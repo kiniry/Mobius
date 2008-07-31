@@ -122,6 +122,9 @@ public class ClassPath {
     final InputStream r = findClass(name).open();
     final C result = reader.read(r);
     r.close();
+    if (result == null) {
+      throw new NotFoundException();
+    }
     return result;
   }
 
@@ -136,7 +139,7 @@ public class ClassPath {
    */
   public <C extends ClassFile> 
     C getCertFile(final String name, 
-                   final ClassReader<C> reader) 
+                  final ClassReader<C> reader) 
       throws NotFoundException, IOException {
     final InputStream r = findCert(name).open();
     final C result = reader.read(r);

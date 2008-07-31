@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import mobius.cct.classfile.ClassName;
-import mobius.cct.repositories.InvalidCertificateException;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Repository;
 
@@ -49,15 +48,19 @@ public class MockRepository implements Repository<MockClassFile> {
   }
   
   @Override
-  public MockClassFile getCertFile(ClassName name) throws IOException,
-      InvalidCertificateException {
+  public MockClassFile getCertFile(ClassName name) throws IOException {
     return fCerts.get(name.internalForm());
   }
 
   @Override
-  public MockClassFile getClassFile(ClassName name) throws NotFoundException,
-      IOException, InvalidCertificateException {
-    return fClasses.get(name.internalForm());
+  public MockClassFile getClassFile(ClassName name) 
+    throws NotFoundException, IOException {
+    final MockClassFile result = fClasses.get(name.internalForm());
+    if (result == null) {
+      throw new NotFoundException();
+    } else {
+      return result;
+    }
   }
 
 }

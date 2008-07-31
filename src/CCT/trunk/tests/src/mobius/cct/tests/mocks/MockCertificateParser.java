@@ -44,6 +44,9 @@ public class MockCertificateParser implements
     while (j.hasNext()) {
       final MethodName m = j.next();
       final MethodCertificateVisitor mv = v.visitMethod(m);
+      if (mv == null) {
+        continue;
+      }
       mv.begin(m);
       final Iterator<MethodCertificate> k = mm.get(m).iterator();
       while (k.hasNext()) {

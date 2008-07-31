@@ -1,16 +1,12 @@
 package mobius.cct.tests.mocks;
 
 import static org.junit.Assert.fail;
-
-import java.util.Iterator;
-
-import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.classfile.ClassName;
-import mobius.cct.util.ArrayIterator;
 import mobius.cct.util.Version;
 import mobius.cct.verifiers.CyclicDependencyException;
 import mobius.cct.verifiers.Environment;
+import mobius.cct.verifiers.VerificationException;
 import mobius.cct.verifiers.Verifier;
 
 /**
@@ -24,6 +20,11 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
     }
 
     @Override
+    public String getSpecificationType() {
+      return "mobius.cct.testspec";
+    }
+    
+    @Override
     public Version getMaxVersion() {
       return new Version(1, 0);
     }
@@ -34,11 +35,6 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
     }
 
     @Override
-    public Iterator<String> getSpecificationTypes(Certificate cert) {
-      return new ArrayIterator<String>(new String[]{"test"});
-    }
-
-    @Override
     public boolean verify(ClassName name, String spec, 
                           CertificatePack cert,
                           Environment<MockClassFile> env) {
@@ -46,8 +42,11 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
         env.verify(name, spec);
       } catch (CyclicDependencyException e) {
         return true; // :-)
+      } catch (VerificationException e) {
+        fail("Invalid exception thrown.");
       }
       fail("Cycle not detected");
       return false;
     }
+
 }

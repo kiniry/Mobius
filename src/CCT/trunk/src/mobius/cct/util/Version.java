@@ -47,9 +47,6 @@ public final class Version implements Comparable<Version> {
    */
   @Override
   public boolean equals(final Object obj) {
-    if (obj == null) {
-      return false;
-    }
     if (obj instanceof Version) {
       return (fMajor == ((Version)obj).getMajor()) &&
         (fMinor == ((Version)obj).getMinor());

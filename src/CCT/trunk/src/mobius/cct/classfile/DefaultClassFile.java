@@ -36,43 +36,43 @@ public class DefaultClassFile implements MutableClassFile {
   /**
    * Declared public; may be accessed from outside its package.
    */
-  private static final int ACC_PUBLIC = 0x0001;
+  public static final int ACC_PUBLIC = 0x0001;
   
   /**
    * Declared final; no subclasses allowed.
    */
-  private static final int ACC_FINAL = 0x0010;
+  public static final int ACC_FINAL = 0x0010;
   
   /**
    *  Treat superclass methods specially when 
    *  invoked by the invokespecial instruction.
    */
-  private static final int ACC_SUPER = 0x0020;
+  public static final int ACC_SUPER = 0x0020;
   
   /**
    * Is an interface, not a class.
    */
-  private static final int ACC_INTERFACE = 0x0200; 
+  public static final int ACC_INTERFACE = 0x0200; 
   
   /**
    * Declared abstract; must not be instantiated.
    */
-  private static final int ACC_ABSTRACT = 0x0400; 
+  public static final int ACC_ABSTRACT = 0x0400; 
   
   /**
    * Declared synthetic; Not present in the source code.
    */
-  private static final int ACC_SYNTHETIC = 0x1000; 
+  public static final int ACC_SYNTHETIC = 0x1000; 
   
   /**
    * Declared as an annotation type.
    */
-  private static final int ACC_ANNOTATION = 0x2000; 
+  public static final int ACC_ANNOTATION = 0x2000; 
   
   /**
    * Declared as an enum type.
    */
-  private static final int ACC_ENUM = 0x4000; 
+  public static final int ACC_ENUM = 0x4000; 
 
   /**
    * Version.
@@ -162,7 +162,7 @@ public class DefaultClassFile implements MutableClassFile {
     
     fAttributes = new AttributeMap(ds, fConstantPool);
   }
-
+  
   /**
    * Read version.
    * @param ds Input stream.

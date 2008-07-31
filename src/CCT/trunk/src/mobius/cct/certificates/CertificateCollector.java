@@ -72,6 +72,7 @@ public class CertificateCollector<C extends ClassFile> {
       m = fCerts.get(version);
     } else {
       m = new TreeMap<Version, CertificatePack>();
+      fCerts.put(type, m);
     }
     if (m.containsKey(version)) {
       m.put(version, m.get(version).merge(c));

@@ -49,12 +49,11 @@ public class ClasspathRepository<C extends ClassFile>
    * @param name Fully qualified class name.
    * @return ClassFile object.
    * @throws NotFoundException if the class cannot be found.
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getClassFile(final ClassName name) 
-    throws NotFoundException, IOException, InvalidCertificateException {
+    throws NotFoundException, IOException {
     return fPath.getClassFile(name.externalForm(), fReader);
   }
   
@@ -62,13 +61,11 @@ public class ClasspathRepository<C extends ClassFile>
    * Locate and read certificate file.
    * @param name Fully qualified class name.
    * @return ClassFile object or null (if certificate cannot be found).
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getCertFile(final ClassName name) 
-    throws IOException, 
-           InvalidCertificateException { 
+    throws IOException { 
     try {
       return fPath.getCertFile(name.externalForm(), fReader);
     } catch (NotFoundException e) {

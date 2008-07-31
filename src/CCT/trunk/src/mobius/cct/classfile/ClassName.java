@@ -16,6 +16,11 @@ public final class ClassName {
   private final String fName;
   
   /**
+   * Cached hash value.
+   */
+  private final int fHash;
+  
+  /**
    * Constructor.
    * @param packageName Name of package, with slashes as separators.
    * @param name Class name.
@@ -27,6 +32,7 @@ public final class ClassName {
     }
     fPackageName = packageName;
     fName = name;
+    fHash = internalForm().hashCode();
   }
   
   /**
@@ -66,6 +72,47 @@ public final class ClassName {
       final String n = name.substring(sep + 1);
       final String p = name.substring(0, sep);
       return new ClassName(PackageName.parseInternal(p), n);
+    }
+  }
+  
+  /**
+   * Hash.
+   * @return hashcode.
+   */
+  @Override
+  public int hashCode() {
+    return fHash;
+  }
+  
+  /**
+   * Get package name.
+   * @return Package name.
+   */
+  public PackageName getPackage() {
+    return fPackageName;
+  }
+  
+  /**
+   * Get class name (without package).
+   * @return Class name.
+   */
+  public String getName() {
+    return fName;
+  }
+  
+  /**
+   * Equals.
+   * @param obj Object to be compared.
+   * @return True iff class names are equal.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj instanceof ClassName) {
+      return fHash == obj.hashCode() && 
+        fName.equals(((ClassName)obj).getName()) &&
+        fPackageName.equals(((ClassName)obj).getPackage()); 
+    } else {
+      return false;
     }
   }
 }

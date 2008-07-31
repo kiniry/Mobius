@@ -23,14 +23,14 @@ public class CachedRepository<C extends ClassFile>
   /**
    * Repository from which classes are read.
    */
-  private final Repository<C> fRepo;
+  private final Repository<? extends C> fRepo;
   
   /**
    * Create repository with unlimited cache size.
    * @param repo Repository from which classes are read if
    * they cannot be found in cache.
    */
-  public CachedRepository(final Repository<C> repo) {
+  public CachedRepository(final Repository<? extends C> repo) {
     fCache = new InfiniteCache<C>();
     this.fRepo = repo;
   }
@@ -41,7 +41,7 @@ public class CachedRepository<C extends ClassFile>
    * they cannot be found in cache.
    * @param cache Cache object used to store classes.
    */
-  public CachedRepository(final Repository<C> repo, 
+  public CachedRepository(final Repository<? extends C> repo, 
                           final Cache<C> cache) {
     this.fCache = cache;
     this.fRepo = repo;
@@ -53,12 +53,11 @@ public class CachedRepository<C extends ClassFile>
    * @param name Fully qualified class name.
    * @return ClassFile object.
    * @throws NotFoundException if the class cannot be found.
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getClassFile(final ClassName name) 
-    throws NotFoundException, IOException, InvalidCertificateException {
+    throws NotFoundException, IOException {
     final String key = name.externalForm() + ".class";
     if (fCache.hasKey(key)) {
       return fCache.lookup(key);
@@ -73,13 +72,11 @@ public class CachedRepository<C extends ClassFile>
    * Locate and read certificate file.
    * @param name Fully qualified class name.
    * @return ClassFile object or null (if certificate cannot be found).
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getCertFile(final ClassName name) 
-    throws IOException, 
-           InvalidCertificateException {
+    throws IOException {
     final String key = name.externalForm() + ".cert";
     if (fCache.hasKey(key)) {
       return fCache.lookup(key);

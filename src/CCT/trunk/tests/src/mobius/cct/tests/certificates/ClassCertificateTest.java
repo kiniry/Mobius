@@ -3,7 +3,9 @@ package mobius.cct.tests.certificates;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.util.Version;
@@ -92,4 +94,28 @@ public class ClassCertificateTest {
     }
     assertArrayEquals(data, c.getData());
   }
+  
+  /**
+   * Test equality of class certificates.
+   * @param c1 Class cert 1.
+   * @param c2 Class cert 2.
+   */
+  public static void assertClassCertsEq(final ClassCertificate c1,
+                             final ClassCertificate c2) {
+    assertEquals(c1.getType(), c2.getType());
+    assertEquals(c1.getVersion(), c2.getVersion());
+    Set<String> imports1 = new HashSet<String>();
+    Iterator<String> i1 = c1.getImports();
+    while (i1.hasNext()) {
+      imports1.add(i1.next());
+    }
+    Set<String> imports2 = new HashSet<String>();
+    Iterator<String> i2 = c2.getImports();
+    while (i2.hasNext()) {
+      imports2.add(i2.next());
+    }
+    assertEquals(imports1, imports2);
+    assertArrayEquals(c1.getData(), c2.getData());
+  }
+
 }

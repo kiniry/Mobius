@@ -15,6 +15,15 @@ import mobius.cct.classfile.ClassName;
  */
 public class SCRepository<C extends ClassFile> 
   implements Repository<C> {
+  /**
+   * Class repository.
+   */
+  private final Repository<? extends C> fClassRepo; 
+
+  /**
+   * Certificate repository.
+   */
+  private final Repository<? extends C> fCertRepo; 
   
   /**
    * Create repository.
@@ -22,9 +31,10 @@ public class SCRepository<C extends ClassFile>
    * @param certRepository Repository used to locate standalone 
    * certificates.
    */
-  public SCRepository(final Repository<C> classRepository,
-                      final Repository<C> certRepository) {
-    //TODO
+  public SCRepository(final Repository<? extends C> classRepository,
+                      final Repository<? extends C> certRepository) {
+    fClassRepo = classRepository;
+    fCertRepo = certRepository;
   }
 
   /**
@@ -32,28 +42,23 @@ public class SCRepository<C extends ClassFile>
    * @param name Fully qualified class name.
    * @return ClassFile object.
    * @throws NotFoundException if the class cannot be found.
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getClassFile(final ClassName name) 
-    throws NotFoundException, IOException, InvalidCertificateException {
-    //TODO
-    return null;
+    throws NotFoundException, IOException {
+    return fClassRepo.getClassFile(name);
   }
   
   /**
    * Locate and read certificate file.
    * @param name Fully qualified class name.
    * @return ClassFile object or null (if certificate cannot be found).
-   * @throws InvalidCertificateException if file format is invalid.
    * @throws IOException if it is thrown during class reading.
    */
   @Override
   public C getCertFile(final ClassName name) 
-    throws IOException, 
-           InvalidCertificateException {
-    //TODO
-    return null; 
+    throws IOException {
+    return fCertRepo.getCertFile(name);
   }  
 }

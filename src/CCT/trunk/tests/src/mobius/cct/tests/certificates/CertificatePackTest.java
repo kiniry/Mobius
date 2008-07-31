@@ -1,9 +1,8 @@
 package mobius.cct.tests.certificates;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static mobius.cct.tests.certificates.ClassCertificateTest.*;
+import static mobius.cct.tests.certificates.MethodCertificateTest.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -77,38 +76,37 @@ public class CertificatePackTest {
   }
   
   /**
-   * Test equality of class certificates.
-   * @param c1 Class cert 1.
-   * @param c2 Class cert 2.
+   * Test equality of CertificatePacks.
+   * @param cp1 First certificate pack.
+   * @param cp2 Second certificate pack.
    */
-  private void assertClassCertsEq(final ClassCertificate c1,
-                             final ClassCertificate c2) {
-    assertEquals(c1.getType(), c2.getType());
-    assertEquals(c1.getVersion(), c2.getVersion());
-    Set<String> imports1 = new HashSet<String>();
-    Iterator<String> i1 = c1.getImports();
+  public static void assertCertPacksEq(final CertificatePack cp1,
+                                       final CertificatePack cp2) {
+    if (cp1 == null) {
+      assertNull(cp2);
+    }
+    if (cp2 == null) {
+      fail();
+    }
+    assertClassCertsEq(cp1.getClassCertificate(), 
+                       cp2.getClassCertificate());
+    final Set<MethodName> s1 = new HashSet<MethodName>();
+    final Iterator<MethodName> i1 = cp1.getCertifiedMethods();
     while (i1.hasNext()) {
-      imports1.add(i1.next());
+      s1.add(i1.next());
     }
-    Set<String> imports2 = new HashSet<String>();
-    Iterator<String> i2 = c2.getImports();
+    final Set<MethodName> s2 = new HashSet<MethodName>();
+    final Iterator<MethodName> i2 = cp2.getCertifiedMethods();
     while (i2.hasNext()) {
-      imports2.add(i2.next());
+      s2.add(i2.next());
     }
-    assertEquals(imports1, imports2);
-    assertArrayEquals(c1.getData(), c2.getData());
+    assertEquals(s1, s2);
+    Iterator<MethodName> i = s1.iterator();
+    while (i.hasNext()) {
+      final MethodName m = i.next();
+      assertMethodCertsEq(cp1.getMethodCertificate(m),
+                          cp2.getMethodCertificate(m));
+    }
   }
   
-  /**
-   * Test equality of method certificates.
-   * @param c1 Class cert 1.
-   * @param c2 Class cert 2.
-   */
-  private void assertMethodCertsEq(final MethodCertificate c1,
-                                   final MethodCertificate c2) {
-    assertEquals(c1.getMethod(), c2.getMethod());
-    assertEquals(c1.getType(), c2.getType());
-    assertEquals(c1.getVersion(), c2.getVersion());
-    assertArrayEquals(c1.getData(), c2.getData());
-  }
 }

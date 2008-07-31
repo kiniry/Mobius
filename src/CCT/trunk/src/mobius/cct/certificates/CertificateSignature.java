@@ -9,6 +9,10 @@ import mobius.cct.util.Version;
 public final class CertificateSignature 
   implements Comparable<CertificateSignature> {
   /**
+   * Constant used for hashing.
+   */
+  private static final int HASH_FACTOR = 0xDEAF;
+  /**
    * Type.
    */
   private final String fType;
@@ -53,9 +57,6 @@ public final class CertificateSignature
    */
   @Override
   public boolean equals(final Object obj) {
-    if (obj == null) {
-      return false;
-    }
     if (obj instanceof CertificateSignature) {
       return (fType.equals(((CertificateSignature)obj).getType())) &&
         (fVersion.equals(((CertificateSignature)obj).getVersion()));
@@ -70,7 +71,7 @@ public final class CertificateSignature
    */
   @Override
   public int hashCode() {
-    return fVersion.hashCode() ^ fType.hashCode();
+    return HASH_FACTOR * fVersion.hashCode() + fType.hashCode();
   }
   
   /**

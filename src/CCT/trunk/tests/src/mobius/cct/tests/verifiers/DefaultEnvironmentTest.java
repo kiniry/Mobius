@@ -17,8 +17,8 @@ import mobius.cct.tests.mocks.MockCertificateParser;
 import mobius.cct.tests.mocks.MockClassFile;
 import mobius.cct.tests.mocks.MockRepository;
 import mobius.cct.util.Version;
-import mobius.cct.verifiers.CyclicDependencyException;
 import mobius.cct.verifiers.DefaultEnvironment;
+import mobius.cct.verifiers.VerificationException;
 import mobius.cct.verifiers.Verifier;
 
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class DefaultEnvironmentTest {
   public void setUp() {
     fRepo = new MockRepository();
     
-    fEnv = new DefaultEnvironment<MockClassFile>(fRepo, false);
+    fEnv = new DefaultEnvironment<MockClassFile>(fRepo);
   }
   
   /**
@@ -63,15 +63,19 @@ public class DefaultEnvironmentTest {
   /**
    * Test verification of non-existing class.
    */
-  @Test
-  public void testNotFound() {
-    try {
-      assertFalse(fEnv.verify(ClassName.parseInternal("X"), ""));
-    } catch (CyclicDependencyException e) {
-      fail("CyclicDependencyException");
-    }
+  @Test(expected=VerificationException.class)
+  public void testNotFound() throws Exception {
+    fEnv.verify(ClassName.parseInternal("X"), "");
   }
 
+  /**
+   * Test verification of empty array of classes.
+   */
+  @Test
+  public void testEmptyArray() throws Exception {
+    assertTrue(fEnv.verify(new ClassName[0], new String[0]));
+  }
+  
   /**
    * Test null as first argument of verify().
    */
@@ -101,10 +105,11 @@ public class DefaultEnvironmentTest {
       assertTrue(fEnv.verify(fk, ""));
       assertTrue(fEnv.verify(afk, ""));
       fEnv.removeTrustedClass(fk);
-      assertFalse(fEnv.verify(fk, ""));
-    } catch (CyclicDependencyException e) {
-      fail("CyclicDependencyException");
+      fEnv.verify(fk, "");
+    } catch (VerificationException e) {
+      return;
     }
+    fail("VerificationException not thrown.");
   }
   
   /**
@@ -114,7 +119,7 @@ public class DefaultEnvironmentTest {
   public void testCycle() {
     Verifier<MockClassFile> v = new CyclicVerifier();
     ClassCertificate cert = 
-      new ClassCertificate("mobius.cct.testcert",
+      new ClassCertificate(v.getCertificateType(),
                            new Version(0, 5),
                            new String[]{},
                            new byte[]{});
@@ -123,15 +128,18 @@ public class DefaultEnvironmentTest {
                           new LinkedList<MethodCertificate>());
     MockClassFile c = 
       new MockClassFile(
-        ClassName.parseInternal("testpackage/TestClass"),
+        ClassName.parseInternal("mobius/cct/Test"),
         new CertificatePack[]{certs});
-    fRepo.addClass("/mobius/cct/Test", c);
+    fRepo.addClass("mobius/cct/Test", c);
     fEnv.setCertificateParser(new MockCertificateParser());
     fEnv.addVerifier(v);
     try {
-      assertTrue(fEnv.verify(ClassName.parseInternal("/mobius/cct/Test"), "test"));
-    } catch (CyclicDependencyException e) {
-      fail("Cycle detected too early");
+      assertTrue(fEnv.verify(
+         ClassName.parseInternal("mobius/cct/Test"), 
+         v.getSpecificationType())
+      );
+    } catch (VerificationException e) {
+      fail("VerificationException: " + e.toString());
     }
   }
 }

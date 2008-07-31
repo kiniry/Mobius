@@ -18,11 +18,11 @@ certificate type (a string and version number). Each certificate
 proves one or more specifications. The specifications also have a 
 type, but there is no standardized way to store them in a 
 <tt>.class</tt> file. They may be embedded in certificates, 
-represented by separate attributes or inferred from the bytecode.
+represented by separate attributes or inferred from bytecode.
 To find out which types of specification exist in a class file
 one has to read all its certificates, find verification plugins 
 and query the plugins (using 
-{@link mobius.cct.verifiers.Verifier#getSpecificationTypes(Certificate)
+{@link mobius.cct.verifiers.Verifier#getSpecificationType()}
 
 } method).
 </p>
@@ -33,7 +33,7 @@ is called a plugin. All plugins implement the
 {@link mobius.cct.verifiers.Verifier} interface. Each plugin 
 must declare type of certificates which can be verified
 by it. It should be able to check correctness of all certificates
-of this type and retrieve types of specifications proved by them.
+of this type and know the type of specifications proved by them.
 </p>
 <h2>Environments</h2>
 <p>

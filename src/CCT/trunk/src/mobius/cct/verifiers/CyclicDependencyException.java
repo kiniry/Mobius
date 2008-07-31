@@ -1,18 +1,20 @@
 package mobius.cct.verifiers;
 
+import mobius.cct.classfile.ClassName;
+
 /**
  * Exception thrown when a verifier requests verification
  * of the same specification it is assigned to. 
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class CyclicDependencyException extends Exception {
+public class CyclicDependencyException extends VerificationException {
   /**
    * SerialVersionUID.
    */
   private static final long serialVersionUID = 1L;
 
   /** Class name. */
-  private final String fName;
+  private final ClassName fName;
 
   /** Specification type. */
   private final String fSpec;
@@ -22,8 +24,8 @@ public class CyclicDependencyException extends Exception {
    * @param name Name of verified class.
    * @param spec Type of verified specification.
    */
-  public CyclicDependencyException(final String name, 
-                                final String spec) {
+  public CyclicDependencyException(final ClassName name, 
+                                   final String spec) {
     fName = name;
     fSpec = spec;
   }
@@ -35,8 +37,8 @@ public class CyclicDependencyException extends Exception {
    * @param spec Type of verified specification.
    */
   public CyclicDependencyException(final String msg,
-                                final String name,
-                                final String spec) {
+                                   final ClassName name,
+                                   final String spec) {
     super(msg);
     fName = name;
     fSpec = spec;
@@ -46,7 +48,7 @@ public class CyclicDependencyException extends Exception {
    * Get name of verified class.
    * @return Class name.
    */
-  public String getName() {
+  public ClassName getName() {
     return fName;
   }
   

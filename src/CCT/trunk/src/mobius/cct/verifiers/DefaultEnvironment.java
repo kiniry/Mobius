@@ -1,19 +1,28 @@
 package mobius.cct.verifiers;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
+import mobius.cct.cache.Cache;
+import mobius.cct.cache.InfiniteCache;
+import mobius.cct.certificates.CertificateCollector;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.CertificateParser;
+import mobius.cct.certificates.DefaultCertificateParser;
 import mobius.cct.classfile.ClassFile;
 import mobius.cct.classfile.ClassName;
+import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Repository;
+import mobius.cct.verifiers.logging.DefaultLogger;
 import mobius.cct.verifiers.logging.Logger;
 
 /**
  * Default implementation of verification environment.
  * Uses repository to load classes and list of verifiers
  * to check certificates. It also maintains a list of
- * trusted classes. Verifications of such classes always
+ * trusted classes. Verification of such classes always
  * succeeds, even if the class is not in the repository
  * or does not contain requested certificate. This feature
  * can be used to avoid unnecessary parsing of system 
@@ -26,23 +35,84 @@ import mobius.cct.verifiers.logging.Logger;
 public class DefaultEnvironment<C extends ClassFile> 
   implements Environment<C> {
   /**
-   * Create environment with given repository.
-   * @param repo Repository used to locate classes.
-   * @param defaultVerifiers if this paramater is set to 
-   * {@code true}, default list of verifers is added to this 
-   * environment. If it set to {@code false}, verifiers must
-   * be added manually.
+   * Repository used to load classes and certificates.
    */
-  public DefaultEnvironment(final Repository<C> repo,
-                            final boolean defaultVerifiers) { 
-  //TODO
-  }
+  private final Repository<? extends C> fRepo;
   
   /**
-   * Create environment using default repository and verifiers.
+   * Set of trusted classes.
    */
-  public DefaultEnvironment() { 
-  //TODO
+  private final Set<ClassName> fTrusted;
+  
+  /**
+   * Certificate parser.
+   */
+  private CertificateParser<? super C> fParser;
+  
+  /**
+   * Cache of parsed certificates.
+   */
+  private final Cache<CertificateCollector<C>> fCache; 
+  
+  /**
+   * Cache of class files.
+   */
+  private final Cache<C> fClassCache;
+  
+  /**
+   * Set of active verification requests.
+   */
+  private final Set<VerificationRequest> fActive;
+
+  /**
+   * Set of successful verification requests.
+   */
+  private final Set<VerificationRequest> fVerified;
+  
+  /**
+   * Verifiers.
+   */
+  private final VerifierMap<C> fVerifiers;
+  
+  /**
+   * Logger.
+   */
+  private Logger fLogger;
+  
+//  /**
+//   * Create environment with given repository.
+//   * @param repo Repository used to locate classes.
+//   * @param defaultVerifiers if this parameter is set to 
+//   * {@code true}, default list of verifiers is added to this 
+//   * environment. If it set to {@code false}, verifiers must
+//   * be added manually.
+//   */
+//  public DefaultEnvironment(final Repository<? extends C> repo,
+//                            final boolean defaultVerifiers) { 
+//    fRepo = repo;
+//    fTrusted = new HashSet<ClassName>();
+//    fLogger = new DefaultLogger();
+//    fParser = new DefaultCertificateParser<C>();
+//    fCache = new InfiniteCache<CertificateCollector<C>>();
+//    fClassCache = new InfiniteCache<C>();
+//    fActive = new HashSet<VerificationRequest>();
+//    fVerified = new HashSet<VerificationRequest>();
+//  }
+
+  /**
+   * Create environment with given repository and no verifiers.
+   * @param repo Repository used to locate classes.
+   */
+  public DefaultEnvironment(final Repository<? extends C> repo) { 
+    fRepo = repo;
+    fTrusted = new HashSet<ClassName>();
+    fLogger = new DefaultLogger();
+    fParser = new DefaultCertificateParser<C>();
+    fCache = new InfiniteCache<CertificateCollector<C>>();
+    fClassCache = new InfiniteCache<C>();
+    fActive = new HashSet<VerificationRequest>();
+    fVerified = new HashSet<VerificationRequest>();
+    fVerifiers = new VerifierMap<C>();
   }
   
   /**
@@ -50,8 +120,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return Iterator object.
    */
   public Iterator<Verifier<C>> getVerifiers() {
-  //TODO
-    return null;
+    return fVerifiers.getVerifiers();
   }
   
   /**
@@ -59,26 +128,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param v Verifier object.
    */
   public void addVerifier(final Verifier<C> v) {
-  //TODO
-  }
-  
-  /**
-   * Remove verifier for given certificate type 
-   * from environment.
-   * @param certType Type of certificates.
-   */
-  public void removeVerifier(final String certType) {
-  //TODO
-  }
-  
-  /** Get verifier for given certificate type. 
-   *  @param certType Type of certificates.
-   *  @return Verifier applicable to certificates of given type
-   *  or {@code null}, if there is no such verifier in this env.
-   **/
-  public Verifier<C> getVerifier(final String certType) {
-  //TODO
-    return null;
+    fVerifiers.addVerifier(v);
   }
   
   /**
@@ -86,7 +136,7 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param name Class name (FQN).
    */
   public void addTrustedClass(final ClassName name) {
-  //TODO
+    fTrusted.add(name);
   }
   
   /**
@@ -95,45 +145,67 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param name Class name (FQN). 
    */
   public void removeTrustedClass(final ClassName name) {
-  //TODO
+    fTrusted.remove(name);
   }
   
   /**
    * Iterate over all trusted classes.
    * @return Iterator.
    */
-  Iterator<String> getTrustedClasses() {
-  //TODO
-    return null;
+  Iterator<ClassName> getTrustedClasses() {
+    return fTrusted.iterator();
   }
   
   /**
    * Read class file from used repository.
    * @param name FQN of a class.
    * @return ClassFile object.
+   * @throws IOException If thrown during class reading.
+   * @throws NotFoundException If class was not in the repository.
    */
   @Override
-  public C getClassFile(final ClassName name) {
-  //TODO
-    return null;
+  public C getClassFile(final ClassName name) 
+    throws NotFoundException, IOException {
+    final String n = name.internalForm();
+    if (fClassCache.hasKey(n)) {
+      return fClassCache.lookup(n);
+    } else {
+      final C cls = fRepo.getClassFile(name);
+      fClassCache.update(n, cls);
+      return cls;
+    }
   }
   
   /**
    * Read certificate file from used repository.
+   * Return null if there is no certificate file for 
+   * the requested class.
    * @param name FQN of a class.
-   * @return ClassFile object.
+   * @return ClassFile object or null.
+   * @throws IOException If thrown during class reading.
    */
   @Override
-  public C getCertificateFile(final ClassName name) {
-  //TODO
-    return null;
+  public C getCertificateFile(final ClassName name) 
+    throws IOException {
+    final String n = "<CERT>" + name.internalForm();
+    if (fClassCache.hasKey(n)) {
+      return fClassCache.lookup(n);
+    } else {
+      final C cls = fRepo.getCertFile(name);
+      if (cls != null) {
+        fClassCache.update(n, cls);
+      }
+      return cls;
+    }
   }
 
   /**
-   * Verify specification of given ClassFile. 
-   * If there are multiple certificates for the desired specification
-   * verifiers are tried in order in which they were added to the
-   * environment. If a specification was already checked in
+   * Verify specification of given class.
+   * Verifiers for requested specification type are scanned 
+   * in order in which they were added to the environment. 
+   * First verifier for which a suitable certificate
+   * exists in the class is run.
+   * If a specification was already checked in
    * this environment it is not checked again. A class is not checked
    * (or even loaded) if its name is on the list of trusted classes.
    * @param name Class name.
@@ -141,15 +213,69 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return (@code true} iff given class file contains a
    * certificate for requested specification type and the
    * certificate is valid.
-   * @throws CyclicDependencyException See
-   * {@link mobius.cct.verifiers.CyclicDependencyException 
-   * CyclicDependyException}.
+   * @throws VerificationException .
    */
   @Override
   public boolean verify(final ClassName name, final String spec)  
-    throws CyclicDependencyException {
-  //TODO
-    return false;
+    throws VerificationException {
+    if ((name == null) || (spec == null)) {
+      throw new IllegalArgumentException();
+    }
+    final VerificationRequest req = 
+      new VerificationRequest(name, spec);
+    if (fActive.contains(req)) {
+      throw new CyclicDependencyException(name, spec);
+    }
+    if (fTrusted.contains(name) || (fVerified.contains(req))) {
+      return true;
+    } else {
+      try {
+        final Iterator<CertificatePack> i = 
+          loadCertificates(name).getAllCertificates();
+        while (i.hasNext()) {
+          final CertificatePack p = i.next();
+          final Verifier<C> v = findVerifier(p, spec);
+          if (v != null) {
+            return verify(req, p, v);
+          }
+        }
+        throw new 
+        VerificationException("Verifier or certificate not found");
+      } catch (IOException e) {
+        throw new VerificationException(e);
+      } catch (NotFoundException e) {
+        throw new VerificationException(e);
+      }
+    }
+  }
+  
+  /**
+   * Verify a certificate pack using given Verifier.
+   * @param req Verification request.
+   * @param p Certificate pack.
+   * @param v Verifier.
+   * @return Verification result.
+   * @throws VerificationException .
+   */
+  private boolean verify(final VerificationRequest req,
+                         final CertificatePack p,
+                         final Verifier<C> v) 
+    throws VerificationException {
+    
+    fActive.add(req);
+    final boolean result;
+    try {
+      result = 
+        v.verify(req.getClassName(), req.getSpecType(), p, this);
+    } catch (VerificationException e) {
+      fActive.remove(req);
+      throw e;
+    }
+    if (result) {
+      fVerified.add(req);
+    }
+    fActive.remove(req);
+    return result;
   }
   
   /** 
@@ -159,50 +285,51 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param spec Specification types to be verified.
    * @return {@code true} iff all specifications were succesfully
    * verified.
-   * @throws CyclicDependencyException See
-   * {@link mobius.cct.verifiers.CyclicDependencyException 
-   * CyclicDependyException}.
+   * @throws VerificationException .
    */
   @Override
   public boolean verify(final ClassName[] name, final String[] spec)  
-    throws CyclicDependencyException {
-  //TODO
-    return false;
+    throws VerificationException {
+    for (int i = 0; i < name.length; i++) {
+      if (!verify(name[i], spec[i])) {
+        return false;
+      }
+    }
+    return true;
   }
   
   /**
-   * Get logger used by this environemnt.
+   * Get logger used by this environment.
    * @return Logger.
    */
   @Override
   public Logger getLogger() {
-  //TODO
-    return null;
+    return fLogger;
   }
   
   /**
-   * Set logger used by this environemnt.
+   * Set logger used by this environment.
    * @param logger Logger.
    */
   public void setLogger(final Logger logger) {
-  //TODO
+    fLogger = logger;
   }
   
   /**
    * Get object used to parse certificates.
    * @return CertificateParser used by this environment.
    */
-  public CertificateParser<C> getCertificateParser() {
-    //TODO
-    return null;
+  public CertificateParser<? super C> getCertificateParser() {
+    return fParser;
   }
   
   /**
    * Set object used to parse certificates.
    * @param cp New certificate parser.
    */
-  public void setCertificateParser(final CertificateParser<C> cp) {
-    //TODO
+  public void 
+  setCertificateParser(final CertificateParser<? super C> cp) {
+    fParser = cp;
   }
 
   /**
@@ -211,11 +338,56 @@ public class DefaultEnvironment<C extends ClassFile>
    * @param name Class name.
    * @param type Certificate type.
    * @return Iterator.
+   * @throws IOException 
+   * @throws NotFoundException 
+   * @throws IOException If thrown during class reading.
+   * @throws NotFoundException If class was not in the repository.
    */
   @Override
   public Iterator<CertificatePack> 
-  getCertificate(final ClassName name, final String type) {
-    // TODO Auto-generated method stub
-    return null;
+  getCertificate(final ClassName name, final String type) 
+    throws NotFoundException, IOException {
+    return loadCertificates(name).getCertificates(type);
+  }
+  
+  /**
+   * Load data from class and certificate file.
+   * @param clsName ClassName.
+   * @return {@link CertificateCollector} with all certificates.
+   * @throws IOException .
+   * @throws NotFoundException . 
+   */
+  private CertificateCollector<C> 
+  loadCertificates(final ClassName clsName) 
+    throws NotFoundException, IOException {
+    final String n = clsName.internalForm();
+    if (fCache.hasKey(n)) {
+      return fCache.lookup(n);
+    } else {
+      final C cls = getClassFile(clsName);
+      final C cert = getCertificateFile(clsName);
+      final CertificateCollector<C> c = 
+        new CertificateCollector<C>();
+      c.collect(fParser, cls);
+      if (cert != null) {
+        c.collect(fParser, cert);
+      }
+      fCache.update(n, c);
+      return c;
+    }    
+  }
+  
+  /**
+   * Find verifier for given certificate and specification.
+   * @param c Certificate.
+   * @param spec Specification type.
+   * @return Verifier or null.
+   */
+  private Verifier<C> findVerifier(final CertificatePack c,
+                                   final String spec) {
+    return fVerifiers.getVerifier(
+       c.getClassCertificate().getSignature(), 
+       spec
+    );
   }
 }

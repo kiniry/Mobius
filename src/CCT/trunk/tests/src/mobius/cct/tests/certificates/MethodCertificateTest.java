@@ -50,4 +50,18 @@ public class MethodCertificateTest {
 
     assertArrayEquals(data, c.getData());
   }
+  
+  /**
+   * Test equality of method certificates.
+   * @param c1 Class cert 1.
+   * @param c2 Class cert 2.
+   */
+  public static void assertMethodCertsEq(final MethodCertificate c1,
+                                   final MethodCertificate c2) {
+    assertEquals(c1.getMethod(), c2.getMethod());
+    assertEquals(c1.getType(), c2.getType());
+    assertEquals(c1.getVersion(), c2.getVersion());
+    assertArrayEquals(c1.getData(), c2.getData());
+  }
+  
 }

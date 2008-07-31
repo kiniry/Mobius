@@ -1,8 +1,5 @@
 package mobius.cct.verifiers;
 
-import java.util.Iterator;
-
-import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.classfile.ClassFile;
 import mobius.cct.classfile.ClassName;
@@ -21,6 +18,12 @@ public interface Verifier<C extends ClassFile> {
   String getCertificateType();
   
   /**
+   * Get type of specification.
+   * @return Specification type.
+   */
+  String getSpecificationType();
+  
+  /**
    * Lowest version number supported by this verifier.
    * @return Version number.
    */
@@ -33,15 +36,6 @@ public interface Verifier<C extends ClassFile> {
   Version getMaxVersion();
   
   /**
-   * Type of specifications associated with given certificate.
-   * @param cert Certificate. 
-   * @return Types of specifications. 
-   * If type or version of the certificate is not valid 
-   * for this plugin, empty iterator should be returned.
-   */
-  Iterator<String> getSpecificationTypes(Certificate cert);
-  
-  /**
    * Verify certificate of a class in given environment.
    * If specifications of other classes are used they must also
    * be verified.
@@ -52,9 +46,10 @@ public interface Verifier<C extends ClassFile> {
    * @return {@code true} if the certificate is valid. If type
    * or version of this certificate are not acceptable for
    * this plugin, {@code false} is returned.
+   * @throws VerificationException If an error occured.
    */
   boolean verify(ClassName name, 
                  String spec,
                  CertificatePack cert, 
-                 Environment<C> env);
+                 Environment<C> env) throws VerificationException;
 }
