@@ -23,11 +23,12 @@ public class THIS extends OldExpression {
    * A standard constructor.
    *
    * @param isOld - whether it should be OLD_THIS or THIS,
-   * @param abcc - initializing class.
+   * @param classRepresentation - initializing class.
    */
-  public THIS(final boolean isOld, final BCClass abcc) {
+  public THIS(final boolean isOld,
+              final BCClass classRepresentation) {
     super(isOld ? Code.OLD_THIS : Code.THIS, isOld);
-    this.bcc = abcc;
+    this.bcc = classRepresentation;
   }
 
   @Override

@@ -3,11 +3,13 @@ package annot.io;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
+import bmllib.utils.NumberUtils;
+
 import annot.attributes.IBCAttribute;
-import annot.bcclass.BCClass;
+import annot.bcclass.BCClassRepresentation;
 import annot.bcclass.BCMethod;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 
 /**
  * This class is used to write BML attributes (of IBCAttribute
@@ -21,7 +23,7 @@ public class AttributeWriter {
   /**
    * BCClass containing attributes to be written.
    */
-  private final BCClass bcc;
+  private final BCClassRepresentation bcc;
 
   /**
    * BCMethod containing attributes to be written.
@@ -42,10 +44,10 @@ public class AttributeWriter {
   /**
    * A contructor for BCClass (to write class atributes).
    *
-   * @param abcc - class containing attributes to be written.
+   * @param classRepresentation - class containing attributes to be written.
    */
-  public AttributeWriter(final BCClass abcc) {
-    this.bcc = abcc;
+  public AttributeWriter(final BCClassRepresentation classRepresentation) {
+    this.bcc = classRepresentation;
   }
 
   /**
@@ -109,7 +111,8 @@ public class AttributeWriter {
    * @return Uknonwn attribute representing given attribute.
    */
   public Unknown writeAttribute(final IBCAttribute attr) {
-    MLog.putMsg(MessageLog.PInfo, "    writing attribute: " + attr.getName());
+    MLog.putMsg(MessageLog.LEVEL_PINFO,
+                "    writing attribute: " + attr.getName());
     this.output = new byte[4];
     this.pos = 0;
     attr.save(this);
@@ -137,7 +140,7 @@ public class AttributeWriter {
    */
   public void writeByte(final int b) {
     grow(1);
-    this.output[this.pos] = (byte) (b & 0xff);
+    this.output[this.pos] = (byte) (b & NumberUtils.LOWEST_BYTE_MASK);
     this.pos++;
   }
 
@@ -147,12 +150,16 @@ public class AttributeWriter {
    * @param i - integer to be written.
    */
   public void writeInt(final int i) {
-    grow(4);
-    this.output[this.pos] = (byte) (i  >>  24 & 0xff);
-    this.output[this.pos + 1] = (byte) (i  >>  16 & 0xff);
-    this.output[this.pos + 2] = (byte) (i  >>  8 & 0xff);
-    this.output[this.pos + 3] = (byte) (i & 0xff);
-    this.pos += 4;
+    grow(NumberUtils.INTEGER_IN_BYTES);
+    this.output[this.pos] =
+      (byte) (i  >>  24 & NumberUtils.LOWEST_BYTE_MASK);
+    this.output[this.pos + 1] =
+      (byte) (i  >>  16 & NumberUtils.LOWEST_BYTE_MASK);
+    this.output[this.pos + 2] =
+      (byte) (i  >>  NumberUtils.ONE_BYTE_SIZE & NumberUtils.LOWEST_BYTE_MASK);
+    this.output[this.pos + 3] =
+      (byte) (i & NumberUtils.LOWEST_BYTE_MASK);
+    this.pos += NumberUtils.INTEGER_IN_BYTES;
   }
 
   /**
@@ -162,8 +169,9 @@ public class AttributeWriter {
    */
   public void writeShort(final int s) {
     grow(2);
-    this.output[this.pos] = (byte) (s  >>  8 & 0xff);
-    this.output[this.pos + 1] = (byte) (s & 0xff);
+    this.output[this.pos] = (byte) (s  >>  NumberUtils.ONE_BYTE_SIZE &
+        NumberUtils.LOWEST_BYTE_MASK);
+    this.output[this.pos + 1] = (byte) (s & NumberUtils.LOWEST_BYTE_MASK);
     this.pos += 2;
   }
 

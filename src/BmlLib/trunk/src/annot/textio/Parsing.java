@@ -228,11 +228,11 @@ public class Parsing {
     final BMLLexer lex = new BMLLexer(chstr);
     final CommonTokenStream tokens = new CommonTokenStream(lex);
     if (goShowTokens) {
-      System.out.print("tokens:");
+      MLog.putMsg(MLog.LEVEL_PINFO, "tokens:");
       for (int i = 0; i  <  100; i++) {
-        MLog.putBitOfMsg(0, " " + tokens.toString(i, i));
+        MLog.putBitOfMsg(MLog.LEVEL_PINFO, " " + tokens.toString(i, i));
       }
-      MLog.putMsg(0, "");
+      MLog.putMsg(MLog.LEVEL_PINFO, "");
     }
     final BMLParser parser = new BMLParser(tokens);
     parser.init(this.bcc, m, this.bcc.getCp(), ih, minor);
@@ -278,7 +278,7 @@ public class Parsing {
         throw lex.lastE;
       }
       if (parser.lastE != null) {
-        MLog.putMsg(0, Integer.toString(parser.lastE.line));
+        MLog.putMsg(MLog.LEVEL_PINFO, Integer.toString(parser.lastE.line));
         throw parser.lastE;
       }
     } catch (final RecognitionException e) {

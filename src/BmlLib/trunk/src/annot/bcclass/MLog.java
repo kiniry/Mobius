@@ -17,7 +17,7 @@ public final class MLog extends MessageLog {
    * Message type filter. It's not final, so it can be
    * changed eg. by automated tests.
    */
-  private static int LOG_MASK = PNORMAL;
+  private static int LOG_MASK = MASK_PNORMAL;
 
   /**
    * The standard logging facility is the standard output.

@@ -79,13 +79,15 @@ public class DisplayStyle {
    */
   public static final String comment_start = "/*@ "; //careful
 
-  public static final char expr_block_end = '}';
+  /**
+   * Character which marks the start of a block expression.
+   */
+  public static final char BLOCK_EXPR_START = '{';
 
   /**
-   * block marks for an expression (beginning and end of
-   * expression block):
+   * Character which marks the end of a block expression.
    */
-  public static final char expr_block_start = '{';
+  public static final char BLOCK_EXPR_END = '}';
 
   /**
    * whether display each implication branch of quantified

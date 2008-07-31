@@ -1,5 +1,6 @@
 package annot.attributes;
 
+
 /**
  * Contains codes for each printable attribute type
  * and commonly used bit masks to represent sets of attributes

@@ -31,8 +31,9 @@ public class BCMethod {
 
   /**
    * A flag to choose how bytecode should be displayed.
+   * TODO: true -> ???, false -> ????
    */
-  private static final boolean displayStyle = false;
+  private static final boolean DISPLAY_STYLE = false;
 
   /**
    * Collection of all attributes inside method body.
@@ -40,7 +41,7 @@ public class BCMethod {
   private final BCAttributeMap amap;
 
   /**
-   * BCClass containing this method.
+   * BML class representation containing this method.
    */
   private final BCClass bcc;
 
@@ -68,15 +69,17 @@ public class BCMethod {
   /**
    * A standard constructor from BCClass and MethodGen.
    *
-   * @param abcc - BCClass containig this method,
+   * @param abcc - BCClass containing this method,
    * @param m - BCEL's methodGen for this method.
    * @throws ReadAttributeException - if any of BML
    *     attributes wasn't correctly parsed
    *     by this library.
    */
-  public BCMethod(final BCClass abcc, final MethodGen m)
+  public BCMethod(final BCClass abcc,
+                  final MethodGen m)
     throws ReadAttributeException {
-    MLog.putMsg(MessageLog.PInfo, "  initializing method: " + m.getName());
+    MLog.putMsg(MessageLog.LEVEL_PINFO,
+                "  initializing method: " + m.getName());
     this.bcc = abcc;
     this.bcelMethod = m;
     this.amap = new BCAttributeMap(this);
@@ -84,11 +87,20 @@ public class BCMethod {
     final int cnt = lvgens.length;
     this.lvars = new LocalVariable[cnt];
     this.oldvars = new LocalVariable[cnt];
-    for (int i = 0; i  <  cnt; i++) {
-      final String name = lvgens[i].getName();
-      this.lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
-      this.oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
-    }
+    setLocalVariables(lvgens);
+    readBMLAttributes(m);
+  }
+
+  /**
+   * Examines the attributes of the given method and incorporates all the
+   * BML related ones as appropriate subobjects of the current object.
+   *
+   * @param m method representation from which the attributes are read
+   * @throws ReadAttributeException if an attribute's data doesn't represent
+   *   correct attribute of attribute's name
+   */
+  private void readBMLAttributes(final MethodGen m)
+    throws ReadAttributeException {
     final Attribute[] attrs = m.getAttributes();
     final AttributeReader ar = new AttributeReader(this);
     for (int i = 0; i  <  attrs.length; i++) {
@@ -99,12 +111,32 @@ public class BCMethod {
   }
 
   /**
+   * The method fills in the local variables and old local variables tables
+   * with the variables based on the values in the given array of local
+   * variable generators. The method fills in the initial segments of the
+   * tables. The size of the given array of local variables should be not
+   * greater than the sizes of the local tables. If this is greater the
+   * {@link IndexOutOfBoundsException} is thrown.
+   *
+   * @param lvgens the array of local variable generators
+   */
+  private void setLocalVariables(final LocalVariableGen[] lvgens) {
+    final int cnt = lvgens.length;
+    for (int i = 0; i  <  cnt; i++) {
+      final String name = lvgens[i].getName();
+      this.lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
+      this.oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
+    }
+  }
+
+  /**
    * Adds an annotation to the BCMethod.
    *
    * @param ica - annotation to be added.
    */
   public void addAttribute(final InCodeAttribute ica) {
-    MLog.putMsg(MessageLog.PProgress, "adding attribute: " + ica.toString());
+    MLog.putMsg(MessageLog.LEVEL_PPROGRESS,
+                "adding attribute: " + ica.toString());
     this.amap.addAttribute(ica, ica.getMinor());
   }
 
@@ -176,7 +208,7 @@ public class BCMethod {
   }
 
   /**
-   * @return BCClass containing this method.
+   * @return BML class representation containing this method.
    */
   public BCClass getBcc() {
     return this.bcc;
@@ -228,13 +260,12 @@ public class BCMethod {
   }
 
   /**
-   * Computes pc numbers for each bytecode instruction of
-   * a method containing this annotation and returns,
-   * and returns pc number of instruction this annotation
-   * is attached to.
+   * Refreshes the pc numbers for each bytecode instruction of
+   * the current method and returns the current pc number of the instruction
+   * for the given handle.
    *
-   * @return pc number of this annotation's
-   *     bytecode instruction.
+   * @param ih the handle of the instruction to give pc number for
+   * @return pc number of the instruction under the given handle
    */
   public int getPC(final InstructionHandle ih) {
     this.bcelMethod.getInstructionList().setPositions();
@@ -256,39 +287,68 @@ public class BCMethod {
     }
     code += toString();
     String bcode = "";
-    if (displayStyle) {
-      final InstructionList il = this.bcelMethod.getInstructionList();
-      il.setPositions();
-      final Iterator iter = this.bcelMethod.getInstructionList().iterator();
-      while (iter.hasNext()) {
-        final InstructionHandle ih = (InstructionHandle) iter.next();
-        bcode += this.amap.getAllAt(ih).printCode(conf);
-        bcode += ih.getPosition() + ": " + ih.getInstruction().toString(
-                                                this.bcc.getJC()
-                                                    .getConstantPool()) + "\n";
-      }
+    if (DISPLAY_STYLE) {
+      bcode = printCodeStyleTrue(conf);
     } else {
-      final Method m = this.bcelMethod.getMethod();
-      if (!m.isAbstract()) {
-        bcode += m.getCode().toString();
-        bcode = bcode.substring(bcode.indexOf("\n") + 1);
-        bcode = bcode.split("\n\n")[0];
-        final String[] lines_in = bcode.split("\n");
-        bcode = "";
-        for (int l = 0; l  <  lines_in.length; l++) {
-          final String line = lines_in[l];
-          final int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
-          String annotLines = "";
-          final InCodeAttribute[] attrs = this.amap.getAllAt(findAtPC(pc))
-              .getAll(AType.C_ALL);
-          for (int i = 0; i  <  attrs.length; i++) {
-            annotLines += attrs[i].printCode(conf);
-          }
-          bcode += Parsing.addComment(annotLines) + line + "\n";
-        }
-      }
+      bcode = printCodeStyleFalse(conf);
     }
     return code + bcode;
+  }
+
+  /**
+   * The implementation of the representation style when {@link #DISPLAY_STYLE}
+   * is <code>false</code>.
+   *
+   * @param conf the BML formulae display configuration to typesett the
+   *   BML formulae
+   * @return the string representation of the current method
+   */
+  private String printCodeStyleFalse(final BMLConfig conf) {
+    final Method m = this.bcelMethod.getMethod();
+    String bcode = "";
+    if (!m.isAbstract()) {
+      bcode = m.getCode().toString();
+      bcode = bcode.substring(bcode.indexOf("\n") + 1);
+      bcode = bcode.split("\n\n")[0];
+      final String[] lines_in = bcode.split("\n");
+      bcode = "";
+      for (int l = 0; l  <  lines_in.length; l++) {
+        final String line = lines_in[l];
+        final int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
+        String annotLines = "";
+        final InCodeAttribute[] attrs = this.amap.getAllAt(findAtPC(pc))
+            .getAll(AType.C_ALL);
+        for (int i = 0; i  <  attrs.length; i++) {
+          annotLines += attrs[i].printCode(conf);
+        }
+        bcode += Parsing.addComment(annotLines) + line + "\n";
+      }
+    }
+    return bcode;
+  }
+
+  /**
+   * The implementation of the representation style when {@link #DISPLAY_STYLE}
+   * is <code>true</code>.
+   *
+   * @param conf the BML formulae display configuration to typesett the
+   *   BML formulae
+   * @return the string representation of the current method
+   */
+  private String printCodeStyleTrue(final BMLConfig conf) {
+    final StringBuffer bcode = new StringBuffer("");
+    final InstructionList il = this.bcelMethod.getInstructionList();
+    il.setPositions();
+    final Iterator iter = this.bcelMethod.getInstructionList().iterator();
+    while (iter.hasNext()) {
+      final InstructionHandle ih = (InstructionHandle) iter.next();
+      bcode.append(this.amap.getAllAt(ih).printCode(conf));
+      bcode.append(ih.getPosition()).append(": ").
+            append(ih.getInstruction().
+                      toString(this.bcc.getJC().getConstantPool())).
+            append("\n");
+    }
+    return bcode.toString();
   }
 
   /**
@@ -298,7 +358,7 @@ public class BCMethod {
    * @return generated BCEL Method.
    */
   public Method save() {
-    MLog.putMsg(MessageLog.PInfo, "  saving method: " +
+    MLog.putMsg(MessageLog.LEVEL_PINFO, "  saving method: " +
                 this.bcelMethod.getName());
     final AttributeWriter aw = new AttributeWriter(this);
     Attribute[] attrs = BCClass.removeBMLAttributes(this.bcelMethod
@@ -325,10 +385,10 @@ public class BCMethod {
   /**
    * Sets method specification attribute for this method.
    *
-   * @param mspec - new method specification.
+   * @param amspec - new method specification.
    */
-  public void setMspec(final MethodSpecification mspec) {
-    this.mspec = mspec;
+  public void setMspec(final MethodSpecification amspec) {
+    this.mspec = amspec;
   }
 
   /**

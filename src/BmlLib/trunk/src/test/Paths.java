@@ -11,9 +11,11 @@ package test;
  * @version a-01
  */
 public class Paths {
-  public static final String path = "D:\\dane\\workspace\\BmlLib\\bin\\";
+  //public static final String path = "D:\\dane\\workspace\\BmlLib\\bin\\";
+  public static final String path = "/home/alx/workspace/BmlLib/bin/";
 
-  public static final String tmp_path = "D:\\dane\\tmp\\";
+  //public static final String tmp_path = "D:\\dane\\tmp\\";
+  public static final String tmp_path = "/home/alx/tmp/";
   // public static final String path =
   // "/home/chrzaszcz/Mobius/Testy/BmlLib2/bin/";
   // public static final String tmp_path = "/home/chrzaszcz/tmp/";

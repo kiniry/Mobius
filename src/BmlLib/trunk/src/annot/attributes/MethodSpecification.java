@@ -6,8 +6,6 @@ import org.antlr.runtime.RecognitionException;
 
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
-import annot.bcexpression.formula.AbstractFormula;
-import annot.bcexpression.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
@@ -30,11 +28,6 @@ public class MethodSpecification extends MethodAttribute implements
   private final BCMethod method;
 
   /**
-   * This should be true before first method's instruction.
-   */
-  private final ExpressionRoot < AbstractFormula >  precondition;
-
-  /**
    * Each of this cases specifies method's behaviour
    * in some conditions (if their's precondition's are true).
    */
@@ -47,22 +40,18 @@ public class MethodSpecification extends MethodAttribute implements
    * @param m - method this annotation specifies.
    */
   public MethodSpecification(final BCMethod m) {
-    this(m, new Predicate0Ar(true), new SpecificationCase[0]);
+    this(m, new SpecificationCase[0]);
   }
 
   /**
    * A standard constructor.
    *
    * @param m - method this annotation specifies,
-   * @param precondition - it's precondition,
    * @param sc - and specification cases.
    */
   public MethodSpecification(final BCMethod m,
-                             final AbstractFormula precondition,
                              final SpecificationCase[] sc) {
     this.method = m;
-    this.precondition = new ExpressionRoot < AbstractFormula > (this,
-        precondition);
     this.specCases = new Vector < SpecificationCase > ();
     for (int i = 0; i  <  sc.length; i++) {
       this.specCases.add(sc[i]);
@@ -82,8 +71,6 @@ public class MethodSpecification extends MethodAttribute implements
   public MethodSpecification(final BCMethod m, final AttributeReader ar)
     throws ReadAttributeException {
     this.method = m;
-    this.precondition = new ExpressionRoot < AbstractFormula > (this, ar
-        .readFormula());
     final int length = ar.readAttributesCount();
     this.specCases = new Vector < SpecificationCase > ();
     for (int i = 0; i  <  length; i++) {
@@ -112,7 +99,6 @@ public class MethodSpecification extends MethodAttribute implements
       n += this.specCases.get(i).getExprCount();
     }
     final ExpressionRoot[] all = new ExpressionRoot[n];
-    all[0] = this.precondition;
     int pos = 1;
     for (int i = 0; i  <  this.specCases.size(); i++) {
       final ExpressionRoot[] sce = this.specCases.get(i).getAllExpressions();
@@ -201,7 +187,6 @@ public class MethodSpecification extends MethodAttribute implements
    * @param aw - stream to save to.
    */
   public void save(final AttributeWriter aw) {
-    this.precondition.write(aw);
     aw.writeAttributeCount(this.specCases.size());
     for (int i = 0; i  <  this.specCases.size(); i++) {
       this.specCases.get(i).write(aw);

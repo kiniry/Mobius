@@ -8,8 +8,8 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.bcclass.BCMethod;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 
 /**
  * This class represents collection of all annotations inside
@@ -265,7 +265,7 @@ public class BCAttributeMap {
    */
   public void setAtributesForInstruction(final InstructionHandle ih,
                                          final SingleList sl) {
-    MLog.putMsg(MessageLog.PInfo, "singleList replaced");
+    MLog.putMsg(MessageLog.LEVEL_PINFO, "singleList replaced");
     this.map.put(ih, sl);
   }
 

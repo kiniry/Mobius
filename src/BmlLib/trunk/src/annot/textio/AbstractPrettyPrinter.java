@@ -86,8 +86,8 @@ public abstract class AbstractPrettyPrinter {
     //XXX use regexp here
     for (int i = 0; i  <  str.length(); i++) {
       final char ch = str.charAt(i);
-      if (ch != DisplayStyle.expr_block_start &&
-          ch != DisplayStyle.expr_block_end) {
+      if (ch != DisplayStyle.BLOCK_EXPR_START &&
+          ch != DisplayStyle.BLOCK_EXPR_END) {
         result += ch;
       }
     }

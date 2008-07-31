@@ -148,7 +148,7 @@ public final class ManualTests {
                                                            new Predicate0Ar(
                                                                             false),
                                                            null) };
-    m.setMspec(new MethodSpecification(m, new Predicate0Ar(true), sc));
+    m.setMspec(new MethodSpecification(m, sc));
     final SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
     m.getAmap().addAttribute(1, 5, 0);
     final SingleAssert sa = (SingleAssert) m.getAmap().addAttribute(1, 8, 2);
@@ -207,7 +207,7 @@ public final class ManualTests {
     errc = 0;
     replaceTest("~true", " && true || ~true) ||", 554, 856, true);
     replaceTest("\\class", "))", 980, 765, true);
-    replaceTest("\\req", "| false", 565, 480, true);
+    replaceTest("requi", "| false", 565, 480, true);
     replaceTest("\\a", "~tr", 386, 209, true);
     replaceTest("~(~f", "e)", 593, noChange, true);
     replaceTest("rt (tr", "ue) &", 905, noChange, true);
@@ -220,11 +220,11 @@ public final class ManualTests {
     replaceTest("ldc", "~", 47, noChange, true);
     replaceTest("requires", "true", 536, 599, true);
     replaceTest("res (", "e))", 183, 25, true);
-    replaceTest("~(~false", "\\req", 542, 517, true);
+    replaceTest("~(~false", "requi", 542, 517, true);
     replaceTest("invariant", "requires", 654, 765, true);
     replaceTest("rt false", " && (", 191, 830, true, "");
-    replaceTest("~(~(~(~", "\\a", 574, 431, true,
-                "false)))\n\\assert true\n * ");
+    //replaceTest("~(~(~(~", "\\a", 574, 431, true,
+    //            "false)))\n\\assert true\n * ");
     replaceTest("(20)", "\n3:", 638, noChange, false, "\n/* \\assert false");
     replaceTest("(20)", "\n3:", 286, 993, true, "\n/* \\assert false */");
     replaceTest("(20)", "\n3:", 442, 993, true, "\n  /* \\assert false */  ");
@@ -238,12 +238,12 @@ public final class ManualTests {
     // TODO current BML-annotated .class file format don't support
     // storeing minor munber, so diffrent bytecodes are equal after saving.
     ignoreSaveLoadFailure = true;
-    replaceTest("(26)\n/* \n * ", " * \\assert ((", 917, 65, true,
-                "\\loop specification\n *   \\modifies nothing\n");
+    replaceTest("(26)\n/*@ \n @ ", " @ assert ((", 917, 65, true,
+                "loop specification\n @   modifies \\nothing\n");
     ignoreSaveLoadFailure = true;
     replaceTest(
-                "(26)\n/* \n * ",
-                " * \\assert ((",
+                "(26)\n/*@ \n @ ",
+                " @ assert ((",
                 200,
                 879,
                 true,
@@ -270,7 +270,7 @@ public final class ManualTests {
   @SuppressWarnings("deprecation")
   public static BCClass createSampleClass() throws ClassNotFoundException,
       ReadAttributeException {
-    MLog.putMsg(MLog.PInfo, xxx);
+    MLog.putMsg(MLog.LEVEL_PINFO, xxx);
     bcc = new BCClass(Paths.path, "test.Empty2");
     final BCMethod m1 = bcc.getMethod(2);
     final BCMethod m2 = bcc.getMethod(3);
@@ -316,8 +316,10 @@ public final class ManualTests {
       final BCMethod m = bcc.getMethod(i);
       final InstructionHandle[] ihs = m.getInstructions()
           .getInstructionHandles();
-      m.setMspec(new MethodSpecification(m, getSampleFormula(2 * i + 1, 0),
-                                         new SpecificationCase[0]));
+      SpecificationCase[] specCase = new SpecificationCase[1];
+      specCase[0] = new SpecificationCase(m, getSampleFormula(2 * i + 1, 0),
+                                          null, null, null);
+      m.setMspec(new MethodSpecification(m, specCase));
       m.addAttribute(new SingleAssert(m, ihs[0], 0, getSampleFormula(2 * i + 2,
                                                                      0)));
       m.addAttribute(new SingleAssert(m, ihs[2], 0, getSampleFormula(2 * i + 2,
@@ -545,8 +547,8 @@ public final class ManualTests {
   public static void main(final String[] args) {
     try {
       //      addRemoveTest();
-      codeReplaceTest();
-      //      variableSearchTest();
+      //codeReplaceTest();
+            variableSearchTest();
       //      pp_test();
       //      iterTest();
       //      desugarTest();
@@ -670,7 +672,7 @@ public final class ManualTests {
                                   final boolean correct, final String newCode)
       throws ClassNotFoundException, ReadAttributeException {
     final int oldMask = MLog.getLogMask();
-    MLog.setLogMask(MLog.PERRORS);
+    MLog.setLogMask(MLog.MASK_PERRORS);
     bcc = createSampleClass2();
     code = bcc.printCode();
     MLog.setLogMask(oldMask);
@@ -705,7 +707,7 @@ public final class ManualTests {
         errc++;
       }
     } else {
-      MLog.setLogMask(MLog.PERRORS);
+      MLog.setLogMask(MLog.MASK_PERRORS);
       bcc.saveJC();
       bcc = new BCClass(bcc.getJC());
       final String code2 = bcc.printCode();
@@ -791,7 +793,7 @@ public final class ManualTests {
     }
     final int oldMask = MLog.getLogMask();
     if (!goDisplayAllMessages) {
-      MLog.setLogMask(MLog.PERRORS);
+      MLog.setLogMask(MLog.MASK_PERRORS);
     }
     CodeFragment cf = new CodeFragment(bcc, code);
     final int cfrom = code.indexOf(from) + from.length();

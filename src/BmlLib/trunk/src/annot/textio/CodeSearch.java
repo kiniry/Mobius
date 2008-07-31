@@ -3,8 +3,8 @@ package annot.textio;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.bcclass.BCClass;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 
 /**
  * This ugly class computes initial attribute positions
@@ -68,9 +68,9 @@ public final class CodeSearch {
       }
       int pos = code.indexOf(lc);
       if (pos  <  0) {
-        MLog.putMsg(0, all[a].getLast_code());
-        MLog.putMsg(0, lc);
-        MLog.putMsg(0, code);
+        MLog.putMsg(MLog.LEVEL_PDEBUG, all[a].getLast_code());
+        MLog.putMsg(MLog.LEVEL_PDEBUG, lc);
+        MLog.putMsg(MLog.LEVEL_PDEBUG, code);
         throw new RuntimeException("attribute's code not found!");
       }
       code = code.substring(0, pos) + clear(lc) +
@@ -84,7 +84,7 @@ public final class CodeSearch {
       }
       final int start = Parsing.lineAt(code, pos + 1);
       final int end = Parsing.lineAt(code, pos2);
-      MLog.putMsg(MessageLog.PNotice, a + ": " + start + "--" + end);
+      MLog.putMsg(MessageLog.LEVEL_PNOTICE, a + ": " + start + "--" + end);
     }
   }
 }

@@ -63,16 +63,17 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * A constructor from attributeReader, for use in class
    * loading only.
    *
-   * @param abcc - BCClass containing this invariant,
+   * @param classRepresentation - BCClass containing this invariant,
    * @param ar - {@link AttributeReader} to load invariant from, it is
    *   in a position right after the length field of the attribute
    * @throws ReadAttributeException - if data left
    *     in <code>ar</code> doesn't represent correct
    *     class invariant.
    */
-  public ClassInvariant(final BCClass abcc, final AttributeReader ar)
+  public ClassInvariant(final BCClass classRepresentation,
+                        final AttributeReader ar)
     throws ReadAttributeException {
-    this.bcc = abcc;
+    this.bcc = classRepresentation;
     this.access_flags = ar.readShort();
     this.isInstance = (this.access_flags & AttributeFlags.ACC_STATIC) == 0;
     this.invariant = new ExpressionRoot < AbstractFormula > (this,

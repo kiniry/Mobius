@@ -510,7 +510,7 @@ public abstract class BCExpression {
       lvlinc = false;
     }
     if (lvlinc) {
-      str += DisplayStyle.expr_block_start;
+      str += DisplayStyle.BLOCK_EXPR_START;
     }
     String sub = printCode1(conf);
     if (this.subExpr.length == 1 &&
@@ -523,7 +523,7 @@ public abstract class BCExpression {
     }
     str += sub;
     if (lvlinc) {
-      str += DisplayStyle.expr_block_end;
+      str += DisplayStyle.BLOCK_EXPR_END;
     }
     boolean addParenthness = this.priority  >  rp;
     int chn = this.childNo;
@@ -551,9 +551,9 @@ public abstract class BCExpression {
         if (ch == ' ' || ch == '\n' || ch == '*') {
           str2 += ch;
         } else {
-          str2 += DisplayStyle.expr_block_start + "(" +
+          str2 += DisplayStyle.BLOCK_EXPR_START + "(" +
             str.substring(i, str.length()) + ")" +
-            DisplayStyle.expr_block_end;
+            DisplayStyle.BLOCK_EXPR_END;
           break;
         }
       }

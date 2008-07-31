@@ -40,8 +40,8 @@ public class SimplePrettyPrinter extends AbstractPrettyPrinter {
     int pos = spos - DisplayStyle.LINE_INDENT_STRING.length();
     for (int i = 0; i  <  str.length(); i++) {
       final char ch = str.charAt(i);
-      if (ch == DisplayStyle.expr_block_start) {
-      } else if (ch == DisplayStyle.expr_block_end) {
+      if (ch == DisplayStyle.BLOCK_EXPR_START) {
+      } else if (ch == DisplayStyle.BLOCK_EXPR_END) {
         ret += token;
         token = "";
       } else if (pos  >  width) {

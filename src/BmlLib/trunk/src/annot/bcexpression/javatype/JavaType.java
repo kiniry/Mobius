@@ -4,8 +4,8 @@ import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.Type;
 
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.bcexpression.BCExpression;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
@@ -106,7 +106,7 @@ public abstract class JavaType extends BCExpression {
       }
       return new JavaReferenceType(name);
     } catch (final ClassFormatException cfe) {
-      MLog.putMsg(MessageLog.PWarning, "invalid type name");
+      MLog.putMsg(MessageLog.LEVEL_PWARNING, "invalid type name");
       //XXX shouldn't it return null?
       return new JavaReferenceType(name);
     }

@@ -78,7 +78,7 @@ public class BCConstantPool {
       }
     }
     if (bytes != null) {
-      MLog.putMsg(MessageLog.PNotice, "second constant pool detected.");
+      MLog.putMsg(MessageLog.LEVEL_PNOTICE, "second constant pool detected.");
       final DataInputStream file = new DataInputStream(
         new ByteArrayInputStream(bytes));
       try {
@@ -200,7 +200,7 @@ public class BCConstantPool {
    * secondary constant pool.
    */
   public void reset() {
-    MLog.putMsg(MessageLog.PProgress, "clearing second constant pool");
+    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "clearing second constant pool");
     this.constants = new Vector < Constant > ();
     final ConstantPoolGen cpg = new ConstantPoolGen(this.jc.getConstantPool());
     addStandardConstants(cpg);

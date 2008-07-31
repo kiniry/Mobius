@@ -1,7 +1,7 @@
 package annot.bcexpression.util;
 
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.bcexpression.BCExpression;
 import annot.io.Code;
 
@@ -29,7 +29,7 @@ public class DesugarWalker extends ExpressionWalker {
     if (expr.getConnector() == Code.NOT) {
       if (expr.getSubExpr(0).getConnector() == Code.NOT) {
         expr.replaceWith(expr.getSubExpr(0).getSubExpr(0));
-        MLog.putMsg(MessageLog.PInfo, expr + " ~~~~~ >  " +
+        MLog.putMsg(MessageLog.LEVEL_PINFO, expr + " ~~~~~ >  " +
                     expr.getSubExpr(0).getSubExpr(0));
         incChanges();
       }

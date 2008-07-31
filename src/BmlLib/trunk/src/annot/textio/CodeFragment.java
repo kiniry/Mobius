@@ -142,7 +142,7 @@ public class CodeFragment {
       return false;
     }
     if (code.indexOf("\nEOD\n")  <  0) {
-      MLog.putMsg(MLog.PInfo, "no EOD found");
+      MLog.putMsg(MLog.LEVEL_PINFO, "no EOD found");
       return false;
     }
     final String[] lines = code.split("\n");
@@ -159,7 +159,7 @@ public class CodeFragment {
       }
       if (isCommentStart(line)) {
         if (inComment) {
-          MLog.putMsg(MLog.PInfo, "line " + l +
+          MLog.putMsg(MLog.LEVEL_PINFO, "line " + l +
                       ": invalid comment parenthness: /*/*");
           return false;
         }
@@ -168,7 +168,7 @@ public class CodeFragment {
       if (inComment) {
         if ("mthod".equals(kw) || "class".equals(kw) || "package".equals(kw) ||
             isNumber(kw)) {
-          MLog.putMsg(MLog.PInfo, "invalid keyword in comment: " + kw);
+          MLog.putMsg(MLog.LEVEL_PINFO, "invalid keyword in comment: " + kw);
           return false;
         }
         if (isAttributeStr(kw)) {
@@ -178,13 +178,13 @@ public class CodeFragment {
         }
       } else {
         if (isAttributeStr(kw)) {
-          MLog.putMsg(MLog.PInfo, "invalid keyword outside comment");
+          MLog.putMsg(MLog.LEVEL_PINFO, "invalid keyword outside comment");
           return false;
         }
       }
       if (isCommentEnd(line)) {
         if (!inComment) {
-          MLog.putMsg(MLog.PInfo, "invalid comment parenthness: */*/");
+          MLog.putMsg(MLog.LEVEL_PINFO, "invalid comment parenthness: */*/");
           return false;
         }
         inComment = false;
@@ -238,7 +238,8 @@ public class CodeFragment {
             last_boc = -1;
           } else if (isAttributeStr(kw)) {
             if (last_eoc == -1) {
-              MLog.putMsg(MLog.PNotice, "attribute keyword outside comment");
+              MLog.putMsg(MLog.LEVEL_PNOTICE,
+                          "attribute keyword outside comment");
               return null;
             }
             lines[last_eoc] += "\nEOD";
@@ -271,8 +272,8 @@ public class CodeFragment {
     for (int l = 0; l  <  lines.length; l++) {
       newCode += lines[l] + "\n";
     }
-    MLog.putMsg(MLog.PDebug, ManualTests.xxx);
-    MLog.putMsg(MLog.PDebug, "newCode:\n" + newCode);
+    MLog.putMsg(MLog.LEVEL_PDEBUG, ManualTests.xxx);
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "newCode:\n" + newCode);
     return newCode;
   }
 
@@ -616,7 +617,7 @@ public class CodeFragment {
     int lnr = alnr;
     int lpos = alpos;
     if (code.indexOf("\n")  <  0) {
-      MLog.putMsg(MLog.PInfo, "code too short");
+      MLog.putMsg(MLog.LEVEL_PINFO, "code too short");
       return null;
     }
     final CodePosition cpos = new CodePosition();
@@ -875,7 +876,7 @@ public class CodeFragment {
   public void modify(final int cfrom, final int length, final String nc) {
     addChange(cfrom, length, nc);
     performChanges();
-    MLog.putMsg(MLog.PInfo, toString());
+    MLog.putMsg(MLog.LEVEL_PINFO, toString());
     if (this.correct) {
       resetChanges();
     }
@@ -895,7 +896,7 @@ public class CodeFragment {
     this.correct = true;
     this.errMsg = "";
     if (goShowDecoratedCode) {
-      MLog.putMsg(MLog.PInfo, decorate(this.code));
+      MLog.putMsg(MLog.LEVEL_PINFO, decorate(this.code));
     }
     //DONE compute positions of affected code
     final CodePosition cp_start = where(this.code, this.begin);
@@ -904,7 +905,8 @@ public class CodeFragment {
     if (cp_old == null) {
       if (!checkParenthness(decorate(this.oldCode))) {
         if (cp_start != null) {
-          MLog.putMsg(MLog.PNotice, "code has just became correct enough" +
+          MLog.putMsg(MLog.LEVEL_PNOTICE,
+                      "code has just became correct enough" +
                       " to attempt to parse it.");
           cp_old = cp_new;
         }
@@ -920,10 +922,10 @@ public class CodeFragment {
     if (cp_new != null) {
       this.cp_hash += cp_new.hash();
     }
-    MLog.putMsg(MLog.PInfo, "changes positions:");
-    MLog.putMsg(MLog.PInfo, "begin  : " + cp_start);
-    MLog.putMsg(MLog.PInfo, "old end: " + cp_old);
-    MLog.putMsg(MLog.PInfo, "new end: " + cp_new);
+    MLog.putMsg(MLog.LEVEL_PINFO, "changes positions:");
+    MLog.putMsg(MLog.LEVEL_PINFO, "begin  : " + cp_start);
+    MLog.putMsg(MLog.LEVEL_PINFO, "old end: " + cp_old);
+    MLog.putMsg(MLog.LEVEL_PINFO, "new end: " + cp_new);
     if (cp_start == null || cp_old == null || cp_new == null) {
       showMsg("couldn't find codePositions due to syntax errors");
       this.correct = false;
@@ -1071,7 +1073,7 @@ public class CodeFragment {
       }
     }
     final String shortCode = linesToString(lines);
-    MLog.putMsg(MLog.PInfo, "code to be parsed:\n" + shortCode);
+    MLog.putMsg(MLog.LEVEL_PINFO, "code to be parsed:\n" + shortCode);
     if (goDisableParser) {
       return;
     }
@@ -1118,7 +1120,7 @@ public class CodeFragment {
    * @param msg
    */
   private void showMsg(final String msg) {
-    MLog.putMsg(MLog.PInfo, msg);
+    MLog.putMsg(MLog.LEVEL_PINFO, msg);
     this.errMsg = msg;
   }
 
@@ -1185,7 +1187,7 @@ public class CodeFragment {
                                   final int cto) {
     //       oooooo
     // nnnn
-    MLog.putMsg(MLog.PDebug, "branch no 1");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 1");
     this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove;
     this.toAdd = nc + this.code.substring(cto, this.begin) + this.toAdd;
     this.begin = cfrom;
@@ -1200,7 +1202,7 @@ public class CodeFragment {
                                     final int cto) {
     //       oooooo
     //    nnnnnn
-    MLog.putMsg(MLog.PDebug, "branch no 2");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 2");
     this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove;
     this.toAdd = nc + this.toAdd.substring(cto - this.begin);
     this.begin = cfrom;
@@ -1215,7 +1217,7 @@ public class CodeFragment {
                                 final int cto) {
     //       oooooo
     //    nnnnnnnnnnn
-    MLog.putMsg(MLog.PDebug, "branch no 3");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 3");
     this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove +
       this.code.substring(this.end, cto);
     this.toAdd = nc;
@@ -1232,7 +1234,7 @@ public class CodeFragment {
                                   final int cto) {
     //       oooooo
     //               nnnn
-    MLog.putMsg(MLog.PDebug, "branch no 6");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 6");
     this.toRemove = this.toRemove + this.code.substring(this.end, cto);
     this.toAdd = this.toAdd + this.code.substring(this.end, cfrom) + nc;
     this.end = cto;
@@ -1247,7 +1249,7 @@ public class CodeFragment {
                                     final int cto) {
     //       oooooo
     //         nnnnnnn
-    MLog.putMsg(MLog.PDebug, "branch no 5");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 5");
     this.toRemove = this.toRemove + this.code.substring(this.end, cto);
     this.toAdd = this.toAdd.substring(0, cfrom - this.begin) + nc;
     this.end = cto;
@@ -1262,7 +1264,7 @@ public class CodeFragment {
                                 final int cto) {
     //       oooooo
     //         nn
-    MLog.putMsg(MLog.PDebug, "branch no 4");
+    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 4");
     this.toAdd = this.toAdd.substring(0, cfrom - this.begin) + nc +
       this.toAdd.substring(cto - this.begin);
   }

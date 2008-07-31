@@ -5,8 +5,8 @@ import org.apache.bcel.generic.InstructionHandle;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.bcexpression.ExpressionRoot;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
@@ -63,7 +63,8 @@ public abstract class BCPrintableAttribute {
     if (pa.getClass() == this.getClass()) {
       replaceWith(pa);
     } else {
-      MLog.putMsg(MessageLog.PNotice, "**** attribute's class changed ****");
+      MLog.putMsg(MessageLog.LEVEL_PNOTICE,
+                  "**** attribute's class changed ****");
       // XXX untested
       remove();
       if (m == null) {

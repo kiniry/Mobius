@@ -163,7 +163,7 @@ public class QuantifiedFormula extends AbstractFormula {
   @Override
   protected String printCode1(final BMLConfig conf) {
     String code = printRoot();
-    code += DisplayStyle.expr_block_start;
+    code += DisplayStyle.BLOCK_EXPR_START;
     final Iterator < BoundVar >  iter = this.vars.iterator();
     while (iter.hasNext()) {
       final BoundVar bv = iter.next();
@@ -172,7 +172,7 @@ public class QuantifiedFormula extends AbstractFormula {
       code += " " + bv.printCode1(conf); // !
     }
     code += "; ";
-    code += DisplayStyle.expr_block_end;
+    code += DisplayStyle.BLOCK_EXPR_END;
     String str = getSubExpr(0).printCode(conf);
     if (DisplayStyle.go3argQuantifiers) {
       str = str.substring(1, str.length() - 1);

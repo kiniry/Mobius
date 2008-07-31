@@ -177,15 +177,15 @@ public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
     String sub = "";
     for (int p = 0; p  <  str.length(); p++) {
       final char ch = str.charAt(p);
-      if (ch == DisplayStyle.expr_block_start) {
+      if (ch == DisplayStyle.BLOCK_EXPR_START) {
         if (level == 0) {
           v.add(sub);
           sub = "";
         } else {
-          sub += DisplayStyle.expr_block_start;
+          sub += DisplayStyle.BLOCK_EXPR_START;
         }
         level++;
-      } else if (ch == DisplayStyle.expr_block_end) {
+      } else if (ch == DisplayStyle.BLOCK_EXPR_END) {
         level--;
         if (level  <  0) {
           throw new RuntimeException(str.substring(0, p) + "#" +
@@ -195,7 +195,7 @@ public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
           v.add(sub);
           sub = "";
         } else {
-          sub += DisplayStyle.expr_block_end;
+          sub += DisplayStyle.BLOCK_EXPR_END;
         }
       } else {
         sub += ch;
@@ -210,7 +210,7 @@ public class AdvancedPrettyPrinter extends AbstractPrettyPrinter {
       if (result.length  <  2) {
         return result;
       }
-      if (result[1].indexOf(DisplayStyle.expr_block_start)  <  0) {
+      if (result[1].indexOf(DisplayStyle.BLOCK_EXPR_START)  <  0) {
         return result;
       }
       final String[] nr = splitRoot(result[1]);

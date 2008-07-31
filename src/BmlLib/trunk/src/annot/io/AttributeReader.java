@@ -6,13 +6,15 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
+import bmllib.utils.NumberUtils;
+
 import annot.attributes.ClassInvariant;
 import annot.attributes.MethodSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
 import annot.bcexpression.ArrayLength;
@@ -107,11 +109,11 @@ public class AttributeReader {
   /**
    * A Constructor used for reading class attributes.
    *
-   * @param abcc - class that read attributes should be
+   * @param classRepresentation - class that read attributes should be
    * attached to.
    */
-  public AttributeReader(final BCClass abcc) {
-    this.bcc = abcc;
+  public AttributeReader(final BCClass classRepresentation) {
+    this.bcc = classRepresentation;
     this.bvars = new Vector < BoundVar > ();
   }
 
@@ -207,23 +209,24 @@ public class AttributeReader {
     this.length = ua.getLength();
     this.pos = 0;
     if (aname.equals(DisplayStyle.__mspec)) {
-      MLog.putMsg(MessageLog.PInfo, "    reading attribute: " +
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.__mspec);
       this.method.setMspec(new MethodSpecification(this.method, this));
     } else if (aname.equals(DisplayStyle.__classInvariant)) {
-      MLog.putMsg(MessageLog.PInfo, "    reading attribute: " +
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.__classInvariant);
       this.bcc.setInvariant(new ClassInvariant(this.bcc, this));
     } else if (aname.equals(DisplayStyle.__assertTable)) {
-      MLog.putMsg(MessageLog.PInfo, "    reading attribute: " +
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.__assertTable);
       this.method.getAmap().getAtab().load(this);
     } else if (aname.equals(DisplayStyle.__loopSpecTable)) {
-      MLog.putMsg(MessageLog.PInfo, "    reading attribute: " +
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.__loopSpecTable);
       this.method.getAmap().getLstab().load(this);
     } else {
-      MLog.putMsg(MessageLog.PTodo, "    unrecognized attribute: " + aname);
+      MLog.putMsg(MessageLog.LEVEL_PTODO,
+                  "    unrecognized attribute: " + aname);
       return;
     }
     if (this.pos != this.length) {
@@ -253,7 +256,7 @@ public class AttributeReader {
    */
   public int readByte() throws ReadAttributeException {
     chkRange(1);
-    final int b = this.input[this.pos] & 0xff;
+    final int b = this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK;
     this.pos++;
     return b;
   }
@@ -383,12 +386,15 @@ public class AttributeReader {
    *     bytes in the stream to read an int.
    */
   public int readInt() throws ReadAttributeException {
-    chkRange(4);
-    int i = (this.input[this.pos] & 0xff)  <<  24;
-    i += (this.input[this.pos + 1] & 0xff)  <<  16;
-    i += (this.input[this.pos + 2] & 0xff)  <<  8;
-    i += this.input[this.pos + 3] & 0xff;
-    this.pos += 4;
+    chkRange(NumberUtils.INTEGER_IN_BYTES);
+    int i = (this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK)  <<
+      NumberUtils.THREE_BYTES_SIZE;
+    i += (this.input[this.pos + 1] & NumberUtils.LOWEST_BYTE_MASK)  <<
+      NumberUtils.TWO_BYTES_SIZE;
+    i += (this.input[this.pos + 2] & NumberUtils.LOWEST_BYTE_MASK)  <<
+      NumberUtils.ONE_BYTE_SIZE;
+    i += this.input[this.pos + 3] & NumberUtils.LOWEST_BYTE_MASK;
+    this.pos += NumberUtils.INTEGER_IN_BYTES;
     return i;
   }
 
@@ -430,8 +436,10 @@ public class AttributeReader {
    */
   public int readShort() throws ReadAttributeException {
     chkRange(2);
-    final int s = ((this.input[this.pos] & 0xff)  <<  8) +
-      (this.input[this.pos + 1] & 0xff);
+    final int s =
+      ((this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK)  <<
+          NumberUtils.ONE_BYTE_SIZE) +
+      (this.input[this.pos + 1] & NumberUtils.LOWEST_BYTE_MASK);
     this.pos += 2;
     return s;
   }

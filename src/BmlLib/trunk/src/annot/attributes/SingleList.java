@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.bcclass.BCMethod;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
@@ -161,7 +161,7 @@ public class SingleList implements Comparable < SingleList >  {
     int pos = 0;
     for (int i = 0; i  <  all.length; i++) {
       if ((all[i].aType() & types)  >  0) {
-        MLog.putMsg(MessageLog.PDebug, all[i].getPC() + "; " +
+        MLog.putMsg(MessageLog.LEVEL_PDEBUG, all[i].getPC() + "; " +
                     all[i].getMinor());
         filtered[pos++] = all[i];
       }

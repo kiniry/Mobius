@@ -15,90 +15,96 @@ public class MessageLog {
   /**
    * Displays all messages.
    */
-  public static final int PALL = 511;
+  public static final int MASK_PALL = 511;
 
   /**
    * For debug message that appear frequently,
    * trashing the console.
    */
-  public static final int PDebug = 2;
+  public static final int LEVEL_PDEBUG = 2;
 
   /**
    * Displays almost all messages.
    */
-  public static final int PDEBUG = 510;
+  public static final int MASK_PDEBUG = 510;
 
   /**
    * For debug message that appear very frequently
    * (or that are very long), slowing down the library.
    */
-  public static final int PDebug2 = 1;
+  public static final int LEVEL_PDEBUG2 = 1;
 
   /**
    * For displaying error messages.
    */
-  public static final int PError = 256;
+  public static final int LEVEL_PERROR = 256;
 
   /**
    * Displays only error and warning messages.
    */
-  public static final int PERRORS = 384;
+  public static final int MASK_PERRORS = 384;
 
   // message types (priorities) - higher message type value,
   // higher it's priority:
 
   /**
-   * For debug message that occures about once per
+   * For debug message that occur about once per
    * attribute operation (adding / modifying / removing
    *  / saving / loading / etc).
    */
-  public static final int PInfo = 4;
+  public static final int LEVEL_PINFO = 4;
 
   /**
    * Displays no messages.
    */
-  public static final int PNONE = 0;
+  public static final int MASK_PNONE = 0;
 
   /**
    * Normal verbosity level for developing
    * <code>bmllib</code>.
    */
-  public static final int PNORMAL = 492;
+  public static final int MASK_PNORMAL = 492;
 
   /**
    * For debug message that appears rarely, about once per
    * class operation (saving / loading / etc).
    */
-  public static final int PNotice = 8;
+  public static final int LEVEL_PNOTICE = 8;
 
   /**
-   * For displaying messages while parsing with ANTLR
+   * For displaying messages while parsing with ANTLR.
    */
-  public static final int PParser = 16;
+  public static final int LEVEL_PPARSER = 16;
 
   /**
    * Normal verbosity level for developing
    * <code>bmllib</code> + displays parser
    * failures and parsing progress.
    */
-  public static final int PPARSER = 508;
+  public static final int MASK_PPARSER = 508;
 
   /**
-   * For displaing progress while saving / loading
+   * For displaying progress while saving / loading.
    */
-  public static final int PProgress = 32;
+  public static final int LEVEL_PPROGRESS = 32;
 
   /**
    * Indicates that it's time to implement missing
    * code branch to make this test case run correctly.
    */
-  public static final int PTodo = 64;
+  public static final int LEVEL_PTODO = 64;
 
   /**
    * For displaying warning messages, eg. in situations in
    * which we are not certain what to do or that shouldn't
    * happen, but we're prepared for them.
    */
-  public static final int PWarning = 128;
+  public static final int LEVEL_PWARNING = 128;
 
+  /**
+   * An empty protected constructor to disallow the creation of instances
+   * and allow private constructors in subclasses.
+   */
+  protected MessageLog() {
+  }
 }

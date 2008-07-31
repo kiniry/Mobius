@@ -8,8 +8,8 @@ import org.apache.bcel.generic.ConstantPoolGen;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.bcclass.BCClass;
-import annot.bcclass.MessageLog;
 import annot.bcclass.MLog;
+import annot.bcclass.MessageLog;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.CodeFragment;
@@ -493,7 +493,7 @@ public final class AutomatedTests {
     at = bcc.getAllAttributes(AType.C_ALL);
     final String code = bcc.printCode();
     oldMask = MLog.getLogMask();
-    MLog.setLogMask(MessageLog.PERRORS);
+    MLog.setLogMask(MessageLog.MASK_PERRORS);
     if (goShowBytecode) {
       System.out.println(code);
     }
