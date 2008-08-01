@@ -133,6 +133,7 @@ public class CertificateWriter implements ClassCertificateVisitor {
 
     /**
      * end().
+     * Does not have to be called.
      */
     @Override
     public void end() {

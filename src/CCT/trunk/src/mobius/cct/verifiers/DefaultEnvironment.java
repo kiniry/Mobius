@@ -55,11 +55,6 @@ public class DefaultEnvironment<C extends ClassFile>
   private final Cache<CertificateCollector<C>> fCache; 
   
   /**
-   * Cache of class files.
-   */
-  private final Cache<C> fClassCache;
-  
-  /**
    * Set of active verification requests.
    */
   private final Set<VerificationRequest> fActive;
@@ -109,7 +104,6 @@ public class DefaultEnvironment<C extends ClassFile>
     fLogger = new DefaultLogger();
     fParser = new DefaultCertificateParser<C>();
     fCache = new InfiniteCache<CertificateCollector<C>>();
-    fClassCache = new InfiniteCache<C>();
     fActive = new HashSet<VerificationRequest>();
     fVerified = new HashSet<VerificationRequest>();
     fVerifiers = new VerifierMap<C>();
@@ -166,14 +160,7 @@ public class DefaultEnvironment<C extends ClassFile>
   @Override
   public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException {
-    final String n = name.internalForm();
-    if (fClassCache.hasKey(n)) {
-      return fClassCache.lookup(n);
-    } else {
-      final C cls = fRepo.getClassFile(name);
-      fClassCache.update(n, cls);
-      return cls;
-    }
+    return fRepo.getClassFile(name);
   }
   
   /**
@@ -187,16 +174,7 @@ public class DefaultEnvironment<C extends ClassFile>
   @Override
   public C getCertificateFile(final ClassName name) 
     throws IOException {
-    final String n = "<CERT>" + name.internalForm();
-    if (fClassCache.hasKey(n)) {
-      return fClassCache.lookup(n);
-    } else {
-      final C cls = fRepo.getCertFile(name);
-      if (cls != null) {
-        fClassCache.update(n, cls);
-      }
-      return cls;
-    }
+    return fRepo.getCertFile(name);
   }
 
   /**
