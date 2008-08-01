@@ -8,6 +8,6 @@
 	<classpathentry kind="lib" path="lib/Javafe2.0.5.jar"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry kind="lib" path="lib/javac.jar"/>
-	<classpathentry kind="lib" path="lib/bico.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

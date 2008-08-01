@@ -30,13 +30,13 @@ public class MkfileGenerator extends MakefileGen {
     out.println("\t@echo Compiling the annotations files...");
     out.println("\t@echo ");
     out.println("\t@cd classes; make annot");
-    out.println("\tcoqc Bico_annotations.v");
+    out.println("\t$(COQC) Bico_annotations.v");
     // defs
     out.println("\ndefs: main  ");
     out.println("\t@echo ");
     out.println("\t@echo Compiling the definition file...");
     out.println("\t@echo ");
-    out.println("\tcoqc defs_types.v");
+    out.println("\t$(COQC) defs_types.v");
   }
   
   /** {@inheritDoc} */

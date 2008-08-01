@@ -7,12 +7,15 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
+import mobius.bico.Constants.Suffix;
 import mobius.bico.coq.CoqStream;
-import mobius.bico.dico.Dictionary;
+import mobius.bico.coq.LoadPath;
+import mobius.bico.dico.ADictionary;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.ClassesMakefileGen;
 import mobius.bico.executors.Executor;
 import mobius.bico.executors.MakefileGen;
+import mobius.bico.executors.NamingData;
 import mobius.bico.implem.MapImplemSpecif;
 import mobius.directVCGen.formula.Util;
 
@@ -68,18 +71,22 @@ public class AnnotationExecutor extends Executor {
   public void start() throws IOException, ClassNotFoundException {
     super.start(); // everything except the coffee
     
+    final NamingData data = getNamingData();
     // the coffee
-    final File typ = new File(getBaseDir(), getModuleName() + "_annotations" + suffix);
+    final File typ = new File(getBaseDir(), 
+                              data.getModuleName() + "_annotations" + 
+                              Suffix.COQ);
     final CoqStream out = new CoqStream(new FileOutputStream(typ));
-    out.println(libPath);
-    
+    for (String path: libPaths) {
+      out.addLoadPath(new LoadPath(path));
+    }
     final List<String> pathList = Util.findAllPath(new File(getBaseDir(), "classes"));
     for (String path: pathList) {
       out.println("Add LoadPath \"classes" + path + "\".");
     }
     
     out.println();
-    out.incPrintln("Module " + getModuleName() + "Annotations.");
+    out.incPrintln("Module " + data.getModuleName() + "Annotations.");
 
     // the already treated classes + interfaces
     for (ClassExecutor ce: getTreatedClasses()) {
@@ -92,7 +99,7 @@ public class AnnotationExecutor extends Executor {
     out.println("AnnoProg BicoProgram.program " +
         "BicoProgram.subclass program_spec.");
     out.decPrintln("");
-    out.endModule(getModuleName() + "Annotations");
+    out.endModule(data.getModuleName() + "Annotations");
     
   }
   
@@ -103,7 +110,7 @@ public class AnnotationExecutor extends Executor {
    */
   private void defineProgramSpecs(final CoqStream out) {
     out.incPrintln("Definition program_spec: MethSpecTab :=");
-    final Dictionary dico = getDico();
+    final ADictionary dico = getDico();
     final Collection<Integer> meths = dico.getMethods();
     
     for (int meth: meths) {

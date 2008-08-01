@@ -9,7 +9,6 @@ import javafe.util.Location;
 import mobius.bico.coq.CoqStream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
@@ -82,8 +81,8 @@ public final class AnnotationVisitor extends ABasicVisitor {
     }
     if (fAnnot.getAnnotPre(x) != null) {
       // let's do something else
-      final int lineNum = Location.toLineNumber(x.getStartLoc());
-      final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
+      //final int lineNum = Location.toLineNumber(x.getStartLoc());
+      //final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
       final List<AAnnotation> list = fAnnot.getAnnotPre(x);
       for (AAnnotation annot: list) {
         buildMker(annot);
@@ -124,55 +123,55 @@ public final class AnnotationVisitor extends ABasicVisitor {
    */
   private void buildDefiner(final AAnnotation annot) {
     String lets = "";
-    String vars = "";
     final Iterator<QuantVariableRef> iter = annot.getArgs().iterator();
     QuantVariableRef var;
     // olds
     var = iter.next(); // the old heap
-    final String olhname = Formula.generateFormulas(var).toString();
-    lets += "let " + olhname + " := (snd s0) in \n";
-    vars += olhname;
+    lets += "let " + Formula.generateFormulas(var) + " := (snd s0) in \n";
     
-    // now the variables
+    // now the old variables
     int varcount = 1;
     var = iter.next();
     
     while (!var.equals(Heap.var)) {
-      final String vname = Formula.generateFormulas(var).toString();
-      lets += "let " + vname + " := (do_lvget (fst s0) " + varcount + "%N) in ";
-      vars += " " + vname;
+      lets += "let " + Formula.generateFormulas(var) + " := " +
+                 "(do_lvget (fst s0) " + varcount + "%N) in ";
       var = iter.next();
       varcount++;
     }  
     lets += "\n";
     
-    // new :)
-    final String hname = Formula.generateFormulas(var).toString();
-    lets += "let " + hname + " :=  (fst (fst s)) in \n";
-    vars += " " + hname;
+    // new heap :)
+    lets += "let " + Formula.generateFormulas(var) + " :=  (fst (fst s)) in \n";
     
     // new variables
     varcount = 0;
     while (iter.hasNext()) {
       var = iter.next();
-      if (var.equals(Ref.varThis)) {
-        final String vname = Formula.generateFormulas(var).toString();
-        lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
-        vars += " " + vname;
-      }
-      else {
-        final String vname = Formula.generateFormulas(var).toString();
-        lets += "let " + vname + " := (do_lvget (snd s) " + varcount + "%N) in \n";
-        vars += " " + vname;
-      }
+      lets += "let " + Formula.generateFormulas(var) + " := " +
+                  "(do_lvget (snd s) " + varcount + "%N) in \n";
       varcount++;
     }
     
-    fOut.println("Definition " + annot.getName() + " (s0:InitState) " +
+    fOut.incPrintln("Definition " + annot.getName() + " (s0:InitState) " +
         "(s:LocalState): list Prop := ");
-    fOut.incTab();
-    fOut.println("(" + lets + "  mk_" + annot.getName() + " " +  vars + "):: nil.");
+    fOut.println("(" + lets + "  mk_" + annot.getName() + " " +  
+                 getVarsName(annot) + "):: nil.");
     fOut.decTab();
+  }
+
+  /**
+   * Returns a string containing the variable list that 
+   * shall be the arguments for the annotation.
+   * @param annot the annotation to inspect
+   * @return a string containing the variables name separated by a space
+   */
+  private String getVarsName(final AAnnotation annot) {
+    String vars = ""; 
+    for (QuantVariableRef var: annot.getArgs()) {
+      vars += " " + Formula.generateFormulas(var);
+    }
+    return vars.substring(1);
   }
 
 

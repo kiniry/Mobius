@@ -23,10 +23,21 @@ public class VarCorrDecoration extends ASTDecoration {
   /** the current instance initialized of the annotation decorations. */
   public static final VarCorrDecoration inst = new VarCorrDecoration();
 
+  /**
+   * Creates an instance.
+   */
   public VarCorrDecoration() {
     super("variables-bytecode-map");
   }
 
+  
+  /**
+   * Retrieve the variables which were previously registered 
+   * using the set method.
+   * 
+   * @param n the routine to get the variables from
+   * @return a list of variables, or null
+   */
   @SuppressWarnings("unchecked")
   public List<QuantVariableRef> get(final RoutineDecl n) {
     final List<QuantVariableRef> v = 
@@ -35,6 +46,13 @@ public class VarCorrDecoration extends ASTDecoration {
   }
   
   
+  /**
+   * Adds the methods variable list to a method declaration.
+   * 
+   * @param n the routine to annotate
+   * @param vars the variables
+   * @param old the variables that can turn old.
+   */
   public void set(final RoutineDecl n,
                   final Map<QuantVariableRef, LocalVariableGen> vars,
                   final List<QuantVariableRef> old) {

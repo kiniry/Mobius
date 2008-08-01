@@ -19,12 +19,14 @@ import escjava.tc.TypeCheck;
  */
 public class Main extends mobius.directVCGen.Main {
 
+
   /**
    * Create a main object from a base directory.
-   * @param basedir The directory where to stock all the files.
+   * @param basedir The directory where to stock all the files
+   * @param args the arguments given to the program
    */
-  public Main(File basedir, String[] escargs) {
-    super(basedir, escargs);
+  public Main(final File basedir, final String[] args) {
+    super(basedir, args);
   }
 
 
@@ -36,7 +38,6 @@ public class Main extends mobius.directVCGen.Main {
    */
   //@ requires td != null;
   //@ requires (* td is not from a binary file. *);
-  @SuppressWarnings("unchecked")
   public boolean processTD(final TypeDecl td) {
     final int errorCount = ErrorSet.errors;
 
@@ -94,7 +95,7 @@ public class Main extends mobius.directVCGen.Main {
       fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
-      final Main m = new Main(basedir, escargs);
+      new Main(basedir, escargs);
       
     }
     catch (IOException e1) {
