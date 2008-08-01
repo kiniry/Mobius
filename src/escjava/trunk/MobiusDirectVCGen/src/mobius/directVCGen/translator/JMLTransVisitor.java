@@ -57,41 +57,35 @@ public class JMLTransVisitor extends JmlVisitor {
      
   }
 
-
+  /** {@inheritDoc} */
   @Override
   public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, 
                                           final Object o) {
     return fTranslator.genericVarDecl(x, o);
   }
   
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitLiteralExpr(javafe.ast.LiteralExpr, java.lang.Object)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
     return fTranslator.literal(x, o);
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitVariableAccess(javafe.ast.VariableAccess, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
-  public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, final Object o) {
+  public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
+                                          final Object o) {
     return fTranslator.variableAccess(x, o);
 
   }
-
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitFieldAccess(javafe.ast.FieldAccess, java.lang.Object)
-   */
+  
+  /** {@inheritDoc} */
   @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
     return fTranslator.fieldAccess(x, o);
   }
   
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitNaryExpr(escjava.ast.NaryExpr, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public final Object visitNaryExpr(final /*@non_null*/ NaryExpr x, final Object o) {
     final ContextProperties prop = (ContextProperties) o;
@@ -114,35 +108,30 @@ public class JMLTransVisitor extends JmlVisitor {
     
   
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitInstanceOfExpr(javafe.ast.InstanceOfExpr, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
-  public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, final Object o) {
+  public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, 
+                                          final Object o) {
     return fTranslator.instanceOfExpr(x, o);
   }
 
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitThisExpr(javafe.ast.ThisExpr, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     return fTranslator.thisLiteral(x, o);
   }
 
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitResExpr(escjava.ast.ResExpr, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public final Object visitResExpr(final /*@non_null*/ ResExpr x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
     return fTranslator.resultLiteral(x, prop);
   }
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitExprDeclPragma(escjava.ast.ExprDeclPragma, java.lang.Object)
-   */
+  
+  /** {@inheritDoc} */
   @Override
-  public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, final Object o) {
+  public final Object visitExprDeclPragma(final /*@non_null*/ ExprDeclPragma x, 
+                                          final Object o) {
     
     Term t;
     final ContextProperties cprop = (ContextProperties) o;
@@ -184,9 +173,8 @@ public class JMLTransVisitor extends JmlVisitor {
     }
     return null;
   }
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitBinaryExpr(javafe.ast.BinaryExpr, java.lang.Object)
-   */
+  
+  /** {@inheritDoc} */
   @Override
   public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, 
                                       final Object o) {
@@ -272,9 +260,7 @@ public class JMLTransVisitor extends JmlVisitor {
 
   }
   
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitVarExprModifierPragma(escjava.ast.VarExprModifierPragma, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public final Object visitVarExprModifierPragma(final /*@non_null*/ VarExprModifierPragma x, 
                                                  final Object o) {
@@ -295,9 +281,8 @@ public class JMLTransVisitor extends JmlVisitor {
     return null;
   }
   
-  /* (non-Javadoc)
-   * @see escjava.ast.VisitorArgResult#visitExprModifierPragma(escjava.ast.ExprModifierPragma, java.lang.Object)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public final Object visitExprModifierPragma(final /*@non_null*/ ExprModifierPragma x, 
                                               final Object o) {
@@ -324,9 +309,8 @@ public class JMLTransVisitor extends JmlVisitor {
     }
     return null;
   }
-  /* (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitVarDeclStmt(javafe.ast.VarDeclStmt, java.lang.Object)
-   */
+
+  /** {@inheritDoc} */
   @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     //final MethodProperties prop = (MethodProperties) o;
@@ -342,12 +326,15 @@ public class JMLTransVisitor extends JmlVisitor {
     return ghostVar;
   }
   
+  /** {@inheritDoc} */
+  @Override
   public /*@non_null*/ Object visitQuantifiedExpr(final /*@non_null*/ QuantifiedExpr x, 
                                                   final Object o) {
     return fTranslator.quantifier(x, o);
   }
   
-  
+  /** {@inheritDoc} */
+  @Override
   public /*@non_null*/ Object visitUnaryExpr(final /*@non_null*/ UnaryExpr x, 
                                              final Object o) {
     Term res = (Term) visitExpr(x, o);

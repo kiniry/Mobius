@@ -285,7 +285,6 @@ public class JmlExprToFormula {
   }
 
   public Object asgbitand(final BinaryExpr expr, final Object o) {
-    
     return null;
   }
 
@@ -421,11 +420,12 @@ public class JmlExprToFormula {
     return res;
   }
 
+  @SuppressWarnings("unchecked")
   public Object fieldAccess(final FieldAccess fieldAccess, final Object o) {
-    ContextProperties prop = (ContextProperties) o;
+    final ContextProperties prop = (ContextProperties) o;
     if (prop.fresh) { 
       final QuantVariableRef qref = Expression.rvar(fieldAccess.decl);
-      final Set<Term> freshSet = (HashSet) ((ContextProperties)o).get("freshSet");
+      final Set<Term> freshSet = (HashSet<Term>) ((ContextProperties)o).get("freshSet");
       freshSet.add(qref);
       ((ContextProperties)o).put("freshSet", freshSet);
     }
@@ -501,7 +501,6 @@ public class JmlExprToFormula {
   }
 
   public Object thisLiteral(final ThisExpr x, final Object o) {
-    
     return Ref.varThis;
   }
 

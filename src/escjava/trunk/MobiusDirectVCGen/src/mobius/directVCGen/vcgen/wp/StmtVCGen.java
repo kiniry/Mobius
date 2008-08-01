@@ -27,7 +27,6 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.Identifier;
 import javafe.ast.IfStmt;
 import javafe.ast.LabelStmt;
-import javafe.ast.MethodDecl;
 import javafe.ast.ReturnStmt;
 import javafe.ast.RoutineDecl;
 import javafe.ast.SkipStmt;
@@ -204,10 +203,7 @@ public class StmtVCGen extends ExpressionVisitor {
     return vce.fPost;
   }
 
-  /*
-   * (non-Javadoc)
-   * @see javafe.ast.VisitorArgResult#visitStmt(javafe.ast.Stmt, java.lang.Object)
-   */
+  /** {@inheritDoc} */
   @Override
   public Object visitStmt(final Stmt x, final Object o) {
     throw new IllegalArgumentException("Not yet implememented");

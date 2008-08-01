@@ -487,6 +487,8 @@ public final class Util extends mobius.bico.Util {
     resName = resName.replace('?', '.');
     return resName;
   }
+  
+  
   public static boolean isGhostVar(final LocalVarDecl s) {
     for (final ModifierPragma p: s.pmodifiers.toArray()) {
       if (p.getTag() == TagConstants.GHOST) {
@@ -496,13 +498,25 @@ public final class Util extends mobius.bico.Util {
     return false;
   }
   
+  /**
+   * An oracle that determines if the given statement is
+   * a statement that represents a loop.
+   * @param s a statenent
+   * @return true if it is of the class WhileStmt ForStmt or DoStmt
+   */
   public static boolean isLoop(final Stmt s) {
     return s instanceof WhileStmt || 
         s instanceof ForStmt || 
         s instanceof DoStmt;
   }
   
-  
+  /**
+   * 
+   * @param s the expression to decrypt.
+   * @return if the expression is a Loop invariant clause,
+   * loop invariant redundantly, maintaining, maintaining 
+   * redundantly clause.
+   */
   public static boolean isInvariant(final ExprStmtPragma s) {
     final int tag = s.getTag();
     return tag == TagConstants.LOOP_INVARIANT ||

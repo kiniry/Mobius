@@ -15,7 +15,14 @@ public class CommentScanner extends Scanner {
 
   /** A factory for creating scanners. */
   public static class Factory extends Scanner.Factory {
-
+    /** 
+     * Create a new scanner factory.
+     * @param context 
+     */
+    protected Factory(final Context context) {
+      super(context);
+    }
+    
     public static void preRegister(final Context context) {
       context.put(scannerFactoryKey, new Context.Factory<Scanner.Factory>() {
         public Factory make() {
@@ -24,10 +31,7 @@ public class CommentScanner extends Scanner {
       });
     }
 
-    /** Create a new scanner factory. */
-    protected Factory(final Context context) {
-      super(context);
-    }
+    
 
     /** {@inheritDoc} */
     @Override
@@ -66,7 +70,7 @@ public class CommentScanner extends Scanner {
   }
 
   /** Starting position of the comment in original source. */
-  private int pos;
+  private int fPos;
 
   /** The comment input buffer, index of next chacter to be read,
    *  index of one past last character in buffer.
@@ -258,8 +262,8 @@ public class CommentScanner extends Scanner {
       processLineComment(style);
       return;
     }
-    pos = pos();
-    buf = getRawCharacters(pos, endPos());
+    fPos = pos();
+    buf = getRawCharacters(fPos, endPos());
     buflen = buf.length;
     bp = 0;
     col = 0;
@@ -467,8 +471,8 @@ public class CommentScanner extends Scanner {
       return;
     }
 
-    pos = pos();
-    buf = getRawCharacters(pos, endPos());
+    fPos = pos();
+    buf = getRawCharacters(fPos, endPos());
     buflen = buf.length;
     bp = 0;
     col = 0;

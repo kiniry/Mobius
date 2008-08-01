@@ -103,7 +103,6 @@ public class Main extends escjava.Main {
 
   private static void clear() {
     Lookup.clear();
-    
   }
 
   /**

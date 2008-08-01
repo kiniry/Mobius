@@ -1,7 +1,7 @@
 
 public class VW {
 
-	Audi audi;
-	int price;
-	
+  Audi audi;
+  int price;
+  
 }

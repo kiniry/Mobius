@@ -1,7 +1,7 @@
 
 public class Opel {
 
-	VW vw;
-	int year;
-	
+  VW vw;
+  int year;
+  
 }

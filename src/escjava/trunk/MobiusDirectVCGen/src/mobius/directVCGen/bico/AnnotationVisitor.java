@@ -60,7 +60,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
 
   }
 
-
+  /** {@inheritDoc} */
   public /*@non_null*/ Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
                                                final Object o) {
     if (x.body != null) {
@@ -70,14 +70,13 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
   
 
-
+  /** {@inheritDoc} */
+  @Override
   public Object visitASTNode(final ASTNode x, final Object o) {
     String res = (String)o;
-    
-    
     if (fAnnot.getAnnotPost(x) != null) {
       // let's do something
-
+      System.err.println("Post annotation are unhandled at the moment.");
     }
     if (fAnnot.getAnnotPre(x) != null) {
       // let's do something else
@@ -90,7 +89,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
       }
     }
     if (fAnnot.getInvariant(x) != null) {
-   
       // let's do a third thing
       final int lineNum = Location.toLineNumber(x.getStartLoc());
       final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
@@ -106,7 +104,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
     }
     
     final int max = x.childCount();
-
     for (int i = 0; i < max; i++) {
       final Object child = x.childAt(i);
       if (child instanceof ASTNode) {
@@ -194,9 +191,6 @@ public final class AnnotationVisitor extends ABasicVisitor {
     fOut.decTab();
   }
 
-  
-
-  
   /**
    * Returns the assertion enumeration.
    * @param out the file to dump the assertion definition to

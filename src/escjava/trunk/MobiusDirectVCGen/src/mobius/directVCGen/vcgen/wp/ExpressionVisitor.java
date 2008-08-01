@@ -245,7 +245,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   /**
    * We just get what is contained inside the paren expression.
    * @param x the parenthesised expr
-   * @param the current postcondition
+   * @param o the current postcondition
    * @return the wp of <code>x.expr</code>
    */
   @Override
