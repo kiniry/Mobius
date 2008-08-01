@@ -78,8 +78,11 @@ public final class Translator {
     /** corresponds to the string "End ". */ 
     END_DEFINITION("End "),
     /** corresponds to the string "Add LoadPath ". */ 
-    ADD_LOAD_PATH("Add LoadPath ");
-    
+    ADD_LOAD_PATH("Add LoadPath "),
+    /** corresponds to the string "(* ". */ 
+    LCOMMENT("(* "),  
+    /** corresponds to the string " *)". */ 
+    RCOMMENT(" *)");
     
     
     /** the string representing the keyword. */
@@ -210,5 +213,13 @@ public final class Translator {
   public static String addLoadPath(final LoadPath path, 
                           final File relativeTo) {
     return addLoadPath(new LoadPath(path.getRelative(relativeTo))); 
+  }
+  
+  /**
+   * @param str the string to put in the comments
+   * @return "<code>(* str *)</code>"
+   */
+  public static String comment(final String str) {
+    return Syntax.LCOMMENT + str + Syntax.RCOMMENT;
   }
 }

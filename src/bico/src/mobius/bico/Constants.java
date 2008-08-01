@@ -30,6 +30,13 @@ public final class Constants {
     public String toString() {
       return fStr;
     }
+    
+    /**
+     * @return the length of the string constant
+     */
+    public int length() {
+      return fStr.length();
+    }
   }
   
   /**

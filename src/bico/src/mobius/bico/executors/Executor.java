@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.Map.Entry;
 
-import mobius.bico.Constants;
 import mobius.bico.Util;
 import mobius.bico.coq.CoqStream;
 import mobius.bico.coq.LoadPath;
@@ -132,37 +131,12 @@ public class Executor extends ABasicExecutor {
    * @throws ClassNotFoundException if the main file or a dependency file cannot be found
    */
   public void doApplication() throws ClassNotFoundException, IOException {
-    collectClasses("");
+    Util.collectClasses(fSourceDir, "");
     System.out.println("There are " + fPendingClasses.size() + " classe(s) pending.");
     while (!fPendingClasses.isEmpty()) {
       handleClass(fPendingClasses.pop());
     }
   
-  }
-  
-  /**
-   * Treat all classes in the directory passed as value to the 
-   * input parameter <code>-lib</code>.
-   * 
-   * @param pkg the current package name
-   */
-  private void collectClasses(final String pkg) {
-    final File f = new File(fSourceDir, pkg);
-    final File[] classfiles = f.listFiles(new Util.ClassFilter());    
-    final File[] dirfiles = f.listFiles(new Util.DirectoryFilter());
-    
-    for (File cf: classfiles) {
-      String className = 
-        pkg + Util.removeClassSuffix(cf.getName()); 
-      className = className.replace(File.separatorChar,
-                                    Constants.JAVA_NAME_SEPARATOR);
-      fPendingClasses.add(className);
-    }
-    
-    for (File cf: dirfiles) {
-      final String p = pkg + cf.getName() + File.separatorChar;
-      collectClasses(p);
-    }
   }
   
   /**
@@ -528,17 +502,6 @@ public class Executor extends ABasicExecutor {
     }
     interfBody += " " + implem.interfaceEnd();
     out.definition("AllInterfaces", implem.interfaceType(), interfBody);
-  }
-  
-  /**
-   * Returns the name of the module, the content of the field
-   * {@link #fName}.
-   * 
-   * @return not null
-   * @deprecated use {@link #getNamingData()} instead
-   */
-  public String getModuleName() {
-    return fNamingData.getModuleName();
   }
   
   /**

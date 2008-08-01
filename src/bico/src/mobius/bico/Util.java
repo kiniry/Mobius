@@ -2,9 +2,11 @@ package mobius.bico;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Stack;
 
 
 import mobius.bico.Constants.Suffix;
+import mobius.bico.coq.Translator;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
@@ -25,11 +27,8 @@ public class Util {
   /** the size of a tab used in writeln. */
   public static final String TAB = "  ";
   
-  /**
-   */
-  protected Util() {
-  
-  }
+  /** */
+  protected Util() { }
   
   /**
    * Replaces all chars not accepted by coq by "_".
@@ -86,7 +85,7 @@ public class Util {
                                      final Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unimplemented " + instruction + ": " + name);
-    return upCase(name) + " (* Unimplemented *)";
+    return upCase(name) + " " + Translator.comment("Unimplemented");
   }
   
   /**
@@ -102,7 +101,7 @@ public class Util {
   public static String unknown(final String str, final Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unknown " + str + ": " + name);
-    return "Nop (* " + name + " *)";
+    return "Nop " + Translator.comment(name);
   }
   
   /**
@@ -129,7 +128,7 @@ public class Util {
   public static String unhandled(final String str, final Instruction ins) {
     final String name = ins.getName();
     System.err.println("Unhandled " + str + ": " + name);
-    return "Nop (* " + name + " *)";
+    return "Nop " + Translator.comment(name);
   }
   
   /**
@@ -183,7 +182,8 @@ public class Util {
     } 
     else {
       unhandled("Unhandled Type: ", t);
-      return "(ReferenceType (ObjectType javaLangObject (* " + t.toString() + " *) )";
+      return "(ReferenceType (ObjectType javaLangObject " + 
+      Translator.comment(t.toString()) + " )";
     }
   }
   
@@ -199,7 +199,7 @@ public class Util {
   public static String convertReferenceType(final ReferenceType type,
                                             final Repository repos) 
     throws ClassNotFoundException {
-    String convertedType;
+    final String convertedType;
     if (type instanceof ArrayType) {
       convertedType = "(ArrayType " + 
                         convertType(((ArrayType) type).getElementType(), repos) + ")";
@@ -215,7 +215,8 @@ public class Util {
         } 
         else {
           unhandled("ObjectType", type);
-          convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
+          convertedType = "(ObjectType javaLangObject " + 
+                        Translator.comment(type.toString()) + " )";
         }
       }
       catch (ClassNotFoundException e) {
@@ -233,7 +234,8 @@ public class Util {
     } 
     else {
       unhandled("ReferenceType", type);
-      convertedType = "(ObjectType javaLangObject (* " + type.toString() + " *) )";
+      convertedType = "(ObjectType javaLangObject " +
+                        Translator.comment(type.toString()) + " )";
     }
     return convertedType;
   }
@@ -250,7 +252,7 @@ public class Util {
     } 
     else {
       unhandled("BasicType", t);
-      return ("INT (* " + t.toString() + " *)");
+      return ("INT " + Translator.comment(t.toString()));
     }
   }
   
@@ -344,7 +346,7 @@ public class Util {
    */
   public static String removeCoqSuffix(final String coqfile) {
     return coqfile.substring(0, coqfile.length() - 
-                            ".v".length());
+                            Suffix.COQ.length());
   }
   
   /**
@@ -404,5 +406,35 @@ public class Util {
       }
     }
     return className;
+  }
+
+  /**
+   * Treat all classes in the directory passed as value to the 
+   * input parameter <code>-lib</code>.
+   * 
+   * @param sourceDir the source directory
+   * @param pkg the current package name
+   * 
+   * @return a stack containing all the classes that were collected
+   */
+  public static Stack<String> collectClasses(final File sourceDir,
+                                     final String pkg) {
+    final File f = new File(sourceDir, pkg);
+    final File[] classfiles = f.listFiles(new ClassFilter());    
+    final File[] dirfiles = f.listFiles(new DirectoryFilter());
+    final Stack<String> pendingClasses = new Stack<String>();
+    for (File cf: classfiles) {
+      String className = 
+        pkg + removeClassSuffix(cf.getName()); 
+      className = className.replace(File.separatorChar,
+                                    Constants.JAVA_NAME_SEPARATOR);
+      pendingClasses.add(className);
+    }
+    
+    for (File cf: dirfiles) {
+      final String p = pkg + cf.getName() + File.separatorChar;
+      pendingClasses.addAll(collectClasses(sourceDir, p));
+    }
+    return pendingClasses;
   }
 }
