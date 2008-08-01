@@ -120,7 +120,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Definition name: type := body.</code>".
+   * Prints "<code>Definition name: type := body.\n</code>".
    * @param name the name of the definition
    * @param type  the type of the definition
    * @param body the body of the definition
@@ -131,7 +131,7 @@ public class CoqStream extends Stream {
   }
   
   /**
-   * Prints "<code>Definition name := body.</code>".
+   * Prints "<code>Definition name := body.\n</code>".
    * @param name the name of the definition
    * @param body the body of the definition
    */

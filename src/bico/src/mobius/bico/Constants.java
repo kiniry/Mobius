@@ -38,22 +38,25 @@ public final class Constants {
    * @author J. Charles (julien.charles@inria.fr)
    */
   public static enum Option {
-    /** to have the map implementation. */
+    /** To have the map implementation. */
     MAP("-map"),
-    /** to have the list implementation. */
+    /** To have the list implementation. */
     LIST("-list"),
-    /** the base working class path. */
+    /** The base working class path. */
     CLASSPATH("-cp"),
-    /** the output directory. */
+    /** The output directory. */
     OUTPUT("-o"),
-    /** to show the help message. */
+    /** To show the help message. */
     HELP("-help"),
-    /** to tell the location of the bicolano jar. */
+    /** 
+     * Enables the java.lang library generation. 
+     * It implies the generation of most of the JRE. 
+     */
     LIB("-lib"), 
-    /** the option if all else fails. */
+    /** The option if all else fails. */
     UNKNOWN(""); 
     
-    /** the string representing the option. */
+    /** The string representing the option. */
     private final String fStr;
     
     /**

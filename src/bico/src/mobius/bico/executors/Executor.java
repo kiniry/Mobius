@@ -310,8 +310,6 @@ public class Executor extends ABasicExecutor {
       out.load(ce.getValue().getModuleName() + "_signature.v");
     }
     
-
-    
     out.endModule(fNamingData.getSignatureModule());
     out.close();
   
@@ -474,8 +472,6 @@ public class Executor extends ABasicExecutor {
     return ce;
   }
   
-
-  
   /**
    * Returns an instance of a class executor. This method is there as an
    * extension point.
@@ -501,25 +497,25 @@ public class Executor extends ABasicExecutor {
     final IImplemSpecifics implem = getImplemSpecif();
     final CoqStream out = getOut();
     final List<ClassExecutor> treatedInterfaces = new ArrayList<ClassExecutor>();
-    final List<ClassExecutor> treatedClasses = new ArrayList<ClassExecutor>();
-  
+    final List<ClassExecutor> treatedClasses = new ArrayList<ClassExecutor>(); 
     for (ClassExecutor ce: fTreatedClasses.values()) {
       if (ce.getJavaClass().isInterface()) {
-        treatedInterfaces .add(ce);
+        treatedInterfaces.add(ce);
       } 
       else {
         treatedClasses.add(ce);
       }
     }
-    out.incTab();
     
     // all classes
     String clzzBody = "";
     for (ClassExecutor clss : treatedClasses) {
       clzzBody += implem.classCons(clss.getModuleName() + ".class");
     }
-    for (int i = 0; !fGenerateJavaLibs && i < fSpecialLibs.length; i++) {
-      clzzBody += implem.classCons(Util.coqify(fSpecialLibs[i]) + ".class");
+    if (!fGenerateJavaLibs) {
+      for (String lib: fSpecialLibs) {
+        clzzBody += implem.classCons(Util.coqify(lib) + ".class");
+      }
     }
     clzzBody += " " + implem.classEnd();
     out.definition("AllClasses", implem.classType(), clzzBody);
@@ -532,8 +528,6 @@ public class Executor extends ABasicExecutor {
     }
     interfBody += " " + implem.interfaceEnd();
     out.definition("AllInterfaces", implem.interfaceType(), interfBody);
-    out.println();
-    out.decPrintln();
   }
   
   /**
