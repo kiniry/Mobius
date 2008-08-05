@@ -1,7 +1,7 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
-import mobius.bico.coq.Translator;
+import mobius.bico.bicolano.coq.Translator;
 import mobius.bico.dico.MethodHandler;
 
 import org.apache.bcel.Constants;

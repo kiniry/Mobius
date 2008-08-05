@@ -1,4 +1,4 @@
-package mobius.bico.coq;
+package mobius.bico.bicolano.coq;
 
 /**
  * This interface defines constants useful for the translation

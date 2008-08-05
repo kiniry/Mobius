@@ -1,4 +1,4 @@
-package mobius.bico.coq;
+package mobius.bico.bicolano.coq;
 
 import java.io.File;
 

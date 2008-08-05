@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.LoadPath;
-import mobius.bico.coq.Translator;
+import mobius.bico.bicolano.coq.CoqStream;
+import mobius.bico.bicolano.coq.LoadPath;
+import mobius.bico.bicolano.coq.Translator;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.DependenciesVisitor;
 

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.Translator;
-import mobius.bico.coq.Translator.Access;
+import mobius.bico.bicolano.coq.CoqStream;
+import mobius.bico.bicolano.coq.Translator;
+import mobius.bico.bicolano.coq.Translator.Access;
 import mobius.bico.implem.IImplemSpecifics;
 
 import org.apache.bcel.classfile.Field;

@@ -8,7 +8,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqStream;
+import mobius.bico.bicolano.coq.CoqStream;
 
 /**
  * An abstract class used to add signature handling to 

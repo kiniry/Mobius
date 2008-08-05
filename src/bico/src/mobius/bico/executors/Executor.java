@@ -15,8 +15,8 @@ import java.util.Stack;
 import java.util.Map.Entry;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.LoadPath;
+import mobius.bico.bicolano.coq.CoqStream;
+import mobius.bico.bicolano.coq.LoadPath;
 import mobius.bico.dico.CamlDictionary;
 import mobius.bico.dico.Dico;
 import mobius.bico.dico.MethodHandler;

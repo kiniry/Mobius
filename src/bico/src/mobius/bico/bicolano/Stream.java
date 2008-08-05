@@ -1,4 +1,4 @@
-package mobius.bico.coq;
+package mobius.bico.bicolano;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -9,7 +9,7 @@ import mobius.bico.Util;
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */
-class Stream extends PrintStream {
+public class Stream extends PrintStream {
   /** the number of tabs. */
   private int fTab;
   /** the tabulations to add. */

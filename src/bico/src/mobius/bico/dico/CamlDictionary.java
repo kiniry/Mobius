@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import mobius.bico.coq.Translator;
+import mobius.bico.bicolano.coq.Translator;
 
 import org.apache.bcel.classfile.JavaClass;
 

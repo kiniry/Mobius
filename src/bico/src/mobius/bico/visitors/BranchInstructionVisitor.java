@@ -1,7 +1,7 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
-import mobius.bico.coq.Translator;
+import mobius.bico.bicolano.coq.Translator;
 
 import org.apache.bcel.generic.BranchInstruction;
 import org.apache.bcel.generic.EmptyVisitor;

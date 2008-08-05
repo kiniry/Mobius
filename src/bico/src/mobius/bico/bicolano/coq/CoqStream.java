@@ -1,9 +1,10 @@
-package mobius.bico.coq;
+package mobius.bico.bicolano.coq;
 
 import java.io.File;
 import java.io.OutputStream;
 
-import mobius.bico.coq.Translator.Syntax;
+import mobius.bico.bicolano.Stream;
+import mobius.bico.bicolano.coq.Translator.Syntax;
 
 
 /**

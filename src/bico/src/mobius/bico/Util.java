@@ -6,7 +6,7 @@ import java.util.Stack;
 
 
 import mobius.bico.Constants.Suffix;
-import mobius.bico.coq.Translator;
+import mobius.bico.bicolano.coq.Translator;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;

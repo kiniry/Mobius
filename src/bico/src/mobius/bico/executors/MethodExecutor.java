@@ -1,9 +1,9 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
-import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.Translator;
-import mobius.bico.coq.Translator.Access;
+import mobius.bico.bicolano.coq.CoqStream;
+import mobius.bico.bicolano.coq.Translator;
+import mobius.bico.bicolano.coq.Translator.Access;
 import mobius.bico.implem.IImplemSpecifics;
 import mobius.bico.visitors.InstructionVisitor;
 

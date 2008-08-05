@@ -3,7 +3,7 @@ package mobius.bico.executors;
 import java.io.File;
 import java.io.IOException;
 
-import mobius.bico.coq.CoqStream;
+import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.dico.ADictionary;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.implem.IImplemSpecifics;
