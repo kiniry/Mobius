@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import mobius.cct.repositories.cp.ConstantPool;
+import mobius.cct.constantpool.ConstantPool;
 import mobius.cct.util.FlattenIterator;
 import mobius.cct.util.GetIterator;
 import mobius.cct.util.MappedIterator;

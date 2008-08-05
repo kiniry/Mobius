@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.DefaultPool;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.DefaultPool;
 import mobius.cct.util.VisitorException;
 
 /**

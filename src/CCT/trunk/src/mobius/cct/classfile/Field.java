@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import mobius.cct.classfile.types.FieldType;
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.DefaultPool;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.DefaultPool;
 
 /**
  * Field in a class file.

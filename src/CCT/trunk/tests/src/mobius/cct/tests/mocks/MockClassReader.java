@@ -12,24 +12,24 @@ import mobius.cct.classfile.ClassReader;
  *
  */
 public class MockClassReader 
-  implements ClassReader<MockClassFile> {
+  implements ClassReader<MockRepoClass> {
   /**
    * Classfile returned by read.
    */
-  private MockClassFile fClassFile;
+  private MockRepoClass fClassFile;
   
   /**
    * Constructor.
    */
   public MockClassReader() {
     fClassFile = 
-      new MockClassFile(ClassName.parseInternal("testpackage/TestClass"));
+      new MockRepoClass(ClassName.parseInternal("testpackage/TestClass"));
   }
   
   /**
    * Set classfile returned by read().
    */
-  public void setClassFile(final MockClassFile f) {
+  public void setClassFile(final MockRepoClass f) {
     fClassFile = f;
   }
   
@@ -38,7 +38,7 @@ public class MockClassReader
    * @param is Input stream (ignored).
    */
   @Override
-  public MockClassFile read(InputStream is) throws IOException {
+  public MockRepoClass read(InputStream is) throws IOException {
     return fClassFile;
   }
 

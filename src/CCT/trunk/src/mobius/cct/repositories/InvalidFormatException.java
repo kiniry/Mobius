@@ -25,4 +25,23 @@ public class InvalidFormatException extends IOException {
   public InvalidFormatException(final String msg) {
     super(msg);
   }
+
+  /**
+   * Constructor.
+   * @param cause Cause.
+   */
+  public InvalidFormatException(final Throwable cause) {
+    super(cause);
+  }
+  
+  /**
+   * Constructor.
+   * @param msg Message.
+   * @param cause Cause.
+   */
+  public InvalidFormatException(final String msg, 
+                                final Throwable cause) {
+    super(msg, cause);
+  }
+  
 }

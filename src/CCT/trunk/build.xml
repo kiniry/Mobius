@@ -46,7 +46,9 @@
 	<target name="dist" depends="build">
 		<mkdir dir="${dist.dir}" />
 		<delete file="${dist.dir}/${jar.file}" />
-		<jar destfile="${dist.dir}/${jar.file}" basedir="${build.dir}/classes">
+		<jar destfile="${dist.dir}/${jar.file}" 
+			 basedir="${build.dir}/classes"
+			 manifest="MANIFEST.MF">
 			<include name="**/*" />
 		</jar>
 	</target>

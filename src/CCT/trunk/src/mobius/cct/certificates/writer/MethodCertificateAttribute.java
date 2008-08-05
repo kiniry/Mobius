@@ -6,7 +6,7 @@ import java.io.OutputStream;
 
 import mobius.cct.certificates.MethodCertificate;
 import mobius.cct.classfile.Attribute;
-import mobius.cct.repositories.cp.ConstantPoolBuilder;
+import mobius.cct.constantpool.ConstantPoolBuilder;
 
 /**
  * A method certificate wrapped in Attribute interface.

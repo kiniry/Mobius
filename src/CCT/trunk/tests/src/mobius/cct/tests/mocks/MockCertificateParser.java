@@ -20,10 +20,10 @@ import mobius.cct.util.VisitorException;
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class MockCertificateParser implements
-  CertificateParser<MockClassFile> {
+  CertificateParser<MockRepoClass> {
 
   @Override
-  public void parse(MockClassFile c, ClassCertificateVisitor v)
+  public void parse(MockRepoClass c, ClassCertificateVisitor v)
       throws InvalidFormatException, VisitorException {
     final CertificatePack[] certs = c.getCerts();
     final Map<MethodName, List<MethodCertificate>> mm = 

@@ -2,7 +2,7 @@ package mobius.cct.tests.repositories;
 
 import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.DefaultRepository;
-import mobius.cct.tests.mocks.MockClassFile;
+import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.tests.mocks.MockClassReader;
 
 import org.junit.Before;
@@ -16,7 +16,7 @@ public class DefaultRepositoryTest {
   /**
    * Repository instance.
    */
-  private DefaultRepository<MockClassFile> fRepo;
+  private DefaultRepository<MockRepoClass> fRepo;
   
   /**
    * Method called before each test.
@@ -24,7 +24,7 @@ public class DefaultRepositoryTest {
   @Before
   public void setUp() {
     fRepo = 
-      new DefaultRepository<MockClassFile>(new MockClassReader());
+      new DefaultRepository<MockRepoClass>(new MockClassReader());
   }
   
   /**

@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.classfile.Attribute;
-import mobius.cct.repositories.cp.ConstantPoolBuilder;
+import mobius.cct.constantpool.ConstantPoolBuilder;
 
 /**
  * A class ertificate wrapped in Attribute interface.

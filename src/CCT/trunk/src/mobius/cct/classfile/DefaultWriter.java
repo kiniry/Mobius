@@ -11,9 +11,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import mobius.cct.repositories.cp.ConstantPoolBuilder;
-import mobius.cct.repositories.cp.DefaultBuilder;
-import mobius.cct.repositories.cp.DefaultFactory;
+import mobius.cct.constantpool.ConstantPoolBuilder;
+import mobius.cct.constantpool.DefaultBuilder;
+import mobius.cct.constantpool.DefaultFactory;
 import mobius.cct.util.VisitorException;
 
 /**

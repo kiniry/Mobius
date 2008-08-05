@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.constantpool docs</title>
+</head>
+<body>
+<p>This package contains support for reading and writing
+constant pools.</p>
+
+<h2>Reading constant pools</h2>
+<p>Constant pools are read from byte streams by objects implementing 
+{@link mobius.cct.constantpool.ConstantPoolFactory ConstantPoolFactory}
+interface. Their format is described in class file specification.
+</p>
+
+<h2>Creating constant pools</h2>
+<p>
+Constant pools can be created either by passing array of entries
+(objects implementing {@link mobius.cct.constantpool.entries.Entry Entry}
+interface) to an implementation of 
+{@link mobius.cct.constantpool.ConstantPoolFactory ConstantPoolFactory}
+(such as 
+{@link mobius.cct.constantpool.DefaultFactory DefaultFactory})
+ or by using 
+{@link mobius.cct.constantpool.ConstantPoolBuilder ConstantPoolBuilder}
+(default implementation of this interface is 
+{@link mobius.cct.constantpool.DefaultBuilder DefaultBuilder}).
+The latter method is usually preferred because it is simpler.
+</p>
+<p>
+The following code illustrates two ways of creating constant pools. <br />
+<pre>
+<code>
+ConstantPoolFactory factory = new DefaultFactory();
+Entry[] entries = new Entry[] { 
+           new Utf8Entry("Test"), 
+           new StringEntry(1), // 1 = index of "Test"
+           new ClassEntry(1), // 1 = index of "Test"
+           new IntegerEntry(42)
+        }
+ConstantPool cp = factory.create(entries);
+</code>
+</pre>
+
+<pre>
+<code>
+ConstantPoolBuilder builder = new DefaultBuilder();
+builder.newString("Test"); // Required Utf8 entry is created automatically.
+builder.newClass("Test"); // Existing Utf8 entry is used.
+builder.newInt(42);
+ConstantPoolFactory factory = new DefaultFactory();
+ConstantPool cp = builder.toConstantPool(factory);
+</code>
+</pre>
+</p>
+
+
+<h2>Writing constant pools</h2>
+<p>
+All implementations of 
+{@link mobius.cct.constantpool.ConstantPool ConstantPool} 
+must contain 
+{@link mobius.cct.constantpool.ConstantPool#write write()} method
+which can be used to write them to an output stream in format 
+described in class file specification.
+</p>
+</body>
+</html>

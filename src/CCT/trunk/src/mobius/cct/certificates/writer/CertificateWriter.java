@@ -19,11 +19,11 @@ import mobius.cct.classfile.ClassVisitor;
 import mobius.cct.classfile.MethodName;
 import mobius.cct.classfile.MethodVisitor;
 import mobius.cct.classfile.MutableClassFile;
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.ConstantPoolBuilder;
+import mobius.cct.constantpool.DefaultBuilder;
+import mobius.cct.constantpool.DefaultFactory;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.ConstantPoolBuilder;
-import mobius.cct.repositories.cp.DefaultBuilder;
-import mobius.cct.repositories.cp.DefaultFactory;
 import mobius.cct.util.VisitorException;
 
 /**

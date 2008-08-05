@@ -1,63 +1,103 @@
 package mobius.cct.tests.mocks;
 
-import mobius.cct.certificates.CertificatePack;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import mobius.cct.classfile.Attribute;
 import mobius.cct.classfile.ClassFile;
 import mobius.cct.classfile.ClassName;
 import mobius.cct.classfile.ClassVisitor;
+import mobius.cct.classfile.MethodName;
+import mobius.cct.classfile.MethodVisitor;
 import mobius.cct.util.VisitorException;
 
 /**
- * Mock class file used for testing.
+ * Mock implementation of ClassFile.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class MockClassFile implements ClassFile {
   /**
-   * Certificates.
-   */
-  private final CertificatePack[] fCerts;
-  
-  /**
-   * Name.
+   * Class name.
    */
   private final ClassName fName;
   
-  public CertificatePack[] getCerts() {
-    return fCerts;
-  }
-
   /**
-   * Constructor - create file with no certificates.
-   * @param name Class name.
+   * List of class attributes.
    */
-  public MockClassFile(final ClassName name){
+  private final List<Attribute> fClassAttributes;
+  
+  /**
+   * Map of method attributes.
+   */
+  private final Map<MethodName, List<Attribute>> fMethods;
+  
+  /**
+   * Constructor - create empty class with no attributes.
+   * @param name Class name. 
+   */
+  public MockClassFile(final ClassName name) {
     fName = name;
-    fCerts = new CertificatePack[]{};
+    fClassAttributes = new ArrayList<Attribute>();
+    fMethods = new HashMap<MethodName, List<Attribute>>();
   }
   
   /**
-   * Constructor - create class file with given set of
-   * certificates.
-   * @param name Class name.
-   * @param certs Certificates.
+   * Add class attribute.
+   * @param attr Attribute.
    */
-  public MockClassFile(final ClassName name, 
-                       final CertificatePack[] certs) {
-    fName = name;
-    fCerts = certs;
-  }
-
-  /**
-   * Get class name.
-   * @return Class name.
-   */
-  public ClassName getName() {
-    return fName;
+  public void addAttribute(final Attribute attr) {
+    fClassAttributes.add(attr);
   }
   
+  /**
+   * Add method attribute.
+   * @param m Method name.
+   * @param attr Attribute.
+   */
+  public void addAttribute(final MethodName m,
+                           final Attribute attr) {
+    final List<Attribute> list;
+    if (fMethods.containsKey(m)) {
+      list = fMethods.get(m);
+    } else {
+      list = new LinkedList<Attribute>();
+      fMethods.put(m, list);
+    }
+    list.add(attr);
+  }
+  
+  /**
+   * Visit class.
+   * @param v Visitor.
+   * @throws VisitorException .
+   */
   @Override
-  public void visit(ClassVisitor v) throws VisitorException {
-    // Not implemented...
+  public void visit(final ClassVisitor v) 
+    throws VisitorException {
+    
+    v.begin(fName);
+    final Iterator<Attribute> i = fClassAttributes.iterator();
+    while (i.hasNext()) {
+      v.visitAttribute(i.next());
+    }
+    final Iterator<MethodName> j = fMethods.keySet().iterator();
+    while (j.hasNext()) {
+      final MethodName m = j.next();
+      final MethodVisitor mv = v.visitMethod(m);
+      if (mv != null) {
+        mv.begin(m);
+        final Iterator<Attribute> k = fMethods.get(m).iterator();
+        while (k.hasNext()) {
+          mv.visitAttribute(k.next());
+        }
+        mv.end();
+      }
+    }
+    v.end();
   }
 
-  
 }

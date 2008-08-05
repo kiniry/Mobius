@@ -5,9 +5,9 @@ import java.io.OutputStream;
 import java.util.Iterator;
 
 import mobius.cct.classfile.Attribute;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.IllegalIndexException;
-import mobius.cct.repositories.cp.entries.Entry;
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.IllegalIndexException;
+import mobius.cct.constantpool.entries.Entry;
 
 /**
  * Constant pool stored in an attribute.

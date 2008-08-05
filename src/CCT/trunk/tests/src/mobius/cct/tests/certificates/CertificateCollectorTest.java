@@ -12,7 +12,7 @@ import mobius.cct.certificates.MethodCertificate;
 import mobius.cct.classfile.ClassName;
 import mobius.cct.classfile.MethodName;
 import mobius.cct.tests.mocks.MockCertificateParser;
-import mobius.cct.tests.mocks.MockClassFile;
+import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.util.Version;
 
 /**
@@ -29,8 +29,8 @@ public class CertificateCollectorTest {
       ClassName.parseInternal("mobius.cct.Test");
     final String certType = "mobius.testcert";
     final Version version = new Version(0, 5);
-    final CertificateCollector<MockClassFile> c = 
-      new CertificateCollector<MockClassFile>();
+    final CertificateCollector<MockRepoClass> c = 
+      new CertificateCollector<MockRepoClass>();
     ClassCertificate cert = 
       new ClassCertificate(certType,
                            version,
@@ -56,7 +56,7 @@ public class CertificateCollectorTest {
     CertificatePack[] certs = new CertificatePack[] { 
       cp1
     };
-    final MockClassFile cls = new MockClassFile(clsName, certs);
+    final MockRepoClass cls = new MockRepoClass(clsName, certs);
     c.collect(new MockCertificateParser(), cls);
     final CertificatePack cp2 = c.getCertificatePack(certType, version);
     CertificatePackTest.assertCertPacksEq(cp1, cp2);

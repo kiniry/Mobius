@@ -13,7 +13,7 @@ import mobius.cct.verifiers.Verifier;
  * Verifier used to test cycle detection.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class CyclicVerifier implements Verifier<MockClassFile> {
+public class CyclicVerifier implements Verifier<MockRepoClass> {
     @Override
     public String getCertificateType() {
       return "mobius.cct.testcert";
@@ -37,7 +37,7 @@ public class CyclicVerifier implements Verifier<MockClassFile> {
     @Override
     public boolean verify(ClassName name, String spec, 
                           CertificatePack cert,
-                          Environment<MockClassFile> env) {
+                          Environment<MockRepoClass> env) {
       try {
         env.verify(name, spec);
       } catch (CyclicDependencyException e) {

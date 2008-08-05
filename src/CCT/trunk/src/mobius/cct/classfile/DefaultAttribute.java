@@ -4,9 +4,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.DefaultPool;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.DefaultPool;
 
 /**
  * Default implementation of attribute interface.
@@ -39,6 +39,16 @@ public class DefaultAttribute implements Attribute {
     final int size = ds.readInt();
     fData = new byte[size];
     ds.readFully(fData);
+  }
+  
+  /**
+   * Constructor - create attribute from byte array.
+   * @param t Attribute type.
+   * @param data Attribute data.
+   */
+  public DefaultAttribute(final String t, final byte[] data) {
+    fName = t;
+    fData = data;
   }
   
   /**

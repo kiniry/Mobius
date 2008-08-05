@@ -15,12 +15,12 @@ import mobius.cct.classfile.ClassName;
 import mobius.cct.classfile.ClassVisitor;
 import mobius.cct.classfile.MethodName;
 import mobius.cct.classfile.MethodVisitor;
+import mobius.cct.constantpool.ConstantPool;
+import mobius.cct.constantpool.ConstantPoolFactory;
+import mobius.cct.constantpool.DefaultFactory;
+import mobius.cct.constantpool.DefaultPool;
+import mobius.cct.constantpool.UnknownConstantException;
 import mobius.cct.repositories.InvalidFormatException;
-import mobius.cct.repositories.cp.ConstantPool;
-import mobius.cct.repositories.cp.ConstantPoolFactory;
-import mobius.cct.repositories.cp.DefaultFactory;
-import mobius.cct.repositories.cp.DefaultPool;
-import mobius.cct.repositories.cp.UnknownConstantException;
 import mobius.cct.util.Version;
 import mobius.cct.util.VisitorException;
 
@@ -71,9 +71,9 @@ public final class DefaultCertificateParser<C extends ClassFile>
         new ByteArrayInputStream(bos.toByteArray());
       return factory.read(bis);
     } catch (IOException e) {
-      throw new InvalidFormatException(e.getMessage());
+      throw new InvalidFormatException(e);
     } catch (UnknownConstantException e) {
-      throw new InvalidFormatException(e.getMessage());
+      throw new InvalidFormatException(e);
     }
   }
   

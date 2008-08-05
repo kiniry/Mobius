@@ -4,7 +4,7 @@ import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.ClasspathRepository;
 import mobius.cct.repositories.classpath.ClassPath;
 import mobius.cct.repositories.classpath.DirEntry;
-import mobius.cct.tests.mocks.MockClassFile;
+import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.tests.mocks.MockClassReader;
 
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class ClasspathRepositoryTest {
   /**
    * Repository instance.
    */
-  private ClasspathRepository<MockClassFile> repo;
+  private ClasspathRepository<MockRepoClass> repo;
   
   /**
    * Method called before each test.
@@ -37,7 +37,7 @@ public class ClasspathRepositoryTest {
   public void setUp() {
     path = new ClassPath();
     path.addEntry(new DirEntry(testDir));
-    repo = new ClasspathRepository<MockClassFile>(new MockClassReader(), path);
+    repo = new ClasspathRepository<MockRepoClass>(new MockClassReader(), path);
   }
   
   /**

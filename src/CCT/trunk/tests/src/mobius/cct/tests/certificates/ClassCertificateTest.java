@@ -117,5 +117,4 @@ public class ClassCertificateTest {
     assertEquals(imports1, imports2);
     assertArrayEquals(c1.getData(), c2.getData());
   }
-
 }
