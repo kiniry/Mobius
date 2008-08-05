@@ -207,27 +207,22 @@ public class Util {
     else if (type instanceof ObjectType) {
       final ObjectType ot = (ObjectType) type;
       try {
-        if (ot.referencesClassExact()) {
-          convertedType = "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
-        } 
-        else if (ot.referencesInterfaceExact()) {
+        if (ot.referencesInterfaceExact()) {
           convertedType = "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
         } 
         else {
-          unhandled("ObjectType", type);
-          convertedType = "(ObjectType javaLangObject " + 
-                        Translator.comment(type.toString()) + " )";
+          convertedType = "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
         }
       }
       catch (ClassNotFoundException e) {
         final JavaClass jc = repos.findClass(ot.getClassName());
         if (jc != null) {
-          if (jc.isClass()) {
-            return "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
-          } 
-          else if (jc.isInterface()) {
+          if (jc.isInterface()) {
             return "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
           }
+          else {
+            return "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
+          } 
         }
         throw e;
       }
