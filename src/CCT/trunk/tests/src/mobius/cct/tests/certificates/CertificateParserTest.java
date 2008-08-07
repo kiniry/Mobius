@@ -3,9 +3,6 @@ package mobius.cct.tests.certificates;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.certificates.DefaultCertificateParser;
@@ -18,6 +15,9 @@ import mobius.cct.repositories.InvalidFormatException;
 import mobius.cct.tests.mocks.MockCertVisitor;
 import mobius.cct.tests.mocks.MockClassFile;
 import mobius.cct.util.Version;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests of default certificate parser.

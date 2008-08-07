@@ -1,8 +1,10 @@
 package mobius.cct.tests.mocks;
 
-import java.util.List;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
-import static junit.framework.Assert.*;
+import java.util.List;
 
 import mobius.cct.certificates.Certificate;
 import mobius.cct.certificates.ClassCertificate;
@@ -43,6 +45,11 @@ public class MockCertVisitor implements ClassCertificateVisitor {
   private boolean fEndCalled;
   
   /**
+   * Was unexpected certificate encountered?
+   */
+  private boolean fUnexpected;
+  
+  /**
    * Constructor.
    */
   public MockCertVisitor(final List<Certificate> certs) {
@@ -53,6 +60,7 @@ public class MockCertVisitor implements ClassCertificateVisitor {
   }
   
   public void assertVisitOK() {
+    assertFalse(fUnexpected);
     for (int i = 0; i < fCerts.size(); i++) {
       if (!fFound[i]) {
         fail("Certificate not found");
@@ -68,6 +76,7 @@ public class MockCertVisitor implements ClassCertificateVisitor {
     for (int i = 0; i < fCerts.size(); i++) {
       fFound[i] = false;
     }
+    fUnexpected = false;
   }
 
   @Override
@@ -78,7 +87,8 @@ public class MockCertVisitor implements ClassCertificateVisitor {
   @Override
   public void visitClassCert(ClassCertificate cert) throws VisitorException {
     for (int i = 0; i < fCerts.size(); i++) {
-      if (fCerts.get(i) instanceof ClassCertificate) {
+      if ((!fFound[i]) &&
+          fCerts.get(i) instanceof ClassCertificate) {
         final ClassCertificate c = (ClassCertificate)fCerts.get(i);
         //WARNING: UGLY HACK
         try {
@@ -89,6 +99,7 @@ public class MockCertVisitor implements ClassCertificateVisitor {
         }
       }
     }
+    fUnexpected = true;
   }
 
   @Override
@@ -109,7 +120,8 @@ public class MockCertVisitor implements ClassCertificateVisitor {
     @Override
     public void visitMethodCert(MethodCertificate cert) {
       for (int i = 0; i < fCerts.size(); i++) {
-        if (fCerts.get(i) instanceof MethodCertificate) {
+        if ((!fFound[i]) && 
+            fCerts.get(i) instanceof MethodCertificate) {
           final MethodCertificate c = (MethodCertificate)fCerts.get(i);
           //WARNING: UGLY HACK
           try {
@@ -120,6 +132,7 @@ public class MockCertVisitor implements ClassCertificateVisitor {
           }
         }
       }
+      fUnexpected = true;
     }
     
   }

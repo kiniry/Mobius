@@ -4,8 +4,8 @@ import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.ClasspathRepository;
 import mobius.cct.repositories.classpath.ClassPath;
 import mobius.cct.repositories.classpath.DirEntry;
-import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.tests.mocks.MockClassReader;
+import mobius.cct.tests.mocks.MockRepoClass;
 
 import org.junit.Before;
 import org.junit.Test;

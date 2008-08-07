@@ -1,5 +1,6 @@
 package mobius.cct.tests.mocks;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,18 +9,18 @@ import java.util.List;
 import java.util.Map;
 
 import mobius.cct.classfile.Attribute;
-import mobius.cct.classfile.ClassFile;
 import mobius.cct.classfile.ClassName;
 import mobius.cct.classfile.ClassVisitor;
 import mobius.cct.classfile.MethodName;
 import mobius.cct.classfile.MethodVisitor;
+import mobius.cct.classfile.MutableClassFile;
 import mobius.cct.util.VisitorException;
 
 /**
  * Mock implementation of ClassFile.
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
-public class MockClassFile implements ClassFile {
+public class MockClassFile implements MutableClassFile {
   /**
    * Class name.
    */
@@ -34,6 +35,11 @@ public class MockClassFile implements ClassFile {
    * Map of method attributes.
    */
   private final Map<MethodName, List<Attribute>> fMethods;
+  
+  /**
+   * Writer.
+   */
+  private ClassVisitor fWriter;
   
   /**
    * Constructor - create empty class with no attributes.
@@ -98,6 +104,23 @@ public class MockClassFile implements ClassFile {
       }
     }
     v.end();
+  }
+
+  /**
+   * Set writer.
+   * @param w New writer.
+   */
+  public void setWriter(final ClassVisitor w) {
+    fWriter = w;
+  }
+  
+  /**
+   * Get writer.
+   * @return Writer.
+   */
+  @Override
+  public ClassVisitor getWriter(OutputStream os) {
+    return fWriter;
   }
 
 }

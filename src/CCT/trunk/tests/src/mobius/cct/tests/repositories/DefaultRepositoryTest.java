@@ -2,8 +2,8 @@ package mobius.cct.tests.repositories;
 
 import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.DefaultRepository;
-import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.tests.mocks.MockClassReader;
+import mobius.cct.tests.mocks.MockRepoClass;
 
 import org.junit.Before;
 import org.junit.Test;

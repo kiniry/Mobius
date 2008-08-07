@@ -1,4 +1,4 @@
-- Write tests.
-- Find and fix bugs.
+- Write more tests
+- Refactor old tests.
 - Create command line tools
 - ...

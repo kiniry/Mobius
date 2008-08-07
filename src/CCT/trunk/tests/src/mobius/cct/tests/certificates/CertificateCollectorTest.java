@@ -3,8 +3,6 @@ package mobius.cct.tests.certificates;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Test;
-
 import mobius.cct.certificates.CertificateCollector;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.ClassCertificate;
@@ -14,6 +12,8 @@ import mobius.cct.classfile.MethodName;
 import mobius.cct.tests.mocks.MockCertificateParser;
 import mobius.cct.tests.mocks.MockRepoClass;
 import mobius.cct.util.Version;
+
+import org.junit.Test;
 
 /**
  * Tests for class CertificateCollector.
