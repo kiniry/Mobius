@@ -242,17 +242,33 @@ BEGIN
 
   % CHECK: in what form exactly can we use it
   % and then: can we actually prove it!!
+  % AT: This does not typecheck, I guess that sigma should be sigma1 and sigma1
+  % and sigma1 should be sigma2.
+%   equal_derivation_set_annotations_with_equal_arguments : LEMMA
+%     FORALL(p : Program, e : (wf_Expr(p)), 
+%            set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
+%            v, v1 : Val, 
+%            sigma1, sigma2 : APState, n1, n2 : nat) :
+%       (FORALL (tau : APState) :
+%          pstate(tau) = pstate(sigma) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
+%       IMPLIES
+%       no_change_in_pstate(p)(set(e)) IMPLIES
+%       derive(p)(set(e), sigma, v1, sigma1)(n2) IMPLIES
+%         EXISTS (n3 : nat) : 
+%           derive(p)(set(Const(v)), sigma, v1, sigma1)(n3)
+
   equal_derivation_set_annotations_with_equal_arguments : LEMMA
     FORALL(p : Program, e : (wf_Expr(p)), 
            set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
            v, v1 : Val, 
            sigma1, sigma2 : APState, n1, n2 : nat) :
       (FORALL (tau : APState) :
-         pstate(tau) = pstate(sigma) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
+         pstate(tau) = pstate(sigma1) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
       IMPLIES
       no_change_in_pstate(p)(set(e)) IMPLIES
-      derive(p)(set(e), sigma, v1, sigma1)(n2) IMPLIES
+      derive(p)(set(e), sigma1, v1, sigma2)(n2) IMPLIES
         EXISTS (n3 : nat) : 
-          derive(p)(set(Const(v)), sigma, v1, sigma1)(n3)
+          derive(p)(set(Const(v)), sigma1, v1, sigma2)(n3)
+
 
 END APSemanticsProperties

@@ -488,6 +488,7 @@ BEGIN
 END MonitoredProgramSemantics
 
 
+% TODO: rename, add an n
 MonitoredProgramCompletessRelation[CP, Name : TYPE+] : THEORY
 BEGIN
 

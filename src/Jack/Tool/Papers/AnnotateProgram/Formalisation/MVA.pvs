@@ -210,7 +210,7 @@ BEGIN
       ts(a)(t) AND scp(t) = q IMPLIES
         tcp(t) = q
 
-  % TODO: We should rename complete to monitor
+  % TODO: Should rename complete to monitor?
   % A MVA does not necessarily have to pass through our completion function to
   % be usable. These are the conditions we require to work with a MVA.
   complete(a : MVA) : boolean =
@@ -230,6 +230,7 @@ BEGIN
 END MVAProperties
 
 
+% Definitions and properties used by MVAPartialSemantics and MVATotalSemantics
 MVACommonSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -356,7 +357,8 @@ BEGIN
 END MVACommonSemantics
 
 
-% Operational semantics for partial MVAs
+% Operational semantics for partial MVAs 
+% (i.e. their transition relation is not total)
 MVAPartialSemantics[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -429,12 +431,17 @@ BEGIN
 END MVATotalSemantics
 
 
-
+% Assumptions about MVAs
 MVAMonitoring[CP, Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING WellFormedMVA[CP, Name]
 
+  % We need a way to translate a guard into a Java boolean expression.
+  % In an implementation we would define a language for writing guards (probably
+  % a subset of Java) and then we would translate them into Java. In our
+  % specification we modelled guards as mathematical functions. We assume a
+  % function guard_to_expression, whose behavior is defined axiomatically.
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
@@ -481,10 +488,11 @@ BEGIN
           subterm(b, source(l)) IMPLIES
             NOT TryCatch?(b)
 
-
 END MVAMonitoring
 
 
+% This theory defines the MVA completition function, which is used in the
+% fisrt step of the translation algorithm.
 MVACompletion[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -549,7 +557,8 @@ BEGIN
   evs_complete_MVA : LEMMA % :-)
     FORALL (a : (partial)) :
       evs(complete_MVA(a)) = evs(a)
-  
+
+
   IMPORTING MVAPartialSemantics[CP, Name], 
             MVATotalSemantics[CP, Name]
 
@@ -559,47 +568,11 @@ BEGIN
       MVAPartialSemantics.step(a)(s, pe) = bottom IFF
         cp(MVATotalSemantics.step(complete_MVA(a))(s, pe)) = halted
 
-
   completion_equivalence2 : LEMMA  % :-)
     FORALL(a : (partial), 
            s : (wf_AState(a)), pe : (wf_PEvent(a))) :
       MVAPartialSemantics.step(a)(s, pe) = bottom IFF
         cp(down(MVAPartialSemantics.step(complete_MVA(a))(s, pe))) = halted
-
-
-%  % Correctness requirements for a completion function:
-%  % .The only changes allowed are to add halted and to modify the set of 
-%  %  transitions,
-%  % .The original transitions must remain unchanged,
-%  % .Transitions added have halted as target control point,
-%  % .The result must be a complete MVA.
-%  correct_completion_function(complete_fun : [(partial) -> 
-%                                               MVA]) : boolean =
-%    FORALL (a : (partial)) :
-%      (FORALL (ts_prime : finite_set[Transition]) :
-%        a WITH [ts := ts_prime, cps := add(halted, cps(a))] = 
-%        complete_fun(a) WITH [ts := ts_prime]) AND
-%      subset?(ts(a), ts(complete_fun(a))) AND
-%      (FORALL (t : Transition) :
-%	difference(ts(complete_fun(a)), ts(a))(t) IMPLIES
-%          tcp(t) = halted) AND
-%      complete(complete_fun(a))
-
-%  complete_MVA_correctness : THEOREM % :-)
-%    correct_completion_function(complete_MVA)
-
-%  IMPORTING MVAPartialSemantics[CP, Name],
-%  	    MVATotalSemantics[CP, Name]
-
-%  % If a partial MVA <a> gets stuck on a certain input then
-%  % <complete_fun>(<a>) reaches halted for the same input.
-%  complete_function_correctness_implication : THEOREM % :-)
-%    FORALL (complete_fun : [MVA -> MVA], a : (partial), 
-%            sa : (wf_AState(a)), pe : (wf_PEvent(a))) :
-%      correct_completion_function(complete_fun) IMPLIES
-%      step(a)(sa, pe) = bottom IMPLIES 
-%        cp(step(complete_fun(a))(sa, pe)) = halted
-
 
 END MVACompletion
 

@@ -3,9 +3,11 @@
 This section formally defines our format of security automata. They
 are particularly suited for monitoring, because transitions can depend
 on the state of the monitored program. We call them
-\marginnote{MH: Multi-Variable Automata not very good/catchy name}
+\marginnote{\small MH: Multi-Variable Automata not very good/catchy name
+ AT: What about: Property Automata, Security Automata (may be confusing),
+ Pushdown Automata, just Automata or just Property}
 \emph{Multi-Variable Automata} (MVA). %because their states are defined
-%by a set of variables. 
+%by a set of variables.
 Transitions between states are labelled with guards, events and a list
 of actions. The event specifies the method whose entry and/or exit is
 being monitored, with a distinction between normal and exceptional
@@ -15,12 +17,13 @@ can be applied. It depends on
 \item the automaton state,
 \item the state of the program that is being monitored, and
 \item the argument of the method, in case the event is method entry; or
-the result of the method, in case the event is normal method exit ; or
+the result of the method, in case the event is normal method exit; or
 the exception with which the method returns, in case the event is
 exceptional method exit.
 \end{inparaenum}
-Each action describes how the automaton state is updated by the transition. 
-\marginnote{MH: conditions on guards/actions?}
+Each action describes how the automaton state is updated by the transition.
+\marginnote{\small MH: conditions on guards/actions?
+ AT: I wouldn't mention them we have the specification for all the details.}
 
 MVA and programs share the definitions of values, types and exceptions, denoted
 \Val, \Type and \Excpt, respectively. They are defined by the following grammar,
@@ -39,14 +42,13 @@ record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
 \end{array}}
 \]
-\marginnote{ AT: Why is \NullPointer defined as RunTimeException ? MH: To be more abstract.}
 Notice that there is a special type \(\Void\), inhabited by \(\One\)
 to model methods without results. Reference values contain a number,
 which can be considered as the location where the object is stored;
 \(\bot\) is used to denote the outcome of an undefined expression.
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable nonempty sets of control points and names, respectively. We
-assume that \(\Name\) contains the special names \textsf{this}. 
+assume that \(\Name\) contains the special names \textsf{this}.
 
 
 An MVA consists of
@@ -56,7 +58,7 @@ An MVA consists of
 \item a finite set of control points,
 \item an initial control point,
 \item a set of events, to specify which methods are being monitored,
-\item a set of MVA variable declarations, to describe 
+\item a set of MVA variable declarations, to describe
 the internal state of the automaton
 \item a set of program variable declarations, to specify which
 program variables will be inspected by the monitor, and
@@ -66,7 +68,7 @@ Transitions go from source to target control points. They are labelled
 with events, where an event is a tuple of an event type (entry, exit
 or exceptional exit) and a method name, guards and a list of
 actions. Each action assigns the result of an expression (containing
-both program and MVA variables) to a MVA variable. MVA variables
+both program and MVA variables) to an MVA variable. MVA variables
 declarations are the same as program field declarations (defined
 below), while program variable declarations in the MVA have the same
 format as local variable declarations in a program (\emph{i.e.}, they
@@ -127,13 +129,6 @@ words,
 \item transitions range between declared control points and are
 labelled with declared events
 \end{inparaenum}.
-\marginnote{AT: This are not all the requirements, for instance it is not said that the
-     initial control point should be on the set of declared control points or
-     that guards depend only on the value of the declared variables.
-     I think that don't want to enuntiate all the requirements precisesly in
-     English but then we should say it. We can say that these are the most
-     important requirements.
-     For a complete English description see the comments I added to MVA. MH: rephrased}
 
 %Formally:
 %\[
@@ -184,7 +179,7 @@ according to the list of actions in the obvious way).
 
 \end{array}}
 \]
-In a total MVA, the transition function \(\Delta_a\) is total. Notice
+In a total MVA $a$, the transition function \(\Delta_a\) is total. Notice
 that a partial automaton gets stuck on a certain input if and only if the
 complete MVA will reach the state \halted.
 
@@ -209,7 +204,7 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
 \cps := \{s_1, s_2\},
 \init := s_1,\\
-\evs := 
+\evs :=
 \begin{array}[t]{l}
 \{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \opri \entry,
 \exit, \excexit \} \:\cup \\
@@ -234,7 +229,7 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \scp := s_2, \tcp := s_1, \\
              \event := \opri \etype := \exit,
                              \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, 
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
              \action := [\opri \target := n, \expr := n + 1 \clri]
             \clri,
 \end{array}\\
@@ -252,7 +247,7 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \scp := s_1, \tcp := s_1, \\
              \event := \opri \etype := \exit, \mname := \texttt{reset}
 \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt, 
+             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
              \action := [\opri \target := n, \expr := 0 \clri]
            \clri \} \clri
 \end{array}
@@ -261,7 +256,6 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \end{array}
 }\]
 
-% TODO: This should be adapted to the new example
 Completion add the following transitions to the automaton in
 Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
 \entry(\texttt{sendSMS}), with guard \(n \geq N\); and for the events

@@ -39,15 +39,15 @@ differently upon method call and exit.
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
-\Expr & = & \Plus(n_1, n_2 : \Expr) \mid 
+\Expr & = & \Plus(n_1, n_2 : \Expr) \mid
             \EvalN(n : \Name) \mid
-            \Not(b : \Expr) \mid 
+            \Not(b : \Expr) \mid
             \Conj(b_1, b_2 : \Expr) \mid \\
-      &   & \Eq(e_1, e_2 : \Expr) \mid 
-            \EvalB(n : \Name) \mid 
+      &   & \Eq(e_1, e_2 : \Expr) \mid
+            \EvalB(n : \Name) \mid
             \EvalR(n : \Name) \mid
             \CondExpr(c, e_1, e_2 : \Expr) \mid\\
-      &   & \Assign(n : \Name, e : \Expr) \mid 
+      &   & \Assign(n : \Name, e : \Expr) \mid
             \Call(o : \Expr, n : \Name, p : \Expr) \mid
             \Const(v : \Val) \\
 \Stmt & = & \Skip \mid
@@ -103,9 +103,7 @@ only a few exceptions, and assume that methods have only one
 parameter. However, we believe that our formalisation contains all
 constructs that are relevant for proving correctness of our approach,
 and that implementing the algorithm for the full language is mainly an
-engineering issue (see Section~\ref{SecConcl}). 
-\marginnote{AT: Should we mention our lack of of formalization for
-object creation?\\MH: we say that we remove all object-oriented features}
+engineering issue (see Section~\ref{SecConcl}).
 
 Figure~\ref{FigExprStmt} defines expressions and statements as a
 mutually recursive data type (we use the term \emph{body} to denote
@@ -120,11 +118,6 @@ is extended with a ghost variable store, which is updated according to
 the \Set or \CaseJML statement. If an \Assert statement is evaluated,
 and its condition evaluates to false, a special \JMLExc is thrown to
 signal the annotation violation.
-
-% and the
-%program stops~--~otherwise execution continues normally.
-% AT: assert does not stop the program, it just throws and exception. The
-%     program will stop only if the exception reaches the top level.
 
 Next, Figure~\ref{FigProgram} describes the syntax for methods,
 classes and programs. To ensure that every method has an appropriate
@@ -183,10 +176,12 @@ Exceptions can only be caught explicitly \emph{within} a \(\TryCatch\)
 statement.  All evaluation rules require explicitly that the
 initial state is not exceptional.
 
-As mentioned above, we define both the semantics of an (annotated)
-program and of a monitored program by parametrising the semantics with
-functions that specify how the specification constructs are to be
-evaluated. Since annotated or monitored programs and/or their states
+% Commented out to save space
+% As mentioned above, we define both the semantics of an (annotated)
+% program and of a monitored program by parametrising the semantics with
+% functions that specify how the specification constructs are to be
+% evaluated.
+Since annotated or monitored programs and/or their states
 contain more information than programs without annotations, the
 evaluation rules are defined over parametric types
 \(\FullProgram\) and \(\FullState\). For each instantiation we give
@@ -194,8 +189,8 @@ mappings \program and \progstate to the basic program type \Program
 and the basic program state \Pstate.
 
 The evaluation rules are fairly standard, therefore we refer to Von
-Oheimb and the PVS formalisation for more
-details. Figure~\ref{FigEvalRules} shows the evaluation of normally
+Oheimb and the PVS formalisation for more details.
+Figure~\ref{FigEvalRules} shows the evaluation of normally
 terminating method calls (where for clarity of presentation, we have
 left out several checks that intermediate states are not
 exceptional~--~these are present in the PVS formalisation). First the
@@ -290,12 +285,9 @@ and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the \(n^{th}\) entry of the \gvs component of \(\tau\) is
 updated to \(v\).} appropriately.
-\marginnote{AT: What is the difference between $\beta$ and $\deltaassert$?
-In the rule for $\beta$ if $\sigma_1.pstate.exc = \Throwable$ then
-$\sigma_2.pstate.exc = \JMLExc$, is that the intention? MH: \(\beta\)
-is checkassertion, and is defined exactly as that. \(\deltaassert\)
-additionally check whether the state is unchanged}
 
+% Relation with the code:
+% r = a, act = arg, \sigma_1 = s1, \sigma_2 = s2, \beta = check_assertion
 \begin{figure}[t]
 \[{\small
 \begin{array}[t]{c}
@@ -317,7 +309,7 @@ additionally check whether the state is unchanged}
 \smallskip\\
 
 \etp{P}{e, \sigma_1}{v, \tau} \qquad
-\pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau (\gvs.n := v)}{\sigma_2 = \tau}\\
+\pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau}{\sigma_2 = \tau (\gvs.n := v)}\\
 \hline
 \deltaset(P, \Set(e, n), \sigma_1, \sigma_2)
 \end{array}}
@@ -355,10 +347,6 @@ policy is modelled by the MVA reaching the error state \halted.
 : \mathbb{B} \clr
 \end{array}}
 \]
-\marginnote{AT: Did you omit the gvs on purpose? MH: yes, think
-so. \Pstate can be anything\\
-AT:     If its is an APState then then the mapping should be
-prog\_state..program MH: ?}
 Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
 \Mstate, with mappings \program and \progstate. Now we can give
 appropriate instantiations for the \(\gamma\)- and
@@ -380,8 +368,12 @@ the method specification).
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2)
 \end{array}}
 \]
+\marginnote{\small isn't $\hat\gammain$ the same defined in
+Fig~\ref{FigAnnotatedSem}? If so why don't we refer to it? We should make
+clear that this is a parameter to the semantics}
 
 \noindent where
+% This is a simplified version of on_method_MVA in MonitoredProgram
 \[
 {\small
 \begin{array}{rcl}
@@ -390,7 +382,7 @@ the method specification).
 \mathsf{let\ }
 \begin{array}[t]{rcl}
   e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
- \tau & = & \sigma.\mvastate.\Delta_a, \sigma.\progstate, e, \act)
+ \tau & = & \Delta_{P.\mva}(\sigma.\mvastate, \sigma.\progstate, e, \act)
 \end{array}
 \mathsf{in\ }\\
 \pif{\sigma.\stuck \vee \tau = \bot}

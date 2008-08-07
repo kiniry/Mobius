@@ -73,18 +73,18 @@ avoids that the automaton is cluttered up with transitions that
 automaton is easier to handle. We show that the behaviour of a program
 that is monitored with a partial automaton is equivalent to the
 behaviour of a program that is monitored with a complete
-automaton. 
+automaton.
 \item We generate annotations that capture the behaviour of the total automaton. For this, we add special ghost variables that model the
 monitor state, and to every method specification, we add special
 \textsf{set} annotations that update these ghost variables upon entry
-and exit of a method~--~according to the updates in the automaton. 
+and exit of a method~--~according to the updates in the automaton.
 %To
 %write  this in a convenient way, we introduce a special
 %conditional construct to update ghost variables (called
-%\CaseJML). 
+%\CaseJML).
 We show that run-time monitoring of the program
 only throws a (new) exception to signal an annotation violation if the
-monitor reaches the special trap state. 
+monitor reaches the special trap state.
 \item We inline the
 \textsf{set} annotations from the method specification to the method
 body. This requires a (source code level) code transformation, that
@@ -92,7 +92,7 @@ ensure that the ghost variables are also updated appropriately if the
 method throws an exception. We prove that the run-time checking
 behaviour of the program with the inlined \textsf{set} annotations is
 equivalent to the run-time checking behaviour of the program with the
-method specification-level \textsf{set} annotations. 
+method specification-level \textsf{set} annotations.
 \end{inparaenum}
 All results in the paper have been established formally using
 the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation
@@ -103,7 +103,7 @@ is available via
 %last step, we show that the special \CaseJML construct can be
 %transformed into a sequence of set instructions, and we prove again
 %that this does not change the run-time checking behaviour of the
-%program. 
+%program.
 
 Since the Java Virtual Machine (and variations) is the most common
 platform for personal devices\footnote{The standard Java set-up for
@@ -156,12 +156,6 @@ point.
 \caption{Example Security Automaton}\label{FigExample}
 \end{figure}
 
-\marginnote{ TODO: describe the new version of the example
- MH: not necessary to change, maybe just add one line about distinction
- between entry and exit (but the terminate successfully is sufficient)
- AT: But we should say that reset is not allowed within sendSMS, otherwise we
- could make a simpler automaton with just one state and events for normal
- termination of sendSMS and reset.}
 Throughout this paper, we will use a simple example property to
 illustrate the different translations: the method \texttt{sendSMS} can
 be called and terminate successfully at most \(N\) times in between
@@ -174,14 +168,11 @@ security automaton that can be used to monitor this property (where
 this example is representative for a wide range of important
 resource-related security properties.
 
-
-
-The remainder of this paper is organised as
-follows. Section~\ref{SecMVA} formalises the automaton format that we
+The remainder of this paper is organised as follows.
+Section~\ref{SecMVA} formalises the automaton format that we
 use, and defines completion of an automaton. Next,
 Section~\ref{SecProgram} defines the semantics of monitored and
 annotated programs. Then Section~\ref{SecAnnotGen} presents the
 different translations, and proves their
 correctness. Section~\ref{SecRelated} discusses related work, while
 Section~\ref{SecConcl} concludes and discusses future work.
-

@@ -24,11 +24,11 @@ For each step we prove that the old and the new program are bisimilar,
 \(\alpha\) there exists a relation \(R\) such that:
 \[{\small
 \begin{array}{l}
-\forall \sigma_1, \sigma_2, \tau_1, v_1.
-\etp{P}{b,\sigma_1}{v_1, \sigma_2} \Rightarrow
+\forall b, \sigma_1, \sigma_2, \tau_1, v_1.
+\etp{P}{b,\sigma_1}{v_1, \sigma_2} \wedge
 R(\sigma_1, \tau_1) \Rightarrow \\
 \qquad
-\exists \tau_2, v_2. 
+\exists \tau_2, v_2.
 \etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \wedge
 R(\sigma_2, \tau_2)
 \end{array}}
@@ -72,6 +72,7 @@ The first translation step does not change the program itself, it only
 completes the MVA. Suppose that \(P\) is a monitored program, where
 \(\mva(P)\) is deterministic and wellformed. Then the translation to a
 monitored program with a total MVA, \(\alpha_1(P)\), is defined as:
+% This is complete_MP in MonitoredProgramCompletessRelation
 \[{\small
 \alpha_1(P) = \opri \mva := \complete(P.\mva), \program := P.\program
 \clri
@@ -79,6 +80,7 @@ monitored program with a total MVA, \(\alpha_1(P)\), is defined as:
 \]
 
 The relation that is preserved between executions of \(P\) and
+% This is monitor_related_states
 \(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
 \(P\) and \(\tau\) is a state of \(\alpha_1(P)\)):
 \[{\small
@@ -87,10 +89,11 @@ R(\sigma, \tau) =\\
   (\pif {\sigma.\stuck}{\tau.\mvastate.\cp = \halted\\\ }
         {\sigma.\mvastate.\cp = \tau.\mvastate.\cp}) \:\wedge \\
   \neg \tau.\stuck \:\wedge\\
-  (\sigma.\mvastate.\stA = \tau.\mvastate.\stA) \:\wedge 
+  (\sigma.\mvastate.\stA = \tau.\mvastate.\stA) \:\wedge
   (\sigma.\progstate = \tau.\progstate)
 \end{array}}
 \]
+% TODO: should we add the condition on ghost variables?
 
 To prove that this relation is preserved for any body \(b\), we make
 use of equivalence (\ref{MVAcompletionProp}) on
@@ -103,14 +106,12 @@ Page~\pageref{MVAcompletionProp} and we observe further that
 \(Q\) is a monitored program with total MVA:
 \[{\small
 \begin{array}[t]{rl}
-\sigma_1.\stuck \Rightarrow
-\etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
+\sigma_1.\stuck \wedge \etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \sigma_2.\stuck \\
-\sigma_1.\mvastate.\cp = \halted \Rightarrow
+\sigma_1.\mvastate.\cp = \halted \wedge
 \etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \sigma_2.\mvastate.\cp = \halted \\
-\neg \sigma_1.\stuck \Rightarrow
-\etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
+\neg \sigma_1.\stuck \wedge \etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \neg \sigma_2.\stuck
 \end{array}}
 \]
@@ -119,6 +120,8 @@ For our running example, applying translation \(\alpha_1\) means that
 where class \texttt{Messaging} as shown above was first monitored
 with the partial MVA in Figure~\ref{FigExample}, after the translation
 it is monitored with the total MVA in Figure~\ref{FigCompleteMVA}.
+% TODO AT: for some reason I get Fig 2 here instead of Fig 3.
+
 
 \paragraph{From MVA to Annotations}
 
@@ -214,10 +217,11 @@ Notice that the order in which the different cases are generated is
 not important: since the MVA is total and deterministic there is
 always exactly one case that applies.
 
-For clarity of presentation, we have ignored here that \preset, \postset and
-\excset are actually functions, taking the method parameter, result or
-exception, respectively as input. However, in the PVS formalisation
-this is correctly handled.
+% Commented out to save space
+% For clarity of presentation, we have ignored here that \preset, \postset and
+% \excset are actually functions, taking the method parameter, result or
+% exception, respectively as input. However, in the PVS formalisation
+% this is correctly handled.
 
 The formalisation does not formally discuss how the guard and the
 actions are translated into expressions in the programming
@@ -240,14 +244,18 @@ To show correctness of the translation, we show that the following
 relation is preserved (where \(P\) is the monitored program,
 \(\sigma\) is a state of the monitored program, and \(\tau\) a state
 of the annotated program):
+\marginnote{Is OK to have both $\pstate$ and $\progstate$?}
+% TODO: Review this definition
 \[{\small
 \begin{array}{rcl}
-R(\sigma, \tau) & =  &
-\begin{array}[t]{l}
+% This is related_states
+R(\sigma, \tau) & = & \neg \sigma.\stuck \:\wedge\\
+& & \begin{array}[t]{l}
 \mathsf{if\ }\sigma.\mvastate.\cp = \halted
 \mathsf{\ then\ }\tau.\pstate.\ex = \JMLExc
 \mathsf{\ else\ }S(\sigma, \tau)
 \end{array}\\
+% This is mp_modeled?
 S(\sigma, \tau) & = &
 \begin{array}[t]{l}
 \unique(\sigma.\mvastate.\cp) = \tau.\pstate.\gvs(\texttt{cp}) \:\wedge\\
@@ -283,7 +291,7 @@ and the precondition are evaluated. Assuming that \halted is not yet
 reached, the new conjunct of the invariant evaluates to true, and then
 a simple induction allows to conclude that after evaluation of the
 precondition, the states are still related. Then the original \preset
-annotations are evaluated, and again the induction hypothesis allow to
+annotations are evaluated, and again the induction hypothesis allows to
 conclude that the resulting states are related. Next, the monitored
 program makes an MVA transition, and the annotated program executes
 the newly generated set annotations, followed by an \Assert to check
@@ -294,8 +302,8 @@ preserved.
 Notice that in \postset or \excset we do not have an \Assert
 statement. Since the invariant is evaluated immediately after the
 set-annotations, the reaching of \halted will be detected
-immediately. Notice that for this part of the proof it is crucial that
-the newly added invariant is evaluated first. 
+immediately. For this part of the proof it is crucial that
+the newly added invariant is evaluated first.
 
 Finally, to be able to complete the proof, we have to make a
 restriction on the behaviour of \TryCatch. We follow the Java Language
@@ -335,17 +343,22 @@ should also terminate exceptionally because of a \JMLExc.
 To illustrate the translation on our running example, consider again
 the implementation of the class \texttt{Messaging} and the completed
 MVA, encoding the \emph{limited SMS} security policy, in
+% TODO AT: again here I get Figure 2
 Figure~\ref{FigCompleteMVA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
 \(\alpha_2\) on this program and this MVA. Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
-generated~--~this is equivalent to a \Skip statement.
+generated~--~this is equivalent to an \Skip statement.
 
-
+\marginnote{\small There are many vars not declared: s1, s2, halted, N.
+Is it just to save space? Should we add some ... in the declarations?
+Also cp must be initialized to s1. I added them but in JML we cannot have
+two annotations on the same line.}
 \begin{figure}[t]
 {\small\begin{verbatim}
 class Messaging {
-  int counter; //@ ghost int cp, n;
+  //@ ghost int s1=1; //@ghost int s2=2; //@ghost int N=5;
+  int counter; //@ ghost int cp = s1; //@ ghost int n;
 
   /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
                                             (n >= N, cp = halted)]),
@@ -357,7 +370,7 @@ class Messaging {
       exc_set  CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
                         (cp == s2, CaseSet [(true, cp = s1)]),
                         (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-  void sendSMS(){ /* body sendSMS  */}
+  void sendSMS(){ /* body sendSMS */}
 
   /*@ pre_set  CaseSet []; post_set CaseSet []; exc_set  CaseSet []; @*/
   void receiveSMS(){ /* body receiveSMS */}
@@ -383,9 +396,9 @@ executed at the end of the method body, the body is wrapped in a
 \TryCatch statement. The translation \(\alpha_3\) applies
 \(\alpha_{3, \mathcal{C}}\) to all classes, which in turn applies
 \(\alpha_{3, \mathcal{M}}\) to all methods in the class. This function
-generates one new local variables\footnote{In fact, this should be a
+generates one new local variable\footnote{In fact, this should be a
 local \emph{ghost} variable, but as these are not yet supported by our
-formalisation, we formalise it as a standard local variable.} 
+formalisation, we formalise it as a standard local variable.}
 \resl. The body of the method is changed as follows: first \preset is
 executed. Then the body of the method is wrapped in two \TryCatch
 statements, to catch \Throwable and \NullPointer
@@ -421,7 +434,7 @@ is the look up of the variable \resl. To conclude, \preset,
   \end{array}\\
   \Throwable, m.\excset, \Skip),
 \end{array}\\
-\NullPointer, m.\excset, \Skip) \clri 
+\NullPointer, m.\excset, \Skip) \clri
 \end{array}
 \end{array}
 \]
@@ -442,4 +455,4 @@ not changed by the set annotations.
 
 \marginnote{MH: We could show the inlining on the running example, but
 this is not very interesting. Since we did not give method bodies, it
-will just stay as abstract}
+will just stay as abstract. AT: I agree}
