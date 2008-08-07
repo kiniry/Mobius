@@ -15,3 +15,7 @@ Default target is 'dist'.
 CCT does not currently depend on any external libraries.
 JUnit and checkstyle jars included in the repository
 are not necessary for using or building CCT.
+
+Simple command line tools can be accessed by calling
+main method in mobius.cct.tools.Main or by executing
+the jar file created by 'ant dist'.

@@ -22,7 +22,7 @@ public final class ClassName {
   
   /**
    * Constructor.
-   * @param packageName Name of package, with slashes as separators.
+   * @param packageName Name of package.
    * @param name Class name.
    */
   public ClassName(final PackageName packageName, 
@@ -65,7 +65,7 @@ public final class ClassName {
    * @return ClassName instance.
    */
   public static ClassName parseInternal(final String name) {
-    final int sep = name.indexOf('/');
+    final int sep = name.lastIndexOf('/');
     if (sep == -1) {
       return new ClassName(PackageName.root(), name);
     } else {
