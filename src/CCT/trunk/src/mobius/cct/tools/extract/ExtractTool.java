@@ -108,6 +108,7 @@ public final class ExtractTool extends AbstractTool {
     final PrintStream stderr = env.getErr();
     if (env.getArgs().length != EXPECTED_ARGS) {
       stderr.println(getMessage("tool.usage", env));
+      return;
     }
     final DefaultClassFile input = readInput(env);
     if (input != null) {

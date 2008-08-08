@@ -251,7 +251,7 @@ public class DefaultWriter implements ClassVisitor {
       os.reset();
       attr.writeData(os);
       fOutput.writeShort(fConstantPool.newUtf8(attr.getName()));
-      fOutput.writeShort(os.size());
+      fOutput.writeInt(os.size());
       fOutput.write(os.toByteArray());
     }
   }

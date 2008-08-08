@@ -3,6 +3,8 @@ package mobius.cct.certificates;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -126,6 +128,80 @@ public class CertificateCollector<C extends ClassFile> {
       new MappedIterator<Map<Version, CertificatePack>, 
                          Iterator<CertificatePack>>(i1, f);
     return new FlattenIterator<CertificatePack>(i2);
+  }
+  
+  /**
+   * Remove all certificates of given type and version.
+   * @param t Certificate type.
+   * @param v Certificate version.
+   */
+  public void removeCerts(final String t, final Version v) {
+    final Map<Version, CertificatePack> m;
+    if (fCerts.containsKey(t)) {
+      m = fCerts.get(t);
+      m.remove(v);
+    }
+  }
+  
+  /**
+   * Collect method certificates in a multimap.
+   * @return Mutlimap with method certificates.
+   */
+  private Map<MethodName, List<MethodCertificate>> methodMap() {
+    final Map<MethodName, List<MethodCertificate>> m;
+    m = new HashMap<MethodName, List<MethodCertificate>>();
+    final Iterator<CertificatePack> i = getAllCertificates();
+    while (i.hasNext()) {
+      final CertificatePack p = i.next();
+      final Iterator<MethodCertificate> j = p.getMethodCerts();
+      while (j.hasNext()) {
+        final MethodCertificate mc = j.next();
+        final List<MethodCertificate> l;
+        if (m.containsKey(mc.getMethod())) {
+          l = m.get(mc.getMethod());
+        } else {
+          l = new LinkedList<MethodCertificate>();
+          m.put(mc.getMethod(), l);
+        }
+        l.add(mc);
+      }
+    }
+    return m;
+  }
+  
+  /**
+   * Visit collected certificates.
+   * @param v Certificate visitor.
+   * @param c Class name.
+   * @throws VisitorException .
+   */
+  public void visitCertificates(final ClassCertificateVisitor v, 
+                                final ClassName c) 
+    throws VisitorException {
+    
+    final Map<MethodName, List<MethodCertificate>> m;
+    m = methodMap();
+    
+    v.begin(c);
+    final Iterator<CertificatePack> i = getAllCertificates();
+    while (i.hasNext()) {
+      final CertificatePack p = i.next();
+      v.visitClassCert(p.getClassCertificate());
+    }
+    final Iterator<MethodName> j = m.keySet().iterator();
+    while (j.hasNext()) {
+      final MethodName mn = j.next();
+      final MethodCertificateVisitor mv = v.visitMethod(mn);
+      if (mv != null) {
+        mv.begin(mn);
+        final Iterator<MethodCertificate> k = m.get(mn).iterator();
+        while (k.hasNext()) {
+          mv.visitMethodCert(k.next());
+        }
+        mv.end();
+      }
+    }
+    v.end();
   }
   
   /**

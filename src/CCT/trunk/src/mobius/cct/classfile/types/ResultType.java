@@ -53,7 +53,8 @@ public abstract class ResultType {
   public static ResultType parse(final Reader reader) 
     throws IOException {
 
-    switch (reader.read()) {
+    final int c = reader.read();
+    switch (c) {
       case 'L': 
         return parseObject(reader);
       case '[': 
@@ -79,7 +80,8 @@ public abstract class ResultType {
       case -1:
         throw new EOFException();
       default: 
-        throw new IOException("Invalid character");
+        throw new IOException("Invalid character: " + 
+                              Character.toString((char)c));
     } 
   }
   // CHECKSTYLE:ON

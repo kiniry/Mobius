@@ -192,7 +192,7 @@ public final class CertificateFileWriter
       new ByteArrayOutputStream();
     a.writeData(bos);
 
-    ds.writeShort(cp.newUtf8(MethodCertificate.ATTR));
+    ds.writeShort(cp.newUtf8(a.getName()));
     ds.writeInt(bos.size());
     a.writeData(ds);    
   }
@@ -221,14 +221,19 @@ public final class CertificateFileWriter
     
     try {
       fOutput.writeInt(DefaultClassFile.MAGIC);
-      fOutput.writeByte(0);
-      fOutput.writeByte(MAJOR);
+      fOutput.writeShort(0);
+      fOutput.writeShort(MAJOR);
       cp.toConstantPool(new DefaultFactory()).write(fOutput);
       fOutput.writeShort(classFlags);
       fOutput.writeShort(cp.newClass(fClass.internalForm()));
       fOutput.writeShort(cp.newClass("java/lang/Object"));
       
+      // Interfaces.
       fOutput.writeShort(0);
+      
+      // Fields.
+      fOutput.writeShort(0);
+      
       writeMethods(cp, scp);
       
       fOutput.writeShort(fClassCerts.size() + 1);

@@ -105,7 +105,7 @@
         <module name="HiddenField"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1, 2, 10, 16, 65536"/>
+            <property name="ignoreNumbers" value="-1, 0, 1, 2, 10, 16, 65536, 255"/>
         </module>
         <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows"/>
@@ -156,9 +156,6 @@
         <module name="Indentation">
             <property name="basicOffset" value="2"/>
             <property name="caseIndent" value="2"/>
-        </module>
-        <module name="MagicNumber">
-            <property name="ignoreNumbers" value="-1, 0, 1, 2, 16, 65536"/>
         </module>
     </module>
     <module name="PackageHtml"/>

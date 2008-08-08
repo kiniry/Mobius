@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import mobius.cct.tools.add.AddTool;
 import mobius.cct.tools.extract.ExtractTool;
 import mobius.cct.tools.help.HelpTool;
 import mobius.cct.tools.info.InfoTool;
@@ -77,6 +78,7 @@ public final class Main {
       new HashMap<String, Tool>();
     
     result.put("info", new InfoTool());
+    result.put("add", new AddTool());
     result.put("extract", new ExtractTool());
     result.put("merge", new MergeTool());
     result.put("help", new HelpTool(result)); 

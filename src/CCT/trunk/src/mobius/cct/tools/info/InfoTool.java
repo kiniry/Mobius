@@ -53,6 +53,7 @@ public final class InfoTool extends AbstractTool {
                                 env, inputName));
       return null;
     } catch (IOException e) {
+      e.printStackTrace();
       stderr.println(getMessage("info.error.reading.input",
                                 env, inputName));
       return null;

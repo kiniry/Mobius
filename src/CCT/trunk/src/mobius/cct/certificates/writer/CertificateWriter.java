@@ -288,6 +288,7 @@ public class CertificateWriter implements ClassCertificateVisitor {
      */
     @Override
     public void end() throws VisitorException {
+      if (!fMethodCerts.containsKey(fMethod)) { return; }
       final Iterator<MethodCertificate> i = 
         fMethodCerts.get(fMethod).iterator();
       while (i.hasNext()) {

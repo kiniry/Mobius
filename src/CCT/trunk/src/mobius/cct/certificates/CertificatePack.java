@@ -129,4 +129,13 @@ public final class CertificatePack {
   public Iterator<MethodName> getCertifiedMethods() {
     return fMethodCerts.keySet().iterator();
   }
+  
+  /**
+   * Change class certificate.
+   * @param nc New class certificate.
+   * @return CertificatePack with changed class certificate.
+   */
+  public CertificatePack setClassCert(final ClassCertificate nc) {
+    return new CertificatePack(nc, fMethodCerts);
+  }
 }
