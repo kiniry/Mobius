@@ -288,7 +288,7 @@ BEGIN
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
     evs(a)(event(pe)) AND wf_PSt(vdsP(a))(stP(pe))
 
-  % NOTE: eval is implicitly defined by eval_action_behavior in Equivalence.
+  % NOTE: eval is implicitly defined by eval_action_behaviour in Equivalence.
   % Since we only consider the PSt of the state of the program, actions can not
   % talk about existing ghost variables in the monitored program, but that is 
   % fine since we assumed that they are fields (although it could be extended to
@@ -441,7 +441,7 @@ BEGIN
   % In an implementation we would define a language for writing guards (probably
   % a subset of Java) and then we would translate them into Java. In our
   % specification we modelled guards as mathematical functions. We assume a
-  % function guard_to_expression, whose behavior is defined axiomatically.
+  % function guard_to_expression, whose behaviuor is defined axiomatically.
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.

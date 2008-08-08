@@ -100,7 +100,7 @@ thus method lookup is trivial. Similarly, we assume that lookup of the
 class invariant returns the complete class invariant, including those
 invariants that are inherited from superclasses. Moreover, we consider
 only a few exceptions, and assume that methods have only one
-parameter. However, we believe that our formalisation contains all
+parameter. We believe, however, that our formalisation contains all
 constructs that are relevant for proving correctness of our approach,
 and that implementing the algorithm for the full language is mainly an
 engineering issue (see Section~\ref{SecConcl}).
@@ -114,50 +114,48 @@ to update ghost variables (\emph{i.e.}, specification-only variables),
 and \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
 semantics evaluates them. Therefore, the state of an annotated program
-is extended with a ghost variable store, which is updated according to
-the \Set or \CaseJML statement. If an \Assert statement is evaluated,
-and its condition evaluates to false, a special \JMLExc is thrown to
+is extended with a ghost variable store.
+% , which is updated according to the \Set or \CaseJML statement.
+If the condition of an \Assert evaluates to false, a special \JMLExc is thrown to
 signal the annotation violation.
 
-Next, Figure~\ref{FigProgram} describes the syntax for methods,
+Figure~\ref{FigProgram} describes the syntax for methods,
 classes and programs. To ensure that every method has an appropriate
-return expression, this is part of the method signature.
-Further, methods can be annotated with pre- and postconditions, and
+return expression, it is part of the method signature.
+Furthermore, methods can be annotated with pre- and postconditions, and
 classes with invariants. To support our annotation generation
-algorithm, we define for each method special annotations, called
+algorithm, we define special annotations called
 \(\preset\), \(\postset\) and \(\excset\). These annotations describe
 the updates to the ghost variables at method entry, exit and
-exceptional exit, respectively. To allow the use of the method
-parameter, the method result and the possible return exception, pre-
-and postcondition and the different method specification-level set
-annotations are functions\footnote{Notice that the type of \pre,
-\post, \preset and \postset could be made more specific: the first
-expression argument is a side-effect free expression.}. The semantics
-will apply these appropriately.
+exceptional exit, respectively.
+Pre- and postcondition and the different method specification-level set
+annotations are functions to allow the use of the method parameter,
+the method result and the possible return exception\footnote{Notice
+that the type of \pre, \post, \preset and \postset could be made more specific:
+the first expression argument is a side-effect free expression.}. The semantics
+will apply them appropriately.
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item names of fields, local variables and ghost variables are
-disjoint;
-\item names used in the program are not reserved words;
+disjoint and are not reserved words;
 \item class names are unique;
 \item method names are unique;
 \item every variable name that is used is declared; and
 \item only ghost variables are the target of \Set statements.
 \end{inparaenum}
-Notice that we decided to state only the wellformedness conditions
-that were necessary to complete our correctness proofs.
+We have stated only the wellformedness conditions necessary to our
+correctness proofs.
 
 \subsection{Natural Semantics}\label{SecSemantics}
 The behaviour of a program is described via a big step semantics. We
 closely follow Von Oheimb's formalisation of Java~\cite{Oheimb01},
-with simplifications wherever possible, because of our simplified
-program syntax. For every body, we derive a judgement
-$\etp{P}{e,\sigma}{v,\sigma'}$, meaning that  $e$
-evaluates to $v$, while transforming state $\sigma$ into $\sigma'$ in
-the context of program \(P\). Notice that \(v\) is \One for
-(normally) terminating \emph{statements}, while \(v\) is \(\bot\) whenever
-evaluation finishes in an exceptional state.
+with simplifications wherever possible, due to our simplified
+program syntax. A judgement $\etp{P}{e,\sigma}{v,\sigma'}$, means that the body
+$e$ evaluates to $v$, while transforming the state $\sigma$ into $\sigma'$ in
+the context of the program \(P\). Note that \(v\) is \One for
+normally terminating \emph{statements}, while \(v\) is \(\bot\) whenever
+the evaluation finishes in an exceptional state.
 
 A basic program state \(\Pstate\) is composed of an optional exception
 and a store.  The store maps every field and local variable to a

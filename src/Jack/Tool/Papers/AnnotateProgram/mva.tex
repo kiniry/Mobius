@@ -1,11 +1,12 @@
-\section{Modeling Security Properties with Automata}\label{SecMVA}
+\section{Modelling Security Properties with Automata}\label{SecMVA}
 
 This section formally defines our format of security automata. They
 are particularly suited for monitoring, because transitions can depend
 on the state of the monitored program. We call them
 \marginnote{\small MH: Multi-Variable Automata not very good/catchy name
- AT: What about: Property Automata, Security Automata (may be confusing),
- Pushdown Automata, just Automata or just Property}
+ AT: What about: Property Automata, Security Automata (or more precisely
+ Safety Automata), Pushdown Automata, just Automata or just Property.
+ I like Property Automata}
 \emph{Multi-Variable Automata} (MVA). %because their states are defined
 %by a set of variables.
 Transitions between states are labelled with guards, events and a list
@@ -47,8 +48,8 @@ to model methods without results. Reference values contain a number,
 which can be considered as the location where the object is stored;
 \(\bot\) is used to denote the outcome of an undefined expression.
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
-enumerable nonempty sets of control points and names, respectively. We
-assume that \(\Name\) contains the special names \textsf{this}.
+enumerable nonempty sets of control points and names, respectively.
+% We assume that \(\Name\) contains the special names \textsf{this}.
 
 
 An MVA consists of
@@ -74,8 +75,10 @@ below), while program variable declarations in the MVA have the same
 format as local variable declarations in a program (\emph{i.e.}, they
 are not explicitly initialised in the monitor, their value is retrieved from
 the program state.). Figure~\ref{FigMVAForm} shows the
-main types of the MVA definition (the types of \FieldDecl and
-\LocalVarDecl will also be used in the abstract syntax of programs).
+main types of the MVA definition
+%% This is already said
+% (the types of \FieldDecl and
+% \LocalVarDecl will also be used in the abstract syntax of programs).
 
 \begin{figure}[t]
 \[{\small
@@ -98,13 +101,13 @@ main types of the MVA definition (the types of \FieldDecl and
 \caption{Formal Definition of MVA}\label{FigMVAForm}
 \end{figure}
 
-We require that an MVA is \emph{deterministic}, \emph{i.e.}, for every
+We require an MVA to be \emph{deterministic}, \emph{i.e.}, for every
 source control point and event there is always at most one guard that
 holds. Notice that it is not obvious how to transform a
 non-deterministic MVA into a deterministic one, because the actions
-made by the overlapping transitions might be different. We believe
-that this is a realistic restriction, and that most important security
-properties can be expressed as deterministic MVAs.
+made by the overlapping transitions might be different.
+% We believe that this is a realistic restriction, and that most important
+% security properties can be expressed as deterministic MVAs.
 
 An MVA is \emph{total} if there is always exactly one guard that holds
 for a given source control point and event, otherwise it is
@@ -113,22 +116,24 @@ one (by function \complete): add a special control state
 \halted, together with transitions for every control point and every event
 to this \halted control point, where the guard is the negation of the
 disjunction of all other guards for this control point and event, and
-in addition, add unconditional transitions from \halted to \halted for
-every possible event.
+in addition, add unconditional transitions from \halted to \halted with guard
+\ttt for every possible event.
 
 %\marginnote{MH: Should we give formal definition of \emph{complete}?}
 
-We define a collection of obvious constraints, when an MVA is
+We define a collection of constraints to say that an MVA is
 \emph{wellformed}, such as:
 \begin{inparaenum}[(\itshape i\upshape)]
-\item the monitor variable names do not overlap with the reserved
-words,
-\item the program variable names that are used are unique,
-\item the guards do not have side-effects,
-\item the transition updates only use declared variables, and
-\item transitions range between declared control points and are
-labelled with declared events
-\end{inparaenum}.
+% \item the monitor variable names do not overlap with the reserved
+% words,
+% \item the program variable names that are used are unique,
+\item variable names are unique and are not reserved words,
+\item guards do not have side-effects,
+\item guards and actions only use declared variables, and
+\item control points and events used in transitions are declared.
+% \item transitions range between declared control points and are
+% labelled with declared events.
+\end{inparaenum}
 
 %Formally:
 %\[
@@ -149,13 +154,13 @@ labelled with declared events
 %\end{array}
 %\]
 
-\paragraph{MVA Transitions} The state of an MVA consists of a current control
-point, and the store of automaton variables.
+% \paragraph{MVA Transitions}
+The state of an MVA consists of a current control point, and the store of
+automaton variables (the program store is not part of the automaton state).
 \[{\small
 \MVAstate = \opr \cp : \CP, \stA : \Store \clr}
 \]
-Notice that the program store is not part of the automaton
-state. Given an MVA \(a\), the transition function \(\Delta_a\)
+Given an MVA \(a\), the transition function \(\Delta_a\)
 describes how given a program store and an event, \(a\) changes its
 internal state (where \(\chooseop\) is the arbitrary choice operator,
 and \textsf{apply} is a function that updates the automaton store
@@ -179,9 +184,9 @@ according to the list of actions in the obvious way).
 
 \end{array}}
 \]
-In a total MVA $a$, the transition function \(\Delta_a\) is total. Notice
-that a partial automaton gets stuck on a certain input if and only if the
-complete MVA will reach the state \halted.
+In a total MVA $a$, the transition function \(\Delta_a\) is total.
+A partial automaton gets stuck on a certain input if and only if the
+complete MVA reaches the state \halted.
 
 \begin{equation}\label{MVAcompletionProp}
 \Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow
@@ -190,14 +195,16 @@ complete MVA will reach the state \halted.
 
 
 \paragraph{Example}
-Recall the example security automaton in Figure~\ref{FigExample},
-expressing that the method \texttt{sendSMS} can
-be called at most \(N\) times in between calls to a \texttt{reset}
-method. This property is formally described by the following
-automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
-
+The following MVA\footnote{Where \(\actskip\) denotes an empty sequence.}
+encodes the property described in Figure~\ref{FigExample}.
+% Recall the example security automaton in Figure~\ref{FigExample},
+% expressing that the method \texttt{sendSMS} can
+% be called at most \(N\) times in between calls to a \texttt{reset}
+% method. This property is formally described by the following
+% automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \[
 \small{
+\hspace{-0.3em}
 \begin{array}[t]{l}
 \opri
 \begin{array}[t]{l}
@@ -256,14 +263,14 @@ automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
 \end{array}
 }\]
 
-Completion add the following transitions to the automaton in
-Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
-\entry(\texttt{sendSMS}), with guard \(n \geq N\); and for the events
-\exit(\texttt{sendSMS}) and \excexit(\texttt{sendSMS}), with guard \ttt;
-from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
-\exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
-all events and with guard \ttt.  Figure~\ref{FigCompleteMVA} shows
-the completed MVA.
+% Completion adds the following transitions to the automaton in
+% Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
+% \entry(\texttt{sendSMS}), with guard \(n \geq N\); and for the events
+% \exit(\texttt{sendSMS}) and \excexit(\texttt{sendSMS}), with guard \ttt;
+% from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
+% \exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
+% all events and with guard \ttt.
+Figure~\ref{FigCompleteMVA} shows the completed MVA.
 
 \psfrag{s1}{\tiny{\(s_1\)}}
 \psfrag{s2}{\tiny{\(s_2\)}}

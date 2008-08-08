@@ -24,14 +24,16 @@ University of Nijmegen, Netherlands}
 
 \maketitle
 \begin{abstract}
-\marginnote{\small AT: We don't verify adherence statically yet.}
 Security automata are a convenient way to describe security
 policies. They are often used to monitor an application, and to
 interrupt execution as soon the security policy is violated. However,
 sometimes run-time adherence checking is not always convenient.
 Therefore, we consider the security automata as specification only,
-and verify adherence to it statically. We achieve this by generation
-of JML annotations that inline the monitor into the application.
+\marginnote{\small AT: We don't verify adherence statically yet.}
+% and verify adherence to it statically. We achieve this by generation
+% of JML annotations that inline the monitor into the application.
+and try to verify adherence to it statically. We want to achieve this by
+generation of JML annotations that inline the monitor into the application.
 
 This paper describes the translation from security automata to program
 annotations, and proves that every translation step preserves the
@@ -51,7 +53,8 @@ that earlier existing annotations are not violated either).
 Both program semantics, translation and correctness proofs are
 formalised using the PVS theorem prover. The correctness proofs
 revealed several subtleties that have to be considered in the
-definition of the algorithm, and the program behaviour.
+definition of the algorithm and the program requirements.
+\marginnote{\small AT: Changed program behaiour to program requiments}
 \end{abstract}
 
 
