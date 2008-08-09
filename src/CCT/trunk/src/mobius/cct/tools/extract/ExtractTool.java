@@ -52,7 +52,7 @@ public final class ExtractTool extends AbstractTool {
                                 env, inputName));
       return null;
     } catch (IOException e) {
-      stderr.println("extract.error.ioexception");
+      stderr.println(getMessage("extract.error.ioexception", env));
       return null;
     }
   }
@@ -62,7 +62,7 @@ public final class ExtractTool extends AbstractTool {
    * @param env Environment.
    * @return File output stream or null.
    */
-  private FileOutputStream openOuput(final Environment env) {
+  private FileOutputStream openOutput(final Environment env) {
     final PrintStream stderr = env.getErr();
     final String outputName = env.getArgs()[OUTPUT_ARG];
     try {
@@ -93,9 +93,9 @@ public final class ExtractTool extends AbstractTool {
       p.parse(input, writer);
       output.close();
     } catch (IOException e) {
-      stderr.println("extract.error.ioexception"); 
+      stderr.println(getMessage("extract.error.ioexception", env));
     } catch (VisitorException e) {
-      stderr.println("extract.error.ioexception");
+      stderr.println(getMessage("extract.error.ioexception", env));
     }    
   }
   
@@ -112,7 +112,7 @@ public final class ExtractTool extends AbstractTool {
     }
     final DefaultClassFile input = readInput(env);
     if (input != null) {
-      final FileOutputStream output = openOuput(env);
+      final FileOutputStream output = openOutput(env);
       if (output != null) {
         extractCert(input, output, env);
       }

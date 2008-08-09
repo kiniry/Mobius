@@ -30,6 +30,9 @@ public class MethodCertificateAttribute implements Attribute {
    */
   public MethodCertificateAttribute(final MethodCertificate cert,
                                     final ConstantPoolBuilder scp) {
+    if ((cert == null) || (scp == null)) {
+      throw new IllegalArgumentException();
+    }
     fCert = cert;
     fSCP = scp;
   }

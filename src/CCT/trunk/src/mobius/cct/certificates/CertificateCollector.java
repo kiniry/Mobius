@@ -84,6 +84,24 @@ public class CertificateCollector<C extends ClassFile> {
   }
   
   /**
+   * Add method certificate. Class certificate
+   * with the same signature must already exist.
+   * If a method certificate with identical signature
+   * exists, it is replaced.
+   * @param m Method certificate.
+   */
+  public void addMethodCert(final MethodCertificate m) {
+    final Map<Version, CertificatePack> map = 
+      fCerts.get(m.getType());
+    if (map != null) {
+      final CertificatePack p = map.get(m.getVersion());
+      if (p != null) {
+        map.put(m.getVersion(), p.setMethodCert(m));
+      }
+    }
+  }
+  
+  /**
    * Get certificate pack. Returns null if there are no
    * certificates with requested type and version.
    * @param type Certificate type.

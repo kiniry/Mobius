@@ -138,4 +138,16 @@ public final class CertificatePack {
   public CertificatePack setClassCert(final ClassCertificate nc) {
     return new CertificatePack(nc, fMethodCerts);
   }
+  
+  /**
+   * Change method certificate.
+   * @param m New certificate.
+   * @return CertificatePack with changed method certificate.
+   */
+  public CertificatePack setMethodCert(final MethodCertificate m) {
+    final Map<MethodName, MethodCertificate> mc = 
+      new HashMap<MethodName, MethodCertificate>(fMethodCerts);
+    mc.put(m.getMethod(), m);
+    return new CertificatePack(fClassCert, mc);
+  }
 }

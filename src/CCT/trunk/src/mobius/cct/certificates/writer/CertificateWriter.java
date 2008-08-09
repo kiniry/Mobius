@@ -228,28 +228,28 @@ public class CertificateWriter implements ClassCertificateVisitor {
       throws VisitorException {
       return new MethodAttributeFilter();
     }
-    
-    /**
-     * Update second constant pool with constants needed by
-     * new certificates. Old constants are not removed.
-     */
-    private void updateScp() {
-      final Iterator<ClassCertificate> i = fClassCerts.iterator();
-      while (i.hasNext()) {
-        final ClassCertificate cert = i.next();
-        fSCP.newUtf8(cert.getType());
-        final Iterator<String> j = cert.getImports();
-        while (j.hasNext()) {
-          fSCP.newUtf8(j.next());
-        }
-      }
-      final Iterator<List<MethodCertificate>> j = 
-        fMethodCerts.values().iterator();
+  }
+  
+  /**
+   * Update second constant pool with constants needed by
+   * new certificates. Old constants are not removed.
+   */
+  private void updateScp() {
+    final Iterator<ClassCertificate> i = fClassCerts.iterator();
+    while (i.hasNext()) {
+      final ClassCertificate cert = i.next();
+      fSCP.newUtf8(cert.getType());
+      final Iterator<String> j = cert.getImports();
       while (j.hasNext()) {
-        final Iterator<MethodCertificate> k = j.next().iterator();
-        while (k.hasNext()) {
-          fSCP.newUtf8(k.next().getType());
-        }
+        fSCP.newUtf8(j.next());
+      }
+    }
+    final Iterator<List<MethodCertificate>> j = 
+      fMethodCerts.values().iterator();
+    while (j.hasNext()) {
+      final Iterator<MethodCertificate> k = j.next().iterator();
+      while (k.hasNext()) {
+        fSCP.newUtf8(k.next().getType());
       }
     }
   }
@@ -277,6 +277,13 @@ public class CertificateWriter implements ClassCertificateVisitor {
      */
     @Override
     public void begin(final MethodName m) throws VisitorException {
+      if (fSCP == null) {
+        fSCP = new DefaultBuilder();
+        updateScp();
+        final ConstantPool scp = 
+          fSCP.toConstantPool(new DefaultFactory());
+        fWriter.visitAttribute(new SecondConstantPool(scp)); 
+      }
       fMethodWriter = fWriter.visitMethod(m);
       fMethodWriter.begin(m);
       fMethod = m;
