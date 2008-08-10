@@ -2,6 +2,7 @@ package mobius.cct.repositories.classpath;
 
 import java.io.File;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.FileResource;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
@@ -51,12 +52,16 @@ public final class DirEntry implements ClassPathEntry {
    * @throws NotFoundException Cannot read requested file.
    */
   @Override
-  public Resource getClassFile(final String name) 
+  public Resource getClassFile(final ClassName name) 
     throws NotFoundException {
-    final char sep = System.getProperty("file.separator", "/").charAt(0);
-    final File f = new File(fPath, name.replace('.', sep) + ".class");
+    final char sep = 
+      System.getProperty("file.separator", "/").charAt(0);
+    final String path = 
+      name.getPackage().internalForm().replace('/', sep);
+    final File f = 
+      new File(fPath + "/" + path,  name.getName() + ".class");
     if ((!f.exists()) || (!f.isFile())) {
-      throw new NotFoundException();
+      throw new NotFoundException(name);
     }
     return new FileResource(f);
   }
@@ -68,12 +73,15 @@ public final class DirEntry implements ClassPathEntry {
    * @throws NotFoundException Cannot read requested file.
    */
   @Override
-  public Resource getCertFile(final String name) 
+  public Resource getCertFile(final ClassName name) 
     throws NotFoundException {
     final char sep = System.getProperty("file.separator", "/").charAt(0);
-    final File f = new File(fPath, name.replace('.', sep) + ".cert");
+    final String path = 
+      name.getPackage().internalForm().replace('/', sep);
+    final File f = 
+      new File(fPath + "/" + path,  name.getName() + ".cert");
     if ((!f.exists()) || (!f.isFile())) {
-      throw new NotFoundException();
+      throw new NotFoundException(name);
     }
     return new FileResource(f);
   }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.io.InputStream;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
 import mobius.cct.repositories.classpath.ZipEntry;
@@ -37,7 +38,9 @@ public class ZipEntryTest {
    */
   @Test
   public void testClass1() throws Exception {
-    Resource r = fEntry.getClassFile("mobius.cct.testdata.Test1");
+    Resource r = fEntry.getClassFile(
+      ClassName.parseInternal("mobius/cct/testdata/Test1")
+    );
     assertNotNull(r);
     InputStream is = r.open();
     assertNotNull(is);
@@ -51,6 +54,8 @@ public class ZipEntryTest {
    */
   @Test(expected=NotFoundException.class)
   public void testClass2() throws Exception {
-    fEntry.getClassFile("mobius.cct.testdata.FalseTest2");
+    fEntry.getClassFile(
+      ClassName.parseInternal("mobius/cct/testdata/FalseTest2")
+    );
   }
 }

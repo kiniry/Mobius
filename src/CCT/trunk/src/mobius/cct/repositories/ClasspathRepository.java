@@ -54,7 +54,7 @@ public class ClasspathRepository<C extends ClassFile>
   @Override
   public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException {
-    return fPath.getClassFile(name.externalForm(), fReader);
+    return fPath.getClassFile(name, fReader);
   }
   
   /**
@@ -67,7 +67,7 @@ public class ClasspathRepository<C extends ClassFile>
   public C getCertFile(final ClassName name) 
     throws IOException { 
     try {
-      return fPath.getCertFile(name.externalForm(), fReader);
+      return fPath.getCertFile(name, fReader);
     } catch (NotFoundException e) {
       return null;
     }

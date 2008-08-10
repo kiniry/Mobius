@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import mobius.cct.classfile.ClassFile;
+import mobius.cct.classfile.ClassName;
 import mobius.cct.classfile.ClassReader;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
@@ -70,7 +71,7 @@ public class ClassPath {
    * @return Class file.
    * @throws NotFoundException If the class cannot be found.
    */
-  private Resource findClass(final String name) 
+  private Resource findClass(final ClassName name) 
     throws NotFoundException {
     final Iterator<ClassPathEntry> i = fEntries.iterator();
     // CHECKSTYLE:OFF
@@ -82,7 +83,7 @@ public class ClassPath {
       }
     }
     // CHECKSTYLE:ON
-    throw new NotFoundException();
+    throw new NotFoundException(name);
   }
 
   /**
@@ -91,7 +92,7 @@ public class ClassPath {
    * @return Class file.
    * @throws NotFoundException If the class cannot be found.
    */
-  private Resource findCert(final String name) 
+  private Resource findCert(final ClassName name) 
     throws NotFoundException {
     final Iterator<ClassPathEntry> i = fEntries.iterator();
     // CHECKSTYLE:OFF
@@ -103,7 +104,7 @@ public class ClassPath {
       }
     }
     // CKECKSTYLE:ON
-    throw new NotFoundException();
+    throw new NotFoundException(name);
   }
   
   /**
@@ -116,14 +117,14 @@ public class ClassPath {
    * @throws IOException If thrown by reader.
    */
   public <C extends ClassFile> 
-    C getClassFile(final String name, 
+    C getClassFile(final ClassName name, 
                    final ClassReader<C> reader) 
       throws NotFoundException, IOException {
     final InputStream r = findClass(name).open();
     final C result = reader.read(r);
     r.close();
     if (result == null) {
-      throw new NotFoundException();
+      throw new NotFoundException(name);
     }
     return result;
   }
@@ -138,7 +139,7 @@ public class ClassPath {
    * @throws IOException If thrown by reader.
    */
   public <C extends ClassFile> 
-    C getCertFile(final String name, 
+    C getCertFile(final ClassName name, 
                   final ClassReader<C> reader) 
       throws NotFoundException, IOException {
     final InputStream r = findCert(name).open();

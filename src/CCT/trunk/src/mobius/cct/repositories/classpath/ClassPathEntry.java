@@ -1,5 +1,6 @@
 package mobius.cct.repositories.classpath;
 
+import mobius.cct.classfile.ClassName;
 import mobius.cct.repositories.NotFoundException;
 import mobius.cct.repositories.Resource;
 
@@ -14,7 +15,7 @@ public interface ClassPathEntry {
    * @return Resource which contains the class.
    * @throws NotFoundException Cannot read requested file.
    */
-  Resource getClassFile(final String name) 
+  Resource getClassFile(final ClassName name) 
     throws NotFoundException;
   
   /**
@@ -23,6 +24,6 @@ public interface ClassPathEntry {
    * @return Resource which contains the class.
    * @throws NotFoundException Cannot read requested file.
    */
-  Resource getCertFile(final String name)
+  Resource getCertFile(final ClassName name)
     throws NotFoundException;
 }

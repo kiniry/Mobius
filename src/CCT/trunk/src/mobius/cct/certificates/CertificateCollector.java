@@ -71,7 +71,7 @@ public class CertificateCollector<C extends ClassFile> {
     final Version version = c.getVersion();
     final Map<Version, CertificatePack> m;
     if (fCerts.containsKey(type)) {
-      m = fCerts.get(version);
+      m = fCerts.get(type);
     } else {
       m = new TreeMap<Version, CertificatePack>();
       fCerts.put(type, m);

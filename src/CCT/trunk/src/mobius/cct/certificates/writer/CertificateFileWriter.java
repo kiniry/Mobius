@@ -100,13 +100,16 @@ public final class CertificateFileWriter
         scp.newUtf8(k.next());
       }
     }
-    final Iterator<MethodCertificate> j = 
-      getMethodCerts();
+    final Iterator<MethodName> j = fMethodCerts.keySet().iterator();
     while (j.hasNext()) {
-      final MethodCertificate m = j.next();
-      cp.newUtf8(m.getMethod().getName());
-      cp.newUtf8(m.getMethod().getType().internalForm());
-      scp.newUtf8(m.getType());
+      final MethodName m = j.next();
+      cp.newUtf8(m.getName());
+      cp.newUtf8(m.getType().internalForm());
+      final Iterator<MethodCertificate> k = 
+        fMethodCerts.get(m).iterator();
+      while (k.hasNext()) {
+        scp.newUtf8(k.next().getType());
+      }
     }
     return new Pair<ConstantPoolBuilder, 
                     ConstantPoolBuilder>(cp, scp);
@@ -158,22 +161,6 @@ public final class CertificateFileWriter
         new ClassCertificateAttribute(i.next(), scp);
       writeAttribute(a, cp, fOutput);
     }
-  }
-
-  /**
-   * Iterate over all method certificates.
-   * @return Iterator.
-   */
-  private Iterator<MethodCertificate> getMethodCerts() {
-    final Iterator<List<MethodCertificate>> i =
-      fMethodCerts.values().iterator();
-    return new FlattenIterator<MethodCertificate>(
-      new MappedIterator<Collection<MethodCertificate>,
-      Iterator<MethodCertificate>>(
-        i,
-        new GetIterator<MethodCertificate>()
-      )
-    );
   }
   
   /**

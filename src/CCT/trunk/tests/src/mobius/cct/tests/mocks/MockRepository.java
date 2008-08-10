@@ -57,7 +57,7 @@ public class MockRepository implements Repository<MockRepoClass> {
     throws NotFoundException, IOException {
     final MockRepoClass result = fClasses.get(name.internalForm());
     if (result == null) {
-      throw new NotFoundException();
+      throw new NotFoundException(name);
     } else {
       return result;
     }
