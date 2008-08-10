@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -25,9 +24,6 @@ import mobius.cct.classfile.MethodName;
 import mobius.cct.constantpool.ConstantPoolBuilder;
 import mobius.cct.constantpool.DefaultBuilder;
 import mobius.cct.constantpool.DefaultFactory;
-import mobius.cct.util.FlattenIterator;
-import mobius.cct.util.GetIterator;
-import mobius.cct.util.MappedIterator;
 import mobius.cct.util.Pair;
 import mobius.cct.util.VisitorException;
 

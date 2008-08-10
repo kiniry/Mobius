@@ -22,6 +22,11 @@ public final class PackageName {
   private final String fName;
   
   /**
+   * Cached hash value.
+   */
+  private final int fHash;
+  
+  /**
    * Constructor.
    * @param parent Parent package.
    * @param name Package name.
@@ -30,6 +35,7 @@ public final class PackageName {
                       final String name) {
     fParent = parent;
     fName = name;
+    fHash = internalForm().hashCode();
   }
   
   /**
@@ -132,6 +138,29 @@ public final class PackageName {
       final String n = name.substring(sep + 1);
       final String p = name.substring(0, sep);
       return getPackage(parseInternal(p), n);
+    }
+  }
+  
+  /**
+   * Hashcode.
+   * @return Hash code.
+   */
+  @Override
+  public int hashCode() {
+    return fHash;
+  }
+  
+  /**
+   * Compare package names.
+   * @param obj Object to compare.
+   * @return True iff objects are equal.
+   */
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj instanceof PackageName) {
+      return internalForm().equals(((PackageName)obj).internalForm());
+    } else {
+      return false;
     }
   }
 }
