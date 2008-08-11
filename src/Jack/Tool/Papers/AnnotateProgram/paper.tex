@@ -35,26 +35,36 @@ Therefore, we consider the security automata as specification only,
 and try to verify adherence to it statically. We want to achieve this by
 generation of JML annotations that inline the monitor into the application.
 
-This paper describes the translation from security automata to program
-annotations, and proves that every translation step preserves the
-program behaviour.
+% This paper describes the translation from security automata to program
+% annotations, and proves that every translation step preserves the
+% program behaviour.
 % For this, we have developed a generic program semantics that is instantiated
 % for monitoring and run-time annotation checking.
-Preservation of program behaviour boils down to a proof
+% Preservation of program behaviour boils down to a proof
+% that monitoring will not find a security violation iff run-time
+% annotation checking will not find any annotation violation (provided
+% that earlier existing annotations are not violated either).
+%
+This paper describes the translation from security automata to program
+annotations and proves preservation of program behaviour, which
+boils down to a proof
 that monitoring will not find a security violation iff run-time
 annotation checking will not find any annotation violation (provided
 that earlier existing annotations are not violated either).
+%
 % AT: This is future work.
 % Once the program annotations are generated, an annotation propagation algorithm
 % can be used to generate appropriate pre- and postconditions that
 % are sufficient to guarantee adherence to the annotations, and that can
 % be verified statically.
 %
-Both program semantics, translation and correctness proofs are
-formalised using the PVS theorem prover. The correctness proofs
-revealed several subtleties that have to be considered in the
-definition of the algorithm and the program requirements.
-\marginnote{\small AT: Changed program behaiour to program requiments}
+% Both program semantics, translation and correctness proofs are
+% formalised using the PVS theorem prover. The correctness proofs
+% revealed several subtleties that have to be considered in the
+% definition of the algorithm and the program behaviour.
+The correctness proofs are formalised using the PVS theorem prover and they
+reveal several subtleties that have to be considered in the definition of the
+algorithm and in the program requirements.
 \end{abstract}
 
 

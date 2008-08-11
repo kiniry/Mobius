@@ -357,7 +357,7 @@ two annotations on the same line.}
 \begin{figure}[t]
 {\small\begin{verbatim}
 class Messaging {
-  //@ ghost int s1=1; //@ghost int s2=2; //@ghost int N=5;
+  //@ ghost int s1=1; //@ ghost int s2=2; //@ ghost int N=5;
   int counter; //@ ghost int cp = s1; //@ ghost int n;
 
   /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),

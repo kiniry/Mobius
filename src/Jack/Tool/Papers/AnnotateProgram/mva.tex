@@ -17,7 +17,7 @@ can be applied. It depends on
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the automaton state,
 \item the state of the program that is being monitored, and
-\item the argument of the method, in case the event is method entry; or
+\item the argument of the method, in case the event is method entry;
 the result of the method, in case the event is normal method exit; or
 the exception with which the method returns, in case the event is
 exceptional method exit.
@@ -75,7 +75,7 @@ below), while program variable declarations in the MVA have the same
 format as local variable declarations in a program (\emph{i.e.}, they
 are not explicitly initialised in the monitor, their value is retrieved from
 the program state.). Figure~\ref{FigMVAForm} shows the
-main types of the MVA definition
+main types of the MVA definition.
 %% This is already said
 % (the types of \FieldDecl and
 % \LocalVarDecl will also be used in the abstract syntax of programs).
@@ -116,8 +116,8 @@ one (by function \complete): add a special control state
 \halted, together with transitions for every control point and every event
 to this \halted control point, where the guard is the negation of the
 disjunction of all other guards for this control point and event, and
-in addition, add unconditional transitions from \halted to \halted with guard
-\ttt for every possible event.
+in addition, add unconditional transitions from \halted to \halted
+for every possible event.
 
 %\marginnote{MH: Should we give formal definition of \emph{complete}?}
 

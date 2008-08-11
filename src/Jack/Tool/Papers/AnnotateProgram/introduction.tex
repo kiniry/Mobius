@@ -3,9 +3,9 @@
 With the emergence of a new generation of trusted personal devices
 (mobile phones, PDAs, smart cards \emph{etc.}), the demand for
 techniques to guarantee application security has become even more
-prominent. A commonly advocated way to achieve this is to monitor
-executions with a security automaton~\cite{Schneider99}.  Upon entry
-or exit of a security-critical method, the security automaton changes
+prominent. A commonly advocated approach is to monitor
+executions with a security automaton~\cite{Schneider99}. Upon entry
+or exit of a security-critical method, the security automaton updates
 its internal state. If it reaches an ``illegal'' state, the
 application will be stopped and a security violation will be
 reported. This approach is in particular suited for properties that
@@ -52,16 +52,15 @@ automaton~\cite{Wolper01}) into inline annotations.
 % generated, see~\cite{PavlovaBBHL04} for a propagation algorithm that does
 % exactly this.
 
-This paper shows that the translation from security automata to
-annotations is security preserving: monitoring of the application does
-not produce a security violation, if and only if runtime checking of
-the generated annotations will not result in annotation violation.
+We prove that such translation is security preserving: monitoring
+the application does not produce a security violation,
+if and only if, runtime checking
+the generated annotations does not result in a violation.
 As a next step, the annotations can be propagated (as described
-in~\cite{PavlovaBBHL04}), \emph{i.e.}, the annotations that are
-generated directly give rise to new program annotations. Eventually,
-this will result in a completely annotated application, and if one can
+in~\cite{PavlovaBBHL04}), giving rise to new annotations. Eventually,
+this will result in a completely annotated application and if one can
 prove statically that the annotated program respects its annotations,
-the program also respects the security property expressed by the automaton.
+the program will also respect the security property expressed by the automaton.
 
 The translation described in this paper is defined in several
 steps. For each step we provide a correctness proof.
@@ -180,14 +179,14 @@ increased upon exceptional termination of
 called from within \texttt{sendSMS}). Figure~\ref{FigExample} shows a
 security automaton that can be used to monitor this property (where
 \(\varepsilon\) denotes an empty action list). Even though very basic,
-this example is representative for a wide range of important
+this example is representative of a wide range of important
 resource-related security properties.
 
 The remainder of this paper is organised as follows.
 Section~\ref{SecMVA} formalises the automaton format that we
-use, and defines the completion function. Next,
+use and defines the completion function. Next,
 Section~\ref{SecProgram} defines the semantics of monitored and
 annotated programs. Then Section~\ref{SecAnnotGen} presents the
-different translations, and proves their
+different translations and proves their
 correctness. Section~\ref{SecRelated} discusses related work, while
 Section~\ref{SecConcl} concludes and discusses future work.
