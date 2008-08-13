@@ -52,11 +52,10 @@ we prove a stronger result, adding that also the resulting values
 \(v_1\) and \(v_2\) are the same (however, sometimes this holds only
 under certain conditions).
 
-
-
-This section presents more details of the different translation steps,
-and presents the relation that witnesses the bisimulation.  Further,
-we discuss the special conditions under which the bisimulation holds.
+%% Commented to save space
+% This section presents more details of the different translation steps,
+% and presents the relation that witnesses the bisimulation.  Further,
+% we discuss the special conditions under which the bisimulation holds.
 
 %\begin{figure}
 %\begin{center}
@@ -87,7 +86,7 @@ The relation that is preserved between executions of \(P\) and
 R(\sigma, \tau) =\\
  \begin{array}[t]{l}
   (\pif {\sigma.\stuck}{\tau.\mvastate.\cp = \halted\\\ }
-        {\sigma.\mvastate.\cp = \tau.\mvastate.\cp}) \:\wedge \\
+        {\sigma.\mvastate.\cp = \tau.\mvastate.\cp}) \:\wedge
   \neg \tau.\stuck \:\wedge\\
   (\sigma.\mvastate.\stA = \tau.\mvastate.\stA) \:\wedge
   (\sigma.\progstate = \tau.\progstate)
@@ -346,19 +345,18 @@ MVA, encoding the \emph{limited SMS} security policy, in
 % TODO AT: again here I get Figure 2
 Figure~\ref{FigCompleteMVA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
-\(\alpha_2\) on this program and this MVA. Notice that for methods
+\(\alpha_2\) on this program and this MVA.
+\marginnote{\small To be strict, in the \preset we add an \Assert}
+Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
 generated~--~this is equivalent to an \Skip statement.
 
-\marginnote{\small There are many vars not declared: s1, s2, halted, N.
-Is it just to save space? Should we add some ... in the declarations?
-Also cp must be initialized to s1. I added them but in JML we cannot have
-two annotations on the same line.}
 \begin{figure}[t]
 {\small\begin{verbatim}
 class Messaging {
-  //@ ghost int s1=1; //@ ghost int s2=2; //@ ghost int N=5;
-  int counter; //@ ghost int cp = s1; //@ ghost int n;
+  //@ static final ghost int halted = 0, s1 = 1, s2 = 2, N = 5;
+  int counter; //@ ghost int cp = s1, n = 0;
+  //@ public invariant cp != halted;
 
   /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
                                             (n >= N, cp = halted)]),
