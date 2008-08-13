@@ -48,7 +48,7 @@ differently upon method call and exit.
             \EvalR(n : \Name) \mid
             \CondExpr(c, e_1, e_2 : \Expr) \mid\\
       &   & \Assign(n : \Name, e : \Expr) \mid
-            \Call(o : \Expr, n : \Name, p : \Expr) \mid
+            \Call(o : \Expr, mn : \Name, p : \Expr) \mid
             \Const(v : \Val) \\
 \Stmt & = & \Skip \mid
             \Sequence(s_1, s_2 : \Stmt) \mid
@@ -132,8 +132,8 @@ Pre- and postcondition and the different method specification-level set
 annotations are functions to allow the use of the method parameter,
 the method result and the possible return exception\footnote{Notice
 that the type of \pre, \post, \preset and \postset could be made more specific:
-the first expression argument is a side-effect free expression.}. The semantics
-will apply them appropriately.
+the first expression argument is a side-effect free expression.}.
+% The semantics will apply them appropriately.
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -152,7 +152,7 @@ The behaviour of a program is described via a big step semantics. We
 closely follow Von Oheimb's formalisation of Java~\cite{Oheimb01},
 with simplifications wherever possible, due to our simplified
 program syntax. A judgement $\etp{P}{e,\sigma}{v,\sigma'}$, means that the body
-$e$ evaluates to $v$, while transforming the state $\sigma$ into $\sigma'$ in
+$e$ evaluates to $v$, while transforming the state $\sigma$ into $\sigma'$, in
 the context of the program \(P\). Note that \(v\) is \One for
 normally terminating \emph{statements}, while \(v\) is \(\bot\) whenever
 the evaluation finishes in an exceptional state.
@@ -169,19 +169,20 @@ value.
 \end{array}}
 \]
 
-When bodies are evaluated, uncaught exceptions are propagated.
-Exceptions can only be caught explicitly \emph{within} a \(\TryCatch\)
-statement.  All evaluation rules require explicitly that the
-initial state is not exceptional.
+% Commented out to save space
+% When bodies are evaluated, uncaught exceptions are propagated.
+% Exceptions can only be caught explicitly \emph{within} a \(\TryCatch\)
+% statement.  All evaluation rules require explicitly that the
+% initial state is not exceptional.
 
 % Commented out to save space
 % As mentioned above, we define both the semantics of an (annotated)
 % program and of a monitored program by parametrising the semantics with
 % functions that specify how the specification constructs are to be
 % evaluated.
-Since annotated or monitored programs and/or their states
-contain more information than programs without annotations, the
-evaluation rules are defined over parametric types
+Since annotated or monitored programs
+contain more information than unannotated programs, the
+evaluation rules are parametrised with types
 \(\FullProgram\) and \(\FullState\). For each instantiation we give
 mappings \program and \progstate to the basic program type \Program
 and the basic program state \Pstate.
@@ -199,10 +200,12 @@ the method definition
 the receiver reference \(r\) to \texttt{this}, initialising the
 method's local variables and assigning the actual parameter to the
 formal parameter. The old local variable store is kept (as \oldlvs),
-to be restored after method termination. Next, an appropriate action
+to be restored after method termination.
+Next, an appropriate action
 upon method entry is taken, as specified by the relation \(\gammain\),
-one of the parameters of the semantics~--~below we will discuss
-different instantiations. Next the method body, and method result
+one of the parameters of the semantics.
+% ~--~below we will discuss different instantiations.
+Then the method body, and method result
 expression are evaluated. Since this rule applies to normal method
 termination only, the parameter for normal method termination
 \(\gammanorm\) is evaluated. Last, the local store is set back to
@@ -245,8 +248,8 @@ is also parametrised with
 method, and \deltaset, \deltacase, and \deltaassert, describing the
 semantics of the \Set, \CaseJML and \Assert statements,
 respectively. In a standard program semantics, where specifications
-are ignored, all these parameters are instantiated basically with the
-identity relation.
+are ignored, all these parameters are instantiated % basically
+with the identity relation.
 
 %\paragraph{Standard program semantics}
 %To evaluate a program without considering the specifications,
@@ -270,7 +273,7 @@ ghost variables:
 The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
-instantiations of the semantics parameters (presented in rule format);
+instantiations of the semantics parameters; % (presented in rule format);
 the other instantiations are similar. Relation \gammain uses an
 auxiliary relation \(\beta\) which checks boolean expression \(e\) and
 raises a special \JMLExc if the expression is not true. Upon method
@@ -307,7 +310,7 @@ updated to \(v\).} appropriately.
 \smallskip\\
 
 \etp{P}{e, \sigma_1}{v, \tau} \qquad
-\pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau}{\sigma_2 = \tau (\gvs.n := v)}\\
+\pif{\tau.\pstate.\ex = \bot}{\sigma_2 = \tau (\gvs.n := v)}{\sigma_2 = \tau}\\
 \hline
 \deltaset(P, \Set(e, n), \sigma_1, \sigma_2)
 \end{array}}
@@ -318,7 +321,7 @@ updated to \(v\).} appropriately.
 
 
 \paragraph{Monitored Program Semantics}
-The general program semantics is also instantiated for monitored
+The parametric program semantics is also instantiated for monitored
 programs. This semantics is only defined when the MVA is compatible
 with the program. An MVA \(a\) is said to be compatible with a program
 \(P\), denoted \(a \sqsubseteq P\), if
@@ -350,8 +353,8 @@ Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
 appropriate instantiations for the \(\gamma\)- and
 \(\delta\)-relations. In fact, the \(\delta\)-relations are the same as
 for the standard or annotated program semantics (depending on whether
-we wish the monitored program to evaluate annotations that are
-possibly already there). Here we show how \gammain changes the state
+we wish the monitored program to evaluate annotations).
+Here we show how \gammain changes the state
 of the monitor, using \(\hat\gammain\) for the necessary checks at
 method entrance in the program itself (\emph{i.e.}, the evaluation of
 the method specification).
@@ -367,8 +370,7 @@ the method specification).
 \end{array}}
 \]
 \marginnote{\small isn't $\hat\gammain$ the same defined in
-Fig~\ref{FigAnnotatedSem}? If so why don't we refer to it? We should make
-clear that this is a parameter to the semantics}
+Fig~\ref{FigAnnotatedSem}? If so why don't we refer to it?}
 
 \noindent where
 % This is a simplified version of on_method_MVA in MonitoredProgram
@@ -391,23 +393,25 @@ clear that this is a parameter to the semantics}
 \]
 
 
-\paragraph{Example}
+%% This example does not add much is a bit disconnected with the previous text
+% \paragraph{Example}
+%
+% To be able to generate the annotations capturing the security policy
+% specified by the LimitSMS automaton in Figure~\ref{FigExample}, below
+% is a class declaration of class \texttt{Messaging}, declaring the
+% methods used by the automaton, plus a method \texttt{receiveSMS}, and
+% a field \texttt{counter}. To illustrate our annotation algorithm, we
+% do not need to give an implementation here; it is only important to
+% know that the methods actually have an implementation.
+%
+% {\small\begin{verbatim}
+% class Messaging {
+%   int counter;
+%   void sendSMS(){/* body of sendSMS */}
+%   void receiveSMS(){/* body of receiveSMS */}
+%   void reset() {/* body of reset */} }
+% \end{verbatim}}
 
-To be able to generate the annotations capturing the security policy
-specified by the LimitSMS automaton in Figure~\ref{FigExample}, below
-is a class declaration of class \texttt{Messaging}, declaring the
-methods used by the automaton, plus a method \texttt{receiveSMS}, and
-a field \texttt{counter}. To illustrate our annotation algorithm, we
-do not need to give an implementation here; it is only important to
-know that the methods actually have an implementation.
-
-{\small\begin{verbatim}
-class Messaging {
-  int counter;
-  void sendSMS(){ /* body sendSMS  */}
-  void receiveSMS(){... }
-  void reset() { /* body reset */} }
-\end{verbatim}}
 %\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
 %\end{figure}
 %\subsubsection{PVS formalisation}

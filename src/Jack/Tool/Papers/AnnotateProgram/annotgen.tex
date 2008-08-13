@@ -16,7 +16,7 @@ the method body.
 %annotations.
 \end{inparaenum}
 %Notice that the order of the last two steps can be swapped.
-Notice that the special \CaseJML constructed could be translated into
+Notice that the special \CaseJML statement could be translated into
 standard JML annotations as well.
 
 For each step we prove that the old and the new program are bisimilar,
@@ -35,8 +35,8 @@ R(\sigma_2, \tau_2)
 \]
 and vice versa. Additionally, we show that the initial program states
 are related by \(R\), and from this we can conclude that for any
-reachable states there exists a related state, reachable in the
-translated program.
+reachable state of the monitored program, there exists a related state,
+reachable in the translated program.
 
 A natural way to prove this is by induction over the derivation
 length. However, to do this, we have to make some restrictions. In
