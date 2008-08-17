@@ -429,7 +429,7 @@ BEGIN
        pstate(on_method_MVA(etype)(mp, md)(arg)(s)) = pstate(s) AND
        gvs(on_method_MVA(etype)(mp, md)(arg)(s)) = gvs(s)
 
-  derive_pstate_independent_of_MVA : LEMMA 
+  derive_pstate_independent_of_MVA : LEMMA % PROVE
     FORALL (mp1, mp2 : MonitoredProgram, b : Body, v : Val)
            (sigma1, sigma2, tau1 : MPState, n1 : nat) :
       wf_MP(mp1) IMPLIES
@@ -442,7 +442,7 @@ BEGIN
       gvs(sigma1) = gvs(tau1) IMPLIES
       derive(mp1)(b, sigma1, v, sigma2)(n1) IMPLIES
       EXISTS (tau2 : MPState, n2 : nat) : 
-      derive(mp2)(b, tau1, v, tau2)(n2) AND
+        derive(mp2)(b, tau1, v, tau2)(n2) AND
         pstate(sigma2) = pstate(tau2) AND gvs(sigma2) = gvs(tau2)
 
 
@@ -619,39 +619,41 @@ BEGIN
 
 
  monitor_related_states_implies_derive : LEMMA % :-)
-    FORALL (b : (wf_Body(program(mp))), v : Val)
-           (s1a, s1b, s2a : MPState) 
-           (n1 : nat) :
-      monitor_related_states(mp)(s1a, s1b) IMPLIES
-      derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
-      EXISTS (s2b : MPState, n2 : nat) : 
-      derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
+   FORALL (b : (wf_Body(program(mp))), v : Val)
+          (s1a, s1b, s2a : MPState) 
+          (n1 : nat) :
+     monitor_related_states(mp)(s1a, s1b) IMPLIES
+     derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
+     EXISTS (s2b : MPState, n2 : nat) : 
+     derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
 
  monitor_related_states_implies_derive_converse : LEMMA % :-)
-    FORALL (b : (wf_Body(program(mp))), v : Val)
-           (s1a, s1b, s2a : MPState) 
-           (n1 : nat) :
-      monitor_related_states(mp)(s1b, s1a) IMPLIES
-      derive(complete_MP(mp))(b, s1a, v, s2a)(n1) IMPLIES
-      EXISTS (s2b : MPState, n2 : nat) : 
-      derive(mp)(b, s1b, v, s2b)(n2)
-  
-  correctness_of_complete_MP : THEOREM % :-)
-    FORALL (main : Name, arg : int)(root_object : (defined?))
-           (s1, s2 : MPState) :
-      run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
-      EXISTS (s2 : MPState) : 
-        run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
-        monitor_related_states(mp)(s1, s2)
+   FORALL (b : (wf_Body(program(mp))), v : Val)
+          (s1a, s1b, s2a : MPState) 
+          (n1 : nat) :
+     monitor_related_states(mp)(s1b, s1a) IMPLIES
+     derive(complete_MP(mp))(b, s1a, v, s2a)(n1) IMPLIES
+     EXISTS (s2b : MPState, n2 : nat) : 
+     derive(mp)(b, s1b, v, s2b)(n2)
+ 
 
-  correctness_of_complete_MP_converse : THEOREM % :-)
-    FORALL (main : Name, arg : int)(root_object : (defined?))
-           (s1, s2 : MPState) :
-      run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s1) 
-      IMPLIES
-      EXISTS (s2 : MPState) : 
-        run_monitored_program(mp)(main, arg)(root_object)(s2) AND
-        monitor_related_states(mp)(s2, s1)
+ % Correctness of the first step of the translation
+ correctness_of_complete_MP : THEOREM % :-)
+   FORALL (main : Name, arg : int)(root_object : (defined?))
+          (s1, s2 : MPState) :
+     run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
+     EXISTS (s2 : MPState) : 
+       run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
+       monitor_related_states(mp)(s1, s2)
+
+ correctness_of_complete_MP_converse : THEOREM % :-)
+   FORALL (main : Name, arg : int)(root_object : (defined?))
+          (s1, s2 : MPState) :
+     run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s1) 
+     IMPLIES
+     EXISTS (s2 : MPState) : 
+       run_monitored_program(mp)(main, arg)(root_object)(s2) AND
+       monitor_related_states(mp)(s2, s1)
 
 
 END MonitoredProgramCompletessRelation

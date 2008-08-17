@@ -17,7 +17,7 @@ invariant and pre- and post-set annotations in the right order, to ensure
 that the relation was established as quickly as possible~--~so that
 the induction hypothesis could be applied for the other
 steps. Adding the additional assert to the pre-set annotation was also
-crucial for correctness.  
+crucial for correctness.
 Finally, a last important issue here was the behaviour of the
 \TryCatch statement, where exceptions in the \emph{finally} block can
 overwrite other exceptions.
@@ -27,7 +27,7 @@ that extending it to full (sequential) Java would be relatively
 straightforward. However, generalising to properties that are not
 restricted to a single class or to multithreading might be more
 challenging.
-
+%
 The ultimate goal of our work is to be able to do static
 verification. To achieve this, a weakest precondition calculus can be
 used to generate pre- and postconditions, based on the generated \Set

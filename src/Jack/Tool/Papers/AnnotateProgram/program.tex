@@ -107,17 +107,19 @@ engineering issue (see Section~\ref{SecConcl}).
 
 Figure~\ref{FigExprStmt} defines expressions and statements as a
 mutually recursive data type (we use the term \emph{body} to denote
-either expressions or statements). Notice that we have some special
+either an expression or a statement). Notice that we have some special
 language constructs that are used to represent JML annotations: \Set,
 to update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
 and \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
-semantics evaluates them. Therefore, the state of an annotated program
-is extended with a ghost variable store.
+semantics evaluates them.
+% Therefore, the state of an annotated program
+% is extended with a ghost variable store.
 % , which is updated according to the \Set or \CaseJML statement.
-If the condition of an \Assert evaluates to false, a special \JMLExc is thrown to
-signal the annotation violation.
+% If the condition of an \Assert evaluates to false, a special \JMLExc is thrown to
+% signal the annotation violation.
+% If the condition of an \Assert evaluates to false, a \JMLExc is thrown.
 
 Figure~\ref{FigProgram} describes the syntax for methods,
 classes and programs. To ensure that every method has an appropriate
@@ -191,28 +193,27 @@ The evaluation rules are fairly standard, therefore we refer to Von
 Oheimb and the PVS formalisation for more details.
 Figure~\ref{FigEvalRules} shows the evaluation of normally
 terminating method calls (where for clarity of presentation, we have
-left out several checks that intermediate states are not
-exceptional~--~these are present in the PVS formalisation). First the
-receiver is evaluated, resulting in reference \(r\). Next, the
-parameter is evaluated, resulting in value \act. If \(r\) is not null,
-the method definition
-\md can be looked up. The local variable store is updated assigning
-the receiver reference \(r\) to \texttt{this}, initialising the
+left out several checks that intermediate states are not exceptional).
+First the receiver is evaluated, resulting in reference \(r\).
+Next, the parameter is evaluated, resulting in value \act. If \(r\) is not null,
+the method definition \md is looked up.
+The local variable store is updated assigning
+%the receiver reference
+\(r\) to \texttt{this}, initialising the
 method's local variables and assigning the actual parameter to the
-formal parameter. The old local variable store is kept (as \oldlvs),
-to be restored after method termination.
-Next, an appropriate action
-upon method entry is taken, as specified by the relation \(\gammain\),
-one of the parameters of the semantics.
+formal parameter. The old local variable store is kept as \oldlvs.
+%to be restored after method termination.
+Next, an appropriate action upon method entry is taken, as specified by the
+relation \(\gammain\), one of the parameters of the semantics.
 % ~--~below we will discuss different instantiations.
 Then the method body, and method result
 expression are evaluated. Since this rule applies to normal method
-termination only, the parameter for normal method termination
+termination only, the semantics' parameter for normal method termination
 \(\gammanorm\) is evaluated. Last, the local store is set back to
-\(\oldlvs\),  and this terminates the method call. Similar rules
-exist that describe what happens upon exceptional termination of a
-method, when a method is called upon a null reference
-\emph{etc.}
+\(\oldlvs\). %, and this terminates the method call.
+Similar rules exist that describe what happens upon exceptional termination,
+% of a method,
+when a method is called upon a null reference \emph{etc.}
 
 
 
@@ -275,12 +276,12 @@ instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
 instantiations of the semantics parameters; % (presented in rule format);
 the other instantiations are similar. Relation \gammain uses an
-auxiliary relation \(\beta\) which checks boolean expression \(e\) and
-raises a special \JMLExc if the expression is not true. Upon method
+auxiliary relation \(\beta\) which checks a boolean expression \(e\) and
+raises a special \JMLExc if it evaluates to false. Upon method
 entry, the class invariant and precondition are evaluated. If they
 fail, a \JMLExc is thrown, otherwise the method's \preset statement is
-executed. Finally, we ensure that the program store is not
-changed. The function
+executed. Finally, we ensure that the program store is not changed.
+The function
 \deltaset updates a ghost variable: it first evaluates the expression
 and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to

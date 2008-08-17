@@ -195,13 +195,78 @@ complete MVA reaches the state \halted.
 
 
 \paragraph{Example}
-The following MVA\footnote{Where \(\actskip\) denotes an empty sequence.}
-encodes the property described in Figure~\ref{FigExample}.
+% The following MVA\footnote{Where \(\actskip\) denotes an empty sequence.}
+% encodes the property described in Figure~\ref{FigExample}.
 % Recall the example security automaton in Figure~\ref{FigExample},
 % expressing that the method \texttt{sendSMS} can
 % be called at most \(N\) times in between calls to a \texttt{reset}
 % method. This property is formally described by the following
 % automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
+% \[
+% \small{
+% \hspace{-0.3em}
+% \begin{array}[t]{l}
+% \opri
+% \begin{array}[t]{l}
+% \name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
+% \cps := \{s_1, s_2\},
+% \init := s_1,\\
+% \evs :=
+% \begin{array}[t]{l}
+% \{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \opri \entry,
+% \exit, \excexit \} \:\cup \\
+% \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
+% \end{array}
+% \\
+% \vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
+% \vdsP := \emptyset,\\
+% \trans := \{
+% \begin{array}[t]{l}
+% \opri
+%  \begin{array}[t]{l}
+% \scp := s_1, \tcp := s_2, \\
+%              \event := \opri \etype := \entry,
+%                              \mname := \texttt{sendSMS} \clri, \\
+%              \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,
+%              \action := \actskip
+%             \clri,
+% \end{array}\\
+% \opri
+%  \begin{array}[t]{l}
+% \scp := s_2, \tcp := s_1, \\
+%              \event := \opri \etype := \exit,
+%                              \mname := \texttt{sendSMS} \clri, \\
+%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
+%              \action := [\opri \target := n, \expr := n + 1 \clri]
+%             \clri,
+% \end{array}\\
+% \opri
+%  \begin{array}[t]{l}
+% \scp := s_2, \tcp := s_1, \\
+%              \event := \opri \etype := \excexit,
+%                              \mname := \texttt{sendSMS} \clri, \\
+%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
+%              \action := \actskip
+%             \clri,
+% \end{array}\\
+% \opri
+% \begin{array}[t]{l}
+% \scp := s_1, \tcp := s_1, \\
+%              \event := \opri \etype := \exit, \mname := \texttt{reset}
+% \clri, \\
+%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
+%              \action := [\opri \target := n, \expr := 0 \clri]
+%            \clri \} \clri
+% \end{array}
+% \end{array}
+% \end{array}\\
+% \end{array}
+% }\]
+
+The following MVA\footnote{Where we assume that the default guard is
+\(\lambda(\sigma_A, \sigma_P, v). \ttt\) and the default action is
+\(\actskip\), an empty sequence.}
+encodes the property described in Figure~\ref{FigExample}.
 \[
 \small{
 \hspace{-0.3em}
@@ -224,44 +289,33 @@ encodes the property described in Figure~\ref{FigExample}.
 \begin{array}[t]{l}
 \opri
  \begin{array}[t]{l}
-\scp := s_1, \tcp := s_2, \\
+\scp := s_1, \tcp := s_2, \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
              \event := \opri \etype := \entry,
-                             \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,
-             \action := \actskip
-            \clri,
+                             \mname := \texttt{sendSMS} \clri \clri,
 \end{array}\\
 \opri
  \begin{array}[t]{l}
-\scp := s_2, \tcp := s_1, \\
+\scp := s_2, \tcp := s_1, \action := [\opri \target := n, \expr := n + 1 \clri]\\
              \event := \opri \etype := \exit,
-                             \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-             \action := [\opri \target := n, \expr := n + 1 \clri]
-            \clri,
+                             \mname := \texttt{sendSMS} \clri \clri,
 \end{array}\\
 \opri
  \begin{array}[t]{l}
 \scp := s_2, \tcp := s_1, \\
              \event := \opri \etype := \excexit,
-                             \mname := \texttt{sendSMS} \clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-             \action := \actskip
-            \clri,
+                             \mname := \texttt{sendSMS} \clri, \clri,
 \end{array}\\
 \opri
 \begin{array}[t]{l}
-\scp := s_1, \tcp := s_1, \\
-             \event := \opri \etype := \exit, \mname := \texttt{reset}
-\clri, \\
-             \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-             \action := [\opri \target := n, \expr := 0 \clri]
-           \clri \} \clri
+\scp := s_1, \tcp := s_1, \action := [\opri \target := n, \expr := 0 \clri] \\
+             \event := \opri \etype := \exit, \mname := \texttt{reset} \clri \clri
+\} \clri
 \end{array}
 \end{array}
 \end{array}\\
 \end{array}
 }\]
+
 
 % Completion adds the following transitions to the automaton in
 % Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
@@ -270,6 +324,7 @@ encodes the property described in Figure~\ref{FigExample}.
 % from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
 % \exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
 % all events and with guard \ttt.
+% TODO AT: I get a reference to Figure 2 instead of 3.
 Figure~\ref{FigCompleteMVA} shows the completed MVA.
 
 \psfrag{s1}{\tiny{\(s_1\)}}

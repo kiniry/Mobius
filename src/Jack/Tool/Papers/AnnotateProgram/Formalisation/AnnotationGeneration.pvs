@@ -304,6 +304,7 @@ BEGIN
     FORALL (et : EventType, n : Name, q : CP) :
       is_finite({t: Transition | filter_event(mva(mp))(et)(n)(t) AND scp(t) = q})
 
+  % TODO: Prove the TCCs generated
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType)(v : ValOrExcpt) :
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v)

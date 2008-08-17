@@ -623,7 +623,7 @@ BEGIN
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
   % copied proof for monitored program
-  related_states_implies_derive_for_unchanged_program : THEOREM %
+  related_states_implies_derive_for_unchanged_program : THEOREM % PROVE
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1 : APState)
            (n1 : nat) :
@@ -636,7 +636,7 @@ BEGIN
         EXISTS (sAP2 : APState, n2 : nat) : 
           derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
 
-  related_states_implies_derive_for_unchanged_program_converse : THEOREM %
+  related_states_implies_derive_for_unchanged_program_converse : THEOREM % PROVE
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1 : MPState, sAP1, sAP2 : APState)
            (n1 : nat) :

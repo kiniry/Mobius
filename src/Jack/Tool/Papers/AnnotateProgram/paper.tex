@@ -27,7 +27,7 @@ University of Nijmegen, Netherlands}
 Security automata are a convenient way to describe security
 policies. They are often used to monitor an application, and to
 interrupt execution as soon the security policy is violated. However,
-sometimes run-time adherence checking is not always convenient.
+run-time adherence checking is not always convenient.
 Therefore, we consider the security automata as specification only,
 \marginnote{\small AT: We don't verify adherence statically yet.}
 % and verify adherence to it statically. We achieve this by generation
@@ -49,8 +49,8 @@ This paper describes the translation from security automata to program
 annotations and proves preservation of program behaviour, which
 boils down to a proof
 that monitoring will not find a security violation iff run-time
-annotation checking will not find any annotation violation (provided
-that earlier existing annotations are not violated either).
+checking the generated annotations will not find any violation.
+
 %
 % AT: This is future work.
 % Once the program annotations are generated, an annotation propagation algorithm
@@ -62,8 +62,8 @@ that earlier existing annotations are not violated either).
 % formalised using the PVS theorem prover. The correctness proofs
 % revealed several subtleties that have to be considered in the
 % definition of the algorithm and the program behaviour.
-The correctness proofs are formalised using the PVS theorem prover and they
-reveal several subtleties that have to be considered in the definition of the
+The correctness proofs are formalised using the PVS theorem prover.
+They reveal several subtleties to be considered in the definition of the
 algorithm and in the program requirements.
 \end{abstract}
 

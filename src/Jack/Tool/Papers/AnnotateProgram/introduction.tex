@@ -36,31 +36,32 @@ the application provider is required to create this proof.
 % security properties are encoded as logical formulae, and classical
 % program verification techniques are used to produce the proof.
 
-Security experts typically express security requirements by a
-collection of security rules that have to be followed by the
-application developer. Automata or temporal logic are a natural and
-intuitive formalism to express these. However, typical program
-verification tools that can be used in such an approach use a Hoare
-logic style for the specifications (\emph{i.e.}, using pre- and
+Security experts typically express security requirements by a collection of
+% security rules that have to be followed by the
+% application developer. Automata or temporal logic are a natural and
+% intuitive formalism to express these.
+security automata or temporal logic formulae. However, typical program
+verification tools %that can be used in such an approach
+use a Hoare logic style for the specifications (\emph{i.e.}, using pre- and
 postconditions). Therefore, as a first step towards static
 verification of such security properties, this paper proposes a
 translation from security properties expressed as an automaton (or a
 safety temporal logic formula, which can be translated into an
-automaton~\cite{Wolper01}) into inline annotations.
+automaton~\cite{Wolper01}) into program annotations.
 %% This is mentioned below
 % Based on these annotations, appropriate Hoare-style specifications can be
 % generated, see~\cite{PavlovaBBHL04} for a propagation algorithm that does
 % exactly this.
 
-We prove that such translation is security preserving: monitoring
-the application does not produce a security violation,
-if and only if, runtime checking
-the generated annotations does not result in a violation.
-As a next step, the annotations can be propagated (as described
-in~\cite{PavlovaBBHL04}), giving rise to new annotations. Eventually,
-this will result in a completely annotated application and if one can
-prove statically that the annotated program respects its annotations,
-the program will also respect the security property expressed by the automaton.
+% We prove that such translation is security preserving: monitoring
+% the application does not produce a security violation,
+% if and only if, runtime checking
+% the generated annotations does not result in a violation.
+% As a next step, the annotations can be propagated (as described
+% in~\cite{PavlovaBBHL04}), giving rise to new annotations. Eventually,
+% this will result in a completely annotated application and if one can
+% prove statically that the annotated program respects its annotations,
+% the program will also respect the security property expressed by the automaton.
 
 The translation described in this paper is defined in several
 steps. For each step we provide a correctness proof.
