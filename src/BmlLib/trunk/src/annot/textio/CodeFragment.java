@@ -31,10 +31,10 @@ public class CodeFragment {
   private static final boolean goDisableParser = false;
 
   /**
-   * Shows code after preprocessing it
-   * by {@link #decorate(String)} method.
+   * Flag which indicates it the code after preprocessing by
+   * {@link #decorate(String)} should be shown in BMLLib log.
    */
-  private static final boolean goShowDecoratedCode = true;
+  private static final boolean SHOW_DECORATED_CODE = true;
 
 
   /**
@@ -195,11 +195,11 @@ public class CodeFragment {
 
   /**
    * Adds EOD, EOM and EOA marks to given bytecode.
-   * "EOD" line is inserted after class attributes, but
+   * "EOD" line is inserted after class header, but
    * before first method, "EOM" line is inserted after each
    * method, and "EOA" lines are inserted at the beginning
    * of each comment and after each annotation.
-   * Use {@link #goShowDecoratedCode} flag to see decorated
+   * Use {@link #SHOW_DECORATED_CODE} flag to see decorated
    * code while performing changes (at PInfo display level).
    *
    * @param code - bytecode to be decorated,
@@ -319,6 +319,9 @@ public class CodeFragment {
     }
     if (line.matches("class .*$")) {
       return "class";
+    }
+    if (line.matches("import .*$")) {
+      return "";
     }
     if (line.matches("^package .*$")) {
       return "package";
@@ -861,7 +864,7 @@ public class CodeFragment {
   /**
    * Modifies current bytecode, replacing given fragment
    * with another String and updating {@link BCClass}.
-   * Either use this or seuqntly:<br>
+   * Either use this or sequently:<br>
    * - {@link #addChange(int, int, String)} (one or more
    *     times (for merged changes)),<br>
    * - {@link #performChanges()},<br>
@@ -895,13 +898,14 @@ public class CodeFragment {
   public void performChanges() {
     this.correct = true;
     this.errMsg = "";
-    if (goShowDecoratedCode) {
+    if (SHOW_DECORATED_CODE) {
       MLog.putMsg(MLog.LEVEL_PINFO, decorate(this.code));
     }
     //DONE compute positions of affected code
     final CodePosition cp_start = where(this.code, this.begin);
     CodePosition cp_old = where(this.oldCode, this.oldEnd);
     final CodePosition cp_new = where(this.code, this.end);
+    /*
     if (cp_old == null) {
       if (!checkParenthness(decorate(this.oldCode))) {
         if (cp_start != null) {
@@ -911,7 +915,7 @@ public class CodeFragment {
           cp_old = cp_new;
         }
       }
-    }
+    }*/
     this.cp_hash = 0;
     if (cp_start != null) {
       this.cp_hash += cp_start.hash();
@@ -926,31 +930,38 @@ public class CodeFragment {
     MLog.putMsg(MLog.LEVEL_PINFO, "begin  : " + cp_start);
     MLog.putMsg(MLog.LEVEL_PINFO, "old end: " + cp_old);
     MLog.putMsg(MLog.LEVEL_PINFO, "new end: " + cp_new);
-    if (cp_start == null || cp_old == null || cp_new == null) {
+    /*if (cp_start == null || cp_old == null || cp_new == null) {
       showMsg("couldn't find codePositions due to syntax errors");
       this.correct = false;
       return;
+    }*/
+
+    MLog.putMsg(MLog.LEVEL_PINFO, "code to be parsed:\n" + this.code);
+    if (goDisableParser) {
+      return;
     }
-    boolean decl = true;
-    boolean mspec = true;
-    final boolean affd = cp_start.isInClassAttribute();
+    //DONE create grammar for parsing bytecode
+    //DONE check correctness of new code fragment
+    if (!this.correct) {
+      throw new RuntimeException("error in performChanges()");
+    }
+    this.correct = this.bcc.getParser().parseClass(this.code, false);
+    //DONE and parse it into bcc.
+    if (this.correct) {
+      this.bcc.getParser().parseClass(this.code, true);
+    }
+    this.errMsg = this.bcc.getParser().getErrMsg();
+  }
+
+  private String generateShortCode(final CodePosition cp_start,
+                                   CodePosition cp_old,
+                                   final CodePosition cp_new, boolean decl,
+                                   boolean mspec, final boolean affd,
+                                   boolean affm, int inr, boolean affi,
+                                   int anr, boolean affa, String akw,
+                                   final boolean mma, final boolean mia,
+                                   final String[] lines) {
     int mnr = 0;
-    boolean affm = true;
-    int inr = 0;
-    boolean affi = true;
-    int anr = -1;
-    boolean affa = true;
-    String akw = null;
-    final boolean mma = cp_start.getMet_nr() != cp_old.getMet_nr() ||
-      cp_start.getMet_nr() != cp_new.getMet_nr() ||
-      cp_start.getMet_cnt() != cp_old.getMet_cnt() ||
-      cp_start.isInClassAttribute() != cp_old.isInClassAttribute() ||
-      cp_start.isInClassAttribute() != cp_new.isInClassAttribute();
-    final boolean mia = mma || cp_start.getInstr_nr() != cp_old.getInstr_nr() ||
-      cp_start.getInstr_nr() != cp_new.getInstr_nr() ||
-      cp_start.getInstr_cnt() != cp_old.getInstr_cnt();
-    final String newCode = decorate(this.code);
-    final String[] lines = newCode.split("\n");
     for (int l = 0; l  <  lines.length; l++) {
       final String line = lines[l];
       // empty lines, headers
@@ -1073,21 +1084,7 @@ public class CodeFragment {
       }
     }
     final String shortCode = linesToString(lines);
-    MLog.putMsg(MLog.LEVEL_PINFO, "code to be parsed:\n" + shortCode);
-    if (goDisableParser) {
-      return;
-    }
-    //DONE create grammar for parsing bytecode
-    //DONE check correctness of new code fragment
-    if (!this.correct) {
-      throw new RuntimeException("error in performChanges()");
-    }
-    this.correct = this.bcc.getParser().parseClass(shortCode, false);
-    //DONE and parse it into bcc.
-    if (this.correct) {
-      this.bcc.getParser().parseClass(shortCode, true);
-    }
-    this.errMsg = this.bcc.getParser().getErrMsg();
+    return shortCode;
   }
 
   /**

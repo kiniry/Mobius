@@ -1,137 +1,137 @@
 grammar BML;
 
 options {
-	output=AST;
-	ASTLabelType=CommonTree;
-	backtrack=true;
+  output=AST;
+  ASTLabelType=CommonTree;
+  backtrack=true;
 }
 
 @header {
-	package annot.textio;
+  package annot.textio;
 
-	import annot.bcclass.*;
-	import annot.attributes.*;
-	import annot.bcexpression.*;
-	import annot.bcexpression.javatype.*;
-	import annot.bcexpression.modifies.*;
-	import annot.bcexpression.formula.*;
-	import annot.io.Code;
-	import annot.io.ReadAttributeException;
+  import annot.bcclass.*;
+  import annot.attributes.*;
+  import annot.bcexpression.*;
+  import annot.bcexpression.javatype.*;
+  import annot.bcexpression.modifies.*;
+  import annot.bcexpression.formula.*;
+  import annot.io.Code;
+  import annot.io.ReadAttributeException;
 
-	import org.apache.bcel.generic.InstructionHandle;
-	import java.util.Vector;
+  import org.apache.bcel.generic.InstructionHandle;
+  import java.util.Vector;
 }
 
 @members {
-	public RecognitionException lastE = null;
-	
-	// initail data (parser parameters)
-	private BCClass bcc;
-	private BCMethod m;
-	private BCConstantPool cp;
-	private InstructionHandle ih;
-	private int minor;
-	private boolean affectBcc = false;
+  public RecognitionException lastE = null;
+  
+  // initail data (parser parameters)
+  private BCClass bcc;
+  private BCMethod m;
+  private BCConstantPool cp;
+  private InstructionHandle ih;
+  private int minor;
+  private boolean affectBcc = false;
 
-	// global variables
-	private int mnr;						// number of current method
-	private int inr;						// number of current instruction
-	private int bvc;  						// number of currently visible bound variables
-	private int lqfs; 						// last (current) quantified formula size
-	private HashMap<String, BoundVar> env;	// bound variable map
-	
-	//local variables
-	private boolean clr = false;
-	private AbstractFormula prec;
-	private ModifyList modif;
-	private AbstractFormula postc;
-	private Vector<Exsure> exc;
-	private AbstractFormula inv;
-	private AbstractIntExpression dec;
+  // global variables
+  private int mnr;            // number of current method
+  private int inr;            // number of current instruction
+  private int bvc;              // number of currently visible bound variables
+  private int lqfs;             // last (current) quantified formula size
+  private HashMap<String, BoundVar> env;  // bound variable map
+  
+  //local variables
+  private boolean clr = false;
+  private AbstractFormula prec;
+  private ModifyList modif;
+  private AbstractFormula postc;
+  private Vector<Exsure> exc;
+  private AbstractFormula inv;
+  private AbstractIntExpression dec;
 
-	// set whether to affect parsed BCClass, or only check syntax
-	public void initClass(BCClass bcc, boolean affectBcc) {
-		this.bcc = bcc;
-		this.affectBcc = affectBcc;
-		this.cp = bcc.getCp();
-	}
+  // set whether to affect parsed BCClass, or only check syntax
+  public void initClass(BCClass bcc, boolean affectBcc) {
+    this.bcc = bcc;
+    this.affectBcc = affectBcc;
+    this.cp = bcc.getCp();
+  }
 
-	// initialize environment for expression parsing
-	private void initExpression() {
-		this.bvc = 0;
-		this.lqfs = 0;
-		this.env = new HashMap<String, BoundVar>();
-	}
+  // initialize environment for expression parsing
+  private void initExpression() {
+    this.bvc = 0;
+    this.lqfs = 0;
+    this.env = new HashMap<String, BoundVar>();
+  }
 
-	// set context for attribute parsing
-	public void init(BCClass bcc, BCMethod m, BCConstantPool cp, InstructionHandle ih, int minor) {
-		this.bcc = bcc;
-		this.m = m;
-		this.cp = cp;
-		this.ih = ih;
-		this.minor = minor;
-	}
+  // set context for attribute parsing
+  public void init(BCClass bcc, BCMethod m, BCConstantPool cp, InstructionHandle ih, int minor) {
+    this.bcc = bcc;
+    this.m = m;
+    this.cp = cp;
+    this.ih = ih;
+    this.minor = minor;
+  }
 
-	private void syso(String msg) {
-		MLog.putMsg(MLog.PParser, msg);
-	}
+  private void syso(String msg) {
+    MLog.putMsg(MLog.LEVEL_PPARSER, msg);
+  }
 
-	public void reportError(RecognitionException rex) {
-		if (rex == null)
-			rex = new RecognitionException();
-		lastE = rex;
-		syso("*** error ***");
-		if ((MLog.getLogMask() & MLog.PParser) > 0)
-			super.reportError(rex);
-	}
-	
-	// Searches for an identifier name in diffrent locations
-	// and returns proper one, or null if no identifier
-	// of this name could be found.
-	private BCExpression whatIsIt(String ident) {
-		if (ident == null) {
-			reportError(null);
-			return null;
-		}
-		boolean isOld = false;
-		if (ident.startsWith("old_")) { //??!
-			ident = ident.substring(4);
-			isOld = true;
-		}
-		if (env.containsKey(ident))
-			return new SingleOccurence(env.get(ident));
-		if (m != null) {
-			LocalVariable lv = m.findLocalVariable(ident);
-			if (lv != null) {
-				lv.setOld(isOld);
-				return new SingleOccurence(lv);
-			}
-		}
-		FieldRef bfr = FieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
-		if (bfr != null)
-			return bfr;
-		MLog.putMsg(MLog.PInfo, "undefined identifier: " + ident);
-		reportError(null);
-		return null;
-	}
+  public void reportError(RecognitionException rex) {
+    if (rex == null)
+      rex = new RecognitionException();
+    lastE = rex;
+    syso("*** error ***");
+    if ((MLog.getLogMask() & MLog.LEVEL_PPARSER) > 0)
+      super.reportError(rex);
+  }
+  
+  // Searches for an identifier name in diffrent locations
+  // and returns proper one, or null if no identifier
+  // of this name could be found.
+  private BCExpression whatIsIt(String ident) {
+    if (ident == null) {
+      reportError(null);
+      return null;
+    }
+    boolean isOld = false;
+    if (ident.startsWith("old_")) { //??!
+      ident = ident.substring(4);
+      isOld = true;
+    }
+    if (env.containsKey(ident))
+      return new SingleOccurence(env.get(ident));
+    if (m != null) {
+      LocalVariable lv = m.findLocalVariable(ident);
+      if (lv != null) {
+        lv.setOld(isOld);
+        return new SingleOccurence(lv);
+      }
+    }
+    FieldRef bfr = FieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
+    if (bfr != null)
+      return bfr;
+    MLog.putMsg(MLog.LEVEL_PINFO, "undefined identifier: " + ident);
+    reportError(null);
+    return null;
+  }
 }
 
 @lexer::header {
-	package annot.textio;
-	import annot.bcclass.*;
+  package annot.textio;
+  import annot.bcclass.*;
 }
 
 @lexer::members {
-	public RecognitionException lastE = null;
+  public RecognitionException lastE = null;
 
-	public void reportError(RecognitionException rex) {
-		lastE = rex;
-		MLog.putMsg(MLog.PParser, "LEXER ERROR");
-		if ((MLog.getLogMask() & MLog.PParser) > 0) {
-			System.err.println("LEXER ERROR");
-			super.reportError(rex);
-		}
-	}
+  public void reportError(RecognitionException rex) {
+    lastE = rex;
+    MLog.putMsg(MLog.LEVEL_PPARSER, "LEXER ERROR");
+    if ((MLog.getLogMask() & MLog.LEVEL_PPARSER) > 0) {
+      System.err.println("LEXER ERROR");
+      super.reportError(rex);
+    }
+  }
 }
 
 // ***** PARSER RULES *****
@@ -139,431 +139,592 @@ options {
 // bytecode level
 
 parseClass :
-	{syso("--------------- parsing started ---------------");}
-	PACKAGE? CLASS?
-	{syso("class");}
-	(NO_CLA {syso("skipping class declarations");}
-		| classComment {syso("class declarations");}
-			EOD)
-	{syso("end of class decl");
-	mnr = 0;
-	m = bcc.getMethod(mnr);
-	}
-	(method
-		{syso("method");
-		mnr++;
-		if (mnr < bcc.getMethodCount())
-			m = bcc.getMethod(mnr);
-	})+
-	EOF
-	{syso("-------------- parsing completed --------------");}
-	;
+  {syso("--------------- parsing started ---------------");}
+  fileheader typeheader typebody EOF
+  {syso("-------------- parsing completed --------------");};
+
+fileheader :
+  packageinfo imports;
+
+packageinfo :
+  PACKAGE ( DEFAULTPACKAGE | typename ) EOL+
+  {syso("packageinfo");};
+
+typename returns [String name] :
+  i=IDENT { $name = $i.getText(); }
+  (DIV typename { $name +=  '/' + $typename.name; })?;
+
+imports :
+  java_imports bml_imports EOL+
+  {syso("imports");};
+
+java_imports :
+  (java_import)*
+  {syso("java-imports");};
+
+bml_imports :
+  (bml_import)*
+  {syso("bml_imports");};
+
+java_import :
+  IMPORT typename EOL
+  {syso("java_import");};
+
+bml_import :
+  BML_ONE_LINE_START java_import
+  {syso("bml_import");};  
+
+typeheader :
+  (  classmodifiers CLASS dotedname
+     class_extends_clause? implements_clause?
+   | interfacemodifiers INTERFACE dotedname
+     interface_extends_clause? implements_clause?) EOL+
+  {syso("type header");};
+
+dotedname :
+  IDENT ( DOT IDENT)*;
+
+classmodifiers :
+  classmodifier* {syso("class modifiers");};
+  
+interfacemodifiers :
+  interfacemodifier* {syso("interface modifiers");};
+
+classmodifier :
+  (  PUBLIC
+   | PROTECTED
+   | PRIVATE
+   | ABSTRACT
+   | STATIC
+   | FINAL
+   | STRICTFP) {syso("class modifier");};
+   
+interfacemodifier :
+  (  PUBLIC
+   | PROTECTED
+   | PRIVATE
+   | ABSTRACT
+   | STATIC
+   | STRICTFP) {syso("interface modifier");};
+
+class_extends_clause :
+  EXTENDS typename
+  {syso("class_extends_clause");};
+
+interface_extends_clause :
+  EXTENDS name_list
+  {syso("interface_extends_clause");};
+
+implements_clause :
+  IMPLEMENTS name_list
+  {syso("implements_clause");};
+
+name_list :
+  typename ( COMMA typename )*
+  {syso("name_list");};
+
+typebody :
+  { syso("methods start here");
+    mnr = 0;
+    m = bcc.getMethod(mnr);
+  }
+  (method { syso("method");
+            mnr++;
+            if (mnr < bcc.getMethodCount())
+              m = bcc.getMethod(mnr);
+          }
+  )+
+  {syso("methods parsed");};
 
 classComment :
-	EOA {
-		syso("begin of class decl");
-	}
-	(c=classAttribute {
-		if ($c.ast != null) {
-			syso("next class attribute");
-			if (affectBcc)
-				$c.ast.replace(bcc);
-		}
-	}
-		EOA)*
-	;
+  EOA { syso("begin of class decl"); }
+  (c=classAttribute {
+      if ($c.ast != null) {
+        syso("next class attribute");
+        if (affectBcc)
+          $c.ast.replace(bcc);
+      }
+    }
+   EOA)*
+  ;
 
 method :
-	NO_METHOD {syso("skipping method");}
-	|	{clr = true;}
-		((NO_MSPEC {syso("skipping method specification");}
-		MHEAD {
-			syso("method header");
-			inr = 0;
-		}
-		(MTHROWS {syso("handling of throws");} )*
-		| (met=methodAttribute {
-			if ($met.ast != null) {
-				syso("method attribute");
-				if (clr) {
-					syso("clearing method attributes");
-					if (affectBcc)
-						m.setMspec(null);
-					clr = false;
-				}
-				if (affectBcc)
-					$met.ast.replace(m);
-			}
-			} EOA)*
-			MHEAD {
-				if (clr) {
-					syso("clearing method attributes");
-					if (affectBcc)
-						m.setMspec(null);
-					clr = false;
-				}
-				syso("method header");
-				inr = 0;
-			}
-		(MTHROWS {syso("handling of throws");})*)
-		(instruction {inr++;})*
-		EOM {
-			syso("end of method");
-			if (m.getInstructions() != null &&
-			    inr != m.getInstructions().getInstructionHandles().length) {
-				syso("instruction count changed!");
-				reportError(null);
-			}
-		})
-	;
+   (met=methodSpecification {
+      syso("method spec parsed");
+      if ($met.ast != null) {
+        syso("method attribute");
+        if (clr) {
+          syso("clearing method attributes");
+          if (affectBcc)
+            m.setMspec(null);
+          clr = false;
+        }
+        if (affectBcc)
+          $met.ast.replace(m);
+      } else {
+        syso("empty method attribute");
+      }
+    })+ methodmodifiers type_spec? methodheader {
+      if (clr) {
+        syso("clearing method attributes");
+        if (affectBcc)
+          m.setMspec(null);
+        clr = false;
+      }
+      syso("method header");
+      inr = 0;
+    } (instruction_line {inr++;})*
+    {
+      if (m.getInstructions() != null &&
+          inr != m.getInstructions().getInstructionHandles().length) {
+        syso("instruction count changed!");
+        reportError(null);
+      }
+      syso("end of method");
+    } (EOL+ | EOF)
+  ;
 
-instruction :
-	{InstructionHandle[] iha = m.getBcelMethod().getInstructionList().getInstructionHandles();
-		if (iha.length <= inr) {
-			if (affectBcc) {
-				System.err.println("mnr="+mnr+", index="+inr+", size="+iha.length);
-				throw new RuntimeException("instruction count changed! Bytecode parsing unsupported.");
-			} else {
-				syso("instruction count changed");
-				reportError(null);
-			}
-		}
-		if (inr < iha.length) {
-			ih = iha[inr];
-			syso("ih="+ih);
-		}
-	}
-	(NO_INSTRUCTION {syso("skipping instruction");}
-	| ((comment {syso("comment");})?
-		INSTRUCTION {
-			syso("instruction");
-			SingleList sl = m.getAmap().getAllAt(ih);
-			if (affectBcc) {
-				sl.trunce(minor);
-				syso("minor="+minor+", size="+sl.size());
-				m.getAmap().setAtributesForInstruction(ih, sl);
-			}
-		}))
-	;
+methodmodifiers :
+  methodmodifier* {syso("method modifiers");};
+  
+methodmodifier :
+  (  PUBLIC
+   | PROTECTED
+   | PRIVATE
+   | STATIC
+   | ABSTRACT
+   | FINAL
+   | NATIVE
+   | SYNCHRONIZED
+   | TRANSIENT
+   | VOLATILE
+   | STRICTFP) {syso("method modifier");};  
+
+type_spec :
+    type (dims)? ;
+
+type :
+    reference_type
+  | built_in_type ;
+  
+reference_type :
+  typename {syso("reference type");};
+
+built_in_type :
+  (  VOID
+   | BOOLEAN
+   | BYTE
+   | CHAR
+   | SHORT
+   | INT
+   | LONG
+   | FLOAT
+   | DOUBLE) {syso("built in type");};
+
+
+methodheader :
+  (IDENT | CONSNAME) formals dims?
+  throws_clause? EOL {syso("methodheader parsed");}
+  ;
+
+formals :
+  PAR_LEFT param_declaration_list? PAR_RIGHT;
+
+param_declaration_list :
+  param_declaration (COMMA param_declaration)*;
+
+param_declaration :
+  param_modifier? type_spec IDENT dims? {syso("param_declaration");};
+
+param_modifier :
+  'final' | 'nullable' | 'non_null';
+
+dims :
+  (BR_LEFT BR_RIGHT)+;
+  
+throws_clause :
+  THROWS name_list;
+
+instruction_line :
+  { InstructionHandle[] iha = m.getBcelMethod().getInstructionList().
+                              getInstructionHandles();
+    if (iha.length <= inr) {
+      if (affectBcc) {
+        System.err.println("mnr="+mnr+", index="+inr+", size="+iha.length);
+        throw new RuntimeException("instruction count changed! Bytecode parsing unsupported.");
+      } else {
+        syso("instruction count changed");
+        reportError(null);
+      }
+    }
+    if (inr < iha.length) {
+      ih = iha[inr];
+      syso("ih="+ih);
+    }
+  } (NAT COLON (~(EOL)*) EOL {
+      syso("instruction");
+      SingleList sl = m.getAmap().getAllAt(ih);
+      if (affectBcc) {
+        sl.trunce(minor);
+        syso("minor="+minor+", size="+sl.size());
+        m.getAmap().setAtributesForInstruction(ih, sl);
+      }
+     }
+    )
+  ;
 
 comment :
-	EOA {syso("beginning of comment");
-		minor = 0;
-	}
-	( NO_ANNOTATION {
-		syso("annotation unaffected");
-		minor++;
-	}
-		| ica=inCodeAttribute {
-			if ($ica.ast != null) {
-				syso("annotation");
-				SingleList sl = m.getAmap().getAllAt(ih);
-				if (affectBcc) {
-					sl.setNth(minor, $ica.ast);
-					m.getAmap().setAtributesForInstruction(ih, sl);
-				}
-				minor++;
-			}
-		} EOA)*
-	;
+  EOA {syso("beginning of comment");
+    minor = 0;
+  }
+  ( NO_ANNOTATION {
+    syso("annotation unaffected");
+    minor++;
+  }
+    | ica=inCodeAttribute {
+      if ($ica.ast != null) {
+        syso("annotation");
+        SingleList sl = m.getAmap().getAllAt(ih);
+        if (affectBcc) {
+          sl.setNth(minor, $ica.ast);
+          m.getAmap().setAtributesForInstruction(ih, sl);
+        }
+        minor++;
+      }
+    } EOA)*
+  ;
 
 // bml level
 
 printableAttribute returns [BCPrintableAttribute ast] :
-	(c=classAttribute {$ast = $c.ast;}
-	| met=methodAttribute {$ast = $met.ast;}
-	| i=inCodeAttribute {$ast = $i.ast;})
-	EOF
-	;
+  (c=classAttribute {$ast = $c.ast;}
+  | met=methodAttribute {$ast = $met.ast;}
+  | i=inCodeAttribute {$ast = $i.ast;})
+  EOF
+  ;
 
 classAttribute returns [ClassAttribute ast] :
-	| CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
-	| STATIC CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
-	;
+  | CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
+  | STATIC CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
+  ;
 
 methodAttribute returns [MethodAttribute ast] :
-	m=methodSpecification {$ast = $m.ast;};
+  m=methodSpecification {$ast = $m.ast;};
 
 methodSpecification returns [MethodSpecification ast] :
-	| s=specCase { $ast = new MethodSpecification(m);
-                                $ast.addCase($s.ast);}
-	;
+    emptyspec { syso("empty spec parsed"); $ast = null; }
+  | s=specCase {
+      syso("specCase parsed");
+      $ast = new MethodSpecification(m);
+      $ast.addCase($s.ast);
+    }
+  ;
+  
+emptyspec :
+    BML_START (EOL BML_MARK)* EOL BML_END EOL {syso("empty spec");} 
+  | (BML_ONE_LINE_START EOL)+ {syso("empty spec");}
+  ;
 
 exname returns [String name] :
-	i=EXC_IDENT {$name = $i.getText();}
-		(SEMICOLON {$name = $name + ';';})?
-	| i2=IDENT {$name = $i2.getText();}
-		(SEMICOLON {$name = $name + ';';})?
-	;
+  i=typename {$name = $i.name;}
+    (SEMICOLON {$name = $name + ';';})?
+  | i2=IDENT {$name = $i2.getText();}
+    (SEMICOLON {$name = $name + ';';})?
+  ;
 
 specCase returns [SpecificationCase ast] :
-	(REQUIRES f1=formula {
-		prec = $f1.ast;
-		modif = null;
-		postc = null;
-		exc = new Vector<Exsure>();
-	}
-	(MODIFIES ml=modifyList {modif = $ml.ast;})?
-	(POSTCONDITION f2=formula {postc = $f2.ast;})?
-	(EXSURES (i=exname COLON f3=formula {
-		if (($i.name != null) && ($f3.ast != null)) {
-			JavaReferenceType jrt = new JavaReferenceType($i.name);
-			Exsure ex = new Exsure(jrt, $f3.ast);
-			exc.add(ex);
-		}
-	})*)?)
-		{if (prec != null)
-			$ast = new SpecificationCase(m, prec, modif, postc, exc);
-		};
+  (REQUIRES f1=formula {
+     prec = $f1.ast;
+     modif = null;
+     postc = null;
+     exc = new Vector<Exsure>();
+   }
+   (MODIFIES ml=modifyList {modif = $ml.ast;})?
+   (POSTCONDITION f2=formula {postc = $f2.ast;})?
+   (EXSURES 
+     (i=exname COLON f3=formula {
+        if (($i.name != null) && ($f3.ast != null)) {
+          JavaReferenceType jrt = new JavaReferenceType($i.name);
+          Exsure ex = new Exsure(jrt, $f3.ast);
+          exc.add(ex);
+        }
+      })+
+   )?
+  ) {
+    if (prec != null)
+      $ast = new SpecificationCase(m, prec, modif, postc, exc);
+  };
 
 inCodeAttribute returns [InCodeAttribute ast] :
-	ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
-	| LOOPSPEC {
-		modif = null;
-		inv = null;
-		dec = null;
-	}
-	(MODIFIES ml=modifyList {modif = $ml.ast;})?
-	(LINVARIANT iv=formula {inv = $iv.ast;})?
-	(LDECREASES de=expression {dec = $de.ast;})?
-	{$ast = new SingleLoopSpecification(m, ih, -1, modif, inv, dec);}
-	;
+  ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
+  | LOOPSPEC {
+    modif = null;
+    inv = null;
+    dec = null;
+  }
+  (MODIFIES ml=modifyList {modif = $ml.ast;})?
+  (LINVARIANT iv=formula {inv = $iv.ast;})?
+  (LDECREASES de=expression {dec = $de.ast;})?
+  {$ast = new SingleLoopSpecification(m, ih, -1, modif, inv, dec);}
+  ;
 
 modifyList returns [ModifyList ast] :
-	l=modifyExpression {
-		$ast = new ModifyList();
-		$ast.addModify($l.ast);
-	}
-	(COMMA r=modifyExpression {
-		$ast.addModify($r.ast);
-	})*;
+  l=modifyExpression {
+    $ast = new ModifyList();
+    $ast.addModify($l.ast);
+  }
+  (COMMA r=modifyExpression {
+    $ast.addModify($r.ast);
+  })*;
 
 modifyExpression returns [ModifyExpression ast] :
-	{initExpression();}
-	(NOTHING {$ast = ModifyExpression.Nothing;}
-		| EVERYTHING {$ast = ModifyExpression.Everything;}
+  {initExpression();}
+  (NOTHING {$ast = ModifyExpression.Nothing;}
+    | EVERYTHING {$ast = ModifyExpression.Everything;}
         | l=localVar {$ast = new ModifiesLocalVar(l.lv);}
-		| i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
-			(DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
-			(BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
-	);
+    | i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
+      (DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
+      (BR_LEFT a=specArray BR_RIGHT {$ast = new ModifiesArray($ast, $a.ast);})*
+  );
 
 modifySubExpr returns [BCExpression ast] :
-	THIS {$ast = new THIS(false, bcc);}
-	| OLD_THIS {$ast = new THIS(true, bcc);}
-	| i=IDENT {$ast = whatIsIt($i.getText());}
-	;
+  THIS {$ast = new THIS(false, bcc);}
+  | OLD_THIS {$ast = new THIS(true, bcc);}
+  | i=IDENT {$ast = whatIsIt($i.getText());}
+  ;
 
 specArray returns [SpecArray ast] :
-	MULT {$ast = new ModifiesStar();}
-	| e=expression {$ast = new ModifiesSingleIndex($e.ast);}
-	(DOT2 t=expression {$ast = new ModifiesInterval($ast.getSubExpr(0), $t.ast);})?
-	;
+  MULT {$ast = new ModifiesStar();}
+  | e=expression {$ast = new ModifiesSingleIndex($e.ast);}
+  (DOT2 t=expression {$ast = new ModifiesInterval($ast.getSubExpr(0), $t.ast);})?
+  ;
 
 formula returns [AbstractFormula ast] :
-	{initExpression();}
-	e=uncheckedExpression {
-		if ($e.ast == null) {
-			reportError(null);
-		} else {
-			if ($e.ast.checkType() != JavaBasicType.JavaBool) {
-				reportError(null);
-			} else {
-				if ($e.ast instanceof AbstractFormula) {
-					$ast = (AbstractFormula)$e.ast;
-				} else {
-					$ast = new BooleanExpression($e.ast);
-				}
-			}
-		}
-	};
+  {initExpression();}
+  e=uncheckedExpression {
+    if ($e.ast == null) {
+      reportError(null);
+    } else {
+      if ($e.ast.checkType() != JavaBasicType.JavaBool) {
+        reportError(null);
+      } else {
+        if ($e.ast instanceof AbstractFormula) {
+          $ast = (AbstractFormula)$e.ast;
+        } else {
+          $ast = new BooleanExpression($e.ast);
+        }
+      }
+    }
+  };
 
 expression returns [AbstractIntExpression ast] :
-	{initExpression();}
-	e=uncheckedExpression {
-		if ($e.ast == null) {
-			reportError(null);
-		} else {
-			if ($e.ast.getType() != JavaBasicType.JavaInt) {
-				reportError(null);
-			} else {
-				if ($e.ast instanceof AbstractIntExpression) {
-					$ast = (AbstractIntExpression)$e.ast;
-				} else {
-					$ast = new IntExpression($e.ast);
-				}
-			}
-		}
-	};
+  {initExpression();}
+  e=uncheckedExpression {
+    if ($e.ast == null) {
+      reportError(null);
+    } else {
+      if ($e.ast.getType() != JavaBasicType.JavaInt) {
+        reportError(null);
+      } else {
+        if ($e.ast instanceof AbstractIntExpression) {
+          $ast = (AbstractIntExpression)$e.ast;
+        } else {
+          $ast = new IntExpression($e.ast);
+        }
+      }
+    }
+  };
 
 uncheckedExpression returns [BCExpression ast] :
-	e=conditionalExpression {$ast = $e.ast;};
+  e=conditionalExpression {$ast = $e.ast;};
 
 conditionalExpression returns [BCExpression ast] :
-	c=equivalenceExpr {$ast = $c.ast;}
-	(COND t=uncheckedExpression COLON f=uncheckedExpression {
-		$ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
-	})?
-	;
+  c=equivalenceExpr {$ast = $c.ast;}
+  (COND t=uncheckedExpression COLON f=uncheckedExpression {
+    $ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
+  })?
+  ;
 
 equivalenceExpr returns [BCExpression ast] :
-	e=impliesExpr {$ast = $e.ast;}
-	( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
-		| NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
-	)*
-	;
+  e=impliesExpr {$ast = $e.ast;}
+  ( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
+    | NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
+  )*
+  ;
 
 impliesExpr returns [BCExpression ast] :
-	e=logicalOrExpr {$ast = $e.ast;}
-	(IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
-	;
+  e=logicalOrExpr {$ast = $e.ast;}
+  (IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
+  ;
 
 logicalOrExpr returns [BCExpression ast] :
-	e=logicalAndExpr {$ast = $e.ast;}
-	(LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
-	;
+  e=logicalAndExpr {$ast = $e.ast;}
+  (LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
+  ;
 
 logicalAndExpr returns [BCExpression ast] :
-	e=bitwiseOrExpr {$ast = $e.ast;}
-	(LOG_AND r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
-	;
+  e=bitwiseOrExpr {$ast = $e.ast;}
+  (LOG_AND r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
+  ;
 
 bitwiseOrExpr returns [BCExpression ast] :
-	e=bitwiseXorExpr {$ast = $e.ast;}
-	(BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*
-	;
+  e=bitwiseXorExpr {$ast = $e.ast;}
+  (BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*
+  ;
 
 bitwiseXorExpr returns [BCExpression ast] :
-	e=bitwiseAndExpr {$ast = $e.ast;}
-	(BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*
-	;
+  e=bitwiseAndExpr {$ast = $e.ast;}
+  (BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*
+  ;
 
 bitwiseAndExpr returns [BCExpression ast] :
-	e=equalityExpr {$ast = $e.ast;}
-	(BITWISEAND r=equalityExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*
-	;
+  e=equalityExpr {$ast = $e.ast;}
+  (BITWISEAND r=equalityExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*
+  ;
 
 equalityExpr returns [BCExpression ast] :
-	l=shiftExpr EQ r=shiftExpr
-		{$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
-	| l=shiftExpr NOTEQ r=shiftExpr
-		{$ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);}
-	|
-	e=relationalExpr {$ast = $e.ast;};
+  l=shiftExpr EQ r=shiftExpr
+    {$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
+  | l=shiftExpr NOTEQ r=shiftExpr
+    {$ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);}
+  |
+  e=relationalExpr {$ast = $e.ast;};
 
 relationalExpr returns [BCExpression ast] :
-	l=shiftExpr LESS r=shiftExpr
-		{$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
-	| l=shiftExpr GRT r=shiftExpr
-		{$ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);}
-	| l=shiftExpr LESSEQ r=shiftExpr
-		{$ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);}
-	| l=shiftExpr GRTEQ r=shiftExpr
-		{$ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);}
-	|
-	e=shiftExpr {$ast = $e.ast;};
+  l=shiftExpr LESS r=shiftExpr
+    {$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
+  | l=shiftExpr GRT r=shiftExpr
+    {$ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);}
+  | l=shiftExpr LESSEQ r=shiftExpr
+    {$ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);}
+  | l=shiftExpr GRTEQ r=shiftExpr
+    {$ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);}
+  |
+  e=shiftExpr {$ast = $e.ast;};
 
 shiftExpr returns [BCExpression ast] :
-	p=additiveExpr {$ast = $p.ast;}
-	(SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
-	| SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
-	| USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
-	)*
-	;
+  p=additiveExpr {$ast = $p.ast;}
+  (SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
+  | SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
+  | USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
+  )*
+  ;
 
 additiveExpr returns [BCExpression ast] :
-	e=multExpr {$ast = $e.ast;}
-	(PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
-	| MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
-	)*
-	;
+  e=multExpr {$ast = $e.ast;}
+  (PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
+  | MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
+  )*
+  ;
 
 multExpr returns [BCExpression ast] :
-	e=quantifiedFormula {$ast = $e.ast;}
-	(MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
-	| DIV r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
-	| REM r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
-	)*
-	;
+  e=quantifiedFormula {$ast = $e.ast;}
+  (MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
+  | DIV r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
+  | REM r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
+  )*
+  ;
 
 quantifiedFormula returns [BCExpression ast] :
-	((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
-	| EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
-	 (t=ident v=ident {try {
-			JavaBasicType jt = JavaType.getJavaBasicType($t.text);
-			lqfs++;
-			BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
-			// uncomment this to forbid bound variable shadowing
-//			if (env.containsKey($v.text))
-//				reportError(null);
-			env.put($v.text, bv);
-	 		((QuantifiedFormula)$ast).addVariable(bv);
-	 	} catch(ReadAttributeException e) {
-	 		reportError(null);
-	 		//throw new RuntimeException("Error in BML.g3.quantifiedFormula");
-	 	}})+
-	 	SEMICOLON
-	 	f=uncheckedExpression {((QuantifiedFormula)$ast).setFormula($f.ast);
-	 		env.remove($v.text);
-	 		bvc -= lqfs;
-	 	}) |
-	p=dotExpr {$ast = $p.ast;};
+  ((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
+  | EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
+   (t=ident v=ident {try {
+      JavaBasicType jt = JavaType.getJavaBasicType($t.text);
+      lqfs++;
+      BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
+      // uncomment this to forbid bound variable shadowing
+//      if (env.containsKey($v.text))
+//        reportError(null);
+      env.put($v.text, bv);
+       ((QuantifiedFormula)$ast).addVariable(bv);
+     } catch(ReadAttributeException e) {
+       reportError(null);
+       //throw new RuntimeException("Error in BML.g3.quantifiedFormula");
+     }})+
+     SEMICOLON
+     f=uncheckedExpression {((QuantifiedFormula)$ast).setFormula($f.ast);
+       env.remove($v.text);
+       bvc -= lqfs;
+     }) |
+  p=dotExpr {$ast = $p.ast;};
 
 dotExpr returns [BCExpression ast] :
-	l=primaryExpr {$ast = $l.ast;}
-	(DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);}
-		| BR_LEFT p=uncheckedExpression BR_RIGHT {$ast = new ArrayAccess($ast, $p.ast);}
-	)*
-	;
+  l=primaryExpr {$ast = $l.ast;}
+  (DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);}
+    | BR_LEFT p=uncheckedExpression BR_RIGHT {$ast = new ArrayAccess($ast, $p.ast);}
+  )*
+  ;
 
 primaryExpr returns [BCExpression ast] :
-	l=localVar {$ast = $l.lv;}
-	| n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
-	| i=ident {$ast = whatIsIt($i.text);}
-	| MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
-	| PLUS px=primaryExpr {$ast = $px.ast;}
-	| LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
-	| FALSE {$ast = new Predicate0Ar(false);}
-	| TRUE {$ast = new Predicate0Ar(true);}
-	| RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
-	| NULL {$ast = new NULL();}
-	| THIS {$ast = new THIS(false, bcc);}
-	| OLD_THIS {$ast = new THIS(true, bcc);}
-	| OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
-	| PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
-	| LENGTH {$ast = new ArrayLength();}
-	;
+  l=localVar {$ast = $l.lv;}
+  | n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+  | i=ident {$ast = whatIsIt($i.text);}
+  | MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
+  | PLUS px=primaryExpr {$ast = $px.ast;}
+  | LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
+  | FALSE {$ast = new Predicate0Ar(false);}
+  | TRUE {$ast = new Predicate0Ar(true);}
+  | RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
+  | NULL {$ast = new NULL();}
+  | THIS {$ast = new THIS(false, bcc);}
+  | OLD_THIS {$ast = new THIS(true, bcc);}
+  | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
+  | PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
+  | LENGTH {$ast = new ArrayLength();}
+  ;
 
 localVar returns [LocalVariable lv] :
-	LV BR_LEFT n=NAT BR_RIGHT {
-		int i=Integer.parseInt($n.text);
-		if (m == null) {
-			reportError(null);
-		} else {
-			if (i >= m.getLocalVariableCount()) {
-				reportError(null);
-			} else {
-				$lv = m.getLocalVariable(false, i);
-			}
-		}
-	};
+  LV BR_LEFT n=NAT BR_RIGHT {
+    int i=Integer.parseInt($n.text);
+    if (m == null) {
+      reportError(null);
+    } else {
+      if (i >= m.getLocalVariableCount()) {
+        reportError(null);
+      } else {
+        $lv = m.getLocalVariable(false, i);
+      }
+    }
+  };
 
 ident returns [String name]:
-	i=IDENT {$name = $i.getText();};
+  i=IDENT {$name = $i.getText();};
 
 // ***** LEXER RULES *****
 
 // bytecode level
 
-PACKAGE: '[[package]]';
-CLASS: '[[class]]';
-NO_CLA: '\\class attributes unaffected';
-NO_METHOD: '\\method unaffected';
-MHEAD: '[[method header]]';
-NO_INSTRUCTION: '\\instruction unaffected';
-INSTRUCTION: '[[instruction]]';
+//Java keywords
+
+PACKAGE: 'package';
+DEFAULTPACKAGE: '[default]';
+IMPORT: 'import';
+CLASS: 'class';
+INTERFACE: 'interface';
+PUBLIC: 'public';
+PROTECTED: 'protected';
+PRIVATE: 'private';
+ABSTRACT: 'abstract';
+STATIC: 'static';
+FINAL: 'final';
+NATIVE: 'native';
+SYNCHRONIZED: 'synchronized';
+TRANSIENT: 'transient';
+VOLATILE: 'volatile';
+STRICTFP: 'strictfp';
+VOID: 'void';
+BOOLEAN: 'boolean';
+BYTE: 'byte';
+CHAR: 'char';
+SHORT: 'short';
+INT: 'int';
+LONG: 'long';
+FLOAT: 'float';
+DOUBLE: 'double';
+EXTENDS: 'extends';
+IMPLEMENTS: 'implements';
+THROWS: 'throws';
 MTHROWS: '[[throws]]';
-NO_MSPEC: '\\method specification unaffected';
 NO_ANNOTATION: '\\annotation unaffected';
 EOD: 'EOD';
 EOM: 'EOM';
@@ -572,7 +733,7 @@ EOA: 'EOA';
 // bml level
 // IDisplayStyle must be modified as well
 
-STATIC: 'static';
+CONSNAME: '<init>';
 ASSERT: 'assert';
 LOOPSPEC: 'loop_specification';
 LINVARIANT: 'loop_inv';
@@ -631,10 +792,16 @@ DOT2: '..';
 DOT: '.';
 OLD: 'old'|'OLD';
 LENGTH: 'length';
+BML_ONE_LINE_START: '//@';
+BML_START: '/*@';
+BML_END: '@*/';
+BML_MARK: '@';
+COMMENT_END: '*/';
 
 NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
-EXC_IDENT: (('a'..'z'|'A'..'Z')+('/')+)+('a'..'z'|'A'..'Z')+;
+STRING: '\"' (.* (~('\\')))? '\"';
 
-WS: (' '|'\t'|'\n')+ {skip();};
+WS: (' '|'\t')+ {skip();};
 EOF: '\f';
+EOL: '\n';

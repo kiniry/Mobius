@@ -66,6 +66,8 @@ public class DisplayStyle {
   public static final String comment_end = "  @*/"; //careful
 
   public static final String COMMENT_NEXT = "  @ ";
+  
+  public static final String ONE_LINE_BML_START = "//@";
 
   /**
    * length of comment marks above.

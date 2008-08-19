@@ -15,6 +15,8 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
+import bmllib.utils.NumberUtils;
+
 import annot.io.ConstantPoolReader;
 import annot.io.ReadAttributeException;
 import annot.textio.DisplayStyle;
@@ -50,24 +52,68 @@ public class BCConstantPool {
   /**
    * A standard constructor, from JavaClass. It inserts
    * constants from ordinary constant pool first, and
-   * then from secons constant pool attribute.
+   * then from the second constant pool attribute.
    *
-   * @param jc - JavaClass to initialize from.
+   * @param ajc - JavaClass to initialize from.
    * @throws ReadAttributeException - if second constant
    *     pool attribute format is invalid.
    */
-  public BCConstantPool(final JavaClass jc) throws ReadAttributeException {
-    this.jc = jc;
+  public BCConstantPool(final JavaClass ajc) throws ReadAttributeException {
+    this.jc = ajc;
     this.constants = new Vector < Constant > ();
-    final ConstantPoolGen cpg = new ConstantPoolGen(jc.getConstantPool());
+    final ConstantPoolGen cpg = new ConstantPoolGen(ajc.getConstantPool());
     addStandardConstants(cpg);
-    jc.setConstantPool(cpg.getFinalConstantPool());
-    final ConstantPool cp = jc.getConstantPool();
+    ajc.setConstantPool(cpg.getFinalConstantPool());
+    final ConstantPool cp = ajc.getConstantPool();
     this.initialSize = cp.getLength();
+    readInCP(cp);
+    readInSecondCP(ajc);
+  }
+
+  /**
+   * Reads in to the internal constant pool representation the content of the
+   * first constant pool.
+   *
+   * @param cp the BCEL representation of the constant pool to read in
+   */
+  private void readInCP(final ConstantPool cp) {
     for (int i = 0; i  <  this.initialSize; i++) {
       this.constants.add(cp.getConstant(i));
     }
-    final Attribute[] attrs = jc.getAttributes();
+  }
+
+  /**
+   * Reads in to the BMLLib constant pool representation the content of the
+   * second constant pool. It finds the appropriate attribute and in case
+   * it is not empty reads in its contents.
+   *
+   * @param ajc the BCEL representation of the class to read second constant
+   *   pool for
+   * @throws ReadAttributeException if the data in the constant pool
+   *   representation is invalid
+   */
+  private void readInSecondCP(final JavaClass ajc)
+    throws ReadAttributeException {
+    final Attribute[] attrs = ajc.getAttributes();
+    final byte[] bytes = findSecondCPAttribute(attrs);
+    if (bytes != null) {
+      readInSecondCPContent(bytes);
+    }
+  }
+
+  /**
+   * Retrieves the content of the attribute which contains the second constant
+   * pool. It examines one by one all the attributes in the given array.
+   * The content of the first attribute the name of which corresponds to
+   * the name of the second constant pool is returned. In case there is no
+   * second constant pool attribute <code>null</code> is returned.
+   *
+   * @param attrs the array of attributes to retrieve the second constant pool
+   *   from
+   * @return the content of the second constant pool, or <code>null</code> in
+   *   case there is no second constant pool
+   */
+  private byte[] findSecondCPAttribute(final Attribute[] attrs) {
     byte[] bytes = null;
     for (int i = 0; i  <  attrs.length; i++) {
       if (attrs[i] instanceof Unknown) {
@@ -77,20 +123,32 @@ public class BCConstantPool {
         }
       }
     }
-    if (bytes != null) {
-      MLog.putMsg(MessageLog.LEVEL_PNOTICE, "second constant pool detected.");
-      final DataInputStream file = new DataInputStream(
-        new ByteArrayInputStream(bytes));
-      try {
-        final int size = file.readUnsignedShort();
-        for (int i = 0; i  <  size; i++) {
-          final Constant c = ConstantPoolReader.readConstant(file);
-          this.constants.add(c);
-        }
-      } catch (final IOException e) {
-        throw new ReadAttributeException("error while reading second " +
-                                         "constant pool");
+    return bytes;
+  }
+
+  /**
+   * Reads in the contents of the second constant pool and remembers its
+   * constant in the local representation.
+   *
+   * @param bytes the content (second_cp field of the structure) of the second
+   *   constant pool attribute
+   * @throws ReadAttributeException if the data in the constant pool
+   *   representation is invalid
+   */
+  private void readInSecondCPContent(final byte[] bytes)
+    throws ReadAttributeException {
+    MLog.putMsg(MessageLog.LEVEL_PNOTICE, "second constant pool detected.");
+    final DataInputStream file = new DataInputStream(
+      new ByteArrayInputStream(bytes));
+    try {
+      final int size = file.readUnsignedShort();
+      for (int i = 0; i  <  size; i++) {
+        final Constant c = ConstantPoolReader.readConstant(file);
+        this.constants.add(c);
       }
+    } catch (final IOException e) {
+      throw new ReadAttributeException("error while reading second " +
+                                       "constant pool");
     }
   }
 
@@ -145,7 +203,7 @@ public class BCConstantPool {
 
   /**
    * Gives a constant from constant pool. Constants from
-   * second constant pool have indexes starting from
+   * second constant pool have indexes starting with
    * <code>initialSize</code>, while constants from primary
    * constant pool have indexes from 0 to initialSize - 1.
    * Can be used in loading from file only.
@@ -179,7 +237,7 @@ public class BCConstantPool {
   }
 
   /**
-   * Displays i-th constant like:
+   * Displays i-th constant. The format is as follows:
    *   i :  CONSTANT_Utf8[1]("Code")
    *
    * @param i - constant's index.
@@ -190,8 +248,7 @@ public class BCConstantPool {
     if (c == null) {
       return "";
     }
-    return (i  <  100 ? " " : "") + (i  <  10 ? " " : "") + i + ": " +
-      c.toString() + "\n";
+    return NumberUtils.paddedNumber(i) + ": " + c.toString() + "\n";
   }
 
   /**
@@ -207,9 +264,7 @@ public class BCConstantPool {
     this.jc.setConstantPool(cpg.getFinalConstantPool());
     final ConstantPool cp = this.jc.getConstantPool();
     this.initialSize = cp.getLength();
-    for (int i = 0; i  <  this.initialSize; i++) {
-      this.constants.add(cp.getConstant(i));
-    }
+    readInCP(cp);
   }
 
   /**
@@ -217,15 +272,15 @@ public class BCConstantPool {
    * (primary as an ordinary constant pool and secondary
    * as an "second constant pool" class attribute).
    *
-   * @param jc - JavaClass to save to.
+   * @param ajc - JavaClass to save to.
    */
-  public void save(final JavaClass jc) {
+  public void save(final JavaClass ajc) {
     final int n = this.constants.size();
     final Constant[] carr = new Constant[this.initialSize];
     for (int i = 0; i  <  this.initialSize; i++) {
       carr[i] = this.constants.elementAt(i);
     }
-    jc.getConstantPool().setConstantPool(carr);
+    ajc.getConstantPool().setConstantPool(carr);
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final DataOutputStream file = new DataOutputStream(baos);
     try {
@@ -237,13 +292,13 @@ public class BCConstantPool {
       e.printStackTrace();
       throw new RuntimeException("io error in BCConstantPool.save()");
     }
-    final ConstantPool cp = jc.getConstantPool();
+    final ConstantPool cp = ajc.getConstantPool();
     final int nameIndex = findConstant(DisplayStyle.__second_cp);
     final int length = file.size();
     final byte[] bytes = baos.toByteArray();
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
-    final Attribute[] atab = BCClass.addAttribute(jc.getAttributes(), scp);
-    jc.setAttributes(atab);
+    final Attribute[] atab = BCClass.addAttribute(ajc.getAttributes(), scp);
+    ajc.setAttributes(atab);
   }
 
   /**
@@ -269,6 +324,18 @@ public class BCConstantPool {
    */
   public int size() {
     return this.constants.size();
+  }
+
+  /**
+   * Returns <code>true</code> only if the index is an index to a second
+   * constant pool constant.
+   *
+   * @param i the index to check
+   * @return <code>true</code> when the index is to the second constant pool,
+   *   <code>false</code> when the index is to the original constant pool
+   */
+  public boolean isSecondConstantPoolIndex(final int i) {
+    return (i >= initialSize);
   }
 
 }

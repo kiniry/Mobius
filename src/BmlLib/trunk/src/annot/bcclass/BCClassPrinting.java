@@ -9,6 +9,7 @@ import org.apache.bcel.classfile.ConstantUtf8;
 
 import annot.attributes.ClassInvariant;
 import annot.textio.BMLConfig;
+import annot.textio.DisplayStyle;
 
 /**
  * This class handles the pretty printing of the BMLLib class. It extends the
@@ -115,18 +116,29 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * This uses the format of the grammar from "BML Reference Manual" section
    * "Textual Representation of Specifications":
    *    fileheader ::= packageinfo [ imports ]
-   * where
    *
    * @return String representation of class header.
    */
   public String printFileHeader() {
-    String pname = getJC().getPackageName();
-    if ("".equals(pname)) {
-      pname = "[default]";
-    }
-    final StringBuffer ret = new StringBuffer("package ");
-    ret.append(pname);
+    final StringBuffer ret = generatePackageInfo();
     ret.append("\n\n");
+    addImports(ret);
+    return ret.append("\n").toString();
+  }
+
+  /**
+   * Adds at the end of the given {@link StringBuffer} the imports of the class
+   * file. This uses the format of the grammar from "BML Reference Manual"
+   * section "Textual Representation of Specifications":
+   *    imports ::= [ import ]...
+   *    import ::= java-import | bml-import
+   *    java-import ::= 'import' typename
+   *    bml-import ::= '//@' 'import' typename
+   *    typename ::= ident'/'typename
+   *
+   * @param buf the {@link StringBuffer} to append the imports to
+   */
+  private void addImports(final StringBuffer buf) {
     for (int i = 0; i < getCp().size(); i++) {
       final Constant constant = getCp().getConstant(i);
       if (constant != null && constant.getTag() == Constants.CONSTANT_Class) {
@@ -134,11 +146,33 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
         if (getJC().getClassNameIndex() != i) {
           final String name = ((ConstantUtf8)getCp().getConstant(namenum)).
             getBytes();
-          ret.append("import ").append(name).append("\n");
+          if (getCp().isSecondConstantPoolIndex(i)) { //BML import
+            buf.append(DisplayStyle.ONE_LINE_BML_START).append(" ");
+          }
+          buf.append("import ").append(name).append("\n");
         }
       }
     }
-    return ret.append("\n").toString();
+  }
+
+  /**
+   * Displays a file header, similar to one in Java.
+   * This uses the format of the grammar from "BML Reference Manual" section
+   * "Textual Representation of Specifications":
+   *    packageinfo ::= package packagename
+   * where
+   *    packagename ::= [default] | @var{typename}
+   *
+   * @return the buffer with the representation of package information
+   */
+  private StringBuffer generatePackageInfo() {
+    String pname = getJC().getPackageName();
+    if ("".equals(pname)) {
+      pname = "[default]";
+    }
+    final StringBuffer ret = new StringBuffer("package ");
+    ret.append(pname);
+    return ret;
   }
 
 

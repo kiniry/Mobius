@@ -267,6 +267,8 @@ public class Parsing {
    *     and given code is incorrect.
    */
   public boolean parseClass(final String code, final boolean affectBcc) {
+    //TODO FIXME we should strip off the comments first
+    
     final CharStream chstr = new ANTLRStringStream(code);
     final BMLLexer lex = new BMLLexer(chstr);
     final CommonTokenStream tokens = new CommonTokenStream(lex);
