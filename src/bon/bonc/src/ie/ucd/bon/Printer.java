@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.BONSTTreeWalker;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
@@ -40,7 +41,7 @@ public final class Printer {
   /** Prevent instantiation of Printer. */
   private Printer() { }
 
-  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, NONE };
+  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, NONE };
 
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
@@ -59,6 +60,8 @@ public final class Printer {
       return PrintingOption.ICG;
     } else if (optionString.equalsIgnoreCase("iig")) {
       return PrintingOption.IIG;
+    } else if (optionString.equalsIgnoreCase("cl")) {
+      return PrintingOption.CL;
     } else {
       return PrintingOption.NONE;
     }    
@@ -78,6 +81,8 @@ public final class Printer {
       return "informal cluster graph";
     case IIG:
       return "informal class inheritance graph";
+    case CL:
+      return "linguistical analysis data";
     default:
       return "unknown"; //Shouldn't happen
     }
@@ -140,6 +145,7 @@ public final class Printer {
     case DIC:
     case ICG:
     case IIG:
+    case CL:
       return true;
     default:
       return false;
@@ -273,6 +279,8 @@ public final class Printer {
       return Grapher.graphInformalClusterContainment(parsingTracker);
     case IIG:
       return Grapher.graphInformalClassInheritance(parsingTracker);
+    case CL:
+      return MiscLing.printClassChartSentences(parsingTracker);
     default:
       return "";
     }

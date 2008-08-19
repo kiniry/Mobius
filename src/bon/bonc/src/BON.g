@@ -485,9 +485,9 @@ constraints  : c='constraint' constraint_list  -> ^(CONSTRAINTS[$c] constraint_l
              ;
 
 
-query_list  :  m1=manifest_textblock 
-               (  (',' manifest_textblock) 
-                | m=manifest_textblock { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); } 
+query_list  :  m1=manifest_textblock { getTI().informal().addQuery($m1.text); }
+               (  (',' m=manifest_textblock { getTI().informal().addQuery($m.text); } ) 
+                | m=manifest_textblock { getTI().informal().addQuery($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); } 
                )* 
                ','?             
              -> 
@@ -496,9 +496,9 @@ query_list  :  m1=manifest_textblock
               )
             ;
             
-command_list  :  m1=manifest_textblock 
-                 (  (',' manifest_textblock)
-                  | m=manifest_textblock { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
+command_list  :  m1=manifest_textblock { getTI().informal().addCommand($m1.text); }
+                 (  (',' m=manifest_textblock { getTI().informal().addCommand($m.text); } )
+                  | m=manifest_textblock { getTI().informal().addCommand($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
                  )* 
                  ','?
                ->
@@ -507,9 +507,9 @@ command_list  :  m1=manifest_textblock
                 )
               ;
               
-constraint_list  :  m1=manifest_textblock 
-                    (  (',' manifest_textblock)
-                     | m=manifest_textblock { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
+constraint_list  :  m1=manifest_textblock { getTI().informal().addConstraint($m1.text); }
+                    (  (',' m=manifest_textblock { getTI().informal().addConstraint($m.text); } )
+                     | m=manifest_textblock { getTI().informal().addConstraint($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
                     )*
                     ','?
                   -> 

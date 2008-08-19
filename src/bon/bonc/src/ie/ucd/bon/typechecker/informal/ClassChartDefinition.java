@@ -8,6 +8,7 @@ import ie.ucd.bon.source.SourceLocation;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 public class ClassChartDefinition {
@@ -21,10 +22,17 @@ public class ClassChartDefinition {
     
     private boolean hasClassHierarchyCycle;
     
+    private final Collection<String> queries;
+    private final Collection<String> commands;
+    private final Collection<String> constraints;
+    
     public ClassChartDefinition(String className, SourceLocation loc) {
       this.className = className;
       this.loc = loc;
       this.superClasses = new HashSet<String>();
+      queries = new LinkedList<String>();
+      commands = new LinkedList<String>();
+      constraints = new LinkedList<String>();
     }
 
     public String getClassName() {
@@ -76,7 +84,30 @@ public class ClassChartDefinition {
     public void setExplanation(String explanation) {
       this.explanation = explanation;
     }
+
+    public void addQuery(String query) {
+      queries.add(query);
+    }
     
+    public Collection<String> getQueries() {
+      return queries;
+    }
+    
+    public void addCommand(String command) {
+      commands.add(command);
+    }
+    
+    public Collection<String> getCommands() {
+      return commands;
+    }
+    
+    public void addConstraint(String constraint) {
+      constraints.add(constraint);
+    }
+    
+    public Collection<String> getConstraints() {
+      return constraints;
+    }
     
     
 }

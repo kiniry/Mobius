@@ -89,6 +89,33 @@ public class InformalTypingInformation {
     classDef = new ClassChartDefinition(className, loc);
     classes.put(className, classDef);
   }
+  
+  public void addQuery(String query) {
+    if (context.isInClassChart()) {
+      ClassChartDefinition def = classes.get(context.getClassChartName());
+      if (def != null) {
+        def.addQuery(query);
+      }
+    }
+  }
+  
+  public void addCommand(String command) {
+    if (context.isInClassChart()) {
+      ClassChartDefinition def = classes.get(context.getClassChartName());
+      if (def != null) {
+        def.addCommand(command);
+      }
+    }
+  }
+  
+  public void addConstraint(String constraint) {
+    if (context.isInClassChart()) {
+      ClassChartDefinition def = classes.get(context.getClassChartName());
+      if (def != null) {
+        def.addConstraint(constraint);
+      }
+    }
+  }
 
   
   public void addClusterEntry(String clusterName) {
