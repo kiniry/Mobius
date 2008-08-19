@@ -327,7 +327,7 @@ part  :  p='part' MANIFEST_STRING
          ^( PART PARSE_ERROR ) 
       ;
 
-description  :  d='description' manifest_textblock
+description  :  d='description' m=manifest_textblock { getTI().setDescription($m.text); }
               ->
               ^(
                 DESCRIPTION[$d] manifest_textblock
@@ -424,8 +424,9 @@ class_entries  :  (class_entry)+
                  )
                ;
                
-class_entry  :  c='class' class_name description
-                { getTI().informal().addClassEntry($class_name.text, $description.text); }
+class_entry  :  c='class' class_name { getContext().enterClassEntry($class_name.text); }
+                description
+                { getTI().informal().addClassEntry($class_name.text); getContext().leaveClassEntry(); }
               ->
               ^(
                 CLASS_ENTRY[$c] class_name description

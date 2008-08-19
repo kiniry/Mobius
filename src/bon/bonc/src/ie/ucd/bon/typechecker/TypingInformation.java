@@ -236,13 +236,11 @@ public class TypingInformation {
     return classes;
   }
 
-  /*public Map<String, ClusterDefinition> getClusterClusterContainsLink() {
-    return clusterClusterContainsLink;
+  public void setDescription(String description) {
+    //Currently nothing here
+    
+    informal.setDescription(description);
   }
-
-  public Map<String, ClusterDefinition> getClassClusterContainsLink() {
-    return classClusterContainsLink;
-  }*/
   
   public FormalTypeChecker getFormalTypeChecker() {
     return new FormalTypeChecker(clusters, classes, types, classInheritanceGraph, simpleClassInheritanceGraph, classClusterGraph, clusterClusterGraph);

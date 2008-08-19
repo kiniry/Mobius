@@ -39,25 +39,25 @@ public final class Main {
   public static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
   public static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
   public static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
-  
+
   private static boolean debug = false;
   private static String version;
-  
+
   private static Problems problems;   
-  
+
   /** Prevent instantiation of Main. */
   private Main() { }
-  
+
   public static boolean isDebug() {
     return debug;
   }
-  
+
   public static void logDebug(final String debugMessage) {
     if (debug) {
       System.out.println("Debug: " + debugMessage);
     }
   }
-  
+
   /**
    * Get the version of BONc that is running.
    * @return a string containing the version number of BONc.
@@ -72,7 +72,7 @@ public final class Main {
     }
     return version;
   }
-  
+
   public static void main(final String[] args) {
     try {
       main2(args, true);
@@ -81,16 +81,16 @@ public final class Main {
       e.printStackTrace(System.out);
     }
   }
-  
+
   public static void main2(final String[] args, final boolean exitOnFailure) {
     try {
       CommandlineParser cp = processArguments(args);
-      
+
       if (cp.isValidParse()) {
         Options so = cp.getSelectedOptions();
-        
+
         debug = so.isBooleanOptionByNameSelected("-d");
-        
+
         if (so.isBooleanOptionByNameSelected("--print-man")) {
           cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
         } else if (so.isBooleanOptionByNameSelected("--print-readme")) {
@@ -121,18 +121,18 @@ public final class Main {
       System.exit(1);
     } 
   }
-  
+
   private static Collection<File> getValidFiles(final Collection<String> fileNames, final ParsingTracker tracker, final Options so) {
     //Check valid files
     Collection<File> validFiles = new Vector<File>();
-    
+
     boolean readingFromStdIn = false;
     if (so.isBooleanOptionByNameSelected("-")) {
       Main.logDebug("Reading from stdin");
       validFiles.add(null);
       readingFromStdIn = true;
     }
-    
+
     for (String fileName : fileNames) {
       if ("-".equals(fileName)) {
         if (!readingFromStdIn) {
@@ -151,12 +151,12 @@ public final class Main {
     }
     return validFiles;
   }
-  
+
   private static void parse(final Collection<File> files, final ParsingTracker tracker, final boolean timing) {
- 
+
     for (File file : files) {
       ParseResult parseResult;
-      
+
       InputStream is;
       if (file == null) {
         is = SourceReader.getInstance().readStandardInput();
@@ -169,7 +169,7 @@ public final class Main {
           is = null;
         }
       }
-      
+
       try {
         if (timing) {
           long startTime = System.nanoTime();
@@ -179,7 +179,7 @@ public final class Main {
         } else {
           parseResult = Parser.parse(file, is, tracker);
         }
-        
+
         if (file == null) {
           tracker.addParse("stdin", parseResult);
         } else {
@@ -191,7 +191,7 @@ public final class Main {
       }
     }
   }
-  
+
   private static void typeCheck(final ParsingTracker tracker, final Options so, final boolean timing) {
     if (so.isBooleanOptionByNameSelected("-tc")) {
 
@@ -199,7 +199,7 @@ public final class Main {
       boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
       boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
       Main.logDebug("checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
-      
+
       if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
         try {
           if (timing) {
@@ -215,7 +215,7 @@ public final class Main {
           //Nothing - won't actually happen?
           System.out.println("ERROR, something went wrong...");
         }
-        
+
       } else {
         tracker.setFinalMessage("Not typechecking due to parse errors.");
       }
@@ -223,7 +223,7 @@ public final class Main {
       System.out.println("Not typechecking.");
     }
   }
-  
+
   private static void print(final Collection<File> files, final ParsingTracker tracker, final Options so, final boolean timing) {
 
     if (!so.isStringOptionByNameSelected("-p")) {
@@ -236,7 +236,7 @@ public final class Main {
       System.out.println("Unknown print type \"" + printType + "\"");
       return;
     }
-    
+
     if (so.isBooleanOptionByNameSelected("-gcd") && printingOption != Printer.PrintingOption.DIC) {
       try {
         String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
@@ -247,22 +247,22 @@ public final class Main {
         }
       } catch (RecognitionException re) {
         //Can't actually be thrown for this.
-    	logDebug("Main: Threw RecognitionException while executing printGeneratedClassDictionaryToString");
+        logDebug("Main: Threw RecognitionException while executing printGeneratedClassDictionaryToString");
       }
     }
-    
+
     boolean printToFile = so.isStringOptionByNameSelected("-po");
-    
+
     PrintStream outputStream;
     String outputFilePath = null;
     if (printToFile) {
       outputFilePath = so.getStringOptionByNameArgument("-po");
       File outputFile = new File(outputFilePath);
-      
+
       try {
         FileOutputStream outputFileStream = new FileOutputStream(outputFile);
         outputStream = new PrintStream(outputFileStream);
-        
+
         Main.logDebug("printing: " + printType + ", to: " + outputFilePath);
       } catch (FileNotFoundException fnfe) {
         System.out.println("Error writing to file " + outputFilePath);
@@ -275,63 +275,42 @@ public final class Main {
 
 
     Printer.printToStream(files, tracker, outputStream, printingOption, printToFile, timing);
-    
+
     if (printToFile) {
       outputStream.close();
       System.out.println("Succesfully created: " + outputFilePath);
     }
   }
-  
-  /*private static void graph(final ParsingTracker tracker, final Options so) {
-    //Class and Cluster graph
-    if (so.isStringOptionByNameSelected("-cg")) {
-      if (tracker.continueFromParse(CCG_NUM_SEVERE_ERRORS)) {
-        System.out.println("Not creating class-cluster graph due to parse errors.");
-      } else {
-        System.out.println("Creating class-cluster graph: " + so.getStringOptionByNameArgument("-cg"));
-        Grapher.graphClassesAndClusters(tracker, so.getStringOptionByNameArgument("-cg"));
-      }
-    }
-    //Class inheritance graph
-    if (so.isStringOptionByNameSelected("-ig")) {
-      if (tracker.continueFromParse(IG_NUM_SEVERE_ERRORS)) {
-        System.out.println("Not creating inheritance graph due to parse errors.");
-      } else {
-        System.out.println("Creating class-inheritance graph: " + so.getStringOptionByNameArgument("-ig"));
-        Grapher.graphClassHierarchy(tracker, so.getStringOptionByNameArgument("-ig"));
-      }
-    }
-  }*/
-  
+
   public static boolean run(final Collection<String> fileNames, final Options so) {
     //Timing info?
     boolean timing = so.isBooleanOptionByNameSelected("-time");
-    
+
     ParsingTracker tracker = new ParsingTracker();
     Collection<File> validFiles = getValidFiles(fileNames, tracker, so);
-    
+
     //Is there at least one valid file?
     if (validFiles.size() < 1) {
       tracker.addProblem(new NoFilesError());
       printResults(tracker, false, false, false);
       return false;
     }
-    
+
     parse(validFiles, tracker, timing);
     typeCheck(tracker, so, timing);
-    
+
     boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
     boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
     boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
     printResults(tracker, checkInformal, checkFormal, checkConsistency);    
-    
+
     print(validFiles, tracker, so, timing);
     //graph(tracker, so);
 
     //TODO - return false here if we have problems...
     return true;
   }
-  
+
   private static void printResults(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
     problems = tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency);
     problems.printProblems(System.out);
@@ -341,18 +320,18 @@ public final class Main {
 
   private static CommandlineParser processArguments(final String[] args) throws InvalidOptionsSetException {
     CommandlineParser clp = CLP.commandlineParser();
-    
+
     clp.parseOptions(System.out, args);
     clp.checkConstraints(System.out);
     clp.triggerActions();
 
     return clp;
   }
-  
+
   public static String timeString(final long timeInNano) {
     return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
   }
-  
+
   public static Problems getProblems() {
     return problems;
   }

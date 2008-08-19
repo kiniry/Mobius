@@ -23,6 +23,8 @@ public final class Context {
   private boolean inInheritsClause;
   private boolean inEventEntry;
   private boolean inCreationEntry;
+  private boolean inClassEntry;
+  private String classEntryName;
   
   private boolean inDictionaryEntry;
   private String dictionaryEntryClassName;
@@ -66,6 +68,8 @@ public final class Context {
     inInheritsClause = false;
     inEventEntry = false;
     inCreationEntry = false;
+    inClassEntry = false;
+    classEntryName = null;
     
     inDictionaryEntry = false;
     dictionaryEntryClassName = null;
@@ -319,6 +323,24 @@ public final class Context {
   
   public Stack<Map<String,Type>> getQuantificationStack() {
     return quantificationStack;
+  }
+
+  public boolean isInClassEntry() {
+    return inClassEntry;
+  }
+
+  public String getClassEntryName() {
+    return classEntryName;
+  }
+  
+  public void enterClassEntry(String classEntryName) {
+    inClassEntry = true;
+    this.classEntryName = classEntryName;
+  }
+  
+  public void leaveClassEntry() {
+    inClassEntry = false;
+    this.classEntryName = null;
   }
   
 }

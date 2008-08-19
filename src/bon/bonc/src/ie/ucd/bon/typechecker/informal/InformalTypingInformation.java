@@ -126,14 +126,10 @@ public class InformalTypingInformation {
     }
   }
   
-  public void addClassEntry(String className, String description) {
+  public void addClassEntry(String className) {
     if (context.isInClusterChart()) {
       //Should be, sanity check anyway
       classClusterGraph.addEdge(className, clusters.get(context.getClusterChartName()));
-      
-      if (description != null && !"".equals(description)) {
-        alternativeClassDescriptionsGraph.addEdge(className, description);
-      }
     }
   }
   
@@ -213,6 +209,12 @@ public class InformalTypingInformation {
     } else {
       return "";
     }    
+  }
+  
+  public void setDescription(String description) {
+    if (context.isInClassEntry()) {
+      alternativeClassDescriptionsGraph.addEdge(context.getClassEntryName(), description);
+    }
   }
 
 }

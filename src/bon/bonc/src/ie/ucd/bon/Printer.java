@@ -287,7 +287,7 @@ public final class Printer {
   }
 
   public static String printToString(final ParseResult parseResult, final PrintingOption printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
-    System.out.println("Printing to string...");
+    //System.out.println("Printing to string...");
 
     if (printingOption == PrintingOption.DOT) {
       return printDotToString(parseResult);
