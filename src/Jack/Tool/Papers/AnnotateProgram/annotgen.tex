@@ -2,11 +2,12 @@
 
 Given a security property encoded as an MVA, the annotation generation
 procedure generates JML-annotations that capture this property,
-\emph{i.e.}, if the program does not violate the generated % AT: shouldn't be iff?
-JML-annotations, it respects the security property encoded by the
-MVA. As explained above, the procedure is defined in several steps:
+\emph{i.e.}, the program does not violate the generated annotations
+if and only if it respects the encoded property.
+% security property encoded by the MVA.
+As explained above, the procedure is defined in several steps:
 \begin{inparaenum}[(\itshape i\upshape)]
-\item the monitor is completed (as described in Section~\ref{SecMVA});
+\item the monitor is completed; %(as described in Section~\ref{SecMVA});
 \item the annotations are generated at the method specification level,
 as special set-annotations; and
 \item the method specification-level set-annotations are inlined in
@@ -38,17 +39,16 @@ are related by \(R\), and from this we can conclude that for any
 reachable state of the monitored program, there exists a related state,
 reachable in the translated program.
 
-A natural way to prove this is by induction over the derivation
-length. However, to do this, we have to make some restrictions. In
-particular, the translation introduces new (ghost) variables to encode
-the MVA. Therefore, to be able to apply induction, we typically
-require that the body \(b\) does not contain any new variables. The
-new variables occur only at specific points in the program, and for
-these point separate preservation lemmas have to be proven. Further,
-to be able to complete the proof, we need to ensure that in both
+\marginnote{\small This is specific of the second step, not general.}
+A natural way to prove this is by induction over the derivation length.
+To be able to apply induction, we typically require that the body \(b\) does
+not contain new variables. However, the translation introduces new (ghost)
+variables to encode the MVA at specific points in the program. For
+these points, separate preservation lemmas have to be proven.
+Further, to be able to complete the proof, we need to ensure that in both
 bodies the same branches of conditional expressions and statements are
 taken, and that the same values get assigned to the store. Therefore,
-we prove a stronger result, adding that also the resulting values
+we prove a stronger result, adding that also the values  %resulting values
 \(v_1\) and \(v_2\) are the same (however, sometimes this holds only
 under certain conditions).
 
@@ -79,7 +79,8 @@ monitored program with a total MVA, \(\alpha_1(P)\), is defined as:
 \]
 
 The relation that is preserved between executions of \(P\) and
-% This is monitor_related_states
+%% This is monitor_related_states
+\marginnote{\small Should we add the condition on ghost variables?}
 \(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
 \(P\) and \(\tau\) is a state of \(\alpha_1(P)\)):
 \[{\small
@@ -92,7 +93,6 @@ R(\sigma, \tau) =\\
   (\sigma.\progstate = \tau.\progstate)
 \end{array}}
 \]
-% TODO: should we add the condition on ghost variables?
 
 To prove that this relation is preserved for any body \(b\), we make
 use of equivalence (\ref{MVAcompletionProp}) on
@@ -115,10 +115,15 @@ Page~\pageref{MVAcompletionProp} and we observe further that
 \end{array}}
 \]
 
-For our running example, applying translation \(\alpha_1\) means that
-where class \texttt{Messaging} as shown above was first monitored
-with the partial MVA in Figure~\ref{FigExample}, after the translation
-it is monitored with the total MVA in Figure~\ref{FigCompleteMVA}.
+%% Rephrased
+% For our running example, applying translation \(\alpha_1\) means that
+% where class \texttt{Messaging} as shown above was first monitored
+% with the partial MVA in Figure~\ref{FigExample}, after the translation
+% it is monitored with the total MVA in Figure~\ref{FigCompleteMVA}.
+For our running example, applying the translation \(\alpha_1\) means that
+the class \texttt{Messaging} instead of being monitored by the partial MVA
+in Figure~\ref{FigExample}, it is monitored by the total MVA in
+Figure~\ref{FigCompleteMVA}.
 % TODO AT: for some reason I get Fig 2 here instead of Fig 3.
 
 
@@ -243,7 +248,7 @@ To show correctness of the translation, we show that the following
 relation is preserved (where \(P\) is the monitored program,
 \(\sigma\) is a state of the monitored program, and \(\tau\) a state
 of the annotated program):
-\marginnote{Is OK to have both $\pstate$ and $\progstate$?}
+\marginnote{Is it OK to have both $\pstate$ and $\progstate$?}
 % TODO: Review this definition
 \[{\small
 \begin{array}{rcl}
