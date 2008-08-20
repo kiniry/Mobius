@@ -183,34 +183,46 @@ public class Grapher {
       //Start xml
       xw.writeEntity("tree");
       xw.writeEntity("declarations");
+      
       xw.writeEntity("attributeDecl");
       xw.writeAttribute("name", "name");
       xw.writeAttribute("type", "String");
-      xw.writeAttribute("cluster", "boolean");
-      xw.writeAttribute("class", "boolean");
       xw.endEntity(); //attributeDecl
+      
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "cluster");
+      xw.writeAttribute("type", "Boolean");
+      xw.endEntity(); //attributeDecl
+      
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "class");
+      xw.writeAttribute("type", "Boolean");
+      xw.endEntity(); //attributeDecl
+      
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "system");
+      xw.writeAttribute("type", "Boolean");
+      xw.endEntity(); //attributeDecl
+      
       xw.endEntity(); //declarations
 
-      //Top-level branch
+      //Top-level branch/system node
       xw.writeEntity("branch");
 
-      //System node.
-      xw.writeEntity("attribute");
-      xw.writeAttribute("name", "name");
       SystemChartDefinition sysDef = informalTypingInfo.getSystem();
       if (sysDef == null) {
-        xw.writeAttribute("value", "Unnamed System");
-      } else {        
-        xw.writeAttribute("value", sysDef.getSystemName());
+        printPrefuseAttribute("name", "Unnamed System", xw);
+      } else {
+        printPrefuseAttribute("name", sysDef.getSystemName(), xw);
       }
+      printPrefuseAttribute("system", "true", xw);
 
       for (String clusterName : clustersInSystem) {
         printPrefuseCluster(clusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
       }
 
-      xw.endEntity(); //system node
+      xw.endEntity(); //system node/top-level branch
 
-      xw.endEntity(); //Top-level branch
       xw.endEntity(); //tree
       return sw.toString();
     } catch (IOException ioe) {
@@ -226,11 +238,10 @@ public class Grapher {
 
     if (clusters != null || classes != null) {
       xw.writeEntity("branch");
-      xw.writeEntity("attribute");
-      xw.writeAttribute("name", "name");
-      xw.writeAttribute("value", clusterName);
-      xw.writeAttribute("cluster", "true");
-
+      
+      printPrefuseAttribute("name", clusterName, xw);
+      printPrefuseAttribute("cluster", "true", xw);
+      
       if (clusters != null) {
         for (String childClusterName : clusters) {
           printPrefuseCluster(childClusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
@@ -240,28 +251,29 @@ public class Grapher {
         for (String childClassName : classes) {
           printPrefuseClass(childClassName, xw);
         }
-      }
-
-      xw.endEntity(); //attribute
+      }      
       xw.endEntity(); //branch
     } else {
       xw.writeEntity("leaf");
-      xw.writeEntity("attribute");
-      xw.writeAttribute("name", "name");
-      xw.writeAttribute("value", clusterName);
+      printPrefuseAttribute("name", clusterName, xw);
+      printPrefuseAttribute("cluster", "true", xw);
       xw.endEntity(); //leaf
-      xw.endEntity(); //attribute
     }
 
   }
 
   private static void printPrefuseClass(String className, XMLWriter xw) throws IOException {
     xw.writeEntity("leaf");
-    xw.writeEntity("attribute");
-    xw.writeAttribute("name", "name");
-    xw.writeAttribute("value", className);
+    printPrefuseAttribute("name", className, xw);
+    printPrefuseAttribute("class", "true", xw);
     xw.endEntity(); //leaf
-    xw.endEntity(); //attribute
+  }
+  
+  private static void printPrefuseAttribute(String name, String value, XMLWriter xw) throws IOException {
+    xw.writeEntity("attribute");
+    xw.writeAttribute("name", name);
+    xw.writeAttribute("value", value);
+    xw.endEntity();    
   }
 
 }

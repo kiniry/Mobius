@@ -230,7 +230,7 @@ public final class Main {
     if (!so.isStringOptionByNameSelected("-p")) {
       return;
     }
-System.out.println("Here...");
+
     String printType = so.getStringOptionByNameArgument("-p");
     PrintingOption printingOption = Printer.getPrintingOption(printType);
     if (printingOption == Printer.PrintingOption.NONE) {
