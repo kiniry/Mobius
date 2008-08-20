@@ -386,9 +386,6 @@ public class TreeView extends Display {
         }
         
         public int getColor(VisualItem item) {
-          if (item.getBoolean("cluster") ) {
-            System.out.println("Cluster!!");
-          }
             if ( m_vis.isInGroup(item, Visualization.SEARCH_ITEMS) )
                 return ColorLib.rgb(255,190,190);
             else if ( m_vis.isInGroup(item, Visualization.FOCUS_ITEMS) )
