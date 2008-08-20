@@ -194,6 +194,15 @@ public final class CLP {
     noGenClassDicWhenPrinting.addAction(new TriggersBoolean("77.1", "77", false));
     cp.addOption(noGenClassDicWhenPrinting);
     
+    StringDefaultOption g = new StringDefaultOption();
+    g.setOptionID("100");
+    g.addOptionName("-g");
+    g.addOptionName("-graph");
+    g.addOptionName("--graph");
+    g.setArgName("TYPE");
+    g.setHelpString("Display the chosen graph type. ICG for informal clustering graph.");
+    cp.addOption(g);
+    
     BooleanDefaultOption printMan = new BooleanDefaultOption();
     printMan.setOptionID("99999");
     printMan.setHidden();

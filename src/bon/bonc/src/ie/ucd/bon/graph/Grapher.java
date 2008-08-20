@@ -2,15 +2,18 @@
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
-package ie.ucd.bon;
+package ie.ucd.bon.graph;
 
-import ie.ucd.bon.graph.Graph;
+import ie.ucd.bon.Main;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
+import ie.ucd.bon.util.XMLWriter;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +38,7 @@ public class Grapher {
     printGraphName(informalTypingInfo, sb);
 
     Graph<String,String> classInheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
-    
+
     printInformalClasses(informalTypingInfo, sb);
 
     appendLine("//Class inheritance links", sb);
@@ -148,7 +151,7 @@ public class Grapher {
   private static void printClusterSystemLink(final String clusterName, final String systemName, final StringBuilder sb) {
     appendLine("\"" + systemName + "\" -> \"" + clusterName + "\";", sb);
   }
-  
+
   private static void printClassInheritanceLink(final String child, final String parent, final StringBuilder sb) {
     appendLine("\"" + parent + "\" -> \"" + child + "\";", sb);
   }
@@ -163,6 +166,102 @@ public class Grapher {
     }
     appendLine("digraph \"" + graphName + "\" {", sb);
     appendLine(sb);
+  }
+
+  public static String graphPrefuseInformalClusterContainment(ParsingTracker parseTracker) {
+    //Output
+    StringWriter sw = new StringWriter();
+    XMLWriter xw = new XMLWriter(sw);
+
+    //Relevant collected data
+    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
+    Graph<String,String> reverseClassClusterGraph = informalTypingInfo.getReverseClassClusterGraph();
+    Graph<String,String> reverseClusterClusterGraph = informalTypingInfo.getReverseClusterClusterGraph();
+    Set<String> clustersInSystem = informalTypingInfo.getClustersInSystem();
+
+    try {
+      //Start xml
+      xw.writeEntity("tree");
+      xw.writeEntity("declarations");
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "name");
+      xw.writeAttribute("type", "String");
+      xw.writeAttribute("cluster", "boolean");
+      xw.writeAttribute("class", "boolean");
+      xw.endEntity(); //attributeDecl
+      xw.endEntity(); //declarations
+
+      //Top-level branch
+      xw.writeEntity("branch");
+
+      //System node.
+      xw.writeEntity("attribute");
+      xw.writeAttribute("name", "name");
+      SystemChartDefinition sysDef = informalTypingInfo.getSystem();
+      if (sysDef == null) {
+        xw.writeAttribute("value", "Unnamed System");
+      } else {        
+        xw.writeAttribute("value", sysDef.getSystemName());
+      }
+
+      for (String clusterName : clustersInSystem) {
+        printPrefuseCluster(clusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
+      }
+
+      xw.endEntity(); //system node
+
+      xw.endEntity(); //Top-level branch
+      xw.endEntity(); //tree
+      return sw.toString();
+    } catch (IOException ioe) {
+      Main.logDebug("IOException while writing XML: " + ioe);
+      return "";
+    }
+  }
+
+  private static void printPrefuseCluster(String clusterName, Graph<String,String> reverseClusterClusterGraph, Graph<String,String> reverseClassClusterGraph, XMLWriter xw) throws IOException {
+
+    Set<String> clusters = reverseClusterClusterGraph.getLinkedNodes(clusterName);
+    Set<String> classes = reverseClassClusterGraph.getLinkedNodes(clusterName);
+
+    if (clusters != null || classes != null) {
+      xw.writeEntity("branch");
+      xw.writeEntity("attribute");
+      xw.writeAttribute("name", "name");
+      xw.writeAttribute("value", clusterName);
+      xw.writeAttribute("cluster", "true");
+
+      if (clusters != null) {
+        for (String childClusterName : clusters) {
+          printPrefuseCluster(childClusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
+        }
+      }
+      if (classes != null) {
+        for (String childClassName : classes) {
+          printPrefuseClass(childClassName, xw);
+        }
+      }
+
+      xw.endEntity(); //attribute
+      xw.endEntity(); //branch
+    } else {
+      xw.writeEntity("leaf");
+      xw.writeEntity("attribute");
+      xw.writeAttribute("name", "name");
+      xw.writeAttribute("value", clusterName);
+      xw.endEntity(); //leaf
+      xw.endEntity(); //attribute
+    }
+
+  }
+
+  private static void printPrefuseClass(String className, XMLWriter xw) throws IOException {
+    xw.writeEntity("leaf");
+    xw.writeEntity("attribute");
+    xw.writeAttribute("name", "name");
+    xw.writeAttribute("value", className);
+    xw.endEntity(); //leaf
+    xw.endEntity(); //attribute
   }
 
 }

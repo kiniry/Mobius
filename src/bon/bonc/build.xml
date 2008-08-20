@@ -41,6 +41,7 @@
       <file name="stringtemplate.jar"/>
       <file name="CommandlineParser.jar"/>
       <file name="antlr-2.7.7.jar"/>
+    	<file name="prefuse.jar"/>
     </filelist>
   </path>
 	
@@ -162,7 +163,7 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-    	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar"/>
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar,prefuse.jar"/>
     </copy>
   	
     <chmod perm="a+x">

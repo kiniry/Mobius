@@ -8,6 +8,7 @@ import ie.ucd.bon.Printer.PrintingOption;
 import ie.ucd.bon.errorreporting.FileNotFoundError;
 import ie.ucd.bon.errorreporting.NoFilesError;
 import ie.ucd.bon.errorreporting.Problems;
+import ie.ucd.bon.graph.display.PrefuseGraphDisplay;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
@@ -229,7 +230,7 @@ public final class Main {
     if (!so.isStringOptionByNameSelected("-p")) {
       return;
     }
-
+System.out.println("Here...");
     String printType = so.getStringOptionByNameArgument("-p");
     PrintingOption printingOption = Printer.getPrintingOption(printType);
     if (printingOption == Printer.PrintingOption.NONE) {
@@ -306,6 +307,7 @@ public final class Main {
 
     print(validFiles, tracker, so, timing);
     //graph(tracker, so);
+    displayGraphs(tracker, so);
 
     //TODO - return false here if we have problems...
     return true;
@@ -316,6 +318,13 @@ public final class Main {
     problems.printProblems(System.out);
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
+  }
+  
+  private static void displayGraphs(final ParsingTracker tracker, final Options so) {
+    if (so.isStringOptionByNameSelected("-g")) {
+      System.out.println("Graphing...");
+      PrefuseGraphDisplay.displayGraph(so.getStringOptionByNameArgument("-g"), tracker);
+    }
   }
 
   private static CommandlineParser processArguments(final String[] args) throws InvalidOptionsSetException {

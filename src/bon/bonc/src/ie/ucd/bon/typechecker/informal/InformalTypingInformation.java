@@ -30,7 +30,9 @@ public class InformalTypingInformation {
   private SystemChartDefinition system;
   
   private final Graph<String,ClusterChartDefinition> classClusterGraph;
+  private final Graph<String,String> reverseClassClusterGraph;
   private final Graph<String,ClusterChartDefinition> clusterClusterGraph;
+  private final Graph<String,String> reverseClusterClusterGraph;
   private final Set<String> clustersInSystem;
   
   private final Graph<String,String> classInheritanceGraph;
@@ -45,6 +47,9 @@ public class InformalTypingInformation {
     
     classClusterGraph = new Graph<String,ClusterChartDefinition>();
     clusterClusterGraph = new Graph<String,ClusterChartDefinition>();
+    reverseClassClusterGraph = new Graph<String,String>();
+    reverseClusterClusterGraph = new Graph<String,String>();
+    
     clustersInSystem = new HashSet<String>();
     
     classInheritanceGraph = new Graph<String,String>();
@@ -123,6 +128,7 @@ public class InformalTypingInformation {
       clustersInSystem.add(clusterName);
     } else if (context.isInClusterChart()) {
       clusterClusterGraph.addEdge(clusterName, clusters.get(context.getClusterChartName()));
+      reverseClusterClusterGraph.addEdge(context.getClusterChartName(), clusterName);
     }
   }
   
@@ -130,6 +136,7 @@ public class InformalTypingInformation {
     if (context.isInClusterChart()) {
       //Should be, sanity check anyway
       classClusterGraph.addEdge(className, clusters.get(context.getClusterChartName()));
+      reverseClassClusterGraph.addEdge(context.getClusterChartName(), className);
     }
   }
   
@@ -198,6 +205,14 @@ public class InformalTypingInformation {
 
   public Graph<String, String> getClassInheritanceGraph() {
     return classInheritanceGraph;
+  }
+
+  public Graph<String, String> getReverseClassClusterGraph() {
+    return reverseClassClusterGraph;
+  }
+
+  public Graph<String, String> getReverseClusterClusterGraph() {
+    return reverseClusterClusterGraph;
   }
 
   public String getAlternativeClassDescription(final String className) {

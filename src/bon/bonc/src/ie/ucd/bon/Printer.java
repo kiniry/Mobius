@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.BONSTTreeWalker;
 import ie.ucd.bon.parser.tracker.ParseResult;
@@ -41,7 +42,7 @@ public final class Printer {
   /** Prevent instantiation of Printer. */
   private Printer() { }
 
-  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, NONE };
+  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, NONE };
 
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
@@ -62,6 +63,8 @@ public final class Printer {
       return PrintingOption.IIG;
     } else if (optionString.equalsIgnoreCase("cl")) {
       return PrintingOption.CL;
+    } else if (optionString.equalsIgnoreCase("picg")) {
+      return PrintingOption.PICG;
     } else {
       return PrintingOption.NONE;
     }    
@@ -83,6 +86,8 @@ public final class Printer {
       return "informal class inheritance graph";
     case CL:
       return "linguistical analysis data";
+    case PICG:
+      return "informal cluster graph for prefuse";
     default:
       return "unknown"; //Shouldn't happen
     }
@@ -146,6 +151,7 @@ public final class Printer {
     case ICG:
     case IIG:
     case CL:
+    case PICG:
       return true;
     default:
       return false;
@@ -281,6 +287,8 @@ public final class Printer {
       return Grapher.graphInformalClassInheritance(parsingTracker);
     case CL:
       return MiscLing.printClassChartSentences(parsingTracker);
+    case PICG:
+      return Grapher.graphPrefuseInformalClusterContainment(parsingTracker);
     default:
       return "";
     }
