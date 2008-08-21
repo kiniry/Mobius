@@ -42,7 +42,7 @@ public final class Printer {
   /** Prevent instantiation of Printer. */
   private Printer() { }
 
-  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, NONE };
+  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, PIIG, NONE };
 
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
@@ -65,6 +65,8 @@ public final class Printer {
       return PrintingOption.CL;
     } else if (optionString.equalsIgnoreCase("picg")) {
       return PrintingOption.PICG;
+    } else if (optionString.equalsIgnoreCase("piig")) {
+      return PrintingOption.PIIG;
     } else {
       return PrintingOption.NONE;
     }    
@@ -87,6 +89,8 @@ public final class Printer {
     case CL:
       return "linguistical analysis data";
     case PICG:
+      return "informal cluster graph for prefuse";
+    case PIIG:
       return "informal cluster graph for prefuse";
     default:
       return "unknown"; //Shouldn't happen
@@ -152,6 +156,7 @@ public final class Printer {
     case IIG:
     case CL:
     case PICG:
+    case PIIG:
       return true;
     default:
       return false;
@@ -289,6 +294,8 @@ public final class Printer {
       return MiscLing.printClassChartSentences(parsingTracker);
     case PICG:
       return Grapher.graphPrefuseInformalClusterContainment(parsingTracker);
+    case PIIG:
+      return Grapher.graphPrefuseInformalInheritance(parsingTracker);
     default:
       return "";
     }

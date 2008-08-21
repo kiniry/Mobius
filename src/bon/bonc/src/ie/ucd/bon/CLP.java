@@ -200,7 +200,7 @@ public final class CLP {
     g.addOptionName("-graph");
     g.addOptionName("--graph");
     g.setArgName("TYPE");
-    g.setHelpString("Display the chosen graph type. ICG for informal clustering graph.");
+    g.setHelpString("Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph.");
     cp.addOption(g);
     
     BooleanDefaultOption printMan = new BooleanDefaultOption();

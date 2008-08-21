@@ -123,6 +123,7 @@ public class XMLWriter {
         this.writer.write(">");
       }
       this.empty = false;
+      this.closed = true;
     }
     
     return this;

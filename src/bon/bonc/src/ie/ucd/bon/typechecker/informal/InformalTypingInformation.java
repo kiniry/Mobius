@@ -36,6 +36,7 @@ public class InformalTypingInformation {
   private final Set<String> clustersInSystem;
   
   private final Graph<String,String> classInheritanceGraph;
+  private final Graph<String,String> reverseClassInheritanceGraph;
   
   private final Graph<String,String> alternativeClassDescriptionsGraph;
     
@@ -53,6 +54,7 @@ public class InformalTypingInformation {
     clustersInSystem = new HashSet<String>();
     
     classInheritanceGraph = new Graph<String,String>();
+    reverseClassInheritanceGraph = new Graph<String,String>();
     
     alternativeClassDescriptionsGraph = new Graph<String,String>();
     
@@ -157,6 +159,7 @@ public class InformalTypingInformation {
         problems.addProblem(new DuplicateSuperclassWarning(loc,context.getClassChartName(),className));
       } else {
         classInheritanceGraph.addEdge(currentClassName, className);
+        reverseClassInheritanceGraph.addEdge(className, currentClassName);
         ClassChartDefinition classDef = classes.get(currentClassName);
         classDef.addSuperClass(className);
       }
@@ -205,6 +208,10 @@ public class InformalTypingInformation {
 
   public Graph<String, String> getClassInheritanceGraph() {
     return classInheritanceGraph;
+  }
+
+  public Graph<String, String> getReverseClassInheritanceGraph() {
+    return reverseClassInheritanceGraph;
   }
 
   public Graph<String, String> getReverseClassClusterGraph() {

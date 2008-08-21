@@ -226,6 +226,7 @@ public class Grapher {
       xw.endEntity(); //system node/top-level branch
 
       xw.endEntity(); //tree
+      xw.close();
       return sw.toString();
     } catch (IOException ioe) {
       Main.logDebug("IOException while writing XML: " + ioe);
@@ -278,6 +279,89 @@ public class Grapher {
     xw.writeAttribute("name", name);
     xw.writeAttribute("value", value);
     xw.endEntity();    
+  }
+  
+  public static String graphPrefuseInformalInheritance(ParsingTracker parseTracker) {
+  //Output
+    StringWriter sw = new StringWriter();
+    XMLWriter xw = new XMLWriter(sw);
+
+    //Relevant collected data
+    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
+    Set<String> classes = informalTypingInfo.getClasses().keySet();
+    Graph<String,String> inheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
+    Graph<String,String> reverseInheritanceGraph = informalTypingInfo.getReverseClassInheritanceGraph();
+    Set<String> topLevel = new TreeSet<String>();
+    
+    for (String className : classes) {
+      if (!inheritanceGraph.hasEdge(className)) {
+        topLevel.add(className);
+      }
+    }
+    
+    try {
+      //Start xml
+      xw.writeEntity("tree");
+      xw.writeEntity("declarations");
+      
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "name");
+      xw.writeAttribute("type", "String");
+      xw.endEntity(); //attributeDecl
+      
+      xw.writeEntity("attributeDecl");
+      xw.writeAttribute("name", "class");
+      xw.writeAttribute("type", "Boolean");
+      xw.endEntity(); //attributeDecl
+      
+      xw.endEntity(); //declarations
+
+      //Top-level branch/system node
+      xw.writeEntity("branch");
+
+      
+      printPrefuseAttribute("name", "BOTTOM", xw);
+
+      for (String className : topLevel) {
+        printPrefuseClassWithInheritance(className, reverseInheritanceGraph, xw);
+      }
+
+      xw.endEntity(); //system node/top-level branch
+
+      xw.endEntity(); //tree
+      xw.close();
+      return sw.toString();
+    } catch (IOException ioe) {
+      Main.logDebug("IOException while writing XML: " + ioe);
+      return "";
+    }
+  }
+  
+  private static void printPrefuseClassWithInheritance(String className, Graph<String,String> reverseInheritanceGraph, XMLWriter xw) throws IOException {
+    
+    
+    Set<String> subclasses = reverseInheritanceGraph.getLinkedNodes(className);
+    
+    if (subclasses != null && subclasses.size() > 0) {
+      xw.writeEntity("branch");
+      
+      
+      printPrefuseAttribute("name", className, xw);
+      printPrefuseAttribute("class", "true", xw);
+      
+      for (String subclassName : subclasses) {
+        printPrefuseClassWithInheritance(subclassName, reverseInheritanceGraph, xw);
+      }
+      
+      xw.endEntity(); //branch
+    } else {
+      xw.writeEntity("leaf");
+      printPrefuseAttribute("name", className, xw);
+      printPrefuseAttribute("class", "true", xw);
+      xw.endEntity(); //leaf
+    }
+    
+    
   }
 
 }
