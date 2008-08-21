@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Grapher {
 
@@ -217,6 +218,7 @@ public class Grapher {
       }
       printPrefuseAttribute("system", "true", xw);
 
+      clustersInSystem = new TreeSet<String>(clustersInSystem);
       for (String clusterName : clustersInSystem) {
         printPrefuseCluster(clusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
       }
@@ -243,11 +245,13 @@ public class Grapher {
       printPrefuseAttribute("cluster", "true", xw);
       
       if (clusters != null) {
+        clusters = new TreeSet<String>(clusters);
         for (String childClusterName : clusters) {
           printPrefuseCluster(childClusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
         }
       }
       if (classes != null) {
+        classes = new TreeSet<String>(classes);
         for (String childClassName : classes) {
           printPrefuseClass(childClassName, xw);
         }

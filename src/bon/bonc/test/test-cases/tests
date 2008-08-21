@@ -155,3 +155,8 @@
 @Prog-args: -informal
 @Location { clock/ }
 @Input { Alarm.bon, AlarmClock.bon, AlarmClockInformal.bon, AlarmInformal.bon, Clock.bon, ClockInformal.bon, ClockSystemAndClusterCharts.bon, LogicalClock.bon, LogicalClockInformal.bon }
+
+@Test-name: "Sports Clustering Example."
+@Prog-args: -informal
+@Location { ./ }
+@Input { ClusteringSportsExample.bon }

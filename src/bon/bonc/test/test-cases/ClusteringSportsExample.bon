@@ -1,0 +1,162 @@
+
+system_chart SPORT
+  cluster ASSOCIATION_FOOTBALL description ""
+  cluster RUGBY_UNION description ""
+end
+
+cluster_chart ASSOCIATION_FOOTBALL
+  cluster ENGLISH_FOOTBALL_LEAGUES description ""
+end
+
+cluster_chart RUGBY_UNION
+  cluster ENGLISH_RUGBY_UNION_LEAGUES description "" 
+end
+
+cluster_chart ENGLISH_FOOTBALL_LEAGUES
+  cluster PREMIER_LEAGUE description ""
+  cluster CHAMPIONSHIP description ""
+  cluster LEAGUE_ONE description ""
+  cluster LEAGUE_TWO description ""
+  cluster NON_LEAGUE description ""
+end
+
+cluster_chart ENGLISH_RUGBY_UNION_LEAGUES
+  cluster GUINNESS_PREMIERSHIP description ""
+  cluster NATIONAL_LEAGUE_ONE description ""
+  cluster NATIONAL_LEAGUE_TWO description ""
+  cluster NATIONAL_LEAGUE_THREE_NORTH description ""
+  cluster NATIONAL_LEAGUE_THREE_SOUTH description ""
+end
+
+cluster_chart PREMIER_LEAGUE
+  class ARSENAL description ""
+  class ASTON_VILLA description ""
+  class BOLTON description ""
+  class BLACKBURN description ""
+  class CHELSEA description ""
+  class EVERTON description ""
+  class FULHAM description ""
+  class HULL description ""
+  class LIVERPOOL description ""
+  class MANCHESTER_CITY description ""
+  class MANCHESTER_UNITED description ""
+  class MIDDLESBROUGH description ""
+  class NEWCASTLE description ""
+  class PORTSMOUTH description ""
+  class STOKE description ""
+  class SUNDERLAND description ""
+  class TOTTENHAM description ""
+  class WEST_BROM description ""
+  class WEST_HAM description ""
+  class WIGAN description ""
+end
+
+cluster_chart CHAMPIONSHIP
+  class COVENTRY description ""
+  class PRESTON description ""
+  class BIRMINGHAM description ""
+  class WOLVERHAMPTON description ""
+  class READING description ""
+  class CARDIFF description ""
+  class BRISTOL_CITY description ""
+  class DONCASTER description ""
+  class WATFORD description ""
+  class IPSWICH description ""
+  class SHEFFIELD_UNITED description ""
+  class CHARLTON description ""
+  class SHEFFIELD_WEDNESDAY description ""
+  class SWANSEA description ""
+  class QPR description ""
+  class BLACKPOOL description ""
+  class DERBY description ""
+  class PLYMOUTH description ""
+  class NORWICH description ""
+  class NOTTINGHAM_FOREST description ""
+  class CRYSTAL_PALACE description ""
+  class BARNSLEY description ""
+  class SOUTHAMPTON description ""
+  class BURNLEY description ""
+end
+
+cluster_chart LEAGUE_ONE end
+cluster_chart LEAGUE_TWO end
+cluster_chart NON_LEAGUE end
+
+cluster_chart GUINNESS_PREMIERSHIP
+  class GLOUCESTER description ""
+  class WASPS description ""
+  class BATH description ""
+  class LEICESTER description ""
+  class SALE description ""
+  class HARLEQUINS description ""
+  class LONDON_IRISH description ""
+  class SARACENS description ""
+  class BRISTOL description ""
+  class WORCESTER description ""
+  class NEWCASTLE description ""
+  class LEEDS_CARNEGIE  description ""
+end
+
+cluster_chart NATIONAL_LEAGUE_ONE end
+cluster_chart NATIONAL_LEAGUE_TWO end
+cluster_chart NATIONAL_LEAGUE_THREE_NORTH end
+cluster_chart NATIONAL_LEAGUE_THREE_SOUTH end
+
+class_chart ARSENAL end
+class_chart ASTON_VILLA end
+class_chart BOLTON end
+class_chart BLACKBURN end
+class_chart CHELSEA end
+class_chart EVERTON end
+class_chart FULHAM end
+class_chart HULL end
+class_chart LIVERPOOL end
+class_chart MANCHESTER_CITY end
+class_chart MANCHESTER_UNITED end
+class_chart MIDDLESBROUGH end
+class_chart NEWCASTLE end
+class_chart PORTSMOUTH end
+class_chart STOKE end
+class_chart SUNDERLAND end
+class_chart TOTTENHAM end
+class_chart WEST_BROM end
+class_chart WEST_HAM end
+class_chart WIGAN end
+
+class_chart COVENTRY end
+class_chart PRESTON end
+class_chart BIRMINGHAM end
+class_chart WOLVERHAMPTON end
+class_chart READING end
+class_chart CARDIFF end
+class_chart BRISTOL_CITY end
+class_chart DONCASTER end
+class_chart WATFORD end
+class_chart IPSWICH end
+class_chart SHEFFIELD_UNITED end
+class_chart CHARLTON end
+class_chart SHEFFIELD_WEDNESDAY end
+class_chart SWANSEA end
+class_chart QPR end
+class_chart BLACKPOOL end
+class_chart DERBY end
+class_chart PLYMOUTH end
+class_chart NORWICH end
+class_chart NOTTINGHAM_FOREST end
+class_chart CRYSTAL_PALACE end
+class_chart BARNSLEY end
+class_chart SOUTHAMPTON end
+class_chart BURNLEY end
+
+class_chart GLOUCESTER end
+class_chart WASPS end
+class_chart BATH end
+class_chart LEICESTER end
+class_chart SALE end
+class_chart HARLEQUINS end
+class_chart LONDON_IRISH end
+class_chart SARACENS end
+class_chart BRISTOL end
+class_chart WORCESTER end
+--class_chart NEWCASTLE end --duplicate of newcastle (footie and rugby union)
+class_chart LEEDS_CARNEGIE end
