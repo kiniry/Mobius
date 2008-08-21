@@ -6,38 +6,46 @@ BEGIN
             Val,
             ValProp
 
-  % A store is a mapping from names to values. Partial mappings are represented
-  % using the value Bottom
+  % A store is a mapping from names to values. Undefined locations map to 
+  % the value Bottom
   Store : TYPE = [Name -> Val]
 
   update_store(n : Name, v : Val)(s : Store) : Store =
     s WITH [n := v]
 
-  % Fields and local variables
+  % PSt: Fields and local variables
   PSt : TYPE = [# fvs, lvs : Store #]
 
-  % A program state has a store for fields, a store for local vairables and may
-  % have an exception
+  % A program state contains PSt (fields + local variables) +
+  % exception state (bottom = no exception)
   PState : TYPE = [# ex : lift[Excpt],
                      st : PSt #]
 
+  % convenience functions
+
+  % is vn local variable?
   is_local(vn : Name, sigma : PState) : boolean =
     defined?(lvs(st(sigma))(vn)) 
 
+  % is vn field?
   is_field(vn : Name, sigma : PState) : boolean =
     defined?(fvs(st(sigma))(vn))
 
+  % lookup local variable vn
   lookup_local(vn : Name, sigma : PState) : Val =
     lvs(st(sigma))(vn)
 
+  % lookup field vn
   lookup_field(vn : Name, sigma : PState) : Val =
     fvs(st(sigma))(vn)
 
+  % update local variable vn to v
   update_local(vn : Name, v : Val)(sigma : PState) : PState =
     (# ex := ex(sigma),
        st := (# fvs := fvs(st(sigma)),
                 lvs := lvs(st(sigma)) WITH [vn := v] #) #)
 
+  % update set of local variables V
   update_locals(V : finite_set[[Name, Val]])(sigma : PState) : 
                RECURSIVE PState =
     IF empty?(V)
@@ -47,18 +55,21 @@ BEGIN
     ENDIF
   MEASURE card(V)
 
+  % update field vn to v
   update_field(vn : Name, v : Val)(sigma : PState) : PState =
     (# ex := ex(sigma),
        st := (# fvs := fvs(st(sigma)) WITH [vn := v],
                 lvs := lvs(st(sigma)) #) #)
 
 
+  % lookup variable vn, vn could be local or field
   lookup(vn : Name, sigma : PState) : Val =
     IF is_local(vn, sigma)
     THEN lookup_local(vn, sigma)
     ELSE lookup_field(vn, sigma)
     ENDIF
 
+  % update variable vn to v, vn could be local or field
   update(vn : Name, v : Val)(sigma : PState) : PState =
     IF is_local(vn, sigma)
     THEN update_local(vn, v)(sigma)
@@ -67,24 +78,33 @@ BEGIN
     ELSE sigma
     ENDIF
 
+  % set exception exc, i.e., raise exception
   raise(exc : Excpt)(sigma : PState) : PState =
     sigma WITH [ex := up(exc)]
 
+  % set exception state to bottom, i.e., catch exception
   catch(sigma : PState) : PState =
     sigma WITH [ex := bottom]
 
+  % unpack integer value from Int value
   val2int(v : Val) : int =
     IF Int?(v)
     THEN i(v)
     ELSE 0
     ENDIF
 
+  % unpack boolean value from Bool value
   val2bool(v : Val) : bool =
     IF Bool?(v)
     THEN b(v)
     ELSE FALSE
     ENDIF
 
+  % initial program state:
+  % all declared fields are set to their initial values
+  % all declared local variables are set to default value of their type
+  % all undeclared variable names map to Bottom
+  % ex = bottom, i.e., state is normal
   initial_Program_state(p : Program)(this_val : Val) : PState =
     (# ex := bottom,
        st :=
@@ -106,19 +126,25 @@ BEGIN
          #)
     #)
 
-  % Well formed state definition
+
+  % Well formed state definition:
+  % all declared fields have a defined value,
+  % all local fields, including This have a defined value
   wf_state(p : Program)(s : PState) : boolean =
     FORALL (vn : Name) :
       (is_field(vn, s) IFF var_names(getFieldDecls(p))(vn)) AND
-      (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This)) 
+      (is_local(vn, s) IFF (var_names(getLocalDecls(p))(vn) OR vn = This))
 
 
   % Well formed state properties
 
+  % initial states are wellformed
   wf_initial_Program_state : LEMMA % :-)
     FORALL (p : Program)(this_val : (defined?)) :
       wf_Program(p) IMPLIES wf_state(p)(initial_Program_state(p)(this_val))
 
+  % in wellformed state, local variables are not fields and vice versa
+  % (since declared fields and local variables are disjoint)
   wf_state_vars_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : PState, vn : Name) :
       wf_state(p)(s) IMPLIES
@@ -126,6 +152,7 @@ BEGIN
         ((is_field(vn, s) IMPLIES NOT is_local(vn, s)) AND
          (is_local(vn, s) IMPLIES NOT is_field(vn, s)))
 
+  % wf_state preserved by update_local
   wf_state_update_local : LEMMA % :-)
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
       wf_state(p)(s) IMPLIES
@@ -134,6 +161,7 @@ BEGIN
 
   IMPORTING WF_Card[[Name, Val]]
 
+  % wf_state preserved by update_locals
   wf_state_update_locals : LEMMA % :-)
     FORALL(p : Program, s : PState, V : finite_set[[Name, Val]]) :
       wf_state(p)(s) IMPLIES
@@ -142,29 +170,43 @@ BEGIN
                       defined?(proj_2(v))) IMPLIES
         wf_state(p)(update_locals(V)(s))
 
+  % wf_state preserved by update
   wf_state_update : LEMMA % :-) 
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
       wf_state(p)(s) IMPLIES
         wf_state(p)(update(vn, v)(s))
 
-
+  % wf_state preserved by raising exception
   wf_state_raise : LEMMA % :-)
     FORALL(p : Program, s : PState, exc : Excpt) :
       wf_state(p)(s) IMPLIES
         wf_state(p)(raise(exc)(s))
 
+  % wf_state preserved by catching exception
   wf_state_catch : LEMMA % :-)
     FORALL(p : Program, s : PState) :
       wf_state(p)(s) IMPLIES
         wf_state(p)(catch(s))
 
-
+  % in wf_state, formal parameter of method is local variable
   wf_state_arg_is_local : LEMMA % :-)
     FORALL(p : Program, s : PState, c : Class, m : Method) :
       wf_state(p)(s) IMPLIES
       classes(p)(c) IMPLIES
       methods(c)(m) IMPLIES
         is_local(name(arg(m)), s)
+
+  % wf_store wrt set V: exactly all vn in V are defined in store s
+  wf_store(s : Store)(V : finite_set[Name]) : boolean =
+    FORALL(vn : Name) : defined?(s(vn)) IFF V(vn)
+
+  % wf_store can be used to state alternative definition of wf_state
+  % main interest is that it is also used to describe wellformed state of MVA
+  wf_state_alternative_def : LEMMA % :-)
+    FORALL(p : Program, s : PState) :
+      wf_state(p)(s) =
+        (wf_store(fvs(st(s)))(var_names(getFieldDecls(p))) AND
+         wf_store(lvs(st(s)))(add(This, var_names(getLocalDecls(p)))))
 
 
 END State

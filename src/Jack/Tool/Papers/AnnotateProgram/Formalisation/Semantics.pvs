@@ -2,8 +2,10 @@ ReferenceFunctions[Name : TYPE+, Store : TYPE] : THEORY
 BEGIN
 
   % Functions whose existence we assume
-  get_address(vn : Name, sigma : Store) : int
 
+  % if vn is a reference, what location does it points to
+  get_address(vn : Name, sigma : Store) : int
+  % and what is the dynamic type of the location it points to
   get_dynamic_type_name(vn : Name, sigma : Store) : Name
 
 
@@ -19,17 +21,24 @@ BEGIN
   IMPORTING WellFormedProgram[Name],
             ValOrExcpt[Name]
 
+  % types for parameters of semantics
+
+  % type for derivation in less than n steps
   derive_type(n : nat) : TYPE =
     [p : FullProgram ->
     [(wf_Body(program(p))), FullState, Val, FullState -> [below(n) -> bool]]]
 
   derive_rec_type(n : nat) : TYPE = [k : upto(n) -> derive_type(k)]
 
+  % type for evaluation function update_PState
+  % update_PState only changes pstate component of fullstate
   update_PState_type(f : [FullState, [PState -> PState] -> FullState]) :
     boolean =
     FORALL (s1, s2 : FullState, upd : [PState -> PState]) :
       f(s1, upd) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
+  % type for evaluation function set_annotation
+  % does not change pstate (program state)
   execute_set_type
     (f : [p : FullProgram, Name,
           (wf_Expr(program(p))), FullState, FullState, n : nat,
@@ -39,6 +48,8 @@ BEGIN
             n : nat, d : derive_rec_type(n)) :
       f(p, vn, e, s1, s2, n, d) IMPLIES pstate(s2) = pstate(s1)
 
+  % type for evaluation function CaseJML annotation
+  % does not change pstate (program state)
   execute_CaseJML_type
     (f : [p : FullProgram, (wf_Branches(program(p))),
           FullState, FullState, Val, n : nat,
@@ -49,6 +60,11 @@ BEGIN
             n : nat, d : derive_rec_type(n)) :
       f(p, branches, s1, s2, v, n, d) IMPLIES pstate(s2) = pstate(s1)
 
+  % type for evaluation function Assert annotation
+  % store of program state (local var and fields) unchanged
+  % if state was exceptional, it remains exceptional
+  % if it was not exceptional, it might become so, since Assert can throw
+  % a JML exception
   execute_assert_type
     (f : [p : FullProgram, (wf_Expr(program(p))),
           FullState, FullState, n : nat,
@@ -61,7 +77,12 @@ BEGIN
         (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
 
 
-  % We allow on_method_event to throw an exception if an assertion failed
+  % type for evaluation function that specifies what happens
+  % upon method entry/exit/exceptional exit
+  % store of program state (local var and fields) unchanged
+  % if state was exceptional, it remains exceptional
+  % if it was not exceptional, it might become so, since failing of pre-
+  % or postcondition, or invariant throws a JML exception
   on_method_event_type
     (f : [p : FullProgram, (wf_Method(program(p))), Val,
           ValOrExcpt, FullState, FullState, n : nat,
@@ -83,7 +104,9 @@ SemanticsJMLTypes[Name : TYPE+,
                   FullState : TYPE,
                   (IMPORTING State[Name]) gvs : [FullState -> Store]] : THEORY
 BEGIN
-
+ 
+  % type for evaluation function that updates ghost variables
+  % only changes ghost variable state component
   update_GhostVars_type(f : [FullState, [Store -> Store] -> FullState]) :
     boolean =
     FORALL (s1, s2 : FullState, upd : [Store -> Store]) :
@@ -91,6 +114,37 @@ BEGIN
 
 
 END SemanticsJMLTypes
+
+
+SemanticsAuxiliaryFunctions
+         [Name : TYPE+, FullState : TYPE,
+          (IMPORTING State[Name]) pstate : [FullState -> PState]] : THEORY
+BEGIN
+
+  % defines some auxiliary functions that help to make derivation
+  % function more readable
+
+  IMPORTING Val, State
+  % return value of stmts: Bottom if exception thrown, otherwise Unit
+  return_of_stmt(sigma2 : FullState) : Val =
+    IF up?(ex(pstate(sigma2))) THEN Bottom ELSE Unit ENDIF
+
+  % if intermediate state is exceptional then v should be Bottom,
+  % and final state should be same as intermediate state
+  % otherwise some other specified condition has to hold
+  check_for_exception(intermed, final : FullState,
+                      v : Val, otherwise : bool) : bool =
+    IF up?(ex(pstate(intermed)))
+    THEN v = Bottom AND intermed = final
+    ELSE otherwise
+    ENDIF
+
+  % check_for_exception in final state
+  check_for_exception_final(final : FullState,
+                            v : Val, otherwise : bool) : bool =
+    check_for_exception(final, final, v, otherwise)
+
+END SemanticsAuxiliaryFunctions
 
 
 Semantics[Name : TYPE+,
@@ -110,8 +164,24 @@ Semantics[Name : TYPE+,
           on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
+  % semantics 
+  % defined for FullProgram, FullState
+  % program maps FullProgram to core program
+  % pstate maps FullState to program state
+  % lookup function lifted to FullState
+
+  % parameters of semantics: 
+  % update_PState (update program state)
+  % execute_set (evaluate set annotations)
+  % execute_assert (evaluate assert annotations)
+  % execute_CaseJML (evaluate CaseJML annotations)
+  % on_method_entry (actions on method entry)
+  % on_method_exit_normal
+  % on_method_exit_exceptional
+
   IMPORTING ReferenceFunctions[Name, Store]
 
+  % convenience abbreviations
   get_address(vn : Name, sigma : FullState) : int =
     get_address(vn, fvs(st(pstate(sigma))))
 
@@ -120,41 +190,35 @@ BEGIN
 
   IMPORTING WellFormedProgram[Name]
 
+  % dynamic type names is in the set of class names of the program
   get_dynamic_type_name_correctness : AXIOM
     FORALL (p : Program, vn : Name, sigma : FullState) :
       wf_Program(p) IMPLIES
         class_names(p)(get_dynamic_type_name(vn, sigma))
 
 
-  update_stack(this_val : Val, arg : LocalVarDecl, param_val : Val,
-               lvds : finite_set[LocalVarDecl], s : FullState) : FullState =
+  % update local variables when method is entered
+  % this_val set to method call target
+  % argument set to value of parameter
+  % local variables declared in method set to default value
+  update_stack(this_val : Val, arg : Decl, param_val : Val,
+               lvds : finite_set[Decl], s : FullState) : FullState =
     IF defined?(this_val) AND defined?(param_val)
     THEN
     LET new_pstate =
       (update_local(This, this_val)) o
         (update_local(name(arg), param_val)) o
-           (update_locals({x : [Name, Val] | EXISTS (l : LocalVarDecl) :
+           (update_locals({x : [Name, Val] | EXISTS (l : Decl) :
                                lvds(l) AND name(l) = proj_1(x) AND
                                default_value(jtype(l)) = proj_2(x)}))
     IN update_PState(s, new_pstate)
     ELSE s
     ENDIF
 
-  return_of_stmt(sigma2 : FullState) : Val =
-    IF up?(ex(pstate(sigma2))) THEN Bottom ELSE Unit ENDIF
+  IMPORTING SemanticsAuxiliaryFunctions[Name, FullState, pstate]
 
-  check_for_exception(intermed, final : FullState,
-                      v : Val, otherwise : bool) : bool =
-    IF up?(ex(pstate(intermed)))
-    THEN v = Bottom AND intermed = final
-    ELSE otherwise
-    ENDIF
-
-  check_for_exception_final(final : FullState,
-                            v : Val, otherwise : bool) : bool =
-    check_for_exception(final, final, v, otherwise)
-
-
+  % derivation function, encoding big step operational semantics
+  % termination proven by decrease of n
   derive(p : FullProgram)
         (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
         (n : nat) : RECURSIVE bool =
@@ -213,7 +277,7 @@ BEGIN
       RefVarEval(vn) : sigma1 = sigma2 AND n = 0 AND
                        v = Reference(get_address(vn, sigma1),
                                  get_dynamic_type_name(vn, sigma1)),
-      % Program's expressions
+      % Program expressions
       Assign(vn, e) :
         n > 0 AND
         (EXISTS (tau : FullState) :
@@ -302,7 +366,7 @@ BEGIN
         n = 0 AND
         v = v1 AND
         sigma1 = sigma2,
-      % Program's statements
+      % Program statements
       CaseJML(l) :
         v = return_of_stmt(sigma2) AND
         execute_CaseJML(p, l, sigma1, sigma2, v, n, derive_rec),
@@ -370,25 +434,20 @@ BEGIN
     ENDIF
   MEASURE n
 
-
+  % derives: some final derivation exists
   derives(p : FullProgram)
          (b : (wf_Body(program(p))), sigma1 : FullState)
          (sigma2 : FullState) : bool =
     EXISTS (n : nat, v : Val) :
       derive(p)(b, sigma1, v, sigma2)(n)
 
+  % full program starts with call to main method
   run_FullProgram(p : FullProgram)(main : Name, arg : int)
                  (initial, final : FullState) : boolean =
     LET c  = StmtExpr(MethodCall(RefVarEval(This), main, Const(Int(arg))))
     IN
       derives(p)(c, initial)(final)
 
-  no_change_in_pstate(p : FullProgram)(b : (wf_Body(program(p)))) : boolean =
-    FORALL(b1 : (wf_Body(program(p)))) :
-      subterm(b1, b) IMPLIES
-        FORALL(sigma1, sigma2 : FullState, v : Val, n : nat) :
-          derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-            pstate(sigma1) = pstate(sigma2)
 
 END Semantics
 
@@ -418,12 +477,8 @@ ASSUMING
               on_method_entry, on_method_exit_normal,
               on_method_exit_exceptional]
 
-    % AT: It would be nice to simplify these assumptions using
-    % deriv_stmt_determ and deriv_expr_determ. I tried it but for instance in
-    % expr_determ_step these assumptions are discharged with just an assert
-    % but now it doesn't work (even after expanding the definition). It works
-    % issuing a grind but the whole proof while take ages. I couldn't find a
-    % simple way of proving those branches.
+    % assumptions about semantics parameters to prove derivation is 
+    % deterministic
 
     on_method_entry_deterministic : ASSUMPTION
       FORALL (p : FullProgram, m : (wf_Method(program(p))), v : Val,
@@ -523,6 +578,7 @@ ENDASSUMING
 
   IMPORTING WF[nat, nat] % used in the proofs
 
+  % derivation is deterministic
   derive_determ_step : LEMMA % :-)
     FORALL (p : FullProgram)(n1, n2 : nat)(b : (wf_Body(program(p))))
            (v1, v2 : Val, sigma, sigma1, sigma2 : FullState) :
@@ -539,6 +595,7 @@ ENDASSUMING
           sigma1 = sigma2
 
 
+  % derivation only returns Bottom value if exception is thrown
   derive_bottom_iff_exception_step : LEMMA % :-)
     FORALL (p : FullProgram)(e : (wf_Body(program(p))))
            (sigma1, sigma2 : FullState, v : Val, n : nat) :
@@ -546,13 +603,8 @@ ENDASSUMING
         Bottom?(v) = up?(ex(pstate(sigma2)))
 
 
-%  derive_boolean_expr_type : LEMMA % :-)
-%    FORALL (p : FullProgram)(b : (wf_Expr(program(p))))
-%           (sigma1, sigma2 : FullState, v : Val, n : nat) :
-%      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-%      NOT up?(ex(pstate(sigma2))) IMPLIES
-%        Bool?(v)
-
+  % if state is exceptional, derivation does not change it (and
+  % return value is Bottom)
   derive_after_raise : LEMMA % :-)
     FORALL (p : FullProgram)(b : (wf_Body(program(p))))
            (sigma1, sigma2, tau : FullState, v : Val, n : nat, e : Excpt) :
@@ -560,17 +612,6 @@ ENDASSUMING
               derive(p)(b, tau, v, sigma2)(n) IMPLIES
               sigma2 = tau AND v = Bottom
                  
-
-  IMPORTING ContainsNoMethodCall[Name]
-
-  derive_does_not_change_unmentioned_var : LEMMA
-    FORALL (p : FullProgram)(b : (wf_Body(program(p))), v : Val)
-           (sigma1, sigma2 : FullState)(x : Name)
-           (n : nat) :
-      NOT var_names(b)(x) IMPLIES
-      contains_no_method_call(b) IMPLIES
-      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-      lookup(x, pstate(sigma1)) = lookup(x, pstate(sigma2))
 
 END SemanticsProofs
 
@@ -589,9 +630,13 @@ SemanticsJML[Name : TYPE+,
              update_GhostVars : (update_GhostVars_type)] : THEORY
 BEGIN
 
+  % state of annotated program contains component gvs: ghost variable store
+
+  % vn is ghost variable, if it is non-Bottom in gvs
   is_ghost(vn : Name, sigma : FullState) : boolean =
     defined?(gvs(sigma)(vn))
 
+  % lookup of vn where vn is field, local or ghost variable
   lookup(vn : Name, sigma : FullState) : Val =
     IF is_local(vn, pstate(sigma))
     THEN lookup_local(vn, pstate(sigma))
@@ -600,10 +645,19 @@ BEGIN
     ELSE gvs(sigma)(vn)
     ENDIF
 
+  % ghoststate wellformed if all declared ghost variables are defined
   wf_ghoststate(p : FullProgram)(sigma : FullState) : boolean =
     FORALL (vn : Name) :
       is_ghost(vn, sigma) IFF var_names(getGhostDecls(program(p)))(vn)
 
+  wf_ghoststate_alternative_def : LEMMA
+    FORALL(p : FullProgram)(sigma : FullState) : 
+      wf_ghoststate(p)(sigma) = 
+      wf_store(gvs(sigma))(var_names(getGhostDecls(program(p))))
+
+  % initial ghost state: all declared ghost variables have their
+  % initial value, all other names map to Bottom
+  % initial ghost state is wellformed
   wf_initial_ghost_state : LEMMA % :-)
     FORALL (p : FullProgram)(sigma : FullState) :
       (gvs(sigma) = LAMBDA (n : Name) :
@@ -614,9 +668,10 @@ BEGIN
                       ENDIF) IMPLIES
       wf_ghoststate(p)(sigma)
 
-  return_of_stmt(sigma2 : FullState) : Val =
-    IF up?(ex(pstate(sigma2))) THEN Bottom ELSE Unit ENDIF
 
+  IMPORTING SemanticsAuxiliaryFunctions[Name, FullState, pstate]
+
+  % derivation of set annotation for runtime checking semantics
   execute_set : (execute_set_type) =
     LAMBDA (p : FullProgram, vn : Name, e : (wf_Expr(program(p))),
             s1, s2 : FullState, n : nat,
@@ -630,6 +685,7 @@ BEGIN
              ENDIF AND
         pstate(s1) = pstate(s2)
 
+  % derivation of CaseJML annotation for runtime checking semantics
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : FullProgram,
             branches : ({l : list[[Expr, Stmt]] | wf_Branches(program(p))(l)}),
@@ -645,20 +701,8 @@ BEGIN
 
   IMPORTING ProgramFunctions[Name]
 
-%  check_assertion(p : FullProgram)
-%                 (e : (wf_Expr(program(p))), s1, s2 : FullState)(n : nat)
-%                 (derive : derive_type(n)) : boolean =
-%    n > 0 AND
-%    EXISTS (tau1 : FullState, v : Val) :
-%      derive(p)(e, s1, v, tau1)(n - 1) AND
-%      s2 = IF Bool?(v) THEN
-%             IF b(v)
-%             THEN tau1
-%             ELSE update_PState(tau1, raise(JMLExc))
-%             ENDIF
-%           ELSE tau1 % This may happen if v is bottom
-%           ENDIF
-
+  % auxiliary function to check an assertion for runtime checking semantics
+  % throw JML Exception if assertion fails
   check_assertion(p : FullProgram)
                  (e : (wf_Expr(program(p))), s1, s2 : FullState)(n : nat)
                  (derive : derive_type(n)) : boolean =
@@ -671,6 +715,7 @@ BEGIN
            ENDIF
 
 
+  % derivation of assert annotation for runtime checking semantics
   execute_assert : (execute_assert_type) =
     LAMBDA (p : FullProgram, e : (wf_Expr(program(p))),
             s1, s2 : FullState, n : nat,
@@ -682,6 +727,10 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
+  % runtime checking at method entry:
+  % first evaluate class invariant
+  % then precondition
+  % then execute preset annotation
   on_method_entry : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
             arg : ValOrExcpt, s1, s2 : FullState, n : nat,
@@ -702,6 +751,10 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
+  % runtime checking upon normal method termination
+  % execute postset annotation
+  % then evaluate invariant
+  % then postcondition 
   on_method_exit_normal : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
             arg : ValOrExcpt, s1, s2 : FullState, n : nat,
@@ -722,8 +775,12 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ENDIF
 
-  % If there was an exception, there is no need to chech the postcondition
-  % (JML has an exceptional postcondition but we are not modelling it)
+
+  % runtime checking upon exceptional method termination
+  % execute exc_set annotation
+  % then evaluate invariant
+
+  % notice that we do not model exceptional postconditions
   on_method_exit_exceptional : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
             arg : ValOrExcpt, s1, s2 : FullState, n : nat,
@@ -746,26 +803,5 @@ BEGIN
       st(pstate(s1)) = st(pstate(s2))
     ELSE s1 = s2 AND n = 0
     ENDIF
-
-
-%  IMPORTING Semantics[Name, FullProgram, FullState, 
-%                      program, pstate, lookup, update_PState, 
-%                      execute_set, execute_assert, execute_CaseJML,
-%                      on_method_entry, on_method_exit_normal, 
-%                      on_method_exit_exceptional]
-
-
-%  on_method_entry_only_throws_JMLExc : LEMMA
-%     FORALL(p : FullProgram, md : (wf_Method(program(p))), a : Val,
-%            s1, s2 : FullState, n : nat,
-%            derive_rec : derive_rec_type(n)) :
-%       NOT up?(ex(pstate(s1))) IMPLIES
-%       on_method_entry(p, md, a, s1, s2, n,         
-%          LAMBDA (k : upto(n))(p : FullProgram)
-%               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
-%               (m : below(k)) : derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-%       up?(ex(pstate(s2))) IMPLIES
-%         down(ex(pstate(s2))) = JMLExc
-
 
 END SemanticsJML

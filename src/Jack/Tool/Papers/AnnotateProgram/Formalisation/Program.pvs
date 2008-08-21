@@ -1,38 +1,33 @@
-% Simplifications in the modeling of (the syntax of) programs:
-% Just sequential programs
-% We don't model arrays and interfaces
-% Methods have just one parameter
-% Initial values for fields are Val, not Expr. This is to avoid defining an
-%   order of evaluation of those expressions.
-% Only two types of exceptions: Throwable and NullPointer. We also model JML 
-%   exceptions
-% Local variables are declared at the beginning of the body (like in Pascal)
-% We do not model inheritance and static overloading of methods (their names can
-%   be "mangled", .i.e the contain the information to disambiguate then
+% This file defines abstract syntax of programs
 
-% No static fields nor static methods
-% No return instruction. Methods have a result component that is an expression
-%   whose value is the value to be returned
+% Some remarks:
+% Only sequential programs
+% No arrays and interfaces 
+% Methods have only one parameter
+% Initial values for fields are of type Val, not Expr. (This avoids having to
+% define an evaluation order on those)
+% Only two types of exceptions can occur in program (text): 
+%   Throwable and NullPointer. 
+% Local variables are declared at beginning of body (like in Pascal)
+% Inheritance and overloading of methods, shadowing of fields not modelled 
+% ?? (their names can
+%   be "mangled", .i.e the contain the information to disambiguate then
+% No static fields or static methods
+% No return instruction. Methods have a result component, containing an 
+% expression. Evaluation of this expression computes value to be returned
+
+% Runtime checker can also throw JML exceptions
+% Assert and Set annotations modelled as part of programming language
 
 % Our additions:
 % CaseJML: allows to do a case distiction on the value of a ghost variable
 % Methods have a pre_set, post_set and exc_set clause
 
 
-% JType instead of Type, because Type is a reserved keyword in PVS
-JType : DATATYPE
-BEGIN
-
-  IntType : IntType?            % Integers
-  BoolType : BoolType?          % Booleans
-  Void : Void?                  % Void
-  RefType : RefType?            % References
 
 
-END JType
-
-
-
+% Abstract Syntax of program instructions (called Body)
+% Every expression can be used as statement
 Body[Name : TYPE+] : DATATYPE
                          WITH SUBTYPES Expr, Stmt
 BEGIN
@@ -52,7 +47,7 @@ BEGIN
   % Reference expressions
   RefVarEval(varname : Name) : RefVarEval?          : Expr
 
-  % Program's expressions
+  % Program expressions
   Assign(target : Name, source : Expr) : Assign?    : Expr
   CondExpr(test : Expr, then_expr : Expr, 
            else_expr : Expr) : CondExpr?            : Expr
@@ -61,7 +56,7 @@ BEGIN
   Const(v : (defined?)) : Const?                    : Expr
 
 
-  % Program's statements
+  % Program statements
   CaseJML(branches : list[[Expr, Stmt]]) : CaseJML? : Stmt
   IfThenElse(test : Expr, then_stmt : Stmt, 
              else_stmt : Stmt) : IfThenElse?        : Stmt
@@ -78,7 +73,7 @@ BEGIN
 
 END Body
 
-
+% Basic functions over datatype Body
 BodyFunctions[Name : TYPE+] : THEORY
 BEGIN
 
@@ -88,6 +83,7 @@ BEGIN
             listsum,
             list_map_funcs
 
+  % size of instruction, counting number of constructors 
   size(b : Body) : nat = 
     reduce_nat(
        LAMBDA(n1, n2 : nat) : n1 + n2 + 1, % Plus
@@ -115,79 +111,6 @@ BEGIN
        )(b) 
 
 
-  equal_except_for(T1, x, T2, y : Body) : RECURSIVE boolean =
-    (T1 = x AND T2 = y) OR
-    CASES T1 OF
-      Plus(b1, b2) : Plus?(T2) AND
-                     equal_except_for(b1, x, b1(T2), y) AND
-                     equal_except_for(b2, x, b2(T2), y),
-      NumVarEval(v) : NumVarEval?(T2) AND varname(T2) = v,
-      Neg(b) : Neg?(T2) AND equal_except_for(b, x, b(T2), y),
-      Conj(b1, b2) : Conj?(T2) AND
-                     equal_except_for(b1, x, b1(T2), y) AND
-                     equal_except_for(b2, x, b2(T2), y),
-      Eq(b1, b2) : Eq?(T2) AND
-                     equal_except_for(b1, x, b1(T2), y) AND
-                     equal_except_for(b2, x, b2(T2), y),
-     BoolVarEval(v) : BoolVarEval?(T2) AND varname(T2) = v,
-     RefVarEval(v) : RefVarEval?(T2) AND varname(T2) = v,
-     Assign(v, e) : Assign?(T2) AND target(T2) = v AND
-                    equal_except_for(e, x, source(T2), y),
-     CondExpr(t, then_expr, else_expr) :
-                    CondExpr?(T2) AND
-                    equal_except_for(t, x, test(T2), y) AND
-                    equal_except_for(then_expr, x, then_expr(T2), y) AND
-                    equal_except_for(else_expr, x, else_expr(T2), y),
-     MethodCall(tgt, n, arg) : MethodCall?(T2) AND
-                               equal_except_for(tgt, x, tgt(T2), y) AND
-                               name(T2) = n AND
-                               equal_except_for(arg, x, arg(T2), y),
-     Const(v) : Const?(T2) AND v(T2) = v,
-     CaseJML(br) : CaseJML?(T2) AND
-                   length(br) = length(branches(T2)) AND
-                   (null?(br) OR
-                    equal_except_for(proj_1(car(br)), x, 
-                                     proj_1(car(branches(T2))), y) AND
-                    equal_except_for(proj_2(car(br)), x, 
-                                     proj_2(car(branches(T2))), y) AND
-                    equal_except_for(CaseJML(cdr(br)), x,
-                                     CaseJML(cdr(branches(T2))), y)),
-     IfThenElse(t, then_stmt, else_stmt) :
-                    IfThenElse?(T2) AND
-                    equal_except_for(t, x, test(T2), y) AND
-                    equal_except_for(then_stmt, x, then_stmt(T2), y) AND
-                    equal_except_for(else_stmt, x, else_stmt(T2), y),
-     Sequence(s1, s2) : Sequence?(T2) AND
-                        equal_except_for(s1, x, s1(T2), y) AND
-                        equal_except_for(s2, x, s2(T2), y),
-     Set(v, e) : Set?(T2) AND target(T2) = v AND
-                 equal_except_for(e, x, source(T2), y),
-     Skip : Skip?(T2), 
-     StmtExpr(expr) : StmtExpr?(T2) AND equal_except_for(expr, x, expr(T2), y),
-     Throw(exc) : Throw?(T2) AND exc(T2) = exc,
-     TryCatch(try, exc, catch, finally) : TryCatch?(T2) AND
-        exc(T2) = exc AND
-        equal_except_for(try, x, try(T2), y) AND
-        equal_except_for(catch, x, catch(T2), y) AND
-        equal_except_for(finally, x, finally(T2), y),
-     While(test, body) : While?(T2) AND
-        equal_except_for(test, x, test(T2), y) AND
-        equal_except_for(body, x, body(T2), y),
-     Assert(expr) : Assert?(T2) AND equal_except_for(expr, x, expr(T2), y)
-    ENDCASES
-  MEASURE size(T1)
-
-  FunType : TYPE =  ({f : [Body -> Body] | 
-      FORALL(v1, v2 : Body) : equal_except_for(f(v1), v1, f(v2), v2)})
-
-  CondType : TYPE = 
-    ({f : [Expr -> Expr] | 
-      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
-
-  SetType : TYPE = 
-    ({f : [Expr -> Stmt] | 
-      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
-
 END BodyFunctions
 
 
@@ -200,56 +123,78 @@ BEGIN
             ValOrExcpt[Name], 
             BodyFunctions[Name]
 
-  This : Name 
 
-  % Other reserved words given as examples
-  Super, rsIf, rsThen, rsElse : Name
-
-  % Java reserved words. We only need to mention This, the other are given as
+  % Java reserved words. Below, we only use This, the others are given as
   % examples. 
+  This, Super, rsIf, rsThen, rsElse : Name
+
   reserved_words : finite_set[Name] =
     {n : Name | n = This OR n = Super OR n = rsIf OR n = rsThen OR n = rsElse}
 
-  % NOTE: It is not correct to have Val in programs because they belong to the
-  % semantic domain, however, we do so to simplify the definition of the initial
-  % state (otherwise we would have to define an order of initialization).
-  FieldDecl : TYPE = [# jtype : JType,
-                        name : Name,
-                        init_val : (defined?) #]
+  % To simplify semantics, initial values are defined as Val, not with
+  % expression. This avoids need to define evaluation order for initialisation.
+  % Variable declarations contain type, name and initial value
+  Decl : TYPE = [# jtype : JType,
+                   name : Name,
+                   init_val : (defined?) #]
 
-  LocalVarDecl : TYPE = [# jtype : JType,
-                           name : Name #]
-
+  % Method contains 
+  % name, 
+  % classname to which method belongs
+  % declaration of formal parameter (arg)
+  % pre and postcondition 
+  % (precondition parametrised with argument expression (actual parameter)
+  %  postcondition parametrised with return value expression)
+  % local variable declaration
+  % method body
+  % pre_set, post_set and exc_set annotations
+  % (pre_set parametrised with actual parameter, 
+  %  post_set parametrised with return value, 
+  %  exc_set parametrised with return exception)
+  % res: expression to compute return value
+  % res_type: return type of method
   Method : TYPE = [# name : Name,
                      classname : Name,
-                     arg : LocalVarDecl,
-                     pre : CondType,
-                     post : CondType,
-                     lvars : finite_set[LocalVarDecl],
+                     arg : Decl,
+                     pre : [Expr -> Expr],
+                     post : [Expr -> Expr],
+                     lvars : finite_set[Decl],
                      body : Stmt,
-                     pre_set : SetType,
-                     post_set : SetType,
+                     pre_set : [Expr -> Stmt],
+                     post_set : [Expr -> Stmt],
                      exc_set : [Excpt -> Stmt],
                      res : Expr,
                      res_type : JType #]
 
+  % Class contains 
+  % name
+  % name of superclass (bottom for class Object)
+  % class invariant (supposed to contain also inherited invariants from 
+  %                  superclasses)
+  % set of ghost variable declarations
+  % field declarations
+  % methods
   Class : TYPE = [# name : Name,
                     super_class : lift[Name],
                     inv : Expr,
-                    ghost_vars : finite_set[FieldDecl],
-                    fields : finite_set[FieldDecl],
+                    ghost_vars : finite_set[Decl],
+                    fields : finite_set[Decl],
                     methods : finite_set[Method] #]
 
+  % Program is a list of classes
+  % since we only want to treat wellformed classes, here we define
+  % type PreProgram, below Program is defined as a subtype satisfying
+  % the wellformedness predicate
   PreProgram : TYPE = [# classes : non_empty_finite_set[Class] #]
 
 
 END Program
 
 
-% Functions that manipulate programs or program parts
+% Several utility functions for programs and program parts
 ProgramFunctions[Name : TYPE+] : THEORY
 BEGIN
-
+  
   IMPORTING Program[Name],
             %% Used for proving TCCs
             finite_sets@finite_sets_inductions[Class],
@@ -273,7 +218,7 @@ BEGIN
             list_map_funcs, 
             BodyFunctions[Name]
 
-
+  % variable names occurring in program instruction
   var_names(b : Body) : RECURSIVE [Name -> boolean] =
     CASES b OF    
        Plus(b1, b2) : union(var_names(b1), var_names(b2)),
@@ -312,13 +257,13 @@ BEGIN
     ENDCASES
   MEASURE size(b)
 
-  var_names(fs : finite_set[FieldDecl]) : finite_set[Name] =
-    {n : Name |EXISTS (f : FieldDecl) : fs(f) AND name(f) = n}
+  % var_names in set of variable declarations
+  var_names(fs : finite_set[Decl]) : finite_set[Name] =
+    {n : Name |EXISTS (f : Decl) : fs(f) AND name(f) = n}
 
-  var_names(ls : finite_set[LocalVarDecl]) : finite_set[Name] =
-    {n : Name |EXISTS (l : LocalVarDecl) : ls(l) AND name(l) = n}
-
-
+  % var_names in method are the var_names in pre- and postcondition,
+  % pre-, post- and exc-set anntations, method body, local variables and
+  % formal parameter
   var_names(m : Method) : set[Name] =
     Union({ns : set[Name] | 
       ns = var_names(pre(m)(Const(Unit))) OR 
@@ -330,26 +275,25 @@ BEGIN
       ns = var_names(lvars(m)) OR ns = var_names(res(m)) OR
       ns = singleton(name(arg(m)))})
 
+  % var_names in class are var_names in all methods, fields, ghost variables
+  % and class invariants
   var_names(c : Class) : set[Name] = 
     union(Union({ns : set[Name] | EXISTS (m : Method) :
                  methods(c)(m) AND ns = var_names(m)}),
     union(var_names(fields(c)), 
     union(var_names(ghost_vars(c)), var_names(inv(c)))))
 
+  % var_names in program are var_names of all classes
   var_names(p : PreProgram) : set[Name] =
     Union({ns : set[Name] | EXISTS (c : Class) :
       classes(p)(c) AND ns = var_names(c)})
 
 
   var_names_union : LEMMA % :-)
-    FORALL (fs1, fs2 : finite_set[FieldDecl]) :
+    FORALL (fs1, fs2 : finite_set[Decl]) :
       var_names(union(fs1, fs2)) = union(var_names(fs1), var_names(fs2))
 
-  var_names_union2 : LEMMA % :-)
-    FORALL (ls1, ls2 : finite_set[LocalVarDecl]) :
-      var_names(union(ls1, ls2)) = union(var_names(ls1), var_names(ls2))
-
-  IMPORTING WF_Card[[Expr, Stmt]], set2list[[Expr, Stmt]]
+  IMPORTING WF_Card[[Expr, Stmt]], set2list[[Expr, Stmt]] 
 
   var_names_CaseJML_set2list : LEMMA % :-)
     FORALL (s : finite_set[[Expr, Stmt]], n : Name) :
@@ -366,102 +310,102 @@ BEGIN
       var_names(CaseJML(branches))(n)
 
 
-%  var_names(f : [Expr -> Body]) : set[Name] =
-%    {n : Name |FORALL(e : Expr) : var_names(f(e))(n)}
-
-%  % TO PROVE
-%  % I can't prove this...
-%  var_names_predicate : LEMMA
-%    FORALL(f : [Expr -> Body], v : Expr) :
-%      subset?(var_names(f(v)), union(var_names(f), var_names(v)))
-
-%  % TO PROVE
-%  var_names_exc_predicate : LEMMA
-%    FORALL(f : [Excpt -> Body], e : Excpt) :
-%      var_names(f(e)) = var_names(f(Throwable))
-
-
   % Declared variable names
 
-  getFieldDecls(p : PreProgram) : finite_set[FieldDecl] =
-    {f : FieldDecl | EXISTS (c : Class) : classes(p)(c) AND 
+  % all declared field names in program
+  getFieldDecls(p : PreProgram) : finite_set[Decl] =
+    {f : Decl | EXISTS (c : Class) : classes(p)(c) AND 
                                           fields(c)(f)}
 
-  getLocalDecls(c : Class) : finite_set[LocalVarDecl] =
-    {l : LocalVarDecl | EXISTS (m : Method) : 
+  % declared local variables in a class, including formal parameters
+  getLocalDecls(c : Class) : finite_set[Decl] =
+    {l : Decl | EXISTS (m : Method) : 
                           methods(c)(m) AND                      
                           (lvars(m)(l) OR l = arg(m))}
 
-  getLocalDecls(p : PreProgram) : finite_set[LocalVarDecl] =
-    {l : LocalVarDecl | EXISTS (c : Class) : 
+  % local variables declared in program
+  getLocalDecls(p : PreProgram) : finite_set[Decl] =
+    {l : Decl | EXISTS (c : Class) : 
                         classes(p)(c) AND getLocalDecls(c)(l)}
 
+  % formal parameter names are always in set of declared local variables
   arg_in_getLocalDecls : LEMMA % :-)
     FORALL(p : PreProgram, c : Class, m : Method) :
       classes(p)(c) IMPLIES
       methods(c)(m) IMPLIES
       getLocalDecls(p)(arg(m))
 
+  % all declared ghost variable names in program
+  getGhostDecls(p : PreProgram) : finite_set[Decl] =
+    {g : Decl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
-  getGhostDecls(p : PreProgram) : finite_set[FieldDecl] =
-    {g : FieldDecl | EXISTS (c : Class) :  classes(p)(c) AND ghost_vars(c)(g)}
 
-
-  get_LocalDecl(n : Name, p : PreProgram) : lift[LocalVarDecl] =
-    LET ng = {l : LocalVarDecl | getLocalDecls(p)(l) AND name(l) = n} IN
+  % lookup local variable declaration with name n
+  get_LocalDecl(n : Name, p : PreProgram) : lift[Decl] =
+    LET ng = {l : Decl | getLocalDecls(p)(l) AND name(l) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  get_FieldDecl(n : Name, p : PreProgram) : lift[FieldDecl] =
-    LET ng = {f : FieldDecl | getFieldDecls(p)(f) AND name(f) = n} IN
+  % lookup field declaration with name n
+  get_FieldDecl(n : Name, p : PreProgram) : lift[Decl] =
+    LET ng = {f : Decl | getFieldDecls(p)(f) AND name(f) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
-  get_GhostDecl(n : Name, p : PreProgram) : lift[FieldDecl] =
-    LET ng = {g : FieldDecl | getGhostDecls(p)(g) AND name(g) = n} IN
+  % lookup ghost variable declaration with name n
+  get_GhostDecl(n : Name, p : PreProgram) : lift[Decl] =
+    LET ng = {g : Decl | getGhostDecls(p)(g) AND name(g) = n} IN
     IF nonempty?(ng)
     THEN up(choose(ng))
     ELSE bottom
     ENDIF
 
+  % all variable names declared in program (fields, ghost and local var.)
   declared_var_names(p : PreProgram) : finite_set[Name] =
     {n : Name | var_names(getFieldDecls(p))(n) OR
                 var_names(getLocalDecls(p))(n) OR
                 var_names(getGhostDecls(p))(n)}
 
+  % all declared variable names, plus reserved name This
   ext_declared_var_names(p : PreProgram) : finite_set[Name] =
     union({n : Name | var_names(getFieldDecls(p))(n) OR
                       var_names(getLocalDecls(p))(n) OR
                       var_names(getGhostDecls(p))(n)},
           {n : Name | n = This})
 
-
+  % all class names used in program
   class_names(p : PreProgram) : finite_set[Name] =
     {n : Name | EXISTS (c : Class) : classes(p)(c) AND name(c) = n}
 
+  % names of methods defined in program
   method_names(p : PreProgram, c : Class) : finite_set[Name] =
     {n : Name | EXISTS (m : Method) : classes(p)(c) AND methods(c)(m) AND
                                       name(m) = n}
 
+  % all methods defined in program
   methods(p : PreProgram) : finite_set[Method] =
     {m : Method |EXISTS (c : Class) : classes(p)(c) AND methods(c)(m)}
 
+  % if tgt is a reference, and the class name occurs in the program
+  % then return the class (otherwise bottom)
   get_class(p : PreProgram)(tgt : Val) : lift[Class] =
     IF Reference?(tgt) AND class_names(p)(class_name(tgt))
     THEN up(choose({c : Class | classes(p)(c) AND name(c) = class_name(tgt)}))
     ELSE bottom
     ENDIF
 
- 
+  % class returned by get_class occurs in the program
   get_class_in_classes : LEMMA % :-)
     FORALL(p : PreProgram)(tgt : Val) :
       up?(get_class(p)(tgt)) IMPLIES
         classes(p)(down(get_class(p)(tgt)))
 
+  % if tgt is a reference to a class in the program, and mn is 
+  % declared in this class, return the method (otherwise bottom)
   lookup_mthd(p : PreProgram, tgt : Val, mn : Name) : lift[(methods(p))] =
     IF up?(get_class(p)(tgt)) AND method_names(p, down(get_class(p)(tgt)))(mn)
     THEN up(choose({m : Method | classes(p)(down(get_class(p)(tgt))) AND 
@@ -470,6 +414,7 @@ BEGIN
     ELSE bottom
     ENDIF
 
+  % lookup_mthd returns method in the class
   lookup_mthd_in_methods_class : LEMMA % :-)
      FORALL(p : PreProgram, tgt : Val, mn : Name) :
        up?(get_class(p)(tgt)) IMPLIES
@@ -479,12 +424,23 @@ BEGIN
 
   % NOTE: We assume that the invariant contains the conjunction of the 
   %       invariants of the the parent classes.
-  % If it can't find the class of tgt it just returns TRUE
+  % if tgt is reference to a class of the program, return invariant
+  % for convenience, if tgt does not point to a class, just return True
   lookup_inv(p : PreProgram, tgt : Val) : Expr =
     IF up?(get_class(p)(tgt))
     THEN inv(down(get_class(p)(tgt)))
     ELSE Const(Bool(True))
     ENDIF
+
+
+  % look up value of variable n, knowing that it is of type t
+  var_lookup(n : Name)(t : JType) : Expr =
+    CASES t OF
+      IntType : NumVarEval(n),
+      BoolType : BoolVarEval(n),
+      RefType : RefVarEval(n),
+      Void : Const(Unit)
+    ENDCASES
 
 
   % Proper subtern (<<) properties
@@ -542,14 +498,6 @@ BEGIN
            s(x) AND (subterm(b, proj_1(x)) OR subterm(b, proj_2(x))))
 
 
-  var_lookup(n : Name)(t : JType) : Expr =
-    CASES t OF
-      IntType : NumVarEval(n),
-      BoolType : BoolVarEval(n),
-      RefType : RefVarEval(n),
-      Void : Const(Unit)
-    ENDCASES
-
 
 END ProgramFunctions
 
@@ -560,6 +508,12 @@ BEGIN
 
   IMPORTING Program[Name]
 
+  % pred: predicate over program and body
+  % apply pred to 
+  % methods pre- and postcondition
+  % body
+  % pre-, post- and exc-set
+  % return expression
   method_pred(p : PreProgram)(m : Method)
              (pred : [PreProgram -> [Body -> bool]]) : bool =
     (FORALL (v : Expr) : pred(p)(pre(m)(v))) AND 
@@ -570,6 +524,10 @@ BEGIN
     (FORALL (e : Excpt) : pred(p)(exc_set(m)(e))) AND
     pred(p)(res(m))
 
+  % pred: predicate over program and body
+  % apply pred to
+  % all class invariants
+  % all methods (using method_pred above)
   program_pred(p : PreProgram)
               (pred : [PreProgram -> [Body -> bool]]) : bool =
     FORALL (c : Class) :
@@ -578,6 +536,8 @@ BEGIN
         FORALL (m : Method) :
           methods(c)(m) IMPLIES method_pred(p)(m)(pred)
 
+  % pred: predicate over methods
+  % apply pred to all methods in program
   program_method_pred(p : PreProgram)(pred : [Method -> bool]) : bool =
     FORALL (c : Class) :
       classes(p)(c) IMPLIES
@@ -588,15 +548,16 @@ BEGIN
 END ProgramRestriction
 
 
-% Program's syntax requirements.
-% We include only the requirements needed for the proofs.
-% NOTE: Since the declarations are sets we can avoid some duplicate tests.
+% Wellformedness conditions of program
+% We include only the requirements needed for this formalisation
 WellFormedProgram[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING ProgramFunctions[Name],
             ProgramRestriction[Name]
 
+  % program instructions only contain declared variable names
+  % target of set annotation is always a ghost variable
   wf_Body(p : PreProgram)(b : Body) : boolean = 
     (FORALL(v : Name) : var_names(b)(v) IMPLIES ext_declared_var_names(p)(v))
     AND
@@ -610,12 +571,15 @@ BEGIN
       b2 << b1 IMPLIES
         wf_Body(p)(b2)
 
+  % wf_Body and e is an expression
   wf_Expr(p : PreProgram)(e : Expr) : boolean =
      wf_Body(p)(e)
 
+  % wf_Body and s is a statement
   wf_Stmt(p : PreProgram)(s : Stmt) : boolean =
     wf_Body(p)(s)
 
+  % check wf_Body for all branches of CaseJML instruction
   wf_Branches(p : PreProgram)(l : list[[Expr, Stmt]]) : boolean =
     every(LAMBDA(x : [[Expr, Stmt]]) : 
       wf_Body(p)(proj_1(x)) AND wf_Body(p)(proj_2(x)))(l)
@@ -638,9 +602,13 @@ BEGIN
                 PROJ_2(car(branches(b))),
                 CaseJML(cdr(branches(b)))))
 
+  % methods: all instructions and (incl. specification) should satisfy wf_Body
   wf_Method(p : PreProgram)(m : Method) : boolean =
     method_pred(p)(m)(wf_Body)
 
+  % all methods in class should be wf_Method
+  % in addition: every method name occurs only once in class
+  % classname in method is class method belongs too
   wf_Class(p : PreProgram)(c : Class) : boolean =
     (FORALL (m1, m2 : Method) :
        methods(c)(m1) IMPLIES
@@ -650,10 +618,12 @@ BEGIN
      AND
     (FORALL (m : Method) : methods(c)(m) IMPLIES classname(m) = name(c))
 
+  % all classes in program should satisfy wf_Class
   wf_Classes(p : PreProgram) : boolean =
     FORALL (c : Class) : classes(p)(c) IMPLIES wf_Class(p)(c)
 
-
+  % fields, local and ghost variables should have disjoint name sets
+  % Needed, since we model the heap as a flat Store 
   wf_program_variables_disjoint_def(p : PreProgram) : boolean =
     LET fname = var_names(getFieldDecls(p)),
         lname = var_names(getLocalDecls(p)),
@@ -662,9 +632,11 @@ BEGIN
     disjoint?(lname, gname) AND
     disjoint?(fname, gname)
 
+  % program variable names are not reserved words
   wf_program_variables_not_reserved_words_def(p : PreProgram) : boolean =
     disjoint?(declared_var_names(p), reserved_words)
 
+  % class names are unique
   wf_program_has_unique_class_names_def(p : PreProgram) : boolean =
     FORALL (c1, c2 : Class) :
       classes(p)(c1) IMPLIES
@@ -672,6 +644,7 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c1 = c2
 
+  % every method belongs to one class
   wf_program_methods_only_in_one_class(p : PreProgram) : boolean =
     FORALL (c1, c2 : Class, m : Method) :
       classes(p)(c1) IMPLIES
@@ -693,15 +666,13 @@ BEGIN
     wf_Classes(p)AND
     program_pred(p)(wf_Body)
 
-  
+  % Below, we only consider wellformed programs
   Program : TYPE = (wf_Program)
 
   AUTO_REWRITE- wf_Program
 
-  % Properties needed of well-formed programs
+  % Properties about well-formed programs
 
-  % Because we model the heap as a flat Store here we need to require that
-  % variables have a unique name within the program.
   wf_program_variables_disjoint : LEMMA % :-)
      FORALL (p : Program) :
        LET fname = var_names(getFieldDecls(p)),

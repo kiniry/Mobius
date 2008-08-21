@@ -34,6 +34,5 @@ BEGIN
       RefType : Null
     ENDCASES
 
-
 END ValProp
 
