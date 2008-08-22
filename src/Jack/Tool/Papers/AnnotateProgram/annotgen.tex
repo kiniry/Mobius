@@ -39,11 +39,11 @@ are related by \(R\), and from this we can conclude that for any
 reachable state of the monitored program, there exists a related state,
 reachable in the translated program.
 
-\marginnote{\small This is specific of the second step, not general.}
+\marginnote{This is specific of the second step, not general.}
 A natural way to prove this is by induction over the derivation length.
 To be able to apply induction, we typically require that the body \(b\) does
 not contain new variables. However, the translation introduces new (ghost)
-variables to encode the MVA at specific points in the program. For
+variables to encode the MVA, at specific points in the program. For
 these points, separate preservation lemmas have to be proven.
 Further, to be able to complete the proof, we need to ensure that in both
 bodies the same branches of conditional expressions and statements are
@@ -80,7 +80,7 @@ monitored program with a total MVA, \(\alpha_1(P)\), is defined as:
 
 The relation that is preserved between executions of \(P\) and
 %% This is monitor_related_states
-\marginnote{\small Should we add the condition on ghost variables?}
+\marginnote{Should we add the condition on ghost variables?}
 \(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
 \(P\) and \(\tau\) is a state of \(\alpha_1(P)\)):
 \[{\small
@@ -194,9 +194,9 @@ value of the ghost variable representing the initial control point;
 \item for each automaton variable declaration, a ghost variable is
 declared with corresponding type and initialisation.
 \end{inparaenum}
-Further, \(\alpha_{2, \mathcal{C}}\) adds the condition that the
-current control point should not be halted to the class
-invariant\footnote{For readability, we do not explicitly write the
+Further, \(\alpha_{2, \mathcal{C}}\) adds to the class invariant
+the condition that the current control point should not be
+halted\footnote{For readability, we do not explicitly write the
 translation from MVA control points to ghost variables.}, and then it
 annotates all methods in the class using \(\alpha_{2,
 \mathcal{M}}\). For each method in the class, its \preset, \postset
@@ -227,11 +227,9 @@ always exactly one case that applies.
 % exception, respectively as input. However, in the PVS formalisation
 % this is correctly handled.
 
-The formalisation does not formally discuss how the guard and the
-actions are translated into expressions in the programming
-language. Instead, we assume that we can translate the guard and the
-action expressions into expressions in the programming
-language that
+The formalisation does not say how guards and actions are
+translated. Instead, we assume that we can translate them
+into expressions in the programming language that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item are wellformed,
 \item give the same result,
@@ -273,7 +271,7 @@ S(\sigma, \tau) & = &
 \end{array}
 \end{array}}
 \]
-This specifies that if the monitor has reached a \halted
+It specifies that if the monitor has reached a \halted
 control point, then the annotated program must have thrown a
 \JMLExc. Otherwise, the state of the annotated program must correctly
 model the MVA, \emph{i.e.}\ the current control point is stored in the
@@ -351,7 +349,7 @@ MVA, encoding the \emph{limited SMS} security policy, in
 Figure~\ref{FigCompleteMVA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
 \(\alpha_2\) on this program and this MVA.
-\marginnote{\small To be strict, in the \preset we add an \Assert}
+\marginnote{AT: To be strict, in the \preset we add an \Assert}
 Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
 generated~--~this is equivalent to an \Skip statement.
@@ -455,7 +453,3 @@ contain method calls, from which we can conclude that they do not
 modify any variables that are not explicitly mentioned in them. In
 particular, this allows to conclude that the new local variable is
 not changed by the set annotations.
-
-\marginnote{MH: We could show the inlining on the running example, but
-this is not very interesting. Since we did not give method bodies, it
-will just stay as abstract. AT: I agree}

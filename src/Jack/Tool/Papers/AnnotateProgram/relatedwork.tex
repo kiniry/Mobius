@@ -1,2 +1,35 @@
 \section{Related Work}\label{SecRelated}
-Cheon, Aktug \& Gurov...
+% Discuss briefly the work by Schneider "Enforceable security policies" and its
+% follow up by Ligatti. Talk about it language to specify security properties.
+
+In~\cite{Aktug07} Aktug and Naliuka present ConSpec, a language for security
+policy specification.
+The ConSpec automaton is similar to our MVA, in particular it
+has guarded transitions with actions that can be executed at the entry or exit
+(exceptional) of methods. Although they give a formal semantics for a ConSpec
+automaton that may allow the user to reason about the property being enforced,
+the inlining of the monitor and it correctness are stated informally.
+\marginnote{AT: I later found the paper Provably Correct Runtime Monitoring where
+they are much more formal, but since you work with Gurov, it may be easier for
+you to write about it.}
+
+Cheon and Perumandla propose and extension to JML to specify the allowed
+sequences of methods calls in a regular expression-like notation~\cite{Cheon07}.
+These specifications are succinct, however, many interesting
+security properties cannot be expressed with this formalism. Even our simple
+example is out of their scope, because it contains a counter (which is used
+only by the specification).
+
+There are tools that translate properties specified in some format to JML
+annotations.
+One of them is F2J, a tool~\cite{Hubbers03} developed by Hubbers \emph{et al.},
+which translates finite state machine specifications into JML annotations and
+can also generate a code skeleton for a smart card applet.
+Another one is JAG~\cite{Giorgetti06} by Giorgetti and Groslambert, whose input
+are properties specified in (a subset of) temporal logic.
+The main distinction these formalisms and ours is that they do not distinguish
+between method entry and exit, thus the translation approach is different.
+Moreover, none of these works have proved the correctness of their translation
+algorithms.
+
+%Use of Aspects to do monitoring
