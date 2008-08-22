@@ -3,16 +3,19 @@ BEGIN
 
   IMPORTING State[Name]
 
+  % Annoted Program State contains ghost variables, fields and local variables
   APState : TYPE = [# gvs : Store, pstate : PState #]
 
   IMPORTING SemanticsTypes[Name, Program, APState,
                            id, LAMBDA (s : APState) : pstate(s)],
             SemanticsJMLTypes[Name, APState, LAMBDA (s : APState) : gvs(s)]
 
+  % lifting of program state update
   update_PState : (update_PState_type) = 
     LAMBDA (s : APState, upd : [PState -> PState]) :     
       s WITH [pstate := upd(pstate(s))]
 
+  % lifting of ghost variables update
   update_GhostVars : (update_GhostVars_type) =
     LAMBDA (s : APState, upd : [Store -> Store])  : 
       s WITH [gvs := upd(gvs(s))]
@@ -33,10 +36,15 @@ BEGIN
                       on_method_exit_normal,
                       on_method_exit_exceptional]
 
+  % wf state in annotated program:
+  % program state wellformed, and ghost variable state wellformed
   wf_state(p : Program)(sigma : APState) : boolean =
     wf_state(p)(pstate(sigma)) AND
     wf_ghoststate(p)(sigma)
 
+  % initial state of annotated program:
+  % intitial program state and all declared ghost variables initialised
+  % to their initial value (all non-declared ghost variables map to Bottom
   initial_AP_state(p : Program)(this_val : Val) : APState =
     (# pstate := initial_Program_state(p)(this_val),
        gvs := LAMBDA (n : Name) :
@@ -47,12 +55,16 @@ BEGIN
          ENDIF
     #)
 
+
+  % a program body has no side-effects if it does not change the state at all
   body_has_no_side_effects(p : Program)(b : (wf_Body(p))) : boolean =
     FORALL (s1, s2 : APState, v : Val, n : nat) :
       wf_state(p)(s1) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         s1 = s2
 
+  % running annotated program: run main method, starting in 
+  % initial annotated program state
   run_annotated_program(p : Program)(main : Name, arg : int)
                        (this_val : Val)(final : APState) : boolean =
     run_FullProgram(p)(main, arg)(initial_AP_state(p)(this_val), final)
@@ -72,6 +84,7 @@ BEGIN
 
   % Well-formedness properties
 
+  % all declared variables are either ghost, local or field
   wf_state_vars_tricotomy : LEMMA % :-)
     FORALL (p : Program, s : APState, vn : Name) :
       wf_state(p)(s) IMPLIES
@@ -80,6 +93,7 @@ BEGIN
         is_field(vn, pstate(s)) OR
         is_local(vn, pstate(s))
 
+  % ghost variables are not local or fields
   wf_state_ghost_not_local_or_field : LEMMA % :-)
     FORALL (p : Program, s : APState, vn : Name) :
       wf_state(p)(s) IMPLIES
@@ -87,6 +101,8 @@ BEGIN
       is_ghost(vn, s) IMPLIES 
         NOT is_local(vn, pstate(s)) AND NOT is_field(vn, pstate(s))
 
+  % wf_state preserved by update_PState (provided update preserves
+  % wf_state on program state)
    wf_update_PState : LEMMA % :-)
      FORALL (p : Program, s1 : APState, 
              upd : [PState[Name] -> PState[Name]]) :
@@ -95,6 +111,8 @@ BEGIN
        (wf_state(p)(pstate(s1)) IMPLIES wf_state(p)(pstate(s2))) IMPLIES
        wf_state(p)(s2)
 
+   % wf_state preserved by update_GhostVars (provided update preserves
+   % wf_ghost_state)
    wf_update_GhostVars : LEMMA % :-)
      FORALL (p : Program, s1 : APState, 
              upd : [Store -> Store]) :
@@ -103,18 +121,21 @@ BEGIN
        (wf_ghoststate(p)(s1) IMPLIES wf_ghoststate(p)(s2)) IMPLIES
        wf_state(p)(s2)
 
+  % wf_state preserved by update_stack abbreviation
+  % provided all local variables are declared
   wf_state_update_stack : LEMMA % :-)
     FORALL(p : Program, this_val : Val, arg : (getLocalDecls(p)), 
-           param_val : Val, lvds : finite_set[LocalVarDecl], s : APState) : 
+           param_val : Val, lvds : finite_set[Decl], s : APState) : 
       wf_state(p)(s) IMPLIES
-      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES getLocalDecls(p)(l)) IMPLIES
+      (FORALL (l : Decl) : lvds(l) IMPLIES getLocalDecls(p)(l)) IMPLIES
         wf_state(p)(update_stack(this_val, arg, param_val, lvds, s))
 
+  % initial annotated program state is wellformed
   wf_initial_AP_state : LEMMA % :-)
     FORALL (p : Program)(this_val : (defined?)) :
       wf_Program(p) IMPLIES wf_state(p)(initial_AP_state(p)(this_val))
 
-
+  % wf_state preserved by derve
   derive_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, b : (wf_Body(p)), v : Val)
            (sigma1, sigma2 : APState, n : nat) :
@@ -123,6 +144,7 @@ BEGIN
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
         wf_state(p)(sigma2)
 
+  % on_method_entry preserves wf_state
   on_method_entry_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) :
@@ -135,6 +157,7 @@ BEGIN
                derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         wf_state(p)(sigma2)
 
+  % on_method_exit_normal preserves wf_state
   on_method_exit_normal_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) : 
@@ -145,9 +168,9 @@ BEGIN
                (b : (wf_Body(p)), sigma1 : APState, v : Val, 
                 sigma2 : APState)(m : below(k)) :
                derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
-
         wf_state(p)(sigma2)
 
+  % on_method_exit_exceptional preserves wf_state
   on_method_exit_exceptional_yields_wf_state_AP : LEMMA % :-)
     FORALL (p : Program, m : (wf_Method(p)), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : APState, n : nat) : 
@@ -182,14 +205,6 @@ BEGIN
            (sigma1, sigma2 : APState, v : Val, n : nat) :
       derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
       Bottom?(v) = up?(ex(pstate(sigma2)))
-
-%  derive_boolean_expr_type_AP : LEMMA % :-)
-%    FORALL (p : Program)(b : (wf_Expr(p)))
-%           (sigma1, sigma2 : APState, v : Val, n : nat) :
-%      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
-%      NOT up?(ex(pstate(sigma2))) IMPLIES
-%      Bool?(v)
-
 
 END AnnotatedProgramSemantics
 
@@ -237,38 +252,6 @@ BEGIN
         derive(p)(CaseJML(bs), s1, v, s2)(n) IMPLIES
           EXISTS (n1 : nat) :
             derive(p)(PROJ_2(b1), s1, v, s2)(n1)
-
-  % together with derive_determ this should be sufficient!!
-
-  % CHECK: in what form exactly can we use it
-  % and then: can we actually prove it!!
-  % AT: This does not typecheck, I guess that sigma should be sigma1 and sigma1
-  % and sigma1 should be sigma2.
-%   equal_derivation_set_annotations_with_equal_arguments : LEMMA
-%     FORALL(p : Program, e : (wf_Expr(p)), 
-%            set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
-%            v, v1 : Val, 
-%            sigma1, sigma2 : APState, n1, n2 : nat) :
-%       (FORALL (tau : APState) :
-%          pstate(tau) = pstate(sigma) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
-%       IMPLIES
-%       no_change_in_pstate(p)(set(e)) IMPLIES
-%       derive(p)(set(e), sigma, v1, sigma1)(n2) IMPLIES
-%         EXISTS (n3 : nat) : 
-%           derive(p)(set(Const(v)), sigma, v1, sigma1)(n3)
-
-  equal_derivation_set_annotations_with_equal_arguments : LEMMA
-    FORALL(p : Program, e : (wf_Expr(p)), 
-           set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
-           v, v1 : Val, 
-           sigma1, sigma2 : APState, n1, n2 : nat) :
-      (FORALL (tau : APState) :
-         pstate(tau) = pstate(sigma1) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
-      IMPLIES
-      no_change_in_pstate(p)(set(e)) IMPLIES
-      derive(p)(set(e), sigma1, v1, sigma2)(n2) IMPLIES
-        EXISTS (n3 : nat) : 
-          derive(p)(set(Const(v)), sigma1, v1, sigma2)(n3)
 
 
 END APSemanticsProperties
