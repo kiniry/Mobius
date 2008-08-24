@@ -10,7 +10,7 @@
 %\numberofauthors{3}
 \author{
 %\alignauthor
-Jï¿½drzej Fulara and
+Jêdrzej Fulara and
 %\affaddr{Institute of Informatics}\\
 %\affaddr{University of Warsaw}\\
 %\affaddr{ul. Banacha 2}\\
@@ -262,7 +262,7 @@ In Sect.~\ref{sec:specification}, we present specification
 languages JML and BML. An example which illustrates the work of the
 compiler is presented in Sect.~\ref{sec:example}.
 Sect.~\ref{sec:compiler} overviews the design of the \jmltobml
-compiler. The problem of placing loop specifications in the bytecode is discussed in Sect.~\ref{sec:loops}. Related work is presented in
+compiler. The problem of placing BML annotations in the bytecode is discussed in Sect.~\ref{sec:loops}. Related work is presented in
 Sect.~\ref{sec:related-work} and we conclude in
 Sect.~\ref{sec:conclusion}.
 
@@ -727,17 +727,17 @@ at the bytecode level which makes their compilation convoluted.
 \label{fig:loops}
 \end{figure}
 
-\section{Detecting loops in bytecode}
+
+\section{Adding BML annotations to class files}
+BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. invariants. This case is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
+
+Loop invariant must be associated with bytecode instruction too. Loop invariant holds at the beginning of the loop
+body at each loop iteration. Taking into consideration that calculating loop arguments does not have to be site effect free,
+loop invariant should not be placed before calculating the arguments. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the loop arguments are calculated. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 
+
+\subsection{Detecting loops in bytecode}
 \label{sec:loops}
-
-In some cases, it is crucial to use for the translation the content of
-the original class file, provided by the user. There is a need to link
-instructions from the source code with corresponding bytecode
-instructions from the provided class file. The most difficult and
-important part is to detect loops in the bytecode. A loop can be translated in one of the ways presented on
-Fig.~\ref{fig:loops}.
-
-In the first scenario (shown on Fig.~\ref{fig:loops}(a)), an
+The most difficult and important part is to detect loops in the bytecode. A loop can be translated in one of the ways presented on Fig.~\ref{fig:loops}. In the first scenario (shown on Fig.~\ref{fig:loops}(a)), an
 unconditional jump (goto) from the vertex \textit{a} to the vertex
 \textit{c} is done (vertex \textit{c} denotes the start of the loop
 exit condition). In vertex \textit{d}, the condition check is
@@ -819,14 +819,6 @@ matching bytecode loops. This is done using the following algorithm:
 \item Otherwise, fail.
 \end{itemize}
 
-\subsubsection*{The translation of \texttt{assert} clauses}
-
-It is worth mentioning that the \emph{line number table} is also
-crucial for the translation of JML \texttt{assert} expressions. They
-are assigned to the first bytecode instruction which realises the
-particular line. A potential \texttt{assert} formula to be inserted is
-determined using the correspondence from \emph{line number table}.
-
 \section{The application of the compiler}
 
 The generation of class files with BML specifications can be conducted
@@ -836,7 +828,7 @@ instance to ensure that the programs do not disturb their
 infrastructure). In the latter case, the limited access to the source
 code makes the augmenting of the existing class files with BML
 attributes a sensible approach. One can just decompile the class files
-then specify them and subsequently move the specifications to the
+then augment them with specifications and subsequently move the specifications to the
 original class files with the help of \jmltobml. In this case, it is
 even not strictly necessary that the specifications will be placed in
 exactly the right point as the bytecode will be examined by human
@@ -890,7 +882,7 @@ correspond to the bytecode program (see
 e.g.~\cite{barthe06:_certif_trans_optim_compil}). The main difference
 with our approach is that the use of BML allows having a single fixed
 representation of the properties to be guaranteed. These properties
-can then be proved by different proving technologies.
+can then be proved by different proving technologies \cite{mobius31,bml2bpl}.
 
 An example of an attribute with information that can be further
 exploited to check that the code indeed obeys the required policy is
