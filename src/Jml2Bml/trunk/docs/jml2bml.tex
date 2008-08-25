@@ -702,6 +702,8 @@ between fields, ghost fields, local variables, and bound
 variables. All these kinds of variables are resolved in different ways
 at the bytecode level which makes their compilation convoluted.
 
+\vspace{-0.5\baselineskip}
+
 \begin{figure}[ht]
 \centering{
 \begin{tikzpicture}[shorten >=1pt,->]
@@ -727,13 +729,13 @@ at the bytecode level which makes their compilation convoluted.
 \label{fig:loops}
 \end{figure}
 
+\vspace{-2\baselineskip}
 
 \section{Adding BML annotations to class files}
-BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. invariants. This case is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
-
+BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. invariants. Using BMLLib, placing them in the output file is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to the proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
 Loop invariant must be associated with bytecode instruction too. Loop invariant holds at the beginning of the loop
-body at each loop iteration. Taking into consideration that calculating loop arguments does not have to be site effect free,
-loop invariant should not be placed before calculating the arguments. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the loop arguments are calculated. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 
+body at each loop iteration. Taking into consideration that loop control expression does not have to be site effect free,
+loop invariant should not be placed in the beginnint of the expression. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the expression. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 
 
 \subsection{Detecting loops in bytecode}
 \label{sec:loops}
@@ -791,8 +793,7 @@ fails then it tries to detect the second one. At the end, the
 
 It is not enough to discover a loop in the bytecode. We have to find
 out which loop specification is pertinent to this particular piece of
-the code. The \emph{line number table}\footnote{In some cases this
-requires the compiler to be called with a proper flag.} is used to
+the code. The \emph{line number table} is used to
 match the bytecode loop with its source code counterpart. To this end
 we calculate, with the help of the \emph{line number table}, the range
 of the lines where the loop is located. In order to do that, we
@@ -866,12 +867,12 @@ satisfactory as the whole JML to BML compilation task is not supposed
 to be done in continuous fashion throughout the development of the
 project, but rather only once at the end of the process.
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.8\baselineskip}
 
 \section{Related work}
 \label{sec:related-work}
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.7\baselineskip}
 
 Other approaches to proof-carrying code for Java bytecode have been
 proposed~\cite{gilmore05:_proof,wildmoser04:_prototy}. A notable
@@ -916,12 +917,12 @@ should be replaced with something different e.g. an algorithm which
 constructs the control flow graph of the source code and matches the
 graph with the bytecode graph.
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.8\baselineskip}
 
 \section{Conclusion}
 \label{sec:conclusion}
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.8\baselineskip}
 
 We have presented \jmltobml compiler that transforms JML
 annotations into BML. The resulting annotations
@@ -930,17 +931,19 @@ are inserted in binary format into the class file (using the
 building a common verification platform for all languages compiled to
 Java bytecode.
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.8\baselineskip}
 
 \section{Acknowledgements} 
 
-\vspace{-0.5\baselineskip}
+\vspace{-0.8\baselineskip}
 
 This work was partly supported by the Information Society Technologies
 programme of the European Commission, under the IST-2005-015905 MOBIUS
 project and Polish Ministry of Science grant 177/6.PR UE/2006/7. This
 paper reflects only the authors' views and the Community is not liable
 for any use that may be made of the information contained therein.
+
+\vspace{-0.8\baselineskip}
 
 \bibliography{jml2bml}
 \end{document}
