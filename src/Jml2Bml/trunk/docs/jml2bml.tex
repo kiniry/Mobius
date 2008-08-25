@@ -101,7 +101,7 @@ ul. Banacha 2\\
   The proof-carrying code (PCC) techniques allow the executable code
   to be augmented with a proof that the code obeys certain policies
   (e.g. the program does not store passwords in clear in a file). BML
-  (Bytecode Modelling Language) can be regarded as a part of the PCC
+  (Bytecode Modeling Language) can be regarded as a part of the PCC
   architecture which allows expressing detailed properties of Java
   bytecode programs.  As most of the programming is done at the source
   code level, it is desirable to have a way to translate properties
@@ -246,7 +246,7 @@ checked at the user's end, requires the following items:
 \item tools which enable the construction of PCC certificates,
 \item procedures to safely distribute the desired properties to be
   checked by PCC infrastructure,
-\item modelling languages (such as JML) for other programming
+\item modeling languages (such as JML) for other programming
   languages,
 \item compilers that transform programs to JVM bytecode with
   annotations.
@@ -274,7 +274,7 @@ Sect.~\ref{sec:conclusion}.
 \vspace*{-0.5\baselineskip}
 
 \subsection{JML}
-The Java Modelling Language (JML) is a behavioural specification
+The Java Modeling Language (JML) is a behavioural specification
 language for Java programs~\cite{JML}. It allows writing
 specifications in the \textit{design-by-contract}
 fashion~\cite{DesignByContract}. Data types and method behaviour can
@@ -312,7 +312,7 @@ annotation generation~\cite{canapa,daikon}.
 
 \vspace*{-0.5\baselineskip}
 
-The Bytecode Modelling Language (BML) is a specification language for
+The Bytecode Modeling Language (BML) is a specification language for
 Java bytecode. It was proposed by Burdy et al. in~\cite{bmlBurdy}.\
 
 The
@@ -549,7 +549,7 @@ files are not human readable. Thus, we rely for the current
 presentation on its textual representation obtained from Umbra
 \cite{bmllib}. Fig.~\ref{fig:bytecode} shows the translated
 \texttt{replace} method together with BML annotations inserted by our
-\jmltobml compiler. The bytecode instructions labelled with 0 and 1
+\jmltobml compiler. The bytecode instructions labeled with 0 and 1
 correspond to the initialisation \texttt{i = 0}. The loop is located
 between lines 2 and 33. Lines 5--12 represent the \texttt{if}
 statement, 15--23 correspond to lines 19--20 from the source
@@ -564,7 +564,7 @@ formula. The only difference is in the way the objects are referenced
 \texttt{$\backslash$old} operator becomes a part of the \texttt{this}
 reference).
 
-Loop specifications are located after the line labelled with~32 in the
+Loop specifications are located after the line labeled with~32 in the
 presented listing. The \jmltobml compiler detects loops in the
 bytecode and inserts the annotation before the bytecode representing
 the final conditional jump. In this case it is the \texttt{if\_icmplt}
@@ -732,10 +732,10 @@ at the bytecode level.
 \vspace{-2\baselineskip}
 
 \section{Adding BML annotations to class files}
-BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. invariants. Using BMLLib, placing them in the output file is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to the proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
+BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. class invariants or method pre and postconditions. Using BMLLib, placing them in the output file is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to the proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
 Loop invariant must be associated with bytecode instruction too. Loop invariant holds at the beginning of the loop
-body at each loop iteration. Taking into consideration that loop control expression does not have to be site effect free,
-loop invariant should not be placed in the beginnint of the expression. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the expression. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 
+body at each loop iteration. Taking into consideration that loop control expression does not have to be side effect free,
+loop invariant should not be placed at the beginning of the expression. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the expression. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 
 
 \subsection{Detecting loops in bytecode}
 \label{sec:loops}
@@ -793,8 +793,8 @@ It is not enough to discover a loop in the bytecode. We have to find
 out which loop specification is pertinent to this particular piece of
 the code. The \emph{line number table} is used to
 match the bytecode loop with its source code counterpart. To this end
-we calculate, with the help of the \emph{line number table}, the range
-of the lines where the loop is located. In order to do that, we
+we calculate, with the help of the \emph{line number table}, range
+of lines where the loop is located. In order to do that, we
 examine all the instructions in the bytecode loop and retrieve their 
 corresponding source code lines from the table. The range
 we are interested in is delimited by the minimal and the maximal values
