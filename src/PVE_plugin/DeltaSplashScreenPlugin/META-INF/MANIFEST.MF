@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PVE_Delta_Release_Splashscreen Plug-in
+Bundle-SymbolicName: PVE_Delta_Release_Splashscreen
+Bundle-Version: 1.0.0
