@@ -215,6 +215,13 @@ BEGIN
     ELSE s
     ENDIF
 
+  % if state is normal, update_stack will never produce an exception
+  update_stack_does_not_throw_exception : LEMMA % :-)
+    FORALL(this_val : Val, arg : Decl, param_val : Val,
+           lvds : finite_set[Decl], s : FullState) :
+      NOT up?(ex(pstate(s))) IMPLIES
+        NOT up?(ex(pstate(update_stack(this_val, arg, param_val, lvds, s))))
+
   IMPORTING SemanticsAuxiliaryFunctions[Name, FullState, pstate]
 
   % derivation function, encoding big step operational semantics

@@ -69,7 +69,7 @@
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
-    (Name formal-nonempty-type-decl nil State nil) nil nil
+    (Name formal-nonempty-type-decl nil State nil)
     (member const-decl "bool" sets nil) (empty? const-decl "bool" sets nil)
     (nonempty? const-decl "bool" sets nil))
    181 180 nil nil))
@@ -265,7 +265,7 @@
     (reserved_words const-decl "finite_set[Name]" Program nil)
     (member const-decl "bool" sets nil)
     (declared_var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil) nil nil
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (finite_intersection1 application-judgement "finite_set" finite_sets nil)
@@ -445,8 +445,8 @@
     (remove const-decl "set" sets nil)
     (finite_remove application-judgement "finite_set" finite_sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
-    (Bottom? adt-recognizer-decl "[Val -> boolean]" Val_adt nil) nil
-    (empty? const-decl "bool" sets nil) nil nil
+    (Bottom? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (empty? const-decl "bool" sets nil)
     (wf_store const-decl "boolean" State nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
@@ -859,7 +859,7 @@
     (Name formal-nonempty-type-decl nil State nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (wf_store const-decl "boolean" State nil) nil nil
+    (wf_store const-decl "boolean" State nil)
     (wf_state const-decl "boolean" State nil)
     (raise const-decl "PState" State nil))
    216 180 t shostak))
@@ -882,7 +882,7 @@
     (Name formal-nonempty-type-decl nil State nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (wf_store const-decl "boolean" State nil) nil nil
+    (wf_store const-decl "boolean" State nil)
     (wf_state const-decl "boolean" State nil)
     (catch const-decl "PState" State nil))
    181 180 t shostak))
@@ -924,6 +924,30 @@
     (Stmt type-eq-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil State nil))
    380 380 t shostak))
+ (update_yields_wf_store 0
+  (update_yields_wf_store-1 nil 3428741422 3428741507
+   ("" (skosimp*)
+    (("" (typepred "v!1")
+      (("" (expand* "wf_store" "update_store")
+        (("" (skosimp*)
+          (("" (lift-if)
+            (("" (assert) (("" (inst -2 "vn!1") (("" (prop) nil nil)) nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil State nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (wf_store const-decl "boolean" State nil)
+    (update_store const-decl "Store" State nil))
+   84978 180 t shostak))
  (wf_state_alternative_def 0
   (wf_state_alternative_def-1 nil 3428166757 3428166902
    ("" (skosimp*)
@@ -969,7 +993,7 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((wf_store const-decl "boolean" State nil)
     (is_field const-decl "boolean" State nil)
     (member const-decl "bool" sets nil)

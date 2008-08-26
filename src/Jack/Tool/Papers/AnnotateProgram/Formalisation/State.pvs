@@ -200,6 +200,13 @@ BEGIN
   wf_store(s : Store)(V : finite_set[Name]) : boolean =
     FORALL(vn : Name) : defined?(s(vn)) IFF V(vn)
 
+  % wf_store preserved by update_store
+  update_yields_wf_store : LEMMA % :-)
+    FORALL (st : Store, n : Name, v : (defined?), V : finite_set[Name]) :
+      wf_store(st)(V) IMPLIES
+        V(n) IMPLIES
+        wf_store(update_store(n, v)(st))(V)
+ 
   % wf_store can be used to state alternative definition of wf_state
   % main interest is that it is also used to describe wellformed state of MVA
   wf_state_alternative_def : LEMMA % :-)

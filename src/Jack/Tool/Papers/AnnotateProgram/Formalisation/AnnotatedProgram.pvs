@@ -228,13 +228,15 @@ BEGIN
       NOT target(c) = vn IMPLIES
         gvs(s1)(vn) = gvs(s2)(vn)
 
-  % Consider the evaluation of a CaseJML on a non-exceptional state for which
-  % there is a branch b1 whose condition has no side-effects and holds, and all
-  % the branches before b1 have no side-effect (and hence do not throw exceptions),
-  % and do not hold.
-  % Then the statement associated with b1 will be eventually evaluated and the
-  % resulting state and value (Unit) will be the same as the respective state and
-  % value for the whole CaseJML statement.
+  % Suppose we evaluate a CaseJML instruction, starting in a 
+  % non-exceptional state s
+  % If there branch b1 whose condition has no side-effects and holds in s, 
+  % and all branches before b1 have no side-effect (and hence do not 
+  % throw exceptions), and do not hold in s (i.e., b1 is the first branch
+  % where the condition holds).
+  % Then the statement associated with b1 will be eventually evaluated 
+  % and the resulting state and value (Unit) of this evaluation will be 
+  % the same as the respective state and value for the whole CaseJML statement.
   CaseJML_exclusive_branches_semantics : LEMMA % :-)
     FORALL (p : Program, bs : list[[Expr, Stmt]], s1, s2 : APState,
             v : Val, n : nat, b1 : [(wf_Expr(p)), (wf_Stmt(p))]) :
