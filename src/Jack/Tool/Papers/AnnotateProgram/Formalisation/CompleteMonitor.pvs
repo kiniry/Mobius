@@ -1,3 +1,4 @@
+% First step of translation: transform partial monitor into complete monitor
 CompleteMonitor[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -6,28 +7,44 @@ BEGIN
 
   mp : VAR (wf_and_partial_MP)
 
+  % implementation: program unchanged, monitor completed
   complete_MP(mp) : MonitoredProgram =
     (# mva := complete_MVA(mva(mp)),
        program := program(mp) #)
 
+  % several utility lemmas
+
+  % after completion, monitored program is wellformed, and mva is complete
   complete_MP_wf_and_complete : JUDGEMENT % :-)
     complete_MP(mp) HAS_TYPE (wf_and_complete_MP)
   
-
+  % wf_body preserved by completion
   complete_MP_preserves_wf_body : LEMMA
     FORALL (b : (wf_Body(program(mp)))) : % :-)
       wf_Body(program(complete_MP(mp)))(b)
 
+  % wf_method preserved by completion
   complete_MP_preserves_wf_method : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(program(complete_MP(mp)))(m)
 
+  % relation maintainted between original monitored program and 
+  % completed monitored program
 
+  % automaton states related:
+  % if partial monitor stuck, then complete monitor in halted control point
+  % otherwise control points the same
+  % automaton stores are always the same
   monitor_related_astates(sA1, sA2 : AState, stuck1 : boolean) : boolean =
     IF stuck1 THEN cp(sA2) = halted ELSE cp(sA1) = cp(sA2) ENDIF AND
     stA(sA1) = stA(sA2)
 
-
+  
+  % monitored program states related:
+  % automaton states related
+  % second automaton never stuck
+  % both states wellformed
+  % program state and ghost variables coincide
   monitor_related_states(mp)(s1, s2 : MPState) : boolean =
     monitor_related_astates(astate(s1), astate(s2), stuck(s1)) AND
     NOT stuck(s2) AND
@@ -36,38 +53,45 @@ BEGIN
     pstate(s1) = pstate(s2) AND
     gvs(s1) = gvs(s2)
 
+  % states related: first monitor stuck IFF second monitor reached halted
   monitor_related_astates_consequence : LEMMA % :-)
     FORALL(s1, s2 : MPState) :
     monitor_related_states(mp)(s1, s2) IMPLIES
       (stuck(s1) IFF cp(astate(s2)) = halted)
 
+  % for every complete monitor state, a related partial monitor stack can be 
+  % constructed
   existence_state_partial_monitor : LEMMA % :-)
     FORALL(s : MPState) :
       wf_state(complete_MP(mp))(s) IMPLIES
       NOT stuck(s) IMPLIES
       EXISTS (s1 : MPState) : monitor_related_states(mp)(s1, s)
 
+  % get_adress same result in related states
   get_address_same_in_monitor_related_states : LEMMA % :-)
     FORALL(vn : Name, s1, s2 : MPState) :
       monitor_related_states(mp)(s1, s2) IMPLIES
         get_address(vn, s1) = get_address(vn, s2)
 
+  % get_dynamic_type same result in related states
   get_dynamic_type_name_same_in_monitor_related_states : LEMMA % :-)
     FORALL(vn : Name, s1, s2 : MPState) :
       monitor_related_states(mp)(s1, s2) IMPLIES
         get_dynamic_type_name(vn, s1) = get_dynamic_type_name(vn, s2)
 
-
+  % related states: always same exception
   monitor_related_states_implies_same_exception : LEMMA % :-)
     FORALL (s1, s2 : MPState) :
       monitor_related_states(mp)(s1, s2) IMPLIES 
         ex(pstate(s1)) = ex(pstate(s2))
 
+  % related states: lookup of variables always returns same value
   monitor_related_states_implies_same_lookup : LEMMA % :-)
     FORALL (s1, s2 : MPState, n : Name) :
       monitor_related_states(mp)(s1, s2) IMPLIES 
         lookup(n, s1) = lookup(n, s2)
 
+  % related states preserved by update_local
   monitor_related_states_preserved_by_update_local : LEMMA % :-)
     FORALL (s1, s2 : MPState)(vn : Name, v : (defined?)) :
       monitor_related_states(mp)(s1, s2) IMPLIES
@@ -75,18 +99,21 @@ BEGIN
         monitor_related_states(mp)(update_PState(s1, update_local(vn, v)), 
                                update_PState(s2, update_local(vn, v)))
 
+  % related states preserved by catching exception
   monitor_related_states_preserved_by_catch : LEMMA % :-)
     FORALL (s1, s2 : MPState) :
       monitor_related_states(mp)(s1, s2) IMPLIES
         monitor_related_states(mp)(update_PState(s1, catch), 
                                update_PState(s2, catch))
 
+  % related states preserved by raising exception
   monitor_related_states_preserved_by_raise : LEMMA % :-)
     FORALL (s1, s2 : MPState, e : Excpt) :
       monitor_related_states(mp)(s1, s2) IMPLIES
         monitor_related_states(mp)(update_PState(s1, raise(e)), 
                                update_PState(s2, raise(e)))
 
+  % related states preserved by update_stack (initialisation of method frame)
   monitor_related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sMP1, sMP2 : MPState,
             this_val : Val, arg :  (getLocalDecls(program(mp))), 
@@ -99,6 +126,7 @@ BEGIN
                                    update_stack(this_val, arg, param_val,
                                                 lvds, sMP2))
 
+  % related states preserved by monitor transition
   monitor_related_astates_preserved_by_on_method_MVA : LEMMA % :-)
     FORALL(s1, s2 : MPState, etype : EventType,
            md : (wf_Method(program(mp))), arg : ValOrExcpt) :
@@ -112,11 +140,13 @@ BEGIN
            astate(on_method_MVA(etype)(complete_MP(mp), md)(arg)(s2)),
            stuck(on_method_MVA(etype)(mp, md)(arg)(s1)))
 
+  % initial states related
   monitor_related_states_initial_MP_states : LEMMA  % :-)
     FORALL (root_object : (defined?)) :
     monitor_related_states(mp)(initial_MP_state(mp)(root_object), 
                            initial_MP_state(complete_MP(mp))(root_object))
 
+  % related states preserved by derive
   monitor_related_states_preserved_by_derive : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (s1a, s1b, s2a, s2b : MPState) 
@@ -127,42 +157,48 @@ BEGIN
         monitor_related_states(mp)(s2a, s2b) AND v1 = v2 
 
 
- monitor_related_states_implies_derive : LEMMA % :-)
-   FORALL (b : (wf_Body(program(mp))), v : Val)
-          (s1a, s1b, s2a : MPState) 
-          (n1 : nat) :
-     monitor_related_states(mp)(s1a, s1b) IMPLIES
-     derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
-     EXISTS (s2b : MPState, n2 : nat) : 
-     derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
-
- monitor_related_states_implies_derive_converse : LEMMA % :-)
-   FORALL (b : (wf_Body(program(mp))), v : Val)
-          (s1a, s1b, s2a : MPState) 
-          (n1 : nat) :
-     monitor_related_states(mp)(s1b, s1a) IMPLIES
-     derive(complete_MP(mp))(b, s1a, v, s2a)(n1) IMPLIES
-     EXISTS (s2b : MPState, n2 : nat) : 
-     derive(mp)(b, s1b, v, s2b)(n2)
+  % related states: if partial monitored program can make derivation
+  % so can completed monitored program
+  monitor_related_states_implies_derive : LEMMA % :-)
+    FORALL (b : (wf_Body(program(mp))), v : Val)
+           (s1a, s1b, s2a : MPState) 
+           (n1 : nat) :
+      monitor_related_states(mp)(s1a, s1b) IMPLIES
+      derive(mp)(b, s1a, v, s2a)(n1) IMPLIES
+        EXISTS (s2b : MPState, n2 : nat) : 
+          derive(complete_MP(mp))(b, s1b, v, s2b)(n2) 
+ 
+  % related states: if completed monitored program can make derivation
+  % so can partial monitored program
+  monitor_related_states_implies_derive_converse : LEMMA % :-)
+    FORALL (b : (wf_Body(program(mp))), v : Val)
+           (s1a, s1b, s2a : MPState) 
+           (n1 : nat) :
+      monitor_related_states(mp)(s1b, s1a) IMPLIES
+      derive(complete_MP(mp))(b, s1a, v, s2a)(n1) IMPLIES
+        EXISTS (s2b : MPState, n2 : nat) : 
+          derive(mp)(b, s1b, v, s2b)(n2)
  
 
- % Correctness of the first step of the translation
- correctness_of_complete_MP : THEOREM % :-)
-   FORALL (main : Name, arg : int)(root_object : (defined?))
-          (s1, s2 : MPState) :
-     run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
-     EXISTS (s2 : MPState) : 
-       run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
-       monitor_related_states(mp)(s1, s2)
+  % Correctness of the first step of the translation
+  % monitor_related_states is witness of bisimulation between
+  % behaviour of partial monitored program and completed monitored program
+  correctness_of_complete_MP : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (s1, s2 : MPState) :
+      run_monitored_program(mp)(main, arg)(root_object)(s1) IMPLIES
+      EXISTS (s2 : MPState) : 
+        run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s2) AND
+        monitor_related_states(mp)(s1, s2)
 
- correctness_of_complete_MP_converse : THEOREM % :-)
-   FORALL (main : Name, arg : int)(root_object : (defined?))
-          (s1, s2 : MPState) :
-     run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s1) 
-     IMPLIES
-     EXISTS (s2 : MPState) : 
-       run_monitored_program(mp)(main, arg)(root_object)(s2) AND
-       monitor_related_states(mp)(s2, s1)
+  correctness_of_complete_MP_converse : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (s1, s2 : MPState) :
+      run_monitored_program(complete_MP(mp))(main, arg)(root_object)(s1) 
+      IMPLIES
+      EXISTS (s2 : MPState) : 
+        run_monitored_program(mp)(main, arg)(root_object)(s2) AND
+        monitor_related_states(mp)(s2, s1)
 
 
 END CompleteMonitor
