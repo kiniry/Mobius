@@ -12,7 +12,7 @@ ENDASSUMING
 
 
 
-  IMPORTING MonitoredProgramCompletessRelation[CP, Name],
+  IMPORTING CompleteMonitor[CP, Name],
             ContainsNoMethodCall[Name],
             WfSetStmts[Name, MonitoredProgram, MPState,
                              LAMBDA(mp : MonitoredProgram) : program(mp),

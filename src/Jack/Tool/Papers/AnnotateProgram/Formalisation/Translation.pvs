@@ -32,7 +32,7 @@ ENDASSUMING
 
   IMPORTING CompleteMonitorProgramPropertiesPreservation[CP, Name],
             AnnotateProgramPropertiesPreservation[CP, Name],
-            MonitoredProgramCompletessRelation[CP, Name],
+            CompleteMonitor[CP, Name],
             CorrectnessAnnProgram[CP, Name],
             CorrectnessInlineProgram[Name]
 

@@ -1,13 +1,14 @@
 \section{Modelling Security Properties with Automata}\label{SecMVA}
 
-This section formally defines our format of security automata. They
-are particularly suited for monitoring, because transitions can depend
-on the state of the monitored program. We call them
-\marginnote{MH: Multi-Variable Automata not very good/catchy name
- AT: What about: Property Automata, Security Automata (or more precisely
- Safety Automata), Pushdown Automata, just Automata or just Property.
- I like Property Automata}
-\emph{Multi-Variable Automata} (MVA). %because their states are defined
+This section formally defines the format of security automata that we
+use. These are particularly suited for monitoring, because transitions
+can depend on the state of the monitored program. We call them
+Property Automata (PA).  
+% \marginnote{MH: Multi-Variable Automata not very good/catchy name
+%  AT: What about: Property Automata, Security Automata (or more precisely
+%  Safety Automata), Pushdown Automata, just Automata or just Property.
+%  I like Property Automata}
+% \emph{Multi-Variable Automata} (MVA). %because their states are defined
 %by a set of variables.
 Transitions between states are labelled with guards, events and a list
 of actions. The event specifies the method whose entry and/or exit is
@@ -23,16 +24,18 @@ the exception with which the method returns, in case the event is
 exceptional method exit.
 \end{inparaenum}
 Each action describes how the automaton state is updated by the transition.
-\marginnote{\small MH: conditions on guards/actions?
- AT: I wouldn't mention them we have the specification for all the details.}
+% \marginnote{\small MH: conditions on guards/actions?
+%  AT: I wouldn't mention them we have the specification for all the details.}
 
-MVA and programs share the definitions of values, types and exceptions, denoted
-\Val, \Type and \Excpt, respectively. They are defined by the following grammar,
-where \(\mathbb{B}\) and \(\mathbb{Z}\) denote the standard sets of booleans
-and integers, respectively\footnote{We will
+Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
+enumerable nonempty sets of control points and names, respectively.
+PA and programs share the definitions of values, types and exceptions,
+denoted \Val, \Type and \Excpt, respectively. They are defined by the
+following grammar, where \(\mathbb{B}\) and \(\mathbb{Z}\) denote the
+standard sets of booleans and integers, respectively\footnote{We will
 use a PVS-like notation to declare abstract data types and records
-(enclosed by \(\opr\) and \(\clr\)). Further, if \(x\) is a
-record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
+(enclosed by \(\opr\) and \(\clr\)). Further, if \(x\) is a record
+with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \textsf{y}, and \(x \opri\mathsf{y} := z\clri\) to denote the record
 \(x\) with the field \textsf{y} updated to \(z\).}.
 \[{\small
@@ -43,23 +46,22 @@ record with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
 \end{array}}
 \]
-Notice that there is a special type \(\Void\), inhabited by \(\One\)
-to model methods without results. Reference values contain a number,
-which can be considered as the location where the object is stored;
+The special type \(\Void\), inhabited by \(\One\), models methods
+without results. Reference values contain a number, which can be
+considered as the location where the object is stored;
 \(\bot\) is used to denote the outcome of an undefined expression.
-Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
-enumerable nonempty sets of control points and names, respectively.
+
 % We assume that \(\Name\) contains the special names \textsf{this}.
 
 
-An MVA consists of
+A PA consists of
 \begin{inparaenum}[(\itshape i\upshape)]
 \item a name,
 \item a class name, to specify which class is being monitored,
 \item a finite set of control points,
 \item an initial control point,
 \item a set of events, to specify which methods are being monitored,
-\item a set of MVA variable declarations, to describe
+\item a set of PA variable declarations, to describe
 the internal state of the automaton
 \item a set of program variable declarations, to specify which
 program variables will be inspected by the monitor, and
@@ -69,13 +71,17 @@ Transitions go from source to target control points. They are labelled
 with events, where an event is a tuple of an event type (entry, exit
 or exceptional exit) and a method name, guards and a list of
 actions. Each action assigns the result of an expression (containing
-both program and MVA variables) to an MVA variable. MVA variables
-declarations are the same as program field declarations (defined
-below), while program variable declarations in the MVA have the same
-format as local variable declarations in a program (\emph{i.e.}, they
-are not explicitly initialised in the monitor, their value is retrieved from
-the program state.). Figure~\ref{FigMVAForm} shows the
-main types of the MVA definition.
+both program and PA variables) to a PA
+variable. Figure~\ref{FigPAForm} shows the main components of the
+formal PA definition.
+
+%  Variables
+% declarations are the same as variable declarations in a program (defined
+% below).
+%  while program variable declarations in the PA have the same
+% format as local variable declarations in a program (\emph{i.e.}, they
+% are not explicitly initialised in the monitor, their value is retrieved from
+% the program state.).
 %% This is already said
 % (the types of \FieldDecl and
 % \LocalVarDecl will also be used in the abstract syntax of programs).
@@ -83,46 +89,45 @@ main types of the MVA definition.
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
-\FieldDecl & = \opr & \type : \Type, \name : \Name, \init : \Val
+\Decl & = \opr & \type : \Type, \name : \Name, \init : \Val
 \clr \\
-\LocalVarDecl & = \opr & \type : \Type, \name : \Name \clr \\
 \EVENT & = \opr & \etype : (\entry \mid \exit \mid \excexit),
                  \mname : \Name \clr\\
-\TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \\
+\TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \action : (\opr \target : \Name, \expr : \Expr \clr)^*, \\
 & &
-\guard : \MVAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \mathbb{B}, \\
-&& \action : (\opr \target : \Name, \expr : \Expr \clr)^* \clr\\
-\MVA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
+\guard : \PAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \mathbb{B}\clr\\
+\PA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
             \init : \CP, \evs : \setof{\EVENT},\\
-     &   &  \vdsA : \setof{\FieldDecl}, \vdsP : \setof{\LocalVarDecl},\\
-     &   &  \trans : \setof{\TRANS} \clr
+     &   &  \vdsA : \setof{\Decl}, \vdsP : \setof{\Decl},
+            \trans : \setof{\TRANS} \clr
 \end{array}}
 \]
-\caption{Formal Definition of MVA}\label{FigMVAForm}
+\caption{Formal Definition of PA}\label{FigPAForm}
 \end{figure}
 
-We require an MVA to be \emph{deterministic}, \emph{i.e.}, for every
+We require a PA to be \emph{deterministic}, \emph{i.e.}, for every
 source control point and event there is always at most one guard that
 holds. Notice that it is not obvious how to transform a
-non-deterministic MVA into a deterministic one, because the actions
-made by the overlapping transitions might be different.
+non-deterministic PA into a deterministic one, because the actions
+made by the overlapping transitions might differ.
 % We believe that this is a realistic restriction, and that most important
-% security properties can be expressed as deterministic MVAs.
+% security properties can be expressed as deterministic PAs.
 
-An MVA is \emph{total} if there is always exactly one guard that holds
+A PA is \emph{total} if there is always a guard that holds
 for a given source control point and event, otherwise it is
-\emph{partial}. Every deterministic MVA can be completed into a total
-one (by function \complete): add a special control state
+\emph{partial}. Every deterministic PA can be completed into a total
+one (by function \complete): add a special control point
 \halted, together with transitions for every control point and every event
-to this \halted control point, where the guard is the negation of the
+to \halted, where the guard is the negation of the
 disjunction of all other guards for this control point and event, and
 in addition, add unconditional transitions from \halted to \halted
 for every possible event.
 
 %\marginnote{MH: Should we give formal definition of \emph{complete}?}
 
-We define a collection of constraints to say that an MVA is
-\emph{wellformed}, such as:
+A PA is
+\emph{wellformed} if\footnote{We only formalise constraints that are
+necessary for our formalisation.}:
 \begin{inparaenum}[(\itshape i\upshape)]
 % \item the monitor variable names do not overlap with the reserved
 % words,
@@ -130,7 +135,7 @@ We define a collection of constraints to say that an MVA is
 \item variable names are unique and are not reserved words,
 \item guards do not have side-effects,
 \item guards and actions only use declared variables, and
-\item control points and events used in transitions are declared.
+\item control points and events  in transitions are declared.
 % \item transitions range between declared control points and are
 % labelled with declared events.
 \end{inparaenum}
@@ -154,22 +159,22 @@ We define a collection of constraints to say that an MVA is
 %\end{array}
 %\]
 
-% \paragraph{MVA Transitions}
-The state of an MVA consists of a current control point, and the store of
+% \paragraph{PA Transitions}
+The state of a PA consists of a current control point, and the store of
 automaton variables (the program store is not part of the automaton state).
 \[{\small
-\MVAstate = \opr \cp : \CP, \stA : \Store \clr}
+\PAstate = \opr \cp : \CP, \stA : \Store \clr}
 \]
-Given an MVA \(a\), the transition function \(\Delta_a\)
-describes how given a program store and an event, \(a\) changes its
-internal state (where \(\chooseop\) is the arbitrary choice operator,
-and \textsf{apply} is a function that updates the automaton store
-according to the list of actions in the obvious way).
+Given PA \(a\), transition function \(\Delta_a\) specifies how an
+automaton state \(\sigma_A\) is update, given program store
+\(\sigma_P\) and event \(e\) (where \(\chooseop\) is the arbitrary
+choice operator, and \textsf{apply} is a function that updates the
+automaton store according to a list of actions in the obvious way).
 \[{\small
 \begin{array}{l}
-\Delta_a  :  \MVAstate \times \Pstate \times \EVENT \times (\Val \mid
+\Delta_a  :  \PAstate \times \Pstate \times \EVENT \times (\Val \mid
 \Excpt) \hookrightarrow
-\MVAstate\\
+\PAstate\\
 \Delta_a(\sigma_A, \sigma_P, e, v) = \\
 \quad
 \begin{array}[t]{l}
@@ -178,24 +183,23 @@ according to the list of actions in the obvious way).
      t.\scp = \sigma_A.\cp \wedge t.\event = e \wedge \\
      t.\guard(\sigma_A.\stA, \sigma_P.\fvs.\st, v)\}) \mathsf{\ in}
   \end{array}\\
-\quad \opri \cp := t.\tcp, \stA := \mathit{apply}(t.\action,
+\quad \opri \cp := t.\tcp, \stA := \mathsf{apply}(t.\action,
 \sigma_A.\stA) \clri
 \end{array}
 
 \end{array}}
 \]
-In a total MVA $a$, the transition function \(\Delta_a\) is total.
+In a total PA $a$, the transition function \(\Delta_a\) is total.
 A partial automaton gets stuck on a certain input if and only if the
-complete MVA reaches the state \halted.
+completed PA reaches the state \halted.
 
-\begin{equation}\label{MVAcompletionProp}
+\begin{equation}\label{PAcompletionProp}
 \Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow
 \cp (\Delta_{\complete(a)}(\sigma_A, \sigma_P, e, v)) = \halted
 \end{equation}
 
 
-\paragraph{Example}
-% The following MVA\footnote{Where \(\actskip\) denotes an empty sequence.}
+% The following PA\footnote{Where \(\actskip\) denotes an empty sequence.}
 % encodes the property described in Figure~\ref{FigExample}.
 % Recall the example security automaton in Figure~\ref{FigExample},
 % expressing that the method \texttt{sendSMS} can
@@ -263,10 +267,13 @@ complete MVA reaches the state \halted.
 % \end{array}
 % }\]
 
-The following MVA\footnote{Where we assume that the default guard is
+\paragraph{Example}
+
+The following PA\footnote{Where we assume that the default guard is
 \(\lambda(\sigma_A, \sigma_P, v). \ttt\) and the default action is
 \(\actskip\), an empty sequence.}
-encodes the property described in Figure~\ref{FigExample}.
+encodes the property described in Figure~\ref{FigExample}, while Figure~\ref{FigCompletePA} shows the completed PA.
+
 \[
 \small{
 \hspace{-0.3em}
@@ -324,8 +331,9 @@ encodes the property described in Figure~\ref{FigExample}.
 % from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
 % \exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
 % all events and with guard \ttt.
-% TODO AT: I get a reference to Figure 2 instead of 3.
-Figure~\ref{FigCompleteMVA} shows the completed MVA.
+% TODO AT: I get a reference to Figure 2 instead of 3. Moved label
+
+\begin{figure}[t]
 
 \psfrag{s1}{\tiny{\(s_1\)}}
 \psfrag{s2}{\tiny{\(s_2\)}}
@@ -362,10 +370,11 @@ Figure~\ref{FigCompleteMVA} shows the completed MVA.
 \(\rightarrow\)\actskip}}
 \psfrag{halted}{\tiny{\halted}}
 
-\begin{figure}[t]
 \begin{center}
-\epsfig{file=completed_alt.eps, width=8cm}
+\epsfig{file=completed_alt.eps, width=7cm}
 \end{center}
-\label{FigCompleteMVA}
-\caption{Automaton of Figure~\ref{FigExample}, after completion}
+\caption{Automaton of Figure~\ref{FigExample}, after completion}\label{FigCompletePA}
+
 \end{figure}
+
+

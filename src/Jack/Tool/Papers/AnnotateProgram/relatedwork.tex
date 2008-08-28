@@ -2,34 +2,35 @@
 % Discuss briefly the work by Schneider "Enforceable security policies" and its
 % follow up by Ligatti. Talk about it language to specify security properties.
 
-In~\cite{Aktug07} Aktug and Naliuka present ConSpec, a language for security
-policy specification.
-The ConSpec automaton is similar to our MVA, in particular it
-has guarded transitions with actions that can be executed at the entry or exit
-(exceptional) of methods. Although they give a formal semantics for a ConSpec
-automaton that may allow the user to reason about the property being enforced,
-the inlining of the monitor and it correctness are stated informally.
-\marginnote{AT: I later found the paper Provably Correct Runtime Monitoring where
-they are much more formal, but since you work with Gurov, it may be easier for
-you to write about it.}
+Security automata, as introduced by Schneider~\cite{Schneider99}, are
+widely used for monitoring security properties. The originality of our
+work lies in considering them as specifications, with the ultimate
+goal of static verification. 
 
-Cheon and Perumandla propose and extension to JML to specify the allowed
-sequences of methods calls in a regular expression-like notation~\cite{Cheon07}.
-These specifications are succinct, however, many interesting
-security properties cannot be expressed with this formalism. Even our simple
-example is out of their scope, because it contains a counter used
-only by the specification.
+Closely related to our approach is work by Aktug \emph{et
+al.}~\cite{Aktug07,AktugDG08}. They define a formal language for
+security policy specifications, ConSpec, that is similar to our
+PA. They prove that a monitor can be inlined into the program text,
+\emph{i.e.}, the run-time checks can be merged into the program. This
+allows to run the program in isolation, with runtime checking of the
+security policy enabled. In contrast, we transform the monitor into a
+specification of the program, and eventually we want to prove
+adherence to the specification statically.
 
-There are tools that translate properties specified in some format to JML
-annotations.
-One of them is F2J, a tool~\cite{Hubbers03} developed by Hubbers \emph{et al.},
-which translates finite state machine specifications into JML annotations and
-can also generate a code skeleton for a smart card applet.
-Another one is JAG~\cite{Giorgetti06} by Giorgetti and Groslambert, whose input
-are properties specified in (a subset of) temporal logic.
-The main distinction of these formalisms and ours is that they do not distinguish
-between method entry and exit, thus the translation approach is different.
-Moreover, none of these works have proved correctness of their translation
-algorithms.
+Cheon and Perumandla propose an extension to JML to specify allowed
+sequences of methods calls in a regular expression-like
+notation~\cite{Cheon07}.  This results in succint specifications, but
+of limited expressiveness. Even our simple example is out of their
+scope, because it contains a counter used only by the
+specification. Further, they only target runtime verification. 
+
+Several tools exist that translate temporal properties into JML
+annotations: F2J ~\cite{Hubbers03} translates finite state machine
+specifications into JML annotations and can also generate a code
+skeleton for a smart card applet; JAG~\cite{Giorgetti06} translates
+properties in (a subset of) temporal logic, including liveness
+properties.  However, they typically do not distinguish between method
+entry and exit, and moreover, correctness of the translation algorithm
+has not been proven.
 
 %Use of Aspects to do monitoring?

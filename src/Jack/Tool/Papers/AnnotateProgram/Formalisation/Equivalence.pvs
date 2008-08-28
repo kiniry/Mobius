@@ -77,7 +77,7 @@ BEGIN
           FORALL(arg : ValOrExcpt) :
           wf_Expr(ann_program(mp))(e(arg)) AND
           derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
-          (guard(t)(stA(sMVA), st(pstate(sAP)), arg) = (v = Bool(TRUE)))
+          (guard(t)(stA(sMVA), fvs(st(pstate(sAP))), arg) = (v = Bool(TRUE)))
 
   % It is possible to evaluate expressions appearing in actions (they 
   % terminate) and they are side-effect-free. Note that the evaluation 
@@ -90,7 +90,7 @@ BEGIN
       wf_AState(mva(mp))(sMVA) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
-        (eval(e)(stA(sMVA), st(pstate(sAP))) = v) =
+        (eval(e)(stA(sMVA), fvs(st(pstate(sAP)))) = v) =
         EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n)
 
   actions_have_no_side_effects(mp) : boolean =
@@ -218,11 +218,11 @@ BEGIN
   related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState,
             this_val : Val, arg :  (getLocalDecls(program(mp))), 
-            param_val : Val, lvds : finite_set[LocalVarDecl]) :
+            param_val : Val, lvds : finite_set[Decl]) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT cp(astate(sMP)) = halted IMPLIES
-      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
-                                   getLocalDecls(program(mp))(l)) IMPLIES
+      (FORALL (l : Decl) : lvds(l) IMPLIES 
+                           getLocalDecls(program(mp))(l)) IMPLIES
         related_states(mp)(update_stack(this_val, arg, param_val,
                                         lvds, sMP),
                            update_stack(this_val, arg, param_val,

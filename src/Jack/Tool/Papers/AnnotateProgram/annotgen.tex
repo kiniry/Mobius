@@ -1,13 +1,13 @@
 \section{Annotation Generation}\label{SecAnnotGen}
 
-Given a security property encoded as an MVA, the annotation generation
+Given a security property encoded as a PA, the annotation generation
 procedure generates JML-annotations that capture this property,
 \emph{i.e.}, the program does not violate the generated annotations
 if and only if it respects the encoded property.
-% security property encoded by the MVA.
+% security property encoded by the PA.
 As explained above, the procedure is defined in several steps:
 \begin{inparaenum}[(\itshape i\upshape)]
-\item the monitor is completed; %(as described in Section~\ref{SecMVA});
+\item the monitor is completed; %(as described in Section~\ref{SecPA});
 \item the annotations are generated at the method specification level,
 as special set-annotations; and
 \item the method specification-level set-annotations are inlined in
@@ -39,16 +39,15 @@ are related by \(R\), and from this we can conclude that for any
 reachable state of the monitored program, there exists a related state,
 reachable in the translated program.
 
-\marginnote{This is specific of the second step, not general.}
-A natural way to prove this is by induction over the derivation length.
-To be able to apply induction, we typically require that the body \(b\) does
-not contain new variables. However, the translation introduces new (ghost)
-variables to encode the MVA, at specific points in the program. For
-these points, separate preservation lemmas have to be proven.
-Further, to be able to complete the proof, we need to ensure that in both
-bodies the same branches of conditional expressions and statements are
-taken, and that the same values get assigned to the store. Therefore,
-we prove a stronger result, adding that also the values  %resulting values
+A natural way to prove this is by induction over the derivation
+length.  However, induction can only be applied when the body is
+unchanged. Since the translation introduces new (ghost) variables to
+encode the PA, this is not always the case. For these cases, separate
+preservation lemmas have to be proven.  Further, to be able to
+complete the proof, we need to ensure that in both bodies the same
+branches of conditional expressions and statements are taken, and that
+the same values get assigned to the store. Therefore, we prove a
+stronger result, adding that also the values %resulting values
 \(v_1\) and \(v_2\) are the same (however, sometimes this holds only
 under certain conditions).
 
@@ -61,55 +60,54 @@ under certain conditions).
 %\begin{center}
 %\epsfig{file=annotgen_example, width=4cm}
 %\end{center}
-%\caption{MVA fragment to illustrate set-annotation
+%\caption{PA fragment to illustrate set-annotation
 %generation}\label{FigAnnotGenExample}
 
 %\end{figure}
 
 \paragraph{Completion of the automaton}
 The first translation step does not change the program itself, it only
-completes the MVA. Suppose that \(P\) is a monitored program, where
-\(\mva(P)\) is deterministic and wellformed. Then the translation to a
-monitored program with a total MVA, \(\alpha_1(P)\), is defined as:
+completes the PA. Suppose that \(P\) is a monitored program, where
+\(\pa(P)\) is deterministic and wellformed. Then the translation to a
+monitored program with a total PA, \(\alpha_1(P)\), is defined as:
 % This is complete_MP in MonitoredProgramCompletessRelation
 \[{\small
-\alpha_1(P) = \opri \mva := \complete(P.\mva), \program := P.\program
+\alpha_1(P) = \opri \pa := \complete(P.\pa), \program := P.\program
 \clri
 }
 \]
 
 The relation that is preserved between executions of \(P\) and
 %% This is monitor_related_states
-\marginnote{Should we add the condition on ghost variables?}
 \(\alpha_1(P)\) is the following (where \(\sigma\) is a state of
 \(P\) and \(\tau\) is a state of \(\alpha_1(P)\)):
 \[{\small
 R(\sigma, \tau) =\\
  \begin{array}[t]{l}
-  (\pif {\sigma.\stuck}{\tau.\mvastate.\cp = \halted\\\ }
-        {\sigma.\mvastate.\cp = \tau.\mvastate.\cp}) \:\wedge
+  (\pif {\sigma.\stuck}{\tau.\pastate.\cp = \halted\\\ }
+        {\sigma.\pastate.\cp = \tau.\pastate.\cp}) \:\wedge
   \neg \tau.\stuck \:\wedge\\
-  (\sigma.\mvastate.\stA = \tau.\mvastate.\stA) \:\wedge
-  (\sigma.\progstate = \tau.\progstate)
+  (\sigma.\pastate.\stA = \tau.\pastate.\stA) \:\wedge\\
+  (\sigma.\pstate = \tau.\pstate) \:\wedge\: (\sigma.\gvs = \tau.\gvs)
 \end{array}}
 \]
 
 To prove that this relation is preserved for any body \(b\), we make
-use of equivalence (\ref{MVAcompletionProp}) on
-Page~\pageref{MVAcompletionProp} and we observe further that
+use of equivalence (\ref{PAcompletionProp}) on
+Page~\pageref{PAcompletionProp} and we observe further that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item if \stuck has been set, it remains set,
-\item if the MVA is total and \halted is reached, it is never left, and
-\item if the MVA is total, \stuck is never set.
+\item if the PA is total and \halted is reached, it is never left, and
+\item if the PA is total, \stuck is never set.
 \end{inparaenum} Formally, where \(P\) is a monitored program, and
-\(Q\) is a monitored program with total MVA:
+\(Q\) is a monitored program with total PA:
 \[{\small
 \begin{array}[t]{rl}
 \sigma_1.\stuck \wedge \etp{P}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \sigma_2.\stuck \\
-\sigma_1.\mvastate.\cp = \halted \wedge
+\sigma_1.\pastate.\cp = \halted \wedge
 \etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
-\sigma_2.\mvastate.\cp = \halted \\
+\sigma_2.\pastate.\cp = \halted \\
 \neg \sigma_1.\stuck \wedge \etp{Q}{b,\sigma_1}{v,\sigma_2} \Rightarrow &
 \neg \sigma_2.\stuck
 \end{array}}
@@ -118,22 +116,33 @@ Page~\pageref{MVAcompletionProp} and we observe further that
 %% Rephrased
 % For our running example, applying translation \(\alpha_1\) means that
 % where class \texttt{Messaging} as shown above was first monitored
-% with the partial MVA in Figure~\ref{FigExample}, after the translation
-% it is monitored with the total MVA in Figure~\ref{FigCompleteMVA}.
-For our running example, applying the translation \(\alpha_1\) means that
-the class \texttt{Messaging} instead of being monitored by the partial MVA
-in Figure~\ref{FigExample}, it is monitored by the total MVA in
-Figure~\ref{FigCompleteMVA}.
-% TODO AT: for some reason I get Fig 2 here instead of Fig 3.
+% with the partial PA in Figure~\ref{FigExample}, after the translation
+% it is monitored with the total PA in Figure~\ref{FigCompletePA}.
 
+To illustrate how the annotation generation algorithm 
+works on the LimitSMS automaton in Figure~\ref{FigExample}, assume
+we have declared a class \texttt{Messaging}, containing the
+methods used by the automaton, plus a method \texttt{receiveSMS}.
+Applying translation \(\alpha_1\) means that this class, instead of
+being monitored by the partial PA in Figure~\ref{FigExample}, is
+monitored by the total PA in Figure~\ref{FigCompletePA}.
 
-\paragraph{From MVA to Annotations}
+% a field \texttt{counter}. 
+% {\small\begin{verbatim}
+% class Messaging {
+%   int counter;
+%   void sendSMS(){/* body of sendSMS */}
+%   void receiveSMS(){/* body of receiveSMS */}
+%   void reset() {/* body of reset */} }
+% \end{verbatim}}
+
+\paragraph{From PA to Annotations}
 
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
 \alpha_2(P) & = &\opri \classes :=
-\{\alpha_{2, \mathcal{C}}(c, P.\mva) \mid c \in P.\program.\classes\} \clri\\
+\{\alpha_{2, \mathcal{C}}(c, P.\pa) \mid c \in P.\program.\classes\} \clri\\
 
 \alpha_{2,\mathcal{C}}(c, a) & = &
 \mathsf{if\ }c.\name \not = a.\clname \mathsf{\ then\ }c\\
@@ -171,33 +180,33 @@ Figure~\ref{FigCompleteMVA}.
     \end{array}
 \end{array}}
 \]
-\caption{Formal definition of translation MVA into annotations}
-\label{FigMVAtoAnnot}
+\caption{Formal definition of translation PA into annotations}
+\label{FigPAtoAnnot}
 \end{figure}
 
 
-Figure~\ref{FigMVAtoAnnot} contains the formal definition of the
-second translation step: from MVA to method-level set-annotations.
-Given a monitored program \(P\) where \(\mva(P)\) is total,
+Figure~\ref{FigPAtoAnnot} contains the formal definition of the
+second translation step: from PA to method-level set-annotations.
+Given a monitored program \(P\) where \(\pa(P)\) is total,
 the annotation generation algorithm \(\alpha_2\) applies
 \(\alpha_{2, \mathcal{C}}\) to all classes.
 This function checks whether the class is the one being
 monitored. If so, appropriate ghost variables are added to the class
 using the function \newgvs, that is not formally defined here. Basically
 \begin{inparaenum}[(\itshape i\upshape)]
-\item for each control point of the automaton, a (final) ghost
-variable declaration is generated, initialised to a unique value
+\item for each control point \(q\) of the automaton, a (final) ghost
+variable declaration \texttt{q} is generated, initialised to a unique value
 (\emph{i.e.}, we assume we have a function \unique that maps each
 control point to a unique value);
 \item a ghost variable \texttt{cp} is declared, initialised to the
-value of the ghost variable representing the initial control point;
+value of the ghost variable representing the initial control point; and
 \item for each automaton variable declaration, a ghost variable is
-declared with corresponding type and initialisation.
+declared with corresponding name, type and initialisation.
 \end{inparaenum}
 Further, \(\alpha_{2, \mathcal{C}}\) adds to the class invariant
 the condition that the current control point should not be
 halted\footnote{For readability, we do not explicitly write the
-translation from MVA control points to ghost variables.}, and then it
+translation from PA control points to ghost variables.}, and then it
 annotates all methods in the class using \(\alpha_{2,
 \mathcal{M}}\). For each method in the class, its \preset, \postset
 and \excset are extended with updates to the ghost variables encoding
@@ -218,7 +227,7 @@ the guard holds, and if so, setting the control point \texttt{cp} to
 \(t.\tcp\), and executing the actions that correspond to this
 transition.
 Notice that the order in which the different cases are generated is
-not important: since the MVA is total and deterministic there is
+not important: since the PA is total and deterministic there is
 always exactly one case that applies.
 
 % Commented out to save space
@@ -228,13 +237,13 @@ always exactly one case that applies.
 % this is correctly handled.
 
 The formalisation does not say how guards and actions are
-translated. Instead, we assume that we can translate them
+translated. Instead, we simply assume that we can translate them
 into expressions in the programming language that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item are wellformed,
 \item give the same result,
 \item do not have side-effects,
-\item do not throw exceptions,
+\item do not throw exceptions, and
 \item do not contain method calls.
 \end{inparaenum}
 From this we can conclude that in the annotated program, the generated
@@ -246,43 +255,40 @@ To show correctness of the translation, we show that the following
 relation is preserved (where \(P\) is the monitored program,
 \(\sigma\) is a state of the monitored program, and \(\tau\) a state
 of the annotated program):
-\marginnote{Is it OK to have both $\pstate$ and $\progstate$?}
-% TODO: Review this definition
 \[{\small
 \begin{array}{rcl}
 % This is related_states
 R(\sigma, \tau) & = & \neg \sigma.\stuck \:\wedge\\
 & & \begin{array}[t]{l}
-\mathsf{if\ }\sigma.\mvastate.\cp = \halted
+\mathsf{if\ }\sigma.\pastate.\cp = \halted
 \mathsf{\ then\ }\tau.\pstate.\ex = \JMLExc
 \mathsf{\ else\ }S(\sigma, \tau)
 \end{array}\\
-% This is mp_modeled?
+% This is mp_modeled
 S(\sigma, \tau) & = &
 \begin{array}[t]{l}
-\unique(\sigma.\mvastate.\cp) = \tau.\pstate.\gvs(\texttt{cp}) \:\wedge\\
-(\forall q \in P.\mva.\cps.\ \unique(q) =
-\tau.\pstate.\gvs(\texttt{q})) \:\wedge\\
-(\forall n \in P.\mva.\vdsA.\ \sigma.\mvastate(n.\name) =
-                             \tau.\pstate.\gvs(\texttt{n})) \:\wedge\\
-\sigma.\progstate.\pstate = \tau.\progstate.\pstate \:\wedge\\
-(\forall n \in P.\ghostvars.\ \sigma.\progstate.\gvs(n) =
-\tau.\progstate.\gvs(n))
+(\unique(\sigma.\pastate.\cp) = \tau.\gvs(\texttt{cp})) \:\wedge\\
+\forall q \in P.\pa.\cps.\ (\unique(q) = \tau.\gvs(\texttt{q})) \:\wedge\\
+\forall n \in \Name. (\sigma.\pastate(n) \not= \perp \Rightarrow
+\sigma.\pastate(n) = \tau.\gvs(n)) \:\wedge\\
+\sigma.\pstate = \tau.\pstate \:\wedge\\
+\forall n \in \Name. (\sigma.\gvs(n) \not= \perp \Rightarrow
+\sigma.\gvs(n) = \tau.\gvs(n))
 \end{array}
 \end{array}}
 \]
-It specifies that if the monitor has reached a \halted
-control point, then the annotated program must have thrown a
+This relation specifies that if the monitor has reached a \halted
+control point, the annotated program must have thrown a
 \JMLExc. Otherwise, the state of the annotated program must correctly
-model the MVA, \emph{i.e.}\ the current control point is stored in the
-ghost variable \texttt{cp}, and all the MVA control points and
-variables correspond to ghost variables. Moreover, the values of the
-fields have to coincide, just as the values of the ghost variables
-that are declared in the program of \(P\). Notice that if an
-annotation that is already present in \(P\) throws a \JMLExc,
-both the monitored and the annotated program will throw a \JMLExc.
-Therefore, we cannot prove that the annotated program throws
-a \JMLExc \emph{if and only if} \halted is reached.
+model the PA, \emph{i.e.}\ the current control point is stored in the
+ghost variable \texttt{cp}, and all PA control points and variables
+correspond to ghost variables. Moreover, the program states (fields,
+local variables and exceptions) have to coincide, just as the values
+of the ghost variables that are declared in the original program
+\(P\). Notice that if an annotation already present in \(P\)
+causes a \JMLExc, both the monitored and the annotated program will
+throw thi \JMLExc.  Therefore, we cannot prove that the annotated
+program throws a \JMLExc \emph{if and only if} \halted is reached.
 
 To prove that this relation is a preserved, the property is
 strengthened with the following property: if the control point is not
@@ -295,7 +301,7 @@ a simple induction allows to conclude that after evaluation of the
 precondition, the states are still related. Then the original \preset
 annotations are evaluated, and again the induction hypothesis allows to
 conclude that the resulting states are related. Next, the monitored
-program makes an MVA transition, and the annotated program executes
+program makes a PA transition, and the annotated program executes
 the newly generated set annotations, followed by an \Assert to check
 whether \halted has been reached. Here we cannot use the induction
 hypothesis, but instead we show manually that the relation is
@@ -326,7 +332,7 @@ should also terminate exceptionally because of a \JMLExc.
 
 %The exact
 %algorithm is best illustrated with an example. Suppose that we have
-%the MVA displayed in Figure~\ref{FigAnnotGenExample}, where \texttt{x}
+%the PA displayed in Figure~\ref{FigAnnotGenExample}, where \texttt{x}
 %is supposed to be an automaton variable. It has three transitions
 %labelled \(\opri \etype := \entry,
 %\mname := m\clri\) for some method \(m\). The \preset annotation
@@ -334,7 +340,7 @@ should also terminate exceptionally because of a \JMLExc.
 %first branch tests whether \texttt{cp} has the value of the ghost
 %variable representing control point \(c\) and \(p\) holds, the second
 %tests whether we are in \(c\) and \(\neg p\) holds \emph{etc.}. Notice
-%that the guards are now legal JML expressions, as all MVA variables
+%that the guards are now legal JML expressions, as all PA variables
 %have been mapped into ghost variable declarations. In the first branch
 %\texttt{cp} is set to the ghost variable representing
 %\(c''\), and the ghost variable \texttt{x} is set to 3. In the second
@@ -343,28 +349,26 @@ should also terminate exceptionally because of a \JMLExc.
 %\(c'''\) and \texttt{x} is not changed.
 
 To illustrate the translation on our running example, consider again
-the implementation of the class \texttt{Messaging} and the completed
-MVA, encoding the \emph{limited SMS} security policy, in
-% TODO AT: again here I get Figure 2
-Figure~\ref{FigCompleteMVA}. Figure~\ref{FigExampleStep2} shows the
+class \texttt{Messaging} and the completed
+PA, encoding the \emph{limited SMS} security policy, in
+Figure~\ref{FigCompletePA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
-\(\alpha_2\) on this program and this MVA.
-\marginnote{AT: To be strict, in the \preset we add an \Assert}
-Notice that for methods
+\(\alpha_2\) on this program and this PA. Notice that for methods 
 and events that are not involved in the property, an empty \CaseJML is
-generated~--~this is equivalent to an \Skip statement.
+generated~--~this is equivalent to an
+\Skip statement.
 
 \begin{figure}[t]
 {\small\begin{verbatim}
 class Messaging {
-  //@ static final ghost int halted = 0, s1 = 1, s2 = 2, N = 5;
-  int counter; //@ ghost int cp = s1, n = 0;
+  //@ ghost int halted = 0, s1 = 1, s2 = 2, N = 5, cp = s1, n = 0;
   //@ public invariant cp != halted;
 
   /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
                                             (n >= N, cp = halted)]),
                         (cp == s2, CaseSet [(true, cp = halted)]),
                         (cp == halted, CaseSet [(true, cp = halted)])];
+               Assert cp != halted;
       post_set CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
                         (cp == s2, CaseSet [(true, cp = s1; n = n + 1)]),
                         (cp == halted, CaseSet [(true, cp = halted)])];
@@ -373,16 +377,15 @@ class Messaging {
                         (cp == halted, CaseSet [(true, cp = halted)])]; @*/
   void sendSMS(){ /* body sendSMS */}
 
-  /*@ pre_set  CaseSet []; post_set CaseSet []; exc_set  CaseSet []; @*/
+  /*@ pre_set  CaseSet []; Assert cp != halted; 
+      post_set CaseSet []; exc_set  CaseSet []; @*/
   void receiveSMS(){ /* body receiveSMS */}
 
-  /*@ pre_set  CaseSet []; exc_set CaseSet [];
+  /*@ pre_set  CaseSet []; Assert cp != halted; exc_set CaseSet [];
       post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1)]),
                         (cp == s2, CaseSet [(true, cp = halted)]),
                         (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-  void reset() { /* body reset */}
-}
-\end{verbatim}}
+  void reset() { /* body reset */}}\end{verbatim}}
 \caption{Set annotations generated for class Messaging}\label{FigExampleStep2}
 \end{figure}
 
@@ -391,7 +394,7 @@ class Messaging {
 \paragraph{Inlining the Annotations}
 
 Once the set-annotations at method specification level are generated,
-the next step is to inline these into the method bodies.  The main
+the next step is to inline them into the method bodies.  The main
 idea is that to ensure that the appropriate set-statements are
 executed at the end of the method body, the body is wrapped in a
 \TryCatch statement. The translation \(\alpha_3\) applies
@@ -400,18 +403,18 @@ executed at the end of the method body, the body is wrapped in a
 generates one new local variable\footnote{In fact, this should be a
 local \emph{ghost} variable, but as these are not yet supported by our
 formalisation, we formalise it as a standard local variable.}
-\resl. The body of the method is changed as follows: first \preset is
-executed. Then the body of the method is wrapped in two \TryCatch
-statements, to catch \Throwable and \NullPointer
-exceptions\footnote{For simplicity, we do not model the exception
-hierarchy and thus \TryCatch can only catch a single exception, but in
-practice only one \emph{try-catch-finally} block would be needed.}.  After
-the body is executed (inside the \emph{try} block) the result
+\resl. The body of the method is changed as follows: 
+all code is wrapped in two \TryCatch statements, to catch \Throwable
+and \NullPointer exceptions\footnote{For simplicity, we do not model
+the exception hierarchy and thus \TryCatch can only catch a single
+exception, but in practice only one \emph{try-catch-finally} block
+would be needed.}. In the \emph{try|} block, first \preset is
+executed, followed by the body of the method. Then the result
 expression from the original body is evaluated, and assigned to
-\resl. Next, the \postset instruction is executed. Notice that these
+\resl. Next, the \postset instruction is executed. Notice that the latter
 are only executed if the body actually terminates normally, otherwise
 the exception will simply be propagated. Finally, in the \emph{catch}
-clauses, the \excset is executed. The result expression of the method
+clauses, the \excset is executed. The new result expression of the method
 is the look up of the variable \resl. To conclude, \preset,
 \postset and
 \excset in the method specification are set to

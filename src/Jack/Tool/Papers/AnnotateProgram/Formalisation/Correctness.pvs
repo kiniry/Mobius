@@ -45,7 +45,7 @@ BEGIN
       derive(ann_program(mp))(ann_action(a), sAP1, Unit, sAP2)(n) IMPLIES
       sMP2 = (# astate := (# cp := cp(astate(sMP1)),
                              stA := execute_action(a)(stA(astate(sMP1)),
-                                                          st(pstate(sMP1)))
+                                                          fvs(st(pstate(sMP1))))
                            #),
                 stuck := stuck(sMP1),    % CHECK!!
                 pstate := pstate(sMP1),
@@ -64,7 +64,7 @@ BEGIN
       ts(mva(mp))(t) IMPLIES
       sMP2 = (# astate := (# cp := tcp(t),
                              stA := execute_action(action(t))(stA(astate(sMP1)),
-                                                              st(pstate(sMP1)))
+                                                              fvs(st(pstate(sMP1))))
                            #),
                 stuck := stuck(sMP1), % CHECK!!
                 pstate := pstate(sMP1),
@@ -439,7 +439,7 @@ BEGIN
                                           (m: below(k)):
                                      derive(p)(b, sigma1, v, sigma2)(m))
             AND derive(mp)(body(md1), tauMP4, x1, tauMP5)(m41)
-            AND x1 = Semantics.return_of_stmt(tauMP5)
+            AND x1 = return_of_stmt(tauMP5)
             AND derive(mp)(res(md1), tauMP5, w1, tauMP6)(m51)
             AND IF bottom?(ex(pstate(tauMP6))) 
                   THEN defined?(w1) AND
@@ -527,7 +527,7 @@ BEGIN
                                        (m: below(k)):
                                   derive(p)(b, sigma1, v, sigma2)(m))
             AND derive(ann_program(mp))(body(md2), tauAP4, x2, tauAP5)(m42)
-            AND x2 = Semantics.return_of_stmt(tauAP5)
+            AND x2 = return_of_stmt(tauAP5)
             AND derive(ann_program(mp))(res(md2), tauAP5, w2, tauAP6)(m52)
             AND IF bottom?(ex(pstate(tauAP6))) 
                   THEN defined?(w2) AND

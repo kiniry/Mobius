@@ -26,7 +26,8 @@ BEGIN
                        execute_CaseJML,
                        on_method_entry,
                        on_method_exit_normal,
-                       on_method_exit_exceptional]
+                       on_method_exit_exceptional],
+            ContainsNoMethodCall[Name]
 
   p : VAR ({p : Program | wf_set_stmts(p) AND 
                           contains_no_method_call_in_sets_in_program(p)})

@@ -4,8 +4,8 @@
 programme of the European Commission, under the IST-2005-015905
 \textsf{Mobius} project.}}
 
-\author{Marieke Huisman\inst{1} \and Alejandro Tamalet\inst{2}\thanks{Research done while at INRIA Sophia Antipolis}}
-\institute{INRIA Sophia Antipolis, France \and
+\author{Marieke Huisman\inst{1}\thanks{Research done while at INRIA Sophia Antipolis} \and Alejandro Tamalet\inst{2}\thanks{Research done while at INRIA Sophia Antipolis}}
+\institute{University of Twente, Netherlands \and
 University of Nijmegen, Netherlands}
 
 
@@ -25,15 +25,19 @@ University of Nijmegen, Netherlands}
 \maketitle
 \begin{abstract}
 Security automata are a convenient way to describe security
-policies. They are often used to monitor an application, and to
-interrupt execution as soon the security policy is violated. However,
-run-time adherence checking is not always convenient.
-Therefore, we consider the security automata as specification only,
-\marginnote{AT: We don't verify adherence statically yet.}
+policies. Their typical use is to monitor the execution of an
+application, and to interrupt this as soon as the security policy is
+violated. However, run-time adherence checking is not always
+convenient. Instead, we aim at developing a technique to verify
+adherence to a security policy statically.  To do this, we consider
+the security automata as specification, and we generate JML
+annotations that inline the monitor~--~as a specification~--~into the
+application.
+%\marginnote{AT: We don't verify adherence statically yet.}
 % and verify adherence to it statically. We achieve this by generation
 % of JML annotations that inline the monitor into the application.
-and try to verify adherence to it statically. We want to achieve this by
-generation of JML annotations that inline the monitor into the application.
+%  We want to achieve this by
+% generation of JML annotations 
 
 % This paper describes the translation from security automata to program
 % annotations, and proves that every translation step preserves the
@@ -46,10 +50,9 @@ generation of JML annotations that inline the monitor into the application.
 % that earlier existing annotations are not violated either).
 %
 This paper describes the translation from security automata to program
-annotations and proves preservation of program behaviour, which
-boils down to a proof
-that monitoring will not find a security violation iff run-time
-checking the generated annotations will not find any violation.
+annotations and proves preservation of program behaviour. This boils
+down to a proof that monitoring will not reveal a security violation
+iff the generated annotations are respected.
 
 %
 % AT: This is future work.
@@ -63,8 +66,8 @@ checking the generated annotations will not find any violation.
 % revealed several subtleties that have to be considered in the
 % definition of the algorithm and the program behaviour.
 The correctness proofs are formalised using the PVS theorem prover.
-They reveal several subtleties to be considered in the definition of the
-algorithm and in the program requirements.
+This reveals several subtleties to be considered in the definition of the
+translation algorithm and in the program requirements.
 \end{abstract}
 
 

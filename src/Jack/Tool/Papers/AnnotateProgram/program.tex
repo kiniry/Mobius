@@ -36,6 +36,22 @@ differently upon method call and exit.
 %\end{array}
 %\]
 
+\subsection{Program Syntax}\label{SecSyntax}
+
+\marginnote{Should we discuss consequences of restrictions? Probably no space}
+Our language is a restricted subset of (sequential) Java, abstracting
+away from typical object-oriented features. This means in particular
+that we abstract away from method resolution; instead we assume that
+the annotated class contains method bodies for the relevant methods,
+thus method lookup is trivial. Similarly, we assume that lookup of the
+class invariant returns the complete class invariant, including those
+invariants that are inherited from superclasses. Moreover, we consider
+only a few exceptions, and assume that methods have only one
+parameter. We believe, however, that our formalisation contains all
+constructs that are relevant for proving correctness of our approach,
+and that implementing the algorithm for the full language is mainly an
+engineering issue (see Section~\ref{SecConcl}).
+
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
@@ -90,25 +106,11 @@ differently upon method call and exit.
 \caption{Abstract Syntax for Programs}\label{FigProgram}
 \end{figure}
 
-\subsection{Program Syntax}\label{SecSyntax}
-
-Our language is a restricted subset of (sequential) Java, abstracting
-away from typical object-oriented features. This means in particular
-that we abstract away from method resolution; instead we assume that
-the annotated class contains method bodies for the relevant methods,
-thus method lookup is trivial. Similarly, we assume that lookup of the
-class invariant returns the complete class invariant, including those
-invariants that are inherited from superclasses. Moreover, we consider
-only a few exceptions, and assume that methods have only one
-parameter. We believe, however, that our formalisation contains all
-constructs that are relevant for proving correctness of our approach,
-and that implementing the algorithm for the full language is mainly an
-engineering issue (see Section~\ref{SecConcl}).
 
 Figure~\ref{FigExprStmt} defines expressions and statements as a
 mutually recursive data type (we use the term \emph{body} to denote
-either an expression or a statement). Notice that we have some special
-language constructs that are used to represent JML annotations: \Set,
+either an expression or a statement). Notice that we define several special
+language constructs to represent JML annotations: \Set,
 to update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
 and \Assert, to evaluate a condition on the program state. A standard
@@ -131,10 +133,11 @@ algorithm, we define special annotations called
 the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively.
 Pre- and postcondition and the different method specification-level set
-annotations are functions to allow the use of the method parameter,
-the method result and the possible return exception\footnote{Notice
-that the type of \pre, \post, \preset and \postset could be made more specific:
-the first expression argument is a side-effect free expression.}.
+annotations have a function type, to allow the use of the method parameter,
+the method result or the returned exception, respectively. 
+% \footnote{Notice
+% that the type of \pre, \post, \preset and \postset could be made more specific:
+% the first expression argument is a side-effect free expression.}.
 % The semantics will apply them appropriately.
 
 A program is said to be \emph{wellformed} if
@@ -146,8 +149,8 @@ disjoint and are not reserved words;
 \item every variable name that is used is declared; and
 \item only ghost variables are the target of \Set statements.
 \end{inparaenum}
-We have stated only the wellformedness conditions necessary to our
-correctness proofs.
+(We have stated only the wellformedness conditions necessary for our
+correctness proofs.)
 
 \subsection{Natural Semantics}\label{SecSemantics}
 The behaviour of a program is described via a big step semantics. We
@@ -187,31 +190,35 @@ contain more information than unannotated programs, the
 evaluation rules are parametrised with types
 \(\FullProgram\) and \(\FullState\). For each instantiation we give
 mappings \program and \progstate to the basic program type \Program
-and the basic program state \Pstate.
+and the basic program state \Pstate. Further, we add parameters that
+specify the actions that are taken upon method entry or (normal or
+exceptional) exit (\gammain, \gammanorm, and \gammaexc, respectively),
+and the handling of annotations (\deltaset, \deltaassert, and
+\deltacase).  In a standard program semantics, where specifications
+are ignored, these are all instantiated with the identity relation.
 
-The evaluation rules are fairly standard, therefore we refer to Von
-Oheimb and the PVS formalisation for more details.
-Figure~\ref{FigEvalRules} shows the evaluation of normally
-terminating method calls (where for clarity of presentation, we have
-left out several checks that intermediate states are not exceptional).
-First the receiver is evaluated, resulting in reference \(r\).
-Next, the parameter is evaluated, resulting in value \act. If \(r\) is not null,
-the method definition \md is looked up.
-The local variable store is updated assigning
+The evaluation rules are fairly standard, and we refer to Von Oheimb
+and the PVS formalisation for more details.  Figure~\ref{FigEvalRules}
+shows the evaluation of normally terminating method calls (where for
+clarity of presentation, we left out several checks that intermediate
+states are not exceptional).  First the receiver is evaluated,
+resulting in non-null reference \(r\).  Next, the parameter is
+evaluated, resulting in value \act. Using \(r\), the method definition
+\md is looked up.  The local variable store is updated assigning
 %the receiver reference
 \(r\) to \texttt{this}, initialising the
 method's local variables and assigning the actual parameter to the
-formal parameter. The old local variable store is kept as \oldlvs.
+formal parameter. The old local variable store is remembered as \oldlvs.
 %to be restored after method termination.
-Next, an appropriate action upon method entry is taken, as specified by the
-relation \(\gammain\), one of the parameters of the semantics.
+Next, an appropriate action upon method entry is taken, as specified
+by the relation \(\gammain\).
 % ~--~below we will discuss different instantiations.
-Then the method body, and method result
-expression are evaluated. Since this rule applies to normal method
-termination only, the semantics' parameter for normal method termination
+Then the method body, and method result expression are
+evaluated. Since this rule applies to normal method termination only,
+the parameter for normal method termination
 \(\gammanorm\) is evaluated. Last, the local store is set back to
 \(\oldlvs\). %, and this terminates the method call.
-Similar rules exist that describe what happens upon exceptional termination,
+Similar rules exist that describe what happens
 % of a method,
 when a method is called upon a null reference \emph{etc.}
 
@@ -243,14 +250,13 @@ r \not= \Null \qquad                         % receiver not null
 calls}\label{FigEvalRules}
 \end{figure}
 
-Besides the relations \gammain and \gammanorm, the semantics
-is also parametrised with
-\gammaexc, describing what happens upon exceptional termination of a
-method, and \deltaset, \deltacase, and \deltaassert, describing the
-semantics of the \Set, \CaseJML and \Assert statements,
-respectively. In a standard program semantics, where specifications
-are ignored, all these parameters are instantiated % basically
-with the identity relation.
+% Besides the relations \gammain and \gammanorm, the semantics
+% is also parametrised with
+% \gammaexc, describing what happens upon exceptional termination of a
+% method, and \deltaset, \deltacase, and \deltaassert, describing the
+% semantics of the \Set, \CaseJML and \Assert statements,
+% respectively.
+
 
 %\paragraph{Standard program semantics}
 %To evaluate a program without considering the specifications,
@@ -275,8 +281,8 @@ The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
 instantiations of the semantics parameters; % (presented in rule format);
-the other instantiations are similar. Relation \gammain uses an
-auxiliary relation \(\beta\) which checks a boolean expression \(e\) and
+the other instantiations are similar. Relation \gammain uses 
+auxiliary relation \(\beta\) which checks boolean expression \(e\) and
 raises a special \JMLExc if it evaluates to false. Upon method
 entry, the class invariant and precondition are evaluated. If they
 fail, a \JMLExc is thrown, otherwise the method's \preset statement is
@@ -323,8 +329,8 @@ updated to \(v\).} appropriately.
 
 \paragraph{Monitored Program Semantics}
 The parametric program semantics is also instantiated for monitored
-programs. This semantics is only defined when the MVA is compatible
-with the program. An MVA \(a\) is said to be compatible with a program
+programs. This semantics is only defined when the PA is compatible
+with the program. A PA \(a\) is said to be compatible with a program
 \(P\), denoted \(a \sqsubseteq P\), if
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the program contains the class \(c\) that is being monitored,
@@ -332,91 +338,76 @@ with the program. An MVA \(a\) is said to be compatible with a program
 \(a\) are fields of the class \(c\) with the correct type, and
 \item every event name corresponds to a method in the class.
 \end{inparaenum}
-A monitored program is a product of an MVA and a program. The state
-of a monitored program consists of the states of the MVA and the
-program, and a flag \stuck. If the MVA is partial, the flag
+A monitored program is a product of a PA and a program. The state of a
+monitored program consists of the states of the PA and the program
+(including ghost variables)\footnote{For simplicity, we assume that a
+monitored program also evaluates annotations, but this instantiation
+is in fact orthogonal to the annotated program semantics.}, and a flag
+\stuck. If the PA is partial, the flag
 \stuck is set when \(\Delta_a\) is not defined for a
 certain input. If the flag is set, this means that the security policy
-is violated, and the program should be stopped. If the MVA is total,
+is violated, and the program should be stopped. If the PA is total,
 the \stuck flag will never be set. Instead, violation of the security
-policy is modelled by the MVA reaching the error state \halted.
+policy is modelled by the PA reaching the error state \halted.
 
 \[
 {\small
 \begin{array}{rcl}
-\Mprogram & =  & \opr \mva : \MVA, \program : \Program \clr\\
-\Mstate & = & \opr \mvastate : \MVAstate, \progstate : \Pstate, \stuck
+\Mprogram & =  & \opr \pa : \PA, \program : \Program \clr\\
+\Mstate & = & \opr \pastate : \PAstate, \pstate : \Pstate, \gvs :  \Name \mapsto \Val, \stuck
 : \mathbb{B} \clr
 \end{array}}
 \]
 Thus, \FullProgram gets instantiated as \Mprogram and \FullState as
-\Mstate, with mappings \program and \progstate. Now we can give
+\Mstate, with mappings \program and \pstate. Now we can give
 appropriate instantiations for the \(\gamma\)- and
-\(\delta\)-relations. In fact, the \(\delta\)-relations are the same as
-for the standard or annotated program semantics (depending on whether
-we wish the monitored program to evaluate annotations).
-Here we show how \gammain changes the state
-of the monitor, using \(\hat\gammain\) for the necessary checks at
-method entrance in the program itself (\emph{i.e.}, the evaluation of
-the method specification).
+\(\delta\)-relations. The \(\delta\)-relations are the same as
+for the annotated program semantics, but the \(\gamma\)-relation also
+updates the state of the monitor. For example, \(\gammain\) is defined
+in terms of \(\gammain\) for annotated programs, as defined in
+Figure~\ref{FigAnnotatedSem}. 
 \[
 {\small
 \begin{array}{c}
-\hat\gammain(P, \md, r, \act, \sigma_1, \tau) \\
+\gammain^{\mathsf{AP}}(P, \md, r, \act, \sigma_1, \tau) \\
 \pif{\tau.\pstate.\ex = \bot}
-    {\sigma_2 = \delta(\entry)(P, \md, \act, \tau)}
+    {\sigma_2 = \gammapa(\entry)(P, \md, \act, \tau)}
     {\sigma_2 = \tau}\\
 \hline
 \gammain(P, \md, r, \act, \sigma_1, \sigma_2)
 \end{array}}
 \]
-\marginnote{\small isn't $\hat\gammain$ the same defined in
-Fig~\ref{FigAnnotatedSem}? If so why don't we refer to it?}
+
 
 \noindent where
-% This is a simplified version of on_method_MVA in MonitoredProgram
+% This is a simplified version of on_method_PA in MonitoredProgram
 \[
 {\small
 \begin{array}{rcl}
-\delta(\ev)(P, \md, \act, \sigma) & = &
+\gammapa(\ev)(P, \md, \act, \sigma) & = &
 \begin{array}[t]{l}
 \mathsf{let\ }
 \begin{array}[t]{rcl}
   e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
- \tau & = & \Delta_{P.\mva}(\sigma.\mvastate, \sigma.\progstate, e, \act)
-\end{array}
-\mathsf{in\ }\\
+ \tau & = & \Delta_{P.\pa}(\sigma.\pastate, \sigma.\progstate, e, \act)
+\mathsf{\ in\ }\end{array}
+\\
 \pif{\sigma.\stuck \vee \tau = \bot}
     {\sigma (\stuck := \ttt)}
-    {\sigma (\mvastate := \tau)}
+    {\sigma (\pastate := \tau)}
 \end{array}
 \end{array}}
 \]
 
 
-%% This example does not add much is a bit disconnected with the previous text
-% \paragraph{Example}
-%
-% To be able to generate the annotations capturing the security policy
-% specified by the LimitSMS automaton in Figure~\ref{FigExample}, below
-% is a class declaration of class \texttt{Messaging}, declaring the
-% methods used by the automaton, plus a method \texttt{receiveSMS}, and
-% a field \texttt{counter}. To illustrate our annotation algorithm, we
-% do not need to give an implementation here; it is only important to
-% know that the methods actually have an implementation.
-%
-% {\small\begin{verbatim}
-% class Messaging {
-%   int counter;
-%   void sendSMS(){/* body of sendSMS */}
-%   void receiveSMS(){/* body of receiveSMS */}
-%   void reset() {/* body of reset */} }
-% \end{verbatim}}
+%% This example does not add much is a bit disconnected with the
+%% previous text
+
 
 %\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
 %\end{figure}
 %\subsubsection{PVS formalisation}
-%As mentioned above, the syntax and semantics for MVA and programming
+%As mentioned above, the syntax and semantics for PA and programming
 %language have been formalised in PVS.
 
 % To formalise the program semantics in PVS is not

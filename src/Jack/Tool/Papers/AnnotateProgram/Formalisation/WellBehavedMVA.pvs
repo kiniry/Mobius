@@ -20,7 +20,7 @@ BEGIN
           FORALL(arg : ValOrExcpt) :
           wf_Expr(program(mp))(e(arg)) AND
           derive(mp)(e(arg), sMP, v, sMP)(n) AND
-          (guard(t)(stA(astate(sMP)), st(pstate(sMP)), arg) = (v = Bool(TRUE)))
+          (guard(t)(stA(astate(sMP)), fvs(st(pstate(sMP))), arg) = (v = Bool(TRUE)))
 
   % It is possible to evaluate expressions appearing in actions (they 
   % terminate) and they are side-effect-free. Note that the evaluation 
@@ -40,7 +40,7 @@ BEGIN
       member(oa, action(t)) IMPLIES
       wf_state(mp)(sMP) IMPLIES
       NOT up?(ex(pstate(sMP))) IMPLIES
-        (eval(source(oa))(stA(astate(sMP)), st(pstate(sMP))) = v) =
+        (eval(source(oa))(stA(astate(sMP)), fvs(st(pstate(sMP)))) = v) =
         EXISTS (n : nat) : derive(mp)(source(oa), sMP, v, sMP)(n)
 
   actions_have_no_side_effects(mp) : boolean =
@@ -68,7 +68,7 @@ BEGIN
 %    (eval_action_behavior(mp) AND actions_have_no_side_effects(mp)) IFF
 %    eval_actions_without_side_effects(mp)
 
-  Well_behaved_mva(mp) : boolean =
+  well_behaved_MVA(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) AND
     actions_have_no_side_effects(mp)

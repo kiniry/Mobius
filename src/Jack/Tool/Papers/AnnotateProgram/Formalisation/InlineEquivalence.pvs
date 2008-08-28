@@ -126,9 +126,9 @@ BEGIN
   inline_related_states_preserved_by_update_stack : LEMMA % 
     FORALL (sAP1, sAP2 : APState,
             this_val : Val, arg :  (getLocalDecls(p)), 
-            param_val : Val, lvds : finite_set[LocalVarDecl]) :
+            param_val : Val, lvds : finite_set[Decl]) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
-      (FORALL (l : LocalVarDecl) : lvds(l) IMPLIES 
+      (FORALL (l : Decl) : lvds(l) IMPLIES 
                                    getLocalDecls(p)(l)) IMPLIES
         inline_related_states(p)(update_stack(this_val, arg, param_val,
                                        lvds, sAP1),

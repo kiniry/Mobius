@@ -1,24 +1,36 @@
 ContainsNoMethodCall[Name : TYPE+] : THEORY
 BEGIN
 
+  % Method level set annotations cannot contain method calls
+  % Necessary condition to prove correctness of complete translation
+  % (for step 3 - inlining annotations)
+
   IMPORTING ProgramRestriction[Name],
             ProgramFunctions[Name]
 
+  % a body b does not contain a method call if there is no
+  % subterm b1 of the form MethodCall?(b1)
   contains_no_method_call(b : Body) : bool =
       (FORALL (b1 : Body) : 
          subterm(b1, b) IMPLIES NOT MethodCall?(b1))
 
+  % if body b1 does not contain method call, none of its subterms
+  % contains a method call
   contains_no_method_call_preserved_by_proper_subterm : LEMMA % :-)
     FORALL(b1, b2 : Body) :
       contains_no_method_call(b1) IMPLIES
       b2 << b1 IMPLIES
         contains_no_method_call(b2)
 
+  % predicate: method m does not contain a method call in its method-level
+  % set annotations
   contains_no_method_call_in_sets(p : PreProgram)(m : Method) : bool =
     (FORALL(v : Expr) : contains_no_method_call(pre_set(m)(v))) AND
     (FORALL(v : Expr) : contains_no_method_call(post_set(m)(v))) AND
     (FORALL(e : Excpt) : contains_no_method_call(exc_set(m)(e)))
 
+  % predicate: program does not contain a method call in its
+  % method-level set annotations
   contains_no_method_call_in_sets_in_program(p : PreProgram) : bool =
     program_method_pred(p)(contains_no_method_call_in_sets(p))
     

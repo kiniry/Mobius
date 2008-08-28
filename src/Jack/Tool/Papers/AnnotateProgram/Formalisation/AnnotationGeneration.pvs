@@ -1,8 +1,14 @@
+% Specification of step 2 of translation
+% Translating monitor into method level set annotations
+
 VariableNames[CP, Name : TYPE+] : THEORY
 BEGIN
 
+  % Specify set of legal variable names for new ghost variables
+
   ASSUMING
 
+    % name space is infinite
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
 
@@ -11,13 +17,16 @@ BEGIN
   IMPORTING MonitoredProgram[CP, Name],
             MVAMonitoring[CP, Name]
 
+  % Already declared names, monitor variables and reserved words are forbidden
   forbidden_names(mp : MonitoredProgram) : set[Name] =
     union(declared_var_names(program(mp)),
     union(var_names(mva(mp)),
           reserved_words))
 
+  % Name for cp variable
   cp(mp : MonitoredProgram) : {n : Name | NOT forbidden_names(mp)(n)}
 
+  % Remaining legal names: not forbidden, and not representing cp
   legal_names(mp : MonitoredProgram) : set[Name] =
     {n : Name | NOT forbidden_names(mp)(n) AND NOT n = cp(mp)}
 
@@ -28,8 +37,11 @@ END VariableNames
 NewVariableDeclarations[CP, Name : TYPE+] : THEORY
 BEGIN
 
+  % Declarations of new variables that will be added by translation
+
   ASSUMING
 
+    % each control point can be mapped to natural number
     CP_is_enumerable : ASSUMPTION
       EXISTS (f : [CP -> nat]) : injective?(f)
 
@@ -50,86 +62,105 @@ BEGIN
 
   mp : VAR (wf_and_complete_MP)
 
+  % map control points to legal variable names
   name_of(mp) : (injective?[CP, (legal_names(mp))])
 
   unique : (injective?[CP, nat])
 
+  % constant halted: mapping of halted control point to variable names
   halted(mp) : Name = name_of(mp)(halted)
 
 
   % Variables that will be added in the annotation process
 
-  new_cp_gvd(mp) : FieldDecl =
+  % variable to denote current control point
+  % name: cp(mp), integer type, initialised to initial control point
+  new_cp_gvd(mp) : Decl =
     (# name := cp(mp),
        jtype := IntType,
        init_val := Int(unique(init_cp(mva(mp)))) #)
 
-  new_cps_gvds(mp) : finite_set[FieldDecl] =
-    {gd : FieldDecl | EXISTS (q : (cps(mva(mp)))) :
-                      name(gd) = name_of(mp)(q) AND
-                      jtype(gd) = IntType AND
-                      init_val(gd) = Int(unique(q))}
+  % static final ghost variables encode set of control points 
+  % name uses mapping from control points to legal variable names
+  % integer type, each variable initialised to unique value
+  new_cps_gvds(mp) : finite_set[Decl] =
+    {gd : Decl | EXISTS (q : (cps(mva(mp)))) :
+                   name(gd) = name_of(mp)(q) AND
+                   jtype(gd) = IntType AND
+                   init_val(gd) = Int(unique(q))}
 
-  new_mva_vars_gvds(mp) : finite_set[FieldDecl] =
-    {gd : FieldDecl | EXISTS (v : (vdsA(mva(mp)))) :
-                      name(gd) = name(v) AND
-                      jtype(gd) = jtype(v) AND
-                      init_val(gd) = init_val(v)}
+  % ghost variable that represent automaton variables
+  % name, type and initial value coincide
+  new_mva_vars_gvds(mp) : finite_set[Decl] = vdsA(mva(mp))
 
-  new_gvds(mp) : finite_set[FieldDecl] =
+  % new ghost variable: current control point, control point representations
+  % and automaton variables
+  new_gvds(mp) : finite_set[Decl] =
     add(new_cp_gvd(mp), union(new_cps_gvds(mp), new_mva_vars_gvds(mp)))
 
 
+  % names of new variables depend on original monitored program (they are 
+  % not constants)
   new_vars_derived_from_mp : LEMMA % :-)
     var_names(new_gvds(mp))(cp(mp)) AND
     (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
       var_names(new_gvds(mp))(name_of(mp)(q))) AND
-    (FORALL (v : MVAVarDecl) : vdsA(mva(mp))(v) IMPLIES
+    (FORALL (v : Decl) : vdsA(mva(mp))(v) IMPLIES
       var_names(new_gvds(mp))(name(v)))
 
 
-  % The generated ghost variables must have different names
+  % The generated ghost variables have different names, disjoint from
+  % reserved words and variable names already used in the program
   wf_new_vars : LEMMA % :-)
     (FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
         NOT name_of(mp)(q) = cp(mp)) AND
-    (FORALL (vd : MVAVarDecl) : vdsA(mva(mp))(vd) IMPLIES
+    (FORALL (vd : Decl) : vdsA(mva(mp))(vd) IMPLIES
         NOT name(vd) = cp(mp)) AND
-    (FORALL (q : CP, vd : MVAVarDecl) :
+    (FORALL (q : CP, vd : Decl) :
       cps(mva(mp))(q) IMPLIES
       vdsA(mva(mp))(vd) IMPLIES
         NOT name_of(mp)(q) = name(vd)) AND
     disjoint?(var_names(new_gvds(mp)), reserved_words) AND
     disjoint?(var_names(new_gvds(mp)), declared_var_names(program(mp)))
 
-
+  % cp(mp) is a new variable name
   cp_new_ghostvar : LEMMA % :-)
     var_names(new_gvds(mp))(cp(mp))
 
+  % halted(mp) is a new variable name
   halted_new_ghostvar : LEMMA % :-)
     var_names(new_gvds(mp))(halted(mp))
 
-  new_cp_gvd(mp)(q : (cps(mva(mp)))) : FieldDecl =
+  % variable declaration corresponding to control point q
+  new_cp_gvd(mp)(q : (cps(mva(mp)))) : Decl =
     (# name := name_of(mp)(q), jtype := IntType, init_val := Int(unique(q)) #)
 
+  % variable declaration encoding q is a new ghost variable
   new_cp_gvd_new_ghostvar : LEMMA % :-)
     FORALL (q : CP) :
       cps(mva(mp))(q) IMPLIES
         new_gvds(mp)(new_cp_gvd(mp)(q))
 
-  new_mva_var_gvd(mp)(vd : (vdsA(mva(mp)))) : FieldDecl =
-    (# name := name(vd), jtype := jtype(vd), init_val := init_val(vd) #)
+  % variable decaration corresponding to automaton variable declaration
+  new_mva_var_gvd(mp)(vd : (vdsA(mva(mp)))) : Decl = vd
 
+  % automaton variable is a new ghost variable
   new_mva_var_new_ghostvar : LEMMA % :-)
-    FORALL (vd : MVAVarDecl) :
+    FORALL (vd : Decl) :
       vdsA(mva(mp))(vd) IMPLIES
         new_gvds(mp)(new_mva_var_gvd(mp)(vd))
 
+  % cp(mp) is different from (constant) ghost variables 
+  % representing control points
   cp_not_cps_ghostvar : LEMMA % :-)
     NOT new_cps_gvds(mp)(new_cp_gvd(mp))
 
+  % cp(mp) is different from automaton variables
   cp_not_mva_ghostvar : LEMMA % :-)
     NOT new_mva_vars_gvds(mp)(new_cp_gvd(mp))
 
+  % the variable names used in the monitor are a subset of the newly
+  % declared variable names, and the original program variables
   var_names_MVA_subset_var_names_new_gdvs : LEMMA % :-)
     subset?(var_names(mva(mp)),
             union(var_names(program(mp)), var_names(new_gvds(mp))))
@@ -166,7 +197,10 @@ BEGIN
 
   a : VAR (wf_MVA)
 
-
+  % set annotations to encode an action sequence
+  % for each single action, generate a Set annotation, assigning source
+  % to target
+  % combine with Sequence operator
   ann_action(l : Action) : RECURSIVE Stmt =
     CASES l OF
       null : Skip,
@@ -174,6 +208,8 @@ BEGIN
     ENDCASES
   MEASURE length(l)
 
+  % variable names used in generated set annotation are the target of the
+  % action, and the variable names used in the source expression
   var_names_ann_action : LEMMA % :-)
     FORALL(a : Action, n : Name) :
       var_names(ann_action(a))(n) =
@@ -181,7 +217,8 @@ BEGIN
           member(oa, a) AND
           (n = target(oa) OR var_names(source(oa))(n))
 
-
+  % b is a subterm of a generated set annotation if there is a single action x
+  % such that b is a subterm of Set(target(x), source(x))
   subterm_ann_action : LEMMA % :-)
     FORALL(a : Action, b : Body) :
       Set?(b) IMPLIES
@@ -190,11 +227,15 @@ BEGIN
              member(oa, a) AND
              subterm(b, Set(target(oa), source(oa))))
 
-
+  % set annotations for a transition t:
+  % update current control point and translate actions of transition
   update_vars(mp)(t : Transition) : Stmt =
     Sequence(Set(cp(mp), NumVarEval(name_of(mp)(tcp(t)))),
              ann_action(action(t)))
 
+  % map each transition t in ts to a "guard*action" tuple (expr, stmt)
+  % first component represents guard of t (using guard_to_expression)
+  % second component are set annotations related with transition
   ann_guard_actions_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
                             finite_set[[Expr, Stmt]] =
      {x : [Expr, Stmt] | EXISTS (t : Transition) :
@@ -202,17 +243,20 @@ BEGIN
           update_vars(mp)(t))}
 
 
+  % transform set of guard_action tuples for transitions ts into list
   ann_guard_actions(mp)(ts : finite_set[Transition])
                    (v : ValOrExcpt) : list[[Expr, Stmt]] =
     set2list(ann_guard_actions_set(mp)(ts)(v))
 
+  % for all transitions starting in q, return a tuple:
+  % (current control point is q, encoding of transitions starting in q)
   ann_trans_cp(mp)(q : CP, ts : finite_set[Transition]) 
               (v : ValOrExcpt) : [Expr, Stmt] =
     (Eq(NumVarEval(cp(mp)),
         NumVarEval(name_of(mp)(q))),
      CaseJML(ann_guard_actions(mp)(ts)(v)))
 
-
+  % for all nonempty set of transitions ts, generate a tuple via ann_trans_cp
   ann_event_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
                          finite_set[[Expr, Stmt]] =
     {c : [Expr, Stmt] | EXISTS (q : CP) :
@@ -220,11 +264,13 @@ BEGIN
          nonempty?({t: Transition | ts(t) AND scp(t) = q}) AND
          c = ann_trans_cp(mp)(q, {t: Transition | ts(t) AND scp(t) = q})(v)}
 
-  % Generates annotations to update the control point and the variables when an
-  % event occurs
+  % ts: set of transitions with particular event (method entry/exit/exc_exit)
+  % compute CaseJML annotation, encoding all possible transitions in ts
   ann_event(mp)(ts : finite_set[Transition])(v : ValOrExcpt) : Stmt =
     CaseJML(set2list(ann_event_set(mp)(ts)(v)))
 
+  % var_names in generated annotation are subset of variable names of 
+  % original programs and newly declared ghost variables
   var_names_ann_event_set : LEMMA % :-)
     FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
@@ -247,6 +293,8 @@ BEGIN
         ext_declared_var_names(program(mp))(v) OR
         var_names(new_gvds(mp))(v)
 
+  % Set annotations that are subterm of newly generated annotations
+  % have a target that is a newly declared ghost variable
   ann_event_set_set_ghostvar : LEMMA % :-)
     FORALL (ts : finite_set[Transition], b: Body, x : [Expr, Stmt],
             v : ValOrExcpt):
@@ -269,6 +317,7 @@ END AnnotateEvent
 AnnotateMethod[CP, Name : TYPE+] : THEORY
 BEGIN
 
+  % Annotate methods
   ASSUMING
 
     CP_is_enumerable : ASSUMPTION
@@ -293,18 +342,25 @@ BEGIN
   a : VAR (wf_MVA)
 
 
+  % filter transitions with appropriate event
   filter_event(a)(et : EventType)(m : Name) : finite_set[Transition] =
     {t : Transition | ts(a)(t) AND etype(event(t)) = et AND mname(event(t)) = m}
 
+  % filter_event returns subset of all transitions
   filter_event_subset : LEMMA % :-)
     FORALL(et : EventType, m : Name) :
       subset?(filter_event(a)(et)(m), ts(a))
-
+  
+  % filter_event returns finite set
   filter_event_cp_is_finite : LEMMA % :-)
     FORALL (et : EventType, n : Name, q : CP) :
       is_finite({t: Transition | filter_event(mva(mp))(et)(n)(t) AND scp(t) = q})
 
-  % TODO: Prove the TCCs generated
+  % annotate method m
+  % generate pre_set, post_set and exc_set annotations, encoding the monitor
+  % use ann_event for this, with argument all transitions for appropriate event
+  % for pre_set, add additional Assert annotation, to check that cp has
+  % not reached halted
   ann_method(mp)(m : Method) : Method =
     LET ann_event_type = LAMBDA (et : EventType)(v : ValOrExcpt) :
                            ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v)
@@ -322,11 +378,12 @@ BEGIN
                         ann_event_type(ExitExceptional)(excpt(e)))]
 
 
+  % annotate all methods in ms
   ann_methods(mp)(ms : finite_set[Method]) : finite_set[Method] =
     {m : Method | EXISTS (n : Method) : ms(n) AND m = ann_method(mp)(n)}
 
 
-  % NOTE: The following lemmas are simple but are useful as autorewrite rules
+  % Simple rewrite lemmas, appropriate for auto-rewrite
 
   ann_method_name : LEMMA % :-)
     FORALL (m : Method) :
@@ -375,6 +432,8 @@ BEGIN
     FORALL (m : Method) :
       res_type(ann_method(mp)(m)) = res_type(m)
 
+  % all components of the annotated method satisfy first conjunct of 
+  % wf_Body
   ann_method_wf_Body1 : LEMMA % :-)
     FORALL(m : Method) :
       wf_Method(program(mp))(m) IMPLIES
@@ -408,6 +467,7 @@ BEGIN
                           ext_declared_var_names(program(mp))(v) OR
                           var_names(new_gvds(mp))(v))
 
+  % all components of annotated method satisfy second conjunct of wf_Body
   ann_method_wf_Body2 : LEMMA % :-)
     FORALL(m : Method, b : Body) :
       wf_Method(program(mp))(m) IMPLIES
@@ -443,6 +503,8 @@ END AnnotateMethod
 AnnotateClass[CP, Name : TYPE+] : THEORY
 BEGIN
 
+  % Annotate class, if class is monitored (otherwise do nothing)
+
   ASSUMING
 
     CP_is_enumerable : ASSUMPTION
@@ -466,7 +528,10 @@ BEGIN
 
   a : VAR (wf_MVA)
 
-
+  % If class is monitored, then
+  % add conjunct: cp != halted to invariant,
+  % add new ghost variable declarations
+  % annotate methods of class
   ann_class(mp)(c : Class) : Class =
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
     THEN c WITH [inv := Conj(Neg(Eq(NumVarEval(cp(mp)),
@@ -476,6 +541,8 @@ BEGIN
                  methods := ann_methods(mp)(methods(c))]
     ELSE c
     ENDIF
+
+  % Simple rewrite lemmas, useful for auto-rewrite 
 
   FieldDecls_ann_class : LEMMA % :-)
     FORALL(c : Class) :
@@ -497,7 +564,7 @@ BEGIN
       NOT name(c) = class_name(mva(mp)) IMPLIES
         ghost_vars(ann_class(mp)(c)) = ghost_vars(c)
 
-
+  % ann_class satisfies global part of the wf_Class condition
   ann_class_almost_wf_Class : LEMMA % :-)
     FORALL(c : Class) :
       wf_Class(program(mp))(c) IMPLIES
@@ -508,6 +575,8 @@ BEGIN
            name(m1) = name(m2) IMPLIES
            m1 = m2
 
+  % var_names in new invariant are declared in original program or new
+  % ghost variable names
   ann_class_inv_wf_Body1 : LEMMA % :-)
     FORALL(c : Class) :
       wf_Body(program(mp))(inv(c)) IMPLIES
@@ -516,6 +585,7 @@ BEGIN
                             var_names(new_gvds(mp))(v))
 
 
+  % rewrite rule for invariant in annotated class
   ann_class_inv : LEMMA % :-)
     FORALL(c : Class) :
     IF classes(program(mp))(c) AND name(c) = class_name(mva(mp))
@@ -524,6 +594,7 @@ BEGIN
     ELSE inv(ann_class(mp)(c)) = inv(c)
     ENDIF
 
+  % class name unchanged by annotation
   ann_program_preserves_class_name : LEMMA % :-)
     FORALL(c : Class) :
       name(ann_class(mp)(c)) = name(c)
@@ -534,6 +605,8 @@ END AnnotateClass
 
 AnnotateProgram[CP, Name : TYPE+] : THEORY
 BEGIN
+
+  % Annotate Program
 
   ASSUMING
 
@@ -560,6 +633,7 @@ BEGIN
 
   % Program annotation
 
+  % annotate program by applying class annotation to all classes
   ann_program(mp) : Program =
     (# classes := {c : Class | EXISTS (c1 : Class) :
                                  classes(program(mp))(c1) AND
@@ -572,6 +646,8 @@ END AnnotateProgram
 % Properties relating MPs and APs through ann_program
 AnnotateProgramProperties[CP, Name : TYPE+] : THEORY
 BEGIN
+
+  % Properties about translation algorithm
 
   ASSUMING
 
@@ -597,10 +673,12 @@ BEGIN
 
   mp : VAR (wf_and_complete_MP)
 
+  % Every class in annotated program corresponds to a class in original program
   ann_program_class_correspondence : LEMMA % :-)
     FORALL(c : Class) : classes(ann_program(mp))(c) IMPLIES
       EXISTS (c1 : Class) : classes(program(mp))(c1) AND c = ann_class(mp)(c1)
 
+  % Every method in annotated program corresponds to method in original program
   ann_program_method_correspondence : LEMMA % :-)
     FORALL(c : Class, m : Method) :
       classes(ann_program(mp))(c) IMPLIES
@@ -613,6 +691,9 @@ BEGIN
            ELSE m = m1
            ENDIF)
 
+  % Fields and Local Variables are unchanged
+  % Ghost variables of original program subset of ghost variables in
+  % annotated program
   ann_program_preserves_var_decls : LEMMA % :-)
     getFieldDecls(program(mp)) = getFieldDecls(ann_program(mp)) AND
     getLocalDecls(program(mp)) = getLocalDecls(ann_program(mp)) AND
@@ -629,6 +710,8 @@ BEGIN
       (var_names(getLocalDecls(program(mp)))(vn) IFF
        var_names(getLocalDecls(ann_program(mp)))(vn))
 
+  % ghost variables in annotated program: union of original ghost variables
+  % and newly declared ghost variables
   ann_program_add_ghost_var_decls : LEMMA % :-)
     getGhostDecls(ann_program(mp)) =
       union(getGhostDecls(program(mp)), new_gvds(mp))
@@ -637,12 +720,15 @@ BEGIN
      ext_declared_var_names(ann_program(mp)) =
        union(ext_declared_var_names(program(mp)), var_names(new_gvds(mp)))
 
+  % if state s is wellformed wrt original program p, it is also
+  % wellformed wrt annotated program
   ann_program_preserves_wf_state : LEMMA % :-)
     FORALL (s : PState) :
       wf_state(program(mp))(s) IMPLIES
         wf_state(ann_program(mp))(s)
 
-
+  % fields and local variables in state for original program are the
+  % same as for annotated program
   ann_program_preserves_pstate_vars : LEMMA % :-)
     FORALL (vn : Name)(sMP : MPState, sAP : APState) :
       wf_state(mp)(sMP) IMPLIES
@@ -650,6 +736,8 @@ BEGIN
         (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP))) AND
         (is_local(vn, pstate(sMP)) IFF is_local(vn, pstate(sAP)))
 
+  % ghost variable in state for original program is also a ghost 
+  % variable in state of annotated program
   ann_program_preserves_ghoststate_vars : LEMMA % :-)
     FORALL (vn : Name)(sMP : MPState, sAP : APState) :
       wf_state(mp)(sMP) IMPLIES
@@ -660,57 +748,72 @@ BEGIN
     subset?(var_names(ann_program(mp)),
             union(var_names(program(mp)), var_names(new_gvds(mp))))
 
+  % all automaton variables are declared as ghost variables in 
+  % annotated program
   var_names_declared_in_MVA_subset_ghostvars : LEMMA % :-)
     subset?(var_names(vdsA(mva(mp))),
             var_names(getGhostDecls(ann_program(mp))))
 
+  % all variables in new_gvds are declared in the annotated program
   ann_program_defines_MVA_vars : LEMMA % :-)
     FORALL (n : Name) : var_names(new_gvds(mp))(n) IMPLIES
-      EXISTS (c : Class, gd : FieldDecl) :
+      EXISTS (c : Class, gd : Decl) :
         classes(ann_program(mp))(c) AND
         name(c) = class_name(mva(mp)) AND
         ghost_vars(c)(gd) AND name(gd) = n
 
+  % new variables are all ghost variables in annotated program
   new_vars_ghost_in_ann_program : LEMMA % :-)
     FORALL (n : Name, s : APState) :
       wf_state(ann_program(mp))(s) IMPLIES
       var_names(new_gvds(mp))(n) IMPLIES
         is_ghost(n, s)
 
-
+  % if expression satisfies wf_Body wrt the mva(mp), then
+  % it also satisfies wf_Body wrt the annotated program
   wf_Body_MVA_implies_wf_Body : LEMMA % :-)
     FORALL (e : Expr) :
       wf_Body(mva(mp))(e) IMPLIES
         wf_Body(ann_program(mp))(e)
 
+  % wellformed action in mva, then the source expression is a wf_Body 
+  % wrt the annotated program
   one_action_source_wf_Body : LEMMA % :-)
     FORALL (a : Action, oa : OneAction) :
       wf_Action(mva(mp))(a) IMPLIES
       member(oa, a) IMPLIES
         wf_Body(ann_program(mp))(source(oa))
 
+  % and therefore also the generated Set annotated is a wf_Body
+  % wrt the annotated program
   one_action_translation_wf_Body : LEMMA % :-)
     FORALL (a : Action, oa : OneAction) :
       wf_Action(mva(mp))(a) IMPLIES
       member(oa, a) IMPLIES
         wf_Body(ann_program(mp))(Set(target(oa), source(oa)))
 
+  % therefore sequence of set annotations encoding action list is a 
+  % wf_Body wrt the annotated program
   ann_action_yields_wf_Body : LEMMA % :-)
     FORALL (a : Action) :
       wf_Action(mva(mp))(a) IMPLIES
         wf_Body(ann_program(mp))(ann_action(a))
 
+  % and the annotation generated for transition t is a wf_Body (Stmt)
+  % wrt the annotated program
   update_vars_wf_Stmt : LEMMA % :-)
     FORALL (t : Transition) :
       ts(mva(mp))(t) IMPLIES
         wf_Stmt(ann_program(mp))(update_vars(mp)(t))
 
+  % guard_to_expression returns a wf_Body (Expr) wrt the annotated program
   guard_to_expression_wf_Expr : LEMMA % :-)
     FORALL (t : Transition, v : ValOrExcpt) :
       ts(mva(mp))(t) IMPLIES
         wf_Expr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t))(v))
-
- ann_trans_cp_wf : LEMMA % :-)
+  
+  % components of guard_action tuple are wf_Body wrt annotated program
+  ann_trans_cp_wf : LEMMA % :-)
    FORALL (q : CP, ts : finite_set[Transition], v : ValOrExcpt) :
      LET p = ann_trans_cp(mp)(q, ts)(v) IN
      cps(mva(mp))(q) IMPLIES
@@ -718,21 +821,24 @@ BEGIN
        (wf_Expr(ann_program(mp))(p`1) AND
         wf_Stmt(ann_program(mp))(p`2))
 
+  % annotations generated for an event are wf_Body wrt annotated program
   ann_event_wf_Body : LEMMA % :-)
     FORALL (ts : finite_set[Transition], v : ValOrExcpt) :
       subset?(ts, ts(mva(mp))) IMPLIES
         wf_Body(ann_program(mp))(ann_event(mp)(ts)(v))
 
+  % every annotated method is wellformed wrt the annotated program
   ann_program_preserves_wf_method : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
 
-
+  % any body that is wellformed wrt the original program is wellformed
+  % wrt the annotated program
   ann_program_preserves_wf_body : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)
 
-
+  % name of classes in annotated program unchanged
   get_class_ann_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :
       up?(get_class(program(mp))(tgt)) IMPLIES
@@ -741,6 +847,10 @@ BEGIN
       c2 = down(get_class(ann_program(mp))(tgt)) IMPLIES
         name(c1) = name(c2)
 
+  % if c1 is class in original program, and c2 is class in annotated program
+  % and names are the same, then
+  % if c1 is the monitored class, then c2 = ann_class(c1) 
+  % else c2 is equal to c1
   same_class_name_ann_class_implies_same_class : LEMMA % :-)
     FORALL (c1, c2 : Class) :
       classes(program(mp))(c1) IMPLIES
@@ -751,6 +861,7 @@ BEGIN
         ELSE c2 = c1
         ENDIF
 
+  % method names not changed by annotations
   same_method_name_ann_class_implies_same_method : LEMMA % :-)
     FORALL (c1, c2 : Class, m1, m2 : Method) :
       classes(program(mp))(c1) IMPLIES
@@ -761,7 +872,8 @@ BEGIN
       name(m1) = name(m2) IMPLIES
         m2 = ann_method(mp)(m1)
 
-
+  % lookup method returns annotated method if method originally in 
+  % monitored class, otherwise original method returned
   lookup_mthd_ann_program : LEMMA % :-)
     FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(program(mp), tgt, mn)) IMPLIES
@@ -773,15 +885,18 @@ BEGIN
         ELSE m2 = m1
         ENDIF
 
-
+  % class names unchanged by program annotations
   ann_program_preserves_class_names : LEMMA % :-)
     class_names(program(mp)) = class_names(ann_program(mp))
 
+  % if a reference to class in original program, then also in annotated program
   up_get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) :
       up?(get_class(program(mp))(a)) IMPLIES
         up?(get_class(ann_program(mp))(a))
 
+  % if reference to annotated class, then annotated class returned,
+  % otherwise original class returned by get_class
   get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) :
       up?(get_class(program(mp))(a)) IMPLIES

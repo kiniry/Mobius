@@ -6,22 +6,26 @@ BEGIN
   IMPORTING State[Name],
             SemanticsTypes[Name, Program, PState, id, id]
 
+  % skip set annotations
   execute_set : (execute_set_type) =
     LAMBDA (p : Program, vn : Name, e : (wf_Expr(p)), s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
+  % skip asserts
   execute_assert : (execute_assert_type) =
     LAMBDA (p : Program, e : (wf_Expr(p)), s1, s2 : PState, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1
 
+  % skip CaseJML annotations
   execute_CaseJML : (execute_CaseJML_type) =
     LAMBDA (p : Program, bs : (wf_Branches(p)), s1, s2 : PState,  
             v : Val, n : nat,
             derive_rec : derive_rec_type(n)) :
       s1 = s2 AND n = 1 AND v = Unit
 
+  % upon method entry or exit, do not take any special actions
   on_method_event : (on_method_event_type) =
     LAMBDA (p : Program, md : (wf_Method(p)), a : Val, v : ValOrExcpt,
             s1, s2 : PState, n : nat,
@@ -33,6 +37,8 @@ BEGIN
                       execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
+  % running basic program: run main method, starting in 
+  % initial program state
   run_program(p : Program)(main : Name, arg : int)
              (this_val : (defined?))
              (s2 : PState) : boolean =
@@ -44,7 +50,5 @@ BEGIN
                       execute_set, execute_assert, execute_CaseJML,
                       on_method_event, on_method_event, on_method_event]
 
-  % MH: Missing is a proof that this semantics preserves wf_state 
-  % wf_state should actually be defined in this file.
 
 END ProgramSemantics

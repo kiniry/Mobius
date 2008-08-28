@@ -13,8 +13,9 @@ are expressed as sequences of legal method calls, such as life cycle
 properties, or constraints that express how often or under which
 conditions a method can be called.
 
-However, for many applications, such a runtime monitoring approach is
-not suited due to resource constraints.
+However, such a monitoring approach is not always suited due to the
+nature and use of certain applications.
+% MH: changed resource constraints to nature of the application
 %% Commented out to save space (and added "due to resource constraints"
 %% in the previous line.
 % In particular, if an application is installed on a
@@ -67,7 +68,7 @@ The translation described in this paper is defined in several
 steps. For each step we provide a correctness proof.
 \begin{inparaenum}[(\itshape i\upshape)]
 \item We translate a \emph{partial automaton}, to a \emph{total automaton}
-that contains a special trap state that models that an error has occurred.
+that contains a special trap to model that an error has occurred.
 % \emph{i.e.},\ an automaton that can get \emph{stuck}, because it has
 % no transitions enabled, to a \emph{total automaton}, \emph{i.e.},\ an
 % automaton that always has a transition enabled, but that contains a
@@ -82,11 +83,10 @@ that contains a special trap state that models that an error has occurred.
 We show that the behaviour of a program that is monitored with a partial
 automaton is equivalent to the behaviour of a program that is monitored with
 the completed automaton.
-\marginnote{AT: Added JML here and commented the paragraph about JML.}
-\item We generate JML~\cite{LeavensPCCRCK05} annotations that capture the
-behaviour of the total automaton.
-For this, we add special \textsf{set} annotations that are evaluated
-upon entry or exit of a method.
+\item We generate annotations, using an extension of JML~\cite{LeavensPCCRCK05}, 
+that capture the behaviour of the total automaton.  For this, we
+generate special method-level set-annotations that are evaluated upon
+entry or exit of a method.
 % For this, we add special ghost variables that model the
 % monitor state, and to every method specification, we add special
 % \textsf{set} annotations that update these ghost variables upon entry
@@ -97,7 +97,7 @@ upon entry or exit of a method.
 We show that run-time monitoring of the program
 only throws a (new) exception to signal an annotation violation if the
 monitor reaches the trap state.
-\item We inline the \textsf{set} annotations from the method specification
+\item We inline the set-annotations from the method specification
 to the method body and prove equivalence of the run-time checking behaviour.
 % This requires a (source code level) code transformation, that
 % ensure that the ghost variables are also updated appropriately if the
@@ -166,12 +166,12 @@ is available via \texttt{http://www....}.
 \end{tabular}}
 \begin{figure}[t]
 \begin{center}
-\epsfig{file=limited_sms_alt.eps, width=6cm}
+\epsfig{file=limited_sms_alt.eps, width=5.5cm}
 \end{center}
 \caption{Example Security Automaton}\label{FigExample}
 \end{figure}
 
-Throughout this paper, we will use a simple example property to
+Throughout this paper, we use a simple example property to
 illustrate the different translations: the method \texttt{sendSMS} can
 be called and terminate successfully at most \(N\) times in between
 calls to a \texttt{reset} method (notice that the counter is not
@@ -179,15 +179,15 @@ increased upon exceptional termination of
 \texttt{sendSMS}, and that we assume that \texttt{reset} cannot be
 called from within \texttt{sendSMS}). Figure~\ref{FigExample} shows a
 security automaton that can be used to monitor this property (where
-\(\varepsilon\) denotes an empty action list). Even though very basic,
+\(\epsilon\) denotes a skip action). Even though very basic,
 this example is representative of a wide range of important
 resource-related security properties.
 
 The remainder of this paper is organised as follows.
 Section~\ref{SecMVA} formalises the automaton format that we
-use and defines the completion function. Next,
+use and defines completion. Next,
 Section~\ref{SecProgram} defines the semantics of monitored and
 annotated programs. Then Section~\ref{SecAnnotGen} presents the
-different translations and proves their
+different translation steps and proves their
 correctness. Section~\ref{SecRelated} discusses related work, while
 Section~\ref{SecConcl} concludes and discusses future work.

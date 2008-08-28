@@ -1,7 +1,12 @@
+% Step 3 of translation: inlining of method level set annotations into
+% method body
+
 InlineVariableNames[Name : TYPE+] : THEORY
 BEGIN
 
   ASSUMING
+
+    % Name space is infinite
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -10,6 +15,8 @@ BEGIN
 
   IMPORTING WellFormedProgram[Name]
 
+  % New variables cannot have name that is already used in program or 
+  % reserved word
   legal_names(p : Program)(n : Name) : bool =
     NOT union(declared_var_names(p), reserved_words)(n)
 
@@ -27,7 +34,7 @@ BEGIN
 
   IMPORTING InlineVariableNames[Name]
 
-
+    % for every program p, method m, a unique legal name can be found
     name_of_exists : ASSUMPTION
       EXISTS (f : [p : Program -> [Method -> (legal_names(p))]]) :
         FORALL(p : Program) :
@@ -35,51 +42,36 @@ BEGIN
 
   ENDASSUMING
 
+  % name of new local variable res(p)(m) for each method m
   res(p : Program) : (injective?[Method, (legal_names(p))])
 
 
   p : VAR Program
   m : VAR Method
 
-%  res_ex_disjoint : LEMMA % :-)
-%    FORALL(m1, m2 : Method) :
-%     (NOT res(p)(m1) = ex(p)(m2)) AND
-%     (NOT m1 = m2 IMPLIES
-%         (NOT res(p)(m1) = res(p)(m2)) AND
-%         (NOT ex(p)(m1) = ex(p)(m2)))
 
+  % Variable that will be added by the inline process
 
-  % Variables that will be added for the inline process
-
-  new_res_lvar(p, m) : LocalVarDecl =
+  new_res_lvar(p, m) : Decl =
     (# name := res(p)(m),
-       jtype := res_type(m) #)
+       jtype := res_type(m),
+       init_val := default_value(res_type(m)) #)
 
-%  new_ex_lvar(p, m) : LocalVarDecl =
-%    (# name := ex(p)(m),
-%       jtype := BoolType #)
-
-  new_lvars(p) : finite_set[LocalVarDecl] =
-    {lv : LocalVarDecl | EXISTS (m : Method) : 
-                        methods(p)(m) AND lv = new_res_lvar(p, m) }
-
-
-%  new_ex_lvars(p) : finite_set[LocalVarDecl] =
-%    {lv : LocalVarDecl | EXISTS (m : Method) : 
-%                        methods(p)(m) AND lv = new_ex_lvar(p, m) }
-
-%  new_lvars(p) : finite_set[LocalVarDecl] =
-%    union(new_res_lvars(p), new_ex_lvars(p))
+  % New variables will be local variables
+  new_lvars(p) : finite_set[Decl] =
+    {lv : Decl | EXISTS (m : Method) : 
+                   methods(p)(m) AND lv = new_res_lvar(p, m) }
 
   new_res_lvar_new_lvar : LEMMA % :-)
      methods(p)(m) IMPLIES
      new_lvars(p)(new_res_lvar(p, m))
 
-%  new_ex_lvar_new_lvar : LEMMA % :-)
-%     methods(p)(m) IMPLIES
-%     new_lvars(p)(new_ex_lvar(p, m))
 
   IMPORTING ProgramFunctions[Name], SetProp[Name]
+
+  % new local variable disjoint from:
+  % existing field, ghost or local variable declarations
+  % and reserved words
 
   new_lvars_not_field_decls : LEMMA % :-)
      disjoint?(var_names(new_lvars(p)), var_names(getFieldDecls(p)))
@@ -93,9 +85,6 @@ BEGIN
   new_lvars_not_reserved_words : LEMMA % :-)
      disjoint?(var_names(new_lvars(p)), reserved_words)
 
-  new_vars_not_ext_declared_var_names : LEMMA % :-)
-     disjoint?(var_names(new_lvars(p)), ext_declared_var_names(p))
-
   new_lvars_not_ext_declared_var_names : LEMMA % :-)
      disjoint?(var_names(new_lvars(p)), ext_declared_var_names(p))
 
@@ -105,6 +94,8 @@ END InlineNewVariableDeclarations
 
 InlineMethodAnnotation[Name : TYPE+] : THEORY
 BEGIN
+
+  % Inline Method level set-annotations into method body
 
   ASSUMING
 
@@ -129,21 +120,15 @@ BEGIN
   p : VAR Program
   m : VAR Method
 
-  % with every method call, ex initialised to false
-
   % several try-catches needed, because we do not model subclass hierarchy
   % of exceptions
-
-  % MH: name ex a bit unfortunate, should rather be no_ex
-  % AT: Right, but if you don't want to change the name we could assing it
-  %     false after body and then test !ex in the finally clause
 
   % inline_method_body(p)(m) gives in Java-like syntax:
   % try{
   %   try{
   %     pre_set(m);
-  %     body(m);
-  %     ex := true;
+  %     body(m); 
+  %     res(p)(m) := result(m);
   %     post_set(m);
   %   }
   %   catch(Throwable){
@@ -151,12 +136,6 @@ BEGIN
   %   }
   % catch(NullPointerExc){
   %   exc_set(m);
-  % }
-  % finally{
-  %   if (ex){
-  %     res := res(m);
-  %     post_set(m);
-  %   }
   % }
   inline_method_body(p)(m) : Body = 
     TryCatch(
@@ -176,7 +155,10 @@ BEGIN
                 Throw(NullPointer)),
        Skip)
          
-
+  % inline method: pre_set, post_set and exc_set set to Skip
+  % new result variable res(p)(m) added as local variable for this method
+  % body becomes inline_method_body
+  % new result expression: lookup of new local variable res(p)(m)
   inline_method(p)(m : Method) : Method =
     m WITH [pre_set  := LAMBDA(v : Expr) : Skip,
             post_set := LAMBDA(v : Expr) : Skip,
@@ -185,9 +167,11 @@ BEGIN
             body := inline_method_body(p)(m),
             res := var_lookup(res(p)(m))(res_type(m))]
 
-
+  % inline each method in ms
   inline_methods(p)(ms : finite_set[Method]) : finite_set[Method] =
     {m : Method | EXISTS (n : Method) : ms(n) AND m = inline_method(p)(n)}
+
+  % simple rewrite lemmas, useful for auto-rewrites in proofs
 
   inline_method_name : LEMMA % :-)
     FORALL (m : Method) :
@@ -234,6 +218,7 @@ BEGIN
     FORALL (m : Method) :
       res_type(inline_method(p)(m)) = res_type(m)
 
+  % components of inline_method satisfy first conjunct of wf_Body
   inline_method_wf_Body1 : LEMMA % :-)
     FORALL(m : Method) :
       methods(p)(m) IMPLIES
@@ -258,6 +243,7 @@ BEGIN
       AND
       (FORALL(v : Name, e : Excpt) : NOT var_names(exc_set(im)(e))(v))
 
+  % components of inline_method satisfy second conjunct of wf_Body
   inline_method_wf_Body2 : LEMMA % :-)
     FORALL(m : Method, b : Body) :
       wf_Method(p)(m) IMPLIES
@@ -283,6 +269,8 @@ END InlineMethodAnnotation
 InlineClassAnnotation[Name : TYPE+] : THEORY
 BEGIN
 
+  % Inline all methods in class
+
   ASSUMING
 
 
@@ -303,10 +291,12 @@ BEGIN
 
   p : VAR Program
 
-
+  % apply inline_method on all methods in class
+  % otherwise, class unchanged
   inline_class(p)(c : Class) : Class =
     c WITH [methods := inline_methods(p)(methods(c))]
 
+  % simple rewrite lemmas, useful for auto-rewrites in proofs
   inv_inline_class : LEMMA
     FORALL(c : Class) :
       inv(inline_class(p)(c)) = inv(c)
@@ -323,6 +313,7 @@ BEGIN
     FORALL(c : Class) :
       name(inline_class(p)(c)) = name(c)
 
+  % inlines_class satisfies global part of the wf_Class condition
   inline_class_almost_wf_Class : LEMMA % :-)
     FORALL(c : Class) :
       wf_Class(p)(c) IMPLIES
@@ -333,12 +324,14 @@ BEGIN
            name(m1) = name(m2) IMPLIES
            m1 = m2
 
+  % invariant in class satisfies first conjunct of wf_Body
   inline_class_inv_wf_Body1 : LEMMA % :-)
     FORALL(c : Class) :
       wf_Body(p)(inv(c)) IMPLIES
        (FORALL (v : Name) : var_names(inv(inline_class(p)(c)))(v) IMPLIES
                             ext_declared_var_names(p)(v))
 
+  % invariant in class satisfies second conjunct of wf_Body
   inline_class_inv_wf_Body2 : LEMMA % :-)
     FORALL(c : Class) :
       wf_Body(p)(inv(c)) IMPLIES
@@ -354,6 +347,8 @@ END InlineClassAnnotation
 
 InlineProgramAnnotation[Name : TYPE+] : THEORY
 BEGIN
+
+  % Inline Method-level set annotations for whole program
 
   ASSUMING
 
@@ -380,15 +375,11 @@ BEGIN
 
   IMPORTING SetProp[Name] % to prove TCC
 
+  % Apply inline_class to all classes in program
   inline_program(p) : Program =
     (# classes := {c : Class | EXISTS (c1 : Class) :
                                  classes(p)(c1) AND
                                  c = inline_class(p)(c1)} #)
-
-
-  LocalDecls_inline_program : LEMMA % :-)
-    getLocalDecls(inline_program(p)) = 
-      union(getLocalDecls(p), new_lvars(p))
 
 
 END InlineProgramAnnotation
@@ -397,6 +388,8 @@ END InlineProgramAnnotation
 
 InlineProgramAnnotationProperties[Name : TYPE+] : THEORY
 BEGIN
+
+  % Properties about inlining algorithm
 
   ASSUMING
 
@@ -419,10 +412,15 @@ BEGIN
 
   p : VAR Program
 
+  % For every class in inlined program, a corresponding class in
+  % original program exists
+
   inline_program_class_correspondence : LEMMA % :-)
     FORALL(c : Class) : classes(inline_program(p))(c) IMPLIES
       EXISTS (c1 : Class) : classes(p)(c1) AND c = inline_class(p)(c1)
 
+  % For every method in inlined program, a corresponding method in
+  % original program exists
   inline_program_method_correspondence : LEMMA % :-)
     FORALL(c : Class, m : Method) :
       classes(inline_program(p))(c) IMPLIES
@@ -430,70 +428,39 @@ BEGIN
         EXISTS (c1 : Class, m1 : Method) :
           classes(p)(c1) AND methods(c1)(m1) AND m = inline_method(p)(m1)
 
+  % Field declarations unchanged by inlining
   inline_program_preserves_Field_decls : LEMMA % :-)
     getFieldDecls(inline_program(p)) = getFieldDecls(p) 
 
-
+  % Ghost declarations unchanged by inlining
   inline_program_preserves_Ghost_decls : LEMMA % :-)
     getGhostDecls(inline_program(p)) = getGhostDecls(p)
 
-
+  % Local variable declarations in inlined program union of  
+  % local variable declarations in original program and new local variable
+  % declarations
   inline_program_add_LocalVar_decls : LEMMA % :-)
     getLocalDecls(inline_program(p)) = union(getLocalDecls(p), new_lvars(p))
 
+  % variable declarations in inlined program union of original program
+  % declarations and new local variable declarations
   inline_program_ext_declared_var_names : LEMMA % :-)
      ext_declared_var_names(inline_program(p)) =
        union(ext_declared_var_names(p), var_names(new_lvars(p)))
 
-
-% NOT PROVABLE AS IS NOW: SEE IF USED
-%  inline_program_preserves_wf_state : LEMMA % :-)
-%    FORALL (s : PState) :
-%      wf_state(p)(s) IMPLIES
-%        wf_state(inline_program(p))(s)
-
-%  new_vars_local_in_inline_program : LEMMA % :-)
-%    FORALL (n : Name, s : APState) :
-%      wf_state(inline_program(p))(s) IMPLIES
-%      var_names(new_lvars(p))(n) IMPLIES
-%        is_local(n, pstate(s))
-
-
-% NOT SURE THAT THESE WILL BE USED
-%  inline_program_preserves_fields : LEMMA % :-)
-%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
-%      wf_state(p)(sMP) IMPLIES
-%      wf_state(inline_program(p))(sAP) IMPLIES
-%        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP)))
-
-%  inline_program_preserves_ghoststate_vars : LEMMA % :-)
-%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
-%      wf_state(p)(sMP) IMPLIES
-%      wf_state(inline_program(p))(sAP) IMPLIES
-%        (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
-
-%  inline_program_preserves_local_vars : LEMMA % :-)
-%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
-%      wf_state(p)(sMP) IMPLIES
-%      wf_state(inline_program(p))(sAP) IMPLIES
-%        (is_local(vn, sMP) IMPLIES is_local(vn, sAP))
-
-%  var_names_inline_program : LEMMA % :-)
-%    subset?(var_names(inline_program(p)),
-%            union(var_names(p), var_names(new_lvars(p))))
-
-
+  % inlined method wellformed wrt inlined program
   inline_program_preserves_wf_method : LEMMA % :-)
     FORALL (m : Method) :
       methods(p)(m) IMPLIES
       wf_Method(inline_program(p))(inline_method(p)(m))
 
-
+  % any body that is wellformed wrt the original program is wellformed
+  % wrt the inlined program
   inline_program_preserves_wf_body : LEMMA % :-)
     FORALL (b : (wf_Body(p))) :
       wf_Body(inline_program(p))(b)
 
-
+  % name of classes in inlined program unchanged
   get_class_inline_program : LEMMA % :-)
     FORALL (c1, c2 : Class, tgt : Val) :
       up?(get_class(p)(tgt)) IMPLIES
@@ -502,6 +469,8 @@ BEGIN
       c2 = down(get_class(inline_program(p))(tgt)) IMPLIES
         name(c1) = name(c2)
 
+  % if c1 is class in original program, and c2 is class in inlined program
+  % and names are the same, then c2 = inline_class(c1)
   same_class_name_inline_class_implies_same_class : LEMMA % :-)
     FORALL (c1, c2 : Class) :
       classes(p)(c1) IMPLIES
@@ -509,6 +478,7 @@ BEGIN
       name(c1) = name(c2) IMPLIES
         c2 = inline_class(p)(c1)
 
+  % method names not changed by annotations
   same_method_name_inline_class_implies_same_method : LEMMA % :-)
     FORALL (c1, c2 : Class, m1, m2 : Method) :
       classes(p)(c1) IMPLIES
@@ -519,6 +489,7 @@ BEGIN
         m2 = inline_method(p)(m1)
 
 
+  % lookup method returns inlined method 
   lookup_mthd_inline_program : LEMMA % :-)
     FORALL (m1, m2 : Method, mn : Name, tgt : Val) :
       up?(lookup_mthd(p, tgt, mn)) IMPLIES
@@ -527,15 +498,17 @@ BEGIN
       m2 = down(lookup_mthd(inline_program(p), tgt, mn)) IMPLIES
         m2 = inline_method(p)(m1)
 
-
+  % class names unchanged by annotation inlining
   inline_program_preserves_class_names : LEMMA % :-)
     class_names(p) = class_names(inline_program(p))
 
+  % if a reference to class in original program, then also in inlined program
   up_get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) :
       up?(get_class(p)(a)) IMPLIES
         up?(get_class(inline_program(p))(a))
 
+  % get_class in inlined program returns inlined class
   get_class_equivalence : LEMMA % :-)
     FORALL(a : Val) :
       up?(get_class(p)(a)) IMPLIES
