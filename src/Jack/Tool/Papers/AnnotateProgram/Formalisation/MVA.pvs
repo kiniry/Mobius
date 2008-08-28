@@ -275,7 +275,7 @@ BEGIN
   wf_PEvent(a : MVA)(pe : PEvent) : boolean =
     evs(a)(event(pe)) AND wf_PSt(stP(pe))(var_names(vdsP(a)))
 
-  % NOTE: eval is implicitly defined by eval_action_behaviour in Equivalence.
+  % NOTE: eval is implicitly defined by eval_action_behaviour in WellBehavedMVA
   % eval expression depends on program and automaton state
 
   % Since we only consider the PSt of the state of the program, actions can not
@@ -286,7 +286,7 @@ BEGIN
   % throw an exception). 
   % Note that this is required by well_behaved_MVA, but for simplicity we
   % specify it here (otherwise we have to move execute_action_yields_wf_state
-  % to MonitoredProgramSemantics).
+  % and step_yields_wf_state to WellBehavedMVA as well).
   eval_yields_not_bottom : AXIOM
     FORALL (a : MVA, e : Expr, stA, stP : Store) :
       wf_store(stA)(var_names(vdsA(a))) IMPLIES
