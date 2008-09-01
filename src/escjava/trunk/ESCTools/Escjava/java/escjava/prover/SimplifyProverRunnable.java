@@ -17,9 +17,9 @@ public class SimplifyProverRunnable implements Runnable {
 	}
 
 	public void run() {
-		if (ProverManager.THEADING_TRACE_OUTPUT) System.out.println("\tSimplifyProverRunnable: run: starting");
+		if (ProverManager.THREADING_TRACE_OUTPUT > 9) System.out.println("\tSimplifyProverRunnable: run: starting");
 		this.proverResult = this.streamProve();
-		if (ProverManager.THEADING_TRACE_OUTPUT) System.out.println("\tSimplifyProverRunnable: run: returning");
+		if (ProverManager.THREADING_TRACE_OUTPUT > 9) System.out.println("\tSimplifyProverRunnable: run: returning");
 	}
 
 	private Enumeration streamProve() {
