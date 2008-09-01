@@ -10,6 +10,7 @@ import javafe.tc.*;
 import javafe.util.*;
 
 import escjava.Main;
+import escjava.ast.SimpleModifierPragma;
 import escjava.ast.TagConstants;
 import escjava.ast.TypeExpr;
 import escjava.prover.Atom;
@@ -102,6 +103,28 @@ public class BackPred
         for( Enumeration fields = scope.fields();
         fields.hasMoreElements(); ) {
             FieldDecl fd = (FieldDecl)fields.nextElement();
+            //[[ chalin --- experiments in IDC
+            if (false) {
+            	SimpleModifierPragma nonNullPragma = GetSpec.NonNullPragma(fd);
+            	if (nonNullPragma != null) {
+            		int loc = fd.getStartLoc();
+            		VariableAccess f = VariableAccess.make(fd.id, loc, fd);
+
+            		LocalVarDecl sDecl = UniqName.newBoundVariable('s');
+            		VariableAccess s = TrAnExpr.makeVarAccess(sDecl, Location.NULL);
+            		// genFinalInitInfo(fd.init, sDecl, s, GC.select(f, s), fd.type, loc, proverStream);
+            		if (Modifiers.isStatic(fd.modifiers)) {
+            			produce(sDecl, s, GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit), proverStream);
+            			System.out.print("\nTSBP: ");
+            			produce(sDecl, s, GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit), System.out);
+            		} else {
+            			produce(null, null, GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit), proverStream);
+            			System.out.print("\nTSBP: ");
+            			produce(null, null, GC.nary(TagConstants.REFNE, GC.select(f, s), GC.nulllit), System.out);
+            		}
+            	}
+            }
+            //]] chalin
             if (!Modifiers.isFinal(fd.modifiers) || fd.init==null)
                 continue;
             
@@ -109,8 +132,7 @@ public class BackPred
             VariableAccess f = VariableAccess.make(fd.id, loc, fd);
             
             if (Modifiers.isStatic(fd.modifiers)) {
-                genFinalInitInfo(fd.init, null, null, f, fd.type, loc, 
-                        proverStream);
+                genFinalInitInfo(fd.init, null, null, f, fd.type, loc, proverStream);
             } else {
                 LocalVarDecl sDecl = UniqName.newBoundVariable('s');
                 VariableAccess s = TrAnExpr.makeVarAccess(sDecl, Location.NULL);
@@ -124,12 +146,13 @@ public class BackPred
 
     //@ requires loc != Location.NULL;
     //@ requires sDecl != null ==> s != null;
-    protected void genFinalInitInfo(/*@ non_null */ VarInit initExpr,
-                                         GenericVarDecl sDecl, Expr s,
-                                         /*@ non_null */ Expr x,
-                                         /*@ non_null */ Type type,
-                                         int loc,
-                                         /*@ non_null */ PrintStream proverStream) {
+    protected void genFinalInitInfo(/*@non_null*/VarInit initExpr,
+    		/*@nullable*/GenericVarDecl sDecl,
+    		/*@nullable*/Expr s,
+    		/*@non_null*/Expr x,
+    		/*@non_null*/Type type,
+    		int loc,
+    		/*@non_null*/PrintStream proverStream) {
         /* The dynamic type of the field is subtype of the type of the
          * initializing expression.
          */
@@ -234,9 +257,9 @@ public class BackPred
     }
 
     //@ requires sDecl != null ==> s != null;
-    protected void produce(GenericVarDecl sDecl, Expr s,
-                                /*@ non_null */ Expr e,
-                                /*@ non_null */ PrintStream proverStream) {
+    protected void produce(/*@nullable*/GenericVarDecl sDecl, /*@nullable*/Expr s,
+                                /*@non_null*/ Expr e,
+                                /*@non_null*/ PrintStream proverStream) {
         if (sDecl != null) {
             Expr ant = GC.nary(TagConstants.REFNE, s, GC.nulllit);
             ExprVec nopats = ExprVec.make(1);
