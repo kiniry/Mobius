@@ -109,6 +109,7 @@ test303a  Good 	IDC: ... .
 test304   Good 	IDC: ... .
 test305   Good 	IDC: ... .
 test306   Good	IDC: non-null declarations and invariants.
+test307   Good	IDC: non-null array declarations and invariants over them. SEE FIXME IN TEST FILE.
 
 test495 Good    See https://mobius.ucd.ie/ticket/495 - dcochran
 
