@@ -1,0 +1,13 @@
+% JType instead of Type, because Type is a reserved keyword in PVS
+% Primitive types: integer and bool and special void type
+% Datatype Val defines elements of JType
+JType : DATATYPE
+BEGIN
+
+  IntType : IntType?            % Integers
+  BoolType : BoolType?          % Booleans
+  Void : Void?                  % Void
+  RefType : RefType?            % References
+
+
+END JType
