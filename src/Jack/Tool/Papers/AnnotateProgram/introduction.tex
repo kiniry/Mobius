@@ -15,14 +15,6 @@ conditions a method can be called.
 
 However, such a monitoring approach is not always suited due to the
 nature and use of certain applications.
-% MH: changed resource constraints to nature of the application
-%% Commented out to save space (and added "due to resource constraints"
-%% in the previous line.
-% In particular, if an application is installed on a
-% stand-alone personal device that is handed out to an end-user, it is
-% unacceptable that the device suddenly gets blocked because of a
-% security violation, forcing the end-user to return to the
-% provider to unblock the device.
 Instead, for such applications
 statical means to enforce security are necessary. A commonly advocated
 approach is to require that the application carries a correctness
@@ -38,9 +30,6 @@ the application provider is required to create this proof.
 % program verification techniques are used to produce the proof.
 
 Security experts typically express security requirements by a collection of
-% security rules that have to be followed by the
-% application developer. Automata or temporal logic are a natural and
-% intuitive formalism to express these.
 security automata or temporal logic formulae. However, typical program
 verification tools %that can be used in such an approach
 use a Hoare logic style for the specifications (\emph{i.e.}, using pre- and
@@ -49,31 +38,12 @@ verification of such security properties, this paper proposes a
 translation from security properties expressed as an automaton (or a
 safety temporal logic formula, which can be translated into an
 automaton~\cite{Wolper01}) into program annotations.
-%% This is mentioned below
-% Based on these annotations, appropriate Hoare-style specifications can be
-% generated, see~\cite{PavlovaBBHL04} for a propagation algorithm that does
-% exactly this.
-
-% We prove that such translation is security preserving: monitoring
-% the application does not produce a security violation,
-% if and only if, runtime checking
-% the generated annotations does not result in a violation.
-% As a next step, the annotations can be propagated (as described
-% in~\cite{PavlovaBBHL04}), giving rise to new annotations. Eventually,
-% this will result in a completely annotated application and if one can
-% prove statically that the annotated program respects its annotations,
-% the program will also respect the security property expressed by the automaton.
 
 The translation described in this paper is defined in several
 steps. For each step we provide a correctness proof.
 \begin{inparaenum}[(\itshape i\upshape)]
 \item We translate a \emph{partial automaton}, to a \emph{total automaton}
 that contains a special trap to model that an error has occurred.
-% \emph{i.e.},\ an automaton that can get \emph{stuck}, because it has
-% no transitions enabled, to a \emph{total automaton}, \emph{i.e.},\ an
-% automaton that always has a transition enabled, but that contains a
-% special trap state, that models that an error has occurred.
-%
 %% Commented to save space: this can be seen on the example
 % This step is necessary, because often it is much more intuitive to
 % specify a security property by a partial automaton, (this
@@ -83,29 +53,14 @@ that contains a special trap to model that an error has occurred.
 We show that the behaviour of a program that is monitored with a partial
 automaton is equivalent to the behaviour of a program that is monitored with
 the completed automaton.
-\item We generate annotations, using an extension of JML~\cite{LeavensPCCRCK05}, 
+\item We generate annotations, using an extension of JML~\cite{LeavensPCCRCK05},
 that capture the behaviour of the total automaton.  For this, we
 generate special method-level set-annotations that are evaluated upon
 entry or exit of a method.
-% For this, we add special ghost variables that model the
-% monitor state, and to every method specification, we add special
-% \textsf{set} annotations that update these ghost variables upon entry
-% and exit of a method ~--~according to the updates in the automaton.
-%To write  this in a convenient way, we introduce a special
-%conditional construct to update ghost variables (called
-%\CaseJML).
-We show that run-time monitoring of the program
-only throws a (new) exception to signal an annotation violation if the
-monitor reaches the trap state.
+We show that run-time monitoring of the program only throws a (new) exception
+to signal an annotation violation if the monitor reaches the trap state.
 \item We inline the set-annotations from the method specification
 to the method body and prove equivalence of the run-time checking behaviour.
-% This requires a (source code level) code transformation, that
-% ensure that the ghost variables are also updated appropriately if the
-% method throws an exception.
-% We prove that the run-time checking
-% behaviour of the program with the inlined \textsf{set} annotations is
-% equivalent to the run-time checking behaviour of the program with the
-% method specification-level \textsf{set} annotations.
 \end{inparaenum}
 All results in the paper have been established formally using
 the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation

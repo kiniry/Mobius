@@ -3,7 +3,7 @@
 This section formally defines the format of security automata that we
 use. These are particularly suited for monitoring, because transitions
 can depend on the state of the monitored program. We call them
-Property Automata (PA).  
+Property Automata (PA).
 % \marginnote{MH: Multi-Variable Automata not very good/catchy name
 %  AT: What about: Property Automata, Security Automata (or more precisely
 %  Safety Automata), Pushdown Automata, just Automata or just Property.
@@ -24,8 +24,6 @@ the exception with which the method returns, in case the event is
 exceptional method exit.
 \end{inparaenum}
 Each action describes how the automaton state is updated by the transition.
-% \marginnote{\small MH: conditions on guards/actions?
-%  AT: I wouldn't mention them we have the specification for all the details.}
 
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable nonempty sets of control points and names, respectively.
@@ -51,9 +49,6 @@ without results. Reference values contain a number, which can be
 considered as the location where the object is stored;
 \(\bot\) is used to denote the outcome of an undefined expression.
 
-% We assume that \(\Name\) contains the special names \textsf{this}.
-
-
 A PA consists of
 \begin{inparaenum}[(\itshape i\upshape)]
 \item a name,
@@ -74,17 +69,6 @@ actions. Each action assigns the result of an expression (containing
 both program and PA variables) to a PA
 variable. Figure~\ref{FigPAForm} shows the main components of the
 formal PA definition.
-
-%  Variables
-% declarations are the same as variable declarations in a program (defined
-% below).
-%  while program variable declarations in the PA have the same
-% format as local variable declarations in a program (\emph{i.e.}, they
-% are not explicitly initialised in the monitor, their value is retrieved from
-% the program state.).
-%% This is already said
-% (the types of \FieldDecl and
-% \LocalVarDecl will also be used in the abstract syntax of programs).
 
 \begin{figure}[t]
 \[{\small
@@ -110,8 +94,6 @@ source control point and event there is always at most one guard that
 holds. Notice that it is not obvious how to transform a
 non-deterministic PA into a deterministic one, because the actions
 made by the overlapping transitions might differ.
-% We believe that this is a realistic restriction, and that most important
-% security properties can be expressed as deterministic PAs.
 
 A PA is \emph{total} if there is always a guard that holds
 for a given source control point and event, otherwise it is
@@ -123,21 +105,13 @@ disjunction of all other guards for this control point and event, and
 in addition, add unconditional transitions from \halted to \halted
 for every possible event.
 
-%\marginnote{MH: Should we give formal definition of \emph{complete}?}
-
-A PA is
-\emph{wellformed} if\footnote{We only formalise constraints that are
+A PA is \emph{wellformed} if\footnote{We only formalise constraints that are
 necessary for our formalisation.}:
 \begin{inparaenum}[(\itshape i\upshape)]
-% \item the monitor variable names do not overlap with the reserved
-% words,
-% \item the program variable names that are used are unique,
 \item variable names are unique and are not reserved words,
 \item guards do not have side-effects,
 \item guards and actions only use declared variables, and
-\item control points and events  in transitions are declared.
-% \item transitions range between declared control points and are
-% labelled with declared events.
+\item control points and events in transitions are declared.
 \end{inparaenum}
 
 %Formally:
@@ -199,74 +173,6 @@ completed PA reaches the state \halted.
 \end{equation}
 
 
-% The following PA\footnote{Where \(\actskip\) denotes an empty sequence.}
-% encodes the property described in Figure~\ref{FigExample}.
-% Recall the example security automaton in Figure~\ref{FigExample},
-% expressing that the method \texttt{sendSMS} can
-% be called at most \(N\) times in between calls to a \texttt{reset}
-% method. This property is formally described by the following
-% automaton\footnote{Where \(\actskip\) denotes an empty sequence.}.
-% \[
-% \small{
-% \hspace{-0.3em}
-% \begin{array}[t]{l}
-% \opri
-% \begin{array}[t]{l}
-% \name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
-% \cps := \{s_1, s_2\},
-% \init := s_1,\\
-% \evs :=
-% \begin{array}[t]{l}
-% \{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \opri \entry,
-% \exit, \excexit \} \:\cup \\
-% \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
-% \end{array}
-% \\
-% \vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
-% \vdsP := \emptyset,\\
-% \trans := \{
-% \begin{array}[t]{l}
-% \opri
-%  \begin{array}[t]{l}
-% \scp := s_1, \tcp := s_2, \\
-%              \event := \opri \etype := \entry,
-%                              \mname := \texttt{sendSMS} \clri, \\
-%              \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,
-%              \action := \actskip
-%             \clri,
-% \end{array}\\
-% \opri
-%  \begin{array}[t]{l}
-% \scp := s_2, \tcp := s_1, \\
-%              \event := \opri \etype := \exit,
-%                              \mname := \texttt{sendSMS} \clri, \\
-%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-%              \action := [\opri \target := n, \expr := n + 1 \clri]
-%             \clri,
-% \end{array}\\
-% \opri
-%  \begin{array}[t]{l}
-% \scp := s_2, \tcp := s_1, \\
-%              \event := \opri \etype := \excexit,
-%                              \mname := \texttt{sendSMS} \clri, \\
-%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-%              \action := \actskip
-%             \clri,
-% \end{array}\\
-% \opri
-% \begin{array}[t]{l}
-% \scp := s_1, \tcp := s_1, \\
-%              \event := \opri \etype := \exit, \mname := \texttt{reset}
-% \clri, \\
-%              \guard := \lambda(\sigma_A, \sigma_P, v). \ttt,
-%              \action := [\opri \target := n, \expr := 0 \clri]
-%            \clri \} \clri
-% \end{array}
-% \end{array}
-% \end{array}\\
-% \end{array}
-% }\]
-
 \paragraph{Example}
 
 The following PA\footnote{Where we assume that the default guard is
@@ -285,8 +191,8 @@ encodes the property described in Figure~\ref{FigExample}, while Figure~\ref{Fig
 \init := s_1,\\
 \evs :=
 \begin{array}[t]{l}
-\{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \opri \entry,
-\exit, \excexit \} \:\cup \\
+\{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \{ \entry,
+\exit, \excexit \} \} \:\cup \\
 \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
 \end{array}
 \\
