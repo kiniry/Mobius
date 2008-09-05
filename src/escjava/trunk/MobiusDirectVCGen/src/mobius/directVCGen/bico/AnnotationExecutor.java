@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.List;
 
 import mobius.bico.Constants.Suffix;
-import mobius.bico.coq.CoqStream;
-import mobius.bico.coq.LoadPath;
+import mobius.bico.bicolano.coq.CoqStream;
+import mobius.bico.bicolano.coq.LoadPath;
 import mobius.bico.dico.ADictionary;
 import mobius.bico.executors.ClassExecutor;
 import mobius.bico.executors.ClassesMakefileGen;

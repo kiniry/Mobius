@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javafe.ast.RoutineDecl;
-import mobius.bico.coq.CoqStream;
+import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
 import mobius.directVCGen.formula.Expression;

@@ -6,7 +6,7 @@ import java.util.List;
 import javafe.ast.ASTNode;
 import javafe.ast.RoutineDecl;
 import javafe.util.Location;
-import mobius.bico.coq.CoqStream;
+import mobius.bico.bicolano.coq.CoqStream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Util;

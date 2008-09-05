@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
-import mobius.bico.coq.CoqStream;
+import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
 import mobius.directVCGen.translator.JmlVisitor;
 
