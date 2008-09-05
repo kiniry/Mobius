@@ -1,6 +1,7 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
+import mobius.bico.bicolano.coq.CType;
 import mobius.bico.dico.MethodHandler;
 
 import org.apache.bcel.generic.ANEWARRAY;
@@ -58,7 +59,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
     final Type type = ins.getType(fConstantPool);
     final Repository fRepos = SyntheticRepository.getInstance();
     try {
-      fRes = "Newarray " + Util.convertType(type, fRepos);
+      fRes = "Newarray " + CType.getInstance().convertType(type, fRepos);
     } 
     catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -75,7 +76,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
     final Type type = ins.getType(fConstantPool);
     final Repository fRepos = SyntheticRepository.getInstance();
     try {
-      fRes = "Checkcast " + Util.convertReferenceType((ReferenceType) type, fRepos);
+      fRes = "Checkcast " + CType.getInstance().convertReferenceType((ReferenceType) type, fRepos);
     }
     catch (ClassNotFoundException e) {
       e.printStackTrace();
@@ -118,7 +119,7 @@ public final class CPInstructionVisitor extends EmptyVisitor {
     final Type type = ins.getType(fConstantPool);
     final Repository fRepos = SyntheticRepository.getInstance();
     try {
-      fRes = "Instanceof " + Util.convertReferenceType((ReferenceType) type, fRepos);
+      fRes = "Instanceof " + CType.getInstance().convertReferenceType((ReferenceType) type, fRepos);
     }
     catch (ClassNotFoundException e) {
       e.printStackTrace();

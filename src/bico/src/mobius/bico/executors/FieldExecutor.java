@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.bico.Util;
+import mobius.bico.bicolano.AType;
+import mobius.bico.bicolano.coq.CType;
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.bicolano.coq.Translator;
 import mobius.bico.bicolano.coq.Translator.Access;
@@ -129,7 +131,7 @@ class FieldExecutor extends ASignatureExecutor {
     fOutSig.println("(" + fieldIdx + "%positive)");
     
     // !!! here will be conversion
-    fOutSig.println(Util.convertType(field.getType(), getRepository()));
+    fOutSig.println(AType.getInstance().convertType(field.getType(), getRepository()));
     fOutSig.decTab();
     fOutSig.println(".\n");
     fOutSig.definition(Util.coqify(field.getName()) + "FieldSignature", 

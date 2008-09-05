@@ -1,6 +1,7 @@
 package mobius.bico.executors;
 
 import mobius.bico.Util;
+import mobius.bico.bicolano.coq.CType;
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.bicolano.coq.Translator;
 import mobius.bico.bicolano.coq.Translator.Access;
@@ -127,7 +128,7 @@ class MethodExecutor extends ASignatureExecutor {
     else {
       String str = "(";
       for (int i = 0; i < atrr.length; i++) {
-        str = str.concat(Util.convertType(atrr[i], getRepository()) + "::");
+        str = str.concat(CType.getInstance().convertType(atrr[i], getRepository()) + "::");
       }
       str = str.concat("nil)");
       fOutSig.println(str);

@@ -1,6 +1,8 @@
 package mobius.bico.visitors;
 
 import mobius.bico.Util;
+import mobius.bico.bicolano.AType;
+import mobius.bico.bicolano.coq.CType;
 import mobius.bico.bicolano.coq.Translator;
 import mobius.bico.dico.MethodHandler;
 
@@ -147,14 +149,7 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = BranchInstructionVisitor.translate(ins);
   }
   
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitBREAKPOINT(final BREAKPOINT ins) {
-    fRes = Util.unhandled(ins);
-  }
+
   
   /**
    * Visit a conversion instruction only works for I2B and
@@ -185,104 +180,18 @@ public final class InstructionVisitor extends EmptyVisitor {
                                    fConstantPool, ins);
   }
   
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitDCMPG(final DCMPG ins) {
-    fRes = Util.unhandled(ins);
-  }
+
   
   /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitDCMPL(final DCMPL ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitDCONST(final DCONST ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitFCMPG(final FCMPG ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitFCMPL(final FCMPL ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitFCONST(final FCONST ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
+   * Construnt an integer constant.
+   * @param ins contains the number
    */
   @Override
   public void visitICONST(final ICONST ins) {
     fRes = "Const INT " + Translator.toZ(((ICONST) ins).getValue());
   }
   
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitIMPDEP1(final IMPDEP1 ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitIMPDEP2(final IMPDEP2 ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitLCMP(final LCMP ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitLCONST(final LCONST ins) {
-    fRes = Util.unhandled(ins);
-  }
+
   
   /**
    * Construct a local variable. 
@@ -316,24 +225,7 @@ public final class InstructionVisitor extends EmptyVisitor {
       }
     }
   }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitMONITORENTER(final MONITORENTER ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitMONITOREXIT(final MONITOREXIT ins) {
-    fRes = Util.unhandled(ins);
-  }
+
   
   /**
    * Set the result to <code>Newarray type</code>.
@@ -342,7 +234,7 @@ public final class InstructionVisitor extends EmptyVisitor {
   @Override
   public void visitNEWARRAY(final NEWARRAY ins) {
     try {
-      final String type = Util.convertType(BasicType.getType(((NEWARRAY) ins)
+      final AType type = CType.getInstance().convertType(BasicType.getType(((NEWARRAY) ins)
                                                   .getTypecode()), null);
       fRes = "Newarray " + type;
     } 
@@ -360,15 +252,7 @@ public final class InstructionVisitor extends EmptyVisitor {
     fRes = "Nop";
   }
   
-  /**
-   * Unhandled instruction.
-   * @param ins ignored
-   */
-  @Override
-  public void visitRET(final RET ins) {
-    fRes = Util.unhandled(ins);
-  }
-  
+ 
   /**
    * Translate a return instruction to a Bico one:
    * Return, Vreturn Aval, Vreturn Ival, or an unhandled
@@ -429,5 +313,130 @@ public final class InstructionVisitor extends EmptyVisitor {
     
     return v.fRes;
   }
-
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitIMPDEP1(final IMPDEP1 ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitIMPDEP2(final IMPDEP2 ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitLCMP(final LCMP ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitLCONST(final LCONST ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitMONITORENTER(final MONITORENTER ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitMONITOREXIT(final MONITOREXIT ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitRET(final RET ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitDCMPG(final DCMPG ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitDCMPL(final DCMPL ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitDCONST(final DCONST ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitFCMPG(final FCMPG ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitFCMPL(final FCMPL ins) {
+    fRes = Util.unhandled(ins);
+  }
+  
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitFCONST(final FCONST ins) {
+    fRes = Util.unhandled(ins);
+  }
+  /**
+   * Unhandled instruction.
+   * @param ins ignored
+   */
+  @Override
+  public void visitBREAKPOINT(final BREAKPOINT ins) {
+    fRes = Util.unhandled(ins);
+  }
 }

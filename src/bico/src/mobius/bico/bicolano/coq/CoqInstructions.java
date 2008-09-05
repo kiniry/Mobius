@@ -3,12 +3,15 @@ package mobius.bico.bicolano.coq;
 /**
  * This interface defines constants useful for the translation
  * of bytecode.
+ * Actually it is not used at all.
+ * 
+ * @deprecated Maybe find a use to it.
  * 
  * @author J. Charles (julien.charles@inria.fr), 
  * P. Czarnik (czarnik@mimuw.edu.pl), 
  * L. Hubert (laurent.hubert@irisa.fr)
  */
-public interface CoqInstructions {
+interface CoqInstructions {
   
   /** instruction types in BCEL the same as in umbra. */
   String[] instructions = {"aconst_null", "dadd", "ddiv", "dmul", "dneg", "drem", 

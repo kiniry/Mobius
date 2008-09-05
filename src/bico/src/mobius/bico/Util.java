@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Stack;
 
-
 import mobius.bico.Constants.Suffix;
+import mobius.bico.bicolano.AType;
 import mobius.bico.bicolano.coq.Translator;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -112,7 +112,7 @@ public class Util {
    * @param t
    *            the type which was found
    */
-  static void unhandled(final String str, final Type t) {
+  public static void unhandled(final String str, final Type t) {
     System.err.println("Unhandled type (" + str + "): " + t.toString());
   }
   
@@ -158,98 +158,14 @@ public class Util {
     if (t == Type.VOID || t == null) {
       return "None";
     }
-    return "(Some " + Util.convertType(t, repos) + ")";
+    return "(Some " + AType.getInstance().convertType(t, repos) + ")";
   }
   
-  /**
-   * Convert a type to a Coq valid type.
-   * 
-   * @param t
-   *            the type to convert
-   * @param repos
-   *            is the repository where information on classes can be found
-   * @return Coq value of t of type type
-   * @throws ClassNotFoundException
-   *             if the type cannot be resolved
-   */
-  public static String convertType(final Type t, final Repository repos)
-    throws ClassNotFoundException {
-    if (t instanceof BasicType) {
-      return "(PrimitiveType " + Util.convertPrimitiveType((BasicType) t) + ")";
-    } 
-    else if (t instanceof ReferenceType) {
-      return "(ReferenceType " + Util.convertReferenceType((ReferenceType) t, repos) + ")";
-    } 
-    else {
-      unhandled("Unhandled Type: ", t);
-      return "(ReferenceType (ObjectType javaLangObject " + 
-      Translator.comment(t.toString()) + " )";
-    }
-  }
+
   
-  /**
-   * @param type
-   *            the type to convert
-   * @param repos
-   *            is the repository where information on classes can be found
-   * @return Coq value of t of type refType
-   * @throws ClassNotFoundException
-   *             if a type cannot have its class resolved
-   */
-  public static String convertReferenceType(final ReferenceType type,
-                                            final Repository repos) 
-    throws ClassNotFoundException {
-    final String convertedType;
-    if (type instanceof ArrayType) {
-      convertedType = "(ArrayType " + 
-                        convertType(((ArrayType) type).getElementType(), repos) + ")";
-    } 
-    else if (type instanceof ObjectType) {
-      final ObjectType ot = (ObjectType) type;
-      try {
-        if (ot.referencesInterfaceExact()) {
-          convertedType = "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
-        } 
-        else {
-          convertedType = "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
-        }
-      }
-      catch (ClassNotFoundException e) {
-        final JavaClass jc = repos.findClass(ot.getClassName());
-        if (jc != null) {
-          if (jc.isInterface()) {
-            return "(InterfaceType " + coqify(ot.getClassName()) + "Type.name)";
-          }
-          else {
-            return "(ClassType " + coqify(ot.getClassName()) + "Type.name)";
-          } 
-        }
-        throw e;
-      }
-    } 
-    else {
-      unhandled("ReferenceType", type);
-      convertedType = "(ObjectType javaLangObject " +
-                        Translator.comment(type.toString()) + " )";
-    }
-    return convertedType;
-  }
+
   
-  /**
-   * Converts a primitive type to a string.
-   * @param t the type to convert
-   * @return Coq value of t of type primitiveType
-   */
-  static String convertPrimitiveType(final BasicType t) {
-    if (t.equals(Type.BOOLEAN) || t == Type.BYTE || 
-        t == Type.SHORT || t == Type.INT) {
-      return (t.toString().toUpperCase());
-    } 
-    else {
-      unhandled("BasicType", t);
-      return ("INT " + Translator.comment(t.toString()));
-    }
-  }
+
   
   /**
    * Returns a Coq version of the package name. If the package is a.bc.de it
