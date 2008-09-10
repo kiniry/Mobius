@@ -47,6 +47,14 @@ BEGIN
     MVA_cps_modeled?(mp)(sAP) AND
     MVA_vars_modeled?(sA, sAP)
 
+
+  % from APState, compute AState, such that ghots variables representing
+  % automaton variables have corresponding values
+  APStateToAState(mp)(sAP : APState) : AState =
+    choose({sA : AState | MVA_modeled?(mp)(sA, sAP) AND
+                          wf_AState(mva(mp))(sA)})
+
+
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
@@ -71,41 +79,43 @@ BEGIN
       wf_AState(mva(mp))(sMVA) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
-      ts(mva(mp))(t) IMPLIES scp(t) = cp(sMVA) IMPLIES
+      ts(mva(mp))(t) IMPLIES 
         EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
           guard_to_expression(mva(mp))(guard(t)) = e AND
           FORALL(arg : ValOrExcpt) :
           wf_Expr(ann_program(mp))(e(arg)) AND
           derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
-          (guard(t)(stA(sMVA), fvs(st(pstate(sAP))), arg) = (v = Bool(TRUE)))
+          Bool(guard(t)(stA(sMVA), fvs(st(pstate(sAP))), arg)) = v
 
   % It is possible to evaluate expressions appearing in actions (they 
   % terminate) and they are side-effect-free. Note that the evaluation 
   % of the expresion can not throw an exception (provided it starts in 
   % a non-exceptional state).
   eval_action_behavior(mp) : boolean =
-    FORALL (e : Expr, v : Val, sAP : APState, sMVA : AState) :
-      wf_Expr(mva(mp))(e) IMPLIES
+    FORALL (t : Transition, oa : OneAction, v : Val, 
+            sAP : APState, sMVA : AState) :
+      wf_Expr(mva(mp))(source(oa)) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
       wf_AState(mva(mp))(sMVA) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
       MVA_modeled?(mp)(sMVA, sAP) IMPLIES
-        (eval(e)(stA(sMVA), fvs(st(pstate(sAP)))) = v) =
-        EXISTS (n : nat) : derive(ann_program(mp))(e, sAP, v, sAP)(n)
+        EXISTS (n : nat) : 
+          derive(ann_program(mp))
+                (source(oa), sAP, 
+                 eval(source(oa))(stA(sMVA), fvs(st(pstate(sAP)))), sAP)(n)
 
-  actions_have_no_side_effects(mp) : boolean =
-    FORALL (t : Transition, oa : OneAction) :
-      ts(mva(mp))(t) IMPLIES
-      member(oa, action(t)) IMPLIES
-        FORALL (s1, s2 : APState, v : Val, n : nat) :
-          wf_state(ann_program(mp))(s1) IMPLIES
-          derive(ann_program(mp))(source(oa), s1, v, s2)(n) IMPLIES
-            s1 = s2
+%   actions_have_no_side_effects(mp) : boolean =
+%     FORALL (t : Transition, oa : OneAction) :
+%       ts(mva(mp))(t) IMPLIES
+%       member(oa, action(t)) IMPLIES
+%         FORALL (s1, s2 : APState, v : Val, n : nat) :
+%           wf_state(ann_program(mp))(s1) IMPLIES
+%           derive(ann_program(mp))(source(oa), s1, v, s2)(n) IMPLIES
+%             s1 = s2
 
   well_behaved_MVA_for_annot_gen(mp) : boolean =
     guard_to_expression_behavior(mp) AND
-    eval_action_behavior(mp) AND
-    actions_have_no_side_effects(mp)
+    eval_action_behavior(mp) 
 
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
