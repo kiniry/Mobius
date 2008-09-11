@@ -441,17 +441,19 @@ BEGIN
 
   % guard_to_expression is implicitly defined by guard_to_expression_behavior
   % in Equivalence.
-  guard_to_expression(a : MVA)(g : Guard) : [ValOrExcpt -> Expr]
+  guard_to_expression(g : Guard) : [ValOrExcpt -> Expr]
 
   % assumptions on guard_to_expression
 
   % guard_to_expression produces wellformed expressions
+  % i.e. any guard occurring in a translates into an expression that is 
+  % wellformed wrt a
   guard_to_expression_yields_wf_Expr : AXIOM
     FORALL(a : MVA, t : Transition) :
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
         FORALL(v : ValOrExcpt) :
-          wf_Expr(a)(guard_to_expression(a)(guard(t))(v))
+          wf_Expr(a)(guard_to_expression(guard(t))(v))
 
   % guard_to_expression produces expressions that do not contain TryCatch 
   % statements (exclude operational aspects of Java)
@@ -460,7 +462,7 @@ BEGIN
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
         FORALL(v : ValOrExcpt, b : Body) :
-          subterm(b, guard_to_expression(a)(guard(t))(v)) IMPLIES
+          subterm(b, guard_to_expression(guard(t))(v)) IMPLIES
             NOT TryCatch?(b)
 
   IMPORTING ContainsNoMethodCall[Name]
@@ -471,7 +473,7 @@ BEGIN
       wf_MVA(a) IMPLIES
       ts(a)(t) IMPLIES
         FORALL(v : ValOrExcpt) :
-        contains_no_method_call(guard_to_expression(a)(guard(t))(v))
+        contains_no_method_call(guard_to_expression(guard(t))(v))
 
   % sources of actions do not contain method calls
   action_sources_contains_no_method_calls : AXIOM
@@ -526,8 +528,55 @@ BEGIN
                                                 arg : ValOrExcpt) : TRUE)
                             AND action(t) = skip AND tcp(t) = halted})
 
+  
 
+  big_conj(E : finite_set[Expr]) : RECURSIVE Expr =
+    IF empty?(E)
+    THEN Const(Bool(TRUE))
+    ELSE Conj(choose(E), big_conj(rest(E)))
+    ENDIF
+  MEASURE card(E)
 
+  IMPORTING finite_sets@finite_sets_inductions[Expr]
+
+  % auxiliary lemma, to prove guard_to_expression_build_guard_wf_Expr
+  % (proof is not allow to use guard_to_expression_wf_Expr axiom)
+  guard_to_expression_big_conj : LEMMA % :-)
+    FORALL(a : MVA)(E : finite_set[Expr]) :
+      (FORALL (e : Expr) : E(e) IMPLIES wf_Expr(a)(e)) IMPLIES
+      wf_Expr(a)(big_conj(E))
+
+  IMPORTING MVAMonitoring[CP, Name]
+
+  guard_to_expression_build_guard : AXIOM
+    FORALL(a : MVA)(cp : CP, e : Event, v : ValOrExcpt) :
+      guard_to_expression(build_guard(a)(cp, e))(v) =
+        big_conj({expr : Expr |
+                  EXISTS (g : Guard) : all_guards(a)(cp, e)(g) AND
+                                       expr = guard_to_expression(g)(v)})
+
+  % sanity check 
+  % (proof is not allow to use guard_to_expression_wf_Expr axiom)
+  guard_to_expression_build_guard_wf_Expr : LEMMA % :-)
+    FORALL(a : MVA)(cp : CP, e : Event)(v : ValOrExcpt) : 
+      (FORALL (t : Transition) : 
+         ts(a)(t) IMPLIES 
+         scp(t) = cp IMPLIES
+         event(t) = e IMPLIES
+          wf_Expr(a)(guard_to_expression(guard(t))(v))) IMPLIES
+      wf_Expr(a)(guard_to_expression(build_guard(a)(cp, e))(v))
+
+  guard_to_expression_LAMBDA_true : AXIOM
+    guard_to_expression(LAMBDA(stA, stP : Store, arg : ValOrExcpt) : TRUE) =
+      LAMBDA(arg : ValOrExcpt) : Const(Bool(TRUE))
+
+  % sanity check 
+  % (proof is not allow to use guard_to_expression_wf_Expr axiom)
+  guard_to_expression_LAMBDA_true_wf_Expr : LEMMA % :-)
+    FORALL(a : MVA, v : ValOrExcpt) :
+      wf_Expr(a)(guard_to_expression
+                   (LAMBDA(stA, stP : Store, arg : ValOrExcpt) : TRUE)(v))
+    
   % Makes a deterministic MVA total.
   complete_MVA(a : (partial)) : MVA =
     a WITH [cps := add(halted, cps(a)),

@@ -3,8 +3,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -28,11 +30,11 @@ BEGIN
 
 
   MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
-    Int(unique(cp(sA))) = gvs(sAP)(cp(mp))
+    unique(cp(sA)) = gvs(sAP)(cp(mp))
 
   MVA_cps_modeled?(mp)(sAP : APState) : boolean =
     FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-      Int(unique(q)) = gvs(sAP)(name_of(mp)(q))
+      unique(q) = gvs(sAP)(name_of(mp)(q))
 
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(stA(sA)(n)) IMPLIES
@@ -50,9 +52,23 @@ BEGIN
 
   % from APState, compute AState, such that ghots variables representing
   % automaton variables have corresponding values
-  APStateToAState(mp)(sAP : APState) : AState =
-    choose({sA : AState | MVA_modeled?(mp)(sA, sAP) AND
-                          wf_AState(mva(mp))(sA)})
+  APStateToAStore(mp)(sAP : APState) : Store =
+     LAMBDA(n : Name) : 
+       IF var_names(vdsA(mva(mp)))(n)
+       THEN gvs(sAP)(n)
+       ELSE Bottom
+       ENDIF 
+
+  APStateToAStore_wf_store : LEMMA % :-)
+    FORALL(sAP : APState) :
+      wf_state(ann_program(mp))(sAP) IMPLIES
+        wf_store(APStateToAStore(mp)(sAP))(var_names(vdsA(mva(mp))))
+
+  APStateToAStore_MVA_modeled? : LEMMA % :-)
+    FORALL(sAP : APState) :
+      FORALL (n : Name) : 
+        defined?(APStateToAStore(mp)(sAP)(n)) IMPLIES
+        APStateToAStore(mp)(sAP)(n) = gvs(sAP)(n)
 
 
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
@@ -74,15 +90,14 @@ BEGIN
   % of the expression can not result in an exception (v would be Bottom).
   % Furthermore, the evaluation must have no side-effects.
   guard_to_expression_behavior(mp) : boolean =
-    FORALL (t : Transition, sAP : APState, sMVA : AState) :
+    FORALL (t : Transition, sAP : APState, sMVA : AState, arg : ValOrExcpt) :
       wf_state(ann_program(mp))(sAP) IMPLIES
-      wf_AState(mva(mp))(sMVA) IMPLIES
+      wf_store(stA(sMVA))(var_names(vdsA(mva(mp)))) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      MVA_modeled?(mp)(sMVA, sAP) IMPLIES
+      MVA_vars_modeled?(sMVA, sAP) IMPLIES
       ts(mva(mp))(t) IMPLIES 
         EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
-          guard_to_expression(mva(mp))(guard(t)) = e AND
-          FORALL(arg : ValOrExcpt) :
+          guard_to_expression(guard(t)) = e AND
           wf_Expr(ann_program(mp))(e(arg)) AND
           derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
           Bool(guard(t)(stA(sMVA), fvs(st(pstate(sAP))), arg)) = v
@@ -92,13 +107,14 @@ BEGIN
   % of the expresion can not throw an exception (provided it starts in 
   % a non-exceptional state).
   eval_action_behavior(mp) : boolean =
-    FORALL (t : Transition, oa : OneAction, v : Val, 
-            sAP : APState, sMVA : AState) :
+    FORALL (t : Transition, oa : OneAction, sAP : APState, sMVA : AState) :
+      ts(mva(mp))(t) IMPLIES
+      member(oa, action(t)) IMPLIES
       wf_Expr(mva(mp))(source(oa)) IMPLIES
       wf_state(ann_program(mp))(sAP) IMPLIES
-      wf_AState(mva(mp))(sMVA) IMPLIES
+      wf_store(stA(sMVA))(var_names(vdsA(mva(mp)))) IMPLIES
       NOT up?(ex(pstate(sAP))) IMPLIES
-      MVA_modeled?(mp)(sMVA, sAP) IMPLIES
+      MVA_vars_modeled?(sMVA, sAP) IMPLIES
         EXISTS (n : nat) : 
           derive(ann_program(mp))
                 (source(oa), sAP, 
@@ -136,8 +152,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -248,8 +266,7 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
-                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
+        (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
 
   related_states_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
@@ -259,8 +276,7 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
-                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
+        (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
 
 
 END RelatedStatesProperties

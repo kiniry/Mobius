@@ -1,55 +1,51 @@
 (CorrectnessInlineProgram
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3409049681 3412940764
-   ("" (use "infinite_namespace") nil nil) unchecked
-   ((infinite_namespace formula-decl nil CorrectnessInlineProgram nil))
-   250 220 t nil))
+  (IMP_InlineVariableNames_TCC1-1 nil 3409049681 3430053320
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil CorrectnessInlineProgram nil)) 727
+   720 t nil))
  (IMP_InlineRelatedStatesProperties_TCC1 0
-  (IMP_InlineRelatedStatesProperties_TCC1-1 nil 3409049681 3412940765
-   ("" (use "name_of_exists") nil nil) unchecked
-   ((name_of_exists formula-decl nil CorrectnessInlineProgram nil)) 242
-   230 t nil))
+  (IMP_InlineRelatedStatesProperties_TCC1-1 nil 3409049681 3430053321
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil CorrectnessInlineProgram nil)) 772 740 t
+   nil))
  (derive_maintains_inline_related_states_for_method_call_TCC1 0
   (derive_maintains_inline_related_states_for_method_call_TCC1-1 nil
-   3410869839 3412940768 ("" (subtype-tcc) nil nil) unchecked
+   3410869839 3430053326 ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (defined? const-decl "boolean" ValProp nil)
     (is_field const-decl "boolean" State nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
+    (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (is_local const-decl "boolean" State nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
     (PSt type-eq-decl nil State nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (inline_class const-decl "Class" InlineClassAnnotation nil)
@@ -57,53 +53,48 @@
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
-    (member const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (member const-decl "bool" sets nil) (union const-decl "set" sets nil)
     (subset? const-decl "bool" sets nil))
-   3283 3010 nil nil))
+   5185 5030 nil nil))
  (derive_maintains_inline_related_states_for_method_call_TCC2 0
   (derive_maintains_inline_related_states_for_method_call_TCC2-1 nil
-   3410869839 3412940772 ("" (subtype-tcc) nil nil) unchecked
+   3410869839 3430053331 ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (defined? const-decl "boolean" ValProp nil)
     (is_field const-decl "boolean" State nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
+    (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (is_local const-decl "boolean" State nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
     (PSt type-eq-decl nil State nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (inline_class const-decl "Class" InlineClassAnnotation nil)
@@ -111,20 +102,19 @@
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
-    (member const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (member const-decl "bool" sets nil) (union const-decl "set" sets nil)
     (subset? const-decl "bool" sets nil))
-   3773 3420 nil nil))
+   5635 5450 nil nil))
  (derive_maintains_inline_related_states_for_method_call_TCC3 0
   (derive_maintains_inline_related_states_for_method_call_TCC3-1 nil
-   3410869839 3412942245
+   3410869839 3430053333
    ("" (skosimp*)
-    (("" (expand "id")
-      (("" (use "inline_program_preserves_wf_body") nil nil)) nil))
+    (("" (expand "id") (("" (use "inline_program_preserves_wf_body") nil nil))
+      nil))
     nil)
-   unchecked
+   proved
    ((id const-decl "(bijective?[T, T])" identity nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (inline_program_preserves_wf_body formula-decl nil
@@ -132,29 +122,24 @@
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (bijective? const-decl "bool" functions nil)
     (PSt type-eq-decl nil State nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
@@ -176,8 +161,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
@@ -194,8 +178,7 @@
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -209,28 +192,27 @@
     (list type-decl nil list_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil))
-   16145 510 t nil))
+   1251 1200 t nil))
  (derive_maintains_inline_related_states_for_method_call_TCC4 0
   (derive_maintains_inline_related_states_for_method_call_TCC4-1 nil
-   3410869839 3412942258
+   3410869839 3430053334
    ("" (skosimp*)
-    (("" (expand "id")
-      (("" (use "inline_program_preserves_wf_body") nil nil)) nil))
+    (("" (expand "id") (("" (use "inline_program_preserves_wf_body") nil nil))
+      nil))
     nil)
-   unchecked
+   proved
    ((id const-decl "(bijective?[T, T])" identity nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (inline_program_preserves_wf_body formula-decl nil
@@ -238,29 +220,24 @@
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (bijective? const-decl "bool" functions nil)
     (PSt type-eq-decl nil State nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
@@ -282,8 +259,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
@@ -300,8 +276,7 @@
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -315,23 +290,22 @@
     (list type-decl nil list_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil))
-   6521 480 t nil))
+   1256 1200 t nil))
  (derive_maintains_inline_related_states_for_method_call 0
-  (derive_maintains_inline_related_states_for_method_call-4 nil
-   3413709645 3413710986
+  (derive_maintains_inline_related_states_for_method_call-4 nil 3413709645
+   3430053404
    ("" (skosimp*)
     (("" (auto-rewrite "id")
       (("" (expand "derive" -4)
@@ -341,23 +315,18 @@
               (("" (assert)
                 ((""
                   (apply (branch (split -5)
-                          ((then (flatten) (assert) (flatten)
-                            (assert)))))
+                          ((then (flatten) (assert) (flatten) (assert)))))
                   (("" (skosimp*)
                     (("" (copy -9)
                       (("1" (apply (repeat (inst? -1 :where (-3 -12))))
                         (("1" (assert)
                           (("1" (split -1)
                             (("1" (flatten)
-                              (("1"
-                                (copy -11)
+                              (("1" (copy -11)
                                 (("1"
-                                  (apply
-                                   (repeat (inst? -1 :where (-6 -15))))
-                                  (("1"
-                                    (assert)
-                                    (("1"
-                                      (split -1)
+                                  (apply (repeat (inst? -1 :where (-6 -15))))
+                                  (("1" (assert)
+                                    (("1" (split -1)
                                       (("1"
                                         (flatten)
                                         (("1"
@@ -435,8 +404,7 @@
                                                               (("2"
                                                                 (expand
                                                                  "lookup_mthd"
-                                                                 (-1
-                                                                  -2))
+                                                                 (-1 -2))
                                                                 (("2"
                                                                   (lift-if)
                                                                   (("2"
@@ -3671,10 +3639,7 @@
                                          (then
                                           (use
                                            "subterm_subset_of_var"
-                                           ("b2"
-                                            "arg(b!1)"
-                                            "b1"
-                                            "b!1"))
+                                           ("b2" "arg(b!1)" "b1" "b!1"))
                                           (assert)
                                           (expand "<<")))
                                         nil
@@ -3682,23 +3647,18 @@
                                       nil))
                                     nil)
                                    ("2"
-                                    (apply
-                                     (then
-                                      (use
-                                       "wf_Body_preserved_by_proper_subterm"
-                                       ("b1" "b!1" "b2" "arg(b!1)"))
-                                      (assert)
-                                      (expand "<<")))
-                                    nil
-                                    nil))
+                                    (apply (then
+                                            (use
+                                             "wf_Body_preserved_by_proper_subterm"
+                                             ("b1" "b!1" "b2" "arg(b!1)"))
+                                            (assert)
+                                            (expand "<<")))
+                                    nil nil))
                                   nil)
-                                 ("2"
-                                  (skosimp*)
+                                 ("2" (skosimp*)
                                   (("2"
-                                    (use
-                                     "inline_program_preserves_wf_body")
-                                    nil
-                                    nil))
+                                    (use "inline_program_preserves_wf_body")
+                                    nil nil))
                                   nil))
                                 nil))
                               nil)
@@ -3707,24 +3667,21 @@
                                       (use
                                        "subterm_subset_of_var"
                                        ("b2" "tgt(b!1)" "b1" "b!1"))
-                                      (assert)
-                                      (expand "<<")))
+                                      (assert) (expand "<<")))
                               nil nil))
                             nil))
                           nil)
                          ("2" (assert) nil nil) ("3" (assert) nil nil)
                          ("4"
                           (apply (then
-                                  (use
-                                   "wf_Body_preserved_by_proper_subterm"
-                                   ("b1" "b!1" "b2" "tgt(b!1)"))
-                                  (assert)
-                                  (expand "<<")))
+                                  (use "wf_Body_preserved_by_proper_subterm"
+                                       ("b1" "b!1" "b2" "tgt(b!1)"))
+                                  (assert) (expand "<<")))
                           nil nil))
                         nil)
                        ("2" (skosimp*)
-                        (("2" (use "inline_program_preserves_wf_body")
-                          nil nil))
+                        (("2" (use "inline_program_preserves_wf_body") nil
+                          nil))
                         nil))
                       nil))
                     nil))
@@ -3736,9 +3693,9 @@
         nil))
       nil))
     nil)
-   unfinished nil 572726 117080 t nil)
-  (derive_maintains_inline_related_states_for_method_call-3 nil
-   3413278632 3413290779
+   unfinished nil 69497 63200 t nil)
+  (derive_maintains_inline_related_states_for_method_call-3 nil 3413278632
+   3413290779
    ("" (skosimp*)
     (("" (auto-rewrite "id")
       (("" (expand "derive" -4)
@@ -3748,23 +3705,18 @@
               (("" (assert)
                 ((""
                   (apply (branch (split -5)
-                          ((then (flatten) (assert) (flatten)
-                            (assert)))))
+                          ((then (flatten) (assert) (flatten) (assert)))))
                   (("" (skosimp*)
                     (("" (copy -9)
                       (("1" (apply (repeat (inst? -1 :where (-3 -12))))
                         (("1" (assert)
                           (("1" (split -1)
                             (("1" (flatten)
-                              (("1"
-                                (copy -11)
+                              (("1" (copy -11)
                                 (("1"
-                                  (apply
-                                   (repeat (inst? -1 :where (-6 -15))))
-                                  (("1"
-                                    (assert)
-                                    (("1"
-                                      (split -1)
+                                  (apply (repeat (inst? -1 :where (-6 -15))))
+                                  (("1" (assert)
+                                    (("1" (split -1)
                                       (("1"
                                         (flatten)
                                         (("1"
@@ -3842,8 +3794,7 @@
                                                               (("2"
                                                                 (expand
                                                                  "lookup_mthd"
-                                                                 (-1
-                                                                  -2))
+                                                                 (-1 -2))
                                                                 (("2"
                                                                   (lift-if)
                                                                   (("2"
@@ -7086,10 +7037,7 @@
                                          (then
                                           (use
                                            "subterm_subset_of_var"
-                                           ("b2"
-                                            "arg(b!1)"
-                                            "b1"
-                                            "b!1"))
+                                           ("b2" "arg(b!1)" "b1" "b!1"))
                                           (assert)
                                           (expand "<<")))
                                         nil
@@ -7097,23 +7045,18 @@
                                       nil))
                                     nil)
                                    ("2"
-                                    (apply
-                                     (then
-                                      (use
-                                       "wf_Body_preserved_by_proper_subterm"
-                                       ("b1" "b!1" "b2" "arg(b!1)"))
-                                      (assert)
-                                      (expand "<<")))
-                                    nil
-                                    nil))
+                                    (apply (then
+                                            (use
+                                             "wf_Body_preserved_by_proper_subterm"
+                                             ("b1" "b!1" "b2" "arg(b!1)"))
+                                            (assert)
+                                            (expand "<<")))
+                                    nil nil))
                                   nil)
-                                 ("2"
-                                  (skosimp*)
+                                 ("2" (skosimp*)
                                   (("2"
-                                    (use
-                                     "inline_program_preserves_wf_body")
-                                    nil
-                                    nil))
+                                    (use "inline_program_preserves_wf_body")
+                                    nil nil))
                                   nil))
                                 nil))
                               nil)
@@ -7122,24 +7065,21 @@
                                       (use
                                        "subterm_subset_of_var"
                                        ("b2" "tgt(b!1)" "b1" "b!1"))
-                                      (assert)
-                                      (expand "<<")))
+                                      (assert) (expand "<<")))
                               nil nil))
                             nil))
                           nil)
                          ("2" (assert) nil nil) ("3" (assert) nil nil)
                          ("4"
                           (apply (then
-                                  (use
-                                   "wf_Body_preserved_by_proper_subterm"
-                                   ("b1" "b!1" "b2" "tgt(b!1)"))
-                                  (assert)
-                                  (expand "<<")))
+                                  (use "wf_Body_preserved_by_proper_subterm"
+                                       ("b1" "b!1" "b2" "tgt(b!1)"))
+                                  (assert) (expand "<<")))
                           nil nil))
                         nil)
                        ("2" (skosimp*)
-                        (("2" (use "inline_program_preserves_wf_body")
-                          nil nil))
+                        (("2" (use "inline_program_preserves_wf_body") nil
+                          nil))
                         nil))
                       nil))
                     nil))
@@ -7152,8 +7092,8 @@
       nil))
     nil)
    unfinished nil 8858200 168450 t nil)
-  (derive_maintains_inline_related_states_for_method_call-2 nil
-   3412705615 3413278608
+  (derive_maintains_inline_related_states_for_method_call-2 nil 3412705615
+   3413278608
    ("" (skosimp*)
     (("" (auto-rewrite "id")
       (("" (expand "derive" -4)
@@ -7163,23 +7103,18 @@
               (("" (assert)
                 ((""
                   (apply (branch (split -5)
-                          ((then (flatten) (assert) (flatten)
-                            (assert)))))
+                          ((then (flatten) (assert) (flatten) (assert)))))
                   (("" (skosimp*)
                     (("" (copy -9)
                       (("1" (apply (repeat (inst? -1 :where (-3 -12))))
                         (("1" (assert)
                           (("1" (split -1)
                             (("1" (flatten)
-                              (("1"
-                                (copy -11)
+                              (("1" (copy -11)
                                 (("1"
-                                  (apply
-                                   (repeat (inst? -1 :where (-6 -15))))
-                                  (("1"
-                                    (assert)
-                                    (("1"
-                                      (split -1)
+                                  (apply (repeat (inst? -1 :where (-6 -15))))
+                                  (("1" (assert)
+                                    (("1" (split -1)
                                       (("1"
                                         (flatten)
                                         (("1"
@@ -7257,8 +7192,7 @@
                                                               (("2"
                                                                 (expand
                                                                  "lookup_mthd"
-                                                                 (-1
-                                                                  -2))
+                                                                 (-1 -2))
                                                                 (("2"
                                                                   (lift-if)
                                                                   (("2"
@@ -11071,10 +11005,7 @@
                                          (then
                                           (use
                                            "subterm_subset_of_var"
-                                           ("b2"
-                                            "arg(b!1)"
-                                            "b1"
-                                            "b!1"))
+                                           ("b2" "arg(b!1)" "b1" "b!1"))
                                           (assert)
                                           (expand "<<")
                                           (assert)))
@@ -11083,24 +11014,19 @@
                                       nil))
                                     nil)
                                    ("2"
-                                    (apply
-                                     (then
-                                      (use
-                                       "wf_Body_preserved_by_proper_subterm"
-                                       ("b2" "arg(b!1)" "b1" "b!1"))
-                                      (assert)
-                                      (expand "<<")
-                                      (assert)))
-                                    nil
-                                    nil))
+                                    (apply (then
+                                            (use
+                                             "wf_Body_preserved_by_proper_subterm"
+                                             ("b2" "arg(b!1)" "b1" "b!1"))
+                                            (assert)
+                                            (expand "<<")
+                                            (assert)))
+                                    nil nil))
                                   nil)
-                                 ("2"
-                                  (skosimp*)
+                                 ("2" (skosimp*)
                                   (("2"
-                                    (use
-                                     "inline_program_preserves_wf_body")
-                                    nil
-                                    nil))
+                                    (use "inline_program_preserves_wf_body")
+                                    nil nil))
                                   nil))
                                 nil))
                               nil)
@@ -11109,26 +11035,21 @@
                                       (use
                                        "subterm_subset_of_var"
                                        ("b2" "tgt(b!1)" "b1" "b!1"))
-                                      (assert)
-                                      (expand "<<")
-                                      (assert)))
+                                      (assert) (expand "<<") (assert)))
                               nil nil))
                             nil))
                           nil)
                          ("2" (assert) nil nil) ("3" (assert) nil nil)
                          ("4"
                           (apply (then
-                                  (use
-                                   "wf_Body_preserved_by_proper_subterm"
-                                   ("b2" "tgt(b!1)" "b1" "b!1"))
-                                  (assert)
-                                  (expand "<<")
-                                  (assert)))
+                                  (use "wf_Body_preserved_by_proper_subterm"
+                                       ("b2" "tgt(b!1)" "b1" "b!1"))
+                                  (assert) (expand "<<") (assert)))
                           nil nil))
                         nil)
                        ("2" (skosimp*)
-                        (("2" (use "inline_program_preserves_wf_body")
-                          nil nil))
+                        (("2" (use "inline_program_preserves_wf_body") nil
+                          nil))
                         nil))
                       nil))
                     nil))
@@ -11141,8 +11062,8 @@
       nil))
     nil)
    unfinished nil 74531602 236260 t nil)
-  (derive_maintains_inline_related_states_for_method_call-1 nil
-   3411105248 3412705594
+  (derive_maintains_inline_related_states_for_method_call-1 nil 3411105248
+   3412705594
    ("" (skosimp*)
     (("" (auto-rewrite "id")
       (("" (expand "derive" -4)
@@ -11152,23 +11073,18 @@
               (("" (assert)
                 ((""
                   (apply (branch (split -5)
-                          ((then (flatten) (assert) (flatten)
-                            (assert)))))
+                          ((then (flatten) (assert) (flatten) (assert)))))
                   (("" (skosimp*)
                     (("" (copy -9)
                       (("1" (apply (repeat (inst? -1 :where (-3 -12))))
                         (("1" (assert)
                           (("1" (split -1)
                             (("1" (flatten)
-                              (("1"
-                                (copy -11)
+                              (("1" (copy -11)
                                 (("1"
-                                  (apply
-                                   (repeat (inst? -1 :where (-6 -15))))
-                                  (("1"
-                                    (assert)
-                                    (("1"
-                                      (split -1)
+                                  (apply (repeat (inst? -1 :where (-6 -15))))
+                                  (("1" (assert)
+                                    (("1" (split -1)
                                       (("1"
                                         (flatten)
                                         (("1"
@@ -11246,8 +11162,7 @@
                                                               (("2"
                                                                 (expand
                                                                  "lookup_mthd"
-                                                                 (-1
-                                                                  -2))
+                                                                 (-1 -2))
                                                                 (("2"
                                                                   (lift-if)
                                                                   (("2"
@@ -12729,7 +12644,7 @@
     nil)
    unfinished nil 4503422 84410 t shostak))
  (initial_states_are_equivalent 0
-  (initial_states_are_equivalent-1 nil 3409049916 3412942397
+  (initial_states_are_equivalent-2 nil 3430111449 3430111459
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (use "wf_initial_AP_state")
@@ -12744,8 +12659,7 @@
                         (("" (assert)
                           (("" (expand "get_LocalDecl")
                             (("" (expand "get_GhostDecl")
-                              ((""
-                                (expand "get_FieldDecl")
+                              (("" (expand "get_FieldDecl")
                                 ((""
                                   (rewrite
                                    "inline_program_preserves_Field_decls")
@@ -12786,8 +12700,365 @@
                                                           (flatten)
                                                           (assert)))))
                                                       (("1"
-                                                        (expand
-                                                         "defined?")
+                                                        (expand "defined?")
+                                                        (("1"
+                                                          (apply
+                                                           (branch
+                                                            (split -2)
+                                                            ((then
+                                                              (flatten)
+                                                              (assert)
+                                                              (flatten)
+                                                              (assert)))))
+                                                          (("1"
+                                                            (case-replace
+                                                             "{l: Decl[Name] |
+                                  getLocalDecls(p!1)(l) AND
+                                   name(l) = n!1} = {l: Decl[Name] |
+                                   union(getLocalDecls(p!1), new_lvars(p!1))(l)
+                                    AND name(l) = n!1}")
+                                                            (("1"
+                                                              (hide 2)
+                                                              (("1"
+                                                                (apply-extensionality
+                                                                 :hide?
+                                                                 t)
+                                                                (("1"
+                                                                  (auto-rewrite
+                                                                   "union"
+                                                                   "member")
+                                                                  (("1"
+                                                                    (assert)
+                                                                    (("1"
+                                                                      (iff)
+                                                                      (("1"
+                                                                        (split
+                                                                         1)
+                                                                        (("1"
+                                                                          (skosimp*)
+                                                                          (("1"
+                                                                            (assert)
+                                                                            nil
+                                                                            nil))
+                                                                          nil)
+                                                                         ("2"
+                                                                          (skosimp*)
+                                                                          (("2"
+                                                                            (split
+                                                                             -1)
+                                                                            (("1"
+                                                                              (assert)
+                                                                              nil
+                                                                              nil)
+                                                                             ("2"
+                                                                              (rewrite
+                                                                               "nonempty_exists"
+                                                                               -3)
+                                                                              (("2"
+                                                                                (skosimp*)
+                                                                                (("2"
+                                                                                  (typepred
+                                                                                   "x!2")
+                                                                                  (("2"
+                                                                                    (use
+                                                                                     "new_lvars_not_old_local_decls")
+                                                                                    (("2"
+                                                                                      (expand*
+                                                                                       "disjoint?"
+                                                                                       "intersection"
+                                                                                       "empty?")
+                                                                                      (("2"
+                                                                                        (assert)
+                                                                                        (("2"
+                                                                                          (inst?)
+                                                                                          (("2"
+                                                                                            (expand
+                                                                                             "var_names")
+                                                                                            (("2"
+                                                                                              (split
+                                                                                               1)
+                                                                                              (("1"
+                                                                                                (inst?)
+                                                                                                (("1"
+                                                                                                  (assert)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil)
+                                                                                               ("2"
+                                                                                                (inst?)
+                                                                                                nil
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil))
+                                                                                  nil))
+                                                                                nil))
+                                                                              nil))
+                                                                            nil))
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil)
+                                                       ("2"
+                                                        (apply
+                                                         (branch
+                                                          (split 2)
+                                                          ((then
+                                                            (flatten)
+                                                            (assert)
+                                                            (flatten)
+                                                            (assert)))))
+                                                        (("2"
+                                                          (rewrite
+                                                           "nonempty_exists")
+                                                          (("2"
+                                                            (rewrite
+                                                             "nonempty_exists")
+                                                            (("2"
+                                                              (skosimp*)
+                                                              (("2"
+                                                                (typepred
+                                                                 "x!1")
+                                                                (("2"
+                                                                  (inst? 2)
+                                                                  (("2"
+                                                                    (assert)
+                                                                    (("2"
+                                                                      (auto-rewrite
+                                                                       "union"
+                                                                       "member")
+                                                                      (("2"
+                                                                        (assert)
+                                                                        nil
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
+                                                      nil))
+                                                    nil))
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics nil)
+    (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
+    (contains_no_method_call_in_sets_in_program const-decl "bool"
+     ContainsNoMethodCall nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    (on_method_exit_exceptional const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
+     nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (wf_Branches const-decl "boolean" WellFormedProgram nil)
+    (list type-decl nil list_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
+    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
+    (derive_type type-eq-decl nil SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
+    (number nonempty-type-decl nil numbers nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (wf_Expr const-decl "boolean" WellFormedProgram nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Body type-decl nil Body_adt nil)
+    (lookup const-decl "Val" SemanticsJML nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
+     AnnotatedProgramSemantics nil)
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (inline_program const-decl "Program" InlineProgramAnnotation nil)
+    (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
+    (initial_Program_state const-decl "PState" State nil)
+    (get_LocalDecl const-decl "lift[Decl]" ProgramFunctions nil)
+    (get_FieldDecl const-decl "lift[Decl]" ProgramFunctions nil)
+    (inline_program_preserves_Ghost_decls formula-decl nil
+     InlineProgramAnnotationProperties nil)
+    (x!1 skolem-const-decl
+     "({l: Decl[Name] | getLocalDecls(p!1)(l) AND name(l) = n!1})"
+     CorrectnessInlineProgram nil)
+    (n!1 skolem-const-decl "Name" CorrectnessInlineProgram nil)
+    (p!1 skolem-const-decl "({p: Program |
+    wf_set_stmts(p) AND contains_no_method_call_in_sets_in_program(p)})"
+     CorrectnessInlineProgram nil)
+    (new_lvars const-decl "finite_set[Decl]" InlineNewVariableDeclarations
+     nil)
+    (union const-decl "set" sets nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (member const-decl "bool" sets nil)
+    (new_lvars_not_old_local_decls formula-decl nil
+     InlineNewVariableDeclarations nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (disjoint? const-decl "bool" sets nil) (empty? const-decl "bool" sets nil)
+    (intersection const-decl "set" sets nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (inline_program_add_LocalVar_decls formula-decl nil
+     InlineProgramAnnotationProperties nil)
+    (inline_program_preserves_Field_decls formula-decl nil
+     InlineProgramAnnotationProperties nil)
+    (get_GhostDecl const-decl "lift[Decl]" ProgramFunctions nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics nil)
+    (Program_modeled? const-decl "boolean" InlineEquivalence nil)
+    (inline_related_states const-decl "boolean" InlineEquivalence nil))
+   8876 3890 t nil)
+  (initial_states_are_equivalent-1 nil 3409049916 3430053406
+   ("" (skosimp*)
+    (("" (expand "inline_related_states")
+      (("" (use "wf_initial_AP_state")
+        (("" (assert)
+          (("" (use "wf_initial_AP_state" ("p" "inline_program(p!1)"))
+            (("" (assert)
+              (("" (hide -1 -2)
+                (("" (expand "Program_modeled?")
+                  (("" (expand "Program_lvs_modeled?")
+                    (("" (expand "initial_AP_state")
+                      (("" (expand "initial_Program_state")
+                        (("" (assert)
+                          (("" (expand "get_LocalDecl")
+                            (("" (expand "get_GhostDecl")
+                              (("" (expand "get_FieldDecl")
+                                ((""
+                                  (rewrite
+                                   "inline_program_preserves_Field_decls")
+                                  ((""
+                                    (rewrite
+                                     "inline_program_preserves_Ghost_decls")
+                                    ((""
+                                      (rewrite
+                                       "inline_program_add_LocalVar_decls")
+                                      ((""
+                                        (assert)
+                                        ((""
+                                          (skosimp*)
+                                          ((""
+                                            (lift-if)
+                                            ((""
+                                              (assert)
+                                              ((""
+                                                (apply
+                                                 (branch
+                                                  (split 1)
+                                                  ((then
+                                                    (flatten)
+                                                    (assert)
+                                                    (flatten)
+                                                    (assert)))))
+                                                ((""
+                                                  (lift-if)
+                                                  ((""
+                                                    (assert)
+                                                    ((""
+                                                      (apply
+                                                       (branch
+                                                        (split 2)
+                                                        ((then
+                                                          (flatten)
+                                                          (assert)
+                                                          (flatten)
+                                                          (assert)))))
+                                                      (("1"
+                                                        (expand "defined?")
                                                         (("1"
                                                           (apply
                                                            (branch
@@ -12916,8 +13187,7 @@
                                                                 (typepred
                                                                  "x!1")
                                                                 (("2"
-                                                                  (inst?
-                                                                   2)
+                                                                  (inst? 2)
                                                                   (("2"
                                                                     (assert)
                                                                     (("2"
@@ -12962,23 +13232,20 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics
-     nil)
+   unfinished
+   ((wf_initial_AP_state formula-decl nil AnnotatedProgramSemantics nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (list type-decl nil list_adt nil)
@@ -12992,8 +13259,7 @@
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
@@ -13010,8 +13276,7 @@
     (real nonempty-type-from-decl nil reals nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number nonempty-type-decl nil numbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
@@ -13033,29 +13298,24 @@
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
     (PSt type-eq-decl nil State nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) nil
     (Expr type-eq-decl nil Body_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil) nil
     (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -13063,13 +13323,12 @@
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (initial_Program_state const-decl "PState" State nil)
-    (get_LocalDecl const-decl "lift[LocalVarDecl]" ProgramFunctions
-     nil)
-    (get_FieldDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
+    (get_LocalDecl const-decl "lift[Decl]" ProgramFunctions nil)
+    (get_FieldDecl const-decl "lift[Decl]" ProgramFunctions nil)
     (inline_program_preserves_Ghost_decls formula-decl nil
      InlineProgramAnnotationProperties nil)
-    (new_lvars const-decl "finite_set[LocalVarDecl]"
-     InlineNewVariableDeclarations nil)
+    (new_lvars const-decl "finite_set[Decl]" InlineNewVariableDeclarations
+     nil)
     (union const-decl "set" sets nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
@@ -13077,8 +13336,7 @@
     (member const-decl "bool" sets nil)
     (new_lvars_not_old_local_decls formula-decl nil
      InlineNewVariableDeclarations nil)
-    (disjoint? const-decl "bool" sets nil)
-    (empty? const-decl "bool" sets nil)
+    (disjoint? const-decl "bool" sets nil) (empty? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
@@ -13087,50 +13345,116 @@
      InlineProgramAnnotationProperties nil)
     (inline_program_preserves_Field_decls formula-decl nil
      InlineProgramAnnotationProperties nil)
-    (get_GhostDecl const-decl "lift[FieldDecl]" ProgramFunctions nil)
-    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics
-     nil)
+    (get_GhostDecl const-decl "lift[Decl]" ProgramFunctions nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil))
-   3030 2070 t shostak))
+   2581 2510 t shostak))
  (derive_maintains_inline_related_states_for_unchanged_program_TCC1 0
-  (derive_maintains_inline_related_states_for_unchanged_program_TCC1-1
-   nil 3409049681 3412942268
-   ("" (expand "id") (("" (propax) nil nil)) nil) unchecked
-   ((id const-decl "(bijective?[T, T])" identity nil)) 4745 250 t nil))
+  (derive_maintains_inline_related_states_for_unchanged_program_TCC1-1 nil
+   3409049681 3430053407 ("" (expand "id") (("" (propax) nil nil)) nil) proved
+   ((id const-decl "(bijective?[T, T])" identity nil)) 813 810 t nil))
  (derive_maintains_inline_related_states_for_unchanged_program_TCC2 0
-  (derive_maintains_inline_related_states_for_unchanged_program_TCC2-1
-   nil 3409049681 3409287262
+  (derive_maintains_inline_related_states_for_unchanged_program_TCC2-1 nil
+   3409049681 3430053408
    ("" (expand "id")
-    (("" (skosimp*)
-      (("" (use "inline_program_preserves_wf_body") nil nil)) nil))
+    (("" (skosimp*) (("" (use "inline_program_preserves_wf_body") nil nil))
+      nil))
     nil)
-   unchecked
+   proved
    ((Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (inline_program_preserves_wf_body formula-decl nil
      InlineProgramAnnotationProperties nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (bijective? const-decl "bool" functions nil)
+    (PSt type-eq-decl nil State nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
+     AnnotatedProgramSemantics nil)
+    (lookup const-decl "Val" SemanticsJML nil)
     (Body type-decl nil Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (wf_Expr const-decl "boolean" WellFormedProgram nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (< const-decl "bool" reals nil) (<= const-decl "bool" reals nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (derive_type type-eq-decl nil SemanticsTypes nil)
+    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
+    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (list type-decl nil list_adt nil)
+    (wf_Branches const-decl "boolean" WellFormedProgram nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
+     nil)
+    (on_method_exit_exceptional const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    (contains_no_method_call_in_sets_in_program const-decl "bool"
+     ContainsNoMethodCall nil)
     (id const-decl "(bijective?[T, T])" identity nil))
-   13865 210 t nil))
+   1225 1190 t nil))
  (derive_maintains_inline_related_states_for_unchanged_program 0
   (derive_maintains_inline_related_states_for_unchanged_program-2 nil
-   3410871728 3412943533
+   3410871728 3430053459
    ("" (skolem 1 ("p!1" _ _ _))
     ((""
       (lemma
@@ -13148,8 +13472,8 @@
           (("1" (split -1)
             (("1" (skosimp*)
               (("1" (inst -1 "(n1!1, n2!1)")
-                (("1" (apply (repeat (inst? -1)))
-                  (("1" (assert) nil nil)) nil))
+                (("1" (apply (repeat (inst? -1))) (("1" (assert) nil nil))
+                  nil))
                 nil))
               nil)
              ("2" (hide 2)
@@ -13161,29 +13485,21 @@
                         (use "inline_related_states_implies_same_exception")
                         (("2" (assert)
                           (("2"
-                            (apply (branch
-                                    (split -5)
-                                    ((then
-                                      (flatten)
-                                      (assert)
-                                      (flatten)
+                            (apply (branch (split -5)
+                                    ((then (flatten) (assert) (flatten)
                                       (assert)))))
                             (("2" (lift-if)
                               (("2"
-                                (apply
-                                 (branch
-                                  (split -1)
-                                  ((then
-                                    (flatten)
-                                    (assert)
-                                    (flatten)
-                                    (assert)))))
-                                (("1"
-                                  (skosimp*)
-                                  (("1"
-                                    (copy -7)
-                                    (("1"
-                                      (inst -1 "(m1!1, m1!2)")
+                                (apply (branch
+                                        (split -1)
+                                        ((then
+                                          (flatten)
+                                          (assert)
+                                          (flatten)
+                                          (assert)))))
+                                (("1" (skosimp*)
+                                  (("1" (copy -7)
+                                    (("1" (inst -1 "(m1!1, m1!2)")
                                       (("1"
                                         (assert)
                                         (("1"
@@ -13193,10 +13509,7 @@
                                             (("1"
                                               (apply
                                                (repeat
-                                                (inst?
-                                                 -1
-                                                 :where
-                                                 (-4 -12))))
+                                                (inst? -1 :where (-4 -12))))
                                               (("1"
                                                 (assert)
                                                 (("1"
@@ -13257,8 +13570,7 @@
                                                             (("2"
                                                               (assert)
                                                               (("2"
-                                                                (expand
-                                                                 "<<")
+                                                                (expand "<<")
                                                                 (("2"
                                                                   (propax)
                                                                   nil
@@ -13278,8 +13590,7 @@
                                                         (("2"
                                                           (assert)
                                                           (("2"
-                                                            (expand
-                                                             "<<")
+                                                            (expand "<<")
                                                             (("2"
                                                               (propax)
                                                               nil
@@ -13322,8 +13633,7 @@
                                           nil))
                                         nil))
                                       nil)
-                                     ("2"
-                                      (skosimp*)
+                                     ("2" (skosimp*)
                                       (("2"
                                         (use
                                          "inline_program_preserves_wf_body")
@@ -13333,19 +13643,16 @@
                                     nil))
                                   nil)
                                  ("2"
-                                  (apply
-                                   (branch
-                                    (split -1)
-                                    ((then
-                                      (flatten)
-                                      (assert)
-                                      (flatten)
-                                      (assert)))))
+                                  (apply (branch
+                                          (split -1)
+                                          ((then
+                                            (flatten)
+                                            (assert)
+                                            (flatten)
+                                            (assert)))))
                                   (("1"
-                                    (use
-                                     "inline_related_states_implies_same_lookup")
-                                    (("1"
-                                      (assert)
+                                    (use "inline_related_states_implies_same_lookup")
+                                    (("1" (assert)
                                       (("1"
                                         (auto-rewrite
                                          "subset?"
@@ -13361,10 +13668,7 @@
                                                 (expand "var_names" +)
                                                 (("1"
                                                   (expand "singleton")
-                                                  (("1"
-                                                    (propax)
-                                                    nil
-                                                    nil))
+                                                  (("1" (propax) nil nil))
                                                   nil))
                                                 nil))
                                               nil))
@@ -13374,16 +13678,14 @@
                                       nil))
                                     nil)
                                    ("2"
-                                    (apply
-                                     (branch
-                                      (split -1)
-                                      ((then
-                                        (flatten)
-                                        (assert)
-                                        (flatten)
-                                        (assert)))))
-                                    (("1"
-                                      (skosimp*)
+                                    (apply (branch
+                                            (split -1)
+                                            ((then
+                                              (flatten)
+                                              (assert)
+                                              (flatten)
+                                              (assert)))))
+                                    (("1" (skosimp*)
                                       (("1"
                                         (inst
                                          -6
@@ -13393,10 +13695,7 @@
                                           (("1"
                                             (apply
                                              (repeat
-                                              (inst?
-                                               -6
-                                               :where
-                                               (-3 -10))))
+                                              (inst? -6 :where (-3 -10))))
                                             (("1"
                                               (assert)
                                               (("1"
@@ -13447,10 +13746,7 @@
                                                (then
                                                 (use
                                                  "wf_Body_preserved_by_proper_subterm"
-                                                 ("b2"
-                                                  "b(b!1)"
-                                                  "b1"
-                                                  "b!1"))
+                                                 ("b2" "b(b!1)" "b1" "b!1"))
                                                 (assert)
                                                 (expand "<<")))
                                               nil
@@ -13479,10 +13775,7 @@
                                               (("1"
                                                 (apply
                                                  (repeat
-                                                  (inst?
-                                                   -1
-                                                   :where
-                                                   (-4 -12))))
+                                                  (inst? -1 :where (-4 -12))))
                                                 (("1"
                                                   (assert)
                                                   (("1"
@@ -13501,8 +13794,7 @@
                                                             (("1"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -7)
+                                                                (split -7)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -13511,8 +13803,7 @@
                                                               (("1"
                                                                 (apply
                                                                  (branch
-                                                                  (split
-                                                                   -1)
+                                                                  (split -1)
                                                                   ((then
                                                                     (flatten)
                                                                     (assert)
@@ -13696,13 +13987,11 @@
                                                                 (inst?
                                                                  -9
                                                                  :where
-                                                                 (-6
-                                                                  -14))))
+                                                                 (-6 -14))))
                                                               (("1"
                                                                 (assert)
                                                                 (("1"
-                                                                  (split
-                                                                   -9)
+                                                                  (split -9)
                                                                   (("1"
                                                                     (flatten)
                                                                     (("1"
@@ -13774,8 +14063,7 @@
                                                             "b1"
                                                             "b!1"))
                                                           (assert)
-                                                          (expand
-                                                           "<<")))
+                                                          (expand "<<")))
                                                         nil
                                                         nil))
                                                       nil))
@@ -13828,17 +14116,13 @@
                                                 (("1"
                                                   (assert)
                                                   (("1"
-                                                    (inst
-                                                     -7
-                                                     "varname(b!1)")
+                                                    (inst -7 "varname(b!1)")
                                                     (("1"
                                                       (assert)
                                                       (("1"
-                                                        (expand
-                                                         "var_names")
+                                                        (expand "var_names")
                                                         (("1"
-                                                          (expand
-                                                           "singleton")
+                                                          (expand "singleton")
                                                           (("1"
                                                             (propax)
                                                             nil
@@ -13871,10 +14155,7 @@
                                                   (("1"
                                                     (case
                                                      "ext_declared_var_names(p!1)(varname(b!1))")
-                                                    (("1"
-                                                      (assert)
-                                                      nil
-                                                      nil)
+                                                    (("1" (assert) nil nil)
                                                      ("2"
                                                       (auto-rewrite
                                                        "subset?"
@@ -14050,8 +14331,7 @@
                                                                 "b1"
                                                                 "b!1"))
                                                               (assert)
-                                                              (expand
-                                                               "<<")))
+                                                              (expand "<<")))
                                                             nil
                                                             nil))
                                                           nil))
@@ -14066,8 +14346,7 @@
                                                             "b1"
                                                             "b!1"))
                                                           (assert)
-                                                          (expand
-                                                           "<<")))
+                                                          (expand "<<")))
                                                         nil
                                                         nil))
                                                       nil))
@@ -14088,9 +14367,7 @@
                                                   (("1"
                                                     (copy -7)
                                                     (("1"
-                                                      (inst
-                                                       -1
-                                                       "(m1!1, m1!2)")
+                                                      (inst -1 "(m1!1, m1!2)")
                                                       (("1"
                                                         (assert)
                                                         (("1"
@@ -14099,13 +14376,11 @@
                                                             (inst?
                                                              -1
                                                              :where
-                                                             (-4
-                                                              -12))))
+                                                             (-4 -12))))
                                                           (("1"
                                                             (assert)
                                                             (("1"
-                                                              (split
-                                                               -1)
+                                                              (split -1)
                                                               (("1"
                                                                 (flatten)
                                                                 (("1"
@@ -14273,8 +14548,7 @@
                                                                 "b1"
                                                                 "b!1"))
                                                               (assert)
-                                                              (expand
-                                                               "<<")))
+                                                              (expand "<<")))
                                                             nil
                                                             nil))
                                                           nil))
@@ -14394,16 +14668,13 @@
                                                         (expand
                                                          "execute_CaseJML")
                                                         (("1"
-                                                          (expand
-                                                           "extend")
+                                                          (expand "extend")
                                                           (("1"
-                                                            (expand
-                                                             "id")
+                                                            (expand "id")
                                                             (("1"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -3)
+                                                                (split -3)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -14414,8 +14685,7 @@
                                                                 (("1"
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     -2)
+                                                                    (split -2)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -14985,8 +15255,7 @@
                                                            ("2"
                                                             (apply
                                                              (branch
-                                                              (split
-                                                               -1)
+                                                              (split -1)
                                                               ((then
                                                                 (flatten)
                                                                 (assert)
@@ -15267,8 +15536,7 @@
                                                              ("2"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -1)
+                                                                (split -1)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -15285,8 +15553,7 @@
                                                                ("2"
                                                                 (apply
                                                                  (branch
-                                                                  (split
-                                                                   -1)
+                                                                  (split -1)
                                                                   ((then
                                                                     (flatten)
                                                                     (assert)
@@ -15379,8 +15646,7 @@
                                                                  ("2"
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     -1)
+                                                                    (split -1)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -16471,26 +16737,23 @@
             nil)
            ("2" (hide 2)
             (("2" (skosimp*)
-              (("2" (use "inline_program_preserves_wf_body") nil nil))
-              nil))
+              (("2" (use "inline_program_preserves_wf_body") nil nil)) nil))
             nil))
           nil))
         nil)
        ("2" (lemma "well_founded?_product")
         (("2"
-          (inst -1 "LAMBDA(i, j : nat) : i < j"
-           "LAMBDA(i, j : nat) : i < j")
+          (inst -1 "LAMBDA(i, j : nat) : i < j" "LAMBDA(i, j : nat) : i < j")
           (("2" (assert)
             (("2" (split -1)
-              (("1" (use "wf_nat") nil nil)
-               ("2" (use "wf_nat") nil nil))
+              (("1" (use "wf_nat") nil nil) ("2" (use "wf_nat") nil nil))
               nil))
             nil))
           nil))
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((< const-decl "bool" reals nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
@@ -16503,36 +16766,36 @@
     (real nonempty-type-from-decl nil reals nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (boolean nonempty-type-decl nil booleans nil)
     (number nonempty-type-decl nil numbers nil)
     (wf_induction formula-decl nil wf_induction nil)
     (well_founded? const-decl "bool" orders nil)
     (pred type-eq-decl nil defined_types nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
     (is_finite const-decl "bool" finite_sets nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
-    (subset? const-decl "bool" sets nil)
-    (set type-eq-decl nil sets nil)
+    (subset? const-decl "bool" sets nil) (set type-eq-decl nil sets nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil)
     (derive def-decl "bool" Semantics nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (p!1 skolem-const-decl "({p: Program |
+    wf_set_stmts(p) AND contains_no_method_call_in_sets_in_program(p)})"
+     CorrectnessInlineProgram nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (list type-decl nil list_adt nil)
@@ -16546,8 +16809,7 @@
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
@@ -16573,29 +16835,24 @@
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
     (PSt type-eq-decl nil State nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (bijective? const-decl "bool" functions nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (Val type-decl nil Val_adt nil) (Body type-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
@@ -16613,23 +16870,23 @@
      InlineRelatedStatesProperties nil)
     (target shared-adt-accessor-decl
             "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
+    (v2!1 skolem-const-decl "Val[Name]" CorrectnessInlineProgram nil)
     (add const-decl "(nonempty?)" sets nil)
     (derive_bottom_iff_exception_step_AP formula-decl nil
      AnnotatedProgramSemantics nil)
-    (derive_maintains_inline_related_states_for_method_call
-     formula-decl nil CorrectnessInlineProgram nil)
+    (derive_maintains_inline_related_states_for_method_call formula-decl nil
+     CorrectnessInlineProgram nil)
     (extend const-decl "R" extend nil)
     (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
      Body_adt nil)
-    (branches adt-accessor-decl "[(CaseJML?) -> list[[Expr, Stmt]]]"
-     Body_adt nil)
+    (branches adt-accessor-decl "[(CaseJML?) -> list[[Expr, Stmt]]]" Body_adt
+     nil)
     (car adt-accessor-decl "[(cons?) -> T]" list_adt nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
-    (IfThenElse adt-constructor-decl
-     "[[Expr, Stmt, Stmt] -> (IfThenElse?)]" Body_adt nil)
-    (union const-decl "set" sets nil)
-    (member def-decl "bool" list_props nil)
+    (IfThenElse adt-constructor-decl "[[Expr, Stmt, Stmt] -> (IfThenElse?)]"
+     Body_adt nil)
+    (union const-decl "set" sets nil) (member def-decl "bool" list_props nil)
     (some_is_exists formula-decl nil listfuncs nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
     (s2 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
@@ -16641,8 +16898,7 @@
      InlineRelatedStatesProperties nil)
     (Body_While_extensionality formula-decl nil Body_adt nil)
     (emptyset const-decl "set" sets nil)
-    (While adt-constructor-decl "[[Expr, Stmt] -> (While?)]" Body_adt
-     nil)
+    (While adt-constructor-decl "[[Expr, Stmt] -> (While?)]" Body_adt nil)
     (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
     (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
@@ -16660,70 +16916,67 @@
     (inline_related_states_preserved_by_catch formula-decl nil
      InlineRelatedStatesProperties nil)
     (expr shared-adt-accessor-decl
-          "[{x: Body | Assert?(x) OR StmtExpr?(x)} -> Expr]" Body_adt
-          nil)
-    (return_of_stmt const-decl "Val" Semantics nil)
+          "[{x: Body | Assert?(x) OR StmtExpr?(x)} -> Expr]" Body_adt nil)
+    (return_of_stmt const-decl "Val" SemanticsAuxiliaryFunctions nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_program_preserves_Ghost_decls formula-decl nil
      InlineProgramAnnotationProperties nil)
-    (wf_update_GhostVars formula-decl nil AnnotatedProgramSemantics
-     nil)
+    (wf_update_GhostVars formula-decl nil AnnotatedProgramSemantics nil)
     (update_store const-decl "Store" State nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (id_preserves application-judgement "S" identity_props nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
-    (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
-     nil)
-    (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt
-     nil)
+    (v1!3 skolem-const-decl "Val[Name]" CorrectnessInlineProgram nil)
+    (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
+    (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
     (test shared-adt-accessor-decl
      "[{x: Body | While?(x) OR IfThenElse?(x) OR CondExpr?(x)} -> Expr]"
      Body_adt nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
+    (v1!3 skolem-const-decl "Val[Name]" CorrectnessInlineProgram nil)
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (IF const-decl "[boolean, T, T -> T]" if_def nil)
-    (get_dynamic_type_name_same_in_inline_related_states formula-decl
-     nil InlineRelatedStatesProperties nil)
+    (get_dynamic_type_name_same_in_inline_related_states formula-decl nil
+     InlineRelatedStatesProperties nil)
     (get_address_same_in_inline_related_states formula-decl nil
      InlineRelatedStatesProperties nil)
     (b adt-accessor-decl "[(Neg?) -> Expr]" Body_adt nil)
     (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
-    (real_ge_is_total_order name-judgement "(total_order?[real])"
-     real_props nil)
+    (real_ge_is_total_order name-judgement "(total_order?[real])" real_props
+     nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
-    (inline_program_preserves_wf_body formula-decl nil
-     InlineProgramAnnotationProperties nil)
+    (b!1 skolem-const-decl "(wf_Body(p!1))" CorrectnessInlineProgram nil)
     (b1 shared-adt-accessor-decl
-     "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt
-     nil)
+     "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt nil)
     (b2 shared-adt-accessor-decl
-     "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt
+     "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt nil)
+    (check_for_exception const-decl "bool" SemanticsAuxiliaryFunctions nil)
+    (check_for_exception_final const-decl "bool" SemanticsAuxiliaryFunctions
      nil)
-    (check_for_exception const-decl "bool" Semantics nil)
-    (check_for_exception_final const-decl "bool" Semantics nil)
     (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
     (subterm_subset_of_var formula-decl nil ProgramFunctions nil)
-    (wf_Body_preserved_by_proper_subterm formula-decl nil
-     WellFormedProgram nil)
+    (wf_Body_preserved_by_proper_subterm formula-decl nil WellFormedProgram
+     nil)
     (real_lt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (int_plus_int_is_int application-judgement "int" integers nil)
-    (posint_plus_nnint_is_posint application-judgement "posint"
-     integers nil)
+    (posint_plus_nnint_is_posint application-judgement "posint" integers nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
     (inline_related_states_implies_same_exception formula-decl nil
      InlineRelatedStatesProperties nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
+    (inline_program_preserves_wf_body formula-decl nil
+     InlineProgramAnnotationProperties nil)
     (wf_nat formula-decl nil naturalnumbers nil)
     (well_founded?_product formula-decl nil WF nil))
-   834796 57690 t nil)
+   51089 47280 t nil)
   (derive_maintains_inline_related_states_for_unchanged_program-1 nil
    3409050897 3410871708
    (""
@@ -16742,8 +16995,7 @@
         (("1" (split -1)
           (("1" (skosimp*)
             (("1" (inst -1 "(n1!1, n2!1)")
-              (("1" (apply (repeat (inst? -1)))
-                (("1" (assert) nil nil)) nil))
+              (("1" (apply (repeat (inst? -1))) (("1" (assert) nil nil)) nil))
               nil))
             nil)
            ("2" (hide 2)
@@ -16751,41 +17003,31 @@
               (("2" (expand "derive" -4)
                 (("2" (expand "derive" -5)
                   (("2" (assert)
-                    (("2"
-                      (use "inline_related_states_implies_same_exception")
+                    (("2" (use "inline_related_states_implies_same_exception")
                       (("2" (assert)
                         (("2"
-                          (apply (branch
-                                  (split -5)
-                                  ((then
-                                    (flatten)
-                                    (assert)
-                                    (flatten)
+                          (apply (branch (split -5)
+                                  ((then (flatten) (assert) (flatten)
                                     (assert)))))
                           (("2" (lift-if)
                             (("2"
-                              (apply (branch
-                                      (split -1)
+                              (apply (branch (split -1)
                                       ((then
                                         (flatten)
                                         (assert)
                                         (flatten)
                                         (assert)))))
                               (("2"
-                                (apply
-                                 (branch
-                                  (split -1)
-                                  ((then
-                                    (flatten)
-                                    (assert)
-                                    (flatten)
-                                    (assert)))))
-                                (("1"
-                                  (skosimp*)
-                                  (("1"
-                                    (copy -7)
-                                    (("1"
-                                      (inst -1 "(m1!1, m1!2)")
+                                (apply (branch
+                                        (split -1)
+                                        ((then
+                                          (flatten)
+                                          (assert)
+                                          (flatten)
+                                          (assert)))))
+                                (("1" (skosimp*)
+                                  (("1" (copy -7)
+                                    (("1" (inst -1 "(m1!1, m1!2)")
                                       (("1"
                                         (assert)
                                         (("1"
@@ -16795,10 +17037,7 @@
                                             (("1"
                                               (apply
                                                (repeat
-                                                (inst?
-                                                 -1
-                                                 :where
-                                                 (-4 -12))))
+                                                (inst? -1 :where (-4 -12))))
                                               (("1"
                                                 (assert)
                                                 (("1"
@@ -16859,8 +17098,7 @@
                                                             (("2"
                                                               (assert)
                                                               (("2"
-                                                                (expand
-                                                                 "<<")
+                                                                (expand "<<")
                                                                 (("2"
                                                                   (propax)
                                                                   nil
@@ -16880,8 +17118,7 @@
                                                         (("2"
                                                           (assert)
                                                           (("2"
-                                                            (expand
-                                                             "<<")
+                                                            (expand "<<")
                                                             (("2"
                                                               (propax)
                                                               nil
@@ -16924,8 +17161,7 @@
                                           nil))
                                         nil))
                                       nil)
-                                     ("2"
-                                      (skosimp*)
+                                     ("2" (skosimp*)
                                       (("2"
                                         (use
                                          "inline_program_preserves_wf_body")
@@ -16935,19 +17171,16 @@
                                     nil))
                                   nil)
                                  ("2"
-                                  (apply
-                                   (branch
-                                    (split -1)
-                                    ((then
-                                      (flatten)
-                                      (assert)
-                                      (flatten)
-                                      (assert)))))
+                                  (apply (branch
+                                          (split -1)
+                                          ((then
+                                            (flatten)
+                                            (assert)
+                                            (flatten)
+                                            (assert)))))
                                   (("1"
-                                    (use
-                                     "inline_related_states_implies_same_lookup")
-                                    (("1"
-                                      (assert)
+                                    (use "inline_related_states_implies_same_lookup")
+                                    (("1" (assert)
                                       (("1"
                                         (auto-rewrite
                                          "subset?"
@@ -16963,10 +17196,7 @@
                                                 (expand "var_names" 5)
                                                 (("1"
                                                   (expand "singleton")
-                                                  (("1"
-                                                    (propax)
-                                                    nil
-                                                    nil))
+                                                  (("1" (propax) nil nil))
                                                   nil))
                                                 nil))
                                               nil))
@@ -16976,14 +17206,13 @@
                                       nil))
                                     nil)
                                    ("2"
-                                    (apply
-                                     (branch
-                                      (split -1)
-                                      ((then
-                                        (flatten)
-                                        (assert)
-                                        (flatten)
-                                        (assert)))))
+                                    (apply (branch
+                                            (split -1)
+                                            ((then
+                                              (flatten)
+                                              (assert)
+                                              (flatten)
+                                              (assert)))))
                                     (("2"
                                       (apply
                                        (branch
@@ -17013,10 +17242,7 @@
                                               (("1"
                                                 (apply
                                                  (repeat
-                                                  (inst?
-                                                   -6
-                                                   :where
-                                                   (-3 -10))))
+                                                  (inst? -6 :where (-3 -10))))
                                                 (("1"
                                                   (assert)
                                                   (("1"
@@ -17035,8 +17261,7 @@
                                                             (("1"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -7)
+                                                                (split -7)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -17094,9 +17319,7 @@
                                             (("1"
                                               (copy -7)
                                               (("1"
-                                                (inst
-                                                 -1
-                                                 "(m1!1, m1!2)")
+                                                (inst -1 "(m1!1, m1!2)")
                                                 (("1"
                                                   (assert)
                                                   (("1"
@@ -17124,8 +17347,7 @@
                                                                 (("1"
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     -7)
+                                                                    (split -7)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -17246,8 +17468,7 @@
                                                               "b1"
                                                               "b!1"))
                                                             (assert)
-                                                            (expand
-                                                             "<<")))
+                                                            (expand "<<")))
                                                           nil
                                                           nil))
                                                         nil))
@@ -17292,9 +17513,7 @@
                                               (("1"
                                                 (copy -7)
                                                 (("1"
-                                                  (inst
-                                                   -1
-                                                   "(m1!1, m1!2)")
+                                                  (inst -1 "(m1!1, m1!2)")
                                                   (("1"
                                                     (assert)
                                                     (("1"
@@ -17400,8 +17619,7 @@
                                                                 "b1"
                                                                 "b!1"))
                                                               (assert)
-                                                              (expand
-                                                               "<<")))
+                                                              (expand "<<")))
                                                             nil
                                                             nil))
                                                           nil))
@@ -17416,8 +17634,7 @@
                                                             "b1"
                                                             "b!1"))
                                                           (assert)
-                                                          (expand
-                                                           "<<")))
+                                                          (expand "<<")))
                                                         nil
                                                         nil))
                                                       nil))
@@ -17567,13 +17784,11 @@
                                                               (inst?
                                                                -6
                                                                :where
-                                                               (-3
-                                                                -10))))
+                                                               (-3 -10))))
                                                             (("1"
                                                               (assert)
                                                               (("1"
-                                                                (split
-                                                                 -6)
+                                                                (split -6)
                                                                 (("1"
                                                                   (flatten)
                                                                   (("1"
@@ -17733,13 +17948,11 @@
                                                               (inst?
                                                                -5
                                                                :where
-                                                               (-3
-                                                                -9))))
+                                                               (-3 -9))))
                                                             (("1"
                                                               (assert)
                                                               (("1"
-                                                                (split
-                                                                 -5)
+                                                                (split -5)
                                                                 (("1"
                                                                   (propax)
                                                                   nil
@@ -18023,8 +18236,7 @@
                                                                 (("1"
                                                                   (assert)
                                                                   (("1"
-                                                                    (split
-                                                                     -1)
+                                                                    (split -1)
                                                                     (("1"
                                                                       (propax)
                                                                       nil
@@ -18087,8 +18299,7 @@
                                                            ("2"
                                                             (apply
                                                              (branch
-                                                              (split
-                                                               -1)
+                                                              (split -1)
                                                               ((then
                                                                 (flatten)
                                                                 (assert)
@@ -18153,8 +18364,7 @@
                                                              ("2"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -1)
+                                                                (split -1)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -18222,8 +18432,7 @@
                                                                ("2"
                                                                 (apply
                                                                  (branch
-                                                                  (split
-                                                                   -1)
+                                                                  (split -1)
                                                                   ((then
                                                                     (flatten)
                                                                     (assert)
@@ -18474,8 +18683,7 @@
                                                                  ("2"
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     -1)
+                                                                    (split -1)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -20214,27 +20422,24 @@
           nil)
          ("2" (hide 2)
           (("2" (skosimp*)
-            (("2" (use "inline_program_preserves_wf_body") nil nil))
-            nil))
+            (("2" (use "inline_program_preserves_wf_body") nil nil)) nil))
           nil))
         nil))
       nil)
      ("2" (lemma "well_founded?_product")
       (("2"
-        (inst -1 "LAMBDA(i, j : nat) : i < j"
-         "LAMBDA(i, j : nat) : i < j")
+        (inst -1 "LAMBDA(i, j : nat) : i < j" "LAMBDA(i, j : nat) : i < j")
         (("2" (assert)
           (("2" (split -1)
-            (("1" (use "wf_nat") nil nil) ("2" (use "wf_nat") nil nil))
-            nil))
+            (("1" (use "wf_nat") nil nil) ("2" (use "wf_nat") nil nil)) nil))
           nil))
         nil))
       nil))
     nil)
    unfinished nil 354027 62780 t shostak))
  (inline_related_states_implies_derive_for_unchanged_program 0
-  (inline_related_states_implies_derive_for_unchanged_program-1 nil
-   3413537511 nil
+  (inline_related_states_implies_derive_for_unchanged_program-1 nil 3413537511
+   3430111539
    (";;; Proof monitor_related_states_implies_derive-1 for formula MonitoredProgramCompletessRelation.monitor_related_states_implies_derive"
     (skolem 1 ("p!1" _ _))
     ((";;; Proof monitor_related_states_implies_derive-1 for formula MonitoredProgramCompletessRelation.monitor_related_states_implies_derive"
@@ -20252,43 +20457,32 @@
             (("1" (skosimp*)
               (("1" (inst?)
                 (("1" (assert)
-                  (("1" (inst?)
-                    (("1" (inst?) (("1" (assert) nil)))))))))))
+                  (("1" (inst?) (("1" (inst?) (("1" (assert) nil)))))))))))
              ("2" (hide 2)
               (("2" (skosimp*)
                 (("2" (expand "derive" (-3 1))
-                  (("2"
-                    (use "inline_related_states_implies_same_exception")
+                  (("2" (use "inline_related_states_implies_same_exception")
                     (("2" (assert)
                       (("2"
-                        (apply (branch
-                                (split -4)
-                                ((then
-                                  (flatten)
-                                  (assert)
-                                  (flatten)
+                        (apply (branch (split -4)
+                                ((then (flatten) (assert) (flatten)
                                   (assert)))))
                         (("1" (inst 1 "s1b!1" "0") nil)
                          ("2" (lift-if)
                           (("2" (assert)
                             (("2"
-                              (apply (branch
-                                      (split -1)
+                              (apply (branch (split -1)
                                       ((then
                                         (flatten)
                                         (assert)
                                         (flatten)
                                         (assert)))))
-                              (("1"
-                                (skosimp*)
-                                (("1"
-                                  (inst-cp -7 "m1!1")
-                                  (("1"
-                                    (assert)
+                              (("1" (skosimp*)
+                                (("1" (inst-cp -7 "m1!1")
+                                  (("1" (assert)
                                     (("1"
                                       (apply
-                                       (repeat
-                                        (inst? -8 :where (-3 -9))))
+                                       (repeat (inst? -8 :where (-3 -9))))
                                       (("1"
                                         (assert)
                                         (("1"
@@ -20351,50 +20545,40 @@
                                                                               (propax)
                                                                               nil)))))))))))))))))))))))))))))))))))))))))))))))
                                ("2"
-                                (apply
-                                 (branch
-                                  (split -1)
-                                  ((then
-                                    (flatten)
-                                    (assert)
-                                    (flatten)
-                                    (assert)))))
-                                (("1"
-                                  (inst 3 "s1b!1" "0")
-                                  (("1"
-                                    (assert)
+                                (apply (branch
+                                        (split -1)
+                                        ((then
+                                          (flatten)
+                                          (assert)
+                                          (flatten)
+                                          (assert)))))
+                                (("1" (inst 3 "s1b!1" "0")
+                                  (("1" (assert)
                                     (("1"
                                       (use
                                        "inline_related_states_implies_same_lookup")
                                       (("1" (assert) nil)))))))
                                  ("2"
-                                  (apply
-                                   (branch
-                                    (split -1)
-                                    ((then
-                                      (flatten)
-                                      (assert)
-                                      (flatten)
-                                      (assert)))))
-                                  (("1"
-                                    (skosimp*)
-                                    (("1"
-                                      (inst -6 "x!1 - 1")
+                                  (apply (branch
+                                          (split -1)
+                                          ((then
+                                            (flatten)
+                                            (assert)
+                                            (flatten)
+                                            (assert)))))
+                                  (("1" (skosimp*)
+                                    (("1" (inst -6 "x!1 - 1")
                                       (("1"
                                         (assert)
                                         (("1"
                                           (apply
-                                           (repeat
-                                            (inst? -6 :where (-3 -7))))
+                                           (repeat (inst? -6 :where (-3 -7))))
                                           (("1"
                                             (assert)
                                             (("1"
                                               (skosimp*)
                                               (("1"
-                                                (inst
-                                                 4
-                                                 "s2b!1"
-                                                 "n2!1 + 1")
+                                                (inst 4 "s2b!1" "n2!1 + 1")
                                                 (("1"
                                                   (assert)
                                                   (("1"
@@ -20416,22 +20600,19 @@
                                                               (("1"
                                                                 (assert)
                                                                 (("1"
-                                                                  (replace
-                                                                   -1)
+                                                                  (replace -1)
                                                                   (("1"
                                                                     (propax)
                                                                     nil)))))))))))))))))))))))))))))))))
                                    ("2"
-                                    (apply
-                                     (branch
-                                      (split -1)
-                                      ((then
-                                        (flatten)
-                                        (assert)
-                                        (flatten)
-                                        (assert)))))
-                                    (("1"
-                                      (skosimp*)
+                                    (apply (branch
+                                            (split -1)
+                                            ((then
+                                              (flatten)
+                                              (assert)
+                                              (flatten)
+                                              (assert)))))
+                                    (("1" (skosimp*)
                                       (("1"
                                         (inst-cp -7 "m1!1")
                                         (("1"
@@ -20439,10 +20620,7 @@
                                           (("1"
                                             (apply
                                              (repeat
-                                              (inst?
-                                               -8
-                                               :where
-                                               (-3 -9))))
+                                              (inst? -8 :where (-3 -9))))
                                             (("1"
                                               (assert)
                                               (("1"
@@ -20464,8 +20642,7 @@
                                                           (("1"
                                                             (apply
                                                              (branch
-                                                              (split
-                                                               -6)
+                                                              (split -6)
                                                               ((then
                                                                 (flatten)
                                                                 (assert)
@@ -20494,8 +20671,7 @@
                                                              ("2"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -1)
+                                                                (split -1)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -20604,10 +20780,7 @@
                                             (("1"
                                               (apply
                                                (repeat
-                                                (inst?
-                                                 -8
-                                                 :where
-                                                 (-3 -9))))
+                                                (inst? -8 :where (-3 -9))))
                                               (("1"
                                                 (assert)
                                                 (("1"
@@ -20618,9 +20791,7 @@
                                                     (("1"
                                                       (assert)
                                                       (("1"
-                                                        (inst
-                                                         -8
-                                                         "m2!1")
+                                                        (inst -8 "m2!1")
                                                         (("1"
                                                           (assert)
                                                           (("1"
@@ -20629,8 +20800,7 @@
                                                               (inst?
                                                                -8
                                                                :where
-                                                               (-1
-                                                                -5))))
+                                                               (-1 -5))))
                                                             (("1"
                                                               (assert)
                                                               (("1"
@@ -20706,9 +20876,7 @@
                                               (("1"
                                                 (use
                                                  "get_dynamic_type_name_same_in_inline_related_states")
-                                                (("1"
-                                                  (assert)
-                                                  nil)))))))
+                                                (("1" (assert) nil)))))))
                                            ("2"
                                             (apply
                                              (branch
@@ -20743,9 +20911,7 @@
                                                           (("1"
                                                             (assert)
                                                             (("1"
-                                                              (inst
-                                                               9
-                                                               "s2b!1")
+                                                              (inst 9 "s2b!1")
                                                               nil)))))))))))))))))
                                              ("2"
                                               (apply
@@ -20904,10 +21070,7 @@
                                                       (flatten)
                                                       (assert)))))
                                                   (("1"
-                                                    (inst
-                                                     12
-                                                     "s1b!1"
-                                                     "0")
+                                                    (inst 12 "s1b!1" "0")
                                                     nil)
                                                    ("2"
                                                     (apply
@@ -20922,8 +21085,7 @@
                                                       (expand
                                                        "execute_CaseJML")
                                                       (("1"
-                                                        (expand
-                                                         "extend")
+                                                        (expand "extend")
                                                         (("1"
                                                           (expand
                                                            "complete_MP"
@@ -20932,8 +21094,7 @@
                                                           (("1"
                                                             (apply
                                                              (branch
-                                                              (split
-                                                               -3)
+                                                              (split -3)
                                                               ((then
                                                                 (flatten)
                                                                 (assert)
@@ -20944,8 +21105,7 @@
                                                               (("1"
                                                                 (apply
                                                                  (branch
-                                                                  (split
-                                                                   -2)
+                                                                  (split -2)
                                                                   ((then
                                                                     (flatten)
                                                                     (assert)
@@ -21022,9 +21182,7 @@
                                                       (("1"
                                                         (skosimp*)
                                                         (("1"
-                                                          (inst-cp
-                                                           -8
-                                                           "m1!1")
+                                                          (inst-cp -8 "m1!1")
                                                           (("1"
                                                             (assert)
                                                             (("1"
@@ -21033,8 +21191,7 @@
                                                                 (inst?
                                                                  -9
                                                                  :where
-                                                                 (-4
-                                                                  -10))))
+                                                                 (-4 -10))))
                                                               (("1"
                                                                 (assert)
                                                                 (("1"
@@ -21450,8 +21607,7 @@
                                                            ("2"
                                                             (apply
                                                              (branch
-                                                              (split
-                                                               -1)
+                                                              (split -1)
                                                               ((then
                                                                 (flatten)
                                                                 (assert)
@@ -21473,8 +21629,7 @@
                                                              ("2"
                                                               (apply
                                                                (branch
-                                                                (split
-                                                                 -1)
+                                                                (split -1)
                                                                 ((then
                                                                   (flatten)
                                                                   (assert)
@@ -21537,8 +21692,7 @@
                                                                ("2"
                                                                 (apply
                                                                  (branch
-                                                                  (split
-                                                                   -1)
+                                                                  (split -1)
                                                                   ((then
                                                                     (flatten)
                                                                     (assert)
@@ -21564,8 +21718,7 @@
                                                                  ("2"
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     -1)
+                                                                    (split -1)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -22017,14 +22170,13 @@
                                                                                                                 nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
        ("2" (use "wf_nat") nil))))
     ";;; developed with shostak decision procedures")
-   unfinished nil nil nil nil nil))
- (inline_related_states_implies_derive_for_unchanged_program_converse_TCC1
-  0
+   unfinished nil 22290 3750 t nil))
+ (inline_related_states_implies_derive_for_unchanged_program_converse_TCC1 0
   (inline_related_states_implies_derive_for_unchanged_program_converse_TCC1-1
-   nil 3414149511 3414301157
+   nil 3414149511 3430053463
    ("" (skosimp*)
-    (("" (expand "id")
-      (("" (use "inline_program_preserves_wf_body") nil nil)) nil))
+    (("" (expand "id") (("" (use "inline_program_preserves_wf_body") nil nil))
+      nil))
     nil)
    proved
    ((id const-decl "(bijective?[T, T])" identity nil)
@@ -22034,30 +22186,24 @@
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (bijective? const-decl "bool" functions nil)
     (PSt type-eq-decl nil State nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
@@ -22079,8 +22225,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
@@ -22097,8 +22242,7 @@
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -22112,70 +22256,61 @@
     (list type-decl nil list_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
     (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil))
-   18231 3480 t nil))
- (inline_related_states_implies_derive_for_unchanged_program_converse_TCC2
-  0
+   1221 1190 t nil))
+ (inline_related_states_implies_derive_for_unchanged_program_converse_TCC2 0
   (inline_related_states_implies_derive_for_unchanged_program_converse_TCC2-1
-   nil 3414149511 3414301177
-   ("" (skosimp*) (("" (expand "id") (("" (propax) nil nil)) nil)) nil)
-   proved ((id const-decl "(bijective?[T, T])" identity nil)) 13929
-   3070 t nil))
+   nil 3414149511 3430053464
+   ("" (skosimp*) (("" (expand "id") (("" (propax) nil nil)) nil)) nil) proved
+   ((id const-decl "(bijective?[T, T])" identity nil)) 818 810 t nil))
  (correctness_of_inline_program 0
-  (correctness_of_inline_program-1 nil 3409049685 3413539160
+  (correctness_of_inline_program-1 nil 3409049685 3430111641
    ("" (skosimp*)
     (("" (expand "run_annotated_program")
       (("" (expand "run_FullProgram")
         (("" (expand "derives")
           (("" (skosimp*)
             ((""
-              (auto-rewrite "subset?" "member" "union" "var_names"
-                            "singleton" "emptyset" "subterm"
-                            "ext_declared_var_names")
+              (auto-rewrite "subset?" "member" "union" "var_names" "singleton"
+                            "emptyset" "subterm" "ext_declared_var_names")
               (("" (use "initial_states_are_equivalent")
                 ((""
                   (use "inline_related_states_implies_derive_for_unchanged_program")
                   (("1" (assert)
                     (("1"
                       (case "(FORALL (x: Name):
-         x = This =>
-          ((EXISTS (f: FieldDecl[Name]):
-              getFieldDecls(p!1)(f) AND name(f) = x)
-            OR
-            (EXISTS (l: LocalVarDecl[Name]):
-               getLocalDecls(p!1)(l) AND name(l) = x)
-             OR
-             (EXISTS (f: FieldDecl[Name]):
-                getGhostDecls(p!1)(f) AND name(f) = x))
-           OR x = This)")
+                  x = This =>
+                   ((EXISTS (f: Decl[Name]):
+                       getFieldDecls(p!1)(f) AND name(f) = x)
+                     OR
+                     (EXISTS (l: Decl[Name]):
+                        getLocalDecls(p!1)(l) AND name(l) = x)
+                      OR
+                      (EXISTS (f: Decl[Name]):
+                         getGhostDecls(p!1)(f) AND name(f) = x))
+                    OR x = This)")
                       (("1" (assert)
                         (("1" (split -2)
                           (("1" (skosimp*)
                             (("1" (inst 1 "sAP2b!1")
-                              (("1"
-                                (split 1)
+                              (("1" (split 1)
                                 (("1" (inst?) nil nil)
                                  ("2"
-                                  (use
-                                   "derive_maintains_inline_related_states_for_unchanged_program")
+                                  (use "derive_maintains_inline_related_states_for_unchanged_program")
                                   (("1" (assert) nil nil)
-                                   ("2"
-                                    (expand "wf_Body")
-                                    (("2"
-                                      (split 1)
+                                   ("2" (expand "wf_Body")
+                                    (("2" (split 1)
                                       (("1"
                                         (skosimp*)
                                         (("1" (assert) nil nil))
@@ -22210,82 +22345,74 @@
         nil))
       nil))
     nil)
-   unchecked
-   ((run_annotated_program const-decl "boolean"
-     AnnotatedProgramSemantics nil)
+   proved
+   ((run_annotated_program const-decl "boolean" AnnotatedProgramSemantics nil)
     (derives const-decl "bool" Semantics nil)
-    (inline_related_states_implies_derive_for_unchanged_program
-     formula-decl nil CorrectnessInlineProgram nil)
-    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics
-     nil)
-    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Body_adt
-     nil)
-    (MethodCall adt-constructor-decl
-     "[[Expr, Name, Expr] -> (MethodCall?)]" Body_adt nil)
-    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt
-     nil)
+    (inline_related_states_implies_derive_for_unchanged_program formula-decl
+     nil CorrectnessInlineProgram nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics nil)
+    (p!1 skolem-const-decl "({p: Program |
+    wf_set_stmts(p) AND contains_no_method_call_in_sets_in_program(p)})"
+     CorrectnessInlineProgram nil)
+    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Body_adt nil)
+    (MethodCall adt-constructor-decl "[[Expr, Name, Expr] -> (MethodCall?)]"
+     Body_adt nil)
+    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt nil)
     (This const-decl "Name" Program nil)
-    (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt
-     nil)
+    (main!1 skolem-const-decl "Name" CorrectnessInlineProgram nil)
+    (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt nil)
     (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (arg!1 skolem-const-decl "int" CorrectnessInlineProgram nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (set type-eq-decl nil sets nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (derive_maintains_inline_related_states_for_unchanged_program
-     formula-decl nil CorrectnessInlineProgram nil)
-    (nonempty_finite_union1 application-judgement
-     "non_empty_finite_set" finite_sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (derive_maintains_inline_related_states_for_unchanged_program formula-decl
+     nil CorrectnessInlineProgram nil)
+    (nonempty_finite_union1 application-judgement "non_empty_finite_set"
+     finite_sets nil)
     (finite_union application-judgement "finite_set" finite_sets nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
-    (subset? const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
-    (emptyset const-decl "set" sets nil)
-    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil) (union const-decl "set" sets nil)
+    (emptyset const-decl "set" sets nil) (member const-decl "bool" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
-    (nonempty_singleton_finite application-judgement
-     "non_empty_finite_set" finite_sets nil)
+    (nonempty_singleton_finite application-judgement "non_empty_finite_set"
+     finite_sets nil)
     (finite_emptyset name-judgement "finite_set" finite_sets nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (bijective? const-decl "bool" functions nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (PSt type-eq-decl nil State nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
@@ -22307,8 +22434,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
@@ -22325,8 +22451,7 @@
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -22340,34 +22465,239 @@
     (list type-decl nil list_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
-    (initial_states_are_equivalent formula-decl nil
-     CorrectnessInlineProgram nil)
+    (initial_states_are_equivalent formula-decl nil CorrectnessInlineProgram
+     nil)
     (run_FullProgram const-decl "boolean" Semantics nil))
-   129090 10970 t shostak))
+   60727 8700 t shostak))
  (correctness_of_inline_program_converse 0
-  (correctness_of_inline_program_converse-1 nil 3414149527 3414149574
+  (correctness_of_inline_program_converse-2 nil 3430111656 3430111671
    ("" (skosimp*)
     (("" (expand "run_annotated_program")
       (("" (expand "run_FullProgram")
         (("" (expand "derives")
           (("" (skosimp*)
             ((""
-              (auto-rewrite "subset?" "member" "union" "var_names"
-                            "singleton" "emptyset" "subterm"
-                            "ext_declared_var_names")
+              (auto-rewrite "subset?" "member" "union" "var_names" "singleton"
+                            "emptyset" "subterm" "ext_declared_var_names")
+              (("" (use "initial_states_are_equivalent")
+                ((""
+                  (use "inline_related_states_implies_derive_for_unchanged_program_converse")
+                  (("1" (assert)
+                    (("1"
+                      (case "(FORALL (x: Name):
+                           x = This =>
+                            ((EXISTS (f: Decl[Name]):
+                                getFieldDecls(p!1)(f) AND name(f) = x)
+                              OR
+                              (EXISTS (l: Decl[Name]):
+                                 getLocalDecls(p!1)(l) AND name(l) = x)
+                               OR
+                               (EXISTS (f: Decl[Name]):
+                                  getGhostDecls(p!1)(f) AND name(f) = x))
+                             OR x = This)")
+                      (("1" (assert)
+                        (("1" (split -2)
+                          (("1" (skosimp*)
+                            (("1" (inst 1 "sAP2b!1")
+                              (("1" (split 1)
+                                (("1" (inst?) nil nil)
+                                 ("2"
+                                  (use "derive_maintains_inline_related_states_for_unchanged_program")
+                                  (("1" (assert) nil nil)
+                                   ("2" (expand "wf_Body")
+                                    (("2" (split 1)
+                                      (("1"
+                                        (skosimp*)
+                                        (("1" (assert) nil nil))
+                                        nil)
+                                       ("2"
+                                        (skosimp*)
+                                        (("2" (assert) nil nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (propax) nil nil))
+                          nil))
+                        nil)
+                       ("2" (skosimp*) nil nil))
+                      nil))
+                    nil)
+                   ("2" (expand "wf_Body")
+                    (("2" (split 1)
+                      (("1" (skosimp*) (("1" (assert) nil nil)) nil)
+                       ("2" (skosimp*) (("2" (assert) nil nil)) nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((run_FullProgram const-decl "boolean" Semantics nil)
+    (initial_states_are_equivalent formula-decl nil CorrectnessInlineProgram
+     nil)
+    (contains_no_method_call_in_sets_in_program const-decl "bool"
+     ContainsNoMethodCall nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
+    (on_method_exit_exceptional const-decl "(on_method_event_type)"
+     SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
+     nil)
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_event_type const-decl "boolean" SemanticsTypes nil)
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (wf_Method const-decl "boolean" WellFormedProgram nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
+    (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
+    (wf_Branches const-decl "boolean" WellFormedProgram nil)
+    (list type-decl nil list_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
+    (execute_assert_type const-decl "boolean" SemanticsTypes nil)
+    (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
+    (execute_set_type const-decl "boolean" SemanticsTypes nil)
+    (derive_rec_type type-eq-decl nil SemanticsTypes nil)
+    (derive_type type-eq-decl nil SemanticsTypes nil)
+    (below type-eq-decl nil naturalnumbers nil)
+    (<= const-decl "bool" reals nil) (< const-decl "bool" reals nil)
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (>= const-decl "bool" reals nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
+    (number nonempty-type-decl nil numbers nil)
+    (upto nonempty-type-eq-decl nil naturalnumbers nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (wf_Expr const-decl "boolean" WellFormedProgram nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Body type-decl nil Body_adt nil)
+    (lookup const-decl "Val" SemanticsJML nil)
+    (update_GhostVars const-decl "(update_GhostVars_type)"
+     AnnotatedProgramSemantics nil)
+    (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
+    (update_PState_type const-decl "boolean" SemanticsTypes nil)
+    (PSt type-eq-decl nil State nil)
+    (id const-decl "(bijective?[T, T])" identity nil)
+    (bijective? const-decl "bool" functions nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
+    (finite_emptyset name-judgement "finite_set" finite_sets nil)
+    (nonempty_singleton_finite application-judgement "non_empty_finite_set"
+     finite_sets nil)
+    (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
+     sets_lemmas nil)
+    (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (singleton const-decl "(singleton?)" sets nil)
+    (member const-decl "bool" sets nil) (emptyset const-decl "set" sets nil)
+    (union const-decl "set" sets nil) (subset? const-decl "bool" sets nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (nonempty_finite_union1 application-judgement "non_empty_finite_set"
+     finite_sets nil)
+    (derive_maintains_inline_related_states_for_unchanged_program formula-decl
+     nil CorrectnessInlineProgram nil)
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (set type-eq-decl nil sets nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (arg!1 skolem-const-decl "int" CorrectnessInlineProgram nil)
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
+    (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt nil)
+    (main!1 skolem-const-decl "Name" CorrectnessInlineProgram nil)
+    (This const-decl "Name" Program nil)
+    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt nil)
+    (MethodCall adt-constructor-decl "[[Expr, Name, Expr] -> (MethodCall?)]"
+     Body_adt nil)
+    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Body_adt nil)
+    (p!1 skolem-const-decl "({p: Program |
+    wf_set_stmts(p) AND contains_no_method_call_in_sets_in_program(p)})"
+     CorrectnessInlineProgram nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics nil)
+    (inline_program const-decl "Program" InlineProgramAnnotation nil)
+    (inline_related_states_implies_derive_for_unchanged_program_converse
+     formula-decl nil CorrectnessInlineProgram nil)
+    (derives const-decl "bool" Semantics nil)
+    (run_annotated_program const-decl "boolean" AnnotatedProgramSemantics
+     nil))
+   14189 11310 nil nil)
+  (correctness_of_inline_program_converse-1 nil 3414149527 3430053478
+   ("" (skosimp*)
+    (("" (expand "run_annotated_program")
+      (("" (expand "run_FullProgram")
+        (("" (expand "derives")
+          (("" (skosimp*)
+            ((""
+              (auto-rewrite "subset?" "member" "union" "var_names" "singleton"
+                            "emptyset" "subterm" "ext_declared_var_names")
               (("" (use "initial_states_are_equivalent")
                 ((""
                   (use "inline_related_states_implies_derive_for_unchanged_program_converse")
@@ -22388,17 +22718,13 @@
                         (("1" (split -2)
                           (("1" (skosimp*)
                             (("1" (inst 1 "sAP2b!1")
-                              (("1"
-                                (split 1)
+                              (("1" (split 1)
                                 (("1" (inst?) nil nil)
                                  ("2"
-                                  (use
-                                   "derive_maintains_inline_related_states_for_unchanged_program")
+                                  (use "derive_maintains_inline_related_states_for_unchanged_program")
                                   (("1" (assert) nil nil)
-                                   ("2"
-                                    (expand "wf_Body")
-                                    (("2"
-                                      (split 1)
+                                   ("2" (expand "wf_Body")
+                                    (("2" (split 1)
                                       (("1"
                                         (skosimp*)
                                         (("1" (assert) nil nil))
@@ -22433,69 +22759,53 @@
         nil))
       nil))
     nil)
-   untried
-   ((run_annotated_program const-decl "boolean"
-     AnnotatedProgramSemantics nil)
+   unfinished
+   ((run_annotated_program const-decl "boolean" AnnotatedProgramSemantics nil)
     (derives const-decl "bool" Semantics nil)
     (inline_related_states_implies_derive_for_unchanged_program_converse
      formula-decl nil CorrectnessInlineProgram nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics
-     nil)
-    nil
-    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Body_adt
-     nil)
-    (MethodCall adt-constructor-decl
-     "[[Expr, Name, Expr] -> (MethodCall?)]" Body_adt nil)
-    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt
-     nil)
-    (This const-decl "Name" Program nil) nil
-    (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt
-     nil)
+    (initial_AP_state const-decl "APState" AnnotatedProgramSemantics nil)
+    (StmtExpr adt-constructor-decl "[Expr -> (StmtExpr?)]" Body_adt nil)
+    (MethodCall adt-constructor-decl "[[Expr, Name, Expr] -> (MethodCall?)]"
+     Body_adt nil)
+    (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt nil)
+    (This const-decl "Name" Program nil)
+    (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt nil)
     (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil) nil
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (set type-eq-decl nil sets nil)
     (is_finite const-decl "bool" finite_sets nil)
-    (getFieldDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    nil
-    (getGhostDecls const-decl "finite_set[FieldDecl]" ProgramFunctions
-     nil)
-    (derive_maintains_inline_related_states_for_unchanged_program
-     formula-decl nil CorrectnessInlineProgram nil)
-    (nonempty_finite_union1 application-judgement
-     "non_empty_finite_set" finite_sets nil)
+    (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (derive_maintains_inline_related_states_for_unchanged_program formula-decl
+     nil CorrectnessInlineProgram nil)
+    (nonempty_finite_union1 application-judgement "non_empty_finite_set"
+     finite_sets nil)
     (finite_union application-judgement "finite_set" finite_sets nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
-    (subset? const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
-    (emptyset const-decl "set" sets nil)
-    (member const-decl "bool" sets nil)
+    (subset? const-decl "bool" sets nil) (union const-decl "set" sets nil)
+    (emptyset const-decl "set" sets nil) (member const-decl "bool" sets nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
-    nil nil
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
-    (nonempty_singleton_finite application-judgement
-     "non_empty_finite_set" finite_sets nil)
+    (nonempty_singleton_finite application-judgement "non_empty_finite_set"
+     finite_sets nil)
     (finite_emptyset name-judgement "finite_set" finite_sets nil)
     (Name formal-nonempty-type-decl nil CorrectnessInlineProgram nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) nil
     (finite_set type-eq-decl nil finite_sets nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
+    (Expr type-eq-decl nil Body_adt nil) nil
+    (Stmt type-eq-decl nil Body_adt nil) (Excpt type-decl nil Excpt_adt nil)
+    (Method type-eq-decl nil Program nil) (lift type-decl nil lift_adt nil)
     (Class type-eq-decl nil Program nil)
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -22503,15 +22813,14 @@
     (Program type-eq-decl nil WellFormedProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (bijective? const-decl "bool" functions nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (PSt type-eq-decl nil State nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (update_GhostVars_type const-decl "boolean" SemanticsJMLTypes nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      AnnotatedProgramSemantics nil)
@@ -22533,8 +22842,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (upto nonempty-type-eq-decl nil naturalnumbers nil)
     (number nonempty-type-decl nil numbers nil)
-    (number_field_pred const-decl "[number -> boolean]" number_fields
-     nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
     (number_field nonempty-type-from-decl nil number_fields nil)
     (real_pred const-decl "[number_field -> boolean]" reals nil)
     (real nonempty-type-from-decl nil reals nil)
@@ -22551,8 +22859,7 @@
     (execute_set_type const-decl "boolean" SemanticsTypes nil)
     (execute_set const-decl "(execute_set_type)" SemanticsJML nil)
     (execute_assert_type const-decl "boolean" SemanticsTypes nil)
-    (execute_assert const-decl "(execute_assert_type)" SemanticsJML
-     nil)
+    (execute_assert const-decl "(execute_assert_type)" SemanticsJML nil)
     (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -22566,22 +22873,19 @@
     (list type-decl nil list_adt nil)
     (wf_Branches const-decl "boolean" WellFormedProgram nil)
     (execute_CaseJML_type const-decl "boolean" SemanticsTypes nil)
-    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML
-     nil)
+    (execute_CaseJML const-decl "(execute_CaseJML_type)" SemanticsJML nil)
     (wf_Method const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (on_method_event_type const-decl "boolean" SemanticsTypes nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (on_method_exit_normal const-decl "(on_method_event_type)" SemanticsJML
      nil)
-    (on_method_exit_normal const-decl "(on_method_event_type)"
-     SemanticsJML nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
      SemanticsJML nil)
-    nil
     (contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
-    (initial_states_are_equivalent formula-decl nil
-     CorrectnessInlineProgram nil)
+    (initial_states_are_equivalent formula-decl nil CorrectnessInlineProgram
+     nil)
     (run_FullProgram const-decl "boolean" Semantics nil))
-   47111 7700 t shostak)))
+   6581 6480 t shostak)))
 

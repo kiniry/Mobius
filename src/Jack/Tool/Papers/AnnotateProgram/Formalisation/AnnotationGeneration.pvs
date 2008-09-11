@@ -41,9 +41,11 @@ BEGIN
 
   ASSUMING
 
-    % each control point can be mapped to natural number
+    IMPORTING ValProp[Name]
+
+    % each control point can be mapped to a unique value
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -65,7 +67,7 @@ BEGIN
   % map control points to legal variable names
   name_of(mp) : (injective?[CP, (legal_names(mp))])
 
-  unique : (injective?[CP, nat])
+  unique : (injective?[CP, (defined?)])
 
   % constant halted: mapping of halted control point to variable names
   halted(mp) : Name = name_of(mp)(halted)
@@ -77,8 +79,8 @@ BEGIN
   % name: cp(mp), integer type, initialised to initial control point
   new_cp_gvd(mp) : Decl =
     (# name := cp(mp),
-       jtype := IntType,
-       init_val := Int(unique(init_cp(mva(mp)))) #)
+       jtype := type_of(unique(init_cp(mva(mp)))),
+       init_val := unique(init_cp(mva(mp))) #)
 
   % static final ghost variables encode set of control points 
   % name uses mapping from control points to legal variable names
@@ -86,8 +88,8 @@ BEGIN
   new_cps_gvds(mp) : finite_set[Decl] =
     {gd : Decl | EXISTS (q : (cps(mva(mp)))) :
                    name(gd) = name_of(mp)(q) AND
-                   jtype(gd) = IntType AND
-                   init_val(gd) = Int(unique(q))}
+                   jtype(gd) = type_of(unique(q)) AND
+                   init_val(gd) = unique(q)}
 
   % ghost variable that represent automaton variables
   % name, type and initial value coincide
@@ -133,7 +135,8 @@ BEGIN
 
   % variable declaration corresponding to control point q
   new_cp_gvd(mp)(q : (cps(mva(mp)))) : Decl =
-    (# name := name_of(mp)(q), jtype := IntType, init_val := Int(unique(q)) #)
+    (# name := name_of(mp)(q), jtype := type_of(unique(q)),
+       init_val := unique(q) #)
 
   % variable declaration encoding q is a new ghost variable
   new_cp_gvd_new_ghostvar : LEMMA % :-)
@@ -176,8 +179,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -239,7 +244,7 @@ BEGIN
   ann_guard_actions_set(mp)(ts : finite_set[Transition])(v : ValOrExcpt) :
                             finite_set[[Expr, Stmt]] =
      {x : [Expr, Stmt] | EXISTS (t : Transition) :
-          ts(t) AND x = (guard_to_expression(mva(mp))(guard(t))(v),
+          ts(t) AND x = (guard_to_expression(guard(t))(v),
           update_vars(mp)(t))}
 
 
@@ -320,8 +325,10 @@ BEGIN
   % Annotate methods
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -507,8 +514,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -610,8 +619,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -651,8 +662,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -810,7 +823,7 @@ BEGIN
   guard_to_expression_wf_Expr : LEMMA % :-)
     FORALL (t : Transition, v : ValOrExcpt) :
       ts(mva(mp))(t) IMPLIES
-        wf_Expr(ann_program(mp))(guard_to_expression(mva(mp))(guard(t))(v))
+        wf_Expr(ann_program(mp))(guard_to_expression(guard(t))(v))
   
   % components of guard_action tuple are wf_Body wrt annotated program
   ann_trans_cp_wf : LEMMA % :-)

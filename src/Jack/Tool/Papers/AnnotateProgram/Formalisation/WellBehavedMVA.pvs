@@ -12,13 +12,13 @@ BEGIN
   % result in an exception (v would be Bottom).
   % Furthermore, the evaluation must have no side-effects.
   guard_to_expression_behavior(mva)(stA : [APState -> Store]) : boolean =
-    FORALL (t : Transition, p : Program, s : APState, arg : ValOrExcpt,
-            v : (Bool?), n : nat) :
-      LET e = guard_to_expression(mva)(guard(t)) IN
+    FORALL (t : Transition, p : Program, s : APState, arg : ValOrExcpt) : 
+      LET e = guard_to_expression(guard(t)) IN
         ts(mva)(t) IMPLIES % t transition in MVA
         wf_Expr(p)(e(arg)) IMPLIES % e wellformed wrt p
         wf_state(p)(s) IMPLIES % s good
         NOT up?(ex(pstate(s))) IMPLIES % and non-exceptional state
+          EXISTS(v : Val, n : nat) : 
           derive(p)(e(arg), s, v, s)(n) AND % evaluation of e does not 
                                             % have side effects
           v = Bool(guard(t)(stA(s), fvs(st(pstate(s))), arg))
@@ -28,7 +28,7 @@ BEGIN
   % Evaluation of expressions appearing in actions terminate
   % and is side-effect-free (and thus does not throw an exception)
   eval_action_behavior(mva) (stA : [APState -> Store]) : boolean =
-    FORALL(t : Transition, oa : OneAction, v : Val, p : Program, 
+    FORALL(t : Transition, oa : OneAction, p : Program, 
            s : APState) :
       ts(mva)(t) IMPLIES % t transition in MVA
       member(oa, action(t)) IMPLIES % oa single action in t        
@@ -49,6 +49,7 @@ BEGIN
 
   IMPORTING MVACompletion[CP, Name]
 
+  % remaining case: build_guard for transition from existing state to halted
   well_behaved_MVA_preserved_by_complete : LEMMA
     FORALL(mva : (partial), stA : [APState -> Store]) :
     well_behaved_MVA(mva)(stA) IMPLIES

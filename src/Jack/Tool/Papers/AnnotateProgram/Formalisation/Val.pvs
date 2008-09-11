@@ -34,5 +34,14 @@ BEGIN
       RefType : Null
     ENDCASES
 
+  type_of(v : (defined?)) : JType =
+    CASES v OF
+      Bool(b) : BoolType,
+      Int(i) : IntType,
+      Null : RefType,
+      Reference(a, c) : RefType,
+      Unit : Void
+    ENDCASES
+
 END ValProp
 

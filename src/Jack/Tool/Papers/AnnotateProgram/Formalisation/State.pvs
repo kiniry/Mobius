@@ -170,6 +170,41 @@ BEGIN
                       defined?(proj_2(v))) IMPLIES
         wf_state(p)(update_locals(V)(s))
 
+            
+  IMPORTING finite_sets@finite_sets_inductions[[Name, Val]]
+
+  % exception state not affected by update_locals
+  ex_update_locals : LEMMA % :-)
+    FORALL(s : PState, V : finite_set[[Name, Val]]) :
+      ex(update_locals(V)(s)) = ex(s)
+
+  % fields not affected by update_locals
+  fvs_update_locals : LEMMA % :-)
+    FORALL(s : PState, V : finite_set[[Name, Val]]) :
+      fvs(st(update_locals(V)(s))) = fvs(st(s))
+
+
+  % update_locals in equal program state result in equal states
+  st_update_locals : LEMMA % :-)
+    FORALL(s1, s2 : PState, V : finite_set[[Name, Val]]) :
+      st(s1) = st(s2) IMPLIES
+        st(update_locals(V)(s1)) = st(update_locals(V)(s2))
+
+  % if V only contains defined values, then defined after update_locals
+  % if defined before, or if in V
+  defined?_update_locals : LEMMA % :-)
+    FORALL(s : PState, V : finite_set[[Name, Val]], n : Name) :
+      (FORALL(x : [[Name, Val]]) : V(x) IMPLIES defined?(proj_2(x))) IMPLIES
+        defined?(lvs(st(update_locals(V)(s)))(n)) = 
+          (defined?(lvs(st(s))(n)) OR EXISTS (v : Val) : V(n,v))
+
+  % local variable n equal after update_locals if in V, or if equal before
+  lvs_update_locals : LEMMA % :-)
+    FORALL(s1, s2 : PState, V : finite_set[[Name, Val]], n : Name) :
+      (lvs(st(s1))(n) = lvs(st(s2))(n) OR
+       EXISTS (v : Val) : V(n,v)) IMPLIES
+      lvs(st(update_locals(V)(s1)))(n) = lvs(st(update_locals(V)(s2)))(n)
+
   % wf_state preserved by update
   wf_state_update : LEMMA % :-) 
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :

@@ -1,44 +1,40 @@
 (InlineEquivalence
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3409035720 3410868979
-   ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil InlineEquivalence nil)) 125
-   120 t nil))
+  (IMP_InlineVariableNames_TCC1-1 nil 3409035720 3430053504
+   ("" (use "infinite_namespace") nil nil) unchecked
+   ((infinite_namespace formula-decl nil InlineEquivalence nil)) 756 720 t
+   nil))
  (IMP_InlineProgramAnnotationProperties_TCC1 0
-  (IMP_InlineProgramAnnotationProperties_TCC1-1 nil 3409035720
-   3410868979 ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil InlineEquivalence nil)) 118 120 t
-   nil)))
+  (IMP_InlineProgramAnnotationProperties_TCC1-1 nil 3409035720 3430053504
+   ("" (use "name_of_exists") nil nil) unchecked
+   ((name_of_exists formula-decl nil InlineEquivalence nil)) 739 740 t nil)))
 (InlineRelatedStatesProperties
  (IMP_InlineVariableNames_TCC1 0
-  (IMP_InlineVariableNames_TCC1-1 nil 3409036204 3410868979
-   ("" (use "infinite_namespace") nil nil) proved
-   ((infinite_namespace formula-decl nil InlineRelatedStatesProperties
-     nil))
-   164 110 t nil))
+  (IMP_InlineVariableNames_TCC1-1 nil 3409036204 3430053478
+   ("" (use "infinite_namespace") nil nil) unchecked
+   ((infinite_namespace formula-decl nil InlineRelatedStatesProperties nil))
+   727 730 t nil))
  (IMP_InlineEquivalence_TCC1 0
-  (IMP_InlineEquivalence_TCC1-1 nil 3409036204 3410868979
-   ("" (use "name_of_exists") nil nil) proved
-   ((name_of_exists formula-decl nil InlineRelatedStatesProperties
-     nil))
-   119 120 t nil))
+  (IMP_InlineEquivalence_TCC1-1 nil 3409036204 3430053479
+   ("" (use "name_of_exists") nil nil) unchecked
+   ((name_of_exists formula-decl nil InlineRelatedStatesProperties nil)) 768
+   740 t nil))
  (get_address_same_in_inline_related_states 0
-  (get_address_same_in_inline_related_states-1 nil 3409041892
-   3410869051
+  (get_address_same_in_inline_related_states-1 nil 3409041892 3430053480
    ("" (skosimp*)
     (("" (expand* "inline_related_states" "Program_modeled?")
-      (("" (flatten)
-        (("" (expand "get_address") (("" (assert) nil nil)) nil)) nil))
+      (("" (flatten) (("" (expand "get_address") (("" (assert) nil nil)) nil))
+        nil))
       nil))
     nil)
-   proved
+   unchecked
    ((Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil)
     (get_address const-decl "int" Semantics nil))
-   13259 230 t shostak))
+   1049 1050 t shostak))
  (get_dynamic_type_name_same_in_inline_related_states 0
   (get_dynamic_type_name_same_in_inline_related_states-1 nil 3409041993
-   3410869069
+   3430053481
    ("" (skosimp*)
     (("" (expand "get_dynamic_type_name")
       (("" (expand "inline_related_states")
@@ -47,34 +43,29 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((get_dynamic_type_name const-decl "Name" Semantics nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (inline_related_states const-decl "boolean" InlineEquivalence nil))
-   14570 230 t shostak))
+   1076 1040 t shostak))
  (Program_modeled_implies_same_exception 0
-  (Program_modeled_implies_same_exception-1 nil 3409042333 3410868980
+  (Program_modeled_implies_same_exception-1 nil 3409042333 3430053482
    ("" (skosimp*)
-    (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil))
-    nil)
-   proved
-   ((Program_modeled? const-decl "boolean" InlineEquivalence nil)) 184
-   130 t shostak))
+    (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil)) nil)
+   unchecked ((Program_modeled? const-decl "boolean" InlineEquivalence nil))
+   818 790 t shostak))
  (inline_related_states_implies_same_exception 0
-  (inline_related_states_implies_same_exception-1 nil 3409042347
-   3410868980
+  (inline_related_states_implies_same_exception-1 nil 3409042347 3430053483
    ("" (skosimp*)
     (("" (expand "inline_related_states")
-      (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil))
-      nil))
+      (("" (expand "Program_modeled?") (("" (flatten) nil nil)) nil)) nil))
     nil)
-   proved
+   unchecked
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   218 220 t shostak))
+   1046 1050 t shostak))
  (inline_related_states_implies_same_lookup 0
-  (inline_related_states_implies_same_lookup-1 nil 3409042364
-   3410868981
+  (inline_related_states_implies_same_lookup-1 nil 3409042364 3430053486
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -93,12 +84,9 @@
                         (("" (expand "wf_state")
                           (("" (expand "Program_modeled?")
                             (("" (flatten)
-                              ((""
-                                (expand "ext_declared_var_names")
-                                ((""
-                                  (auto-rewrite "union" "member")
-                                  ((""
-                                    (assert)
+                              (("" (expand "ext_declared_var_names")
+                                (("" (auto-rewrite "union" "member")
+                                  (("" (assert)
                                     ((""
                                       (expand*
                                        "lookup"
@@ -137,8 +125,7 @@
                                                                 ((""
                                                                   (apply
                                                                    (branch
-                                                                    (split
-                                                                     1)
+                                                                    (split 1)
                                                                     ((then
                                                                       (flatten)
                                                                       (assert)
@@ -191,32 +178,25 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
     (wf_state_ghost_not_local_or_field formula-decl nil
      AnnotatedProgramSemantics nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
@@ -230,17 +210,15 @@
     (id_preserves application-judgement "S" identity_props nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (id const-decl "(bijective?[T, T])" identity nil)
-    (union const-decl "set" sets nil)
-    (member const-decl "bool" sets nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
+    (union const-decl "set" sets nil) (member const-decl "bool" sets nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil)
     (PSt type-eq-decl nil State nil)
     (wf_state_vars_local_or_field formula-decl nil State nil))
-   1512 1400 t shostak))
+   2855 2790 t shostak))
  (inline_related_states_preserved_by_update 0
-  (inline_related_states_preserved_by_update-1 nil 3409043468
-   3410868983
+  (inline_related_states_preserved_by_update-1 nil 3409043468 3430053489
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -249,8 +227,7 @@
             (("1" (assert)
               (("1" (skosimp*)
                 (("1" (expand "update_PState")
-                  (("1" (use "wf_state_update")
-                    (("1" (assert) nil nil)) nil))
+                  (("1" (use "wf_state_update") (("1" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -259,8 +236,7 @@
             (("2" (assert)
               (("2" (skosimp*)
                 (("2" (expand "update_PState")
-                  (("2" (use "wf_state_update")
-                    (("2" (assert) nil nil)) nil))
+                  (("2" (use "wf_state_update") (("2" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -270,23 +246,17 @@
               (("3" (expand "Program_lvs_modeled?")
                 (("3" (expand "update_PState")
                   (("3" (split 1)
-                    (("1"
-                      (expand* "update" "update_local" "update_field")
-                      nil nil)
-                     ("2"
-                      (expand* "update" "update_local" "update_field")
+                    (("1" (expand* "update" "update_local" "update_field") nil
+                      nil)
+                     ("2" (expand* "update" "update_local" "update_field")
                       (("2" (replace -4)
                         (("2" (lift-if)
                           (("2" (assert)
                             (("2" (expand "wf_state" -1)
-                              (("2"
-                                (flatten)
-                                (("2"
-                                  (use "wf_state_vars_local_or_field")
-                                  (("2"
-                                    (assert)
-                                    (("2"
-                                      (flatten)
+                              (("2" (flatten)
+                                (("2" (use "wf_state_vars_local_or_field")
+                                  (("2" (assert)
+                                    (("2" (flatten)
                                       (("2"
                                         (apply
                                          (branch
@@ -328,8 +298,7 @@
                                                       (("1"
                                                         (flatten)
                                                         (("1"
-                                                          (expand
-                                                           "is_field")
+                                                          (expand "is_field")
                                                           (("1"
                                                             (assert)
                                                             nil
@@ -364,14 +333,11 @@
                       (("3" (inst -6 "n!1")
                         (("3" (split -6)
                           (("1"
-                            (expand* "update" "update_local"
-                             "update_field" "is_local" "is_field")
+                            (expand* "update" "update_local" "update_field"
+                             "is_local" "is_field")
                             (("1" (case-replace "vn!1 = n!1")
-                              (("1"
-                                (assert)
-                                (("1"
-                                  (replace -2)
-                                  (("1" (propax) nil nil))
+                              (("1" (assert)
+                                (("1" (replace -2) (("1" (propax) nil nil))
                                   nil))
                                 nil)
                                ("2" (assert) nil nil))
@@ -379,19 +345,12 @@
                             nil)
                            ("2" (hide 2)
                             (("2" (expand "ext_declared_var_names")
-                              (("2"
-                                (auto-rewrite "union" "member")
-                                (("2"
-                                  (assert)
+                              (("2" (auto-rewrite "union" "member")
+                                (("2" (assert)
                                   (("2"
-                                    (expand*
-                                     "update"
-                                     "update_local"
-                                     "update_field"
-                                     "is_local"
-                                     "is_field")
-                                    nil
-                                    nil))
+                                    (expand* "update" "update_local"
+                                     "update_field" "is_local" "is_field")
+                                    nil nil))
                                   nil))
                                 nil))
                               nil))
@@ -409,41 +368,33 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (wf_state_update formula-decl nil State nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
-    (Val type-decl nil Val_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (lift type-decl nil lift_adt nil)
+    (PSt type-eq-decl nil State nil) (Val type-decl nil Val_adt nil)
     (update const-decl "PState" State nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties nil)
     (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
-    (ext_declared_var_names const-decl "finite_set[Name]"
-     ProgramFunctions nil)
-    (member const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
+    (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
+     nil)
+    (member const-decl "bool" sets nil) (union const-decl "set" sets nil)
     (wf_state const-decl "boolean" AnnotatedProgramSemantics nil)
     (wf_state_vars_local_or_field formula-decl nil State nil)
     (is_local const-decl "boolean" State nil)
@@ -452,9 +403,9 @@
     (update_field const-decl "PState" State nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   1490 1370 t shostak))
+   2814 2750 t shostak))
  (inline_related_states_preserved_by_catch 0
-  (inline_related_states_preserved_by_catch-1 nil 3409044630 3410868984
+  (inline_related_states_preserved_by_catch-1 nil 3409044630 3430053491
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -463,8 +414,7 @@
             (("1" (assert)
               (("1" (skosimp*)
                 (("1" (expand "update_PState")
-                  (("1" (use "wf_state_catch") (("1" (assert) nil nil))
-                    nil))
+                  (("1" (use "wf_state_catch") (("1" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -473,8 +423,7 @@
             (("2" (assert)
               (("2" (skosimp*)
                 (("2" (expand "update_PState")
-                  (("2" (use "wf_state_catch") (("2" (assert) nil nil))
-                    nil))
+                  (("2" (use "wf_state_catch") (("2" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -483,8 +432,7 @@
             (("3" (flatten)
               (("3" (expand "Program_lvs_modeled?")
                 (("3" (expand "update_PState")
-                  (("3" (expand "catch") (("3" (assert) nil nil)) nil))
-                  nil))
+                  (("3" (expand "catch") (("3" (assert) nil nil)) nil)) nil))
                 nil))
               nil))
             nil))
@@ -492,41 +440,34 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (wf_state_catch formula-decl nil State nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
-    (catch const-decl "PState" State nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
+    (Excpt type-decl nil Excpt_adt nil) (lift type-decl nil lift_adt nil)
+    (PSt type-eq-decl nil State nil) (catch const-decl "PState" State nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties nil)
     (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   979 940 t shostak))
+   2275 2210 t shostak))
  (inline_related_states_preserved_by_raise 0
-  (inline_related_states_preserved_by_raise-1 nil 3409044719 3410868985
+  (inline_related_states_preserved_by_raise-1 nil 3409044719 3430053493
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -535,8 +476,7 @@
             (("1" (assert)
               (("1" (skosimp*)
                 (("1" (expand "update_PState")
-                  (("1" (use "wf_state_raise") (("1" (assert) nil nil))
-                    nil))
+                  (("1" (use "wf_state_raise") (("1" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -545,8 +485,7 @@
             (("2" (assert)
               (("2" (skosimp*)
                 (("2" (expand "update_PState")
-                  (("2" (use "wf_state_raise") (("2" (assert) nil nil))
-                    nil))
+                  (("2" (use "wf_state_raise") (("2" (assert) nil nil)) nil))
                   nil))
                 nil))
               nil))
@@ -555,8 +494,7 @@
             (("3" (flatten)
               (("3" (expand "Program_lvs_modeled?")
                 (("3" (expand "update_PState")
-                  (("3" (expand "raise") (("3" (assert) nil nil)) nil))
-                  nil))
+                  (("3" (expand "raise") (("3" (assert) nil nil)) nil)) nil))
                 nil))
               nil))
             nil))
@@ -564,42 +502,34 @@
         nil))
       nil))
     nil)
-   proved
+   unchecked
    ((inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
     (wf_state_raise formula-decl nil State nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
-    (FieldDecl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Method type-eq-decl nil Program nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
-    (Store type-eq-decl nil State nil)
-    (PState type-eq-decl nil State nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (lift type-decl nil lift_adt nil) (PSt type-eq-decl nil State nil)
-    (raise const-decl "PState" State nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
+    (Excpt type-decl nil Excpt_adt nil) (lift type-decl nil lift_adt nil)
+    (PSt type-eq-decl nil State nil) (raise const-decl "PState" State nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties nil)
     (wf_update_PState formula-decl nil AnnotatedProgramSemantics nil)
     (inline_program const-decl "Program" InlineProgramAnnotation nil)
     (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
     (Program_modeled? const-decl "boolean" InlineEquivalence nil))
-   976 930 t nil))
+   2216 2170 t nil))
  (inline_related_states_preserved_by_update_stack 0
-  (inline_related_states_preserved_by_update_stack-1 nil 3409044745
-   3410868988
+  (inline_related_states_preserved_by_update_stack-1 nil 3409044745 3430116140
    ("" (skosimp*)
     (("" (expand "inline_related_states")
       (("" (flatten)
@@ -608,40 +538,40 @@
             (("" (split -1)
               (("1" (assert)
                 (("1"
-                  (use "wf_state_update_stack"
-                       ("p" "inline_program(p!1)"))
+                  (use "wf_state_update_stack" ("p" "inline_program(p!1)"))
                   (("1" (assert)
                     (("1" (split -1)
                       (("1" (assert)
                         (("1" (hide -1 -2)
                           (("1" (expand "Program_modeled?")
                             (("1" (expand "update_stack")
-                              (("1"
-                                (expand "update_PState")
-                                (("1"
-                                  (expand "o")
-                                  (("1"
-                                    (expand "update_local")
-                                    (("1"
-                                      (flatten)
+                              (("1" (expand "update_PState")
+                                (("1" (expand "o")
+                                  (("1" (expand "update_local")
+                                    (("1" (flatten)
                                       (("1"
                                         (assert)
                                         (("1"
-                                          (expand
-                                           "Program_lvs_modeled?")
+                                          (expand "Program_lvs_modeled?")
                                           (("1"
-                                            (skosimp*)
+                                            (lift-if 1)
                                             (("1"
-                                              (lift-if 1)
+                                              (apply
+                                               (branch
+                                                (split 1)
+                                                ((then
+                                                  (flatten)
+                                                  (assert)
+                                                  (flatten)
+                                                  (assert)))))
                                               (("1"
-                                                (apply
-                                                 (branch
-                                                  (split 1)
-                                                  ((then
-                                                    (flatten)
-                                                    (assert)
-                                                    (flatten)
-                                                    (assert)))))
+                                                (case
+                                                 "is_finite[[Name, Val[Name]]]
+          ({x: [Name, Val[Name]] |
+              EXISTS (l: Decl[Name]):
+                lvds!1(l) AND
+                 name(l) = PROJ_1(x) AND
+                  default_value[Name](jtype(l)) = PROJ_2(x)})")
                                                 (("1"
                                                   (apply
                                                    (branch
@@ -652,37 +582,194 @@
                                                       (flatten)
                                                       (assert)))))
                                                   (("1"
-                                                    (apply
-                                                     (branch
-                                                      (split 2)
-                                                      ((then
-                                                        (flatten)
-                                                        (assert)
-                                                        (flatten)
-                                                        (assert)))))
+                                                    (rewrite
+                                                     "ex_update_locals")
                                                     (("1"
-                                                      (inst?)
-                                                      (("1"
-                                                        (assert)
-                                                        nil
+                                                      (rewrite
+                                                       "ex_update_locals")
+                                                      nil
+                                                      nil))
+                                                    nil)
+                                                   ("2"
+                                                    (rewrite
+                                                     "fvs_update_locals")
+                                                    (("2"
+                                                      (rewrite
+                                                       "fvs_update_locals")
+                                                      nil
+                                                      nil))
+                                                    nil)
+                                                   ("3"
+                                                    (skosimp*)
+                                                    (("3"
+                                                      (lift-if)
+                                                      (("3"
+                                                        (apply
+                                                         (branch
+                                                          (split 1)
+                                                          ((then
+                                                            (flatten)
+                                                            (assert)
+                                                            (flatten)
+                                                            (assert)))))
+                                                        (("3"
+                                                          (apply
+                                                           (branch
+                                                            (split 2)
+                                                            ((then
+                                                              (flatten)
+                                                              (assert)
+                                                              (flatten)
+                                                              (assert)))))
+                                                          (("3"
+                                                            (rewrite
+                                                             "defined?_update_locals")
+                                                            (("1"
+                                                              (use
+                                                               "lvs_update_locals")
+                                                              (("1"
+                                                                (assert)
+                                                                (("1"
+                                                                  (flatten)
+                                                                  (("1"
+                                                                    (split -1)
+                                                                    (("1"
+                                                                      (inst?
+                                                                       -9)
+                                                                      (("1"
+                                                                        (assert)
+                                                                        nil
+                                                                        nil))
+                                                                      nil)
+                                                                     ("2"
+                                                                      (propax)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil)
+                                                             ("2"
+                                                              (skosimp*)
+                                                              (("2"
+                                                                (replace
+                                                                 -3
+                                                                 :dir
+                                                                 rl)
+                                                                (("2"
+                                                                  (expand
+                                                                   "default_value")
+                                                                  (("2"
+                                                                    (propax)
+                                                                    nil
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
                                                         nil))
                                                       nil))
                                                     nil))
                                                   nil)
                                                  ("2"
-                                                  (apply
-                                                   (branch
-                                                    (split -8)
-                                                    ((then
-                                                      (flatten)
-                                                      (assert)
-                                                      (flatten)
-                                                      (assert)))))
+                                                  (hide-all-but 1)
                                                   (("2"
-                                                    (inst?)
+                                                    (typepred "lvds!1")
                                                     (("2"
-                                                      (assert)
-                                                      nil
+                                                      (expand "is_finite")
+                                                      (("2"
+                                                        (skosimp*)
+                                                        (("2"
+                                                          (inst
+                                                           1
+                                                           "N!1"
+                                                           "LAMBDA(x : ({x: [Name, Val[Name]] |
+                     EXISTS (l: Decl[Name]):
+                       lvds!1(l) AND
+                        name(l) = PROJ_1(x) AND
+                         default_value[Name](jtype(l)) = PROJ_2(x)})) : f!1(choose({(l: Decl[Name])|
+                       lvds!1(l) AND
+                        name(l) = PROJ_1(x) AND
+                         default_value[Name](jtype(l)) = PROJ_2(x)}))")
+                                                          (("1"
+                                                            (expand
+                                                             "injective?")
+                                                            (("1"
+                                                              (skosimp*)
+                                                              (("1"
+                                                                (inst?)
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (apply-extensionality
+                                                                     :hide?
+                                                                     t)
+                                                                    nil
+                                                                    nil))
+                                                                  nil)
+                                                                 ("2"
+                                                                  (rewrite
+                                                                   "nonempty_exists")
+                                                                  (("2"
+                                                                    (typepred
+                                                                     "x2!1")
+                                                                    (("2"
+                                                                      (skosimp*)
+                                                                      (("2"
+                                                                        (inst?)
+                                                                        (("2"
+                                                                          (assert)
+                                                                          nil
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil)
+                                                                 ("3"
+                                                                  (rewrite
+                                                                   "nonempty_exists")
+                                                                  (("3"
+                                                                    (typepred
+                                                                     "x1!1")
+                                                                    (("3"
+                                                                      (skosimp*)
+                                                                      (("3"
+                                                                        (inst?)
+                                                                        (("3"
+                                                                          (assert)
+                                                                          nil
+                                                                          nil))
+                                                                        nil))
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil)
+                                                           ("2"
+                                                            (skosimp*)
+                                                            (("2"
+                                                              (rewrite
+                                                               "nonempty_exists")
+                                                              (("2"
+                                                                (typepred
+                                                                 "x!1")
+                                                                (("2"
+                                                                  (skosimp*)
+                                                                  (("2"
+                                                                    (inst?)
+                                                                    (("2"
+                                                                      (assert)
+                                                                      nil
+                                                                      nil))
+                                                                    nil))
+                                                                  nil))
+                                                                nil))
+                                                              nil))
+                                                            nil))
+                                                          nil))
+                                                        nil))
                                                       nil))
                                                     nil))
                                                   nil))
@@ -700,16 +787,11 @@
                           nil))
                         nil)
                        ("2" (skosimp*)
-                        (("2"
-                          (rewrite "inline_program_add_LocalVar_decls")
+                        (("2" (rewrite "inline_program_add_LocalVar_decls")
                           (("2" (auto-rewrite "union" "member")
                             (("2" (assert)
-                              (("2"
-                                (inst?)
-                                (("2"
-                                  (assert)
-                                  (("2" (flatten) nil nil))
-                                  nil))
+                              (("2" (inst?)
+                                (("2" (assert) (("2" (flatten) nil nil)) nil))
                                 nil))
                               nil))
                             nil))
@@ -733,53 +815,85 @@
       nil))
     nil)
    proved
-   ((inline_related_states const-decl "boolean" InlineEquivalence nil)
-    (wf_state_update_stack formula-decl nil AnnotatedProgramSemantics
-     nil)
-    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties
-     nil)
-    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
-    (PState type-eq-decl nil State nil)
-    (Store type-eq-decl nil State nil)
-    (getLocalDecls const-decl "finite_set[LocalVarDecl]"
-     ProgramFunctions nil)
-    (is_finite const-decl "bool" finite_sets nil)
-    (set type-eq-decl nil sets nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
-    (Program type-eq-decl nil WellFormedProgram nil)
-    (wf_Program const-decl "boolean" WellFormedProgram nil)
-    (PreProgram type-eq-decl nil Program nil)
-    (Class type-eq-decl nil Program nil)
-    (lift type-decl nil lift_adt nil)
-    (Method type-eq-decl nil Program nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Excpt type-decl nil Excpt_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (LocalVarDecl type-eq-decl nil Program nil)
-    (BoolExpr type-eq-decl nil Body_adt nil)
-    (finite_set type-eq-decl nil finite_sets nil)
-    (FieldDecl type-eq-decl nil Program nil)
-    (JType type-decl nil JType_adt nil)
-    (defined? const-decl "boolean" ValProp nil)
-    (boolean nonempty-type-decl nil booleans nil)
-    (Val type-decl nil Val_adt nil)
-    (inline_program const-decl "Program" InlineProgramAnnotation nil)
-    (arg!1 skolem-const-decl "(getLocalDecls(p!1))"
-     InlineRelatedStatesProperties nil)
-    (p!1 skolem-const-decl "Program[Name]"
-     InlineRelatedStatesProperties nil)
-    (update_stack const-decl "FullState" Semantics nil)
-    (O const-decl "T3" function_props nil)
-    (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
-    (update_local const-decl "PState" State nil)
-    (update_PState const-decl "(update_PState_type)"
-     AnnotatedProgramSemantics nil)
-    (Program_modeled? const-decl "boolean" InlineEquivalence nil)
+   ((union const-decl "set" sets nil) (member const-decl "bool" sets nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
     (inline_program_add_LocalVar_decls formula-decl nil
      InlineProgramAnnotationProperties nil)
-    (finite_union application-judgement "finite_set" finite_sets nil)
-    (member const-decl "bool" sets nil)
-    (union const-decl "set" sets nil)
-    (NOT const-decl "[bool -> bool]" booleans nil))
-   2659 2580 t shostak)))
+    (Program_modeled? const-decl "boolean" InlineEquivalence nil)
+    (update_PState const-decl "(update_PState_type)" AnnotatedProgramSemantics
+     nil)
+    (update_local const-decl "PState" State nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (default_value const-decl "(defined?)" ValProp nil)
+    (defined?_update_locals formula-decl nil State nil)
+    (lvs_update_locals formula-decl nil State nil)
+    (fvs_update_locals formula-decl nil State nil)
+    (PSt type-eq-decl nil State nil)
+    (ex_update_locals formula-decl nil State nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (l!1 skolem-const-decl "Decl[Name]" InlineRelatedStatesProperties nil)
+    (x!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: Decl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     InlineRelatedStatesProperties nil)
+    (injective? const-decl "bool" functions nil)
+    (x1!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: Decl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     InlineRelatedStatesProperties nil)
+    (x2!1 skolem-const-decl "({x: [Name, Val[Name]] |
+    EXISTS (l: Decl[Name]):
+      lvds!1(l) AND
+       name(l) = PROJ_1(x) AND default_value[Name](jtype(l)) = PROJ_2(x)})"
+     InlineRelatedStatesProperties nil)
+    (l!1 skolem-const-decl "Decl[Name]" InlineRelatedStatesProperties nil)
+    (nonempty_exists formula-decl nil sets_lemmas nil)
+    (l!1 skolem-const-decl "Decl[Name]" InlineRelatedStatesProperties nil)
+    (number nonempty-type-decl nil numbers nil)
+    (number_field_pred const-decl "[number -> boolean]" number_fields nil)
+    (number_field nonempty-type-from-decl nil number_fields nil)
+    (real_pred const-decl "[number_field -> boolean]" reals nil)
+    (real nonempty-type-from-decl nil reals nil)
+    (rational_pred const-decl "[real -> boolean]" rationals nil)
+    (rational nonempty-type-from-decl nil rationals nil)
+    (integer_pred const-decl "[rational -> boolean]" integers nil)
+    (int nonempty-type-eq-decl nil integers nil)
+    (>= const-decl "bool" reals nil)
+    (nat nonempty-type-eq-decl nil naturalnumbers nil)
+    (< const-decl "bool" reals nil) (below type-eq-decl nil nat_types nil)
+    (choose const-decl "(p)" sets nil) (nonempty? const-decl "bool" sets nil)
+    (lvds!1 skolem-const-decl "finite_set[Decl[Name]]"
+     InlineRelatedStatesProperties nil)
+    (Program_lvs_modeled? const-decl "boolean" InlineEquivalence nil)
+    (O const-decl "T3" function_props nil)
+    (update_stack const-decl "FullState" Semantics nil)
+    (p!1 skolem-const-decl "Program[Name]" InlineRelatedStatesProperties nil)
+    (arg!1 skolem-const-decl "(getLocalDecls(p!1))"
+     InlineRelatedStatesProperties nil)
+    (inline_program const-decl "Program" InlineProgramAnnotation nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
+    (APState type-eq-decl nil AnnotatedProgramSemantics nil)
+    (Name formal-nonempty-type-decl nil InlineRelatedStatesProperties nil)
+    (wf_state_update_stack formula-decl nil AnnotatedProgramSemantics nil)
+    (inline_related_states const-decl "boolean" InlineEquivalence nil))
+   142419 13220 t shostak)))
 

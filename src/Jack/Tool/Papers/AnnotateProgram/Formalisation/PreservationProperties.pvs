@@ -89,8 +89,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -192,16 +194,30 @@ BEGIN
   IMPORTING AnnEventPreservesMPModeled[CP, Name],
             CorrectnessAnnProgram[CP, Name]
 
-  well_behaved_MVA_appropriate_for_annot_gen : LEMMA
+
+  APStateToAStore(mp : (wf_and_partial_MP)) : [APState -> Store] =
+    APStateToAStore(complete_MP(mp))
+
+  APStateToAStore_unchanged_by_completion : LEMMA % :-)
+    FORALL(mp : (wf_and_partial_MP), sAP : APState) :
+      APStateToAStore(mp)(sAP) =  
+        LAMBDA (n : Name) : 
+          IF var_names(vdsA(mva(mp)))(n)
+          THEN gvs(sAP)(n)
+          ELSE Bottom
+          ENDIF
+
+  well_behaved_MVA_appropriate_for_annot_gen : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
-    well_behaved_MVA(mva(mp))(APStateToAState(mp)) IMPLIES
+    well_behaved_MVA(mva(mp))(APStateToAStore(mp))
+      IMPLIES
       well_behaved_MVA_for_annot_gen(mp)
 
-
+  % check how well_behaved_MVA assumption is used!!
   wf_set_stmts_preserved_by_ann_program : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
       wf_set_stmts(mp) IMPLIES
-      well_behaved_MVA(mva(mp)) IMPLIES
+      well_behaved_MVA(mva(mp))(APStateToAStore(mp)) IMPLIES
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
       wf_set_stmts(ann_program(mp))
 

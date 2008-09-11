@@ -3,8 +3,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -111,8 +113,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -579,8 +583,10 @@ BEGIN
 
   ASSUMING
 
+    IMPORTING ValProp[Name]
+
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> nat]) : injective?(f)
+      EXISTS (f : [CP -> (defined?)]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})

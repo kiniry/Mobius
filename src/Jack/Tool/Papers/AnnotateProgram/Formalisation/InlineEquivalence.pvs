@@ -123,7 +123,7 @@ BEGIN
         inline_related_states(p)(update_PState(sAP1, raise(e)), 
                           update_PState(sAP2, raise(e)))
 
-  inline_related_states_preserved_by_update_stack : LEMMA % 
+  inline_related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState,
             this_val : Val, arg :  (getLocalDecls(p)), 
             param_val : Val, lvds : finite_set[Decl]) :
