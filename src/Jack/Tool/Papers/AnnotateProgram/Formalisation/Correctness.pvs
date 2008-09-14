@@ -49,7 +49,7 @@ BEGIN
                              stA := execute_action(a)(stA(astate(sMP1)),
                                                           fvs(st(pstate(sMP1))))
                            #),
-                stuck := stuck(sMP1),    % CHECK!!
+                stuck := stuck(sMP1),
                 pstate := pstate(sMP1),
                 gvs := gvs(sMP1) #) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
