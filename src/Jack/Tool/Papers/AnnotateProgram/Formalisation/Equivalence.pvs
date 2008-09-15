@@ -6,7 +6,7 @@ BEGIN
     IMPORTING ValProp[Name]
 
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> (defined?)]) : injective?(f)
+      EXISTS (f : [CP -> nat]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -30,11 +30,11 @@ BEGIN
 
 
   MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
-    unique(cp(sA)) = gvs(sAP)(cp(mp))
+    Int(unique(cp(sA))) = gvs(sAP)(cp(mp))
 
   MVA_cps_modeled?(mp)(sAP : APState) : boolean =
     FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
-      unique(q) = gvs(sAP)(name_of(mp)(q))
+      Int(unique(q)) = gvs(sAP)(name_of(mp)(q))
 
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(stA(sA)(n)) IMPLIES
@@ -155,7 +155,7 @@ BEGIN
     IMPORTING ValProp[Name]
 
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> (defined?)]) : injective?(f)
+      EXISTS (f : [CP -> nat]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})

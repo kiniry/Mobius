@@ -92,7 +92,7 @@ BEGIN
     IMPORTING ValProp[Name]
 
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> (defined?)]) : injective?(f)
+      EXISTS (f : [CP -> nat]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
@@ -194,18 +194,6 @@ BEGIN
   IMPORTING AnnEventPreservesMPModeled[CP, Name],
             CorrectnessAnnProgram[CP, Name]
 
-
-  APStateToAStore(mp : (wf_and_partial_MP)) : [APState -> Store] =
-    APStateToAStore(complete_MP(mp))
-
-  APStateToAStore_unchanged_by_completion : LEMMA % :-)
-    FORALL(mp : (wf_and_partial_MP), sAP : APState) :
-      APStateToAStore(mp)(sAP) =  
-        LAMBDA (n : Name) : 
-          IF var_names(vdsA(mva(mp)))(n)
-          THEN gvs(sAP)(n)
-          ELSE Bottom
-          ENDIF
 
   well_behaved_MVA_appropriate_for_annot_gen : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
