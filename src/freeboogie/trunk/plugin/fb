@@ -1,0 +1,6 @@
+#!/bin/bash
+SCRIPT=`which $0`
+HERE=`dirname $SCRIPT`
+CP=$HERE/freeboogie-0.0.jar:$HERE/antlr-3.0b7.jar
+java -Xms64m -Xmx64m -ea -cp $CP freeboogie.Main $*
+
