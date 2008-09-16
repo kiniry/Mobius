@@ -48,6 +48,12 @@
    <feature url="features/mobius.RCC.feature_1.0.0.jar" id="mobius.RCC.feature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
+   <feature url="features/DeltaSplashScreenFeature_1.0.0.jar" id="DeltaSplashScreenFeature" version="1.0.0">
+      <category name="Mobius"/>
+   </feature>
+   <feature url="features/FreeBoogieFeature_1.0.0.jar" id="FreeBoogieFeature" version="1.0.0">
+      <category name="Mobius"/>
+   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
    <category-def name="Other" label="Other"/>
    <category-def name="JML" label="JML"/>
