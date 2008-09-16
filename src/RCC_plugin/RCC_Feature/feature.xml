@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="RCC_Feature"
-      label="RCC_Feature Feature"
+      id="mobius.RCC.feature"
+      label="MOBIUS RCC Feature"
       version="1.0.0"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      RCC - a race condition checker for Java
    </description>
 
    <copyright url="http://www.example.com/copyright">
@@ -17,11 +17,8 @@
       [Enter License Description here.]
    </license>
 
-   <plugin
-         id="RCC_plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+   <url>
+      <discovery label="MOBIUS PVE" url="http://kind.ucd.ie/products/opensource/Mobius/updates/"/>
+   </url>
 
 </feature>

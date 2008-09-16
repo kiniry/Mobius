@@ -1,0 +1,65 @@
+Copyright (c) 2006-2008 EU Mobius IST-15905 and others
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+http://www.opensource.org/licenses/mit-license.php
+
+-------------------------------------------------------------------------------
+
+The original version of RCC was derived from the Java Programming Toolkit
+Source Release from HP labs.
+
+http://www.hpl.hp.com/downloads/crl/jtk/index.html
+http://www.hpl.hp.com/downloads/crl/jtk/agreement.html
+
+Software License Agreement
+
+This software, and other information, is protected by copyright laws and 
+international treaties.  Hewlett-Packard Company, and its subsidiary 
+Hewlett-Packard Development Company, L.P., (collectively ‚HP) reserves all 
+rights except those expressly granted below.
+
+Copyright (c) Hewlett-Packard Development Company, LP
+
+HP does not warrant the accuracy or completeness of the software and other 
+information.  This software and other information may have errors or other 
+defects.  Any use made of, or reliance on, such information is entirely at 
+user's own risk.
+
+By downloading any software or other information you agree to be bound by the 
+terms and conditions of this license agreement.
+
+You may download and use personally the software for non-commercial purposes 
+free of charge or further obligation.  Your may not, directly or indirectly, 
+distribute the software for a fee, incorporate this software into any product 
+offered for sale, or use the software to provide a service or a product for 
+which a fee is charged.
+
+You may download, modify and redistribute the software to individuals for 
+personal, non-commercial purposes free of charge provided that such individuals 
+agree to only use the modified software according to the terms of this 
+agreement. 
+
+The software and other information is furnished ‚as is‚ without any expressed 
+or implied warranty of any kind.  All implied warranties of merchantability 
+and fitness for a purpose are disclaimed.  HP shall not be liable for any 
+direct, indirect, special, incidental or consequential damages arising out of 
+any use of the software and other information. 
+
+For inquiries please contact: Hewlett-Packard Company

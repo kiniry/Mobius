@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MOBIUS RCC plugin
+Bundle-SymbolicName: mobius.rcc.plugin;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Vendor: MOBIUS
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
