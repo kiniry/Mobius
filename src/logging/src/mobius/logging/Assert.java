@@ -42,6 +42,8 @@
 
 package mobius.logging;
 
+
+
 /**
  * <p> The core interface to making assertions. </p>
  *
@@ -50,7 +52,7 @@ package mobius.logging;
  * @see Debug
  * @see Context
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class Assert
   implements Cloneable {
   // Attributes
@@ -61,54 +63,55 @@ public class Assert
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ constraint (my_debug != null) ==> (\old(my_debug) == my_debug);
-  private Debug my_debug;
+  private /*@ non_null @*/ Debug my_debug;
 
   // Constructors
 
-  /*@ private normal_behavior
-    @   assignable my_debug;
-    @   ensures my_debug == the_debug;
-    @*/
   /**
    * <p> Construct a new <code>Assert</code> class. </p>
    *
    * @param the_debug the debugging interface associated with this assertion interface.
    */
-  Assert(final Debug the_debug) {
+  /*@ private normal_behavior
+    @   assignable my_debug;
+    @   ensures my_debug == the_debug;
+    @*/
+  Assert(final /*@ non_null @*/ Debug the_debug) {
     my_debug = the_debug;
   }
 
   // Public Methods
 
-  /*@ public exceptional_behavior
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
   /**
    * <p> Assert that the passed boolean expression evaluates to true.  If
    * it does not, the assertion fails, a stack dump takes place via the
    * current debugging output channel, and a
-   * <var>FailedAssertionException</var> is thrown. </p>
+   * <code>FailedAssertionException</code> is thrown. </p>
    *
    * @param the_assertion is the boolean expression to assert.
    *
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  public static synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion) {
+  /*@ public normal_behavior
+    @   requires the_assertion;
+    @ also
+    @ public exceptional_behavior
+    @   requires !the_assertion;
+    @   signals_only FailedAssertionException;
+    @   signals (FailedAssertionException) !the_assertion;
+    @*/
+  public static synchronized void assertTrue(final boolean the_assertion) {
     if (!the_assertion) {
       Utilities.dumpStackSafe();
       throw new FailedAssertionException();
     }
   }
 
-  /*@ public exceptional_behavior
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
   /**
    * <p> Assert that the passed boolean expression evaluates to true.  If
    * it does not, the assertion fails, a stack dump takes place, and a
-   * <var>FailedAssertionException</var> is thrown. </p>
+   * <code>FailedAssertionException</code> is thrown. </p>
    *
    * @param the_assertion is the boolean expression to assert.
    * @param the_assertion_text is the text of the assertion itself.
@@ -116,24 +119,30 @@ public class Assert
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  public final synchronized /*@ pure @*/ void assertTrue(final boolean the_assertion,
+  /*@ public normal_behavior
+    @   requires the_assertion;
+    @ also
+    @ public exceptional_behavior
+    @   requires !the_assertion;
+    @   signals_only FailedAssertionException;
+    @   signals (FailedAssertionException) !the_assertion;
+    @*/
+  public final synchronized void assertTrue(final boolean the_assertion,
                                                          final String the_assertion_text) {
     if (!the_assertion) {
-      final String output = my_debug.getDebugConstants().FAILED_ASSERTION_STRING +
+      final String output = my_debug.getDebugConstants().getFailedAssertionString() +
         " `" + the_assertion_text + "'\n";
-      my_debug.getOutputInterface().printMsg(output);
+      if (my_debug.getOutputInterface() != null)
+	      my_debug.getOutputInterface().printMsg(output);
       Utilities.dumpStackSafe();
       throw new FailedAssertionException(output);
     }
   }
 
-  /*@ public exceptional_behavior
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
    /**
    * <p> Assert that the passed boolean expression evaluates to true.  If
    * it does not, the assertion fails, the message is displayed, a stack
-   * dump takes place, and a <var>FailedAssertionException</var> is
+   * dump takes place, and a <code>FailedAssertionException</code> is
    * thrown. </p>
    *
    * @param the_assertion is the boolean expression to assert.
@@ -144,14 +153,23 @@ public class Assert
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  public final synchronized /*@ pure @*/ void
+  /*@ public normal_behavior
+    @   requires the_assertion;
+    @ also
+    @ public exceptional_behavior
+    @   requires !the_assertion;
+    @   signals_only FailedAssertionException;
+    @   signals (FailedAssertionException) !the_assertion;
+    @*/
+  public final synchronized void
   assertTrue(final boolean the_assertion,
              final String the_assertion_text,
              /*@ non_null @*/ final Object the_assertion_message) {
     if (!the_assertion) {
-      final String output = my_debug.getDebugConstants().FAILED_ASSERTION_STRING +
+      final String output = my_debug.getDebugConstants().getFailedAssertionString() +
         " `" + the_assertion_text + "': " + the_assertion_message.toString() + "\n";
-      my_debug.getOutputInterface().printMsg(output);
+      if (my_debug.getOutputInterface() != null)
+	      my_debug.getOutputInterface().printMsg(output);
       Utilities.dumpStackSafe();
       throw new FailedAssertionException(output);
     }

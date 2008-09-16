@@ -64,7 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see Statistic
  * @see AbstractCollect
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class SimpleCollect extends AbstractCollect
   implements Cloneable {
   // Attributes
@@ -100,6 +100,7 @@ public class SimpleCollect extends AbstractCollect
    *
    * @param the_statistic the statistic to register.
    */
+  //@ also
   //@ ensures isRegistered(the_statistic);
   public void register(final /*@ non_null @*/ Statistic the_statistic) {
     super.register(the_statistic);
@@ -111,7 +112,8 @@ public class SimpleCollect extends AbstractCollect
    *
    * @param the_statistic the statistic to unregister.
    */
-  //@ ensures !isRegistered(statistic);
+  //@ also
+  //@ ensures !isRegistered(the_statistic);
   public void unregister(final Statistic the_statistic) {
     super.unregister(the_statistic);
     my_data.remove(the_statistic);
@@ -123,7 +125,7 @@ public class SimpleCollect extends AbstractCollect
    * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-  public double currentValue(final /*@ non_null @*/ Statistic the_statistic) {
+  public double currentValue(final Statistic the_statistic) {
     return ((Double)my_data.get(the_statistic)).doubleValue();
   }
 
@@ -133,7 +135,7 @@ public class SimpleCollect extends AbstractCollect
    * @param the_statistic the statistic being reported on.
    * @return a simple <code>String</code> textual report.
    */
-  public Object report(final /*@ non_null @*/ Statistic the_statistic) {
+  public Object report(final Statistic the_statistic) {
     return "[" + the_statistic.getID() + "]" +
       (((Double)my_data.get(the_statistic)).doubleValue() * the_statistic.getScale()) +
       " " + the_statistic.getUnits();
@@ -232,7 +234,9 @@ public class SimpleCollect extends AbstractCollect
    * @param the_value the new value of the statistic.
    * @return the old value of the statistic.
    */
-  public double set(final /*@ non_null @*/ Statistic the_statistic,
+  //@ also
+  //@ requires the_statistics != null;
+  public double set(final Statistic the_statistic,
                     final double the_value) {
     final double oldValue = currentValue(the_statistic);
 

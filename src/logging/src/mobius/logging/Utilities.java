@@ -52,26 +52,26 @@ import java.util.Map;
  * @see Debug
  * @see Context
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 class Utilities {
   // Attributes
 
   /**
    * <p> The Debug object associated with this object. </p>
    */
-  private Debug my_debug;
+  private /*@ non_null @*/ Debug my_debug;
 
   // Inherited Methods
   // Constructors
 
-  //@ assignable my_debug;
-  //@ ensures my_debug == the_debug;
   /**
    * Construct a new Utilities class.
    *
    * @param the_debug the debug instance for this utility class.
    */
-  Utilities(final Debug the_debug) {
+  //@ assignable my_debug;
+  //@ ensures my_debug == the_debug;
+  Utilities(final /*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
   }
 
@@ -98,8 +98,7 @@ class Utilities {
    */
 
   public static synchronized void dumpStackSafe() {
-    final Thread currentThread = Thread.currentThread();
-    currentThread.dumpStack();
+    Thread.dumpStack();
   }
 
   // Protected Methods
@@ -168,6 +167,7 @@ class Utilities {
    * @return true iff the current debug context warrants output.
    */
 
+  //@ requires my_debug != null;
   synchronized boolean levelTest(final int the_level) {
     // Get the current thread.
     final Thread currentThread = Thread.currentThread();
@@ -205,8 +205,8 @@ class Utilities {
    * @return a boolean indicating if the context warrants output.
    * @param a_category is the category of this message.
    */
-
-  synchronized boolean categoryTest(final String a_category) {
+  //@ requires a_category.length() > 0;
+  synchronized boolean categoryTest(final /*@ non_null @*/ String a_category) {
     int the_category_level = 0;
 
     // Get the current thread.
@@ -217,6 +217,8 @@ class Utilities {
       // Get a reference to the global category map.
       final Map the_category_map =
         (Map)(my_debug.my_thread_map.get("GLOBAL_CATEGORIES"));
+      //@ assume the_category_map != null;
+      // "GLOBAL_CATEGORIES" is always presented in the_category_map
 
       // If this category is not defined in the global map,
       // we break out of the global checks and start the per-thread
@@ -272,7 +274,10 @@ class Utilities {
    * is permitted to print in the current debugging context.
    */
 
-  synchronized boolean sourceClassValid() {
+  // XXX @ modifies \nothing;
+  // Can't use modifies \nothing since Throwable.printStactTrace has
+  // assignable \not_specified
+  synchronized /* obs pure */ boolean sourceClassValid() {
     int index, startIndex, parenIndex;
     Throwable throwable;
     StringWriter stringWriter;
@@ -312,11 +317,18 @@ class Utilities {
     index += at.length();
     // Grab out the class name of the next stack frame.
     parenIndex = string.indexOf('(', index);
+
+    // We relay on the output layout of printStackTrace.
+    //@ assume parenIndex != -1;
+
     // So, everything between index and parenIndex is the class name
     // that we are interested in.
     className = string.substring(index, parenIndex);
     // Strip off the last part past the last ".", it is a method name.
     index = className.lastIndexOf('.');
+
+    // We relay on the output layout of printStackTrace.
+    //@ assume index != -1;
     className = className.substring(0, index);
 
     // Now, we have the name of the class that called the debugging

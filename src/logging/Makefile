@@ -30,14 +30,14 @@ release =	$(project)-$(version)
 # Core directories.
 
 basedir =	$(shell pwd)
-srcreldir =	source
+srcreldir =	src
 srcbasedir =	$(basedir)/$(srcreldir)
 libdir =	$(basedir)/libs
 jasssrcdir =	$(srcreldir)/idebug_jass
 
 # Auto-library discovery of core JDK libs.
 
-jdkdir =	/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK
+jdkdir =	/usr/lib/jvm/java-6-sun
 jdklibs0 =	$(subst $(space),:,$(wildcard $(jdkdir)/Classes/classes.jar))
 jdklibs1 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/*.jar))
 jdklibs2 =	$(subst $(space),:,$(wildcard $(jdkdir)/jre/lib/ext/*.jar))

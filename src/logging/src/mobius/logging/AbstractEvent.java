@@ -62,7 +62,7 @@ import java.util.Date;
  * thus no values tag is necessary in the specification.
  * @design Events cannot be cloned.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public abstract class AbstractEvent extends Object
   implements Event, Serializable, Cloneable {
   // Attributes
@@ -165,14 +165,14 @@ public abstract class AbstractEvent extends Object
    * use this method sparingly.  Also, the length of the output is directly
    * proportional to the event description.
    */
-  public String toString() {
+  public /*@ pure @*/ String toString() {
     return "[" + my_creation_date.toString() + " | " + my_source_host + " | " +
       my_source_component + "] " + my_type + ":" + my_level + " - " + my_description;
   }
 
   // @todo kiniry Implement hashCode.
   /** {@inheritDoc} */
-  public int hashCode() {
+  public /*@ pure @*/ int hashCode() {
     assert false;
     //@ assert false;
     return 0;
@@ -213,32 +213,32 @@ public abstract class AbstractEvent extends Object
   // Public Methods
 
   /** {@inheritDoc} */
-  public String getSourceHost() {
+  public /*@ pure @*/ String getSourceHost() {
     return my_source_host;
   }
 
   /** {@inheritDoc} */
-  public String getSourceComponent() {
+  public /*@ pure @*/ String getSourceComponent() {
     return my_source_component;
   }
 
   /** {@inheritDoc} */
-  public Date getCreationDate() {
+  public /*@ pure @*/ Date getCreationDate() {
     return my_creation_date;
   }
 
   /** {@inheritDoc} */
-  public String getDescription() {
+  public /*@ pure @*/ String getDescription() {
     return my_description;
   }
 
   /** {@inheritDoc} */
-  public String getType() {
+  public /*@ pure @*/ String getType() {
     return my_type;
   }
 
   /** {@inheritDoc} */
-  public int getLevel() {
+  public /*@ pure @*/ int getLevel() {
     return my_level;
   }
 

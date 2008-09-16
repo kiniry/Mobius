@@ -49,13 +49,82 @@ import java.util.Map;
  * @version alpha_1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class DefaultDebugConstants
   implements DebugConstants {
   // Attributes
   // Inherited Methods
   // Constructors
   // Public Methods
+	
+
+  public /*@ pure @*/ int getLevelMin() {
+	return LEVEL_MIN;
+  }
+  
+  public /*@ pure @*/ int getLevelMax() {
+	return LEVEL_MAX;
+  }
+  
+  public /*@ pure @*/ String getErrorString() {
+    return ERROR_STRING;  
+  }
+  
+  public /*@ pure @*/ String getFailedAssertionString() {
+	return FAILED_ASSERTION_STRING;  
+  }
+  
+  public /*@ pure @*/ int getAssertionLevel() {
+	return ASSERTION_LEVEL;
+  }
+  
+  public /*@ pure @*/ int getFailureLevel() {
+	return FAILURE_LEVEL;  
+  }
+  
+  public /*@ pure @*/ int getCriticalLevel() {
+	return CRITICAL_LEVEL;
+  }
+  
+  public /*@ pure @*/ int getErrorLevel() {
+	return ERROR_LEVEL;
+  }
+  
+  public /*@ pure @*/ int getWarningLevel() {
+	return WARNING_LEVEL;  
+  }
+  
+  public /*@ pure @*/ int getNoticeLevel() {
+	return NOTICE_LEVEL;  
+  }
+  
+  public /*@ pure @*/ String getAssertion() {
+	return ASSERTION;  
+  }
+  
+  public /*@ pure @*/ String getFailure() {
+	return FAILURE;  
+  }
+  
+  public /*@ pure @*/ String getCritical() {
+	return CRITICAL;  
+  }
+  
+  public /*@ pure @*/ String getError() {
+	return ERROR;  
+  }
+  
+  public /*@ pure @*/ String getWarning() {
+	return WARNING;
+  }
+  
+  public /*@ pure @*/ String getNotice() {
+    return NOTICE;  
+  }
+  
+  public /*@ pure @*/ int getInvalidThread() {
+	return INVALID_THREAD;
+  }
 
   /**
    * Initializes default categories of debugging facilities.
@@ -66,8 +135,14 @@ public class DefaultDebugConstants
    * @see DebugConstants The default debug categories are documented in
    * DebugConstants.
    */
-  //@ ensures the_categories_map.size() == 6;
+  /* TODO
+   * Warning: Postcondition possibly not established (Post)
+   * Associated declaration is "./mobius/logging/DefaultDebugConstants.java", line 139, col 6:
+   */
+  //@ also
+  // @ ensures the_categories_map.size() >= 6; XXX
   public void initCategories(/*@ non_null @*/ Map the_categories_map) {
+	the_categories_map.clear();
     the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
     the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
     the_categories_map.put(CRITICAL, Integer.valueOf(CRITICAL_LEVEL));

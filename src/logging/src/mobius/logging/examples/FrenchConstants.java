@@ -56,7 +56,7 @@ import mobius.logging.DebugConstants;
  *
  * @note An example extension to the IDebug package.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public interface FrenchConstants extends DebugConstants {
   // Public Attributes
 
@@ -77,7 +77,7 @@ public interface FrenchConstants extends DebugConstants {
   // Various messages that can be localized or otherwise customized.
   /** What is an error called? */
   String ERROR_STRING = "l'error";
-  // "affirmation échouée";
+  // "affirmation ï¿½chouï¿½e";
   /** What is a failed assertion called? */
   String FAILED_ASSERTION_STRING = "affirmation echouee";
 

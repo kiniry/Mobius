@@ -53,7 +53,7 @@ import java.io.Writer;
  * @see Context
  * @see Debug
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class WriterOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable {
   // Attributes
@@ -62,25 +62,21 @@ public class WriterOutput extends AbstractDebugOutputBase
    * <p> The output channel used by this <code>WriterOutput</code>
    * object. </p>
    */
-  private PrintWriter my_print_writer = new PrintWriter(System.err);
+  private /*@ non_null @*/ PrintWriter my_print_writer = new PrintWriter(System.err);
 
   // Constructors
 
-  //@ assignable my_debug;
-  //@ ensures my_debug == a_debug;
   /**
    * <p> Constructor for <code>WriterOutput</code>. </p>
    *
    * @param a_debug the <code>Debug</code> object associated with this
    * <code>WriterOutput</code>.
    */
-  public WriterOutput(final Debug a_debug) {
+  //@ ensures my_debug == a_debug;
+  public WriterOutput(final /*@ non_null @*/ Debug a_debug) {
     my_debug = a_debug;
   }
 
-  //@ assignable my_debug, my_print_writer;
-  //@ ensures my_debug == a_debug;
-  //@ ensures getWriter() == a_print_writer;
   /**
    * <p> Constructor for <code>WriterOutput</code>. </p>
    *
@@ -89,22 +85,24 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @param a_print_writer the new <code>PrintWriter</code> for this
    * <code>WriterOutput</code>.
    */
-  public WriterOutput(final Debug a_debug,
-                      final PrintWriter a_print_writer) {
+  //@ ensures my_debug == a_debug;
+  //@ ensures my_print_writer == a_print_writer;
+  public WriterOutput(final /*@ non_null @*/ Debug a_debug,
+                      final /*@ non_null @*/ PrintWriter a_print_writer) {
     my_debug = a_debug;
     my_print_writer = a_print_writer;
   }
 
   // Public Methods
 
-  //@ assignable my_print_writer;
-  //@ ensures getWriter() == the_new_print_writer;
   /**
    * <p> Set a new <code>PrintWriter</code>.
    *
    * @param the_new_print_writer the new <code>PrintWriter</code>.
    */
-  public void setPrintWriter(final PrintWriter the_new_print_writer) {
+  //@ assignable my_print_writer;
+  //@ ensures my_print_writer == the_new_print_writer;
+  public void setPrintWriter(final /*@ non_null @*/ PrintWriter the_new_print_writer) {
     my_print_writer = the_new_print_writer;
   }
 
@@ -115,7 +113,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @modifies QUERY
    */
   public synchronized void printMsg(final String a_category, final String a_message) {
-    my_print_writer.print("<" + a_category + ">: " + a_message);
+    my_print_writer.print("<" + a_category + ">: " + ((a_message != null) ? a_message : "null"));
     my_print_writer.flush();
   }
 
@@ -124,7 +122,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @modifies QUERY
    */
   public synchronized void printMsg(int a_level, String a_message) {
-    my_print_writer.print("[" + a_level + "]: " + a_message);
+    my_print_writer.print("[" + a_level + "]: " + ((a_message != null) ? a_message : "null"));
     my_print_writer.flush();
   }
 
@@ -133,7 +131,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @modifies QUERY
    */
   public synchronized void printMsg(String a_message) {
-    my_print_writer.print(a_message);
+    my_print_writer.print((a_message != null) ? a_message : "null");
     my_print_writer.flush();
   }
 

@@ -78,7 +78,7 @@ import java.util.Map;
  * @see Statistic
  * @see mobius.logging.examples.SimpleCollect
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public abstract class AbstractCollect {
   // Attributes
 
@@ -94,9 +94,9 @@ public abstract class AbstractCollect {
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ private constraint (my_debug != null) ==> (my_debug == \old(my_debug));
-  private /*@ non_null @*/ Debug my_debug;
-
+  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
+  private Debug my_debug;
+  
   // Inherited Methods
   // Constructors
 
@@ -105,6 +105,8 @@ public abstract class AbstractCollect {
    */
   public AbstractCollect() {
     this.my_statistics = new ConcurrentHashMap();
+    //  @ set my_statistics.elementType = CuncurrentHashMap; XXX
+    // @ set my_statistics.containsNull = false; XXX
   }
 
   // Public Methods
@@ -119,8 +121,8 @@ public abstract class AbstractCollect {
    * @return true iff <code>a_debug</code>'s collect field references
    * <code>this</code>.
    */
-  //@ ensures \result <==> (a_debug.collect == this);
-  public /*@ pure @*/ boolean checkDebugCollectRef(Debug a_debug) {
+  //@ ensures \result <==> (a_debug.getCollect() == this);
+  public /*@ pure @*/ boolean checkDebugCollectRef(/*@ non_null @*/ Debug a_debug) {
     return (a_debug.getCollect() == this);
   }
 
@@ -135,9 +137,10 @@ public abstract class AbstractCollect {
    * object.
    */
   //@ requires checkDebugCollectRef(a_debug);
+  //@ requires my_debug == null;
   //@ assignable my_debug;
   //@ ensures my_debug == a_debug;
-  public final void setDebug(final Debug a_debug) {
+  public final void setDebug(/*@ non_null @*/ final Debug a_debug) {
     my_debug = a_debug;
   }
 
@@ -148,9 +151,8 @@ public abstract class AbstractCollect {
    * @param a_statistic the statistic to register.
    */
   //@ requires checkStatisticID(a_statistic);
-  //@ assignable my_statistics;
   //@ ensures isRegistered(a_statistic);
-  public void register(final Statistic a_statistic) {
+  public void register(/*@ non_null @*/ final Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
 
@@ -164,7 +166,7 @@ public abstract class AbstractCollect {
    * @return a boolean indicating if the value of the statistic
    * <code>a_statistic</code> has changed at all.
    */
-  public boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
+  public /*@ pure @*/ boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
     final Object the_old_value = my_statistics.get(a_statistic);
     if (the_old_value != null) {
       // make sure value hasn't changed.
@@ -179,9 +181,9 @@ public abstract class AbstractCollect {
    * @concurrency CONCURRENT
    * @param a_statistic the statistic to unregister.
    */
-  //@ assignable my_statistics;
   //@ ensures !isRegistered(a_statistic);
-  public void unregister(final Statistic a_statistic) {
+  public void unregister(final /*@ non_null @*/ Statistic a_statistic) {
+    //@ assume \typeof(my_statistics) == \type(ConcurrentHashMap);
     my_statistics.remove(a_statistic);
   }
 
@@ -195,7 +197,7 @@ public abstract class AbstractCollect {
    * @modifies QUERY
    */
   //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
-  public boolean isRegistered(Statistic a_statistic) {
+  public /*@ pure @*/ boolean isRegistered(Statistic a_statistic) {
     return (my_statistics.get(a_statistic) == a_statistic);
   }
 
@@ -289,7 +291,9 @@ public abstract class AbstractCollect {
    * @see Context
    * @modifies QUERY
    */
-  protected final /*@ pure @*/ boolean isValidCategory(final String the_category) {
+  //@ requires the_category.length() > 0;
+  //@ requires my_debug != null;
+  protected final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
     return my_debug.my_debug_utilities.categoryTest(the_category);
   }
 
@@ -303,6 +307,8 @@ public abstract class AbstractCollect {
    * invoking the method, etc.)
    * @see Context
    */
+  //@ requires my_debug != null;
+  //@ requires my_debug.my_debug_utilities != null;
   protected final boolean isValidLevel(int level) {
     return my_debug.my_debug_utilities.levelTest(level);
   }

@@ -51,7 +51,7 @@ import java.util.Date;
  * @bon Represents a single important event of any kind. The event includes
  * a source, description, importance, and time, among other things.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 interface Event extends Serializable, Cloneable {
 
   // Public Methods

@@ -90,7 +90,7 @@ maintaining such systems rapidly becomes impossible.
 
 Modern Methods, Dark Ages
 
-But how do most developers do development and testing?  Surprising,
+But how most developers do development and testing?  Surprising,
 many developers use advanced integrated modeling and development
 environments coupled with a smattering of low-tech print statements.
 

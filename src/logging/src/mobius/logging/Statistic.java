@@ -65,11 +65,14 @@ import java.io.Serializable;
  * @bon All static properties must be specified at, and cannot be changed
  * after, construction time.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class Statistic
   implements Serializable {
   // Attributes
+  
 
+  //@ public represents theHashCode <- my_unique_ID;
+  
   /** Placeholder serialVersionUID. */
   private static final long serialVersionUID = 1L;
 
@@ -87,7 +90,7 @@ public class Statistic
    * @see #getID
    * @example uniqueID = 42
    */
-  private final int my_unique_ID;
+  private /*@ spec_public @*/ final int my_unique_ID;
 
   /**
    * <p> Units of statistic. </p>
@@ -136,14 +139,6 @@ public class Statistic
 
   // Constructors
 
-  //@ requires scale != 0.0;
-  //@ ensures my_unique_ID == my_current_ID;
-  //@ ensures my_current_ID == \old(my_current_ID + 1);
-  //@ ensures getUnits() == the_units;
-  //@ ensures getScale() == the_scale;
-  //@ ensures getStart() == the_start;
-  //@ ensures getIncrement() == the_increment;
-  //@ ensures getDecrement() == the_decrement;
   /**
    * <p> This the standard constructor for Statistic.  No other constructor
    * can be legally used. </p>
@@ -160,11 +155,21 @@ public class Statistic
    * has generated.
    * @generates A new, valid instance of Statistic.
    */
-  public /*@ pure @*/ Statistic(final String the_units,
+  //@ requires the_scale != 0.0;
+  //@ ensures my_unique_ID == \old(my_current_ID);
+  //@ ensures my_current_ID == \old(my_current_ID) + 1;
+  //@ ensures getUnits() == the_units;
+  //@ ensures getScale() == the_scale;
+  //@ ensures getStart() == the_start;
+  //@ ensures getIncrement() == the_increment;
+  //@ ensures getDecrement() == the_decrement;
+  public Statistic(final String the_units,
                                 final double the_scale, final float the_start,
                                 final float the_increment, final float the_decrement) {
-    my_unique_ID = my_current_ID;
-    my_current_ID = my_current_ID + 1;
+    synchronized (this) {
+        my_unique_ID = my_current_ID;
+    	my_current_ID++;
+    }
     this.my_units = the_units;
     this.my_scale = the_scale;
     this.my_default_start_value = the_start;
@@ -179,13 +184,13 @@ public class Statistic
    * @modifies QUERY
    * @overrides java.lang.Object.hashCode
    */
-  public /*@ pure @*/ int hashCode() {
+  public int hashCode() {
     return my_unique_ID;
   }
 
   /** {@inheritDoc} */
   public boolean equals(Object obj) {
-    // todo Auto-generated method stub
+    // TODO Auto-generated method stub
     return super.equals(obj);
   }
 

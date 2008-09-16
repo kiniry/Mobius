@@ -93,7 +93,7 @@ import java.util.Map;
  * clone() method is part of the IDebug context design and is not
  * implemented for changeonly semantics.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class Context
   implements Cloneable, Serializable
 {
@@ -140,7 +140,7 @@ public class Context
   /**
    * @serial The debugging constants for this class.
    */
-  private DebugConstants my_debug_constants;
+  private final DebugConstants my_debug_constants;
 
   /**
    * @serial A flag indicating if debugging is enabled for this
@@ -160,6 +160,7 @@ public class Context
    * constant during the construction of a Context.
    */
   private int my_level;
+  //@ invariant validLevel( my_level);
 
   /**
    * @serial A map that binds category keys (Strings) to levels
@@ -202,12 +203,10 @@ public class Context
    * @param a_debug_output an implementation of <code>DebugOutput</code> that defines
    * the semantics of debugging output.
    */
-  //@ assignable my_is_on, my_level;
-  //@ assignable my_category_map, my_class_map;
-  //@ assignable my_debug_constants, my_debug_output_interface, my_thread;
   // @todo kiniry put fields in objectState and use datagroup in frame axiom
   //@ ensures my_is_on == false;
-  //@ ensures my_level == 0;
+  //@ ensures my_level == my_debug_constants.LEVEL_MIN;
+  //@ ensures validLevel( my_level);
   //@ ensures my_category_map != null;
   //@ ensures my_class_map != null;
   //@ ensures my_debug_constants != null;
@@ -218,12 +217,16 @@ public class Context
                  final /*@ non_null @*/ DebugOutput a_debug_output) {
     super();
     my_is_on = false;
-    my_level = 0;
     my_category_map = new ConcurrentHashMap();
+    //@ set my_category_map.keyType = \type(String);
+    //@ set my_category_map.elementType = \type(Integer);
     my_class_map = new ConcurrentHashMap();
+    //@ set my_class_map.keyType = \type(String);
+    //@ set my_class_map.elementType = \type(boolean);
     my_class_map.put("*", Boolean.TRUE);
     my_debug_constants = some_debug_constants;
     my_debug_constants.initCategories(my_category_map);
+    my_level = my_debug_constants.LEVEL_MIN;
     my_debug_output_interface = a_debug_output;
     my_thread = Thread.currentThread();
   }
@@ -242,6 +245,7 @@ public class Context
     Context contextClone = null;
     try {
       contextClone = (Context)super.clone();
+      //@ assume \fresh( contextClone);
     } catch (CloneNotSupportedException cnse) {
       throw new RuntimeException(cnse.getMessage(), cnse);
     }
@@ -323,7 +327,9 @@ public class Context
                                           int level) {
     // See if an entry for the passed category exists.
     if (my_category_map.containsKey(category)) {
-      return (((Integer)(my_category_map.get(category))).intValue() == level);
+      Integer i = (Integer)my_category_map.get(category);
+      //@ assume i != null;
+      return i.intValue() == level;
     }
 
     // Add a new entry for the passed category.
@@ -342,11 +348,10 @@ public class Context
    * removed from the database.  A false indicates that the parameters
    * were invalid.
    */
-  //@ requires category.length() > 0;
-  //@ assignable my_category_map;
-  //@ ensures !containsCategory(category);
+  //@ requires a_category.length() > 0;
+  //@ ensures !containsCategory(a_category);
   public synchronized boolean removeCategory(/*@ non_null @*/ String a_category) {
-    // If is in the map, remove it.
+    // If it is in the map, remove it.
     if (my_category_map.containsKey(a_category)) {
       my_category_map.remove(a_category);
       return true;
@@ -360,7 +365,7 @@ public class Context
    * @return a boolean indicating if a category is in the class-global
    * category database.
    */
-  //@ requires category.length() > 0;
+  //@ requires a_category.length() > 0;
   public synchronized /*@ pure @*/ boolean
   containsCategory(/*@ non_null @*/ String a_category) {
     return (my_category_map.containsKey(a_category));
@@ -373,8 +378,8 @@ public class Context
    * @return the level of the category provided it is in the category
    * database of this context.
    */
-  //@ requires category.length() > 0;
-  //@ requires containsCategory(category);
+  //@ requires a_category.length() > 0;
+  //@ requires containsCategory(a_category);
   public synchronized /*@ pure @*/ int getCategoryLevel(/*@ non_null @*/ String a_category) {
     return ((Integer)(my_category_map.get(a_category))).intValue();
   }
@@ -387,7 +392,7 @@ public class Context
    * database.  An empty iterator will be returned if there
    * are no categories defined in the database as of yet.
    */
-  public synchronized /*@ pure @*/ Iterator listCategories() {
+  public synchronized Iterator listCategories() {
     return (my_category_map.values().iterator());
   }
 
@@ -413,6 +418,7 @@ public class Context
    * @concurrency GUARDED
    * @param classRef the class to check.
    */
+  //@ requires classRef.getName().length() > 0;
   public synchronized /*@ pure @*/ boolean
   containsClass(final /*@ non_null @*/ Class classRef) {
     return containsClass(classRef.getName());
@@ -426,7 +432,6 @@ public class Context
    * @param a_class_reference the class to add to the global table of classes
    * that have debugging enabled.
    */
-  //@ assignable my_class_map;
   public synchronized void addClass(final /*@ non_null @*/ Class a_class_reference) {
     Utilities.addClassToMap(my_class_map, a_class_reference.getName());
   }
@@ -442,8 +447,7 @@ public class Context
    * @concurrency GUARDED
    * @param a_class_name the name of the class to add.
    */
-  //@ requires className.length() > 0;
-  //@ assignable my_class_map;
+  //@ requires a_class_name.length() > 0;
   public synchronized void addClass(final /*@ non_null @*/ String a_class_name) {
     Utilities.addClassToMap(my_class_map, a_class_name);
   }
@@ -456,7 +460,6 @@ public class Context
    * @param a_class_reference the class to remove from this Context's table of
    * classes that have debugging enabled.
    */
-  //@ assignable my_class_map;
   public synchronized void removeClass(final /*@ non_null @*/ Class a_class_reference) {
     Utilities.removeClassFromMap(my_class_map, a_class_reference.getName());
   }
@@ -471,8 +474,7 @@ public class Context
    * @param a_class_name the class to remove from this Context's table of
    * classes that have debugging enabled.
    */
-  //@ requires className.length() > 0;
-  //@ assignable my_class_map;
+  //@ requires a_class_name.length() > 0;
   public synchronized void removeClass(/*@ non_null @*/ String a_class_name) {
     Utilities.removeClassFromMap(my_class_map, a_class_name);
   }
@@ -501,6 +503,7 @@ public class Context
   //@ requires validLevel(the_new_level);
   //@ assignable my_level;
   //@ ensures getLevel() == the_new_level;
+  //@ ensures validLevel(my_level);
   public synchronized void setLevel(int the_new_level) {
     my_level = the_new_level;
   }
@@ -511,6 +514,7 @@ public class Context
    * @return the current debugging level for the owning thread.
    */
   //@ ensures validLevel(\result);
+  //@ ensures \result == my_level;
   public synchronized /*@ pure @*/ int getLevel() {
     return my_level;
   }
@@ -530,10 +534,12 @@ public class Context
    * @return a flag indicating if the provided level is valid.
    * @param a_level the level to check.
    */
-
+  /*@ ensures \result == ((a_level >= my_debug_constants.LEVEL_MIN)
+    @		&& (a_level <= my_debug_constants.LEVEL_MAX));
+    @*/
   public /*@ pure @*/ boolean validLevel(int a_level) {
-    return ((a_level >= DebugConstants.LEVEL_MIN) &&
-            (a_level <= DebugConstants.LEVEL_MAX));
+    return ((a_level >= my_debug_constants.LEVEL_MIN) &&
+            (a_level <= my_debug_constants.LEVEL_MAX));
   }
 
   // Protected Methods

@@ -50,7 +50,7 @@ import java.io.Writer;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see AbstractDebugOutputBase
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public interface DebugOutput {
   // Attributes
   // Inherited Classes
@@ -63,7 +63,8 @@ public interface DebugOutput {
    * @param the_category is the category of this message.
    * @param the_message is the debugging message to print.
    */
-  void printMsg(String the_category, String the_message);
+  //@ requires the_category.length() > 0;
+  void printMsg(/*@ non_null @*/ String the_category, String the_message);
 
   /**
    * <p> Print out the debugging message, no questions asked. </p>
@@ -107,7 +108,8 @@ public interface DebugOutput {
    * @param the_category The category of this message.
    * @param the_message The debugging message to print.
    */
-  boolean print(String the_category, String the_message);
+  //@ requires the_category.length() > 0;
+  boolean print(/*@ non_null @*/ String the_category, String the_message);
 
   /**
    * <p> Print out an object if the debugging context warrants. </p>
@@ -116,7 +118,8 @@ public interface DebugOutput {
    * @param the_category The category of this message.
    * @param the_object The object to print.
    */
-  boolean print(String the_category, Object the_object);
+  //@ requires the_category.length() > 0;
+  boolean print(/*@ non_null @*/ String the_category, Object the_object);
 
   /**
    * <p> Print out an object if the debugging context warrants. </p>
@@ -125,7 +128,8 @@ public interface DebugOutput {
    * @param the_category The category of this message.
    * @param the_object The object to print.
    */
-  boolean println(String the_category, Object the_object);
+  //@ requires the_category.length() > 0;
+  boolean println(/*@ non_null @*/ String the_category, Object the_object);
 
   /**
    * <p> Print out a debugging message if the debugging context
@@ -135,7 +139,8 @@ public interface DebugOutput {
    * @param the_category The category of this message.
    * @param the_message The debugging message to print.
    */
-  boolean println(String the_category, String the_message);
+  //@ requires the_category.length() > 0;
+  boolean println(/*@ non_null @*/ String the_category, String the_message);
 
   /**
    * <p> Print out an object if the debugging context warrants. </p>
@@ -176,7 +181,8 @@ public interface DebugOutput {
    * class invoking the method, etc.)
    * @see Context
    */
-  boolean isValidCategory(String the_category);
+  //@ requires the_category.length() > 0;
+  boolean isValidCategory(/*@ non_null @*/ String the_category);
 
   /**
    * <p> Tests to see if the current debug context is interested in a given

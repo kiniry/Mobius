@@ -123,7 +123,7 @@ import java.util.Map;
  * @see DefaultDebugConstants
  * @see mobius.logging.examples.FrenchConstants
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public interface DebugConstants {
   // Public Attributes
 
@@ -131,7 +131,7 @@ public interface DebugConstants {
    * <p> The minimum debug level. </p>
    *
    * @design Higher valued levels usually indicate higher priorities.  E.g.,
-   * a level 9 message is in the default implementation an asssertion; if
+   * a level 9 message is in the default implementation an assertion; if
    * it fails, the program exits.  A level 5 message is an error and the
    * user should probably be informed of the problem.  You can override
    * this behavior by subtyping DebugConstants and installing the new
@@ -139,12 +139,30 @@ public interface DebugConstants {
    */
 
   int LEVEL_MIN = 0;
+  
+  /**
+   * <p> Get the minimum debug level. </p>
+   * 
+   * @see LEVEL_MIN
+   * @return the minimum debug level
+   */
+  
+  /*@ pure @*/ int getLevelMin();
 
   /**
    * <p> The maximum debug level. </p>
    */
 
   int LEVEL_MAX = 9;
+  
+  /**
+   * <p> Get the maximum debug level. </p>
+   * 
+   * @see LEVEL_MAX
+   * @return the maximum debug level
+   */
+  
+  /*@ pure @*/ int getLevelMax();
 
   /**
    * <p> An error message that can be localized or otherwise
@@ -152,6 +170,15 @@ public interface DebugConstants {
    */
 
   String ERROR_STRING = "Error";
+  
+  /**
+   * <p> Get the "error" text representation. </p>
+   * 
+   * @see ERROR_STRING
+   * @return the "error" text representation
+   */
+  
+  /*@ pure @*/ String getErrorString();
 
   /**
    * <p> An assertion failure message that can be localized or otherwise
@@ -159,6 +186,15 @@ public interface DebugConstants {
    */
 
   String FAILED_ASSERTION_STRING = "Failed assertion";
+  
+  /**
+   * <p> Get the "failed assertion" text representation. </p>
+   * 
+   * @see FAILED_ASSERTION_STRING
+   * @return the "failed assertion" text representation
+   */
+  
+  /*@ pure @*/ String getFailedAssertionString();
 
   // The default debugging levels are pre-defined to simplify the use
   // of the print() and println() functions for simple debugging.
@@ -173,6 +209,15 @@ public interface DebugConstants {
    */
 
   int ASSERTION_LEVEL = 9;
+  
+  /**
+   * <p>Get the assertion level. </p>
+   * 
+   * @see ASSERTION_LEVEL
+   * @return the assertion level
+   */
+  
+  /*@ pure @*/ int getAssertionLevel();
 
   /**
    * <p> The highest level category that exists.  Sometimes a object need
@@ -182,6 +227,15 @@ public interface DebugConstants {
    */
 
   int FAILURE_LEVEL = 9;
+  
+  /**
+   * <p> Get the failure level. </p>
+   * 
+   * @see FAILURE_LEVEL
+   * @return the failure level
+   */
+  
+  /*@ pure @*/ int getFailureLevel();
 
   /**
    * <p> Very important problems/errors that will eventually cause Failures
@@ -193,14 +247,32 @@ public interface DebugConstants {
    */
 
   int CRITICAL_LEVEL = 7;
+  
+  /**
+   * <p> Get the critical level. </p>
+   * 
+   * @see CRITICAL_LEVEL
+   * @return the critical level
+   */
+  
+  /*@ pure @*/ int getCriticalLevel();
 
   /**
    * <p> This is the standard error level.  An Error means "something went
-   * wrong and the user should probably be notified whether the the system
+   * wrong and the user should probably be notified whether the system
    * can automatically recover properly or not". </p>
    */
 
   int ERROR_LEVEL = 5;
+  
+  /**
+   * <p> Get the error level. </p>
+   * 
+   * @see ERROR_LEVEL
+   * @return the error level
+   */
+  
+  /*@ pure @*/ int getErrorLevel();
 
   /**
    * <p> A warning is a message that says something has gone wrong but it's
@@ -209,6 +281,15 @@ public interface DebugConstants {
    */
 
   int WARNING_LEVEL = 3;
+  
+  /**
+   * <p> Get the warning level. </p>
+   * 
+   * @see WARNING_LEVEL
+   * @return the warning level
+   */
+  
+  /*@ pure @*/ int getWarningLevel();
 
   /**
    * <p> A notice is simply a progress message.  Notices are used to track
@@ -216,6 +297,15 @@ public interface DebugConstants {
    */
 
   int NOTICE_LEVEL = 1;
+  
+  /**
+   * <p> Get the notice level. </p>
+   * 
+   * @see NOTICE_LEVEL
+   * @return the notice level
+   */
+  
+  /*@ pure @*/ int getNoticeLevel();
 
   // The default debugging categories are pre-defined to simplify the use
   // of the print() and println() functions for simple debugging.
@@ -230,6 +320,15 @@ public interface DebugConstants {
    */
 
   String ASSERTION = "ASSERTION";
+  
+  /**
+   * Get the "assertion" text representation.
+   * 
+   * @see ASSERTION
+   * @return the "assertion" text representation
+   */
+  
+  /*@ pure @*/ String getAssertion();
 
   /**
    * <p> The highest level category that exists.  Sometimes a object need
@@ -239,6 +338,15 @@ public interface DebugConstants {
    */
 
   String FAILURE = "FAILURE";
+  
+  /**
+   * <p> Get the "failure" text representation. </p>
+   * 
+   * @see FAILURE
+   * @return the "failure" text representation
+   */
+  
+  /*@ pure @*/ String getFailure();
 
   /**
    * <p> Very important problems/errors that will eventually cause Failures
@@ -250,6 +358,15 @@ public interface DebugConstants {
    */
 
   String CRITICAL = "CRITICAL";
+  
+  /**
+   * <p> Get the "critical" text representation. </p>
+   * 
+   * @see CRITICAL
+   * @return the "critical" text representation
+   */
+  
+  /*@ pure @*/ String getCritical();
 
   /**
    * <p> This is the standard error level.  An Error means "something went
@@ -258,6 +375,15 @@ public interface DebugConstants {
    */
 
   String ERROR = "ERROR";
+  
+  /**
+   * <p> Get the "error" text representation. </p>
+   * 
+   * @see ERROR
+   * @return the "error" text representation
+   */
+  
+  /*@ pure @*/ String getError();
 
   /**
    * <p> A warning is a message that says something has gone wrong but it's
@@ -266,6 +392,15 @@ public interface DebugConstants {
    */
 
   String WARNING = "WARNING";
+  
+  /**
+   * <p> Get the "warning" text representation. </p>
+   * 
+   * @see WARNING
+   * @return the "warning" text representation
+   */
+  
+  /*@ pure @*/ String getWarning();
 
   /**
    * <p> A notice is simply a progress message.  Notices are used to track
@@ -273,6 +408,15 @@ public interface DebugConstants {
    */
 
   String NOTICE = "NOTICE";
+  
+  /**
+   * <p> Get the "notice" text representation. </p>
+   * 
+   * @see NOTICE
+   * @return the "notice" text representation
+   */
+  
+  /*@ pure @*/ String getNotice();
 
   // Error condition for the Debug class.
 
@@ -282,6 +426,15 @@ public interface DebugConstants {
    */
 
   int INVALID_THREAD = -1;
+  
+  /**
+   * <p> Get the invalid thread parameter. </p>
+   * 
+   * @see INVALID_THREAD
+   * @return the IVALID_THREAD parameter
+   */
+  
+  /*@ pure @*/ int getInvalidThread();
 
   // Public Methods
 
@@ -294,7 +447,7 @@ public interface DebugConstants {
    * the default implementation of <code>DebugConstants</code>.
    * @param the_initial_categories is the map to initialize.
    */
-  //@ ensures 6 <= the_initial_categories.size();
+  // @ ensures 6 <= the_initial_categories.size(); XXX
   void initCategories(/*@ non_null @*/ Map the_initial_categories);
 
   /**

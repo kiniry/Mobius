@@ -53,7 +53,7 @@ import java.io.Writer;
  * @see Context
  * @see Debug
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class ConsoleOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable
 {

@@ -47,8 +47,8 @@ package mobius.logging;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @see Assert
  */
-//@ nullable_by_default
-public class FailedAssertionException extends Error {
+//+@ nullable_by_default
+public class FailedAssertionException extends RuntimeException {
   // Attributes
   // Constructors
 

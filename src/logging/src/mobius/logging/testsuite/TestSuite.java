@@ -76,7 +76,7 @@ package mobius.logging.testsuite;
  * were added in v1.3 of this class.
  * @design The success boolean is a running indicator of the success
  * of the test suite.  The return value of every method in Debug is
- * checked and and-ed, as appropriate, with success.  I.e. If any one
+ * checked and and-ed, as appropriate, with success.  I.e. if any one
  * such method returns a value we didn't expect, we would be and-ing
  * with a false and the final value would be a false.
  *
@@ -200,7 +200,7 @@ public class TestSuite {
       return false;
 
     for (int i = 0; i < argv.length; i++) {
-      if (argv[i].indexOf("--help") != -1) {
+      if (argv[i] == "--help") {
         System.out.println("Usage: TestSuite [TESTOPTION]...");
         System.out.println("Test the IDebug debugging framework according to TESTOPTION.");
         System.out.println("Example: java idebughc.testsuite.TestSuite --window\n");

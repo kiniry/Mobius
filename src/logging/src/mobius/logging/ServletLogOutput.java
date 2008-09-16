@@ -57,7 +57,7 @@ import javax.servlet.*;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @concurrency (GUARDED) All methods are synchronized.
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class ServletLogOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable {
   // Attributes
@@ -66,11 +66,11 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * <p> The <code>ServletContext</code> instance associated with this
    * instance of ServletLogOutput. </p>
    */
-  private ServletContext my_servlet_context;
+
+  private /*@ non_null @*/ ServletContext my_servlet_context;
 
   // Constructors
 
-  //@ ensures my_debug == the_debug;
   /**
    * <p> Construct a new <code>ServletLogOutput</code> object for debugging
    * purposes. A dummy <code>ServletContext</code> will be created and
@@ -79,13 +79,13 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * @param the_debug the <code>Debug</code> class associated with this
    * <code>ServletLogOutput</code>.
    */
-  public /*@ pure @*/ ServletLogOutput(final Debug the_debug) {
+  //@ ensures my_servlet_context != null;
+  //@ ensures my_debug == the_debug;
+  public ServletLogOutput(final /*@ non_null @*/ Debug the_debug) {
     my_debug = the_debug;
     my_servlet_context = new DummyServletContext();
   }
 
-  //@ ensures my_debug == the_debug;
-  //@ ensures my_servlet_context == the_servlet_context;
   /**
    * <p> Construct a new <code>ServletLogOutput</code> object. </p>
    *
@@ -94,9 +94,11 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * @param the_servlet_context the <code>ServletContext</code> associated with this instance
    * of <code>ServletLogOutput</code>.
    */
-  public /*@ pure @*/
-  ServletLogOutput(final Debug the_debug,
-                   final ServletContext the_servlet_context) {
+  //@ ensures my_debug == the_debug;
+  //@ ensures my_servlet_context == the_servlet_context;
+  public
+  ServletLogOutput(final /*@ non_null @*/ Debug the_debug,
+                   final /*@ non_null @*/ ServletContext the_servlet_context) {
     my_debug = the_debug;
     my_servlet_context = the_servlet_context;
   }
@@ -132,7 +134,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    */
   public synchronized void printMsg(String a_message) {
-    my_servlet_context.log(a_message);
+    my_servlet_context.log(a_message != null ? a_message : "null");
   }
 
   /**
@@ -179,9 +181,10 @@ public class ServletLogOutput extends AbstractDebugOutputBase
       System.err.print(msg);
     }
     /** {@inheritDoc} */
-    public void log(Exception exception, String msg) {
+    public void log( Exception exception, String msg) {
       System.err.print(msg);
-      exception.printStackTrace(System.err);
+      if (exception != null)
+	      exception.printStackTrace(System.err);
     }
     /** {@inheritDoc} */
     public String getRealPath(String path) {

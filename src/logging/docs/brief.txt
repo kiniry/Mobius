@@ -56,7 +56,7 @@ very few built-in constructs for debugging classes.
 Typically, a Java programmer relies upon certain aspects of the language
 (array bounds checking, static type and variable initialization checking,
 etc.), declared and runtime exceptions, source-code debuggers, and
-primative println's to debug their code.
+primitive println's to debug their code.
 
 Java is missing several core debugging constructs, the most critical of
 which is assertions. Assertions are statements of the form ``at this point
@@ -93,7 +93,7 @@ exceptions are provided for fine-tuning the debug process.
 
 Additionally, we are working support for debugging distributed systems. One
 problem typical of debugging distributed systems is a loss of context when
-communication between two non-local entities takes place. E.g. When object
+communication between two non-local entities takes place. E.g. when object
 A invokes a method m on object B, the thread within m does not have access
 to the call stack from the calling thread in A.  Thus, the IDebug package
 will support what we call "call-stack currying". Information such as source
@@ -115,7 +115,7 @@ object and inspected at a later time by the object's owner or developer.
 The IDebug package is very configurable. First, debugging functionality can
 be fine-tuned on a per-thread basis. Each thread can have its own debugging
 context. The context states the classes of interest to that particular
-thread. I.e. If a thread T specifies that it is interested in a class C but
+thread. I.e. if a thread T specifies that it is interested in a class C but
 not a second class D, then debugging statements in C will be considered
 when T is inside of C, but debugging statements in D will be ignored at all
 times. These debugging contexts can be stored and recovered from persistent

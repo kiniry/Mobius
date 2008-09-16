@@ -72,7 +72,7 @@ import javax.swing.JTextArea;
  *
  * @todo Can we actually provide a valid Writer for getWriter()?
  */
-//@ nullable_by_default
+//+@ nullable_by_default
 public class WindowOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable {
   // Attributes
@@ -92,7 +92,7 @@ public class WindowOutput extends AbstractDebugOutputBase
    *
    * @param the_debug the Debug class associated with this WindowOutput.
    */
-  public WindowOutput(final Debug the_debug) {
+  public WindowOutput(final /*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
 
     // set up swing components.
