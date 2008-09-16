@@ -45,6 +45,9 @@
    <feature url="features/JML4Eclipse_0.0.1.jar" id="JML4Eclipse" version="0.0.1">
       <category name="JML"/>
    </feature>
+   <feature url="features/mobius.RCC.feature_1.0.0.jar" id="mobius.RCC.feature" version="1.0.0">
+      <category name="Mobius"/>
+   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
    <category-def name="Other" label="Other"/>
    <category-def name="JML" label="JML"/>
