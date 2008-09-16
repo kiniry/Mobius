@@ -61,9 +61,9 @@ ENDASSUMING
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
         wf_set_stmts(complete_MP(mp))
 
-  full_complete_MP_characterisation : LEMMA % :-)
-    FORALL(p : Program) :
-      full_complete_MP(p) = complete_MP(full_partial_MP(p))
+%   full_complete_MP_characterisation : LEMMA % :-)
+%     FORALL(p : Program) :
+%       full_complete_MP(p) = complete_MP(full_partial_MP(p))
 
   legal_Body_preserved_by_complete_MP : LEMMA % uses derive_pstate_indepedent_of_MVA
     FORALL(mp : (wf_and_partial_MP))(b : (wf_Body(program(mp)))) :

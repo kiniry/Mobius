@@ -25,17 +25,16 @@ LegalProgramRestriction[Name : TYPE+,
           execute_CaseJML : (execute_CaseJML_type),
           on_method_entry : (on_method_event_type),
           on_method_exit_normal : (on_method_event_type),
-          on_method_exit_exceptional : (on_method_event_type),
-          full_program : [Program -> FullProgram]] : THEORY
+          on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
-  ASSUMING
-    % program parameter left inverse of full_program parameter
-    program_full_program_inverse : ASSUMPTION
-      FORALL(p : Program) :
-        program(full_program(p)) = p
+%   ASSUMING
+%     % program parameter left inverse of full_program parameter
+%     program_full_program_inverse : ASSUMPTION
+%       FORALL(p : Program) :
+%         program(full_program(p)) = p
 
-  ENDASSUMING
+%   ENDASSUMING
 
   IMPORTING WellFormedProgram[Name],
             Semantics[Name, FullProgram, FullState, program, pstate,
@@ -49,24 +48,22 @@ BEGIN
   % then derivation of the complete statement should also return 
   % a JML-exception
 
-  % Notice that legal_Body is parametrised by a predicate wf_state
-  legal_Body(wf_state : [FullProgram -> [FullState -> bool]])
-            (p : PreProgram)(b : Body) : bool =
+  legal_Body(p : FullProgram)(b : Body) : bool =
    FORALL(b1 : Body) : 
      subterm(b1, b) IMPLIES
      TryCatch?(b1) IMPLIES 
-     wf_Body(p)(b1) IMPLIES
-     wf_Program(p) IMPLIES
+     wf_Body(program(p))(b1) IMPLIES
+     wf_Program(program(p)) IMPLIES
      FORALL(s1, s2, tau1, tau2 : FullState)
            (v, v1, v2 : Val)(n, m1, m2 : nat) :
-       wf_state(full_program(p))(s1) IMPLIES
-       derive(full_program(p))(b1, s1, v, s2)(n) IMPLIES
-       derive(full_program(p))(try(b1), s1, v1, tau1)(m1) IMPLIES
+       wf_state(program(p))(pstate(s1)) IMPLIES
+       derive(p)(b1, s1, v, s2)(n) IMPLIES
+       derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
        up?(ex(pstate(tau1))) IMPLIES 
         (down(ex(pstate(tau1))) = JMLExc
          OR
         (down(ex(pstate(tau1))) = exc(b1) AND
-         derive(full_program(p))
+         derive(p)
                (catch(b1), update_PState(tau1, catch), v2, tau2)(m2) AND
          up?(ex(pstate(tau2))) AND
          down(ex(pstate(tau2))) = JMLExc)) IMPLIES
@@ -74,18 +71,16 @@ BEGIN
 
   % if b1 respects legal_Body, then so do any subterms of b1
   legal_Body_preserved_by_proper_subterm : LEMMA % :-)
-    FORALL(wf_state : [FullProgram -> [FullState -> bool]])
-          (p : PreProgram)(b1, b2 : Body) :
-      legal_Body(wf_state)(p)(b1) IMPLIES
+    FORALL(p : FullProgram)(b1, b2 : Body) :
+      legal_Body(p)(b1) IMPLIES
       b2 << b1 IMPLIES
-        legal_Body(wf_state)(p)(b2)
+        legal_Body(p)(b2)
 
-  IMPORTING ProgramRestriction[Name]
+  IMPORTING FullProgramRestriction[Name, FullProgram, program]
 
   % a program is a legal_Program if all bodies it contains are legal_Bodies
-  legal_Program(wf_state : [FullProgram -> [FullState -> bool]])
-               (p : PreProgram) : bool =
-    program_pred(p)(legal_Body(wf_state))
+  legal_Program(p : FullProgram) : bool =
+    program_pred(p)(legal_Body)
 
 END LegalProgramRestriction
 
@@ -93,24 +88,24 @@ END LegalProgramRestriction
 LegalPartialMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  % Instantiation for monitored programs with partial monitors
+%   % Instantiation for monitored programs with partial monitors
 
-ASSUMING 
+% ASSUMING 
 
-    IMPORTING MVA[CP, Name]
+%     IMPORTING MVA[CP, Name]
 
-    CP_not_only_halted : ASSUMPTION
-      EXISTS(cp : CP) : NOT cp = halted
+%     CP_not_only_halted : ASSUMPTION
+%       EXISTS(cp : CP) : NOT cp = halted
 
-ENDASSUMING
+% ENDASSUMING
 
-  IMPORTING MonitoredProgramSemantics[CP, Name],
-            EmptyMVA[CP, Name]
+   IMPORTING MonitoredProgramSemantics[CP, Name]
+%             EmptyMVA[CP, Name]
 
-  % full program: monitor with empty monitor
-  full_partial_MP(p : Program) : (wf_and_partial_MP) =
-    (# mva := empty(name(choose({c : Class |classes(p)(c)}))),
-       program := p #)
+%   % full program: monitor with empty monitor
+%   full_partial_MP(p : Program) : (wf_and_partial_MP) =
+%     (# mva := empty(name(choose({c : Class |classes(p)(c)}))),
+%        program := p #)
 
   IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
                              LAMBDA(mp : MonitoredProgram) : program(mp),
@@ -118,13 +113,13 @@ ENDASSUMING
                              lookup, update_PState, execute_set,
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP, full_partial_MP]
+                             on_method_exit_exceptional_MP]
 
   legal_Body_partial_MP(mp : (wf_and_partial_MP))(b : Body) : boolean =
-    legal_Body(wf_state)(program(mp))(b)
+    legal_Body(mp)(b)
 
   legal_Program_partial_MP(mp : (wf_and_partial_MP)) : boolean =
-    legal_Program(wf_state)(program(mp))
+    legal_Program(mp)
 
 
 END LegalPartialMonitoredProgramRestriction
@@ -133,26 +128,26 @@ END LegalPartialMonitoredProgramRestriction
 LegalCompleteMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
 BEGIN
 
-  % Instantiation for monitored program with total monitors
+%   % Instantiation for monitored program with total monitors
 
-ASSUMING 
+% ASSUMING 
 
-    IMPORTING MVA[CP, Name]
+%     IMPORTING MVA[CP, Name]
 
-    CP_not_only_halted : ASSUMPTION
-      EXISTS(cp : CP) : NOT cp = halted
+%     CP_not_only_halted : ASSUMPTION
+%       EXISTS(cp : CP) : NOT cp = halted
 
-ENDASSUMING
+% ENDASSUMING
 
 
-  IMPORTING MonitoredProgramSemantics[CP, Name],
-            MVACompletion[CP, Name],
-            EmptyMVA[CP, Name]
+  IMPORTING MonitoredProgramSemantics[CP, Name]
+%             MVACompletion[CP, Name],
+%             EmptyMVA[CP, Name]
 
-  % full program: monitor with completed empty monitor
-  full_complete_MP(p : Program) : (wf_and_complete_MP) =
-    (# mva := complete_MVA(empty(name(choose({c : Class |classes(p)(c)})))),
-       program := p #)
+%   % full program: monitor with completed empty monitor
+%   full_complete_MP(p : Program) : (wf_and_complete_MP) =
+%     (# mva := complete_MVA(empty(name(choose({c : Class |classes(p)(c)})))),
+%        program := p #)
 
   IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
                              LAMBDA(mp : MonitoredProgram) : program(mp),
@@ -160,13 +155,13 @@ ENDASSUMING
                              lookup, update_PState, execute_set,
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP, full_complete_MP]
+                             on_method_exit_exceptional_MP]
 
   legal_Body_complete_MP(mp : (wf_and_complete_MP))(b : Body) : boolean =
-    legal_Body(wf_state)(program(mp))(b)
+    legal_Body(mp)(b)
 
   legal_Program_complete_MP(mp : (wf_and_complete_MP)) : boolean =
-    legal_Program(wf_state)(program(mp))
+    legal_Program(mp)
 
 
 END LegalCompleteMonitoredProgramRestriction
@@ -187,13 +182,13 @@ BEGIN
                       execute_CaseJML,
                       on_method_entry,
                       on_method_exit_normal,
-                      on_method_exit_exceptional, id]
+                      on_method_exit_exceptional]
 
   legal_Body_AP(p : Program)(b : Body) : boolean =
-    legal_Body(wf_state)(p)(b)
+    legal_Body(p)(b)
 
   legal_Program_AP(p : Program) : boolean =
-    legal_Program(wf_state)(p)
+    legal_Program(p)
 
 
 END LegalAnnotatedProgramRestriction

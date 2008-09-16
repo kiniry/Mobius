@@ -1,18 +1,13 @@
 (CompleteMonitorProgramPropertiesPreservation
- (IMP_LegalPartialMonitoredProgramRestriction_TCC1 0
-  (IMP_LegalPartialMonitoredProgramRestriction_TCC1-1 nil 3413112202
-   3414404121 ("" (use "CP_not_only_halted") nil nil) proved-complete
-   ((CP_not_only_halted formula-decl nil
-     CompleteMonitorProgramPropertiesPreservation nil))
-   1300 1250 t nil))
  (derive_equivalence_if_TCC1 0
-  (derive_equivalence_if_TCC1-1 nil 3413112202 3414404124
-   ("" (subtype-tcc) nil nil) proved-complete
+  (derive_equivalence_if_TCC1-1 nil 3413112202 3430480062
+   ("" (subtype-tcc) nil nil) proved
    ((Name formal-nonempty-type-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
      nil)
@@ -23,10 +18,11 @@
      CompleteMonitorProgramPropertiesPreservation nil)
     (skip const-decl "Action" MVA nil)
     (complete_trans const-decl "finite_set[Transition]" MVACompletion nil)
-    (complete_MVA const-decl "MVA" MVACompletion nil))
-   2539 2430 nil nil))
+    (complete_MVA const-decl "MVA" MVACompletion nil)
+    (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
+   1741 1670 nil nil))
  (derive_equivalence_if 0
-  (derive_equivalence_if-1 nil 3413112302 3430473028
+  (derive_equivalence_if-1 nil 3413112302 3430480101
    (";;; Proof derive_equivalence-1 for formula CompleteMonitorProgramPropertiesPreservation.derive_equivalence"
     (skolem 1 ("mp!1" _ _ _ _ _))
     ((";;; Proof derive_equivalence-1 for formula CompleteMonitorProgramPropertiesPreservation.derive_equivalence"
@@ -2206,9 +2202,9 @@
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitorProgramPropertiesPreservation nil)
     (wf_nat formula-decl nil naturalnumbers nil))
-   37511 34950 nil nil))
+   38865 30060 nil nil))
  (derive_equivalence_only_if 0
-  (derive_equivalence_only_if-1 nil 3413112313 3430473057
+  (derive_equivalence_only_if-1 nil 3413112313 3430480133
    ("" (skolem 1 ("mp!1" _ _ _ _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1"
@@ -4516,9 +4512,9 @@
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitorProgramPropertiesPreservation nil)
     (wf_nat formula-decl nil naturalnumbers nil))
-   29438 25900 t shostak))
+   31845 25010 t shostak))
  (derive_equivalence 0
-  (derive_equivalence-1 nil 3412503635 3430473060
+  (derive_equivalence-1 nil 3412503635 3430480134
    ("" (skosimp*)
     (("" (use "derive_equivalence_only_if")
       (("" (use "derive_equivalence_if")
@@ -4576,16 +4572,16 @@
      sets_lemmas nil)
     (derive_equivalence_if formula-decl nil
      CompleteMonitorProgramPropertiesPreservation nil))
-   2532 2470 t shostak))
+   987 950 t shostak))
  (contains_no_method_call_preserved_by_complete_MP 0
   (contains_no_method_call_preserved_by_complete_MP-1 nil 3412503365
-   3430473062
+   3430480134
    ("" (skosimp*) (("" (expand "complete_MP") (("" (propax) nil nil)) nil))
     nil)
    proved ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   2398 2350 t shostak))
+   811 780 t shostak))
  (wf_set_stmts_preserved_by_complete_MP 0
-  (wf_set_stmts_preserved_by_complete_MP-1 nil 3412503375 3430473067
+  (wf_set_stmts_preserved_by_complete_MP-1 nil 3412503375 3430480138
    ("" (skosimp*)
     (("" (expand "wf_set_stmts")
       (("" (typepred "program(mp!1)")
@@ -5046,22 +5042,9 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil))
-   4662 4420 t shostak))
- (full_complete_MP_characterisation 0
-  (full_complete_MP_characterisation-1 nil 3413191599 3430473070
-   ("" (skosimp*)
-    (("" (expand* "complete_MP" "full_partial_MP" "full_complete_MP") nil
-      nil))
-    nil)
-   proved
-   ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)
-    (full_partial_MP const-decl "(wf_and_partial_MP)"
-     LegalPartialMonitoredProgramRestriction nil)
-    (full_complete_MP const-decl "(wf_and_complete_MP)"
-     LegalCompleteMonitoredProgramRestriction nil))
-   2910 2860 t shostak))
+   3493 3190 t shostak))
  (legal_Body_preserved_by_complete_MP 0
-  (legal_Body_preserved_by_complete_MP-1 nil 3414388243 3430473942
+  (legal_Body_preserved_by_complete_MP-1 nil 3414388243 3430480148
    ("" (skosimp*)
     (("" (expand "legal_Body_partial_MP")
       (("" (expand "legal_Body_complete_MP")
@@ -5917,9 +5900,7 @@
      nil)
     (update_PState_type const-decl "boolean" SemanticsTypes nil)
     (PSt type-eq-decl nil State nil)
-    (NOT const-decl "[bool -> bool]" booleans nil)
-    (full_complete_MP const-decl "(wf_and_complete_MP)"
-     LegalCompleteMonitoredProgramRestriction nil)
+    (NOT const-decl "[bool -> bool]" booleans nil) nil
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
@@ -5968,13 +5949,10 @@
     (Body type-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
-    (full_partial_MP const-decl "(wf_and_partial_MP)"
-     LegalPartialMonitoredProgramRestriction nil)
+    nil
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitorProgramPropertiesPreservation nil)
-    (full_complete_MP_characterisation formula-decl nil
-     CompleteMonitorProgramPropertiesPreservation nil)
-    (wf_ghoststate const-decl "boolean" SemanticsJML nil)
+    nil (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (derive_yields_wf_state_MP formula-decl nil MonitoredProgramSemantics nil)
     (wf_state_catch formula-decl nil State nil)
@@ -5986,9 +5964,9 @@
     (wf_MP const-decl "boolean" MonitoredProgram nil)
     (legal_Body_complete_MP const-decl "boolean"
      LegalCompleteMonitoredProgramRestriction nil))
-   31896 26940 t nil))
+   9968 9710 t nil))
  (legal_Program_preserved_by_complete_MP 0
-  (legal_Program_preserved_by_complete_MP-2 nil 3414388258 3430473106
+  (legal_Program_preserved_by_complete_MP-2 nil 3414388258 3430480165
    (";;; Proof legal_Program_preserved_by_complete_MP-1 for formula CompleteMonitorProgramPropertiesPreservation.legal_Program_preserved_by_complete_MP"
     (skosimp*)
     ((";;; Proof legal_Program_preserved_by_complete_MP-1 for formula CompleteMonitorProgramPropertiesPreservation.legal_Program_preserved_by_complete_MP"
@@ -6147,8 +6125,12 @@
     (legal_Program_partial_MP const-decl "boolean"
      LegalPartialMonitoredProgramRestriction nil)
     (program_pred const-decl "bool" ProgramRestriction nil)
+    (program_pred const-decl "bool" LegalProgramRestriction nil)
+    (method_pred const-decl "bool" LegalProgramRestriction nil)
     (method_pred const-decl "bool" ProgramRestriction nil)
     (legal_Program const-decl "bool" LegalProgramRestriction nil)
+    (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
+     CompleteMonitorProgramPropertiesPreservation nil)
     (legal_Program_complete_MP const-decl "boolean"
      LegalCompleteMonitoredProgramRestriction nil)
     (e!1 skolem-const-decl "Excpt"
@@ -6187,10 +6169,8 @@
      CompleteMonitorProgramPropertiesPreservation nil)
     (legal_Body_preserved_by_complete_MP formula-decl nil
      CompleteMonitorProgramPropertiesPreservation nil)
-    (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
-     CompleteMonitorProgramPropertiesPreservation nil)
     (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   20765 20370 nil nil)
+   17214 16880 nil nil)
   (legal_Program_preserved_by_complete_MP-1 nil 3413190727 3414328849
    ("" (skosimp*)
     (("" (typepred "program(mp!1)")
@@ -6411,36 +6391,36 @@
    20876 20330 t shostak)))
 (AnnotateProgramPropertiesPreservation
  (IMP_VariableNames_TCC1 0
-  (IMP_VariableNames_TCC1-1 nil 3410161121 3413195209
-   ("" (use "infinite_namespace") nil nil) unchecked
+  (IMP_VariableNames_TCC1-1 nil 3410161121 3430480943
+   ("" (use "infinite_namespace") nil nil) proved
    ((infinite_namespace formula-decl nil AnnotateProgramPropertiesPreservation
      nil))
-   1289 1290 t nil))
+   865 870 t nil))
  (IMP_Equivalence_TCC1 0
-  (IMP_Equivalence_TCC1-1 nil 3410161121 3413195210
-   ("" (use "CP_is_enumerable") nil nil) unchecked
+  (IMP_Equivalence_TCC1-1 nil 3410161121 3430480944
+   ("" (use "CP_is_enumerable") nil nil) proved
    ((CP_is_enumerable formula-decl nil AnnotateProgramPropertiesPreservation
      nil))
-   1329 1280 t nil))
+   911 860 t nil))
  (IMP_Equivalence_TCC2 0
-  (IMP_Equivalence_TCC2-1 nil 3410161121 3413195211
-   ("" (use "name_of_exists") nil nil) unchecked
+  (IMP_Equivalence_TCC2-1 nil 3410161121 3430480945
+   ("" (use "name_of_exists") nil nil) proved
    ((name_of_exists formula-decl nil AnnotateProgramPropertiesPreservation
      nil))
-   1308 1310 t nil))
+   877 880 t nil))
  (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1 0
   (IMP_CompleteMonitorProgramPropertiesPreservation_TCC1-1 nil 3413189842
-   3413195140 ("" (use "CP_not_only_halted") nil nil) unchecked
+   3430480946 ("" (use "CP_not_only_halted") nil nil) proved
    ((CP_not_only_halted formula-decl nil AnnotateProgramPropertiesPreservation
      nil))
-   5701 1290 t nil))
+   654 650 t nil))
  (derive_equivalence_if_TCC1 0
-  (derive_equivalence_if_TCC1-1 nil 3413189842 3413195166
+  (derive_equivalence_if_TCC1-1 nil 3413189842 3430480947
    ("" (skosimp*)
     (("" (expand "id") (("" (use "ann_program_preserves_wf_body") nil nil))
       nil))
     nil)
-   unchecked
+   proved
    ((id const-decl "(bijective?[T, T])" identity nil)
     (Name formal-nonempty-type-decl nil AnnotateProgramPropertiesPreservation
      nil)
@@ -6455,7 +6435,8 @@
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil) (MVA type-eq-decl nil MVA nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
+    (MVA type-eq-decl nil MVA nil)
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
     (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -6470,9 +6451,9 @@
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil))
-   15704 1930 t nil))
+   1116 1080 t nil))
  (derive_equivalence_if 0
-  (derive_equivalence_if-1 nil 3413193424 3429358481
+  (derive_equivalence_if-1 nil 3413193424 3430481359
    ("" (skolem 1 ("mp!1" _ _ _ _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1"
@@ -10373,9 +10354,9 @@
     (id const-decl "(bijective?[T, T])" identity nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
     (wf_nat formula-decl nil naturalnumbers nil))
-   2464647 85040 t nil))
+   411698 400670 t nil))
  (derive_equivalence_only_if 0
-  (derive_equivalence_only_if-1 nil 3413195431 3414407384
+  (derive_equivalence_only_if-1 nil 3413195431 3430481675
    ("" (skolem 1 ("mp!1" _ _ _ _ _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1"
@@ -13342,7 +13323,7 @@
        ("2" (use "wf_nat") nil nil))
       nil))
     nil)
-   unchecked
+   proved
    ((< const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (>= const-decl "bool" reals nil)
@@ -13362,6 +13343,8 @@
     (pred type-eq-decl nil defined_types nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
+    (check_for_exception_final const-decl "bool" SemanticsAuxiliaryFunctions
+     nil)
     (int_minus_int_is_int application-judgement "int" integers nil)
     (posint_plus_nnint_is_posint application-judgement "posint" integers nil)
     (real_lt_is_strict_total_order name-judgement
@@ -13373,14 +13356,15 @@
      ContainsNoMethodCall nil)
     (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
     (subterm_subset_of_var formula-decl nil ProgramFunctions nil)
+    (check_for_exception const-decl "bool" SemanticsAuxiliaryFunctions nil)
     (b1 shared-adt-accessor-decl
      "[{x: Body | Eq?(x) OR Conj?(x) OR Plus?(x)} -> Expr]" Body_adt nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (real_ge_is_total_order name-judgement "(total_order?[real])" real_props
      nil)
-    (numfield nonempty-type-eq-decl nil number_fields nil)
     (- const-decl "[numfield, numfield -> numfield]" number_fields nil)
+    (numfield nonempty-type-eq-decl nil number_fields nil)
     (b adt-accessor-decl "[(Neg?) -> Expr]" Body_adt nil)
     (get_dynamic_type_name const-decl "Name" Semantics nil)
     (get_address const-decl "int" Semantics nil)
@@ -13389,13 +13373,19 @@
      Body_adt nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
+    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))"
+     AnnotateProgramPropertiesPreservation nil)
     (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (v1!1 skolem-const-decl "Val[Name]" AnnotateProgramPropertiesPreservation
+     nil)
     (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
     (wf_Body_preserved_by_proper_subterm formula-decl nil WellFormedProgram
      nil)
     (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
+    (v1!1 skolem-const-decl "Val[Name]" AnnotateProgramPropertiesPreservation
+     nil)
     (update_store const-decl "Store" State nil)
     (add const-decl "(nonempty?)" sets nil)
     (target shared-adt-accessor-decl
@@ -13408,29 +13398,30 @@
     (catch adt-accessor-decl "[(TryCatch?) -> Stmt]" Body_adt nil)
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
-    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
-    (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
     (While adt-constructor-decl "[[Expr, Stmt] -> (While?)]" Body_adt nil)
+    (body adt-accessor-decl "[(While?) -> Stmt]" Body_adt nil)
+    (Skip adt-constructor-decl "(Skip?)" Body_adt nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (emptyset const-decl "set" sets nil)
     (Body_While_extensionality formula-decl nil Body_adt nil)
     (raise const-decl "PState" State nil)
     (s1 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
     (s2 adt-accessor-decl "[(Sequence?) -> Stmt]" Body_adt nil)
-    (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
-    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
-     Body_adt nil)
-    (branches adt-accessor-decl "[(CaseJML?) -> list[[Expr, Stmt]]]" Body_adt
-     nil)
-    (car adt-accessor-decl "[(cons?) -> T]" list_adt nil)
-    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
     (IfThenElse adt-constructor-decl "[[Expr, Stmt, Stmt] -> (IfThenElse?)]"
      Body_adt nil)
+    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (car adt-accessor-decl "[(cons?) -> T]" list_adt nil)
+    (branches adt-accessor-decl "[(CaseJML?) -> list[[Expr, Stmt]]]" Body_adt
+     nil)
+    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
+     Body_adt nil)
+    (cdr adt-accessor-decl "[(cons?) -> list]" list_adt nil)
     (some_is_exists formula-decl nil listfuncs nil)
     (member def-decl "bool" list_props nil)
     (wf_Body_CaseJML formula-decl nil WellFormedProgram nil)
     (ann_program_preserves_wf_body formula-decl nil AnnotateProgramProperties
      nil)
+    (return_of_stmt const-decl "Val" SemanticsAuxiliaryFunctions nil)
     (extend const-decl "R" extend nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
     (source shared-adt-accessor-decl
@@ -13443,14 +13434,15 @@
     (declared_var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (reserved_words const-decl "finite_set[Name]" Program nil)
     (singleton const-decl "(singleton?)" sets nil)
-    (union const-decl "set" sets nil) (member const-decl "bool" sets nil)
+    (union const-decl "set" sets nil) (disjoint? const-decl "bool" sets nil)
+    (empty? const-decl "bool" sets nil)
     (intersection const-decl "set" sets nil)
-    (empty? const-decl "bool" sets nil) (disjoint? const-decl "bool" sets nil)
+    (member const-decl "bool" sets nil)
     (finite_intersection1 application-judgement "finite_set" finite_sets nil)
     (wf_new_vars formula-decl nil NewVariableDeclarations nil)
-    (new_gvds const-decl "finite_set[Decl]" NewVariableDeclarations nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (IF const-decl "[boolean, T, T -> T]" if_def nil)
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (new_gvds const-decl "finite_set[Decl]" NewVariableDeclarations nil)
     (make_APState const-decl "APState" AnnotateProgramPropertiesPreservation
      nil)
     (on_method_exit_exceptional const-decl "(on_method_event_type)"
@@ -13467,7 +13459,7 @@
      nil)
     (Body type-decl nil Body_adt nil) (Val type-decl nil Val_adt nil)
     (defined? const-decl "boolean" ValProp nil)
-    (JType type-decl nil JType_adt nil)
+    (JType type-decl nil JType_adt nil) (Decl type-eq-decl nil Program nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
     (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
@@ -13488,6 +13480,8 @@
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
+    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
+     AnnotateProgramPropertiesPreservation nil)
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
@@ -13558,9 +13552,9 @@
     (id const-decl "(bijective?[T, T])" identity nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
     (wf_nat formula-decl nil naturalnumbers nil))
-   1922865 59650 t shostak))
+   316301 304980 t shostak))
  (ann_actions_contains_no_method_calls 0
-  (ann_actions_contains_no_method_calls-1 nil 3410526069 3413195262
+  (ann_actions_contains_no_method_calls-1 nil 3410526069 3430481676
    ("" (induct "l")
     (("1" (expand "ann_action")
       (("1" (expand "contains_no_method_call")
@@ -13603,7 +13597,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((Sequence adt-constructor-decl "[[Stmt, Stmt] -> (Sequence?)]" Body_adt
      nil)
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -13646,10 +13640,10 @@
     (Action type-eq-decl nil MVA nil)
     (boolean nonempty-type-decl nil booleans nil)
     (list type-decl nil list_adt nil))
-   6169 1830 t shostak))
+   1043 1010 t shostak))
  (contains_no_method_call_preserved_by_ann_program 0
   (contains_no_method_call_preserved_by_ann_program-1 nil 3410181070
-   3413195271
+   3430481685
    ("" (skosimp*)
     (("" (expand "contains_no_method_call_in_sets_in_program")
       (("" (expand "program_method_pred")
@@ -14469,7 +14463,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((contains_no_method_call_in_sets_in_program const-decl "bool"
      ContainsNoMethodCall nil)
     (ann_class const-decl "Class" AnnotateClass nil)
@@ -14487,12 +14481,14 @@
     (EventType type-decl nil EventType_adt nil)
     (CP formal-nonempty-type-decl nil AnnotateProgramPropertiesPreservation
      nil)
+    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation nil)
     (excpt adt-constructor-decl "[Excpt -> (excpt?)]" ValOrExcpt_adt nil)
     (excpt? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt nil)
     (ExitExceptional adt-constructor-decl "(ExitExceptional?)" EventType_adt
      nil)
     (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
+    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation nil)
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]" EventType_adt
      nil)
@@ -14539,6 +14535,11 @@
     (ann_action def-decl "Stmt" AnnotateEvent nil)
     (guard_to_expression_contains_no_method_calls formula-decl nil
      MVAMonitoring nil)
+    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
+     AnnotateProgramPropertiesPreservation nil)
+    (n!1 skolem-const-decl "Method[Name]"
+     AnnotateProgramPropertiesPreservation nil)
+    (q!1 skolem-const-decl "CP" AnnotateProgramPropertiesPreservation nil)
     (ann_guard_actions_set const-decl "finite_set[[Expr, Stmt]]" AnnotateEvent
      nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
@@ -14576,7 +14577,7 @@
     (Method type-eq-decl nil Program nil) (Excpt type-decl nil Excpt_adt nil)
     (Stmt type-eq-decl nil Body_adt nil) (Expr type-eq-decl nil Body_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (JType type-decl nil JType_adt nil)
+    (Decl type-eq-decl nil Program nil) (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil)
@@ -14584,9 +14585,27 @@
      nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
     (program_method_pred const-decl "bool" ProgramRestriction nil))
-   8387 7890 t shostak))
+   8884 8310 t shostak))
+ (IMP_CorrectnessAnnProgram_TCC1 0
+  (IMP_CorrectnessAnnProgram_TCC1-1 nil 3430479867 3430539916
+   ("" (use "CP_is_enumerable") nil nil) proved
+   ((CP_is_enumerable formula-decl nil AnnotateProgramPropertiesPreservation
+     nil))
+   11798 580 t nil))
+ (IMP_CorrectnessAnnProgram_TCC2 0
+  (IMP_CorrectnessAnnProgram_TCC2-1 nil 3430479867 3430539947
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil AnnotateProgramPropertiesPreservation
+     nil))
+   25467 590 t nil))
+ (IMP_CorrectnessAnnProgram_TCC3 0
+  (IMP_CorrectnessAnnProgram_TCC3-1 nil 3430479867 3430539957
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil AnnotateProgramPropertiesPreservation
+     nil))
+   5235 600 t nil))
  (well_behaved_MVA_appropriate_for_annot_gen 0
-  (well_behaved_MVA_appropriate_for_annot_gen-1 nil 3414400907 3430474878
+  (well_behaved_MVA_appropriate_for_annot_gen-1 nil 3414400907 3430481693
    ("" (skosimp*)
     (("" (expand "well_behaved_MVA_for_annot_gen")
       (("" (expand "well_behaved_MVA")
@@ -14816,9 +14835,9 @@
     (guard_to_expression_behavior const-decl "boolean" Equivalence nil)
     (guard_to_expression_behavior const-decl "boolean" WellBehavedMVA nil)
     (well_behaved_MVA const-decl "boolean" WellBehavedMVA nil))
-   106139 5740 t shostak))
+   5173 5030 t shostak))
  (wf_set_stmts_preserved_by_ann_program 0
-  (wf_set_stmts_preserved_by_ann_program-2 nil 3413196193 3414152250
+  (wf_set_stmts_preserved_by_ann_program-2 nil 3413196193 3430481727
    ("" (skosimp*)
     (("" (use "well_behaved_MVA_appropriate_for_annot_gen")
       (("" (assert)
@@ -16207,7 +16226,7 @@
         nil))
       nil))
     nil)
-   unfinished
+   proved
    ((well_behaved_MVA_appropriate_for_annot_gen formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -16217,7 +16236,8 @@
     (Program type-eq-decl nil WellFormedProgram nil)
     (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
     (wf_MVA const-decl "boolean" WellFormedMVA nil)
-    (MVA type-eq-decl nil MVA nil) (JType type-decl nil JType_adt nil)
+    (MVA type-eq-decl nil MVA nil) (Decl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
     (defined? const-decl "boolean" ValProp nil)
     (boolean nonempty-type-decl nil booleans nil)
     (Val type-decl nil Val_adt nil) (Transition type-eq-decl nil MVA nil)
@@ -16231,8 +16251,17 @@
      nil)
     (id const-decl "(bijective?[T, T])" identity nil)
     (ann_class const-decl "Class" AnnotateClass nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
      sets_lemmas nil)
+    (e!1 skolem-const-decl "Excpt" AnnotateProgramPropertiesPreservation nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
+    (m!1 skolem-const-decl "Method[Name]"
+     AnnotateProgramPropertiesPreservation nil)
     (only_JMLExc const-decl "bool" WfSetStmts nil)
     (no_change const-decl "bool" WfSetStmts nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -16244,24 +16273,38 @@
     (methods const-decl "finite_set[Method]" ProgramFunctions nil)
     (extend const-decl "R" extend nil)
     (id_preserves application-judgement "S" identity_props nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
     (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
     (ExitExceptional adt-constructor-decl "(ExitExceptional?)" EventType_adt
      nil)
     (excpt? adt-recognizer-decl "[ValOrExcpt -> boolean]" ValOrExcpt_adt nil)
     (excpt adt-constructor-decl "[Excpt -> (excpt?)]" ValOrExcpt_adt nil)
+    (e!1 skolem-const-decl "Excpt" AnnotateProgramPropertiesPreservation nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
     (ExitNormal adt-constructor-decl "(ExitNormal?)" EventType_adt nil)
     (ExitNormal? adt-recognizer-decl "[EventType -> boolean]" EventType_adt
      nil)
     (ann_method const-decl "Method" AnnotateMethod nil)
     (derive_equivalence_if formula-decl nil
      AnnotateProgramPropertiesPreservation nil)
+    (v!1 skolem-const-decl "Expr[Name]" AnnotateProgramPropertiesPreservation
+     nil)
+    (n!1 skolem-const-decl "Method[Name]"
+     AnnotateProgramPropertiesPreservation nil)
+    (mp!1 skolem-const-decl "(wf_and_complete_MP)"
+     AnnotateProgramPropertiesPreservation nil)
     (ann_event_does_not_throw_exception formula-decl nil
      AnnEventPreservesMPModeled nil)
     (real_gt_is_strict_total_order name-judgement
      "(strict_total_order?[real])" real_props nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
+    (check_for_exception const-decl "bool" SemanticsAuxiliaryFunctions nil)
     (raise const-decl "PState" State nil)
+    (check_for_exception_final const-decl "bool" SemanticsAuxiliaryFunctions
+     nil)
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (make_MPState const-decl "MPState" AnnotateProgramPropertiesPreservation
      nil)
@@ -16363,12 +16406,14 @@
     (derive def-decl "bool" Semantics nil)
     (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
     (no_exc const-decl "bool" WfSetStmts nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil)
     (Expr type-eq-decl nil Body_adt nil) (Stmt type-eq-decl nil Body_adt nil)
     (Excpt type-decl nil Excpt_adt nil) (Method type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil) (Class type-eq-decl nil Program nil)
     (ann_program const-decl "Program" AnnotateProgram nil)
-    (program_method_pred const-decl "bool" ProgramRestriction nil))
-   902945 30220 t nil)
+    (program_method_pred const-decl "bool" ProgramRestriction nil)
+    (wf_set_stmts const-decl "bool" WfSetStmts nil))
+   33532 30320 t nil)
   (wf_set_stmts_preserved_by_ann_program-1 nil 3410541769 3413195356
    ("" (skosimp*)
     (("" (expand "wf_set_stmts")
@@ -17584,7 +17629,7 @@
     (id const-decl "(bijective?[T, T])" identity nil))
    85283 78700 t shostak))
  (ann_action_contains_no_TryCatch 0
-  (ann_action_contains_no_TryCatch-1 nil 3414386341 nil
+  (ann_action_contains_no_TryCatch-1 nil 3414386341 3430481728
    (";;; Proof ann_actions_contains_no_TryCatch-1 for formula AnnotateProgramPropertiesPreservation.ann_actions_contains_no_TryCatch"
     (induct "l")
     (("1" (skosimp*)
@@ -17606,24 +17651,38 @@
                         (("2" (expand "member" 1)
                           (("2" (propax) nil))))))))))))))))))))))))
     ";;; developed with shostak decision procedures")
-   unchecked nil nil nil nil nil))
- (APStateToAStore_unchanged_by_completion 0
-  (APStateToAStore_unchanged_by_completion-1 nil 3430134177 3430134192
-   ("" (skosimp*)
-    (("" (expand "APStateToAStore")
-      (("" (expand "APStateToAStore")
-        (("" (expand "complete_MP")
-          (("" (expand "complete_MVA") (("" (propax) nil nil)) nil)) nil))
-        nil))
-      nil))
-    nil)
-   unchecked
-   (nil (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)
-    (complete_MVA const-decl "MVA" MVACompletion nil)
-    (APStateToAStore const-decl "Store" Equivalence nil))
-   15308 430 t shostak))
+   proved
+   ((list_induction formula-decl nil list_adt nil)
+    (Name formal-nonempty-type-decl nil AnnotateProgramPropertiesPreservation
+     nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgramPropertiesPreservation
+     nil)
+    (OneAction type-eq-decl nil MVA nil)
+    (ann_action def-decl "Stmt" AnnotateEvent nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NOT const-decl "[bool -> bool]" booleans nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (member def-decl "bool" list_props nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (Body type-decl nil Body_adt nil) (Action type-eq-decl nil MVA nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (list type-decl nil list_adt nil))
+   703 670 nil nil))
  (legal_Body_preserved_by_ann_program 0
-  (legal_Body_preserved_by_ann_program-1 nil 3414388232 3414389287
+  (legal_Body_preserved_by_ann_program-1 nil 3414388232 3430481729
    ("" (skosimp*)
     (("" (expand "legal_Body_complete_MP")
       (("" (expand "legal_Body_AP")
@@ -17643,9 +17702,9 @@
         nil))
       nil))
     nil)
-   unfinished nil 205765 4980 t nil))
+   unfinished nil 1894 1810 t nil))
  (legal_Program_preserved_by_ann_program 0
-  (legal_Program_preserved_by_ann_program-1 nil 3414314379 3414389056
+  (legal_Program_preserved_by_ann_program-1 nil 3414314379 3430481732
    ("" (skosimp*)
     (("" (typepred "program(mp!1)")
       (("" (expand "wf_Program")
@@ -19183,7 +19242,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -19322,5 +19381,5 @@
      LegalCompleteMonitoredProgramRestriction nil)
     (legal_Body_AP const-decl "boolean" LegalAnnotatedProgramRestriction nil)
     (ann_class const-decl "Class" AnnotateClass nil))
-   575649 77320 t nil)))
+   2913 2830 t nil)))
 

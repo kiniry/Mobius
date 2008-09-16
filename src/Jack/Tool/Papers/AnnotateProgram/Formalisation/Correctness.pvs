@@ -169,7 +169,7 @@ BEGIN
         related_states(mp)(sMP1, sAP1) IMPLIES
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -217,7 +217,7 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program_AP(ann_program(mp)) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -254,7 +254,7 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program_AP(ann_program(mp)) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -303,7 +303,7 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program_AP(ann_program(mp)) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -340,7 +340,7 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program_AP(ann_program(mp)) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -389,7 +389,7 @@ BEGIN
         derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
         derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
         legal_Program_AP(ann_program(mp)) IMPLIES
-        legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
           related_states(mp)(sMP2, sAP2) AND 
           (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
       on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
@@ -496,7 +496,7 @@ BEGIN
              related_states(mp)(sMP1, sAP1) IMPLIES
               derive(mp)(b, sMP1, v1, sMP2)(y`1) IMPLIES
                derive(ann_program(mp))(b, sAP1, v2, sAP2)(y`2) IMPLIES
-                legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+                legal_Body(ann_program(mp))(b) IMPLIES
                  related_states(mp)(sMP2, sAP2) AND
                   (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2))) IMPLIES
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
@@ -569,7 +569,7 @@ BEGIN
                                  [st := st(pstate) WITH [lvs := old_lvs2]])
       ENDIF IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
       NOT up?(ex(pstate(sAP1))) IMPLIES
       related_states(mp)(sMP2, sAP2) AND
        (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
@@ -624,7 +624,7 @@ BEGIN
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
       derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
         related_states(mp)(sMP2, sAP2) AND 
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
@@ -638,7 +638,7 @@ BEGIN
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
         EXISTS (sAP2 : APState, n2 : nat) : 
           derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
 
@@ -651,7 +651,7 @@ BEGIN
       related_states(mp)(sMP1, sAP1) IMPLIES
       derive(ann_program(mp))(b, sAP1, v1, sAP2)(n1) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(wf_state)(ann_program(mp))(b) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
         EXISTS (sMP2 : MPState, n2 : nat) : 
           derive(mp)(b, sMP1, v2, sMP2)(n2) 
 

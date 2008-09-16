@@ -548,6 +548,45 @@ BEGIN
 END ProgramRestriction
 
 
+% Functions to apply a predicate to each part of a program or a method
+% Repeat definitions from ProgramPred, but with parameter FullProgram,
+% instead of PreProgram
+FullProgramRestriction[Name : TYPE+, FullProgram : TYPE,
+                       (IMPORTING Program[Name])
+                       program : [FullProgram -> PreProgram]] : THEORY
+BEGIN
+
+  % pred: predicate over program and body
+  % apply pred to 
+  % methods pre- and postcondition
+  % body
+  % pre-, post- and exc-set
+  % return expression
+  method_pred(p : FullProgram)(m : Method)
+             (pred : [FullProgram -> [Body -> bool]]) : bool =
+    (FORALL (v : Expr) : pred(p)(pre(m)(v))) AND 
+    (FORALL (v : Expr) : pred(p)(post(m)(v))) AND
+    pred(p)(body(m)) AND 
+    (FORALL (v : Expr) : pred(p)(pre_set(m)(v))) AND
+    (FORALL (v : Expr) : pred(p)(post_set(m)(v))) AND 
+    (FORALL (e : Excpt) : pred(p)(exc_set(m)(e))) AND
+    pred(p)(res(m))
+
+  % pred: predicate over program and body
+  % apply pred to
+  % all class invariants
+  % all methods (using method_pred above)
+  program_pred(p : FullProgram)
+              (pred : [FullProgram -> [Body -> bool]]) : bool =
+    FORALL (c : Class) :
+      classes(program(p))(c) IMPLIES
+        pred(p)(inv(c)) AND
+        FORALL (m : Method) :
+          methods(c)(m) IMPLIES method_pred(p)(m)(pred)
+
+END FullProgramRestriction
+
+
 % Wellformedness conditions of program
 % We include only the requirements needed for this formalisation
 WellFormedProgram[Name : TYPE+] : THEORY

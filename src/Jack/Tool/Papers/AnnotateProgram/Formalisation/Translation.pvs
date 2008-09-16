@@ -6,7 +6,7 @@ ASSUMING
     IMPORTING ValProp[Name]
 
     CP_is_enumerable : ASSUMPTION
-      EXISTS (f : [CP -> (defined?)]) : injective?(f)
+      EXISTS (f : [CP -> nat]) : injective?(f)
 
     infinite_namespace : ASSUMPTION
       is_infinite({n : Name | TRUE})
