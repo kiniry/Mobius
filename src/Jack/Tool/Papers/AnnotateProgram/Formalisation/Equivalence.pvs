@@ -120,15 +120,6 @@ BEGIN
                 (source(oa), sAP, 
                  eval(source(oa))(stA(sMVA), fvs(st(pstate(sAP)))), sAP)(n)
 
-%   actions_have_no_side_effects(mp) : boolean =
-%     FORALL (t : Transition, oa : OneAction) :
-%       ts(mva(mp))(t) IMPLIES
-%       member(oa, action(t)) IMPLIES
-%         FORALL (s1, s2 : APState, v : Val, n : nat) :
-%           wf_state(ann_program(mp))(s1) IMPLIES
-%           derive(ann_program(mp))(source(oa), s1, v, s2)(n) IMPLIES
-%             s1 = s2
-
   well_behaved_MVA_for_annot_gen(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) 
@@ -266,7 +257,8 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
+        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
+                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
 
   related_states_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
@@ -276,7 +268,29 @@ BEGIN
       cps(mva(mp))(q2) IMPLIES
       cp(astate(sMP)) = q1 IMPLIES
         (q1 = q2) =
-        (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
+        equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
+                           Int(val2int(lookup(name_of(mp)(q2), sAP)))))
+
+
+%   MP_modeled_lookup_correspondence : LEMMA % :-)
+%     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
+%       wf_state(ann_program(mp))(sAP) IMPLIES
+%       MP_modeled?(mp)(sMP, sAP) IMPLIES
+%       cps(mva(mp))(q1) IMPLIES
+%       cps(mva(mp))(q2) IMPLIES
+%       cp(astate(sMP)) = q1 IMPLIES
+%         (q1 = q2) =
+%         (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
+
+%   related_states_lookup_correspondence : LEMMA % :-)
+%     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
+%       related_states(mp)(sMP, sAP) IMPLIES
+%       NOT cp(astate(sMP)) = halted IMPLIES
+%       cps(mva(mp))(q1) IMPLIES
+%       cps(mva(mp))(q2) IMPLIES
+%       cp(astate(sMP)) = q1 IMPLIES
+%         (q1 = q2) =
+%         (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
 
 
 END RelatedStatesProperties
