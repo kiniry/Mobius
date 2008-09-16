@@ -73,7 +73,7 @@ public abstract class AbstractEvent extends Object
    * @see #getSourceHost
    * @example sourceHost = "joe.kindsoftware.com"
    */
-  private final String my_source_host;
+  private final /*@ non_null @*/ String my_source_host;
 
   /**
    * The source component for this event.
@@ -81,14 +81,14 @@ public abstract class AbstractEvent extends Object
    * @see #getSourceComponent
    * @example sourceComponent = "Monitoring System, version 0.1.0"
    */
-  private final String my_source_component;
+  private final /*@ non_null @*/ String my_source_component;
 
   /**
    * The date on which this event was created.
    *
    * @see #getCreationDate
    */
-  private final Date my_creation_date;
+  private final /*@ non_null @*/ Date my_creation_date;
 
   /**
    * The text description of this event.
@@ -96,7 +96,7 @@ public abstract class AbstractEvent extends Object
    * @see #getDescription
    * @example description = "Available memory is beneath 1.0 MB."
    */
-  private final String my_description;
+  private final /*@ non_null @*/ String my_description;
 
   /**
    * The "type" of this event.
@@ -104,7 +104,7 @@ public abstract class AbstractEvent extends Object
    * @see #getType
    * @example type = "MEMORY_WARNING"
    */
-  private final String my_type;
+  private final /*@ non_null @*/ String my_type;
 
   /**
    * The "level" of this event.
@@ -170,12 +170,15 @@ public abstract class AbstractEvent extends Object
       my_source_component + "] " + my_type + ":" + my_level + " - " + my_description;
   }
 
-  // @todo kiniry Implement hashCode.
   /** {@inheritDoc} */
   public /*@ pure @*/ int hashCode() {
-    assert false;
-    //@ assert false;
-    return 0;
+    return
+       my_source_host.hashCode()
+      +my_source_component.hashCode()
+      +my_creation_date.hashCode()
+      +my_description.hashCode()
+      +my_type.hashCode()
+      +my_level;
   }
 
   /**
@@ -188,8 +191,6 @@ public abstract class AbstractEvent extends Object
    *          being compared have identical values)
    * @overrides java.lang.Object.equals()
    */
-  //@ also
-  //@ requires (obj instanceof AbstractEvent);
   public boolean equals(Object obj) {
     if (obj instanceof AbstractEvent) {
       final AbstractEvent an_event = (AbstractEvent)obj;
