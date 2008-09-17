@@ -319,7 +319,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
-  on_method_exit_exceptional_preserves_related_states_annotated : LEMMA % FIX
+  on_method_exit_exceptional_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), 
            a : (defined?), m1, m2 : nat, v : ValOrExcpt,
            sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
