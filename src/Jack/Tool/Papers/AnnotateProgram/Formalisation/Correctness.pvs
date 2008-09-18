@@ -405,6 +405,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
+  % Method call case of derive_preserves_related_states_for_unchanged_program
   method_call_lemma : LEMMA % FIX
     FORALL(b : (wf_Body(program(mp))), x : [nat, nat],
            m11, m21, m31, m41, m51, m61, m12, m22, m32, m42, m52, m62 : nat,
@@ -615,7 +616,7 @@ BEGIN
                          initial_AP_state(ann_program(mp))(root_object))
 
   % Inductive case
-  derive_preserves_related_states_for_unchanged_program : THEOREM % :-)
+  derive_preserves_related_states_for_unchanged_program : THEOREM % FIX
     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
            (n1, n2 : nat) :
