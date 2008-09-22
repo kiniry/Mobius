@@ -641,9 +641,18 @@ BEGIN
                 PROJ_2(car(branches(b))),
                 CaseJML(cdr(branches(b)))))
 
+
+  % within a method, all local variables have different names
+  wf_method_all_lvars_disjoint(m : Method) : boolean =
+    FORALL(x, y : Decl) :
+      lvars(m)(x) IMPLIES
+      lvars(m)(y) IMPLIES
+      name(x) = name(y) IMPLIES x = y
+  
   % methods: all instructions and (incl. specification) should satisfy wf_Body
   wf_Method(p : PreProgram)(m : Method) : boolean =
-    method_pred(p)(m)(wf_Body)
+    method_pred(p)(m)(wf_Body) AND
+    wf_method_all_lvars_disjoint(m)    
 
   % all methods in class should be wf_Method
   % in addition: every method name occurs only once in class

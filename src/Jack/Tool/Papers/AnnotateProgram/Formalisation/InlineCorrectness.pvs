@@ -32,8 +32,48 @@ BEGIN
   p : VAR ({p : Program | wf_set_stmts(p) AND 
                           contains_no_method_call_in_sets_in_program(p)})
 
-  % missing pre_set and post_set preserve inline_related_states
-  % post_set does not change res(p)(m)
+
+  pre_post_set_inline_related_states : AXIOM
+    FORALL(p : Program, m : Method, sA1, sA2, sB1, sB2 : APState,
+           val, v1, v2 : Val, nm : Name, t : JType, n1, n2 : nat,
+           set : [Expr -> Stmt]) :
+      methods(p)(m) IMPLIES
+      (set = pre_set(m) OR set = post_set(m)) IMPLIES
+      inline_related_states(p)(sA1, sB1) IMPLIES
+      defined?(val) IMPLIES
+      lvs(st(pstate(sB1)))(nm) = val IMPLIES
+      derive(p)(set(Const(val)), sA1, v1, sA2)(n1) IMPLIES      
+      derive(inline_program(p))
+            (set(var_lookup(nm)(t)), sB1, v2, sB2)(n2) IMPLIES
+      % added this assumption to make it possible to turn this into a provable
+      % lemma one day
+      (FORALL (b_1: (wf_Body(p)), v1, v2: Val)
+             (sAP1a, sAP1b, sAP2a, sAP2b: APState)
+             (m1: below(n1), m2: below(n2)):
+        subset?(var_names(b_1), ext_declared_var_names(p)) IMPLIES
+         inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+          derive(p)(b_1, sAP1a, v1, sAP1b)(m1) IMPLIES
+           derive(inline_program(p))(b_1, sAP2a, v2, sAP2b)(m2) IMPLIES
+            inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2) IMPLIES
+        inline_related_states(p)(sA2, sB2) AND v1 = v2
+
+  result_expression_preservation : AXIOM
+    FORALL(p : Program, m : Method, s1, s2, s3 : APState,
+           v1, v2, w : Val, n1, n2 : nat) : 
+      methods(p)(m) IMPLIES
+      lvs(st(pstate(s1)))(res(p)(m)) = v1 IMPLIES
+      derive(inline_program(p))
+            (post_set(m)(var_lookup(res(p)(m))(res_type(m))), s1, w, s2)(n1) 
+      IMPLIES
+      derive(inline_program(p))
+            (var_lookup(res(p)(m))(res_type(m)), s2, v2, s3)(n2) IMPLIES
+      v1 = v2
+
+
+  % uses axioms about pre_set and post_set, and value of result expression
+  % being preserved by post_set above
+  % missing branch needs assumption that if two lvars have the same name,
+  % they are the same
   derive_maintains_inline_related_states_for_method_call : LEMMA
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)

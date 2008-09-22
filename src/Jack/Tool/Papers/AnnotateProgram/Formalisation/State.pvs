@@ -205,6 +205,18 @@ BEGIN
        EXISTS (v : Val) : V(n,v)) IMPLIES
       lvs(st(update_locals(V)(s1)))(n) = lvs(st(update_locals(V)(s2)))(n)
 
+  lvs_update_locals_all_elements_different : LEMMA % :-)
+    FORALL(s : PState, V : finite_set[[Name, Val]], n : Name) :
+      (FORALL (n1, n2 : Name, v1, v2 : Val) :
+         V(n1, v1) IMPLIES
+         V(n2, v2) IMPLIES n1 = n2 IMPLIES v1 = v2) IMPLIES
+      lvs(st(update_locals(V)(s)))(n) = 
+      IF EXISTS (v : Val) : V(n, v)      
+      THEN the({v : Val | V(n, v)})
+      ELSE lvs(st(s))(n)
+      ENDIF
+      
+
   % wf_state preserved by update
   wf_state_update : LEMMA % :-) 
     FORALL(p : Program, s : PState, vn : Name, v : (defined?)) :
