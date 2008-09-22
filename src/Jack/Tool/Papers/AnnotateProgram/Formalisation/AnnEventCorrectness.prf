@@ -1,0 +1,2039 @@
+(AnnEventPreservesMPModeled
+ (IMP_VariableNames_TCC1 0
+  (IMP_VariableNames_TCC1-1 nil 3430817371 3430819616
+   ("" (use "infinite_namespace") nil nil) proved
+   ((infinite_namespace formula-decl nil AnnEventPreservesMPModeled
+     nil))
+   6796 190 t nil))
+ (IMP_RelatedStatesProperties_TCC1 0
+  (IMP_RelatedStatesProperties_TCC1-1 nil 3430817371 3430819639
+   ("" (use "CP_is_enumerable") nil nil) proved
+   ((CP_is_enumerable formula-decl nil AnnEventPreservesMPModeled nil))
+   16383 210 t nil))
+ (IMP_RelatedStatesProperties_TCC2 0
+  (IMP_RelatedStatesProperties_TCC2-1 nil 3430817371 3430819666
+   ("" (use "name_of_exists") nil nil) proved
+   ((name_of_exists formula-decl nil AnnEventPreservesMPModeled nil))
+   17238 240 t nil))
+ (ann_action_preserves_MP_modeled_TCC1 0
+  (ann_action_preserves_MP_modeled_TCC1-2 nil 3430819705 3430819713
+   ("" (skosimp)
+    (("" (expand "id")
+      (("" (use "ann_action_yields_wf_Body") (("" (assert) nil nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((ann_action_yields_wf_Body formula-decl nil
+     AnnotateProgramProperties nil)
+    (CP formal-nonempty-type-decl nil AnnEventPreservesMPModeled nil)
+    (Name formal-nonempty-type-decl nil AnnEventPreservesMPModeled nil)
+    (list type-decl nil list_adt nil)
+    (OneAction type-eq-decl nil MVA nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil) (Decl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (Val type-decl nil Val_adt nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (id const-decl "(bijective?[T, T])" identity nil))
+   6258 1700 t nil)
+  (ann_action_preserves_MP_modeled_TCC1-1 nil 3430817371 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (ann_action_preserves_MP_modeled 0
+  (ann_action_preserves_MP_modeled-1 nil 3430817389 nil
+   (";;; Proof ann_action_preserves_MP_modeled-2 for formula AnnEventPreservesMPModeled.ann_action_preserves_MP_modeled"
+    (induct "a")
+    (("1" (skosimp*)
+      (("1" (expand* "ann_action" "execute_action" "derive")
+        (("1" (prop)
+          (("1" (rewrite -1)
+            (("1" (expand "MP_modeled?")
+              (("1" (prop)
+                (("1"
+                  (expand* "MVA_modeled?" "MVA_cp_modeled?"
+                   "MVA_cps_modeled?" "MVA_vars_modeled?")
+                  (("1" (ground)
+                    (("1" (replace -14)
+                      (("1" (beta) (("1" (propax) nil)))))))))
+                 ("2"
+                  (expand* "Program_modeled?" "Program_gvs_modeled?")
+                  (("2" (replace -12)
+                    (("2" (ground) nil)))))))))))))))))
+     ("2" (skosimp*)
+      (("2" (expand "execute_action" -11)
+        (("2" (expand "ann_action" -10)
+          (("2" (expand "derive" -10)
+            (("2" (assert)
+              (("2" (skosimp*)
+                (("2"
+                  (name "stA2"
+                        "update_store(target(cons1_var!1),eval(source(cons1_var!1))(stA(astate(sMP1!1)), fvs(st(pstate(sMP1!1)))))(stA(astate(sMP1!1)))")
+                  (("2" (replace -1)
+                    (("2"
+                      (inst - "mp!1" "t!1 WITH [action := cons2_var!1]"
+                       "m2!1"
+                       "sMP1!1 WITH [astate := astate(sMP1!1) WITH [stA := stA2]]"
+                       "sMP2!1" "tau!1" "sAP2!1")
+                      (("2"
+                        (case "defined?(eval(source(cons1_var!1))(stA(astate(sMP1!1)), fvs(st(pstate(sMP1!1))))) AND                                                                                        MP_modeled?(mp!1)(sMP1!1 WITH [astate := astate(sMP1!1) WITH [stA := stA2]], tau!1)")
+                        (("1" (assert)
+                          (("1" (prop)
+                            (("1" (hide-all-but (-1 -15 1))
+                              (("1"
+                                (expand* "derive" "execute_set")
+                                (("1"
+                                  (skosimp*)
+                                  (("1" (assert) nil)))))))
+                             ("2" (inst 1 "t1!1")
+                              (("2"
+                                (assert)
+                                (("2"
+                                  (replace -8 :dir rl :hide? t)
+                                  (("2"
+                                    (hide-all-but (-10 1))
+                                    (("2"
+                                      (expand "suffix")
+                                      (("2"
+                                        (skolem!)
+                                        (("2"
+                                          (inst
+                                           1
+                                           "append(l3!1, (: cons1_var!1 :))")
+                                          (("2"
+                                            (use
+                                             "append_assoc[OneAction]")
+                                            (("2"
+                                              (rewrite -1)
+                                              (("2"
+                                                (expand "append" 1 2)
+                                                (("2"
+                                                  (expand "append" 1 2)
+                                                  (("2"
+                                                    (propax)
+                                                    nil)))))))))))))))))))))))
+                             ("3" (hide-all-but (-9 1))
+                              (("3"
+                                (expand "wf_Action")
+                                (("3"
+                                  (skosimp)
+                                  (("3"
+                                    (inst?)
+                                    (("3"
+                                      (expand "member" -2)
+                                      (("3" (assert) nil)))))))))))
+                             ("4" (use "derive_yields_wf_state_AP")
+                              (("1" (assert) nil)
+                               ("2"
+                                (use "one_action_translation_wf_Body")
+                                (("2"
+                                  (assert)
+                                  (("2"
+                                    (expand "member")
+                                    (("2" (propax) nil)))))))))
+                             ("5" (hide-all-but (-1 -3 -5 -9 1))
+                              (("5"
+                                (replace -2 1 :dir rl :hide? t)
+                                (("5"
+                                  (expand "wf_state")
+                                  (("5"
+                                    (prop)
+                                    (("1"
+                                      (expand "wf_AState")
+                                      (("1"
+                                        (prop)
+                                        (("1"
+                                          (expand "wf_store")
+                                          (("1"
+                                            (skosimp)
+                                            (("1"
+                                              (inst?)
+                                              (("1"
+                                                (expand "update_store")
+                                                (("1"
+                                                  (lift-if)
+                                                  (("1"
+                                                    (prop)
+                                                    (("1"
+                                                      (expand
+                                                       "wf_Action")
+                                                      (("1"
+                                                        (inst?)
+                                                        (("1"
+                                                          (expand
+                                                           "member")
+                                                          (("1"
+                                                            (assert)
+                                                            nil)))))))))))))))))))))))
+                                     ("2"
+                                      (expand "wf_ghoststate")
+                                      (("2"
+                                        (skolem!)
+                                        (("2"
+                                          (inst?)
+                                          (("2"
+                                            (expand "is_ghost")
+                                            (("2"
+                                              (propax)
+                                              nil)))))))))))))))))))))
+                         ("2" (hide -2 -9 -11 -12 -14 -15 3)
+                          (("2" (expand* "derive" "execute_set")
+                            (("2" (skosimp*)
+                              (("2"
+                                (expand*
+                                 "well_behaved_MVA_for_annot_gen"
+                                 "eval_action_behavior")
+                                (("2"
+                                  (flatten)
+                                  (("2"
+                                    (inst
+                                     -
+                                     "t1!1"
+                                     "cons1_var!1"
+                                     "sAP1!1"
+                                     "astate(sMP1!1)")
+                                    (("2"
+                                      (assert)
+                                      (("2"
+                                        (split -)
+                                        (("1"
+                                          (skosimp)
+                                          (("1"
+                                            (lemma
+                                             "derive_determ_step"
+                                             ("p" "ann_program(mp!1)"))
+                                            (("1"
+                                              (inst?)
+                                              (("1"
+                                                (assert)
+                                                (("1"
+                                                  (inst
+                                                   -1
+                                                   "m1!1-1"
+                                                   "v!1"
+                                                   "tau!2")
+                                                  (("1"
+                                                    (assert)
+                                                    (("1"
+                                                      (flatten)
+                                                      (("1"
+                                                        (use
+                                                         "derive_bottom_iff_exception_step"
+                                                         ("p"
+                                                          "ann_program(mp!1)"
+                                                          "v"
+                                                          "v!1"))
+                                                        (("1"
+                                                          (assert)
+                                                          (("1"
+                                                            (case
+                                                             "st(pstate(sAP1!1)) = st(pstate(sMP1!1))")
+                                                            (("1"
+                                                              (replace
+                                                               -1
+                                                               :hide?
+                                                               t)
+                                                              (("1"
+                                                                (replace
+                                                                 -1
+                                                                 :dir
+                                                                 rl
+                                                                 :hide?
+                                                                 t)
+                                                                (("1"
+                                                                  (expand
+                                                                   "defined?")
+                                                                  (("1"
+                                                                    (replace
+                                                                     -1
+                                                                     :hide?
+                                                                     t)
+                                                                    (("1"
+                                                                      (expand*
+                                                                       "update_GhostVars"
+                                                                       "update_store")
+                                                                      (("1"
+                                                                        (replace
+                                                                         -15
+                                                                         2
+                                                                         :hide?
+                                                                         t)
+                                                                        (("1"
+                                                                          (expand*
+                                                                           "wf_Action"
+                                                                           "var_names")
+                                                                          (("1"
+                                                                            (inst?)
+                                                                            (("1"
+                                                                              (expand
+                                                                               "member")
+                                                                              (("1"
+                                                                                (skosimp*)
+                                                                                (("1"
+                                                                                  (replace
+                                                                                   -3
+                                                                                   2
+                                                                                   :dir
+                                                                                   rl
+                                                                                   :hide?
+                                                                                   t)
+                                                                                  (("1"
+                                                                                    (hide-all-but
+                                                                                     (-4
+                                                                                      -6
+                                                                                      -8
+                                                                                      -9
+                                                                                      2))
+                                                                                    (("1"
+                                                                                      (expand
+                                                                                       "MP_modeled?")
+                                                                                      (("1"
+                                                                                        (prop)
+                                                                                        (("1"
+                                                                                          (expand
+                                                                                           "MVA_modeled?")
+                                                                                          (("1"
+                                                                                            (prop)
+                                                                                            (("1"
+                                                                                              (expand
+                                                                                               "MVA_cp_modeled?")
+                                                                                              (("1"
+                                                                                                (lift-if)
+                                                                                                (("1"
+                                                                                                  (prop)
+                                                                                                  (("1"
+                                                                                                    (use
+                                                                                                     "wf_new_vars")
+                                                                                                    (("1"
+                                                                                                      (flatten)
+                                                                                                      (("1"
+                                                                                                        (inst?
+                                                                                                         -2)
+                                                                                                        (("1"
+                                                                                                          (assert)
+                                                                                                          nil)))))))))))))
+                                                                                             ("2"
+                                                                                              (expand
+                                                                                               "MVA_cps_modeled?")
+                                                                                              (("2"
+                                                                                                (skosimp)
+                                                                                                (("2"
+                                                                                                  (inst?)
+                                                                                                  (("2"
+                                                                                                    (assert)
+                                                                                                    (("2"
+                                                                                                      (rewrite
+                                                                                                       -4)
+                                                                                                      (("2"
+                                                                                                        (lift-if)
+                                                                                                        (("2"
+                                                                                                          (prop)
+                                                                                                          (("2"
+                                                                                                            (use
+                                                                                                             "wf_new_vars")
+                                                                                                            (("2"
+                                                                                                              (flatten)
+                                                                                                              (("2"
+                                                                                                                (inst
+                                                                                                                 -3
+                                                                                                                 "q!1"
+                                                                                                                 "f!1")
+                                                                                                                (("2"
+                                                                                                                  (assert)
+                                                                                                                  nil)))))))))))))))))))))
+                                                                                             ("3"
+                                                                                              (expand
+                                                                                               "MVA_vars_modeled?")
+                                                                                              (("3"
+                                                                                                (skosimp)
+                                                                                                (("3"
+                                                                                                  (lift-if)
+                                                                                                  (("3"
+                                                                                                    (prop)
+                                                                                                    (("3"
+                                                                                                      (inst?)
+                                                                                                      (("3"
+                                                                                                        (assert)
+                                                                                                        nil)))))))))))))))
+                                                                                         ("2"
+                                                                                          (expand*
+                                                                                           "Program_modeled?"
+                                                                                           "Program_gvs_modeled?")
+                                                                                          (("2"
+                                                                                            (prop)
+                                                                                            (("2"
+                                                                                              (skosimp)
+                                                                                              (("2"
+                                                                                                (inst?)
+                                                                                                (("2"
+                                                                                                  (assert)
+                                                                                                  (("2"
+                                                                                                    (lift-if)
+                                                                                                    (("2"
+                                                                                                      (prop)
+                                                                                                      (("2"
+                                                                                                        (rewrite
+                                                                                                         -1)
+                                                                                                        (("2"
+                                                                                                          (expand*
+                                                                                                           "wf_state"
+                                                                                                           "wf_ghoststate")
+                                                                                                          (("2"
+                                                                                                            (flatten)
+                                                                                                            (("2"
+                                                                                                              (inst?)
+                                                                                                              (("2"
+                                                                                                                (expand*
+                                                                                                                 "is_ghost"
+                                                                                                                 "var_names")
+                                                                                                                (("2"
+                                                                                                                  (assert)
+                                                                                                                  (("2"
+                                                                                                                    (skosimp*)
+                                                                                                                    (("2"
+                                                                                                                      (expand
+                                                                                                                       "getGhostDecls")
+                                                                                                                      (("2"
+                                                                                                                        (skosimp*)
+                                                                                                                        (("2"
+                                                                                                                          (use
+                                                                                                                           "wf_new_vars")
+                                                                                                                          (("2"
+                                                                                                                            (flatten)
+                                                                                                                            (("2"
+                                                                                                                              (hide
+                                                                                                                               -1
+                                                                                                                               -2
+                                                                                                                               -3
+                                                                                                                               -4)
+                                                                                                                              (("2"
+                                                                                                                                (expand*
+                                                                                                                                 "disjoint?"
+                                                                                                                                 "empty?"
+                                                                                                                                 "intersection"
+                                                                                                                                 "member"
+                                                                                                                                 "declared_var_names")
+                                                                                                                                (("2"
+                                                                                                                                  (inst
+                                                                                                                                   -
+                                                                                                                                   "name(f!1)")
+                                                                                                                                  (("2"
+                                                                                                                                    (prop)
+                                                                                                                                    (("1"
+                                                                                                                                      (use
+                                                                                                                                       "new_vars_derived_from_mp")
+                                                                                                                                      (("1"
+                                                                                                                                        (flatten)
+                                                                                                                                        (("1"
+                                                                                                                                          (inst
+                                                                                                                                           -3
+                                                                                                                                           "f!1")
+                                                                                                                                          (("1"
+                                                                                                                                            (assert)
+                                                                                                                                            nil)))))))
+                                                                                                                                     ("2"
+                                                                                                                                      (hide
+                                                                                                                                       1
+                                                                                                                                       2)
+                                                                                                                                      (("2"
+                                                                                                                                        (expand*
+                                                                                                                                         "var_names"
+                                                                                                                                         "getGhostDecls")
+                                                                                                                                        (("2"
+                                                                                                                                          (inst
+                                                                                                                                           1
+                                                                                                                                           "f!2")
+                                                                                                                                          (("2"
+                                                                                                                                            (assert)
+                                                                                                                                            (("2"
+                                                                                                                                              (inst?)
+                                                                                                                                              (("2"
+                                                                                                                                                (assert)
+                                                                                                                                                nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                                             ("2"
+                                                              (expand*
+                                                               "MP_modeled?"
+                                                               "Program_modeled?")
+                                                              (("2"
+                                                                (flatten)
+                                                                (("2"
+                                                                  (assert)
+                                                                  nil)))))))))))))))))))))))))
+                                         ("2"
+                                          (expand*
+                                           "MP_modeled?"
+                                           "MVA_modeled?")
+                                          (("2" (flatten) nil)))
+                                         ("3"
+                                          (expand*
+                                           "wf_state"
+                                           "wf_AState")
+                                          (("3" (flatten) nil)))
+                                         ("4"
+                                          (expand "wf_Action")
+                                          (("4"
+                                            (inst?)
+                                            (("4"
+                                              (expand "member")
+                                              (("4"
+                                                (flatten)
+                                                nil)))))))
+                                         ("5"
+                                          (expand "suffix")
+                                          (("5"
+                                            (skosimp)
+                                            (("5"
+                                              (replace -6 :dir rl)
+                                              (("5"
+                                                (replace -8 :dir rl)
+                                                (("5"
+                                                  (use
+                                                   "append_member[OneAction]")
+                                                  (("5"
+                                                    (assert)
+                                                    (("5"
+                                                      (expand
+                                                       "member"
+                                                       1)
+                                                      (("5"
+                                                        (propax)
+                                                        nil)))))))))))))))))))))))))))))))))))))))))))))))))))
+     ("3" (hide 2)
+      (("3" (skosimp)
+        (("3" (expand "id")
+          (("3" (skosimp)
+            (("3" (use "ann_action_yields_wf_Body")
+              (("3" (assert) nil))))))))))))
+    ";;; developed with shostak decision procedures")
+   untried nil nil nil nil nil))
+ (update_vars_preserves_MP_modeled_TCC1 0
+  (update_vars_preserves_MP_modeled_TCC1-2 nil 3430819782 nil
+   ("" (skosimp)
+    (("" (expand "id")
+      (("" (use "update_vars_wf_Stmt")
+        (("" (assert)
+          (("" (expand "wf_Stmt") (("" (propax) nil))))))))))
+    nil)
+   unchecked nil nil nil nil nil)
+  (update_vars_preserves_MP_modeled_TCC1-1 nil 3430817371 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (update_vars_preserves_MP_modeled 0
+  (update_vars_preserves_MP_modeled-1 nil 3430819240 nil
+   ("" (skosimp*)
+    (("" (expand* "update_vars" "derive")
+      (("" (assert)
+        (("" (skosimp*)
+          (("" (case "cps(mva(mp!1))(tcp(t!1))")
+            (("1" (case "wf_state(ann_program(mp!1))(tau!1)")
+              (("1" (expand "derive" -9)
+                (("1" (expand "execute_set")
+                  (("1" (skosimp*)
+                    (("1" (expand "derive" -12)
+                      (("1" (ground)
+                        (("1"
+                          (expand* "update_GhostVars" "update_store")
+                          (("1" (replace -12 :dir rl :hide? t)
+                            (("1"
+                              (lemma "ann_action_preserves_MP_modeled")
+                              (("1"
+                                (inst
+                                 -
+                                 "mp!1"
+                                 "t!1"
+                                 "action(t!1)"
+                                 "m2!1"
+                                 "sMP1!1 WITH [astate := astate(sMP1!1) WITH [cp := tcp(t!1)]]"
+                                 "sMP2!1"
+                                 "tau!1"
+                                 "sAP2!1")
+                                (("1"
+                                  (ground)
+                                  (("1"
+                                    (inst 1 "t!1")
+                                    (("1"
+                                      (assert)
+                                      (("1"
+                                        (use
+                                         "suffix_reflexive[OneAction]")
+                                        nil)))))
+                                   ("2"
+                                    (typepred "mva(mp!1)")
+                                    (("2"
+                                      (expand* "wf_MVA" "wf_Trans")
+                                      (("2"
+                                        (flatten)
+                                        (("2"
+                                          (inst?)
+                                          (("2" (assert) nil)))))))))
+                                   ("3"
+                                    (hide-all-but (-2 -4 -13 -14 1))
+                                    (("3"
+                                      (expand "related_states")
+                                      (("3"
+                                        (prop)
+                                        (("3"
+                                          (rewrite -6)
+                                          (("3"
+                                            (expand "MP_modeled?")
+                                            (("3"
+                                              (prop)
+                                              (("1"
+                                                (expand "MVA_modeled?")
+                                                (("1"
+                                                  (prop)
+                                                  (("1"
+                                                    (expand
+                                                     "MVA_cp_modeled?")
+                                                    (("1"
+                                                      (rewrite -8)
+                                                      (("1"
+                                                        (expand
+                                                         "MVA_cps_modeled?")
+                                                        (("1"
+                                                          (inst?)
+                                                          (("1"
+                                                            (assert)
+                                                            (("1"
+                                                              (rewrite
+                                                               -2)
+                                                              (("1"
+                                                                (use
+                                                                 "wf_state_ghost_not_local_or_field"
+                                                                 ("p"
+                                                                  "ann_program(mp!1)"))
+                                                                (("1"
+                                                                  (assert)
+                                                                  (("1"
+                                                                    (split)
+                                                                    (("1"
+                                                                      (expand
+                                                                       "lookup")
+                                                                      (("1"
+                                                                        (ground)
+                                                                        (("1"
+                                                                          (expand
+                                                                           "val2int")
+                                                                          (("1"
+                                                                            (apply-extensionality
+                                                                             3)
+                                                                            nil)))))))
+                                                                     ("2"
+                                                                      (use
+                                                                       "new_vars_ghost_in_ann_program")
+                                                                      (("2"
+                                                                        (assert)
+                                                                        (("2"
+                                                                          (use
+                                                                           "new_vars_derived_from_mp")
+                                                                          (("2"
+                                                                            (flatten)
+                                                                            (("2"
+                                                                              (inst?)
+                                                                              (("2"
+                                                                                (assert)
+                                                                                nil)))))))))))))))))))))))))))))
+                                                   ("2"
+                                                    (expand
+                                                     "MVA_cps_modeled?")
+                                                    (("2"
+                                                      (skosimp)
+                                                      (("2"
+                                                        (inst?)
+                                                        (("2"
+                                                          (assert)
+                                                          (("2"
+                                                            (rewrite
+                                                             -3)
+                                                            (("2"
+                                                              (lift-if)
+                                                              (("2"
+                                                                (prop)
+                                                                (("2"
+                                                                  (use
+                                                                   "wf_new_vars")
+                                                                  (("2"
+                                                                    (flatten)
+                                                                    (("2"
+                                                                      (inst?)
+                                                                      (("2"
+                                                                        (assert)
+                                                                        nil)))))))))))))))))))))
+                                                   ("3"
+                                                    (expand
+                                                     "MVA_vars_modeled?")
+                                                    (("3"
+                                                      (skosimp)
+                                                      (("3"
+                                                        (inst?)
+                                                        (("3"
+                                                          (assert)
+                                                          (("3"
+                                                            (lift-if)
+                                                            (("3"
+                                                              (ground)
+                                                              (("3"
+                                                                (rewrite
+                                                                 -5)
+                                                                (("3"
+                                                                  (expand*
+                                                                   "wf_state"
+                                                                   "wf_AState"
+                                                                   "wf_store")
+                                                                  (("3"
+                                                                    (flatten)
+                                                                    (("3"
+                                                                      (inst?)
+                                                                      (("3"
+                                                                        (assert)
+                                                                        (("3"
+                                                                          (expand
+                                                                           "var_names")
+                                                                          (("3"
+                                                                            (skosimp)
+                                                                            (("3"
+                                                                              (use
+                                                                               "wf_new_vars")
+                                                                              (("3"
+                                                                                (flatten)
+                                                                                (("3"
+                                                                                  (inst
+                                                                                   -2
+                                                                                   "f!1")
+                                                                                  (("3"
+                                                                                    (assert)
+                                                                                    nil)))))))))))))))))))))))))))))))))))))
+                                               ("2"
+                                                (expand*
+                                                 "Program_modeled?"
+                                                 "Program_gvs_modeled?")
+                                                (("2"
+                                                  (prop)
+                                                  (("2"
+                                                    (skosimp)
+                                                    (("2"
+                                                      (inst?)
+                                                      (("2"
+                                                        (assert)
+                                                        (("2"
+                                                          (lift-if)
+                                                          (("2"
+                                                            (prop)
+                                                            (("2"
+                                                              (comment
+                                                               "now expand wf_state(mp!1)(sMP1!1)")
+                                                              (("2"
+                                                                (";; now expand wf_state(mp!1)(sMP1!1)"
+                                                                 hide
+                                                                 -8)
+                                                                (("2"
+                                                                  (expand*
+                                                                   "wf_state"
+                                                                   "wf_ghoststate")
+                                                                  (("2"
+                                                                    (flatten)
+                                                                    (("2"
+                                                                      (inst?)
+                                                                      (("2"
+                                                                        (expand*
+                                                                         "is_ghost"
+                                                                         "var_names")
+                                                                        (("2"
+                                                                          (skosimp)
+                                                                          (("2"
+                                                                            (use
+                                                                             "wf_new_vars")
+                                                                            (("2"
+                                                                              (flatten)
+                                                                              (("2"
+                                                                                (hide
+                                                                                 -1
+                                                                                 -2
+                                                                                 -3
+                                                                                 -4)
+                                                                                (("2"
+                                                                                  (expand*
+                                                                                   "disjoint?"
+                                                                                   "empty?"
+                                                                                   "intersection"
+                                                                                   "member"
+                                                                                   "var_names"
+                                                                                   "declared_var_names")
+                                                                                  (("2"
+                                                                                    (inst?)
+                                                                                    (("2"
+                                                                                      (prop)
+                                                                                      (("1"
+                                                                                        (inst
+                                                                                         1
+                                                                                         "new_cp_gvd(mp!1)")
+                                                                                        (("1"
+                                                                                          (expand
+                                                                                           "new_cp_gvd"
+                                                                                           1
+                                                                                           2)
+                                                                                          (("1"
+                                                                                            (assert)
+                                                                                            (("1"
+                                                                                              (expand*
+                                                                                               "new_gvds"
+                                                                                               "add"
+                                                                                               "member")
+                                                                                              nil)))))))
+                                                                                       ("2"
+                                                                                        (hide
+                                                                                         1
+                                                                                         2)
+                                                                                        (("2"
+                                                                                          (expand
+                                                                                           "var_names")
+                                                                                          (("2"
+                                                                                            (inst?)
+                                                                                            (("2"
+                                                                                              (assert)
+                                                                                              nil)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+                                   ("4"
+                                    (expand "related_states")
+                                    (("4"
+                                      (flatten)
+                                      (("4"
+                                        (hide -5 -1)
+                                        (("4"
+                                          (expand "wf_state")
+                                          (("4"
+                                            (prop)
+                                            (("1"
+                                              (expand*
+                                               "wf_AState"
+                                               "wf_store")
+                                              (("1"
+                                                (skosimp)
+                                                (("1" (inst?) nil)))))
+                                             ("2"
+                                              (expand "wf_ghoststate")
+                                              (("2"
+                                                (expand "is_ghost")
+                                                (("2"
+                                                  (propax)
+                                                  nil)))))))))))))))))))))))))))))))))))
+               ("2" (expand "related_states")
+                (("2" (flatten)
+                  (("2" (use "derive_yields_wf_state_AP")
+                    (("1" (assert) nil)
+                     ("2" (hide-all-but (-1 1))
+                      (("2" (expand "wf_Body")
+                        (("2" (split)
+                          (("1" (skosimp)
+                            (("1" (apply (repeat (expand "var_names")))
+                              (("1"
+                                (expand* "add" "member" "singleton")
+                                (("1"
+                                  (expand*
+                                   "ext_declared_var_names"
+                                   "union"
+                                   "member")
+                                  (("1"
+                                    (flatten)
+                                    (("1"
+                                      (hide 1 2)
+                                      (("1"
+                                        (expand*
+                                         "var_names"
+                                         "getGhostDecls")
+                                        (("1"
+                                          (split)
+                                          (("1"
+                                            (use
+                                             "ann_program_defines_MVA_vars")
+                                            (("1"
+                                              (use "cp_new_ghostvar")
+                                              (("1"
+                                                (assert)
+                                                (("1"
+                                                  (skosimp)
+                                                  (("1"
+                                                    (inst?)
+                                                    (("1"
+                                                      (assert)
+                                                      (("1"
+                                                        (inst?)
+                                                        (("1"
+                                                          (assert)
+                                                          nil)))))))))))))))
+                                           ("2"
+                                            (use
+                                             "ann_program_defines_MVA_vars")
+                                            (("2"
+                                              (use
+                                               "new_vars_derived_from_mp")
+                                              (("2"
+                                                (flatten)
+                                                (("2"
+                                                  (inst?)
+                                                  (("2"
+                                                    (ground)
+                                                    (("2"
+                                                      (skosimp)
+                                                      (("2"
+                                                        (inst? 1)
+                                                        (("2"
+                                                          (assert)
+                                                          (("2"
+                                                            (inst? 1)
+                                                            (("2"
+                                                              (assert)
+                                                              nil)))))))))))))))))))))))))))))))))))
+                           ("2" (skosimp)
+                            (("2" (apply (repeat (expand "subterm")))
+                              (("2"
+                                (ground)
+                                (("2"
+                                  (rewrite -1)
+                                  (("2"
+                                    (beta)
+                                    (("2"
+                                      (expand*
+                                       "var_names"
+                                       "getGhostDecls")
+                                      (("2"
+                                        (use
+                                         "ann_program_defines_MVA_vars")
+                                        (("2"
+                                          (use "cp_new_ghostvar")
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (skosimp)
+                                              (("2"
+                                                (inst?)
+                                                (("2"
+                                                  (assert)
+                                                  (("2"
+                                                    (inst?)
+                                                    (("2"
+                                                      (assert)
+                                                      nil)))))))))))))))))))))))))))))))))))))))))
+             ("2" (typepred "mva(mp!1)")
+              (("2" (expand* "wf_MVA" "wf_Trans")
+                (("2" (flatten)
+                  (("2" (inst?) (("2" (assert) nil))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil))
+ (ann_event_preserves_MP_modeled_TCC1 0
+  (ann_event_preserves_MP_modeled_TCC1-2 nil 3430819826 nil
+   ("" (skosimp*)
+    (("" (expand "id")
+      (("" (expand "wf_Body")
+        (("" (split 2)
+          (("1" (skosimp*)
+            (("1" (use "ann_event_var_names")
+              (("1" (assert)
+                (("1" (rewrite "ann_program_ext_declared_var_names")
+                  (("1"
+                    (auto-rewrite "union" "member" "subset?"
+                                  "filter_event")
+                    (("1" (assert)
+                      (("1" (flatten)
+                        (("1" (assert)
+                          (("1" (skosimp*) nil)))))))))))))))))
+           ("2" (skosimp*)
+            (("2" (use "ann_event_set_ghostvar")
+              (("2" (assert)
+                (("2" (rewrite "ann_program_add_ghost_var_decls")
+                  (("2" (rewrite "var_names_union")
+                    (("2"
+                      (auto-rewrite "union" "member" "subset?"
+                                    "filter_event")
+                      (("2" (assert)
+                        (("2" (flatten)
+                          (("2" (assert)
+                            (("2" (skosimp*)
+                              nil))))))))))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)
+  (ann_event_preserves_MP_modeled_TCC1-1 nil 3430817371 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (ann_event_preserves_MP_modeled 0
+  (ann_event_preserves_MP_modeled-1 nil 3430819355 nil
+   ("" (skosimp*)
+    ((""
+      (expand* "ann_event" "derive" "execute_CaseJML" "on_method_MVA")
+      (("" (expand* "extend" "id")
+        (("" (ground)
+          (("" (lift-if)
+            (("" (prop)
+              (("1" (expand "set2list" -5)
+                (("1" (lift-if)
+                  (("1" (assert)
+                    (("1" (split -5)
+                      (("1" (expand* "empty?" "member")
+                        (("1" (typepred "mp!1")
+                          (("1"
+                            (expand* "wf_and_complete_MP" "complete"
+                             "total")
+                            (("1" (flatten)
+                              (("1"
+                                (inst
+                                 -6
+                                 "cp(astate(sMP1!1))"
+                                 "(# etype := et!1, mname := name(m!1) #)"
+                                 "stA(astate(sMP1!1))"
+                                 "fvs(st(pstate(sMP1!1)))"
+                                 "v!1")
+                                (("1"
+                                  (assert)
+                                  (("1"
+                                    (split -6)
+                                    (("1"
+                                      (skosimp*)
+                                      (("1"
+                                        (inst
+                                         -
+                                         "ann_trans_cp(mp!1)(cp(astate(sMP1!1)), {t : Transition |filter_event(mva(mp!1))(et!1)(name(m!1))(t) AND scp(t) = cp(astate(sMP1!1))})(v!1)")
+                                        (("1"
+                                          (expand "ann_event_set")
+                                          (("1"
+                                            (inst
+                                             1
+                                             "cp(astate(sMP1!1))")
+                                            (("1"
+                                              (split 1)
+                                              (("1"
+                                                (typepred "mva(mp!1)")
+                                                (("1"
+                                                  (expand "wf_MVA")
+                                                  (("1"
+                                                    (flatten)
+                                                    (("1"
+                                                      (inst? -)
+                                                      (("1"
+                                                        (expand
+                                                         "wf_Trans")
+                                                        (("1"
+                                                          (assert)
+                                                          nil)))))))))))
+                                               ("2"
+                                                (rewrite
+                                                 "nonempty_exists")
+                                                (("2"
+                                                  (inst?)
+                                                  (("2"
+                                                    (expand
+                                                     "filter_event")
+                                                    (("2"
+                                                      (assert)
+                                                      nil)))))))))))))
+                                         ("2"
+                                          (use
+                                           "filter_event_cp_is_finite")
+                                          nil)))))
+                                     ("2"
+                                      (typepred "mva(mp!1)")
+                                      (("2"
+                                        (expand*
+                                         "wf_MVA"
+                                         "related_states")
+                                        (("2"
+                                          (flatten)
+                                          (("2"
+                                            (expand*
+                                             "wf_state"
+                                             "wf_AState")
+                                            (("2"
+                                              (flatten)
+                                              nil)))))))))))))))))))))))
+                       ("2" (propax) nil)))))))))
+               ("2" (expand "related_states")
+                (("2" (flatten)
+                  (("2" (prop)
+                    (("2" (rewrite -2)
+                      (("2" (replace -6 7 :dir rl :hide? t)
+                        (("2"
+                          (expand* "MP_modeled?" "Program_modeled?"
+                           "Program_gvs_modeled?")
+                          nil)))))))))))
+               ("3" (case-replace "sMP2!1 = sMP1!1")
+                (("3" (expand "related_states")
+                  (("3" (flatten) nil)))))
+               ("4" (expand "related_states") (("4" (assert) nil)))
+               ("5" (expand "related_states") (("5" (assert) nil)))
+               ("6" (expand* "step" "derive")
+                (("6" (skosimp*)
+                  (("6"
+                    (name-replace "t1"
+                     "choose(LAMBDA (t: Transition): ts(mva(mp!1))(t) AND scp(t) = cp(astate(sMP1!1)) AND
+                                                                                                                                                event(t) = (# etype := et!1, mname := name(m!1) #) AND
+                                                                                                                                                guard(t)(stA(astate(sMP1!1)), fvs(st(pstate(sMP1!1))), (v!1)))")
+                    (("1" (typepred "t1")
+                      (("1" (case "cps(mva(mp!1))(scp(t1))")
+                        (("1"
+                          (name-replace "ts"
+                           "filter_event(mva(mp!1))(et!1)(name(m!1))"
+                           :hide? nil)
+                          (("1" (case "ts(t1)")
+                            (("1"
+                              (case "is_finite({t: Transition | ts(t) AND scp(t) = scp(t1)})")
+                              (("1"
+                                (name
+                                 "brT"
+                                 "ann_trans_cp(mp!1)(scp(t1), {t: Transition | ts(t) AND scp(t) = scp(t1)})(v!1)")
+                                (("1"
+                                  (lemma
+                                   "CaseJML_exclusive_branches_semantics[Name]")
+                                  (("1"
+                                    (inst
+                                     -1
+                                     "ann_program(mp!1)"
+                                     "set2list(ann_event_set(mp!1)(ts)(v!1))"
+                                     "sAP1!1"
+                                     "sAP2!1"
+                                     "Unit"
+                                     "n!1"
+                                     "brT")
+                                    (("1"
+                                      (assert)
+                                      (("1"
+                                        (split -1)
+                                        (("1"
+                                          (skolem!)
+                                          (("1"
+                                            (replace
+                                             -2
+                                             -1
+                                             :dir
+                                             rl
+                                             :hide?
+                                             t)
+                                            (("1"
+                                              (hide
+                                               -14
+                                               -15
+                                               -16
+                                               -17
+                                               -18
+                                               -19
+                                               -20
+                                               -21
+                                               1
+                                               3)
+                                              (("1"
+                                                (expand*
+                                                 "derive"
+                                                 "execute_CaseJML"
+                                                 "ann_trans_cp"
+                                                 "ann_guard_actions")
+                                                (("1"
+                                                  (expand*
+                                                   "extend"
+                                                   "id")
+                                                  (("1"
+                                                    (ground)
+                                                    (("1"
+                                                      (name
+                                                       "bT"
+                                                       "(guard_to_expression(guard(t1))(v!1), update_vars(mp!1)(t1))")
+                                                      (("1"
+                                                        (case
+                                                         "ann_guard_actions_set(mp!1)({t:Transition | ts(t) AND scp(t) = scp(t1)})(v!1)(bT)")
+                                                        (("1"
+                                                          (ground)
+                                                          (("1"
+                                                            (lemma
+                                                             "CaseJML_exclusive_branches_semantics[Name]")
+                                                            (("1"
+                                                              (inst
+                                                               -
+                                                               "ann_program(mp!1)"
+                                                               "set2list(ann_guard_actions_set(mp!1)({t:Transition | ts(t) AND scp(t) = scp(t1)})(v!1))"
+                                                               "sAP1!1"
+                                                               "sAP2!1"
+                                                               "Unit"
+                                                               "n1!1"
+                                                               "bT")
+                                                              (("1"
+                                                                (ground)
+                                                                (("1"
+                                                                  (skolem!)
+                                                                  (("1"
+                                                                    (lemma
+                                                                     "update_vars_preserves_MP_modeled")
+                                                                    (("1"
+                                                                      (inst
+                                                                       -
+                                                                       "mp!1"
+                                                                       "t1"
+                                                                       "n1!2"
+                                                                       "sMP1!1"
+                                                                       "sMP2!1"
+                                                                       "sAP1!1"
+                                                                       "sAP2!1")
+                                                                      (("1"
+                                                                        (assert)
+                                                                        (("1"
+                                                                          (lift-if)
+                                                                          (("1"
+                                                                            (assert)
+                                                                            (("1"
+                                                                              (split
+                                                                               -14)
+                                                                              (("1"
+                                                                                (split
+                                                                                 -15)
+                                                                                (("1"
+                                                                                  (flatten)
+                                                                                  (("1"
+                                                                                    (replace
+                                                                                     -2)
+                                                                                    (("1"
+                                                                                      (apply-extensionality
+                                                                                       :hide?
+                                                                                       t)
+                                                                                      nil)))))
+                                                                                 ("2"
+                                                                                  (flatten)
+                                                                                  nil)))
+                                                                               ("2"
+                                                                                (propax)
+                                                                                nil)))))))))))))))
+                                                                 ("2"
+                                                                  (expand
+                                                                   "derive"
+                                                                   1)
+                                                                  (("2"
+                                                                    (expand
+                                                                     "execute_CaseJML")
+                                                                    (("2"
+                                                                      (expand*
+                                                                       "extend"
+                                                                       "id")
+                                                                      nil)))))
+                                                                 ("3"
+                                                                  (skosimp)
+                                                                  (("3"
+                                                                    (use
+                                                                     "before_distinct[[Expr, Stmt]]")
+                                                                    (("3"
+                                                                      (use
+                                                                       "before_member[[Expr, Stmt]]")
+                                                                      (("3"
+                                                                        (assert)
+                                                                        (("3"
+                                                                          (use
+                                                                           "set2list_same_elements[[Expr, Stmt]]")
+                                                                          (("3"
+                                                                            (assert)
+                                                                            (("3"
+                                                                              (expand
+                                                                               "member"
+                                                                               -1)
+                                                                              (("3"
+                                                                                (expand
+                                                                                 "ann_guard_actions_set"
+                                                                                 -1)
+                                                                                (("3"
+                                                                                  (skosimp)
+                                                                                  (("3"
+                                                                                    (replace
+                                                                                     -3
+                                                                                     :hide?
+                                                                                     t)
+                                                                                    (("3"
+                                                                                      (replace
+                                                                                       -12
+                                                                                       :dir
+                                                                                       rl
+                                                                                       :hide?
+                                                                                       t)
+                                                                                      (("3"
+                                                                                        (case
+                                                                                         "NOT t!1 = t1")
+                                                                                        (("1"
+                                                                                          (comment
+                                                                                           "hide from member..., to cps(mva(..., leaving derive(.., hide wf_state(mp!1)(sMP1!1)")
+                                                                                          (("1"
+                                                                                            (hide
+                                                                                             -3
+                                                                                             -4
+                                                                                             -6
+                                                                                             -7
+                                                                                             -8
+                                                                                             -9
+                                                                                             -10
+                                                                                             -11
+                                                                                             -12
+                                                                                             -19
+                                                                                             2
+                                                                                             4
+                                                                                             5)
+                                                                                            (("1"
+                                                                                              (expand*
+                                                                                               "well_behaved_MVA_for_annot_gen"
+                                                                                               "guard_to_expression_behavior")
+                                                                                              (("1"
+                                                                                                (flatten)
+                                                                                                (("1"
+                                                                                                  (inst
+                                                                                                   -
+                                                                                                   "t!1"
+                                                                                                   "sAP1!1"
+                                                                                                   "astate(sMP1!1)"
+                                                                                                   "v!1")
+                                                                                                  (("1"
+                                                                                                    (assert)
+                                                                                                    (("1"
+                                                                                                      (split
+                                                                                                       -)
+                                                                                                      (("1"
+                                                                                                        (skosimp)
+                                                                                                        (("1"
+                                                                                                          (typepred
+                                                                                                           "mp!1")
+                                                                                                          (("1"
+                                                                                                            (expand*
+                                                                                                             "wf_and_complete_MP"
+                                                                                                             "complete"
+                                                                                                             "deterministic")
+                                                                                                            (("1"
+                                                                                                              (flatten)
+                                                                                                              (("1"
+                                                                                                                (inst
+                                                                                                                 -
+                                                                                                                 "t1"
+                                                                                                                 "t!1"
+                                                                                                                 "stA(astate(sMP1!1))"
+                                                                                                                 "fvs(st(pstate(sAP1!1)))"
+                                                                                                                 "v!1")
+                                                                                                                (("1"
+                                                                                                                  (assert)
+                                                                                                                  (("1"
+                                                                                                                    (expand
+                                                                                                                     "filter_event")
+                                                                                                                    (("1"
+                                                                                                                      (flatten)
+                                                                                                                      (("1"
+                                                                                                                        (assert)
+                                                                                                                        (("1"
+                                                                                                                          (split
+                                                                                                                           -)
+                                                                                                                          (("1"
+                                                                                                                            (case
+                                                                                                                             "NOT v!3 = Bool(TRUE)")
+                                                                                                                            (("1"
+                                                                                                                              (lemma
+                                                                                                                               "determ_step_AP")
+                                                                                                                              (("1"
+                                                                                                                                (replace
+                                                                                                                                 -7)
+                                                                                                                                (("1"
+                                                                                                                                  (inst
+                                                                                                                                   -1
+                                                                                                                                   "ann_program(mp!1)"
+                                                                                                                                   "n!2"
+                                                                                                                                   "m2!2"
+                                                                                                                                   "e!1(v!1)"
+                                                                                                                                   "v!3"
+                                                                                                                                   "v!2"
+                                                                                                                                   "sAP1!1"
+                                                                                                                                   "sAP1!1"
+                                                                                                                                   "tau!2")
+                                                                                                                                  (("1"
+                                                                                                                                    (ground)
+                                                                                                                                    nil)
+                                                                                                                                   ("2"
+                                                                                                                                    (expand
+                                                                                                                                     "wf_Expr")
+                                                                                                                                    (("2"
+                                                                                                                                      (propax)
+                                                                                                                                      nil)))))))))
+                                                                                                                             ("2"
+                                                                                                                              (replace
+                                                                                                                               -1
+                                                                                                                               :hide?
+                                                                                                                               t)
+                                                                                                                              (("2"
+                                                                                                                                (decompose-equality
+                                                                                                                                 -9)
+                                                                                                                                nil)))))
+                                                                                                                           ("2"
+                                                                                                                            (expand*
+                                                                                                                             "related_states"
+                                                                                                                             "MP_modeled?"
+                                                                                                                             "Program_modeled?")
+                                                                                                                            (("2"
+                                                                                                                              (flatten)
+                                                                                                                              (("2"
+                                                                                                                                (assert)
+                                                                                                                                nil)))))
+                                                                                                                           ("3"
+                                                                                                                            (decompose-equality
+                                                                                                                             1)
+                                                                                                                            nil)))))))))))))))))))))
+                                                                                                       ("2"
+                                                                                                        (expand
+                                                                                                         "filter_event")
+                                                                                                        (("2"
+                                                                                                          (flatten)
+                                                                                                          nil)))
+                                                                                                       ("3"
+                                                                                                        (expand*
+                                                                                                         "related_states"
+                                                                                                         "MP_modeled?"
+                                                                                                         "MVA_modeled?")
+                                                                                                        (("3"
+                                                                                                          (flatten)
+                                                                                                          (("3"
+                                                                                                            (assert)
+                                                                                                            nil)))))
+                                                                                                       ("4"
+                                                                                                        (comment
+                                                                                                         "expanding related_states does not show wf_state(mp!1)(sMP1!1), thus we introduce it with a case")
+                                                                                                        (("4"
+                                                                                                          (case
+                                                                                                           "wf_state(mp!1)(sMP1!1)")
+                                                                                                          (("1"
+                                                                                                            (expand*
+                                                                                                             "wf_state"
+                                                                                                             "wf_state"
+                                                                                                             "wf_AState")
+                                                                                                            (("1"
+                                                                                                              (flatten)
+                                                                                                              nil)))
+                                                                                                           ("2"
+                                                                                                            (assert)
+                                                                                                            nil)))
+                                                                                                         ";;; expanding related_states does not show wf_state(mp!1)(sMP1!1), thus we introduce it with a case"))
+                                                                                                       ("5"
+                                                                                                        (expand
+                                                                                                         "related_states")
+                                                                                                        (("5"
+                                                                                                          (flatten)
+                                                                                                          nil)))))))))))))))
+                                                                                           ";;; hide from member..., to cps(mva(..., leaving derive(.., hide wf_state(mp!1)(sMP1!1)"))
+                                                                                         ("2"
+                                                                                          (replace
+                                                                                           -1)
+                                                                                          (("2"
+                                                                                            (propax)
+                                                                                            nil)))))))))))))))))))))))))))
+                                                                 ("4"
+                                                                  (skosimp)
+                                                                  (("4"
+                                                                    (comment
+                                                                     "Hide from ann_guard_actions_set to is_finite")
+                                                                    (("4"
+                                                                      (hide
+                                                                       -2
+                                                                       -3
+                                                                       -4
+                                                                       -5
+                                                                       -6
+                                                                       2
+                                                                       3)
+                                                                      (("4"
+                                                                        (expand*
+                                                                         "well_behaved_MVA_for_annot_gen"
+                                                                         "guard_to_expression_behavior")
+                                                                        (("4"
+                                                                          (flatten)
+                                                                          (("4"
+                                                                            (inst
+                                                                             -
+                                                                             "t1"
+                                                                             "sAP1!1"
+                                                                             "astate(sMP1!1)"
+                                                                             "v!1")
+                                                                            (("4"
+                                                                              (expand
+                                                                               "related_states")
+                                                                              (("4"
+                                                                                (flatten)
+                                                                                (("4"
+                                                                                  (assert)
+                                                                                  (("4"
+                                                                                    (split
+                                                                                     -13)
+                                                                                    (("1"
+                                                                                      (skosimp*)
+                                                                                      (("1"
+                                                                                        (lemma
+                                                                                         "determ_step_AP")
+                                                                                        (("1"
+                                                                                          (inst
+                                                                                           -
+                                                                                           "ann_program(mp!1)"
+                                                                                           "n!2"
+                                                                                           "m1!2"
+                                                                                           "e!1(v!1)"
+                                                                                           "v!3"
+                                                                                           "v!2"
+                                                                                           "sAP1!1"
+                                                                                           "sAP1!1"
+                                                                                           "tau!2")
+                                                                                          (("1"
+                                                                                            (ground)
+                                                                                            (("1"
+                                                                                              (expand*
+                                                                                               "MP_modeled?"
+                                                                                               "Program_modeled?")
+                                                                                              nil)))
+                                                                                           ("2"
+                                                                                            (expand
+                                                                                             "wf_Expr")
+                                                                                            (("2"
+                                                                                              (propax)
+                                                                                              nil)))))))))
+                                                                                     ("2"
+                                                                                      (expand*
+                                                                                       "MP_modeled?"
+                                                                                       "MVA_modeled?")
+                                                                                      (("2"
+                                                                                        (assert)
+                                                                                        nil)))
+                                                                                     ("3"
+                                                                                      (comment
+                                                                                       "Expanding related_states did not give wf_state(mp!1)(sMP1!1)")
+                                                                                      (("3"
+                                                                                        (case
+                                                                                         "wf_state(mp!1)(sMP1!1)")
+                                                                                        (("1"
+                                                                                          (expand*
+                                                                                           "wf_state"
+                                                                                           "wf_AState")
+                                                                                          (("1"
+                                                                                            (flatten)
+                                                                                            nil)))
+                                                                                         ("2"
+                                                                                          (propax)
+                                                                                          nil)))
+                                                                                       ";;; Expanding related_states did not give wf_state(mp!1)(sMP1!1)"))))))))))))))))))
+                                                                     ";;; Hide from ann_guard_actions_set to is_finite"))))
+                                                                 ("5"
+                                                                  (use
+                                                                   "set2list_same_elements[[Expr, Stmt]]")
+                                                                  (("5"
+                                                                    (assert)
+                                                                    (("5"
+                                                                      (expand
+                                                                       "member"
+                                                                       1)
+                                                                      (("5"
+                                                                        (propax)
+                                                                        nil)))))))))
+                                                               ("2"
+                                                                (use
+                                                                 "update_vars_wf_Stmt")
+                                                                (("2"
+                                                                  (use
+                                                                   "guard_to_expression_wf_Expr")
+                                                                  (("2"
+                                                                    (assert)
+                                                                    nil)))))))))))
+                                                         ("2"
+                                                          (replace
+                                                           -1
+                                                           1
+                                                           :dir
+                                                           rl
+                                                           :hide?
+                                                           t)
+                                                          (("2"
+                                                            (expand
+                                                             "ann_guard_actions_set")
+                                                            (("2"
+                                                              (inst?)
+                                                              nil)))))))))))))))))))))
+                                         ("2"
+                                          (expand "derive" 1)
+                                          (("2"
+                                            (expand "execute_CaseJML")
+                                            (("2"
+                                              (expand* "extend" "id")
+                                              (("2"
+                                                (assert)
+                                                (("2"
+                                                  (expand "derive" 1)
+                                                  (("2"
+                                                    (inst?)
+                                                    (("2"
+                                                      (inst 1 "m2!1")
+                                                      (("2"
+                                                        (assert)
+                                                        (("2"
+                                                          (prop)
+                                                          nil)))))))))))))))))
+                                         ("3"
+                                          (skosimp)
+                                          (("3"
+                                            (use
+                                             "before_member[[Expr, Stmt]]")
+                                            (("3"
+                                              (use
+                                               "before_distinct[[Expr, Stmt]]")
+                                              (("3"
+                                                (assert)
+                                                (("3"
+                                                  (use
+                                                   "set2list_same_elements[[Expr, Stmt]]")
+                                                  (("3"
+                                                    (assert)
+                                                    (("3"
+                                                      (expand
+                                                       "member"
+                                                       -1)
+                                                      (("3"
+                                                        (expand
+                                                         "ann_event_set"
+                                                         -1)
+                                                        (("3"
+                                                          (skosimp)
+                                                          (("3"
+                                                            (replace
+                                                             -3
+                                                             :hide?
+                                                             t)
+                                                            (("3"
+                                                              (replace
+                                                               -6
+                                                               :dir
+                                                               rl
+                                                               :hide?
+                                                               t)
+                                                              (("3"
+                                                                (case
+                                                                 "NOT q!1 = scp(t1)")
+                                                                (("1"
+                                                                  (expand
+                                                                   "related_states")
+                                                                  (("1"
+                                                                    (flatten)
+                                                                    (("1"
+                                                                      (comment
+                                                                       "Leave: cps(q!1), derive(ann_trans_cp), cps(scp(t1)), scp(t1) = cp(sMP1!!), wf_state(sAP!1) and IF of related_states")
+                                                                      (("1"
+                                                                        (hide-all-but
+                                                                         (-1
+                                                                          -5
+                                                                          -9
+                                                                          -11
+                                                                          -27
+                                                                          -28
+                                                                          1
+                                                                          3))
+                                                                        (("1"
+                                                                          (split
+                                                                           -6)
+                                                                          (("1"
+                                                                            (propax)
+                                                                            nil)
+                                                                           ("2"
+                                                                            (expand*
+                                                                             "ann_trans_cp"
+                                                                             "derive"
+                                                                             "derive"
+                                                                             "derive")
+                                                                            (("2"
+                                                                              (skosimp)
+                                                                              (("2"
+                                                                                (expand*
+                                                                                 "check_for_exception_final"
+                                                                                 "check_for_exception")
+                                                                                (("2"
+                                                                                  (ground)
+                                                                                  (("2"
+                                                                                    (replace
+                                                                                     -1)
+                                                                                    (("2"
+                                                                                      (decompose-equality
+                                                                                       1)
+                                                                                      (("2"
+                                                                                        (rewrite
+                                                                                         -5)
+                                                                                        (("2"
+                                                                                          (rewrite
+                                                                                           -10)
+                                                                                          (("2"
+                                                                                            (replace
+                                                                                             -8
+                                                                                             :dir
+                                                                                             rl
+                                                                                             :hide?
+                                                                                             t)
+                                                                                            (("2"
+                                                                                              (lemma
+                                                                                               "MP_modeled_lookup_correspondence")
+                                                                                              (("2"
+                                                                                                (inst
+                                                                                                 -
+                                                                                                 "mp!1"
+                                                                                                 "scp(t1)"
+                                                                                                 "q!1"
+                                                                                                 "sMP1!1"
+                                                                                                 "sAP1!1")
+                                                                                                (("2"
+                                                                                                  (assert)
+                                                                                                  nil)))))))))))))))))))))))))))
+                                                                       ";;; Leave: cps(q!1), derive(ann_trans_cp), cps(scp(t1)), scp(t1) = cp(sMP1!!), wf_state(sAP!1) and IF of related_states"))))))
+                                                                 ("2"
+                                                                  (replace
+                                                                   -1)
+                                                                  (("2"
+                                                                    (propax)
+                                                                    nil)))))))))))))))))))))))))))
+                                         ("4"
+                                          (skosimp)
+                                          (("4"
+                                            (replace
+                                             -2
+                                             -1
+                                             :dir
+                                             rl
+                                             :hide?
+                                             t)
+                                            (("4"
+                                              (expand "related_states")
+                                              (("4"
+                                                (flatten)
+                                                (("4"
+                                                  (hide-all-but
+                                                   (-1
+                                                    -5
+                                                    -7
+                                                    -23
+                                                    -24
+                                                    1
+                                                    4))
+                                                  (("4"
+                                                    (split -)
+                                                    (("1" (propax) nil)
+                                                     ("2"
+                                                      (expand*
+                                                       "ann_trans_cp"
+                                                       "derive"
+                                                       "derive"
+                                                       "derive")
+                                                      (("2"
+                                                        (skosimp)
+                                                        (("2"
+                                                          (replace
+                                                           -3
+                                                           :dir
+                                                           rl
+                                                           :hide?
+                                                           t)
+                                                          (("2"
+                                                            (expand*
+                                                             "check_for_exception_final"
+                                                             "check_for_exception")
+                                                            (("2"
+                                                              (ground)
+                                                              (("2"
+                                                                (rewrite
+                                                                 -1)
+                                                                (("2"
+                                                                  (decompose-equality
+                                                                   1)
+                                                                  (("2"
+                                                                    (rewrite
+                                                                     -3)
+                                                                    (("2"
+                                                                      (rewrite
+                                                                       -6)
+                                                                      (("2"
+                                                                        (lemma
+                                                                         "MP_modeled_lookup_correspondence")
+                                                                        (("2"
+                                                                          (inst
+                                                                           -
+                                                                           "mp!1"
+                                                                           "scp(t1)"
+                                                                           "scp(t1)"
+                                                                           "sMP1!1"
+                                                                           "sAP1!1")
+                                                                          (("2"
+                                                                            (assert)
+                                                                            nil)))))))))))))))))))))))))))))))))))
+                                         ("5"
+                                          (case
+                                           "ann_event_set(mp!1)(ts)(v!1)(brT)")
+                                          (("1"
+                                            (use
+                                             "set2list_same_elements[[Expr, Stmt]]")
+                                            (("1"
+                                              (assert)
+                                              (("1"
+                                                (expand "member" 1)
+                                                (("1"
+                                                  (propax)
+                                                  nil)))))))
+                                           ("2"
+                                            (replace
+                                             -1
+                                             1
+                                             :dir
+                                             rl
+                                             :hide?
+                                             t)
+                                            (("2"
+                                              (expand
+                                               "ann_event_set"
+                                               1)
+                                              (("2"
+                                                (inst?)
+                                                (("2"
+                                                  (assert)
+                                                  (("2"
+                                                    (rewrite
+                                                     "nonempty_exists")
+                                                    (("2"
+                                                      (inst 1 "t1")
+                                                      nil)))))))))))))))))
+                                     ("2"
+                                      (replace -1 1 :dir rl)
+                                      (("2"
+                                        (use "ann_trans_cp_wf")
+                                        (("2"
+                                          (beta)
+                                          (("2"
+                                            (assert)
+                                            (("2"
+                                              (split -1)
+                                              (("1" (prop) nil)
+                                               ("2"
+                                                (lemma
+                                                 "subset_transitive[Transition]")
+                                                (("2"
+                                                  (inst
+                                                   -
+                                                   "{t: Transition | ts(t) AND scp(t) = scp(t1)}"
+                                                   "ts"
+                                                   "ts(mva(mp!1))")
+                                                  (("2"
+                                                    (assert)
+                                                    (("2"
+                                                      (use
+                                                       "filter_event_subset")
+                                                      (("2"
+                                                        (assert)
+                                                        (("2"
+                                                          (hide-all-but
+                                                           1)
+                                                          (("2"
+                                                            (expand*
+                                                             "subset?"
+                                                             "member")
+                                                            (("2"
+                                                              (skosimp)
+                                                              nil)))))))))))))))))))))))))))))
+                                 ("2" (propax) nil)))
+                               ("2"
+                                (hide-all-but (-2 1))
+                                (("2"
+                                  (lemma "finite_subset[Transition]")
+                                  (("2"
+                                    (assert)
+                                    (("2"
+                                      (inst
+                                       -
+                                       "ts(mva(mp!1))"
+                                       "{t: Transition | ts(t) AND scp(t) = scp(t1)}")
+                                      (("2"
+                                        (assert)
+                                        (("2"
+                                          (expand* "subset?" "member")
+                                          (("2"
+                                            (skosimp)
+                                            (("2"
+                                              (replace
+                                               -3
+                                               :dir
+                                               rl
+                                               :hide?
+                                               t)
+                                              (("2"
+                                                (expand "filter_event")
+                                                (("2"
+                                                  (flatten)
+                                                  nil)))))))))))))))))))))
+                             ("2" (replace -1 1 :dir rl)
+                              (("2"
+                                (expand "filter_event")
+                                (("2" (assert) nil)))))))))
+                         ("2" (hide-all-but (-1 1))
+                          (("2" (typepred "mp!1")
+                            (("2" (expand "wf_and_complete_MP")
+                              (("2"
+                                (flatten)
+                                (("2"
+                                  (case "wf_MVA(mva(mp!1))")
+                                  (("1"
+                                    (expand* "wf_MVA" "wf_Trans")
+                                    (("1"
+                                      (flatten)
+                                      (("1"
+                                        (inst?)
+                                        (("1" (assert) nil)))))))
+                                   ("2" (assert) nil)))))))))))))))
+                     ("2"
+                      (comment "Leave: wf_state(sMP1!1), well_behaved_MVA_for_annot_gen(mp!1), nonemtpy?(..)")
+                      (("2" (hide-all-but (-3 -4 -13 1))
+                        (("2" (expand* "nonempty?" "empty?" "member")
+                          (("2" (typepred "mp!1")
+                            (("2"
+                              (expand* "wf_and_complete_MP" "complete"
+                               "total")
+                              (("2"
+                                (flatten)
+                                (("2"
+                                  (inst
+                                   -
+                                   "cp(astate(sMP1!1))"
+                                   "(# etype := et!1, mname := name(m!1) #)"
+                                   "stA(astate(sMP1!1))"
+                                   "fvs(st(pstate(sMP1!1)))"
+                                   "v!1")
+                                  (("2"
+                                    (expand* "wf_state" "wf_AState")
+                                    (("2"
+                                      (ground)
+                                      (("2"
+                                        (skolem!)
+                                        (("2"
+                                          (inst?)
+                                          nil)))))))))))))))))))
+                       ";;; Leave: wf_state(sMP1!1), well_behaved_MVA_for_annot_gen(mp!1), nonemtpy?(..)"))))))))
+               ("7" (use "complete_definedness")
+                (("7" (typepred "mp!1")
+                  (("7" (expand "wf_and_complete_MP")
+                    (("7" (flatten) nil)))))))
+               ("8" (expand "related_states") (("8" (flatten) nil)))
+               ("9" (expand "related_states") (("9" (assert) nil)))
+               ("10" (expand "set2list")
+                (("10" (lift-if)
+                  (("10" (ground)
+                    (("10" (hide-all-but (1 5))
+                      (("10"
+                        (expand* "empty?" "member" "ann_event_set"
+                         "filter_event")
+                        (("10" (skosimp*)
+                          (("10" (rewrite "nonempty_exists")
+                            (("10" (skolem - "t")
+                              (("10"
+                                (typepred "t")
+                                (("10"
+                                  (typepred "mp!1")
+                                  (("10"
+                                    (expand*
+                                     "wf_and_complete_MP"
+                                     "wf_MP")
+                                    (("10"
+                                      (case "wf_MVA(mva(mp!1))")
+                                      (("1"
+                                        (expand* "wf_MVA" "wf_Trans")
+                                        (("1"
+                                          (flatten)
+                                          (("1"
+                                            (inst?)
+                                            (("1"
+                                              (prop)
+                                              (("1"
+                                                (case
+                                                 "event(t) = (# etype := et!1, mname := name(m!1) #)")
+                                                (("1" (assert) nil)
+                                                 ("2"
+                                                  (decompose-equality
+                                                   1)
+                                                  nil)))))))))))
+                                       ("2"
+                                        (assert)
+                                        nil))))))))))))))))))))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil))
+ (ann_event_does_not_throw_exception_TCC1 0
+  (ann_event_does_not_throw_exception_TCC1-2 nil 3430819872 nil
+   ("" (skosimp*)
+    (("" (expand "id")
+      (("" (expand "wf_Body")
+        (("" (split 2)
+          (("1" (skosimp*)
+            (("1" (use "ann_event_var_names")
+              (("1" (assert)
+                (("1" (rewrite "ann_program_ext_declared_var_names")
+                  (("1"
+                    (auto-rewrite "union" "member" "subset?"
+                                  "filter_event")
+                    (("1" (assert)
+                      (("1" (flatten)
+                        (("1" (assert)
+                          (("1" (skosimp*) nil)))))))))))))))))
+           ("2" (skosimp*)
+            (("2" (use "ann_event_set_ghostvar")
+              (("2" (assert)
+                (("2" (rewrite "ann_program_add_ghost_var_decls")
+                  (("2" (rewrite "var_names_union")
+                    (("2"
+                      (auto-rewrite "union" "member" "subset?"
+                                    "filter_event")
+                      (("2" (assert)
+                        (("2" (flatten)
+                          (("2" (assert)
+                            (("2" (skosimp*)
+                              nil))))))))))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)
+  (ann_event_does_not_throw_exception_TCC1-1 nil 3430817371 nil
+   ("" (subtype-tcc) nil nil) unchecked nil nil nil nil nil))
+ (ann_event_does_not_throw_exception 0
+  (ann_event_does_not_throw_exception-2 nil 3430819528 nil
+   ("" (skosimp*)
+    (("" (expand "ann_event")
+      (("" (expand "derive")
+        (("" (expand* "execute_CaseJML" "id" "extend" "return_of_stmt")
+          (("" (lift-if)
+            (("" (assert)
+              (("" (lift-if)
+                (("" (assert) (("" (prop) nil))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)
+  (ann_event_does_not_throw_exception-1 nil 3430819456 nil
+   ("" (skosimp*)
+    (("" (expand "id")
+      (("" (expand "wf_Body")
+        (("" (split 2)
+          (("1" (skosimp*)
+            (("1" (use "ann_event_var_names")
+              (("1" (assert)
+                (("1" (rewrite "ann_program_ext_declared_var_names")
+                  (("1"
+                    (auto-rewrite "union" "member" "subset?"
+                                  "filter_event")
+                    (("1" (assert)
+                      (("1" (flatten)
+                        (("1" (assert)
+                          (("1" (skosimp*) nil)))))))))))))))))
+           ("2" (skosimp*)
+            (("2" (use "ann_event_set_ghostvar")
+              (("2" (assert)
+                (("2" (rewrite "ann_program_add_ghost_var_decls")
+                  (("2" (rewrite "var_names_union")
+                    (("2"
+                      (auto-rewrite "union" "member" "subset?"
+                                    "filter_event")
+                      (("2" (assert)
+                        (("2" (flatten)
+                          (("2" (assert)
+                            (("2" (skosimp*)
+                              nil))))))))))))))))))))))))))
+    nil)
+   unchecked nil nil nil nil nil)))
+

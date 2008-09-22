@@ -1,0 +1,470 @@
+MethodCallsPreserveRelatedState[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    IMPORTING ValProp[Name]
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+
+  IMPORTING AnnEventPreservesMPModeled[CP, Name],
+            LegalAnnotatedProgramRestriction[Name],
+            WfSetStmts[Name, MonitoredProgram, MPState, 
+                      LAMBDA (mp : MonitoredProgram) : program(mp),
+                      LAMBDA(s : MPState) : pstate(s),
+                      lookup,
+                      update_PState,
+                      execute_set,
+                      execute_assert,
+                      execute_CaseJML,
+                      on_method_entry_MP,
+                      on_method_exit_normal_MP,
+                      on_method_exit_exceptional_MP]
+
+
+  mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
+                                     wf_set_stmts(mp)})
+
+  on_method_entry_preserves_related_states_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt, 
+           m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class(program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_entry(ann_program(mp), ann_method(mp)(md), a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_entry_preserves_related_states_halted_reached : LEMMA % :-))
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, v : ValOrExcpt,
+           m1 : nat, sMP1, sMP2 : MPState) :
+      cp(astate(sMP1)) = halted IMPLIES
+      on_method_entry_MP(mp, md1, a1, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        cp(astate(sMP2)) = halted
+
+
+  on_method_entry_preserves_related_states_not_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt,
+           m1, m2 : nat, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Program_AP(ann_program(mp)) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_entry_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_entry(ann_program(mp), md, a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+
+  on_method_exit_normal_preserves_related_states_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           v : ValOrExcpt, m1, m2 : nat,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Program_AP(ann_program(mp)) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_normal(ann_program(mp), ann_method(mp)(md), 
+                            a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+
+  on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-))
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, v : ValOrExcpt,
+           m1 : nat, sMP1, sMP2 : MPState) : 
+      cp(astate(sMP1)) = halted IMPLIES
+      on_method_exit_normal_MP(mp, md1, a1, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        cp(astate(sMP2)) = halted
+  
+  on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           m1, m2 : nat, v : ValOrExcpt,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Program_AP(ann_program(mp)) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_exit_normal_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_normal(ann_program(mp), md, a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+
+  on_method_exit_exceptional_preserves_related_states_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), 
+           a : (defined?), m1, m2 : nat, v : ValOrExcpt,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Program_AP(ann_program(mp)) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_exceptional(ann_program(mp), ann_method(mp)(md), 
+                                  a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+  on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-))
+    FORALL(md1 : (wf_Method(program(mp))), 
+           a1 : Val, v : ValOrExcpt,
+           m1 : nat, sMP1, sMP2 : MPState) : 
+      cp(astate(sMP1)) = halted IMPLIES
+      on_method_exit_exceptional_MP(mp, md1, a1, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        cp(astate(sMP2)) = halted
+
+
+  on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-))
+    FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
+           m1, m2 : nat, v : ValOrExcpt,
+           sMP1, sMP2 : MPState, sAP1, sAP2 : APState) : 
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      up?(ex(pstate(sAP1))) IMPLIES
+      up?(get_class[Name](program(mp))(a)) IMPLIES
+      NOT name(down(get_class(program(mp))(a))) = class_name(mva(mp)) IMPLIES
+      up?(lookup_mthd(program(mp), a, mn)) IMPLIES
+      down(lookup_mthd(program(mp), a, mn)) = md IMPLIES
+      (FORALL(b : (wf_Body(program(mp))), v1, v2 : Val)
+             (sMP1, sMP2 : MPState, sAP1, sAP2 : APState)
+             (n1 : below(m1), n2 : below(m2)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+        derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) IMPLIES
+        legal_Program_AP(ann_program(mp)) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+          related_states(mp)(sMP2, sAP2) AND 
+          (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)) IMPLIES
+      on_method_exit_exceptional_MP(mp, md, a, v, sMP1, sMP2, m1,
+                         LAMBDA (k: upto(m1))(p: MonitoredProgram)
+                                (b: (wf_Body(program(p))), sigma1: MPState,
+                                 v: Val, sigma2: MPState)(m: below(k)):
+                           derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+      on_method_exit_exceptional(ann_program(mp), md, a, v, sAP1, sAP2, m2,
+                      LAMBDA (k: upto(m2))(p: Program)
+                             (b: (wf_Body(id(p))), sigma1: APState,
+                              v: Val, sigma2: APState)(m: below(k)):
+                        derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+        related_states(mp)(sMP2, sAP2)
+
+
+  % Method call case of derive_preserves_related_states_for_unchanged_program
+  method_call_lemma : LEMMA % FIX
+    FORALL(b : (wf_Body(program(mp))), x : [nat, nat],
+           m11, m21, m31, m41, m51, m61, m12, m22, m32, m42, m52, m62 : nat,
+           sMP1, sMP2, tauMP1, tauMP2, tauMP3, tauMP4, tauMP5, tauMP6, 
+           tauMP7 : MPState,
+           sAP1, sAP2, tauAP1, tauAP2, tauAP3, tauAP4, tauAP5, tauAP6,
+           tauAP7 : APState,
+           a1, a2, pv1, pv2, v1, v2, w1, w2, x1, x2 : Val, 
+           old_lvs1, old_lvs2 : Store,
+           md1 : (wf_Method(program(mp))), md2 : (wf_Method(ann_program(mp)))):
+      MethodCall?(b) IMPLIES
+      x`1 = 1 + m11 + m21 + m31 + m41 + m51 + m61 IMPLIES
+      derive(mp)(tgt(b), sMP1, a1, tauMP1)(m11) IMPLIES
+      derive(mp)(arg(b), tauMP1, pv1, tauMP2)(m21) IMPLIES
+      IF bottom?(ex(pstate(tauMP2))) AND Null?(a1)
+      THEN sMP2 = update_PState(tauMP2, raise(NullPointer)) AND
+           v1 = Bottom AND m31 = 0 AND m41 = 0 AND m51 = 0 AND m61 = 0
+      ELSE IF up?(ex(pstate(tauMP2))) 
+      THEN sMP2 = tauMP2 AND 
+            v1 = Bottom AND 
+            m31 = 0 AND m41 = 0 AND m51 = 0 AND m61 = 0
+      ELSE IF up?(lookup_mthd(program(mp), a1, name(b)))
+           THEN md1 = down(lookup_mthd(program(mp), a1, name(b)))
+           ELSE FALSE
+           ENDIF AND
+           old_lvs1 = lvs(st(pstate(tauMP2))) AND
+           tauMP3 = update_stack(a1, arg(md1), pv1, lvars(md1), tauMP2) AND
+           defined?(pv1) AND
+           on_method_entry_MP(mp, md1, a1, val(Const(pv1)), tauMP3, tauMP4, 
+                              m31, 
+                              LAMBDA (k: upto(m31))
+                                          (p: MonitoredProgram[CP, Name])
+                                          (b: (wf_Body(program(p))),
+                                           sigma1: MPState[CP, Name],
+                                           v: Val[Name],
+                                           sigma2: MPState[CP, Name])
+                                          (m: below(k)):
+                                     derive(p)(b, sigma1, v, sigma2)(m))
+            AND derive(mp)(body(md1), tauMP4, x1, tauMP5)(m41)
+            AND x1 = return_of_stmt(tauMP5)
+            AND derive(mp)(res(md1), tauMP5, w1, tauMP6)(m51)
+            AND IF bottom?(ex(pstate(tauMP6))) 
+                  THEN defined?(w1) AND
+                       on_method_exit_normal_MP(mp, md1, a1, val(Const(w1)), 
+                                                tauMP6, tauMP7, m61,
+                                                LAMBDA
+                                                (k: upto(m61))
+                                                (p:
+                                                 MonitoredProgram[CP, Name])
+                                                (b: (wf_Body(program(p))),
+                                                 sigma1: MPState[CP, Name],
+                                                 v: Val[Name],
+                                                 sigma2: MPState[CP, Name])
+                                                (m: below(k)):
+                                                derive(p)(b, sigma1, v, sigma2)(m))
+                ELSE on_method_exit_exceptional_MP(mp, md1,a1, 
+                                                   excpt(down(ex(pstate(tauMP6)))), 
+                                                   tauMP6, tauMP7, m61,
+                                                   LAMBDA
+                                                   (k: upto(m61))
+                                                   (p:
+                                                    MonitoredProgram
+                                                    [CP, Name])
+                                                   (b:
+                                                    (wf_Body(program(p))),
+                                                    sigma1:
+                                                    MPState[CP, Name],
+                                                    v: Val[Name],
+                                                    sigma2:
+                                                    MPState[CP, Name])
+                                                   (m: below(k)): 
+                                                   derive(p)(b, sigma1, v, sigma2)(m))
+                ENDIF
+            AND IF up?(ex(pstate(tauMP7))) THEN v1 = Bottom
+                ELSE v1 = w1
+                ENDIF
+            AND sMP2 =
+                 update_PState(tauMP7,
+                               LAMBDA(pstate : PState) : 
+                                 pstate WITH 
+                                 [st := st(pstate) WITH [lvs := old_lvs1]])
+      ENDIF ENDIF IMPLIES
+      ex(pstate(sMP1)) = ex(pstate(sAP1)) IMPLIES
+      (FORALL (y: [nat, nat]):
+        PROJ_1(y) < PROJ_1(x) AND PROJ_2(y) < PROJ_2(x) IMPLIES
+         (FORALL (b: (wf_Body(program(mp))), v1, v2: Val)
+                 (sMP1, sMP2: MPState, sAP1, sAP2: APState):
+            subset?(var_names(b), ext_declared_var_names(program(mp)))
+             IMPLIES
+             related_states(mp)(sMP1, sAP1) IMPLIES
+              derive(mp)(b, sMP1, v1, sMP2)(y`1) IMPLIES
+               derive(ann_program(mp))(b, sAP1, v2, sAP2)(y`2) IMPLIES
+                legal_Body(ann_program(mp))(b) IMPLIES
+                 related_states(mp)(sMP2, sAP2) AND
+                  (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2))) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      x`2 = 1 + m12 + m22 + m32 + m42 + m52 + m62 IMPLIES
+      derive(ann_program(mp))(tgt(b), sAP1, a2, tauAP1)(m12) IMPLIES
+      derive(ann_program(mp))(arg(b), tauAP1, pv2, tauAP2)(m22) IMPLIES
+      IF bottom?(ex(pstate(tauAP2))) AND Null?(a2)
+      THEN sAP2 = update_PState(tauAP2, raise(NullPointer))
+           AND v2 = Bottom AND m32 = 0 AND m42 = 0 AND m52 = 0
+           AND m62 = 0
+      ELSIF up?(ex(pstate(tauAP2))) 
+      THEN sAP2 = tauAP2 AND 
+           v2 = Bottom AND 
+           m32 = 0 AND m42 = 0 AND m52 = 0 AND m62 = 0
+      ELSE IF up?(lookup_mthd(ann_program(mp), a2, name(b)))
+           THEN md2 = down(lookup_mthd(ann_program(mp), a2, name(b)))
+           ELSE FALSE
+           ENDIF AND
+           old_lvs2 = lvs(st(pstate(tauAP2))) AND
+           tauAP3 = update_stack(a2, arg(md2), pv2, lvars(md2), tauAP2) AND
+           defined?(pv2) AND
+           on_method_entry(ann_program(mp), md2, a2, val(Const(pv2)), 
+                           tauAP3, tauAP4, m32, 
+                                LAMBDA (k: upto(m32))
+                                       (p: Program[Name])
+                                       (b: (wf_Body(id(p))),
+                                        sigma1: APState[Name],
+                                        v: Val[Name],
+                                        sigma2: APState[Name])
+                                       (m: below(k)):
+                                  derive(p)(b, sigma1, v, sigma2)(m))
+            AND derive(ann_program(mp))(body(md2), tauAP4, x2, tauAP5)(m42)
+            AND x2 = return_of_stmt(tauAP5)
+            AND derive(ann_program(mp))(res(md2), tauAP5, w2, tauAP6)(m52)
+            AND IF bottom?(ex(pstate(tauAP6))) 
+                  THEN defined?(w2) AND
+                       on_method_exit_normal(ann_program(mp), md2, a2, 
+                                             val(Const(w2)),
+                                             tauAP6, tauAP7, m62,
+                                             LAMBDA
+                                             (k: upto(m62))
+                                             (p: Program[Name])
+                                             (b: (wf_Body(id(p))),
+                                              sigma1: APState[Name],
+                                              v: Val[Name],
+                                              sigma2: APState[Name])
+                                             (m: below(k)):
+                                             derive(p)(b, sigma1, v, sigma2)(m))
+                ELSE on_method_exit_exceptional(ann_program(mp), md2, a2, 
+                                                excpt(down(ex(pstate(tauAP6)))),
+                                                tauAP6, tauAP7, m62,
+                                                LAMBDA
+                                                (k: upto(m62))
+                                                (p: Program[Name])
+                                                (b: (wf_Body(id(p))),
+                                                 sigma1: APState[Name],
+                                                 v: Val[Name],
+                                                 sigma2: APState[Name])
+                                                (m: below(k)):
+                                                derive(p)(b, sigma1, v, sigma2)(m))
+                ENDIF
+            AND IF up?(ex(pstate(tauAP7))) THEN v2 = Bottom
+                ELSE v2 = w2
+                ENDIF
+            AND sAP2 = update_PState(tauAP7,
+                               LAMBDA(pstate : PState) : 
+                                 pstate WITH 
+                                 [st := st(pstate) WITH [lvs := old_lvs2]])
+      ENDIF IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      related_states(mp)(sMP2, sAP2) AND
+       (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
+
+
+END MethodCallsPreserveRelatedState

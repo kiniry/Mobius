@@ -1,0 +1,108 @@
+AnnEventPreservesMPModeled[CP, Name : TYPE+] : THEORY
+BEGIN
+
+  ASSUMING
+
+    IMPORTING ValProp[Name]
+
+    CP_is_enumerable : ASSUMPTION
+      EXISTS (f : [CP -> nat]) : injective?(f)
+
+    infinite_namespace : ASSUMPTION
+      is_infinite({n : Name | TRUE})
+
+    IMPORTING VariableNames[CP, Name]
+
+    name_of_exists : ASSUMPTION
+      EXISTS (f : [mp : (wf_and_complete_MP) -> [CP -> (legal_names(mp))]]) : 
+        FORALL(mp : (wf_and_complete_MP)) : 
+          injective?(f(mp))
+
+  ENDASSUMING
+
+
+  IMPORTING RelatedStatesProperties[CP, Name],
+            APSemanticsProperties,
+            listfuncs
+
+  mp : VAR (wf_and_complete_MP)
+
+
+  % Eexecuting an action on a MVA modifies its variables in the same way that
+  % the execution of the annotations representing that action modifies the
+  % corresponding ghost variables in the annotated program.
+  % NOTE: We need a quantification over "a" to be able to apply induction.
+  ann_action_preserves_MP_modeled : LEMMA % :-)
+    FORALL (t : Transition, a : Action, n : nat)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      wf_state(mp)(sMP1) IMPLIES
+      wf_state(ann_program(mp))(sAP1) IMPLIES
+      MP_modeled?(mp)(sMP1, sAP1) IMPLIES
+      a = action(t) IMPLIES
+      wf_Action(mva(mp))(a) IMPLIES
+      (EXISTS (t1 : Transition) : 
+         ts(mva(mp))(t1) AND suffix(action(t), action(t1))) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))(ann_action(a), sAP1, Unit, sAP2)(n) IMPLIES
+      sMP2 = (# astate := (# cp := cp(astate(sMP1)),
+                             stA := execute_action(a)(stA(astate(sMP1)),
+                                                          fvs(st(pstate(sMP1))))
+                           #),
+                stuck := stuck(sMP1),
+                pstate := pstate(sMP1),
+                gvs := gvs(sMP1) #) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
+
+  % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
+  % state of the automaton after performing t and sAP2 is the state of the 
+  % annotated program after executing the annotations that model the effect of t, 
+  % then sMVA is still well modeled by sAP2.
+  update_vars_preserves_MP_modeled : LEMMA % :-)
+    FORALL (t : Transition, n : nat)
+           (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      ts(mva(mp))(t) IMPLIES
+      sMP2 = (# astate := (# cp := tcp(t),
+                             stA := execute_action(action(t))(stA(astate(sMP1)),
+                                                              fvs(st(pstate(sMP1))))
+                           #),
+                stuck := stuck(sMP1),
+                pstate := pstate(sMP1),
+                gvs := gvs(sMP1) #) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))(update_vars(mp)(t), sAP1, Unit, sAP2)(n) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
+
+  % If sMP1 and sAP1 are related stated, sMP2 is the state of the monitored
+  % progran after evaluating on_method_MVA with some event type et and some
+  % method m, ts is the set of transitions that has (et, name(m)) as event and
+  % sAP2 is the state of the annotated program after the execution of ann_event
+  % with ts as argument, then sMP2 and sAP2 are in MP_modeled?.
+  ann_event_preserves_MP_modeled : LEMMA % :-)
+    FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
+           (v : ValOrExcpt, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      methods(get_monitored_class(mp))(m) IMPLIES
+      sMP2 = on_method_MVA(et)(mp, m)(v)(sMP1) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))
+        (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),
+                              sAP1, Unit, sAP2)(n) IMPLIES
+        MP_modeled?(mp)(sMP2, sAP2)
+
+  % ann_event as used by the annotation algorithm does not throw a new exception
+  ann_event_does_not_throw_exception : LEMMA % :-)
+    FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
+           (arg : ValOrExcpt, sAP1, sAP2 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      NOT up?(ex(pstate(sAP1))) IMPLIES
+      derive(ann_program(mp))
+            (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(arg),
+            sAP1, v, sAP2)(n) IMPLIES
+        NOT up?(ex(pstate(sAP2))) AND v = Unit
+
+
+END AnnEventPreservesMPModeled
