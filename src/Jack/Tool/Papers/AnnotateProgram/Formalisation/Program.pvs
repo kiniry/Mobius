@@ -711,8 +711,9 @@ BEGIN
     wf_program_variables_disjoint_def(p) AND
     wf_program_variables_not_reserved_words_def(p) AND
     wf_program_has_unique_class_names_def(p) AND
-    wf_Classes(p)AND
-    program_pred(p)(wf_Body)
+    wf_Classes(p) AND
+    program_pred(p)(wf_Body) AND
+    program_method_pred(p)(wf_method_all_lvars_disjoint)
 
   % Below, we only consider wellformed programs
   Program : TYPE = (wf_Program)
