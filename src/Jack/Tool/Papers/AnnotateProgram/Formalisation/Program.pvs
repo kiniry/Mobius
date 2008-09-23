@@ -10,8 +10,6 @@
 %   Throwable and NullPointer. 
 % Local variables are declared at beginning of body (like in Pascal)
 % Inheritance and overloading of methods, shadowing of fields not modelled 
-% ?? (their names can
-%   be "mangled", .i.e the contain the information to disambiguate then
 % No static fields or static methods
 % No return instruction. Methods have a result component, containing an 
 % expression. Evaluation of this expression computes value to be returned

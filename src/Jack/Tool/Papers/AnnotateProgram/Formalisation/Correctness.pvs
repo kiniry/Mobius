@@ -48,37 +48,19 @@ BEGIN
         related_states(mp)(sMP2, sAP2) AND 
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
-  % copied proof for monitored program
-%   related_states_implies_derive_for_unchanged_program : THEOREM % PROVE
-%     FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
-%            (sMP1, sMP2 : MPState, sAP1 : APState)
-%            (n1 : nat) :
-%       well_behaved_MVA_for_annot_gen(mp) IMPLIES
-%       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
-%       related_states(mp)(sMP1, sAP1) IMPLIES
-%       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-%       legal_Program_AP(ann_program(mp)) IMPLIES
-%       legal_Body(ann_program(mp))(b) IMPLIES
-%         EXISTS (sAP2 : APState, n2 : nat) : 
-%           derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
-
   related_states_implies_derive_for_unchanged_program : THEOREM % PROVE
-    FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
+    FORALL (b : (wf_Body(program(mp))), v1 : Val)
            (sMP1, sMP2 : MPState, sAP1 : APState)
            (n1 : nat) :
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
       derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
-      legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(ann_program(mp))(b) IMPLIES
-        EXISTS (sAP2 : APState, n2 : nat) : 
-          derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2) AND
-          IF cp(astate(sMP2)) = halted
-          THEN up?(ex(pstate(sAP2)))
-          ELSE v1 = v2
-          ENDIF
+        EXISTS (sAP2 : APState, v2 : Val, n2 : nat) : 
+          derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
 
 
   related_states_implies_derive_for_unchanged_program_converse : THEOREM % PROVE (untried)
@@ -94,7 +76,7 @@ BEGIN
         EXISTS (sMP2 : MPState, n2 : nat) : 
           derive(mp)(b, sMP1, v2, sMP2)(n2) 
 
-  % Correctness of the first step of the translation
+  % Correctness of the annotate program function
   correctness_of_ann_program : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (sMP : MPState) :

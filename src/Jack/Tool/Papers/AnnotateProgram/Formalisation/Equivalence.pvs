@@ -271,26 +271,4 @@ BEGIN
         equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
                            Int(val2int(lookup(name_of(mp)(q2), sAP)))))
 
-
-%   MP_modeled_lookup_correspondence : LEMMA % :-)
-%     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
-%       wf_state(ann_program(mp))(sAP) IMPLIES
-%       MP_modeled?(mp)(sMP, sAP) IMPLIES
-%       cps(mva(mp))(q1) IMPLIES
-%       cps(mva(mp))(q2) IMPLIES
-%       cp(astate(sMP)) = q1 IMPLIES
-%         (q1 = q2) =
-%         (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
-
-%   related_states_lookup_correspondence : LEMMA % :-)
-%     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
-%       related_states(mp)(sMP, sAP) IMPLIES
-%       NOT cp(astate(sMP)) = halted IMPLIES
-%       cps(mva(mp))(q1) IMPLIES
-%       cps(mva(mp))(q2) IMPLIES
-%       cp(astate(sMP)) = q1 IMPLIES
-%         (q1 = q2) =
-%         (lookup(cp(mp), sAP) = lookup(name_of(mp)(q2), sAP))
-
-
 END RelatedStatesProperties
