@@ -296,7 +296,7 @@ BEGIN
 
 
   % Method call case of derive_preserves_related_states_for_unchanged_program
-  method_call_lemma : LEMMA % FIX
+  method_call_lemma : LEMMA % :-)
     FORALL(b : (wf_Body(program(mp))), x : [nat, nat],
            m11, m21, m31, m41, m51, m61, m12, m22, m32, m42, m52, m62 : nat,
            sMP1, sMP2, tauMP1, tauMP2, tauMP3, tauMP4, tauMP5, tauMP6, 
