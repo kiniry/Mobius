@@ -4,7 +4,7 @@
 % Post-set cannot change program state (ie fields and local variables, and
 % exception flag, it can change ghost variables)
 
-% Necessary to prove correctness of step 3
+% Necessary to prove correctness of steps 2 and 3
 
 WfSetStmts[Name : TYPE+, 
                  FullProgram : TYPE,
@@ -67,3 +67,53 @@ BEGIN
 
 
 END WfSetStmts
+
+
+% TODO: explain why this separate theory
+WfSetStmtsAP[Name : TYPE+] : THEORY
+BEGIN
+
+  IMPORTING AnnotatedProgramSemantics[Name],
+            ProgramRestriction[Name]
+
+  % Body b can only throw JML exception
+  only_JMLExc(p : Program)(b : (wf_Body(p))) : bool =
+    FORALL(s1, s2 : APState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+      up?(ex(pstate(s2))) IMPLIES down(ex(pstate(s2))) = JMLExc
+
+  % Body b does not throw an exception
+  no_exc(p : Program)(b : (wf_Body(p))) : bool =
+    FORALL(s1, s2 : APState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+        NOT up?(ex(pstate(s2)))
+
+  % Body b does not change program set
+  no_change(p : Program)(b : (wf_Body(p))) : bool =
+    FORALL(s1, s2 : APState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
+      NOT up?(ex(pstate(s1))) IMPLIES
+      derive(p)(b, s1, v, s2)(n) IMPLIES
+        NOT pstate(s1) = pstate(s2)
+
+  % Predicate wf_set_stmts for method m:
+  % pre_set can only throw JML exception
+  % post_set and exc_set cannot throw any exception
+  % post_set cannot change pstate
+  wf_set_stmts(p : Program)(m : Method) : bool =
+    methods(p)(m) IMPLIES
+      (FORALL (v : Expr) : only_JMLExc(p)(pre_set(m)(v))) AND
+      (FORALL (v : Expr) : no_exc(p)(post_set(m)(v))) AND
+      (FORALL (e : Excpt) : no_exc(p)(exc_set(m)(e))) AND
+      (FORALL (v : Expr) : no_change(p)(post_set(m)(v))) 
+
+  % Predicate wf_set_stmts for program p: wf_set_stmts holds for any method m
+  wf_set_stmts_AP(p : Program) : bool =
+    program_method_pred(p)(wf_set_stmts(p))
+
+
+END WfSetStmtsAP

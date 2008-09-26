@@ -114,12 +114,6 @@ BEGIN
 
   IMPORTING Equivalence[CP, Name],
             ContainsNoMethodCall[Name],
-            WfSetStmts[Name, Program, APState, id, 
-                             LAMBDA(s : APState) : pstate(s), lookup,
-                             update_PState, execute_set, execute_assert,
-                             execute_CaseJML, on_method_entry,
-                             on_method_exit_normal, 
-                             on_method_exit_exceptional],
             WfSetStmts[Name, MonitoredProgram, MPState,
                              LAMBDA(mp : MonitoredProgram) : program(mp),
                              LAMBDA(s : MPState) : pstate(s),
@@ -127,6 +121,7 @@ BEGIN
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
                              on_method_exit_exceptional_MP],
+            WfSetStmtsAP[Name],
             CompleteMonitorProgramPropertiesPreservation[CP, Name],
 %             LegalCompleteMonitoredProgramRestriction[CP, Name],
             LegalAnnotatedProgramRestriction[Name],
@@ -149,10 +144,11 @@ BEGIN
 %                                  THEN gvs(s_mark)(n)
 %                                  ELSE gvs(s)(n)
 %                                  ENDIF #)
-%   wf_state_make_MPState : LEMMA 
-%     FORALL(mp : (wf_and_complete_MP), s : APState) : 
-%       wf_state(ann_program(mp))(s) IMPLIES
-%         wf_state(mp)(make_MPState(mp)(s))
+
+  wf_state_make_MPState : LEMMA % :-)
+    FORALL(mp : (wf_and_complete_MP), s : APState) : 
+      wf_state(ann_program(mp))(s) IMPLIES
+        wf_state(mp)(make_MPState(mp)(s))
 
 %   wf_state_make_APState : LEMMA
 %     FORALL(mp : (wf_and_complete_MP), sMP : MPState, sAP : APState) : 
@@ -165,6 +161,7 @@ BEGIN
   derive_equivalence_if : LEMMA % 
     FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
            sAP1, sAP2 : APState, v : Val, n : nat) :
+      wf_state(ann_program(mp))(sAP1) IMPLIES
       contains_no_method_call(b) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       derive(ann_program(mp))(b, sAP1, v, sAP2)(n) IMPLIES
@@ -207,7 +204,7 @@ BEGIN
       wf_set_stmts(mp) IMPLIES
       well_behaved_MVA(mva(mp))(APStateToAStore(mp)) IMPLIES
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
-      wf_set_stmts(ann_program(mp))
+      wf_set_stmts_AP(ann_program(mp))
 
   ann_action_contains_no_TryCatch : LEMMA % :-)
     FORALL(l : Action, b : Body) :

@@ -54,7 +54,7 @@ ENDASSUMING
           ELSE Bottom
           ENDIF
 
-
+  % TODO: explain legal_Program assumption
   main : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (sMP : MPState) :
