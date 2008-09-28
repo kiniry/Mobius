@@ -242,10 +242,19 @@ BEGIN
       NOT cp(astate(sMP)) = halted IMPLIES
       (FORALL (l : Decl) : lvds(l) IMPLIES 
                            getLocalDecls(program(mp))(l)) IMPLIES
-        related_states(mp)(update_stack(this_val, arg, param_val,
-                                        lvds, sMP),
-                           update_stack(this_val, arg, param_val,
-                                        lvds, sAP))
+        related_states(mp)(update_stack(this_val, arg, param_val, lvds, sMP),
+                           update_stack(this_val, arg, param_val, lvds, sAP))
+
+  related_states_preserved_by_update_stack_lookup : LEMMA
+    FORALL (sMP : MPState, sAP : APState,
+            mn: Name, md : Method, parent, this, param : Val, 
+            arg : (getLocalDecls(program(mp))), lvds : finite_set[Decl]) :
+      related_states(mp)(sMP, sAP) IMPLIES
+      NOT cp(astate(sMP)) = halted IMPLIES
+      up?(lookup_mthd(program(mp), parent, mn)) IMPLIES
+      md = down(lookup_mthd(program(mp), parent, mn)) IMPLIES
+        related_states(mp)(update_stack(this, arg, param, lvars(md), sMP),
+                           update_stack(this, arg, param, lvars(md), sAP))
 
 
   % NOTE: The use of equalities[Val] is needed for disambiaguation of =
