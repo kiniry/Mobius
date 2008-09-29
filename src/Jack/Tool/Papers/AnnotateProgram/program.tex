@@ -6,39 +6,8 @@ is parametrised on the treatment of specifications. In particular, we
 define a run-time checking and a monitoring semantics, that evaluate
 differently upon method call and exit.
 
-% commented out: version with different constants
-%\[
-%\begin{array}{rcl}
-%\NumExpr & = & \I(i : \mathbb{Z}) \mid \Plus(n_1, n_2 : \NumExpr) \mid \ldots \mid
-%               \EvalN(n : \Name) \\
-%\BoolExpr & = & \ttt \mid \fff \mid \Not(b : \BoolExpr) \mid \Conj(b_1,
-%b_2 : \BoolExpr) \mid \ldots \mid \\
-%          &   & \Eq(e_1, e_2 : \Expr) \mid \EvalB(n
-%: \Name) \\
-%\RefExpr & = & \Null \mid \EvalR(n : \Name)\\
-%\Expr & = & \BExpr(b : \BoolExpr) \mid
-%            \NExpr(n : \NumExpr) \mid
-%            \RExpr(r : \RefExpr) \mid\\
-%      &   & \CondExpr(c : \BoolExpr, e_1, e_2 : \Expr) \mid
-%            \Assign(n : \Name, e : \Expr) \mid \\
-%      &   & \Call(o : \Expr, n : \Name, p : \Expr) \mid
-%            \Const(v : \Val) \\
-%\Stmt & = & \Skip \mid
-%            \Sequence(s_1, s_2 : \Stmt) \mid
-%            \IfThenElse(c : \BoolExpr, s_1, s_2 : \Stmt) \mid\\
-%      &   & \While(c : \BoolExpr, s : \Stmt) \mid
-%            \StmtExpr(e : \Expr) \mid
-%            \Throw \mid\\
-%      &   & \TryCatch(t: \Stmt, e : \Excpt c, f : \Stmt) \mid
-%            \Set(n : \Name, e : \Expr) \mid\\
-%      &   & \CaseJML(b : \listof{\BoolExpr \times \Stmt}) \mid
-%            \Assert(e : \BoolExpr)
-%\end{array}
-%\]
 
 \subsection{Program Syntax}\label{SecSyntax}
-
-\marginnote{Should we discuss consequences of restrictions? Probably no space}
 Our language is a restricted subset of (sequential) Java, abstracting
 away from typical object-oriented features. This means in particular
 that we abstract away from method resolution; instead we assume that
@@ -116,12 +85,6 @@ to update ghost variables (\emph{i.e.}, specification-only variables),
 and \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
 semantics evaluates them.
-% Therefore, the state of an annotated program
-% is extended with a ghost variable store.
-% , which is updated according to the \Set or \CaseJML statement.
-% If the condition of an \Assert evaluates to false, a special \JMLExc is thrown to
-% signal the annotation violation.
-% If the condition of an \Assert evaluates to false, a \JMLExc is thrown.
 
 Figure~\ref{FigProgram} describes the syntax for methods,
 classes and programs. To ensure that every method has an appropriate
@@ -134,11 +97,7 @@ the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively.
 Pre- and postcondition and the different method specification-level set
 annotations have a function type, to allow the use of the method parameter,
-the method result or the returned exception, respectively. 
-% \footnote{Notice
-% that the type of \pre, \post, \preset and \postset could be made more specific:
-% the first expression argument is a side-effect free expression.}.
-% The semantics will apply them appropriately.
+the method result or the returned exception, respectively.
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -174,17 +133,6 @@ value.
 \end{array}}
 \]
 
-% Commented out to save space
-% When bodies are evaluated, uncaught exceptions are propagated.
-% Exceptions can only be caught explicitly \emph{within} a \(\TryCatch\)
-% statement.  All evaluation rules require explicitly that the
-% initial state is not exceptional.
-
-% Commented out to save space
-% As mentioned above, we define both the semantics of an (annotated)
-% program and of a monitored program by parametrising the semantics with
-% functions that specify how the specification constructs are to be
-% evaluated.
 Since annotated or monitored programs
 contain more information than unannotated programs, the
 evaluation rules are parametrised with types
@@ -205,23 +153,15 @@ states are not exceptional).  First the receiver is evaluated,
 resulting in non-null reference \(r\).  Next, the parameter is
 evaluated, resulting in value \act. Using \(r\), the method definition
 \md is looked up.  The local variable store is updated assigning
-%the receiver reference
-\(r\) to \texttt{this}, initialising the
-method's local variables and assigning the actual parameter to the
-formal parameter. The old local variable store is remembered as \oldlvs.
-%to be restored after method termination.
+\(r\) to \texttt{this}, initialising the method's local variables and
+assigning the actual parameter to the formal parameter. The old local variable
+store is remembered as \oldlvs.
 Next, an appropriate action upon method entry is taken, as specified
-by the relation \(\gammain\).
-% ~--~below we will discuss different instantiations.
-Then the method body, and method result expression are
-evaluated. Since this rule applies to normal method termination only,
-the parameter for normal method termination
-\(\gammanorm\) is evaluated. Last, the local store is set back to
-\(\oldlvs\). %, and this terminates the method call.
-Similar rules exist that describe what happens
-% of a method,
-when a method is called upon a null reference \emph{etc.}
-
+by the relation \(\gammain\). Then the method body, and method result expression
+are evaluated. Since this rule applies to normal method termination only,
+the parameter for normal method termination \(\gammanorm\) is evaluated.
+Last, the local store is set back to \(\oldlvs\). Similar rules exist that
+describe what happens when a method is called upon a null reference \emph{etc.}
 
 
 \begin{figure}[t]
@@ -250,25 +190,6 @@ r \not= \Null \qquad                         % receiver not null
 calls}\label{FigEvalRules}
 \end{figure}
 
-% Besides the relations \gammain and \gammanorm, the semantics
-% is also parametrised with
-% \gammaexc, describing what happens upon exceptional termination of a
-% method, and \deltaset, \deltacase, and \deltaassert, describing the
-% semantics of the \Set, \CaseJML and \Assert statements,
-% respectively.
-
-
-%\paragraph{Standard program semantics}
-%To evaluate a program without considering the specifications,
-%\(\FullProgram\) and \(\Program\) and
-%\(\FullState\) and \(\Pstate\) are identical, thus \program and
-%\progstate are identify functions. The specification evaluation
-%functions are instantiated as identity relations, \emph{i.e.,}
-%\(\gammain(P, \md, r, \tau_1, \tau_2) = \gammanorm(\ldots) =
-%\gammaexc(\ldots) = (\tau_1 = \tau_2)\), and \(\deltaeval(P,
-%\EvalG(n), \tau_1, v, \tau_2, \ldots) = \deltaset(\ldots) = \deltacase(\ldots) = (\tau_1 =
-%\tau_2)\).
-
 
 \paragraph{Annotated Program Semantics}
 
@@ -281,8 +202,8 @@ The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
 instantiations of the semantics parameters; % (presented in rule format);
-the other instantiations are similar. Relation \gammain uses 
-auxiliary relation \(\beta\) which checks boolean expression \(e\) and
+the other instantiations are similar. The relation \gammain uses
+the auxiliary relation \(\beta\) which checks a boolean expression \(e\) and
 raises a special \JMLExc if it evaluates to false. Upon method
 entry, the class invariant and precondition are evaluated. If they
 fail, a \JMLExc is thrown, otherwise the method's \preset statement is
@@ -291,11 +212,11 @@ The function
 \deltaset updates a ghost variable: it first evaluates the expression
 and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
-abbreviate that the \(n^{th}\) entry of the \gvs component of \(\tau\) is
-updated to \(v\).} appropriately.
+abbreviate that the value of \(\gvs(n)\) in \(\tau\) is updated to
+\(v\).} appropriately.
 
-% Relation with the code:
-% r = a, act = arg, \sigma_1 = s1, \sigma_2 = s2, \beta = check_assertion
+%% Relation with the code:
+%% r = a, act = arg, \sigma_1 = s1, \sigma_2 = s2, \beta = check_assertion
 \begin{figure}[t]
 \[{\small
 \begin{array}[t]{c}
@@ -365,7 +286,7 @@ appropriate instantiations for the \(\gamma\)- and
 for the annotated program semantics, but the \(\gamma\)-relation also
 updates the state of the monitor. For example, \(\gammain\) is defined
 in terms of \(\gammain\) for annotated programs, as defined in
-Figure~\ref{FigAnnotatedSem}. 
+Figure~\ref{FigAnnotatedSem}.
 \[
 {\small
 \begin{array}{c}
@@ -380,7 +301,7 @@ Figure~\ref{FigAnnotatedSem}.
 
 
 \noindent where
-% This is a simplified version of on_method_PA in MonitoredProgram
+% NOTE: This is a simplified version of on_method_MVA in MonitoredProgram
 \[
 {\small
 \begin{array}{rcl}
@@ -398,40 +319,3 @@ Figure~\ref{FigAnnotatedSem}.
 \end{array}
 \end{array}}
 \]
-
-
-%% This example does not add much is a bit disconnected with the
-%% previous text
-
-
-%\caption{Implementation of class \texttt{Messaging}}\label{FigExampleImplem}
-%\end{figure}
-%\subsubsection{PVS formalisation}
-%As mentioned above, the syntax and semantics for PA and programming
-%language have been formalised in PVS.
-
-% To formalise the program semantics in PVS is not
-%completely straightforward. PVS does not allow one to define mutually
-%recursive definitions, and moreover for every recursive method call,
-%termination has to be shown. As a solution, we define a function
-%\texttt{deriv\_expr} parametrised with
-%natural number \(n\) and function \texttt{deriv\_stmt}, where the
-%argument \texttt{deriv\_stmt} is only applicable to natural numbers
-%strictly less than \(n\). The number \(n\) provides an upperbound on
-%the number of recursive method calls that are going to be made.  The
-%function \texttt{deriv\_stmt}, applied to natural number \(m\) can
-%then directly call the \texttt{deriv\_expr} function, with
-%\texttt{deriv\_stmt} as argument, but restricted to calls with arguments
-%strictly less than \(m\). The parameters \gammain, \gammanorm
-%\emph{etc.} are all parametrised with \texttt{deriv\_expr} and
-%\texttt{deriv\_stmt}, but again restricted to be applicable only for
-%strictly smaller natural numbers. We can then prove that the natural
-%number argument is always strictly decreasing, and this is sufficient
-%to guarantee termination.
-
-
-
-
-
-
-

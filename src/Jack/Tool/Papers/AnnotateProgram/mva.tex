@@ -4,12 +4,6 @@ This section formally defines the format of security automata that we
 use. These are particularly suited for monitoring, because transitions
 can depend on the state of the monitored program. We call them
 Property Automata (PA).
-% \marginnote{MH: Multi-Variable Automata not very good/catchy name
-%  AT: What about: Property Automata, Security Automata (or more precisely
-%  Safety Automata), Pushdown Automata, just Automata or just Property.
-%  I like Property Automata}
-% \emph{Multi-Variable Automata} (MVA). %because their states are defined
-%by a set of variables.
 Transitions between states are labelled with guards, events and a list
 of actions. The event specifies the method whose entry and/or exit is
 being monitored, with a distinction between normal and exceptional
@@ -64,7 +58,7 @@ program variables will be inspected by the monitor, and
 \end{inparaenum}
 Transitions go from source to target control points. They are labelled
 with events, where an event is a tuple of an event type (entry, exit
-or exceptional exit) and a method name, guards and a list of
+or exceptional exit) and a method name, a guard and a list of
 actions. Each action assigns the result of an expression (containing
 both program and PA variables) to a PA
 variable. Figure~\ref{FigPAForm} shows the main components of the
@@ -105,6 +99,9 @@ disjunction of all other guards for this control point and event, and
 in addition, add unconditional transitions from \halted to \halted
 for every possible event.
 
+% NOTE: these are not all the condition (for instance we are not saying that
+% the expressions should not include Set statements or that the initial control
+% point is in the set of control points and must not be halted.
 A PA is \emph{wellformed} if\footnote{We only formalise constraints that are
 necessary for our formalisation.}:
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -114,34 +111,15 @@ necessary for our formalisation.}:
 \item control points and events in transitions are declared.
 \end{inparaenum}
 
-%Formally:
-%\[
-%\begin{array}[t]{l}
-%\mathsf{complete}(a) =
-%\begin{array}[t]{l}
-%a \mathsf{with} (\#
-%\begin{array}[t]{l}
-%\cps := a.\cps \cup {\halted},
-%\trans := a.\trans \cup complete(a.\trans)
-%\end{array}
-%\#)
-%\end{array}
-%\mathsf{complete}(T) =
-%\{ (\# \scp := q,
-%       \tcp := \halted,
-%       \guard := \lambda \sigma_A \sigma_P v.
-%\end{array}
-%\]
-
-% \paragraph{PA Transitions}
 The state of a PA consists of a current control point, and the store of
 automaton variables (the program store is not part of the automaton state).
 \[{\small
 \PAstate = \opr \cp : \CP, \stA : \Store \clr}
 \]
-Given PA \(a\), transition function \(\Delta_a\) specifies how an
-automaton state \(\sigma_A\) is update, given program store
-\(\sigma_P\) and event \(e\) (where \(\chooseop\) is the arbitrary
+For a PA \(a\), the transition function \(\Delta_a\) specifies how an automaton
+state \(\sigma_A\) is updated for a given program store \(\sigma_P\) an
+event \(e\) and a value or exception \(v\)
+(where \(\chooseop\) is the arbitrary
 choice operator, and \textsf{apply} is a function that updates the
 automaton store according to a list of actions in the obvious way).
 \[{\small
@@ -177,8 +155,8 @@ completed PA reaches the state \halted.
 
 The following PA\footnote{Where we assume that the default guard is
 \(\lambda(\sigma_A, \sigma_P, v). \ttt\) and the default action is
-\(\actskip\), an empty sequence.}
-encodes the property described in Figure~\ref{FigExample}, while Figure~\ref{FigCompletePA} shows the completed PA.
+\(\actskip\), an empty sequence.} encodes the property described in
+Figure~\ref{FigExample}, while Figure~\ref{FigCompletePA} shows the completed PA.
 
 \[
 \small{
@@ -229,16 +207,6 @@ encodes the property described in Figure~\ref{FigExample}, while Figure~\ref{Fig
 \end{array}
 }\]
 
-
-% Completion adds the following transitions to the automaton in
-% Figure~\ref{FigExample}: from \(s_1\) to \halted, for the event
-% \entry(\texttt{sendSMS}), with guard \(n \geq N\); and for the events
-% \exit(\texttt{sendSMS}) and \excexit(\texttt{sendSMS}), with guard \ttt;
-% from \(s_2\) to \halted, for the events \entry(\texttt{sendSMS}) and
-% \exit(\texttt{reset}), with guard \ttt, from \halted to \halted, for
-% all events and with guard \ttt.
-% TODO AT: I get a reference to Figure 2 instead of 3. Moved label
-
 \begin{figure}[t]
 
 \psfrag{s1}{\tiny{\(s_1\)}}
@@ -282,5 +250,3 @@ encodes the property described in Figure~\ref{FigExample}, while Figure~\ref{Fig
 \caption{Automaton of Figure~\ref{FigExample}, after completion}\label{FigCompletePA}
 
 \end{figure}
-
-

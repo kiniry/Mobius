@@ -2,9 +2,14 @@
 \title{A Formal Connection between Security Automata and JML Annotations
 \thanks{This work is partially funded by the IST FET
 programme of the European Commission, under the IST-2005-015905
-\textsf{Mobius} project.}}
+\textsf{Mobius} project. Research done while the authors where at INRIA Sophia
+Antipolis}}
 
-\author{Marieke Huisman\inst{1}\thanks{Research done while at INRIA Sophia Antipolis} \and Alejandro Tamalet\inst{2}\thanks{Research done while at INRIA Sophia Antipolis}}
+\author{Marieke Huisman\inst{1}
+ \and Alejandro Tamalet\inst{2}}
+% \author{Marieke Huisman\inst{1}\thanks{Research done while at INRIA Sophia Antipolis}
+%  \and Alejandro Tamalet\inst{2}\thanks{Research done while at INRIA Sophia Antipolis}}
+
 \institute{University of Twente, Netherlands \and
 University of Nijmegen, Netherlands}
 
@@ -24,8 +29,6 @@ University of Nijmegen, Netherlands}
 
 \maketitle
 \begin{abstract}
-\marginnote{AT: It doesn't look nice to have two equal footnotes, maybe we can add
-it to the first one.}
 Security automata are a convenient way to describe security
 policies. Their typical use is to monitor the execution of an
 application, and to interrupt this as soon as the security policy is
@@ -39,7 +42,7 @@ application.
 This paper describes the translation from security automata to program
 annotations and proves preservation of program behaviour. This boils
 down to a proof that monitoring will not reveal a security violation
-iff the generated annotations are respected.
+iff the generated annotations are respected by the program.
 
 The correctness proofs are formalised using the PVS theorem prover.
 This reveals several subtleties to be considered in the definition of the

@@ -21,19 +21,12 @@ approach is to require that the application carries a correctness
 proof with it, which can be validated before installing the application
 on the device. In such a proof carrying code scenario~\cite{Necula97},
 the application provider is required to create this proof.
-%% Commented out to save space
-% Traditional proof carrying code has focused on simple security properties that
-% can be checked via a type checker. Within the
-% \textsf{Mobius} project (see \texttt{http://mobius.inria.fr}),
-% a more advanced proof carrying code scenario is developed where
-% security properties are encoded as logical formulae, and classical
-% program verification techniques are used to produce the proof.
 
 Security experts typically express security requirements by a collection of
 security automata or temporal logic formulae. However, typical program
-verification tools %that can be used in such an approach
-use a Hoare logic style for the specifications (\emph{i.e.}, using pre- and
-postconditions). Therefore, as a first step towards static
+verification tools use a Hoare logic style for the specifications
+(\emph{i.e.}, pre- and postconditions).
+Therefore, as a first step towards static
 verification of such security properties, this paper proposes a
 translation from security properties expressed as an automaton (or a
 safety temporal logic formula, which can be translated into an
@@ -44,12 +37,10 @@ steps. For each step we provide a correctness proof.
 \begin{inparaenum}[(\itshape i\upshape)]
 \item We translate a \emph{partial automaton}, to a \emph{total automaton}
 that contains a special trap to model that an error has occurred.
-%% Commented to save space: this can be seen on the example
-% This step is necessary, because often it is much more intuitive to
-% specify a security property by a partial automaton, (this
-% avoids that the automaton is cluttered up with transitions that
-% \emph{``go wrong''}), while for many tools and algorithms, a complete
-% automaton is easier to handle.
+Often it is much more intuitive to specify a security property by a partial
+automaton, (this avoids clutering up the automaton with transitions that
+\emph{``go wrong''}), while for many tools and algorithms, a complete
+automaton is easier to handle.
 We show that the behaviour of a program that is monitored with a partial
 automaton is equivalent to the behaviour of a program that is monitored with
 the completed automaton.
@@ -66,36 +57,6 @@ All results in the paper have been established formally using
 the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation
 is available via \texttt{http://www....}.
 \marginnote{URL}
-
-%Finally, as a
-%last step, we show that the special \CaseJML construct can be
-%transformed into a sequence of set instructions, and we prove again
-%that this does not change the run-time checking behaviour of the
-%program.
-
-%% Commented to save space: JML is quite standard but provably we still want
-%% to refer to JACK and ESC/Java.
-% Since the Java Virtual Machine (and variations) is the most common
-% platform for personal devices\footnote{The standard Java set-up for
-% such devices is the Connected Limited Device Configuration, see
-% \texttt{http://java.sun.com/products/cldc/}, together with the MIDP
-% profile, see \texttt{http://java.sun.com/products/midp/}.}, we use JML
-% as the annotation language.  JML (Java
-% Modelling Language)~\cite{LeavensPCCRCK05} is a behavioural interface
-% specification language for Java. It allows to express Hoare-style
-% specifications, including constructs like class invariants
-% and history constraints. Several tools and techniques exist that allow
-% to validate JML specifications \emph{w.r.t.}\ a Java implementation,
-% \emph{e.g.},\ static verification is provided by
-% for example ESC/Java~\cite{CokK04} and
-% JACK~\cite{BartheBCGHMPPSV06}, while runtime checking is possible
-% using the \texttt{jmlc} and \texttt{jmlrac} tools. The JML runtime
-% checking tools evaluate at every method entry or exit point
-% preconditions or postconditions, class invariants, history constraints
-% \emph{etc.}, and if an annotation is violated, a special exception is
-% returned. In addition, at any point in the program code, an assertion
-% can be added, that is supposed to hold whenever control reaches this
-% point.
 
 \psfrag{s1}{\tiny{\(s_1\)}}
 \psfrag{s2}{\tiny{\(s_2\)}}
