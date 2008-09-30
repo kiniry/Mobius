@@ -173,7 +173,7 @@ describe what happens when a method is called upon a null reference \emph{etc.}
 %\sigma_2.\progstate.\ex = \bot \qquad        % no exceptions in sigma_2
 r \not= \Null \qquad                         % receiver not null
 \md = \lookupmthd(P, r, \mn) \\
-\oldlvs = \sigma_2.\progstate.\st.\lvs \qquad
+\oldlvs = \sigma_2.\progstate.\st.\lvs \quad
 \sigma_3 = \updatelvs(\sigma_2, r, \md.\lvars, md.\param, \act) \\
 \gammain(P, \md, r, \Const(\act), \sigma_3, \sigma_4) \qquad
 \etp{P}{\md.body, \sigma_4}{\One,\sigma_5} \\
@@ -208,9 +208,8 @@ raises a special \JMLExc if it evaluates to false. Upon method
 entry, the class invariant and precondition are evaluated. If they
 fail, a \JMLExc is thrown, otherwise the method's \preset statement is
 executed. Finally, we ensure that the program store is not changed.
-The function
-\deltaset updates a ghost variable: it first evaluates the expression
-and if this did not result in an exceptional state, it updates the
+The function \deltaset updates a ghost variable: it first evaluates the
+expression and if this did not result in an exceptional state, it updates the
 value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
 abbreviate that the value of \(\gvs(n)\) in \(\tau\) is updated to
 \(v\).} appropriately.

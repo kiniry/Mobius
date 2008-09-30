@@ -4,7 +4,6 @@ Given a security property encoded as a PA, the annotation generation
 procedure generates JML-annotations that capture this property,
 \emph{i.e.}, the program does not violate the generated annotations
 if and only if it respects the encoded property.
-% security property encoded by the PA.
 As explained above, the procedure is defined in several steps:
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the monitor is completed; %(as described in Section~\ref{SecPA});
@@ -12,11 +11,7 @@ As explained above, the procedure is defined in several steps:
 as special set-annotations; and
 \item the method specification-level set-annotations are inlined in
 the method body.
-%\item the special \CaseJML construct that is used to make the
-%annotations more compact is translated into a sequence of \Set
-%annotations.
 \end{inparaenum}
-%Notice that the order of the last two steps can be swapped.
 Notice that the special \CaseJML statement could be translated into
 standard JML annotations as well.
 
@@ -48,29 +43,17 @@ complete the proof, we need to ensure that in both bodies the same
 branches of conditional expressions and statements are taken, and that
 the same values get assigned to the store. Therefore, we prove a
 stronger result, adding that also the values %resulting values
-\(v_1\) and \(v_2\) are the same (however, sometimes this holds only
-under certain conditions).
+\(v_1\) and \(v_2\) are the same
+(however, this holds only if the property has not been breached, more on this
+later).
 
-%% Commented to save space
-% This section presents more details of the different translation steps,
-% and presents the relation that witnesses the bisimulation.  Further,
-% we discuss the special conditions under which the bisimulation holds.
-
-%\begin{figure}
-%\begin{center}
-%\epsfig{file=annotgen_example, width=4cm}
-%\end{center}
-%\caption{PA fragment to illustrate set-annotation
-%generation}\label{FigAnnotGenExample}
-
-%\end{figure}
 
 \paragraph{Completion of the automaton}
 The first translation step does not change the program itself, it only
 completes the PA. Suppose that \(P\) is a monitored program, where
 \(\pa(P)\) is deterministic and wellformed. Then the translation to a
 monitored program with a total PA, \(\alpha_1(P)\), is defined as:
-% This is complete_MP in MonitoredProgramCompletessRelation
+%% This is complete_MP in MonitoredProgramCompletessRelation
 \[{\small
 \alpha_1(P) = \opri \pa := \complete(P.\pa), \program := P.\program
 \clri
@@ -113,13 +96,7 @@ Page~\pageref{PAcompletionProp} and we observe further that
 \end{array}}
 \]
 
-%% Rephrased
-% For our running example, applying translation \(\alpha_1\) means that
-% where class \texttt{Messaging} as shown above was first monitored
-% with the partial PA in Figure~\ref{FigExample}, after the translation
-% it is monitored with the total PA in Figure~\ref{FigCompletePA}.
-
-To illustrate how the annotation generation algorithm 
+To illustrate how the annotation generation algorithm
 works on the LimitSMS automaton in Figure~\ref{FigExample}, assume
 we have declared a class \texttt{Messaging}, containing the
 methods used by the automaton, plus a method \texttt{receiveSMS}.
@@ -127,17 +104,9 @@ Applying translation \(\alpha_1\) means that this class, instead of
 being monitored by the partial PA in Figure~\ref{FigExample}, is
 monitored by the total PA in Figure~\ref{FigCompletePA}.
 
-% a field \texttt{counter}. 
-% {\small\begin{verbatim}
-% class Messaging {
-%   int counter;
-%   void sendSMS(){/* body of sendSMS */}
-%   void receiveSMS(){/* body of receiveSMS */}
-%   void reset() {/* body of reset */} }
-% \end{verbatim}}
 
 \paragraph{From PA to Annotations}
-
+%TODO: Try to avoid overfulls (the problem ofc is space)
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
@@ -167,8 +136,8 @@ monitored by the total PA in Figure~\ref{FigCompletePA}.
   \alpha_{2, \mathcal{T}}(\{t \mid t \in a.\trans \wedge
                                    t.\event = \opri \event := e,
                                                     \mname := m \clri
-                           \})\\
-\alpha_{2, \mathcal{T}}(ts) & = &
+                           \}, a)\\
+\alpha_{2, \mathcal{T}}(ts, a) & = &
   \CaseJML(
     \{(\begin{array}[t]{l}
        \Eq(\texttt{cp}, \texttt{q}),\\
@@ -197,7 +166,7 @@ using the function \newgvs, that is not formally defined here. Basically
 \item for each control point \(q\) of the automaton, a (final) ghost
 variable declaration \texttt{q} is generated, initialised to a unique value
 (\emph{i.e.}, we assume we have a function \unique that maps each
-control point to a unique value);
+control point to a unique integer);
 \item a ghost variable \texttt{cp} is declared, initialised to the
 value of the ghost variable representing the initial control point; and
 \item for each automaton variable declaration, a ghost variable is
@@ -230,12 +199,6 @@ Notice that the order in which the different cases are generated is
 not important: since the PA is total and deterministic there is
 always exactly one case that applies.
 
-% Commented out to save space
-% For clarity of presentation, we have ignored here that \preset, \postset and
-% \excset are actually functions, taking the method parameter, result or
-% exception, respectively as input. However, in the PVS formalisation
-% this is correctly handled.
-
 The formalisation does not say how guards and actions are
 translated. Instead, we simply assume that we can translate them
 into expressions in the programming language that
@@ -257,14 +220,14 @@ relation is preserved (where \(P\) is the monitored program,
 of the annotated program):
 \[{\small
 \begin{array}{rcl}
-% This is related_states
+%% This is related_states
 R(\sigma, \tau) & = & \neg \sigma.\stuck \:\wedge\\
 & & \begin{array}[t]{l}
 \mathsf{if\ }\sigma.\pastate.\cp = \halted
 \mathsf{\ then\ }\tau.\pstate.\ex = \JMLExc
 \mathsf{\ else\ }S(\sigma, \tau)
 \end{array}\\
-% This is mp_modeled
+%% This is mp_modeled
 S(\sigma, \tau) & = &
 \begin{array}[t]{l}
 (\unique(\sigma.\pastate.\cp) = \tau.\gvs(\texttt{cp})) \:\wedge\\
@@ -287,10 +250,10 @@ local variables and exceptions) have to coincide, just as the values
 of the ghost variables that are declared in the original program
 \(P\). Notice that if an annotation already present in \(P\)
 causes a \JMLExc, both the monitored and the annotated program will
-throw thi \JMLExc.  Therefore, we cannot prove that the annotated
+throw the \JMLExc.  Therefore, we cannot prove that the annotated
 program throws a \JMLExc \emph{if and only if} \halted is reached.
 
-To prove that this relation is a preserved, the property is
+To prove that this relation is a preserved, it is
 strengthened with the following property: if the control point is not
 \halted, then the derivations also produce the same value. The crucial
 part in the proof is of course what happens upon method call and
@@ -318,7 +281,7 @@ restriction on the behaviour of \TryCatch. We follow the Java Language
 Specification in describing its behaviour~\cite{GoslingJSB05}. This
 means in particular that if the \emph{finally} block in the statement
 terminates abnormally (because of an exception, or any other reason
-for abrupt completion), this overrides a possible exception thrown in
+for abrupt completion), it overrides a possible exception thrown in
 the \emph{try} or \emph{catch} block. Thus, for example, if \halted
 is reached in the \emph{try} block, and hence a \JMLExc is thrown, this
 exception might be overwritten by an exception thrown in the
@@ -326,73 +289,53 @@ exception might be overwritten by an exception thrown in the
 this problem), which would mean that the violation of the security
 policy is not signalled to the user. To avoid this, we require that
 for all \TryCatch statements in the program, if the \emph{try} or
-\emph{catch} block can throw a \JMLExc, then the whole statement
-should also terminate exceptionally because of a \JMLExc.
-
-
-%The exact
-%algorithm is best illustrated with an example. Suppose that we have
-%the PA displayed in Figure~\ref{FigAnnotGenExample}, where \texttt{x}
-%is supposed to be an automaton variable. It has three transitions
-%labelled \(\opri \etype := \entry,
-%\mname := m\clri\) for some method \(m\). The \preset annotation
-%of method \(m\) contains a \CaseJML statement with three branches: the
-%first branch tests whether \texttt{cp} has the value of the ghost
-%variable representing control point \(c\) and \(p\) holds, the second
-%tests whether we are in \(c\) and \(\neg p\) holds \emph{etc.}. Notice
-%that the guards are now legal JML expressions, as all PA variables
-%have been mapped into ghost variable declarations. In the first branch
-%\texttt{cp} is set to the ghost variable representing
-%\(c''\), and the ghost variable \texttt{x} is set to 3. In the second
-%branch,  \texttt{cp} is set to \(c'''\) and \texttt{x} to 5, and in
-%the last branch (\texttt{cp} = \(c'\)) \texttt{cp} is always set to
-%\(c'''\) and \texttt{x} is not changed.
+\emph{catch} block throws a \JMLExc, then the whole statement
+also terminates exceptionally because of a \JMLExc.
 
 To illustrate the translation on our running example, consider again
-class \texttt{Messaging} and the completed
+the class \texttt{Messaging} and the completed
 PA, encoding the \emph{limited SMS} security policy, in
 Figure~\ref{FigCompletePA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
-\(\alpha_2\) on this program and this PA. Notice that for methods 
+\(\alpha_2\) on this program and this PA. Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
 generated~--~this is equivalent to an
 \Skip statement.
 
+\hspace{-0.2em}
 \begin{figure}[t]
 {\small\begin{verbatim}
 class Messaging {
-  //@ ghost int halted = 0, s1 = 1, s2 = 2, N = 5, cp = s1, n = 0;
-  //@ public invariant cp != halted;
+//@ ghost int halted = 0, s1 = 1, s2 = 2, N = 5, cp = s1, n = 0;
+//@ public invariant cp != halted;
 
-  /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
-                                            (n >= N, cp = halted)]),
-                        (cp == s2, CaseSet [(true, cp = halted)]),
-                        (cp == halted, CaseSet [(true, cp = halted)])];
-               Assert cp != halted;
-      post_set CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
-                        (cp == s2, CaseSet [(true, cp = s1; n = n + 1)]),
-                        (cp == halted, CaseSet [(true, cp = halted)])];
-      exc_set  CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
-                        (cp == s2, CaseSet [(true, cp = s1)]),
-                        (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-  void sendSMS(){ /* body sendSMS */}
+/*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
+                                          (n >= N, cp = halted)]),
+                      (cp == s2, CaseSet [(true, cp = halted)]),
+                      (cp == halted, CaseSet [(true, cp = halted)])];
+             Assert cp != halted;
+    post_set CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
+                      (cp == s2, CaseSet [(true, cp = s1; n = n + 1)]),
+                      (cp == halted, CaseSet [(true, cp = halted)])];
+    exc_set  CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
+                      (cp == s2, CaseSet [(true, cp = s1)]),
+                      (cp == halted, CaseSet [(true, cp = halted)])]; @*/
+void sendSMS(){/* body sendSMS */}
 
-  /*@ pre_set  CaseSet []; Assert cp != halted; 
-      post_set CaseSet []; exc_set  CaseSet []; @*/
-  void receiveSMS(){ /* body receiveSMS */}
+/*@ pre_set  CaseSet []; Assert cp != halted;
+    post_set CaseSet []; exc_set  CaseSet []; @*/
+void receiveSMS(){/* body receiveSMS */}
 
-  /*@ pre_set  CaseSet []; Assert cp != halted; exc_set CaseSet [];
-      post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1)]),
-                        (cp == s2, CaseSet [(true, cp = halted)]),
-                        (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-  void reset() { /* body reset */}}\end{verbatim}}
+/*@ pre_set  CaseSet []; Assert cp != halted; exc_set CaseSet [];
+    post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1)]),
+                      (cp == s2, CaseSet [(true, cp = halted)]),
+                      (cp == halted, CaseSet [(true, cp = halted)])]; @*/
+void reset() {/* body reset */} }\end{verbatim}}
 \caption{Set annotations generated for class Messaging}\label{FigExampleStep2}
 \end{figure}
 
 
-
 \paragraph{Inlining the Annotations}
-
 Once the set-annotations at method specification level are generated,
 the next step is to inline them into the method bodies.  The main
 idea is that to ensure that the appropriate set-statements are
@@ -403,7 +346,7 @@ executed at the end of the method body, the body is wrapped in a
 generates one new local variable\footnote{In fact, this should be a
 local \emph{ghost} variable, but as these are not yet supported by our
 formalisation, we formalise it as a standard local variable.}
-\resl. The body of the method is changed as follows: 
+\resl. The body of the method is changed as follows:
 all code is wrapped in two \TryCatch statements, to catch \Throwable
 and \NullPointer exceptions\footnote{For simplicity, we do not model
 the exception hierarchy and thus \TryCatch can only catch a single
@@ -444,7 +387,6 @@ is the look up of the variable \resl. To conclude, \preset,
 \]
 \caption{Formal definition of annotation inlining for methods}\label{FigInline}
 \end{figure}
-
 
 To prove correctness of this translation, we use the following
 relation: all fields and ghost variables coincide, exceptions
