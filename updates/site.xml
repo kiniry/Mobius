@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
    <description url="http://kind.ucd.ie/products/opensource/Mobius/updates/">
-      This is the general update site for all the plugins and features that are included with the Mobius Program Verifiaction Environment.
+      This is the general update site for all the plugins and features that are included with the Mobius Program Verification Environment.
    </description>
    <feature url="features/mobius.Escjava2.feature_2.0.7.jar" id="mobius.Escjava2.feature" version="2.0.7">
       <category name="Mobius"/>
@@ -32,9 +32,6 @@
    </feature>
    <feature url="features/net.sourceforge.pmd.eclipse_3.2.2.jar" id="net.sourceforge.pmd.eclipse" version="3.2.2">
       <category name="Other"/>
-   </feature>
-   <feature url="features/RCC_Feature_1.0.0.jar" id="RCC_Feature" version="1.0.0">
-      <category name="Mobius"/>
    </feature>
    <feature url="features/ch.ethz.inf.sct.jml.plugin_1.0.9.jar" id="ch.ethz.inf.sct.jml.plugin" version="1.0.9">
       <category name="Mobius"/>
