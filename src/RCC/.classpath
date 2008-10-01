@@ -4,5 +4,5 @@
 	<classpathentry kind="src" path="java"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.4"/>
 	<classpathentry exported="true" kind="lib" path="releases/1.0.0/javafe-1.0.jar"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
