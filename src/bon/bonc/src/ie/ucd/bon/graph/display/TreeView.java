@@ -59,7 +59,6 @@ import prefuse.visual.VisualItem;
 import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
 
-
 /**
  * Demonstration of a node-link tree viewer
  *
@@ -68,7 +67,7 @@ import prefuse.visual.sort.TreeDepthItemSorter;
  */
 public class TreeView extends Display {
 
-  public static final String TREE_CHI = "/Users/Fintan/Desktop/mon.xml";
+  private static final long serialVersionUID = 6738484295206040637L;
 
   private static final String tree = "tree";
   private static final String treeNodes = "tree.nodes";
@@ -189,7 +188,7 @@ public class TreeView extends Display {
     registerKeyboardAction(
         new OrientAction(Constants.ORIENT_BOTTOM_TOP),
         "bottom-to-top", KeyStroke.getKeyStroke("ctrl 4"), WHEN_FOCUSED);
-
+    
     // ------------------------------------------------
 
     // filter graph and perform layout
@@ -324,6 +323,10 @@ public class TreeView extends Display {
   // ------------------------------------------------------------------------
 
   public class OrientAction extends AbstractAction {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 154642313345L;
     private int orientation;
 
     public OrientAction(int orientation) {
