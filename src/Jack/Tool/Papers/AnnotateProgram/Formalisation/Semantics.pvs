@@ -690,7 +690,7 @@ BEGIN
              THEN tau
              ELSE update_GhostVars(tau, update_store(vn, v))
              ENDIF AND
-        pstate(s1) = pstate(s2)
+        st(pstate(s1)) = st(pstate(s2))
 
   % derivation of CaseJML annotation for runtime checking semantics
   execute_CaseJML : (execute_CaseJML_type) =
@@ -703,7 +703,7 @@ BEGIN
         cons(x, xs) : n > 0 AND
                       derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x),
                                        CaseJML(xs)), s1, v, s2)(n - 1) AND
-                      pstate(s1) = pstate(s2)
+                      st(pstate(s1)) = st(pstate(s2))
       ENDCASES 
 
   IMPORTING ProgramFunctions[Name]
