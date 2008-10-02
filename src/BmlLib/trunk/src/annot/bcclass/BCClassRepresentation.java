@@ -85,16 +85,16 @@ public abstract class BCClassRepresentation {
       if (arr[i] instanceof Unknown) {
         final Unknown ua = (Unknown) arr[i];
         final String aname = ua.getName();
-        if (DisplayStyle.__classInvariant.equals(aname)) {
+        if (DisplayStyle.INVARIANTS_ATTR.equals(aname)) {
           continue;
         }
-        if (DisplayStyle.__mspec.equals(aname)) {
+        if (DisplayStyle.METHOD_SPECIFICATION_ATTR.equals(aname)) {
           continue;
         }
-        if (DisplayStyle.__assertTable.equals(aname)) {
+        if (DisplayStyle.ASSERT_TABLE_ATTR.equals(aname)) {
           continue;
         }
-        if (DisplayStyle.__loopSpecTable.equals(aname)) {
+        if (DisplayStyle.LOOP_SPECIFICATION_TABLE.equals(aname)) {
           continue;
         }
       }

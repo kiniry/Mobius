@@ -612,9 +612,6 @@ public final class ManualTests {
       ReadAttributeException {
     bcc.saveToFile(Paths.tmp_path + "test/Empty.class");
     bcc = new BCClass(Paths.tmp_path, "test.Empty");
-    final String cpCode = bcc.printCp();
-    System.out.println(xxx);
-    System.out.println(cpCode);
     final String code = bcc.printCode();
     System.out.println(xxx);
     System.out.println(addLineNumbers(code));
@@ -851,7 +848,6 @@ public final class ManualTests {
       ReadAttributeException {
     final String fname = "text";
     bcc = createSampleClass();
-    System.out.println(bcc.printCp());
     System.out.println(bcc.printCode());
     System.out.println(xxx);
     final int fi = bcc.getFieldIndex(fname);

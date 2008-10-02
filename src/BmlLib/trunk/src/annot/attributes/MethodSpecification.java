@@ -119,14 +119,14 @@ public class MethodSpecification extends MethodAttribute implements
    *     attribute it represents.
    */
   public int getIndex() {
-    return this.method.getBcc().getCp().findConstant(DisplayStyle.__mspec);
+    return this.method.getBcc().getCp().findConstant(DisplayStyle.METHOD_SPECIFICATION_ATTR);
   }
 
   /**
    * @return Unknown (BCEL) attribute name.
    */
   public String getName() {
-    return DisplayStyle.__mspec;
+    return DisplayStyle.METHOD_SPECIFICATION_ATTR;
   }
 
   /**

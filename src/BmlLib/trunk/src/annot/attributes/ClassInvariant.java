@@ -124,7 +124,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    *     attribute it represents.
    */
   public int getIndex() {
-    return this.bcc.getCp().findConstant(DisplayStyle.__classInvariant);
+    return this.bcc.getCp().findConstant(DisplayStyle.INVARIANTS_ATTR);
   }
 
   /**
@@ -138,7 +138,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * @return Unknown (BCEL) attribute name.
    */
   public String getName() {
-    return DisplayStyle.__classInvariant;
+    return DisplayStyle.INVARIANTS_ATTR;
   }
 
   /**

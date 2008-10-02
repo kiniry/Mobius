@@ -27,11 +27,11 @@ public class NumberUtils {
    * This method returns the given number with an initial padding which
    * depends on the size of the number. We assume that the highest number
    * has at most {@link MAXIMAL_PADDING} + 1 digits. The padding is at most
-   * {@link #MAXIMAL_PADDING}. In case the number has more digits no
-   * padding is generated
+   * {@link #MAXIMAL_PADDING} and consists of spaces. In case the number has
+   * more digits no padding is generated.
    *
    * @param num the number to be padded
-   * @return
+   * @return the string with padded number
    */
   public static String paddedNumber(final int num) {
     int acc = num;
@@ -43,8 +43,8 @@ public class NumberUtils {
     if (pow > MAXIMAL_PADDING) {
       return Integer.toString(num);
     }
-    StringBuffer ret = new StringBuffer(pow);
-    for (int  i = pow - 1; i >= 0; i--) {
+    final StringBuffer ret = new StringBuffer(MAXIMAL_PADDING - pow);
+    for (int  i = 0; i < MAXIMAL_PADDING - pow; i++) {
       ret.insert(i, ' ');
     }
     return ret.append(num).toString();

@@ -2,11 +2,6 @@ package annot.bcclass;
 
 import java.util.Enumeration;
 
-import org.apache.bcel.Constants;
-import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantClass;
-import org.apache.bcel.classfile.ConstantUtf8;
-
 import annot.attributes.ClassInvariant;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
@@ -73,7 +68,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * "Textual Representation of Specifications":
    *    fileheader typeheader
    * where
-   *    fileheader ::= packageinfo [ imports ]
+   *    fileheader ::= packageinfo constant-pools
    *    typeheader ::= class ident [class-extends-clause] [implements-clause]
    *    class-extends-clause ::= extends name
    *    implements-clause ::= implements name-list
@@ -83,19 +78,9 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    */
   @Override
   public String toString() {
+    // fileheader
     String ret = printFileHeader();
-    /*
-    if (jc.isPublic())
-      ret += "public ";
-    if (jc.isPrivate())
-      ret += "private ";
-    if (jc.isProtected())
-      ret += "protected ";
-    if (jc.isAbstract())
-      ret += "abstract ";
-    if (jc.isFinal())
-      ret += "final ";
-    */
+    // typeheader
     ret += "class " + getJC().getClassName();
     if (!"java.lang.Object".equals(getJC().getSuperclassName())) {
       ret += " extends " + getJC().getSuperclassName();
@@ -115,44 +100,20 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * Displays a file header, similar to one in Java.
    * This uses the format of the grammar from "BML Reference Manual" section
    * "Textual Representation of Specifications":
-   *    fileheader ::= packageinfo [ imports ]
+   *    fileheader ::= packageinfo constant-pools
+   * where
+   *    packageinfo ::= package packagename nl [ nl ]...
+   *    packagename ::= [default] | typename
+   *    constant-pools ::= constant-pool [ second-constant-pool ] nl
    *
    * @return String representation of class header.
    */
   public String printFileHeader() {
     final StringBuffer ret = generatePackageInfo();
     ret.append("\n\n");
-    addImports(ret);
+    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "displaying constant pool");
+    getCp().printCode(ret);
     return ret.append("\n").toString();
-  }
-
-  /**
-   * Adds at the end of the given {@link StringBuffer} the imports of the class
-   * file. This uses the format of the grammar from "BML Reference Manual"
-   * section "Textual Representation of Specifications":
-   *    imports ::= [ import ]...
-   *    import ::= java-import | bml-import
-   *    java-import ::= 'import' typename
-   *    bml-import ::= '//@' 'import' typename
-   *    typename ::= ident'/'typename
-   *
-   * @param buf the {@link StringBuffer} to append the imports to
-   */
-  private void addImports(final StringBuffer buf) {
-    for (int i = 0; i < getCp().size(); i++) {
-      final Constant constant = getCp().getConstant(i);
-      if (constant != null && constant.getTag() == Constants.CONSTANT_Class) {
-        final int namenum = ((ConstantClass)constant).getNameIndex();
-        if (getJC().getClassNameIndex() != i) {
-          final String name = ((ConstantUtf8)getCp().getConstant(namenum)).
-            getBytes();
-          if (getCp().isSecondConstantPoolIndex(i)) { //BML import
-            buf.append(DisplayStyle.ONE_LINE_BML_START).append(" ");
-          }
-          buf.append("import ").append(name).append("\n");
-        }
-      }
-    }
   }
 
   /**
@@ -161,30 +122,18 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * "Textual Representation of Specifications":
    *    packageinfo ::= package packagename
    * where
-   *    packagename ::= [default] | @var{typename}
+   *    packagename ::= [default] | typename
    *
    * @return the buffer with the representation of package information
    */
   private StringBuffer generatePackageInfo() {
     String pname = getJC().getPackageName();
     if ("".equals(pname)) {
-      pname = "[default]";
+      pname = DisplayStyle.DEFAULT_PACKAGE_NAME_KWD;
     }
-    final StringBuffer ret = new StringBuffer("package ");
+    final StringBuffer ret = new StringBuffer(DisplayStyle.PACKAGE_KWD + " ");
     ret.append(pname);
     return ret;
-  }
-
-
-  /**
-   * Displays constant pools.
-   *
-   * @return String representation of class' constant pool,
-   *     including second constant pool, if any.
-   */
-  public String printCp() {
-    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "displaying constant pool");
-    return getCp().printCode();
   }
 
 }

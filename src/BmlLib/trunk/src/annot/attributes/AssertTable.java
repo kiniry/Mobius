@@ -34,7 +34,7 @@ public class AssertTable extends BCAttributeTable {
    */
   @Override
   public String getName() {
-    return DisplayStyle.__assertTable;
+    return DisplayStyle.ASSERT_TABLE_ATTR;
   }
 
   /**

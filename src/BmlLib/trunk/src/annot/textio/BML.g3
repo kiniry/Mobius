@@ -25,7 +25,7 @@ options {
 @members {
   public RecognitionException lastE = null;
   
-  // initail data (parser parameters)
+  // initial data (parser parameters)
   private BCClass bcc;
   private BCMethod m;
   private BCConstantPool cp;
@@ -144,35 +144,86 @@ parseClass :
   {syso("-------------- parsing completed --------------");};
 
 fileheader :
-  packageinfo imports;
+  packageinfo constant_pools;
 
 packageinfo :
   PACKAGE ( DEFAULTPACKAGE | typename ) EOL+
   {syso("packageinfo");};
 
 typename returns [String name] :
-  i=IDENT { $name = $i.getText(); }
-  (DIV typename { $name +=  '/' + $typename.name; })?;
+    i=IDENT { $name = $i.getText(); }
+    (DIV typename { $name +=  '/' + $typename.name; })?
+  | STRING_CP { $name = "String"; }
+    (DIV typename { $name +=  '/' + $typename.name; })?;
 
-imports :
-  java_imports bml_imports EOL+
-  {syso("imports");};
+constant_pools : constant_pool ( second_constant_pool )? EOL;
 
-java_imports :
-  (java_import)*
-  {syso("java-imports");};
+constant_pool : CONSTANT_POOL EOL constant_pool_content
+  {syso("constant_pool");};
 
-bml_imports :
-  (bml_import)*
-  {syso("bml_imports");};
+second_constant_pool : SECOND_CONSTANT_POOL EOL constant_pool_content;
 
-java_import :
-  IMPORT typename EOL
-  {syso("java_import");};
+constant_pool_content : constant_pool_line EOL ( constant_pool_line EOL )*;
 
-bml_import :
-  BML_ONE_LINE_START java_import
-  {syso("bml_import");};  
+constant_pool_line : CONST cp_ref EQUALS constant_pool_entry 
+  	{syso("constant_pool_line");};
+
+constant_pool_entry : class_cp_entry | field_cp_entry 
+   | method_cp_entry | interface_method_cp_entry
+   | string_cp_entry | integer_cp_entry | float_cp_entry
+   | long_cp_entry | double_cp_entry
+   | name_and_type_cp_entry | utf8_cp_entry;
+   
+class_cp_entry : CLASS_CP cp_ref SEMICOLON 
+  {syso("class_cp_entry");};
+
+field_cp_entry : FIELDREF_CP cp_ref.cp_ref SEMICOLON
+  {syso("field_cp_entry");};
+
+method_cp_entry : METHODREF_CP cp_ref DOT cp_ref SEMICOLON
+  {syso("method_cp_entry");};
+
+interface_method_cp_entry : INTERFACEMETHODREF_CP cp_ref DOT cp_ref SEMICOLON
+  {syso("interface_method_cp_entry");};
+
+string_cp_entry : STRING_CP cp_ref SEMICOLON
+  {syso("string_cp_entry");};
+
+integer_cp_entry : INTEGER_CP ( sign )? NAT SEMICOLON
+  {syso("integer_cp_entry");};
+
+float_cp_entry : FLOAT_CP ( sign )? floating_point_literal SEMICOLON
+  {syso("float_cp_entry");};
+
+long_cp_entry : LONG_CP ( sign )? NAT SEMICOLON
+  {syso("long_cp_entry");};
+
+double_cp_entry : DOUBLE_CP ( sign )? floating_point_literal SEMICOLON
+  {syso("double_cp_entry");};
+
+name_and_type_cp_entry : NAMEANDTYPE_CP cp_ref COLON cp_ref SEMICOLON
+  {syso("name_and_type_cp_entry");};
+
+//slight simplification, any non-newline character is accepted as string
+utf8_cp_entry : UTF8_CP (~('\n'))* SEMICOLON
+  {syso("utf8_cp_entry");};
+
+cp_ref : HASH NAT;
+
+sign : PLUS | MINUS;
+
+exponent_indicator : 'e' | 'E';
+
+signed_integer : ( sign )? NAT;
+
+exponent_part : exponent_indicator signed_integer;
+
+floating_point_literal : NAT DOT ( NAT )? ( exponent_part )? ( float_type_suffix )?
+        | DOT NAT ( exponent_part )? ( float_type_suffix )?
+        | NAT exponent_part ( float_type_suffix )?
+        | NAT ( exponent_part )? float_type_suffix;
+
+float_type_suffix : 'f' | 'F' | 'd' | 'D';
 
 typeheader :
   (  classmodifiers CLASS dotedname
@@ -301,7 +352,7 @@ methodmodifier :
    | STRICTFP) {syso("method modifier");};  
 
 type_spec :
-    type (dims)? ;
+    type (dims)? {syso("type_spec");};
 
 type :
     reference_type
@@ -323,24 +374,26 @@ built_in_type :
 
 
 methodheader :
-  (IDENT | CONSNAME) formals dims?
+  (i=IDENT | i=CONSNAME) {syso("method IDENT=" + $i.getText());} formals dims?
   throws_clause? EOL {syso("methodheader parsed");}
   ;
 
-formals :
-  PAR_LEFT param_declaration_list? PAR_RIGHT;
+formals : 
+  PAR_LEFT {syso("before param_declaration_list");} param_declaration_list? PAR_RIGHT;
 
-param_declaration_list :
+param_declaration_list : {syso("started param_declaration_list");}
   param_declaration (COMMA param_declaration)*;
 
 param_declaration :
-  param_modifier? type_spec IDENT dims? {syso("param_declaration");};
+  param_modifier? type_spec i=IDENT {syso("IDENT=" + $i.getText());} 
+  dims? {syso("param_declaration");};
 
 param_modifier :
   'final' | 'nullable' | 'non_null';
 
 dims :
-  (BR_LEFT BR_RIGHT)+;
+  (BR_LEFT BR_RIGHT)+
+  {syso("dims");};
   
 throws_clause :
   THROWS name_list;
@@ -421,7 +474,7 @@ methodSpecification returns [MethodSpecification ast] :
   ;
   
 emptyspec :
-    BML_START (EOL BML_MARK)* EOL BML_END EOL {syso("empty spec");} 
+    BML_START (EOL)* BML_END EOL {syso("empty spec");} 
   | (BML_ONE_LINE_START EOL)+ {syso("empty spec");}
   ;
 
@@ -745,6 +798,9 @@ SC_END: '|}';
 PRECONDITION: 'precondition';
 MODIFIES: 'modifies';
 POSTCONDITION: 'ensures';
+CONSTANT_POOL: 'Constant pool:';
+SECOND_CONSTANT_POOL: 'Second constant pool:';
+CONST: 'const';
 COMMA: ',';
 EXSURES: 'exsures';
 COLON: ':';
@@ -767,6 +823,7 @@ EQ: '==';
 NOTEQ: '!=';
 GRTEQ: '>=';
 GRT: '>';
+EQUALS : '=';
 PAR_LEFT: '(';
 PAR_RIGHT: ')';
 BR_LEFT: '[';
@@ -776,6 +833,7 @@ MINUS: '-';
 MULT: '*';
 DIV: '/';
 REM: '%';
+HASH: '#';
 SHL: '<<';
 SHR: '>>';
 USHR: '>>>';
@@ -793,13 +851,24 @@ DOT: '.';
 OLD: 'old'|'OLD';
 LENGTH: 'length';
 BML_ONE_LINE_START: '//@';
+ONE_LINE_COMMENT: '//';
 BML_START: '/*@';
 BML_END: '@*/';
-BML_MARK: '@';
 COMMENT_END: '*/';
+CLASS_CP: 'Class';
+FIELDREF_CP: 'Fieldref';
+METHODREF_CP: 'Methodref';
+INTERFACEMETHODREF_CP: 'InterfaceMethodref';
+STRING_CP: 'String';
+INTEGER_CP: 'Integer';
+UTF8_CP: 'Utf8';
+LONG_CP: 'Long';
+DOUBLE_CP: 'Double';
+NAMEANDTYPE_CP: 'NameAndType';
+FLOAT_CP: 'Float';
 
-NAT: ('0'..'9')+;
 IDENT: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+NAT: ('0'..'9')+;
 STRING: '\"' (.* (~('\\')))? '\"';
 
 WS: (' '|'\t')+ {skip();};

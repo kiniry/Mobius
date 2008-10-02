@@ -208,21 +208,21 @@ public class AttributeReader {
     this.input = ua.getBytes();
     this.length = ua.getLength();
     this.pos = 0;
-    if (aname.equals(DisplayStyle.__mspec)) {
+    if (aname.equals(DisplayStyle.METHOD_SPECIFICATION_ATTR)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.__mspec);
+                  DisplayStyle.METHOD_SPECIFICATION_ATTR);
       this.method.setMspec(new MethodSpecification(this.method, this));
-    } else if (aname.equals(DisplayStyle.__classInvariant)) {
+    } else if (aname.equals(DisplayStyle.INVARIANTS_ATTR)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.__classInvariant);
+                  DisplayStyle.INVARIANTS_ATTR);
       this.bcc.setInvariant(new ClassInvariant(this.bcc, this));
-    } else if (aname.equals(DisplayStyle.__assertTable)) {
+    } else if (aname.equals(DisplayStyle.ASSERT_TABLE_ATTR)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.__assertTable);
+                  DisplayStyle.ASSERT_TABLE_ATTR);
       this.method.getAmap().getAtab().load(this);
-    } else if (aname.equals(DisplayStyle.__loopSpecTable)) {
+    } else if (aname.equals(DisplayStyle.LOOP_SPECIFICATION_TABLE)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.__loopSpecTable);
+                  DisplayStyle.LOOP_SPECIFICATION_TABLE);
       this.method.getAmap().getLstab().load(this);
     } else {
       MLog.putMsg(MessageLog.LEVEL_PTODO,

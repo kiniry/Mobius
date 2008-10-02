@@ -15,8 +15,6 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
-import bmllib.utils.NumberUtils;
-
 import annot.io.ConstantPoolReader;
 import annot.io.ReadAttributeException;
 import annot.textio.DisplayStyle;
@@ -31,7 +29,7 @@ import annot.textio.DisplayStyle;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BCConstantPool {
+public class BCConstantPool extends BCCConstantPrinting {
 
   /**
    * Constant array.
@@ -39,7 +37,7 @@ public class BCConstantPool {
   private Vector < Constant >  constants;
 
   /**
-   * Number of constants in main (BCEL's) constant pool.
+   * Number of constants in first constant pool.
    */
   private int initialSize;
 
@@ -118,7 +116,7 @@ public class BCConstantPool {
     for (int i = 0; i  <  attrs.length; i++) {
       if (attrs[i] instanceof Unknown) {
         final Unknown ua = (Unknown) attrs[i];
-        if (DisplayStyle.__second_cp.equals(ua.getName())) {
+        if (DisplayStyle.SECOND_CONSTANT_POOL_ATTR.equals(ua.getName())) {
           bytes = ua.getBytes();
         }
       }
@@ -171,11 +169,11 @@ public class BCConstantPool {
    */
   private void addStandardConstants(final ConstantPoolGen cpg) {
     cpg.addUtf8(DisplayStyle.JT_INT);
-    cpg.addUtf8(DisplayStyle.__assertTable);
-    cpg.addUtf8(DisplayStyle.__classInvariant);
-    cpg.addUtf8(DisplayStyle.__mspec);
-    cpg.addUtf8(DisplayStyle.__second_cp);
-    cpg.addUtf8(DisplayStyle.__loopSpecTable);
+    cpg.addUtf8(DisplayStyle.ASSERT_TABLE_ATTR);
+    cpg.addUtf8(DisplayStyle.INVARIANTS_ATTR);
+    cpg.addUtf8(DisplayStyle.METHOD_SPECIFICATION_ATTR);
+    cpg.addUtf8(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
+    cpg.addUtf8(DisplayStyle.LOOP_SPECIFICATION_TABLE);
   }
 
   /**
@@ -216,40 +214,31 @@ public class BCConstantPool {
   }
 
   /**
-   * Prints both constant pools.
+   * Prints both constant pools. The grammar to pring out is:
+   *    constant-pools ::= constant-pool [ second-constant-pool ] nl
+   * where
+   *    constant-pool ::= Constant pool: nl constant-pool-content
+   *    second-constant-pool ::= Second constant pool: nl constant-pool-content
    *
-   * @return Constant pools String representation.
+   * @param a_code the {@link StringBuffer} to append the constant pools to
+   * @return Constant pools representation in a StringBuffer
    */
-  public String printCode() {
-    String code = "**** primary constant pool ****\n";
+  public StringBuffer printCode(final StringBuffer a_code) {
+    a_code.append(DisplayStyle.CONSTANT_POOL_KWD + "\n");
     for (int i = 0; i  <  this.initialSize; i++) {
-      code += printElement(i);
+      a_code.append(printElement(i));
     }
     final int n = this.constants.size();
     if (n == this.initialSize) {
-      return code;
+      return a_code;
     }
-    code += "*** secondary constant pool ****\n";
+    a_code.append("\n" + DisplayStyle.SECOND_CONSTANT_POOL_KWD + "\n");
     for (int i = this.initialSize; i  <  n; i++) {
-      code += printElement(i);
+      a_code.append(printElement(i));
     }
-    return code;
+    return a_code;
   }
 
-  /**
-   * Displays i-th constant. The format is as follows:
-   *   i :  CONSTANT_Utf8[1]("Code")
-   *
-   * @param i - constant's index.
-   * @return a String like described above.
-   */
-  private String printElement(final int i) {
-    final Constant c = this.constants.elementAt(i);
-    if (c == null) {
-      return "";
-    }
-    return NumberUtils.paddedNumber(i) + ": " + c.toString() + "\n";
-  }
 
   /**
    * Reinitializes constant pool from it's JavaClass'es
@@ -293,7 +282,7 @@ public class BCConstantPool {
       throw new RuntimeException("io error in BCConstantPool.save()");
     }
     final ConstantPool cp = ajc.getConstantPool();
-    final int nameIndex = findConstant(DisplayStyle.__second_cp);
+    final int nameIndex = findConstant(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
     final int length = file.size();
     final byte[] bytes = baos.toByteArray();
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
