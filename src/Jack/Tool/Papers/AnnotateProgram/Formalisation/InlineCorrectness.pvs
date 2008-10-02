@@ -111,6 +111,32 @@ BEGIN
       derive(inline_program(p))(b, sAP2a, v2, sAP2b)(n2) IMPLIES
         inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2
 
+  derive_pstate_changes_inlined_program_for_unchanged_program : LEMMA % :-)
+    FORALL (b : (wf_Body(p)), v1, v2 : Val)
+           (sAP1a, sAP1b, sAP2a, sAP2b : APState)
+           (n1, n2 : nat) :
+      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+      inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+      derive(p)(b, sAP1a, v1, sAP1b)(n1) IMPLIES
+      derive(inline_program(p))(b, sAP2a, v2, sAP2b)(n2) IMPLIES
+      (FORALL (n : Name) :
+        IF lvs(st(pstate(sAP1a)))(n) = lvs(st(pstate(sAP1b)))(n) 
+        THEN lvs(st(pstate(sAP2a)))(n) = lvs(st(pstate(sAP2b)))(n)
+        ELSE NOT (lvs(st(pstate(sAP2a)))(n) = lvs(st(pstate(sAP2b)))(n))
+        ENDIF)
+
+  derive_maintains_lvs_pstate_inlined_program_for_unchanged_program : LEMMA % :-)
+    FORALL (b : (wf_Body(p)), v1, v2 : Val)
+           (sAP1a, sAP1b, sAP2a, sAP2b : APState)
+           (n1, n2 : nat) :
+      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+      inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+      derive(p)(b, sAP1a, v1, sAP1b)(n1) IMPLIES
+      derive(inline_program(p))(b, sAP2a, v2, sAP2b)(n2) IMPLIES
+      lvs(st(pstate(sAP1a))) = lvs(st(pstate(sAP1b))) IMPLIES
+        lvs(st(pstate(sAP2a))) = lvs(st(pstate(sAP2b))) 
+
+  % all but method call case proven
   inline_related_states_implies_derive_for_unchanged_program : THEOREM
     FORALL (b : (wf_Body(p)), v : Val)
            (sAP1a, sAP1b, sAP2a : APState)
