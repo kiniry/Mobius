@@ -37,15 +37,15 @@ steps. For each step we provide a correctness proof.
 \begin{inparaenum}[(\itshape i\upshape)]
 \item We translate a \emph{partial automaton}, to a \emph{total automaton}
 that contains a special trap to model that an error has occurred.
-Often it is much more intuitive to specify a security property by a partial
-automaton, (this avoids cluttering up the automaton with transitions that
-\emph{``go wrong''}), while for many tools and algorithms, a complete
-automaton is easier to handle.
+% Often it is much more intuitive to specify a security property by a partial
+% automaton, (this avoids cluttering up the automaton with transitions that
+% \emph{``go wrong''}), while for many tools and algorithms, a complete
+% automaton is easier to handle.
 We show that the behaviour of a program that is monitored with a partial
 automaton is equivalent to the behaviour of a program that is monitored with
 the completed automaton.
-\item We generate annotations, using an extension of JML~\cite{LeavensPCCRCK05},
-that capture the behaviour of the total automaton.  For this, we
+\item Using an extension of JML~\cite{LeavensPCCRCK05}, we generate annotations
+that capture the behaviour of the total automaton. For this, we
 generate special method-level set-annotations that are evaluated upon
 entry or exit of a method.
 We show that run-time monitoring of the program only throws a (new) exception
