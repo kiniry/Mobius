@@ -102,8 +102,8 @@ public abstract class AbstractPrettyPrinter {
    * @return <code>s</code> with trailing spaces removed.
    */
   private String filter1(final String s) {
-    if (DisplayStyle.comment_start.equals(s) ||
-        DisplayStyle.comment_end.equals(s)) {
+    if (DisplayStyle.BML_COMMENT_START.equals(s) ||
+        DisplayStyle.BML_COMMENT_END_WITH_SPACES.equals(s)) {
       return s;
     }
     int i = s.length() - 1;
@@ -157,8 +157,8 @@ public abstract class AbstractPrettyPrinter {
     final String[] lines = s.split("\n");
     for (int i = 0; i  <  lines.length; i++) {
       String line = lines[i];
-      if (!line.startsWith(DisplayStyle.comment_start) &&
-          !line.startsWith(DisplayStyle.COMMENT_NEXT)) {
+      if (!line.startsWith(DisplayStyle.BML_COMMENT_START) &&
+          !line.startsWith(DisplayStyle.BML_COMMENT_NEXT)) {
         continue;
       }
       if (i == 0) {

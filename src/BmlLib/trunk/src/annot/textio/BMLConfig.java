@@ -96,7 +96,7 @@ public class BMLConfig extends DisplayStyle {
    *     and indentation.
    */
   public String newLine() {
-    return "\n" + COMMENT_NEXT + this.indent;
+    return "\n" + BML_COMMENT_NEXT + this.indent;
   }
 
   /**

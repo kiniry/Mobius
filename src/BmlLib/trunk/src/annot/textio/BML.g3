@@ -39,6 +39,7 @@ options {
   private int bvc;              // number of currently visible bound variables
   private int lqfs;             // last (current) quantified formula size
   private HashMap<String, BoundVar> env;  // bound variable map
+  private Vector<PosInCode> bml_positions = new Vector(); //postions of BML areas
   
   //local variables
   private boolean clr = false;
@@ -113,6 +114,10 @@ options {
     MLog.putMsg(MLog.LEVEL_PINFO, "undefined identifier: " + ident);
     reportError(null);
     return null;
+  }
+  
+  public Vector<PosInCode> getBMLPositions() {
+    return bml_positions;
   }
 }
 
@@ -287,18 +292,6 @@ typebody :
   )+
   {syso("methods parsed");};
 
-classComment :
-  EOA { syso("begin of class decl"); }
-  (c=classAttribute {
-      if ($c.ast != null) {
-        syso("next class attribute");
-        if (affectBcc)
-          $c.ast.replace(bcc);
-      }
-    }
-   EOA)*
-  ;
-
 method :
    (met=methodSpecification {
       syso("method spec parsed");
@@ -426,27 +419,6 @@ instruction_line :
     )
   ;
 
-comment :
-  EOA {syso("beginning of comment");
-    minor = 0;
-  }
-  ( NO_ANNOTATION {
-    syso("annotation unaffected");
-    minor++;
-  }
-    | ica=inCodeAttribute {
-      if ($ica.ast != null) {
-        syso("annotation");
-        SingleList sl = m.getAmap().getAllAt(ih);
-        if (affectBcc) {
-          sl.setNth(minor, $ica.ast);
-          m.getAmap().setAtributesForInstruction(ih, sl);
-        }
-        minor++;
-      }
-    } EOA)*
-  ;
-
 // bml level
 
 printableAttribute returns [BCPrintableAttribute ast] :
@@ -465,18 +437,38 @@ methodAttribute returns [MethodAttribute ast] :
   m=methodSpecification {$ast = $m.ast;};
 
 methodSpecification returns [MethodSpecification ast] :
-    emptyspec { syso("empty spec parsed"); $ast = null; }
-  | s=specCase {
-      syso("specCase parsed");
-      $ast = new MethodSpecification(m);
-      $ast.addCase($s.ast);
-    }
-  ;
+    emptyspec
+      {
+        syso("empty spec parsed");
+        $ast = null;
+      }
+  | s=specCase 
+      {
+        syso("specCase parsed");
+        $ast = new MethodSpecification(m);
+        $ast.addCase($s.ast);
+      };
   
 emptyspec :
-    BML_START (EOL)* BML_END EOL {syso("empty spec");} 
-  | (BML_ONE_LINE_START EOL)+ {syso("empty spec");}
-  ;
+    st=BML_START (EOL)* en=BML_END EOL
+      {
+         bml_positions.add(new PosInCode($st.getLine(),
+                                         $st.getCharPositionInLine()));
+         bml_positions.add(new PosInCode($en.getLine(),
+                                         $en.getCharPositionInLine()+3));
+         syso("empty spec");
+      } 
+  | (st=BML_ONE_LINE_START en=EOL
+       {
+          bml_positions.add(new PosInCode($st.getLine(),
+                                          $st.getCharPositionInLine()));
+          bml_positions.add(new PosInCode($en.getLine()+1,
+                                          0));
+       }
+    )+
+      {
+         syso("empty spec");
+      };
 
 exname returns [String name] :
   i=typename {$name = $i.name;}
@@ -486,6 +478,7 @@ exname returns [String name] :
   ;
 
 specCase returns [SpecificationCase ast] :
+  st=BML_START
   (REQUIRES f1=formula {
      prec = $f1.ast;
      modif = null;
@@ -503,7 +496,11 @@ specCase returns [SpecificationCase ast] :
         }
       })+
    )?
-  ) {
+  ) en=BML_END EOL {
+    bml_positions.add(new PosInCode($st.getLine(),
+                                    $st.getCharPositionInLine()));
+    bml_positions.add(new PosInCode($en.getLine(),
+                                    $en.getCharPositionInLine()+3));
     if (prec != null)
       $ast = new SpecificationCase(m, prec, modif, postc, exc);
   };
@@ -777,11 +774,7 @@ DOUBLE: 'double';
 EXTENDS: 'extends';
 IMPLEMENTS: 'implements';
 THROWS: 'throws';
-MTHROWS: '[[throws]]';
-NO_ANNOTATION: '\\annotation unaffected';
-EOD: 'EOD';
-EOM: 'EOM';
-EOA: 'EOA';
+
 
 // bml level
 // IDisplayStyle must be modified as well

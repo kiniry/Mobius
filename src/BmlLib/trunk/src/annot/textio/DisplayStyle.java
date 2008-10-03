@@ -270,12 +270,6 @@ public class DisplayStyle {
 
   public static final String _assert = "assert";
 
-  public static final String comment_end = "  @*/"; //careful
-
-  public static final String COMMENT_NEXT = "  @ ";
-
-  public static final String ONE_LINE_BML_START = "//@";
-
   /**
    * The hash sign to be used in numbers of constants.
    */
@@ -300,18 +294,46 @@ public class DisplayStyle {
    * The . sign to be used in numbers of constants.
    */
   public static final String DOT_SIGN = ".";
+  
+  /**
+   * The @ sign to be used as BML comment indicator
+   */
+  public static final String BML_AT_SIGN = "@";
 
   /**
-   * length of comment marks above.
+   * The string which starts a BML area.
+   * @see COMMENT_LENGTH
    */
-  public static final int COMMENT_LENGTH = COMMENT_NEXT.length();
-
+  public static final String BML_COMMENT_START = "/*" + BML_AT_SIGN + " ";
 
   /**
-   * Beginning, next line, and end of BML annotation comment.
-   * All should have the same length:
+   * The string which ends a BML area.
    */
-  public static final String comment_start = "/*@ "; //careful
+  public static final String BML_COMMENT_END = BML_AT_SIGN + "*/";
+
+  /**
+   * The string which ends a BML area together with initial spaces.
+   * @see COMMENT_LENGTH
+   */
+  public static final String BML_COMMENT_END_WITH_SPACES = "  " +
+    BML_COMMENT_END;
+
+  /**
+   * The string which starts internal lines of multi-line BML comments.
+   * @see COMMENT_LENGTH
+   */
+  public static final String BML_COMMENT_NEXT = "  " + BML_AT_SIGN + " ";
+
+  /**
+   * The length of BML_COMMENT_START, BML_COMMENT_END_WITH_SPACES, and
+   * BML_COMMENT_NEXT. All should have the same length.
+   */
+  public static final int COMMENT_LENGTH = BML_COMMENT_NEXT.length(); //careful
+
+  /**
+   * The string which starts one line BML comments.
+   */
+  public static final String ONE_LINE_BML_START = "//@";
 
   /**
    * Character which marks the start of a block expression.

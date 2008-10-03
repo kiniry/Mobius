@@ -135,7 +135,7 @@ public abstract class BCCConstantPrinting {
    * @return <code>true</code> in case the type belongs to primitive types.
    */
   private boolean isPrimitiveType(final byte tag) {
-    for (int i = 0; i <= PRIMITIVE_TYPES.length; i++) {
+    for (int i = 0; i < PRIMITIVE_TYPES.length; i++) {
       if (tag == PRIMITIVE_TYPES[i]) return true;
     }
     return false;

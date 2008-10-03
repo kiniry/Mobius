@@ -1,5 +1,7 @@
 package annot.textio;
 
+import java.util.Vector;
+
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -39,6 +41,11 @@ public class Parsing {
   private String my_errmsg = "";
 
   /**
+   * The vector with positions of BML regions.
+   */
+  private Vector < PosInCode > bml_positions;
+
+  /**
    * A standard constructor.
    *
    * @param abcc - BCClass of all BML annotations
@@ -64,23 +71,24 @@ public class Parsing {
     //      code = code.substring(0, code.length() - 1);
     if (code.lastIndexOf("\n")  >= 0 ||
         code.length()  >  DisplayStyle.MAX_TOTAL_LINE_WIDTH -
-              DisplayStyle.comment_start.length() -
-              DisplayStyle.comment_end.length()) {
+              DisplayStyle.BML_COMMENT_START.length() -
+              DisplayStyle.BML_COMMENT_END_WITH_SPACES.length()) {
       final String[] lines = code.split("\n");
       code = "";
       for (int i = 0; i  <  lines.length; i++) {
-        if (!lines[i].startsWith(DisplayStyle.COMMENT_NEXT)) {
-          lines[i] = DisplayStyle.COMMENT_NEXT + lines[i];
+        if (!lines[i].startsWith(DisplayStyle.BML_COMMENT_NEXT)) {
+          lines[i] = DisplayStyle.BML_COMMENT_NEXT + lines[i];
         }
-        if (lines[i].equals(DisplayStyle.COMMENT_NEXT)) {
+        if (lines[i].equals(DisplayStyle.BML_COMMENT_NEXT)) {
           continue;
         }
         code += lines[i] + "\n";
       }
-      return DisplayStyle.comment_start + "\n" + code +
-             DisplayStyle.comment_end + "\n";
+      return DisplayStyle.BML_COMMENT_START + "\n" + code +
+             DisplayStyle.BML_COMMENT_END_WITH_SPACES + "\n";
     } else {
-      return DisplayStyle.comment_start + code + DisplayStyle.comment_end +
+      return DisplayStyle.BML_COMMENT_START + code +
+        DisplayStyle.BML_COMMENT_END_WITH_SPACES +
         "\n";
     }
   }
@@ -161,12 +169,14 @@ public class Parsing {
    */
   public static String removeComment(final String attr) {
     String lattr = attr;
-    if (lattr.startsWith(DisplayStyle.COMMENT_NEXT)) {
+    if (lattr.startsWith(DisplayStyle.BML_COMMENT_NEXT)) {
       lattr = lattr.substring(DisplayStyle.COMMENT_LENGTH);
     }
-    lattr = lattr.replaceAll(escape(DisplayStyle.comment_start), "");
-    lattr = lattr.replaceAll(escape("\n" + DisplayStyle.COMMENT_NEXT), "\n");
-    lattr = lattr.replaceAll(escape(DisplayStyle.comment_end), "");
+    lattr = lattr.replaceAll(escape(DisplayStyle.BML_COMMENT_START), "");
+    lattr = lattr.replaceAll(escape("\n" +
+                                    DisplayStyle.BML_COMMENT_NEXT), "\n");
+    lattr = lattr.replaceAll(escape(DisplayStyle.BML_COMMENT_END_WITH_SPACES),
+                             "");
     return lattr;
   }
 
@@ -268,7 +278,7 @@ public class Parsing {
    */
   public boolean parseClass(final String code, final boolean affectBcc) {
     //TODO FIXME we should strip off the comments first
-    
+
     final CharStream chstr = new ANTLRStringStream(code);
     final BMLLexer lex = new BMLLexer(chstr);
     final CommonTokenStream tokens = new CommonTokenStream(lex);
@@ -283,14 +293,19 @@ public class Parsing {
         MLog.putMsg(MLog.LEVEL_PINFO, Integer.toString(parser.lastE.line));
         throw parser.lastE;
       }
+      bml_positions = parser.getBMLPositions();
     } catch (final RecognitionException e) {
       if (affectBcc) {
         throw new RuntimeException("parsing failed while updating BCClass");
       }
-      this.my_errmsg = "error in char " + e.charPositionInLine + 3;
+      this.my_errmsg = "error in char " + e.charPositionInLine + 1;
       return false;
     }
     this.my_errmsg = "";
     return true;
+  }
+
+  public Vector<PosInCode> getBMLPositions() {
+    return bml_positions;
   }
 }
