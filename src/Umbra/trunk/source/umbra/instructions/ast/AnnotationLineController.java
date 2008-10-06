@@ -63,19 +63,19 @@ public class AnnotationLineController extends CommentLineController {
   /**
    * Checks is the line can be an end of annotation. This holds when the
    * final non-whitespace sequence in the line is either
-   * {@link BytecodeStrings#ANNOT_LINE_END} or
-   * {@link BytecodeStrings#ANNOT_LINE_END_SIMPLE}.
+   * {@link BytecodeStrings#ANNOT_END} or
+   * {@link BytecodeStrings#ANNOT_END_SIMPLE}.
    *
    * @return <code>true</code> when the line contains the end of comment
    *   sequence, <code>false</code> otherwise
    */
   public boolean isAnnotationEnd() {
     final String line = getMy_line_text();
-    int where = line.lastIndexOf(BytecodeStrings.ANNOT_LINE_END);
-    int wlen = BytecodeStrings.ANNOT_LINE_END.length();
+    int where = line.lastIndexOf(BytecodeStrings.ANNOT_END);
+    int wlen = BytecodeStrings.ANNOT_END.length();
     if (where == 0) {
-      where = line.lastIndexOf(BytecodeStrings.ANNOT_LINE_END_SIMPLE);
-      wlen = BytecodeStrings.ANNOT_LINE_END_SIMPLE.length();
+      where = line.lastIndexOf(BytecodeStrings.ANNOT_END_SIMPLE);
+      wlen = BytecodeStrings.ANNOT_END_SIMPLE.length();
     }
     if (where > 0) {
       where += wlen;

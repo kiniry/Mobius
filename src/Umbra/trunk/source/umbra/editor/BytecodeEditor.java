@@ -39,9 +39,11 @@ import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
+import umbra.lib.UmbraSyntaxException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -296,6 +298,9 @@ public class BytecodeEditor extends TextEditor {
     } catch (UmbraMethodException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
                                     GUIMessages.BYTECODE_MESSAGE_TITLE);
+    } catch (UmbraSyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace(); 
     }
   }
 

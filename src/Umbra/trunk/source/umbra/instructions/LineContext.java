@@ -37,39 +37,44 @@ public class LineContext {
   public static final int STATE_UNDEFINED = 0;
 
   /**
-   * The context state which is used at the begining of parsing.
+   * The context state which is used at the beginning of parsing.
    */
   private static final int STATE_INITIAL = 1;
+
+  /**
+   * The context state which is used inside constant pools.
+   */
+  private static final int STATE_CONSTANT_POOL = 2;
 
   /**
    * The context state which is used in case we expect that the content
    * of a class will be read.
    */
-  private static final int STATE_CLASS_TO_BE_READ = 2;
+  private static final int STATE_CLASS_TO_BE_READ = 3;
 
   /**
    * The context state which is uset in case the parsing is inside of a
    * multi-line comment.
    */
-  private static final int STATE_INSIDE_COMMENT = 3;
+  private static final int STATE_INSIDE_COMMENT = 4;
 
   /**
    * The context state which is used in case the parsing is inside of a
    * BML annotation comment.
    */
-  private static final int STATE_INSIDE_ANNOTATION = 4;
+  private static final int STATE_INSIDE_ANNOTATION = 5;
 
   /**
    * The context state which is used in case the parsing is inside of a
    * method.
    */
-  private static final int STATE_INSIDE_METHOD = 5;
+  private static final int STATE_INSIDE_METHOD = 6;
 
   /**
    * The context state which is used in case the parsing is inside of the
    * invariant area of the class.
    */
-  private static final int STATE_INVARIANT_AREA = 6;
+  private static final int STATE_INVARIANT_AREA = 7;
 
   /**
    * The current state of the context.
@@ -257,5 +262,19 @@ public class LineContext {
    */
   public boolean isInsideMethod() {
     return my_state == STATE_INSIDE_METHOD;
+  }
+
+  /**
+   * 
+   */
+  public void setInsideCP() {
+    my_state = STATE_CONSTANT_POOL;
+  }
+
+  /**
+   * @return
+   */
+  public boolean isInsideConstantPool() {
+    return my_state == STATE_CONSTANT_POOL;
   }
 }

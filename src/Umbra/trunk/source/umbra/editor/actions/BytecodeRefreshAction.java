@@ -23,9 +23,11 @@ import umbra.instructions.BytecodeController;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
+import umbra.lib.UmbraSyntaxException;
 
 
 /**
@@ -97,6 +99,9 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       wrongFileOperationMessage(parent, getDescription());
     } catch (UmbraRangeException e) {
       GUIMessages.exceededRangeInfo(new Shell(), e, "Byte code refreshing");
+    } catch (UmbraSyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace(); 
     }
   }
 
@@ -117,11 +122,12 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    * @throws UmbraRangeException thrown in case a position has been reached
    *   which is outside the current document or when the textual representation
    *   has more methods than the internal one
+   * @throws UmbraSyntaxException 
    */
   private BytecodeEditor doRefresh(final BytecodeEditor the_editor,
                                final IFile a_file)
     throws ClassNotFoundException,
-           CoreException, UmbraRangeException {
+           CoreException, UmbraRangeException, UmbraSyntaxException {
     final BytecodeEditorContributor a_contributor = getContributor();
     final IPath active = FileNames.getClassFileFileFor(a_file, the_editor,
                              FileNames.BYTECODE_EXTENSION).getFullPath();

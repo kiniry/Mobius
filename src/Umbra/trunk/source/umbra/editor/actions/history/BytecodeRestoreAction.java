@@ -29,9 +29,11 @@ import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * This class defines action of restoring byte code from
@@ -139,6 +141,9 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     } catch (UmbraMethodException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
                                     getDescription());
+    } catch (UmbraSyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace(); 
     }
   }
 

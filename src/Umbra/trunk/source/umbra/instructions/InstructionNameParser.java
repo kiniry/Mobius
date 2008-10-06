@@ -50,7 +50,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    * @return <code>true</code> when the class name has been suceessfully
    *   swallowed, <code>false</code> otherwise.
    */
-  protected boolean swallowClassnameWithDelim(final char a_separator) {
+  public boolean swallowClassnameWithDelim(final char a_separator) {
     final String line = getLine();
     while (swallowIdentifier()) {
       if (!(line.charAt(getIndex()) == a_separator)) {
@@ -201,7 +201,7 @@ public class InstructionNameParser extends InstructionParserGeneric {
    * @return <code>true</code> in case the word was successfully swallowed,
    *   <code>false</code> otherwise
    */
-  protected boolean swallowGivenWord(final String a_word) {
+  public boolean swallowGivenWord(final String a_word) {
     if (getLine().regionMatches(getIndex(), a_word, 0, a_word.length())) {
       moveIndex(a_word.length());
       return true;

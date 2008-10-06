@@ -18,6 +18,7 @@ import umbra.lib.BMLParsing;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSyntaxException;
 import annot.bcclass.BCClass;
 
 /**
@@ -150,10 +151,11 @@ public class BytecodeDocument extends Document {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
+   * @throws UmbraSyntaxException 
    */
   public void init(final String[] a_comment_array,
                    final String[] an_interline)
-    throws UmbraLocationException, UmbraMethodException {
+    throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
     final String str = my_bcc.init(this, a_comment_array, an_interline);
     my_ready_flag = true; //this causes the following line not to loop
     setTextWithDeadUpdate(str);
@@ -182,6 +184,9 @@ public class BytecodeDocument extends Document {
     throws UmbraException, UmbraLocationException {
     my_bcc.removeIncorrects(a_start, an_oldend);
     my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
+    int reg = my_bcode_editor.getVisibleRegion();
+    setTextWithDeadUpdate(my_bcc.printDocument());
+    my_bcode_editor.setVisibleRegion(reg);
     my_bcc.checkAllLines(a_start, a_newend);
   }
 

@@ -25,6 +25,7 @@ import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * This class encapsulates the internal structures of the
@@ -84,11 +85,13 @@ public abstract class BytecodeControllerContainer extends
    *   which is outside the current document
    * @throws UmbraMethodException thrown in case a method number has been
    *   reached which is outside the number of available methods in the document
+   * @throws UmbraSyntaxException in case a syntax error in BML document is
+   *   encountered
    */
   public String init(final BytecodeDocument a_doc,
                      final String[] a_comment_array,
                      final String[] a_interline)
-    throws UmbraLocationException, UmbraMethodException {
+    throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
     final InitParser initParser = new InitParser(a_doc, a_comment_array,
                                                  a_interline);
     final String res = initParser.runParsing();
@@ -492,5 +495,21 @@ public abstract class BytecodeControllerContainer extends
       return ilc.getPC();
     }
     return -1;
+  }
+
+  /**
+   * This method returns the string with the content of the current document
+   * as a result of its internal representation.
+   *
+   * @return the string with the internal representation of the document
+   */
+  public String printDocument() {
+    BytecodeLineController elem;
+    final StringBuffer buf = new StringBuffer();
+    for (final Iterator i = my_editor_lines.iterator(); i.hasNext();) {
+      elem = (BytecodeLineController) i.next();
+      buf.append(elem.getLineContent());
+    }
+    return buf.toString();
   }
 }

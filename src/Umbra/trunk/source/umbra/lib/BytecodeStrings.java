@@ -87,7 +87,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
     "if",
     "goto",
     "implements",
-    "import",
+    "Constant pool:",
     "instanceof",
     "int",
     "interface",
@@ -116,6 +116,25 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
   };
 
   /**
+   * This constant contains an array with all the keywords for constant pool
+   * entries. This array is based on the section "Textual Representation of
+   * Specifications" of "BML Reference Manual"
+   */
+  public static final String[] CP_KEYWORDS = new String[] {
+    "Class",
+    "Fieldref",
+    "Methodref",
+    "InterfaceMethodref",
+    "String",
+    "Integer",
+    "Float",
+    "Long",
+    "Double",
+    "NameAndType",
+    "Utf8"
+  };
+
+  /**
    * The position of the "class" keyword in {@link #JAVA_KEYWORDS}.
    */
   public static final int CLASS_KEYWORD_POS = 8;
@@ -129,6 +148,16 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * The position of the "implements" keyword in {@link #JAVA_KEYWORDS}.
    */
   public static final int IMPLEMENTS_KEYWORD_POS = 23;
+
+  /**
+   * The position of the "Constant pool:" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int CP_KEYWORD_POS = 24;
+
+  /**
+   * The position of the "const" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int CP_ENTRY_KEYWORD_POS = 9;
 
   /**
    * This constant contains an array with all the keywords that occur in the
@@ -167,6 +196,13 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "String", "byte",
                                                              "package",
                                                              "}" };
+
+  /**
+   * This constant contains an array with all the possible prefixes of constant
+   * pool lines in byte code text files. The constant pool lines are handled by
+   * {@link umbra.instructions.ast.CPLineController} class.
+   */
+  public static final String[] CP_ENTRY_PREFIX = new String[] {"  const #"};
 
   /**
    * This constant contains an array with all the possible prefixes of throw

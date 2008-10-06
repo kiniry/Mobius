@@ -20,7 +20,7 @@ import umbra.instructions.ClassHeaderParser;
 public class ClassHeaderLineController extends BytecodeLineController {
 
   /**
-   * This is an object contains a parser which allows to check the
+   * This object contains a parser which allows to check the
    * correctness of the header code line and to parse its parameters.
    */
   private ClassHeaderParser my_headerparser;

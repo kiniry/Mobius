@@ -24,9 +24,11 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * This class defines action of restoring the original version
@@ -96,6 +98,9 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
     } catch (UmbraMethodException e) {
       GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
                                     getDescription());
+    } catch (UmbraSyntaxException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace(); 
     }
   }
 

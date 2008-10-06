@@ -94,7 +94,9 @@ public class FragmentParser extends BytecodeCommentParser {
     throws UmbraLocationException {
     int a_line_no = my_start;
     try {
-      if (a_ctxt.isInsideAnnotation()) {
+      if (a_ctxt.isInsideConstantPool()) {
+        a_line_no = swallowCPFragment(a_line_no, a_ctxt);
+      } else if (a_ctxt.isInsideAnnotation()) {
         a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
       } else if (a_ctxt.isInsideMethod()) {
         a_line_no = swallowMethodBodyFragment(a_line_no, a_ctxt);
@@ -114,6 +116,24 @@ public class FragmentParser extends BytecodeCommentParser {
     }
     if (a_line_no > my_end + 1)
       throw new UmbraRuntimeException("Too high line number: " + a_line_no);
+  }
+
+  /**
+   * This method parses a fragment of a constant pool. The fragment is delimited
+   * with {@code a_start} and {@code my_end} (inclusively). The line context
+   * gives the number of the current method and should be set in the
+   * state that corresponds to parsing of a constant pool. This method
+   * currently does nothing.
+   *
+   * @param a_start the first parsed line
+   * @param a_ctxt the parsing context
+   * @return the first line to be parsed by the further parsing procedure
+   * @throws UmbraLocationException in case the method reaches a line number
+   *   which is not within the given document
+   */
+  private int swallowCPFragment(final int a_start, final LineContext a_ctxt)
+    throws UmbraLocationException {
+    return my_end;
   }
 
   /**

@@ -29,6 +29,7 @@ import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -170,6 +171,9 @@ public class BytecodeContribution extends ControlContribution {
         } catch (UmbraMethodException e) {
           GUIMessages.exceededRangeInfo(sh, new UmbraRangeException(e),
             GUIMessages.INITIAL_PARSING_MESSAGE_TITLE);
+        } catch (UmbraSyntaxException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace(); 
         }
       }
       try {

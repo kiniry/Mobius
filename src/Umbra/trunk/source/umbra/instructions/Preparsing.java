@@ -13,6 +13,8 @@ import java.lang.reflect.InvocationTargetException;
 import umbra.UmbraPlugin;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPHeaderController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -70,13 +72,17 @@ public final class Preparsing {
       }
       return lc;
     }
-
     if (a_context.isInsideAnnotation()) {
       final AnnotationLineController lc = new AnnotationLineController(a_line);
       if (lc.isAnnotationEnd()) {
         a_context.revertState();
       }
       return lc;
+    }
+    if (a_context.isInsideConstantPool()) {
+      if (CPLineController.isCPLineStart(a_line)) {
+        return new CPLineController(a_line);
+      }
     }
     final DispatchingAutomaton automaton = Preparsing.getAutomaton();
     BytecodeLineController  blc;
@@ -138,9 +144,13 @@ public final class Preparsing {
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CLASS_KEYWORD_POS],
         ClassHeaderLineController.class);
+      my_preparse_automaton.addSimple(
+        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_KEYWORD_POS],
+        CPHeaderController.class);
+
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);
-      my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_LINE_START,
+      my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_START,
                                       AnnotationLineController.class);
       final DispatchingAutomaton digitnode = my_preparse_automaton.
                addSimple("0",

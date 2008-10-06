@@ -16,6 +16,7 @@ import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPHeaderController;
 import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -68,14 +69,11 @@ public final class BytecodeController extends BytecodeControllerContainer {
     final LineContext ctxt = new LineContext();
     for (int i = a_pos; i >= 0;) {
       final BytecodeLineController blc = getLineController(i);
-      if (blc instanceof HeaderLineController) {
-        final int mno = blc.getMethodNo();
-        if (mno >= 0) {
-          ctxt.setInsideMethod();
-          ctxt.setMethodNo(blc.getMethodNo());
-        }
+      if (blc instanceof CPHeaderController) {
+        ctxt.setInsideCP();
         break;
       }
+      if (checkMethodContext(blc, ctxt)) break;
       if (blc instanceof ClassHeaderLineController) {
         ctxt.setInvariantArea();
         break;
@@ -95,6 +93,32 @@ public final class BytecodeController extends BytecodeControllerContainer {
       }
     }
     return ctxt;
+  }
+
+  /**
+   * This methods checks if the given line controller is a witness for
+   * the fact that processing is inside a method. In case the processing
+   * is inside a method, the method number is established and the
+   * context for the processing inside method and the method number are set
+   * The method assumes that given line context is in the initial state.
+   *
+   * @param a_lc the line controller to check
+   * @param a_ctxt the context to be set in case the processing is within a
+   *   method
+   * @return <code>true</code> in case the processing is within a method,
+   *   <code>false</code> otherwise
+   */
+  private boolean checkMethodContext(final BytecodeLineController a_lc,
+                                     final LineContext a_ctxt) {
+    if (a_lc instanceof HeaderLineController) {
+      final int mno = a_lc.getMethodNo();
+      if (mno >= 0) {
+        a_ctxt.setInsideMethod();
+        a_ctxt.setMethodNo(a_lc.getMethodNo());
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -131,7 +155,9 @@ public final class BytecodeController extends BytecodeControllerContainer {
                             // after that I must know all the instructions are
                             //correct
     final LineContext ctxtold = establishCurrentContext(a_start_rem);
-    if (ctxtold.isInInvariantArea()) {
+    if (ctxtold.isInsideConstantPool()) {
+      doSpecialHandlingForCP();
+    } else if (ctxtold.isInInvariantArea()) {
       doSpecialHandlingForInvariants();
     } else if (ctxtold.isInsideAnnotation()) {
       doSpecialHandlingForAnnotations();
@@ -143,6 +169,13 @@ public final class BytecodeController extends BytecodeControllerContainer {
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold);
     if (FileNames.DEBUG_MODE) controlPrint(1);
+  }
+
+  /**
+   * The method performs the special handling for areas which contain constant
+   * pools. Currently, it does nothing.
+   */
+  private void doSpecialHandlingForCP() {
   }
 
   /**
@@ -226,6 +259,7 @@ public final class BytecodeController extends BytecodeControllerContainer {
                                  final LinkedList the_lines,
                                  final LineContext a_ctxt)
     throws UmbraException {
+    if (the_lines.isEmpty()) return; //in case edit should not change anything
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
     final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
                                      the_lines);

@@ -36,8 +36,10 @@ import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
+import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSyntaxException;
 
 
 /**
@@ -330,12 +332,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
+   * @throws UmbraSyntaxException 
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final String[] the_comments,
                                   final String[] the_interline)
-    throws PartInitException, UmbraLocationException, UmbraMethodException {
+    throws PartInitException, UmbraLocationException, UmbraMethodException,
+           UmbraSyntaxException {
     final IEditorInput input = an_editor.getEditorInput();
     return refreshEditor(an_editor, input, the_comments, the_interline);
   }
@@ -359,12 +363,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
+   * @throws UmbraSyntaxException 
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
                                   final String[] a_comment_array,
                                   final String[] an_interline)
-    throws PartInitException, UmbraLocationException, UmbraMethodException {
+    throws PartInitException, UmbraLocationException, UmbraMethodException,
+           UmbraSyntaxException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();

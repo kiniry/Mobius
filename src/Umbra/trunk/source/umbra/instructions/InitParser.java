@@ -16,12 +16,15 @@ import org.apache.bcel.generic.MethodGen;
 
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPHeaderController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * This class handles the initial parsing of a byte code textual document.
@@ -89,9 +92,11 @@ public class InitParser extends BytecodeCommentParser {
    *   which is outside the current document
    * @throws UmbraMethodException thrown in case a method number has been
    *   reached which is outside the number of available methods in the document
+   * @throws UmbraSyntaxException in case a syntax error in BML document is
+   *   encountered
    */
   public final String runParsing()
-    throws UmbraLocationException, UmbraMethodException {
+    throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
     initInstructionNo();
     int a_line_no = 0;
     int a_method_count = 0;
@@ -110,14 +115,13 @@ public class InitParser extends BytecodeCommentParser {
   /**
    * The method parses the initial portion of a byte code text. This portion
    * contains the information about the class which the code implements.
-   * The exact format is:
+   * The exact format is, according to BML Reference Manual, section 'Textual
+   * Representation of Specifications':
    * <pre>
-   * public PackageName
-   * [ emptylines ]
-   * AccessModifier class ClassName
-   * [ emptylines ]
+   *    fileheader ::= packageinfo [imports]
+   *    imports ::= [ java-imports ] [ bml-imports ]
    * </pre>
-   * Note that emptylines may be comments as well.
+   * Note that whitespace may be comments as well.
    *
    * @param the_current_line the line from which we start the parsing (mostly 0)
    * @param a_ctxt the parsing context
@@ -125,17 +129,22 @@ public class InitParser extends BytecodeCommentParser {
    *   analysed by the current method
    * @throws UmbraLocationException in case one of the locations in the document
    *   was wrongly calculated
+   * @throws UmbraSyntaxException in case a syntax error in BML document is
+   *   encountered
    */
   private int swallowClassHeader(final int the_current_line,
                                  final LineContext a_ctxt)
-    throws UmbraLocationException {
+    throws UmbraLocationException, UmbraSyntaxException {
     int j = the_current_line;
-    String line = getLineFromDoc(my_doc, j, a_ctxt); //package
+    String line = getLineFromDoc(my_doc, j, a_ctxt); //packageinfo
     a_ctxt.setInitial();
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
+    j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
+                                                                  //empty lines
+    j = swallowConstantPools(j, a_ctxt);
     j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
                                                                   //empty lines
     line = getLineFromDoc(my_doc, j, a_ctxt); //class
@@ -145,6 +154,46 @@ public class InitParser extends BytecodeCommentParser {
     lc.setMethodNo(a_ctxt.getMethodNo());
     j++;
     return swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
+  }
+
+  /**
+   * This method handles the parsing of these lines of a textual representation
+   * which contain a class pool. The method first swallows the header line of
+   * a constant pool. Subsequently it parses line by line the given document
+   * starting with the line after the header and tries to parse the lines and
+   * associate them with constant pool entries. In case the first line is not
+   * a constant pool header line the {@link UmbraSyntaxException} is
+   * thrown.
+   *
+   * @param the_current_lno the line from which we start the parsing
+   * @param a_ctxt the parsing context
+   * @return the number of the first line after the constant pool
+   * @throws UmbraLocationException in case a line number is reached which is
+   *   not within the given document
+   * @throws UmbraSyntaxException in case a syntax error in BML document is
+   *   encountered
+   */
+  private int swallowConstantPools(final int the_current_lno,
+                                   final LineContext a_ctxt)
+    throws UmbraLocationException, UmbraSyntaxException {
+    String line = getLineFromDoc(my_doc, the_current_lno, a_ctxt);
+    BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
+    if (!(lc instanceof CPHeaderController)) {
+      throw new UmbraSyntaxException();
+    }
+    addEditorLine(the_current_lno, lc);
+    a_ctxt.setInsideCP();
+    int j = the_current_lno + 1;
+    while (j < my_doc.getNumberOfLines()) {
+      line = getLineFromDoc(my_doc, j, a_ctxt);
+      lc = Preparsing.getType(line, a_ctxt);
+      if (!(lc instanceof CPLineController)) {
+        break;
+      }
+      addEditorLine(lc);
+      j++;
+    }
+    return j;
   }
 
   /**
