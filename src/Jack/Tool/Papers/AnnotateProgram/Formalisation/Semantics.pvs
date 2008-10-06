@@ -46,7 +46,9 @@ BEGIN
     FORALL (p : FullProgram, vn : Name, e : (wf_Expr(program(p))),
             s1, s2 : FullState,
             n : nat, d : derive_rec_type(n)) :
-      f(p, vn, e, s1, s2, n, d) IMPLIES pstate(s2) = pstate(s1)
+      f(p, vn, e, s1, s2, n, d) IMPLIES
+        st(pstate(s1)) = st(pstate(s2)) AND
+        (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
 
   % type for evaluation function CaseJML annotation
   % does not change pstate (program state)
@@ -58,7 +60,9 @@ BEGIN
             branches : (wf_Branches(program(p))),
             s1, s2 : FullState, v : Val, 
             n : nat, d : derive_rec_type(n)) :
-      f(p, branches, s1, s2, v, n, d) IMPLIES pstate(s2) = pstate(s1)
+      f(p, branches, s1, s2, v, n, d) IMPLIES 
+        st(pstate(s1)) = st(pstate(s2)) AND
+        (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
 
   % type for evaluation function Assert annotation
   % store of program state (local var and fields) unchanged
@@ -75,7 +79,6 @@ BEGIN
       f(p, e, s1, s2, n, d) IMPLIES
         st(pstate(s1)) = st(pstate(s2)) AND
         (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
-
 
   % type for evaluation function that specifies what happens
   % upon method entry/exit/exceptional exit
