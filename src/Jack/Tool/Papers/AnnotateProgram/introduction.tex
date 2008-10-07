@@ -3,7 +3,7 @@
 With the emergence of a new generation of trusted personal devices
 (mobile phones, PDAs, smart cards \emph{etc.}), the demand for
 techniques to guarantee application security has become even more
-prominent. A commonly advocated approach is to monitor
+prominent. A usual approach is to monitor
 executions with a security automaton~\cite{Schneider99}. Upon entry
 or exit of a security-critical method, the security automaton updates
 its internal state. If it reaches an ``illegal'' state, the
@@ -12,15 +12,14 @@ reported. This approach is in particular suited for properties that
 are expressed as sequences of legal method calls, such as life cycle
 properties, or constraints that express how often or under which
 conditions a method can be called.
-
+%
 However, such a monitoring approach is not always suited due to the
 nature and use of certain applications.
-Instead, for such applications
-statical means to enforce security are necessary. A commonly advocated
-approach is to require that the application carries a correctness
-proof with it, which can be validated before installing the application
-on the device. In such a proof carrying code scenario~\cite{Necula97},
-the application provider is required to create this proof.
+Instead, for such applications statical means to enforce security are necessary.
+% A commonly advocated approach is to require that the application carries a
+% correctness proof with it, which can be validated before installing the
+% application on the device. In such a proof carrying code scenario~\cite{Necula97},
+% the application provider is required to create this proof.
 
 Security experts typically express security requirements by a collection of
 security automata or temporal logic formulae. However, typical program
@@ -31,6 +30,7 @@ verification of such security properties, this paper proposes a
 translation from security properties expressed as an automaton (or a
 safety temporal logic formula, which can be translated into an
 automaton~\cite{Wolper01}) into program annotations.
+We work with Java programs.
 
 The translation described in this paper is defined in several
 steps. For each step we provide a correctness proof.

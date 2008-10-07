@@ -412,7 +412,7 @@ BEGIN
     ELSE bottom
     ENDIF
 
-  % lookup_mthd returns method in the class
+  % lookup_mthd returns method in the provided class
   lookup_mthd_in_methods_class : LEMMA % :-)
      FORALL(p : PreProgram, tgt : Val, mn : Name) :
        up?(get_class(p)(tgt)) IMPLIES

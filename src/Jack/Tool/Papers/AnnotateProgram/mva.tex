@@ -1,9 +1,9 @@
 \section{Modelling Security Properties with Automata}\label{SecMVA}
 
 This section formally defines the format of security automata that we
-use. These are particularly suited for monitoring, because transitions
-can depend on the state of the monitored program. We call them
-Property Automata (PA).
+use. They are extended finite state machines particularly suited for monitoring,
+because transitions can depend on the state of the monitored program.
+We call them Property Automata (PA).
 Transitions between states are labelled with guards, events and a list
 of actions. The event specifies the method whose entry and/or exit is
 being monitored, with a distinction between normal and exceptional
@@ -23,7 +23,7 @@ Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
 enumerable non-empty sets of control points and names, respectively.
 PA and programs share the definitions of values, types and exceptions,
 denoted \Val, \Type and \Excpt, respectively. They are defined by the
-following grammar, where \(\mathbb{B}\) and \(\mathbb{Z}\) denote the
+following grammar, where \(\BoolSet\) and \(\IntSet\) denote the
 standard sets of booleans and integers, respectively\footnote{We will
 use a PVS-like notation to declare abstract data types and records
 (enclosed by \(\opr\) and \(\clr\)). Further, if \(x\) is a record
@@ -32,16 +32,17 @@ with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \(x\) with the field \textsf{y} updated to \(z\).}.
 \[{\small
 \begin{array}{rcl}
-\Val & = & \B(b : \mathbb{B}) \mid \I(i : \mathbb{Z}) \mid \Null \mid
-\R(i : \mathbb{Z}) \mid \One \mid \bot\\
+\Val & = & \B(b : \BoolSet) \mid \I(i : \IntSet) \mid \Null \mid
+\R(i : \IntSet) \mid \One \mid \bot\\
 \Type & = & \Bool \mid \Int \mid \Ref \mid \Void\\
 \Excpt & = & \Throwable \mid \NullPointer \mid \JMLExc
 \end{array}}
 \]
-The special type \(\Void\), inhabited by \(\One\), models methods
-without results. Reference values contain a number, which can be
-considered as the location where the object is stored;
-\(\bot\) is used to denote the outcome of an undefined expression.
+The type \(\Void\), inhabited by \(\One\), models methods
+without results. A reference can be \(\Null\) or contain a number
+representing the location where the object is stored;
+\(\bot\) is used to denote the outcome of an expression that results in an
+exception.
 
 A PA consists of
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -73,7 +74,7 @@ formal PA definition.
                  \mname : \Name \clr\\
 \TRANS & = \opr & \scp, \tcp : \CP, \event : \EVENT, \action : (\opr \target : \Name, \expr : \Expr \clr)^*, \\
 & &
-\guard : \PAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \mathbb{B}\clr\\
+\guard : \PAstate \times \Pstate \times (\Val \mid \Excpt) \rightarrow \BoolSet\clr\\
 \PA & = \opr & \name, \clname : \Name, \cps : \setof{\CP},
             \init : \CP, \evs : \setof{\EVENT},\\
      &   &  \vdsA : \setof{\Decl}, \vdsP : \setof{\Decl},
@@ -89,8 +90,8 @@ Notice that it is not obvious how to transform a non-deterministic PA into
 a deterministic one, because the actions made by the overlapping transitions
 might differ.
 
-A PA is \emph{total} if there is always a guard that holds
-for a given source control point and event, otherwise it is
+A PA is \emph{total} if for any source control point and event,
+there is always a guard that holds; otherwise it is
 \emph{partial}. Every deterministic PA can be completed into a total
 one (by function \complete): add a special control point
 \halted, together with transitions for every control point and every event
@@ -102,8 +103,8 @@ for every possible event.
 % NOTE: these are not all the condition (for instance we are not saying that
 % the expressions should not include Set statements or that the initial control
 % point is in the set of control points and must not be halted.
-A PA is \emph{wellformed} if\footnote{We only formalise constraints that are
-necessary for our formalisation.}:
+A PA is \emph{wellformed} if:
+% \footnote{We only formalise constraints that are necessary for our formalisation.}:
 \begin{inparaenum}[(\itshape i\upshape)]
 \item variable names are unique and are not reserved words,
 \item guards do not have side-effects,
