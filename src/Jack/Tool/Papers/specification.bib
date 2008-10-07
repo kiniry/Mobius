@@ -1,6 +1,6 @@
 @string{ENTCS   = "ENTCS"}
 @string{elsevier="Elsevier  Publishing"}
-@string {LNCS           = {LNCS}}
+@string{lncs="Lecture Notes in Computer Science"}
 @string{springer        = {Springer}}%{Springer-Verlag}}            %
 
 @string{cav96           = {Computer-Aided Verification (CAV~'96)}}
@@ -16,6 +16,8 @@
 		  Systems (TACAS~2004)"}
 @string{fase00          = "Fundamental Approaches to Software Engineering (FASE~2000)"}
 @string{fase01          = "Fundamental Approaches to Software Engineering (FASE~2001)"}
+@string{tphol00         = "Theorem Proving in Higher Order Logics:
+                           13th International Conference (TPHOLs 2000)"}
 
 @STRING{OOPSLA98  = "Object-Oriented Programming, Systems, Languages
 		   and Applications (OOPSLA'98)"}
@@ -27,7 +29,7 @@
 
 @string{jlap = "Journal of Logic and Algebraic Programming"}
 
-@STRING{TCS     = "Theor. Comp. Sci."}
+@string{tcs="{Theoretical Computer Science}"}
 @STRING{ACI     = "Acta Informatica"}
 
 @Book{Abrial96,
@@ -46,6 +48,39 @@
   series = {Center for Environmental Structure Series},
   address = {New York, NY}
 }
+
+@inproceedings{deAlfaro03,
+author = "Alfaro, L. de",
+title = "Quantitative Verification and Control via the Mu-Calculus",
+booktitle = "Concurrency Theory (CONCUR 03)",
+series = lncs,
+volume = 2761,
+pages = "103--127",
+publisher = springer,
+year = 2003
+}
+
+
+@inproceedings{deAlfaroHJ01,
+author = "Alfaro, L. de and T.A. Henzinger  and R. Jhala",
+title = "Compositional methods for probabilistic systems",
+booktitle = "Concurrency Theory (CONCUR)", 
+series = lncs,
+volume = 2154, 
+publisher = springer, 
+year = 2001, 
+pages = "351--365"
+}
+
+@article{AlurH99,
+author = "R. Alur and T.A. Henzinger",
+title = "Reactive modules",
+journal = "Formal Methods in System Design",
+volume = 15,
+pages = "7--48",
+year = 1999
+}
+
 
 @article{Apt81,
   author =       "K.R. Apt",
@@ -202,6 +237,14 @@ pages={369-398}}
     issue = "4",
 }
 
+@mastersthesis{Blondeel07,
+author = "H.-C. Blondeel",
+title = "Security by Logic: characterizing non-interference in temporal logic",
+year = 2007,
+school = "KTH Sweden",
+note = {Available from \texttt{ftp://ftp-sop.inria.fr/everest/Marieke.Huisman/blondeel.pdf}}
+}
+
 @INPROCEEDINGS{BoergerS99a,
 AUTHOR       = "E. B{\"o}rger and W. Schulte", 
 TITLE        = " Programmer Friendly Modular Definition of the Semantics of {Java}",
@@ -222,6 +265,17 @@ volume = 21,
 number = 10,
 pages = "785--798"
 }
+
+@inproceedings{BouEspSchStr05,
+	Author = {A. Bouajjani and J. Esparza and S. Schwoon and J. Strej\v{c}ek},
+	Booktitle = {Foundations of Software Technology and                Theoretical Computer Science (FSTTCS '05)},
+	Date-Modified = {2008-05-01 00:20:57 +0200},
+	Pages = {348-359},
+	Publisher = springer,
+	Series = lncs,
+	Title = {Reachability analysis of multithreaded software with asynchronous communication},
+	Volume = {3821},
+	Year = {2005}}
 
 @inproceedings{BratKPV00,
   author = "G. Brat and K. Havelund and S. Park and W. Visser",
@@ -329,7 +383,7 @@ year = 2003,
 booktitle = "Verification, Model Checking and Abstract Interpretation",
 editor = "L.D. Zuck and P.C. Attie and A. Cortesi and S. Mukhopadhyay",
 series = lncs,
-number = 2575,
+volume = 2575,
 pages = "26--40",
 publisher = springer
 }
@@ -385,6 +439,17 @@ year = 2005
   year =     2006,
 }
 
+@inproceedings{ChenPPW07,
+author = "Chen, T. and Ploeger, S.C.W. and van de Pol, J.C. and Willemse, T.A.C",
+year = 2007,
+title = "Equivalence Checking for Infinite Systems Using Parameterized Boolean Equation Systems",
+booktitle = "Concurrency Theory (CONCUR 2007)",
+pages = "120--135",
+series = lncs,
+volume = 4703,
+publisher = springer
+}
+
 @phdthesis{Cheon03,
 author = "Y. Cheon",
 title = "A Runtime Assertion Checker for the {Java} {M}odeling {L}anguage",
@@ -438,6 +503,20 @@ publisher = "IEEE Press"
     year = "1999",
 }
 
+@article{CleavelandPS93,
+    author = "R. Cleaveland and J. Parrow and B. Steffen",
+    title = "The Concurrency Workbench: A Semantics-Based  Tool for the 
+     Verification of Concurrent Systems", 
+    journal = "ACM Transactions on Programming Languages and Systems",
+    volume = "15",
+    number = "1",
+    month = "January",
+    publisher = "ACM Press",
+    pages = "36--72",
+    year = "1993",
+    url = "citeseer.ist.psu.edu/cleaveland92concurrency.html" 
+}
+
 @inproceedings{ColcombetF00,
 author = "T. Colcombet and P. Fradet",
 title = "Enforcing Trace Properties by Program Transformation",
@@ -462,6 +541,23 @@ year = 2000
   pages = 	 {439--448},
   year = 	 {2000},
   month = 	 {June},
+}
+
+@Article{CremersMV06,
+  author = 	 {C.J.F. Cremers and S. Mauw and Vink, E.P. de},
+  title = 	 {Injective synchronisation: An extension of the authentication
+                  hierarchy},
+  journal = 	 {Theoretical Computer Science},
+  volume = 	 {367},
+  year = 	 {2006},
+  pages = 	 {139--161}
+}
+
+@inproceedings{CuppensCR06,
+author = "F. Cuppens and N. Cuppens-Boulahia and T. Ramard",
+title = "Availability Enforcement by Obligations and Aspects Identification",
+booktitle = "Availability, Reliability and Security (AReS 2006)",
+year = 2006
 }
 
 
@@ -640,6 +736,17 @@ editor = "X. Leroy"
     year = "1967",
 }
 
+@inproceedings{GaravelLMS07,
+title = "{CADP} 2006: A Toolbox for the Construction and Analysis of Distributed Processes",
+author = "H. Garavel and F. Lang and R. Mateescu and W. Serwe",
+booktitle = "19th International Conference on Computer Aided Verification (CAV 2007)",
+year =  2007,
+volume = 4590,
+series = lncs, 
+pages = "158--163",
+publisher = springer
+}
+
 @inproceedings{GoguenM82,
 author = "J. Goguen and J. Meseguer",
 title = "Security policieis and Security models",
@@ -665,7 +772,24 @@ PUBLISHER    = "Addison-Wesley",
 SERIES       = "The Java Series",
 YEAR         = 2000}
 
+@inproceedings{GrooteO08,
+title = "Parameterised Anonymity",
+author = "J.F. Groote and S. Orzan",
+booktitle = "Proceedings FAST'08",
+year = 2008,
+series = lncs,
+publisher = springer,
+note = "To appear"
+}
 
+@article{GrooteW05,
+author = "J.F. Groote and T.A.C. Willemse",
+title = "Parameterised Boolean Equation Systems",
+journal = 	 {Theoretical Computer Science},
+volume = "343",
+pages = "332--369",
+year = 2005
+}
 
 @book{ HansmannNS00,
     author = "U. Hansmann and M. S. Nicklous and T. Sch{\"a}ck and F. Seliger",
@@ -775,6 +899,34 @@ publisher = springer
   title = "Java PathFinder User Guide",
 }
 
+@inproceedings{HenselHJT98,
+TITLE = { Reasoning about Classes in Object-Oriented Languages:
+          Logical Models and Tools},
+AUTHOR = {U. Hensel and M. Huisman and B. Jacobs and H. Tews} ,
+BOOKTITLE = {Proceedings of European Symposium on Programming (ESOP '98)},
+YEAR = 1998,
+editor = "C. Hankin",
+PUBLISHER = springer,
+SERIES = LNCS,
+volume = 1381,
+pages = {105--121},
+psurl = {ftp://ftp-sop.inria.fr/lemme/Marieke.Huisman/etaps98.ps.gz}
+
+}
+
+@inproceedings{HintonKNP06,
+author = "A. Hinton and M. Kwiatkowska and G. Norman and D. Parker",
+title ="{PRISM}: A Tool for Automatic Verification of Probabilistic Systems",
+editors = "H. Hermanns and J. Palsberg",
+booktitle = "Tools and Algorithms for the Construction and Analysis of Systems (TACAS'06)", 
+volume = 3920,
+series = LNCS, 
+pages = "441--444", 
+publisher = springer,
+year = 2006
+}
+
+
 @incollection{Hoare89,
     author = "{C.A.R} {H}oare",
     title = "An Axiomatic Basis for Computer Programming",
@@ -831,8 +983,21 @@ PUBLISHER    = springer,
 editor = "T. Maibaum",
 pages = "284--303",
 SERIES       = LNCS, 
-NUMBER       = "1783",            
+volume       = "1783",            
 YEAR         = 2000}
+
+@INPROCEEDINGS{HuismanJ00b,
+AUTHOR  = "M. Huisman and B. Jacobs", 
+title   = "Inheritance in Higher Order Logic: Modeling and Reasoning",
+pages   = "301--319",
+editor          = "J. Harrison and M. Aagaard",
+booktitle       = tphol00,
+series          = LNCS,
+volume          = 1869,
+year            = 2000,
+publisher       = springer,
+psurl = {ftp://ftp-sop.inria.fr/lemme/personnel/Marieke.Huisman/inheritance.ps.gz}
+}
 
 
 @inproceedings{HuismanT05,
@@ -852,6 +1017,13 @@ title = "Run-time verification can miss errors~-~Why finally clauses
                   can be dangerous", 
 note = "Submitted",
 year = "2008"
+}
+
+@misc{HuismanB08,
+author = "M. Huisman and H.-C. Blondeel",
+title = "Secure Information Flow for Multi-threaded Programs",
+note = "Manuscript",
+year = 2008
 }
 
 @misc{InsurePP,
@@ -987,6 +1159,7 @@ year = "2005 - 2007"
     publisher = "IEEE CS Press, Los Alamitos",
     year = "1998"
 }
+
 
 
 @InProceedings{LasterG98,
@@ -1293,6 +1466,17 @@ number = 1102,
 year = 1996,
 }
 
+@article{Park76,
+  author    = {D. Park},
+  title     = {Finiteness is Mu-Ineffable},
+  journal = 	 {Theoretical Computer Science},
+  volume    = {3},
+  number    = {2},
+  year      = {1976},
+  pages     = {173--181},
+}
+
+
 @misc{PatternsURL,
   key = {Patterns},
   author = {Bandera Project},
@@ -1349,6 +1533,17 @@ SERIES       = LNCS,
 number       = 1576,
 PAGES        = "162--176",
 YEAR         = "1999"}
+
+
+@inproceedings{PolW08,
+author = "Pol, J.C. van de and M. Weber",
+title = "A Multi-Core Solver for Parity Games",
+editor = "I. {\v{C}}erna and G. L{\"u}ttgen",
+booktitle = "Proceedings of PDMC 2008",
+series = ENTCS, 
+note = "To appear",
+year = 2008
+}
 
 @inproceedings{PollBJ00,
     author = "Erik Poll and Joachim {van den} Berg and Bart Jacobs",
@@ -1424,6 +1619,16 @@ year = 2004
 }
 
 
+@InProceedings{RussoS06a,
+  author =       "A. Russo and A. Sabelfeld",
+  title =        "Securing interaction between threads and the
+                 scheduler",
+crossref = {csfw06},
+  pages =        "177--189",
+  pdfurl =       "http://www.cs.chalmers.se/~andrei/russo-sabelfeld-csfw06.pdf",
+  keywords =     "mobius",
+}
+
 
 @article{Santone02,
 author = "A. Santone",
@@ -1481,6 +1686,19 @@ year = "2002"
 }
 
 
+@INPROCEEDINGS{SprengerD03,
+  AUTHOR = {C. Sprenger and M. Dam},
+  TITLE = {On the Structure of Inductive Reasoning: Circular and 
+                  Tree-shaped Proofs in the mu-Calculus},
+  BOOKTITLE = {Proc. FOSSACS'03},
+  SERIES = LNCS,
+  publisher = springer,
+  YEAR = {2003},
+  number = {2620},
+  PAGES = {425--440},
+}
+
+
 @InProceedings{SprengerEtAl03,
   author = 	 {C. Sprenger and D. Gurov and M. Huisman},
   title = 	 {Compositional Verification for Secure Loading of Smart Card Applets},
@@ -1511,7 +1729,7 @@ booktitle = amast02,
 publisher = springer,
 series = lncs,
 pages = "334-348",
-number = 2422,
+volume = 2422,
 editor = "H. Kirchner and C. Ringeissen"
 }
 
@@ -1538,6 +1756,21 @@ pages = "167--187"
   series    = lncs,
   number    = {2090},
   year      = {2001},
+}
+
+@PhDThesis{Zapreev_UT08,
+	title={Model {C}hecking {M}arkov {C}hains: {T}echniques and {T}ools},
+	author={
+		I. S. Zapreev
+	},
+	school={University of Twente},
+	year={2008},
+	address = { Enschede, The Netherlands },
+	supervisors = {Joost-Pieter Katoen},
+	research_groups = {FMT: Formal Methods and Tools},
+	research_programs = {MC=MC: Model-checking of infinite-state Markov chains},
+	isbn = {978-90-8570-298-6},
+	num_pages = {249}
 }
 
 @inproceedings{ZdancewicM03,
