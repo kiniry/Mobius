@@ -1,10 +1,10 @@
 %!PS-Adobe-2.0 EPSF-2.0
-%%Title: limited_sms_alt.fig
-%%Creator: fig2dev Version 3.2 Patchlevel 4
-%%CreationDate: Fri Jun 20 11:51:34 2008
-%%For: mhuisman@cauberg (Marieke Huisman,A110,7556,,)
-%%BoundingBox: 0 0 387 126
-%%Magnification: 1.0000
+%%Title: limited_sms.fig
+%%Creator: fig2dev Version 3.2 Patchlevel 5
+%%CreationDate: Tue Oct  7 14:55:19 2008
+%%For: marieke@ewi1285 (Marieke Huisman)
+%%BoundingBox: 0 0 317 144
+%Magnification: 1.0000
 %%EndComments
 /$F2psDict 200 dict def
 $F2psDict begin
@@ -45,8 +45,8 @@ $F2psDict /mtrx matrix put
 
 end
 save
-newpath 0 126 moveto 0 0 lineto 387 0 lineto 387 126 lineto closepath clip newpath
--18.0 196.7 translate
+newpath 0 144 moveto 0 0 lineto 317 0 lineto 317 144 lineto closepath clip newpath
+-17.1 197.3 translate
 1 -1 scale
 
 /cp {closepath} bind def
@@ -145,20 +145,22 @@ $F2psBegin
 % here starts figure with depth 50
 % Arc
 7.500 slw
+0 slc
 gs  clippath
-5151 2423 m 5208 2404 l 5159 2261 l 5170 2385 l 5102 2281 l cp
+5102 2281 m 5151 2423 l 5208 2404 l 5159 2261 l 5159 2261 l 5170 2385 l 5102 2281 l cp
 eoclip
-n 3562.5 2882.8 1683.2 -163.3 -16.7 arc
+n 3562.5 2882.8 1683.2 -163.3313 -16.6687 arc
 gs col0 s gr
  gr
 
 % arrowhead
+0 slj
 n 5102 2281 m 5170 2385 l 5159 2261 l 5102 2281 l  cp gs 0.00 setgray ef gr  col0 s
 % Arc
 gs  clippath
-2032 2367 m 1994 2413 l 2109 2510 l 2037 2410 l 2148 2464 l cp
+2148 2464 m 2032 2367 l 1994 2413 l 2109 2510 l 2109 2510 l 2037 2410 l 2148 2464 l cp
 eoclip
-n 3600.0 632.8 2367.2 48.3 131.7 arc
+n 3600.0 632.8 2367.2 48.2911 131.7089 arc
 gs col0 s gr
  gr
 
@@ -166,9 +168,9 @@ gs col0 s gr
 n 2148 2464 m 2037 2410 l 2109 2510 l 2148 2464 l  cp gs 0.00 setgray ef gr  col0 s
 % Arc
 gs  clippath
-1703 2275 m 1758 2252 l 1700 2112 l 1719 2235 l 1645 2135 l cp
+1645 2135 m 1703 2275 l 1758 2252 l 1700 2112 l 1700 2112 l 1719 2235 l 1645 2135 l cp
 eoclip
-n 1100.7 2438.0 652.0 -16.8 16.7 arcn
+n 1100.7 2438.0 652.0 -16.7599 16.6757 arcn
 gs col0 s gr
  gr
 
@@ -182,32 +184,34 @@ n 1800 2437 188 188 0 360 DrawEllipse gs col0 s gr
 
 % Polyline
 gs  clippath
-2010 2370 m 2010 2430 l 2161 2430 l 2041 2400 l 2161 2370 l cp
+2161 2370 m 2010 2370 l 2010 2430 l 2161 2430 l 2161 2430 l 2041 2400 l 2161 2370 l cp
 eoclip
 n 5175 2400 m
  2025 2400 l gs col0 s gr gr
 
 % arrowhead
 n 2161 2370 m 2041 2400 l 2161 2430 l 2161 2370 l  cp gs 0.00 setgray ef gr  col0 s
-/Times-Roman-iso ff 180.00 scf sf
+/Times-Roman-iso ff 200.00 scf sf
 5250 2475 m
 gs 1 -1 sc (s2) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
+/Times-Roman-iso ff 200.00 scf sf
 1650 2475 m
 gs 1 -1 sc (s1) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
+/Times-Roman-iso ff 200.00 scf sf
 2325 2175 m
 gs 1 -1 sc (exit\(sendSMS\)? true -> n := n + 1;) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
+/Times-Roman-iso ff 200.00 scf sf
 300 1575 m
 gs 1 -1 sc (exit\(reset\)? true -> n := 0;) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
-4575 1500 m
-gs 1 -1 sc (entry\(sendSMS\)? n < N -> ;) col0 sh gr
-/Times-Roman-iso ff 180.00 scf sf
+/Times-Roman-iso ff 200.00 scf sf
 2475 3225 m
 gs 1 -1 sc (exitE\(sendSMS\)? true -> ;) col0 sh gr
+/Times-Roman-iso ff 200.00 scf sf
+2700 1050 m
+gs 1 -1 sc (entry\(sendSMS\)? n < N -> ;) col0 sh gr
 % here ends figure;
 $F2psEnd
 rs
 showpage
+%%Trailer
+%EOF

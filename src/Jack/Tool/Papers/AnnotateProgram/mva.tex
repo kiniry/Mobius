@@ -1,14 +1,14 @@
 \section{Modelling Security Properties with Automata}\label{SecMVA}
 
-This section formally defines the format of security automata that we
-use. They are extended finite state machines particularly suited for monitoring,
-because transitions can depend on the state of the monitored program.
-We call them Property Automata (PA).
-Transitions between states are labelled with guards, events and a list
-of actions. The event specifies the method whose entry and/or exit is
-being monitored, with a distinction between normal and exceptional
-exits.  The guard describes the conditions under which the transition
-can be applied. It depends on
+This section formally defines the format of security automata.  These
+are extended finite state machines particularly suited for monitoring,
+since transitions can depend on the state of the monitored program.
+We call them Property Automata (PA).  Transitions between states are
+labelled with guards, events and a list of actions. The event
+specifies the method whose entry and/or exit is being monitored, with
+a distinction between normal and exceptional exits.  The guard
+describes the conditions under which the transition can be applied. It
+depends on
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the automaton state,
 \item the state of the program that is being monitored, and
@@ -17,11 +17,11 @@ the result of the method, in case the event is normal method exit; or
 the exception with which the method returns, in case the event is
 exceptional method exit.
 \end{inparaenum}
-Each action describes how the automaton state is updated by the transition.
+Actions describe how the automaton state is updated by the transition.
 
 Throughout, we assume that \(\CP\) and \(\Name\) are infinite, but
-enumerable non-empty sets of control points and names, respectively.
-PA and programs share the definitions of values, types and exceptions,
+enumerable non-empty sets of control points and names.  PA and
+programs share the definitions of values, types and exceptions,
 denoted \Val, \Type and \Excpt, respectively. They are defined by the
 following grammar, where \(\BoolSet\) and \(\IntSet\) denote the
 standard sets of booleans and integers, respectively\footnote{We will
@@ -39,10 +39,10 @@ with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 \end{array}}
 \]
 The type \(\Void\), inhabited by \(\One\), models methods
-without results. A reference can be \(\Null\) or contain a number
+without results; a reference can be \(\Null\) or contain a number
 representing the location where the object is stored;
-\(\bot\) is used to denote the outcome of an expression that results in an
-exception.
+\(\bot\) is used to denote the outcome of an expression whose evaluation 
+is undefined (in Java this would typically result in an exception).  
 
 A PA consists of
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -62,10 +62,15 @@ with events, where an event is a tuple of an event type (entry, exit
 or exceptional exit) and a method name, a guard and a list of
 actions. Each action assigns the result of an expression (containing
 both program and PA variables) to a PA
-variable. Figure~\ref{FigPAForm} shows the main components of the
-formal PA definition.
+variable. Notice that we only monitor classes here. This also often
+the case in practice, because security-critical methods are often
+static API methods. However, a more precise formalisation would allow
+to monitor objects as well. Formally, a PA is defined as follows.
+% Figure~\ref{FigPAForm} shows the main components of the
+% formal PA definition.
+%\begin{figure}[t]
 
-\begin{figure}[t]
+\vspace*{-1em}
 \[{\small
 \begin{array}{rcl}
 \Decl & = \opr & \type : \Type, \name : \Name, \init : \Val
@@ -81,8 +86,8 @@ formal PA definition.
             \trans : \setof{\TRANS} \clr
 \end{array}}
 \]
-\caption{Formal Definition of PA}\label{FigPAForm}
-\end{figure}
+% \caption{Formal Definition of PA}\label{FigPAForm}
+% \end{figure}
 
 We require a PA to be \emph{deterministic}, \emph{i.e.}, for every source
 control point and event there is always at most one guard that holds.
@@ -113,16 +118,15 @@ A PA is \emph{wellformed} if:
 \end{inparaenum}
 
 The state of a PA consists of a current control point, and the store of
-automaton variables (the program store is not part of the automaton state).
-\[{\small
+automaton variables (the program store is not part of the automaton state):
+\({\small
 \PAstate = \opr \cp : \CP, \stA : \Store \clr}
-\]
-For a PA \(a\), the transition function \(\Delta_a\) specifies how an automaton
-state \(\sigma_A\) is updated for a given program store \(\sigma_P\) an
-event \(e\) and a value or exception \(v\)
-(where \(\chooseop\) is the arbitrary
-choice operator, and \textsf{apply} is a function that updates the
-automaton store according to a list of actions in the obvious way).
+\). Given PA \(a\), the transition function \(\Delta_a\) specifies how
+an automaton state \(\sigma_A\) is updated for a given program store
+\(\sigma_P\) an event \(e\) and a value or exception \(v\) (where
+\(\chooseop\) is the arbitrary choice operator, and \textsf{apply} is
+a function that updates the automaton store according to a list of
+actions in the obvious way).
 \[{\small
 \begin{array}{l}
 \Delta_a  :  \PAstate \times \Pstate \times \EVENT \times (\Val \mid
@@ -145,7 +149,7 @@ automaton store according to a list of actions in the obvious way).
 In a total PA $a$, the transition function \(\Delta_a\) is total.
 A partial automaton gets stuck on a certain input if and only if the
 completed PA reaches the state \halted.
-
+\vspace*{-.5em}
 \begin{equation}\label{PAcompletionProp}
 \Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow
 \cp (\Delta_{\complete(a)}(\sigma_A, \sigma_P, e, v)) = \halted
@@ -153,60 +157,113 @@ completed PA reaches the state \halted.
 
 
 \paragraph{Example}
+The property specified in Figure~\ref{FigExample} is encoded by the
+following PA\footnote{Where we leave the default guard 
+\(\lambda(\sigma_A, \sigma_P, v). \ttt\) and  empty action
+\(\actskip\) implicit.}, while Figure~\ref{FigCompletePA} shows the
+completed PA (where new transitions are dashed).
 
-The following PA\footnote{Where we assume that the default guard is
-\(\lambda(\sigma_A, \sigma_P, v). \ttt\) and the default action is
-\(\actskip\), an empty sequence.} encodes the property described in
-Figure~\ref{FigExample}, while Figure~\ref{FigCompletePA} shows the completed PA.
-
-\[
-\small{
+\vspace*{-1em}
+{\small{
 \hspace{-0.3em}
-\begin{array}[t]{l}
-\opri
-\begin{array}[t]{l}
-\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
-\cps := \{s_1, s_2\},
-\init := s_1,\\
-\evs :=
-\begin{array}[t]{l}
-\{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \{ \entry,
-\exit, \excexit \} \} \:\cup \\
-\{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
-\end{array}
-\\
-\vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
-\vdsP := \emptyset,\\
-\trans := \{
-\begin{array}[t]{l}
-\opri
- \begin{array}[t]{l}
-\scp := s_1, \tcp := s_2, \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
-             \event := \opri \etype := \entry,
-                             \mname := \texttt{sendSMS} \clri \clri,
-\end{array}\\
-\opri
- \begin{array}[t]{l}
-\scp := s_2, \tcp := s_1, \action := [\opri \target := n, \expr := n + 1 \clri]\\
-             \event := \opri \etype := \exit,
-                             \mname := \texttt{sendSMS} \clri \clri,
-\end{array}\\
-\opri
- \begin{array}[t]{l}
-\scp := s_2, \tcp := s_1, \\
-             \event := \opri \etype := \excexit,
-                             \mname := \texttt{sendSMS} \clri, \clri,
-\end{array}\\
-\opri
-\begin{array}[t]{l}
-\scp := s_1, \tcp := s_1, \action := [\opri \target := n, \expr := 0 \clri] \\
-             \event := \opri \etype := \exit, \mname := \texttt{reset} \clri \clri
-\} \clri
-\end{array}
-\end{array}
-\end{array}\\
-\end{array}
-}\]
+\begin{longtable}[t]{lll}
+\(\opri\) & 
+\multicolumn{2}{l}
+  {\(\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
+  \cps := \{s_1, s_2\},
+  \init := s_1,\)}\\
+& \multicolumn{2}{l}{
+  \(\evs :=
+    \begin{array}[t]{l}
+     \{ \opri \etype := e, 
+        \mname := \texttt{sendSMS} \clri 
+        \mid e \in \{ \entry, \exit, \excexit \} \} \:\cup \\
+     \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
+    \end{array}\)} \\
+& \multicolumn{2}{l}{
+    \(\vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
+    \vdsP := \emptyset,\)}\\
+& \(\trans := \{ \) &
+       \(\opri
+        \begin{array}[t]{l}
+           \scp := s_1, \tcp := s_2, 
+           \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
+           \event := \opri \etype := \entry,
+                     \mname := \texttt{sendSMS} \clri \clri,
+        \end{array}\)\\
+&&
+     \(\opri
+        \begin{array}[t]{l}
+           \scp := s_2, \tcp := s_1, 
+           \action := [\opri \target := n, \expr := n + 1 \clri]\\
+           \event := \opri \etype := \exit,
+                     \mname := \texttt{sendSMS} \clri \clri,
+        \end{array}\)\\
+&&
+     \(\opri
+        \begin{array}[t]{l}
+           \scp := s_2, \tcp := s_1, \\
+           \event := \opri \etype := \excexit,
+           \mname := \texttt{sendSMS} \clri, \clri,
+        \end{array}\)\\
+&&
+     \(\opri
+        \begin{array}[t]{l}
+           \scp := s_1, \tcp := s_1, 
+           \action := [\opri \target := n, \expr := 0 \clri] \\
+           \event := \opri \etype := \exit, \mname := \texttt{reset} 
+           \clri \clri \} \clri
+        \end{array}\)
+\end{longtable}
+}}
+
+% \small{
+% \hspace{-0.3em}
+% \begin{longtable}[t]{l}
+% \opri
+% \begin{longtable}[t]{l}
+% \(\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
+% \cps := \{s_1, s_2\},
+% \init := s_1,\)\\
+% \(\evs :=
+% \begin{array}[t]{l}
+% \{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \{ \entry,
+% \exit, \excexit \} \} \:\cup \\
+% \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
+% \end{array}\)
+% \\
+% \(\vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
+% \vdsP := \emptyset,\)\\
+% \(\trans := \{
+% \begin{array}[t]{l}
+% \opri
+%  \begin{array}[t]{l}
+% \scp := s_1, \tcp := s_2, \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
+%              \event := \opri \etype := \entry,
+%                              \mname := \texttt{sendSMS} \clri \clri,
+% \end{array}\)\\
+% \(\opri
+%  \begin{array}[t]{l}
+% \scp := s_2, \tcp := s_1, \action := [\opri \target := n, \expr := n + 1 \clri]\\
+%              \event := \opri \etype := \exit,
+%                              \mname := \texttt{sendSMS} \clri \clri,
+% \end{array}\\
+% \opri
+%  \begin{array}[t]{l}
+% \scp := s_2, \tcp := s_1, \\
+%              \event := \opri \etype := \excexit,
+%                              \mname := \texttt{sendSMS} \clri, \clri,
+% \end{array}\\
+% \opri
+% \begin{array}[t]{l}
+% \scp := s_1, \tcp := s_1, \action := [\opri \target := n, \expr := 0 \clri] \\
+%              \event := \opri \etype := \exit, \mname := \texttt{reset} \clri \clri
+% \} \clri
+% \end{array}
+% \end{array}\)
+% \end{longtable}\\
+% \end{longtable}
+% }
 
 \begin{figure}[t]
 
@@ -246,8 +303,7 @@ Figure~\ref{FigExample}, while Figure~\ref{FigCompletePA} shows the completed PA
 \psfrag{halted}{\tiny{\halted}}
 
 \begin{center}
-\epsfig{file=completed.eps, width=7cm}
+\epsfig{file=complete.eps, width=7cm}
 \end{center}
 \caption{Automaton of Figure~\ref{FigExample}, after completion}\label{FigCompletePA}
-
 \end{figure}
