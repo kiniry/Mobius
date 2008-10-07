@@ -48,7 +48,7 @@
    <feature url="features/DeltaSplashScreenFeature_1.0.0.jar" id="DeltaSplashScreenFeature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/FreeBoogieFeature_1.0.0.jar" id="FreeBoogieFeature" version="1.0.0">
+   <feature url="features/FreeBoogie_feature_1.0.0.jar" id="FreeBoogie_feature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
