@@ -14,14 +14,14 @@ Our language is a restricted subset of (sequential) Java, abstracting
 away from typical object-oriented features. This means in particular
 that we abstract away from method resolution; instead we assume that
 the annotated class contains method bodies for the relevant methods,
-thus method lookup is trivial. Similarly, we assume that lookup of 
+thus method lookup is trivial. Similarly, we assume that lookup of
 class invariants returns the complete class invariant, including those
 invariants that are inherited from superclasses. We consider
 only a few exceptions, and assume that methods have only one
 parameter. We believe, however, that our formalisation contains all
 constructs that are relevant for proving correctness of our inlining
 algorithm for class-based monitoring, and implementing the
-algorithm for the full language is mainly an engineering issue. 
+algorithm for the full language is mainly an engineering issue.
 
 \begin{figure}[t]
 \[{\small
@@ -113,11 +113,12 @@ disjoint and are not reserved words;
 % (We have stated only the wellformedness conditions necessary for our
 % correctness proofs.)
 
+
 \subsection{Natural Semantics}\label{SecSemantics}
 The behaviour of a program is described via a big step semantics. We
 closely follow Von Oheimb's formalisation of Java~\cite{Oheimb01},
 with simplifications wherever possible, due to our simplified
-program syntax. A judgement $\etp{P}{e,\sigma}{v,\sigma'}$, means that the body
+program syntax. A judgement $\etp{P}{e,\sigma}{v,\sigma'}$ means that the body
 $e$ evaluates to $v$, while transforming the state $\sigma$ into $\sigma'$, in
 the context of the program \(P\). Note that \(v\) is \One\ for
 normally terminating \emph{statements}, while \(v\) is \(\bot\) whenever
@@ -148,11 +149,11 @@ and the handling of annotations (\deltaset, \deltaassert, and
 are ignored, these are all instantiated with the identity relation.
 
 The evaluation rules are fairly standard, and we refer to Von Oheimb
-and the PVS formalisation for more details.  Evaluation 
+and the PVS formalisation for more details.  Evaluation
 of normally terminating method calls is described by the following rule
 (where for
 clarity of presentation, we left out several checks that intermediate
-states are not exceptional).  
+states are not exceptional).
 
 %\begin{figure}[t]
 \vspace*{-1em}
@@ -196,8 +197,6 @@ evaluated.  Last, the local store is set back to \(\oldlvs\). In
 addition, rules exist that specify behaviour of a method call when it
 is called upon a null reference, the body contains an uncaught
 exception \emph{etc.}
-
-
 
 
 \paragraph{Annotated Program Semantics}

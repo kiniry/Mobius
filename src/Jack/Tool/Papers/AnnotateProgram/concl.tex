@@ -7,7 +7,7 @@ theorem prover. The algorithm might seem trivial, but several
 subtleties complicated the correctness proof, \emph{i.e.}~evaluating
 the specifications in the right order, dealing with
 side-effect-freeness of annotations and the possibility that a
-\emph{finally} block hides exceptions. 
+\emph{finally} block hides exceptions.
 
 % First of all,
 % for the main step, where the monitor is encoded in method-level set
@@ -33,8 +33,8 @@ straightforward. However, generalising to properties that are not
 restricted to a single class or to multithreading might be more
 challenging.
 
-The ultimate goal of our work is to statically verify adherence to the
-security policy. To achieve this, a weakest precondition calculus can
+The ultimate goal of our work is to statically verify adherence to
+security policies. To achieve this, a weakest precondition calculus can
 be used to generate pre- and postconditions, based on the generated
 \Set annotations. In earlier work, we presented such a
 propagation algorithm~\cite{PavlovaBBHL04}, and proved correctness for

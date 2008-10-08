@@ -49,7 +49,7 @@ same branches of conditional expressions and statements are taken, and
 that the same values get assigned to the store. Therefore, we prove a
 stronger result, adding that also the values %resulting values
 \(v_1\) and \(v_2\) are the same (for step~(\emph{ii}): provided the
-monitor does not reach the \halted state). 
+monitor does not reach the \halted state).
 
 
 \paragraph{Completion of the automaton}
@@ -80,7 +80,7 @@ R(\sigma, \tau) =\\
 \end{array}}
 \]
 
-To prove that this relation is preserved for any body \(b\), we 
+To prove that this relation is preserved for any body \(b\), we
 use equivalence (\ref{PAcompletionProp}) on
 Page~\pageref{PAcompletionProp} and we observe further that
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -147,7 +147,7 @@ monitored by the total PA in Figure~\ref{FigCompletePA}.
     \{(\Eq(\texttt{cp}, \texttt{q}), \alpha_{2, \mathcal{S}}(ts, q))
       \mid \texttt{q} \in a.\cps
     \})\\
-\alpha_{2, \mathcal{S}}(ts, q) & = & 
+\alpha_{2, \mathcal{S}}(ts, q) & = &
        \CaseJML(\{(t.\guard, \Set(\texttt{cp}, t.\tcp; t.\action)) \mid
                   t \in ts \wedge t.\scp = \texttt{q}
                \})
