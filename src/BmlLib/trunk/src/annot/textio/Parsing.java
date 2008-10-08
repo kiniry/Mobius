@@ -84,10 +84,10 @@ public class Parsing {
         }
         code += lines[i] + "\n";
       }
-      return DisplayStyle.BML_COMMENT_START + "\n" + code +
+      return DisplayStyle.BML_COMMENT_START + " \n" + code +
              DisplayStyle.BML_COMMENT_END_WITH_SPACES + "\n";
     } else {
-      return DisplayStyle.BML_COMMENT_START + code +
+      return DisplayStyle.BML_COMMENT_START + " " + code +
         DisplayStyle.BML_COMMENT_END_WITH_SPACES +
         "\n";
     }
@@ -298,7 +298,8 @@ public class Parsing {
       if (affectBcc) {
         throw new RuntimeException("parsing failed while updating BCClass");
       }
-      this.my_errmsg = "error in char " + e.charPositionInLine + 1;
+      this.my_errmsg = "error in " + e.line + " : " +
+                       e.charPositionInLine + 1;
       return false;
     }
     this.my_errmsg = "";

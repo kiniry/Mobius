@@ -5,10 +5,12 @@ import java.util.Iterator;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
 import annot.attributes.BCAttributeMap;
@@ -396,7 +398,39 @@ public class BCMethod {
    */
   @Override
   public String toString() {
-    return this.bcelMethod.toString() + "\n";
+    return methodToString() + "\n";
   }
 
+  /**
+   * Return method content representation close to declaration format,
+   * `public static void main(String[]) throws IOException', e.g.
+   *
+   * @return String representation of the method.
+   */
+  public final String methodToString() {
+    final String access = Utility.accessToString(
+      this.bcelMethod.getAccessFlags());
+    String signature = Type.getMethodSignature(this.bcelMethod.getType(),
+      this.bcelMethod.getArgumentTypes());
+
+    signature = Utility.methodSignatureToString(signature,
+      this.bcelMethod.getName(), access, true,
+      this.bcelMethod.getLocalVariableTable(this.bcelMethod.getConstantPool()));
+
+    final StringBuffer buf = new StringBuffer(signature);
+
+    final String[] excs = this.bcelMethod.getExceptions();
+    for (int i = 0; i < excs.length; i++) {
+      buf.append("\n      throws " + excs[i].replace('.', '/'));
+    }
+    return buf.toString();
+  }
+
+  public boolean canBeLocalVariable(int i) {
+    if ( lvars.length > 0) {
+      return i < lvars.length;
+    }
+    Type[] types = bcelMethod.getArgumentTypes();
+    return i <= types.length;
+  }
 }

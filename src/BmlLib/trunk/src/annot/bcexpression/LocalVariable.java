@@ -125,7 +125,11 @@ public class LocalVariable extends OldExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return isOld() ? "old_" + this.name : this.name;
+    if (this.name!=null) {
+      return isOld() ? "old_" + this.name : this.name;
+    } else {
+      return toString();
+    }
   }
 
   @Override

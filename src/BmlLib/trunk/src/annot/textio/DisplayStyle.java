@@ -304,7 +304,7 @@ public class DisplayStyle {
    * The string which starts a BML area.
    * @see COMMENT_LENGTH
    */
-  public static final String BML_COMMENT_START = "/*" + BML_AT_SIGN + " ";
+  public static final String BML_COMMENT_START = "/*" + BML_AT_SIGN;
 
   /**
    * The string which ends a BML area.

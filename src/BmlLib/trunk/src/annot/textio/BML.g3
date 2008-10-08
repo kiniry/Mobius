@@ -368,18 +368,35 @@ built_in_type :
 
 methodheader :
   (i=IDENT | i=CONSNAME) {syso("method IDENT=" + $i.getText());} formals dims?
-  throws_clause? EOL {syso("methodheader parsed");}
+  EOL throws_clause? {syso("methodheader parsed");}
   ;
 
 formals : 
   PAR_LEFT {syso("before param_declaration_list");} param_declaration_list? PAR_RIGHT;
 
 param_declaration_list : {syso("started param_declaration_list");}
-  param_declaration (COMMA param_declaration)*;
+    param_declaration (COMMA param_declaration)*
+  | param_declaration_noname (COMMA param_declaration_noname)*;
 
 param_declaration :
-  param_modifier? type_spec i=IDENT {syso("IDENT=" + $i.getText());} 
-  dims? {syso("param_declaration");};
+  param_modifier? type_spec i=IDENT 
+    {
+       syso("IDENT=" + $i.getText());
+    } 
+  dims?
+    {
+      syso("param_declaration");
+    };
+
+param_declaration_noname :
+  param_modifier? type_spec 
+    {
+       syso("noname ident");
+    } 
+  dims?
+    {
+      syso("param_declaration_noname");
+    };
 
 param_modifier :
   'final' | 'nullable' | 'non_null';
@@ -389,7 +406,7 @@ dims :
   {syso("dims");};
   
 throws_clause :
-  THROWS name_list;
+  (THROWS typename EOL)+;
 
 instruction_line :
   { InstructionHandle[] iha = m.getBcelMethod().getInstructionList().
@@ -478,15 +495,16 @@ exname returns [String name] :
   ;
 
 specCase returns [SpecificationCase ast] :
-  st=BML_START
-  (REQUIRES f1=formula {
-     prec = $f1.ast;
-     modif = null;
-     postc = null;
-     exc = new Vector<Exsure>();
+  st=BML_START EOL
+  (REQUIRES f1=formula EOL
+   {
+      prec = $f1.ast;
+      modif = null;
+      postc = null;
+      exc = new Vector<Exsure>();
    }
-   (MODIFIES ml=modifyList {modif = $ml.ast;})?
-   (POSTCONDITION f2=formula {postc = $f2.ast;})?
+   (MODIFIES ml=modifyList {modif = $ml.ast;} EOL)?
+   (POSTCONDITION f2=formula {postc = $f2.ast;} EOL)?
    (EXSURES 
      (i=exname COLON f3=formula {
         if (($i.name != null) && ($f3.ast != null)) {
@@ -494,16 +512,17 @@ specCase returns [SpecificationCase ast] :
           Exsure ex = new Exsure(jrt, $f3.ast);
           exc.add(ex);
         }
-      })+
+      } EOL)+
    )?
-  ) en=BML_END EOL {
-    bml_positions.add(new PosInCode($st.getLine(),
-                                    $st.getCharPositionInLine()));
-    bml_positions.add(new PosInCode($en.getLine(),
-                                    $en.getCharPositionInLine()+3));
-    if (prec != null)
-      $ast = new SpecificationCase(m, prec, modif, postc, exc);
-  };
+  ) en=BML_END EOL
+    {
+      bml_positions.add(new PosInCode($st.getLine(),
+                                      $st.getCharPositionInLine()));
+      bml_positions.add(new PosInCode($en.getLine(),
+                                      $en.getCharPositionInLine()+3));
+      if (prec != null)
+        $ast = new SpecificationCase(m, prec, modif, postc, exc);
+    };
 
 inCodeAttribute returns [InCodeAttribute ast] :
   ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
@@ -633,32 +652,59 @@ bitwiseAndExpr returns [BCExpression ast] :
   ;
 
 equalityExpr returns [BCExpression ast] :
-  l=shiftExpr EQ r=shiftExpr
-    {$ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);}
+    l=shiftExpr EQ r=shiftExpr
+    {
+       $ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);
+    }
   | l=shiftExpr NOTEQ r=shiftExpr
-    {$ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);}
-  |
-  e=relationalExpr {$ast = $e.ast;};
+    {
+      $ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);
+    }
+  | e=relationalExpr
+    {
+      $ast = $e.ast;
+    };
 
 relationalExpr returns [BCExpression ast] :
-  l=shiftExpr LESS r=shiftExpr
-    {$ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);}
+    l=shiftExpr LESS r=shiftExpr
+    {
+      $ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);
+    }
   | l=shiftExpr GRT r=shiftExpr
-    {$ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);}
+    {
+      $ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);
+     }
   | l=shiftExpr LESSEQ r=shiftExpr
-    {$ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);}
+    {
+      $ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);
+    }
   | l=shiftExpr GRTEQ r=shiftExpr
-    {$ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);}
-  |
-  e=shiftExpr {$ast = $e.ast;};
+    {
+      $ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);
+    }
+  | e=shiftExpr 
+    {
+      $ast = $e.ast;
+    };
 
 shiftExpr returns [BCExpression ast] :
-  p=additiveExpr {$ast = $p.ast;}
-  (SHL r1=additiveExpr {$ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);}
-  | SHR r2=additiveExpr {$ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);}
-  | USHR r3=additiveExpr {$ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);}
-  )*
-  ;
+    p=additiveExpr 
+    {
+      $ast = $p.ast;
+    }
+    (  SHL r1=additiveExpr
+       {
+         $ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);
+       }
+     | SHR r2=additiveExpr
+       {
+         $ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);
+       }
+     | USHR r3=additiveExpr 
+       {
+          $ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);
+        }
+    )*;
 
 additiveExpr returns [BCExpression ast] :
   e=multExpr {$ast = $e.ast;}
@@ -729,7 +775,7 @@ localVar returns [LocalVariable lv] :
     if (m == null) {
       reportError(null);
     } else {
-      if (i >= m.getLocalVariableCount()) {
+      if (!m.canBeLocalVariable(i)) {
         reportError(null);
       } else {
         $lv = m.getLocalVariable(false, i);

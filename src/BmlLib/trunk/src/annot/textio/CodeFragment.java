@@ -299,7 +299,7 @@ public class CodeFragment {
     MLog.putMsg(MLog.LEVEL_PINFO, "code to be preprocessed:\n" + this.code);
     final String toparse = preProcess(this.code);
     if (SHOW_DECORATED_CODE) {
-      MLog.putMsg(MLog.LEVEL_PINFO, "code to be parsed:\n" + toparse);
+      MLog.putMsg(MLog.LEVEL_PINFO, "code to be parsed:\n" + addLines(toparse));
     }
     if (GO_DISABLE_PARSER) {
       return;
@@ -313,6 +313,15 @@ public class CodeFragment {
     }
     bml_positions = this.bcc.getParser().getBMLPositions();
     this.errMsg = this.bcc.getParser().getErrMsg();
+  }
+
+  private String addLines(String toparse) {
+    StringBuffer buf = new StringBuffer();
+    String[] lines = toparse.split("\n");
+    for (int i = 0; i < lines.length; i++) {
+      buf.append("" + i + " -> " + lines[i] + "\n");
+    }
+    return buf.toString();
   }
 
   /**
@@ -500,6 +509,7 @@ public class CodeFragment {
         continue;
       } else if (ch == '/') { // DisplayStyle.BML_COMMENT_START starts with '/'
         i++;
+        String gdzie = code.substring(i);
         ch = code.charAt(i);
         if (ch == '/') {
           i = readOneLineComment(i, code);
@@ -541,7 +551,7 @@ public class CodeFragment {
     boolean newline = false;
     while (i < code.length()) {
       final char ch = code.charAt(i);
-      if (DisplayStyle.BML_AT_SIGN.charAt(i) == ch && newline) {
+      if (DisplayStyle.BML_AT_SIGN.charAt(0) == ch && newline) {
         newline = false;
         if (code.substring(i).startsWith(DisplayStyle.BML_COMMENT_END)) {
           buf.append(DisplayStyle.BML_COMMENT_END);
