@@ -7,7 +7,7 @@ prominent. A common approach is to monitor executions with a security
 automaton~\cite{Schneider99}. Upon entry or exit of a
 security-critical method, the security automaton updates its internal
 state. If it reaches an ``illegal'' state, the application will be
-stopped and a security violation will be reported. This approach is 
+stopped and a security violation will be reported. This approach is
 particularly suited for properties that are expressed as sequences of
 legal method calls, such as life cycle properties, or constraints that
 express how often or under which conditions a method can be called.
@@ -27,17 +27,16 @@ verification tools use a Hoare logic style for the specifications
 (\emph{i.e.}, pre- and postconditions).
 Therefore, as a first step towards static
 verification of such security properties, this paper proposes a
-translation from security properties expressed as an automaton 
-% (or a
-% safety temporal logic formula, which can be translated into an
-% automaton~\cite{Wolper01}) 
+translation from security properties expressed as an automaton
+% (or a safety temporal logic formula, which can be translated into an
+% automaton~\cite{Wolper01})
 into program annotations.
 
 The translation in this paper is defined for Java programs. It is
 defined in several steps. For each step we provide a correctness
 proof.
 \begin{inparaenum}[(\itshape i\upshape)]
-\item We translate a \emph{partial automaton} to a \emph{total automaton},
+\item We translate a \emph{partial automaton} to a \emph{total automaton}
 that contains a special trap state to model that an error has
 occurred.
 % Often it is much more intuitive to specify a security property by a partial
@@ -53,7 +52,7 @@ method-level set-annotations that are evaluated upon entry or exit of
 a method.  We show that run-time monitoring of the program only throws
 a (new) exception to signal an annotation violation if the monitor
 reaches the trap state, otherwise the annotated program has the same
-executions as the monitored program. 
+executions as the monitored program.
 \item We inline the set-annotations from the method specification
 to the method body and prove equivalence of the run-time checking behaviour.
 \end{inparaenum}

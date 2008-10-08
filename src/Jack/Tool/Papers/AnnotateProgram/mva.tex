@@ -41,8 +41,8 @@ with field \textsf{y}, we use \(x.\mathsf{y}\) to access field
 The type \(\Void\), inhabited by \(\One\), models methods
 without results; a reference can be \(\Null\) or contain a number
 representing the location where the object is stored;
-\(\bot\) is used to denote the outcome of an expression whose evaluation 
-is undefined (in Java this would typically result in an exception).  
+\(\bot\) is used to denote the outcome of an expression whose evaluation
+is undefined (in Java this would typically result in an exception).
 
 A PA consists of
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -62,10 +62,10 @@ with events, where an event is a tuple of an event type (entry, exit
 or exceptional exit) and a method name, a guard and a list of
 actions. Each action assigns the result of an expression (containing
 both program and PA variables) to a PA
-variable. Notice that we only monitor classes here. This also often
+variable. Notice that we only monitor classes here. This is often
 the case in practice, because security-critical methods are often
-static API methods. However, a more precise formalisation would allow
-to monitor objects as well. Formally, a PA is defined as follows.
+static API methods. However, a more precise formalisation of Java's semantics
+would allow to monitor objects as well. Formally, a PA is defined as follows.
 % Figure~\ref{FigPAForm} shows the main components of the
 % formal PA definition.
 %\begin{figure}[t]
@@ -158,7 +158,7 @@ completed PA reaches the state \halted.
 
 \paragraph{Example}
 The property specified in Figure~\ref{FigExample} is encoded by the
-following PA\footnote{Where we leave the default guard 
+following PA\footnote{Where we leave the default guard
 \(\lambda(\sigma_A, \sigma_P, v). \ttt\) and  empty action
 \(\actskip\) implicit.}, while Figure~\ref{FigCompletePA} shows the
 completed PA (where new transitions are dashed).
@@ -167,7 +167,7 @@ completed PA (where new transitions are dashed).
 {\small{
 \hspace{-0.3em}
 \begin{longtable}[t]{lll}
-\(\opri\) & 
+\(\opri\) &
 \multicolumn{2}{l}
   {\(\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
   \cps := \{s_1, s_2\},
@@ -175,8 +175,8 @@ completed PA (where new transitions are dashed).
 & \multicolumn{2}{l}{
   \(\evs :=
     \begin{array}[t]{l}
-     \{ \opri \etype := e, 
-        \mname := \texttt{sendSMS} \clri 
+     \{ \opri \etype := e,
+        \mname := \texttt{sendSMS} \clri
         \mid e \in \{ \entry, \exit, \excexit \} \} \:\cup \\
      \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
     \end{array}\)} \\
@@ -186,7 +186,7 @@ completed PA (where new transitions are dashed).
 & \(\trans := \{ \) &
        \(\opri
         \begin{array}[t]{l}
-           \scp := s_1, \tcp := s_2, 
+           \scp := s_1, \tcp := s_2,
            \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
            \event := \opri \etype := \entry,
                      \mname := \texttt{sendSMS} \clri \clri,
@@ -194,7 +194,7 @@ completed PA (where new transitions are dashed).
 &&
      \(\opri
         \begin{array}[t]{l}
-           \scp := s_2, \tcp := s_1, 
+           \scp := s_2, \tcp := s_1,
            \action := [\opri \target := n, \expr := n + 1 \clri]\\
            \event := \opri \etype := \exit,
                      \mname := \texttt{sendSMS} \clri \clri,
@@ -209,9 +209,9 @@ completed PA (where new transitions are dashed).
 &&
      \(\opri
         \begin{array}[t]{l}
-           \scp := s_1, \tcp := s_1, 
+           \scp := s_1, \tcp := s_1,
            \action := [\opri \target := n, \expr := 0 \clri] \\
-           \event := \opri \etype := \exit, \mname := \texttt{reset} 
+           \event := \opri \etype := \exit, \mname := \texttt{reset}
            \clri \clri \} \clri
         \end{array}\)
 \end{longtable}
