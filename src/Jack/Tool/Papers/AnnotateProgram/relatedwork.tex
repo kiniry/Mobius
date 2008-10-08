@@ -2,20 +2,25 @@
 % Discuss briefly the work by Schneider "Enforceable security policies" and its
 % follow up by Ligatti. Talk about it language to specify security properties.
 
-Security automata, as introduced by Schneider~\cite{Schneider99}, are
-widely used for monitoring security properties. The originality of our
-work lies in considering them as specifications, with the ultimate
-goal of static verification.
+Security automata~\cite{Schneider99} are widely used for monitoring
+security properties. The originality of our work lies in considering
+them as specifications in a general specification language, with the
+ultimate goal of static verification.
 
 Closely related to our approach is work by Aktug \emph{et
-al.}~\cite{Aktug07,AktugDG08}. They define a formal language for
-security policy specifications, ConSpec, that is similar to our
-PA. They prove that a monitor can be inlined into the program text,
-\emph{i.e.}, the run-time checks can be merged into the program. This
-allows to run the program in isolation, with runtime checking of the
-security policy enabled. In contrast, we transform the monitor into a
-specification of the program, and eventually we want to prove
-adherence to the specification statically.
+al.}~\cite{Aktug07,Aktug08,AktugDG08}, who define a formal language
+for security policy specifications, ConSpec, that is similar to our
+PA, except that it does not distinguish between normal and exceptional
+termination of a method. They prove that a monitor can be inlined into
+the program's bytecode, by adding first-order logic annotations, and
+then they use a weakest precondition computation that essentially
+works the same as the annotation propagation algorithm that we plan to
+use~\cite{PavlovaBBHL03} to produce a fully annotated, verifiable
+program. In contrast, our algorithm is defined for source code, and
+connects with the general-purpose specification language JML. This
+allows the use of JML verification tools, to verify the actual policy
+adherence. And of course, correctness of our inlining algorithm has
+been proven with a theorem prover.
 
 Cheon and Perumandla propose an extension to JML to specify allowed
 sequences of methods calls in a regular expression-like
@@ -33,4 +38,7 @@ properties.  However, they typically do not distinguish between method
 entry and exit, and moreover, correctness of the translation algorithm
 has not been proven.
 
+For more information about policy languages, monitor inlining and
+specifying policy adherence, we refer to Section 4.10 of Aktug's
+thesis~\cite{Aktug08}. 
 %Use of Aspects to do monitoring?

@@ -1,3 +1,5 @@
+
+
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, followed by
@@ -184,14 +186,16 @@ First the receiver is evaluated, resulting in non-null reference
 \act. Using \(r\), the method definition
 \md is looked up.  The local variable store is updated assigning
 \(r\) to \texttt{this}, initialising the method's local variables and
-assigning the actual parameter to the formal parameter. The old local variable
-store is remembered as \oldlvs.
-Next, an appropriate action upon method entry is taken, as specified
-by the relation \(\gammain\). Then the method body, and method result expression
-are evaluated. Since this rule applies to normal method termination only,
-the parameter for normal method termination \(\gammanorm\) is evaluated.
-Last, the local store is set back to \(\oldlvs\). Similar rules exist that
-describe what happens when a method is called upon a null reference \emph{etc.}
+assigning the actual parameter to the formal parameter. The old local
+variable store is remembered as \oldlvs.  Next, an appropriate action
+upon method entry is taken, as specified by the relation
+\(\gammain\). Then the method body, and method result expression are
+evaluated. Since this rule applies to normal method termination only,
+the parameter for normal method termination \(\gammanorm\) is
+evaluated.  Last, the local store is set back to \(\oldlvs\). In
+addition, rules exist that specify behaviour of a method call when it
+is called upon a null reference, the body contains an uncaught
+exception \emph{etc.}
 
 
 
@@ -271,10 +275,13 @@ is in fact orthogonal to the annotated program semantics.}, and a flag
 \stuck. If the PA is partial, the flag
 \stuck is set when \(\Delta_a\) is not defined for a
 certain input. If the flag is set, this means that the security policy
-is violated, and the program should be stopped. If the PA is total,
-the \stuck flag will never be set. Instead, violation of the security
-policy is modelled by the PA reaching the error state \halted.
+is violated, and the program should be stopped (by some external
+observer). If the PA is total, the \stuck flag will never be
+set. Instead, violation of the security policy is modelled by the PA
+reaching the trap state \halted (in which case the external observer
+again is supposed to stop execution).
 
+\vspace*{-1em}
 \[
 {\small
 \begin{array}{rcl}
@@ -308,7 +315,7 @@ Figure~\ref{FigAnnotatedSem}.
 % NOTE: This is a simplified version of on_method_MVA in MonitoredProgram
 \[
 {\small
-\begin{array}{rcl}
+\begin{array}[t]{rcl}
 \gammapa(\ev)(P, \md, \act, \sigma) & = &
 \begin{array}[t]{l}
 \mathsf{let\ }

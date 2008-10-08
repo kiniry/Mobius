@@ -4,7 +4,10 @@ This paper presents an algorithm to inline security automata, in the
 form of JML annotations. The translation is defined in several
 steps. All steps are formalised and proven correct, using the PVS
 theorem prover. The algorithm might seem trivial, but several
-subtleties complicated the correctness proof.
+subtleties complicated the correctness proof, \emph{i.e.}~evaluating
+the specifications in the right order, dealing with
+side-effect-freeness of annotations and the possibility that a
+\emph{finally} block hides exceptions. 
 
 % First of all,
 % for the main step, where the monitor is encoded in method-level set

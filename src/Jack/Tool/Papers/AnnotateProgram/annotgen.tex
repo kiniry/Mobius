@@ -2,9 +2,9 @@
 
 Given a security property encoded as a PA, the annotation generation
 procedure generates JML-annotations that capture this property,
-\emph{i.e.}, the program does not violate the generated annotations
-if and only if it respects the encoded property.
-As explained above, the procedure is defined in several steps:
+\emph{i.e.}, if the program respects the property encoded by the
+monitor, then it does not violate the generated annotations. As
+explained above, the procedure is defined in several steps:
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the monitor is completed; %(as described in Section~\ref{SecPA});
 \item the annotations are generated at the method specification level,
@@ -15,7 +15,7 @@ the method body.
 Notice that the special \CaseJML statement could be translated into
 standard JML annotations as well.
 
-For each step we prove that the old and the new program are bisimilar,
+For each step we prove that the new program simulates the old program,
 \emph{i.e.}, we show for every translation step
 \(\alpha\) there exists a relation \(R\) such that:
 \[{\small
@@ -29,30 +29,35 @@ R(\sigma_1, \tau_1) \Rightarrow \\
 R(\sigma_2, \tau_2)
 \end{array}}
 \]
-and vice versa. Additionally, we show that the initial program states
-are related by \(R\), and from this we can conclude that for any
-reachable state of the monitored program, there exists a related state,
-reachable in the translated program.
+Additionally, we show that the initial program states are related by
+\(R\), and from this we can conclude that for any reachable state of
+the monitored program, there exists a related state, reachable in the
+translated program. As a side-remark, for translation steps~(\emph{i})
+and~(\emph{iii}), we can even prove that relation \(R\) is a
+bisimulation, while for step~(\emph{ii}) we can only prove existence
+of a simulation (since non-terminating monitored programs~--~for which
+no derivation exists in the natural semantics~--~might terminate after
+annotation generation, because of an annotation violation).
 
-A natural way to prove this is by induction over the derivation
-length.  However, induction can only be applied when the body is
-unchanged. Since the translation introduces new (ghost) variables to
-encode the PA, this is not always the case. For these cases, separate
-preservation lemmas have to be proven.  Further, to be able to
-complete the proof, we need to ensure that in both bodies the same
-branches of conditional expressions and statements are taken, and that
-the same values get assigned to the store. Therefore, we prove a
+A natural way to prove the simulation is by induction over the
+derivation length.  However, induction can only be applied when the
+body is unchanged. Since the translation introduces new (ghost)
+variables to encode the PA, this is not always the case. For these
+cases, separate preservation lemmas have to be proven.  Further, to be
+able to complete the proof, we need to ensure that in both bodies the
+same branches of conditional expressions and statements are taken, and
+that the same values get assigned to the store. Therefore, we prove a
 stronger result, adding that also the values %resulting values
-\(v_1\) and \(v_2\) are the same
-(however, this holds only if the property has not been breached, more on this
-later).
+\(v_1\) and \(v_2\) are the same (for step~(\emph{ii}): provided the
+monitor does not reach the \halted state). 
 
 
 \paragraph{Completion of the automaton}
 The first translation step does not change the program itself, it only
-completes the PA. Suppose that \(P\) is a monitored program, where
-\(\pa(P)\) is deterministic and wellformed. Then the translation to a
-monitored program with a total PA, \(\alpha_1(P)\), is defined as:
+completes the PA. Suppose that \(P\) is a monitored program, where the
+monitor \(\pa(P)\) is deterministic and wellformed. Then the
+translation to a monitored program with a total PA, \(\alpha_1(P)\),
+is defined as:
 %% This is complete_MP in MonitoredProgramCompletessRelation
 \[{\small
 \alpha_1(P) = \opri \pa := \complete(P.\pa), \program := P.\program
@@ -75,13 +80,13 @@ R(\sigma, \tau) =\\
 \end{array}}
 \]
 
-To prove that this relation is preserved for any body \(b\), we make
-use of equivalence (\ref{PAcompletionProp}) on
+To prove that this relation is preserved for any body \(b\), we 
+use equivalence (\ref{PAcompletionProp}) on
 Page~\pageref{PAcompletionProp} and we observe further that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item if \stuck has been set, it remains set,
-\item if the PA is total and \halted is reached, it is never left, and
-\item if the PA is total, \stuck is never set.
+\item for a total PA, if  \halted is reached, it is never left, and
+\item for a total PA, \stuck is never set.
 \end{inparaenum} Formally, where \(P\) is a monitored program, and
 \(Q\) is a monitored program with total PA:
 \[{\small
@@ -125,7 +130,7 @@ monitored by the total PA in Figure~\ref{FigCompletePA}.
 \alpha_{2,\mathcal{M}}(m, a) & = & m \: \opri
   \begin{array}[t]{l}
   \preset := \begin{array}[t]{l}
-             m.\preset; \alpha_{2,\mathcal{E}}(\entry, m.\name, a);
+             m.\preset; \alpha_{2,\mathcal{E}}(\entry, m.\name, a);\\
              \Assert(\Not(\Eq(\texttt{cp}, \texttt{halted}))),
              \end{array}\\
   \postset := m.\postset; \alpha_{2, \mathcal{E}}(\exit, m.\name, a)\\
@@ -139,14 +144,13 @@ monitored by the total PA in Figure~\ref{FigCompletePA}.
                            \}, a)\\
 \alpha_{2, \mathcal{T}}(ts, a) & = &
   \CaseJML(
-    \{(\begin{array}[t]{l}
-       \Eq(\texttt{cp}, \texttt{q}),\\
+    \{(\Eq(\texttt{cp}, \texttt{q}), \alpha_{2, \mathcal{S}}(ts, q))
+      \mid \texttt{q} \in a.\cps
+    \})\\
+\alpha_{2, \mathcal{S}}(ts, q) & = & 
        \CaseJML(\{(t.\guard, \Set(\texttt{cp}, t.\tcp; t.\action)) \mid
                   t \in ts \wedge t.\scp = \texttt{q}
-               \}))\\
-    \mid \texttt{q} \in a.\cps
-    \})
-    \end{array}
+               \})
 \end{array}}
 \]
 \caption{Formal definition of translation PA into annotations}
@@ -161,47 +165,47 @@ the annotation generation algorithm \(\alpha_2\) applies
 \(\alpha_{2, \mathcal{C}}\) to all classes.
 This function checks whether the class is the one being
 monitored. If so, appropriate ghost variables are added to the class
-using the function \newgvs, that is not formally defined here. Basically
+using the function \newgvs (see the PVS formalisation for its formal
+definition). Basically
 \begin{inparaenum}[(\itshape i\upshape)]
-\item for each control point \(q\) of the automaton, a (final) ghost
-variable declaration \texttt{q} is generated, initialised to a unique value
-(\emph{i.e.}, we assume we have a function \unique that maps each
-control point to a unique integer);
+\item for each automaton control point \(q\), a (final) ghost
+variable declaration \texttt{q} is generated, initialised to a unique value;
+% (\emph{i.e.}, we assume we have a function \unique that maps each
+% control point to a unique integer);
 \item a ghost variable \texttt{cp} is declared, initialised to the
 value of the ghost variable representing the initial control point; and
 \item for each automaton variable declaration, a ghost variable is
 declared with corresponding name, type and initialisation.
 \end{inparaenum}
-Further, \(\alpha_{2, \mathcal{C}}\) adds to the class invariant
-the condition that the current control point should not be
-halted\footnote{For readability, we do not explicitly write the
-translation from PA control points to ghost variables.}, and then it
+Further, \(\alpha_{2, \mathcal{C}}\) adds the condition that the
+current control point should not be halted to the class
+invariant\footnote{For readability, we do not explicitly write the
+translation from PA control points to ghost variables.}, and it
 annotates all methods in the class using \(\alpha_{2,
-\mathcal{M}}\). For each method in the class, its \preset, \postset
+\mathcal{M}}\). For each method, \preset, \postset
 and \excset are extended with updates to the ghost variables encoding
-the automaton. In addition, at the end of the \preset, an \Assert
-statement is added to verify that the transition did not reach the
+the automaton. In addition, at the end of \preset, an \Assert
+statement is added to verify whether the transition reached the
 \halted state: in that case program execution should terminate
-immediately.  Without this \Assert, the invariant violation would only
+immediately.  Without this \Assert, the property violation would only
 be detected after the body is executed. To encode the updates to the
-ghost variables, first \(\alpha_{2, \mathcal{E}}\) computes the set of
+ghost variables, \(\alpha_{2, \mathcal{E}}\) computes the set of
 relevant transitions (\emph{i.e.}, those where the event and method
 name correspond). For these transitions, a \CaseJML statement is
 generated, where the different cases correspond to the current control
 point being equal to a control point \texttt{q}, for any
-\texttt{q} in the automaton. For each such \texttt{q}, all transitions
-where \(t.\scp\) is \texttt{q} are selected and a \CaseJML
-statement is generated, testing for each of the transitions whether
-the guard holds, and if so, setting the control point \texttt{cp} to
-\(t.\tcp\), and executing the actions that correspond to this
-transition.
-Notice that the order in which the different cases are generated is
-not important: since the PA is total and deterministic there is
-always exactly one case that applies.
+\texttt{q} in the automaton. For each such \texttt{q}, \(\alpha_{2,
+\mathcal{S}}\) selects the transitions where \(t.\scp\) is \texttt{q}
+and generates a \CaseJML statement, that tests whether the guard
+holds, and if so, sets the control point \texttt{cp} to
+\(t.\tcp\), and executes the actions associated with this
+transition.  Notice that the order in which the different cases are
+generated is not important: since the PA is total and deterministic
+there is always exactly one case that applies.
 
-The formalisation does not say how guards and actions are
-translated. Instead, we simply assume that we can translate them
-into expressions in the programming language that
+The formalisation does not specify how guards and actions are
+translated. Instead, we assume there exists a translation into
+expressions in the programming language that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item are wellformed,
 \item give the same result,
@@ -209,14 +213,14 @@ into expressions in the programming language that
 \item do not throw exceptions, and
 \item do not contain method calls.
 \end{inparaenum}
-From this we can conclude that in the annotated program, the generated
-statements in the \preset can only throw a \JMLExc (because of the
-concluding \Assert), while the generated statements in the \postset
+From this we can derive that in the annotated program, the generated
+statements in \preset can only throw a \JMLExc (because of the
+concluding \Assert), while the generated statements in \postset
 and \excset do not throw any exception.
 
 To show correctness of the translation, we show that the following
 relation is preserved (where \(P\) is the monitored program,
-\(\sigma\) is a state of the monitored program, and \(\tau\) a state
+\(\sigma\) a state of the monitored program, and \(\tau\) a state
 of the annotated program):
 \[{\small
 \begin{array}{rcl}
@@ -240,18 +244,20 @@ S(\sigma, \tau) & = &
 \end{array}
 \end{array}}
 \]
-This relation specifies that if the monitor has reached a \halted
-control point, the annotated program must have thrown a
-\JMLExc. Otherwise, the state of the annotated program must correctly
-model the PA, \emph{i.e.}\ the current control point is stored in the
-ghost variable \texttt{cp}, and all PA control points and variables
-correspond to ghost variables. Moreover, the program states (fields,
+This relation specifies that if the monitor has reached
+control point  \halted, the annotated program must have thrown a
+\JMLExc. Otherwise, the state of the annotated program corresponds to
+the state of the original program, extended with the modeling of the
+monitor's state. This means that the program states (fields,
 local variables and exceptions) have to coincide, just as the values
 of the ghost variables that are declared in the original program
-\(P\). Notice that if an annotation already present in \(P\)
-causes a \JMLExc, both the monitored and the annotated program will
-throw the \JMLExc.  Therefore, we cannot prove that the annotated
-program throws a \JMLExc \emph{if and only if} \halted is reached.
+\(P\). Further, the current control point is represented by the value
+stored in ghost variable \texttt{cp}, and all PA control points and
+variables correspond to ghost variables. Notice that if an annotation
+already present in \(P\) causes a \JMLExc, both the monitored and the
+annotated program will throw it.  Therefore, we cannot prove that the
+annotated program throws a \JMLExc \emph{if and only if} \halted is
+reached.
 
 To prove that this relation is a preserved, it is
 strengthened with the following property: if the control point is not
@@ -259,16 +265,16 @@ strengthened with the following property: if the control point is not
 part in the proof is of course what happens upon method call and
 termination. For example, when a method is called, first the invariant
 and the precondition are evaluated. Assuming that \halted is not yet
-reached, the new conjunct of the invariant evaluates to true, and then
-a simple induction allows to conclude that after evaluation of the
-precondition, the states are still related. Then the original \preset
-annotations are evaluated, and again the induction hypothesis allows to
-conclude that the resulting states are related. Next, the monitored
-program makes a PA transition, and the annotated program executes
-the newly generated set annotations, followed by an \Assert to check
-whether \halted has been reached. Here we cannot use the induction
-hypothesis, but instead we show manually that the relation is
-preserved.
+reached, the new conjunct of the invariant evaluates to true, and
+induction allows to derive that after evaluation of the precondition,
+the states are related by \(R\). Next, the original \preset
+annotations are evaluated, and again the induction hypothesis allows
+to conclude that the resulting states are related. Next, the monitored
+program makes a PA transition, and the annotated program executes the
+newly generated set annotations, followed by an \Assert to check
+whether
+\halted has been reached. Here we cannot use the induction hypothesis,
+but instead we show manually that relation \(R\) is preserved.
 
 Notice that in \postset or \excset we do not have an \Assert
 statement. Since the invariant is evaluated immediately after the
@@ -276,7 +282,7 @@ set-annotations, the reaching of \halted will be detected
 immediately. For this part of the proof it is crucial that
 the newly added invariant is evaluated first.
 
-Finally, to be able to complete the proof, we have to make a
+Finally,  to complete the proof, we have to make a
 restriction on the behaviour of \TryCatch. We follow the Java Language
 Specification in describing its behaviour~\cite{GoslingJSB05}. This
 means in particular that if the \emph{finally} block in the statement
@@ -287,28 +293,30 @@ is reached in the \emph{try} block, and hence a \JMLExc is thrown, this
 exception might be overwritten by an exception thrown in the
 \emph{finally} block (see also~\cite{Huisman08} for a discussion of
 this problem), which would mean that the violation of the security
-policy is not signalled to the user. To avoid this, we require that
-for all \TryCatch statements in the program, if the \emph{try} or
-\emph{catch} block throws a \JMLExc, then the whole statement
+policy is not signalled to the user, and instead execution
+continues. To avoid this, we require that for all \TryCatch statements
+in the program, if the \emph{try} or
+\emph{catch} block throws a \JMLExc, the whole statement
 also terminates exceptionally because of a \JMLExc.
 
-To illustrate the translation on our running example, consider again
+
+%To illustrate the translation on our running example
+As an example, consider again
 the class \texttt{Messaging} and the completed
-PA, encoding the \emph{limited SMS} security policy, in
+PA, encoding the \emph{limited SMS} policy, in
 Figure~\ref{FigCompletePA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
-\(\alpha_2\) on this program and this PA. Notice that for methods
+\(\alpha_2,\mathcal{C}\) on this class and this PA. Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
-generated~--~this is equivalent to an
+generated~--~this is equivalent to a
 \Skip statement.
 
 \hspace{-0.2em}
 \begin{figure}[t]
-{\small\begin{verbatim}
-class Messaging {
+{\small\begin{alltt}
+class Messaging \{
 //@ ghost int halted = 0, s1 = 1, s2 = 2, N = 5, cp = s1, n = 0;
-//@ public invariant cp != halted;
-
+//@ public invariant cp != halted;\vspace*{.5em}
 /*@ pre_set  CaseSet [(cp == s1, CaseSet [(n < N, cp = s2),
                                           (n >= N, cp = halted)]),
                       (cp == s2, CaseSet [(true, cp = halted)]),
@@ -320,47 +328,44 @@ class Messaging {
     exc_set  CaseSet [(cp == s1, CaseSet [(true, cp = halted)]),
                       (cp == s2, CaseSet [(true, cp = s1)]),
                       (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-void sendSMS(){/* body sendSMS */}
-
+void sendSMS()\{/* body sendSMS */\}\vspace*{.5em}
 /*@ pre_set  CaseSet []; Assert cp != halted;
     post_set CaseSet []; exc_set  CaseSet []; @*/
-void receiveSMS(){/* body receiveSMS */}
-
+void receiveSMS()\{/* body receiveSMS */\}\vspace*{.5em}
 /*@ pre_set  CaseSet []; Assert cp != halted; exc_set CaseSet [];
     post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1)]),
                       (cp == s2, CaseSet [(true, cp = halted)]),
                       (cp == halted, CaseSet [(true, cp = halted)])]; @*/
-void reset() {/* body reset */} }\end{verbatim}}
-\caption{Set annotations generated for class Messaging}\label{FigExampleStep2}
+void reset() \{/* body reset */\} \}\end{alltt}\vspace*{-.5em}}
+\caption{Method-level set annotations generated for class Messaging}\label{FigExampleStep2}
 \end{figure}
 
-
+\vspace*{-1.5em}
 \paragraph{Inlining the Annotations}
 Once the set-annotations at method specification level are generated,
-the next step is to inline them into the method bodies.  The main
-idea is that to ensure that the appropriate set-statements are
-executed at the end of the method body, the body is wrapped in a
+the next step is to inline them into the method bodies.  To ensure
+that the appropriate set-statements are always executed at the end of
+the method body, the body is wrapped in a
 \TryCatch statement. The translation \(\alpha_3\) applies
 \(\alpha_{3, \mathcal{C}}\) to all classes, which in turn applies
 \(\alpha_{3, \mathcal{M}}\) to all methods in the class. This function
 generates one new local variable\footnote{In fact, this should be a
-local \emph{ghost} variable, but as these are not yet supported by our
-formalisation, we formalise it as a standard local variable.}
-\resl. The body of the method is changed as follows:
-all code is wrapped in two \TryCatch statements, to catch \Throwable
-and \NullPointer exceptions\footnote{For simplicity, we do not model
-the exception hierarchy and thus \TryCatch can only catch a single
-exception, but in practice only one \emph{try-catch-finally} block
-would be needed.}. In the \emph{try|} block, first \preset is
+local \emph{ghost} variable, but these are not yet supported by our
+formalisation, therefore we formalise it as a standard local
+variable.} \resl. The body of the method is changed as follows: all
+code is wrapped in two \TryCatch statements, to catch \Throwable and
+\NullPointer exceptions\footnote{For simplicity, we do not model the
+exception hierarchy and thus \TryCatch can only catch a single
+exception, but in practice only one \emph{try-catch-finally} instruction
+would be necessary.}. In the \emph{try} block, first \preset is
 executed, followed by the body of the method. Then the result
 expression from the original body is evaluated, and assigned to
-\resl. Next, the \postset instruction is executed. Notice that the latter
-are only executed if the body actually terminates normally, otherwise
+\resl. Next, \postset is executed. Notice that the latter
+is only executed if the body actually terminates normally, otherwise
 the exception will simply be propagated. Finally, in the \emph{catch}
-clauses, the \excset is executed. The new result expression of the method
+clauses, \excset is executed. The new result expression of the method
 is the look up of the variable \resl. To conclude, \preset,
-\postset and
-\excset in the method specification are set to
+\postset and  \excset in the method specification are set to
 \Skip. Figure~\ref{FigInline} gives the formal definition of
 \(\alpha_{3, \mathcal{M}}\) (where \(P\) is a program, and \(m\) a method).
 
@@ -375,16 +380,13 @@ is the look up of the variable \resl. To conclude, \preset,
 \begin{array}[t]{l}
 \TryCatch(\\
 \quad \begin{array}[t]{l}
-  \TryCatch(
-  \begin{array}[t]{l}
-   m.\preset; m.\body; \\ \Assign(\resl, m.\res); m.\postset\\
-  \end{array}\\
-  \Throwable, m.\excset, \Skip),
+  \TryCatch( \begin{array}[t]{l} m.\preset; m.\body; \\ \Assign(\resl,
+  m.\res); m.\postset\\ \end{array}\\ \Throwable, m.\excset, \Skip),
 \end{array}\\
 \NullPointer, m.\excset, \Skip) \clri
 \end{array}
 \end{array}
-\]
+\]\vspace*{-2em}
 \caption{Formal definition of annotation inlining for methods}\label{FigInline}
 \end{figure}
 

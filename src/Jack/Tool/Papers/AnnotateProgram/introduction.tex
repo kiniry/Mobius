@@ -52,7 +52,8 @@ that capture the behaviour of the total automaton. These are special
 method-level set-annotations that are evaluated upon entry or exit of
 a method.  We show that run-time monitoring of the program only throws
 a (new) exception to signal an annotation violation if the monitor
-reaches the trap state.
+reaches the trap state, otherwise the annotated program has the same
+executions as the monitored program. 
 \item We inline the set-annotations from the method specification
 to the method body and prove equivalence of the run-time checking behaviour.
 \end{inparaenum}
@@ -97,12 +98,12 @@ about the proofs is given in Section~\ref{SecAnnotGen}.
 \end{center}
 \caption{Example Security Automaton}\label{FigExample}
 \end{floatingfigure}
-Throughout this paper, we use the example property of
+Throughout this paper, we use the \emph{limited SMS} example property of
 Figure~\ref{FigExample} (where \(\epsilon\) denotes a skip) to
 illustrate the different translations: the method \texttt{sendSMS} can
 be called and terminate successfully at most \(N\) times in between
 calls to a \texttt{reset} method. Notice that the counter is not
-increased when \texttt{sendSMS} terminates with an uncaught exception
+increased if \texttt{sendSMS} terminates with an uncaught exception
 (labelled \excexit{(\texttt{sendSMS})}), and that \texttt{reset}
 should not be called from within \texttt{sendSMS}).  Even though very
 basic, this example is representative of a wide range of important

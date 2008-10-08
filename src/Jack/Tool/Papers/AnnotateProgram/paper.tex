@@ -24,6 +24,7 @@ University of Nijmegen, Netherlands}
 \usepackage{url}
 \usepackage{floatflt}
 \usepackage{longtable}
+\usepackage{alltt}
 \begin{document}
 
 \maketitle
@@ -36,12 +37,10 @@ convenient. Instead, we aim at developing a technique to verify
 adherence to a security policy statically.  To do this, we consider
 the security automata as specification, and we generate JML
 annotations that inline the monitor~--~as a specification~--~into the
-application.
-
-This paper describes the translation from security automata to program
-annotations and proves preservation of program behaviour. This boils
-down to a proof that monitoring will not reveal a security violation
-iff the generated annotations are respected by the program.
+application.  We describe this translation and prove preservation of
+program behaviour, \emph{i.e.}, if monitoring does not reveal a
+security violation, the generated annotations are respected by the
+program.
 
 The correctness proofs are formalised using the PVS theorem prover.
 This reveals several subtleties to be considered in the definition of the
@@ -56,7 +55,10 @@ translation algorithm and in the program requirements.
 \input{relatedwork}
 \input{concl}
 
+\vspace*{-1em}
 \bibliographystyle{plain}
 \bibliography{specification}
 
+\subsubsection*{Acknowledgements}
+We thank Erik Poll for his useful comments on an earlier draft of this paper.
 \end{document}

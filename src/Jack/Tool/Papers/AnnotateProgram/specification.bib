@@ -1,5 +1,37 @@
+@STRING{BYTECODE = {Bytecode Semantics, Verification, Analysis and Transformation}}
 @string {LNCS           = {LNCS}}
 @string{ PUB-AW      = {Addison-Wesley}}
+@string{ENTCS   = "ENTCS"}
+@string{elsevier="Elsevier  Publishing"}
+@string{springer        = {Springer}}%{Springer-Verlag}}            %
+
+@string{cav96           = {Computer-Aided Verification (CAV~'96)}}
+@string{cav02           = {Computer-Aided Verification (CAV'02)}}
+@string{tacas00 	= "Tools and Algorithms
+                           for the Construction and Analysis of
+		  Systems (TACAS~2000)"}
+@string{tacas01 	= "Tools and Algorithms
+                           for the Construction and Analysis of
+		  Systems (TACAS~2001)"}
+@string{tacas04 	= "Tools and Algorithms
+                           for the Construction and Analysis of
+		  Systems (TACAS~2004)"}
+@string{fase00          = "Fundamental Approaches to Software Engineering (FASE~2000)"}
+@string{fase01          = "Fundamental Approaches to Software Engineering (FASE~2001)"}
+
+@STRING{OOPSLA98  = "Object-Oriented Programming, Systems, Languages
+		   and Applications (OOPSLA'98)"}
+@STRING{ACMTPLS         = "ACM Trans. on Progr. Lang. and Systems"}
+@string{amast02         = "Algebraic Methodology And Software
+                  Technology (AMAST'02)"}
+@string{fme02           = "Formal Methods Europe (FME'02)"}
+@string{fme03           = "Formal Methods (FME'03)"}
+
+@string{jlap = "Journal of Logic and Algebraic Programming"}
+
+@STRING{TCS     = "Theor. Comp. Sci."}
+@STRING{ACI     = "Acta Informatica"}
+
 
 @inproceedings{AktugDG08,
 title = "Provably Correct Runtime Monitoring",
@@ -32,13 +64,14 @@ year = 2008
   year = {2005},
 }
 
-@inproceedings{Cheon07,
+@article{Cheon07,
   author = {Y. Cheon and A. Perumendla},
   title = {{Specifying and Checking Method Call Sequences of Java Programs}},
-  booktitle = {Software Quality Journal},
-  volume = {15-1},
+  journal = {Software Quality Journal},
+  volume = {15}, 
+  issue = 1,
   pages = {7--25},
-  publisher = {Springer},
+  publisher = springer,
   year = {2007},
 }
 
@@ -66,39 +99,8 @@ Properties},
  publisher = {Kluwer Academic Publishers},
  year = 2003,
  isbn = {1-4020-7449-2},
- note  = {Avail. at {\url{http://autojml.sourceforge.net}}},
+ note  = {See {\url{http://autojml.sourceforge.net}}},
 }
-
-@string{ENTCS   = "ENTCS"}
-@string{elsevier="Elsevier  Publishing"}
-@string{springer        = {Springer}}%{Springer-Verlag}}            %
-
-@string{cav96           = {Computer-Aided Verification (CAV~'96)}}
-@string{cav02           = {Computer-Aided Verification (CAV'02)}}
-@string{tacas00 	= "Tools and Algorithms
-                           for the Construction and Analysis of
-		  Systems (TACAS~2000)"}
-@string{tacas01 	= "Tools and Algorithms
-                           for the Construction and Analysis of
-		  Systems (TACAS~2001)"}
-@string{tacas04 	= "Tools and Algorithms
-                           for the Construction and Analysis of
-		  Systems (TACAS~2004)"}
-@string{fase00          = "Fundamental Approaches to Software Engineering (FASE~2000)"}
-@string{fase01          = "Fundamental Approaches to Software Engineering (FASE~2001)"}
-
-@STRING{OOPSLA98  = "Object-Oriented Programming, Systems, Languages
-		   and Applications (OOPSLA'98)"}
-@STRING{ACMTPLS         = "ACM Trans. on Progr. Lang. and Systems"}
-@string{amast02         = "Algebraic Methodology And Software
-                  Technology (AMAST'02)"}
-@string{fme02           = "Formal Methods Europe (FME'02)"}
-@string{fme03           = "Formal Methods (FME'03)"}
-
-@string{jlap = "Journal of Logic and Algebraic Programming"}
-
-@STRING{TCS     = "Theor. Comp. Sci."}
-@STRING{ACI     = "Acta Informatica"}
 
 @Book{Abrial96,
     author = "J.-R. Abrial",
@@ -106,6 +108,13 @@ Properties},
     publisher = "Cambridge University Press",
     year = "1996"
 }
+
+@phdthesis{Aktug08,
+title = "Algorithmic Verification Techniques for Mobile Code",
+author = "I. Aktug",
+school = "Royal Institute of Technology (KTH), Sweden",
+year = 2008}
+
 
 @book{Alexander79,
   author = {C. Alexander},
@@ -155,6 +164,17 @@ note = {\texttt{http://www.cis.ksu.edu/santos/bandera/}} }
     year = {2001}
 }
 
+@InProceedings{BannwartM05,
+  author =       "F. Y. Bannwart and P. M{\"u}ller",
+  title =        "A Program Logic for Bytecode",
+  booktitle =    BYTECODE,
+  editor =       "F. Spoto",
+  year =         2005,
+  series =       ENTCS,
+  volume =       "141",
+  pages =        "255--273",
+  publisher =    elsevier
+}
 
 
 @INPROCEEDINGS{BartheDR04,
@@ -507,6 +527,21 @@ publisher = "IEEE Press"
     editor = "P. Narendran and M. Rusinowitch",
     pages = "240--243",
     year = "1999",
+}
+
+@InProceedings{CokK04,
+  author =       "D. Cok and J. R. Kiniry",
+  title =        "{ESC/Java2}: Uniting {ESC/Java} and {JML}: Progress and
+                  issues in building and using {ESC/Java2} and a report on a
+                  case study involving the use of {ESC/Java2} to verify
+                  portions of an Internet voting tally system",
+  booktitle =    "Construction and Analysis of Safe, Secure and Interoperable
+                  Smart Devices (CASSIS~2004)",
+  publisher =    springer, 
+  year =         "2005",
+  volume =       "3362",
+  series =       LNCS,
+  pages =        "108--128",
 }
 
 @inproceedings{ColcombetF00,
@@ -1360,7 +1395,7 @@ editor = {R. Alur and T.A. Henzinger},
 pages = {411--414},
 publisher = springer,
 series = LNCS,
-number = 1102,
+volume = 1102,
 year = 1996,
 }
 
@@ -1645,7 +1680,7 @@ key={Reset}
 }
 
 @PhdThesis{Oheimb01,
-  author =       {D. von Oheimb},
+  author =       {Oheimb, D. von },
   title =        {Analyzing {Java} in {Isabelle/HOL}: Formalization, Type
                   Safety and {Hoare} Logic},
   school =       {Technische Universit\"at M\"unchen},
@@ -1659,3 +1694,4 @@ key={Reset}
   series =       "The Java Series",
   year =         "2005",
 }
+
