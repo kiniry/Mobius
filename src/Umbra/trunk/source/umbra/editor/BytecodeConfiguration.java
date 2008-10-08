@@ -17,6 +17,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
 import umbra.editor.actions.BytecodeDoubleClickStrategy;
+import umbra.editor.parsing.BytecodeCPSecScanner;
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.editor.parsing.BytecodeScanner;
 import umbra.editor.parsing.BytecodeBMLSecScanner;
@@ -52,6 +53,12 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    */
   private BytecodeBMLSecScanner my_bml_secscanner;
   //@ invariant my_bml_secscanner.colorManager == my_color_manager;
+
+  /**
+   * The byte code scanner object used to do the colouring and text
+   * styling of the byte code areas inside constant pool.
+   */
+  private BytecodeCPSecScanner my_cp_secscanner;
 
   /**
    * The byte code scanner object used to do the colouring and text
@@ -91,6 +98,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    * <ul>
    *   <li>{@link IDocument#DEFAULT_CONTENT_TYPE}</li>
    *   <li>{@link BytecodePartitionScanner#SECTION_HEAD}</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_CP}</li>
    *   <li>{@link BytecodePartitionScanner#SECTION_BML}</li>
    * </ul>
    * @see SourceViewerConfiguration#getConfiguredContentTypes(ISourceViewer)
@@ -100,6 +108,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
     return new String[] {
       IDocument.DEFAULT_CONTENT_TYPE,
       BytecodePartitionScanner.SECTION_HEAD,
+      BytecodePartitionScanner.SECTION_CP,
       BytecodePartitionScanner.SECTION_BML };
   }
 
@@ -160,11 +169,29 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
   }
 
   /**
+   * This method is a lazy getter for the tag scanner object. It checks if the
+   * corresponding field is <code>null</code>. If so it generates a new
+   * {@link BytecodeCPSecScanner} object and registers in it a default return
+   * token. This is {@link ColorValues#SLOT_TAG}.
+   *
+   * @return the byte code tag scanner object
+   */
+  protected final BytecodeBMLSecScanner getBytecodeCPSecScanner() {
+    if (my_cp_secscanner == null) {
+      my_cp_secscanner = new BytecodeCPSecScanner(my_color_manager, my_mode);
+      my_cp_secscanner.setDefaultReturnToken(
+        TokenGetter.getToken(my_color_manager, my_mode, ColorValues.SLOT_TAG));
+    }
+    return my_bml_secscanner;
+  }
+
+  /**
    * This method creates a new presentation reconciler
    * ({@link PresentationReconciler}) and registers in it damagers and
    * repairers for types ({@link DefaultDamagerRepairer}):
    * <ul>
    *   <li>{@link BytecodePartitionScanner#SECTION_BML},</li>
+   *   <li>{@link BytecodePartitionScanner#SECTION_CP},</li>
    *   <li>{@link IDocument#DEFAULT_CONTENT_TYPE},</li>
    * </ul>
    * and for types ({@link NonRuleBasedDamagerRepairer}):
@@ -193,6 +220,10 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
       new DefaultDamagerRepairer(getBytecodeBMLSecScanner());
     reconciler.setDamager(dr, BytecodePartitionScanner.SECTION_BML);
     reconciler.setRepairer(dr, BytecodePartitionScanner.SECTION_BML);
+
+    dr = new DefaultDamagerRepairer(getBytecodeCPSecScanner());
+    reconciler.setDamager(dr, BytecodePartitionScanner.SECTION_CP);
+    reconciler.setRepairer(dr, BytecodePartitionScanner.SECTION_CP);
 
     dr = new DefaultDamagerRepairer(getBytecodeScanner());
     reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);

@@ -77,9 +77,6 @@ public class BMLParsing {
     if (!my_cFgmt.isCorrect())
       if (my_cFgmt.getErrMsg() != null)
         msg += ": " + my_cFgmt.getErrMsg();
-    if (!my_cFgmt.getCode().equals(an_event.fDocument.get())) {
-      throw new UmbraRuntimeException("CodeFragment's code is out of date!");
-    }
   }
 
   /**

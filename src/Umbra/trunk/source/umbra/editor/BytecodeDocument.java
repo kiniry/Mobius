@@ -184,9 +184,9 @@ public class BytecodeDocument extends Document {
     throws UmbraException, UmbraLocationException {
     my_bcc.removeIncorrects(a_start, an_oldend);
     my_bcc.addAllLines(this, a_start, an_oldend, a_newend);
-    int reg = my_bcode_editor.getVisibleRegion();
-    setTextWithDeadUpdate(my_bcc.printDocument());
-    my_bcode_editor.setVisibleRegion(reg);
+    //int reg = my_bcode_editor.getVisibleRegion();
+    //setTextWithDeadUpdate(my_bcc.printDocument());
+    //my_bcode_editor.setVisibleRegion(reg);
     my_bcc.checkAllLines(a_start, a_newend);
   }
 

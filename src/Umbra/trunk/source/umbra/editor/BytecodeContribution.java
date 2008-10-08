@@ -267,6 +267,7 @@ public class BytecodeContribution extends ControlContribution {
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
+      displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
         displayError(Integer.toString(doc.getModel().getFirstError()));
       } else if (!doc.annotCorrect()) {
@@ -274,6 +275,15 @@ public class BytecodeContribution extends ControlContribution {
       } else {
         displayCorrect();
       }
+    }
+
+    /**
+     * @param doc
+     * @param offset
+     */
+    private void displayPosition(BytecodeDocument doc, int offset) {
+      // TODO Auto-generated method stub
+      
     }
   }
 
@@ -332,6 +342,26 @@ public class BytecodeContribution extends ControlContribution {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
     bars.getStatusLineManager().setMessage(
       GUIMessages.substitute(GUIMessages.INCORRECT_CODE,  a_msg));
+  }
+
+  /**
+   * This method displays in the status line the information
+   * about the cursor position inside the BML document.
+   *
+   * @param doc the document to print the position for
+   * @param offset the offset within the document to report
+   */
+  private void displayPosition(final BytecodeDocument doc, final int offset) {
+    final IActionBars bars = my_editor.getEditorSite().getActionBars();
+    int lno;
+    try {
+      lno = doc.getLineOfOffset(offset);
+      final int chpos = offset - doc.getLineOffset(lno) + 1;
+      bars.getStatusLineManager().setMessage("" + lno + " : " + chpos);
+    } catch (BadLocationException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**

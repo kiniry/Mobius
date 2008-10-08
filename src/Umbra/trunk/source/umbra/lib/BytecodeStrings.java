@@ -117,10 +117,32 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
 
   /**
    * This constant contains an array with all the keywords for constant pool
-   * entries. This array is based on the section "Textual Representation of
+   * areas. This array is based on the section "Textual Representation of
    * Specifications" of "BML Reference Manual"
    */
   public static final String[] CP_KEYWORDS = new String[] {
+    "Class",
+    "Fieldref",
+    "Methodref",
+    "InterfaceMethodref",
+    "String",
+    "Integer",
+    "Float",
+    "Long",
+    "Double",
+    "NameAndType",
+    "Utf8",
+    "const",
+    "Constant pool:",
+    "Second constant pool:"
+  };
+
+  /**
+   * This constant contains an array with all the keywords for constant pool
+   * types of entries. This array is based on the section "Textual
+   * Representation of Specifications" of "BML Reference Manual"
+   */
+  public static final String[] CP_TYPE_KEYWORDS = new String[] {
     "Class",
     "Fieldref",
     "Methodref",

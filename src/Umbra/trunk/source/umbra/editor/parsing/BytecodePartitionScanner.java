@@ -51,6 +51,12 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 
   /**
    * This is the name of a content type assigned to areas of a byte code
+   * document that correspond to constant pool
+   */
+  public static final String SECTION_CP = "__btc.cp";
+
+  /**
+   * This is the name of a content type assigned to areas of a byte code
    * document that correspond to throws declarations.
    * FIXME: the handling of these sections is partial;
    *   https://mobius.ucd.ie/ticket/549
@@ -98,8 +104,9 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    * </ul>
    */
   public BytecodePartitionScanner() {
-    final IToken thr = new Token(SECTION_THROWS);
     final IToken head = new Token(SECTION_HEAD);
+    final IToken cp = new Token(SECTION_CP);
+    final IToken thr = new Token(SECTION_THROWS);
     final IToken bml = new Token(SECTION_BML);
     final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES +
                               BytecodeStrings.HEADER_PREFIX.length];
@@ -109,6 +116,9 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
                                         BytecodeStrings.ANNOT_START,
                                         BytecodeStrings.ANNOT_END_SIMPLE,
                                         bml);
+    rules[BML_RULE] = new MultiLineRule(BytecodeStrings.JAVA_KEYWORDS[
+                                        BytecodeStrings.CP_KEYWORD_POS],
+                                        "  const #38 = Utf8 org.bmlspecs.LoopSpecificationTable;", cp);
     rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
     for (int i = 0; i < BytecodeStrings.HEADER_PREFIX.length;
          i++) {
