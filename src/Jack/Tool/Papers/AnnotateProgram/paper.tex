@@ -35,7 +35,7 @@ application, and to interrupt it as soon as the security policy is
 violated. However, run-time adherence checking is not always
 convenient. Instead, we aim at developing a technique to verify
 adherence to a security policy statically.  To do this, we consider
-the security automata as specification, and we generate JML
+a security automaton as specification, and we generate JML
 annotations that inline the monitor~--~as a specification~--~into the
 application.  We describe this translation and prove preservation of
 program behaviour, \emph{i.e.}, if monitoring does not reveal a
@@ -60,5 +60,7 @@ translation algorithm and in the program requirements.
 
 \vspace*{-0.8em}
 \subsubsection*{Acknowledgements}
-We thank Erik Poll for his useful comments on an earlier draft of this paper.
+We thank Erik Poll for his useful comments on an earlier draft of this
+paper, and Igor Siveroni, who started the work on this topic and came
+up with the idea to use method-level set-annotations.
 \end{document}

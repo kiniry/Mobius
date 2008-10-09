@@ -22,7 +22,7 @@ means to enforce security are necessary.
 % the application provider is required to create this proof.
 
 Security experts typically express security requirements by a collection of
-security automata or temporal logic formulae. However, typical program
+security automata or temporal logic formulae. However, many program
 verification tools use a Hoare logic style for the specifications
 (\emph{i.e.}, pre- and postconditions).
 Therefore, as a first step towards static
@@ -59,12 +59,12 @@ to the method body and prove equivalence of the run-time checking behaviour.
 All results in the paper have been established formally using
 the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation
 is available via \url{http://www.cs.ru.nl/~tamalet/}. To be able to
-complete the correctness proof, the order in which method
+establish the correctness proof, the order in which method
 specifications are evaluated is important. Further, we had to add an
 explicit requirement that \texttt{finally} blocks could not override
 annotation violation exceptions thrown inside \texttt{try} or
 \texttt{catch} statements (see also~\cite{Huisman08}). The last
-complication that we encountered was how to specify explicitly that
+complication that we encountered was how to specify conveniently that
 specification-only constructs and steps taken by the monitor did not
 have any side-effects on the program state. More detailed information
 about the proofs is given in Section~\ref{SecAnnotGen}.
@@ -104,7 +104,7 @@ be called and terminate successfully at most \(N\) times in between
 calls to a \texttt{reset} method. Notice that the counter is not
 increased if \texttt{sendSMS} terminates with an uncaught exception
 (labelled \excexit{(\texttt{sendSMS})}), and that \texttt{reset}
-should not be called from within \texttt{sendSMS}).  Even though very
+should not be called from within \texttt{sendSMS}.  Even though very
 basic, this example is representative of a wide range of important
 resource-related security properties.
 
