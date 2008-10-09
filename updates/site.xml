@@ -54,13 +54,13 @@
    <feature url="features/Prover_Editor_feature_1.0.0.jar" id="Prover_Editor_feature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/org.eclipse.cvs_1.1.1.r34x_20080902-7C79E8N9nJD4oAW9V1938.jar" id="org.eclipse.cvs" version="1.1.1.r34x_20080902-7C79E8N9nJD4oAW9V1938">
-      <category name="Mobius"/>
-   </feature>
    <feature url="features/MOBIUS_Coq_Editor_1.0.0.jar" id="MOBIUS_Coq_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
+      <category name="Mobius"/>
+   </feature>
+   <feature url="features/mobius.library.feature_1.0.0.jar" id="mobius.library.feature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
