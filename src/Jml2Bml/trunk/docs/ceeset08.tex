@@ -86,7 +86,7 @@ ul. Banacha 2\\
     \begin{itemize}
     	\item Bytecode verification
     	\item Digital certificates
-    	\item Statical code analysis
+    	\item Static code analysis
     	\item Runtime checking
     \end{itemize}
   \end{block}
@@ -98,9 +98,9 @@ ul. Banacha 2\\
 	\begin{block}{Goal}
 		Give the user certain guarantees of the code to be executed at the moment of its execution.
 	\end{block}
-	
+
 	\pause
-	
+
 	\begin{block}{Solution}
 		Augmented executable code with a proof that the code obeys certain policies.
 	\end{block}
@@ -163,12 +163,13 @@ ul. Banacha 2\\
 			\item behavioural specification language for Java
 			\item write specifications in \emph{design-by-contract} fashion
 		\end{itemize}
-
+%powiedzieæ kilka zdañ o JMLu: ¿e ma sk³adniê podobn¹ do wyra¿eñ Javy, jakiego typu w³asnoœci siê w nim da wyraziæ (pre/post
+%condition, niezmienniki, asserty...)
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{JML example}
-	
+
 \lstset{language=java, morekeywords={requires,ensures,\result,\exists,\old,loop_invariant,\forall,==>, decreases},
         basicstyle=\tiny,commentstyle=\tiny,moredelim=*[s][\tiny]{/*@}{*/},
         numbers=left,numberstyle=\tiny,stepnumber=2,numbersep=4pt}
@@ -198,14 +199,14 @@ public class List {
     return false;
   }
 }
-\end{lstlisting}	
+\end{lstlisting}
 
 \end{frame}
 
 \subsection{Bytecode Modeling Language}
 
 \begin{frame}[fragile]
-	\frametitle{What is BML?}
+	\frametitle{What is BML? [1/2]}
 
 		\begin{itemize}
 			\item specification language for Java bytecode
@@ -213,6 +214,12 @@ public class List {
 			\item BML is developed within the MOBIUS project
 			\item target of the project are Java-enabled mobile devices
 			\item current version of BML assumes some simplifications of the Java bytecode which are present in the J2ME mobile platform
+		\end{itemize}
+\end{frame}
+\begin{frame}[fragile]
+	\frametitle{What is BML? [2/2]}
+
+		\begin{itemize}
 			\item Class files with BML annotations are regular Java class files
 			\item annotations are stored within additional attributes
 			\item attributes start with the prefix \emph{org.bmlspecs} and according to the specification of JVM they should be ignored in normal execution
@@ -226,7 +233,7 @@ public class List {
 
 \begin{figure}[htb]
 \lstset{language=bml}
-\lstset{basicstyle=\scriptsize,stepnumber=400,numbersep=5pt}
+\lstset{basicstyle=\tiny,stepnumber=400,numbersep=5pt}
 \vspace{-2\baselineskip}
 ~\hspace{2cm}~\begin{minipage}{400pt}
 \begin{lstlisting}
@@ -241,22 +248,7 @@ public class List {
 public boolean replace(Object o1, Object o2)
 0:    iconst_0
 1:    istore_3
-2:    goto	   #27
-5:    aload_0
-6:    getfield	   main.List.list
-9:    iload_3
-10:   aaload
-11:   aload_1
-12:   if_acmpne	   #24
-15:   aload_0
-16:   getfield	   main.List.list
-19:   iload_3
-20:   aload_2
-21:   aastore
-22:   iconst_1
-23:   ireturn
-24:   iinc	   %3	1
-27:   iload_3
+...
 28:   aload_0
 29:   getfield	   main.List.list
 32:   arraylength
@@ -276,9 +268,25 @@ public boolean replace(Object o1, Object o2)
 \end{minipage}
 
 
-\caption{The method \texttt{replace} in the \texttt{List.class}}
 \label{fig:bytecode}
 \end{figure}
+%2:    goto	   #27
+%5:    aload_0
+%6:    getfield	   main.List.list
+%9:    iload_3
+%10:   aaload
+%11:   aload_1
+%12:   if_acmpne	   #24
+%15:   aload_0
+%16:   getfield	   main.List.list
+%19:   iload_3
+%20:   aload_2
+%21:   aastore
+%22:   iconst_1
+%23:   ireturn
+%24:   iinc	   %3	1
+%27:   iload_3
+
 \end{frame}
 
 \section{Jml2Bml Compiler}
@@ -312,9 +320,9 @@ public boolean replace(Object o1, Object o2)
 	  	\item succeessfull translation result is stored in output class file using BMLLib library
 	  \end{itemize}
 	\end{block}
-  
+
   \pause
-  
+
   \begin{block}{Advantages of the design}
   	\begin{itemize}
   		\item easily extensible
@@ -341,9 +349,15 @@ public boolean replace(Object o1, Object o2)
 	\end{block}
 \end{frame}
 
-\subsection{Loopa}
+\subsection{Loop Detection}
 \begin{frame}
-	coœ o pêtlach
+\begin{itemize}
+\item Covers different ways of compiling loops into bytecode
+\item Based on advanced Control Flow Graph analysis
+\item Finds entry point to the loop
+\item Matching source code loops with bytecode loops
+% powiedzieæ o tym, do którego miejsca dopisujemy anotacje. Mo¿liwe pytanie: jakie s¹ sposoby kompilowania pêtli?
+\end{itemize}
 \end{frame}
 
 \subsection{Application}
@@ -355,7 +369,7 @@ public boolean replace(Object o1, Object o2)
 
 \begin{frame}
   \frametitle<presentation>{Summary}
-  
+
 	\begin{block}{Jml2Bml compiler is}
 		\begin{itemize}
 			\item tool that translates annotations from JML to BML
