@@ -3,6 +3,7 @@ package annot.bcclass;
 import java.util.Iterator;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.classfile.Utility;
@@ -59,6 +60,11 @@ public class BCMethod {
   private final LocalVariable[] lvars;
 
   /**
+   * Parameters array.
+   */
+  private final LocalVariable[] params;
+
+  /**
    * Method specification attribute.
    */
   private MethodSpecification mspec;
@@ -86,10 +92,13 @@ public class BCMethod {
     this.bcelMethod = m;
     this.amap = new BCAttributeMap(this);
     final LocalVariableGen[] lvgens = m.getLocalVariables();
-    final int cnt = lvgens.length;
+    final int cnt = lvgens.length > 0 ? lvgens.length : 1;
     this.lvars = new LocalVariable[cnt];
     this.oldvars = new LocalVariable[cnt];
     setLocalVariables(lvgens);
+    final Type[] types = m.getArgumentTypes();
+    this.params = new LocalVariable[types.length];
+    setParams(types);
     readBMLAttributes(m);
   }
 
@@ -124,10 +133,44 @@ public class BCMethod {
    */
   private void setLocalVariables(final LocalVariableGen[] lvgens) {
     final int cnt = lvgens.length;
+    if (cnt == 0) {
+      final JavaClass jc = bcc.getJC();
+      final String typename = "L" + jc.getPackageName() +
+                              jc.getClassName() + ";";
+      final Type t = Type.getType(typename);
+      this.lvars[0] = new LocalVariable(false, this, 0, "this",
+        new LocalVariableGen(0, "this", t, null, null));
+      return;
+    }
     for (int i = 0; i  <  cnt; i++) {
       final String name = lvgens[i].getName();
       this.lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
       this.oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
+    }
+  }
+
+  /**
+   * The method fills in the parameter table with the variables based on the
+   * values in the given array of variable types. The method fills in the
+   * initial segments of the table. The size of the given array of parameters
+   * should be not greater than the sizes of the local table. If this is greater
+   * the {@link IndexOutOfBoundsException} is thrown.
+   *
+   * @param paramsNames the array of parameter types
+   */
+  private void setParams(final Type[] paramsNames) {
+    final int cnt = paramsNames.length;
+    for (int i = 0; i  <  cnt; i++) {
+      String name;
+      LocalVariableGen lvgen;
+      if (lvars.length > 1) {
+        name = lvars[i].getName();
+        lvgen = lvars[i].getBcelLvGen();
+      } else {
+        name = null;
+        lvgen = new LocalVariableGen(i + 1, null, paramsNames[i], null, null);
+      }
+      this.params[i] = new LocalVariable(false, this, i + 1, name, lvgen);
     }
   }
 
@@ -241,10 +284,15 @@ public class BCMethod {
    *     method.
    */
   public LocalVariable getLocalVariable(final boolean isOld, final int index) {
-    if (isOld) {
-      return this.oldvars[index];
+    if (lvars.length > 1) {
+      if (isOld) {
+        return this.oldvars[index];
+      }
+      return this.lvars[index];
     }
-    return this.lvars[index];
+    if (index == 0) return this.lvars[0];
+    else
+      return this.params[index - 1];
   }
 
   /**
@@ -426,11 +474,15 @@ public class BCMethod {
     return buf.toString();
   }
 
+  /**
+   *
+   * @param i
+   * @return
+   */
   public boolean canBeLocalVariable(int i) {
-    if ( lvars.length > 0) {
-      return i < lvars.length;
+    if (lvars.length > 1) {
+      return 0 <= i && i < lvars.length;
     }
-    Type[] types = bcelMethod.getArgumentTypes();
-    return i <= types.length;
+    return i == 0 || (0 <= i - 1 &&  i - 1 < params.length);
   }
 }

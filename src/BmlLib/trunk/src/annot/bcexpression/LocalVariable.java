@@ -50,18 +50,19 @@ public class LocalVariable extends OldExpression {
    * use {@link #getLocalVariable(BCMethod, AttributeReader)}
    * intead.
    *
-   * @param m - initializing method,
+   * @param isOlt - tag marking the variable as old
+   * @param meth - initializing method,
    * @param id - number (index) of this local variable
    *     in method <code>m</code>,
-   * @param name - name of this variable,
+   * @param aname - name of this variable,
    * @param lvg - BCEL's representation of this variable.
    */
-  public LocalVariable(final boolean isOld, final BCMethod m, final int id,
-                       final String name, final LocalVariableGen lvg) {
+  public LocalVariable(final boolean isOld, final BCMethod meth, final int id,
+                       final String aname, final LocalVariableGen lvg) {
     super(Code.LOCAL_VARIABLE, isOld);
-    this.m = m;
+    this.m = meth;
     this.lvar_id = id;
-    this.name = name;
+    this.name = aname;
     this.bcelLvGen = lvg;
     this.type = JavaType.getJavaType(lvg.getType().getSignature());
     //    this.type = JavaType1.convert(lvg.getType());
@@ -85,7 +86,7 @@ public class LocalVariable extends OldExpression {
                                                final AttributeReader ar)
     throws ReadAttributeException {
     final int index = ar.readShort();
-    if (index  <  0 || index  >= m.getLocalVariableCount()) {
+    if (index  <  0 || index  > m.getLocalVariableCount()) {
       throw new ReadAttributeException("invalid local variable index: " +
                                        index);
     }
@@ -125,7 +126,7 @@ public class LocalVariable extends OldExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    if (this.name!=null) {
+    if (this.name != null) {
       return isOld() ? "old_" + this.name : this.name;
     } else {
       return toString();
