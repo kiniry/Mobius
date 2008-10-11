@@ -107,6 +107,7 @@ public final class ConstantPoolHelper {
     final BCConstantPool cp = clazz.getCp();
     //a little bit hacked: the className is Lpackage/name;
     //we want only package/name
+    System.out.println("to tu: " + className + " " + fieldName);
     final String trimmedClassName = className.substring(1, className
         .lastIndexOf(";"));
     final int fieldNameIndex = cp.findConstant(fieldName);

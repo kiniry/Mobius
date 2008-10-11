@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/BCEL5.1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

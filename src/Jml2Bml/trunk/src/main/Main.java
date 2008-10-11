@@ -66,6 +66,7 @@ public class Main {
     if (args.length != 3) {
       return;
     }
+    main.List list = new main.List();
     new Main().compile(args[2], new ClassFileLocation(args[0], args[1]));
   }
 

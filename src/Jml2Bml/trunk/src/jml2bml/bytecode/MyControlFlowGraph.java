@@ -11,6 +11,7 @@ import org.apache.bcel.verifier.structurals.ControlFlowGraph;
 import org.apache.bcel.verifier.structurals.InstructionContext;
 
 import annot.bcclass.BCMethod;
+
 /**
  * Control flow graph, providing access to preceding instructions,
  * successors, instruction numbers etc.
@@ -33,6 +34,7 @@ public class MyControlFlowGraph {
    * Map storing instruction numbers.
    */
   private Map<InstructionContext, Integer> instrNum;
+
   /**
    * Map storing next instruction for the given one.
    */

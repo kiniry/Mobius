@@ -30,11 +30,12 @@ public final class LoopDetector {
   public static List<LoopDescription> detectLoop(final BCMethod method) {
     final MyControlFlowGraph graph = new MyControlFlowGraph(method);
     final InstructionContext[] instructions = graph.getInstructionContext();
-    final List<LoopDescription> res = new LinkedList<LoopDescription>();
+    final List<LoopDescription> res = new LinkedList<LoopDescription>(); 
     for (InstructionContext instruction : instructions) {
       LoopDescription loopDescription = null;
       loopDescription = firstKindLoop(instruction, graph);
       if (loopDescription != null) {
+        System.out.println("znalazlem petle pierwszego rodzaju: " + loopDescription.getInstructionToAnnotate() + " poczatek " + loopDescription.getLoopStart());
         res.add(loopDescription);
       } else {
         loopDescription = secondKindLoop(instruction, graph);
@@ -85,10 +86,14 @@ public final class LoopDetector {
         beforeLoop = prec;
       }
     }
+    InstructionContext start = null;
     if (beforeLoop != null) {
       InstructionContext loopCondition = null;
-      final InstructionContext c = graph.getNextInstruction(beforeLoop);
-      final List<InstructionContext> prec = graph.getPrecedingInstructions(c);
+      start = findFirstLoopStart(beforeLoop, number, graph);
+      if (start == null){
+        return null;
+      }
+      final List<InstructionContext> prec = graph.getPrecedingInstructions(start);
       int max = number;
       for (InstructionContext p : prec) {
         final int n = graph.getInstructionNumber(p);
@@ -99,8 +104,28 @@ public final class LoopDetector {
       }
       if (loopCondition == null)
         return null;
-      return new LoopDescription(graph.getNextInstruction(beforeLoop),
+      return new LoopDescription(start,
                                  loopCondition, loopCondition);
+    }
+    return null;
+  }
+
+  private static InstructionContext findFirstLoopStart(
+                                                final InstructionContext beforeLoop,
+                                                final int number,
+                                                final MyControlFlowGraph graph) {
+    InstructionContext tmp = beforeLoop;
+    int n = graph.getInstructionNumber(tmp);
+    
+    while (n < number) {
+      tmp = graph.getNextInstruction(tmp);
+      n = graph.getInstructionNumber(tmp);
+      final List<InstructionContext> prec = graph.getPrecedingInstructions(tmp);
+      for (InstructionContext p : prec) {
+        if (graph.getInstructionNumber(p) > number) {
+          return tmp;
+        }
+      }
     }
     return null;
   }
