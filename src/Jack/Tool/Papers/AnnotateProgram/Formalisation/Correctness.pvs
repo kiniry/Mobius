@@ -48,6 +48,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2) AND 
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
+  % Simulation of the annotated program. Note that the converse does not hold
   related_states_implies_derive_for_unchanged_program : THEOREM % PROVE
     FORALL (b : (wf_Body(program(mp))), v1 : Val)
            (sMP1, sMP2 : MPState, sAP1 : APState)
@@ -62,20 +63,6 @@ BEGIN
         EXISTS (sAP2 : APState, v2 : Val, n2 : nat) : 
           derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
 
-
-  related_states_implies_derive_for_unchanged_program_converse : THEOREM % PROVE (untried)
-    FORALL (b : (wf_Body(program(mp))), v1, v2 : Val)
-           (sMP1 : MPState, sAP1, sAP2 : APState)
-           (n1 : nat) :
-      well_behaved_MVA_for_annot_gen(mp) IMPLIES
-      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
-      related_states(mp)(sMP1, sAP1) IMPLIES
-      derive(ann_program(mp))(b, sAP1, v1, sAP2)(n1) IMPLIES
-      legal_Program_AP(ann_program(mp)) IMPLIES
-      legal_Body(ann_program(mp))(b) IMPLIES
-        EXISTS (sMP2 : MPState, n2 : nat) : 
-          derive(mp)(b, sMP1, v2, sMP2)(n2) 
-
   % Correctness of the annotate program function
   correctness_of_ann_program : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
@@ -86,17 +73,6 @@ BEGIN
       EXISTS(sAP : APState) :
       run_annotated_program(ann_program(mp))
                                (main, arg)(root_object)(sAP) AND
-        related_states(mp)(sMP, sAP)
-
-  correctness_of_ann_program_converse : THEOREM % :-)
-    FORALL (main : Name, arg : int)(root_object : (defined?))
-           (sAP : APState) :
-      well_behaved_MVA_for_annot_gen(mp) IMPLIES
-      legal_Program_AP(ann_program(mp)) IMPLIES
-      run_annotated_program(ann_program(mp))
-                           (main, arg)(root_object)(sAP) IMPLIES
-      EXISTS(sMP : MPState) :
-      run_monitored_program(mp)(main, arg)(root_object)(sMP) AND
         related_states(mp)(sMP, sAP)
 
 

@@ -906,10 +906,19 @@ BEGIN
       ELSE get_class(ann_program(mp))(a) = get_class(program(mp))(a)
       ENDIF
 
-  ann_program_keeps_methods : LEMMA % TODO: Finish
+
+  % method names unchaged by program annotations
+  ann_program_preserves_method_names : LEMMA % :-)
+    FORALL (c : Class) :
+      classes(program(mp))(c) IMPLIES
+        method_names(program(mp), c) = 
+        method_names(ann_program(mp), ann_class(mp)(c))
+
+  % if lookup_mthd find a method in the monitored program, then it will also
+  % find a method in the annotated program.
+  up_lookup_mthd_equivalence : LEMMA % :-)
     FORALL (a : Val, mn: Name):
       up?(lookup_mthd(program(mp), a, mn)) IMPLIES
         up?(lookup_mthd(ann_program(mp), a, mn))
-
 
 END AnnotateProgramProperties

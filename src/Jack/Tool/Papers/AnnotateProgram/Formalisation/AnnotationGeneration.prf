@@ -11495,7 +11495,7 @@
   (ann_program_class_correspondence-1 nil 3392569211 3431148050
    ("" (skosimp*)
     (("" (expand "ann_program") (("" (propax) nil nil)) nil)) nil)
-   untried ((ann_program const-decl "Program" AnnotateProgram nil))
+   unfinished ((ann_program const-decl "Program" AnnotateProgram nil))
    2987 2890 t shostak))
  (ann_program_method_correspondence 0
   (ann_program_method_correspondence-1 nil 3392569244 3431148054
@@ -11528,7 +11528,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
     (Class type-eq-decl nil Program nil)
@@ -11706,7 +11706,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -11775,7 +11775,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -11895,7 +11895,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (Val type-decl nil Val_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
@@ -11966,7 +11966,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
@@ -12036,7 +12036,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -12078,7 +12078,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -12126,7 +12126,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program_preserves_var_decls formula-decl nil
      AnnotateProgramProperties nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
@@ -13039,7 +13039,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((finite_union application-judgement "finite_set" finite_sets nil)
     (Body type-decl nil Body_adt nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
@@ -14271,7 +14271,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((var_names_union formula-decl nil ProgramFunctions nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (set type-eq-decl nil sets nil)
@@ -14340,7 +14340,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -14455,7 +14455,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((id const-decl "(bijective?[T, T])" identity nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
@@ -14637,7 +14637,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (wf_Body const-decl "boolean" WellFormedMVA nil)
     (Body type-decl nil Body_adt nil)
@@ -14838,7 +14838,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (var_names_declared_in_MVA_subset_ghostvars formula-decl nil
      AnnotateProgramProperties nil)
@@ -15005,7 +15005,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((one_action_source_wf_Body formula-decl nil
      AnnotateProgramProperties nil)
     (Action type-eq-decl nil MVA nil) (list type-decl nil list_adt nil)
@@ -15137,7 +15137,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (var_names_ann_action formula-decl nil AnnotateEvent nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
@@ -15316,7 +15316,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Stmt const-decl "boolean" WellFormedProgram nil)
     (ann_action_yields_wf_Body formula-decl nil
      AnnotateProgramProperties nil)
@@ -15478,7 +15478,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Expr const-decl "boolean" WellFormedProgram nil)
     (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
@@ -15778,7 +15778,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (subset_is_partial_order name-judgement "(partial_order?[set[T]])"
@@ -16241,7 +16241,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (ann_program_add_ghost_var_decls formula-decl nil
@@ -16459,7 +16459,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -16553,7 +16553,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -16629,7 +16629,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((get_class const-decl "lift[Class]" ProgramFunctions nil)
     (ann_program const-decl "Program" AnnotateProgram nil))
    3332 3290 t shostak))
@@ -16652,7 +16652,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((ann_program const-decl "Program" AnnotateProgram nil)
     (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (wf_program_has_unique_class_names formula-decl nil
@@ -16722,7 +16722,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (wf_class_has_unique_method_names formula-decl nil
      WellFormedProgram nil)
@@ -16809,7 +16809,7 @@
     (method_names const-decl "finite_set[Name]" ProgramFunctions nil))
    9632 9340 nil nil))
  (lookup_mthd_ann_program 0
-  (lookup_mthd_ann_program-1 nil 3387195852 3431148179
+  (lookup_mthd_ann_program-1 nil 3387195852 3432716801
    ("" (skosimp)
     (("" (expand "lookup_mthd")
       (("" (lift-if)
@@ -16820,7 +16820,7 @@
                 (("1" (split -3)
                   (("1" (assert)
                     (("1" (split 1)
-                      (("1" (skosimp*)
+                      (("1" (flatten)
                         (("1"
                           (name "c1"
                                 "down(get_class(program(mp!1))(tgt!1))")
@@ -16870,7 +16870,7 @@
                             nil))
                           nil))
                         nil)
-                       ("2" (skosimp*)
+                       ("2" (flatten)
                         (("2" (assert)
                           (("2"
                             (case-replace
@@ -16908,11 +16908,11 @@
         nil))
       nil))
     nil)
-   untried
+   unchecked
    ((lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
+    nil nil (= const-decl "[T, T -> boolean]" equalities nil)
     (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
     (same_class_name_ann_class_implies_same_class formula-decl nil
      AnnotateProgramProperties nil)
@@ -16954,9 +16954,9 @@
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (ann_program const-decl "Program" AnnotateProgram nil))
-   4640 4430 t shostak))
+   493583 2000 t shostak))
  (ann_program_preserves_class_names 0
-  (ann_program_preserves_class_names-1 nil 3398687801 3431148182
+  (ann_program_preserves_class_names-1 nil 3398687801 3432720220
    ("" (skosimp*)
     (("" (apply-extensionality :hide? t)
       (("" (expand "class_names")
@@ -16964,12 +16964,10 @@
           (("" (split 1)
             (("1" (skosimp*)
               (("1" (inst 1 "ann_class(mp!1)(c!1)")
-                (("1" (assert)
-                  (("1" (rewrite "ann_program_preserves_class_name")
-                    (("1" (assert)
-                      (("1" (expand "ann_program")
-                        (("1" (inst?) nil nil)) nil))
-                      nil))
+                (("1" (rewrite "ann_program_preserves_class_name")
+                  (("1" (assert)
+                    (("1" (expand "ann_program")
+                      (("1" (inst?) nil nil)) nil))
                     nil))
                   nil))
                 nil))
@@ -16997,7 +16995,7 @@
         nil))
       nil))
     nil)
-   untried
+   proved
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -17037,7 +17035,7 @@
     (ann_program_preserves_class_name formula-decl nil AnnotateClass
      nil)
     (ann_class const-decl "Class" AnnotateClass nil))
-   3382 3300 t shostak))
+   196888 810 t shostak))
  (up_get_class_equivalence 0
   (up_get_class_equivalence-1 nil 3398687657 3431148185
    ("" (skosimp*)
@@ -17060,7 +17058,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((get_class const-decl "lift[Class]" ProgramFunctions nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -17430,7 +17428,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((class_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (singleton const-decl "(singleton?)" sets nil)
     (singleton? const-decl "bool" sets nil)
@@ -17484,8 +17482,132 @@
     (up_get_class_equivalence formula-decl nil
      AnnotateProgramProperties nil))
    542015 5420 t shostak))
- (ann_program_keeps_methods 0
-  (ann_program_keeps_methods-1 nil 3432207685 3432285258
+ (ann_program_preserves_method_names 0
+  (ann_program_preserves_method_names-1 nil 3432718884 3432724464
+   ("" (skosimp*)
+    (("" (apply-extensionality :hide? t)
+      (("" (expand "method_names")
+        (("" (iff)
+          (("" (split)
+            (("1" (skosimp*)
+              (("1" (expand "ann_class" 1)
+                (("1" (lift-if)
+                  (("1" (split)
+                    (("1" (flatten)
+                      (("1" (inst 1 "ann_method(mp!1)(m!1)")
+                        (("1" (use "ann_method_name")
+                          (("1" (assert)
+                            (("1" (split 1)
+                              (("1"
+                                (expand "ann_program" 1)
+                                (("1"
+                                  (inst?)
+                                  (("1"
+                                    (assert)
+                                    (("1"
+                                      (expand "ann_class" 1)
+                                      (("1" (propax) nil nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil)
+                               ("2"
+                                (expand "ann_methods")
+                                (("2" (inst?) nil nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil)
+                     ("2" (flatten)
+                      (("2" (inst?)
+                        (("2" (split)
+                          (("1" (expand "ann_program")
+                            (("1" (inst?)
+                              (("1"
+                                (assert)
+                                (("1"
+                                  (expand "ann_class")
+                                  (("1" (propax) nil nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil)
+                           ("2" (propax) nil nil)
+                           ("3" (propax) nil nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil)
+             ("2" (skosimp*)
+              (("2" (expand "ann_class" -2)
+                (("2" (prop)
+                  (("1" (expand "ann_methods")
+                    (("1" (skosimp*)
+                      (("1" (inst?)
+                        (("1" (assert)
+                          (("1" (use "ann_method_name")
+                            (("1" (assert) nil nil)) nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil)
+                   ("2" (inst?) (("2" (assert) nil nil)) nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (set type-eq-decl nil sets nil)
+    (ann_class const-decl "Class" AnnotateClass nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (MVA type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Event type-eq-decl nil MVA nil)
+    (EventType type-decl nil EventType_adt nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (method_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (is_finite const-decl "bool" finite_sets nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (Class type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (Decl type-eq-decl nil Program nil)
+    (JType type-decl nil JType_adt nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (Val type-decl nil Val_adt nil)
+    (ann_method_name formula-decl nil AnnotateMethod nil)
+    (ann_methods const-decl "finite_set[Method]" AnnotateMethod nil)
+    (finite_union application-judgement "finite_set" finite_sets nil)
+    (ann_method const-decl "Method" AnnotateMethod nil))
+   1576874 2140 t shostak))
+ (up_lookup_mthd_equivalence 0
+  (up_lookup_mthd_equivalence-1 nil 3432716052 3432719942
    ("" (skosimp*)
     (("" (expand "lookup_mthd")
       (("" (lift-if)
@@ -17493,40 +17615,31 @@
           (("1" (flatten)
             (("1" (use "up_get_class_equivalence")
               (("1" (ground)
-                (("1" (expand "method_names")
-                  (("1" (skosimp*)
-                    (("1" (inst 1 "ann_method(mp!1)(m!1)")
-                      (("1" (use "get_class_in_classes")
-                        (("1" (use "ann_method_name")
+                (("1" (use "get_class_equivalence")
+                  (("1" (assert)
+                    (("1" (split)
+                      (("1" (flatten)
+                        (("1" (replace -2)
                           (("1" (assert)
-                            (("1" (expand "get_class" (-5 1))
-                              (("1"
-                                (split -)
-                                (("1"
-                                  (flatten)
-                                  (("1"
-                                    (use
-                                     "ann_program_preserves_class_names")
-                                    (("1"
-                                      (assert)
-                                      (("1"
-                                        (expand "choose")
-                                        (("1" (postpone) nil nil))
-                                        nil))
-                                      nil))
-                                    nil))
-                                  nil)
-                                 ("2"
-                                  (flatten)
+                            (("1"
+                              (use "ann_program_preserves_method_names")
+                              (("1" (assert) nil nil)) nil))
+                            nil))
+                          nil))
+                        nil)
+                       ("2" (flatten)
+                        (("2" (replace -1)
+                          (("2" (expand "method_names")
+                            (("2" (skosimp*)
+                              (("2"
+                                (inst?)
+                                (("2"
+                                  (assert)
                                   (("2"
-                                    (assert)
-                                    (("2"
-                                      (expand "get_class" -5)
-                                      (("2"
-                                        (lift-if)
-                                        (("2" (ground) nil nil))
-                                        nil))
-                                      nil))
+                                    (use
+                                     "get_class_in_classes"
+                                     ("p" "ann_program(mp!1)"))
+                                    (("2" (assert) nil nil))
                                     nil))
                                   nil))
                                 nil))
@@ -17545,5 +17658,47 @@
         nil))
       nil))
     nil)
-   unfinished nil 1484950 9040 t shostak)))
+   proved
+   ((method_names const-decl "finite_set[Name]" ProgramFunctions nil)
+    (get_class_in_classes formula-decl nil ProgramFunctions nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (ann_program const-decl "Program" AnnotateProgram nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (Excpt type-decl nil Excpt_adt nil)
+    (Method type-eq-decl nil Program nil)
+    (lift type-decl nil lift_adt nil)
+    (Class type-eq-decl nil Program nil)
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
+    (non_empty_finite_set type-eq-decl nil finite_sets nil)
+    (PreProgram type-eq-decl nil Program nil)
+    (get_class const-decl "lift[Class]" ProgramFunctions nil)
+    (ann_program_preserves_method_names formula-decl nil
+     AnnotateProgramProperties nil)
+    (get_class_equivalence formula-decl nil AnnotateProgramProperties
+     nil)
+    (Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (CP formal-nonempty-type-decl nil AnnotateProgramProperties nil)
+    (finite_set type-eq-decl nil finite_sets nil)
+    (EventType type-decl nil EventType_adt nil)
+    (Event type-eq-decl nil MVA nil) (Action type-eq-decl nil MVA nil)
+    (Guard type-eq-decl nil MVA nil)
+    (Transition type-eq-decl nil MVA nil)
+    (Val type-decl nil Val_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (defined? const-decl "boolean" ValProp nil)
+    (JType type-decl nil JType_adt nil)
+    (Decl type-eq-decl nil Program nil) (MVA type-eq-decl nil MVA nil)
+    (wf_MVA const-decl "boolean" WellFormedMVA nil)
+    (good_for_monitoring const-decl "boolean" MonitoredProgram nil)
+    (Program type-eq-decl nil WellFormedProgram nil)
+    (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
+    (compatible const-decl "boolean" MonitoredProgram nil)
+    (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
+    (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
+    (up_get_class_equivalence formula-decl nil
+     AnnotateProgramProperties nil)
+    (lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil))
+   29434 2000 t nil)))
 
