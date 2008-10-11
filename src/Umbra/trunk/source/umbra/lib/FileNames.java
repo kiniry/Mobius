@@ -270,7 +270,7 @@ public final class FileNames {
     final IJavaProject jproject = JavaCore.create(project);
     final IPath outputloc = jproject.getOutputLocation();
     final String newloc = outputloc.append(a_java_file.getFullPath().
-              removeFirstSegments(1)).toPortableString();
+              removeFirstSegments(2)).toPortableString();
     final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().
