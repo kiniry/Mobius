@@ -1109,7 +1109,7 @@
    ("" (skosimp*)
     (("" (apply-extensionality :hide? t) (("" (grind) nil nil)) nil))
     nil)
-   untried
+   unfinished
    ((Name formal-nonempty-type-decl nil ProgramFunctions nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -1273,7 +1273,7 @@
        ("2" (use "wf_card[[Expr, Stmt]]") nil nil))
       nil))
     nil)
-   untried
+   unfinished
    ((pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
     (wf_induction formula-decl nil wf_induction nil)
@@ -1374,7 +1374,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
     (list_induction formula-decl nil list_adt nil)
@@ -1849,7 +1849,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Class type-eq-decl nil Program nil)
     (lift type-decl nil lift_adt nil)
     (Method type-eq-decl nil Program nil)
@@ -2493,8 +2493,9 @@
         nil))
       nil))
     nil)
-   untried ((get_class const-decl "lift[Class]" ProgramFunctions nil))
-   65 40 t shostak))
+   unfinished
+   ((get_class const-decl "lift[Class]" ProgramFunctions nil)) 65 40 t
+   shostak))
  (lookup_mthd_TCC1 0
   (lookup_mthd_TCC1-1 nil 3396591590 3428166042
    ("" (subtype-tcc) nil nil) unchecked
@@ -2554,7 +2555,7 @@
     (("" (expand "lookup_mthd")
       (("" (lift-if) (("" (ground) nil nil)) nil)) nil))
     nil)
-   proved
+   unfinished
    ((lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil))
    57670 3780 t shostak))
  (lookup_inv_TCC1 0
@@ -3073,7 +3074,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((= const-decl "[T, T -> boolean]" equalities nil)
     (some_is_exists formula-decl nil listfuncs nil)
     (Expr type-eq-decl nil Body_adt nil)
@@ -3680,7 +3681,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((proper_subterm_set_clause const-decl "boolean" ProgramFunctions
      nil)
     (Unit adt-constructor-decl "(Unit?)" Val_adt nil)
@@ -3937,7 +3938,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((some_is_exists formula-decl nil listfuncs nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (Stmt type-eq-decl nil Body_adt nil)
@@ -4220,7 +4221,7 @@
         nil nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Body type-decl nil Body_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4788,7 +4789,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Body type-decl nil Body_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -4849,7 +4850,7 @@
     (("" (use "subterm_subset_varnames")
       (("" (assert) (("" (grind) nil nil)) nil)) nil))
     nil)
-   untried
+   unfinished
    ((subterm_subset_varnames formula-decl nil ProgramFunctions nil)
     (Body type-decl nil Body_adt nil)
     (Name formal-nonempty-type-decl nil ProgramFunctions nil)
@@ -4859,7 +4860,7 @@
      sets_lemmas nil))
    1338 400 t shostak))
  (proper_subterm_implies_subterm 0
-  (proper_subterm_implies_subterm-1 nil 3403263109 3428166054
+  (proper_subterm_implies_subterm-1 nil 3403263109 3432810708
    ("" (induct "b2")
     (("1"
       (apply (then (skosimp*) (expand "<<" -3) (expand "subterm" 1)
@@ -5036,56 +5037,296 @@
               (expand "subterm") (flatten) (assert)))
       nil nil))
     nil)
-   untried
-   ((list type-decl nil list_adt nil)
-    (PRED type-eq-decl nil defined_types nil)
-    (AND const-decl "[bool, bool -> bool]" booleans nil)
+   proved
+   ((Body type-decl nil Body_adt nil)
+    (boolean nonempty-type-decl nil booleans nil)
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (pred type-eq-decl nil defined_types nil)
+    (well_founded? const-decl "bool" orders nil)
+    (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramFunctions nil)
+    (Body_induction formula-decl nil Body_adt nil)
+    (every_is_forall formula-decl nil listfuncs nil)
+    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
+    (null adt-constructor-decl "(null?)" list_adt nil)
+    (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (some_is_exists formula-decl nil listfuncs nil)
+    (member def-decl "bool" list_props nil)
+    (list_induction formula-decl nil list_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
     (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
      Body_adt nil)
-    (Stmt type-eq-decl nil Body_adt nil)
-    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Expr type-eq-decl nil Body_adt nil)
-    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil)
-    (list_induction formula-decl nil list_adt nil)
-    (member def-decl "bool" list_props nil)
-    (some_is_exists formula-decl nil listfuncs nil)
-    (= const-decl "[T, T -> boolean]" equalities nil)
-    (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
-    (null adt-constructor-decl "(null?)" list_adt nil)
-    (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
-    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
-    (every_is_forall formula-decl nil listfuncs nil)
-    (Body_induction formula-decl nil Body_adt nil)
-    (Name formal-nonempty-type-decl nil ProgramFunctions nil)
-    (subterm adt-def-decl "boolean" Body_adt nil)
-    (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
-    (well_founded? const-decl "bool" orders nil)
-    (pred type-eq-decl nil defined_types nil)
-    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
-    (bool nonempty-type-eq-decl nil booleans nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (every adt-def-decl "boolean" list_adt nil)
+    (PRED type-eq-decl nil defined_types nil)
+    (list type-decl nil list_adt nil))
+   3606 1280 t shostak))
+ (subterm_implies_equal_or_proper_subterm 0
+  (subterm_implies_equal_or_proper_subterm-1 nil 3432809312 3432811671
+   ("" (induct "b2")
+    (("1"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("2" (skosimp*)
+      (("2" (expand "subterm") (("2" (propax) nil nil)) nil)) nil)
+     ("3"
+      (apply (then (skosimp*) (expand "subterm" -2) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("4"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("5"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("6" (skosimp*)
+      (("6" (expand "subterm") (("6" (propax) nil nil)) nil)) nil)
+     ("7" (skosimp*)
+      (("7" (expand "subterm") (("7" (propax) nil nil)) nil)) nil)
+     ("8"
+      (apply (then (skosimp*) (expand "subterm" -2) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("9"
+      (apply (then (skosimp*) (expand "subterm" -4) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("10"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("11" (skosimp*)
+      (("11" (expand "subterm") (("11" (propax) nil nil)) nil)) nil)
+     ("12" (induct "CaseJML1_var")
+      (("1" (skosimp*)
+        (("1" (expand "subterm" -2)
+          (("1" (rewrite "some_is_exists")
+            (("1" (expand "member") (("1" (propax) nil nil)) nil))
+            nil))
+          nil))
+        nil)
+       ("2" (skosimp*)
+        (("2" (expand "every" -2)
+          (("2" (flatten)
+            (("2" (expand "subterm" -5)
+              (("2" (expand "<<" 2)
+                (("2" (rewrite "some_is_exists")
+                  (("2" (rewrite "some_is_exists")
+                    (("2" (assert)
+                      (("2" (skosimp*)
+                        (("2" (inst 2 "x!1")
+                          (("2" (assert)
+                            (("2" (rewrite "every_is_forall")
+                              (("2"
+                                (expand "member" -5)
+                                (("2"
+                                  (inst -2 "b1!1")
+                                  (("2"
+                                    (inst -3 "b1!1")
+                                    (("2"
+                                      (inst -4 "x!1")
+                                      (("2"
+                                        (split -6)
+                                        (("1"
+                                          (split -6)
+                                          (("1"
+                                            (flatten)
+                                            (("1"
+                                              (replace -1 :dir rl)
+                                              (("1" (assert) nil nil))
+                                              nil))
+                                            nil)
+                                           ("2"
+                                            (assert)
+                                            (("2"
+                                              (flatten)
+                                              (("2"
+                                                (inst? -6)
+                                                (("2"
+                                                  (assert)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil)
+                                         ("2"
+                                          (split -6)
+                                          (("1"
+                                            (flatten)
+                                            (("1"
+                                              (replace -1 :dir rl)
+                                              (("1" (assert) nil nil))
+                                              nil))
+                                            nil)
+                                           ("2"
+                                            (assert)
+                                            (("2"
+                                              (flatten)
+                                              (("2"
+                                                (inst? -7)
+                                                (("2"
+                                                  (assert)
+                                                  nil
+                                                  nil))
+                                                nil))
+                                              nil))
+                                            nil))
+                                          nil))
+                                        nil))
+                                      nil))
+                                    nil))
+                                  nil))
+                                nil))
+                              nil))
+                            nil))
+                          nil))
+                        nil))
+                      nil))
+                    nil))
+                  nil))
+                nil))
+              nil))
+            nil))
+          nil))
+        nil))
+      nil)
+     ("13"
+      (apply (then (skosimp*) (expand "subterm" -4) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("14"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("15"
+      (apply (then (skosimp*) (expand "subterm" -2) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("16" (skosimp*)
+      (("16" (expand "subterm") (("16" (propax) nil nil)) nil)) nil)
+     ("17"
+      (apply (then (skosimp*) (expand "subterm" -2) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("18" (skosimp*)
+      (("18" (expand "subterm") (("18" (propax) nil nil)) nil)) nil)
+     ("19"
+      (apply (then (skosimp*) (expand "subterm" -4) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("20"
+      (apply (then (skosimp*) (expand "subterm" -3) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil)
+     ("21"
+      (apply (then (skosimp*) (expand "subterm" -2) (assert)
+              (expand "<<" 2) (repeat (inst?)) (ground)))
+      nil nil))
+    nil)
+   proved
+   ((Body type-decl nil Body_adt nil)
     (boolean nonempty-type-decl nil booleans nil)
-    (Body type-decl nil Body_adt nil))
-   1039 900 t shostak))
+    (bool nonempty-type-eq-decl nil booleans nil)
+    (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
+    (pred type-eq-decl nil defined_types nil)
+    (well_founded? const-decl "bool" orders nil)
+    (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
+    (Name formal-nonempty-type-decl nil ProgramFunctions nil)
+    (Body_induction formula-decl nil Body_adt nil)
+    (every_is_forall formula-decl nil listfuncs nil)
+    (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
+    (null adt-constructor-decl "(null?)" list_adt nil)
+    (null? adt-recognizer-decl "[list -> boolean]" list_adt nil)
+    (some_is_exists formula-decl nil listfuncs nil)
+    (member def-decl "bool" list_props nil)
+    (list_induction formula-decl nil list_adt nil)
+    (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (NumVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Neg? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Conj? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Eq? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (BoolVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (RefVarEval? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assign? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (CondExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (MethodCall? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Expr type-eq-decl nil Body_adt nil)
+    (CaseJML? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (IfThenElse? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Sequence? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Set? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Skip? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (StmtExpr? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Throw? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (TryCatch? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (While? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Assert? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
+    (Stmt type-eq-decl nil Body_adt nil)
+    (CaseJML adt-constructor-decl "[list[[Expr, Stmt]] -> (CaseJML?)]"
+     Body_adt nil)
+    (AND const-decl "[bool, bool -> bool]" booleans nil)
+    (every adt-def-decl "boolean" list_adt nil)
+    (PRED type-eq-decl nil defined_types nil)
+    (list type-decl nil list_adt nil))
+   950282 1190 t shostak))
+ (subterm_is_equal_or_proper_subterm 0
+  (subterm_is_equal_or_proper_subterm-1 nil 3432808931 3432811735
+   ("" (skosimp*)
+    (("" (iff)
+      (("" (prop)
+        (("1" (use "subterm_implies_equal_or_proper_subterm")
+          (("1" (assert) nil nil)) nil)
+         ("2" (expand "subterm") (("2" (flatten) nil nil)) nil)
+         ("3" (use "proper_subterm_implies_subterm")
+          (("3" (assert) nil nil)) nil))
+        nil))
+      nil))
+    nil)
+   proved
+   ((Name formal-nonempty-type-decl nil ProgramFunctions nil)
+    (Body type-decl nil Body_adt nil)
+    (subterm_implies_equal_or_proper_subterm formula-decl nil
+     ProgramFunctions nil)
+    (subterm adt-def-decl "boolean" Body_adt nil)
+    (proper_subterm_implies_subterm formula-decl nil ProgramFunctions
+     nil))
+   11106 40 t shostak))
  (subterm_transitive 0
   (subterm_transitive-2 nil 3403264428 3428166055
    ("" (induct "b3")
@@ -5330,7 +5571,7 @@
                 (then (inst -2 "b1!1" "b2!1") (assert))))))
       nil nil))
     nil)
-   untried
+   unfinished
    ((list type-decl nil list_adt nil)
     (PRED type-eq-decl nil defined_types nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
@@ -5684,7 +5925,7 @@
        ("2" (use "wf_card[[Expr, Stmt]]") nil nil))
       nil))
     nil)
-   untried
+   unfinished
    ((pred type-eq-decl nil defined_types nil)
     (well_founded? const-decl "bool" orders nil)
     (wf_induction formula-decl nil wf_induction nil)
@@ -6032,8 +6273,7 @@
    unchecked
    ((Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil) nil
-    nil
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
@@ -6081,7 +6321,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (subterm_subset_varnames formula-decl nil ProgramFunctions nil)
     (Body type-decl nil Body_adt nil)
@@ -6298,7 +6538,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((cons adt-constructor-decl "[[T, list] -> (cons?)]" list_adt nil)
     (cons? adt-recognizer-decl "[list -> boolean]" list_adt nil)
     (pred type-eq-decl nil defined_types nil)
@@ -6307,14 +6547,13 @@
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (emptyset const-decl "set" sets nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil) nil
-    nil
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
     (member const-decl "bool" sets nil)
     (union const-decl "set" sets nil)
-    (subterm adt-def-decl "boolean" Body_adt nil) nil nil
+    (subterm adt-def-decl "boolean" Body_adt nil)
     (list_induction formula-decl nil list_adt nil)
     (Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (Body type-decl nil Body_adt nil)
@@ -6458,7 +6697,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (Body type-decl nil Body_adt nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6536,8 +6775,7 @@
     (Body type-decl nil Body_adt nil)
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
-    (var_names const-decl "finite_set[Name]" ProgramFunctions nil) nil
-    nil
+    (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
@@ -6713,7 +6951,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Body const-decl "boolean" WellFormedProgram nil)
     (Body type-decl nil Body_adt nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6782,7 +7020,7 @@
         (("" (ground) nil nil)) nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6817,7 +7055,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6850,7 +7088,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6885,7 +7123,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((Program type-eq-decl nil WellFormedProgram nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (PreProgram type-eq-decl nil Program nil)
@@ -6914,7 +7152,7 @@
       (("" (flatten) (("" (inst?) (("" (assert) nil nil)) nil)) nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_Class const-decl "boolean" WellFormedProgram nil)
     (Name formal-nonempty-type-decl nil WellFormedProgram nil)
     (Decl type-eq-decl nil Program nil)
@@ -6965,7 +7203,7 @@
         nil))
       nil))
     nil)
-   untried
+   unfinished
    ((wf_program_methods_only_in_one_class const-decl "boolean"
      WellFormedProgram nil)
     (wf_Classes const-decl "boolean" WellFormedProgram nil)
@@ -7407,8 +7645,8 @@
         nil))
       nil))
     nil)
-   untried
-   ((Union const-decl "set" sets nil) nil
+   unfinished
+   ((Union const-decl "set" sets nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (set type-eq-decl nil sets nil)
     (Program type-eq-decl nil WellFormedProgram nil)
@@ -7445,7 +7683,7 @@
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (ext_declared_var_names const-decl "finite_set[Name]"
      ProgramFunctions nil)
-    nil nil (program_pred const-decl "bool" ProgramRestriction nil)
+    (program_pred const-decl "bool" ProgramRestriction nil)
     (singleton const-decl "(singleton?)" sets nil)
     (singleton? const-decl "bool" sets nil)
     (var_names const-decl "finite_set[Name]" ProgramFunctions nil)
@@ -7459,13 +7697,12 @@
     (Const? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (Body type-decl nil Body_adt nil)
-    (OR const-decl "[bool, bool -> bool]" booleans nil) nil
+    (OR const-decl "[bool, bool -> bool]" booleans nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (getGhostDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (union const-decl "set" sets nil)
     (member const-decl "bool" sets nil)
     (Union_surjective name-judgement
-     "(surjective?[setofsets[T], set[T]])" sets_lemmas nil)
-    nil)
+     "(surjective?[setofsets[T], set[T]])" sets_lemmas nil))
    88093 3260 t shostak)))
 

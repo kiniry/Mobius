@@ -47,27 +47,76 @@ BEGIN
   % if derivation of the try block or the catch block returns a JML-exception
   % then derivation of the complete statement should also return 
   % a JML-exception
+%   legal_Body(p : FullProgram)(b : Body) : bool =
+%    FORALL(b1 : Body) : 
+%      subterm(b1, b) IMPLIES
+%      TryCatch?(b1) IMPLIES 
+%      wf_Body(program(p))(b1) IMPLIES
+%      wf_Program(program(p)) IMPLIES
+%      FORALL(s1, s2, tau1, tau2 : FullState)
+%            (v, v1, v2 : Val)(n, m1, m2 : nat) :
+%        wf_state(program(p))(pstate(s1)) IMPLIES
+%        derive(p)(b1, s1, v, s2)(n) IMPLIES
+%        derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
+%        up?(ex(pstate(tau1))) IMPLIES 
+%         (down(ex(pstate(tau1))) = JMLExc
+%          OR
+%         (down(ex(pstate(tau1))) = exc(b1) AND
+%          derive(p)
+%                (catch(b1), update_PState(tau1, catch), v2, tau2)(m2) AND
+%          up?(ex(pstate(tau2))) AND
+%          down(ex(pstate(tau2))) = JMLExc)) IMPLIES
+%        up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc
 
+  % b is legal_Body if  for any subterm b1 that 
+  % is a try-catch statement, if derivation of the try block or the catch 
+  %  block returns a JML-exception then derivation of the complete statement
+  %  should also return  a JML-exception. 
+  %  Besides, the catch and the finally block always terminate.
+  % if it is a JML annotatios (Set, Assert or CaseJML), it terminates and
+  % it does not change the program variables.
   legal_Body(p : FullProgram)(b : Body) : bool =
-   FORALL(b1 : Body) : 
-     subterm(b1, b) IMPLIES
-     TryCatch?(b1) IMPLIES 
-     wf_Body(program(p))(b1) IMPLIES
-     wf_Program(program(p)) IMPLIES
-     FORALL(s1, s2, tau1, tau2 : FullState)
-           (v, v1, v2 : Val)(n, m1, m2 : nat) :
-       wf_state(program(p))(pstate(s1)) IMPLIES
-       derive(p)(b1, s1, v, s2)(n) IMPLIES
-       derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
-       up?(ex(pstate(tau1))) IMPLIES 
-        (down(ex(pstate(tau1))) = JMLExc
-         OR
-        (down(ex(pstate(tau1))) = exc(b1) AND
-         derive(p)
-               (catch(b1), update_PState(tau1, catch), v2, tau2)(m2) AND
-         up?(ex(pstate(tau2))) AND
-         down(ex(pstate(tau2))) = JMLExc)) IMPLIES
-       up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc
+    FORALL(b1 : Body) : 
+      wf_Program(program(p)) IMPLIES
+      wf_Body(program(p))(b) IMPLIES
+      subterm(b1, b) IMPLIES
+        (TryCatch?(b1) IMPLIES 
+          (FORALL (s1, s2, tau1, tau2 : FullState)
+                  (v, v1, v2 : Val)(n, m1, m2 : nat) :
+            wf_state(program(p))(pstate(s1)) IMPLIES
+            derive(p)(b1, s1, v, s2)(n) IMPLIES
+            derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
+            up?(ex(pstate(tau1))) IMPLIES 
+              (down(ex(pstate(tau1))) = JMLExc
+              OR
+              (down(ex(pstate(tau1))) = exc(b1) AND
+               derive(p)(catch(b1), 
+                         update_PState(tau1, catch), v2, tau2)(m2) AND
+               up?(ex(pstate(tau2))) AND
+               down(ex(pstate(tau2))) = JMLExc)) IMPLIES
+                 up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc)
+         AND
+         (FORALL (s1 : FullState) :
+            wf_state(program(p))(pstate(s1)) IMPLIES
+            up?(ex(pstate(s1))) IMPLIES 
+            down(ex(pstate(s1))) = exc(b1) IMPLIES
+            EXISTS (s2 : FullState, v : Val, n : nat) :
+              derive(p)(catch(b1), update_PState(s1, catch), v, s2)(n) AND
+              v = return_of_stmt(s2))
+         AND
+         (FORALL (s1 : FullState) :
+            wf_state(program(p))(pstate(s1)) IMPLIES
+            EXISTS (s2 : FullState, v : Val, n : nat) :
+              derive(p)(finally(b1), s1, v, s2)(n) AND
+              v = return_of_stmt(s2)))
+        AND
+        (Set?(b1) OR Assert?(b1) OR CaseJML?(b1) IMPLIES
+          FORALL (s1 : FullState) :
+            wf_state(program(p))(pstate(s1)) IMPLIES
+            EXISTS (s2 : FullState, v : Val, n : nat) :
+              derive(p)(b, s1, v, s2)(n) AND
+              v = return_of_stmt(s2) AND
+              st(pstate(s1)) = st(pstate(s2)))
 
   % if b1 respects legal_Body, then so do any subterms of b1
   legal_Body_preserved_by_proper_subterm : LEMMA % :-)

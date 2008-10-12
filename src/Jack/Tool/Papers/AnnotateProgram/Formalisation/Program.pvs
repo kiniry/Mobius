@@ -482,6 +482,14 @@ BEGIN
     FORALL (b1, b2 : Body) : 
       b1 << b2 IMPLIES subterm(b1, b2) 
 
+  subterm_implies_equal_or_proper_subterm : LEMMA % :-)
+    FORALL (b1, b2 : Body) :
+      subterm(b1, b2) IMPLIES (b1 = b2 OR b1 << b2)
+
+  subterm_is_equal_or_proper_subterm : LEMMA
+    FORALL (b1, b2 : Body) :
+      subterm(b1, b2) = (b1 = b2 OR b1 << b2)
+
   subterm_transitive : LEMMA % :-)
     FORALL (b1, b2, b3 : Body) :
       subterm(b1, b2) IMPLIES
