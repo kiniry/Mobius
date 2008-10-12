@@ -231,4 +231,21 @@ public class SpecificationCase {
     }
   }
 
+  public Vector<Exsure> getExcondition() {
+    return excondition;
+  }
+
+  public ExpressionRoot<ModifyList> getModifies() {
+    return modifies;
+  }
+
+  public ExpressionRoot<AbstractFormula> getPostcondition() {
+    return postcondition;
+  }
+
+  public ExpressionRoot<AbstractFormula> getPrecondition() {
+    return precondition;
+  }
+
+  
 }

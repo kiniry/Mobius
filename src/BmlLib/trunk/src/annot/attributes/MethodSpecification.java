@@ -92,6 +92,9 @@ public class MethodSpecification extends MethodAttribute implements
     this.specCases.add(sc);
   }
 
+  public Vector <SpecificationCase> getSpecificationCases(){
+    return this.specCases;
+  }
   @Override
   public ExpressionRoot[] getAllExpressions() {
     int n = 1;
