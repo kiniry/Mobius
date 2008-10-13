@@ -1,6 +1,7 @@
 \documentclass[a4paper, twocolumn, 11pt]{beamer}
 
-\usetheme{Darmstadt}
+%\usetheme{Darmstadt}
+\usetheme{Warsaw}
 \usefonttheme[onlylarge]{structurebold}
 \setbeamerfont*{frametitle}{size=\normalsize,series=\bfseries}
 %\setbeamertemplate{navigation symbols}{}
@@ -65,9 +66,9 @@ ul. Banacha 2\\
 \titlepage
 \end{frame}
 
-%\begin{frame}{Outline}
-%  \tableofcontents
-%\end{frame}
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
 
 \section{Introduction}
 
@@ -92,7 +93,7 @@ ul. Banacha 2\\
   \end{block}
 \end{frame}
 
-\subsection{Mobius}
+\subsection{MOBIUS project}
 
 \begin{frame}{Idea}
 	\begin{block}{Goal}
@@ -122,7 +123,7 @@ ul. Banacha 2\\
 			\end{itemize}
 		\pause
 	\end{itemize}
-		\small{\emph{We are just going to take the 'J' off the 'JVM' and just make it a 'VM}}\\
+		\small{\emph{We are just going to take the 'J' off the 'JVM' and just make it a 'VM'}}\\
 		\begin{flushright}		 
 \footnotesize{Jonathan Schwartz,\\Sun Microsystems President and CEO}
 		\end{flushright}
@@ -181,11 +182,13 @@ PCC building blocks include:
 
 \begin{frame}[fragile]
 	\frametitle{What is JML?}
-
-		\begin{itemize}
-			\item behavioural specification language for Java
-			\item write specifications in \emph{design-by-contract} fashion
-		\end{itemize}
+		Java Modeling Language (JML) features:
+			\begin{itemize}
+				\item behavioural specification language for Java
+				\item write specifications in \emph{design-by-contract} fashion
+				\item annotations written in Java comments
+				\item Java syntax and semantics
+			\end{itemize}
 %powiedzieæ kilka zdañ o JMLu: ¿e ma sk³adniê podobn¹ do wyra¿eñ Javy, jakiego typu w³asnoœci siê w nim da wyraziæ (pre/post
 %condition, niezmienniki, asserty...)
 \end{frame}
@@ -203,14 +206,14 @@ public class List {
 
   /*@ requires list != null;
     @ ensures \result ==(\exists int i;
-    @ 0 <= i && i < list.length &&
-    @ \old(list[i]) == o1 && list[i] == o2);
+    @                    0 <= i && i < list.length &&
+    @                    \old(list[i]) == o1 && list[i] == o2);
     @*/
   public boolean replace(Object o1, Object o2){
     /*@
       @ loop_invariant i <= list.length
-      @ && i >=0 && (\forall int k;0 <= k
-      @ && k < i ==> list[k] != o1);
+      @                && i >=0 && (\forall int k;0 <= k
+      @                             && k < i ==> list[k] != o1);
       @ decreases list.length - i;
       @*/
     for (int i = 0; i < list.length; i++) {
@@ -230,25 +233,28 @@ public class List {
 
 \begin{frame}[fragile]
 	\frametitle{What is BML? [1/2]}
-
+		Bytecode Modeling Language (BML) features:
 		\begin{itemize}
 			\item specification language for Java bytecode
-			\item design of BML directly follows the fundamental concepts of JML
+			\item design follows fundamental concepts of JML
+			\item inherits most constructions and keywords from the JML syntax
 			\item BML is developed within the MOBIUS project
-			\item target of the project are Java-enabled mobile devices
-			\item current version of BML assumes some simplifications of the Java bytecode which are present in the J2ME mobile platform
 		\end{itemize}
 \end{frame}
 \begin{frame}[fragile]
 	\frametitle{What is BML? [2/2]}
-
+		Bytecode Modeling Language (BML) features:
 		\begin{itemize}
-			\item Class files with BML annotations are regular Java class files
+			\item class files with BML annotations are regular Java class files
 			\item annotations are stored within additional attributes
-			\item attributes start with the prefix \emph{org.bmlspecs} and according to the specification of JVM they should be ignored in normal execution
-			\item Following the logical structure of class files, class specifications are stored as class attributes, method specifications, as method attributes and specifications inserted in the bytecode are subattributes of the JVM Code attributes.
+			\item attributes start with the prefix \emph{org.bmlspecs} and should be ignored in normal execution
+			\item following the logical structure of class files: 
+				\begin{itemize}
+					\item class specifications are stored as class attributes
+					\item method specifications are stored as method attributes 
+					\item specifications inserted in the bytecode are subattributes of the JVM Code attributes.
+				\end{itemize}
 		\end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -262,11 +268,10 @@ public class List {
 \begin{lstlisting}
 /*@
   @ requires this.list != null
-  @ ensures \result ==
-  @   (\exists int i; 0 <= i &&
-  @            i < this.list.length &&
-  @            old_this.list[i] == o1 &&
-  @            this.list[i] == o2)
+  @ ensures \result == (\exists int i; 0 <= i
+  @                     && i < this.list.length
+  @                     && old_this.list[i] == o1
+  @                     && this.list[i] == o2)
   @*/
 public boolean replace(Object o1, Object o2)
 0:    iconst_0
@@ -278,10 +283,10 @@ public boolean replace(Object o1, Object o2)
 /*@
   @ loop_specification
   @   modifies everything
-  @   invariant i <= this.list.length &&
-  @      i >= 0 &&
-  @      (\forall int k; 0 <= k &&
-  @          k < i ==> this.list[k] != o1)
+  @   invariant i <= this.list.length
+  @             && i >= 0
+  @             && (\forall int k; 0 <= k
+  @                 && k < i ==> this.list[k] != o1)
   @   decreases this.list.length - i
   @*/
 33:   if_icmplt	   #5
@@ -312,12 +317,12 @@ public boolean replace(Object o1, Object o2)
 
 \end{frame}
 
-\section{Jml2Bml Compiler}
-\subsection{What is it?}
+\section{JML2BML Compiler}
+\subsection{Introduction}
 
-\begin{frame}{In General}
-	\begin{block}{What it does?}
-		Jml2Bml compiler translates JML annotations to BML annotations.
+\begin{frame}{Introduction}
+	\begin{block}{Task}
+		Translate JML annotations to BML annotations.
 	\end{block}
 	\begin{block}{Input}
 		\begin{itemize}
@@ -333,73 +338,179 @@ public boolean replace(Object o1, Object o2)
 \end{frame}
 
 \subsection{Design}
-\begin{frame}{In General}
-	\begin{block}{Key Features}
-	  \begin{itemize}
-	  	\item acyclic structure of modules
-	  	\item uses enhanced Abstract Syntax Tree from OpenJML compiler
-	  	\item separate translation rules for JML nodes
-	  	\item translation rule applied at each node of the AST
-	  	\item succeessfull translation result is stored in output class file using BMLLib library
-	  \end{itemize}
-	\end{block}
 
-  \pause
+\begin{frame}{Key features}
+  \begin{columns}
+    \column{0.5\textwidth}
+    	JML2BML compiler:
+	\begin{itemize}
+		\item uses OpenJml AST
+		\item uses BMLLib
+		\item has acyclic structure of modules
+		\item uses translation rules for translating JML clauses
+		\item compatible with other bytecode level tools, such as the bytecode editor Umbra
+	\end{itemize}
+\column{0.5\textwidth}
 
-  \begin{block}{Advantages of the design}
-  	\begin{itemize}
-  		\item easily extensible
-  		\item compatible with Umbra bytecode tool
-  	\end{itemize}
-  \end{block}
+\tiny{
+\begin{figure}[h]
+  \centering{
+    \begin{tikzpicture}[shorten >=1pt,->,scale=0.6]
+      \tikzstyle{vertex}=[rectangle,draw=blue!50,fill=blue!20,thick,rounded corners = 2pt]
+      \filldraw[draw=black!30,fill=black!3] (-1,7.5) rectangle (7,-1.5);
+      %\draw (-0.9,7.2) node[right]{\textbf{\texttt{jml2bml}}};
+      \node[vertex] (main) at (3,7) {\texttt{main}};
+      \node[vertex] (engine) at (3,5.9) {\texttt{engine}}  ;
+      \node[vertex] (rules) at (3,4.8) {\texttt{rules}}  ;
+      \node[vertex] (ast) at (4.5,3.5) {\texttt{ast}}  ;
+      \node[vertex] (utils) at (6,2.5) {\texttt{utils}};
+      \node[vertex] (bytecode) at (3,1.5) {\texttt{bytecode}};
+      \node[vertex] (bmllib) at (3, 0) {\texttt{bmllib}};
+      \node[vertex] (exceptions) at (4.5, -1) {\texttt{exceptions}};
+      \node[vertex] (symbols) at (1.5, -1) {\texttt{symbols}};
+      \draw (main) -- (engine);
+      \draw (engine) -- (rules);
+      \draw (rules) --(ast);
+      \draw (engine) -- (ast) ;
+      \draw(ast) -- (utils) ;
+      \draw(ast) -- (bytecode);
+      \draw (ast) to[out=270,in=30] (bmllib);
+      \draw (ast) -- (exceptions);
+      \draw (main) to[out=0,in=90] (ast);
+      \draw (rules) to[out=0,in=90] (utils);
+      \draw (rules) to[out=225,in=90] (symbols);
+      \draw (rules) -- (exceptions);
+      \draw (rules) to[out=225,in=135] (bmllib);
+      \draw (main) to[out=0,in=90] (utils);
+      \draw (main) to[out=225,in=135] (bytecode);
+      \draw (main) to[out=180,in=135] (symbols);
+      \draw (engine) to[out=225,in=90] (symbols);
+      \draw (ast) to[out=190,in=110] (symbols) ;
+      \draw (rules) -- (bytecode);
+      \draw (bytecode) -- (bmllib) ;
+      \draw (bytecode) -- (exceptions) ;
+      \draw (bytecode) -- (symbols) ;
+      \draw (bmllib) -- (exceptions) ;
+      \draw (bmllib) -- (symbols) ;
+      \tikzstyle{external}=[rectangle,draw=black!50,fill=black!15,thick]
+      \node[external] (BmlLib1) at  (6, -2.5) {\texttt{BMLlib}};
+      \node[external] (openJml) at  (0, -2.5) {\texttt{OpenJml}};
+      \draw[dotted] (main) to[out=180,in=90] (openJml);
+      \draw[dotted] (engine) to[out=180,in=90] (openJml);
+      \draw[dotted] (rules) to[out=180,in=90] (openJml);
+      \draw[dotted] (rules) to[out=270,in=90] (BmlLib1);
+      \draw[dotted] (ast) to[out=270,in=90] (BmlLib1);
+      \draw[dotted] (ast) to[out=180,in=90] (openJml);
+      \draw[dotted] (bytecode) to[out=0,in=90] (BmlLib1);
+      \draw[dotted] (bmllib) to[out=270,in=0] (openJml);
+      \draw[dotted] (bmllib)  to[out=270,in=180] (BmlLib1);
+      \draw[dotted] (symbols) to[out=180,in=90] (openJml);
+      \draw[dotted] (symbols) to[out=270,in=180] (BmlLib1);
+    \end{tikzpicture}
+}
+
+\end{figure}}
+\end{columns}
+
 \end{frame}
 
 \begin{frame}{Translation mechanism}
 	\begin{block}{Translation rule}
 		\begin{itemize}
-			\item compiler uses a set of translation rules
-			\item each responsible for a relatively small piece of translation
+	  	\item responsible for relatively small, independent piece of translation
+	  	\item responsible for translation of AST subtree
+	  	\item may write results of the translation to the output class file
 		\end{itemize}
 	\end{block}
-	\pause
-	\begin{block}{Key design features}
+	
+  \pause
+  
+  \begin{block}{Features of the design}
+  	\begin{itemize}
+  		\item the concept falls into a visitor design pattern
+  		\item translation rule is an extension of a simple abstract class
+  		\item translation process can be broken into smaller, independent pieces
+  		\item easily extensible
+  	\end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{Translating loop invariants}
+
+\begin{frame}{Loop invariant annotations}
+	\begin{block}{Where should we place annotations?}
+		First instruction after loop control expression.
+	\end{block}
+	\begin{block}{Translation rule steps}
 		\begin{itemize}
-			\item the concept falls into a visitor design pattern
-			\item translation rule is an extension of a simple abstract class
-			\item translation process can be broken into smaller, independent pieces
-			\item extending translation is simple
+			\item detect loops in bytecode
+			\item match loops from bytecode with loops from source file
+			\item translate loop invariant expression
+			\item attach translated expression to the right bytecode instruction.
 		\end{itemize}
 	\end{block}
 \end{frame}
 
-\subsection{Loop Detection}
-\begin{frame}
-\begin{itemize}
-\item Covers different ways of compiling loops into bytecode
-\item Based on advanced Control Flow Graph analysis
-\item Finds entry point to the loop
-\item Matching source code loops with bytecode loops
+\begin{frame}{Detecting loops}
+	Bytecode loop detection mechanism:
+	\begin{itemize}
+		\item Covers different ways of compiling loops into bytecode
+\scriptsize{\centering{
+\begin{tikzpicture}[shorten >=1pt,->, scale=0.7]
+\tikzstyle{vertex}=[circle,draw=blue!50,fill=blue!20,thick,minimum size=13pt,inner sep=0pt]
+\foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
+\node[vertex] (G-\name) at (\y,0) {$\text$};
+\foreach \from/\to in {s/a,b/body,body/c,c/d,d/e}
+\draw (G-\from) -- (G-\to);
+\draw (G-a) to[out=45,in=135] (G-c);
+\draw (G-d) to[out=225,in=315] (G-b);
+
+\foreach \name/\text/\y in {s/.../1, a/a/2, b/b/3, body/.../4, c/c/5, d/d/6, e/.../7}
+\node[vertex] (Q-\name) at (\y,-2) {$\text$};
+\foreach \from/\to in {s/a,a/b,b/body, body/c, d/e}
+\draw (Q-\from) -- (Q-\to);
+\draw (Q-b) to[out=45,in=135] (Q-d);
+\draw (Q-c) to[out=225,in=315](Q-a);
+
+\foreach \name/\text/\x in {s/.../1, a/a/2, body1/.../3, b/b/4, body2/.../5, c/c/6, d/.../7}
+\node[vertex] (X-\name) at (\x,-4) {$\text$};
+\foreach \from/\to in {s/a,a/body1, body1/b, b/body2, body2/c}
+\draw (X-\from) -- (X-\to);
+\draw (X-b) to[out=315,in=225] (X-d);
+\draw (X-c) to[out=135,in=45] (X-a);
+
+\end{tikzpicture}
+}}\normalsize
+		\item Based on advanced Control Flow Graph analysis
+		\item Finds entry point to the loop
+	\end{itemize}
 % powiedzieæ o tym, do którego miejsca dopisujemy anotacje. Mo¿liwe pytanie: jakie s¹ sposoby kompilowania pêtli?
-\end{itemize}
 \end{frame}
 
-\subsection{Application}
-\begin{frame}
-	zastosowanie
+\begin{frame}{Matching with source}
+	Loop matching mechanism:
+	\begin{itemize}
+		\item uses \emph{line number table}
+		\item handles \texttt{finally} block of \texttt{try-catch} statement
+	\end{itemize}
 \end{frame}
+
+% \subsection{Application}
+% \begin{frame}
+%	zastosowanie
+% \end{frame}
 
 \section*{Summary}
 
 \begin{frame}
-  \frametitle<presentation>{Summary}
-
-	\begin{block}{Jml2Bml compiler is}
-		\begin{itemize}
-			\item tool that translates annotations from JML to BML
-			\item part of PCC infrastructure
-			\item easily extensible
-		\end{itemize}
-	\end{block}
+  \frametitle<presentation>{TODO / In progress}
+	\begin{itemize}
+		\item create Eclipse plugin
+		\item adapt to newer versions of BMLLib and OpenJml
+		\item translate JML levels higher than JML0
+		\item handling model fields and methods
+		\item perform bigger benchmark
+	\end{itemize}
 
 \end{frame}
 
