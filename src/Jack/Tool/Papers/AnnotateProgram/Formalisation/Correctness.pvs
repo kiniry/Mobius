@@ -49,7 +49,7 @@ BEGIN
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
   % Simulation of the annotated program. Note that the converse does not hold
-  related_states_implies_derive_for_unchanged_program : THEOREM % PROVE
+  related_states_implies_derive_for_unchanged_program : THEOREM %
     FORALL (b : (wf_Body(program(mp))), v1 : Val)
            (sMP1, sMP2 : MPState, sAP1 : APState)
            (n1 : nat) :

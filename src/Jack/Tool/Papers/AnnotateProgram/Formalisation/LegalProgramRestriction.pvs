@@ -28,45 +28,11 @@ LegalProgramRestriction[Name : TYPE+,
           on_method_exit_exceptional : (on_method_event_type)] : THEORY
 BEGIN
 
-%   ASSUMING
-%     % program parameter left inverse of full_program parameter
-%     program_full_program_inverse : ASSUMPTION
-%       FORALL(p : Program) :
-%         program(full_program(p)) = p
-
-%   ENDASSUMING
-
   IMPORTING WellFormedProgram[Name],
             Semantics[Name, FullProgram, FullState, program, pstate,
                       lookup, update_PState, execute_set, execute_assert,
                       execute_CaseJML, on_method_entry, 
                       on_method_exit_normal, on_method_exit_exceptional]
-
-  % b is legal_Body if
-  % for any subterm b1 that is a try-catch statement
-  % if derivation of the try block or the catch block returns a JML-exception
-  % then derivation of the complete statement should also return 
-  % a JML-exception
-%   legal_Body(p : FullProgram)(b : Body) : bool =
-%    FORALL(b1 : Body) : 
-%      subterm(b1, b) IMPLIES
-%      TryCatch?(b1) IMPLIES 
-%      wf_Body(program(p))(b1) IMPLIES
-%      wf_Program(program(p)) IMPLIES
-%      FORALL(s1, s2, tau1, tau2 : FullState)
-%            (v, v1, v2 : Val)(n, m1, m2 : nat) :
-%        wf_state(program(p))(pstate(s1)) IMPLIES
-%        derive(p)(b1, s1, v, s2)(n) IMPLIES
-%        derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
-%        up?(ex(pstate(tau1))) IMPLIES 
-%         (down(ex(pstate(tau1))) = JMLExc
-%          OR
-%         (down(ex(pstate(tau1))) = exc(b1) AND
-%          derive(p)
-%                (catch(b1), update_PState(tau1, catch), v2, tau2)(m2) AND
-%          up?(ex(pstate(tau2))) AND
-%          down(ex(pstate(tau2))) = JMLExc)) IMPLIES
-%        up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc
 
   % b is legal_Body if  for any subterm b1 that 
   % is a try-catch statement, if derivation of the try block or the catch 
@@ -76,47 +42,33 @@ BEGIN
   % if it is a JML annotatios (Set, Assert or CaseJML), it terminates and
   % it does not change the program variables.
   legal_Body(p : FullProgram)(b : Body) : bool =
-    FORALL(b1 : Body) : 
+    FORALL(b1 : Body) :
       wf_Program(program(p)) IMPLIES
-      wf_Body(program(p))(b) IMPLIES
+      wf_Body(program(p))(b1) IMPLIES
       subterm(b1, b) IMPLIES
-        (TryCatch?(b1) IMPLIES 
-          (FORALL (s1, s2, tau1, tau2 : FullState)
-                  (v, v1, v2 : Val)(n, m1, m2 : nat) :
+        (TryCatch?(b1) IMPLIES
+          FORALL (s1, tau1, tau2 : FullState)
+                 (v, v1, v2 : Val)(m1, m2 : nat) :
             wf_state(program(p))(pstate(s1)) IMPLIES
-            derive(p)(b1, s1, v, s2)(n) IMPLIES
             derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
-            up?(ex(pstate(tau1))) IMPLIES 
+            up?(ex(pstate(tau1))) IMPLIES
               (down(ex(pstate(tau1))) = JMLExc
               OR
               (down(ex(pstate(tau1))) = exc(b1) AND
-               derive(p)(catch(b1), 
+               derive(p)(catch(b1),
                          update_PState(tau1, catch), v2, tau2)(m2) AND
                up?(ex(pstate(tau2))) AND
                down(ex(pstate(tau2))) = JMLExc)) IMPLIES
+               EXISTS (s2 : FullState, n : nat) :
+                 derive(p)(b1, s1, v, s2)(n) AND
                  up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc)
-         AND
-         (FORALL (s1 : FullState) :
-            wf_state(program(p))(pstate(s1)) IMPLIES
-            up?(ex(pstate(s1))) IMPLIES 
-            down(ex(pstate(s1))) = exc(b1) IMPLIES
-            EXISTS (s2 : FullState, v : Val, n : nat) :
-              derive(p)(catch(b1), update_PState(s1, catch), v, s2)(n) AND
-              v = return_of_stmt(s2))
-         AND
-         (FORALL (s1 : FullState) :
-            wf_state(program(p))(pstate(s1)) IMPLIES
-            EXISTS (s2 : FullState, v : Val, n : nat) :
-              derive(p)(finally(b1), s1, v, s2)(n) AND
-              v = return_of_stmt(s2)))
         AND
         (Set?(b1) OR Assert?(b1) OR CaseJML?(b1) IMPLIES
           FORALL (s1 : FullState) :
             wf_state(program(p))(pstate(s1)) IMPLIES
             EXISTS (s2 : FullState, v : Val, n : nat) :
-              derive(p)(b, s1, v, s2)(n) AND
-              v = return_of_stmt(s2) AND
-              st(pstate(s1)) = st(pstate(s2)))
+              derive(p)(b1, s1, v, s2)(n) AND
+              v = return_of_stmt(s2))
 
   % if b1 respects legal_Body, then so do any subterms of b1
   legal_Body_preserved_by_proper_subterm : LEMMA % :-)
@@ -134,92 +86,9 @@ BEGIN
 END LegalProgramRestriction
 
 
-% LegalPartialMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
-% BEGIN
-
-% %   % Instantiation for monitored programs with partial monitors
-
-% % ASSUMING 
-
-% %     IMPORTING MVA[CP, Name]
-
-% %     CP_not_only_halted : ASSUMPTION
-% %       EXISTS(cp : CP) : NOT cp = halted
-
-% % ENDASSUMING
-
-%    IMPORTING MonitoredProgramSemantics[CP, Name]
-% %             EmptyMVA[CP, Name]
-
-% %   % full program: monitor with empty monitor
-% %   full_partial_MP(p : Program) : (wf_and_partial_MP) =
-% %     (# mva := empty(name(choose({c : Class |classes(p)(c)}))),
-% %        program := p #)
-
-%   IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
-%                              LAMBDA(mp : MonitoredProgram) : program(mp),
-%                              LAMBDA(s : MPState) : pstate(s),
-%                              lookup, update_PState, execute_set,
-%                              execute_assert, execute_CaseJML, 
-%                              on_method_entry_MP, on_method_exit_normal_MP,
-%                              on_method_exit_exceptional_MP]
-
-%   legal_Body_partial_MP(mp : (wf_and_partial_MP))(b : Body) : boolean =
-%     legal_Body(mp)(b)
-
-%   legal_Program_partial_MP(mp : (wf_and_partial_MP)) : boolean =
-%     legal_Program(mp)
-
-
-% END LegalPartialMonitoredProgramRestriction
-
-
-% LegalCompleteMonitoredProgramRestriction[CP, Name : TYPE+] : THEORY
-% BEGIN
-
-% %   % Instantiation for monitored program with total monitors
-
-% % ASSUMING 
-
-% %     IMPORTING MVA[CP, Name]
-
-% %     CP_not_only_halted : ASSUMPTION
-% %       EXISTS(cp : CP) : NOT cp = halted
-
-% % ENDASSUMING
-
-
-%   IMPORTING MonitoredProgramSemantics[CP, Name]
-% %             MVACompletion[CP, Name],
-% %             EmptyMVA[CP, Name]
-
-% %   % full program: monitor with completed empty monitor
-% %   full_complete_MP(p : Program) : (wf_and_complete_MP) =
-% %     (# mva := complete_MVA(empty(name(choose({c : Class |classes(p)(c)})))),
-% %        program := p #)
-
-%   IMPORTING LegalProgramRestriction[Name, MonitoredProgram, MPState,
-%                              LAMBDA(mp : MonitoredProgram) : program(mp),
-%                              LAMBDA(s : MPState) : pstate(s),
-%                              lookup, update_PState, execute_set,
-%                              execute_assert, execute_CaseJML, 
-%                              on_method_entry_MP, on_method_exit_normal_MP,
-%                              on_method_exit_exceptional_MP]
-
-%   legal_Body_complete_MP(mp : (wf_and_complete_MP))(b : Body) : boolean =
-%     legal_Body(mp)(b)
-
-%   legal_Program_complete_MP(mp : (wf_and_complete_MP)) : boolean =
-%     legal_Program(mp)
-
-
-% END LegalCompleteMonitoredProgramRestriction
-
-
+% Instantiation of LegalProgramRestriction for annotated programs
 LegalAnnotatedProgramRestriction[Name : TYPE+] : THEORY
 BEGIN
-
-  % Instantiation for annotated programs 
 
   IMPORTING AnnotatedProgramSemantics[Name],
             LegalProgramRestriction[Name, Program, APState, id,
@@ -239,7 +108,4 @@ BEGIN
   legal_Program_AP(p : Program) : boolean =
     legal_Program(p)
 
-
 END LegalAnnotatedProgramRestriction
-
-
