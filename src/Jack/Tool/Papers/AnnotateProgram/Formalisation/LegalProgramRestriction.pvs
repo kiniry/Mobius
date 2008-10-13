@@ -48,7 +48,7 @@ BEGIN
       subterm(b1, b) IMPLIES
         (TryCatch?(b1) IMPLIES
           FORALL (s1, tau1, tau2 : FullState)
-                 (v, v1, v2 : Val)(m1, m2 : nat) :
+                 (v1, v2 : Val)(m1, m2 : nat) :
             wf_state(program(p))(pstate(s1)) IMPLIES
             derive(p)(try(b1), s1, v1, tau1)(m1) IMPLIES
             up?(ex(pstate(tau1))) IMPLIES
@@ -59,7 +59,7 @@ BEGIN
                          update_PState(tau1, catch), v2, tau2)(m2) AND
                up?(ex(pstate(tau2))) AND
                down(ex(pstate(tau2))) = JMLExc)) IMPLIES
-               EXISTS (s2 : FullState, n : nat) :
+               EXISTS (s2 : FullState, v : Val, n : nat) :
                  derive(p)(b1, s1, v, s2)(n) AND
                  up?(ex(pstate(s2))) AND down(ex(pstate(s2))) = JMLExc)
         AND
