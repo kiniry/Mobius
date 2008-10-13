@@ -76,8 +76,7 @@ BodyFunctions[Name : TYPE+] : THEORY
 BEGIN
 
   IMPORTING Body[Name]
-  IMPORTING list_of_set_funcs[Name], 
-            listfuncs[[Expr, Stmt]],
+  IMPORTING listfuncs[[Expr, Stmt]],
             listsum,
             list_map_funcs
 
@@ -210,8 +209,7 @@ BEGIN
 %     FORALL(x : list[[Expr, Stmt]]) :
 %       var_names(CaseJML(x)) = emptyset
 
-  IMPORTING list_of_set_funcs[Name], 
-            listfuncs[[Expr, Stmt]],
+  IMPORTING listfuncs[[Expr, Stmt]],
             listsum,
             list_map_funcs, 
             BodyFunctions[Name]
