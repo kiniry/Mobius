@@ -31,6 +31,14 @@
                id="umbra.BCELTest"/>
          <action
                toolbarPath="showGroup"
+               label="Compile JML"
+               tooltip="Compile JML"
+               icon="icons/jml-compile.gif"
+               class="umbra.java.actions.JMLCompile"
+               menubarPath="umbra.bytecodeMenu/showGroup"
+               id="umbra.BCELTest"/>
+         <action
+               toolbarPath="showGroup"
                label="Show byte code"
                tooltip="Show byte code of selected statement"
                class="umbra.java.actions.SynchrSBAction"

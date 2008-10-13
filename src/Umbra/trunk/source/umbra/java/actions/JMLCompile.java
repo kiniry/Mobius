@@ -25,6 +25,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
+import annot.io.ReadAttributeException;
+import api.Jml2BmlAPI; 
 
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeDocumentProvider;
@@ -47,7 +49,7 @@ import umbra.lib.GUIMessages;
  * @version a-01
  */
 
-public class DisasBCEL implements IEditorActionDelegate {
+public class JMLCompile implements IEditorActionDelegate {
 
   /**
    * The editor of a Java file for which the byte code file is
@@ -77,6 +79,12 @@ public class DisasBCEL implements IEditorActionDelegate {
       return;
     }
     try {
+      String bName = bFile.getName();
+      IPath path = bFile.getLocation();
+      bName = bName.substring(0,bName.lastIndexOf("."));
+      String bPath = path.removeLastSegments(1).toOSString();
+      String sourceFile = jFile.getLocation().toOSString();
+      Jml2BmlAPI.compile(sourceFile, bPath, bName);
       openBCodeEditorForJavaFile(jFile);
     } catch (JavaModelException e) {
       MessageDialog.openError(my_editor.getSite().getShell(),
@@ -87,8 +95,12 @@ public class DisasBCEL implements IEditorActionDelegate {
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
+      System.out.println("problem1 is " + e +".");
       messageClassNotFound(bFile.getProjectRelativePath());
+    } catch (ReadAttributeException e) {
+      System.out.println("problem " + e);      
     }
+    
   }
 
   /**
