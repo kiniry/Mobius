@@ -86,7 +86,7 @@ escjavatests: build
 
 alltests:	build
 	${MAKE} test ALLTESTS=1
-	${MAKE} specs_test
+	##${MAKE} specs_test
 
 escjavaalltests: build
 	$(MAKE) -C Escjava test ALLTESTS=1 || exit 1;
@@ -485,7 +485,7 @@ jar:	build
 	cp ${ESCTOOLS_ROOT}/Escjava/java/escjava/vcGeneration/xml/xmlprover.dtd ${ESCJAVA_CLASSFILES}/escjava/vcGeneration/xml
 	cp -Rf ${ESCJAVA_CLASSFILES}/* ${RELTEMP}/sub
 	mkdir -p ${RELTEMP}/sub/junitutils
-	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
+	-( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.class'` ${RELTEMP}/sub/junitutils )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAR) )
 	( cd ${RELTEMP}/sub; jar xf $(ESCJAVA2_SPECS_JAVA1_4_JAR) )
@@ -504,7 +504,7 @@ srcjar:
 	cp -Rf ${ESCJAVA2_SPECS_JAVACARD} ${RELTEMP}/sub/specs/javacard
 	cp -Rf ${ORIG_SRC_SPECS} ${RELTEMP}/sub/original-specs
 	mkdir -p ${RELTEMP}/sub/junitutils
-	( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
+	-( cd ${ESCTOOLS_ROOT}/Utils/junitutils; \
 	  cp `find . -name '*.java'` ${RELTEMP}/sub/junitutils )
 	-find ${RELTEMP} -name "*.svn*" -exec rm -rf {} \; > /dev/null 2>&1
 	( cd ${RELTEMP}/sub; jar cf ${RELSRCJAR} *; )
