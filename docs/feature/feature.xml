@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="DeltaSplashScreenFeature"
-      label="DeltaSplashScreenFeature Feature"
+      id="mobius.help.documentation.feature"
+      label="MOBIUS PVE Help and Documentation feature"
       version="1.0.0"
-      provider-name="MOBIUS">
+      provider-name="MOBIUS"
+      plugin="mobius.help.documentation.plugin">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -18,7 +19,7 @@
    </license>
 
    <plugin
-         id="PVE_Delta_Release_Splashscreen"
+         id="mobius.help.documentation.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
