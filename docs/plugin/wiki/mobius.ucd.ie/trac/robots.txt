@@ -1,0 +1,32 @@
+User-agent: *
+Disallow: /moodle
+Disallow: /browser
+Disallow: /changeset
+Disallow: /log
+Disallow: /milestone
+Disallow: /report
+Disallow: /roadmap
+Disallow: /search
+Disallow: /tags
+Disallow: /timeline
+Disallow: /repos
+Disallow: /ticket
+Disallow: /query
+Disallow: /wiki
+Disallow: /
+
+User-agent: wget
+Disallow: /moodle
+Disallow: /browser
+Disallow: /changeset
+Disallow: /log
+Disallow: /milestone
+Disallow: /report
+Disallow: /roadmap
+Disallow: /search
+Disallow: /tags
+Disallow: /timeline
+Disallow: /repos
+Disallow: /ticket
+Disallow: /query
+

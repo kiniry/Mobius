@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: PVE_Delta_Release_Splashscreen Plug-in
-Bundle-SymbolicName: PVE_Delta_Release_Splashscreen
+Bundle-Name: MOBIUS PVE Help and Documentation plugin
+Bundle-SymbolicName: mobius.help.documentation.plugin
 Bundle-Version: 1.0.0
+Bundle-Vendor: MOBIUS
