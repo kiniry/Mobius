@@ -280,6 +280,8 @@ name_list :
   {syso("name_list");};
 
 typebody :
+  (staticsection)?
+  (objectsection)?
   { syso("methods start here");
     mnr = 0;
     m = bcc.getMethod(mnr);
@@ -291,6 +293,55 @@ typebody :
           }
   )+
   {syso("methods parsed");};
+
+staticsection :
+  staticfields? staticspec?
+  {
+     syso("static section");
+  };
+
+staticfields : STATIC STATIC;
+
+staticspec : staticinvariants? staticconstraints?
+             staticrepresents? staticinitially?;
+
+staticinvariants : BML_START STATIC INVARIANT BML_END EOL;
+
+staticconstraints : BML_START STATIC CONSTRAINT BML_END EOL;
+
+staticrepresents : BML_START STATIC REPRESENTS BML_END EOL;
+
+staticinitially : BML_START STATIC INITIALLY BML_END EOL;
+
+objectsection :
+  objectfields? objectspec? EOL*
+  {
+     syso("object section");
+  };
+
+objectfields : PUBLIC PUBLIC;
+
+objectspec : objectinvariants? objectconstraints?
+             objectrepresents? objectinitially?;
+
+objectinvariants :
+  (objectinvariant)+
+  {
+     syso("object invariants");
+  };
+
+objectinvariant : 
+     BML_START EOL? methodmodifier? INVARIANT formula EOL? BML_END EOL
+  |  BML_START EOL* BML_END EOL
+     {
+        {syso("empty object invariant");}
+     };
+
+objectconstraints : BML_START CONSTRAINT BML_END EOL;
+ 
+objectrepresents : BML_START REPRESENTS BML_END EOL;
+
+objectinitially : BML_START INITIALLY BML_END EOL;
 
 method :
    (met=methodSpecification {
@@ -446,8 +497,8 @@ printableAttribute returns [BCPrintableAttribute ast] :
   ;
 
 classAttribute returns [ClassAttribute ast] :
-  | CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
-  | STATIC CLASSINVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
+  | INVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
+  | STATIC INVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
   ;
 
 methodAttribute returns [MethodAttribute ast] :
@@ -495,8 +546,8 @@ exname returns [String name] :
   ;
 
 specCase returns [SpecificationCase ast] :
-  st=BML_START EOL
-  (REQUIRES f1=formula EOL
+  st=BML_START EOL?
+  (REQUIRES f1=formula EOL?
    {
       prec = $f1.ast;
       modif = null;
@@ -538,18 +589,18 @@ inCodeAttribute returns [InCodeAttribute ast] :
   ;
 
 modifyList returns [ModifyList ast] :
-  l=modifyExpression {
+  l=modifyExpression EOL? {
     $ast = new ModifyList();
     $ast.addModify($l.ast);
   }
   (COMMA r=modifyExpression {
     $ast.addModify($r.ast);
-  })*;
+  } EOL?)*;
 
 modifyExpression returns [ModifyExpression ast] :
   {initExpression();}
-  (NOTHING {$ast = ModifyExpression.Nothing;}
-    | EVERYTHING {$ast = ModifyExpression.Everything;}
+  ( NOTHING EOL? {$ast = ModifyExpression.Nothing;}
+    | EVERYTHING EOL? {$ast = ModifyExpression.Everything;}
         | l=localVar {$ast = new ModifiesLocalVar(l.lv);}
     | i=modifySubExpr {$ast = new ModifiesIdent($i.ast);}
       (DOT j=modifySubExpr {$ast = new ModifiesDot($ast, $j.ast);})*
@@ -570,7 +621,7 @@ specArray returns [SpecArray ast] :
 
 formula returns [AbstractFormula ast] :
   {initExpression();}
-  e=uncheckedExpression {
+  e=uncheckedExpression EOL? {
     if ($e.ast == null) {
       reportError(null);
     } else {
@@ -588,7 +639,7 @@ formula returns [AbstractFormula ast] :
 
 expression returns [AbstractIntExpression ast] :
   {initExpression();}
-  e=uncheckedExpression {
+  e=uncheckedExpression EOL? {
     if ($e.ast == null) {
       reportError(null);
     } else {
@@ -605,126 +656,126 @@ expression returns [AbstractIntExpression ast] :
   };
 
 uncheckedExpression returns [BCExpression ast] :
-  e=conditionalExpression {$ast = $e.ast;};
+  e=conditionalExpression EOL? {$ast = $e.ast;};
 
 conditionalExpression returns [BCExpression ast] :
-  c=equivalenceExpr {$ast = $c.ast;}
-  (COND t=uncheckedExpression COLON f=uncheckedExpression {
+  c=equivalenceExpr EOL? {$ast = $c.ast;}
+  (COND EOL? t=uncheckedExpression EOL? COLON  EOL? f=uncheckedExpression EOL? {
     $ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
   })?
   ;
 
 equivalenceExpr returns [BCExpression ast] :
-  e=impliesExpr {$ast = $e.ast;}
-  ( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
-    | NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
+  e=impliesExpr EOL? {$ast = $e.ast;}
+  ( EQUIV EOL? r=impliesExpr EOL? {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
+    | NOTEQUIV EOL? r=impliesExpr EOL? {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
   )*
   ;
 
 impliesExpr returns [BCExpression ast] :
-  e=logicalOrExpr {$ast = $e.ast;}
-  (IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
+  e=logicalOrExpr EOL? {$ast = $e.ast;}
+  (IMPLIES EOL? r=logicalOrExpr EOL? {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
   ;
 
 logicalOrExpr returns [BCExpression ast] :
-  e=logicalAndExpr {$ast = $e.ast;}
-  (LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
+  e=logicalAndExpr EOL? {$ast = $e.ast;}
+  (LOG_OR EOL? r=logicalAndExpr EOL? {$ast = new Formula(Code.OR, $ast, $r.ast);})*
   ;
 
 logicalAndExpr returns [BCExpression ast] :
-  e=bitwiseOrExpr {$ast = $e.ast;}
-  (LOG_AND r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
+  e=bitwiseOrExpr EOL? {$ast = $e.ast;}
+  (LOG_AND EOL? r=bitwiseOrExpr EOL? {$ast = new Formula(Code.AND, $ast, $r.ast);})*
   ;
 
 bitwiseOrExpr returns [BCExpression ast] :
-  e=bitwiseXorExpr {$ast = $e.ast;}
-  (BITWISEOR r=bitwiseXorExpr {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*
+  e=bitwiseXorExpr EOL? {$ast = $e.ast;}
+  (BITWISEOR EOL? r=bitwiseXorExpr EOL? {$ast = new ArithmeticExpression(Code.BITWISEOR, $ast, $r.ast);})*
   ;
 
 bitwiseXorExpr returns [BCExpression ast] :
-  e=bitwiseAndExpr {$ast = $e.ast;}
-  (BITWISEXOR r=bitwiseAndExpr {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*
+  e=bitwiseAndExpr EOL? {$ast = $e.ast;}
+  (BITWISEXOR EOL? r=bitwiseAndExpr EOL? {$ast = new ArithmeticExpression(Code.BITWISEXOR, $ast, $r.ast);})*
   ;
 
 bitwiseAndExpr returns [BCExpression ast] :
-  e=equalityExpr {$ast = $e.ast;}
-  (BITWISEAND r=equalityExpr {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*
+  e=equalityExpr EOL? {$ast = $e.ast;}
+  (BITWISEAND EOL? r=equalityExpr EOL? {$ast = new ArithmeticExpression(Code.BITWISEAND, $ast, $r.ast);})*
   ;
 
 equalityExpr returns [BCExpression ast] :
-    l=shiftExpr EQ r=shiftExpr
+    l=shiftExpr EOL? EQ EOL? r=shiftExpr EOL?
     {
        $ast = new Predicate2Ar(Code.EQ, $l.ast, $r.ast);
     }
-  | l=shiftExpr NOTEQ r=shiftExpr
+  | l=shiftExpr EOL? NOTEQ EOL? r=shiftExpr EOL?
     {
       $ast = new Predicate2Ar(Code.NOTEQ, $l.ast, $r.ast);
     }
-  | e=relationalExpr
+  | e=relationalExpr EOL?
     {
       $ast = $e.ast;
     };
 
 relationalExpr returns [BCExpression ast] :
-    l=shiftExpr LESS r=shiftExpr
+    l=shiftExpr EOL? LESS EOL? r=shiftExpr EOL?
     {
       $ast = new Predicate2Ar(Code.LESS, $l.ast, $r.ast);
     }
-  | l=shiftExpr GRT r=shiftExpr
+  | l=shiftExpr EOL? GRT EOL? r=shiftExpr EOL?
     {
       $ast = new Predicate2Ar(Code.GRT, $l.ast, $r.ast);
      }
-  | l=shiftExpr LESSEQ r=shiftExpr
+  | l=shiftExpr EOL? LESSEQ EOL? r=shiftExpr EOL?
     {
       $ast = new Predicate2Ar(Code.LESSEQ, $l.ast, $r.ast);
     }
-  | l=shiftExpr GRTEQ r=shiftExpr
+  | l=shiftExpr EOL? GRTEQ EOL? r=shiftExpr EOL?
     {
       $ast = new Predicate2Ar(Code.GRTEQ, $l.ast, $r.ast);
     }
-  | e=shiftExpr 
+  | e=shiftExpr EOL?
     {
       $ast = $e.ast;
     };
 
 shiftExpr returns [BCExpression ast] :
-    p=additiveExpr 
+    p=additiveExpr EOL?
     {
       $ast = $p.ast;
     }
-    (  SHL r1=additiveExpr
+    (  SHL EOL? r1=additiveExpr EOL?
        {
          $ast = new ArithmeticExpression(Code.SHL, $ast, $r1.ast);
        }
-     | SHR r2=additiveExpr
+     | SHR EOL? r2=additiveExpr EOL?
        {
          $ast = new ArithmeticExpression(Code.SHR, $ast, $r2.ast);
        }
-     | USHR r3=additiveExpr 
+     | USHR EOL? r3=additiveExpr EOL? 
        {
           $ast = new ArithmeticExpression(Code.USHR, $ast, $r3.ast);
         }
     )*;
 
 additiveExpr returns [BCExpression ast] :
-  e=multExpr {$ast = $e.ast;}
-  (PLUS r1=multExpr {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
-  | MINUS r2=multExpr {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
+  e=multExpr EOL? {$ast = $e.ast;}
+  (PLUS EOL? r1=multExpr EOL? {$ast = new ArithmeticExpression(Code.PLUS, $ast, $r1.ast);}
+  | MINUS EOL? r2=multExpr EOL? {$ast = new ArithmeticExpression(Code.MINUS, $ast, $r2.ast);}
   )*
   ;
 
 multExpr returns [BCExpression ast] :
-  e=quantifiedFormula {$ast = $e.ast;}
-  (MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
-  | DIV r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
-  | REM r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
+  e=quantifiedFormula EOL? {$ast = $e.ast;}
+  (MULT EOL? r1=quantifiedFormula EOL? {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
+  | DIV EOL? r2=quantifiedFormula EOL? {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
+  | REM EOL? r3=quantifiedFormula EOL? {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
   )*
   ;
 
 quantifiedFormula returns [BCExpression ast] :
-  ((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
-  | EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
-   (t=ident v=ident {try {
+  ((FORALL EOL? {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
+  | EXISTS EOL? {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
+   (t=ident v=ident EOL? {try {
       JavaBasicType jt = JavaType.getJavaBasicType($t.text);
       lqfs++;
       BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
@@ -737,40 +788,40 @@ quantifiedFormula returns [BCExpression ast] :
        reportError(null);
        //throw new RuntimeException("Error in BML.g3.quantifiedFormula");
      }})+
-     SEMICOLON
-     f=uncheckedExpression {((QuantifiedFormula)$ast).setFormula($f.ast);
+     SEMICOLON EOL?
+     f=uncheckedExpression EOL? {((QuantifiedFormula)$ast).setFormula($f.ast);
        env.remove($v.text);
        bvc -= lqfs;
      }) |
-  p=dotExpr {$ast = $p.ast;};
+  p=dotExpr EOL? {$ast = $p.ast;};
 
 dotExpr returns [BCExpression ast] :
-  l=primaryExpr {$ast = $l.ast;}
-  (DOT r=primaryExpr {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);}
-    | BR_LEFT p=uncheckedExpression BR_RIGHT {$ast = new ArrayAccess($ast, $p.ast);}
+  l=primaryExpr EOL? {$ast = $l.ast;}
+  (DOT r=primaryExpr EOL? {$ast = new FieldAccess(Code.FIELD_ACCESS, $ast, $r.ast);}
+    | BR_LEFT p=uncheckedExpression BR_RIGHT EOL? {$ast = new ArrayAccess($ast, $p.ast);}
   )*
   ;
 
 primaryExpr returns [BCExpression ast] :
-  l=localVar {$ast = $l.lv;}
-  | n=NAT {$ast = new NumberLiteral(Integer.parseInt($n.text));}
-  | i=ident {$ast = whatIsIt($i.text);}
-  | MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
-  | PLUS px=primaryExpr {$ast = $px.ast;}
-  | LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
-  | FALSE {$ast = new Predicate0Ar(false);}
-  | TRUE {$ast = new Predicate0Ar(true);}
-  | RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
-  | NULL {$ast = new NULL();}
-  | THIS {$ast = new THIS(false, bcc);}
-  | OLD_THIS {$ast = new THIS(true, bcc);}
-  | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
-  | PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
-  | LENGTH {$ast = new ArrayLength();}
+  l=localVar EOL? {$ast = $l.lv;}
+  | n=NAT EOL? {$ast = new NumberLiteral(Integer.parseInt($n.text));}
+  | i=ident EOL? {$ast = whatIsIt($i.text);}
+  | MINUS EOL? min=primaryExpr EOL? {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
+  | PLUS EOL? px=primaryExpr EOL? {$ast = $px.ast;}
+  | LOG_NOT EOL? p=primaryExpr EOL? {$ast = new Formula(Code.NOT, $p.ast);}
+  | FALSE EOL? {$ast = new Predicate0Ar(false);}
+  | TRUE EOL? {$ast = new Predicate0Ar(true);}
+  | RESULT EOL? {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
+  | NULL EOL? {$ast = new NULL();}
+  | THIS EOL? {$ast = new THIS(false, bcc);}
+  | OLD_THIS EOL? {$ast = new THIS(true, bcc);}
+  | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT EOL? {$ast = new OLD(Code.OLD, $e1.ast);}
+  | PAR_LEFT e=uncheckedExpression PAR_RIGHT EOL? {$ast = $e.ast;}
+  | LENGTH EOL? {$ast = new ArrayLength();}
   ;
 
 localVar returns [LocalVariable lv] :
-  LV BR_LEFT n=NAT BR_RIGHT {
+  LV BR_LEFT n=NAT BR_RIGHT EOL? {
     int i=Integer.parseInt($n.text);
     if (m == null) {
       reportError(null);
@@ -830,7 +881,10 @@ ASSERT: 'assert';
 LOOPSPEC: 'loop_specification';
 LINVARIANT: 'loop_inv';
 LDECREASES: 'decreases';
-CLASSINVARIANT: 'invariant';
+INVARIANT: 'invariant';
+CONSTRAINT: 'constraint';
+REPRESENTS: 'represents';
+INITIALLY: 'initially';
 REQUIRES: 'requires';
 SC_START: '{|';
 SC_END: '|}';
