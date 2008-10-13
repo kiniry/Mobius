@@ -1,6 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MOBIUS PVE Help and Documentation plugin
-Bundle-SymbolicName: mobius.help.documentation.plugin
+Bundle-SymbolicName: mobius.help.documentation.plugin;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: MOBIUS
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt,
+ org.eclipse.jface,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.intro,
+ org.eclipse.ui.intro.universal,
+ org.eclipse.ui
