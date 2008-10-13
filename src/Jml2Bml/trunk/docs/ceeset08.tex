@@ -65,9 +65,9 @@ ul. Banacha 2\\
 \titlepage
 \end{frame}
 
-\begin{frame}{Outline}
-  \tableofcontents
-\end{frame}
+%\begin{frame}{Outline}
+%  \tableofcontents
+%\end{frame}
 
 \section{Introduction}
 
@@ -92,7 +92,7 @@ ul. Banacha 2\\
   \end{block}
 \end{frame}
 
-\subsection{Proof-Carrying Code}
+\subsection{Mobius}
 
 \begin{frame}{Idea}
 	\begin{block}{Goal}
@@ -102,8 +102,30 @@ ul. Banacha 2\\
 	\pause
 
 	\begin{block}{Solution}
+		\alert{Proof-Carrying Code}:
 		Augmented executable code with a proof that the code obeys certain policies.
 	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Platform - JVM bytecode}
+	\begin{itemize}
+		\item JVM is mature
+		\item popular (in commerce)
+		\item supports many languages \\
+			\begin{itemize}
+				\item Java
+				\item Python (Jython)
+				\item Ruby (JRuby)
+				\item JavaScript (Rhino)
+				\item Scala
+			\end{itemize}
+		\pause
+	\end{itemize}
+		\small{\emph{We are just going to take the 'J' off the 'JVM' and just make it a 'VM}}\\
+		\begin{flushright}		 
+\footnotesize{Jonathan Schwartz,\\Sun Microsystems President and CEO}
+		\end{flushright}
 \end{frame}
 
 \begin{frame}{PCC architecture for bytecode}
@@ -143,11 +165,12 @@ ul. Banacha 2\\
 \end{frame}
 
 \begin{frame}{PCC infrastructure}
+PCC building blocks include:
 \begin{itemize}
-	\item checker tools for BML annotations combined with PCC certificates
-	\item tools which enable the construction of PCC certificates
 	\item procedures to safely distribute the desired properties to be checked by PCC infrastructure
-	\item modeling languages (such as JML) for other programming languages
+	\item construction of PCC certificates
+	\item checker tools for bytecode annotations (BML) combined with PCC certificates
+	\item annotations in source code: modeling languages (such as JML)
 	\item<1->\alert<2> {compilers that transform programs to JVM bytecode with annotations}
 \end{itemize}
 \end{frame}
