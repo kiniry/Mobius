@@ -13,7 +13,7 @@ import java.util.Vector;
 import jml2bml.ast.SymbolsBuilder;
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
@@ -57,14 +57,14 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
       TranslationRule<String, Symbols> {
 
     /**
-     * Default preVisit method. Throws NotTranslatedException.
+     * Default preVisit method. Throws NotTranslatedRuntimeException.
      * @param node visited node
      * @param symb symbol table
      * @return never reached.
      */
     @Override
     protected String preVisit(final Tree node, final Symbols symb) {
-      throw new NotTranslatedException("Not implemented: " + node);
+      throw new NotTranslatedRuntimeException("Not implemented: " + node);
     }
 
     /**
@@ -96,7 +96,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
           postcondition = new Formula(Code.AND, precondition, form);
         }
       } else
-        throw new NotTranslatedException("Not implemented: " + node);
+        throw new NotTranslatedRuntimeException("Not implemented: " + node);
       return "";
     }
 
@@ -127,7 +127,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
                                                                  .toString());
         appendExcondition(new Exsure(type, form));
       } else
-        throw new NotTranslatedException("Not implemented signals type: " +
+        throw new NotTranslatedRuntimeException("Not implemented signals type: " +
                                          node.vardef);
       return "";
     }
@@ -194,7 +194,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
     final Tree nextClassMember = finder.getNextSibling(specs);
     if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-      throw new NotTranslatedException("Cannot find method for the requires: " +
+      throw new NotTranslatedRuntimeException("Cannot find method for the requires: " +
                                        node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     final Symbols withParams = createSymbolsWithParams(symb, method);

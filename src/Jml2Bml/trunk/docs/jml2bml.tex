@@ -221,7 +221,7 @@ counterpart of the Java Modeling Language (JML), an established
 specification language dedicated to formally describe properties of
 Java programs in the design-by-contract style~\cite{JML}.
 
-Multiple languages can now be compiled to Java bytecode: Python,
+Multiple languages can now be compiled to the Java bytecode: Python,
 JavaScript, Scala, etc.  At SugarCon 2008, Sun Microsystems President
 and CEO Jonathan Schwartz said "we are just going to take the 'J' off
 the 'JVM' and just make it a 'VM'". Therefore there will be a global
@@ -342,7 +342,7 @@ and interfaces) annotations.
 
 \subsubsection{Method annotations}
 The most important type of method annotations are \textit{method
-specifications} describing the input-output behaviour of the
+specifications} which describe the input-output behaviour of the
 method. These are preconditions (\texttt{requires}), defining
 conditions that should be fulfilled before entering the method and
 postconditions (\texttt{ensures}) telling what we can expect after the
@@ -357,7 +357,7 @@ appearing between mnemonics, such as:
   variables etc. that should hold at this point of program execution.}
 \item {Loop specifications that describe loop invariants
     (\texttt{loop\_invariant}), loop termination measures
-    (\texttt{decreases}), and modification descriptions (\texttt{modifies}).}
+    (\texttt{decreases}), and modification scopes (\texttt{modifies}).}
 \item {Declarations of local \texttt{ghost}
   variables\hs{}---\hs{}variables that are visible only in the
   specifications and that can be modified only using special
@@ -713,7 +713,7 @@ at the bytecode level.
 
 
 \section{Adding BML annotations to class files}
-BML annotations generated with described translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. class invariants or method pre- and postconditions. Using BMLLib, placing them in the output file is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to the proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
+BML annotations generated with presented translation mechanism must be added to the output Java class file. Some BML annotations are connected with class or method e.g. class invariants or method pre- and postconditions. Using BMLLib, placing them in the output file is simple. More problematic are asserts and loop invariants. Each assert clause needs to be assigned to the proper bytecode instruction. For positioning assert clauses \emph{line number table} is used. This structure, present in Java class files, associates lines in source file with bytecode instructions. BML assert clauses are assigned to the first bytecode instruction which realises the particular line.
 Loop invariant must be associated with bytecode instruction too. Loop invariant holds at the beginning of the loop
 body at each loop iteration. Taking into consideration that loop control expression does not have to be side effect free,
 loop invariant should not be placed at the beginning of the expression. Therefore the proper bytecode instruction to attach the loop invariant to is the first instruction after the expression. To find such instruction there is a need to link instructions from the source code with corresponding bytecode instructions from the provided class file. 

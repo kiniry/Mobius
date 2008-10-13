@@ -868,8 +868,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @return just the result of corresponding method from the superclass.
    */
   public R visitJmlMethodClauseConditional(
-                                           final JmlMethodClauseConditional node,
-                                           final P p) {
+      final JmlMethodClauseConditional node,
+      final P p) {
     final P tmpP = preVisit(node, p);
     final R r = scan(node.expression, tmpP);
     return scanAndReduce(node.predicate, tmpP, r);

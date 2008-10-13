@@ -1,5 +1,7 @@
 package jml2bml.rules;
 
+import jml2bml.exceptions.NotTranslatedRuntimeException;
+
 import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;

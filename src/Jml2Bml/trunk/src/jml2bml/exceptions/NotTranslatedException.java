@@ -1,8 +1,12 @@
 package jml2bml.exceptions;
 
-public class NotTranslatedException extends RuntimeException {
-  private static final long serialVersionUID = 821440172563056853L;
-  public NotTranslatedException(String msg) {
-    super(msg);
+public class NotTranslatedException extends Exception {
+  /**
+   *
+   */
+  private static final long serialVersionUID = -8880799492732932857L;
+
+  public NotTranslatedException(Exception exc) {
+    super(exc);
   }
 }

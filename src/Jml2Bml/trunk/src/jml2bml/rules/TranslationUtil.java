@@ -8,7 +8,7 @@
  */
 package jml2bml.rules;
 
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
@@ -37,16 +37,18 @@ public final class TranslationUtil {
    * @param symb symbol table
    * @param context application context
    * @return formula for given expression
+   * @throws NotTranslatedRuntimeException 
    */
   public static AbstractFormula getFormula(final JCExpression expression,
                                            final Symbols symb,
-                                           final Context context) {
+                                           final Context context)
+    throws NotTranslatedRuntimeException {
     if (expression == null)
       return null;
     final BCExpression bcExpr = expression.accept(RulesFactory
         .getExpressionRule(context), symb);
     if (bcExpr.getType1() != JavaBasicType.JavaBool)
-      throw new NotTranslatedException("assert expression must be boolean");
+      throw new NotTranslatedRuntimeException("assert expression must be boolean");
     return (AbstractFormula) bcExpr;
   }
 }

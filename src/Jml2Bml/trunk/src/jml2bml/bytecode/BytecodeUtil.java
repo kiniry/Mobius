@@ -13,7 +13,7 @@ import java.util.Map;
 
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.exceptions.Jml2BmlException;
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
@@ -121,13 +121,14 @@ public final class BytecodeUtil {
    * Returns map: bytecode instruction -> line number in the source file.
    * @param method - method, for which the map should be generated
    * @return map: <code>Bytecode Instruction -> line in the source code</code>
+   * @throws NotTranslatedRuntimeException 
    */
   public static Map<InstructionHandle, Integer> getLineNumberMap(
-                                                                 final BCMethod method) {
+                                                                 final BCMethod method) throws NotTranslatedRuntimeException {
     final Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();
     for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
       if (result.containsKey(lng.getInstruction()))
-        throw new NotTranslatedException(
+        throw new NotTranslatedRuntimeException(
                                          "One bytecode instruction has more than one line number");
       else
         result.put(lng.getInstruction(), lng.getSourceLine());

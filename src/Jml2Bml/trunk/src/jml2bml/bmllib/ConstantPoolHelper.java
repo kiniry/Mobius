@@ -304,6 +304,6 @@ public final class ConstantPoolHelper {
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex));
-    System.err.println(cp.printCode());
+    System.err.println(cp.printCode(new StringBuffer()));
 }
 }

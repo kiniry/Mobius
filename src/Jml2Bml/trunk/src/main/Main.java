@@ -16,9 +16,12 @@ import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
 import jml2bml.engine.TranslationManager;
+import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import jml2bml.utils.Logger;
 
+import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Method;
 import org.jmlspecs.openjml.JmlSpecs;
 import org.jmlspecs.openjml.JmlTree;
@@ -67,7 +70,12 @@ public class Main {
       return;
     }
     main.List list = new main.List();
-    new Main().compile(args[2], new ClassFileLocation(args[0], args[1]));
+    try {
+      new Main().compile(args[2], new ClassFileLocation(args[0], args[1]));
+    } catch (NotTranslatedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -79,9 +87,10 @@ public class Main {
    * corresponding to the source file
    * @throws ReadAttributeException
    * @throws ClassNotFoundException
+   * @throws NotTranslatedException 
    */
   public void compile(final String sourceFile, final ClassFileLocation classLoc)
-      throws ClassNotFoundException, ReadAttributeException {
+      throws ClassNotFoundException, ReadAttributeException, NotTranslatedException {
     final Context context = createContext();
     context.put(ClassFileLocation.class, classLoc);
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
@@ -96,7 +105,12 @@ public class Main {
     log.info("LINE TABLES: ");
     for (Method m : clazz.getJC().getMethods()) {
       log.info(m.getName());
-      log.info(m.getLineNumberTable().toString());
+      LineNumberTable lnt = m.getLineNumberTable();
+      if (lnt != null) {
+        log.info(lnt.toString());
+      } else {
+        log.info("NO LINE NUMBER TABLE!!!");
+      }
     }
     log.info("----------- END PRETTY PRINT ----------");
     context.put(LineMap.class, tree.getLineMap());
@@ -109,7 +123,11 @@ public class Main {
         .getTranslator(context);
     final Symbols syms = new Symbols();
     syms.setClass(context.get(BCClass.class));
-    tree.accept(translator, syms);
+    try {
+      tree.accept(translator, syms);
+    } catch (NotTranslatedRuntimeException e) {
+      throw new NotTranslatedException(e);
+    }
     clazz.saveJC();
     log.info(clazz.printCode());
   }

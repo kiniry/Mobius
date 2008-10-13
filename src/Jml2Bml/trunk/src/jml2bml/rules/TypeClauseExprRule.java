@@ -8,12 +8,13 @@
  */
 package jml2bml.rules;
 
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlTypeClauseExpr;
 
+import annot.attributes.AttributeFlags;
 import annot.attributes.ClassInvariant;
 import annot.bcclass.BCClass;
 import annot.bcexpression.formula.AbstractFormula;
@@ -44,7 +45,17 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
   }
 
   /**
-   * Main translation method.
+   * Main translation method.  The translation
+   * realises the following logic:
+   * <pre>
+   *  Tr(invariantkeyword predicate, translationcontext) =
+   *      replace(translationcontext,
+   *         getInvariant(translationcontext),
+   *         packInvariant(
+   *            getInvExpression(
+   *              getInvariant(translationcontext)) &&^*
+   *            getExpression(Tr(predicate, translationcontext ))))
+   * </pre>
    *
    * @param node node to be translated
    * @param symb symbol table
@@ -58,17 +69,19 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
       final AbstractFormula formula = TranslationUtil
           .getFormula(node.expression, symb, myContext);
 
-      ClassInvariant classInvariant = clazz.getInvariant();
+      ClassInvariant classInvariant =
+        clazz.getInvariant(AttributeFlags.ACC_PUBLIC);
       if (classInvariant == null) {
-        classInvariant = new ClassInvariant(clazz, formula);
+        //currently only instance invariants are handled
+        classInvariant = new ClassInvariant(clazz, formula, true);
       } else {
         final AbstractFormula newFormula = new Formula(Code.AND, classInvariant
             .getInvariant(), formula);
-        classInvariant = new ClassInvariant(clazz, newFormula);
+        classInvariant = new ClassInvariant(clazz, newFormula, true);
       }
       clazz.setInvariant(classInvariant);
     } else
-      throw new NotTranslatedException("Token != invariant - not implemented");
+      throw new NotTranslatedRuntimeException("Token != invariant - not implemented");
     return "";
   }
 }

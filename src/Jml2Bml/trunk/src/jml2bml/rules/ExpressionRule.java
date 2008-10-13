@@ -13,7 +13,7 @@ import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.Jml2BmlException;
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import jml2bml.symbols.Variable;
 import jml2bml.utils.Constants;
@@ -89,14 +89,14 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
 
   // ------- visitor methods
   /**
-   * Default preVisit - throws NotTranslatedException.
+   * Default preVisit - throws NotTranslatedRuntimeException.
    * @param node visited node
    * @param p symbol table
    * @return never reached
    */
   @Override
   protected BCExpression preVisit(final Tree node, final Symbols p) {
-    throw new NotTranslatedException("Node " + node + " not translated.");
+    throw new NotTranslatedRuntimeException("Node " + node + " not translated.");
   }
   // TODO probably more nodes should be visited here
   /**
@@ -172,7 +172,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     if (kind == Kind.STRING_LITERAL) {
       //FIXME find out how string literals are represented
     }
-    throw new NotTranslatedException("Not implemented literal: " + node);
+    throw new NotTranslatedRuntimeException("Not implemented literal: " + node);
   };
 
   /**
@@ -346,7 +346,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       isOld = tmp;
       return expr;
     }
-    throw new NotTranslatedException("Method invocation not supported!");
+    throw new NotTranslatedRuntimeException("Method invocation not supported!");
   }
 
   /**
@@ -364,7 +364,7 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
       final Tree nextClassMember = finder.getNextSibling(specs);
       if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-        throw new NotTranslatedException(
+        throw new NotTranslatedRuntimeException(
                                          "Cannot find method for the \result: "
                                              + node);
       final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
@@ -372,6 +372,6 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
                                                         bcClazz);
       return new RESULT(bcMethod);
     }
-    throw new NotTranslatedException("Singleton type not translated: " + node);
+    throw new NotTranslatedRuntimeException("Singleton type not translated: " + node);
   }
 }

@@ -10,7 +10,7 @@ package jml2bml.rules;
 
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
@@ -58,10 +58,11 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * @param node - node to visit
    * @param symb - additional data (not used)
    * @return bml-assert annotation or null.
+   * @throws NotTranslatedRuntimeException 
    */
   @Override
   public String visitJmlStatementExpr(final JmlStatementExpr node,
-                                      final Symbols symb) {
+                                      final Symbols symb) throws NotTranslatedRuntimeException {
 
     if (node.token == JmlToken.ASSERT) {
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
@@ -106,8 +107,9 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * @param stmt statement, for which the sibling should be found
    * @return found sibling
    */
-  private static StatementTree findFirstNotEmptySibling(final TreeNodeFinder finder,
-                                                        final StatementTree stmt) {
+  private static StatementTree findFirstNotEmptySibling(
+      final TreeNodeFinder finder,
+      final StatementTree stmt) {
     StatementTree tmp = stmt;
     do {
       tmp = (StatementTree) finder.getNextSibling(tmp);
@@ -116,7 +118,8 @@ public class AssertRule extends TranslationRule<String, Symbols> {
   }
 
   private InstructionHandle translateStatement(final StatementTree stmt,
-                                               final BCMethod method) {
+                                               final BCMethod method)
+    throws NotTranslatedRuntimeException {
     if (stmt == null) {
       return method.getInstructions().getEnd();
     } else {
@@ -128,7 +131,7 @@ public class AssertRule extends TranslationRule<String, Symbols> {
           return lng.getInstruction();
       }
     }
-    throw new NotTranslatedException(
-                                     "Error with finding target instruction in bytecode");
+    throw new NotTranslatedRuntimeException(
+      "Error with finding target instruction in bytecode");
   }
 }

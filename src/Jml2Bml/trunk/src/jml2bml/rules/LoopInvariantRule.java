@@ -18,7 +18,7 @@ import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.bytecode.LoopDescription;
 import jml2bml.bytecode.LoopDetector;
-import jml2bml.exceptions.NotTranslatedException;
+import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.generic.InstructionHandle;
@@ -73,14 +73,14 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     }
 
     /**
-     * Default preVisit method. Throws NotTranslatedException.
+     * Default preVisit method. Throws NotTranslatedRuntimeException.
      * @param node visited node
      * @param symb symbol table
      * @return never reached.
      */
     @Override
     protected Symbols preVisit(final Tree node, final Symbols symb) {
-      throw new NotTranslatedException("Not implemented: " + node.getClass() +
+      throw new NotTranslatedRuntimeException("Not implemented: " + node.getClass() +
                                        " " + node);
     }
 
@@ -263,10 +263,10 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
             matchedLoop.sourceEnd >= loopDesc.sourceEnd)
           continue;
         else
-          throw new NotTranslatedException("Wrong loops in bytecode??");
+          throw new NotTranslatedRuntimeException("Wrong loops in bytecode??");
       }
     if (matchedLoop == null)
-      throw new NotTranslatedException("No matching loop found");
+      throw new NotTranslatedRuntimeException("No matching loop found");
     return matchedLoop;
   }
 
@@ -420,7 +420,7 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
       decreases = node.expression.accept(RulesFactory
           .getExpressionRule(myContext), newSymbols);
     else
-      throw new NotTranslatedException("Not translating JmlStatementLoop of " +
+      throw new NotTranslatedRuntimeException("Not translating JmlStatementLoop of " +
                                        "type: " + node.token);
     insertSpecs(loopNode, newSymbols, modifies, invariant, decreases);
     return "";

@@ -5,7 +5,8 @@
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
- */package jml2bml.utils;
+ */
+package jml2bml.utils;
 
 import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
