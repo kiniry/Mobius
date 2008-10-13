@@ -1,3 +1,5 @@
+% Relation that witnesses the simulation between monitored and annotated
+% program
 Equivalence[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -28,22 +30,28 @@ BEGIN
 
   mp : VAR (wf_and_complete_MP)
 
-
+  % MVA control point is modeled by ghost variable cp(mp)
+  % i.e., the control point maps to the unique integer that is held by cp(mp)
   MVA_cp_modeled?(mp)(sA : AState, sAP : APState) : boolean =
     Int(unique(cp(sA))) = gvs(sAP)(cp(mp))
 
+  % for every MVA control point, there is a ghost variable that maps this
+  % control point to a unique (integer) value
   MVA_cps_modeled?(mp)(sAP : APState) : boolean =
     FORALL (q : CP) : cps(mva(mp))(q) IMPLIES
       Int(unique(q)) = gvs(sAP)(name_of(mp)(q))
 
+  % Variables declared in monitor have corresponding ghost variable
+  % Values coincide
   MVA_vars_modeled?(sA : AState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(stA(sA)(n)) IMPLIES
       stA(sA)(n) = gvs(sAP)(n)
 
-  % A state of a MVA, sA, is modeled by a state of an AP, sAP, if:
-  % .The value of cp in sAP is equal to the mapping from cp to integers
-  % .Variables that model the control points are unchnaged
-  % .Variables in MVA have the same value as the respective ghost vars in the AP
+  % MVA_modeled?:
+  % A monitor state sA is modeled by an annotated program state  sAP if:
+  % the current control point is correctly modeled
+  % for each automaton control point, there is a unique ghost variable
+  % automaton variables and ghost variables representing those coincide
   MVA_modeled?(mp)(sA : AState, sAP : APState) : boolean =
     MVA_cp_modeled?(mp)(sA, sAP) AND
     MVA_cps_modeled?(mp)(sAP) AND
@@ -59,36 +67,46 @@ BEGIN
        ELSE Bottom
        ENDIF 
 
+  % APStateToAStore is wellformed
   APStateToAStore_wf_store : LEMMA % :-)
     FORALL(sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
         wf_store(APStateToAStore(mp)(sAP))(var_names(vdsA(mva(mp))))
 
+  % APStateToAStore(s) is correctly modeled by s
   APStateToAStore_MVA_modeled? : LEMMA % :-)
     FORALL(sAP : APState) :
       FORALL (n : Name) : 
         defined?(APStateToAStore(mp)(sAP)(n)) IMPLIES
         APStateToAStore(mp)(sAP)(n) = gvs(sAP)(n)
 
-
+  % Program_gvs_modeled?:
+  % ghost variables declared in monitored program (ie., old ghost variables)
+  % have same value as ghost variables in annotated program
   Program_gvs_modeled?(sMP : MPState, sAP : APState) : boolean =
     FORALL (n : Name) : defined?(gvs(sMP)(n)) IMPLIES
       gvs(sMP)(n) = gvs(sAP)(n)
 
+  % Program_modeled?:
+  % program states coincide, old ghost variables coincide
   Program_modeled?(sMP : MPState, sAP : APState) : boolean =
     pstate(sMP) = pstate(sAP) AND 
     Program_gvs_modeled?(sMP, sAP)
 
-  % Says if an state of a MP is correctly modeled by a state of an AP
+  % MP_modeled?
+  % Monitored program state sMP is correctly modeled by annotated program
+  % state sAP, i.e.,:
+  % monitor state is correctly modeled
+  % program state coincides
   MP_modeled?(mp)(sMP : MPState, sAP : APState) : boolean =
     MVA_modeled?(mp)(astate(sMP), sAP) AND
     Program_modeled?(sMP, sAP)
 
 
-  % It is possible to translate every guard of the MVA into an expression that
-  % evaluates to the same result. Note that if the guard holds then evaluation
-  % of the expression can not result in an exception (v would be Bottom).
-  % Furthermore, the evaluation must have no side-effects.
+  % Every guard of the MVA can be translated into an expression that
+  % evaluates to the same result. Note that if evaluation
+  % of the expression cannot result in an exception (v would be Bottom).
+  % Furthermore, evaluation must have no side-effects.
   guard_to_expression_behavior(mp) : boolean =
     FORALL (t : Transition, sAP : APState, sMVA : AState, arg : ValOrExcpt) :
       wf_state(ann_program(mp))(sAP) IMPLIES
@@ -102,10 +120,11 @@ BEGIN
           derive(ann_program(mp))(e(arg), sAP, v, sAP)(n) AND
           Bool(guard(t)(stA(sMVA), fvs(st(pstate(sAP))), arg)) = v
 
-  % It is possible to evaluate expressions appearing in actions (they 
-  % terminate) and they are side-effect-free. Note that the evaluation 
-  % of the expresion can not throw an exception (provided it starts in 
-  % a non-exceptional state).
+  % Every expression in an action of a transtion can be evaluated in the
+  % program, resulting in the same value.
+  % Evaluation is side-effect-free. 
+  % Note that the evaluation of the expresion can not throw an exception 
+  % (since eval cannot return Bottom)
   eval_action_behavior(mp) : boolean =
     FORALL (t : Transition, oa : OneAction, sAP : APState, sMVA : AState) :
       ts(mva(mp))(t) IMPLIES
@@ -120,10 +139,21 @@ BEGIN
                 (source(oa), sAP, 
                  eval(source(oa))(stA(sMVA), fvs(st(pstate(sAP)))), sAP)(n)
 
+  % an MVA that is used for annotation generation is wellbehaved if
+  % both guards and action expressions can be correctly transformed into
+  % program expressions
   well_behaved_MVA_for_annot_gen(mp) : boolean =
     guard_to_expression_behavior(mp) AND
     eval_action_behavior(mp) 
 
+  % related_states:
+  % Monitored program state sMP is related to annotated program state sAP, if:
+  % both states are wellformed
+  % the monitor is not stuck
+  % if the monitor has reached halted, the annotated program throws a 
+  % JMLException
+  % otherwise: sMP is modeled by sAP (i.e., the annotated program state
+  % models the monitored program state)
   related_states(mp)(sMP : MPState, sAP : APState) : boolean = 
     wf_state(mp)(sMP) AND
     wf_state(ann_program(mp))(sAP) AND
@@ -137,7 +167,8 @@ BEGIN
 END Equivalence
 
 
-
+% Basic properties about consequences and preservation of 
+% related_states relation
 RelatedStatesProperties[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -164,36 +195,43 @@ BEGIN
 
   mp : VAR (wf_and_complete_MP)
 
-
+  % if states are related, get_address returns same value
   get_address_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT cp(astate(sMP)) = halted IMPLIES
         get_address(vn, sMP) = get_address(vn, sAP)
 
+  % if states are related, get_dynamic_type_name returns same value
   get_dynamic_type_name_same_in_related_states : LEMMA % :-)
     FORALL(vn : Name, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
       NOT cp(astate(sMP)) = halted IMPLIES
         get_dynamic_type_name(vn, sMP) = get_dynamic_type_name(vn, sAP)
 
+  % if states are related, halted in monitor implies exception in annotated
+  % program
   halted_implies_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES 
       cp(astate(sMP)) = halted IMPLIES
         up?(ex(pstate(sAP)))
   
+  % MP_modeled implies that states have some exception flag
   MP_modeled_implies_same_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       MP_modeled?(mp)(sMP, sAP) IMPLIES
         ex(pstate(sMP)) = ex(pstate(sAP))
 
+  % related_states implies that states have same exception flag
   related_states_implies_same_exception : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES 
       NOT cp(astate(sMP)) = halted IMPLIES
         ex(pstate(sMP)) = ex(pstate(sAP))
 
+  % if states are related, lookup of variable names that occur in monitored
+  % program returns the same value
   related_states_implies_same_lookup : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState, n : Name) :
       related_states(mp)(sMP, sAP) IMPLIES 
@@ -201,6 +239,7 @@ BEGIN
       ext_declared_var_names(program(mp))(n) IMPLIES
         lookup(n, sMP) = lookup(n, sAP)
 
+  % MP_modeled preserved by updates on program state
   MP_modeled_preserved_by_update : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(upd : [PState -> PState]) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -211,6 +250,7 @@ BEGIN
       NOT cp(astate(sMP)) = halted IMPLIES
         MP_modeled?(mp)(update_PState(sMP, upd), update_PState(sAP, upd))
 
+  % related_states preserved by update_local operation
   related_states_preserved_by_update_local : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState)(vn : Name, v : (defined?)) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -220,6 +260,7 @@ BEGIN
         related_states(mp)(update_PState(sMP, update_local(vn, v)), 
                            update_PState(sAP, update_local(vn, v)))
 
+  % related_states preserved by catching an exception
   related_states_preserved_by_catch : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -227,6 +268,7 @@ BEGIN
         related_states(mp)(update_PState(sMP, catch), 
                            update_PState(sAP, catch))
 
+  % related_states preserved by throwing an exception
   related_states_preserved_by_raise : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState, e : Excpt) :
       related_states(mp)(sMP, sAP) IMPLIES
@@ -234,6 +276,7 @@ BEGIN
         related_states(mp)(update_PState(sMP, raise(e)), 
                            update_PState(sAP, raise(e)))
 
+  % related_states preserved by function update_stack
   related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState,
             this_val : Val, arg :  (getLocalDecls(program(mp))), 
@@ -245,6 +288,7 @@ BEGIN
         related_states(mp)(update_stack(this_val, arg, param_val, lvds, sMP),
                            update_stack(this_val, arg, param_val, lvds, sAP))
 
+  % related_states preserved by function update_stack
   related_states_preserved_by_update_stack_lookup : LEMMA % :-)
     FORALL (sMP : MPState, sAP : APState,
             mn: Name, md : Method, parent, this, param : Val) :
@@ -255,7 +299,11 @@ BEGIN
         related_states(mp)(update_stack(this, arg(md), param, lvars(md), sMP),
                            update_stack(this, arg(md), param, lvars(md), sAP))
 
-  % NOTE: The use of equalities[Val] is needed for disambiaguation of =
+  % MP_modeled implies that:
+  % lookup of control point in monitor returns the same value as
+  % lookup of cp(mp) ghost variable in annotated program
+  % NOTE: The use of equalities[Val] is needed for parser/typechecker:
+  % disambiaguation of =
   MP_modeled_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
       wf_state(ann_program(mp))(sAP) IMPLIES
@@ -267,6 +315,7 @@ BEGIN
         equalities[Val].=((Int(val2int(lookup(cp(mp), sAP))),
                            Int(val2int(lookup(name_of(mp)(q2), sAP)))))
 
+  % related states consequence
   related_states_lookup_correspondence : LEMMA % :-)
     FORALL (q1, q2 : CP, sMP : MPState, sAP : APState) :
       related_states(mp)(sMP, sAP) IMPLIES

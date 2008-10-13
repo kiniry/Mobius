@@ -230,8 +230,8 @@ BEGIN
 
   % Suppose we evaluate a CaseJML instruction, starting in a 
   % non-exceptional state s
-  % If there branch b1 whose condition has no side-effects and holds in s, 
-  % and all branches before b1 have no side-effect (and hence do not 
+  % Suppose there is branch b1 whose condition has no side-effects and holds 
+  % in s, and all branches before b1 have no side-effect (and hence do not 
   % throw exceptions), and do not hold in s (i.e., b1 is the first branch
   % where the condition holds).
   % Then the statement associated with b1 will be eventually evaluated 

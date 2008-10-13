@@ -120,37 +120,3 @@ BEGIN
 
 END WellBehavedMVA
 
-%   % Every guard of the MVA is translated into an expression that
-%   % evaluates to the same result. Evaluation of the expression can not
-%   % result in an exception (v would be Bottom).
-%   % Furthermore, the evaluation must have no side-effects.
-%   guard_to_expression_behavior(mp) : boolean =
-%     FORALL (t : Transition, sMP : MPState) :
-%       wf_state(mp)(sMP) IMPLIES % sMP good 
-%       NOT up?(ex(pstate(sMP))) IMPLIES % and non-exceptional state
-%       ts(mva(mp))(t) IMPLIES % t transition in MVA
-%       scp(t) = cp(astate(sMP)) IMPLIES % transition applies to this state
-%         EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
-%           guard_to_expression(mva(mp))(guard(t)) = e AND 
-%                                       % guard translates to expression e
-%           FORALL(arg : ValOrExcpt) :
-%           wf_Expr(program(mp))(e(arg)) AND  % e wellformed
-%           derive(mp)(e(arg), sMP, v, sMP)(n) AND % evaluation of e does not 
-%                                                  % have side effects
-%           v = Bool(guard(t)(stA(astate(sMP)), fvs(st(pstate(sMP))), arg))
-%           % evaluation of expression returns value of guard
-
-
-%   % Evaluation of expressions appearing in actions terminate
-%   % and is side-effect-free (and thus does not throw an exception)
-%   eval_action_behavior(mp) : boolean =
-%     FORALL (e : Expr, v : Val, sMP : MPState) :
-%       wf_state(mp)(sMP) IMPLIES % sMP good and
-%       NOT up?(ex(pstate(sMP))) IMPLIES % non-exceptional state
-%         EXISTS (n : nat) : 
-%           derive(mp)(e, sMP, 
-%                      eval(e)(stA(astate(sMP)), fvs(st(pstate(sMP)))),
-%                      sMP)(n)
-%           % derivation without side effect
-%           % returns value that is the same as evaluation of e in 
-%           % the automaton

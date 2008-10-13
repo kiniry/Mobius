@@ -21,17 +21,23 @@ BEGIN
 
   p : VAR Program
 
+  % Program_lvs_modeled?:
+  % all local variables occurring in original program have same value
   Program_lvs_modeled?(sAP1, sAP2 : APState) : boolean =
     FORALL (n : Name) : defined?(lvs(st(pstate(sAP1)))(n)) IMPLIES
       lvs(st(pstate(sAP1)))(n) = lvs(st(pstate(sAP2)))(n)
 
+  % Program_modeled?:
+  % exception flags coincide
+  % fields and ghost variables coincide
+  % old local variables coincide
   Program_modeled?(sAP1, sAP2 : APState) : boolean =
     ex(pstate(sAP1)) = ex(pstate(sAP2)) AND
     fvs(st(pstate(sAP1))) = fvs(st(pstate(sAP2))) AND 
     Program_lvs_modeled?(sAP1, sAP2) AND
     gvs(sAP1) = gvs(sAP2) 
 
-
+  % inline_related_states: states are wellformed, and satisfy Program_modeled?
   inline_related_states(p)(sAP1, sAP2 : APState) : boolean = 
     wf_state(p)(sAP1) AND
     wf_state(inline_program(p))(sAP2) AND
@@ -40,6 +46,7 @@ BEGIN
 END InlineEquivalence
 
 
+% Auxiliary lemmas about consequences and preservation of inline_related_states
 InlineRelatedStatesProperties[Name : TYPE+] : THEORY
 BEGIN
 
@@ -62,48 +69,42 @@ BEGIN
 
   p : VAR Program
 
-
+  % related states return same value for get_address
   get_address_same_in_inline_related_states : LEMMA % :-)
     FORALL(vn : Name, sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
       ext_declared_var_names(p)(vn) IMPLIES
         get_address(vn, sAP1) = get_address(vn, sAP2)
 
-
+  % related states return same value for get_dynamic_type_name
   get_dynamic_type_name_same_in_inline_related_states : LEMMA % :-)
     FORALL(vn : Name, sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
       ext_declared_var_names(p)(vn) IMPLIES
         get_dynamic_type_name(vn, sAP1) = get_dynamic_type_name(vn, sAP2)
 
-  
+  % Program_modeled implies same exception flag
   Program_modeled_implies_same_exception : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState) :
       Program_modeled?(sAP1, sAP2) IMPLIES
         ex(pstate(sAP1)) = ex(pstate(sAP2))
 
+  % related states implies same exception flag
   inline_related_states_implies_same_exception : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES 
         ex(pstate(sAP1)) = ex(pstate(sAP2))
 
+  % related states implies that for all old variables (i.e., declared in
+  % original program), lookup returns the same value
   inline_related_states_implies_same_lookup : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState, n : Name) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES 
       ext_declared_var_names(p)(n) IMPLIES
         lookup(n, sAP1) = lookup(n, sAP2)
 
-%  % needs reformulation
-%  Program_modeled_preserved_by_update : LEMMA % 
-%    FORALL (sAP1, sAP2 : APState)(upd : [PState -> PState]) :
-%      inline_related_states(p)(sAP1, sAP2) IMPLIES
-%      (FORALL (pstate1, pstate2 : PState) : 
-%        (st(pstate1) = st(pstate2) IMPLIES st(upd(pstate1)) = st(upd(pstate2))))
-%      IMPLIES
-%      (FORALL (pstate : PState) : (ex(upd(pstate)) = ex(pstate))) IMPLIES
-%        Program_modeled?(update_PState(sAP1, upd), update_PState(sAP2, upd))
-
-  % needs reformulation?
+  % related states preserved by update of program state, if
+  % vn is declared in original program
   inline_related_states_preserved_by_update : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState)(vn : Name, v : (defined?)) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
@@ -111,18 +112,21 @@ BEGIN
         inline_related_states(p)(update_PState(sAP1, update(vn, v)), 
                                  update_PState(sAP2, update(vn, v)))
 
+  % related states preserved by catching an exception
   inline_related_states_preserved_by_catch : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
       inline_related_states(p)(update_PState(sAP1, catch), 
                         update_PState(sAP2, catch))
 
+  % related states preserved by throwing an exception
   inline_related_states_preserved_by_raise : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState, e : Excpt) :
       inline_related_states(p)(sAP1, sAP2) IMPLIES
         inline_related_states(p)(update_PState(sAP1, raise(e)), 
                           update_PState(sAP2, raise(e)))
 
+  % related states preserved by function update_stack
   inline_related_states_preserved_by_update_stack : LEMMA % :-)
     FORALL (sAP1, sAP2 : APState,
             this_val : Val, arg :  (getLocalDecls(p)), 

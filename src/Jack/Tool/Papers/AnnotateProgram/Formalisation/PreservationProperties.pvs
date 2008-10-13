@@ -1,3 +1,23 @@
+% assumptions on monitors and programs that are preserved by different
+% translation steps
+
+% Note: for a complete treatment, we should also show that the legal_Program
+% assumption is preserved by complete_MP translation and annotation generation
+% algorithm. However, to prove this, we need to make some additional 
+% assumptions on the form of the try and catch blocks in finally statements:
+% these should not contain method calls that get annotated, otherwise the 
+% property might not be preserved (i.e. suppose try
+% contains a call to m, m always terminates normally, and the finally
+% block throws a NullPointerException - after annotation generation, the
+% call to m might throw a JMLException, but the whole try-catch-finally
+% statement will throw a NullPointerException). This could be fixed by adding
+% a syntactic condition NoMonitoredMethodCallInTryOrCatchBlock(mp), which is 
+% preserved by the first translation step. Then we can use that legal_Program
+% for a program with complete monitor and this condition ensure that the
+% annotated program is also a legal_Program. 
+
+
+% Properties that are preserved by first translation step
 CompleteMonitorProgramPropertiesPreservation[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -21,10 +41,9 @@ ENDASSUMING
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
                              on_method_exit_exceptional_MP],
-%             LegalPartialMonitoredProgramRestriction[CP, Name],
-%             LegalCompleteMonitoredProgramRestriction[CP, Name],
             WellBehavedMVA[CP, Name]
 
+  % convenience lemmas about existence of derivations
   derive_equivalence_if : LEMMA % :-)
     FORALL(mp : (wf_and_partial_MP), b : (wf_Body(program(mp))),
            sMP1, sMP2 : MPState, v : Val, n : nat) :
@@ -50,40 +69,26 @@ ENDASSUMING
       (derive(complete_MP(mp))(b, sMP1, v, sMP2)(n) IFF
          derive(mp)(b, sMP1, v, sMP2)(n))
 
+  % set annotations should not contain method calls
+  % this is preserved by first translation step
   contains_no_method_call_preserved_by_complete_MP : LEMMA % :-)
      FORALL(mp : (wf_and_partial_MP)) :
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
       contains_no_method_call_in_sets_in_program(program(complete_MP(mp)))
 
+  % set annotations should be wellformed
+  % this is preserved by first translation step
   wf_set_stmts_preserved_by_complete_MP : LEMMA % :-)
     FORALL(mp : (wf_and_partial_MP)) :
       wf_set_stmts(mp) IMPLIES
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
         wf_set_stmts(complete_MP(mp))
 
-%   full_complete_MP_characterisation : LEMMA % :-)
-%     FORALL(p : Program) :
-%       full_complete_MP(p) = complete_MP(full_partial_MP(p))
-
-%   legal_Body_preserved_by_complete_MP : LEMMA % uses derive_pstate_indepedent_of_MVA
-%     FORALL(mp : (wf_and_partial_MP))(b : (wf_Body(program(mp)))) :
-%       legal_Body_partial_MP(mp)(b) IMPLIES
-%         legal_Body_complete_MP(complete_MP(mp))(b)
-
-%   legal_Program_preserved_by_complete_MP : LEMMA % :-)
-%     FORALL(mp : (wf_and_partial_MP)) :
-%       legal_Program_partial_MP(mp) IMPLIES
-%         legal_Program_complete_MP(complete_MP(mp))
-
-%   well_behaved_MVA_preserved_by_complete_MP : LEMMA
-%     FORALL(mp : (wf_and_partial_MP)) :
-%       well_behaved_MVA(mva(mp)) IMPLIES
-%         well_behaved_MVA(complete(mva(mp)))
-
 END CompleteMonitorProgramPropertiesPreservation
 
 
-
+% Properties that are preserved by second translation step, and that 
+% are needed to show correctness of third translation step
 AnnotateProgramPropertiesPreservation[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -123,11 +128,10 @@ BEGIN
                              on_method_exit_exceptional_MP],
             WfSetStmtsAP[Name],
             CompleteMonitorProgramPropertiesPreservation[CP, Name],
-%             LegalCompleteMonitoredProgramRestriction[CP, Name],
-            LegalAnnotatedProgramRestriction[Name],
             WellBehavedMVA[CP, Name]
 
 
+  % given APState, construct state for monitored program
   make_MPState(mp : (wf_and_complete_MP))(s : APState) : MPState =
     (# astate := initial_MVA_state(mva(mp)),
        stuck := FALSE,
@@ -137,28 +141,15 @@ BEGIN
                                  ELSE Bottom
                                  ENDIF #)
 
-%   make_APState(mp : (wf_and_complete_MP))
-%               (s : MPState)(s_mark : APState) : APState =
-%     (# pstate := pstate(s), 
-%        gvs := LAMBDA(n : Name) : IF var_names(new_gvds(mp))(n) 
-%                                  THEN gvs(s_mark)(n)
-%                                  ELSE gvs(s)(n)
-%                                  ENDIF #)
-
+  % constructed monitored program state is wellformed
   wf_state_make_MPState : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP), s : APState) : 
       wf_state(ann_program(mp))(s) IMPLIES
         wf_state(mp)(make_MPState(mp)(s))
 
-%   wf_state_make_APState : LEMMA
-%     FORALL(mp : (wf_and_complete_MP), sMP : MPState, sAP : APState) : 
-%       wf_state(mp)(sMP) IMPLIES
-%       wf_state(ann_program(mp))(sAP) IMPLIES
-%         wf_state(ann_program(mp))(make_APState(mp)(sMP)(sAP))
-
   
-  % needs fixing
-  derive_equivalence_if : LEMMA % 
+  % convenience lemma about existence of derivations
+  derive_equivalence_if : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
            sAP1, sAP2 : APState, v : Val, n : nat) :
       wf_state(ann_program(mp))(sAP1) IMPLIES
@@ -167,15 +158,7 @@ BEGIN
       derive(ann_program(mp))(b, sAP1, v, sAP2)(n) IMPLIES
         derive(mp)(b, make_MPState(mp)(sAP1), v, make_MPState(mp)(sAP2))(n)
 
-%   derive_equivalence_only_if : LEMMA % :-)
-%     FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
-%            sMP1, sMP2 : MPState, sAP : APState, v : Val, n : nat) :
-%       contains_no_method_call(b) IMPLIES
-%       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
-%       derive(mp)(b, sMP1, v, sMP2)(n) IMPLIES
-%        derive(ann_program(mp))(b, make_APState(mp)(sMP1)(sAP), v, 
-%                                   make_APState(mp)(sMP2)(sAP))(n) 
-
+  % generated annotations contain no method calls
   ann_actions_contains_no_method_calls : LEMMA % :-)
     FORALL(l : Action) :
       (FORALL (oa : OneAction) : 
@@ -183,6 +166,8 @@ BEGIN
       contains_no_method_call(ann_action(l))
 
 
+  % set annotations should not contain method calls
+  % this is preserved by second translation step
   contains_no_method_call_preserved_by_ann_program : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
@@ -191,14 +176,16 @@ BEGIN
   IMPORTING AnnEventPreservesMPModeled[CP, Name],
             CorrectnessAnnProgram[CP, Name]
 
-
+  % conditions on well_behavedness of monitors are appropriate for
+  % annotation generation algorithm
   well_behaved_MVA_appropriate_for_annot_gen : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
     well_behaved_MVA(mva(mp))(APStateToAStore(mp))
       IMPLIES
       well_behaved_MVA_for_annot_gen(mp)
 
-  % check how well_behaved_MVA assumption is used!!
+  % set annotations should be wellformed
+  % this is preserved by second translation step
   wf_set_stmts_preserved_by_ann_program : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
       wf_set_stmts(mp) IMPLIES
@@ -206,29 +193,6 @@ BEGIN
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
       wf_set_stmts_AP(ann_program(mp))
 
-  ann_action_contains_no_TryCatch : LEMMA % :-)
-    FORALL(l : Action, b : Body) :
-      (FORALL (oa : OneAction, b1 : Body) : 
-         member(oa, l) IMPLIES 
-         subterm(b1, source(oa)) IMPLIES NOT TryCatch?(b1)) IMPLIES
-      subterm(b, ann_action(l)) IMPLIES NOT TryCatch?(b)
-
-%  existence_related_state : LEMMA
-%    FORALL(mp : (wf_and_complete_MP), s : APState) :
-%      wf_state(ann_program(mp))(s) IMPLIES
-%      EXISTS (s1 : MPState) : 
-%        related_states(mp)(s1, s)
-
-%   legal_Body_preserved_by_ann_program : LEMMA
-%     FORALL(mp : (wf_and_complete_MP))(b : Body) :
-%     subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
-%     legal_Body_complete_MP(mp)(b) IMPLIES
-%         legal_Body_AP(ann_program(mp))(b)
-
-%   legal_Program_preserved_by_ann_program : LEMMA % :-)
-%     FORALL(mp : (wf_and_complete_MP)) :
-%       legal_Program_complete_MP(mp) IMPLIES
-%         legal_Program_AP(ann_program(mp))
 
 END AnnotateProgramPropertiesPreservation
 

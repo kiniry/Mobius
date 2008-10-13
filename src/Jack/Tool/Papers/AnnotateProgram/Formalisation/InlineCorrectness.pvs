@@ -32,7 +32,11 @@ BEGIN
   p : VAR ({p : Program | wf_set_stmts(p) AND 
                           contains_no_method_call_in_sets_in_program(p)})
 
-
+  % AXIOM:
+  % derivation of a set annotation is the same if argument is replaced
+  % by a new expression, that will always return the same value
+  % i.e., argument is only evaluated for its value, and does not affect
+  % the rest of set-annotation
   pre_post_set_inline_related_states : AXIOM
     FORALL(p : Program, m : Method, sA1, sA2, sB1, sB2 : APState,
            val, v1, v2 : Val, nm : Name, t : JType, n1, n2 : nat,
@@ -57,6 +61,8 @@ BEGIN
             inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2) IMPLIES
         inline_related_states(p)(sA2, sB2) AND v1 = v2
 
+  % post_set annotation does not change value stored in res(p)(m)
+  % i.e., new program variables not affected by post_set
   result_expression_preservation : AXIOM
     FORALL(p : Program, m : Method, s1, s2, s3 : APState,
            v1, v2, w : Val, n1, n2 : nat) : 
@@ -69,11 +75,8 @@ BEGIN
             (var_lookup(res(p)(m))(res_type(m)), s2, v2, s3)(n2) IMPLIES
       v1 = v2
 
-
-  % uses axioms about pre_set and post_set, and value of result expression
-  % being preserved by post_set above
-  % missing branch needs assumption that if two lvars have the same name,
-  % they are the same
+  % for convenience, explicit lemma that inline_related_states preserved
+  % by method calls
   derive_maintains_inline_related_states_for_method_call : LEMMA
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
@@ -100,7 +103,7 @@ BEGIN
         (initial_AP_state(p)(root_object),
          initial_AP_state(inline_program(p))(root_object))
 
-  % Inductive case
+  % Inductive case: preservation of inline_related_states by derive
   derive_maintains_inline_related_states_for_unchanged_program : THEOREM
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
@@ -111,6 +114,8 @@ BEGIN
       derive(inline_program(p))(b, sAP2a, v2, sAP2b)(n2) IMPLIES
         inline_related_states(p)(sAP1b, sAP2b) AND v1 = v2
 
+  % auxiliary lemma: two derivations starting in related states
+  % then pstates change in similar ways
   derive_pstate_changes_inlined_program_for_unchanged_program : LEMMA % :-)
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
@@ -125,6 +130,8 @@ BEGIN
         ELSE NOT (lvs(st(pstate(sAP2a)))(n) = lvs(st(pstate(sAP2b)))(n))
         ENDIF)
 
+  % auxiliary lemma, direct consequence of 
+  % derive_pstate_changes_inlined_program_for_unchanged_program
   derive_maintains_lvs_pstate_inlined_program_for_unchanged_program : LEMMA % :-)
     FORALL (b : (wf_Body(p)), v1, v2 : Val)
            (sAP1a, sAP1b, sAP2a, sAP2b : APState)
@@ -136,7 +143,8 @@ BEGIN
       lvs(st(pstate(sAP1a))) = lvs(st(pstate(sAP1b))) IMPLIES
         lvs(st(pstate(sAP2a))) = lvs(st(pstate(sAP2b))) 
 
-  % all but method call case proven
+  % derivation in original program, implies existence of derivation in
+  % inlined program
   inline_related_states_implies_derive_for_unchanged_program : THEOREM
     FORALL (b : (wf_Body(p)), v : Val)
            (sAP1a, sAP1b, sAP2a : APState)
@@ -147,17 +155,7 @@ BEGIN
         EXISTS(sAP2b : APState, n2 : nat) :
           derive(inline_program(p))(b, sAP2a, v, sAP2b)(n2)
 
-  inline_related_states_implies_derive_for_unchanged_program_converse : THEOREM
-    FORALL (b : (wf_Body(p)), v : Val)
-           (sAP1a, sAP1b, sAP2a : APState)
-           (n1 : nat) :
-      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
-      inline_related_states(p)(sAP2a, sAP1a) IMPLIES
-      derive(inline_program(p))(b, sAP1a, v, sAP1b)(n1) IMPLIES
-        EXISTS(sAP2b : APState, n2 : nat) :
-          derive(p)(b, sAP2a, v, sAP2b)(n2) 
-
-  % The main result
+  % The main result: inline_related_states is a simulation relation
   correctness_of_inline_program : THEOREM % :-)
     FORALL (main : Name, arg : int)(root_object : (defined?))
            (sAP1 : APState) :
@@ -166,15 +164,6 @@ BEGIN
       run_annotated_program(inline_program(p))
                                (main, arg)(root_object)(sAP2) AND
         inline_related_states(p)(sAP1, sAP2)
-
-
-  correctness_of_inline_program_converse : THEOREM % :-)
-    FORALL (main : Name, arg : int)(root_object : (defined?))
-           (sAP1 : APState) :
-      run_annotated_program(inline_program(p))(main, arg)(root_object)(sAP1) IMPLIES
-      EXISTS(sAP2 : APState) :
-      run_annotated_program(p)(main, arg)(root_object)(sAP2) AND
-        inline_related_states(p)(sAP2, sAP1)
 
 
 END CorrectnessInlineProgram

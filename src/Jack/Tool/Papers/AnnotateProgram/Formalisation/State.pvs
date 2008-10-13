@@ -8,6 +8,11 @@ BEGIN
 
   % A store is a mapping from names to values. Undefined locations map to 
   % the value Bottom
+  % NOTE: We could define Store as Store(ns : set[Name]) : TYPE 
+  % [{n : Name | ns(n)} -> Val], but then the names for which it is defined 
+  % are part of the type, which would be inconvenient, especially for 
+  % programs, that have three stores (and moreover, the values for which lvs
+  % is defined change over time).
   Store : TYPE = [Name -> Val]
 
   update_store(n : Name, v : Val)(s : Store) : Store =

@@ -1,13 +1,13 @@
-% NOTE: Bottom is used to model the partiality of Store. We may define Store as
-% Store(ns : set[Name]) : TYPE [{n : Name | ns(n)} -> Val], but then the names
-% for which it is defined will be in the type. That would be inconvenient,
-% specially for programs, which have three stores (and the values for which lvs
-% is defined change over time).
-% Do not confuse Bottom (a Val) with bottom, a constructor of the lift datatype
+% Values used in program model
+
+% Boolean, Bottom, Integers, Null and non-null References, and Unit
+% Types for these are defined in JType
+
 Val[Name : TYPE+] : DATATYPE 
 BEGIN
 
   Bool(b : bool) : Bool?
+% Do not confuse Bottom (a Val) with bottom, a constructor of the lift datatype
   Bottom : Bottom?    % undefined value
   Int(i : int) : Int?
   Null : Null?
@@ -24,8 +24,10 @@ BEGIN
 
   IMPORTING Val[Name], JType
 
+  % A value is defined, if it is not Bottom
   defined?(v : Val) : boolean = NOT Bottom?(v)
 
+  % For each type, a default value is defined
   default_value(t : JType) : (defined?) =
     CASES t OF
       IntType : Int(0),
@@ -34,6 +36,7 @@ BEGIN
       RefType : Null
     ENDCASES
 
+  % Return type of value
   type_of(v : (defined?)) : JType =
     CASES v OF
       Bool(b) : BoolType,

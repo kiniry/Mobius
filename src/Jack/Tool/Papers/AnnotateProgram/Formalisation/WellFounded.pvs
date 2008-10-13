@@ -1,9 +1,11 @@
+% Convenience lemmas to prove wellfoundedness
 WF[A, B : TYPE] : THEORY
 BEGIN
 
   ord1 : VAR pred[[A, A]]
   ord2 : VAR pred[[B, B]]
 
+  % Product of two relations is wellfound, if the two relations are wellfounded
   well_founded?_product : LEMMA % :-)
     well_founded?(ord1) IMPLIES
     well_founded?(ord2) IMPLIES 
@@ -16,6 +18,7 @@ END WF
 WF_Card [T : TYPE] : THEORY
 BEGIN
 
+  % Cardinality of finite_set is wellfounded relation for finite sets
   wf_card : LEMMA % :-)
     well_founded?[finite_set[T]]
       (LAMBDA(x, y : finite_set[T]) : card[T](x) < card[T](y))

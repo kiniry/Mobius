@@ -1,3 +1,6 @@
+% Argument of pre- and postcondition, and set annotations is either value or
+% exception.
+% For convenience, modeled as single datatype
 ValOrExcpt[Name : TYPE+] : DATATYPE
 BEGIN
 

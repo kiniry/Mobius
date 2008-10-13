@@ -499,7 +499,9 @@ BEGIN
                derive(mp)(b, sigma1, v, sigma2)(m)) IMPLIES
         wf_state(mp)(sigma2)
 
+  % Convenience lemmas about complete monitors never getting stuck
 
+  % a complete monitor never gets stuck after on_method_entry_MP
   complete_MVA_never_stuck_after_on_method_entry_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
@@ -513,6 +515,7 @@ BEGIN
        NOT stuck(sigma1) IMPLIES
        NOT stuck(sigma2)
 
+  % a complete monitor never gets stuck after on_method_exit_normal_MP
   complete_MVA_never_stuck_after_on_method_exit_normal_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :
@@ -526,6 +529,7 @@ BEGIN
        NOT stuck(sigma1) IMPLIES
        NOT stuck(sigma2)
 
+  % a complete monitor never gets stuck after on_method_exit_exceptional_MP
   complete_MVA_never_stuck_after_on_method_exit_exceptional_MP : LEMMA % :-)
     FORALL (mp : MonitoredProgram, m : (wf_Method(program(mp))), a : Val)
            (arg : ValOrExcpt, sigma1, sigma2 : MPState, n : nat) :

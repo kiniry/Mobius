@@ -69,7 +69,8 @@ BEGIN
 END WfSetStmts
 
 
-% TODO: explain why this separate theory
+% Below we define several separate theories, to ensure that we can import
+% these definitions for monitored and annotated programs at the same time
 WfSetStmtsAP[Name : TYPE+] : THEORY
 BEGIN
 

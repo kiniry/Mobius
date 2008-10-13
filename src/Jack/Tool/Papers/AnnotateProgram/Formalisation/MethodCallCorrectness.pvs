@@ -1,3 +1,4 @@
+% Lemmas that show that related_states is preserved by method calls
 MethodCallsPreserveRelatedState[CP, Name : TYPE+] : THEORY
 BEGIN
 
@@ -39,6 +40,7 @@ BEGIN
   mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
                                      wf_set_stmts(mp)})
 
+  % on_method_entry for annotated method preserves related_states
   on_method_entry_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            v : ValOrExcpt, 
@@ -74,6 +76,7 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % if halted already reached, control point stays halted after on_method_entry
   on_method_entry_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, v : ValOrExcpt,
@@ -87,6 +90,7 @@ BEGIN
         cp(astate(sMP2)) = halted
 
 
+  % on_method_entry for unannotated method preserves related_states
   on_method_entry_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            v : ValOrExcpt,
@@ -123,6 +127,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
+  % on_method_exit_normal for annotated method preserves related_states
   on_method_exit_normal_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            v : ValOrExcpt, m1, m2 : nat,
@@ -161,6 +166,8 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
+  % if halted already reached, control point stays halted after 
+  % on_method_exit_normal
   on_method_exit_normal_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, v : ValOrExcpt,
@@ -173,6 +180,7 @@ BEGIN
                            derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         cp(astate(sMP2)) = halted
   
+  % on_method_exit_normal for unannotated method preserves related_states
   on_method_exit_normal_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            m1, m2 : nat, v : ValOrExcpt,
@@ -209,6 +217,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
+  % on_method_exit_normal for annotated method preserves related_states
   on_method_exit_exceptional_preserves_related_states_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), 
            a : (defined?), m1, m2 : nat, v : ValOrExcpt,
@@ -246,6 +255,8 @@ BEGIN
                         derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
         related_states(mp)(sMP2, sAP2)
 
+  % if halted already reached, control point stays halted after 
+  % on_method_exit_exceptional
   on_method_exit_exceptional_preserves_related_states_halted_reached : LEMMA % :-))
     FORALL(md1 : (wf_Method(program(mp))), 
            a1 : Val, v : ValOrExcpt,
@@ -259,6 +270,7 @@ BEGIN
         cp(astate(sMP2)) = halted
 
 
+  % on_method_exit_exceptional for unannotated method preserves related_states
   on_method_exit_exceptional_preserves_related_states_not_annotated : LEMMA % :-))
     FORALL(mn : Name, md : (wf_Method(program(mp))), a : (defined?), 
            m1, m2 : nat, v : ValOrExcpt,
@@ -295,7 +307,7 @@ BEGIN
         related_states(mp)(sMP2, sAP2)
 
 
-  % Method call case of derive_preserves_related_states_for_unchanged_program
+  % Method call preserves related_states
   method_call_lemma : LEMMA % :-)
     FORALL(b : (wf_Body(program(mp))), x : [nat, nat],
            m11, m21, m31, m41, m51, m61, m12, m22, m32, m42, m52, m62 : nat,

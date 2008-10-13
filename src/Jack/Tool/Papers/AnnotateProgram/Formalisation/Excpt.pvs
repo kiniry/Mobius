@@ -1,8 +1,12 @@
+% Exceptions that we distinguish in program model
 Excpt : DATATYPE
 BEGIN
 
+  % User defined exception
   Throwable : Throwable?
+  % NullPointer reference, as representative of runtime exceptions
   NullPointer : NullPointer?
+  % Special JMLExc, to signal annotation violation
   JMLExc : JMLExc?
 
 

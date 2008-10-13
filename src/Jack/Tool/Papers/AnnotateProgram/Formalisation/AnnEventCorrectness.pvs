@@ -28,10 +28,17 @@ BEGIN
   mp : VAR (wf_and_complete_MP)
 
 
-  % Eexecuting an action on a MVA modifies its variables in the same way that
-  % the execution of the annotations representing that action modifies the
-  % corresponding ghost variables in the annotated program.
-  % NOTE: We need a quantification over "a" to be able to apply induction.
+  % Preservation of MP_modeled by the new set annotations that are generated
+  % to capture the transition of the MVA
+
+  % Executing an action <a> in the MVA modifies the MVA variables 
+  % in the same way as the execution of the annotations in the annotated
+  % program representing <a> (ann_action(a)) modifies the ghost variables 
+  % corresponding to the MVA variables. 
+  % Thus: If MP_modeled? holds for the initial states, it also
+  % holds for the final states
+  % NOTE: For proof-technical reasons, we generalise the theorem over 
+  % action <a>. This allows to apply induction on <a>.
   ann_action_preserves_MP_modeled : LEMMA % :-)
     FORALL (t : Transition, a : Action, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
@@ -54,10 +61,10 @@ BEGIN
                 gvs := gvs(sMP1) #) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
-  % If sMP1 and sAP1 are related states and for a given transition t, sMVA is the
-  % state of the automaton after performing t and sAP2 is the state of the 
-  % annotated program after executing the annotations that model the effect of t, 
-  % then sMVA is still well modeled by sAP2.
+  % Executing a transition <t> in the MVA modifies the MVAState in the same
+  % way as the execution of the representation of this transition in the 
+  % annotated program (update_vars(t)) modifies the annotated program state.
+  % Thus: if the initial states are related, then the final states are related.
   update_vars_preserves_MP_modeled : LEMMA % :-)
     FORALL (t : Transition, n : nat)
            (sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
@@ -75,11 +82,14 @@ BEGIN
       derive(ann_program(mp))(update_vars(mp)(t), sAP1, Unit, sAP2)(n) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
-  % If sMP1 and sAP1 are related stated, sMP2 is the state of the monitored
-  % progran after evaluating on_method_MVA with some event type et and some
-  % method m, ts is the set of transitions that has (et, name(m)) as event and
-  % sAP2 is the state of the annotated program after the execution of ann_event
-  % with ts as argument, then sMP2 and sAP2 are in MP_modeled?.
+  % Executing a transition for event <et> and method <m> (i.e. 
+  % on_method_MVA(et)(mp, m)) in the monitored program modifies the
+  % state in the same way as the annotations representing this automaton
+  % step in the annotated program (ann_event(filter_event(et), m)).
+  % Notice that ann_event does not verify whether halted is reached, thus
+  % it will not throw a JMLException.
+  % Therefore: if initial states sMP1 and sAP1 are related stated, 
+  % then the final states sMP2 and sAP2 are related by MP_modeled?. 
   ann_event_preserves_MP_modeled : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  n : nat)
            (v : ValOrExcpt, sMP1, sMP2 : MPState, sAP1, sAP2 : APState) :
@@ -93,7 +103,7 @@ BEGIN
                               sAP1, Unit, sAP2)(n) IMPLIES
         MP_modeled?(mp)(sMP2, sAP2)
 
-  % ann_event as used by the annotation algorithm does not throw a new exception
+  % ann_event does not throw an exception and it returns the value Unit
   ann_event_does_not_throw_exception : LEMMA % :-)
     FORALL (m : (wf_Method(program(mp))), et : EventType,  v : Val, n : nat)
            (arg : ValOrExcpt, sAP1, sAP2 : APState) :

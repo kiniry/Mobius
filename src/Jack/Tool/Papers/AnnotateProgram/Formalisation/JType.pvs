@@ -1,5 +1,9 @@
-% JType instead of Type, because Type is a reserved keyword in PVS
-% Primitive types: integer and bool and special void type
+% Note: JType instead of Type, because Type is a reserved keyword in PVS
+
+% Types used in program model
+% Primitive types: integer and bool and special void type (return type for 
+% statements)
+% Reference types
 % Datatype Val defines elements of JType
 JType : DATATYPE
 BEGIN
