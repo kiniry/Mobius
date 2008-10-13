@@ -167,4 +167,7 @@ public class FieldRef extends OldExpression {
     aw.writeShort(this.cpIndex);
   }
 
+  public String getName(){
+    return name;
+  }
 }
