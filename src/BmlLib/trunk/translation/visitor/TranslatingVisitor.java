@@ -28,7 +28,7 @@ public class TranslatingVisitor {
     
       resMethods[i] = visit(clazz.getMethod(i), type);
     }
-    type.setDeclarations(new BCField[0], resMethods, new BMLInvariant[0], new BMLConstraint[0]);
+    //type.setDeclarations(new BCField[0], resMethods, new BMLInvariant[0], new BMLConstraint[0]);
     return type;
   }
 
@@ -64,7 +64,7 @@ public class TranslatingVisitor {
   public b2bpl.bytecode.bml.ast.BMLMethodSpecification visit(annot.attributes.MethodSpecification spec){
    Vector<annot.attributes.SpecificationCase> cases = spec.getSpecificationCases();
    for (annot.attributes.SpecificationCase specCase :cases){
-     specCase.
+     
    }
    
    return null;

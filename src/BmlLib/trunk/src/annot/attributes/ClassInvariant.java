@@ -142,7 +142,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   }
 
   /**
-   * Return the information if the invariant is instance/static
+   * Return the information if the invariant is instance/static.
    *
    * @return <code>true</code> in case the invariant is an instance
    *   invariant, <code>false</code> otherwise

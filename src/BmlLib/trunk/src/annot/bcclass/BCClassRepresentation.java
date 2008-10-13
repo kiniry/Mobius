@@ -16,6 +16,7 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.AType;
+import annot.attributes.AttributeFlags;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
@@ -171,6 +172,7 @@ public abstract class BCClassRepresentation {
 
   /**
    * Returns the invariant for the given access flags specifications.
+   * Possible access flags are defined in {@link AttributeFlags}.
    *
    * @param accessflags the access flags for which the invariant should
    *   be retrieved
