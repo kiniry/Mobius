@@ -4,8 +4,7 @@ Bundle-Name: Umbra Plug-in
 Bundle-SymbolicName: mobius.umbra;singleton:=true
 Bundle-Version: 1.0.7
 Bundle-Localization: plugin
-Require-Bundle: org.apache.bcel_5.1,
- org.eclipse.core.resources,
+Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
@@ -15,7 +14,8 @@ Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.ui.ide,
  org.eclipse.ui.workbench.texteditor,
  mobius.bmllib,
- Jml2Bml
+ Jml2Bml,
+ org.apache.bcel_5.1;bundle-version="1.0.0"
 Bundle-ClassPath: .
 Eclipse-LazyStart: true
 Bundle-Activator: umbra.UmbraPlugin
