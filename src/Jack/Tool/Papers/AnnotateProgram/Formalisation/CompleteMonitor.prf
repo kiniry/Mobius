@@ -5,7 +5,7 @@
     (("" (typepred "mp!1")
       (("" (expand "wf_and_partial_MP") (("" (assert) nil nil)) nil)) nil))
     nil)
-   unchecked
+   proved-complete
    ((wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -42,7 +42,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((complete_MVA_yields_wf_MVA formula-decl nil MVACompletion nil)
     (CP formal-nonempty-type-decl nil CompleteMonitor nil)
     (Name formal-nonempty-type-decl nil CompleteMonitor nil)
@@ -62,7 +62,7 @@
     (MonitoredProgramPre type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
-    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil) nil
+    (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (complete_MVA_is_complete formula-decl nil MVACompletion nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil))
@@ -99,7 +99,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -147,12 +147,12 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved-complete
    ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)
     (wf_MP const-decl "boolean" MonitoredProgram nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
-    (complete_MVA_is_complete formula-decl nil MVACompletion nil) nil
+    (complete_MVA_is_complete formula-decl nil MVACompletion nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -176,19 +176,19 @@
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil))
    852 830 t shostak))
  (complete_MP_preserves_wf_body 0
-  (complete_MP_preserves_wf_body-1 nil 3412327602 3428746688
+  (complete_MP_preserves_wf_body-1 nil 3412327602 3432903513
    ("" (skosimp*) (("" (expand "complete_MP") (("" (propax) nil nil)) nil))
     nil)
-   unchecked ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   473 480 t shostak))
+   proved ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
+   5009 3270 t shostak))
  (complete_MP_preserves_wf_method 0
-  (complete_MP_preserves_wf_method-1 nil 3412327616 3428746688
+  (complete_MP_preserves_wf_method-1 nil 3412327616 3432903516
    ("" (skosimp*) (("" (expand "complete_MP") (("" (propax) nil nil)) nil))
     nil)
-   unchecked ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   503 470 t shostak))
+   proved ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
+   3332 3270 t shostak))
  (monitor_related_astates_consequence 0
-  (monitor_related_astates_consequence-1 nil 3412488306 3428746689
+  (monitor_related_astates_consequence-1 nil 3412488306 3432903520
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (expand "monitor_related_astates")
@@ -207,7 +207,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
@@ -237,9 +237,9 @@
     (partial_MVA_never_in_halted_in_wf_state formula-decl nil
      MonitoredProgramSemantics nil)
     (monitor_related_astates const-decl "boolean" CompleteMonitor nil))
-   616 620 t shostak))
+   3741 3680 t shostak))
  (existence_state_partial_monitor 0
-  (existence_state_partial_monitor-1 nil 3414152548 3428746690
+  (existence_state_partial_monitor-1 nil 3414152548 3432903524
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       ((""
@@ -307,7 +307,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitor nil)
@@ -349,20 +349,20 @@
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Name formal-nonempty-type-decl nil CompleteMonitor nil)
     (CP formal-nonempty-type-decl nil CompleteMonitor nil))
-   1074 1010 t shostak))
+   3979 3890 t shostak))
  (get_address_same_in_monitor_related_states 0
-  (get_address_same_in_monitor_related_states-1 nil 3412326087 3428746691
+  (get_address_same_in_monitor_related_states-1 nil 3412326087 3432903527
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (expand "get_address") (("" (assert) nil nil)) nil)) nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (get_address const-decl "int" Semantics nil))
-   481 480 t shostak))
+   3342 3280 t shostak))
  (get_dynamic_type_name_same_in_monitor_related_states 0
   (get_dynamic_type_name_same_in_monitor_related_states-2 nil 3412326135
-   3428746691
+   3432903531
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (assert)
@@ -370,10 +370,10 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (get_dynamic_type_name const-decl "Name" Semantics nil))
-   519 490 t nil)
+   3339 3280 t nil)
   (get_dynamic_type_name_same_in_monitor_related_states-1 nil 3412326109 nil
    (";;; Proof get_address_same_in_monitor_related_states-1 for formula CompleteMonitor.get_address_same_in_monitor_related_states"
     (skosimp*)
@@ -386,7 +386,7 @@
     ";;; developed with shostak decision procedures")
    unchecked nil nil nil nil nil))
  (monitor_related_states_implies_same_exception 0
-  (monitor_related_states_implies_same_exception-1 nil 3412326136 3428746692
+  (monitor_related_states_implies_same_exception-1 nil 3412326136 3432903534
    (";;; Proof get_address_same_in_monitor_related_states-1 for formula CompleteMonitor.get_address_same_in_monitor_related_states"
     (skosimp*)
     ((";;; Proof get_address_same_in_monitor_related_states-1 for formula CompleteMonitor.get_address_same_in_monitor_related_states"
@@ -394,11 +394,10 @@
       ((";;; Proof get_address_same_in_monitor_related_states-1 for formula CompleteMonitor.get_address_same_in_monitor_related_states"
         (assert) nil))))
     ";;; developed with shostak decision procedures")
-   unchecked
-   ((monitor_related_states const-decl "boolean" CompleteMonitor nil)) 486 470
-   nil nil))
+   proved ((monitor_related_states const-decl "boolean" CompleteMonitor nil))
+   3331 3270 nil nil))
  (monitor_related_states_implies_same_lookup 0
-  (monitor_related_states_implies_same_lookup-1 nil 3412326159 3428746692
+  (monitor_related_states_implies_same_lookup-1 nil 3412326159 3432903537
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (assert)
@@ -413,17 +412,17 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (is_local const-decl "boolean" State nil)
     (lookup_local const-decl "Val" State nil)
     (lookup_field const-decl "Val" State nil)
     (is_field const-decl "boolean" State nil)
     (lookup const-decl "Val" SemanticsJML nil))
-   538 510 t nil))
+   3349 3290 t nil))
  (monitor_related_states_preserved_by_update_local 0
   (monitor_related_states_preserved_by_update_local-1 nil 3412326200
-   3428746694
+   3432903542
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (flatten)
@@ -456,7 +455,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_update_PState formula-decl nil MonitoredProgramSemantics nil)
     (AState type-eq-decl nil MVACommonSemantics nil)
@@ -494,9 +493,9 @@
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state_update_local formula-decl nil State nil)
     (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   1759 1730 t shostak))
+   4677 4590 t shostak))
  (monitor_related_states_preserved_by_catch 0
-  (monitor_related_states_preserved_by_catch-1 nil 3412326228 3428746696
+  (monitor_related_states_preserved_by_catch-1 nil 3412326228 3432903547
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (flatten)
@@ -529,7 +528,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_update_PState formula-decl nil MonitoredProgramSemantics nil)
     (AState type-eq-decl nil MVACommonSemantics nil)
@@ -566,9 +565,9 @@
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state_catch formula-decl nil State nil)
     (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   1920 1820 t shostak))
+   4746 4660 t shostak))
  (monitor_related_states_preserved_by_raise 0
-  (monitor_related_states_preserved_by_raise-3 nil 3412488888 3428746698
+  (monitor_related_states_preserved_by_raise-3 nil 3412488888 3432903551
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (flatten)
@@ -601,7 +600,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_update_PState formula-decl nil MonitoredProgramSemantics nil)
     (AState type-eq-decl nil MVACommonSemantics nil)
@@ -638,7 +637,7 @@
     (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state_raise formula-decl nil State nil)
     (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   1743 1710 t nil)
+   4669 4580 t nil)
   (monitor_related_states_preserved_by_raise-2 nil 3412330218 3412488492
    (";;; Proof monitor_related_states_preserved_by_catch-1 for formula CompleteMonitor.monitor_related_states_preserved_by_catch"
     (skosimp*)
@@ -674,7 +673,7 @@
    48 20 t shostak))
  (monitor_related_states_preserved_by_update_stack 0
   (monitor_related_states_preserved_by_update_stack-1 nil 3413696364
-   3428746699
+   3432903565
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (flatten)
@@ -705,14 +704,15 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_state_update_stack formula-decl nil MonitoredProgramSemantics nil)
     (CP formal-nonempty-type-decl nil CompleteMonitor nil)
     (Name formal-nonempty-type-decl nil CompleteMonitor nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVACommonSemantics nil) nil
+    (AState type-eq-decl nil MVACommonSemantics nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -737,7 +737,10 @@
     (Event type-eq-decl nil MVA nil)
     (EventType type-decl nil EventType_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
-    (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil) nil nil
+    (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)
+    (arg!1 skolem-const-decl "(getLocalDecls(program(mp!1)))" CompleteMonitor
+     nil)
+    (mp!1 skolem-const-decl "(wf_and_partial_MP)" CompleteMonitor nil)
     (update_PState const-decl "(update_PState_type)" MonitoredProgramSemantics
      nil)
     (update_local const-decl "PState" State nil)
@@ -745,10 +748,10 @@
     (update_stack const-decl "FullState" Semantics nil)
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitor nil))
-   1017 980 t shostak))
+   13764 13530 t shostak))
  (monitor_related_astates_preserved_by_on_method_MVA_TCC1 0
   (monitor_related_astates_preserved_by_on_method_MVA_TCC1-1 nil 3412338644
-   3428746701 ("" (subtype-tcc) nil nil) unchecked
+   3428746701 ("" (subtype-tcc) nil nil) proved-complete
    ((Name formal-nonempty-type-decl nil CompleteMonitor nil)
     (CP formal-nonempty-type-decl nil CompleteMonitor nil)
     (skip const-decl "Action" MVA nil)
@@ -763,7 +766,7 @@
     (wf_AState const-decl "boolean" MVACommonSemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
-    (is_local const-decl "boolean" State nil) nil nil
+    (is_local const-decl "boolean" State nil)
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
@@ -798,7 +801,7 @@
    2430 2320 nil nil))
  (monitor_related_astates_preserved_by_on_method_MVA 0
   (monitor_related_astates_preserved_by_on_method_MVA-2 nil 3428748305
-   3428748697
+   3432903574
    ("" (skosimp*)
     (("" (expand "monitor_related_astates")
       (("" (typepred "complete_MP(mp!1)")
@@ -1833,26 +1836,33 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_astates const-decl "boolean" CompleteMonitor nil)
     (on_method_MVA_never_leaves_halted formula-decl nil
      MonitoredProgramSemantics nil)
     (AState type-eq-decl nil MVACommonSemantics nil)
     (Store type-eq-decl nil State nil) (PState type-eq-decl nil State nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
-    (ValOrExcpt type-decl nil ValOrExcpt_adt nil) nil nil
+    (ValOrExcpt type-decl nil ValOrExcpt_adt nil)
+    (md!1 skolem-const-decl "(wf_Method(program(mp!1)))" CompleteMonitor nil)
+    (mp!1 skolem-const-decl "(wf_and_partial_MP)" CompleteMonitor nil)
     (PEvent type-eq-decl nil MVACommonSemantics nil)
     (wf_PEvent const-decl "boolean" MVACommonSemantics nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (on_method_MVA const-decl "MPState" MonitoredProgramSemantics nil)
     (partial const-decl "boolean" MVAProperties nil)
     (evs_complete_MVA formula-decl nil MVACompletion nil)
-    (completion_equivalence2 formula-decl nil MVACompletion nil) nil
+    (completion_equivalence2 formula-decl nil MVACompletion nil)
+    (t!2 skolem-const-decl "Transition[CP, Name]" CompleteMonitor nil)
     (execute_action def-decl "Store" MVACommonSemantics nil)
     (skip const-decl "Action" MVA nil)
     (wf_state const-decl "boolean" MonitoredProgramSemantics nil)
     (choose const-decl "(p)" sets nil) (nonempty? const-decl "bool" sets nil)
-    (set type-eq-decl nil sets nil) nil nil nil nil
+    (set type-eq-decl nil sets nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]" CompleteMonitor nil)
+    (s2!1 skolem-const-decl "MPState[CP, Name]" CompleteMonitor nil)
+    (etype!1 skolem-const-decl "EventType" CompleteMonitor nil)
+    (arg!1 skolem-const-decl "ValOrExcpt[Name]" CompleteMonitor nil)
     (nonempty_exists formula-decl nil sets_lemmas nil)
     (nonempty_add_finite application-judgement "non_empty_finite_set"
      finite_sets nil)
@@ -1861,12 +1871,15 @@
     (complete_trans const-decl "finite_set[Transition]" MVACompletion nil)
     (all_guards const-decl "finite_set[Guard]" MVACompletion nil)
     (build_guard const-decl "Guard" MVACompletion nil)
-    (deterministic const-decl "boolean" MVAProperties nil) nil nil
+    (deterministic const-decl "boolean" MVAProperties nil)
+    (s1!1 skolem-const-decl "MPState[CP, Name]" CompleteMonitor nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]" CompleteMonitor nil)
     (complete_definedness formula-decl nil MVAPartialSemantics nil)
     (complete const-decl "boolean" MVAProperties nil)
     (complete_MVA const-decl "MVA" MVACompletion nil)
     (step const-decl "lift[AState]" MVAPartialSemantics nil)
-    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil) nil
+    (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
+    (t!1 skolem-const-decl "Transition[CP, Name]" CompleteMonitor nil)
     (wf_Trans const-decl "boolean" WellFormedMVA nil)
     (wf_AState const-decl "boolean" MVACommonSemantics nil)
     (wf_PSt const-decl "boolean" MVACommonSemantics nil)
@@ -1908,7 +1921,7 @@
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil))
-   273387 13820 t nil)
+   9290 8820 t nil)
   (monitor_related_astates_preserved_by_on_method_MVA-1 nil 3412338653
    3428746704
    ("" (skosimp*)
@@ -3021,7 +3034,7 @@
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil))
    2689 2560 t shostak))
  (monitor_related_states_initial_MP_states 0
-  (monitor_related_states_initial_MP_states-1 nil 3412327053 3428746705
+  (monitor_related_states_initial_MP_states-1 nil 3412327053 3432903579
    ("" (skosimp*)
     (("" (expand "monitor_related_states")
       (("" (use "wf_initial_MP_state" ("mp" "complete_MP(mp!1)"))
@@ -3087,7 +3100,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((monitor_related_states const-decl "boolean" CompleteMonitor nil)
     (wf_and_complete_MP const-decl "boolean" MonitoredProgram nil)
     (initial_MP_state const-decl "MPState" MonitoredProgramSemantics nil)
@@ -3106,7 +3119,8 @@
     (bool nonempty-type-eq-decl nil booleans nil)
     (= const-decl "[T, T -> boolean]" equalities nil)
     (complete_MVA const-decl "MVA" MVACompletion nil)
-    (partial const-decl "boolean" MVAProperties nil) nil
+    (partial const-decl "boolean" MVAProperties nil)
+    (mp!1 skolem-const-decl "(wf_and_partial_MP)" CompleteMonitor nil)
     (complete_MVA_yields_wf_MVA formula-decl nil MVACompletion nil)
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
      CompleteMonitor nil)
@@ -3130,15 +3144,16 @@
     (EventType type-decl nil EventType_adt nil)
     (finite_set type-eq-decl nil finite_sets nil)
     (wf_initial_MP_state formula-decl nil MonitoredProgramSemantics nil))
-   1612 1500 t shostak))
+   4585 4430 t shostak))
  (monitor_related_states_preserved_by_derive_TCC1 0
   (monitor_related_states_preserved_by_derive_TCC1-1 nil 3412326920 3428746706
    ("" (skosimp*) (("" (expand "complete_MP") (("" (propax) nil nil)) nil))
     nil)
-   unchecked ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil))
-   518 490 t nil))
+   proved-complete
+   ((complete_MP const-decl "MonitoredProgram" CompleteMonitor nil)) 518 490 t
+   nil))
  (monitor_related_states_preserved_by_derive 0
-  (monitor_related_states_preserved_by_derive-3 nil 3428748811 3428749209
+  (monitor_related_states_preserved_by_derive-3 nil 3428748811 3432984825
    ("" (skolem 1 ("mp!1" _ _ _))
     ((""
       (lemma
@@ -5708,27 +5723,64 @@
                                                                                       (flatten)
                                                                                       (assert)))))
                                                                                   (("1"
+                                                                                    (expand
+                                                                                     "monitor_related_states")
+                                                                                    (("1"
+                                                                                      (use
+                                                                                       "wf_update_GhostVars")
+                                                                                      (("1"
+                                                                                        (use
+                                                                                         "wf_update_GhostVars"
+                                                                                         ("s1"
+                                                                                          "tau!2"
+                                                                                          "p"
+                                                                                          "complete_MP(mp!1)"))
+                                                                                        (("1"
+                                                                                          (assert)
+                                                                                          (("1"
+                                                                                            (expand
+                                                                                             "update_GhostVars")
+                                                                                            (("1"
+                                                                                              (flatten)
+                                                                                              (("1"
+                                                                                                (assert)
+                                                                                                (("1"
+                                                                                                  (expand
+                                                                                                   "return_of_stmt")
+                                                                                                  (("1"
+                                                                                                    (assert)
+                                                                                                    nil
+                                                                                                    nil))
+                                                                                                  nil))
+                                                                                                nil))
+                                                                                              nil))
+                                                                                            nil))
+                                                                                          nil))
+                                                                                        nil))
+                                                                                      nil))
+                                                                                    nil)
+                                                                                   ("2"
                                                                                     (replace
                                                                                      -1)
-                                                                                    (("1"
+                                                                                    (("2"
                                                                                       (replace
                                                                                        -15)
-                                                                                      (("1"
+                                                                                      (("2"
                                                                                         (expand
                                                                                          "monitor_related_states")
-                                                                                        (("1"
+                                                                                        (("2"
                                                                                           (use
                                                                                            "wf_update_GhostVars")
-                                                                                          (("1"
+                                                                                          (("2"
                                                                                             (use
                                                                                              "wf_update_GhostVars"
                                                                                              ("s1"
                                                                                               "tau!2"
                                                                                               "p"
                                                                                               "complete_MP(mp!1)"))
-                                                                                            (("1"
+                                                                                            (("2"
                                                                                               (assert)
-                                                                                              (("1"
+                                                                                              (("2"
                                                                                                 (split
                                                                                                  -1)
                                                                                                 (("1"
@@ -6629,7 +6681,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((well_founded?_product formula-decl nil WF nil)
     (wf_nat formula-decl nil naturalnumbers nil)
     (complete_MP_wf_and_complete application-judgement "(wf_and_complete_MP)"
@@ -6693,7 +6745,8 @@
     (IMPLIES const-decl "[bool, bool -> bool]" booleans nil)
     (MPState type-eq-decl nil MonitoredProgramSemantics nil)
     (PState type-eq-decl nil State nil) (Store type-eq-decl nil State nil)
-    (AState type-eq-decl nil MVACommonSemantics nil) nil
+    (AState type-eq-decl nil MVACommonSemantics nil)
+    (mp!1 skolem-const-decl "(wf_and_partial_MP)" CompleteMonitor nil)
     (wf_and_partial_MP const-decl "boolean" MonitoredProgram nil)
     (MonitoredProgram type-eq-decl nil MonitoredProgram nil)
     (compatible const-decl "boolean" MonitoredProgram nil)
@@ -6747,20 +6800,23 @@
      nil)
     (<< adt-def-decl "(well_founded?[Body])" Body_adt nil)
     (Bool? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil) nil
-    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil) nil
+    (b adt-accessor-decl "[(Bool?) -> bool]" Val_adt nil)
+    (v1!3 skolem-const-decl "Val[Name]" CompleteMonitor nil)
+    (then_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
+    (b!1 skolem-const-decl "(wf_Body(program(mp!1)))" CompleteMonitor nil)
     (NOT const-decl "[bool -> bool]" booleans nil)
     (else_expr adt-accessor-decl "[(CondExpr?) -> Expr]" Body_adt nil)
-    (IF const-decl "[boolean, T, T -> T]" if_def nil) nil
+    (IF const-decl "[boolean, T, T -> T]" if_def nil)
+    (v1!3 skolem-const-decl "Val[Name]" CompleteMonitor nil)
     (then_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
     (else_stmt adt-accessor-decl "[(IfThenElse?) -> Stmt]" Body_adt nil)
     (wf_ghoststate const-decl "boolean" SemanticsJML nil)
     (var_names def-decl "[Name -> boolean]" ProgramFunctions nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
     (is_ghost const-decl "boolean" SemanticsJML nil)
-    (return_of_stmt const-decl "Val" SemanticsAuxiliaryFunctions nil)
     (complete_MP_preserves_wf_body formula-decl nil CompleteMonitor nil)
     (update_store const-decl "Store" State nil)
+    (return_of_stmt const-decl "Val" SemanticsAuxiliaryFunctions nil)
     (wf_update_GhostVars formula-decl nil MonitoredProgramSemantics nil)
     (expr shared-adt-accessor-decl
           "[{x: Body | Assert?(x) OR StmtExpr?(x)} -> Expr]" Body_adt nil)
@@ -6790,8 +6846,9 @@
     (NullPointer? adt-recognizer-decl "[Excpt -> boolean]" Excpt_adt nil)
     (monitor_related_states_preserved_by_raise formula-decl nil
      CompleteMonitor nil)
-    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil) nil
-    nil
+    (on_method_entry const-decl "(on_method_event_type)" SemanticsJML nil)
+    (m1!4 skolem-const-decl "nat" CompleteMonitor nil)
+    (m1!3 skolem-const-decl "nat" CompleteMonitor nil)
     (Entry? adt-recognizer-decl "[EventType -> boolean]" EventType_adt nil)
     (Entry adt-constructor-decl "(Entry?)" EventType_adt nil)
     (is_local const-decl "boolean" State nil)
@@ -6806,7 +6863,9 @@
      nil)
     (ExitExceptional? adt-recognizer-decl "[EventType -> boolean]"
      EventType_adt nil)
-    nil nil (catch const-decl "PState" State nil)
+    (m2!4 skolem-const-decl "nat" CompleteMonitor nil)
+    (m2!3 skolem-const-decl "nat" CompleteMonitor nil)
+    (catch const-decl "PState" State nil)
     (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
     (up? adt-recognizer-decl "[lift -> boolean]" lift_adt nil)
     (check_assertion const-decl "boolean" SemanticsJML nil)
@@ -6833,10 +6892,14 @@
     (complete const-decl "boolean" MVAProperties nil)
     (update_stack const-decl "FullState" Semantics nil)
     (partial const-decl "boolean" MVAProperties nil)
-    (complete_MVA const-decl "MVA" MVACompletion nil) nil
-    (wf_state_update_stack formula-decl nil MonitoredProgramSemantics nil) nil
+    (complete_MVA const-decl "MVA" MVACompletion nil)
+    (md!2 skolem-const-decl "(wf_Method(program(complete_MP(mp!1))))"
+     CompleteMonitor nil)
+    (wf_state_update_stack formula-decl nil MonitoredProgramSemantics nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (name adt-accessor-decl "[(MethodCall?) -> Name]" Body_adt nil)
-    (lookup_mthd_in_methods_class formula-decl nil ProgramFunctions nil) nil
+    (lookup_mthd_in_methods_class formula-decl nil ProgramFunctions nil)
+    (getLocalDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
     (is_finite const-decl "bool" finite_sets nil)
     (set type-eq-decl nil sets nil)
     (get_class const-decl "lift[Class]" ProgramFunctions nil)
@@ -6845,9 +6908,10 @@
     (update const-decl "PState" State nil)
     (target shared-adt-accessor-decl
             "[{x: Body | Set?(x) OR Assign?(x)} -> Name]" Body_adt nil)
-    nil
+    (v2!1 skolem-const-decl "Val[Name]" CompleteMonitor nil)
     (derive_bottom_iff_exception_step formula-decl nil SemanticsProofs nil)
-    nil (wf_Program const-decl "boolean" WellFormedProgram nil)
+    (v1!1 skolem-const-decl "Val[Name]" CompleteMonitor nil)
+    (wf_Program const-decl "boolean" WellFormedProgram nil)
     (wf_state_update formula-decl nil State nil)
     (source shared-adt-accessor-decl
      "[{x: Body | Set?(x) OR Assign?(x)} -> Expr]" Body_adt nil)
@@ -6877,7 +6941,7 @@
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (AND const-decl "[bool, bool -> bool]" booleans nil)
     (< const-decl "bool" reals nil))
-   396547 56730 nil nil)
+   721389 73970 t nil)
   (monitor_related_states_preserved_by_derive-2 nil 3413707232 3428746743
    ("" (skolem 1 ("mp!1" _ _ _))
     ((""
@@ -14363,7 +14427,7 @@
     (well_founded?_product formula-decl nil WF nil))
    24292 22910 t shostak))
  (monitor_related_states_implies_derive 0
-  (monitor_related_states_implies_derive-1 nil 3413528197 3428810482
+  (monitor_related_states_implies_derive-1 nil 3413528197 3432985330
    ("" (skolem 1 ("p!1" _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1" (auto-rewrite "complete_MP_preserves_wf_body")
@@ -17368,7 +17432,14 @@
                                                                                             (flatten)
                                                                                             (("2"
                                                                                               (assert)
-                                                                                              nil
+                                                                                              (("2"
+                                                                                                (replace
+                                                                                                 -1)
+                                                                                                (("2"
+                                                                                                  (propax)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
                                                                                               nil))
                                                                                             nil))
                                                                                           nil))
@@ -17862,24 +17933,18 @@
                                                                                             (expand
                                                                                              "update_GhostVars")
                                                                                             (("1"
-                                                                                              (assert)
+                                                                                              (lift-if)
                                                                                               (("1"
-                                                                                                (lift-if)
-                                                                                                (("1"
-                                                                                                  (assert)
-                                                                                                  (("1"
-                                                                                                    (apply
-                                                                                                     (branch
-                                                                                                      (split
-                                                                                                       1)
-                                                                                                      ((then
-                                                                                                        (flatten)
-                                                                                                        (assert)
-                                                                                                        (flatten)
-                                                                                                        (assert)))))
-                                                                                                    nil
-                                                                                                    nil))
-                                                                                                  nil))
+                                                                                                (apply
+                                                                                                 (branch
+                                                                                                  (split
+                                                                                                   1)
+                                                                                                  ((then
+                                                                                                    (flatten)
+                                                                                                    (assert)
+                                                                                                    (flatten)
+                                                                                                    (assert)))))
+                                                                                                nil
                                                                                                 nil))
                                                                                               nil))
                                                                                             nil))
@@ -17894,32 +17959,40 @@
                                                                                             (("2"
                                                                                               (lift-if)
                                                                                               (("2"
-                                                                                                (assert)
-                                                                                                (("2"
-                                                                                                  (apply
-                                                                                                   (branch
-                                                                                                    (split
-                                                                                                     1)
-                                                                                                    ((then
-                                                                                                      (flatten)
+                                                                                                (apply
+                                                                                                 (branch
+                                                                                                  (split
+                                                                                                   1)
+                                                                                                  ((then
+                                                                                                    (flatten)
+                                                                                                    (assert)
+                                                                                                    (flatten)
+                                                                                                    (assert)))))
+                                                                                                (("1"
+                                                                                                  (expand
+                                                                                                   "monitor_related_states")
+                                                                                                  (("1"
+                                                                                                    (flatten)
+                                                                                                    (("1"
                                                                                                       (assert)
-                                                                                                      (flatten)
-                                                                                                      (assert)))))
+                                                                                                      nil
+                                                                                                      nil))
+                                                                                                    nil))
+                                                                                                  nil)
+                                                                                                 ("2"
+                                                                                                  (replace
+                                                                                                   -7)
                                                                                                   (("2"
-                                                                                                    (replace
-                                                                                                     -7)
+                                                                                                    (expand
+                                                                                                     "update_GhostVars")
                                                                                                     (("2"
                                                                                                       (expand
-                                                                                                       "update_GhostVars")
+                                                                                                       "monitor_related_states")
                                                                                                       (("2"
-                                                                                                        (expand
-                                                                                                         "monitor_related_states")
+                                                                                                        (flatten)
                                                                                                         (("2"
-                                                                                                          (flatten)
-                                                                                                          (("2"
-                                                                                                            (assert)
-                                                                                                            nil
-                                                                                                            nil))
+                                                                                                          (assert)
+                                                                                                          nil
                                                                                                           nil))
                                                                                                         nil))
                                                                                                       nil))
@@ -18955,10 +19028,10 @@
     (>= const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil))
-   523282 79100 t shostak))
+   485775 85000 t shostak))
  (monitor_related_states_implies_derive_converse_TCC1 0
   (monitor_related_states_implies_derive_converse_TCC1-1 nil 3413713509
-   3428746818 ("" (subtype-tcc) nil nil) unchecked
+   3428746818 ("" (subtype-tcc) nil nil) proved-complete
    ((monitor_related_astates const-decl "boolean" CompleteMonitor nil)
     (Name formal-nonempty-type-decl nil CompleteMonitor nil)
     (defined? const-decl "boolean" ValProp nil)
@@ -18968,7 +19041,7 @@
     (wf_AState const-decl "boolean" MVACommonSemantics nil)
     (is_field const-decl "boolean" State nil)
     (getFieldDecls const-decl "finite_set[Decl]" ProgramFunctions nil)
-    (is_local const-decl "boolean" State nil) nil nil
+    (is_local const-decl "boolean" State nil)
     (wf_state const-decl "boolean" State nil)
     (update_GhostVars const-decl "(update_GhostVars_type)"
      MonitoredProgramSemantics nil)
@@ -19008,7 +19081,7 @@
     (monitor_related_states const-decl "boolean" CompleteMonitor nil))
    1720 1620 nil nil))
  (monitor_related_states_implies_derive_converse 0
-  (monitor_related_states_implies_derive_converse-3 nil 3428810657 3428813218
+  (monitor_related_states_implies_derive_converse-3 nil 3428810657 3432986250
    ("" (skolem 1 ("p!1" _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
       (("1" (auto-rewrite "complete_MP_preserves_wf_body")
@@ -22451,7 +22524,14 @@
                                                                                             (flatten)
                                                                                             (("1"
                                                                                               (assert)
-                                                                                              nil
+                                                                                              (("1"
+                                                                                                (replace
+                                                                                                 -1)
+                                                                                                (("1"
+                                                                                                  (propax)
+                                                                                                  nil
+                                                                                                  nil))
+                                                                                                nil))
                                                                                               nil))
                                                                                             nil))
                                                                                           nil))
@@ -22999,24 +23079,18 @@
                                                                                             (expand
                                                                                              "update_GhostVars")
                                                                                             (("1"
-                                                                                              (assert)
+                                                                                              (lift-if)
                                                                                               (("1"
-                                                                                                (lift-if)
-                                                                                                (("1"
-                                                                                                  (assert)
-                                                                                                  (("1"
-                                                                                                    (apply
-                                                                                                     (branch
-                                                                                                      (split
-                                                                                                       1)
-                                                                                                      ((then
-                                                                                                        (flatten)
-                                                                                                        (assert)
-                                                                                                        (flatten)
-                                                                                                        (assert)))))
-                                                                                                    nil
-                                                                                                    nil))
-                                                                                                  nil))
+                                                                                                (apply
+                                                                                                 (branch
+                                                                                                  (split
+                                                                                                   1)
+                                                                                                  ((then
+                                                                                                    (flatten)
+                                                                                                    (assert)
+                                                                                                    (flatten)
+                                                                                                    (assert)))))
+                                                                                                nil
                                                                                                 nil))
                                                                                               nil))
                                                                                             nil))
@@ -23042,7 +23116,18 @@
                                                                                                       (assert)
                                                                                                       (flatten)
                                                                                                       (assert)))))
-                                                                                                  (("2"
+                                                                                                  (("1"
+                                                                                                    (expand
+                                                                                                     "monitor_related_states")
+                                                                                                    (("1"
+                                                                                                      (flatten)
+                                                                                                      (("1"
+                                                                                                        (assert)
+                                                                                                        nil
+                                                                                                        nil))
+                                                                                                      nil))
+                                                                                                    nil)
+                                                                                                   ("2"
                                                                                                     (replace
                                                                                                      -7)
                                                                                                     (("2"
@@ -24229,7 +24314,7 @@
     (>= const-decl "bool" reals nil)
     (nat nonempty-type-eq-decl nil naturalnumbers nil)
     (< const-decl "bool" reals nil))
-   2560121 83410 nil nil)
+   911476 83270 t nil)
   (monitor_related_states_implies_derive_converse-2 nil 3413714427 3428746897
    ("" (skolem 1 ("p!1" _ _))
     (("" (lemma "wf_induction[nat, LAMBDA(i, j : nat) : i < j]")
@@ -32813,7 +32898,7 @@
     ";;; developed with shostak decision procedures")
    unfinished nil nil nil nil nil))
  (correctness_of_complete_MP 0
-  (correctness_of_complete_MP-1 nil 3412327298 3428746899
+  (correctness_of_complete_MP-1 nil 3412327298 3432903841
    ("" (skosimp*)
     (("" (expand "run_monitored_program")
       (("" (expand "run_FullProgram")
@@ -32840,7 +32925,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((run_monitored_program const-decl "boolean" MonitoredProgramSemantics nil)
     (derives const-decl "bool" Semantics nil)
     (monitor_related_states_initial_MP_states formula-decl nil CompleteMonitor
@@ -32915,9 +33000,9 @@
     (monitor_related_states_implies_derive formula-decl nil CompleteMonitor
      nil)
     (run_FullProgram const-decl "boolean" Semantics nil))
-   2454 1000 t shostak))
+   6880 12510 t shostak))
  (correctness_of_complete_MP_converse 0
-  (correctness_of_complete_MP_converse-1 nil 3414142965 3428746901
+  (correctness_of_complete_MP_converse-1 nil 3414142965 3432903849
    ("" (skosimp*)
     (("" (expand "run_monitored_program")
       (("" (expand "run_FullProgram")
@@ -32966,7 +33051,7 @@
         nil))
       nil))
     nil)
-   unchecked
+   proved
    ((run_monitored_program const-decl "boolean" MonitoredProgramSemantics nil)
     (derives const-decl "bool" Semantics nil)
     (monitor_related_states_initial_MP_states formula-decl nil CompleteMonitor
@@ -33006,7 +33091,8 @@
     (non_empty_finite_set type-eq-decl nil finite_sets nil)
     (PreProgram type-eq-decl nil Program nil)
     (Body type-decl nil Body_adt nil)
-    (wf_Body const-decl "boolean" WellFormedProgram nil) nil
+    (wf_Body const-decl "boolean" WellFormedProgram nil)
+    (mp!1 skolem-const-decl "(wf_and_partial_MP)" CompleteMonitor nil)
     (bool nonempty-type-eq-decl nil booleans nil)
     (OR const-decl "[bool, bool -> bool]" booleans nil)
     (Plus? adt-recognizer-decl "[Body -> boolean]" Body_adt nil)
@@ -33025,7 +33111,8 @@
     (MethodCall adt-constructor-decl "[[Expr, Name, Expr] -> (MethodCall?)]"
      Body_adt nil)
     (RefVarEval adt-constructor-decl "[Name -> (RefVarEval?)]" Body_adt nil)
-    (This const-decl "Name" Program nil) nil
+    (This const-decl "Name" Program nil)
+    (main!1 skolem-const-decl "Name" CompleteMonitor nil)
     (Const adt-constructor-decl "[(defined?) -> (Const?)]" Body_adt nil)
     (number nonempty-type-decl nil numbers nil)
     (number_field_pred const-decl "[number -> boolean]" number_fields nil)
@@ -33037,7 +33124,8 @@
     (integer_pred const-decl "[rational -> boolean]" integers nil)
     (int nonempty-type-eq-decl nil integers nil)
     (Int? adt-recognizer-decl "[Val -> boolean]" Val_adt nil)
-    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil) nil
+    (Int adt-constructor-decl "[int -> (Int?)]" Val_adt nil)
+    (arg!1 skolem-const-decl "int" CompleteMonitor nil)
     (monitor_related_states_preserved_by_derive formula-decl nil
      CompleteMonitor nil)
     (subterm adt-def-decl "boolean" Body_adt nil)
@@ -33052,5 +33140,5 @@
     (ext_declared_var_names const-decl "finite_set[Name]" ProgramFunctions
      nil)
     (run_FullProgram const-decl "boolean" Semantics nil))
-   1566 1440 t shostak)))
+   7712 13790 t shostak)))
 
