@@ -77,6 +77,12 @@ public class TranslatingVisitor {
     return type;
   }
 
+  /**
+   * Translates class invariants
+   * @param clazz - BCClass from BMLLib
+   * @param owner - corresponding JClassType from asm
+   * @return
+   */
   private BMLInvariant[] translateInvariants(BCClass clazz, JClassType owner) {
     Vector<BMLInvariant> res = new Vector<BMLInvariant>();
     Enumeration invariants = clazz.getInvariantEnum();
@@ -84,10 +90,15 @@ public class TranslatingVisitor {
     while (invariants.hasMoreElements()) {
       ClassInvariant inv = (ClassInvariant) invariants.nextElement();
       if (inv != null) {
-        System.out.println("dodaje invariant");
+        
         BMLExpression invariant = translator.visit(inv.getInvariant());
-        res.add(new BMLInvariant(inv.getAccessFlags(), owner,
-                                 new BMLPredicate(invariant)));
+        int flags = translateFlags(inv.getAccessFlags());
+        if (!inv.isInstance()) {
+          flags = flags | IConstants.ACC_STATIC;
+        }
+        BMLInvariant i = new BMLInvariant(flags, owner,
+                                          new BMLPredicate(invariant));
+        res.add(i);
       }
     }
     return res.toArray(new BMLInvariant[1]);
