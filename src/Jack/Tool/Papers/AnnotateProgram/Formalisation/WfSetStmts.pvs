@@ -80,7 +80,7 @@ BEGIN
   % Body b can only throw JML exception
   only_JMLExc(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-      wf_state(p)(s1) IMPLIES
+%      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
       up?(ex(pstate(s2))) IMPLIES down(ex(pstate(s2))) = JMLExc
@@ -88,7 +88,7 @@ BEGIN
   % Body b does not throw an exception
   no_exc(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-      wf_state(p)(s1) IMPLIES
+%      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT up?(ex(pstate(s2)))
@@ -96,7 +96,7 @@ BEGIN
   % Body b does not change program set
   no_change(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-      wf_state(p)(s1) IMPLIES
+%      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT pstate(s1) = pstate(s2)
