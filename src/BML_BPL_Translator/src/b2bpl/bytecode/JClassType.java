@@ -124,7 +124,7 @@ public class JClassType extends JReferenceType implements IConstants {
     return constraints;
   }
 
-  void setDeclarations(
+  public void setDeclarations(
       BCField[] fields,
       BCMethod[] methods,
       BMLInvariant[] invariants,
