@@ -83,7 +83,7 @@ ul. Banacha 2\\
     \end{itemize}
   \end{block}
   \pause
-  \begin{block}{Currently security is obtained by}
+  \begin{block}{Currently these are obtained by}
     \begin{itemize}
     	\item Bytecode verification
     	\item Digital certificates
@@ -112,8 +112,8 @@ ul. Banacha 2\\
 	\frametitle{Platform - JVM bytecode}
 	\begin{itemize}
 		\item JVM is mature
-		\item popular (in commerce)
-		\item supports many languages \\
+		\item Popular (in commerce)
+		\item Supports many languages \\
 			\begin{itemize}
 				\item Java
 				\item Python (Jython)
@@ -168,11 +168,10 @@ ul. Banacha 2\\
 \begin{frame}{PCC infrastructure}
 PCC building blocks include:
 \begin{itemize}
-	\item procedures to safely distribute the desired properties to be checked by PCC infrastructure
 	\item construction of PCC certificates
-	\item checker tools for bytecode annotations (BML) combined with PCC certificates
-	\item annotations in source code: modeling languages (such as JML)
+	\item annotations in source code, languages such as JML
 	\item<1->\alert<2> {compilers that transform programs to JVM bytecode with annotations}
+	\item checker tools for bytecode annotations (BML) combined with PCC certificates
 \end{itemize}
 \end{frame}
 
@@ -505,11 +504,11 @@ public boolean replace(Object o1, Object o2)
 \begin{frame}
   \frametitle<presentation>{TODO / In progress}
 	\begin{itemize}
+		\item translate JML levels higher than JML0
 		\item create Eclipse plugin
 		\item adapt to newer versions of BMLLib and OpenJml
-		\item translate JML levels higher than JML0
-		\item handling model fields and methods
-		\item perform bigger benchmark
+		\item perform real benchmark
+		\item match loops without \emph{line number table}
 	\end{itemize}
 
 \end{frame}
