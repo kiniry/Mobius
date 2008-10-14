@@ -8,9 +8,9 @@
 	<classpathentry kind="lib" path="lib/antlr-3.0.1/lib/antlr-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-3.0.1/lib/antlr-runtime-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-3.0.1/lib/stringtemplate-3.1b1.jar"/>
-	<classpathentry kind="lib" path="lib/antlr-runtime-3.0.1.jar"/>
 	<classpathentry kind="src" path="antlr3-generated"/>
 	<classpathentry kind="lib" path="/BML_BPL_Translator/src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BML_BPL_Translator"/>
+	<classpathentry kind="lib" path="E:/workspace-mobius/bcel-5.1/bcel-5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

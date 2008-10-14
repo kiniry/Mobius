@@ -3,6 +3,7 @@ package visitor;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Type;
 
+import annot.attributes.BCAttributeMap;
 import b2bpl.bytecode.IOpCodes;
 import b2bpl.bytecode.InstructionFactory;
 import b2bpl.bytecode.JClassType;
@@ -14,10 +15,14 @@ public class InstructionTranslator {
 
   private TranslatingVisitor visitor;
 
+  private BCAttributeMap annotations;
+
   public InstructionTranslator(final ConstantPoolGen cpg,
-                               final TranslatingVisitor visitor) {
+                               final TranslatingVisitor visitor,
+                               BCAttributeMap annotations) {
     this.visitor = visitor;
     this.cpg = cpg;
+    this.annotations = annotations;
   }
 
   public b2bpl.bytecode.instructions.Instruction translateInvoke(
@@ -38,7 +43,8 @@ public class InstructionTranslator {
   public b2bpl.bytecode.instructions.Instruction translateBranch(
                                                                  org.apache.bcel.generic.BranchInstruction instruction) {
     return InstructionFactory.fromJumpInsn(instruction.getOpcode(), visitor
-        .visit(instruction.getTarget().getInstruction()));
+        .visit(instruction.getTarget().getInstruction(), annotations
+            .getAllAt(instruction.getTarget()), annotations));
   }
 
   public b2bpl.bytecode.instructions.Instruction translateField(
@@ -99,7 +105,7 @@ public class InstructionTranslator {
       return b2bpl.bytecode.InstructionFactory.fromVarInsn(IOpCodes.ASTORE, 2);
     case IOpCodes.ASTORE_3:
       return b2bpl.bytecode.InstructionFactory.fromVarInsn(IOpCodes.ASTORE, 3);
-          
+
     case IOpCodes.IINC:
       return translateIinc((org.apache.bcel.generic.IINC) instruction);
 

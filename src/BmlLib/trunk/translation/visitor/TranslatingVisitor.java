@@ -10,6 +10,11 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
+import annot.attributes.AType;
+import annot.attributes.BCAttributeMap;
+import annot.attributes.InCodeAttribute;
+import annot.attributes.SingleList;
+import annot.attributes.SingleLoopSpecification;
 import annot.bcclass.BCClass;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
@@ -23,11 +28,17 @@ import b2bpl.bytecode.JArrayType;
 import b2bpl.bytecode.JClassType;
 import b2bpl.bytecode.JReferenceType;
 import b2bpl.bytecode.JType;
+import b2bpl.bytecode.bml.ast.BMLAssertStatement;
 import b2bpl.bytecode.bml.ast.BMLConstraint;
 import b2bpl.bytecode.bml.ast.BMLEnsuresClause;
 import b2bpl.bytecode.bml.ast.BMLEverythingStoreRef;
+import b2bpl.bytecode.bml.ast.BMLExpression;
 import b2bpl.bytecode.bml.ast.BMLExsuresClause;
 import b2bpl.bytecode.bml.ast.BMLInvariant;
+import b2bpl.bytecode.bml.ast.BMLLoopInvariant;
+import b2bpl.bytecode.bml.ast.BMLLoopModifiesClause;
+import b2bpl.bytecode.bml.ast.BMLLoopSpecification;
+import b2bpl.bytecode.bml.ast.BMLLoopVariant;
 import b2bpl.bytecode.bml.ast.BMLModifiesClause;
 import b2bpl.bytecode.bml.ast.BMLNothingStoreRef;
 import b2bpl.bytecode.bml.ast.BMLPredicate;
@@ -76,13 +87,15 @@ public class TranslatingVisitor {
                                                                     paramTypes,
                                                                     exc);
     InstructionList instructions = bcm.getInstructionList();
+    BCAttributeMap codeAnnotations = method.getAmap();
     final b2bpl.bytecode.Instructions retInstr = new b2bpl.bytecode.Instructions();
     if (instructions != null) {
       final org.apache.bcel.generic.InstructionHandle[] origInstr = instructions
           .getInstructionHandles();
       for (int i = 0; i < origInstr.length; i++) {
 
-        retInstr.add(visit(origInstr[i].getInstruction()));
+        retInstr.add(visit(origInstr[i].getInstruction(), codeAnnotations
+            .getAllAt(origInstr[i]), codeAnnotations));
       }
     }
     resMethod.setSpecification(visit(method.getMspec()));
@@ -91,7 +104,6 @@ public class TranslatingVisitor {
     System.out.println("A ca³a metoda to " + resMethod);
     return resMethod;
   }
-
 
   private int translateFlags(int flags) {
     if ((flags & Constants.ACC_PUBLIC) != 0)
@@ -113,6 +125,7 @@ public class TranslatingVisitor {
       ExpressionRoot<AbstractFormula> prec = specCase.getPrecondition();
       ExpressionRoot<AbstractFormula> post = specCase.getPostcondition();
       ExpressionRoot<ModifyList> modifies = specCase.getModifies();
+      System.out.println("dodaje invariant");
       translatedCases
           .add(new BMLSpecificationCase(new BMLRequiresClause(visit(prec)),
                                         visit(modifies),
@@ -148,11 +161,37 @@ public class TranslatingVisitor {
   }
 
   public b2bpl.bytecode.InstructionHandle visit(
-                                                final org.apache.bcel.generic.Instruction instruction) {
+                                                final org.apache.bcel.generic.Instruction instruction,
+                                                final SingleList annotations, BCAttributeMap allAnnotations) {
     final b2bpl.bytecode.InstructionHandle res = new b2bpl.bytecode.InstructionHandle();
-    InstructionTranslator translator = new InstructionTranslator(cpg, this);
+    InstructionTranslator translator = new InstructionTranslator(cpg, this, allAnnotations);
+    ExpressionTranslator exprTranslator = new ExpressionTranslator();
     res.setInstruction(translator.translate(instruction));
-
+    for (InCodeAttribute annotation : annotations.getAll(AType.C_LOOPSPEC)) {
+      ExpressionRoot[] expressions = annotation.getAllExpressions();
+      BMLExpression invariant = exprTranslator.visit(expressions[1]);
+      BMLExpression decreases = exprTranslator.visit(expressions[2]);
+      BMLModifiesClause modifies = visit((ExpressionRoot<ModifyList>) expressions[0]);
+      res
+          .addLoopSpecification(new BMLLoopSpecification(
+                                                         new BMLLoopModifiesClause(
+                                                                                   modifies
+                                                                                       .getStoreRefs()),
+                                                         new BMLLoopInvariant(
+                                                                              new BMLPredicate(
+                                                                                               invariant)),
+                                                         new BMLLoopVariant(
+                                                                            new BMLPredicate(
+                                                                                             decreases))));
+    }
+    for (InCodeAttribute annotation : annotations.getAll(AType.C_ASSERT)) {
+      ExpressionRoot formula = annotation.getAllExpressions()[0];
+      BMLExpression translatedFormula = exprTranslator.visit(formula);
+      res
+          .addAssertion(new BMLAssertStatement(
+                                               new BMLPredicate(
+                                                                translatedFormula)));
+    }
     return res;
   }
 
