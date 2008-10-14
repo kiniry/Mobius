@@ -187,3 +187,222 @@ END list_of_set_funcs
 %           % derivation without side effect
 %           % returns value that is the same as evaluation of e in 
 %           % the automaton
+
+
+  equal_except_for(T1, x, T2, y : Body) : RECURSIVE boolean =
+    (T1 = x AND T2 = y) OR
+    CASES T1 OF
+      Plus(b1, b2) : Plus?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+      NumVarEval(v) : NumVarEval?(T2) AND varname(T2) = v,
+      Neg(b) : Neg?(T2) AND equal_except_for(b, x, b(T2), y),
+      Conj(b1, b2) : Conj?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+      Eq(b1, b2) : Eq?(T2) AND
+                     equal_except_for(b1, x, b1(T2), y) AND
+                     equal_except_for(b2, x, b2(T2), y),
+     BoolVarEval(v) : BoolVarEval?(T2) AND varname(T2) = v,
+     RefVarEval(v) : RefVarEval?(T2) AND varname(T2) = v,
+     Assign(v, e) : Assign?(T2) AND target(T2) = v AND
+                    equal_except_for(e, x, source(T2), y),
+     CondExpr(t, then_expr, else_expr) :
+                    CondExpr?(T2) AND
+                    equal_except_for(t, x, test(T2), y) AND
+                    equal_except_for(then_expr, x, then_expr(T2), y) AND
+                    equal_except_for(else_expr, x, else_expr(T2), y),
+     MethodCall(tgt, n, arg) : MethodCall?(T2) AND
+                               equal_except_for(tgt, x, tgt(T2), y) AND
+                               name(T2) = n AND
+                               equal_except_for(arg, x, arg(T2), y),
+     Const(v) : Const?(T2) AND v(T2) = v,
+     CaseJML(br) : CaseJML?(T2) AND
+                   length(br) = length(branches(T2)) AND
+                   (null?(br) OR
+                    equal_except_for(proj_1(car(br)), x, 
+                                     proj_1(car(branches(T2))), y) AND
+                    equal_except_for(proj_2(car(br)), x, 
+                                     proj_2(car(branches(T2))), y) AND
+                    equal_except_for(CaseJML(cdr(br)), x,
+                                     CaseJML(cdr(branches(T2))), y)),
+     IfThenElse(t, then_stmt, else_stmt) :
+                    IfThenElse?(T2) AND
+                    equal_except_for(t, x, test(T2), y) AND
+                    equal_except_for(then_stmt, x, then_stmt(T2), y) AND
+                    equal_except_for(else_stmt, x, else_stmt(T2), y),
+     Sequence(s1, s2) : Sequence?(T2) AND
+                        equal_except_for(s1, x, s1(T2), y) AND
+                        equal_except_for(s2, x, s2(T2), y),
+     Set(v, e) : Set?(T2) AND target(T2) = v AND
+                 equal_except_for(e, x, source(T2), y),
+     Skip : Skip?(T2), 
+     StmtExpr(expr) : StmtExpr?(T2) AND equal_except_for(expr, x, expr(T2), y),
+     Throw(exc) : Throw?(T2) AND exc(T2) = exc,
+     TryCatch(try, exc, catch, finally) : TryCatch?(T2) AND
+        exc(T2) = exc AND
+        equal_except_for(try, x, try(T2), y) AND
+        equal_except_for(catch, x, catch(T2), y) AND
+        equal_except_for(finally, x, finally(T2), y),
+     While(test, body) : While?(T2) AND
+        equal_except_for(test, x, test(T2), y) AND
+        equal_except_for(body, x, body(T2), y),
+     Assert(expr) : Assert?(T2) AND equal_except_for(expr, x, expr(T2), y)
+    ENDCASES
+  MEASURE size(T1)
+
+  FunType : TYPE =  ({f : [Body -> Body] | 
+      FORALL(v1, v2 : Body) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+  CondType : TYPE = 
+    ({f : [Expr -> Expr] | 
+      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+  SetType : TYPE = 
+    ({f : [Expr -> Stmt] | 
+      FORALL(v1, v2 : Expr) : equal_except_for(f(v1), v1, f(v2), v2)})
+
+%  var_names(f : [Expr -> Body]) : set[Name] =
+%    {n : Name |FORALL(e : Expr) : var_names(f(e))(n)}
+
+%  % TO PROVE
+%  % I can't prove this...
+%  var_names_predicate : LEMMA
+%    FORALL(f : [Expr -> Body], v : Expr) :
+%      subset?(var_names(f(v)), union(var_names(f), var_names(v)))
+
+%  % TO PROVE
+%  var_names_exc_predicate : LEMMA
+%    FORALL(f : [Excpt -> Body], e : Excpt) :
+%      var_names(f(e)) = var_names(f(Throwable))
+
+
+  no_change_in_pstate(p : FullProgram)(b : (wf_Body(program(p)))) : boolean =
+    FORALL(b1 : (wf_Body(program(p)))) :
+      subterm(b1, b) IMPLIES
+        FORALL(sigma1, sigma2 : FullState, v : Val, n : nat) :
+          derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+            pstate(sigma1) = pstate(sigma2)
+
+  IMPORTING ContainsNoMethodCall[Name]
+
+  derive_does_not_change_unmentioned_var : LEMMA
+    FORALL (p : FullProgram)(b : (wf_Body(program(p))), v : Val)
+           (sigma1, sigma2 : FullState)(x : Name)
+           (n : nat) :
+      NOT var_names(b)(x) IMPLIES
+      contains_no_method_call(b) IMPLIES
+      derive(p)(b, sigma1, v, sigma2)(n) IMPLIES
+      lookup(x, pstate(sigma1)) = lookup(x, pstate(sigma2))
+
+%  IMPORTING Semantics[Name, FullProgram, FullState, 
+%                      program, pstate, lookup, update_PState, 
+%                      execute_set, execute_assert, execute_CaseJML,
+%                      on_method_entry, on_method_exit_normal, 
+%                      on_method_exit_exceptional]
+
+
+%  on_method_entry_only_throws_JMLExc : LEMMA
+%     FORALL(p : FullProgram, md : (wf_Method(program(p))), a : Val,
+%            s1, s2 : FullState, n : nat,
+%            derive_rec : derive_rec_type(n)) :
+%       NOT up?(ex(pstate(s1))) IMPLIES
+%       on_method_entry(p, md, a, s1, s2, n,         
+%          LAMBDA (k : upto(n))(p : FullProgram)
+%               (b : (wf_Body(program(p))), sigma1 : FullState, v : Val, sigma2 : FullState)
+%               (m : below(k)) : derive(p)(b, sigma1, v, sigma2)(m)) IMPLIES
+%       up?(ex(pstate(s2))) IMPLIES
+%         down(ex(pstate(s2))) = JMLExc
+
+  % together with derive_determ this should be sufficient!!
+
+  % CHECK: in what form exactly can we use it
+  % and then: can we actually prove it!!
+  % AT: This does not typecheck, I guess that sigma should be sigma1 and sigma1
+  % and sigma1 should be sigma2.
+%   equal_derivation_set_annotations_with_equal_arguments : LEMMA
+%     FORALL(p : Program, e : (wf_Expr(p)), 
+%            set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
+%            v, v1 : Val, 
+%            sigma1, sigma2 : APState, n1, n2 : nat) :
+%       (FORALL (tau : APState) :
+%          pstate(tau) = pstate(sigma) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
+%       IMPLIES
+%       no_change_in_pstate(p)(set(e)) IMPLIES
+%       derive(p)(set(e), sigma, v1, sigma1)(n2) IMPLIES
+%         EXISTS (n3 : nat) : 
+%           derive(p)(set(Const(v)), sigma, v1, sigma1)(n3)
+
+  equal_derivation_set_annotations_with_equal_arguments : LEMMA
+    FORALL(p : Program, e : (wf_Expr(p)), 
+           set : ({s : FunType|FORALL(e : Expr) : wf_Body(p)(s(e))}), 
+           v, v1 : Val, 
+           sigma1, sigma2 : APState, n1, n2 : nat) :
+      (FORALL (tau : APState) :
+         pstate(tau) = pstate(sigma1) IMPLIES derive(p)(e, tau, v, tau)(n1)) 
+      IMPLIES
+      no_change_in_pstate(p)(set(e)) IMPLIES
+      derive(p)(set(e), sigma1, v1, sigma2)(n2) IMPLIES
+        EXISTS (n3 : nat) : 
+          derive(p)(set(Const(v)), sigma1, v1, sigma2)(n3)
+
+  on_method_MVA_pstate_independent_of_MVA : LEMMA % :-)
+     FORALL (etype : EventType)
+            (mp : MonitoredProgram, md : (wf_Method(program(mp))))
+            (arg : ValOrExcpt, s : MPState) :
+       pstate(on_method_MVA(etype)(mp, md)(arg)(s)) = pstate(s) AND
+       gvs(on_method_MVA(etype)(mp, md)(arg)(s)) = gvs(s)
+
+  derive_pstate_independent_of_MVA : LEMMA % PROVE
+    FORALL (mp1, mp2 : MonitoredProgram, b : Body, v : Val)
+           (sigma1, sigma2, tau1 : MPState, n1 : nat) :
+      wf_MP(mp1) IMPLIES
+      wf_MP(mp2) IMPLIES
+      wf_Body(program(mp1))(b) IMPLIES
+      wf_Body(program(mp2))(b) IMPLIES
+      wf_state(mp1)(sigma1) IMPLIES
+      wf_state(mp2)(tau1) IMPLIES
+      pstate(sigma1) = pstate(tau1) IMPLIES
+      gvs(sigma1) = gvs(tau1) IMPLIES
+      derive(mp1)(b, sigma1, v, sigma2)(n1) IMPLIES
+      EXISTS (tau2 : MPState, n2 : nat) : 
+        derive(mp2)(b, tau1, v, tau2)(n2) AND
+        pstate(sigma2) = pstate(tau2) AND gvs(sigma2) = gvs(tau2)
+
+
+
+% NOT PROVABLE AS IS NOW: SEE IF USED
+%  inline_program_preserves_wf_state : LEMMA % :-)
+%    FORALL (s : PState) :
+%      wf_state(p)(s) IMPLIES
+%        wf_state(inline_program(p))(s)
+
+%  new_vars_local_in_inline_program : LEMMA % :-)
+%    FORALL (n : Name, s : APState) :
+%      wf_state(inline_program(p))(s) IMPLIES
+%      var_names(new_lvars(p))(n) IMPLIES
+%        is_local(n, pstate(s))
+
+
+% NOT SURE THAT THESE WILL BE USED
+%  inline_program_preserves_fields : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_field(vn, pstate(sMP)) IFF is_field(vn, pstate(sAP)))
+
+%  inline_program_preserves_ghoststate_vars : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_ghost(vn, sMP) IFF is_ghost(vn, sAP))
+
+%  inline_program_preserves_local_vars : LEMMA % :-)
+%    FORALL (vn : Name)(sMP : MPState, sAP : APState) :
+%      wf_state(p)(sMP) IMPLIES
+%      wf_state(inline_program(p))(sAP) IMPLIES
+%        (is_local(vn, sMP) IMPLIES is_local(vn, sAP))
+
+%  var_names_inline_program : LEMMA % :-)
+%    subset?(var_names(inline_program(p)),
+%            union(var_names(p), var_names(new_lvars(p))))
