@@ -111,11 +111,6 @@ BEGIN
        (wf_state(p)(pstate(s1)) IMPLIES wf_state(p)(pstate(s2))) IMPLIES
        wf_state(p)(s2)
 
-%    wf_update_PState_catch : LEMMA
-%      FORALL (p : Program, s1 : APState) :
-%        wf_state(p)(s1) IMPLIES
-%          wf_state(p)(pstate(update_PState(s1, catch)))
-
    % wf_state preserved by update_GhostVars (provided update preserves
    % wf_ghost_state)
    wf_update_GhostVars : LEMMA % :-)
