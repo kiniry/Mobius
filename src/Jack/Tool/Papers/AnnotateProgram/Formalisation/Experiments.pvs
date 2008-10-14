@@ -1,0 +1,189 @@
+
+% NOT USED
+FunProp : THEORY
+BEGIN
+
+  nat2string(n : nat) : RECURSIVE list[char] =
+    IF n = 0
+    THEN null
+    ELSE cons(char(0), nat2string(n - 1))
+    ENDIF
+  MEASURE n
+
+
+  nat2string_injective : LEMMA % :-)
+    injective?(nat2string)
+
+  list2finseq_injective : LEMMA % :-)
+    injective?[list[char], string](list2finseq)
+
+  nat2string_injective_function_exists : LEMMA % :-)
+    EXISTS (f : [nat -> string]) : injective?(f)
+
+
+END FunProp
+
+%morelistfuncs[A, B: TYPE] : THEORY
+%BEGIN
+
+%  zip(l1 : list[A], l2 : list[B]) : RECURSIVE list[[A, B]] =
+%    IF null?(l1) OR null?(l2)
+%    THEN null
+%    ELSE cons((car(l1), car(l2)), zip(cdr(l1), cdr(l2)))
+%    ENDIF
+%  MEASURE length(l1)
+
+%END morelistfuncs
+
+% transform list into set
+list_of_set_funcs[T : TYPE] : THEORY
+BEGIN
+
+  
+  list_to_union(l : list[set[T]]) : RECURSIVE set[T] =
+    IF null?(l)
+    THEN emptyset[T]
+    ELSE union(car(l), list_to_union(cdr(l)))
+    ENDIF
+  MEASURE length(l)
+
+  list_to_union_subset : LEMMA % :-)
+    FORALL(l : list[set[T]], x : set[T]) :
+      member(x, l) IMPLIES subset?(x, list_to_union(l))
+
+
+END list_of_set_funcs
+
+  inline_related_states_implies_derive_for_unchanged_program_converse : THEOREM
+    FORALL (b : (wf_Body(p)), v : Val)
+           (sAP1a, sAP1b, sAP2a : APState)
+           (n1 : nat) :
+      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+      inline_related_states(p)(sAP2a, sAP1a) IMPLIES
+      derive(inline_program(p))(b, sAP1a, v, sAP1b)(n1) IMPLIES
+        EXISTS(sAP2b : APState, n2 : nat) :
+          derive(p)(b, sAP2a, v, sAP2b)(n2) 
+
+  correctness_of_inline_program_converse : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (sAP1 : APState) :
+      run_annotated_program(inline_program(p))(main, arg)(root_object)(sAP1) IMPLIES
+      EXISTS(sAP2 : APState) :
+      run_annotated_program(p)(main, arg)(root_object)(sAP2) AND
+        inline_related_states(p)(sAP2, sAP1)
+
+%  % needs reformulation
+%  Program_modeled_preserved_by_update : LEMMA % 
+%    FORALL (sAP1, sAP2 : APState)(upd : [PState -> PState]) :
+%      inline_related_states(p)(sAP1, sAP2) IMPLIES
+%      (FORALL (pstate1, pstate2 : PState) : 
+%        (st(pstate1) = st(pstate2) IMPLIES st(upd(pstate1)) = st(upd(pstate2))))
+%      IMPLIES
+%      (FORALL (pstate : PState) : (ex(upd(pstate)) = ex(pstate))) IMPLIES
+%        Program_modeled?(update_PState(sAP1, upd), update_PState(sAP2, upd))
+
+%   full_complete_MP_characterisation : LEMMA % :-)
+%     FORALL(p : Program) :
+%       full_complete_MP(p) = complete_MP(full_partial_MP(p))
+
+%   legal_Body_preserved_by_complete_MP : LEMMA % uses derive_pstate_indepedent_of_MVA
+%     FORALL(mp : (wf_and_partial_MP))(b : (wf_Body(program(mp)))) :
+%       legal_Body_partial_MP(mp)(b) IMPLIES
+%         legal_Body_complete_MP(complete_MP(mp))(b)
+
+%   legal_Program_preserved_by_complete_MP : LEMMA % :-)
+%     FORALL(mp : (wf_and_partial_MP)) :
+%       legal_Program_partial_MP(mp) IMPLIES
+%         legal_Program_complete_MP(complete_MP(mp))
+
+%   well_behaved_MVA_preserved_by_complete_MP : LEMMA
+%     FORALL(mp : (wf_and_partial_MP)) :
+%       well_behaved_MVA(mva(mp)) IMPLIES
+%         well_behaved_MVA(complete(mva(mp)))
+
+%   wf_state_make_APState : LEMMA
+%     FORALL(mp : (wf_and_complete_MP), sMP : MPState, sAP : APState) : 
+%       wf_state(mp)(sMP) IMPLIES
+%       wf_state(ann_program(mp))(sAP) IMPLIES
+%         wf_state(ann_program(mp))(make_APState(mp)(sMP)(sAP))
+
+%   derive_equivalence_only_if : LEMMA % :-)
+%     FORALL(mp : (wf_and_complete_MP), b : (wf_Body(program(mp))),
+%            sMP1, sMP2 : MPState, sAP : APState, v : Val, n : nat) :
+%       contains_no_method_call(b) IMPLIES
+%       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+%       derive(mp)(b, sMP1, v, sMP2)(n) IMPLIES
+%        derive(ann_program(mp))(b, make_APState(mp)(sMP1)(sAP), v, 
+%                                   make_APState(mp)(sMP2)(sAP))(n) 
+
+  % 
+  ann_action_contains_no_TryCatch : LEMMA % :-)
+    FORALL(l : Action, b : Body) :
+      (FORALL (oa : OneAction, b1 : Body) : 
+         member(oa, l) IMPLIES 
+         subterm(b1, source(oa)) IMPLIES NOT TryCatch?(b1)) IMPLIES
+      subterm(b, ann_action(l)) IMPLIES NOT TryCatch?(b)
+
+%  existence_related_state : LEMMA
+%    FORALL(mp : (wf_and_complete_MP), s : APState) :
+%      wf_state(ann_program(mp))(s) IMPLIES
+%      EXISTS (s1 : MPState) : 
+%        related_states(mp)(s1, s)
+
+%   legal_Body_preserved_by_ann_program : LEMMA
+%     FORALL(mp : (wf_and_complete_MP))(b : Body) :
+%     subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+%     legal_Body_complete_MP(mp)(b) IMPLIES
+%         legal_Body_AP(ann_program(mp))(b)
+
+%   legal_Program_preserved_by_ann_program : LEMMA % :-)
+%     FORALL(mp : (wf_and_complete_MP)) :
+%       legal_Program_complete_MP(mp) IMPLIES
+%         legal_Program_AP(ann_program(mp))
+
+  main_converse : THEOREM % :-)
+    FORALL (main : Name, arg : int)(root_object : (defined?))
+           (sAP : APState) :
+    well_behaved_MVA(mva(mp))(APStateToPartialAStore(mp)) IMPLIES
+    legal_Program_AP(ann_program(complete_MP(mp))) IMPLIES
+    contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
+    wf_set_stmts(mp) IMPLIES
+      run_annotated_program(translate(mp))(main, arg)(root_object)(sAP) IMPLIES
+        EXISTS(sMP : MPState) :
+          run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
+            EXISTS (R : [MPState, APState -> boolean]) : R(sMP, sAP)   
+    
+%   % Every guard of the MVA is translated into an expression that
+%   % evaluates to the same result. Evaluation of the expression can not
+%   % result in an exception (v would be Bottom).
+%   % Furthermore, the evaluation must have no side-effects.
+%   guard_to_expression_behavior(mp) : boolean =
+%     FORALL (t : Transition, sMP : MPState) :
+%       wf_state(mp)(sMP) IMPLIES % sMP good 
+%       NOT up?(ex(pstate(sMP))) IMPLIES % and non-exceptional state
+%       ts(mva(mp))(t) IMPLIES % t transition in MVA
+%       scp(t) = cp(astate(sMP)) IMPLIES % transition applies to this state
+%         EXISTS (e : [ValOrExcpt -> Expr], v : (Bool?), n : nat) : 
+%           guard_to_expression(mva(mp))(guard(t)) = e AND 
+%                                       % guard translates to expression e
+%           FORALL(arg : ValOrExcpt) :
+%           wf_Expr(program(mp))(e(arg)) AND  % e wellformed
+%           derive(mp)(e(arg), sMP, v, sMP)(n) AND % evaluation of e does not 
+%                                                  % have side effects
+%           v = Bool(guard(t)(stA(astate(sMP)), fvs(st(pstate(sMP))), arg))
+%           % evaluation of expression returns value of guard
+
+
+%   % Evaluation of expressions appearing in actions terminate
+%   % and is side-effect-free (and thus does not throw an exception)
+%   eval_action_behavior(mp) : boolean =
+%     FORALL (e : Expr, v : Val, sMP : MPState) :
+%       wf_state(mp)(sMP) IMPLIES % sMP good and
+%       NOT up?(ex(pstate(sMP))) IMPLIES % non-exceptional state
+%         EXISTS (n : nat) : 
+%           derive(mp)(e, sMP, 
+%                      eval(e)(stA(astate(sMP)), fvs(st(pstate(sMP)))),
+%                      sMP)(n)
+%           % derivation without side effect
+%           % returns value that is the same as evaluation of e in 
+%           % the automaton
