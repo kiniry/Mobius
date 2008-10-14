@@ -1,8 +1,10 @@
 package visitor;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 import org.apache.bcel.Constants;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionList;
@@ -11,10 +13,11 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
+import annot.attributes.AttributeFlags;
 import annot.attributes.BCAttributeMap;
+import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.attributes.SingleList;
-import annot.attributes.SingleLoopSpecification;
 import annot.bcclass.BCClass;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
@@ -52,19 +55,52 @@ public class TranslatingVisitor {
   public JClassType visit(BCClass clazz) {
     cpg = new ConstantPoolGen(clazz.getJC().getConstantPool());
     final JClassType type = new JClassType(clazz.getJC().getClassName());
+    //translating methods
     b2bpl.bytecode.BCMethod[] resMethods = new b2bpl.bytecode.BCMethod[clazz
         .getMethodCount()];
     for (int i = 0; i < clazz.getMethodCount(); i++) {
 
       resMethods[i] = visit(clazz.getMethod(i), type);
     }
-    type.setDeclarations(new BCField[0], resMethods, new BMLInvariant[0],
+    //translating fields
+    Field[] fields = clazz.getJC().getFields();
+    BCField[] resFields = new BCField[fields.length];
+    for (int i = 0; i < fields.length; i++) {
+      resFields[i] = new BCField(translateFlags(fields[i].getAccessFlags()),
+                                 type, fields[i].getName(), visit(fields[i]
+                                     .getType()));
+    }
+    BMLInvariant[] invariants = translateInvariants(clazz, type);
+
+    type.setDeclarations(resFields, resMethods, invariants,
                          new BMLConstraint[0]);
     return type;
   }
 
-  public b2bpl.bytecode.BCMethod visit(annot.bcclass.BCMethod method,
-                                       JClassType owner) {
+  private BMLInvariant[] translateInvariants(BCClass clazz, JClassType owner) {
+    Vector<BMLInvariant> res = new Vector<BMLInvariant>();
+    Enumeration invariants = clazz.getInvariantEnum();
+    ExpressionTranslator translator = new ExpressionTranslator();
+    while (invariants.hasMoreElements()) {
+      ClassInvariant inv = (ClassInvariant) invariants.nextElement();
+      if (inv != null) {
+        System.out.println("dodaje invariant");
+        BMLExpression invariant = translator.visit(inv.getInvariant());
+        res.add(new BMLInvariant(inv.getAccessFlags(), owner,
+                                 new BMLPredicate(invariant)));
+      }
+    }
+    return res.toArray(new BMLInvariant[1]);
+  }
+
+  /**
+   * translating method from bmllib to asm
+   * @param method
+   * @param owner
+   * @return
+   */
+  private b2bpl.bytecode.BCMethod visit(annot.bcclass.BCMethod method,
+                                        JClassType owner) {
     MethodGen bcm = method.getBcelMethod();
     JType returnType = visit(bcm.getReturnType());
     int len = bcm.getArgumentTypes().length;
@@ -125,7 +161,6 @@ public class TranslatingVisitor {
       ExpressionRoot<AbstractFormula> prec = specCase.getPrecondition();
       ExpressionRoot<AbstractFormula> post = specCase.getPostcondition();
       ExpressionRoot<ModifyList> modifies = specCase.getModifies();
-      System.out.println("dodaje invariant");
       translatedCases
           .add(new BMLSpecificationCase(new BMLRequiresClause(visit(prec)),
                                         visit(modifies),
@@ -162,9 +197,11 @@ public class TranslatingVisitor {
 
   public b2bpl.bytecode.InstructionHandle visit(
                                                 final org.apache.bcel.generic.Instruction instruction,
-                                                final SingleList annotations, BCAttributeMap allAnnotations) {
+                                                final SingleList annotations,
+                                                BCAttributeMap allAnnotations) {
     final b2bpl.bytecode.InstructionHandle res = new b2bpl.bytecode.InstructionHandle();
-    InstructionTranslator translator = new InstructionTranslator(cpg, this, allAnnotations);
+    InstructionTranslator translator = new InstructionTranslator(cpg, this,
+                                                                 allAnnotations);
     ExpressionTranslator exprTranslator = new ExpressionTranslator();
     res.setInstruction(translator.translate(instruction));
     for (InCodeAttribute annotation : annotations.getAll(AType.C_LOOPSPEC)) {
@@ -172,6 +209,7 @@ public class TranslatingVisitor {
       BMLExpression invariant = exprTranslator.visit(expressions[1]);
       BMLExpression decreases = exprTranslator.visit(expressions[2]);
       BMLModifiesClause modifies = visit((ExpressionRoot<ModifyList>) expressions[0]);
+      System.out.println("dodaje invariant");
       res
           .addLoopSpecification(new BMLLoopSpecification(
                                                          new BMLLoopModifiesClause(
