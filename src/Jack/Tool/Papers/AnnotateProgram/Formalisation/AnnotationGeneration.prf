@@ -16524,6 +16524,10 @@
     (wf_Body const-decl "boolean" WellFormedProgram nil)
     (ann_method_wf_Body1 formula-decl nil AnnotateMethod nil))
    104049 5100 t shostak))
+ (ann_preserves_preserves_wf_method_unchanged 0
+  (ann_preserves_preserves_wf_method_unchanged-1 nil 3433051609
+   3433051631 ("" (skosimp*) (("" (postpone) nil nil)) nil) unfinished
+   nil 21993 180 t shostak))
  (ann_program_preserves_wf_body 0
   (ann_program_preserves_wf_body-1 nil 3401438501 3431148152
    ("" (skosimp*)
@@ -16908,11 +16912,11 @@
         nil))
       nil))
     nil)
-   unchecked
+   unfinished
    ((lookup_mthd const-decl "lift[(methods(p))]" ProgramFunctions nil)
     (ann_program_class_correspondence formula-decl nil
      AnnotateProgramProperties nil)
-    nil nil (= const-decl "[T, T -> boolean]" equalities nil)
+    (= const-decl "[T, T -> boolean]" equalities nil)
     (down adt-accessor-decl "[(up?) -> T]" lift_adt nil)
     (same_class_name_ann_class_implies_same_class formula-decl nil
      AnnotateProgramProperties nil)
@@ -16995,7 +16999,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -17565,7 +17569,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((Name formal-nonempty-type-decl nil AnnotateProgramProperties nil)
     (boolean nonempty-type-decl nil booleans nil)
     (bool nonempty-type-eq-decl nil booleans nil)
@@ -17658,7 +17662,7 @@
         nil))
       nil))
     nil)
-   proved
+   unfinished
    ((method_names const-decl "finite_set[Name]" ProgramFunctions nil)
     (get_class_in_classes formula-decl nil ProgramFunctions nil)
     (wf_Program const-decl "boolean" WellFormedProgram nil)

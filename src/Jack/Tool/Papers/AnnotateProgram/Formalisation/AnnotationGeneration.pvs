@@ -832,6 +832,19 @@ BEGIN
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
 
+  % a wellformed method in the monitored program is wellformed in the annotated
+  % program
+  ann_program_preserves_wf_method_unchanged : LEMMA
+    FORALL (m : (wf_Method(program(mp)))) :
+      wf_Method(ann_program(mp))(m)
+
+  % 
+  wf_body_lookup_inv_ann_program: LEMMA
+    FORALL (a : Val) :
+    % is this premise needed?
+%      wf_Body(program(mp))(lookup_inv(program(mp), a)) IMPLIES
+        wf_Body(ann_program(mp))(lookup_inv(ann_program(mp), a))
+
   % any body that is wellformed wrt the original program is wellformed
   % wrt the annotated program
   ann_program_preserves_wf_body : LEMMA % :-)

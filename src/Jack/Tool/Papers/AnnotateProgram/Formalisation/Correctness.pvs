@@ -48,6 +48,22 @@ BEGIN
         related_states(mp)(sMP2, sAP2) AND 
         (NOT cp(astate(sMP2)) = halted IMPLIES v1 = v2)
 
+  % There is an equivalent statement for an MVA transition on the annotated 
+  % program
+  on_method_MVA_equivalent_statement : LEMMA
+    FORALL (m : (wf_Method(program(mp))), et : EventType, v : ValOrExcpt)
+           (sMP1, sMP2 : MPState, sAP1 : APState) :
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      methods(get_monitored_class(mp))(m) IMPLIES
+%      NOT cp(astate(sMP1)) = halted IMPLIES % needed?
+      sMP2 = on_method_MVA(et)(mp, m)(v)(sMP1) IMPLIES
+%      NOT up?(ex(pstate(sAP1))) IMPLIES
+        EXISTS (sAP2 : APState, n : nat) :
+          derive(ann_program(mp))
+                (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),
+                 sAP1, Unit, sAP2)(n)
+
   % Simulation of the annotated program. Note that the converse does not hold
   related_states_implies_derive_for_unchanged_program : THEOREM %
     FORALL (b : (wf_Body(program(mp))), v1 : Val)
