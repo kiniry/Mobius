@@ -510,12 +510,34 @@ BEGIN
   all_guards(a : MVA)(cp : CP, e : Event) : finite_set[Guard] =
     {p : Guard | EXISTS (t : Transition) : ts(a)(t) AND scp(t) = cp AND
                                            event(t) = e AND guard(t) = p}
+
+  big_and(V : finite_set[(Bool?)]) : RECURSIVE (Bool?) =
+    IF empty?(V)
+    THEN Bool(TRUE)
+    ELSE Bool(b(choose(V)) AND b(big_and(rest(V))))
+    ENDIF
+  MEASURE card(V)
+
+  IMPORTING finite_sets@finite_sets_inductions[(Bool?)]
+
+  big_and_is_forall : LEMMA % :-)
+    FORALL(V : finite_set[(Bool?)]) :
+      b(big_and(V)) = FORALL(v : (Bool?)) : V(v) IMPLIES b(v)
+
+  big_conj(E : finite_set[Expr]) : RECURSIVE Expr =
+    IF empty?(E)
+    THEN Const(Bool(TRUE))
+    ELSE Conj(choose(E), big_conj(rest(E)))
+    ENDIF
+  MEASURE card(E)
  
   % Returns a guard that is the conjuction of the negation of the guards in ts
   % with source control point cp and event e. 
   build_guard(a : MVA)(cp : CP, e : Event) : Guard =
    LAMBDA (stA, stP : Store, arg : ValOrExcpt) :
-     FORALL (p : Guard) : all_guards(a)(cp, e)(p) IMPLIES NOT p(stA, stP, arg)
+     b(big_and({v : (Bool?) | EXISTS(p : Guard) :
+                                all_guards(a)(cp, e)(p) AND
+                                v = Bool(NOT p(stA, stP, arg))}))
 
   % Makes ts(a) complete with respect to cps and evs(a).
   complete_trans(a : MVA) : finite_set[Transition] =
@@ -530,18 +552,12 @@ BEGIN
 
   
 
-  big_conj(E : finite_set[Expr]) : RECURSIVE Expr =
-    IF empty?(E)
-    THEN Const(Bool(TRUE))
-    ELSE Conj(choose(E), big_conj(rest(E)))
-    ENDIF
-  MEASURE card(E)
-
   IMPORTING finite_sets@finite_sets_inductions[Expr]
+
 
   % auxiliary lemma, to prove guard_to_expression_build_guard_wf_Expr
   % (proof is not allow to use guard_to_expression_wf_Expr axiom)
-  guard_to_expression_big_conj : LEMMA % :-)
+  big_conj_wf_Expr : LEMMA % :-)
     FORALL(a : MVA)(E : finite_set[Expr]) :
       (FORALL (e : Expr) : E(e) IMPLIES wf_Expr(a)(e)) IMPLIES
       wf_Expr(a)(big_conj(E))
@@ -553,7 +569,7 @@ BEGIN
       guard_to_expression(build_guard(a)(cp, e))(v) =
         big_conj({expr : Expr |
                   EXISTS (g : Guard) : all_guards(a)(cp, e)(g) AND
-                                       expr = guard_to_expression(g)(v)})
+                                       expr = Neg(guard_to_expression(g)(v))})
 
   % sanity check 
   % (proof is not allow to use guard_to_expression_wf_Expr axiom)

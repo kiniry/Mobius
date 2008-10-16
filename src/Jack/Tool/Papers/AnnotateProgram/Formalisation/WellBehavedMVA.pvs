@@ -62,40 +62,65 @@ BEGIN
         FORALL(e : Expr) :
           wf_Expr(p)(e) IMPLIES
           E(e) IMPLIES
-          EXISTS(c : [Expr, Val, nat]) :
+          EXISTS(c : [Expr, (Bool?), nat]) :
             C(c) AND
             proj_1(c) = e AND
             derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))
 
-  collect_set_equivalence : LEMMA % 
-    FORALL(E : finite_set[Expr], p : Program, s : APState) :
-      (EXISTS (C : finite_set[[Expr, (Bool?), nat]]) :
-        FORALL(e : Expr) :
-          wf_Expr(p)(e) IMPLIES
-          E(e) IMPLIES
-          EXISTS(c : [Expr, Val, nat]) :
-            C(c) AND
-            proj_1(c) = e AND
-            derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES
-      (FORALL(e : Expr) :
-         wf_Expr(p)(e) IMPLIES
-         E(e) IMPLIES 
-           EXISTS(v : Val, n : nat) : derive(p)(e, s, v, s)(n) AND Bool?(v))
+%   collect_set_equivalence : LEMMA % 
+%     FORALL(E : finite_set[Expr], p : Program, s : APState) :
+%       (EXISTS (C : finite_set[[Expr, (Bool?), nat]]) :
+%         FORALL(e : Expr) :
+%           wf_Expr(p)(e) IMPLIES
+%           E(e) IMPLIES
+%           EXISTS(c : [Expr, Val, nat]) :
+%             C(c) AND
+%             proj_1(c) = e AND
+%             derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES
+%       (FORALL(e : Expr) :
+%          wf_Expr(p)(e) IMPLIES
+%          E(e) IMPLIES 
+%            EXISTS(v : Val, n : nat) : derive(p)(e, s, v, s)(n) AND Bool?(v))
 
-  big_and(V : finite_set[(Bool?)]) : RECURSIVE (Bool?) =
-    IF empty?(V)
-    THEN Bool(TRUE)
-    ELSE Bool(b(choose(V)) AND b(big_and(rest(V))))
-    ENDIF
-  MEASURE card(V)
+%   collect_set_existence : LEMMA % 
+%     FORALL(E : finite_set[Expr], p : Program, s : APState) :
+%       (EXISTS (C : finite_set[[Expr, (Bool?), nat]]) :
+%         FORALL(e : Expr) :
+%           wf_Expr(p)(e) IMPLIES
+%           EXISTS(c : [Expr, Val, nat]) :
+%             C(c) AND
+%             proj_1(c) = e AND
+%             derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES
+%       (FORALL(e : Expr) :
+%          wf_Expr(p)(e) IMPLIES
+%            EXISTS(v : Val, n : nat) : derive(p)(e, s, v, s)(n) AND Bool?(v))
 
-  sum(N : finite_set[nat]) : RECURSIVE nat = 
-    IF (empty?(N)) 
+
+  count_sum(C : finite_set[[Expr, (Bool?), nat]]) : RECURSIVE nat = 
+    IF (empty?(C)) 
     THEN 0
-    ELSE choose(N) + sum(sets[nat].rest(N))
+    ELSE proj_3(choose(C)) + count_sum(rest(C)) + 1
     ENDIF 
-  MEASURE card(N)
+  MEASURE card(C)
 
+  big_conj(C : finite_set[[Expr, (Bool?), nat]]) : RECURSIVE Expr =
+    IF empty?(C)
+    THEN Const(Bool(TRUE))
+    ELSE Conj(proj_1(choose(C)), big_conj(rest(C)))
+    ENDIF
+  MEASURE card(C)
+
+%   derive_big_conj : LEMMA
+%     FORALL(E : finite_set[Expr]) :
+      
+%       EXISTS(v : Val, n : nat) : derive(p)(big_conj(E), 
+  
+  IMPORTING finite_sets@finite_sets_inductions[[Expr, (Bool?), nat]]
+
+  big_conj_wf_Expr : LEMMA % :-)
+    FORALL(p : Program)(E : finite_set[Expr]) :
+      (FORALL (e : Expr) : E(e) IMPLIES wf_Expr(p)(e)) IMPLIES
+      wf_Expr(p)(big_conj(E))
 
   collect_combine : LEMMA
     FORALL(C : finite_set[[Expr, (Bool?), nat]], p : Program, s : APState) :
@@ -103,14 +128,22 @@ BEGIN
          wf_Expr(p)(proj_1(c)) IMPLIES
          C(c) IMPLIES 
          derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES
+      NOT up?(ex(pstate(s))) IMPLIES
+      LET v = (FORALL (c : [Expr, (Bool?), nat]) :
+                 C(c) IMPLIES b(proj_2(c))) IN
+      derive(p)(big_conj(C), s, Bool(v), s)(count_sum(C))
+
+  big_conj_equivalence : LEMMA
+    FORALL(C : finite_set[[Expr, (Bool?), nat]], p : Program, s : APState,
+           v : (Bool?), n : nat) :
+      (FORALL (c : [Expr, (Bool?), nat]) :
+         wf_Expr(p)(proj_1(c)) IMPLIES
+         C(c) IMPLIES 
+         derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES    
       LET E = {e : Expr | EXISTS(c : [Expr, (Bool?), nat]) :
                             C(c) AND proj_1(c) = e} IN
-      LET V = {v : Val | EXISTS(c : [Expr, (Bool?), nat]) :
-                           C(c) AND proj_2(c) = v} IN
-      LET N = {n : nat | EXISTS(c : [Expr, (Bool?), nat]) :
-                           C(c) AND proj_3(c) = n} IN
-      derive(p)(big_conj(E), s, big_and(V), s)(sum(N))
-
+	derive(p)(big_conj(C), s, v, s)(n) =
+          derive(p)(big_conj(E), s, v, s)(n)
 
   % remaining case: build_guard for transition from existing state to halted
   well_behaved_MVA_preserved_by_complete : LEMMA
@@ -120,3 +153,4 @@ BEGIN
 
 END WellBehavedMVA
 
+ 
