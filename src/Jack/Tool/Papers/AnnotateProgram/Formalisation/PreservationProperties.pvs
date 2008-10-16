@@ -41,7 +41,7 @@ ENDASSUMING
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
                              on_method_exit_exceptional_MP,
-                             MonitoredProgramSemantics.wf_state],
+                             wf_ap_state],
             WellBehavedMVA[CP, Name]
 
   % convenience lemmas about existence of derivations
@@ -127,7 +127,7 @@ BEGIN
                              execute_assert, execute_CaseJML, 
                              on_method_entry_MP, on_method_exit_normal_MP,
                              on_method_exit_exceptional_MP,
-                             MonitoredProgramSemantics.wf_state],
+                             wf_ap_state],
             WfSetStmtsAP[Name],
             CompleteMonitorProgramPropertiesPreservation[CP, Name],
             WellBehavedMVA[CP, Name]

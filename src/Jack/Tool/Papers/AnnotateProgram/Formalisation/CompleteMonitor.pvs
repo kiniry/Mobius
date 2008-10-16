@@ -14,13 +14,18 @@ BEGIN
 
   % several utility lemmas
 
+  % wf_ap_state is equivalent for partial and completed monitored programs
+  wf_ap_state_equivalence : LEMMA % :-)
+    FORALL(s : MPState) :
+      wf_ap_state(mp)(s) = wf_ap_state(complete_MP(mp))(s)
+
   % after completion, monitored program is wellformed, and mva is complete
   complete_MP_wf_and_complete : JUDGEMENT % :-)
     complete_MP(mp) HAS_TYPE (wf_and_complete_MP)
   
   % wf_body preserved by completion
-  complete_MP_preserves_wf_body : LEMMA
-    FORALL (b : (wf_Body(program(mp)))) : % :-)
+  complete_MP_preserves_wf_body : LEMMA % :-)
+    FORALL (b : (wf_Body(program(mp)))) : 
       wf_Body(program(complete_MP(mp)))(b)
 
   % wf_method preserved by completion

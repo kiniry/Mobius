@@ -155,6 +155,15 @@ BEGIN
     wf_state(program(mp))(pstate(sigma)) AND
     wf_ghoststate(mp)(sigma)
 
+  wf_ap_state(mp : MonitoredProgram)(sigma : MPState) : boolean =
+    wf_state(program(mp))(pstate(sigma)) AND
+    wf_ghoststate(mp)(sigma)
+
+  % any wf_state is also a wf_ap_state
+  wf_state_implies_wf_ap_state : LEMMA % :-)
+    FORALL(mp : MonitoredProgram, s : MPState) :
+      wf_state(mp)(s) IMPLIES wf_ap_state(mp)(s)
+
   % wf_state implies that program state is wellformed wrt monitoring MVA
   % i.e., all program variables declared in automaton are defined
   wf_state_implies_wf_PSt : LEMMA % :-)

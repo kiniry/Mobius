@@ -832,23 +832,17 @@ BEGIN
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(ann_method(mp)(m))
 
-  % a wellformed method in the monitored program is wellformed in the annotated
-  % program
-  ann_program_preserves_wf_method_unchanged : LEMMA
-    FORALL (m : (wf_Method(program(mp)))) :
-      wf_Method(ann_program(mp))(m)
-
-  % an invariant of the annotated program is wellformed
-  wf_body_lookup_inv_ann_program : LEMMA
-    FORALL (a : Val) :
-      up?(get_class(program(mp))(a)) IMPLIES
-        wf_Body(ann_program(mp))(lookup_inv(ann_program(mp), a))
-
   % any body that is wellformed wrt the original program is wellformed
   % wrt the annotated program
   ann_program_preserves_wf_body : LEMMA % :-)
     FORALL (b : (wf_Body(program(mp)))) :
       wf_Body(ann_program(mp))(b)
+
+  % a wellformed method in the monitored program is wellformed in the annotated
+  % program
+  ann_program_preserves_wf_method_unchanged : LEMMA % :-)
+    FORALL (m : (wf_Method(program(mp)))) :
+      wf_Method(ann_program(mp))(m)
 
   % name of classes in annotated program unchanged
   get_class_ann_program : LEMMA % :-)
@@ -917,6 +911,12 @@ BEGIN
              up(ann_class(mp)(down(get_class(program(mp))(a))))
       ELSE get_class(ann_program(mp))(a) = get_class(program(mp))(a)
       ENDIF
+
+  % an invariant of the annotated program is wellformed
+  wf_body_lookup_inv_ann_program : LEMMA % :-)
+    FORALL (a : Val) :
+      up?(get_class(program(mp))(a)) IMPLIES
+        wf_Body(ann_program(mp))(lookup_inv(ann_program(mp), a))
 
 
   % method names unchaged by program annotations

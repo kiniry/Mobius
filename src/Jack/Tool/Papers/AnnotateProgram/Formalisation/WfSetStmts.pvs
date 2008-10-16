@@ -106,7 +106,7 @@ BEGIN
       wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
-        NOT pstate(s1) = pstate(s2)
+        st(pstate(s1)) = st(pstate(s2))
 
   % Predicate wf_set_stmts for method m:
   % pre_set can only throw JML exception
