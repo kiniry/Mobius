@@ -37,8 +37,8 @@ BEGIN
     FORALL (s1, s2 : FullState, upd : [PState -> PState]) :
       f(s1, upd) = s2 IMPLIES pstate(s2) = upd(pstate(s1))
 
-  % type for evaluation function set_annotation
-  % does not change pstate (program state)
+  % type for evaluation function of set_annotation 
+  % does not change the program state
   execute_set_type
     (f : [p : FullProgram, Name,
           (wf_Expr(program(p))), FullState, FullState, n : nat,
@@ -47,11 +47,10 @@ BEGIN
             s1, s2 : FullState,
             n : nat, d : derive_rec_type(n)) :
       f(p, vn, e, s1, s2, n, d) IMPLIES
-        st(pstate(s1)) = st(pstate(s2)) AND
-        (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
+        pstate(s1) = pstate(s2)
 
-  % type for evaluation function CaseJML annotation
-  % does not change pstate (program state)
+  % type for evaluation function of CaseJML annotation
+  % does not change the program state
   execute_CaseJML_type
     (f : [p : FullProgram, (wf_Branches(program(p))),
           FullState, FullState, Val, n : nat,
@@ -61,8 +60,7 @@ BEGIN
             s1, s2 : FullState, v : Val, 
             n : nat, d : derive_rec_type(n)) :
       f(p, branches, s1, s2, v, n, d) IMPLIES 
-        st(pstate(s1)) = st(pstate(s2)) AND
-        (up?(ex(pstate(s1))) IMPLIES up?(ex(pstate(s2))))
+        pstate(s1) = pstate(s2)
 
   % type for evaluation function Assert annotation
   % store of program state (local var and fields) unchanged
@@ -693,7 +691,7 @@ BEGIN
              THEN tau
              ELSE update_GhostVars(tau, update_store(vn, v))
              ENDIF AND
-        st(pstate(s1)) = st(pstate(s2))
+        pstate(s1) = pstate(s2)
 
   % derivation of CaseJML annotation for runtime checking semantics
   execute_CaseJML : (execute_CaseJML_type) =
@@ -706,7 +704,7 @@ BEGIN
         cons(x, xs) : n > 0 AND
                       derive_rec(n)(p)(IfThenElse(proj_1(x), proj_2(x),
                                        CaseJML(xs)), s1, v, s2)(n - 1) AND
-                      st(pstate(s1)) = st(pstate(s2))
+                      pstate(s1) = pstate(s2)
       ENDCASES 
 
   IMPORTING ProgramFunctions[Name]
@@ -789,8 +787,7 @@ BEGIN
   % runtime checking upon exceptional method termination
   % execute exc_set annotation
   % then evaluate invariant
-
-  % notice that we do not model exceptional postconditions
+  % Notice that we do not model exceptional postconditions
   on_method_exit_exceptional : (on_method_event_type) =
     LAMBDA (p : FullProgram, md : (wf_Method(program(p))), a : Val,
             arg : ValOrExcpt, s1, s2 : FullState, n : nat,

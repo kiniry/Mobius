@@ -838,11 +838,10 @@ BEGIN
     FORALL (m : (wf_Method(program(mp)))) :
       wf_Method(ann_program(mp))(m)
 
-  % 
-  wf_body_lookup_inv_ann_program: LEMMA
+  % an invariant of the annotated program is wellformed
+  wf_body_lookup_inv_ann_program : LEMMA
     FORALL (a : Val) :
-    % is this premise needed?
-%      wf_Body(program(mp))(lookup_inv(program(mp), a)) IMPLIES
+      up?(get_class(program(mp))(a)) IMPLIES
         wf_Body(ann_program(mp))(lookup_inv(ann_program(mp), a))
 
   % any body that is wellformed wrt the original program is wellformed
