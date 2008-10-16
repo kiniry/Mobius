@@ -56,9 +56,8 @@ BEGIN
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       methods(get_monitored_class(mp))(m) IMPLIES
-%      NOT cp(astate(sMP1)) = halted IMPLIES % needed?
+      NOT cp(astate(sMP1)) = halted IMPLIES
       sMP2 = on_method_MVA(et)(mp, m)(v)(sMP1) IMPLIES
-%      NOT up?(ex(pstate(sAP1))) IMPLIES
         EXISTS (sAP2 : APState, n : nat) :
           derive(ann_program(mp))
                 (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),
