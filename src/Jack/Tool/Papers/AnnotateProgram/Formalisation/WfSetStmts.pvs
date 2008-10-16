@@ -20,7 +20,8 @@ WfSetStmts[Name : TYPE+,
                  execute_CaseJML : (execute_CaseJML_type),
                  on_method_entry : (on_method_event_type),
                  on_method_exit_normal : (on_method_event_type),
-                 on_method_exit_exceptional : (on_method_event_type)] : THEORY
+                 on_method_exit_exceptional : (on_method_event_type),
+                 wf_state : [FullProgram -> [FullState -> bool]]] : THEORY
 BEGIN
 
   IMPORTING ProgramRestriction[Name],
@@ -32,6 +33,7 @@ BEGIN
   % Body b can only throw JML exception
   only_JMLExc(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
     FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
       up?(ex(pstate(s2))) IMPLIES down(ex(pstate(s2))) = JMLExc
@@ -39,6 +41,7 @@ BEGIN
   % Body b does not throw an exception
   no_exc(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
     FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT up?(ex(pstate(s2)))
@@ -46,6 +49,7 @@ BEGIN
   % Body b does not change program state (fields/local variables)
   no_change(p : FullProgram)(b : (wf_Body(program(p)))) : bool =
     FORALL(s1, s2 : FullState, v : Val, n : nat) :
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         st(pstate(s1)) = st(pstate(s2))
@@ -69,7 +73,8 @@ BEGIN
 END WfSetStmts
 
 
-% Below we define several separate theories, to ensure that we can import
+% Below we define a separate theory for annotated programs, 
+% to ensure that we can import
 % these definitions for monitored and annotated programs at the same time
 WfSetStmtsAP[Name : TYPE+] : THEORY
 BEGIN
@@ -80,7 +85,7 @@ BEGIN
   % Body b can only throw JML exception
   only_JMLExc(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-%      wf_state(p)(s1) IMPLIES
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
       up?(ex(pstate(s2))) IMPLIES down(ex(pstate(s2))) = JMLExc
@@ -88,7 +93,7 @@ BEGIN
   % Body b does not throw an exception
   no_exc(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-%      wf_state(p)(s1) IMPLIES
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT up?(ex(pstate(s2)))
@@ -96,7 +101,7 @@ BEGIN
   % Body b does not change program set
   no_change(p : Program)(b : (wf_Body(p))) : bool =
     FORALL(s1, s2 : APState, v : Val, n : nat) :
-%      wf_state(p)(s1) IMPLIES
+      wf_state(p)(s1) IMPLIES
       NOT up?(ex(pstate(s1))) IMPLIES
       derive(p)(b, s1, v, s2)(n) IMPLIES
         NOT pstate(s1) = pstate(s2)

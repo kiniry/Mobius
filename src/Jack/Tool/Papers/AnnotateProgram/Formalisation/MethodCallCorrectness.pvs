@@ -34,7 +34,8 @@ BEGIN
                       execute_CaseJML,
                       on_method_entry_MP,
                       on_method_exit_normal_MP,
-                      on_method_exit_exceptional_MP]
+                      on_method_exit_exceptional_MP,
+                      MonitoredProgramSemantics.wf_state]
 
 
   mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
