@@ -122,6 +122,35 @@ BEGIN
       (FORALL (e : Expr) : E(e) IMPLIES wf_Expr(p)(e)) IMPLIES
       wf_Expr(p)(big_conj(E))
 
+
+  big_conj_wf_Expr_components : LEMMA % :-)
+    FORALL(p : Program)(E : finite_set[Expr]) :
+      wf_Expr(p)(big_conj(E)) IMPLIES
+        FORALL (e : Expr) : E(e) IMPLIES wf_Expr(p)(e)
+
+  big_conj_wf_Expr_collected : LEMMA % :-)
+    FORALL(p : Program)(C : finite_set[[Expr, (Bool?), nat]]) :
+      (FORALL (e : Expr) : 
+         (EXISTS (c : [Expr, (Bool?), nat]) : C(c) AND proj_1(c) = e)
+          IMPLIES wf_Expr(p)(e)) IMPLIES
+      wf_Expr(p)(big_conj(C))
+
+
+  big_conj_wf_Expr_components_collected : LEMMA % :-)
+    FORALL(p : Program)(C : finite_set[[Expr, (Bool?), nat]]) :
+      wf_Expr(p)(big_conj(C)) IMPLIES
+        FORALL (e : Expr) : 
+          (EXISTS (c : [Expr, (Bool?), nat]) : C(c) AND proj_1(c) = e)
+          IMPLIES wf_Expr(p)(e)
+
+
+  derivation_steps_unique : LEMMA % :-)
+    FORALL(p : Program)(b : Body, s1, s2 : APState, v : Val) :
+      wf_Body(p)(b) IMPLIES
+      (EXISTS(n : nat) : derive(p)(b, s1, v, s2)(n)) IMPLIES
+      exists1(LAMBDA(n : nat) : derive(p)(b, s1, v, s2)(n))
+
+
   collect_combine : LEMMA
     FORALL(C : finite_set[[Expr, (Bool?), nat]], p : Program, s : APState) :
       (FORALL (c : [Expr, (Bool?), nat]) :
@@ -131,7 +160,23 @@ BEGIN
       NOT up?(ex(pstate(s))) IMPLIES
       LET v = (FORALL (c : [Expr, (Bool?), nat]) :
                  C(c) IMPLIES b(proj_2(c))) IN
+      wf_Expr(p)(big_conj(C)) IMPLIES
       derive(p)(big_conj(C), s, Bool(v), s)(count_sum(C))
+
+  big_conj_unfold : LEMMA
+    FORALL(E : finite_set[Expr], p : Program, s : APState,
+           v : (Bool?), n : nat) :
+      (FORALL (e : Expr) :
+         wf_Expr(p)(e) IMPLIES
+         E(e) IMPLIES 
+         EXISTS (v1 : (Bool?), n1 : nat) :
+           derive(p)(e, s, v1, s)(n1)) IMPLIES    
+      NOT up?(ex(pstate(s))) IMPLIES
+        wf_Expr(p)(big_conj(E)) IMPLIES
+        FORALL(e : Expr) : 
+          E(e) IMPLIES
+          derive(p)(big_conj(E), s, v, s)(n) =
+            derive(p)(Conj(e, big_conj(remove(e, E))), s, v, s)(n)
 
   big_conj_equivalence : LEMMA
     FORALL(C : finite_set[[Expr, (Bool?), nat]], p : Program, s : APState,
@@ -142,10 +187,11 @@ BEGIN
          derive(p)(proj_1(c), s, proj_2(c), s)(proj_3(c))) IMPLIES    
       LET E = {e : Expr | EXISTS(c : [Expr, (Bool?), nat]) :
                             C(c) AND proj_1(c) = e} IN
+      wf_Expr(p)(big_conj(C)) IMPLIES
 	derive(p)(big_conj(C), s, v, s)(n) =
           derive(p)(big_conj(E), s, v, s)(n)
 
-  % remaining case: build_guard for transition from existing state to halted
+  % remaining case: finiteness of collected set C
   well_behaved_MVA_preserved_by_complete : LEMMA
     FORALL(mva : (partial), stA : [APState -> Store]) :
     well_behaved_MVA(mva)(stA) IMPLIES
