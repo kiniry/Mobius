@@ -21,8 +21,8 @@ BEGIN
   ENDASSUMING
 
 
-  IMPORTING MethodCallsPreserveRelatedState[CP, Name]
-%            AnnotateProgramPropertiesPreservation[CP, Name]
+  IMPORTING MethodCallsPreserveRelatedState[CP, Name],
+            AnnotateProgramPropertiesPreservation[CP, Name]
 
   mp : VAR ({mp : MonitoredProgram | wf_and_complete_MP(mp) AND 
                                      wf_set_stmts(mp)})

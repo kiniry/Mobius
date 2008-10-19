@@ -21,16 +21,14 @@
 CompleteMonitorProgramPropertiesPreservation[CP, Name : TYPE+] : THEORY
 BEGIN
 
-ASSUMING 
+  ASSUMING
 
     IMPORTING MVA[CP, Name]
 
     CP_not_only_halted : ASSUMPTION
       EXISTS(cp : CP) : NOT cp = halted
 
-ENDASSUMING
-
-
+  ENDASSUMING
 
   IMPORTING CompleteMonitor[CP, Name],
             ContainsNoMethodCall[Name],
@@ -85,6 +83,7 @@ ENDASSUMING
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
         wf_set_stmts(complete_MP(mp))
 
+
 END CompleteMonitorProgramPropertiesPreservation
 
 
@@ -119,19 +118,8 @@ BEGIN
   ENDASSUMING
 
   IMPORTING Equivalence[CP, Name],
-            ContainsNoMethodCall[Name],
-            WfSetStmts[Name, MonitoredProgram, MPState,
-                             LAMBDA(mp : MonitoredProgram) : program(mp),
-                             LAMBDA(s : MPState) : pstate(s),
-                             lookup, update_PState, execute_set,
-                             execute_assert, execute_CaseJML, 
-                             on_method_entry_MP, on_method_exit_normal_MP,
-                             on_method_exit_exceptional_MP,
-                             wf_ap_state],
-            WfSetStmtsAP[Name],
             CompleteMonitorProgramPropertiesPreservation[CP, Name],
-            WellBehavedMVA[CP, Name]
-
+            WfSetStmtsAP[Name]
 
   % given APState, construct state for monitored program
   make_MPState(mp : (wf_and_complete_MP))(s : APState) : MPState =
@@ -175,15 +163,13 @@ BEGIN
       contains_no_method_call_in_sets_in_program(program(mp)) IMPLIES
       contains_no_method_call_in_sets_in_program(ann_program(mp))
 
-  IMPORTING AnnEventPreservesMPModeled[CP, Name],
-            CorrectnessAnnProgram[CP, Name]
+  IMPORTING AnnEventPreservesMPModeled[CP, Name]
 
   % conditions on well_behavedness of monitors are appropriate for
   % annotation generation algorithm
   well_behaved_MVA_appropriate_for_annot_gen : LEMMA % :-)
     FORALL(mp : (wf_and_complete_MP)) :
-    well_behaved_MVA(mva(mp))(APStateToAStore(mp))
-      IMPLIES
+    well_behaved_MVA(mva(mp))(APStateToAStore(mp)) IMPLIES
       well_behaved_MVA_for_annot_gen(mp)
 
   % set annotations should be wellformed
@@ -197,6 +183,3 @@ BEGIN
 
 
 END AnnotateProgramPropertiesPreservation
-
-
-
