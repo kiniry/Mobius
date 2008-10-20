@@ -17,11 +17,13 @@ import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseAssignable;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
+import org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
 import annot.attributes.Exsure;
@@ -32,11 +34,16 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.javatype.JavaReferenceType;
+import annot.bcexpression.modifies.ModifiesEverything;
+import annot.bcexpression.modifies.ModifiesNothing;
+import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.Code;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 
@@ -65,6 +72,31 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     @Override
     protected String preVisit(final Tree node, final Symbols symb) {
       throw new NotTranslatedRuntimeException("Not implemented: " + node);
+    }
+    @Override
+    public String visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
+                                                 Symbols p) {
+      for (JCTree n :node.list){
+        if (n instanceof JmlStoreRefKeyword){
+          JmlStoreRefKeyword k = (JmlStoreRefKeyword) n;
+          if (k.token == JmlToken.BSNOTHING){
+            System.err.println("to jest ten token");
+            if (modifies == null){
+              modifies = new ModifyList();
+            }
+            modifies.addModify(ModifyExpression.Nothing);
+            return "";
+          }
+          if (k.token == JmlToken.BSEVERYTHING){
+            if (modifies == null){
+              modifies = new ModifyList();
+            }
+            modifies.addModify(ModifyExpression.Everything);
+            return "";
+          }
+        }
+      }
+      return super.visitJmlMethodClauseAssignable(node, p);
     }
 
     /**
@@ -217,4 +249,6 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     spec.addCase(specCase);
     return "";
   }
+
+
 }
