@@ -166,15 +166,18 @@ public class DefGCmd
 
 		case TagConstants.ARRAYREFEXPR: {
 			ArrayRefExpr are=(ArrayRefExpr)e;
-			Expr array=this.trAndGen(are.array);
-			Expr index=this.trAndGen(are.index);
-			// Null check
-			Expr refNEExpr=GC.nary(TagConstants.REFNE,
-					array,GC.nulllit);
-			GuardedCmd gc = GC.check(are.locOpenBracket,
-					TagConstants.CHKNULLPOINTER,
-					refNEExpr,Location.NULL);
-			this.code.addElement(gc);
+			Expr array = this.trAndGen(are.array);
+			Expr index = this.trAndGen(are.index);
+			if (!exprIsNonNull(array)) {
+				if (Main.options().debug) System.err.println("\tIDC: array declared non-null, hence NOT generating non-null check for array ref access.");
+				// Null check
+				Expr refNEExpr=GC.nary(TagConstants.REFNE,
+						array,GC.nulllit);
+				GuardedCmd gc = GC.check(are.locOpenBracket,
+						TagConstants.CHKNULLPOINTER,
+						refNEExpr,Location.NULL);
+				this.code.addElement(gc);
+			}
 			// Negative index check
 			Expr indexNeg=GC.nary(TagConstants.INTEGRALLE,
 					GC.zerolit, index);
@@ -568,6 +571,19 @@ public class DefGCmd
 			FieldAccess fa = (FieldAccess)expr;
 			return isNonNull(fa.decl);
 		}
+		if (expr.getTag() == TagConstants.VARIABLEACCESS) {
+			VariableAccess a = (VariableAccess)expr;
+			GenericVarDecl decl = a.decl;
+			if (decl instanceof FieldDecl) {
+				return isNonNull((FieldDecl)decl);
+			}
+		}
+        if (expr.getTag() == TagConstants.SELECT) {
+        	// instanceof NaryExpr && ((NaryExpr)expr).op == TagConstants.SELECT)
+            NaryExpr n = (NaryExpr)expr;
+            Expr arrayExpr = n.exprs.elementAt(0);
+            return exprIsNonNull(arrayExpr);
+        }
 		// TODO: also handle case for methods.
 		return false;
 	}
