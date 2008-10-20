@@ -340,7 +340,7 @@ public abstract class BufferedCorrelatedReader extends CorrelatedReader
    * @see javafe.util.BufferedCorrelatedReader#mark()
    */
 
-  //@ requires 0 <= discard;
+  //@ also requires 0 <= discard;
   public /*@non_null*/CorrelatedReader createReaderFromMark(int discard)
 	throws IndexOutOfBoundsException {
     int b4markLoc = getBeforeMarkLocation();
