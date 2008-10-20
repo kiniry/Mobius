@@ -31,6 +31,7 @@ import annot.attributes.MethodSpecification;
 import annot.attributes.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.javatype.JavaReferenceType;
@@ -73,30 +74,24 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     protected String preVisit(final Tree node, final Symbols symb) {
       throw new NotTranslatedRuntimeException("Not implemented: " + node);
     }
+
     @Override
-    public String visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
+    public String visitJmlMethodClauseAssignable(
+                                                 JmlMethodClauseAssignable node,
                                                  Symbols p) {
-      for (JCTree n :node.list){
-        if (n instanceof JmlStoreRefKeyword){
-          JmlStoreRefKeyword k = (JmlStoreRefKeyword) n;
-          if (k.token == JmlToken.BSNOTHING){
-            System.err.println("to jest ten token");
-            if (modifies == null){
-              modifies = new ModifyList();
-            }
-            modifies.addModify(ModifyExpression.Nothing);
-            return "";
-          }
-          if (k.token == JmlToken.BSEVERYTHING){
-            if (modifies == null){
-              modifies = new ModifyList();
-            }
-            modifies.addModify(ModifyExpression.Everything);
-            return "";
-          }
+      ExpressionRule exRule = new ExpressionRule(myContext);
+      for (JCTree n : node.list) {
+        BCExpression res = n.accept(exRule, p);
+        if (res == null || !(res instanceof ModifyExpression)) {
+          throw new NotTranslatedRuntimeException("Not implemented: " + node);
         }
+        if (modifies == null){
+          modifies = new ModifyList();
+        }
+        modifies.addModify((ModifyExpression) res);
       }
-      return super.visitJmlMethodClauseAssignable(node, p);
+
+      return "";
     }
 
     /**
@@ -150,17 +145,20 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
      * @return empty string
      */
     @Override
-    public String visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
+    public String visitJmlMethodClauseSignals(
+                                              final JmlMethodClauseSignals node,
                                               final Symbols symb) {
       if (node.vardef.name == null) {
         final AbstractFormula form = TranslationUtil
             .getFormula(node.expression, symb, myContext);
-        final JavaReferenceType type = new JavaReferenceType(node.vardef.vartype
+        final JavaReferenceType type = new JavaReferenceType(
+                                                             node.vardef.vartype
                                                                  .toString());
         appendExcondition(new Exsure(type, form));
       } else
-        throw new NotTranslatedRuntimeException("Not implemented signals type: " +
-                                         node.vardef);
+        throw new NotTranslatedRuntimeException(
+                                                "Not implemented signals type: "
+                                                    + node.vardef);
       return "";
     }
   }
@@ -200,7 +198,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     Symbols withParams = new Symbols(symb);
     final SymbolsBuilder sb = new SymbolsBuilder(myContext);
     for (JCVariableDecl varDecl : method.params)
-      withParams = sb.visitJmlVariableDecl((JmlVariableDecl)varDecl,
+      withParams = sb.visitJmlVariableDecl((JmlVariableDecl) varDecl,
                                            withParams);
     return withParams;
   }
@@ -226,13 +224,14 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
     final Tree nextClassMember = finder.getNextSibling(specs);
     if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
-      throw new NotTranslatedRuntimeException("Cannot find method for the requires: " +
-                                       node);
+      throw new NotTranslatedRuntimeException(
+                                              "Cannot find method for the requires: "
+                                                  + node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
-    final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),
-                                                      bcClazz);
+    final BCMethod bcMethod = BytecodeUtil
+        .findMethod(method.getName(), bcClazz);
     MethodSpecification spec = bcMethod.getMspec();
     if (spec == null) {
       spec = new MethodSpecification(bcMethod);
@@ -249,6 +248,5 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     spec.addCase(specCase);
     return "";
   }
-
 
 }

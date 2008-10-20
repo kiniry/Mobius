@@ -20,6 +20,7 @@ import jml2bml.utils.Constants;
 import jml2bml.utils.JCUtils;
 import jml2bml.utils.UniqueIndexGenerator;
 
+import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
@@ -44,6 +45,7 @@ import annot.bcexpression.formula.Predicate2Ar;
 import annot.bcexpression.formula.QuantifiedFormula;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
+import annot.bcexpression.modifies.ModifyExpression;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 
@@ -149,6 +151,14 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     return null;
   };
 
+  @Override
+  public BCExpression visitJmlStoreRefKeyword(org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword node, Symbols p) {
+    if (node.token == JmlToken.BSNOTHING)
+      return ModifyExpression.Nothing;
+    if (node.token == JmlToken.BSEVERYTHING)
+      return ModifyExpression.Everything;
+    return null;
+  };
   /**
    * This method handles the Literal node.
    * @param node - node to handle
