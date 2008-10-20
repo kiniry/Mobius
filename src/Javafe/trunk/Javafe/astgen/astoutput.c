@@ -109,9 +109,16 @@ static int getFieldCount(ClassListNode *classlist)
  */
 static void outputConstructorSpecification(FILE *o, int ind, Class *class, ClassListNode *classlist, int fieldCount)
 {
-    /* Output ensure that field == formal */
     ClassListNode *c;
     DirectiveListNode *d;
+    /* Output requires clause for loc fields */
+    FOREACHFIELD(c, d, classlist) {
+      if (d->i.f.notnullloc) {
+	indent(o, ind);
+	fprintf(o, "//@ requires %s != javafe.util.Location.NULL;\n", d->i.f.name);
+      }
+    }
+    /* Output ensure that field == formal */
     FOREACHFIELD(c, d, classlist) {
       indent(o, ind);
       fprintf(o, "//@ ensures this.%s == %s;\n", d->i.f.name, d->i.f.name);
@@ -340,7 +347,7 @@ void outputEndClass(FILE *o, Class *class, const char *text, int len,
       indent(o, ind);
       fprintf(o,"//@ requires v != null;\n");
       fprintf(o,"//@ ensures \\result != null;\n");
-      fprintf(o, "public abstract /*@non_null*/ Object accept(/*@non_null*/ " VISITORARGRESULTCLASS " v, Object o);\n\n");
+      fprintf(o, "public abstract /*@non_null*/ Object accept(/*@non_null*/ " VISITORARGRESULTCLASS " v, /*@nullable*/Object o);\n\n");
     }
   }
 
@@ -587,7 +594,7 @@ void outputEndOfAstFile(const char *text, int len,
 	   visit method of superclass. */
 	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n");
 	   fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n"); */
-	fprintf(visitorOutputFile, "  public /*@non_null*/ Object visit%s(/*@non_null*/ %s x, Object o) {\n",
+	fprintf(visitorOutputFile, "  public /*@non_null*/ Object visit%s(/*@non_null*/ %s x, /*@nullable*/Object o) {\n",
 		c->c->name, c->c->name);
 	fprintf(visitorOutputFile, "    return visit%s(x, o);\n",
 		c->c->superclass->name);
@@ -595,7 +602,7 @@ void outputEndOfAstFile(const char *text, int len,
       } else /* Gen an abstract visit method */ {
 	/* fprintf(visitorOutputFile, "  //@ requires x != null;\n");
 	   fprintf(visitorOutputFile, "  //@ ensures \\result != null;\n"); */
-	fprintf(visitorOutputFile, "  public abstract /*@non_null*/ Object visit%s(/*@non_null*/ %s x, Object o);\n\n",
+	fprintf(visitorOutputFile, "  public abstract /*@non_null*/ Object visit%s(/*@non_null*/ %s x, /*@nullable*/Object o);\n\n",
 		c->c->name, c->c->name);
       }
     }
