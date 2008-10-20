@@ -164,8 +164,8 @@ public class ParserTagConstants extends javafe.ast.ASTTagConstants
      * <code>addJavaPunctuation</code>.
      */
 
-    //@ invariant punctuationCodes.length == punctuationStrings.length;
-    /*@ invariant (\forall int i; 0 <= i && i <= punctuationCodes.length
+    /*@ invariant punctuationCodes.length == punctuationStrings.length
+     @	&& (\forall int i; 0 <= i && i < punctuationCodes.length
      @           ==>  punctuationCodes[i] != TagConstants.IDENT &&
      @                punctuationCodes[i] != TagConstants.BOOLEANLIT &&
      @                punctuationCodes[i] != TagConstants.INTLIT &&
