@@ -68,17 +68,16 @@ public final class StackVector
     private /*@ spec_public */ Object[] elements = new Object[10];
 
 
-    //@ invariant 0<=elementCount && elementCount <= elements.length;
-    /*@ invariant (\forall int i; 0<=i && i<elementCount
-	   ==> elements[i]==null || \typeof(elements[i]) <: elementType); */
+    /*@ invariant 0<=elementCount && elementCount <= elements.length
+      @		&&  (\forall int i; 0<=i && i<elementCount
+      @			==> elements[i]==null || \typeof(elements[i]) <: elementType)
+      @ 	&& 0<=currentStackBottom && currentStackBottom<=elementCount
+      @		&& (currentStackBottom == 0 ||
+      @			elements[currentStackBottom-1]==null); 
+      @*/
 
     /*@spec_public*/ private int elementCount = 0;
 
-
-    //@ invariant 0<=currentStackBottom && currentStackBottom<=elementCount;
-
-    /*@ invariant currentStackBottom == 0 ||
-         elements[currentStackBottom-1]==null; */
 
     /*@spec_public*/ private int currentStackBottom = 0;
 

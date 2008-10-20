@@ -65,8 +65,8 @@ public abstract class LocationManagerCorrelatedReader
    *
    * Note: this means a line ends just *after* a newline, not before. <p>
    */
-  //@ invariant curLineNo <= NLOA.length;
-  /*@ invariant (\forall int i; 0 <= i && i < curLineNo ==> 0 <= NLOA[i]); */
+  /*@ invariant curLineNo <= NLOA.length
+    @	&& (\forall int i; 0 <= i && i < curLineNo ==> 0 <= NLOA[i]); */
 
   /*@ spec_public */ private /*@ non_null */ int[] NLOA; //@ in internalState;
 

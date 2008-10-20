@@ -54,14 +54,14 @@ public class  _TYPE_Vec {
      ***************************************************/
 
     private /*@ spec_public non_null*/ _TYPE_[/*#@nullable*/] elements;
-    //@ invariant (\forall int i; (0<=i && i<count) ==> elements[i]!=null);
-    //@ invariant \typeof(elements) == \type(_TYPE_[]);
+    private /*@spec_public*/ int count;
 
-    //@ invariant elements.owner == this;
-
-    /*@spec_public*/ private int count;
-    //@ invariant 0 <= count;
-    //@ invariant count <= elements.length;
+    /*@ invariant 0 <= count 
+      @        && count <= elements.length
+      @        && (\forall int i; (0<=i & i<count) ==> elements[i]!=null);
+      @ invariant \typeof(elements) == \type(Expr[]);
+      @ invariant elements.owner == this;
+      @*/
 
 
     /***************************************************
@@ -79,6 +79,8 @@ public class  _TYPE_Vec {
 	//@ set elements.owner = this;
 
 	System.arraycopy(els,0, elements,0, count);
+	// arraycopy's spec isn't strong enough ... so assume
+	//@ assume (\forall int i; (0<=i & i<count) ==> els[i] == elements[i]);
     }
 
     //@ requires cnt >= 0;

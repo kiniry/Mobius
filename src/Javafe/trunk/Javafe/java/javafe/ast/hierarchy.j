@@ -1512,9 +1512,9 @@ public class NewArrayExpr extends Expr
    * @note locOpenBrackets may contain junk after the first
    * dims.size() entries.
    */
-  //@ invariant locOpenBrackets.length >= dims.count;
-  /*@ invariant (\forall int i; (0 <= i && i<dims.count) ==> 
-			locOpenBrackets[i] != Location.NULL); */
+  /*@ invariant locOpenBrackets.length >= dims.count
+    @	&& ((\forall int i; (0 <= i && i<dims.count) ==> 
+			locOpenBrackets[i] != Location.NULL)); */
   //# int[] locOpenBrackets NoCheck
 
   //@ public represents startLoc <- loc;
