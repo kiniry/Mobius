@@ -393,15 +393,18 @@ public abstract class PrettyPrint {
   
   //// Helper methods
   
+  //@ requires o.isOpen;
   public static void writeln(/*@ non_null */ OutputStream o) {
     write(o, '\n');
   }
   
+  //@ requires o.isOpen;
   public static void writeln(/*@ non_null */ OutputStream o, /*@ non_null */ String s) {
     write(o, s);
     write(o, '\n');
   }
   
+  //@ requires o.isOpen;
   public static void write(/*@ non_null */ OutputStream o, char c) {
     try {
       o.write((byte)c);
@@ -410,6 +413,7 @@ public abstract class PrettyPrint {
     }
   }
   
+  //@ requires o.isOpen;
   public static void write(/*@ non_null */ OutputStream o, /*@ non_null */ String s) {
     byte[] outBuf = s.getBytes();
     try {
