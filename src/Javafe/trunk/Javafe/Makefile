@@ -182,7 +182,7 @@ self_test: build
 self_test0:
 	unset CLASSPATH; \
 	export JAVA_VM_FLAGS=-Xmx1024m; \
-	export PROVER_KILL_TIME=5; \
+	export PROVER_KILL_TIME=4; \
 	export PROVER_CC_LIMIT=1; \
 	${MAKE} ESCJ_EXTRA_FLAGS+=" -nonNullByDefault -nowarn Modifies -nowarn Exception" self_test
 

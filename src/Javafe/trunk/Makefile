@@ -93,6 +93,9 @@ self_typecheck: build
 	$(MAKE) -C Javafe self_typecheck 
 
 self_test self_test0: build
+	export PROVER_CC_LIMIT=1; \
+	export PROVER_IN_ITS_OWN_THREAD=1; \
+	export PROVER_KILL_TIME=4; \
 	export SPECS="$(HOME)/dev/JMLspecs/java4"; \
 	$(MAKE) ESCJ_EXTRA_FLAGS+=" -nonNullByDefault" \
 		SPECS="$(HOME)/dev/JMLspecs/java4" \
