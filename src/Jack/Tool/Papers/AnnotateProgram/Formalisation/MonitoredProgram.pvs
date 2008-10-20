@@ -97,10 +97,9 @@ END MonitoredProgram
 
 
 % The semantics of MonitoredPrograms assumes that the program is annotated,
-% thus this can be thought as MonitoredAnnotatedProgramSemantics
-
+% thus this can be thought as MonitoredAnnotatedProgramSemantics.
 % One could imagine that MPState would be parametrised with the type of 
-% State, which could be for an basic or annotated program
+% State, which could be for a basic or an annotated program.
 % For simplicity, we choose not to do this
 MonitoredProgramSemantics[CP, Name : TYPE+] : THEORY
 BEGIN

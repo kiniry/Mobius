@@ -64,8 +64,35 @@ BEGIN
                 (ann_event(mp)(filter_event(mva(mp))(et)(name(m)))(v),
                  sAP1, Unit, sAP2)(n)
 
-  % Simulation of the annotated program. Note that the converse does not hold
-  related_states_implies_derive_for_unchanged_program : THEOREM %
+  % Method call case of related_states_implies_derive_for_unchanged_program
+  related_states_implies_derive_for_method_call : LEMMA
+    FORALL (b : (wf_Body(program(mp))), v1 : Val)
+           (sMP1, sMP2 : MPState, sAP1 : APState)
+           (n1 : nat) :
+      MethodCall?(b) IMPLIES
+      well_behaved_MVA_for_annot_gen(mp) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+      legal_Program_AP(ann_program(mp)) IMPLIES
+      legal_Body(ann_program(mp))(b) IMPLIES
+      related_states(mp)(sMP1, sAP1) IMPLIES
+      NOT cp(astate(sMP1)) = halted IMPLIES
+      derive(mp)(b, sMP1, v1, sMP2)(n1) IMPLIES
+      (FORALL (b: (wf_Body(program(mp))), v1: Val)
+              (sMP1, sMP2: MPState, sAP1: APState)(m1 : below(n1)) :
+        subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
+        legal_Body(ann_program(mp))(b) IMPLIES
+        related_states(mp)(sMP1, sAP1) IMPLIES
+        NOT cp(astate(sMP1)) = halted IMPLIES
+        derive(mp)(b, sMP1, v1, sMP2)(m1) IMPLIES
+          (EXISTS (sAP2: APState, v2: Val, n2: nat):
+           derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2))) IMPLIES
+        EXISTS (sAP2 : APState, v2 : Val, n2 : nat) : 
+          derive(ann_program(mp))(b, sAP1, v2, sAP2)(n2)
+
+  % The annotated program simulates the monitored program
+  % Note that the converse does not hold because the new annotatations the
+  % annotated program can terminate while the monitored program does not
+  related_states_implies_derive_for_unchanged_program : THEOREM % :-)
     FORALL (b : (wf_Body(program(mp))), v1 : Val)
            (sMP1, sMP2 : MPState, sAP1 : APState)
            (n1 : nat) :
