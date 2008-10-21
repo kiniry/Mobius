@@ -7,6 +7,7 @@ import jml2bml.symbols.Symbols;
 import jml2bml.symbols.Variable;
 import jml2bml.utils.JCUtils;
 
+import org.apache.bcel.generic.LocalVariableGen;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
@@ -98,6 +99,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
       }
     } else if (method != null && !isGhost && !isModal) {
       //parameter
+      
       handleLocal(node, method, p);
     } else {
       //class field
@@ -120,10 +122,26 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     final BCClass cl = s.findClass();
     final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
                                                cl);
-    final LocalVariable var = m.findLocalVariable(node.name.toString());
+    
+    LocalVariable var = m.findLocalVariable(node.name.toString());
+    if (var == null){
+      int index = getIndex(m);
+      LocalVariableGen lvGen = new LocalVariableGen(index + 1, null, m.getBcelMethod().getArgumentType(index - 1), null, null);
+      var = new LocalVariable(false, m, index + 1, node.getName().toString(), lvGen);
+    }
     s.put(node.name.toString(), new Variable(var, node));
   }
 
+  int index = 0;
+  BCMethod currentMethod = null;
+  private int getIndex(BCMethod m){
+    if (! m.equals(currentMethod)){
+      index = 0;
+      currentMethod = m;
+    }
+    index++;
+    return index;
+  }
   /**
    * Handles field declarations.
    * @param node field declaration
