@@ -1,5 +1,8 @@
 package jml2bml.ast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.Jml2BmlException;
@@ -125,21 +128,27 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     
     LocalVariable var = m.findLocalVariable(node.name.toString());
     if (var == null){
-      int index = getIndex(m);
-      LocalVariableGen lvGen = new LocalVariableGen(index + 1, null, m.getBcelMethod().getArgumentType(index - 1), null, null);
-      var = new LocalVariable(false, m, index + 1, node.getName().toString(), lvGen);
+      int index = getIndex(m, node.getName().toString());
+      LocalVariableGen lvGen = new LocalVariableGen(index, null, m.getBcelMethod().getArgumentType(index - 1), null, null);
+      var = new LocalVariable(false, m, index, node.getName().toString(), lvGen);
     }
     s.put(node.name.toString(), new Variable(var, node));
   }
 
   int index = 0;
   BCMethod currentMethod = null;
-  private int getIndex(BCMethod m){
+  Map<String, Integer> mapping = null;
+  private int getIndex(BCMethod m, String name){
     if (! m.equals(currentMethod)){
       index = 0;
       currentMethod = m;
+      mapping = new HashMap<String, Integer>();
     }
+    if (mapping.containsKey(name))
+      return mapping.get(name).intValue();
     index++;
+    mapping.put(name, Integer.valueOf(index));
+    System.err.println("mapowanie " + name + " " + index);
     return index;
   }
   /**
