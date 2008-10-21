@@ -88,7 +88,7 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomNum atomNum, BigInteger val) {
-    return term.mk("const_int", val);
+    return term.mk("literal_int", val);
   }
 
   @Override

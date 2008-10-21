@@ -75,14 +75,14 @@ public class SimplifyProver extends Prover {
       sb.append(") ");
       printTerm(st.children[1], sb);
       sb.append(")");
-    } else if (st.id.equals("const_int")) {
+    } else if (st.id.equals("literal_int")) {
       sb.append(st.data);
-    } else if (st.id.equals("const_bool")) {
+    } else if (st.id.equals("literal_bool")) {
       if ((Boolean)st.data)
         sb.append("|true|");
       else
         sb.append("|false|");
-    } else if (st.id.equals("const_pred")) {
+    } else if (st.id.equals("literal_pred")) {
       if ((Boolean)st.data)
         sb.append("TRUE");
       else
