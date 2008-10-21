@@ -5,12 +5,9 @@
 @c @setchapternewpage odd
 @c %**end of header
 
-@c FIXME - indexing needs major work
-
 @comment ----- title and copyright pages
 @titlepage
 @title ESC/Java2 Implementation Notes
-@subtitle VERY MUCH A PRELIMINARY, INCOMPLETE DRAFT
 
 @author David R. Cok
 @email{cok@@frontiernet.net}
@@ -18,10 +15,12 @@
 @author Joseph R. Kiniry
 @email{joseph.kiniry@@ucd.ie}
 
+@author Dermot Cochran
+@email{Dermot.Cochran@@ucd.ie}
+
 @sp 1
 
-
-@center January 2008
+@center October 2008
 
 @sp 2
 
@@ -55,8 +54,10 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 @sp 1
 
 Copyright @copyright{} 2003-2004 David R. Cok
+
 Copyright @copyright{} 2005-2008 Joseph R. Kiniry
 
+Copyright @copyright{} 2007-2008 Dermot Cochran
 
 @sp 4
 @end titlepage
@@ -87,7 +88,7 @@ Copyright @copyright{} 2005-2008 Joseph R. Kiniry
 Introduction
 
 * Motivation and Background::   
-* Acknowledgements::            
+* Acknowledgments::            
 * Dependencies::                
 * Contacts::                    
 
@@ -109,7 +110,7 @@ Status of JML features
 * Annotation statements::       
 * Local Modifiers::             
 * JML functions (extensions to expressions)::  
-* store-ref expressions::       
+* Store-ref expressions::       
 * Statements within model programs::  
 * Other issues::                
 
@@ -470,7 +471,9 @@ available at
 
 
 To date, the work on ESC/Java2 has been carried out primarily by David
-Cok and Joe Kiniry.  Gary Leavens has provided guidance on the
+Cok, Joe Kiniry, Patrice Chalin, Radu Grigore, Mikolas Janota, Michal Moskal,
+George Karabotsos, Perry James, Julien Charles
+ and Dermot Cochran.  Gary Leavens has provided guidance on the
 semantics and the current and future state of JML.  K. Rustan M. Leino
 has provided advice with respect to the original ESC/Java.
 
@@ -485,7 +488,7 @@ onward. (@url{http://kind.ucd.ie/})
 
 The work of producing ESC/Java2 stands on the very much more
 considerable effort of the ESC/Java team in conceiving of and
-producing ESC/Java, Simplify and related tools in the first place.
+producing ESC/Java, JavaFE, Simplify and related tools in the first place.
 
 It also is built upon the work in designing JML and providing tools for
 JML led by Gary Leavens at Iowa State University, with contributions
@@ -504,7 +507,7 @@ separately available and may have their own license restrictions.
 @cindex ESC/Java
 @cindex Javafe
 @cindex Simplify
-@item The original source for ESC/Java, Simplify and related tools, available 
+@item The original source for ESC/Java, JavaFE, Simplify and related tools, available 
 at
 @*@center @uref{http://www.research.compaq.com/downloads.html/}
 
@@ -620,6 +623,10 @@ using the @code{-simplify} option and the location of the reference
 specifications using the @code{-specs} option.  You also need to 
 specify the classpath using @code{-classpath} and any other input files
 and options.
+
+5. Using the Eclipse plugin for ESC/Java2 or the MOBIUS Program 
+Verification Environment (PVE) for Eclipse:  
+@uref{http://kind.ucd.ie/products/opensource/Mobius}
 
 @c ------ chapter Status of JML features --------
 @node  Status, features, Running ESCJava2, Top
