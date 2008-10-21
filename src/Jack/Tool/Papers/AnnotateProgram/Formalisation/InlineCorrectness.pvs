@@ -134,6 +134,28 @@ BEGIN
       lvs(st(pstate(sAP1a))) = lvs(st(pstate(sAP1b))) IMPLIES
         lvs(st(pstate(sAP2a))) = lvs(st(pstate(sAP2b))) 
 
+
+  % for convenience, explicit lemma that inline_related_states implies
+  % derive for method calls
+  inline_related_states_implies_derive_for_method_call : LEMMA
+    FORALL (b : (wf_Body(p)), v : Val)
+           (sAP1a, sAP1b, sAP2a : APState)
+           (n1 : nat) :
+      MethodCall?(b) IMPLIES
+      subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+      inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+      derive(p)(b, sAP1a, v, sAP1b)(n1) IMPLIES
+      (FORALL(b : (wf_Body(p)), v : Val)
+             (sAP1a, sAP1b, sAP2a : APState)
+             (m1 : below(n1)) :
+        subset?(var_names(b), ext_declared_var_names(p)) IMPLIES
+        inline_related_states(p)(sAP1a, sAP2a) IMPLIES
+        derive(p)(b, sAP1a, v, sAP1b)(m1) IMPLIES
+        EXISTS(sAP2b : APState, n2 : nat) :
+          derive(inline_program(p))(b, sAP2a, v, sAP2b)(n2)) IMPLIES
+          EXISTS(sAP2b : APState, n2 : nat) :
+            derive(inline_program(p))(b, sAP2a, v, sAP2b)(n2)
+
   % derivation in original program, implies existence of derivation in
   % inlined program
   inline_related_states_implies_derive_for_unchanged_program : THEOREM
