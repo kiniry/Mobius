@@ -8,6 +8,8 @@
  */
 package main;
 
+import java.io.IOException;
+
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
@@ -65,7 +67,7 @@ public class Main {
    * @throws ReadAttributeException
    */
   public static void main(final String[] args) throws ClassNotFoundException,
-      ReadAttributeException {
+      ReadAttributeException, IOException {
     if (args.length != 3) {
       return;
     }
@@ -90,7 +92,7 @@ public class Main {
    * @throws NotTranslatedException 
    */
   public void compile(final String sourceFile, final ClassFileLocation classLoc)
-      throws ClassNotFoundException, ReadAttributeException, NotTranslatedException {
+      throws ClassNotFoundException, ReadAttributeException, NotTranslatedException, IOException {
     final Context context = createContext();
     context.put(ClassFileLocation.class, classLoc);
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
@@ -128,7 +130,8 @@ public class Main {
     } catch (NotTranslatedRuntimeException e) {
       throw new NotTranslatedException(e);
     }
-    clazz.saveJC();
+     
+    clazz.saveToFile(classLoc.getClassFilePath());
     log.info(clazz.printCode());
   }
   /**
