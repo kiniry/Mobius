@@ -139,7 +139,7 @@ public class BCMethod extends BCMember implements IOpCodes {
     return exceptionHandlers;
   }
 
-  void setCodeInfo(
+  public void setCodeInfo(
       Instructions instructions,
       int maxStack,
       int maxLocals,
