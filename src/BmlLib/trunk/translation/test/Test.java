@@ -6,7 +6,7 @@ import annot.bcclass.BCClass;
 
 public class Test {
   public static void main(String[] args) throws Exception {
-    String dirName = "e:\\testClasses";
+    String dirName = "F:\\mimuw\\OpenJml-workspace\\BmlLib-ucd\\testClasses";
     String className = "Bill";
     final BCClass clazz = new BCClass(dirName, className);
     JClassType type = new JClassType(clazz.getJC().getClassName());

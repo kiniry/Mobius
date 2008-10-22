@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.CodeExceptionGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
@@ -13,7 +14,6 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
-import annot.attributes.AttributeFlags;
 import annot.attributes.BCAttributeMap;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
@@ -147,8 +147,25 @@ public class TranslatingVisitor {
     }
     resMethod.setSpecification(visit(method.getMspec()));
 
+    CodeExceptionGen[] e = bcm.getExceptionHandlers();
+    b2bpl.bytecode.ExceptionHandler[] excHandlers = new b2bpl.bytecode.ExceptionHandler[e.length]; 
+    int i = 0;
+    for (CodeExceptionGen ceg : e){
+      b2bpl.bytecode.InstructionHandle start = visit(ceg.getStartPC().getInstruction(), codeAnnotations
+            .getAllAt(ceg.getStartPC()), codeAnnotations);
+      b2bpl.bytecode.InstructionHandle end = visit(ceg.getEndPC().getInstruction(), codeAnnotations
+                                                     .getAllAt(ceg.getEndPC()), codeAnnotations);
+      b2bpl.bytecode.InstructionHandle handler = visit(ceg.getHandlerPC().getInstruction(), codeAnnotations
+                                                   .getAllAt(ceg.getHandlerPC()), codeAnnotations);
+      JClassType type = (JClassType) visit(ceg.getCatchType());
+      
+      excHandlers[i] = new b2bpl.bytecode.ExceptionHandler(start, end, handler, type);
+      i++;
+    }
+    resMethod.setCodeInfo(retInstr, bcm.getMaxStack(), bcm.getMaxLocals(), excHandlers);
     System.out.println("specyfikacje to " + visit(method.getMspec()));
     System.out.println("A ca³a metoda to " + resMethod);
+
     return resMethod;
   }
 
@@ -220,7 +237,7 @@ public class TranslatingVisitor {
       BMLExpression invariant = exprTranslator.visit(expressions[1]);
       BMLExpression decreases = exprTranslator.visit(expressions[2]);
       BMLModifiesClause modifies = visit((ExpressionRoot<ModifyList>) expressions[0]);
-      System.out.println("dodaje invariant");
+      
       res
           .addLoopSpecification(new BMLLoopSpecification(
                                                          new BMLLoopModifiesClause(
@@ -241,6 +258,7 @@ public class TranslatingVisitor {
                                                new BMLPredicate(
                                                                 translatedFormula)));
     }
+    
     return res;
   }
 
@@ -253,6 +271,6 @@ public class TranslatingVisitor {
   }
 
   public JReferenceType visit(ObjectType type) {
-    return null;
+    return (JReferenceType)JType.fromDescriptor(type.getSignature());
   }
 }

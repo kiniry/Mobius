@@ -27,6 +27,7 @@ public class InstructionTranslator {
 
   public b2bpl.bytecode.instructions.Instruction translateInvoke(
                                                                  final org.apache.bcel.generic.InvokeInstruction instruction) {
+    
     JType returnType = visitor.visit(instruction.getReturnType(cpg));
     String methodName = instruction.getMethodName(cpg);
     Type[] argTypes = instruction.getArgumentTypes(cpg);
@@ -35,6 +36,7 @@ public class InstructionTranslator {
     for (int i = 0; i < argTypes.length; i++) {
       resArgTypes[i] = visitor.visit(argTypes[i]);
     }
+    System.out.println(instruction.getOpcode() + "|" + owner +"|"+methodName  + "|" + returnType + "|" + resArgTypes);
     return InstructionFactory.fromMethodInsn(instruction.getOpcode(), owner,
                                              methodName, returnType,
                                              resArgTypes);
