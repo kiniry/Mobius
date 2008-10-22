@@ -276,11 +276,11 @@ public class ProverManager {
         	simplifyProverThread.join(PROVER_KILL_TIME*1000); // can throw InterruptedException.
         	en = r.getProverResult();
         	if (en == null) {
-        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: interrupting simplify");
+        		if (THREADING_TRACE_OUTPUT > 0) System.out.println("\tProverManager: interrupting simplify");
         		simplifyProverThread.interrupt(); // in case prover is still running.
-        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: waiting for simplify to return");
-        		simplifyProverThread.join(); // wait for child process to die
-        		if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: killing simplify");
+        		if (THREADING_TRACE_OUTPUT > 9) System.out.println("\tProverManager: waiting for simplify to return");
+        		simplifyProverThread.join(WAIT_FOR_PROVER_TO_DIE_TIME*1000); // wait for child process to die
+        		if (THREADING_TRACE_OUTPUT > 9) System.out.println("\tProverManager: killing simplify");
         		died(); // kill simplify prover process since it is taking too much time.
         		en = new SimplifyTimeoutResultEnum();
         	}
@@ -444,14 +444,15 @@ public class ProverManager {
   public static /*@ nullable */ Lifter lifter;
 
   public static final boolean PROVER_IN_ITS_OWN_THREAD;
-  public static final boolean THEADING_TRACE_OUTPUT;
+  public static final int THREADING_TRACE_OUTPUT;
   public static final int PROVER_KILL_TIME; // in seconds.
+  public static final int WAIT_FOR_PROVER_TO_DIE_TIME = 1; // in seconds.
 
   static {
 	  String proverInItsOwnThread = System.getProperty("PROVER_IN_ITS_OWN_THREAD");
 	  PROVER_IN_ITS_OWN_THREAD = "1".equals(proverInItsOwnThread);
 	  
-	  THEADING_TRACE_OUTPUT = PROVER_IN_ITS_OWN_THREAD && true;
+	  THREADING_TRACE_OUTPUT = PROVER_IN_ITS_OWN_THREAD ? 5 : 0;
 	  
 	  String pktEnvVar = System.getProperty("PROVER_KILL_TIME");
 	  int pkt;
@@ -466,6 +467,6 @@ public class ProverManager {
 		  pkt = 5;
 	  }
 	  PROVER_KILL_TIME = pkt;
-	  if (THEADING_TRACE_OUTPUT) System.out.println("\tProverManager: using PROVER_KILL_TIME " + PROVER_KILL_TIME);
+	  if (THREADING_TRACE_OUTPUT > 0) System.out.println("\tProverManager: using PROVER_KILL_TIME " + PROVER_KILL_TIME);
   }
 }

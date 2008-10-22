@@ -30,7 +30,7 @@ is built.  It now is consistent with the definition of JML and of
 Java 1.4.  It adds additional static checking to that in ESC/Java;
 most significantly, it adds support for checking frame conditions and
 annotations containing method calls.  This document describes the
-status of the implementation of ESC/Java2, along with some notes
+status of the final release of ESC/Java2, along with some notes
 regarding the details of that implementation.
 
 @sp 2
@@ -53,13 +53,9 @@ F.3.1 [@i{Logics and Meanings of Programs}]
 
 @sp 1
 
-Copyright @copyright{} 2003-2004 David R. Cok
+Copyright @copyright{} 2003-2004 David R. Cok, 2005-2008 Joseph R. Kiniry, 
+2007-2008 Dermot Cochran
 
-Copyright @copyright{} 2005-2008 Joseph R. Kiniry
-
-Copyright @copyright{} 2007-2008 Dermot Cochran
-
-@sp 4
 @end titlepage
 
 @contents
@@ -567,7 +563,7 @@ Information about multijava can be obtained from these sources.
 @end itemize
 
 Future versions of JML will not be based on multijava but instead will use, for 
-example, the Eclipse JDT or OpenJDK See the JML mailing list foir more details.
+example, the Eclipse JDT or OpenJDK See the JML mailing list for more details.
 
 @c --------------------------------------------------------------------------
 @node Running ESCJava2, Status, Introduction, Top
@@ -624,8 +620,8 @@ specifications using the @code{-specs} option.  You also need to
 specify the classpath using @code{-classpath} and any other input files
 and options.
 
-5. Using the Eclipse plugin for ESC/Java2 or the MOBIUS Program 
-Verification Environment (PVE) for Eclipse:  
+5. Using the Eclipse plugin for ESC/Java2, which is a component of the 
+MOBIUS Program Verification Environment (PVE) for Eclipse:  
 @uref{http://kind.ucd.ie/products/opensource/Mobius}
 
 @c ------ chapter Status of JML features --------
@@ -733,8 +729,7 @@ all of the files in the directory with suffixes known to JML, namely
 
 Input entries may also be fully-qualified package or class names.  In
 this case, the package or class is found by searching the directories
-of the sourcepath.  [[[which suffixes are used? stop after the first
-directory found??? ]]]
+of the sourcepath.
 
 Each file on the command-line (or file implied by a directory,
 package, or class) is parsed to determine the package to which it
@@ -767,8 +762,9 @@ found in this way are parsed in turn and the files named in each
 @code{refine} statement are sought.  This procedure is repeated
 recursively until a file is found that has no @code{refine} statement.
 The sequence of files so found is called the @emph{refinement
-sequence}.  The refinement sequence may contain the .java file for the
-type [[[ JML allows .class files ??? ]]]
+sequence}.  The refinement sequence may contain the .java or .class 
+file for the type.  ESC/Java2 will parse source code up to Java version 1.4.2
+and bytecode up to Java version 1.5.
 
 @item The rules above do not restrict the filenames of the files of the 
 refinement sequence, other than that they must be in the same package
@@ -865,20 +861,6 @@ sourcepath, regardless of its position in the sourcepath.
 @item When finding a package named as an input entry,
 ESC/Java2 combines all of the packages by that name in any directory
 of the sourcepath, rather than just using the first one.
-@item [[[ Check the caution for CL file not in the RS - OK]]]
-@item [[[ Check the caution for the Java file not in the RS -OK ]]]
-@item [[[ Check the caution if a misnamed file is found in the RS. - OK]]]
-@item [[[ Check that there is an error if a 'refine' file cannot be found. - OK ]]]
-@item [[[ Check that the sourcepath is actually defined and used. - OK]]]
-@item [[[ Can ESC/Java2 handle refining a class?  ]]]
-
-@item [[[ Should we have an option to find MRCUs with any suffix? ]]]
-@item [[[ Should we have an option to find the whole chain whatever the order of the sourcepath and suffixes?]]]
-@item [[[ Should we have an option to change/expand the list of MRCU suffixes? ]]]
-@item [[[ Should we have an option to define 'implicit' refine statements, in order
-for example, to connect specification files to implementation files, when the 
-implementation files suddenly become available and we don't want to edit all of the
-files? ]]]
 @end itemize
 
 @c ------ Format of annotations --------
@@ -978,8 +960,7 @@ public void m();
 It is somewhat ambiguous as to whether (a) to associate `Javadoc material'
 with the embedded annotations and `More javadoc material' with the method
 declaration or (b) to associate all of the javadoc material with the method
-declaration.  The javadoc tool will do the latter, and consequently the jmldoc
-tool does also [[[ or will, this is an outstanding bug.]]]  But the
+declaration.  The javadoc tool will do the latter, but the
 writer, and the flow of the text, may well have meant the former.  It is
 better to avoid embedded annotations if this confusion may arise.
 
@@ -1071,8 +1052,7 @@ Thus, @code{requires} and @code{ensures} clauses must each be wholly
 within a single annotation comment; individual keywords such as
 @code{pure}, @code{normal_behavior}, @code{also}, @code{@{|} or
 @code{implies_that} may be in annotation comments by themselves (with
-any relevant access modifiers).  [[[ FIXME - JML rules need to be
-clarified.]]]
+any relevant access modifiers) if permitted JML.
  
 @item @strong{Multiple annotations per comment:} It is legal JML 
 to include multiple annotations per comment; in fact it is common
@@ -1131,15 +1111,13 @@ names of the declared types must be identical (including case).
 specifications may not add any Java (that is, non-model, non-ghost)
 declarations to the signature.  They may only repeat declarations.
 The specification files may declare specifications for a method that
-is not implemented in the Java implementation if (a) the declaration
+is not implemented in the Java implementation if the declaration
 overrides a method in a superclass or superinterface or, for
-interfaces, a method in @code{java.lang.Object} and (b) the
-declaration is within an interface or is an abstract declaration in a
-class.  This enables the specification writer to write specifications
+interfaces, a method in @code{java.lang.Object}.  This enables the 
+specification writer to write specifications
 for a routine in a class or interface that must be obeyed by
 subtypes, even if the class or interface itself does not provide a new
-implementation.  [[[ The requirement that the introduced declaration
-be abstract is not enforced. Don't think it needs to be abstract. ]]]
+implementation.   
 
 @item If a field is redeclared, it must be redeclared with the 
 same type and the same Java modifiers.  An initializer of a java field
@@ -1184,9 +1162,9 @@ may be added by a refinement but not removed.
 @end itemize
 
 
-@item @strong{Status:} The refine statement is implemented in ESC/Java2.
-[[[ Check that all the rules above regarding consistency of modifiers
-are enforced. They are not all yet.]]]
+@item @strong{Status:} The refine statement is partly implemented in ESC/Java2;
+not all the rules above regarding consistency of modifiers
+are enforced.
 
 @item @strong{Comment on combining refinements:} There are (at least) 
 3 ways to carry out the combining of refinements:
@@ -1199,7 +1177,7 @@ then combining the signatures;
 compilation units it is refining.
 @end enumerate
 
-[[[ Discuss implications and differences.  ESC/Java2 uses (a). ]]]
+ESC/Java2 uses (a).
 
 @end itemize
 
@@ -1317,12 +1295,8 @@ present in ESC/Java
 @noindent
 @strong{Status:} Parsing of access modifiers is fully implemented.
 The access modifiers do not affect static checking.  Checking that
-access is used consistently is not implemented.  [[[ Need to verify
-checks for spec_public and spec_protected, and access checks in
-general. - Behavior sections do not retain or use their access
-modifiers.  ALso ghost and model fields/routines]]]
+access is used consistently is not implemented.
  
-
 @node Type modifiers, Type Annotations, Access modifiers, Status
 @section Type modifiers
 
@@ -1369,8 +1343,7 @@ that is, if an overridden method is pure, the overriding method will
 be pure whether or not it is declared pure.  This is not the case for
 classes or for interfaces.  A subclass may add non-pure methods, even
 if it has a pure superclass.  Declaring a class pure is precisely
-equivalent to declaring all of its methods and constructors pure. [[[
-Verify with JML]]]
+equivalent to declaring all of its methods and constructors pure.
 
 @end itemize
 
@@ -1402,7 +1375,7 @@ or interface declaration.  An example of its syntax is this:
       implements C /*@@ weakly */, D /*@@ weakly */ @{ ... @}
 @end example
 @noindent
-@noindent [[[ Need a description of the semantics ]]]
+@noindent The semantics are not described here.
 
 @item @strong{Status:} Parsed and ignored by ESC/Java2.
 
@@ -1435,17 +1408,14 @@ spec is redundant and the user is notified of such.
 If a class is annotated @code{non_null_by_default} and a formal
 parameter, method, or field is annotated with @code{nullable} then this
 specified annotation overrides the class annotation and the reference
-may be null.
+may be null.  The scope of this annotation to the class includes nested 
+(possibly anonymous) classes, but is not inherited by subclasses.
 
-[[ The scope of this annotation to the class to which it is applied
-as well as nested (possibly anonymous) classes.  The class-scoped
-annotation is not inherited. ]]
-
-[[ An interface may be annotated with @code{non_null_by_default}.  All
+If an interface may be annotated with @code{non_null_by_default}, then all
 constants, formal parameters, and methods in the interface have a
 default specification of @code{non_null}.  All concrete implementations
 of this interface must be consistent with these default
-specifications. ]]
+specifications.
 
 @item @strong{Status:} The modifier is parsed.  Typechecking implementation
       is underway.  This modifier is not yet used by the static checker.
@@ -1537,10 +1507,7 @@ The @code{strictfp} modifier determines the semantics of floating
 point operations within the class so modified.
 
 @item @strong{Status:} This modifier is parsed and typechecked.  
-The static checker does not make use of this information.  [[[ Is it
-inherited, or does it just apply to the implementations given in that
-class?  If so, what about interfaces (maybe applies just to
-initializers in interfaces)?]]]
+The static checker does not make use of this information.
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -1604,7 +1571,6 @@ object that implements the interface.
 @item @strong{Status:} Ghost fields are completely supported.
 
 @item @strong{Differences from JML or Java:} None.
-[[[Check that modifiers work.]]]
 
 @end itemize
 
@@ -1621,15 +1587,11 @@ clause.  They are used to supply values that @emph{model} the behavior
 of the class.
 
 A model field may have these modifiers: access modifiers
-(@pxref{Access modifiers}), @code{static}, [[[ what about @code{final}
-]]] and the JML modifiers @code{non_null}, @code{nullable}, [[[@code{monitored} ???]]] and
+(@pxref{Access modifiers}), @code{static}, and the JML modifiers @code{non_null}, @code{nullable}, and
 @code{instance} (@pxref{Field Annotation modifiers}).  
-Model fields may not have initializers.  [[[ An
-initializer expression would make nice syntactic sugar for the
-combination of a model declaration and a represents clause. ]]]
+Model fields may not have initializers.   
 
-@item @strong{Status:} Model fields are parsed and used in typechecking. 
-[[[ Inconsistencies between multiple represents clauses are usually not found. ]]]
+@item @strong{Status:} Model fields are parsed and used in typechecking, but ESC/Java2 does not find inconsistencies between multiple represents clauses.
 
 
 @item @strong{Differences from JML or Java:} None.
@@ -1651,16 +1613,13 @@ they may have these JML modifiers: @code{pure}, @code{non_null},
 Model methods may be declared in multiple specification files, but may have 
 an implementation in at most one.
 
-
 @item @strong{Status:} Model methods are parsed and converted to regular Java 
-methods within ESC/Java2.  The use of model methods in 
-static checking is described in [[[ ??? ]]]
+methods within ESC/Java2.
 
 @item @strong{Differences from JML or Java:} Model methods are parsed and 
 converted to regular Java methods within ESC/Java2.  Consequently,
 ESC/Java2 will not detect their (illegal) use within the
-implementation of a Java routine.  [[[ Some related scoping issues in the
-presence of inheritance. ]]]
+implementation or inheritance of a Java routine.
 
 @end itemize
 
@@ -1757,7 +1716,6 @@ block, which apply only to that block.
 @item @strong{Status:} Not yet parsed or implemented in static checking.
 
 @item @strong{Differences from JML or Java:} None. 
-[[[ What access modifiers are allowed and used ???]]]
 
 
 @end itemize
@@ -1771,7 +1729,7 @@ block, which apply only to that block.
 @item @strong{Status:} Not yet parsed or implemented in the static checker.
 
 @item @strong{Differences from JML or Java:} None.
-[[[ What access modifiers are allowed and used ???]]]
+
 
 @end itemize
 
@@ -1895,8 +1853,6 @@ the restrictions on static.
 @item @strong{Description:} An @code{axiom} is used to specify a mathematical
 property, independent of the implementation of classes or objects.
 Axioms are always considered to be static.
-[[[ Describe circumstances in which an axiom is added to the proof context]]]
-[[[ Are access modifiers allowed ???]]]
 
 @item @strong{Status:} Implemented.
 
@@ -1926,10 +1882,6 @@ additional postconditions on every constructor of a class.  Failures provoke
 an `Initially' warning.
 
 @item @strong{Differences from JML or Java:} None.  
-[[[ Actually TBD - JML has not
-clarified the semantics of @code{initially} clauses, such 
-as whether they are inherited and whether they can be
-present in interfaces. ]]]
 
 
 @end itemize
@@ -1977,9 +1929,7 @@ be static.  The effect is to associate the expression values as monitors for
 the given object.
 
 @item @strong{Status:} Implemented.
-[[[ Should a list of ids be allowed? ]]]
-[[[ Should syntax such as this.*, T.* for classname T be allowed? ]]]
-[[[ Is a static modifier allowed???]]]
+ 
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -2027,8 +1977,8 @@ omitted, the default for that clause is as follows:
         accessible \everything;
         callable \everything;
         when true;
-        duration \not_specified; [[[ infinite ???]]]
-        working_space \not_specified; [[[ infinite ???]]]
+        duration \not_specified;  
+        working_space \not_specified;  
 @end example
 @noindent
 The defaults defined by JML for lightweight specifications are
@@ -2045,7 +1995,7 @@ ESC/Java2 as follows.
         duration \not_specified;
         working_space \not_specified;
 @end example
-@c [[[ need measured_by eventually ]]]
+@c
 @noindent
 The default for the requires clause is determined as follows:
 @footnote{Michael M@"oller contributed to this
@@ -2085,8 +2035,8 @@ lightweight default, @code{diverges true}, puts the least restrictions
 on the implementation; it states that the implementation is allowed to
 be non-terminating (but not required to be).  The heavyweight default,
 @code{diverges false}, requires the implementation to terminate with
-either an exception or a normal return.  [[[ However, this is not
-checked in the current implementation. ]]]
+either an exception or a normal return, but this is not
+checked by ESC/Java2.
 
 @item @strong{Status:} The lightweight and heavyweight specification forms,
 including nesting using @code{@{|} and @code{|@}} and combination with
@@ -2101,9 +2051,8 @@ to precede any other clauses; with a warning level of -w2 (not the
 default), JML will also warn about deviations from a recommended order
 of the other clause types.  ESC/Java2 will accept clauses in any order
 (but note that the scope of @code{forall} and @code{old} does not
-include clauses that precede them). [[[ Esc/Java2 does not currently
-check the access modifiers on behavior and example keywords.  What
-happens with the privacy checking? ]]]
+include clauses that precede them).  ESC/Java2 does not 
+check the access modifiers on behavior and example keywords.
 
 @anchor{Desugaring}
 @item @strong{Comment:} The ESC/Java2 (and ESC/Java) translator,
@@ -2113,11 +2062,8 @@ In order to handle the nested and heavyweight forms and the
 combination of specifications using @code{also}, either within one
 source file or across a refinement sequence, ESC/Java2 @emph{desugars}
 the more complicated syntax into a simpler form.  For this purpose
-ESC/Java2 largely follows the desugaring as outlined in [[[FIXME -
-provide ref]]], but it does not need to desugar all clauses of a given
-type down to one instance of that clause type.  That paper provides
-more details on the desugaring process; @footnote{Its treatment of
-assignable clauses is incorrect.}  the equivalent but slightly simpler
+ESC/Java2 does not need to desugar all clauses of a given
+type down to one instance of that clause type. The equivalent but slightly simpler
 version used in ESC/Java2 is outlined here. Note that the desugaring
 process must take care not to lose the location information that is
 helpful to the user when warning messages are issued.
@@ -2163,11 +2109,7 @@ from different specification cases are not combined.
 @item @code{signals} (@emph{type} @emph{id} @code{)} @emph{pred}@code{;}
 @*becomes
 @*@code{signals} (@emph{type} @emph{id} @code{)} @emph{pre-predicate} @code{==>} @emph{pred}@code{;}
-@item when -- [[[ complete this ]]]
-@item accessible -- [[[ complete this ]]]
-@item callable -- [[[ complete this ]]]
-@item duration -- [[[ complete this ]]]
-@item working_space -- [[[ complete this ]]]
+
 @end itemize
 The requires clauses are desugared by replacing all of the requires
 clauses in all of the specification cases with a single requires
@@ -2181,8 +2123,6 @@ the method and all the declarations that it overrides.
 
 @node also desugaring, modelprogram, specifications, Routine Annotations
 @subsection also
-
-@comment{Need to actually say what also does! -JRK}
 
 @itemize @bullet
 @item @strong{Description:} 
@@ -2244,8 +2184,7 @@ parser.
 @c ----------------------------------------------------------------------------
 @node codecontract, impliesthat, modelprogram, Routine Annotations
 @subsection code_contract
-[[[ Needs discussion - also accessible, callable, captures, measured_by clauses ]]]
-
+ 
 @c ----------------------------------------------------------------------------
 @node impliesthat, forexample specification, codecontract, Routine Annotations
 @subsection implies_that
@@ -2261,7 +2200,7 @@ turn could help with proofs involving use of the method or constructor
 with which the @code{implies_that} specification is associated.
 
 @item @strong{Status:} The specifications in an @code{implies_that} section are
-parsed [[[and typechecked?]]], but not used within any static checking.
+parsed, but not used within any static checking.
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -2280,7 +2219,7 @@ introduced by one of the keywords @code{example},
 may have associated access modifiers (@pxref{Access modifiers}).
 
 @item @strong{Status:} The specifications in a @code{for_example} section are
-parsed [[[and typechecked?]]], including the @code{example},
+parsed, including the @code{example},
 @code{normal_example}, and @code{exceptional_example} keywords.
 However, they are not used within any static checking, nor is it
 verified that they follow from the other specifications.
@@ -2359,11 +2298,9 @@ for_example section.  The uses of @code{old} variables are desugared
 by substituting the initialization expression, wrapped in an
 appropriate @code{\old} expression, at the point of use.
 
-@item @strong{Status:} Implemented.  [[[ Not yet supported: array initializers. ]]] [[[ I don't think that ESC/Java2 includes the initializer in the scope. ]]]
-[[[ Check what the java behavior is and fix the definition here. ]]]
-
+@item @strong{Status:} Implemented, but array initializers are not supported.
+ 
 @item @strong{Differences from JML or Java:} None.
-
 
 @end itemize
 
@@ -2385,9 +2322,6 @@ evaluated in the pre-state.
 utilized by ESC/Java2 in generating verification conditions.
 
 @item @strong{Differences from JML or Java:} None.
-
-[[[ Decide, discuss use of this, instance variables in constructor preconditions]]]
-[[[ Note any change from ESC/Java]]]
 
 @end itemize
 
@@ -2564,8 +2498,7 @@ any static checking.
 @node when, duration, diverges, Routine Annotation clauses
 @subsection when
 @itemize @bullet
-@item @strong{Description:} description.... [[[ description needed ]]]
-  The expression in the clause
+@item @strong{Description:} The expression in the clause
 may also be @code{\not_specified}, which is equivalent to omitting the clause.
 The expression must have boolean type and is evaluated in the pre-state.
 
@@ -2586,8 +2519,7 @@ the routine (with the given preconditions) will not exceed the stated
 number of virtual machine cycles.  The expression in the clause may
 also be @code{\not_specified}, which is equivalent to omitting the
 clause.  The expression must have @code{long} type and is evaluated in
-the post-state.  [[[ What happens if \result is undefined because of
-an exceptional return?]]]
+the post-state.   
 
 @item @strong{Status:} Parsed and typechecked but not used in 
 any static checking.
@@ -2607,8 +2539,7 @@ of the routine will not utilize more than the stated number of bytes
 of heap space.  The expression in the clause may also be
 @code{\not_specified}, which is equivalent to omitting the clause.
 The expression must have @code{long} type and is evaluated in the
-post-state.  [[[ What happens if \result is undefined because of an
-exceptional return?]]]
+post-state. 
 
 @item @strong{Status:} Parsed and typechecked, but not used in 
 any static checking.
@@ -2622,16 +2553,16 @@ any static checking.
 @node accessible, callable, workingspace, Routine Annotation clauses
 @subsection accessible
 @itemize @bullet
-@item @strong{Description:} description....[[[ description needed ]]]
+@item @strong{Description:}  
   The list of locations in the clause may also contain the special
 keywords @code{\nothing}, @code{\everything}, Any expressions
 (e.g. array indices) are evaluated in the pre-state.
 
-[[[ COmment on @code{not_specified}. ]]]
+ 
 
-@item @strong{Status:} status....  - status unknown
+@item @strong{Status:} Parsed and ignored.
 
-@item @strong{Differences from JML or Java:} bugs...
+
 
 @end itemize
 
@@ -2640,16 +2571,15 @@ keywords @code{\nothing}, @code{\everything}, Any expressions
 @node callable, measuredby, accessible, Routine Annotation clauses
 @subsection callable
 @itemize @bullet
-@item @strong{Description:} description....[[[ description needed ]]]
+@item @strong{Description:}  
   The list of locations in the clause
 may also contain the special keywords @code{\nothing}, @code{\everything},
 Any expressions (e.g. array indices) are evaluated in the pre-state.
 
-[[[ COmment on @code{not_specified}. ]]]
+ 
+@item @strong{Status:} Parsed and ignored.
 
-@item @strong{Status:} status....  - status unknown
 
-@item @strong{Differences from JML or Java:} bugs...
 
 @end itemize
 
@@ -2657,14 +2587,13 @@ Any expressions (e.g. array indices) are evaluated in the pre-state.
 @node measuredby, Redundancy, callable, Routine Annotation clauses
 @subsection measured_by
 @itemize @bullet
-@item @strong{Description:} description.... [[[ Description needed ]]]
+@item @strong{Description:}  
   The expression in the clause
 may also be @code{\not_specified}, which is equivalent to omitting the clause.
-[[[ What is the type of the expression ? ]]]
+ 
 
 @item @strong{Status:} Parsed and ignored.
 
-@item @strong{Differences from JML or Java:} bugs...
 
 @end itemize
 
@@ -2828,13 +2757,6 @@ constructors, final methods or methods of final classes to be helpers.
 (ESC/Java2's rule is that only routines that cannot be overridden may
 be helpers.)
 
-[[[ It seems constructors and methods labeled helper are not checked
-at all, and are inlined when used elsewhere.  Rather they should be
-checked against their own pre and post conditions but not against
-invariants, constraints, initially clauses. ]]]
-
-[[[ Comment on inlining and resulting differences in checking. ]]]
-
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -2882,8 +2804,6 @@ with the object.  Before executing an instance method, it is the lock
 associated with receiver object that is obtained; before executing a static
 method, it is the lock associated with the class object (T.class for type T)
 that is obtained.
-[[[ Are the preconditions/postconditions evaluated before or after 
-obtaining and releasing the locks. ]]]
 
 @item @strong{Status:} Implemented.
 
@@ -2933,8 +2853,6 @@ be @b{followed} by field assertions, which are introduced by the
 @code{in} and @code{maps} keywords.  These declarations associate a
 field or its sub-fields with specific datagroups, which can then be
 used as items in a modifies clause.
-
-[[[ Which fields may have datagroups associated with them???]]]
  
 @menu
 * in (JML)::                    
@@ -2959,18 +2877,10 @@ itself.
 @node maps,  , in (JML), Field Annotations
 @subsection maps, \into (JML)
 @itemize @bullet
-@item @strong{Description:} [[[ Comment needed. ]]]
+@item @strong{Description:}
 
 @item @strong{Status:} Parsed, typechecked and static checked using a 
 limited unrolling of any recursive definitions.
-
-@item @strong{Differences from JML or Java:} [[[ Comment needed. ]]]
-
-[[[ Comment on the unrolling of recursive mappings. ]]]
-[[[ Potential performance improvement: unroll datagroups, wildcard refs 
-only when needed. Perhaps have to do this to verify superclasses.  ]]]
-[[[ Comment on non-support for wild-cards and array ranges in the middle of
-spec-ref expressions.]]]
 
 @end itemize
 
@@ -3060,8 +2970,7 @@ declaration
 ESC/Java by implementing monitors for static fields and by making the 
 error messages more informative and accurate.
 
-@item @strong{Differences from JML or Java:} None. 
-[[[ Check - does JML and jmlrac support static monitors?]]]
+@item @strong{Differences from JML or Java:} None.
 
 @end itemize
 
@@ -3076,9 +2985,7 @@ about definite-assignment that are relevant but not discussed here.
 
 @item @strong{Status:} It is supported by the ESC/Java2 
 parser and type checker.  It does not have any effect on the static
-checking. [[[ There are checks only that variables with initializers
-are not subsequently assigned to.  Is definite-assignment checked???
-]]]
+checking.
 
 @item @strong{Differences from JML or Java:} None.
 @end itemize
@@ -3149,7 +3056,6 @@ public interface are implicitly public.
 @item @strong{Status:} Implemented.
 
 @item @strong{Differences from JML or Java:} 
-[[[ Check that ill-formed JML uses are checked and forbidden by ESC/Java2]]]
 
 @end itemize
 
@@ -3191,8 +3097,7 @@ more thorough discussion is given in @ref{Inheritance and non_null}.
 static checker.
 
 @item @strong{Differences from JML or Java:} None known. 
-      [[[FIXME - does JML detect problems with overriding methods?]]].  
-
+ 
 @item @strong{Comment:} The original ESC/Java did not permit a 
 subclass to modify a formal parameter as @code{non_null} in an
 overriding declaration.  The declarations of the top-most declaration
@@ -3219,8 +3124,7 @@ more thorough discussion is given in @ref{Inheritance and non_null}.
       is underway.  This modifier is not yet used by the static checker.
 
 @item @strong{Differences from JML or Java:} None known. 
-      [[[FIXME - does JML detect problems with overriding methods?]]].
-
+ 
 @item @strong{Comment:} The original ESC/Java did not support this 
 annotation at all, as it did not exist in JML until late 2005.
 @end itemize
@@ -3308,7 +3212,6 @@ statements must be pure expressions.
 
 @item @strong{Differences from JML or Java:} None.
 
-[[[ What about using set statements containing statements other than assignments, such as x++; chekc on the purity requirement in JML ]]]
 @end itemize
 
 @c ---------------------------------------------------------------------------
@@ -3332,7 +3235,7 @@ in JML.
 @node henceby, loopinvariant, unreachable, Annotation statements
 @subsection hence_by, hence_by_redundantly
 @itemize @bullet
-@item @strong{Description:} [[[ Comment needed - semantics unknown. ]]] This
+@item @strong{Description:}   This
 keyword is followed by a predicate.
 @item @strong{Status:} Parsed and type-checked.  Ignored by the static checker.
 @item @strong{Differences from JML or Java:} None.
@@ -3407,10 +3310,9 @@ of a variable of reference type within the body of a method or
 constructor (including local ghost declarations) may be modified with
 the JML annotation @strong{non_null}.  This requires that the initial
 value and any subsequently assigned value for that variable must not
-be null.  [[[ must have an initializer ???]]]
-
-@item @strong{Status:} Fully implemented (in ESC/Java and ESC/Java2).
-[[[ Failure to initialize is not detected. Or failure to initialize with null value.  Also ghost declarations. ]]]
+be null.    
+@item @strong{Status:} Fully implemented (in ESC/Java and ESC/Java2) except that
+detection of failure to initialize or initialize with null value, or ghost declarations.
 
 @item @strong{Differences from JML or Java:} None.
 
@@ -3586,8 +3488,7 @@ Deadlock and Race detection.
 @cindex @code{\result}
 @item @code{\result} : This keyword denotes the result of a method 
 that returns a value.  It may be used in an @code{ensures} clause (but
-not a @code{signals} clause).  [[[ What about duration, working_space
-clauses ]]] 
+not a @code{signals} clause).
 
 @*@strong{Status:} Implemented.
 
@@ -3615,8 +3516,6 @@ body of a routine.  It is equivalent to boolean AND of @code{x ==
 
 @*@strong{Differences:} ESC/Java2 allows arbitrary (pure) expressions as
 the arguments of @code{\not_modified}; JML only allows store locations.
-[[[ Check that ESC/Java2 and JML actually allow this in routine
-bodies.]]]
 
 @cindex @code{\fresh}
 @item @code{\fresh} : This function takes a single argument of 
@@ -3625,12 +3524,10 @@ used in an expression that is evaluated in the post-state.  The result
 is true if its argument is non-null and was not allocated in the
 pre-state.  
 
-@*@strong{Status:} Implemented.  [[[ Checks needed that
-this is allowed in set and initialization statements and works
-correctly - both in ESC/Java and JML.]]]
+@*@strong{Status:} Implemented.   
 
 @cindex @code{\reach}
-@item @code{\reach} : [[[ description, status, differences needed here ]]] - deprecated
+@item @code{\reach} : - deprecated
 
 @cindex @code{\duration}
 @item @code{\duration} : This function returns a @code{long} value 
@@ -3639,8 +3536,7 @@ the method or constructor call which is the argument.  The argument is
 not executed (and so need not be a pure expression).
 
 @*@strong{Status:} Parsed.  No type checking is performed on the
-argument nor is any static checking performed.  [[[ Why not allow any
-expression as the argument. ]]]
+argument nor is any static checking performed.   
 
 @cindex @code{\space}
 @item @code{\space} : This function returns a @code{long} value 
@@ -3657,8 +3553,7 @@ method or constructor call that is the argument.  The argument is not
 executed (and so need not be a pure expression).
 
 @*@strong{Status:} Parsed.  No type checking is performed on the
-argument nor is any static checking performed.  [[[ Why not allow an
-arbitrary expression ]]]
+argument nor is any static checking performed.  [ 
 
 @cindex @code{\nonnullelements}
 @item @code{\nonnullelements} : This function returns a boolean and 
@@ -3686,9 +3581,7 @@ returns a value of type @code{\TYPE}.  If the argument is an array type then
 the result is the (dynamic) most-specific type of the elements of the array;
 if the argument is not an array type, the result is unspecified.
 
-@*@strong{Status:} Implemented.  [[[ The results of applying \elemtype
-to any non-array type all test equal.  This should perhaps not be so. 
-Check what the behavior actually is. Perhaps should define the result.  ]]]
+@*@strong{Status:} Implemented.   
 
 @cindex @code{\type}
 @item @code{\type} : This is a syntactic construct used to 
@@ -3750,8 +3643,7 @@ returns a boolean, which is true if the object is in the lockset.
 
 @*@strong{Status:} This feature is fully implemented by ESC/Java2 (as
 inherited from ESC/Java). It is not part of JML, but should be.
-[[[ There should be a way to get the lockset of a thread other than the
-current thread. ]]]
+ 
 
 @cindex @code{\max}
 @item @code{\max} : This function takes an argument of type @code{\LockSet}.  
@@ -3798,9 +3690,9 @@ operator takes arguments of type @code{\TYPE}.  Values of type
 @code{\TYPE} can also be compared using the @code{==} or @code{!=}
 operators.
 
-@*@strong{Status:} This is fully implemented.  [[[ In JML \TYPE and
-java.lang.Class are now equivalent.  This is not yet the case in
-ESC/Java2. ]]]
+@*@strong{Status:} This is partly implemented. In JML \TYPE and
+java.lang.Class are now equivalent.  This is not the case in
+ESC/Java2.
 
 @cindex @code{\bigint}
 @item @code{\bigint} : This is a new type name used in JML to 
@@ -3896,13 +3788,15 @@ equivalent to the default for that clause type.
 @c ---------------------------------------------------------------------------
 @node privatedata, other , notspecified, JML functions (extensions to expressions)
 @subsection \private_data
-[[[ description, status, differences needed here ]]]
 
+@*@strong{Status: } Not implemented.
+ 
 @c ---------------------------------------------------------------------------
 @node other , Other Java operators and expression syntax, privatedata, JML functions (extensions to expressions)
 @subsection \other 
-[[[ description, status, differences needed here ]]]
 
+@*@strong{Status: } Not implemented.
+ 
 @c ---------------------------------------------------------------------------
 @node Other Java operators and expression syntax,  , other , JML functions (extensions to expressions)
 @subsection Other Java operators and expression syntax
@@ -3914,20 +3808,16 @@ handled by the static checker are these:
 @item new instance expressions - These are completely handled in program code.
 In specification expressions, these are interpreted according to their
 specifications by a procedure that inlines the specifications, but only
-to a limited depth of rewriting. [[[ Check this ??? ]]]
+to a limited depth of rewriting.
 @item new array expressions - These are handled adequately in both program
 code and in annotations, except for reasoning about the values of array
 elements when initializers are provided.
-@item .class expression [[[ ?? ]]]
 @item anonymous classes
 @end itemize
-[[[ CLarify the above. ]]]
 
 @c ---------------------------------------------------------------------------
 @node store-ref expressions, Statements within model programs, JML functions (extensions to expressions), Status
 @section store-ref expressions
-
-[[[ This whole section needs thorough correction and review ]]]
 
 Some annotations require a list of @emph{store-ref expressions}, which are 
 expressions whose value is a set of references to fields of classes or objects;
@@ -3935,8 +3825,7 @@ in particular, the value has type @code{org.jmlspecs.models.JMLObjectSet}.
 For example, the @code{modifies} clause designates a set 
 (that is, a @code{JMLObjectSet} of @emph{store-refs} that
 are allowed to be assigned to within a method.  This section describes the 
-syntactic features that designate such sets.  [[[ Not sure this is right in the
-wake of data groups and in/maps clauses ]]]
+syntactic features that designate such sets.   
 
 
 
@@ -3954,7 +3843,7 @@ wake of data groups and in/maps clauses ]]]
 @c ---------------------------------------------------------------------------
 @node field store-refs, wild-card field store-refs, store-ref expressions, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{.} [ @emph{ident} | @code{this} ]
-This designates a field of an object.  [[[ Describe the function of the this suffix]]]
+This designates a field of an object.   
 
 @*@strong{Status: } Implemented within modifies clauses.
 
@@ -3967,7 +3856,7 @@ those inherited from superclasses and interfaces, of the given object.
 
 @node array element store-refs, array range store-refs, wild-card field store-refs, store-ref expressions
 @subsection [ @emph{ident} | @code{super} | @code{this} ] @code{[@emph{expr}]}  
-This designates an element of the given array object.   [[[ Describe the function of the this and super prefix ]]]
+This designates an element of the given array object.    
 
 @*@strong{Status: } Implemented within modifies clauses.
 
@@ -4025,15 +3914,12 @@ control structures, much like a typical Java program.  However, a
 model program allows some non-deterministic (and non-Java) statements
 as well.  These are described in this section.
 
-[[[ Need enumeration and discussion of these. ]]]
-
+ 
 @c ---------------------------------------------------------------------------
 @node Other issues,  , Statements within model programs, Status
 @section Other issues
-[[[ descriptions needed here ]]]
-
-[[[ Use of JMLDataGroups in modifies clauses; what syntactic structures use stsore-refs? ]]]
-
+ 
+ 
 @menu
 * nowarn annotations-JML::      
 * Java and JML assert statements::  
@@ -4190,9 +4076,6 @@ Java behavior: No warnings - no exception ever thrown
 @noindent
 Java behavior: ESC/Java2 will issue an Unexpected Exception warning
 @*JML behavior: ESC/Java2 will issue an Assert warning
-@* [[[ There may be a bug here - ESC/Java complains about types in an
-exsures clause that are not in the throws list of the declaration, but
-ESC/Java2 does not.]]]
 
 @item  
 @example
@@ -4238,8 +4121,7 @@ tools (except jmldoc) and ESC/Java require bodies to be present.
 
 JML allows the use of pure methods and constructors in annotation expressions; 
 the original ESC/Java did not.  ESC/Java2 follows JML.  
-[[[ Need a discussion of the implementation of this. ]]]
-
+ 
 @c ----------------------------------------------------------------------------
 @node Original also specifications, anonymous classes, Methods and constructors in annotation expressions, Other issues
 @subsection  Original ESC/Java also_ specifications
@@ -4287,8 +4169,7 @@ specifications.
 @item  Any
 specifications are used when the methods of the class are called.
 @end itemize
-[[[ what about model classes ??? ]]]
-
+ 
 @c ----------------------------------------------------------------------------
 @node field-method-constructor keywords, TYPE Equivalence, block-level class declarations, Other issues
 @subsection  @code{field}, @code{method} and @code{constructor} keywords
@@ -4305,9 +4186,7 @@ method declaration with JML modifier helper.  Though in some cases
 sufficient lookahead could distinguish these different uses, JML has
 defined the keywords @code{field}, @code{method}, and @code{constructor}
 to help disambiguate such situations.  These are used in ghost field and
-model field, method, and constructor declarations.  [[[ Are they
-applicable to non-model decls in JML???]]]  [[[ Are they needed with
-model type declarations or model programs???]]]  They have the effect
+model field, method, and constructor declarations. They have the effect
 that any identifiers appearing after these keywords in a JML annotation
 are not interpreted as JML keywords (except for @code{non_null} and
 @code{nullable} in formal parameters as described below).  For example,
@@ -4326,10 +4205,11 @@ however.  Thus in
 @*@center @code{//@@ public model requires ensures(non_null Object o, non_null oo);}
 @noindent
 @*the first occurrence of @code{non_null} is a JML modifier, but the
-second is expected to be a Java type name.  [[[ ESC/Java treats
+second is expected to be a Java type name.  ESC/Java treats
 non_null specially in this case, but the JML tools do not.  For JML
 you cannot use @code{non_null} here and need to write explicit
-pre/post-conditions instead.]]]  @*@noindent @code{Status: } Fully
+pre/post-conditions instead.
+@*@noindent @code{Status: } Fully
 implemented.
 
 @c ----------------------------------------------------------------------------
@@ -4344,10 +4224,6 @@ following @code{T} is a type name, such as @code{int} or
 @code{java.lang.String}, @code{t} is an expression of @code{\TYPE}
 type, and @code{e} is an expression of any type.
 
-@c [[[ It would be better if we could have rules (lines) in this table,
-@c or at least spacing ]]]
-@c [[[ is the subtype relationship line a correct equivalent for primitive 
-@c types??? ]]]
 @multitable @columnfractions .45 .20 .35
 @item
 @tab JML
@@ -4403,15 +4279,11 @@ has type @code{\TYPE}.
 @c ----------------------------------------------------------------------------
 @node exceptions in annotation expressions, Specifications and inheritance, TYPE Equivalence, Other issues
 @subsection exceptions in annotation expressions
-[[[Discuss the behavior of logical and short-circuit operators in the
-presence of undefined expressions (or expressions that throw
-exceptions).]]]
-
+ 
 @c ----------------------- Specifications and inheritance
 @node Specifications and inheritance,  , exceptions in annotation expressions, Other issues
 @subsection Specifications and inheritance
-[[[ Talk about behavioral inheritance ]]]
-
+ 
 @menu
 * Desugaring in the presence of inheritance::  
 * Defaults and inheritance::    
@@ -4647,8 +4519,7 @@ class Derived extends Super @{
 @}
 @end example
 
-[[[ What does jmlrac do with this issue?]]]
-
+ 
 @c ----------------------------------------------------------------------------
 @node Inheritance and non_null,  , Defaults and inheritance, Specifications and inheritance
 @subsubsection Inheritance and non_null
@@ -4876,8 +4747,7 @@ combination of @code{non_null} annotations or lack thereof.
 @end itemize  
 
 
-[[[ What does jmlrac do with the inheritance of non_null? ]]]
-
+ 
 @node features, Changes to static checking, Status, Top
 @chapter ESC/Java2 features
 
@@ -4961,9 +4831,7 @@ the source code itself.
 annotations, but since JML does no static checking, it ignores them.
 ESC/Java did not require a terminating semicolon, but JML does.
 ESC/Java2 accepts nowarn annotations with or without a terminating
-semicolon; it issues a caution if the semicolon is missing.  [[[ JML
-should allow a nowarn without a list to be terminated by an end of
-line. ]]]
+semicolon; it issues a caution if the semicolon is missing.   
 @end itemize
 
 @c ----------------------------------------------------------------------------
@@ -5047,7 +4915,7 @@ assignable (modifies) clauses of a routine [added in ESC/Java2].
 
 @item
 @strong{OwnerNull} warns that a constructor may violate the implicit
-postcondition @code{this.owner != null}.  [[[ Explain this ???]]]
+postcondition @code{this.owner != null}.   
 
 @item
 @strong{NegSize} warns of a possible attempt to allocate an array
@@ -5106,8 +4974,7 @@ pragma.
 @strong{Unreadable} warns that control may reach a read access of
 a field or variable @code{x} when the expression in a @code{readable_if}
 pragma modifying @code{x}'s declaration is false.
- [[[ readable_if has changed]]]
-
+ 
 @item
 @strong{ZeroDiv} warns of a possible attempt to apply the integer
 division (@code{/}) or remainder (@code{%}) operator with zero as the
@@ -5151,8 +5018,7 @@ directories in which
 binary (.class) files for types are sought; the default is to use the value of
 the CLASSPATH environment variable, or to use just the current directory if 
 neither @code{-classpath} nor CLASSPATH is specified 
-[[[ What about java property ]]]
-
+ 
 @cindex -da
 @item @code{-da} : synonym for @code{-disableassertions}
 
@@ -5243,8 +5109,7 @@ the parsing, typechecking and verification condition generation
 
 @cindex -package
 @item @code{-package} @emph{package-name} : includes all the source files in the given package in the list of source files being processed 
-[[[ wihch suffixes ?]]]
-
+ 
 @anchor{-parsePlus}
 @cindex -parsePlus
 @item @code{-parsePlus} : causes ESC/Java2 to process annotations following
@@ -5311,8 +5176,7 @@ ESC/Java)
 @item @code{-warn} @emph{warning-type} : turns on the reporting of 
 warnings of the given type.  Types of wanings include: UnsoundIncomplete,
 
-@item [[[FIXME - check for others to be documented; group the above by type]]]
-
+ 
 @end itemize
 
 @node Environment variables,  , Command-line options, features
@@ -5322,7 +5186,6 @@ There are several environment variables which alter the behavior of
 ESC/Java2 or Simplify, which is called by ESC/Java2.  These are
 described in this section.
 
-[[[ THESE NEED A LOT OF CLEANUP !!!!! Finish comments ]]]
 @itemize @bullet
 
 @item @code{ESCTOOLS_RELEASE}
@@ -5330,7 +5193,7 @@ described in this section.
 @item @code{SIMPLIFY} - the name of the Simplify executable 
 appropriate to the platform on which ESC/Java2 is running.  Current
 options are Simplify-1.5.4.linux, Simplify-1.5.5.macosx,
-Simplify-1.5.4.solaris, and Simplify-1.5.4.exe (for Windows).  [[[Only Mac OS X, Linux and Windows have been tested]]]
+Simplify-1.5.4.solaris, and Simplify-1.5.4.exe (for Windows).  Only Mac OS X, Linux and Windows have been tested
 
 
 @item @code{CLASSPATH}
@@ -5368,7 +5231,7 @@ appropriate for debugging on my machine!)
 The following variables affect the running of the Simplify prover.
 @itemize @bullet
 @item @code{ESCJ_SIMPLIFY_ARGS} - the command-line arguments 
-to use in running simplify (default: -noprune -noplunge)  [[[ No longer???]]]
+to use in running simplify (default: -noprune -noplunge)   
 
 @item @code{PROVER_KILL_TIME} - the maximum number of seconds 
 to spend on any one proof attempt (default: 300)
@@ -5395,8 +5258,7 @@ command-line options.
 Simplify executable
 @end itemize
 
-[[[ Predicate abstraction uses some undocumented java properties. ]]]
-
+ 
 @c ----------------------------------------------------------------------------
 @node Changes to static checking, Incompatibilities, features, Top
 @chapter Changes to static checking in ESC/Java2
@@ -5560,8 +5422,7 @@ adding constraints as additional postconditions on each non-helper method,
 @node Use of modifies clauses in checking routine bodies, Defaults for modifies clauses, The constraint clause, Changes to static checking
 @section Use of modifies clauses in checking routine bodies
 
-[[[ Fix this - we now do check modifies clauses. ]]]
-
+ 
 
 
 ESC/Java2 mitigates problems caused by errors in modifies clauses by
@@ -5627,8 +5488,7 @@ on.
 @node Checking of modifies, typeof, modifies everything, Changes to static checking
 @section Checking of modifies
 
-[[[ Needs description ]]]
-
+ 
 @node typeof, Use of pure routines in annotations, Checking of modifies, Changes to static checking
 @section \typeof
 
@@ -5733,12 +5593,14 @@ not implemented in ESC/Java2.
 @c ----------------------------------------------------------------------------
 @node codecontract-notimp, some aspects of store-ref expressions, Major features of JML not implemented, Major features of JML not implemented
 @subsection code_contract clauses
-[[[ discussion needed ]]]
-
+ 
+@*@strong{Status: } Not implemented. 
+ 
 @c ----------------------------------------------------------------------------
 @node some aspects of store-ref expressions, implies that and for example behavior, codecontract-notimp, Major features of JML not implemented
 @subsection some aspects of store-ref expressions
-[[[ discussion needed ]]]
+
+@*@strong{Status: } Not all aspects of store-ref expressions are implemented.
 
 @c ----------------------------------------------------------------------------
 @cindex implies_that
@@ -5764,7 +5626,7 @@ When in doubt, use a multi-line comment.
 @node Limitations of static checking, Incompatibilities-escjava, Major features of JML not implemented, Incompatibilities
 @section Limitations of static checking
 
-[[[ There are lots - find out by experiment ]]]
+This is an open reseach question.
 
 @c ----------------------------------------------------------------------------
 @node Incompatibilities-escjava, Non-JML features, Limitations of static checking, Incompatibilities
@@ -5818,12 +5680,13 @@ is altered as described in @ref{Inheritance and non_null}.
 ESC/Java2 agrees with ESC/Java in the implementation of @code{monitored_by}.
 However, this keyword is deprecated in JML in favor of @code{monitors_for}.
 It may at some time be deprecated in ESC/Java2 as well.
-[[[ Check this. ]]]
+
 
 @c ----------------------------------------------------------------------------
 @node readable if, old style initially, monitored by, Incompatibilities-escjava
 @subsection readable_if
-[[[ Discussion needed ]]]
+
+@*@strong{Status: } Not implemented.
 
 @c ----------------------------------------------------------------------------
 @node old style initially, semicolon termination, readable if, Incompatibilities-escjava
@@ -5848,7 +5711,6 @@ The original ESC/Java allowed routines declared in specification files to have
 bodies, which were then checked.  ESC/Java2 allows bodies for Java 
 declarations only in .java files.  Model methods, model constructors, and
 routines in model classes may have bodies in at most one specification file.
-[[[ Check the behavior of JML. ]]]
 
 @c ----------------------------------------------------------------------------
 @node Non-JML features, JML features needing clarification, Incompatibilities-escjava, Incompatibilities
@@ -5856,9 +5718,6 @@ routines in model classes may have bodies in at most one specification file.
 
 There are some syntactic constructs accepted by ESC/Java and continue to be 
 accepted by ESC/Java2 (or are additions in ESC/Java2) that are not part of JML.
-
-[[[ discussion needed - have not checked how some of these are used in ESC/Java, so
-they may not be relevant to the discussion here.]]]
 
 @menu
 * annotation comments::         
@@ -5895,12 +5754,10 @@ constructs that are not part of JML.
 
 @node order of clauses, splitting of annotations, annotation comments, Non-JML features
 @subsection order of clauses
-[[[ comment needed ]]]
-
+ 
 @node splitting of annotations, helper, order of clauses, Non-JML features
 @subsection splitting of annotations
-[[[ comment needed ]]]
-
+ 
 @node helper, typeof applied to primitive types, splitting of annotations, Non-JML features
 @subsection helper annotations
 JML and ESC/Java2 differ in which sorts of routines are allowed to be
@@ -5908,8 +5765,7 @@ JML and ESC/Java2 differ in which sorts of routines are allowed to be
 
 @node typeof applied to primitive types, unreachable-nonJML, helper, Non-JML features
 @subsection \typeof applied to primitive types
-[[[ Is this in JML ? ]]]
-
+ 
 @node unreachable-nonJML, notmodified, typeof applied to primitive types, Non-JML features
 @subsection  unreachable
 There is no @code{unreachable} annotation in JML.
@@ -5922,32 +5778,25 @@ only allows store references.
 
 @node specifications of default constructor, loop predicate, notmodified, Non-JML features
 @subsection specifications of default constructor
-[[[ needs description ]]]
-
+ 
 @node loop predicate, skolem constant, specifications of default constructor, Non-JML features
 @subsection  loop_predicate
-[[[ discussion needed ]]]
-
+ 
 @node skolem constant, still deferred, loop predicate, Non-JML features
 @subsection  skolem_constant
-[[[ discussion needed ]]]
-
+ 
 @node still deferred, writable deferred, skolem constant, Non-JML features
 @subsection  still_deferred
-[[[ discussion needed ]]]
-
+ 
 @node writable deferred, writable if - nonJML, still deferred, Non-JML features
 @subsection  writable_deferred
-[[[ discussion needed ]]]
-
+ 
 @node writable if - nonJML, readable if - nonJML, writable deferred, Non-JML features
 @subsection  writable_if
-[[[ discussion needed ]]]
-
+ 
 @node readable if - nonJML, monitored by - nonJML, writable if - nonJML, Non-JML features
 @subsection  readable_if
-[[[ discussion needed ]]]
-
+ 
 @node monitored by - nonJML, dttfsa, readable if - nonJML, Non-JML features
 @subsection  monitored_by
 ESC/Java2 still supports the @code{monitored_by} field annotation, as in 
@@ -5955,7 +5804,6 @@ ESC/Java, although this form has been deprecated in JML.
 
 @node dttfsa, uninitialized, monitored by - nonJML, Non-JML features
 @subsection  dttfsa
-[[[ discussion needed ]]]
 
 @node uninitialized, placement of annotations, dttfsa, Non-JML features
 @subsection  uninitialized
@@ -6001,8 +5849,8 @@ public void m(Object o /*@@ non_null*/, Object oo /*@@ non_null */);
 JML does not recognize this syntax, with the exception of specification
 clauses (but not modifiers such as @code{pure}, @code{non_null}, or
 @code{nullable}) placed just prior to the routine body.  Consequently
-using this style of annotation writing is discouraged in ESC/Java2.  [[[
-Should we generate a caution?]]]
+using this style of annotation writing is discouraged in ESC/Java2.
+Should we generate a caution?
 
 @node semicolon termination - nonJML, need for the field, placement of annotations, Non-JML features
 @subsection semicolon termination
@@ -6011,7 +5859,7 @@ ESC/Java2 will warn about missing semicolons, but does not require them.
 
 @node need for the field, omission of method bodies, semicolon termination - nonJML, Non-JML features
 @subsection need for the field, method, constructor keywords
-[[[ ESC/Java2 parses @code{non_null} and @code{nullable} in method declarations ]]]
+ESC/Java2 parses @code{non_null} and @code{nullable} in method declarations
 
 @node omission of method bodies, Errors and cautions, need for the field, Non-JML features
 @subsection omission of method bodies
@@ -6035,8 +5883,6 @@ in a lockset); JML does not yet include the membership in a lockset operation.
 @c ----------------------------------------------------------------------------
 @node JML features needing clarification, Extensions, Non-JML features, Incompatibilities
 @section JML features needing clarification
-
-[[[ Need discussion of these ]]]
 
 @menu
 * model programs::              
@@ -6293,8 +6139,6 @@ JML Reference Manual.  Available from @url{http://www.jmlspecs.org}.
 @node  Concept Index,  , Bibliography, Top
 @c node-name, next, previous, up
 @unnumbered Concept Index
-
-[[[ The index needs a lot of work. ]]]
 
 @printindex cp
 
