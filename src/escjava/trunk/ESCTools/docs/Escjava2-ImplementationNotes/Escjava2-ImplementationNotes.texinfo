@@ -1418,8 +1418,10 @@ default specification of @code{non_null}.  All concrete implementations
 of this interface must be consistent with these default
 specifications.
 
-@item @strong{Status:} The modifier is parsed.  Typechecking implementation
-      is underway.  This modifier is not yet used by the static checker.
+@item @strong{Status:} The modifier is parsed.  Implemented for method return 
+types and parameters, but class level modifiers are ignored.
+
+Left to do: Fields and bound variables. 
 
 @item @strong{Differences from JML or Java:} In the current JML2
 implementation the @code{non_null_by_default} annotation is file-scoped
