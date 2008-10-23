@@ -3,18 +3,17 @@ package mobius.directVCGen.bico;
 import java.util.Iterator;
 import java.util.List;
 
-import javafe.ast.ASTNode;
-import javafe.ast.RoutineDecl;
 import javafe.util.Location;
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.MethodGen;
 
@@ -26,7 +25,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * to mix them with bico.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public final class AnnotationVisitor extends ABasicVisitor {
+public final class AnnotationVisitor {
   /** the Coq type of the assertions. */
   private static final String assertionType = "(InitState -> LocalState -> list Prop)";
   /** the Coq representation of an empty assertion. */
@@ -52,7 +51,7 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param met the method to inspect
    */
   private AnnotationVisitor(final CoqStream out, 
-                            final RoutineDecl decl, 
+                            //final RoutineDecl decl, 
                             final MethodGen met) {
     fOut = out;
     fMet = met;
@@ -61,58 +60,48 @@ public final class AnnotationVisitor extends ABasicVisitor {
   }
 
   /** {@inheritDoc} */
-  public /*@non_null*/ Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
-                                               final Object o) {
-    if (x.body != null) {
-      return x.body.accept(this, o);
-    }
-    return o;
-  }
-  
 
-  /** {@inheritDoc} */
-  @Override
-  public Object visitASTNode(final ASTNode x, final Object o) {
-    String res = (String)o;
-    if (fAnnot.getAnnotPost(x) != null) {
-      // let's do something
-      System.err.println("Post annotation are unhandled at the moment.");
-    }
-    if (fAnnot.getAnnotPre(x) != null) {
-      // let's do something else
-      //final int lineNum = Location.toLineNumber(x.getStartLoc());
-      //final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
-      final List<AAnnotation> list = fAnnot.getAnnotPre(x);
-      for (AAnnotation annot: list) {
-        buildMker(annot);
-        buildDefiner(annot);      
+  public String start() {
+    InstructionList il = fMet.getInstructionList();
+    String res = assertionEmpty;
+    
+    for(InstructionHandle ih: il.getInstructionHandles()) {
+      PositionHint hint = new PositionHint(ih);
+      if (fAnnot.getAnnotPost(hint) != null) {
+        // let's do something
+        System.err.println("Post annotation are unhandled at the moment.");
       }
-    }
-    if (fAnnot.getInvariant(x) != null) {
-      // let's do a third thing
-      final int lineNum = Location.toLineNumber(x.getStartLoc());
-      final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
-      final AAnnotation inv = fAnnot.getInvariant(x);
-      buildMker(inv);
-      buildDefiner(inv);
-      
+      if (fAnnot.getAnnotPre(hint) != null) {
+        // let's do something else
+        //final int lineNum = Location.toLineNumber(x.getStartLoc());
+        //final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
+        final List<AAnnotation> list = fAnnot.getAnnotPre(hint);
+        for (AAnnotation annot: list) {
+          buildMker(annot);
+          buildDefiner(annot);      
+        }
+      }
+      if (fAnnot.getInvariant(hint) != null) {
+        // let's do a third thing
+        final int lineNum = Location.toLineNumber(hint.getStartLoc());
+        final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
+        final AAnnotation inv = fAnnot.getInvariant(hint);
+        buildMker(inv);
+        buildDefiner(inv);
+        
 
-      final InstructionHandle ih = Util.findLastInstruction(lineList);
-      res = "(PCM.update " + res + " " + ih.getPosition() + "%N" +
-                    " (" + inv.getName() + ",," +  
-                        fMet.getInstructionList().getEnd().getPosition() + "%nat))";
+        final InstructionHandle last = Util.findLastInstruction(lineList);
+        res = "(PCM.update " + res + " " + last.getPosition() + "%N" +
+                      " (" + inv.getName() + ",," +  
+                          fMet.getInstructionList().getEnd().getPosition() + "%nat))";
+      }
     }
     
-    final int max = x.childCount();
-    for (int i = 0; i < max; i++) {
-      final Object child = x.childAt(i);
-      if (child instanceof ASTNode) {
-        res = (String) ((ASTNode) child).accept(this, res);
-      }
-    }
     return res;
   }
- 
+  
+  
+
 
   /**
    * Define the annotations for the bytecide with the right local variables.
@@ -198,12 +187,11 @@ public final class AnnotationVisitor extends ABasicVisitor {
    * @param met the method to inspect, from BCEL
    * @return an enumeration of assertions
    */
-  public static String getAssertion(final CoqStream out, 
-                                    final RoutineDecl decl, 
+  public static String getAssertion(final CoqStream out,  
                                     final MethodGen met) {
-    final AnnotationVisitor vis = new AnnotationVisitor(out, decl, met);
-    VarCorrVisitor.annotateWithVariables(decl, met);
-    final String res = (String) decl.accept(vis, assertionEmpty);
+    final AnnotationVisitor vis = new AnnotationVisitor(out, met);
+    //VarCorrVisitor.annotateWithVariables(met);
+    final String res = vis.start();
  
     return res;
   }

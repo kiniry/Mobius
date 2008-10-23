@@ -14,13 +14,11 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.translator.struct.ContextProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.ExprDeclPragma;
 import escjava.ast.ExprModifierPragma;
@@ -267,7 +265,7 @@ public class JMLTransVisitor extends JmlVisitor {
     final MethodProperties prop = (MethodProperties) o;
     
     final RoutineDecl currentRoutine = prop.getDecl();
-    final Post allExPosts = Lookup.getExceptionalPostcondition(currentRoutine);
+    final Post allExPosts = LookupJavaFe.getInst().getExceptionalPostcondition(LookupJavaFe.getInst().translate(currentRoutine));
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
     final Term typeOfException = Type.translateToType(x.arg.type);
@@ -277,7 +275,7 @@ public class JMLTransVisitor extends JmlVisitor {
     newExPost = newExPost.subst(newExceptionVar, commonExceptionVar);
     final Term guard = Logic.assignCompat(Heap.var, commonExceptionVar, typeOfException);
     final Post result = new Post (commonExceptionVar, Logic.Safe.implies(guard, newExPost));
-    Lookup.addExceptionalPostcondition(prop.getDecl(), result);
+    LookupJavaFe.getInst().addExceptionalPostcondition(prop.getDecl(), result);
     return null;
   }
   
@@ -296,13 +294,13 @@ public class JMLTransVisitor extends JmlVisitor {
     switch (x.getTag()) {
       case TagConstants.REQUIRES:
         //addToPrecondition(t, o);
-        Lookup.addPrecondition(prop.getDecl(), t);
+        LookupJavaFe.getInst().addPrecondition(prop.getDecl(), t);
         break;
       case TagConstants.ENSURES:
       case TagConstants.POSTCONDITION:
       case TagConstants.POSTCONDITION_REDUNDANTLY:
         //addToPostcondition(t, o);
-        Lookup.addNormalPostcondition(prop, t);
+        LookupJavaFe.getInst().addNormalPostcondition(prop, t);
         break;
       default:
         break;

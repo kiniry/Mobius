@@ -5,8 +5,11 @@ import java.util.Vector;
 
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
+import javafe.ast.Stmt;
+import mobius.directVCGen.formula.Decoration;
+import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.IMethProp;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -16,7 +19,7 @@ import escjava.sortedProver.Lifter.Term;
  * @see ASTDecoration javafe.ast.ASTNode
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class AnnotationDecoration extends ASTDecoration {
+public class AnnotationDecoration extends Decoration {
   /** the current instance initialized of the annotation decorations. */
   public static final AnnotationDecoration inst = new AnnotationDecoration();
   
@@ -53,7 +56,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * node has not been decorated or there is no pre annotation
    *  associated
    */
-  public List<AAnnotation> getAnnotPre(final ASTNode n) {
+  public List<AAnnotation> getAnnotPre(final PositionHint n) {
     final Annotation v = getAnnot(n);
     List<AAnnotation> res;
     if (v == null) {
@@ -67,6 +70,19 @@ public class AnnotationDecoration extends ASTDecoration {
     }
     return res;
   }
+  
+  /**
+   * Retrieve the annotation preceding the instruction.
+   * @param n the node to retrieve the annotation from
+   * @return an annotation or <code>null</code> if the 
+   * node has not been decorated or there is no pre annotation
+   *  associated
+   */
+  public List<AAnnotation> getAnnotPre(final ASTNode n) {
+
+    return getAnnotPre(new PositionHint(n));
+  }
+
 
   /**
    * Retrieve the annotation being after the given instruction.
@@ -75,7 +91,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * has not been decorated or there is no post annotation
    *  associated
    */
-  public List<AAnnotation> getAnnotPost(final ASTNode node) {
+  public List<AAnnotation> getAnnotPost(final PositionHint node) {
     final Annotation v = getAnnot(node);
     List<AAnnotation> res;
     if (v == null) {
@@ -96,8 +112,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param n the node from which to retrieve the decoration
    * @return the decoration object
    */
-  @SuppressWarnings("unchecked")
-  private Annotation getAnnot(final ASTNode n) {
+  private Annotation getAnnot(final PositionHint n) {
     final Annotation v = (Annotation) super.get(n);
     return v;
   }
@@ -107,7 +122,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param n the node to decorate
    * @param v the annotation to set
    */
-  public void setAnnotPre(final ASTNode n, final List<AAnnotation> v) {
+  public void setAnnotPre(final PositionHint n, final List<AAnnotation> v) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
@@ -122,7 +137,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param n the node to decorate
    * @param v the annotation to set
    */
-  public void setAnnotPost(final ASTNode n, final List<AAnnotation> v) {
+  public void setAnnotPost(final PositionHint n, final List<AAnnotation> v) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
@@ -138,7 +153,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param inv the invariant to set
    * @param prop the properties to add all the arguments to the invariant
    */
-  public void setInvariant(final ASTNode n, final Term inv, final MethodProperties prop) {
+  public void setInvariant(final PositionHint n, final Term inv, final IMethProp prop) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
@@ -159,7 +174,7 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param n the node decorated
    * @return the invariant the node is decorated with, or null
    */
-  public AAnnotation getInvariant(final ASTNode n) {
+  public AAnnotation getInvariant(final PositionHint n) {
     final Annotation v =  getAnnot(n);
     if (v == null) {
       return null;
@@ -168,11 +183,20 @@ public class AnnotationDecoration extends ASTDecoration {
   }
   
   /**
+   * Retrieve the invariant associated with the node.
+   * @param n the node decorated
+   * @return the invariant the node is decorated with, or null
+   */
+  public AAnnotation getInvariant(final ASTNode n) {
+    return getInvariant(new PositionHint(n));
+  }
+  
+  /**
    * Retrieve the invariant name associated with the node.
    * @param n the node decorated
    * @return the invariant name  the node is decorated with, or null
    */
-  public String getInvariantName(final ASTNode n) {
+  public String getInvariantName(final PositionHint n) {
     final Annotation v =  getAnnot(n);
     if (v == null) {
       return null;
@@ -187,11 +211,25 @@ public class AnnotationDecoration extends ASTDecoration {
    * @param x the node that contains the invariant
    * @return a variable list that are the arguments of the invariant
    */
-  public List<QuantVariableRef> getInvariantArgs(final ASTNode x) {
+  public List<QuantVariableRef> getInvariantArgs(final PositionHint x) {
     final Annotation v =  getAnnot(x);
     if (v == null) {
       return null;
     }
     return v.fInv.getArgs();
+  }
+
+  public List<AAnnotation> getAnnotPost(Stmt x) {
+    
+    return  getAnnotPost(new PositionHint(x));
+  }
+
+  public void setAnnotPre(Stmt s, List<AAnnotation> annos) {
+    setAnnotPre(new PositionHint(s), annos);
+    
+  }
+
+  public void setInvariant(Stmt s, Term inv, IMethProp prop) {
+    setInvariant(new PositionHint(s), inv, prop);
   }
 }

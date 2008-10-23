@@ -24,6 +24,7 @@ import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.formula.coq.EquivCoqFile;
+import mobius.directVCGen.translator.LookupJavaFe;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import mobius.directVCGen.vcgen.wp.StmtVCGen;
@@ -143,16 +144,17 @@ public final class MethodVisitor extends DirectVCGen {
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
     Post normPost;
     Post excpPost;
+    LookupJavaFe jFe = LookupJavaFe.getInst();
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
     
     final String name = Util.getMethodAnnotModule(fMeth);
-    Term[] tab = Util.getNormalPostconditionArgs(fMeth);
-    normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
+    Term[] tab = jFe.getNormalPostconditionArgs(fMeth);
+    normPost = new Post(LookupJavaFe.getInst().getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
   
 
-    tab = Util.getExcPostconditionArgs(fMeth);
-    excpPost = new Post(Lookup.getExceptionalPostcondition(fMeth).getRVar(), 
+    tab = jFe.getExcPostconditionArgs(fMeth);
+    excpPost = new Post(LookupJavaFe.getInst().getExceptionalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
 
     
@@ -169,7 +171,7 @@ public final class MethodVisitor extends DirectVCGen {
     final List<Term> vcs = new ArrayList<Term>(); 
     Term pre;
 
-    final List<QuantVariableRef> largs = Lookup.getInst().getPreconditionArgs(fMeth);
+    final List<QuantVariableRef> largs = LookupJavaFe.getInst().getPreconditionArgs(fMeth);
     final Term[] args = largs.toArray(new Term [largs.size()]);
     pre = Expression.sym(name + ".mk_pre", args);
 
@@ -212,9 +214,10 @@ public final class MethodVisitor extends DirectVCGen {
     }
 
   }
+  
 
-  public static Term addVarDecl(final RoutineDecl meth, Term t) {
-    final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(meth);
+  public static Term addVarDecl(final RoutineDecl met, Term t) {
+    final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(met);
     Term res = t;
     res = Logic.forall(Heap.var, res);
     for (QuantVariableRef qvr: variables) {

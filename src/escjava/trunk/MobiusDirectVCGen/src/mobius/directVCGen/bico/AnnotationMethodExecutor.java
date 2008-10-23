@@ -24,7 +24,7 @@ import escjava.sortedProver.Lifter.Term;
 
 public class AnnotationMethodExecutor extends ABasicExecutor {
   /** the current routine (method) that is treated - esc java style. */
-  private final RoutineDecl fRout;
+  //private final RoutineDecl fRout;
   
   /** the current method (routine) that is treated - bcel style. */
   private final MethodGen fMeth;
@@ -46,7 +46,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     if (met == null) {
       throw new NullPointerException();
     }
-    fRout = rout;
     fMeth = new MethodGen(met, clzz.getClassName(), clzz.getConstantPool());
     fClass = clzz;
     fAnnotOut = annotationOut;
@@ -55,7 +54,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   /** {@inheritDoc}  */
   @Override
   public void start() {
-    Lookup.getInst().computePreconditionArgs(fRout);
+    Lookup.getInst().computePreconditionArgs(fMeth);
     doMethodPreAndPostDefinition();
   }
   
@@ -90,7 +89,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     // assertion and assumption def
     
     out.println("Definition " + nameAssertion + " := " +
-                AnnotationVisitor.getAssertion(out, fRout, fMeth) + ".");
+                AnnotationVisitor.getAssertion(out, fMeth) + ".");
     out.println("Definition " + nameAssumption + " :=" +
                   " (PCM.empty Assumption).");
     out.println("Definition local_spec: LocMethSpec := (" + nameAssertion + " ,, " + 
@@ -113,7 +112,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private void doMethodPre(final String namePre) {
     final CoqStream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
-    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fRout);
+    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fMeth);
 
     String varsAndType = "";
 
@@ -126,7 +125,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.incTab();
     out.println("fun " + varsAndType + " => ");
     out.incTab();
-    out.println(Formula.generateFormulas(Lookup.getPrecondition(fRout)) + ".");
+    out.println(Formula.generateFormulas(Lookup.getInst().getPrecondition(fMeth)) + ".");
     out.decTab();
     out.decTab();
     out.println("Definition " + namePre + " (s0:InitState): list Prop := ");
@@ -144,7 +143,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     final CoqStream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
-    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fRout);
+    final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgsWithoutHeap(fMeth);
     
     String varsAndType = "";
     
@@ -165,7 +164,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       
     }
         
-    Post normalPost = Lookup.getNormalPostcondition(fRout);
+    Post normalPost = Lookup.getInst().getNormalPostcondition(fMeth);
     final QuantVariableRef varRes = normalPost.getRVar();
     if (varRes != null) {
       final QuantVariableRef v = normalPost.getRVar();
@@ -173,7 +172,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       //System.out.println(f);
       normalPost = new Post(v, normalPost.nonSafeSubst(v, f));
     }
-    Post excpPost = Lookup.getExceptionalPostcondition(fRout);
+    Post excpPost = Lookup.getInst().getExceptionalPostcondition(fMeth);
     out.incTab();
     out.println("fun " + "(t: ReturnVal) " + varsAndType + " => ");
     out.incTab();
@@ -242,7 +241,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.println("let " + hname + " := (snd s0) " + " in");
     vars += hname;
     int count = 0;
-    for (Term qvr: Lookup.getInst().getPreconditionArgsWithoutHeap(fRout)) {
+    for (Term qvr: Lookup.getInst().getPreconditionArgsWithoutHeap(fMeth)) {
       final String vname = Formula.generateFormulas(qvr).toString();
       out.println("let " + vname + " := " +
                            "(do_lvget (fst s0) " + count++ + "%N)" + " in ");
@@ -265,7 +264,7 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
     int count = 0;
     final LinkedList<Term> args = new LinkedList<Term>();
-    args.addAll(Lookup.getInst().getPreconditionArgs(fRout));
+    args.addAll(Lookup.getInst().getPreconditionArgs(fMeth));
     args.removeFirst();
     for (Term qvr: args) {
       final String vname = Formula.generateFormulas(qvr).toString();

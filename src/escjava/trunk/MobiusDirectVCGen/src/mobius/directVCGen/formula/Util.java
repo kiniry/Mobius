@@ -18,12 +18,13 @@ import javafe.ast.TypeDecl;
 import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.IMethProp;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 
+import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.GotoInstruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
@@ -330,57 +331,17 @@ public final class Util extends mobius.bico.Util {
     return post.subst(var, val);
   }
   
-  /**
-   * Returns a new array containing all the arguments of the
-   * postcondition.
-   * @param meth the method from which to compute the postcondition arguments
-   * @return a newly created array
-   */
-  public static Term[] getNormalPostconditionArgs(final RoutineDecl meth) {
-    Term[] tab;
-    final LinkedList<Term> args = new LinkedList<Term> ();
-    args.add(Heap.varPre); 
-    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(meth)) {
-      if (!qvr.equals(Heap.var)) {
-        args.add(Expression.old(qvr));
-      }
-      else {
-        args.add(qvr);
-      }
-    }
-    
-    final QuantVariableRef qvr = Lookup.getNormalPostcondition(meth).getRVar();
-    
-    if (!isVoid(meth)) {
-      args.addFirst(Expression.normal(Expression.some(qvr)));
-    }
-    else {
-      args.addFirst(Expression.normal(Expression.none()));
-    }
-    tab = args.toArray(new Term [args.size()]);
-    return tab;
-  }
+
   
   
-  /**
-   * Returns the arguments that will be used to instanciate an 
-   * exceptionnal postcondition.
-   * @param meth the method context
-   * @return the array containing all the arguments.
-   */
-  public static Term[] getExcPostconditionArgs(final RoutineDecl meth) {
-    final Term[] tab = getNormalPostconditionArgs(meth);
-    tab[0] = Expression.sym("Exception", 
-                           new Term [] {Lookup.getExceptionalPostcondition(meth).getRVar()});
-    return tab;
-  }
+
   
   /**
    * Build the argument list for an invariant or an assertion for instance.
    * @param prop the properties from which to build the arguments
    * @return a list of variables ordered, which are the arguments
    */
-  public static List<QuantVariableRef> buildArgs(final MethodProperties prop) {
+  public static List<QuantVariableRef> buildArgs(final IMethProp prop) {
     final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
     // olds
     for (QuantVariableRef qvr: prop.getArgs()) {
@@ -410,6 +371,17 @@ public final class Util extends mobius.bico.Util {
       return true;
     }
   }
+  
+  /**
+   * Tells whether or not the method return type is void.
+   * @param meth the method to inspect
+   * @return true if the method returns void
+   */
+  public static boolean isVoid(final MethodGen meth) {
+    org.apache.bcel.generic.Type t = meth.getReturnType();
+    return BasicType.VOID.equals(t);
+  }
+    
   
 
   

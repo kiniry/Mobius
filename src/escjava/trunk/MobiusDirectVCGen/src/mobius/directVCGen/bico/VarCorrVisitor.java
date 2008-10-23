@@ -43,8 +43,7 @@ public final class VarCorrVisitor extends Visitor {
    * @param decl the ESC/Java representation of the method
    * @param met the bcel representation of the method
    */
-  private VarCorrVisitor(final RoutineDecl decl, 
-                            final MethodGen met) {
+  private VarCorrVisitor(final RoutineDecl decl, final MethodGen met) {
     final LocalVariableGen[] tab = met.getLocalVariables();
     fMet = met;
     if (tab.length == 0) {
@@ -76,18 +75,17 @@ public final class VarCorrVisitor extends Visitor {
   }
 
   /**
-   * Annotates the escjava method with all some informations about
+   * Annotates the escjava method with some informations about
    * the variable. Basically it decorates the method with a fully filled
    * {@link VarCorrDecoration} structure. 
    * @param decl the ESC/Java declaration of the method
    * @param met the bcel version of the method
    */
-  public static void annotateWithVariables(final RoutineDecl decl, 
-                                  final MethodGen met) {
+  public static void annotateWithVariables(final RoutineDecl decl, final MethodGen met) {
     final VarCorrVisitor vis = new VarCorrVisitor(decl, met);
     decl.accept(vis);
     
-    VarCorrDecoration.inst.set(decl, vis.fVariables, vis.fOld);
+    VarCorrDecoration.inst.set(met, vis.fVariables, vis.fOld);
   }
 
   /**

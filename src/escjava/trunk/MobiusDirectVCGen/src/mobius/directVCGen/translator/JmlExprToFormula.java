@@ -19,7 +19,6 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.translator.struct.ContextProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.ResExpr;

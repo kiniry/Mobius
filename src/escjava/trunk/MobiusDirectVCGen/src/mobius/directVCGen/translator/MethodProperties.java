@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator.struct;
+package mobius.directVCGen.translator;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,7 +9,11 @@ import java.util.Set;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.translator.struct.ContextProperties;
+import mobius.directVCGen.translator.struct.IMethProp;
+
+import org.apache.bcel.generic.MethodGen;
+
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -18,7 +22,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * Properties that are passed as argument of the visitor. 
  * @author Hernann Lehner and J. Charles (julien.charles@inria.fr)
  */
-public final class MethodProperties extends ContextProperties {
+final class MethodProperties extends ContextProperties implements IMethProp {
 
   /** */
   private static final long serialVersionUID = 1L;
@@ -70,7 +74,7 @@ public final class MethodProperties extends ContextProperties {
     validStr.addAll(super.getValidStr());
     fMethod = met;
     fArgs = new LinkedList<QuantVariableRef>(); 
-    fArgs.addAll(Lookup.mkArguments(met));
+    fArgs.addAll(LookupJavaFe.getInst().mkArguments(met));
 
     fIsConstructor = fMethod instanceof ConstructorDecl;
     fIsHelper = isHelper(met);
@@ -122,7 +126,9 @@ public final class MethodProperties extends ContextProperties {
   public RoutineDecl getDecl() {
     return fMethod;
   }
-  
+  public MethodGen getBCELDecl() {
+    return LookupJavaFe.getInst().translate(fMethod);
+  }
   public List<QuantVariableRef> getLocalVars() {
     final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();
     for (List<QuantVariableRef> list: fLocalVars) {
@@ -141,5 +147,20 @@ public final class MethodProperties extends ContextProperties {
 
   public List<QuantVariableRef> getArgs() {
     return fArgs;
+  }
+
+
+
+  @Override
+  public QuantVariableRef getResult() {
+    return fResult;
+  }
+
+
+
+  @Override
+  public Set<QuantVariableRef[]> getAssignableSet() {
+
+    return fAssignableSet;
   }
 }

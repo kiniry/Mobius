@@ -51,6 +51,7 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.translator.LookupJavaFe;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -274,8 +275,8 @@ public class StmtVCGen extends ExpressionVisitor {
     
     final VCEntry vce = (VCEntry) o;
     final String name = Util.getMethodAnnotModule(fMeth);
-    final Term[] tab = Util.getNormalPostconditionArgs(fMeth);
-    final Post normPost = new Post(Lookup.getNormalPostcondition(fMeth).getRVar(), 
+    final Term[] tab = LookupJavaFe.getInst().getNormalPostconditionArgs(fMeth);
+    final Post normPost = new Post(LookupJavaFe.getInst().getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
 
     vce.fPost = normPost;
@@ -566,9 +567,9 @@ public class StmtVCGen extends ExpressionVisitor {
                                       final /*@non_null*/ ConstructorInvocation ci, 
                                       final Object o) {
     final VCEntry entry = (VCEntry)o;
-    final Post normalPost = Lookup.getNormalPostcondition(ci.decl);
-    final Post excpPost = Lookup.getExceptionalPostcondition(ci.decl);
-    final Term pre = Lookup.getPrecondition(ci.decl);
+    final Post normalPost = LookupJavaFe.getInst().getNormalPostcondition(ci.decl);
+    final Post excpPost = LookupJavaFe.getInst().getExceptionalPostcondition(ci.decl);
+    final Term pre = LookupJavaFe.getInst().getPrecondition(ci.decl);
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post

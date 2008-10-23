@@ -35,7 +35,6 @@ import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.translator.struct.ContextProperties;
 import mobius.directVCGen.translator.struct.GlobalProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ExprDeclPragma;
@@ -174,8 +173,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     if (!prop.fIsHelper) {
       final Term constraints = Lookup.getInst().getConstraint(x.getParent());
-      Lookup.addNormalPostcondition(prop, constraints);
-      Lookup.addExceptionalPostcondition(prop.getDecl(), constraints);
+      Lookup.getInst().addNormalPostcondition(prop, constraints);
+      Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), constraints);
     }  
     return prop;
   }
@@ -195,8 +194,8 @@ public class JmlVisitor extends BasicJMLTranslator {
     
     if (!prop.fIsHelper) {
       final Term initially = (Term) prop.get("initiallyFOL");
-      Lookup.addNormalPostcondition(prop, initially);
-      Lookup.addExceptionalPostcondition(prop.getDecl(), initially);
+      Lookup.getInst().addNormalPostcondition(prop, initially);
+      Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), initially);
     } 
     return prop;
   }
@@ -561,7 +560,7 @@ public class JmlVisitor extends BasicJMLTranslator {
     }    
     final Term implTerm = Logic.implies(andTerm, invTerm);
     final Term forAllTerm = Logic.forall(vars, implTerm);
-    Lookup.addPrecondition(prop.getDecl(), forAllTerm);
+    Lookup.getInst().addPrecondition(prop.getBCELDecl(), forAllTerm);
   }
 
   /**
@@ -594,8 +593,8 @@ public class JmlVisitor extends BasicJMLTranslator {
    * @param prop the targeted method
    */
   public void addInvPredToPostconditions(final /*@non_null*/ MethodProperties prop) { 
-    Lookup.addNormalPostcondition(prop, invPostPred());
-    Lookup.addExceptionalPostcondition(prop.getDecl(), invPostPred());
+    Lookup.getInst().addNormalPostcondition(prop, invPostPred());
+    Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), invPostPred());
   }
 
   
@@ -647,8 +646,8 @@ public class JmlVisitor extends BasicJMLTranslator {
       }
       
       final Term forAllTerm = Logic.forall(vars, t);
-      Lookup.addNormalPostcondition(prop, forAllTerm);
-      Lookup.addExceptionalPostcondition(prop.getDecl(), forAllTerm);
+      Lookup.getInst().addNormalPostcondition(prop, forAllTerm);
+      Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), forAllTerm);
     } 
   }
  

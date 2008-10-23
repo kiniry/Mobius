@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javafe.ast.FormalParaDecl;
-import javafe.ast.FormalParaDeclVec;
-import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.IMethProp;
 import mobius.directVCGen.vcgen.struct.Post;
-import escjava.ast.Modifiers;
+
+import org.apache.bcel.generic.MethodGen;
+
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
@@ -32,41 +31,38 @@ public class Lookup {
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
-  private static Map<RoutineDecl, Term> preconditions = 
-    new HashMap<RoutineDecl, Term>();
+  private Map<MethodGen, Term> preconditions = 
+    new HashMap<MethodGen, Term>();
 
   /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
-  private static Map<RoutineDecl, Post> postconditions = 
-    new HashMap<RoutineDecl, Post>();
+  private Map<MethodGen, Post> postconditions = 
+    new HashMap<MethodGen, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
-  private static Map<RoutineDecl, Post> exceptionalPostconditions = 
-    new HashMap<RoutineDecl, Post>();
+  private Map<MethodGen, Post> exceptionalPostconditions = 
+    new HashMap<MethodGen, Post>();
 
+  
+  /** the argument lists of each precondition. */
+  private final Map<MethodGen, List<QuantVariableRef>> fPreArgs = 
+    new HashMap<MethodGen, List<QuantVariableRef>>(); 
+  /**  the argument lists of each precondition without the heap. */
+  private final Map<MethodGen, List<QuantVariableRef>> fPreArgsWithoutHeap = 
+    new HashMap<MethodGen, List<QuantVariableRef>>(); 
+  
+  
+
+  public static void clear() {
+    inst = new Lookup();
+    
+  }
+  
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
   private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
 
   /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
   private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
-  
-  /** the argument lists of each precondition. */
-  private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgs = 
-    new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
-  /**  the argument lists of each precondition without the heap. */
-  private final Map<RoutineDecl, List<QuantVariableRef>> fPreArgsWithoutHeap = 
-    new HashMap<RoutineDecl, List<QuantVariableRef>>(); 
-  
-  
 
-  public static void clear() {
-    postconditions.clear();
-    preconditions.clear();
-    exceptionalPostconditions.clear();
-    inst = new Lookup();
-    
-  }
-  
-  
   /**
    * Returns the FOL Term representation of the class invariant.
    * @param type the type to get the invariant from
@@ -79,7 +75,6 @@ public class Lookup {
     }
     return t;
   }
-  
   
 
   /**
@@ -136,7 +131,7 @@ public class Lookup {
    * @param m the method of interest
    * @return the precondition or <code>True</code>
    */
-  public static Term getPrecondition(final RoutineDecl m) {
+  public Term getPrecondition(final MethodGen m) {
     //return buildStdCond(m, "_pre", false);
     Term t = preconditions.get(m);
     if (t == null) {
@@ -150,7 +145,7 @@ public class Lookup {
    * @param rd the method
    * @param term fol term to be used as condition
    */
-  public static void addPrecondition(final RoutineDecl rd, 
+  public void addPrecondition(final MethodGen rd, 
                                             final Term term) {
     final Term pOld = preconditions.get(rd);
     Term pNew;
@@ -170,7 +165,7 @@ public class Lookup {
    * @param m the method of interest
    * @return the normal postcondition or <code>True</code>
    */
-  public static Post getNormalPostcondition(final RoutineDecl m) {
+  public Post getNormalPostcondition(final MethodGen m) {
     //return new Post(buildStdCond (m, "_norm", true)); 
     Post p = postconditions.get(m);
     if (p == null) {
@@ -184,7 +179,7 @@ public class Lookup {
    * @param rd the method
    * @param post to add to postconditions in Lookup hash map
    */
-  public static void addNormalPostcondition(final RoutineDecl rd, 
+  public void addNormalPostcondition(final MethodGen rd, 
                                             final Post post) {
     Post pNew = post;
     
@@ -210,22 +205,22 @@ public class Lookup {
    * @param mp the method
    * @param term fol term to be used as condition
    */
-  public static void addNormalPostcondition(final MethodProperties mp, 
+  public void addNormalPostcondition(final IMethProp mp, 
                                             final Term term) {
-    final Post pOld = postconditions.get(mp.getDecl());
+    final Post pOld = postconditions.get(mp.getBCELDecl());
     Post pNew;
     if (pOld == null) {
-      if (mp.fResult == null) {
+      if (mp.getResult() == null) {
         pNew = new Post(null, term);
       }
       else {
-        pNew = new Post(mp.fResult, term);
+        pNew = new Post(mp.getResult(), term);
       }
     }
     else {
       pNew = Post.and(pOld, term);
     }
-    postconditions.put(mp.getDecl(), pNew);
+    postconditions.put(mp.getBCELDecl(), pNew);
   }
  
   
@@ -236,7 +231,7 @@ public class Lookup {
    * @param m the method of interest
    * @return the exceptional postcondition or <code>True</code>
    */
-  public static Post getExceptionalPostcondition(final RoutineDecl m) {
+  public Post getExceptionalPostcondition(final MethodGen m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
     Post p = exceptionalPostconditions.get(m);
     if (p == null) {
@@ -250,7 +245,7 @@ public class Lookup {
    * @param rd the method
    * @param post to add to exceptional postconditions in Lookup hash map
    */
-  public static void addExceptionalPostcondition(final RoutineDecl rd, 
+  public void addExceptionalPostcondition(final MethodGen rd, 
                                                  final Post post) {
     Post pNew = post;
     
@@ -276,7 +271,7 @@ public class Lookup {
    * @param rd the method
    * @param term fol term to be used as condition
    */
-  public static void addExceptionalPostcondition(final RoutineDecl rd, 
+  public void addExceptionalPostcondition(final MethodGen rd, 
                                                  final Term term) {
     final Post pOld = exceptionalPostconditions.get(rd);
     Post pNew;
@@ -302,12 +297,12 @@ public class Lookup {
    * once for each method.
    * @param rout the method to compute the arguments for
    */
-  public void computePreconditionArgs(final RoutineDecl rout) {
-    final List<RoutineDecl> lrout = new ArrayList<RoutineDecl>();
+  public void computePreconditionArgs(final MethodGen rout) {
+    final List<MethodGen> lrout = new ArrayList<MethodGen>();
     lrout.addAll(preconditions.keySet());
     lrout.add(rout);
     
-    for (RoutineDecl rd: lrout) {
+    for (MethodGen rd: lrout) {
       final List<QuantVariableRef> args = mkArguments(rd);
       final LinkedList<QuantVariableRef> argsWithoutHeap = 
         new LinkedList<QuantVariableRef>();
@@ -325,7 +320,7 @@ public class Lookup {
    * @param m the method to get the precondition arguments from
    * @return a list of variables
    */
-  public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
+  public List<QuantVariableRef> getPreconditionArgs(final MethodGen m) {
     return fPreArgs.get(m);
   }
   
@@ -336,7 +331,7 @@ public class Lookup {
    * @param m the method to get the precondtion arguments from
    * @return a list of variables
    */
-  public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final RoutineDecl m) {
+  public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final MethodGen m) {
     return fPreArgsWithoutHeap.get(m);
   }
   
@@ -349,25 +344,74 @@ public class Lookup {
     return pre;     
   }
   
+
+
   /**
    * Creates the arguments list of a method from its signature.
    * @param rd the method to get the arguments from
    * @return a list of variables
    */
-  public static List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
+  public List<QuantVariableRef> mkArguments(final MethodGen rd) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
-    final FormalParaDeclVec fpdvec = rd.args;
+    
+    final org.apache.bcel.generic.Type [] args = rd.getArgumentTypes();
+    final String [] names = rd.getArgumentNames();
+    
     v.add(Heap.var);
-    if (!Modifiers.isStatic(rd.modifiers)) {
+    
+    if (!rd.isStatic()) {
       v.add(Ref.varThis); 
     }
-    final FormalParaDecl[] args = fpdvec.toArray();
-    for (FormalParaDecl fpd: args) {
-      v.add(Expression.rvar(fpd));
+    
+    int i = 0;
+    for (org.apache.bcel.generic.Type typ: args) {
+      v.add(Expression.rvar(names[i], Type.getSort(typ)));
+      i++;
     }
     return v;
   }
 
-
-
+  /**
+   * Returns a new array containing all the arguments of the
+   * postcondition.
+   * @param meth the method from which to compute the postcondition arguments
+   * @return a newly created array
+   */
+  public static Term[] getNormalPostconditionArgs(final MethodGen meth) {
+    Term[] tab;
+    final LinkedList<Term> args = new LinkedList<Term> ();
+    args.add(Heap.varPre); 
+    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(meth)) {
+      if (!qvr.equals(Heap.var)) {
+        args.add(Expression.old(qvr));
+      }
+      else {
+        args.add(qvr);
+      }
+    }
+    
+    final QuantVariableRef qvr = Lookup.getInst().getNormalPostcondition(meth).getRVar();
+    
+    if (!Util.isVoid(meth)) {
+      args.addFirst(Expression.normal(Expression.some(qvr)));
+    }
+    else {
+      args.addFirst(Expression.normal(Expression.none()));
+    }
+    tab = args.toArray(new Term [args.size()]);
+    return tab;
+  }
+  
+  /**
+   * Returns the arguments that will be used to instanciate an 
+   * exceptionnal postcondition.
+   * @param meth the method context
+   * @return the array containing all the arguments.
+   */
+  public static Term[] getExcPostconditionArgs(final MethodGen meth) {
+    final Term[] tab = getNormalPostconditionArgs(meth);
+    tab[0] = Expression.sym("Exception", 
+                           new Term [] {Lookup.getInst().getExceptionalPostcondition(meth).getRVar()});
+    return tab;
+  }
 }

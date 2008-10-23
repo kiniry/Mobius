@@ -327,6 +327,11 @@ public final class Type {
     return Formula.lf.typeToSort(x.returnType);
   }
 
+  public static Sort getSort(org.apache.bcel.generic.Type typ) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 
 
 

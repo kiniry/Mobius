@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import mobius.directVCGen.translator.struct.GlobalProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directVCGen.translator.struct.IMethProp;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -626,10 +626,10 @@ public final class Logic {
    */
   public static Term isAssignable(final QuantVariableRef t, 
                                   final QuantVariableRef f, final Object o) {
-    final MethodProperties prop = (MethodProperties) o;
+    final IMethProp prop = (IMethProp) o;
     Term t1 = null;
     Term t2 = null;
-    final Set assignSet = (HashSet<QuantVariableRef[]>) prop.fAssignableSet;
+    final Set assignSet = (HashSet<QuantVariableRef[]>) prop.getAssignableSet();
     final Iterator iter = assignSet.iterator();
     
     while (iter.hasNext()) {
