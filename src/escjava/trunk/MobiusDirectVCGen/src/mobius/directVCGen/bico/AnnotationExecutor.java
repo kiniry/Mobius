@@ -30,6 +30,8 @@ import org.apache.bcel.util.ClassPath;
 public class AnnotationExecutor extends Executor {
 
   
+  private final IAnnotationGenerator fGenerator;
+
   /**
    * Create the special annotation executor.
    * @param sourceDir the directory where to find the files to
@@ -43,10 +45,11 @@ public class AnnotationExecutor extends Executor {
   public AnnotationExecutor(final File sourceDir, 
                             final File outputDir,
                             final String classpath, 
-                            final List<String> classToTreat) {
+                            final List<String> classToTreat,
+                            final IAnnotationGenerator generator) {
     super(new MapImplemSpecif(), sourceDir, outputDir,
           new ClassPath(classpath), classToTreat, false);
-
+    fGenerator = generator;
   }
   /**
    * Create the special annotation executor. The source
@@ -58,8 +61,9 @@ public class AnnotationExecutor extends Executor {
    * @param classpath the class path where to find all the source files
    */
   public AnnotationExecutor(final File outputDir, final String classpath, 
-                            final List<String> classToTreat) {
-    this (outputDir, outputDir, classpath, classToTreat);
+                            final List<String> classToTreat,
+                            final IAnnotationGenerator generator) {
+    this (outputDir, outputDir, classpath, classToTreat, generator);
   }
 
   /**
@@ -152,7 +156,7 @@ public class AnnotationExecutor extends Executor {
    */
 
   public ClassExecutor getClassExecutor(final ClassGen cg) throws FileNotFoundException {
-    return new AnnotationClassExecutor(this, cg);
+    return new AnnotationClassExecutor(this, cg, fGenerator);
   }
 
   /**

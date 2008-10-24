@@ -3,7 +3,6 @@ package mobius.directVCGen.bico;
 import java.util.LinkedList;
 import java.util.List;
 
-import javafe.ast.RoutineDecl;
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
@@ -23,8 +22,6 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
 public class AnnotationMethodExecutor extends ABasicExecutor {
-  /** the current routine (method) that is treated - esc java style. */
-  //private final RoutineDecl fRout;
   
   /** the current method (routine) that is treated - bcel style. */
   private final MethodGen fMeth;
@@ -38,11 +35,9 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   public AnnotationMethodExecutor(final ABasicExecutor be, 
                                   final CoqStream annotationOut, 
                                   final ClassGen clzz, 
-                                  final Method met, final RoutineDecl rout) {
+                                  final Method met) {
     super(be);
-    if (rout == null) {
-      throw new NullPointerException();
-    }
+    
     if (met == null) {
       throw new NullPointerException();
     }

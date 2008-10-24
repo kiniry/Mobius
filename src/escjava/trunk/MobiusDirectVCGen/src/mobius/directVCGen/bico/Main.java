@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import mobius.directVCGen.translator.JMLAnnotationGenerator;
+
 
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
@@ -55,9 +57,7 @@ public class Main extends mobius.directVCGen.Main {
     }
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
-    doBcVCGen(sig); 
-
-
+    doBcVCGen(sig, new JMLAnnotationGenerator()); 
     return false;
 
   }

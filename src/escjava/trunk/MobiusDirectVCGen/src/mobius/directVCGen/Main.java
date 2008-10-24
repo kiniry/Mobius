@@ -16,10 +16,12 @@ import javafe.util.AssertionFailureException;
 import javafe.util.ErrorSet;
 import javafe.util.Location;
 import mobius.directVCGen.bico.AnnotationCompiler;
+import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.pojs.JavaCompiler;
+import mobius.directVCGen.translator.JMLAnnotationGenerator;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
@@ -224,7 +226,7 @@ public class Main extends escjava.Main {
     }
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
-    doBcVCGen(sig); 
+    doBcVCGen(sig, new JMLAnnotationGenerator()); 
     doSrcVCGen(sig);
 
 
@@ -239,12 +241,13 @@ public class Main extends escjava.Main {
    * Annotations are taken from the annotated source.
    * @param sig the annotated source
    */
-  protected void doBcVCGen(final TypeSig sig) {
+  protected void doBcVCGen(final TypeSig sig, IAnnotationGenerator gen) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
     
     final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), 
-                                                         options.userPath);
+                                                         options.userPath,
+                                                         gen);
     try {
       ac.start();
     } 

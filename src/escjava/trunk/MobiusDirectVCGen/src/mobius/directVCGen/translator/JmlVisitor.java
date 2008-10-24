@@ -59,7 +59,7 @@ import escjava.tc.Types;
  * @author Claudia Brauchli (claudia@vis.ethz.ch)
  * @author Hermann Lehner (hermann.lehner@inf.ethz.ch)
  */
-public class JmlVisitor extends BasicJMLTranslator {
+class JmlVisitor extends BasicJMLTranslator {
   /** global properties of a class. */
   final GlobalProperties fGlobal = new GlobalProperties();
   

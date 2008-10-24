@@ -25,14 +25,15 @@ public class AnnotationCompiler {
    * @param classpath the current classpath used by to find the source files
    */
   public AnnotationCompiler(final File pkgsdir, final String clzz,
-                            final String classpath) {
+                            final String classpath,
+                            final IAnnotationGenerator generator) {
     final List<String> classes = new ArrayList<String>();
     classes.add(clzz);
     String cp = classpath;
     if (cp == null) {
       cp = "";
     }
-    fExecutor = new AnnotationExecutor(pkgsdir, cp, classes);
+    fExecutor = new AnnotationExecutor(pkgsdir, cp, classes, generator);
   }
 
 

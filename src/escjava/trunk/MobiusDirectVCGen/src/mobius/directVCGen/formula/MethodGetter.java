@@ -1,4 +1,4 @@
-package mobius.directVCGen.bico;
+package mobius.directVCGen.formula;
 
 import org.apache.bcel.classfile.Method;
 
@@ -12,9 +12,10 @@ import javafe.tc.TypeSig;
 /**
  * This class is made to return the ESC/Java version of a BCEL method
  * definition.
+ * @deprecated not used
  * @author J. Charles (julien.charles@inria.fr)
  */
-public final class MethodGetter extends ABasicVisitor {
+final class MethodGetter extends ABasicVisitor {
     /** the currently treated method. */
   private final Method fMet;
   
