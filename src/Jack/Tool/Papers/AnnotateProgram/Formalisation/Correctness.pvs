@@ -73,6 +73,7 @@ BEGIN
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
+      wf_set_stmts_AP(ann_program(mp)) IMPLIES
       legal_Body(ann_program(mp))(b) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
@@ -99,6 +100,7 @@ BEGIN
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       subset?(var_names(b), ext_declared_var_names(program(mp))) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
+      wf_set_stmts_AP(ann_program(mp)) IMPLIES
       legal_Body(ann_program(mp))(b) IMPLIES
       related_states(mp)(sMP1, sAP1) IMPLIES
       NOT cp(astate(sMP1)) = halted IMPLIES
@@ -112,6 +114,7 @@ BEGIN
            (sMP : MPState) :
       well_behaved_MVA_for_annot_gen(mp) IMPLIES
       legal_Program_AP(ann_program(mp)) IMPLIES
+      wf_set_stmts_AP(ann_program(mp)) IMPLIES
       run_monitored_program(mp)(main, arg)(root_object)(sMP) IMPLIES
       EXISTS(sAP : APState) :
       run_annotated_program(ann_program(mp))

@@ -34,13 +34,12 @@ BEGIN
                       execute_CaseJML, on_method_entry, 
                       on_method_exit_normal, on_method_exit_exceptional]
 
-  % b is legal_Body if  for any subterm b1 that 
+  % b is legal_Body if for any subterm b1 that 
   % is a try-catch statement, if derivation of the try block or the catch 
   %  block returns a JML-exception then derivation of the complete statement
-  %  should also return  a JML-exception. 
-  %  Besides, the catch and the finally block always terminate.
-  % if it is a JML annotatios (Set, Assert or CaseJML), it terminates and
-  % it does not change the program variables.
+  %  should also terminate with a JML-exception. 
+  % if it is a JML annotatio (Set, Assert or CaseJML), it terminates and
+  % with an appropiate value.
   legal_Body(p : FullProgram)(b : Body) : bool =
     FORALL(b1 : Body) :
       wf_Program(program(p)) IMPLIES
