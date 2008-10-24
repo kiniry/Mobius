@@ -21,6 +21,7 @@ import javafe.ast.Stmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.util.Location;
+import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
@@ -638,7 +639,7 @@ public class JmlVisitor extends BasicJMLTranslator {
       final QuantVariable[] vars = {target.qvar, field.qvar};
       Term t;
       if (!prop.fAssignableSet.isEmpty()) {
-        t = Logic.or(Logic.isAssignable(target, field, o), 
+        t = Logic.or(JmlVisitor.isAssignable(target, field, prop), 
                           Logic.assignablePred(Heap.var, Heap.varPre, target, field));
       } 
       else {
@@ -688,6 +689,34 @@ public class JmlVisitor extends BasicJMLTranslator {
    */
   public boolean getDoSubsetChecking() {
     return fDoSubsetChecking;
+  }
+
+  /**
+   * @param t the object containing the fieldVar
+   * @param f the field for which we want to find out whether it's assignable or not
+   * @param prop Parameter object also containing a list of modifiable types.
+   * @return A Term expressing the check described above.
+   */
+  public static Term isAssignable(final QuantVariableRef t, 
+                                  final QuantVariableRef f, final MethodProperties prop) {
+    Term t1 = null;
+    Term t2 = null;
+    final java.util.Set<QuantVariableRef[]> assignSet = 
+      (java.util.Set<QuantVariableRef[]>) prop.getAssignableSet();
+    final Iterator iter = assignSet.iterator();
+    
+    while (iter.hasNext()) {
+      final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
+      t1 = Logic.equals(Heap.loc(Heap.var, t, f.qvar), 
+                        Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
+      if (t2 == null) {
+        t2 = t1;
+      }
+      else {
+        t2 = Logic.or(t2, t1);
+      }
+    }
+    return t2;
   }
   
   

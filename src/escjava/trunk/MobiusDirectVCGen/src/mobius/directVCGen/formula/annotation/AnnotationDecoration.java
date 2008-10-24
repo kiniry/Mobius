@@ -6,10 +6,10 @@ import java.util.Vector;
 import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import javafe.ast.Stmt;
+import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.formula.Decoration;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.translator.struct.IMethProp;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 

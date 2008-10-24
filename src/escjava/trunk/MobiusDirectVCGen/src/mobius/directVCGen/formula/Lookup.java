@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import javafe.ast.TypeDecl;
-import mobius.directVCGen.translator.struct.IMethProp;
+import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;

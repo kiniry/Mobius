@@ -4,9 +4,14 @@ import java.util.HashMap;
 
 
 public abstract class Decoration {
-  private HashMap<PositionHint, Object> hs = new HashMap<PositionHint, Object>();
-  public Decoration(String string) {
-    // TODO Auto-generated constructor stub
+  
+  private HashMap<PositionHint, Object> hs = 
+    new HashMap<PositionHint, Object>();
+  
+  private String fName;
+  
+  public Decoration(final String str) {
+    fName = str;
   }
 
   protected Object get(PositionHint n) {

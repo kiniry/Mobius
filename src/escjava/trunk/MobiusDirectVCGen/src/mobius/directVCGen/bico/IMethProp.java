@@ -1,7 +1,6 @@
-package mobius.directVCGen.translator.struct;
+package mobius.directVCGen.bico;
 
 import java.util.List;
-import java.util.Set;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -13,6 +12,4 @@ public interface IMethProp {
   public List<QuantVariableRef> getArgs();
   public List<QuantVariableRef> getLocalVars();
   
-  /** @deprecated */
-  public Set<QuantVariableRef[]> getAssignableSet();
 }

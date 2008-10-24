@@ -2,13 +2,11 @@ package mobius.directVCGen.formula;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import mobius.directVCGen.translator.struct.GlobalProperties;
-import mobius.directVCGen.translator.struct.IMethProp;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -617,35 +615,6 @@ public final class Logic {
                                new Term [] {heap, heapPre, 
                                             target, field});
   }
-
-  /**
-   * @param t the object containing the fieldVar
-   * @param f the field for which we want to find out whether it's assignable or not
-   * @param o Parameter object also containing a list of modifiable types.
-   * @return A Term expressing the check described above.
-   */
-  public static Term isAssignable(final QuantVariableRef t, 
-                                  final QuantVariableRef f, final Object o) {
-    final IMethProp prop = (IMethProp) o;
-    Term t1 = null;
-    Term t2 = null;
-    final Set assignSet = (HashSet<QuantVariableRef[]>) prop.getAssignableSet();
-    final Iterator iter = assignSet.iterator();
-    
-    while (iter.hasNext()) {
-      final QuantVariableRef[] setVar = (QuantVariableRef[]) iter.next();
-      t1 = Logic.equals(Heap.loc(Heap.var, t, f.qvar), 
-                        Heap.loc(Heap.var, setVar[0], setVar[1].qvar));
-      if (t2 == null) {
-        t2 = t1;
-      }
-      else {
-        t2 = Logic.or(t2, t1);
-      }
-    }
-    return t2;
-  }
-  
 
   /**
    * Main for testing purpose.

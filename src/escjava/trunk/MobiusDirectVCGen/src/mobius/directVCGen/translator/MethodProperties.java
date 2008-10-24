@@ -9,8 +9,8 @@ import java.util.Set;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
+import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.translator.struct.ContextProperties;
-import mobius.directVCGen.translator.struct.IMethProp;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -157,8 +157,6 @@ final class MethodProperties extends ContextProperties implements IMethProp {
   }
 
 
-
-  @Override
   public Set<QuantVariableRef[]> getAssignableSet() {
 
     return fAssignableSet;
