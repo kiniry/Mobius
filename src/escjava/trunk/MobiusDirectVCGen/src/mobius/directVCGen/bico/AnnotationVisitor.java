@@ -65,8 +65,8 @@ public final class AnnotationVisitor {
     InstructionList il = fMet.getInstructionList();
     String res = assertionEmpty;
     
-    for(InstructionHandle ih: il.getInstructionHandles()) {
-      PositionHint hint = new PositionHint(ih);
+    for (InstructionHandle ih: il.getInstructionHandles()) {
+      PositionHint hint = new PositionHint(fMet, ih);
       if (fAnnot.getAnnotPost(hint) != null) {
         // let's do something
         System.err.println("Post annotation are unhandled at the moment.");

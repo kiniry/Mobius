@@ -3,6 +3,9 @@ package mobius.directVCGen.pojs;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacFileManager;
 
+/**
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class JavaCompiler extends com.sun.tools.javac.main.Main {
 
   public JavaCompiler() {

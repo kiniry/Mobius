@@ -3,8 +3,12 @@ package mobius.directVCGen.pojs;
 import com.sun.tools.javac.parser.DocCommentScanner;
 import com.sun.tools.javac.util.Context;
 
-
-public class JavacTool extends com.sun.tools.javac.api.JavacTool {
+/**
+ * @deprecated Experimental
+ * @author J. Charles (julien.charles@inria.fr)
+ */
+public class JavacTool { 
+//extends com.sun.tools.javac.api.JavacTool {
   
   public JavacTool() {
     
@@ -14,7 +18,7 @@ public class JavacTool extends com.sun.tools.javac.api.JavacTool {
   }
   protected void beginContext(final Context context) {
     DocCommentScanner.Factory.preRegister(context);
-    super.beginContext(context);
+    //super.beginContext(context);
   }
 
 }

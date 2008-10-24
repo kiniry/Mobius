@@ -88,7 +88,8 @@ public class Main extends escjava.Main {
       
       // Launching the beast
       System.out.println("Launching...");
-      final Main m = new Main(basedir, escargs);
+      final Main m = new Main(basedir);
+      m.start(escargs);
       System.out.println("I'm finished!");
       
     }
@@ -128,30 +129,25 @@ public class Main extends escjava.Main {
     return basedir;
   }
 
+
   /**
    * Do the main operations; compute the vcs and everything.
-   * @param basedir the directory where to host everything
    * @param args the current program arguments to parse
    */
-  public Main(final File basedir, final String[] args) {
-    this(basedir);
+  public int start(final String[] args) {
+    int res;
     try {
-      
-      //instance = t;
-      final int result = this.run(args);
-//      return result;
+      res = this.run(args);
     } 
     catch (OutOfMemoryError oom) {
       final Runtime rt = Runtime.getRuntime();
       final long memUsedBytes = rt.totalMemory() - rt.freeMemory();
       fOut.println("java.lang.OutOfMemoryError (" + memUsedBytes + 
                   " bytes used)");
-      //oom.printStackTrace(System.out);
-//      return outOfMemoryExitCode;
-    }
-
+      res = -1;
+    } 
+    return res;
   }
-
   /**
    * Remove the check for the use of a legitimate VM.
    * (non-Javadoc)

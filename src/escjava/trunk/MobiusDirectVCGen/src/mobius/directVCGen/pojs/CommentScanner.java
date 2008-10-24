@@ -11,6 +11,11 @@ import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Position;
 
+
+/**
+ * @deprecated Experimental
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class CommentScanner extends Scanner {
 
   /** A factory for creating scanners. */
@@ -479,7 +484,7 @@ public class CommentScanner extends Scanner {
 
     docCommentCount = 0;
     
-    boolean firstLine = true;
+    //boolean firstLine = true;
 
     // Skip over first slash
     scanDocCommentChar();
@@ -501,13 +506,13 @@ public class CommentScanner extends Scanner {
     if (bp < buflen) {
       if (ch == LF) {
         scanDocCommentChar();
-        firstLine = false;
+        //firstLine = false;
       } 
       else if (ch == CR) {
         scanDocCommentChar();
         if (ch == LF) {
           scanDocCommentChar();
-          firstLine = false;
+          //firstLine = false;
         }
       }
     }

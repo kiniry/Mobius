@@ -23,10 +23,10 @@ public class Main extends mobius.directVCGen.Main {
   /**
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files
-   * @param args the arguments given to the program
    */
-  public Main(final File basedir, final String[] args) {
-    super(basedir, args);
+  public Main(final File basedir) {
+    super(basedir);
+    
   }
 
 
@@ -95,7 +95,8 @@ public class Main extends mobius.directVCGen.Main {
       fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
-      new Main(basedir, escargs);
+      final Main m = new Main(basedir);
+      m.start(escargs);
       
     }
     catch (IOException e1) {

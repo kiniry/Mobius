@@ -41,6 +41,7 @@ public class VarCorrDecoration extends Decoration {
    * @param n the routine to get the variables from
    * @return a list of variables, or null
    */
+  @SuppressWarnings("unchecked")
   public List<QuantVariableRef> get(final MethodGen n) {
     final List<QuantVariableRef> v = 
       (List<QuantVariableRef>) super.get(new PositionHint(n));

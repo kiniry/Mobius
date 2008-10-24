@@ -12,5 +12,7 @@ public interface IMethProp {
   public QuantVariableRef getResult();
   public List<QuantVariableRef> getArgs();
   public List<QuantVariableRef> getLocalVars();
+  
+  /** @deprecated */
   public Set<QuantVariableRef[]> getAssignableSet();
 }
