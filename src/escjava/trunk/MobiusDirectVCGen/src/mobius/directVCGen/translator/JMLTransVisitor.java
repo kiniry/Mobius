@@ -32,7 +32,7 @@ import escjava.ast.VarExprModifierPragma;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
-public class JMLTransVisitor extends JmlVisitor {
+class JMLTransVisitor extends JmlVisitor {
   
   /** Reference to JML Expression Translator. */
   private final JmlExprToFormula fTranslator;

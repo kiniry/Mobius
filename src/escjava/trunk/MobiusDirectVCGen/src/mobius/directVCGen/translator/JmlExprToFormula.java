@@ -29,7 +29,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
-public class JmlExprToFormula {
+class JmlExprToFormula {
 
   private JmlVisitor fVisitor;
 

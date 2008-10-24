@@ -43,7 +43,7 @@ import escjava.ast.WildRefExpr;
  * This is a basic visitor (which does nothing) used by the JML translator part.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class BasicJMLTranslator extends ABasicVisitor {
+class BasicJMLTranslator extends ABasicVisitor {
   /** {@inheritDoc} */
   @Override
   public final Object visitSimpleModifierPragma(final /*@non_null*/ SimpleModifierPragma x, 

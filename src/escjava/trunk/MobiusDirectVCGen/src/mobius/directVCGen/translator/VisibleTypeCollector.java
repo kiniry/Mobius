@@ -84,7 +84,7 @@ import escjava.tc.TypeSig;
  * @author Julien Charles (julien.charles@inria.fr)
  *
  */
-public final class VisibleTypeCollector extends VisitorArgResult {
+final class VisibleTypeCollector extends VisitorArgResult {
 
   private java.util.Set<Type> fTypeSet;
 

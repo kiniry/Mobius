@@ -21,7 +21,6 @@ import javafe.ast.Stmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VariableAccess;
 import javafe.util.Location;
-import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
