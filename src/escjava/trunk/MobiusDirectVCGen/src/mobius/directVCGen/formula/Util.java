@@ -9,6 +9,8 @@ import java.util.Vector;
 
 import javafe.ast.DoStmt;
 import javafe.ast.ForStmt;
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.ModifierPragma;
@@ -36,6 +38,7 @@ import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.SValue;
+import escjava.tc.Types;
 
 
 /**
@@ -50,12 +53,44 @@ public final class Util extends mobius.bico.Util {
   private Util() {
   }
   
+
+  
   /**
    * Returns the string representing the annotations 
    * bounded to this method. The form of what is returned is: 
    * <code>classNameAnnotations.methName</code>
    * @param decl the method from which we want to get the annotations
    * @return The name of the Annotations version of the method
+   */
+  public static String getMethodAnnotModule(final MethodGen decl) {
+
+    final String name = decl.getClassName().replace('.', '_');
+
+    return name + "Annotations." + Util.coqify(decl.getName());
+    
+  }
+  public static String getMethodSigModule(final MethodGen decl) {
+
+    final String name = decl.getClassName().replace('.', '_');
+
+    return name + "Signature." + Util.coqify(decl.getName());
+    
+  }
+  public static String getMethodModule(final MethodGen decl) {
+
+    final String name = decl.getClassName().replace('.', '_');
+
+    return name + "." + Util.coqify(decl.getName());
+    
+  }
+
+  /**
+   * Returns the string representing the annotations 
+   * bounded to this method. The form of what is returned is: 
+   * <code>classNameAnnotations.methName</code>
+   * @param decl the method from which we want to get the annotations
+   * @return The name of the Annotations version of the method
+   * @deprecated
    */
   public static String getMethodAnnotModule(final RoutineDecl decl) {
     final TypeDecl clzz = decl.parent;
@@ -70,6 +105,7 @@ public final class Util extends mobius.bico.Util {
     }
   }
   
+  /** @deprecated */
   public static String getMethodSigModule(final RoutineDecl decl) {
     final TypeDecl clzz = decl.parent;
     final TypeSig sig = TypeSig.getSig(clzz);
@@ -83,6 +119,7 @@ public final class Util extends mobius.bico.Util {
     }
   }
   
+  /** @deprecated */
   public static String getMethodModule(final RoutineDecl decl) {
     final TypeDecl clzz = decl.parent;
     final TypeSig sig = TypeSig.getSig(clzz);
@@ -230,7 +267,7 @@ public final class Util extends mobius.bico.Util {
    * @param annot the annotation to instanciate
    * @return a term representing the annotation
    */
-  public static Term getAssertion(final RoutineDecl meth, 
+  public static Term getAssertion(final MethodGen meth, 
                                   final AAnnotation annot) {
     final Term res;
     if (DirectVCGen.fByteCodeTrick) {
@@ -519,4 +556,66 @@ public final class Util extends mobius.bico.Util {
     }
     return hasPost;
   }
+  /**
+   * This method is made to pretty print method names.
+   * @param md the method to treat
+   * @return a pretty printed version of the method name
+   */
+  public static String methodPrettyPrint(final RoutineDecl md) {
+    final String prettyname = getRoutinePrettyName(md);
+    final String res = 
+      md.parent.id + "." + prettyname;
+    return res;
+  }
+  /**
+   * This method is made to pretty print method names.
+   * @param md the method to treat
+   * @return a pretty printed version of the method name
+   */
+  public static String methodPrettyPrint(final MethodGen md) {
+    final String prettyname = getRoutinePrettyName(md);
+    final String res = 
+      md.getClassName() + "." + prettyname;
+    return res;
+  }
+
+  /**
+   * Return the signature of a routine.
+   * @param rd the routine to get the signature of
+   * @return a string representing the signature of the routine
+   */
+  public static String getRoutinePrettyName(final RoutineDecl rd) {
+    
+    String res = 
+      rd.id() + "(";
+    final FormalParaDeclVec fdv = rd.args;
+    final int m = fdv.size() - 1;
+    for (int i = 0; i < m; i++) {
+      final FormalParaDecl d = fdv.elementAt(i);
+      res += Types.printName(d.type) + ", ";
+    }
+    if (m >= 0) {
+      final FormalParaDecl d = fdv.elementAt(m);
+      res += Types.printName(d.type);
+    }
+
+    res += ")";
+    return res;
+  }
+  
+  /**
+   * Return the signature of a routine.
+   * @param rd the routine to get the signature of
+   * @return a string representing the signature of the routine
+   */
+  public static String getRoutinePrettyName(final MethodGen rd) {
+    
+    return rd.toString();
+  }
+  
+  public static MethodGen translate(RoutineDecl rd) {
+    return null;
+  }
+  
+  
 }

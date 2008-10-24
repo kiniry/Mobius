@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import org.apache.bcel.generic.MethodGen;
+
 import javafe.ast.ASTNode;
 import javafe.ast.ArrayInit;
 import javafe.ast.AssertStmt;
@@ -51,7 +53,6 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.translator.LookupJavaFe;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -77,7 +78,7 @@ public class StmtVCGen extends ExpressionVisitor {
   private final AnnotationDecoration fAnnot = AnnotationDecoration.inst;
   
   /** the current method or constructor that is being inspected. */
-  private final RoutineDecl fMeth;
+  private final MethodGen fMeth;
 
   /** the correspondence from source to bytecode for the variables. */
   private List<QuantVariableRef> fVariables;
@@ -87,7 +88,7 @@ public class StmtVCGen extends ExpressionVisitor {
     return fVariables;
   }
 
-  public StmtVCGen(final RoutineDecl meth, List<QuantVariableRef> variables) {
+  public StmtVCGen(final MethodGen meth, List<QuantVariableRef> variables) {
     fMeth = meth;
     fVariables = variables;
     
@@ -275,8 +276,8 @@ public class StmtVCGen extends ExpressionVisitor {
     
     final VCEntry vce = (VCEntry) o;
     final String name = Util.getMethodAnnotModule(fMeth);
-    final Term[] tab = LookupJavaFe.getInst().getNormalPostconditionArgs(fMeth);
-    final Post normPost = new Post(LookupJavaFe.getInst().getNormalPostcondition(fMeth).getRVar(), 
+    final Term[] tab = Lookup.getInst().getNormalPostconditionArgs(fMeth);
+    final Post normPost = new Post(Lookup.getInst().getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
 
     vce.fPost = normPost;
@@ -567,9 +568,9 @@ public class StmtVCGen extends ExpressionVisitor {
                                       final /*@non_null*/ ConstructorInvocation ci, 
                                       final Object o) {
     final VCEntry entry = (VCEntry)o;
-    final Post normalPost = LookupJavaFe.getInst().getNormalPostcondition(ci.decl);
-    final Post excpPost = LookupJavaFe.getInst().getExceptionalPostcondition(ci.decl);
-    final Term pre = LookupJavaFe.getInst().getPrecondition(ci.decl);
+    final Post normalPost = Lookup.getInst().getNormalPostcondition(Util.translate(ci.decl));
+    final Post excpPost = Lookup.getInst().getExceptionalPostcondition(Util.translate(ci.decl));
+    final Term pre = Lookup.getInst().getPrecondition(Util.translate(ci.decl));
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post

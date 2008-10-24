@@ -11,18 +11,14 @@ import org.apache.bcel.generic.MethodGen;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
-public class LookupJavaFe extends Lookup {
+class LookupJavaFe extends Lookup {
   
   
   /** an instance of the lookup object. */
   private static LookupJavaFe inst = new LookupJavaFe();
   
 
-  
-  public MethodGen translate(RoutineDecl rd) {
-    return null;
-  }
-  
+
   /**
    * Returns the current instance of the lookup object.
    * @return cannot be null

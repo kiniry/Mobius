@@ -377,7 +377,7 @@ public class Lookup {
    * @param meth the method from which to compute the postcondition arguments
    * @return a newly created array
    */
-  public static Term[] getNormalPostconditionArgs(final MethodGen meth) {
+  public Term[] getNormalPostconditionArgs(final MethodGen meth) {
     Term[] tab;
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre); 
@@ -408,7 +408,7 @@ public class Lookup {
    * @param meth the method context
    * @return the array containing all the arguments.
    */
-  public static Term[] getExcPostconditionArgs(final MethodGen meth) {
+  public Term[] getExcPostconditionArgs(final MethodGen meth) {
     final Term[] tab = getNormalPostconditionArgs(meth);
     tab[0] = Expression.sym("Exception", 
                            new Term [] {Lookup.getInst().getExceptionalPostcondition(meth).getRVar()});

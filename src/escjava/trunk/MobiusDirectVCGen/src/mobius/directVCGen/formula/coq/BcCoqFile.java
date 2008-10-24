@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-import javafe.ast.RoutineDecl;
+import org.apache.bcel.generic.MethodGen;
 
 import mobius.directVCGen.formula.Util;
 
@@ -32,7 +32,7 @@ public class BcCoqFile extends CoqFile {
    * Writes the proof obligation in the file.
    * @param decl the routine from which the proof obligation is the target
    */
-  public void doIt(final RoutineDecl decl) {
+  public void doIt(final MethodGen decl) {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();

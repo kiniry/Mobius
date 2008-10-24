@@ -19,6 +19,7 @@ import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.translator.struct.ContextProperties;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.ast.ExprDeclPragma;
 import escjava.ast.ExprModifierPragma;

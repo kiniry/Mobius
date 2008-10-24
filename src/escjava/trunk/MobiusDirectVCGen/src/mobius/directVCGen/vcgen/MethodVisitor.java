@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.bcel.generic.MethodGen;
+
 import javafe.ast.BlockStmt;
-import javafe.ast.FormalParaDecl;
-import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.bico.VarCorrDecoration;
 import mobius.directVCGen.formula.Expression;
@@ -24,14 +24,12 @@ import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.formula.coq.EquivCoqFile;
-import mobius.directVCGen.translator.LookupJavaFe;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import mobius.directVCGen.vcgen.wp.StmtVCGen;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.STerm;
-import escjava.tc.Types;
 
 /**
  * This class is made to do the weakest precondition calculus over a
@@ -40,7 +38,8 @@ import escjava.tc.Types;
  */
 public final class MethodVisitor extends DirectVCGen {
   /** the name of the method associated with this object. */
-  private RoutineDecl fMeth;
+  private MethodGen fMeth;
+  
   /** the vcs that have been calculated. */
   private LinkedList<Term> fVcs = new LinkedList<Term>();
   
@@ -56,7 +55,7 @@ public final class MethodVisitor extends DirectVCGen {
   private MethodVisitor(final DirectVCGen cfg, final File methoddir,  final RoutineDecl rd) {
     super(cfg, methoddir);
     getWorkingDir().mkdirs();
-    fMeth = rd;
+    fMeth = Util.translate(rd);
     
   }
 
@@ -70,7 +69,7 @@ public final class MethodVisitor extends DirectVCGen {
   public static MethodVisitor treatRoutine(final DirectVCGen parent, final File classDir,
                                            final RoutineDecl rd) {
     final MethodVisitor mv = new MethodVisitor(parent, 
-                                   new File(classDir, getRoutinePrettyName(rd)), rd);
+                                   new File(classDir, Util.getRoutinePrettyName(rd)), rd);
     if (rd.body != null) {
       rd.body.accept(mv);
       mv.dump();
@@ -144,17 +143,17 @@ public final class MethodVisitor extends DirectVCGen {
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
     Post normPost;
     Post excpPost;
-    LookupJavaFe jFe = LookupJavaFe.getInst();
+    final Lookup lkUp = Lookup.getInst();
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
     
     final String name = Util.getMethodAnnotModule(fMeth);
-    Term[] tab = jFe.getNormalPostconditionArgs(fMeth);
-    normPost = new Post(LookupJavaFe.getInst().getNormalPostcondition(fMeth).getRVar(), 
+    Term[] tab = lkUp.getNormalPostconditionArgs(fMeth);
+    normPost = new Post(lkUp.getNormalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
   
 
-    tab = jFe.getExcPostconditionArgs(fMeth);
-    excpPost = new Post(LookupJavaFe.getInst().getExceptionalPostcondition(fMeth).getRVar(), 
+    tab = lkUp.getExcPostconditionArgs(fMeth);
+    excpPost = new Post(lkUp.getExceptionalPostcondition(fMeth).getRVar(), 
                         Expression.sym(name + ".mk_post", tab));
 
     
@@ -171,7 +170,7 @@ public final class MethodVisitor extends DirectVCGen {
     final List<Term> vcs = new ArrayList<Term>(); 
     Term pre;
 
-    final List<QuantVariableRef> largs = LookupJavaFe.getInst().getPreconditionArgs(fMeth);
+    final List<QuantVariableRef> largs = lkUp.getPreconditionArgs(fMeth);
     final Term[] args = largs.toArray(new Term [largs.size()]);
     pre = Expression.sym(name + ".mk_pre", args);
 
@@ -216,7 +215,7 @@ public final class MethodVisitor extends DirectVCGen {
   }
   
 
-  public static Term addVarDecl(final RoutineDecl met, Term t) {
+  public static Term addVarDecl(final MethodGen met, Term t) {
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(met);
     Term res = t;
     res = Logic.forall(Heap.var, res);
@@ -226,7 +225,7 @@ public final class MethodVisitor extends DirectVCGen {
     return res;
   }
 
-  public static Term addOldVarDecl(final RoutineDecl meth, Term t) {
+  public static Term addOldVarDecl(final MethodGen meth, Term t) {
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(meth);
     Term res = t;
     res = Logic.forall(Heap.varPre, res);
@@ -245,7 +244,7 @@ public final class MethodVisitor extends DirectVCGen {
    */
   @Override
   public String toString() {
-    String res = "Method: " + methodPrettyPrint(fMeth);
+    String res = "Method: " + Util.methodPrettyPrint(fMeth);
     if (fVcs.size() > 1) {
       res += "\nproof obligations:";
     }
@@ -264,42 +263,6 @@ public final class MethodVisitor extends DirectVCGen {
 
 
 
-  /**
-   * This method is made to pretty print method names.
-   * @param md the method to treat
-   * @return a pretty printed version of the method name
-   */
-  public static String methodPrettyPrint(final RoutineDecl md) {
-    final String prettyname = getRoutinePrettyName(md);
-    final String res = 
-      md.parent.id + "." + prettyname;
-    return res;
-  }
-
-
-  /**
-   * Return the signature of a routine.
-   * @param rd the routine to get the signature of
-   * @return a string representing the signature of the routine
-   */
-  public static String getRoutinePrettyName(final RoutineDecl rd) {
-    String res = 
-      rd.id() + "(";
-    final FormalParaDeclVec fdv = rd.args;
-    final int m = fdv.size() - 1;
-    for (int i = 0; i < m; i++) {
-      final FormalParaDecl d = fdv.elementAt(i);
-      res += Types.printName(d.type) + ", ";
-    }
-    if (m >= 0) {
-      final FormalParaDecl d = fdv.elementAt(m);
-      res += Types.printName(d.type);
-    }
-
-    res += ")";
-    return res;
-  }
-  
 
   
 } 

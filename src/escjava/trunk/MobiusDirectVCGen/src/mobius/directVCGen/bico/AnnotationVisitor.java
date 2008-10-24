@@ -47,11 +47,9 @@ public final class AnnotationVisitor {
   /**
    * Create an annotation visitor targetting a specific method.
    * @param out the file where to output the annotations
-   * @param decl the routine which is currently inspected
    * @param met the method to inspect
    */
   private AnnotationVisitor(final CoqStream out, 
-                            //final RoutineDecl decl, 
                             final MethodGen met) {
     fOut = out;
     fMet = met;
@@ -62,11 +60,11 @@ public final class AnnotationVisitor {
   /** {@inheritDoc} */
 
   public String start() {
-    InstructionList il = fMet.getInstructionList();
+    final InstructionList il = fMet.getInstructionList();
     String res = assertionEmpty;
     
     for (InstructionHandle ih: il.getInstructionHandles()) {
-      PositionHint hint = new PositionHint(fMet, ih);
+      final PositionHint hint = new PositionHint(fMet, ih);
       if (fAnnot.getAnnotPost(hint) != null) {
         // let's do something
         System.err.println("Post annotation are unhandled at the moment.");
@@ -183,7 +181,6 @@ public final class AnnotationVisitor {
   /**
    * Returns the assertion enumeration.
    * @param out the file to dump the assertion definition to
-   * @param decl the method to inspect, from ESC/Java
    * @param met the method to inspect, from BCEL
    * @return an enumeration of assertions
    */

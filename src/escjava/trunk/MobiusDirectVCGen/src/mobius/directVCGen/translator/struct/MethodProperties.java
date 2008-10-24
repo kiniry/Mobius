@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator;
+package mobius.directVCGen.translator.struct;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,7 +10,8 @@ import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.bico.IMethProp;
-import mobius.directVCGen.translator.struct.ContextProperties;
+import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Util;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -22,7 +23,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * Properties that are passed as argument of the visitor. 
  * @author Hernann Lehner and J. Charles (julien.charles@inria.fr)
  */
-final class MethodProperties extends ContextProperties implements IMethProp {
+public final class MethodProperties extends ContextProperties implements IMethProp {
 
   /** */
   private static final long serialVersionUID = 1L;
@@ -74,7 +75,7 @@ final class MethodProperties extends ContextProperties implements IMethProp {
     validStr.addAll(super.getValidStr());
     fMethod = met;
     fArgs = new LinkedList<QuantVariableRef>(); 
-    fArgs.addAll(LookupJavaFe.getInst().mkArguments(met));
+    fArgs.addAll(Lookup.getInst().mkArguments(getBCELDecl()));
 
     fIsConstructor = fMethod instanceof ConstructorDecl;
     fIsHelper = isHelper(met);
@@ -127,7 +128,7 @@ final class MethodProperties extends ContextProperties implements IMethProp {
     return fMethod;
   }
   public MethodGen getBCELDecl() {
-    return LookupJavaFe.getInst().translate(fMethod);
+    return Util.translate(fMethod);
   }
   public List<QuantVariableRef> getLocalVars() {
     final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();

@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.Decoration;
 import mobius.directVCGen.formula.PositionHint;
-import mobius.directVCGen.translator.LookupJavaFe;
 
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
@@ -48,16 +46,6 @@ public class VarCorrDecoration extends Decoration {
     return v;
   }
   
-  /**
-   * Retrieve the variables which were previously registered 
-   * using the set method.
-   * 
-   * @param n the routine to get the variables from
-   * @return a list of variables, or null
-   */
-  public List<QuantVariableRef> get(final RoutineDecl n) {
-    return get(LookupJavaFe.getInst().translate(n));
-  }
   
   /**
    * Adds the methods variable list to a method declaration.

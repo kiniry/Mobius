@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.bcel.generic.MethodGen;
+
 import javafe.ast.ArrayInit;
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.CastExpr;
@@ -31,7 +33,6 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.translator.LookupJavaFe;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import escjava.ast.Modifiers;
@@ -79,19 +80,21 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     return entry.fPost;
   }
 
-  private void getInvocation(final RoutineDecl meth, ExprVec methArgs, final VCEntry entry) {
+  private void getInvocation(final RoutineDecl invokedMeth, ExprVec methArgs, final VCEntry entry) {
     
     final QuantVariableRef newThis = Expression.rvar(Heap.sortValue);
     final QuantVariableRef newHeap = Heap.newVar();
     
     //mking the args
+
+    final MethodGen meth = Util.translate(invokedMeth);
     final String name = Util.getMethodAnnotModule(meth);
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre);
-    args.addAll(LookupJavaFe.getInst().getPreconditionArgs(meth));
+    args.addAll(Lookup.getInst().getPreconditionArgs(meth));
     
     // mking the meth norm post
-    final QuantVariableRef resVar = LookupJavaFe.getInst().getNormalPostcondition(meth).getRVar();
+    final QuantVariableRef resVar = Lookup.getInst().getNormalPostcondition(meth).getRVar();
     if (!Util.isVoid(meth)) {
       args.addFirst(Expression.normal(Expression.some(Heap.sortToValue(resVar))));
     }
@@ -113,7 +116,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Post methNormPost = new Post(resVar, Expression.sym(name + ".mk_post", tab));
     
     // mking the meth excp post
-    final QuantVariableRef excVar = LookupJavaFe.getInst().getExceptionalPostcondition(meth).getRVar();
+    final QuantVariableRef excVar = Lookup.getInst().getExceptionalPostcondition(meth).getRVar();
     tab = args.toArray(new Term [args.size()]);
     tab [0] = Expression.sym("Exception", new Term [] {excVar});
     for (int i = 0; i < tab.length; i++) {
@@ -132,7 +135,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
    
    
     // mking the meth pre
-    final List<QuantVariableRef> preArgs = LookupJavaFe.getInst().getPreconditionArgs(meth);
+    final List<QuantVariableRef> preArgs = Lookup.getInst().getPreconditionArgs(meth);
     
     tab = preArgs.toArray(new Term [preArgs.size()]);
     for (int i = 0; i < tab.length; i++) {

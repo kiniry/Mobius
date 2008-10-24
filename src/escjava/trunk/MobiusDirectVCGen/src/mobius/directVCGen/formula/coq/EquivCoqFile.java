@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 
-import mobius.directVCGen.formula.Util;
+import org.apache.bcel.generic.MethodGen;
 
-import javafe.ast.RoutineDecl;
+import mobius.directVCGen.formula.Util;
 
 import escjava.sortedProver.NodeBuilder.STerm;
 
@@ -38,7 +38,7 @@ public class EquivCoqFile extends CoqFile {
    * is generated
    * @param term the source vc
    */
-  public void doIt(final RoutineDecl decl, final STerm term) {
+  public void doIt(final MethodGen decl, final STerm term) {
     // bytecode
     final PrintStream out = getOut();
     writeHeader();
