@@ -42,7 +42,7 @@ public class VarCorrDecoration extends Decoration {
   @SuppressWarnings("unchecked")
   public List<QuantVariableRef> get(final MethodGen n) {
     final List<QuantVariableRef> v = 
-      (List<QuantVariableRef>) super.get(new PositionHint(n));
+      (List<QuantVariableRef>) super.get(PositionHint.getMethodPositionHint(n));
     return v;
   }
   
@@ -70,7 +70,7 @@ public class VarCorrDecoration extends Decoration {
     for (QuantVariableRef q: bcvars) {
       rev.addFirst(q);
     }
-    super.set(new PositionHint(n), rev);
+    super.set(PositionHint.getMethodPositionHint(n), rev);
   }
 
 }

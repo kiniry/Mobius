@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javafe.ast.TypeDecl;
-import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
@@ -31,24 +29,24 @@ public class Lookup {
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
-  private Map<MethodGen, Term> preconditions = 
-    new HashMap<MethodGen, Term>();
+  private final Map<PositionHint, Term> preconditions = 
+    new HashMap<PositionHint, Term>();
 
   /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
-  private Map<MethodGen, Post> postconditions = 
-    new HashMap<MethodGen, Post>();
+  private Map<PositionHint, Post> postconditions = 
+    new HashMap<PositionHint, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
-  private Map<MethodGen, Post> exceptionalPostconditions = 
-    new HashMap<MethodGen, Post>();
+  private Map<PositionHint, Post> exceptionalPostconditions = 
+    new HashMap<PositionHint, Post>();
 
   
   /** the argument lists of each precondition. */
-  private final Map<MethodGen, List<QuantVariableRef>> fPreArgs = 
-    new HashMap<MethodGen, List<QuantVariableRef>>(); 
+  private final Map<PositionHint, List<QuantVariableRef>> fPreArgs = 
+    new HashMap<PositionHint, List<QuantVariableRef>>(); 
   /**  the argument lists of each precondition without the heap. */
-  private final Map<MethodGen, List<QuantVariableRef>> fPreArgsWithoutHeap = 
-    new HashMap<MethodGen, List<QuantVariableRef>>(); 
+  private final Map<PositionHint, List<QuantVariableRef>> fPreArgsWithoutHeap = 
+    new HashMap<PositionHint, List<QuantVariableRef>>(); 
   
   
 
@@ -57,83 +55,14 @@ public class Lookup {
     
   }
   
-  /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
-  private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
-
-  /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
-  private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
-
-  /**
-   * Returns the FOL Term representation of the class invariant.
-   * @param type the type to get the invariant from
-   * @return the precondition or <code>True</code>
-   */
-  public Term getInvariant(final TypeDecl type) {
-    Term t = fInvariants.get(type);
-    if (t == null) {
-      t = Logic.trueValue();
-    }
-    return t;
-  }
-  
-
-  /**
-   * Adds a given Term to the invariant of a given class. 
-   * @param type the type
-   * @param term fol term to be used as condition
-   */
-  public void addInvariant(final TypeDecl type, final Term term) {
-    final Term pOld = fInvariants.get(type);
-    Term pNew;
-    if (pOld == null) {
-      pNew = term;
-    }
-    else {
-      pNew = Logic.and(pOld, term);
-    }
-    fInvariants.put(type, pNew);
-  }
-  
-  /**
-   * Returns the FOL Term representation of the constraints of a given class.
-   * @param type the class which we want to get the constraints from
-   * @return the precondition or <code>True</code>
-   */
-  public Term getConstraint(final TypeDecl type) {
-    //return buildStdCond(m, "_pre", false);
-    Term t = fConstraints.get(type);
-    if (t == null) {
-      t = Logic.trueValue();
-    }
-    return t;
-  }
-
-  /**
-   * Adds a given Term to the constraints of a given class.
-   * @param type the class targeted
-   * @param term fol term to be used as constraint
-   */
-  public void addConstraint(final TypeDecl type, 
-                            final Term term) {
-    final Term pOld = fConstraints.get(type);
-    Term pNew;
-    if (pOld == null) {
-      pNew = term;
-    }
-    else {
-      pNew = Logic.and(pOld, term);
-    }
-    fConstraints.put(type, pNew);
-  }  
-  
   /**
    * Returns the FOL Term representation of the precondition of method m.
    * @param m the method of interest
    * @return the precondition or <code>True</code>
    */
   public Term getPrecondition(final MethodGen m) {
-    //return buildStdCond(m, "_pre", false);
-    Term t = preconditions.get(m);
+    final PositionHint ph = PositionHint.getMethodPositionHint(m);
+    Term t = preconditions.get(ph);
     if (t == null) {
       t = Logic.trueValue();
     }
@@ -147,7 +76,8 @@ public class Lookup {
    */
   public void addPrecondition(final MethodGen rd, 
                                             final Term term) {
-    final Term pOld = preconditions.get(rd);
+    final PositionHint ph = PositionHint.getMethodPositionHint(rd);
+    final Term pOld = preconditions.get(ph);
     Term pNew;
     if (pOld == null) {
       pNew = term;
@@ -155,7 +85,7 @@ public class Lookup {
     else {
       pNew = Logic.and(pOld, term);
     }
-    preconditions.put(rd, pNew);
+    preconditions.put(ph, pNew);
   }
   
   
@@ -167,7 +97,9 @@ public class Lookup {
    */
   public Post getNormalPostcondition(final MethodGen m) {
     //return new Post(buildStdCond (m, "_norm", true)); 
-    Post p = postconditions.get(m);
+    final PositionHint ph = PositionHint.getMethodPositionHint(m);
+    
+    Post p = postconditions.get(ph);
     if (p == null) {
       p = new Post(Logic.trueValue());
     }
@@ -181,6 +113,7 @@ public class Lookup {
    */
   public void addNormalPostcondition(final MethodGen rd, 
                                             final Post post) {
+    final PositionHint ph = PositionHint.getMethodPositionHint(rd);
     Post pNew = post;
     
     if (pNew == null && fFailSave) {
@@ -191,37 +124,16 @@ public class Lookup {
       pNew = new Post(Expression.rvar(Ref.sort), pNew);
     }
     
-    final Post pOld = postconditions.get(rd);
+    final Post pOld = postconditions.get(ph);
     if (pOld != null) {
       // not the first time
       pNew = Post.and(pNew, pOld);
     }
-    postconditions.put(rd, pNew);
+    postconditions.put(ph, pNew);
   }
 
 
-  /**
-   * Adds a given Term to postconditions of a given method. 
-   * @param mp the method
-   * @param term fol term to be used as condition
-   */
-  public void addNormalPostcondition(final IMethProp mp, 
-                                            final Term term) {
-    final Post pOld = postconditions.get(mp.getBCELDecl());
-    Post pNew;
-    if (pOld == null) {
-      if (mp.getResult() == null) {
-        pNew = new Post(null, term);
-      }
-      else {
-        pNew = new Post(mp.getResult(), term);
-      }
-    }
-    else {
-      pNew = Post.and(pOld, term);
-    }
-    postconditions.put(mp.getBCELDecl(), pNew);
-  }
+
  
   
   /**
@@ -232,8 +144,9 @@ public class Lookup {
    * @return the exceptional postcondition or <code>True</code>
    */
   public Post getExceptionalPostcondition(final MethodGen m) {
-    //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false)); 
-    Post p = exceptionalPostconditions.get(m);
+    //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false));
+    final PositionHint ph = PositionHint.getMethodPositionHint(m);
+    Post p = exceptionalPostconditions.get(ph);
     if (p == null) {
       p = new Post(Expression.rvar(Heap.sortValue), Logic.trueValue());
     }
@@ -247,6 +160,7 @@ public class Lookup {
    */
   public void addExceptionalPostcondition(final MethodGen rd, 
                                                  final Post post) {
+    final PositionHint ph = PositionHint.getMethodPositionHint(rd);
     Post pNew = post;
     
     if (pNew == null && fFailSave) {
@@ -257,12 +171,12 @@ public class Lookup {
       pNew = new Post(Expression.rvar(Ref.sort), pNew);
     }
     
-    final Post pOld = exceptionalPostconditions.get(rd);
+    final Post pOld = exceptionalPostconditions.get(ph);
     if (pOld != null) {
       // not the first time
       pNew = Post.and(pNew, pOld);
     }
-    exceptionalPostconditions.put(rd, pNew);
+    exceptionalPostconditions.put(ph, pNew);
   }
 
 
@@ -273,7 +187,8 @@ public class Lookup {
    */
   public void addExceptionalPostcondition(final MethodGen rd, 
                                                  final Term term) {
-    final Post pOld = exceptionalPostconditions.get(rd);
+    final PositionHint ph = PositionHint.getMethodPositionHint(rd);
+    final Post pOld = exceptionalPostconditions.get(ph);
     Post pNew;
     if (pOld == null) {
       pNew = new Post(Expression.rvar(Heap.sortValue), term);
@@ -281,7 +196,7 @@ public class Lookup {
     else {
       pNew = Post.and(pOld, term);
     }
-    exceptionalPostconditions.put(rd, pNew);
+    exceptionalPostconditions.put(ph, pNew);
   }
   
   /**
@@ -299,17 +214,18 @@ public class Lookup {
    */
   public void computePreconditionArgs(final MethodGen rout) {
     final List<MethodGen> lrout = new ArrayList<MethodGen>();
-    lrout.addAll(preconditions.keySet());
+    lrout.addAll(PositionHint.getMethodList());
     lrout.add(rout);
     
     for (MethodGen rd: lrout) {
+      final PositionHint ph = PositionHint.getMethodPositionHint(rd);
       final List<QuantVariableRef> args = mkArguments(rd);
       final LinkedList<QuantVariableRef> argsWithoutHeap = 
         new LinkedList<QuantVariableRef>();
       argsWithoutHeap.addAll(args);
       argsWithoutHeap.removeFirst();
-      fPreArgs.put(rd, args);
-      fPreArgsWithoutHeap.put(rd, argsWithoutHeap);
+      fPreArgs.put(ph, args);
+      fPreArgsWithoutHeap.put(ph, argsWithoutHeap);
     }
     
   }
@@ -321,7 +237,9 @@ public class Lookup {
    * @return a list of variables
    */
   public List<QuantVariableRef> getPreconditionArgs(final MethodGen m) {
-    return fPreArgs.get(m);
+    final PositionHint ph = PositionHint.getMethodPositionHint(m);
+    
+    return fPreArgs.get(ph);
   }
   
   
@@ -332,7 +250,8 @@ public class Lookup {
    * @return a list of variables
    */
   public List<QuantVariableRef> getPreconditionArgsWithoutHeap(final MethodGen m) {
-    return fPreArgsWithoutHeap.get(m);
+    final PositionHint ph = PositionHint.getMethodPositionHint(m);
+    return fPreArgsWithoutHeap.get(ph);
   }
   
   /** {@inheritDoc} */
@@ -411,7 +330,7 @@ public class Lookup {
   public Term[] getExcPostconditionArgs(final MethodGen meth) {
     final Term[] tab = getNormalPostconditionArgs(meth);
     tab[0] = Expression.sym("Exception", 
-                           new Term [] {Lookup.getInst().getExceptionalPostcondition(meth).getRVar()});
+                           new Term [] {getExceptionalPostcondition(meth).getRVar()});
     return tab;
   }
 }

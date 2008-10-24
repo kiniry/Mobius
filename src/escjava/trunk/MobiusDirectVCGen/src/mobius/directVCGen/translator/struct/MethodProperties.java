@@ -9,9 +9,9 @@ import java.util.Set;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.bico.IMethProp;
+import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Util;
+import mobius.directVCGen.formula.MethodGetter;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -23,7 +23,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * Properties that are passed as argument of the visitor. 
  * @author Hernann Lehner and J. Charles (julien.charles@inria.fr)
  */
-public final class MethodProperties extends ContextProperties implements IMethProp {
+public final class MethodProperties extends ContextProperties implements ILocalVars {
 
   /** */
   private static final long serialVersionUID = 1L;
@@ -128,7 +128,7 @@ public final class MethodProperties extends ContextProperties implements IMethPr
     return fMethod;
   }
   public MethodGen getBCELDecl() {
-    return Util.translate(fMethod);
+    return MethodGetter.translate(fMethod);
   }
   public List<QuantVariableRef> getLocalVars() {
     final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();
@@ -152,7 +152,6 @@ public final class MethodProperties extends ContextProperties implements IMethPr
 
 
 
-  @Override
   public QuantVariableRef getResult() {
     return fResult;
   }

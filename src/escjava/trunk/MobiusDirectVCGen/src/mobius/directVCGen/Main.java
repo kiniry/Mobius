@@ -208,7 +208,6 @@ public class Main extends escjava.Main {
    */
   //@ requires td != null;
   //@ requires (* td is not from a binary file. *);
-  @SuppressWarnings("unchecked")
   public boolean processTD(final TypeDecl td) {
     final int errorCount = ErrorSet.errors;
 
@@ -240,14 +239,17 @@ public class Main extends escjava.Main {
    * Generate the bicolano class files as well as their annotations.
    * Annotations are taken from the annotated source.
    * @param sig the annotated source
+   * @param gen the annotation generator that will be used to annotate the
+   * AST.
    */
-  protected void doBcVCGen(final TypeSig sig, IAnnotationGenerator gen) {
+  protected void doBcVCGen(final TypeSig sig, final IAnnotationGenerator gen) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
     
     final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), 
                                                          options.userPath,
                                                          gen);
+    
     try {
       ac.start();
     } 

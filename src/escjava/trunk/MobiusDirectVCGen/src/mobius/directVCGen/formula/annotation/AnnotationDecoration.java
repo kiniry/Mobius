@@ -3,11 +3,10 @@ package mobius.directVCGen.formula.annotation;
 import java.util.List;
 import java.util.Vector;
 
-import javafe.ast.ASTDecoration;
 import javafe.ast.ASTNode;
 import javafe.ast.Stmt;
-import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.formula.Decoration;
+import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Util;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -153,7 +152,7 @@ public class AnnotationDecoration extends Decoration {
    * @param inv the invariant to set
    * @param prop the properties to add all the arguments to the invariant
    */
-  public void setInvariant(final PositionHint n, final Term inv, final IMethProp prop) {
+  public void setInvariant(final PositionHint n, final Term inv, ILocalVars prop) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();
@@ -229,7 +228,7 @@ public class AnnotationDecoration extends Decoration {
     
   }
 
-  public void setInvariant(Stmt s, Term inv, IMethProp prop) {
+  public void setInvariant(Stmt s, Term inv, ILocalVars prop) {
     setInvariant(new PositionHint(s), inv, prop);
   }
 }

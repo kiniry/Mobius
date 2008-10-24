@@ -19,7 +19,6 @@ import javafe.ast.Stmt;
 import javafe.ast.TypeDecl;
 import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
-import mobius.directVCGen.bico.IMethProp;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
@@ -378,7 +377,7 @@ public final class Util extends mobius.bico.Util {
    * @param prop the properties from which to build the arguments
    * @return a list of variables ordered, which are the arguments
    */
-  public static List<QuantVariableRef> buildArgs(final IMethProp prop) {
+  public static List<QuantVariableRef> buildArgs(final ILocalVars prop) {
     final List<QuantVariableRef> args = new LinkedList<QuantVariableRef>();
     // olds
     for (QuantVariableRef qvr: prop.getArgs()) {
@@ -612,10 +611,4 @@ public final class Util extends mobius.bico.Util {
     
     return rd.toString();
   }
-  
-  public static MethodGen translate(RoutineDecl rd) {
-    return null;
-  }
-  
-  
 }

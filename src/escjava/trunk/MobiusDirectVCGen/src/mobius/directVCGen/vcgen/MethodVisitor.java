@@ -19,6 +19,7 @@ import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.MethodGetter;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
@@ -55,7 +56,7 @@ public final class MethodVisitor extends DirectVCGen {
   private MethodVisitor(final DirectVCGen cfg, final File methoddir,  final RoutineDecl rd) {
     super(cfg, methoddir);
     getWorkingDir().mkdirs();
-    fMeth = Util.translate(rd);
+    fMeth = MethodGetter.translate(rd);
     
   }
 

@@ -173,8 +173,8 @@ class JmlVisitor extends BasicJMLTranslator {
     visitRoutineDecl(x, prop);
     
     if (!prop.fIsHelper) {
-      final Term constraints = Lookup.getInst().getConstraint(x.getParent());
-      Lookup.getInst().addNormalPostcondition(prop, constraints);
+      final Term constraints = LookupJavaFe.getInst().getConstraint(x.getParent());
+      LookupJavaFe.getInst().addNormalPostcondition(prop, constraints);
       Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), constraints);
     }  
     return prop;
@@ -195,7 +195,7 @@ class JmlVisitor extends BasicJMLTranslator {
     
     if (!prop.fIsHelper) {
       final Term initially = (Term) prop.get("initiallyFOL");
-      Lookup.getInst().addNormalPostcondition(prop, initially);
+      LookupJavaFe.getInst().addNormalPostcondition(prop, initially);
       Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), initially);
     } 
     return prop;
@@ -277,7 +277,7 @@ class JmlVisitor extends BasicJMLTranslator {
     boolean constIsValid = true;
     Term constTerm = t;
     
-    final Term allConst = Lookup.getInst().getConstraint(x.parent);
+    final Term allConst = LookupJavaFe.getInst().getConstraint(x.parent);
     
     if (fDoSubsetChecking) { 
       constIsValid = doSubsetChecking(o);
@@ -285,7 +285,7 @@ class JmlVisitor extends BasicJMLTranslator {
     
     if (constIsValid) {
       constTerm = Logic.Safe.and(allConst, constTerm); 
-      Lookup.getInst().addConstraint(x.parent, constTerm); 
+      LookupJavaFe.getInst().addConstraint(x.parent, constTerm); 
     }
     else {
       System.out.println("Constraint error (subset check)! " +
@@ -594,7 +594,7 @@ class JmlVisitor extends BasicJMLTranslator {
    * @param prop the targeted method
    */
   public void addInvPredToPostconditions(final /*@non_null*/ MethodProperties prop) { 
-    Lookup.getInst().addNormalPostcondition(prop, invPostPred());
+    LookupJavaFe.getInst().addNormalPostcondition(prop, invPostPred());
     Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), invPostPred());
   }
 
@@ -647,7 +647,7 @@ class JmlVisitor extends BasicJMLTranslator {
       }
       
       final Term forAllTerm = Logic.forall(vars, t);
-      Lookup.getInst().addNormalPostcondition(prop, forAllTerm);
+      LookupJavaFe.getInst().addNormalPostcondition(prop, forAllTerm);
       Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), forAllTerm);
     } 
   }
@@ -663,7 +663,7 @@ class JmlVisitor extends BasicJMLTranslator {
     if (t != null) {
       boolean invIsValid = true;
       Term invTerm = t;
-      final Term allInvs = Lookup.getInst().getInvariant(x.parent);
+      final Term allInvs = LookupJavaFe.getInst().getInvariant(x.parent);
       
       if (fDoSubsetChecking) { 
         invIsValid = doSubsetChecking(prop);
@@ -672,7 +672,7 @@ class JmlVisitor extends BasicJMLTranslator {
         invTerm = Logic.and(allInvs, invTerm); 
       }
       else if (invIsValid) {
-        Lookup.getInst().addInvariant(x.parent, invTerm); 
+        LookupJavaFe.getInst().addInvariant(x.parent, invTerm); 
       }
       else if (!invIsValid) {
         System.out.println("Invariant error (subset check)! " +

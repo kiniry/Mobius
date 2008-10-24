@@ -1,24 +1,92 @@
 package mobius.directVCGen.translator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafe.ast.RoutineDecl;
+import javafe.ast.TypeDecl;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Util;
+import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
-
-
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
-class LookupJavaFe extends Lookup {
+class LookupJavaFe {
   
-  
+  /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
+  private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
+
   /** an instance of the lookup object. */
   private static LookupJavaFe inst = new LookupJavaFe();
+  /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
+  private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
+
+
+  /**
+   * Returns the FOL Term representation of the class invariant.
+   * @param type the type to get the invariant from
+   * @return the precondition or <code>True</code>
+   */
+  public Term getInvariant(final TypeDecl type) {
+    Term t = fInvariants.get(type);
+    if (t == null) {
+      t = Logic.trueValue();
+    }
+    return t;
+  }
   
 
-
+  /**
+   * Adds a given Term to the invariant of a given class. 
+   * @param type the type
+   * @param term fol term to be used as condition
+   */
+  public void addInvariant(final TypeDecl type, final Term term) {
+    final Term pOld = fInvariants.get(type);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    fInvariants.put(type, pNew);
+  }
+  
+  /**
+   * Returns the FOL Term representation of the constraints of a given class.
+   * @param type the class which we want to get the constraints from
+   * @return the precondition or <code>True</code>
+   */
+  public Term getConstraint(final TypeDecl type) {
+    //return buildStdCond(m, "_pre", false);
+    Term t = fConstraints.get(type);
+    if (t == null) {
+      t = Logic.trueValue();
+    }
+    return t;
+  }
+  /**
+   * Adds a given Term to the constraints of a given class.
+   * @param type the class targeted
+   * @param term fol term to be used as constraint
+   */
+  public void addConstraint(final TypeDecl type, 
+                            final Term term) {
+    final Term pOld = fConstraints.get(type);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    fConstraints.put(type, pNew);
+  }  
+  
   /**
    * Returns the current instance of the lookup object.
    * @return cannot be null
@@ -35,7 +103,7 @@ class LookupJavaFe extends Lookup {
    */
   public void addPrecondition(final RoutineDecl rd, 
                               final Term term) {
-    addPrecondition(Util.translate(rd), term);
+    Lookup.getInst().addPrecondition(MethodGetter.translate(rd), term);
   }
   
   /**
@@ -45,7 +113,7 @@ class LookupJavaFe extends Lookup {
    */
   public void addNormalPostcondition(final RoutineDecl rd, 
                                             final Post post) {
-    addNormalPostcondition(Util.translate(rd), post);
+    Lookup.getInst().addNormalPostcondition(MethodGetter.translate(rd), post);
   }
   
   
@@ -56,7 +124,7 @@ class LookupJavaFe extends Lookup {
    */
   public void addExceptionalPostcondition(final RoutineDecl rd, 
                                                  final Post post) {
-    addExceptionalPostcondition(Util.translate(rd), post);
+    Lookup.getInst().addExceptionalPostcondition(MethodGetter.translate(rd), post);
   }
 
 
@@ -67,7 +135,7 @@ class LookupJavaFe extends Lookup {
    */
   public void addExceptionalPostcondition(final RoutineDecl rd, 
                                                  final Term term) {
-    addExceptionalPostcondition(Util.translate(rd), term); 
+    Lookup.getInst().addExceptionalPostcondition(MethodGetter.translate(rd), term); 
   }
   
   
@@ -78,10 +146,10 @@ class LookupJavaFe extends Lookup {
    * @return a list of variables
    */
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
-    return getPreconditionArgs(Util.translate(m));
+    return Lookup.getInst().getPreconditionArgs(MethodGetter.translate(m));
   }
   public Post getNormalPostcondition(final RoutineDecl m) {
-    return getNormalPostcondition(Util.translate(m));
+    return Lookup.getInst().getNormalPostcondition(MethodGetter.translate(m));
   }
   
   /**
@@ -92,7 +160,7 @@ class LookupJavaFe extends Lookup {
    * @return the exceptional postcondition or <code>True</code>
    */
   public Post getExceptionalPostcondition(final RoutineDecl m) {
-    return getExceptionalPostcondition(Util.translate(m));
+    return Lookup.getInst().getExceptionalPostcondition(MethodGetter.translate(m));
   }
   /**
    * Creates the arguments list of a method from its signature.
@@ -100,17 +168,17 @@ class LookupJavaFe extends Lookup {
    * @return a list of variables
    */
   public List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
-    return mkArguments(Util.translate(rd));
+    return Lookup.getInst().mkArguments(MethodGetter.translate(rd));
   }
 
   public Term[] getNormalPostconditionArgs(RoutineDecl meth) {
 
-    return getNormalPostconditionArgs(Util.translate(meth));
+    return Lookup.getInst().getNormalPostconditionArgs(MethodGetter.translate(meth));
   }
 
   public Term[] getExcPostconditionArgs(RoutineDecl meth) {
 
-    return getExcPostconditionArgs(Util.translate(meth));
+    return Lookup.getInst().getExcPostconditionArgs(MethodGetter.translate(meth));
   }
   
   /**
@@ -119,6 +187,23 @@ class LookupJavaFe extends Lookup {
    * @return the precondition or <code>True</code>
    */
   public Term getPrecondition(final RoutineDecl m) {
-    return getPrecondition(Util.translate(m));
+    return Lookup.getInst().getPrecondition(MethodGetter.translate(m));
+  }
+  
+  /**
+   * Adds a given Term to postconditions of a given method. 
+   * @param mp the method
+   * @param term fol term to be used as condition
+   */
+  public void addNormalPostcondition(final MethodProperties mp, 
+                                            final Term term) {
+    Post pNew;
+    if (mp.getResult() == null) {
+      pNew = new Post(null, term);
+    }
+    else {
+      pNew = new Post(mp.getResult(), term);
+    }   
+    Lookup.getInst().addNormalPostcondition(mp.getBCELDecl(), pNew); 
   }
 } 

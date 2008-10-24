@@ -1,5 +1,7 @@
 package mobius.directVCGen.formula;
 
+import java.util.Set;
+
 import javafe.ast.ASTNode;
 
 import org.apache.bcel.generic.InstructionHandle;
@@ -22,18 +24,13 @@ public class PositionHint {
   /** the string representation of the position hint. */
   private String fStrRep;
   
-  public PositionHint(ASTNode node) {
+  public PositionHint(MethodGen met, ASTNode node) {
     sourcePos = node.getStartLoc();
-    
-  }
-  
-  public PositionHint(final MethodGen met) {
-    fFullMethodName = met.getClassName() + "." + met.getName();
   }
   
   
   public PositionHint(MethodGen met, InstructionHandle ih) {
-    this(met);
+    fFullMethodName = met.getClassName() + "." + met.getName();
     bytePos = ih.getPosition();
   }
   
@@ -52,7 +49,7 @@ public class PositionHint {
   @Override
   public String toString() {
     if (fStrRep == null) {
-      fStrRep = fFullMethodName + " " + bytePos + " " + sourcePos;
+      fStrRep = "Base" + fFullMethodName + " " + bytePos + " " + sourcePos;
     }
     return fStrRep;
   }
@@ -67,5 +64,19 @@ public class PositionHint {
               (sourcePos == sourcePos);
     }
     return false;
+  }
+
+  public static PositionHint getMethodPositionHint(MethodGen mg) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public static Set<MethodGen> getMethodList() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
+  public static class MethodPositionHint {
+    
   }
 }
