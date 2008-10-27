@@ -114,6 +114,8 @@ public final class EclipseIdentifiers {
    */
   public static final String SYNCHRONIZE_ACTION_NAME = "Synchronize";
 
+  public static final String GENBPL_ACTION_NAME = "BoogiePL";
+
   /**
    * The empty constructor to forbid the creation of the instances.
    */

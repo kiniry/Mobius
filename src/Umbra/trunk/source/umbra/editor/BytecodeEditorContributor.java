@@ -27,6 +27,7 @@ import org.eclipse.ui.part.EditorActionBarContributor;
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeColorAction;
 import umbra.editor.actions.BytecodeCombineAction;
+import umbra.editor.actions.BytecodeGenerateBoogiePL;
 import umbra.editor.actions.BytecodeRebuildAction;
 import umbra.editor.actions.BytecodeRefreshAction;
 import umbra.editor.actions.BytecodeSynchrAction;
@@ -36,7 +37,6 @@ import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
-import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraSyntaxException;
@@ -115,6 +115,11 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   private BytecodeSynchrAction my_synchr_action;
 
   /**
+   * The action to translate to BoogiePL.
+   */
+  private BytecodeGenerateBoogiePL my_genbpl_action;
+
+  /**
    * The constructor is executed when the editor is started.
    * This action happens when there is no byte code editor pane in the
    * environment open and an action to open one is taken.
@@ -141,6 +146,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_refresh_action.setToolTipText(EclipseIdentifiers.REFRESH_ACTION_NAME);
     my_rebuild_action.setToolTipText(EclipseIdentifiers.REBUILD_ACTION_NAME);
     my_combine_action.setToolTipText(EclipseIdentifiers.COMBINE_ACTION_NAME);
+    my_genbpl_action.setToolTipText(EclipseIdentifiers.GENBPL_ACTION_NAME);
     my_addhist_action.setToolTipText(EclipseIdentifiers.HISTORY_ACTION_NAME);
     my_clearhist_action.setToolTipText(
                                EclipseIdentifiers.CLEAR_HISTORY_ACTION_NAME);
@@ -156,6 +162,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_refresh_action = new BytecodeRefreshAction(this, my_bcode_cntrbtn);
     my_rebuild_action = new BytecodeRebuildAction(this, my_bcode_cntrbtn);
     my_combine_action = new BytecodeCombineAction(this, my_bcode_cntrbtn);
+    my_genbpl_action = new BytecodeGenerateBoogiePL(this, my_bcode_cntrbtn);
     my_addhist_action = new HistoryAction(this, my_bcode_cntrbtn);
     my_clearhist_action = new ClearHistoryAction(this, my_bcode_cntrbtn);
     my_restore_action = new BytecodeRestoreAction(this, my_bcode_cntrbtn);
@@ -216,6 +223,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
         createFromURL(new URL(an_install_url, "icons/restoreH.gif"));
       final ImageDescriptor synchr_icon = ImageDescriptor.
         createFromURL(new URL(an_install_url, "icons/synchronize.gif"));
+      final ImageDescriptor bpl_icon = ImageDescriptor.
+      createFromURL(new URL(an_install_url, "icons/bpl.gif"));
       my_refresh_action.setImageDescriptor(refresh_icon);
       my_rebuild_action.setImageDescriptor(rebuild_icon);
       my_combine_action.setImageDescriptor(combine_icon);
@@ -223,6 +232,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
       my_clearhist_action.setImageDescriptor(clearhist_icon);
       my_restore_action.setImageDescriptor(restore_icon);
       my_synchr_action.setImageDescriptor(synchr_icon);
+      my_genbpl_action.setImageDescriptor(bpl_icon);
     } catch (MalformedURLException e) {
       wrongIconMessage(e);
     }
@@ -275,6 +285,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     bytecodeMenu.add(my_rebuild_action);
     bytecodeMenu.add(my_combine_action);
     bytecodeMenu.add(my_synchr_action);
+    bytecodeMenu.add(my_genbpl_action);
     final Separator histGroup =
       new Separator(EclipseIdentifiers.HISTORY_GROUP); //$NON-NLS-1$
     bytecodeMenu.add(histGroup);
@@ -310,6 +321,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     beditor.setAction(REFRESH_ID, my_refresh_action);
     my_rebuild_action.setActiveEditor(an_editor);
     my_combine_action.setActiveEditor(an_editor);
+    my_genbpl_action.setActiveEditor(an_editor);
     my_addhist_action.setActiveEditor(an_editor);
     my_clearhist_action.setActiveEditor(an_editor);
     my_restore_action.setActiveEditor(an_editor);

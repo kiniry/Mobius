@@ -8,6 +8,8 @@
  */
 package umbra.java.actions;
 
+import java.io.IOException;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -84,7 +86,12 @@ public class JMLCompile implements IEditorActionDelegate {
       bName = bName.substring(0,bName.lastIndexOf("."));
       String bPath = path.removeLastSegments(1).toOSString();
       String sourceFile = jFile.getLocation().toOSString();
-      Jml2BmlAPI.compile(sourceFile, bPath, bName);
+      try {
+        Jml2BmlAPI.compile(sourceFile, bPath, bName);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
       openBCodeEditorForJavaFile(jFile);
     } catch (JavaModelException e) {
       MessageDialog.openError(my_editor.getSite().getShell(),
