@@ -215,6 +215,7 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     final BCMethod bcMethod = BytecodeUtil.findMethod(node.getName(), clazz);
     finder = myContext.get(TreeNodeFinder.class);
 
+    if (bcMethod.getBcelMethod().isAbstract()) return null;
     final List<LoopDescription> bytecodeLoops =
       LoopDetector.detectLoop(bcMethod);
     final Map<InstructionHandle, Integer> lineNumbers =
