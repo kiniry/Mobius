@@ -51,7 +51,7 @@ public class OLD extends OldExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return "old(" + getSubExpr(0).printCode(conf) + ")";
+    return "\\old(" + getSubExpr(0).printCode(conf) + ")";
   }
 
   @Override
@@ -63,7 +63,7 @@ public class OLD extends OldExpression {
 
   @Override
   public String toString() {
-    return "old(" + getSubExpr(0).toString() + ")";
+    return "\\old(" + getSubExpr(0).toString() + ")";
   }
 
 }

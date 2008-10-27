@@ -18,7 +18,9 @@ options {
   import annot.io.Code;
   import annot.io.ReadAttributeException;
 
+  import org.apache.bcel.generic.MethodGen;
   import org.apache.bcel.generic.InstructionHandle;
+  import org.apache.bcel.generic.InstructionList;
   import java.util.Vector;
 }
 
@@ -286,13 +288,16 @@ typebody :
     mnr = 0;
     m = bcc.getMethod(mnr);
   }
-  (method { syso("method");
-            mnr++;
-            if (mnr < bcc.getMethodCount())
-              m = bcc.getMethod(mnr);
-          }
-  )+
-  {syso("methods parsed");};
+  (method
+   {
+      syso("method");
+      mnr++;
+      if (mnr < bcc.getMethodCount())
+        m = bcc.getMethod(mnr);
+   })+
+  {
+     syso("methods parsed");
+  };
 
 staticsection :
   staticfields? staticspec?
@@ -325,7 +330,7 @@ objectspec : objectinvariants? objectconstraints?
              objectrepresents? objectinitially?;
 
 objectinvariants :
-  (objectinvariant)+
+  (objectinvariant)+ EOL
   {
      syso("object invariants");
   };
@@ -341,6 +346,10 @@ objectinvariant :
   |  BML_START (EOL)* BML_END EOL
      {
         {syso("empty object invariant");}
+     }
+  |  BML_START (~('\n')* EOL)* BML_END EOL
+     {
+        {syso("wrong object invariant");}
      };
 
 objectconstraints : BML_START CONSTRAINT BML_END EOL;
@@ -350,14 +359,16 @@ objectrepresents : BML_START REPRESENTS BML_END EOL;
 objectinitially : BML_START INITIALLY BML_END EOL;
 
 method :
+   { syso("before method spec");}
    (met=methodSpecification {
-      syso("method spec parsed");
       if ($met.ast != null) {
         syso("method attribute");
         if (clr) {
           syso("clearing method attributes");
-          if (affectBcc)
+          if (affectBcc) {
             m.setMspec(null);
+            m.setMLocalSpecs(null);
+          }
           clr = false;
         }
         if (affectBcc)
@@ -365,25 +376,48 @@ method :
       } else {
         syso("empty method attribute");
       }
-    })+ methodmodifiers type_spec? methodheader {
-      if (clr) {
-        syso("clearing method attributes");
-        if (affectBcc)
-          m.setMspec(null);
-        clr = false;
-      }
-      syso("method header");
-      inr = 0;
-    } (instruction_line {inr++;})*
-    {
-      if (m.getInstructions() != null &&
-          inr != m.getInstructions().getInstructionHandles().length) {
-        syso("instruction count changed!");
-        reportError(null);
-      }
-      syso("end of method");
-    } (EOL+ | EOF)
-  ;
+    }) methodmodifiers type_spec? methodheader
+        {
+          if (clr) {
+            syso("clearing method attributes");
+            if (affectBcc) {
+              m.setMspec(null);
+              m.setMLocalSpecs(null);
+            }
+            clr = false;
+          }
+          syso("method header");
+          inr = 0;
+        }
+        method_body
+        {
+           if (m.getInstructions() != null &&
+               inr != m.getInstructions().getInstructionHandles().length) {
+             syso("instruction count changed (2)");
+             syso("previous length is: " + m.getInstructions().getInstructionHandles().length);
+             syso("inr is: " + inr);
+             reportError(null);
+           }
+           syso("end of method");
+        } (EOL)*;
+
+method_body :
+   (specss=bml_in_method_spec? instruction_line
+          {
+             inr++;
+             if ( specss != null ) {
+           		  if (m != null && $specss.ast != null) {
+               		$specss.ast.setIh(ih);
+              	  m.addAttribute($specss.ast);
+               		specss = null;
+                }
+             }
+             syso("inner spec + instruction line");
+          })+
+ | EOL
+   {
+     syso("empty method body");
+   };
 
 methodmodifiers :
   methodmodifier* {syso("method modifiers");};
@@ -424,9 +458,14 @@ built_in_type :
 
 
 methodheader :
-  (i=IDENT | i=CONSNAME) {syso("method IDENT=" + $i.getText());} formals dims?
-  EOL throws_clause? {syso("methodheader parsed");}
-  ;
+  (i=IDENT | i=CONSNAME)
+  {
+     syso("method IDENT=" + $i.getText());
+  }
+  formals dims? EOL throws_clause?
+  {
+     syso("methodheader parsed");
+  };
 
 formals : 
   PAR_LEFT {syso("before param_declaration_list");} param_declaration_list? PAR_RIGHT;
@@ -465,24 +504,57 @@ dims :
 throws_clause :
   (THROWS typename EOL)+;
 
-instruction_line :
-  { InstructionHandle[] iha = m.getBcelMethod().getInstructionList().
-                              getInstructionHandles();
+bml_in_method_spec returns [InCodeAttribute ast] :
+      BML_ONE_LINE_START assrt=assertspec EOL
+      {
+         if ($assrt.ast != null) {
+           $ast = $assrt.ast;
+         }
+         syso("one line assert with //@");
+      }
+   |  st=BML_START EOL*
+      attr=inCodeAttribute EOL* en=BML_END EOL
+      {
+         $ast = $attr.ast;
+         syso("inCodeAttribute in /*@ @*/");
+      }
+   | EOL
+     {
+       $ast = null;
+       syso("empty BML spec inside method body");
+     };
+
+instruction_line returns [InstructionHandle ih] :
+  { 
+    if (m == null) {
+      throw new RecognitionException();
+    };
+    MethodGen mg = m.getBcelMethod();
+    if (mg == null) {
+      throw new RecognitionException();
+    }
+    InstructionList il = mg.getInstructionList();
+    if (il == null) {
+      throw new RecognitionException();
+    }
+    InstructionHandle[] iha = il.getInstructionHandles();
     if (iha.length <= inr) {
       if (affectBcc) {
         System.err.println("mnr="+mnr+", index="+inr+", size="+iha.length);
         throw new RuntimeException("instruction count changed! Bytecode parsing unsupported.");
       } else {
-        syso("instruction count changed");
+        syso("instruction count changed (1)");
+        syso("previous is: " + iha.length);
+        syso("inr is: " + inr);
         reportError(null);
       }
     }
     if (inr < iha.length) {
       ih = iha[inr];
-      syso("ih="+ih);
+      syso("ih@" + inr + "="+ih);
     }
-  } (NAT COLON (~(EOL)*) EOL {
-      syso("instruction");
+  } (n=NAT COLON (~'\n')* EOL {
+      syso("instruction no " + n);
       SingleList sl = m.getAmap().getAllAt(ih);
       if (affectBcc) {
         sl.trunce(minor);
@@ -584,17 +656,34 @@ specCase returns [SpecificationCase ast] :
     };
 
 inCodeAttribute returns [InCodeAttribute ast] :
-  ASSERT f1=formula {$ast = new SingleAssert(m, ih, -1, $f1.ast);}
-  | LOOPSPEC {
-    modif = null;
-    inv = null;
-    dec = null;
-  }
-  (MODIFIES ml=modifyList {modif = $ml.ast;})?
-  (LINVARIANT iv=formula {inv = $iv.ast;})?
-  (LDECREASES de=expression {dec = $de.ast;})?
-  {$ast = new SingleLoopSpecification(m, ih, -1, modif, inv, dec);}
-  ;
+    assrt=assertspec
+    {
+       if ( $assrt.ast != null ) {
+         $ast = $assrt.ast;
+       }
+       syso("inCodeAttribute, assertspec");
+    }
+  | LOOPSPEC EOL
+    {
+       modif = null;
+       inv = null;
+       dec = null;
+     }
+     (MODIFIES ml=modifyList {modif = $ml.ast;} EOL)?
+     (LINVARIANT iv=formula {inv = $iv.ast;} EOL)?
+     (LDECREASES de=expression {dec = $de.ast;} EOL)?
+     {
+        $ast = new SingleLoopSpecification(m, null, -1, modif, inv, dec);
+     };
+
+assertspec returns [SingleAssert ast]  :
+  ASSERT f1=formula
+    {
+       if ( $f1.ast != null ) {
+         $ast = new SingleAssert(m, null, -1, $f1.ast);
+       }
+       syso("assert formula (1?)");
+    };
 
 modifyList returns [ModifyList ast] :
   l=modifyExpression 
@@ -653,9 +742,13 @@ formula returns [AbstractFormula ast] :
   {initExpression();}
   e=uncheckedExpression {
     if ($e.ast == null) {
+      syso("*** error ***");
+      syso("no unchecked expression error");
       reportError(null);
     } else {
       if ($e.ast.checkType() != JavaBasicType.JavaBool) {
+        syso("*** error ***");
+        syso("wrong type error");
         reportError(null);
       } else {
         if ($e.ast instanceof AbstractFormula) {
@@ -671,9 +764,13 @@ expression returns [AbstractIntExpression ast] :
   {initExpression();}
   e=uncheckedExpression {
     if ($e.ast == null) {
+      syso("*** error ***");
+      syso("no unchecked expression error");
       reportError(null);
     } else {
       if ($e.ast.getType() != JavaBasicType.JavaInt) {
+        syso("*** error ***");
+        syso("wrong type error");
         reportError(null);
       } else {
         if ($e.ast instanceof AbstractIntExpression) {
@@ -852,11 +949,20 @@ primaryExpr returns [BCExpression ast] :
 
 localVar returns [LocalVariable lv] :
   LV BR_LEFT n=NAT BR_RIGHT {
-    int i=Integer.parseInt($n.text);
+    int i;
+    try {
+      i = Integer.parseInt($n.text);
+    } catch (NumberFormatException e) {
+      i = -1;
+    }
     if (m == null) {
+      syso("*** error ***");
+      syso("outside method error");      
       reportError(null);
     } else {
       if (!m.canBeLocalVariable(i)) {
+        syso("*** error ***");
+        syso("no such variable error");
         reportError(null);
       } else {
         $lv = m.getLocalVariable(false, i);
@@ -971,7 +1077,7 @@ RESULT: '\\result';
 LV: 'lv';
 DOT2: '..';
 DOT: '.';
-OLD: 'old'|'OLD';
+OLD: '\\old';
 LENGTH: 'length';
 BML_ONE_LINE_START: '//@';
 ONE_LINE_COMMENT: '//';

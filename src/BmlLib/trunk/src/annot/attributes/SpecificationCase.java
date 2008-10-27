@@ -84,10 +84,13 @@ public class SpecificationCase {
                            final Vector < Exsure >  anexsures) {
     this.method = m;
     if (precondition == null) {
-      throw new RuntimeException("SpecificationCase's precondition == null !");
+      this.precondition = 
+      new ExpressionRoot < AbstractFormula > (this,
+          new Predicate0Ar(true));
+    } else {
+      this.precondition =
+        new ExpressionRoot < AbstractFormula > (this, precondition);
     }
-    this.precondition =
-      new ExpressionRoot < AbstractFormula > (this, precondition);
     final ModifyList mmodifies = (amodifies == null) ?
                                 new ModifyList() : amodifies;
     this.modifies = new ExpressionRoot < ModifyList > (this, mmodifies);

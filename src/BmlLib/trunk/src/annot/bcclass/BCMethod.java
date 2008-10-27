@@ -41,7 +41,7 @@ public class BCMethod {
   /**
    * Collection of all attributes inside method body.
    */
-  private final BCAttributeMap amap;
+  private BCAttributeMap amap;
 
   /**
    * BML class representation containing this method.
@@ -439,6 +439,15 @@ public class BCMethod {
    */
   public void setMspec(final MethodSpecification amspec) {
     this.mspec = amspec;
+  }
+
+  /**
+   * Sets method's local specification table for this method.
+   *
+   * @param amspec - new method local specification table.
+   */
+  public void setMLocalSpecs(final BCAttributeMap amspec) {
+    this.amap = amspec;
   }
 
   /**

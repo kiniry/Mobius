@@ -212,7 +212,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *
    * @param ih - new instruction handle.
    */
-  protected void setIh(final InstructionHandle ih) {
+  public void setIh(final InstructionHandle ih) {
     this.ih = ih;
   }
 

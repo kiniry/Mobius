@@ -353,6 +353,8 @@ public class CodeFragment {
     if (!this.modified) {
       return "code hasn't been modified yet";
     }
+    String ret = "";
+    /*
     String ret = "******** removed code: *********\n";
     ret += this.toRemove;
     ret += "\n*** current (modified) code: ***\n";
@@ -361,6 +363,7 @@ public class CodeFragment {
     ret += "\ntotal length: " + this.code.length();
     ret += "\nchanged fragment: " + this.begin + " to " + this.end;
     ret += "\ncode is currently " + (this.correct ? "correct" : "incorrect");
+    */
     if (this.errMsg.length()  >  0) {
       ret += "\nlast error message: " + this.errMsg;
     }
@@ -511,7 +514,9 @@ public class CodeFragment {
         i++;
         String gdzie = code.substring(i);
         ch = code.charAt(i);
-        if (ch == '/') {
+        if (ch == '/' &&
+            !code.substring(i+1).startsWith(
+                                         DisplayStyle.BML_AT_SIGN)) {
           i = readOneLineComment(i, code);
           continue;
         } else if (code.substring(i).startsWith(
@@ -568,7 +573,7 @@ public class CodeFragment {
       buf.append(ch);
       i++;
     }
-    return 0;
+    return i;
   }
 
   /**
