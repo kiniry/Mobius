@@ -353,12 +353,12 @@ class JmlVisitor extends BasicJMLTranslator {
       } 
       else { // Put annotations to next Java Stmt
         if (!annos.isEmpty()) {
-          AnnotationDecoration.inst.setAnnotPre(s, annos);
+          AnnotationDecoration.inst.setAnnotPre(prop.getBCELDecl(), s, annos);
           annos.clear();
         }
         if (inv != null) { // Add inv as invariant to next Loop Stmt
           if (Util.isLoop(s)) {
-            AnnotationDecoration.inst.setInvariant(s, inv, prop); 
+            AnnotationDecoration.inst.setInvariant(prop.getBCELDecl(), s, inv, prop); 
             inv = null;
           }
         }
@@ -473,7 +473,7 @@ class JmlVisitor extends BasicJMLTranslator {
     // to add last Stmt Pragma as precondition
     if (!annos.isEmpty()) { 
       final SkipStmt skipStmt = SkipStmt.make(0); //FIXME cbr: which location?
-      AnnotationDecoration.inst.setAnnotPre(skipStmt, annos);
+      AnnotationDecoration.inst.setAnnotPre(prop.getBCELDecl(), skipStmt, annos);
       x.stmts.addElement(skipStmt);
     }
     prop.fLocalVars.removeLast();

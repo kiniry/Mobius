@@ -3,6 +3,8 @@ package mobius.directVCGen.formula.annotation;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.bcel.generic.MethodGen;
+
 import javafe.ast.ASTNode;
 import javafe.ast.Stmt;
 import mobius.directVCGen.formula.Decoration;
@@ -77,9 +79,10 @@ public class AnnotationDecoration extends Decoration {
    * node has not been decorated or there is no pre annotation
    *  associated
    */
-  public List<AAnnotation> getAnnotPre(final ASTNode n) {
+  public List<AAnnotation> getAnnotPre(final MethodGen met, 
+                                       final ASTNode n) {
 
-    return getAnnotPre(new PositionHint(n));
+    return getAnnotPre(new PositionHint(met, n));
   }
 
 
@@ -186,8 +189,9 @@ public class AnnotationDecoration extends Decoration {
    * @param n the node decorated
    * @return the invariant the node is decorated with, or null
    */
-  public AAnnotation getInvariant(final ASTNode n) {
-    return getInvariant(new PositionHint(n));
+  public AAnnotation getInvariant(final MethodGen met,
+                                  final ASTNode n) {
+    return getInvariant(new PositionHint(met, n));
   }
   
   /**
@@ -218,17 +222,16 @@ public class AnnotationDecoration extends Decoration {
     return v.fInv.getArgs();
   }
 
-  public List<AAnnotation> getAnnotPost(Stmt x) {
-    
-    return  getAnnotPost(new PositionHint(x));
+  public List<AAnnotation> getAnnotPost(MethodGen met, ASTNode x) {
+    return  getAnnotPost(new PositionHint(met, x));
   }
 
-  public void setAnnotPre(Stmt s, List<AAnnotation> annos) {
-    setAnnotPre(new PositionHint(s), annos);
+  public void setAnnotPre(MethodGen met, Stmt s, List<AAnnotation> annos) {
+    setAnnotPre(new PositionHint(met, s), annos);
     
   }
 
-  public void setInvariant(Stmt s, Term inv, ILocalVars prop) {
-    setInvariant(new PositionHint(s), inv, prop);
+  public void setInvariant(MethodGen met, Stmt s, Term inv, ILocalVars prop) {
+    setInvariant(new PositionHint(met, s), inv, prop);
   }
 }
