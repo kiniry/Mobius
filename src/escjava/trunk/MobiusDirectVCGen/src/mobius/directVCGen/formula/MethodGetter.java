@@ -1,19 +1,20 @@
 package mobius.directVCGen.formula;
 
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.util.Repository;
-
-import mobius.directVCGen.vcgen.ABasicVisitor;
 import javafe.ast.ASTNode;
 import javafe.ast.ConstructorDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
-import javafe.tc.Types;
+import mobius.directVCGen.vcgen.ABasicVisitor;
+
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.util.Repository;
+
+import escjava.tc.TypeCheck;
 
 /**
  * This class is made to put into relation 
@@ -104,9 +105,13 @@ public final class MethodGetter  {
     //System.out.println("Repos set");
   }
   
+
+  
   public static ClassGen translate(final TypeDecl td) {
-    final String clss = td.id + "";
+    final TypeSig sig = TypeCheck.inst.getSig(td);
+    final String clss = sig.getExternalName();
     JavaClass jc;
+    //System.out.println(clss);
     try {
       jc = fRepos.loadClass(clss);
     } 
@@ -119,9 +124,12 @@ public final class MethodGetter  {
   
   public static MethodGen translate(RoutineDecl rd) {
     final ClassGen cg = translate(rd.parent);
+    if (cg == null) {
+      throw new NullPointerException(rd.toString());
+    }
     
-    String mt = "" + rd.id();
-    if (mt.equals(cg.getJavaClass().getClassName())) {
+    String mt = TypeCheck.inst.getRoutineName(rd);
+    if (rd instanceof ConstructorDecl) {
       mt = "<init>";
     }
     final Method [] meths = cg.getMethods();
@@ -131,6 +139,9 @@ public final class MethodGetter  {
       if (met.getName().equals(mt)) {
         res = new MethodGen(met, cg.getClassName(), cg.getConstantPool());
       }
+    }
+    if (res == null) {
+      throw new NullPointerException(mt);
     }
     return res;
   }

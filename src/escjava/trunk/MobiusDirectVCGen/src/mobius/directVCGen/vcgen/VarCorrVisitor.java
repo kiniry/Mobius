@@ -1,4 +1,4 @@
-package mobius.directVCGen.bico;
+package mobius.directVCGen.vcgen;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -13,7 +13,6 @@ import org.apache.bcel.generic.MethodGen;
 
 import javafe.ast.BlockStmt;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.bico.VarCorrDecoration;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
@@ -57,6 +56,7 @@ public final class MethodVisitor extends DirectVCGen {
     super(cfg, methoddir);
     getWorkingDir().mkdirs();
     fMeth = MethodGetter.translate(rd);
+    VarCorrVisitor.annotateWithVariables(rd, fMeth);
     
   }
 
@@ -70,7 +70,7 @@ public final class MethodVisitor extends DirectVCGen {
   public static MethodVisitor treatRoutine(final DirectVCGen parent, final File classDir,
                                            final RoutineDecl rd) {
     final MethodVisitor mv = new MethodVisitor(parent, 
-                                   new File(classDir, Util.getRoutinePrettyName(rd)), rd);
+                                   new File(classDir, Util.getRoutinePrettyName(rd)), rd);  
     if (rd.body != null) {
       rd.body.accept(mv);
       mv.dump();
