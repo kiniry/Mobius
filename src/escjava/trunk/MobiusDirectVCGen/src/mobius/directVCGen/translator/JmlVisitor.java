@@ -194,7 +194,11 @@ class JmlVisitor extends BasicJMLTranslator {
     visitRoutineDecl(x, prop);
     
     if (!prop.fIsHelper) {
-      final Term initially = (Term) prop.get("initiallyFOL");
+      Term initially = (Term) prop.get("initiallyFOL");
+      if (initially == null) {
+        initially = Logic.trueValue();
+        // TODO: quick fix, double check it
+      }
       LookupJavaFe.getInst().addNormalPostcondition(prop, initially);
       Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), initially);
     } 

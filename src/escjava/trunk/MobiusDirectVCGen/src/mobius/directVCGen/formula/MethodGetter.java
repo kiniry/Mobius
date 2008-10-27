@@ -126,7 +126,7 @@ public final class MethodGetter  {
     }
     final Method [] meths = cg.getMethods();
     MethodGen res = null;
-    System.out.println(mt);
+    //System.out.println(mt);
     for (Method met: meths) {
       if (met.getName().equals(mt)) {
         res = new MethodGen(met, cg.getClassName(), cg.getConstantPool());

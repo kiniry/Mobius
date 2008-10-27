@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ReferenceType;
+
 import javafe.ast.MethodDecl;
 import javafe.ast.VarInit;
 import javafe.tc.FlowInsensitiveChecks;
@@ -328,8 +331,27 @@ public final class Type {
   }
 
   public static Sort getSort(org.apache.bcel.generic.Type typ) {
-    // TODO Auto-generated method stub
-    return null;
+    Sort s= Ref.sort;
+    if (typ instanceof BasicType) {
+      if (typ.equals(BasicType.BOOLEAN)) {
+        s = Bool.sort;
+      }
+      else if (typ.equals(BasicType.BYTE) ||
+          typ.equals(BasicType.CHAR) ||
+          typ.equals(BasicType.LONG) ||
+          typ.equals(BasicType.INT)) {
+        s = Num.sortInt;
+        
+      }
+      else if (typ.equals(BasicType.DOUBLE) ||
+          typ.equals(BasicType.FLOAT)) {
+        s = Num.sortReal;
+      }
+    }
+    else if (typ instanceof ReferenceType) {
+      s = Ref.sort;
+    }
+    return s;
   }
 
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import mobius.directVCGen.formula.PositionHint.MethodHint;
 import mobius.directVCGen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
@@ -25,7 +26,7 @@ public class Lookup {
   private static final boolean fFailSave = false;
   
   /** an instance of the lookup object. */
-  private static Lookup inst = new Lookup();
+  protected static Lookup inst = new Lookup();
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
@@ -213,19 +214,18 @@ public class Lookup {
    * @param rout the method to compute the arguments for
    */
   public void computePreconditionArgs(final MethodGen rout) {
-    final List<MethodGen> lrout = new ArrayList<MethodGen>();
-    lrout.addAll(PositionHint.getMethodList());
-    lrout.add(rout);
+    final List<MethodHint> lrout = new ArrayList<MethodHint>();
+    lrout.add(PositionHint.getMethodPositionHint(rout));
+    lrout.addAll(PositionHint.getMethodPositionList());
     
-    for (MethodGen rd: lrout) {
-      final PositionHint ph = PositionHint.getMethodPositionHint(rd);
-      final List<QuantVariableRef> args = mkArguments(rd);
+    for (MethodHint mp: lrout) {
+      final List<QuantVariableRef> args = mkArguments(mp.getMethod());
       final LinkedList<QuantVariableRef> argsWithoutHeap = 
         new LinkedList<QuantVariableRef>();
       argsWithoutHeap.addAll(args);
       argsWithoutHeap.removeFirst();
-      fPreArgs.put(ph, args);
-      fPreArgsWithoutHeap.put(ph, argsWithoutHeap);
+      fPreArgs.put(mp, args);
+      fPreArgsWithoutHeap.put(mp, argsWithoutHeap);
     }
     
   }

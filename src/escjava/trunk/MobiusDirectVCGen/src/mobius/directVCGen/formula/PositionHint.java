@@ -1,5 +1,9 @@
 package mobius.directVCGen.formula;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javafe.ast.ASTNode;
@@ -15,8 +19,14 @@ import org.apache.bcel.generic.MethodGen;
  */
 
 public class PositionHint {
-  int bytePos;
-  int sourcePos;
+
+  
+  /** the list of hints representing methods. */
+  private static Map<String, MethodHint> methodHint = 
+      new HashMap<String, MethodHint>();
+  
+  private int bytePos;
+  private int sourcePos;
   
   /** the full method name, it is of the form  a.b.c.Class.method. */
   private String fFullMethodName;
@@ -24,7 +34,12 @@ public class PositionHint {
   /** the string representation of the position hint. */
   private String fStrRep;
   
+  private PositionHint(final MethodGen met) {
+    fFullMethodName = met.getClassName() + "." + met.getName();
+  }
+  
   public PositionHint(MethodGen met, ASTNode node) {
+    fFullMethodName = met.getClassName() + "." + met.getName();
     sourcePos = node.getStartLoc();
   }
   
@@ -66,17 +81,44 @@ public class PositionHint {
     return false;
   }
 
-  public static PositionHint getMethodPositionHint(MethodGen mg) {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
+  
+  public static MethodHint getMethodPositionHint(final MethodGen met) {
+    final String fullMethodName = met.getClassName() + "." + met.getName();
+    MethodHint mh = methodHint.get(fullMethodName);
+    if (mh == null) {
+      mh = new MethodHint(met);
+      methodHint.put(fullMethodName, mh);
+    }
+    return mh;
+  }
+  public static Collection<MethodHint> getMethodPositionList() {
+    return methodHint.values();
+  }
   public static Set<MethodGen> getMethodList() {
-    // TODO Auto-generated method stub
-    return null;
+    final Set<MethodGen> res = new HashSet<MethodGen>();
+    for (MethodHint mh : methodHint.values()) {
+      res.add(mh.getMethod());
+    }
+    return res;
   }
   
-  public static class MethodPositionHint {
-    
+  /**
+   * The class representing a method hint. Used to handle pre and post
+   * conditions.
+   * @author J. Charles (julien.charles@inria.fr)
+   */
+  public static class MethodHint extends PositionHint {
+    private final MethodGen fMeth;
+
+    public MethodHint(MethodGen met) {
+      super(met);
+      fMeth = met;
+    }
+
+    public MethodGen getMethod() {
+      return fMeth;
+    }
   }
+  
 }

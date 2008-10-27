@@ -16,11 +16,12 @@ import escjava.sortedProver.Lifter.Term;
 
 class LookupJavaFe {
   
+  /** an instance of the lookup object. */
+  private static LookupJavaFe inst = new LookupJavaFe();
+  
   /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
   private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
 
-  /** an instance of the lookup object. */
-  private static LookupJavaFe inst = new LookupJavaFe();
   /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
   private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
 

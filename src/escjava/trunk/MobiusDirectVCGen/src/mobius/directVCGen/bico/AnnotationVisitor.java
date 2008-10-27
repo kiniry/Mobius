@@ -58,11 +58,13 @@ public final class AnnotationVisitor {
   }
 
   /** {@inheritDoc} */
-
   public String start() {
     final InstructionList il = fMet.getInstructionList();
-    String res = assertionEmpty;
     
+    String res = assertionEmpty;
+    if (il == null) {
+      return res;
+    }
     for (InstructionHandle ih: il.getInstructionHandles()) {
       final PositionHint hint = new PositionHint(fMet, ih);
       if (fAnnot.getAnnotPost(hint) != null) {
