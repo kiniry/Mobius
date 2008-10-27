@@ -33,7 +33,7 @@ public class Goal extends UnknownFile implements IShowable {
     super(file);
     final String tmp = file.getRawLocation().toString();
     final String name = file.getName();
-    if (!name.startsWith("goal") || name.endsWith(".v")) {
+    if (!name.startsWith("goal") || !name.endsWith(".v")) {
       throw new IllegalArgumentException("The file name must be of the form goal##.v, " +
                                          "not " + name);
     }

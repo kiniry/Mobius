@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -28,6 +29,7 @@ import org.eclipse.jface.viewers.Viewer;
 public class POsContentProvider implements ITreeContentProvider {
   /** The current tree viewer content.  */
   private Project[] fCurrent;
+  private IProject [] fInput;
   
   /**
    * Construct a content provider, providing its corresponding viewer.
@@ -44,10 +46,17 @@ public class POsContentProvider implements ITreeContentProvider {
   
  /** {@inheritDoc} */
   public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-    if (oldInput == newInput) {
+    if (newInput.equals(fInput)) {
       return;
     }
-    fCurrent = AWorkspaceElement.createProjectItem((IProject[]) newInput);
+    fInput = (IProject[]) newInput;
+    try {
+      fCurrent = AWorkspaceElement.createProjectItem((IProject[]) newInput);
+    }
+    catch (IllegalArgumentException e) {
+      e.printStackTrace();
+    }
+    viewer.refresh();
   }
 
   /** {@inheritDoc} */
@@ -59,7 +68,12 @@ public class POsContentProvider implements ITreeContentProvider {
 
   /** {@inheritDoc} */
   public Object[] getChildren(final Object elem) {
-    return ((AWorkspaceElement) elem).getChildren();
+    if (elem instanceof AWorkspaceElement) {
+      return ((AWorkspaceElement) elem).getChildren();
+    }
+    else {
+      return (Object[]) fCurrent;
+    }
   }
 
   /** {@inheritDoc} */

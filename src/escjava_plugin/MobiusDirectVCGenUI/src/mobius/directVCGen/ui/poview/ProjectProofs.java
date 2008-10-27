@@ -77,10 +77,12 @@ public class ProjectProofs extends ViewPart
     fViewer.setUseHashlookup(true);
     fViewer.setContentProvider(new POsContentProvider(fViewer));
     fViewer.setLabelProvider(new POsLabelProvider());
+    // sets the initial input
+    //fViewer.setInput(new IProject[0]);
 //    fViewer.setInput(Utils.getProjects());
     fViewer.addDoubleClickListener(this);
     fViewer.addSelectionChangedListener(this);
-
+    fViewer.setInput(new IProject[] {});
 
   }
 
@@ -158,7 +160,7 @@ public class ProjectProofs extends ViewPart
   /** {@inheritDoc} */
   @Override
   public void pageActivated(final IWorkbenchPage page) {
-    page.addSelectionListener(new MySelListener());
+    page.addSelectionListener(new MySelListener(page.getSelection()));
   }
 
   /** {@inheritDoc} */
@@ -198,35 +200,48 @@ public class ProjectProofs extends ViewPart
     /** the currently selected project. */
     private IProject fProj;
     
-    /** {@inheritDoc} */
-    @Override
-    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+    public MySelListener(ISelection selection) {
+      selectionChanged(selection);
+    }
+    public void selectionChanged(final ISelection selection) {
       if (selection instanceof IStructuredSelection) {
         final IStructuredSelection sel = (IStructuredSelection) selection;
         if (sel.size() == 1) {
+          //System.out.println(sel);
           final Object o = sel.getFirstElement();
           IProject newProj = null;
-          if (o instanceof IResource) {
-            final IResource res = (IResource) o;
-            newProj = res.getProject();
-          }
           if (o instanceof IProject) {
             newProj = (IProject) o;
-          }
-          if (o instanceof IJavaElement) {
+          } 
+          else if (o instanceof IJavaElement) {
             final IJavaElement elem = (IJavaElement) o;
             newProj = elem.getJavaProject().getProject();
 
+          } 
+          else if (o instanceof IResource) {
+            final IResource res = (IResource) o;
+            newProj = res.getProject();
           }
           
           if ((newProj != null) && (newProj != fProj)) {
             fProj = newProj;
-            
+            //System.out.println(newProj);
             fViewer.setInput(new IProject[] {fProj});
+            fViewer.refresh(true);
+            //fViewer.add(fProj, fProj);
             fViewer.expandToLevel(2);
           }
+          else if (fProj == null) {
+            fViewer.setInput(new IProject[] {});
+          }
         }
-      }
+      }     
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
+      selectionChanged(selection);
     }
     
   }
