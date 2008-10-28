@@ -18,8 +18,7 @@ import org.apache.bcel.util.Repository;
 public class JMLAnnotationGenerator implements IAnnotationGenerator {
   
   /** {@inheritDoc} */
-  public boolean annotateClass(final ClassGen clzz) {
-    final Repository repo = clzz.getJavaClass().getRepository();
+  public boolean annotateClass(Repository repo, final ClassGen clzz) {
     MethodGetter.initTranslation(repo);
     
     

@@ -1,5 +1,6 @@
 package mobius.directVCGen.bico;
 
+import org.apache.bcel.util.Repository;
 import org.apache.bcel.generic.ClassGen;
 
 public interface IAnnotationGenerator {
@@ -10,5 +11,6 @@ public interface IAnnotationGenerator {
    * @param clzz the class to annotate
    * @return
    */
-  public boolean annotateClass(final ClassGen clzz);
+  public boolean annotateClass(final Repository repos, 
+                               final ClassGen clzz);
 }

@@ -34,7 +34,7 @@ public class AnnotationClassExecutor extends ClassExecutor {
                                  final IAnnotationGenerator gen) throws FileNotFoundException {
     super(be, cg);
     fClass = cg;
-    gen.annotateClass(fClass);
+    gen.annotateClass(getRepository(), fClass);
   }
   
  

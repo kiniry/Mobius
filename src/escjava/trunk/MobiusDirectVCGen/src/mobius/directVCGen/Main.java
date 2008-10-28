@@ -42,13 +42,15 @@ public class Main extends escjava.Main {
   private final File fBasedir;
 
 
+  private final String fClassPath;
   
   /**
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files.
    */
-  public Main(final File basedir) {
+  public Main(final File basedir, final String classPath) {
     fBasedir = basedir;
+    fClassPath = classPath;
   }
 
   /**
@@ -67,10 +69,15 @@ public class Main extends escjava.Main {
     }
 
     clear();
-    
+    String cp = "";
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
+      if (args[i].equals("-cp")) {
+        if (i + 1 < args.length) {
+          cp = args[i + 1];
+        }
+      }
     }
 
     try {
@@ -90,7 +97,7 @@ public class Main extends escjava.Main {
       
       // Launching the beast
       System.out.println("Launching...");
-      final Main m = new Main(basedir);
+      final Main m = new Main(basedir, cp);
       m.start(escargs);
       System.out.println("I'm finished!");
       
@@ -245,9 +252,10 @@ public class Main extends escjava.Main {
   protected void doBcVCGen(final TypeSig sig, final IAnnotationGenerator gen) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
-    
-    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, sig.getExternalName(), 
-                                                         options.userPath,
+    System.out.println(fClassPath);
+    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, 
+                                                         sig.getExternalName(), 
+                                                         fClassPath,
                                                          gen);
     
     try {

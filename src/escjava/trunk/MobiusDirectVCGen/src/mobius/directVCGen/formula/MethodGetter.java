@@ -102,7 +102,7 @@ public final class MethodGetter  {
 
   public static void initTranslation(Repository repo) {
     fRepos = repo;
-    //System.out.println("Repos set");
+    //System.out.println("Repos set: " + repo);
   }
   
 

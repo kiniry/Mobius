@@ -26,8 +26,8 @@ public class Main extends mobius.directVCGen.Main {
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files
    */
-  public Main(final File basedir) {
-    super(basedir);
+  public Main(final File basedir, final String classPath) {
+    super(basedir, classPath);
     
   }
 
@@ -74,9 +74,16 @@ public class Main extends mobius.directVCGen.Main {
                   "and the path to the file bicolano.jar");
       return;
     }
+    
+    String cp = "";
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
+      if (args[i].equals("-cp")) {
+        if (i + 1 < args.length) {
+          cp = args[i + 1];
+        }
+      }
     }
 
     try {
@@ -95,7 +102,7 @@ public class Main extends mobius.directVCGen.Main {
       fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
-      final Main m = new Main(basedir);
+      final Main m = new Main(basedir, cp);
       m.start(escargs);
       
     }
