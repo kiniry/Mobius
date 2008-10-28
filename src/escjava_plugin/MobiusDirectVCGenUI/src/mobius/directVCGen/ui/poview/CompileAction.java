@@ -92,6 +92,7 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
         "-SourcePath", 
         fSel.getResource().getParent().getLocation().toString()
       };
+      //System.out.println(res);
       return args;
     }
     catch (IOException e) {

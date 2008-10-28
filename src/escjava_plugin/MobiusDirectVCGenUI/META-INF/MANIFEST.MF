@@ -42,9 +42,9 @@ Export-Package: mobius.directVCGen.ui.poview;
 Bundle-ClassPath: lib/bcel-5.2.jar,
  lib/bico.jar,
  .,
- lib/DirectVCGen.jar,
  lib/escjava.jar,
  lib/javac.jar,
  lib/Javafe2.0.5.jar,
- lib/junit.jar
+ lib/junit.jar,
+ lib/DirectVCGen.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

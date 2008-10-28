@@ -143,9 +143,11 @@ public class POsContentProvider implements ITreeContentProvider {
         switch (delta.getKind()) {
           case IResourceDelta.ADDED:
             fViewer.setInput(new IProject[]{(IProject)res});
+            RefreshUtils.refreshTree(fViewer);
             break;
           case IResourceDelta.REMOVED:
             fViewer.setInput(new IProject[0]);
+            RefreshUtils.refreshTree(fViewer);
                   // no more projects selected  
           default:
             break;

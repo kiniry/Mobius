@@ -118,6 +118,7 @@ public final class RefreshUtils {
     public IStatus runInUIThread(final IProgressMonitor monitor) {
       if (fElem != null) {
         fViewer.refresh(fElem);
+        fViewer.update(fElem, null);
       }
       else {
         fViewer.refresh();
