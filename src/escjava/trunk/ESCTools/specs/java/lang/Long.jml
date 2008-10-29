@@ -302,7 +302,7 @@ public /*@ pure @*/ final
       @     requires obj == null || !(obj instanceof Long);
       @     ensures !\result;
       @*/
-    public boolean equals(Object obj);
+    public boolean equals(/*@nullable*/ Object obj);
 
     /*@ public normal_behavior
       @   ensures (\result == null && getLong(nm,null) == null) ||

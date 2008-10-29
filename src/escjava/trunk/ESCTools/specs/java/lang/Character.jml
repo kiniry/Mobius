@@ -96,7 +96,7 @@ public /*@ pure @*/ final
 
     public static class Subset  {
         protected Subset(String name);
-        public final /*@ pure @*/ boolean equals(Object obj);
+        public final /*@ pure @*/ boolean equals(/*@nullable*/ Object obj);
         public final int hashCode();
         public final String toString();
     }
@@ -231,7 +231,7 @@ public /*@ pure @*/ final
       @    ensures \result <==> false;
       @  |}
       @*/
-    public boolean equals(Object obj);
+    public boolean equals(/*@nullable*/ Object obj);
 
     /*@ also
       @  public normal_behavior

@@ -277,7 +277,7 @@ public final class URI implements Comparable, Serializable {
       @ 
       @*/
     //@ pure
-    public boolean equals(Object ob);
+    public boolean equals(/*@nullable*/ Object ob);
 
     /*@
       @ 

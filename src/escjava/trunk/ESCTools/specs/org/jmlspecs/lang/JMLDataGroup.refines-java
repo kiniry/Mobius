@@ -54,7 +54,7 @@ public /*@ pure @*/ final class JMLDataGroup {
       @   public normal_behavior
       @     ensures \result <==> oth != null && oth instanceof JMLDataGroup;
       @*/
-    public boolean equals(Object oth);
+    public boolean equals(/*@nullable*/ Object oth);
     
     /** Return a hash code for this object.
      */
