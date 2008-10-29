@@ -1,4 +1,4 @@
-# BCEL=`find ../ -name bcel-5.2.jar`
+#BCEL=`find ../ -name bcel-5.2.jar`
 BCEL=./lib/bcel-5.2.jar
 TMP=tmp
 
@@ -17,7 +17,7 @@ clean:
 java:
 	@ echo Compiling:
 	mkdir -p tmp
-	cd src; javac -source 1.5 -sourcepath ../src -classpath ${BCEL} -d ../${TMP} `find ./ -name *.java`
+	cd src; javac -source 1.6 -sourcepath ../src -classpath ../${BCEL} -d ../${TMP} `find ./ -name *.java`
 
 
 ## old commands useless	
@@ -33,11 +33,3 @@ jar-without-bcel: clean java
 	rm -rf tmp
 
 
-clean:
-	@ echo Cleaning...
-	@ rm -f bico.jar
-
-java:
-	@ echo Compiling:
-	mkdir -p tmp
-	cd src; javac -source 1.5 -sourcepath ../src -classpath ../${BCEL} -d ../tmp `find ./ -name *.java`

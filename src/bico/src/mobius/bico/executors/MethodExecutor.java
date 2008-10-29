@@ -302,7 +302,8 @@ class MethodExecutor extends ASignatureExecutor {
    */
   private String doInstruction(final int pos, 
                                final Instruction ins) throws ClassNotFoundException {
-    final String ret = InstructionVisitor.translate(getMethodHandler(), fConstantPool, ins);
+    final String ret = InstructionVisitor.translate(getMethodHandler(), fConstantPool, ins,
+                                                    getRepository());
     return "(" + ret + ")";
 
   }

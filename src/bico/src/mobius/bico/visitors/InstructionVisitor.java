@@ -42,6 +42,7 @@ import org.apache.bcel.generic.RET;
 import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.bcel.generic.SIPUSH;
 import org.apache.bcel.generic.StackInstruction;
+import org.apache.bcel.util.Repository;
 
 
 /**
@@ -57,6 +58,8 @@ public final class InstructionVisitor extends EmptyVisitor {
 
   /** a data structure to stock methods signatures. */
   private final MethodHandler fMethodHandler;
+
+  private final Repository fRepos;
   
   
   /**
@@ -66,10 +69,12 @@ public final class InstructionVisitor extends EmptyVisitor {
    * these instructions
    */
   private InstructionVisitor(final MethodHandler methodHandler,
-                             final ConstantPoolGen constantPool) {
+                             final ConstantPoolGen constantPool,
+                             final Repository repos) {
     fConstantPool = constantPool;
     fMethodHandler = methodHandler;
     fRes = "";
+    fRepos = repos;
   }
   
   
@@ -235,7 +240,7 @@ public final class InstructionVisitor extends EmptyVisitor {
   public void visitNEWARRAY(final NEWARRAY ins) {
     try {
       final AType type = CType.getInstance().convertType(BasicType.getType(((NEWARRAY) ins)
-                                                  .getTypecode()), null);
+                                                  .getTypecode()), fRepos);
       fRes = "Newarray " + type;
     } 
     catch (ClassNotFoundException e) {
@@ -304,8 +309,9 @@ public final class InstructionVisitor extends EmptyVisitor {
    */
   public static String translate(final MethodHandler metHandler, 
                                  final ConstantPoolGen constPool, 
-                                 final Instruction ins) {
-    final InstructionVisitor v = new InstructionVisitor(metHandler, constPool);
+                                 final Instruction ins,
+                                 final Repository repos) {
+    final InstructionVisitor v = new InstructionVisitor(metHandler, constPool, repos);
     ins.accept(v);
     if (v.fRes.equals("")) {
       v.fRes = Util.unknown("Instruction", ins);

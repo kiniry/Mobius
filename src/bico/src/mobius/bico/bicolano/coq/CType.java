@@ -9,6 +9,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.Repository;
+import org.apache.bcel.util.SyntheticRepository;
 
 /**
  * This class represents a Coq Type.

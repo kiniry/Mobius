@@ -73,10 +73,11 @@ public class Executor extends ABasicExecutor {
    * @param e the executor to create a copy from
    */
   public Executor(final Executor e) {
-    super((ABasicExecutor) e);
+    super(e);
     fSourceDir = e.fSourceDir;
     fPendingClasses.addAll(e.fPendingClasses);
     fNamingData = new NamingData(e.fNamingData);
+    org.apache.bcel.Repository.setRepository(getRepository());
   }
   
 
@@ -121,6 +122,7 @@ public class Executor extends ABasicExecutor {
 
     fGenerateJavaLibs = generateLibs;
     fNamingData = new NamingData("Bico");
+    org.apache.bcel.Repository.setRepository(getRepository());
   }
 
   
