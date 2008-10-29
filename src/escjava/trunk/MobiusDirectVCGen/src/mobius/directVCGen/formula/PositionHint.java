@@ -119,6 +119,9 @@ public class PositionHint {
     public MethodGen getMethod() {
       return fMeth;
     }
+    public String toString() {
+      return fMeth.toString();
+    }
   }
   
 }

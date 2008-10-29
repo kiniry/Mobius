@@ -252,7 +252,7 @@ public class Main extends escjava.Main {
   protected void doBcVCGen(final TypeSig sig, final IAnnotationGenerator gen) {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
-    System.out.println(fClassPath);
+    //System.out.println(fClassPath);
     final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, 
                                                          sig.getExternalName(), 
                                                          fClassPath,

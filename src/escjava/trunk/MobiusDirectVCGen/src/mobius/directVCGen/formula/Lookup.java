@@ -238,7 +238,7 @@ public class Lookup {
    */
   public List<QuantVariableRef> getPreconditionArgs(final MethodGen m) {
     final PositionHint ph = PositionHint.getMethodPositionHint(m);
-    
+    //System.out.println(ph);
     return fPreArgs.get(ph);
   }
   
@@ -300,7 +300,7 @@ public class Lookup {
     Term[] tab;
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre); 
-    for (QuantVariableRef qvr:Lookup.getInst().getPreconditionArgs(meth)) {
+    for (QuantVariableRef qvr: getPreconditionArgs(meth)) {
       if (!qvr.equals(Heap.var)) {
         args.add(Expression.old(qvr));
       }
