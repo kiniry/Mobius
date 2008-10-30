@@ -1,4 +1,2057 @@
 ------------------------------------------------------------------------
+r72241 | dcochran | 2008-10-30 15:02:40 +0000 (Thu, 30 Oct 2008) | 1 line
+
+Permit the usage of the \same keyword.
+------------------------------------------------------------------------
+r72240 | dcochran | 2008-10-30 13:40:44 +0000 (Thu, 30 Oct 2008) | 1 line
+
+Added additional warnings about lack of JML JDK specifications for Java 1.6 and about the use of \everything as a modification target.
+------------------------------------------------------------------------
+r72237 | chalin | 2008-10-29 14:51:22 +0000 (Wed, 29 Oct 2008) | 1 line
+
+Fixed nullity declarations of equals().
+------------------------------------------------------------------------
+r72217 | dcochran | 2008-10-23 16:53:07 +0100 (Thu, 23 Oct 2008) | 1 line
+
+Documented changes from ticket #211: partial implementation of non-null be default
+------------------------------------------------------------------------
+r72216 | dcochran | 2008-10-23 16:33:14 +0100 (Thu, 23 Oct 2008) | 1 line
+
+Update web link URLs in the implementation notes.
+------------------------------------------------------------------------
+r72211 | dcochran | 2008-10-22 16:20:45 +0100 (Wed, 22 Oct 2008) | 1 line
+
+Tidy up loose ends in implementation notes.
+------------------------------------------------------------------------
+r72208 | dcochran | 2008-10-21 16:27:50 +0100 (Tue, 21 Oct 2008) | 1 line
+
+Updated pages 1-4 of the Implementation Notes
+------------------------------------------------------------------------
+r72198 | chalin | 2008-10-20 20:44:43 +0100 (Mon, 20 Oct 2008) | 1 line
+
+IDC (#409) for non-null arrays (checkpoint).
+------------------------------------------------------------------------
+r72181 | dcochran | 2008-10-13 17:22:48 +0100 (Mon, 13 Oct 2008) | 1 line
+
+Minor changes so that the all+ target can be run.
+------------------------------------------------------------------------
+r72119 | chalin | 2008-09-01 17:41:53 +0100 (Mon, 01 Sep 2008) | 4 lines
+
+Killing prover subprocess programmatically:
+- renamed misspelled constant THEADING_TRACE_OUTPUT to THREADING_TRACE_OUTPUT and changes its type to int so that we can have more flexibility w.r.t. the level of trace output.
+- reduced the default trace output to a minimum (we now only now get a single message when the Simplify subprocess is forcefully killed due to a timeout).
+- Now only wait 1 sec for Simplify thread to die before considering it dead.
+------------------------------------------------------------------------
+r72118 | chalin | 2008-09-01 17:29:45 +0100 (Mon, 01 Sep 2008) | 2 lines
+
+[IDC] added test307 IDC: non-null array declarations and invariants over them. Also SEE FIXME IN TEST FILE.
+
+------------------------------------------------------------------------
+r72117 | chalin | 2008-09-01 17:28:43 +0100 (Mon, 01 Sep 2008) | 1 line
+
+[IDC] some experimental code (which is currently disabled).
+------------------------------------------------------------------------
+r72116 | chalin | 2008-09-01 17:16:25 +0100 (Mon, 01 Sep 2008) | 1 line
+
+[IDC] Added extra invariants involving quantifiers to test306.
+------------------------------------------------------------------------
+r72105 | dcochran | 2008-08-25 15:50:46 +0100 (Mon, 25 Aug 2008) | 1 line
+
+Moved RCC project into its own top-level folder, outside of ESCJava2
+------------------------------------------------------------------------
+r72099 | dcochran | 2008-08-25 12:37:42 +0100 (Mon, 25 Aug 2008) | 1 line
+
+Added RCC plugin
+------------------------------------------------------------------------
+r72049 | chalin | 2008-07-24 23:46:20 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Making run scripts executable.
+------------------------------------------------------------------------
+r72044 | dcochran | 2008-07-24 09:47:02 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Update Maven's copy of the source code
+------------------------------------------------------------------------
+r72043 | dcochran | 2008-07-24 09:45:33 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Update Maven's copy of the source code
+------------------------------------------------------------------------
+r72039 | chalin | 2008-07-23 04:54:08 +0100 (Wed, 23 Jul 2008) | 1 line
+
+IDC (#409) in invariants & non-null (#211): fields declared non-null will not result in non-null IDC checks in invariants. Non-null by default also handled. Added test306.
+------------------------------------------------------------------------
+r72032 | chalin | 2008-07-18 21:50:02 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Updated comment and added FIXME.)
+------------------------------------------------------------------------
+r72031 | chalin | 2008-07-18 16:38:59 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Make use of prover threading only if feature is actually requested -- had hard coded it on.)
+------------------------------------------------------------------------
+r72030 | chalin | 2008-07-18 16:21:19 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Now supporting running simplify in its own thread so that we can kill it after the expected timeout period. To run it in its own thread set PROVER_IN_ITS_OWN_THREAD to 1. [experimental]
+------------------------------------------------------------------------
+r72029 | chalin | 2008-07-18 16:18:03 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Use javafe OutsideEnv.reader() method rather than directly access the field.
+------------------------------------------------------------------------
+r72028 | chalin | 2008-07-18 16:17:10 +0100 (Fri, 18 Jul 2008) | 2 lines
+
+- Removed spurious invariant (since it follows from the represents clause).
+- Added nullable modifiers.
+------------------------------------------------------------------------
+r72027 | chalin | 2008-07-18 16:14:43 +0100 (Fri, 18 Jul 2008) | 2 lines
+
+- Fix: report a time out when a time out occurs.
+- Minor refactoring.
+------------------------------------------------------------------------
+r72026 | chalin | 2008-07-18 16:12:52 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Non-null by default: a temporary hack to reduce spurious errors about nullities of internal classes in rt.jar files.)
+------------------------------------------------------------------------
+r72025 | chalin | 2008-07-18 16:05:31 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Another interim version of the Javafe.
+------------------------------------------------------------------------
+r72024 | chalin | 2008-07-18 16:03:55 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Minor fix: line number change.)
+------------------------------------------------------------------------
+r72016 | chalin | 2008-07-16 16:11:54 +0100 (Wed, 16 Jul 2008) | 1 line
+
+[support for -nonNullByDefault] Fixed problem with method return types (now checking for explicit nullable) and tried to make problem report locations more accurate.
+------------------------------------------------------------------------
+r72015 | dcochran | 2008-07-16 15:11:28 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Copy recent changes into Maven source folder
+------------------------------------------------------------------------
+r72014 | chalin | 2008-07-16 07:13:20 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Test for added support for -nonNullByDefault for method return types and parameters.
+------------------------------------------------------------------------
+r72013 | chalin | 2008-07-16 07:04:27 +0100 (Wed, 16 Jul 2008) | 2 lines
+
+Added checking of nullity return type contravariance.
+Added support for -nonNullByDefault for method return types and parameters. (Note that there is still no support for the _by_default class-level modifiers.)
+------------------------------------------------------------------------
+r72012 | chalin | 2008-07-16 07:00:10 +0100 (Wed, 16 Jul 2008) | 1 line
+
+[found-by-esc2] Fixes to specs found by enhanced ESC2 checking of nullity return type contravariance.
+------------------------------------------------------------------------
+r72011 | chalin | 2008-07-16 06:57:28 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Fix to test 303a. Needed to split F.jml into two files to avoid OS specific output reordering issues.
+------------------------------------------------------------------------
+r72010 | chalin | 2008-07-16 04:37:02 +0100 (Wed, 16 Jul 2008) | 1 line
+
+#630: updated Javafe version to 2.0.5b.
+------------------------------------------------------------------------
+r72009 | chalin | 2008-07-16 04:20:23 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Fixing Utils/Makefile to ignore the removed junitutils files.
+------------------------------------------------------------------------
+r72008 | chalin | 2008-07-15 22:09:46 +0100 (Tue, 15 Jul 2008) | 4 lines
+
+- Added new Javafe .jar (as version 2.0.5b). Makefile and classpath as been updated.
+- Removed clone of junitutils (since the same source is used in the Javafe).
+- Made changes to ESCJava2 source files necessary to accommodate the above.
+
+------------------------------------------------------------------------
+r72004 | chalin | 2008-07-15 16:08:16 +0100 (Tue, 15 Jul 2008) | 1 line
+
+Merged in changes from Javafe Utils/junitutils (a clone of ESCTools Utils/junitutils).
+------------------------------------------------------------------------
+r72003 | chalin | 2008-07-15 16:05:48 +0100 (Tue, 15 Jul 2008) | 1 line
+
+Updated nullity annotations.
+------------------------------------------------------------------------
+r72002 | chalin | 2008-07-15 16:05:14 +0100 (Tue, 15 Jul 2008) | 1 line
+
+getInteger(String, val) returns non_null result.
+------------------------------------------------------------------------
+r71990 | chalin | 2008-07-14 23:51:43 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Export SPECS definition for use in subsequent calls to make.
+------------------------------------------------------------------------
+r71989 | chalin | 2008-07-14 23:51:14 +0100 (Mon, 14 Jul 2008) | 1 line
+
+(minor change)
+------------------------------------------------------------------------
+r71988 | chalin | 2008-07-14 23:50:44 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Update. Changed non-null assertions to non-null modifiers.
+------------------------------------------------------------------------
+r71985 | chalin | 2008-07-14 21:09:17 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Changes to get the target specs_test working again (for 1.4 specs)
+------------------------------------------------------------------------
+r71984 | chalin | 2008-07-14 19:29:32 +0100 (Mon, 14 Jul 2008) | 1 line
+
+(Adding E2.java which was omitted by mistake from the previous commit.)
+------------------------------------------------------------------------
+r71983 | chalin | 2008-07-14 19:28:21 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Adjusting test case so that ans does not depend on the order of the warnings that are output (until we fix this issue with the order of the output being different between Linux and Windows).
+------------------------------------------------------------------------
+r71982 | chalin | 2008-07-14 18:10:07 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Setting svn:executable property for new test run scripts.
+------------------------------------------------------------------------
+r71981 | chalin | 2008-07-14 17:44:31 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Replace use of Java 5 String.contains() with equivalent 1.4 API call.
+------------------------------------------------------------------------
+r71976 | chalin | 2008-07-12 03:57:45 +0100 (Sat, 12 Jul 2008) | 4 lines
+
+IDC (definedness checking):
+- added support for IDC of inline assume and assert statements.
+- added support for IDC of \forall and \exists expressions.
+- refactored test300 into test30[1-5] and added tests for the new functionality added with this commit. Left test300 in FIX status since the output differs under Windows and Linux (TBD why this happens).
+------------------------------------------------------------------------
+r71975 | chalin | 2008-07-12 03:44:41 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Updated nullity attributes.
+------------------------------------------------------------------------
+r71974 | chalin | 2008-07-12 03:44:22 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Updated nullity attributes.
+------------------------------------------------------------------------
+r71973 | chalin | 2008-07-12 03:42:05 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Clean up of specs and nullity annotations (essentially removed redundant x != null assertions).
+------------------------------------------------------------------------
+r71964 | chalin | 2008-07-10 22:26:08 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71963 | chalin | 2008-07-10 22:22:46 +0100 (Thu, 10 Jul 2008) | 2 lines
+
+test495/ans: removing path so that the same test output will work under Windows and Unix.
+test495/run: process both files in one command so that simple file names, without paths containing OS-specific path separators, are output.
+------------------------------------------------------------------------
+r71962 | chalin | 2008-07-10 18:20:36 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Output order seems to be different under linux. Reverting to previous ans file until I find out why warnings are being reported in different orders.
+------------------------------------------------------------------------
+r71961 | chalin | 2008-07-10 18:19:22 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Adding newline at end of expected output (so that tests also pass under cygwin).
+------------------------------------------------------------------------
+r71959 | chalin | 2008-07-10 17:08:24 +0100 (Thu, 10 Jul 2008) | 4 lines
+
+Fixed and re-enabled test300, "IDC tests":
+- alltests: marked test300 as Good.
+- test300/ans: fixed order of warnings.
+- test300/run: removed harded coded path to George's specs.
+------------------------------------------------------------------------
+r71958 | chalin | 2008-07-10 17:04:13 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Removing unnecessary cast to non-null.
+------------------------------------------------------------------------
+r71957 | chalin | 2008-07-10 17:02:57 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71956 | chalin | 2008-07-10 16:57:24 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71955 | chalin | 2008-07-10 16:33:10 +0100 (Thu, 10 Jul 2008) | 1 line
+
+(Adding explicit nullable modifiers to various fields.)
+------------------------------------------------------------------------
+r71954 | chalin | 2008-07-10 16:32:13 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier: SubProcess P can actually be null.
+------------------------------------------------------------------------
+r71953 | chalin | 2008-07-10 16:31:43 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71952 | chalin | 2008-07-10 16:31:05 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71951 | chalin | 2008-07-10 16:29:06 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] fixing spec for options() such that result is declared non_null. (Produces much fewer warnings in this way and it matches the general usage of the method.)
+------------------------------------------------------------------------
+r71950 | chalin | 2008-07-10 16:20:05 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71949 | chalin | 2008-07-10 16:19:06 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling nullity modifiers
+------------------------------------------------------------------------
+r71822 | dcochran | 2008-06-24 14:50:44 +0100 (Tue, 24 Jun 2008) | 1 line
+
+Gradually increase scope of the stress tests
+------------------------------------------------------------------------
+r71819 | dcochran | 2008-06-23 16:51:40 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Gradually increase scope of the stress tests
+------------------------------------------------------------------------
+r71816 | dcochran | 2008-06-23 15:35:35 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Limit the number of stress tests
+------------------------------------------------------------------------
+r71815 | dcochran | 2008-06-23 14:45:00 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Limit the number of stress tests
+------------------------------------------------------------------------
+r71810 | dcochran | 2008-06-23 12:25:38 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Use Maven naming convention for stress tests
+------------------------------------------------------------------------
+r71783 | dcochran | 2008-06-12 17:33:44 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: set 12M as the mimimum amount of free memory to use before starting tests
+------------------------------------------------------------------------
+r71781 | dcochran | 2008-06-12 17:11:01 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Fix AbstractTestSuite
+------------------------------------------------------------------------
+r71779 | dcochran | 2008-06-12 14:11:15 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Add PMD ruleset generated from Mobius configs for PMD
+------------------------------------------------------------------------
+r71778 | dcochran | 2008-06-12 11:15:51 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Add PMD to the Maven build process
+------------------------------------------------------------------------
+r71777 | dcochran | 2008-06-12 10:32:38 +0100 (Thu, 12 Jun 2008) | 2 lines
+
+(1) Add Galactica to the list of severs
+(2) Rename 'Distributed' test suite as 'Extreme' test suite - all tests are potentially distributed; but this is the one that causes out of memory errors and uses lots of CPU
+------------------------------------------------------------------------
+r71767 | dcochran | 2008-06-11 15:14:56 +0100 (Wed, 11 Jun 2008) | 1 line
+
+Continuous Testing: Add Logic to the list of servers and re-add Voting to the list of servers for the full distributed test suite.
+------------------------------------------------------------------------
+r71765 | dcochran | 2008-06-11 14:13:42 +0100 (Wed, 11 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71759 | dcochran | 2008-06-11 09:48:36 +0100 (Wed, 11 Jun 2008) | 1 line
+
+For Maven testing don't call the garbage collector when memory low - just fail and skip the remaining tests.  Memory leaks should be recorded as test failures rather than errors in the test framework.
+------------------------------------------------------------------------
+r71756 | dcochran | 2008-06-10 13:39:29 +0100 (Tue, 10 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71755 | dcochran | 2008-06-10 13:20:16 +0100 (Tue, 10 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71747 | dcochran | 2008-06-09 16:08:05 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71746 | dcochran | 2008-06-09 16:07:18 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Fix the POM so show Hudson not Continuum as the CI tool.
+------------------------------------------------------------------------
+r71742 | dcochran | 2008-06-09 10:44:44 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71733 | dcochran | 2008-06-06 17:32:32 +0100 (Fri, 06 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71731 | dcochran | 2008-06-06 15:35:43 +0100 (Fri, 06 Jun 2008) | 1 line
+
+Reduce the number of false negatives in test results
+------------------------------------------------------------------------
+r71728 | dcochran | 2008-06-05 17:14:35 +0100 (Thu, 05 Jun 2008) | 1 line
+
+Simplify the legacy tests (under Maven) by factoring out the dependency on TestCase and LocalTestCase.
+------------------------------------------------------------------------
+r71711 | dcochran | 2008-05-28 16:54:01 +0100 (Wed, 28 May 2008) | 1 line
+
+Change free memory variable from int to long to avoid loss of precision
+------------------------------------------------------------------------
+r71708 | dcochran | 2008-05-28 12:31:29 +0100 (Wed, 28 May 2008) | 3 lines
+
+(1) Don't run the full distributed tests on voting.ucd.ie
+(2) Add a diagnostic message to show how much free memory is left
+(3) Don't call the Java GC too often - this causes the process to freeze
+------------------------------------------------------------------------
+r71707 | dcochran | 2008-05-27 16:08:18 +0100 (Tue, 27 May 2008) | 1 line
+
+No need for pre-maven build.
+------------------------------------------------------------------------
+r71706 | dcochran | 2008-05-27 14:14:08 +0100 (Tue, 27 May 2008) | 1 line
+
+Added one of the older legacy tests to the Maven test suite. 
+------------------------------------------------------------------------
+r71704 | dcochran | 2008-05-26 15:24:18 +0100 (Mon, 26 May 2008) | 1 line
+
+For Maven testing; let LocalTestCase be source code used by the tests rather than part of the test suites.
+------------------------------------------------------------------------
+r71703 | dcochran | 2008-05-23 14:56:32 +0100 (Fri, 23 May 2008) | 1 line
+
+Added category and morphism back onto the list of servers.
+------------------------------------------------------------------------
+r71702 | dcochran | 2008-05-22 16:12:23 +0100 (Thu, 22 May 2008) | 2 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581
+------------------------------------------------------------------------
+r71698 | dcochran | 2008-05-22 12:47:54 +0100 (Thu, 22 May 2008) | 1 line
+
+Moving LocalTestCase.java from a test resource to the test source folder so that it can be found on the classpath.
+------------------------------------------------------------------------
+r71697 | dcochran | 2008-05-22 12:33:03 +0100 (Thu, 22 May 2008) | 1 line
+
+Attempt to fail gracefully when running out of memory.
+------------------------------------------------------------------------
+r71696 | dcochran | 2008-05-22 11:44:05 +0100 (Thu, 22 May 2008) | 1 line
+
+Added resource needed for Legacy tests
+------------------------------------------------------------------------
+r71695 | dcochran | 2008-05-22 11:00:03 +0100 (Thu, 22 May 2008) | 3 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581 
+Fixing a test suite compilation error reported by Hudson
+------------------------------------------------------------------------
+r71694 | dcochran | 2008-05-22 10:41:35 +0100 (Thu, 22 May 2008) | 3 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581
+Fixing a test suite compilation error reported by Hudson
+------------------------------------------------------------------------
+r71693 | dcochran | 2008-05-21 11:42:16 +0100 (Wed, 21 May 2008) | 1 line
+
+Distribute test load according to number of processors on each server.
+------------------------------------------------------------------------
+r71692 | dcochran | 2008-05-21 09:37:51 +0100 (Wed, 21 May 2008) | 1 line
+
+Packaging the JDK tests as a test suite called Legacy and re-enabling diagnostic messages so that the progress of tests can be seen from the build monitor
+------------------------------------------------------------------------
+r71691 | dcochran | 2008-05-21 09:30:51 +0100 (Wed, 21 May 2008) | 1 line
+
+Packaging the JDK tests as a test suite called Legacy
+------------------------------------------------------------------------
+r71690 | dcochran | 2008-05-20 17:08:35 +0100 (Tue, 20 May 2008) | 1 line
+
+Distribute test load according to number of processors on each server.
+------------------------------------------------------------------------
+r71689 | dcochran | 2008-05-20 16:10:00 +0100 (Tue, 20 May 2008) | 1 line
+
+Category is not yet being used as a test server.
+------------------------------------------------------------------------
+r71687 | dcochran | 2008-05-20 15:55:24 +0100 (Tue, 20 May 2008) | 1 line
+
+These files need to be under source control for Maven to work correctly - using 'make pre-maven' before you commit will keep these files up to date.
+------------------------------------------------------------------------
+r71679 | dcochran | 2008-05-19 15:10:21 +0100 (Mon, 19 May 2008) | 1 line
+
+#543: Updated URL for Continuum
+------------------------------------------------------------------------
+r71676 | dcochran | 2008-05-19 13:48:29 +0100 (Mon, 19 May 2008) | 1 line
+
+Clean up formatting of JML assertions
+------------------------------------------------------------------------
+r71674 | dcochran | 2008-05-19 13:42:24 +0100 (Mon, 19 May 2008) | 1 line
+
+Inner class generics still aren't supported.
+------------------------------------------------------------------------
+r71666 | dcochran | 2008-05-16 15:27:49 +0100 (Fri, 16 May 2008) | 1 line
+
+#543: The svn username was specified as 'maven'. This was causing authentication errors for Continuum when run as a different user. This username is no longer specified in the POM but can be edited in configuration of the Continuum server.
+------------------------------------------------------------------------
+r71665 | dcochran | 2008-05-16 14:55:28 +0100 (Fri, 16 May 2008) | 1 line
+
+#543: Undo latest change to JUnit version number
+------------------------------------------------------------------------
+r71658 | dcochran | 2008-05-08 17:30:53 +0100 (Thu, 08 May 2008) | 1 line
+
+#543: Fix 'too many open files' error in Distributed Test Suite
+------------------------------------------------------------------------
+r71650 | dcochran | 2008-05-08 11:21:09 +0100 (Thu, 08 May 2008) | 1 line
+
+#543: Limit the number of JUnit tests within a single process
+------------------------------------------------------------------------
+r71649 | dcochran | 2008-05-08 11:18:58 +0100 (Thu, 08 May 2008) | 1 line
+
+Add BSearch to the JUnit tests
+------------------------------------------------------------------------
+r71647 | chalin | 2008-05-07 02:12:18 +0100 (Wed, 07 May 2008) | 1 line
+
+Move definition of SPECS to just before the self_typecheck target because it needs this definition.
+------------------------------------------------------------------------
+r71645 | chalin | 2008-05-06 16:49:18 +0100 (Tue, 06 May 2008) | 1 line
+
+Refactored fix-perms target. Touching the stamp is now a separate target. New target to clean (reset) fix-perms.
+------------------------------------------------------------------------
+r71631 | dcochran | 2008-05-02 09:16:38 +0100 (Fri, 02 May 2008) | 1 line
+
+Add BSearch test as discussed
+------------------------------------------------------------------------
+r71630 | dcochran | 2008-05-01 17:34:24 +0100 (Thu, 01 May 2008) | 1 line
+
+Add BSearch test as discussed
+------------------------------------------------------------------------
+r71629 | dcochran | 2008-05-01 17:30:12 +0100 (Thu, 01 May 2008) | 1 line
+
+Fix test 300
+------------------------------------------------------------------------
+r71627 | dcochran | 2008-04-30 15:04:28 +0100 (Wed, 30 Apr 2008) | 1 line
+
+#543: Downgrade Surefire plugin to avoid issue with memory leaks
+------------------------------------------------------------------------
+r71624 | dcochran | 2008-04-30 12:04:09 +0100 (Wed, 30 Apr 2008) | 2 lines
+
+NEW - # 584: Add a list of theorem provers to be used with each test 
+https://mobius.ucd.ie/ticket/584
+------------------------------------------------------------------------
+r71623 | dcochran | 2008-04-30 10:17:54 +0100 (Wed, 30 Apr 2008) | 1 line
+
+#543: Change the default e-mail address for notification; don't automatically create a ticket - at least until the test framework is complete.
+------------------------------------------------------------------------
+r71584 | dcochran | 2008-04-24 11:29:29 +0100 (Thu, 24 Apr 2008) | 1 line
+
+#543: Add category and voting to the list of servers. Add a memory leak test, to be run on voting only.
+------------------------------------------------------------------------
+r71577 | dcochran | 2008-04-22 17:22:58 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Reset four of the six failing smoke tests
+------------------------------------------------------------------------
+r71568 | dcochran | 2008-04-22 14:43:03 +0100 (Tue, 22 Apr 2008) | 1 line
+
+Add Mobius logo to display on Continuum server
+------------------------------------------------------------------------
+r71567 | dcochran | 2008-04-22 14:16:49 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#196: Modify the build process under Cygwin/Windows
+------------------------------------------------------------------------
+r71562 | dcochran | 2008-04-22 12:26:43 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Add code coverage reporting
+------------------------------------------------------------------------
+r71558 | dcochran | 2008-04-22 11:54:42 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Restored file header from original file and updated copyright notice.
+------------------------------------------------------------------------
+r71557 | dcochran | 2008-04-22 11:27:48 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Tightly optimise the innermost loop so as to avoid memory leaks.
+------------------------------------------------------------------------
+r71554 | dcochran | 2008-04-21 17:30:28 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add a list of additional command line options to be cross-tested
+------------------------------------------------------------------------
+r71550 | dcochran | 2008-04-21 14:30:12 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add to list of developers
+------------------------------------------------------------------------
+r71548 | dcochran | 2008-04-21 14:14:33 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Test all paired combinations of command line options.
+------------------------------------------------------------------------
+r71546 | dcochran | 2008-04-21 12:59:34 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add another 10 command line options to be tested
+------------------------------------------------------------------------
+r71545 | dcochran | 2008-04-21 12:51:07 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add 40 different sets of options to test
+------------------------------------------------------------------------
+r71540 | dcochran | 2008-04-21 11:19:49 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Continuum servers needs to use svn+ssh instead of https when accessing the svn repository
+------------------------------------------------------------------------
+r71538 | dcochran | 2008-04-21 10:26:08 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Generate as many reports as possible
+------------------------------------------------------------------------
+r71535 | dcochran | 2008-04-18 17:06:23 +0100 (Fri, 18 Apr 2008) | 1 line
+
+#543: Don't use https for svn connections from Continuum
+------------------------------------------------------------------------
+r71519 | dcochran | 2008-04-18 10:15:50 +0100 (Fri, 18 Apr 2008) | 1 line
+
+#543: Add extra build target
+------------------------------------------------------------------------
+r71517 | dcochran | 2008-04-18 09:19:38 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Add Dan's machines to the list of servers
+------------------------------------------------------------------------
+r71516 | chalin | 2008-04-18 03:28:25 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Cleaning up imports (in particular of AST nodes via hierarchy.j). Note that ESCTools now builds under WinXP Eclipse and the Cygwin command line.
+------------------------------------------------------------------------
+r71515 | chalin | 2008-04-18 02:32:52 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Resolve ambiguous imports (so that ESCTools now compiles under WinXP Eclipse).
+------------------------------------------------------------------------
+r71512 | dcochran | 2008-04-17 14:29:51 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve ambiguous imports.
+------------------------------------------------------------------------
+r71511 | dcochran | 2008-04-17 13:53:27 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve more ambiguous imports.
+------------------------------------------------------------------------
+r71508 | dcochran | 2008-04-17 10:03:02 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve ambiguous imports.
+------------------------------------------------------------------------
+r71496 | dcochran | 2008-04-16 12:36:50 +0100 (Wed, 16 Apr 2008) | 1 line
+
+#593: Removed unnecessary dependency on Continuum XML-RPC plugin
+------------------------------------------------------------------------
+r71484 | dcochran | 2008-04-15 16:49:32 +0100 (Tue, 15 Apr 2008) | 1 line
+
+#543: remove bad option and reduce number of servers being tested
+------------------------------------------------------------------------
+r71482 | dcochran | 2008-04-15 13:15:27 +0100 (Tue, 15 Apr 2008) | 1 line
+
+#543: Remove local shell script for running Maven
+------------------------------------------------------------------------
+r71477 | dcochran | 2008-04-14 15:02:12 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71476 | dcochran | 2008-04-14 14:54:44 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Allow local paths to maven executable
+------------------------------------------------------------------------
+r71475 | dcochran | 2008-04-14 13:24:17 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Updating distribution script
+------------------------------------------------------------------------
+r71474 | dcochran | 2008-04-14 13:22:36 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Updating distribution script
+------------------------------------------------------------------------
+r71473 | dcochran | 2008-04-14 12:31:03 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Adding distribution script
+------------------------------------------------------------------------
+r71472 | dcochran | 2008-04-14 12:21:15 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71470 | dcochran | 2008-04-14 10:50:42 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71460 | dcochran | 2008-04-10 17:07:42 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Let the number of option sets not be a multiple of the number of servers.
+------------------------------------------------------------------------
+r71459 | dcochran | 2008-04-10 16:49:46 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Renamed 'Default Settings Test' as 'Smoke Test' and fixed an error in the Distributed Tests.
+------------------------------------------------------------------------
+r71456 | dcochran | 2008-04-10 16:10:27 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Added configuration file for command line options
+------------------------------------------------------------------------
+r71455 | dcochran | 2008-04-10 15:34:57 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Move list of servers into a configuration file
+------------------------------------------------------------------------
+r71451 | dcochran | 2008-04-10 13:45:18 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Added infrastructure for distributed testing
+------------------------------------------------------------------------
+r71450 | dcochran | 2008-04-10 11:31:38 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Enhance unit test infrastructure to facilitate Maven unit tests
+------------------------------------------------------------------------
+r71444 | dcochran | 2008-04-09 15:53:45 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Ensure that ESC/Java2 arguments are passed in correctly for Maven tests and reset expected results to match actual results - this is valid because these tests already pass on the command line 'make test'.
+------------------------------------------------------------------------
+r71442 | dcochran | 2008-04-09 14:48:54 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Extend JUnit test framework so as to accept different sets of command line arguments
+------------------------------------------------------------------------
+r71440 | dcochran | 2008-04-09 12:34:53 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Make it easier to find Simplify when running tests from Maven
+------------------------------------------------------------------------
+r71435 | dcochran | 2008-04-09 11:03:08 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Ignore generated -ckd files
+------------------------------------------------------------------------
+r71434 | dcochran | 2008-04-09 10:51:46 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Configured legacy junit tests to run under Maven
+------------------------------------------------------------------------
+r71432 | dcochran | 2008-04-08 16:43:49 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Added empty test suite for Maven tests
+------------------------------------------------------------------------
+r71431 | dcochran | 2008-04-08 15:24:40 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Add folders to hold Maven specific tests. The existing command line tests are not directly reusable for Maven testing.
+------------------------------------------------------------------------
+r71430 | dcochran | 2008-04-08 14:27:59 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Refactored conflicting classnames as required for a Maven build
+------------------------------------------------------------------------
+r71428 | dcochran | 2008-04-08 12:37:08 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Fix buildpath and builder configuration so that ESC/Java2 builds from within Eclipse
+------------------------------------------------------------------------
+r71427 | dcochran | 2008-04-08 12:35:47 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Fix buildpath and builder configuration so that ESC/Java2 builds from within Eclipse
+------------------------------------------------------------------------
+r71425 | dcochran | 2008-04-07 17:35:22 +0100 (Mon, 07 Apr 2008) | 1 line
+
+Restore classpath
+------------------------------------------------------------------------
+r71421 | dcochran | 2008-04-07 12:05:15 +0100 (Mon, 07 Apr 2008) | 1 line
+
+#543: Add make target to copy files into a single source folder as expected by Maven
+------------------------------------------------------------------------
+r71420 | dcochran | 2008-04-07 12:03:45 +0100 (Mon, 07 Apr 2008) | 1 line
+
+#543: Add make target to copy files into a single source folder as expected by Maven
+------------------------------------------------------------------------
+r71419 | dcochran | 2008-04-04 16:09:53 +0100 (Fri, 04 Apr 2008) | 1 line
+
+Add Maven project nature and move POM to the top level folder
+------------------------------------------------------------------------
+r71417 | dcochran | 2008-04-03 16:01:17 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Add more information to the POM
+------------------------------------------------------------------------
+r71415 | dcochran | 2008-04-03 15:04:04 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Ignore local PMD settings
+------------------------------------------------------------------------
+r71414 | dcochran | 2008-04-03 15:02:39 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Add resources to POM
+------------------------------------------------------------------------
+r71413 | dcochran | 2008-04-03 13:49:48 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Fix typo (missing src) in URL for repository
+------------------------------------------------------------------------
+r71412 | dcochran | 2008-04-03 13:47:23 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Updated POM for ESC/Java2
+------------------------------------------------------------------------
+r71411 | dcochran | 2008-04-03 12:56:36 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: fixed project name in POM
+------------------------------------------------------------------------
+r71410 | dcochran | 2008-04-03 12:46:17 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: added sample configuration for Maven
+------------------------------------------------------------------------
+r71409 | dcochran | 2008-04-03 11:17:14 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Added intermediate build target for smoke testing
+------------------------------------------------------------------------
+r71408 | dcochran | 2008-04-03 10:49:33 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Added new make target for continuous integration testing.
+------------------------------------------------------------------------
+r71404 | kiniry | 2008-03-31 15:26:10 +0100 (Mon, 31 Mar 2008) | 5 lines
+
+Updates for ETAPS'08 tutorial: updated date, fixed a few typos,
+updated URLs, removed mandatory use of luximono font (those that have
+the font and classfile installed and simply remove the comment
+character).
+
+------------------------------------------------------------------------
+r71400 | kiniry | 2008-03-27 16:11:26 +0000 (Thu, 27 Mar 2008) | 2 lines
+
+Ignoring new generated file ".svnversion".
+
+------------------------------------------------------------------------
+r71399 | kiniry | 2008-03-27 16:10:44 +0000 (Thu, 27 Mar 2008) | 5 lines
+
+Added view target to Makefile.  Simplified and made more generic
+Makefile design.  Incorporated use of svnversion.  Added Taxpayer
+example from Erik Poll---it is currently commented-out.  Wrote
+beginning of section on logging.
+
+------------------------------------------------------------------------
+r71398 | dcochran | 2008-03-27 13:35:21 +0000 (Thu, 27 Mar 2008) | 1 line
+
+Remove any mention of ssh access and just describe https access to subversion
+------------------------------------------------------------------------
+r71355 | woj | 2008-03-14 14:56:14 +0000 (Fri, 14 Mar 2008) | 1 line
+
+Further manual corrections
+------------------------------------------------------------------------
+r71351 | woj | 2008-03-14 14:06:18 +0000 (Fri, 14 Mar 2008) | 1 line
+
+Made the Escjava2-UsersManual.texinfo compile :/
+------------------------------------------------------------------------
+r71330 | dcochran | 2008-03-11 15:30:45 +0000 (Tue, 11 Mar 2008) | 1 line
+
+Adding test for Ticket 495
+------------------------------------------------------------------------
+r71293 | dcochran | 2008-03-03 17:10:00 +0000 (Mon, 03 Mar 2008) | 2 lines
+
+REOPENED - # 262: [ escjava-Bugs-217 ] The String class in JRE_1.4.2_10-build3 does not typecheck. 
+https://mobius.ucd.ie/ticket/262
+------------------------------------------------------------------------
+r71292 | dcochran | 2008-03-03 16:50:14 +0000 (Mon, 03 Mar 2008) | 1 line
+
+Adding test case for Ticket #262
+------------------------------------------------------------------------
+r71248 | dcochran | 2008-02-21 17:06:07 +0000 (Thu, 21 Feb 2008) | 1 line
+
+Prevent the test build from running automatically and use the workspace default compiler settings for Java.
+------------------------------------------------------------------------
+r71224 | dcochran | 2008-02-20 10:28:47 +0000 (Wed, 20 Feb 2008) | 1 line
+
+Set project specific Java compliance level to 1.4.2
+------------------------------------------------------------------------
+r71193 | dcochran | 2008-02-14 15:58:29 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Update SVN properties
+------------------------------------------------------------------------
+r71192 | dcochran | 2008-02-14 15:57:05 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Add ESC/Java2 tests to the manual build in Eclipse
+------------------------------------------------------------------------
+r71191 | dcochran | 2008-02-14 15:54:30 +0000 (Thu, 14 Feb 2008) | 1 line
+
+#482: Improve error reporting: do not throw a ClassCastException for an unhandled type
+------------------------------------------------------------------------
+r71190 | dcochran | 2008-02-14 15:49:10 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Remove local user data from test results
+------------------------------------------------------------------------
+r71174 | g_karab | 2008-02-11 18:12:17 +0000 (Mon, 11 Feb 2008) | 1 line
+
+Added IDC test cases for arrays and pure methods.
+------------------------------------------------------------------------
+r71173 | g_karab | 2008-02-11 18:11:15 +0000 (Mon, 11 Feb 2008) | 1 line
+
+IDC expressions enclosed within \old(...).
+------------------------------------------------------------------------
+r71157 | dcochran | 2008-02-06 15:53:17 +0000 (Wed, 06 Feb 2008) | 1 line
+
+Remove SVN metadata from exported libraries.
+------------------------------------------------------------------------
+r71128 | test | 2008-02-01 09:23:56 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Test SVN access
+------------------------------------------------------------------------
+r71127 | g_karab | 2008-02-01 00:32:27 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Fix for ticket 446.
+------------------------------------------------------------------------
+r71126 | g_karab | 2008-02-01 00:30:48 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Added redundant if(options().idc) statement.
+------------------------------------------------------------------------
+r71125 | g_karab | 2008-02-01 00:29:36 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Do not generate null checks for the this reference.
+------------------------------------------------------------------------
+r71089 | mikolas | 2008-01-24 16:46:43 +0000 (Thu, 24 Jan 2008) | 2 lines
+
+Changing some private accesses to public as I needed them in the generation of spectests.
+
+------------------------------------------------------------------------
+r71088 | mikolas | 2008-01-24 16:45:55 +0000 (Thu, 24 Jan 2008) | 2 lines
+
+Improving spectester and refactoring.
+
+------------------------------------------------------------------------
+r71060 | dcochran | 2008-01-23 11:35:21 +0000 (Wed, 23 Jan 2008) | 1 line
+
+Update Ant buildfile for ESC/Java2
+------------------------------------------------------------------------
+r71054 | dcochran | 2008-01-22 16:24:10 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Skipping tests 203 and 300
+------------------------------------------------------------------------
+r71053 | mikolas | 2008-01-22 15:35:08 +0000 (Tue, 22 Jan 2008) | 2 lines
+
+Adding an ersta option, a variant of spectesting.
+
+------------------------------------------------------------------------
+r71052 | dcochran | 2008-01-22 15:26:08 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Change Javafe library archive to Java 1.4 version
+------------------------------------------------------------------------
+r71050 | dcochran | 2008-01-22 14:50:18 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Remove test code from build path
+------------------------------------------------------------------------
+r71045 | rgrig | 2008-01-22 12:00:13 +0000 (Tue, 22 Jan 2008) | 1 line
+
+test
+------------------------------------------------------------------------
+r71042 | dcochran | 2008-01-22 10:23:10 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Automatically clean out the classfiles
+------------------------------------------------------------------------
+r71041 | dcochran | 2008-01-22 10:14:14 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Automatically clean out any remaining Javafe or Simplify folders
+------------------------------------------------------------------------
+r71034 | dcochran | 2008-01-21 12:06:49 +0000 (Mon, 21 Jan 2008) | 1 line
+
+Include JavaCard specifications in the next release.
+------------------------------------------------------------------------
+r71028 | g_karab | 2008-01-20 19:18:25 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Added more test cases for IDCing invariants.
+------------------------------------------------------------------------
+r71027 | g_karab | 2008-01-20 19:15:57 +0000 (Sun, 20 Jan 2008) | 2 lines
+
+Moved the code to add invariant conditions to DefGCmd.
+The entry point for adding these conditions also moved to getSpecForBody so that bodyless methods are handled properly.
+------------------------------------------------------------------------
+r71026 | g_karab | 2008-01-20 19:13:01 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Created a method that adds conditions for the invariants.
+------------------------------------------------------------------------
+r71025 | g_karab | 2008-01-20 15:28:53 +0000 (Sun, 20 Jan 2008) | 1 line
+
+The previous version was crashing with Floating exception.  Recompiled from source and inserting the new copy.
+------------------------------------------------------------------------
+r71024 | g_karab | 2008-01-20 02:14:58 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Modified test300 - added tests for IDCing invariants.
+------------------------------------------------------------------------
+r71023 | g_karab | 2008-01-20 02:13:24 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Initial support of IDCing invariants covering only methods with bodies. 
+------------------------------------------------------------------------
+r71022 | g_karab | 2008-01-19 21:37:30 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Removed invalid exported packages.
+------------------------------------------------------------------------
+r71021 | g_karab | 2008-01-19 21:35:55 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Removed missing libraries.
+------------------------------------------------------------------------
+r71020 | g_karab | 2008-01-19 20:47:24 +0000 (Sat, 19 Jan 2008) | 2 lines
+
+Fixed indentation.
+Added comments.
+------------------------------------------------------------------------
+r71019 | g_karab | 2008-01-19 20:46:16 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Fixed indentation.
+------------------------------------------------------------------------
+r71018 | g_karab | 2008-01-19 15:24:19 +0000 (Sat, 19 Jan 2008) | 3 lines
+
+Fixed a bug with IDC to properly handle exceptional postconditions.
+Changed the body added to spec methods from EC=ecReturn to SKIP
+Added a set of test cases that cover null and divZero checks in specs for constructors and methods with and without bodies.
+------------------------------------------------------------------------
+r71017 | g_karab | 2008-01-19 15:20:37 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Added test300.
+------------------------------------------------------------------------
+r71003 | dcochran | 2008-01-17 17:35:39 +0000 (Thu, 17 Jan 2008) | 2 lines
+
+ASSIGNED - # 325: [ escjava-Research-195 ] JavaCard and MIDP support (generalised Java platform variant support) 
+https://mobius.ucd.ie/ticket/325
+------------------------------------------------------------------------
+r71002 | dcochran | 2008-01-17 16:24:12 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Taking copy of Java1.4 JDK specifications, to allow switching between java platforms
+------------------------------------------------------------------------
+r71000 | dcochran | 2008-01-17 14:38:05 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Added JavaCard specifications
+------------------------------------------------------------------------
+r70998 | dcochran | 2008-01-17 12:40:44 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Update ESC/Java2 batch file to use Javafe
+------------------------------------------------------------------------
+r70997 | dcochran | 2008-01-17 11:52:34 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Fixed mistake in binary release process
+------------------------------------------------------------------------
+r70992 | dcochran | 2008-01-16 15:44:54 +0000 (Wed, 16 Jan 2008) | 1 line
+
+Updated build configuration for ESCJava 2.0b4 release
+------------------------------------------------------------------------
+r3376 | dcochran | 2008-01-15 12:41:04 +0000 (Tue, 15 Jan 2008) | 1 line
+
+Minor updates to documentation and build configurations
+------------------------------------------------------------------------
+r3375 | dcochran | 2008-01-15 10:53:01 +0000 (Tue, 15 Jan 2008) | 1 line
+
+Added a test case for conversion of array indexes to short
+------------------------------------------------------------------------
+r3374 | dcochran | 2008-01-14 16:48:19 +0000 (Mon, 14 Jan 2008) | 1 line
+
+First pass on documentation updates
+------------------------------------------------------------------------
+r3370 | dcochran | 2008-01-11 14:53:52 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3369 | dcochran | 2008-01-11 14:48:22 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3368 | dcochran | 2008-01-11 14:44:59 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3364 | dcochran | 2008-01-10 16:40:23 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Updating release notes to show which GForge tickets were feature requests or research questions rather than bugs.
+------------------------------------------------------------------------
+r3363 | dcochran | 2008-01-10 15:32:38 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Fixed layout of release notes
+------------------------------------------------------------------------
+r3362 | dcochran | 2008-01-10 14:42:24 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Updating release notes to distinguish tickets re-asssigned to Javafe or Simplify, and matching Trac ticket ID numbers with former GForge ticket ID numbers 
+------------------------------------------------------------------------
+r3361 | dcochran | 2008-01-10 14:08:34 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Update target release date
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+r72241 | dcochran | 2008-10-30 15:02:40 +0000 (Thu, 30 Oct 2008) | 1 line
+
+Permit the usage of the \same keyword.
+------------------------------------------------------------------------
+r72240 | dcochran | 2008-10-30 13:40:44 +0000 (Thu, 30 Oct 2008) | 1 line
+
+Added additional warnings about lack of JML JDK specifications for Java 1.6 and about the use of \everything as a modification target.
+------------------------------------------------------------------------
+r72237 | chalin | 2008-10-29 14:51:22 +0000 (Wed, 29 Oct 2008) | 1 line
+
+Fixed nullity declarations of equals().
+------------------------------------------------------------------------
+r72217 | dcochran | 2008-10-23 16:53:07 +0100 (Thu, 23 Oct 2008) | 1 line
+
+Documented changes from ticket #211: partial implementation of non-null be default
+------------------------------------------------------------------------
+r72216 | dcochran | 2008-10-23 16:33:14 +0100 (Thu, 23 Oct 2008) | 1 line
+
+Update web link URLs in the implementation notes.
+------------------------------------------------------------------------
+r72211 | dcochran | 2008-10-22 16:20:45 +0100 (Wed, 22 Oct 2008) | 1 line
+
+Tidy up loose ends in implementation notes.
+------------------------------------------------------------------------
+r72208 | dcochran | 2008-10-21 16:27:50 +0100 (Tue, 21 Oct 2008) | 1 line
+
+Updated pages 1-4 of the Implementation Notes
+------------------------------------------------------------------------
+r72198 | chalin | 2008-10-20 20:44:43 +0100 (Mon, 20 Oct 2008) | 1 line
+
+IDC (#409) for non-null arrays (checkpoint).
+------------------------------------------------------------------------
+r72181 | dcochran | 2008-10-13 17:22:48 +0100 (Mon, 13 Oct 2008) | 1 line
+
+Minor changes so that the all+ target can be run.
+------------------------------------------------------------------------
+r72119 | chalin | 2008-09-01 17:41:53 +0100 (Mon, 01 Sep 2008) | 4 lines
+
+Killing prover subprocess programmatically:
+- renamed misspelled constant THEADING_TRACE_OUTPUT to THREADING_TRACE_OUTPUT and changes its type to int so that we can have more flexibility w.r.t. the level of trace output.
+- reduced the default trace output to a minimum (we now only now get a single message when the Simplify subprocess is forcefully killed due to a timeout).
+- Now only wait 1 sec for Simplify thread to die before considering it dead.
+------------------------------------------------------------------------
+r72118 | chalin | 2008-09-01 17:29:45 +0100 (Mon, 01 Sep 2008) | 2 lines
+
+[IDC] added test307 IDC: non-null array declarations and invariants over them. Also SEE FIXME IN TEST FILE.
+
+------------------------------------------------------------------------
+r72117 | chalin | 2008-09-01 17:28:43 +0100 (Mon, 01 Sep 2008) | 1 line
+
+[IDC] some experimental code (which is currently disabled).
+------------------------------------------------------------------------
+r72116 | chalin | 2008-09-01 17:16:25 +0100 (Mon, 01 Sep 2008) | 1 line
+
+[IDC] Added extra invariants involving quantifiers to test306.
+------------------------------------------------------------------------
+r72105 | dcochran | 2008-08-25 15:50:46 +0100 (Mon, 25 Aug 2008) | 1 line
+
+Moved RCC project into its own top-level folder, outside of ESCJava2
+------------------------------------------------------------------------
+r72099 | dcochran | 2008-08-25 12:37:42 +0100 (Mon, 25 Aug 2008) | 1 line
+
+Added RCC plugin
+------------------------------------------------------------------------
+r72049 | chalin | 2008-07-24 23:46:20 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Making run scripts executable.
+------------------------------------------------------------------------
+r72044 | dcochran | 2008-07-24 09:47:02 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Update Maven's copy of the source code
+------------------------------------------------------------------------
+r72043 | dcochran | 2008-07-24 09:45:33 +0100 (Thu, 24 Jul 2008) | 1 line
+
+Update Maven's copy of the source code
+------------------------------------------------------------------------
+r72039 | chalin | 2008-07-23 04:54:08 +0100 (Wed, 23 Jul 2008) | 1 line
+
+IDC (#409) in invariants & non-null (#211): fields declared non-null will not result in non-null IDC checks in invariants. Non-null by default also handled. Added test306.
+------------------------------------------------------------------------
+r72032 | chalin | 2008-07-18 21:50:02 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Updated comment and added FIXME.)
+------------------------------------------------------------------------
+r72031 | chalin | 2008-07-18 16:38:59 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Make use of prover threading only if feature is actually requested -- had hard coded it on.)
+------------------------------------------------------------------------
+r72030 | chalin | 2008-07-18 16:21:19 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Now supporting running simplify in its own thread so that we can kill it after the expected timeout period. To run it in its own thread set PROVER_IN_ITS_OWN_THREAD to 1. [experimental]
+------------------------------------------------------------------------
+r72029 | chalin | 2008-07-18 16:18:03 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Use javafe OutsideEnv.reader() method rather than directly access the field.
+------------------------------------------------------------------------
+r72028 | chalin | 2008-07-18 16:17:10 +0100 (Fri, 18 Jul 2008) | 2 lines
+
+- Removed spurious invariant (since it follows from the represents clause).
+- Added nullable modifiers.
+------------------------------------------------------------------------
+r72027 | chalin | 2008-07-18 16:14:43 +0100 (Fri, 18 Jul 2008) | 2 lines
+
+- Fix: report a time out when a time out occurs.
+- Minor refactoring.
+------------------------------------------------------------------------
+r72026 | chalin | 2008-07-18 16:12:52 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Non-null by default: a temporary hack to reduce spurious errors about nullities of internal classes in rt.jar files.)
+------------------------------------------------------------------------
+r72025 | chalin | 2008-07-18 16:05:31 +0100 (Fri, 18 Jul 2008) | 1 line
+
+Another interim version of the Javafe.
+------------------------------------------------------------------------
+r72024 | chalin | 2008-07-18 16:03:55 +0100 (Fri, 18 Jul 2008) | 1 line
+
+(Minor fix: line number change.)
+------------------------------------------------------------------------
+r72016 | chalin | 2008-07-16 16:11:54 +0100 (Wed, 16 Jul 2008) | 1 line
+
+[support for -nonNullByDefault] Fixed problem with method return types (now checking for explicit nullable) and tried to make problem report locations more accurate.
+------------------------------------------------------------------------
+r72015 | dcochran | 2008-07-16 15:11:28 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Copy recent changes into Maven source folder
+------------------------------------------------------------------------
+r72014 | chalin | 2008-07-16 07:13:20 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Test for added support for -nonNullByDefault for method return types and parameters.
+------------------------------------------------------------------------
+r72013 | chalin | 2008-07-16 07:04:27 +0100 (Wed, 16 Jul 2008) | 2 lines
+
+Added checking of nullity return type contravariance.
+Added support for -nonNullByDefault for method return types and parameters. (Note that there is still no support for the _by_default class-level modifiers.)
+------------------------------------------------------------------------
+r72012 | chalin | 2008-07-16 07:00:10 +0100 (Wed, 16 Jul 2008) | 1 line
+
+[found-by-esc2] Fixes to specs found by enhanced ESC2 checking of nullity return type contravariance.
+------------------------------------------------------------------------
+r72011 | chalin | 2008-07-16 06:57:28 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Fix to test 303a. Needed to split F.jml into two files to avoid OS specific output reordering issues.
+------------------------------------------------------------------------
+r72010 | chalin | 2008-07-16 04:37:02 +0100 (Wed, 16 Jul 2008) | 1 line
+
+#630: updated Javafe version to 2.0.5b.
+------------------------------------------------------------------------
+r72009 | chalin | 2008-07-16 04:20:23 +0100 (Wed, 16 Jul 2008) | 1 line
+
+Fixing Utils/Makefile to ignore the removed junitutils files.
+------------------------------------------------------------------------
+r72008 | chalin | 2008-07-15 22:09:46 +0100 (Tue, 15 Jul 2008) | 4 lines
+
+- Added new Javafe .jar (as version 2.0.5b). Makefile and classpath as been updated.
+- Removed clone of junitutils (since the same source is used in the Javafe).
+- Made changes to ESCJava2 source files necessary to accommodate the above.
+
+------------------------------------------------------------------------
+r72004 | chalin | 2008-07-15 16:08:16 +0100 (Tue, 15 Jul 2008) | 1 line
+
+Merged in changes from Javafe Utils/junitutils (a clone of ESCTools Utils/junitutils).
+------------------------------------------------------------------------
+r72003 | chalin | 2008-07-15 16:05:48 +0100 (Tue, 15 Jul 2008) | 1 line
+
+Updated nullity annotations.
+------------------------------------------------------------------------
+r72002 | chalin | 2008-07-15 16:05:14 +0100 (Tue, 15 Jul 2008) | 1 line
+
+getInteger(String, val) returns non_null result.
+------------------------------------------------------------------------
+r71990 | chalin | 2008-07-14 23:51:43 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Export SPECS definition for use in subsequent calls to make.
+------------------------------------------------------------------------
+r71989 | chalin | 2008-07-14 23:51:14 +0100 (Mon, 14 Jul 2008) | 1 line
+
+(minor change)
+------------------------------------------------------------------------
+r71988 | chalin | 2008-07-14 23:50:44 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Update. Changed non-null assertions to non-null modifiers.
+------------------------------------------------------------------------
+r71985 | chalin | 2008-07-14 21:09:17 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Changes to get the target specs_test working again (for 1.4 specs)
+------------------------------------------------------------------------
+r71984 | chalin | 2008-07-14 19:29:32 +0100 (Mon, 14 Jul 2008) | 1 line
+
+(Adding E2.java which was omitted by mistake from the previous commit.)
+------------------------------------------------------------------------
+r71983 | chalin | 2008-07-14 19:28:21 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Adjusting test case so that ans does not depend on the order of the warnings that are output (until we fix this issue with the order of the output being different between Linux and Windows).
+------------------------------------------------------------------------
+r71982 | chalin | 2008-07-14 18:10:07 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Setting svn:executable property for new test run scripts.
+------------------------------------------------------------------------
+r71981 | chalin | 2008-07-14 17:44:31 +0100 (Mon, 14 Jul 2008) | 1 line
+
+Replace use of Java 5 String.contains() with equivalent 1.4 API call.
+------------------------------------------------------------------------
+r71976 | chalin | 2008-07-12 03:57:45 +0100 (Sat, 12 Jul 2008) | 4 lines
+
+IDC (definedness checking):
+- added support for IDC of inline assume and assert statements.
+- added support for IDC of \forall and \exists expressions.
+- refactored test300 into test30[1-5] and added tests for the new functionality added with this commit. Left test300 in FIX status since the output differs under Windows and Linux (TBD why this happens).
+------------------------------------------------------------------------
+r71975 | chalin | 2008-07-12 03:44:41 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Updated nullity attributes.
+------------------------------------------------------------------------
+r71974 | chalin | 2008-07-12 03:44:22 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Updated nullity attributes.
+------------------------------------------------------------------------
+r71973 | chalin | 2008-07-12 03:42:05 +0100 (Sat, 12 Jul 2008) | 1 line
+
+Clean up of specs and nullity annotations (essentially removed redundant x != null assertions).
+------------------------------------------------------------------------
+r71964 | chalin | 2008-07-10 22:26:08 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71963 | chalin | 2008-07-10 22:22:46 +0100 (Thu, 10 Jul 2008) | 2 lines
+
+test495/ans: removing path so that the same test output will work under Windows and Unix.
+test495/run: process both files in one command so that simple file names, without paths containing OS-specific path separators, are output.
+------------------------------------------------------------------------
+r71962 | chalin | 2008-07-10 18:20:36 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Output order seems to be different under linux. Reverting to previous ans file until I find out why warnings are being reported in different orders.
+------------------------------------------------------------------------
+r71961 | chalin | 2008-07-10 18:19:22 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Adding newline at end of expected output (so that tests also pass under cygwin).
+------------------------------------------------------------------------
+r71959 | chalin | 2008-07-10 17:08:24 +0100 (Thu, 10 Jul 2008) | 4 lines
+
+Fixed and re-enabled test300, "IDC tests":
+- alltests: marked test300 as Good.
+- test300/ans: fixed order of warnings.
+- test300/run: removed harded coded path to George's specs.
+------------------------------------------------------------------------
+r71958 | chalin | 2008-07-10 17:04:13 +0100 (Thu, 10 Jul 2008) | 1 line
+
+Removing unnecessary cast to non-null.
+------------------------------------------------------------------------
+r71957 | chalin | 2008-07-10 17:02:57 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71956 | chalin | 2008-07-10 16:57:24 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling disabled JML (due to space before @ character).
+------------------------------------------------------------------------
+r71955 | chalin | 2008-07-10 16:33:10 +0100 (Thu, 10 Jul 2008) | 1 line
+
+(Adding explicit nullable modifiers to various fields.)
+------------------------------------------------------------------------
+r71954 | chalin | 2008-07-10 16:32:13 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier: SubProcess P can actually be null.
+------------------------------------------------------------------------
+r71953 | chalin | 2008-07-10 16:31:43 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71952 | chalin | 2008-07-10 16:31:05 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71951 | chalin | 2008-07-10 16:29:06 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] fixing spec for options() such that result is declared non_null. (Produces much fewer warnings in this way and it matches the general usage of the method.)
+------------------------------------------------------------------------
+r71950 | chalin | 2008-07-10 16:20:05 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] Fixing nullity modifier (JML4 enforces that it be a type modifier rather than a general method modifier).
+------------------------------------------------------------------------
+r71949 | chalin | 2008-07-10 16:19:06 +0100 (Thu, 10 Jul 2008) | 1 line
+
+[found-by-jml4] re-enabling nullity modifiers
+------------------------------------------------------------------------
+r71822 | dcochran | 2008-06-24 14:50:44 +0100 (Tue, 24 Jun 2008) | 1 line
+
+Gradually increase scope of the stress tests
+------------------------------------------------------------------------
+r71819 | dcochran | 2008-06-23 16:51:40 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Gradually increase scope of the stress tests
+------------------------------------------------------------------------
+r71816 | dcochran | 2008-06-23 15:35:35 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Limit the number of stress tests
+------------------------------------------------------------------------
+r71815 | dcochran | 2008-06-23 14:45:00 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Limit the number of stress tests
+------------------------------------------------------------------------
+r71810 | dcochran | 2008-06-23 12:25:38 +0100 (Mon, 23 Jun 2008) | 1 line
+
+Use Maven naming convention for stress tests
+------------------------------------------------------------------------
+r71783 | dcochran | 2008-06-12 17:33:44 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: set 12M as the mimimum amount of free memory to use before starting tests
+------------------------------------------------------------------------
+r71781 | dcochran | 2008-06-12 17:11:01 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Fix AbstractTestSuite
+------------------------------------------------------------------------
+r71779 | dcochran | 2008-06-12 14:11:15 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Add PMD ruleset generated from Mobius configs for PMD
+------------------------------------------------------------------------
+r71778 | dcochran | 2008-06-12 11:15:51 +0100 (Thu, 12 Jun 2008) | 1 line
+
+Testing: Add PMD to the Maven build process
+------------------------------------------------------------------------
+r71777 | dcochran | 2008-06-12 10:32:38 +0100 (Thu, 12 Jun 2008) | 2 lines
+
+(1) Add Galactica to the list of severs
+(2) Rename 'Distributed' test suite as 'Extreme' test suite - all tests are potentially distributed; but this is the one that causes out of memory errors and uses lots of CPU
+------------------------------------------------------------------------
+r71767 | dcochran | 2008-06-11 15:14:56 +0100 (Wed, 11 Jun 2008) | 1 line
+
+Continuous Testing: Add Logic to the list of servers and re-add Voting to the list of servers for the full distributed test suite.
+------------------------------------------------------------------------
+r71765 | dcochran | 2008-06-11 14:13:42 +0100 (Wed, 11 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71759 | dcochran | 2008-06-11 09:48:36 +0100 (Wed, 11 Jun 2008) | 1 line
+
+For Maven testing don't call the garbage collector when memory low - just fail and skip the remaining tests.  Memory leaks should be recorded as test failures rather than errors in the test framework.
+------------------------------------------------------------------------
+r71756 | dcochran | 2008-06-10 13:39:29 +0100 (Tue, 10 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71755 | dcochran | 2008-06-10 13:20:16 +0100 (Tue, 10 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71747 | dcochran | 2008-06-09 16:08:05 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71746 | dcochran | 2008-06-09 16:07:18 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Fix the POM so show Hudson not Continuum as the CI tool.
+------------------------------------------------------------------------
+r71742 | dcochran | 2008-06-09 10:44:44 +0100 (Mon, 09 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71733 | dcochran | 2008-06-06 17:32:32 +0100 (Fri, 06 Jun 2008) | 1 line
+
+Remove or alter Maven tests that have false negatives. We are aiming for a 100% pass rate and will then start looking at code and specification coverage before adding more tests.
+------------------------------------------------------------------------
+r71731 | dcochran | 2008-06-06 15:35:43 +0100 (Fri, 06 Jun 2008) | 1 line
+
+Reduce the number of false negatives in test results
+------------------------------------------------------------------------
+r71728 | dcochran | 2008-06-05 17:14:35 +0100 (Thu, 05 Jun 2008) | 1 line
+
+Simplify the legacy tests (under Maven) by factoring out the dependency on TestCase and LocalTestCase.
+------------------------------------------------------------------------
+r71711 | dcochran | 2008-05-28 16:54:01 +0100 (Wed, 28 May 2008) | 1 line
+
+Change free memory variable from int to long to avoid loss of precision
+------------------------------------------------------------------------
+r71708 | dcochran | 2008-05-28 12:31:29 +0100 (Wed, 28 May 2008) | 3 lines
+
+(1) Don't run the full distributed tests on voting.ucd.ie
+(2) Add a diagnostic message to show how much free memory is left
+(3) Don't call the Java GC too often - this causes the process to freeze
+------------------------------------------------------------------------
+r71707 | dcochran | 2008-05-27 16:08:18 +0100 (Tue, 27 May 2008) | 1 line
+
+No need for pre-maven build.
+------------------------------------------------------------------------
+r71706 | dcochran | 2008-05-27 14:14:08 +0100 (Tue, 27 May 2008) | 1 line
+
+Added one of the older legacy tests to the Maven test suite. 
+------------------------------------------------------------------------
+r71704 | dcochran | 2008-05-26 15:24:18 +0100 (Mon, 26 May 2008) | 1 line
+
+For Maven testing; let LocalTestCase be source code used by the tests rather than part of the test suites.
+------------------------------------------------------------------------
+r71703 | dcochran | 2008-05-23 14:56:32 +0100 (Fri, 23 May 2008) | 1 line
+
+Added category and morphism back onto the list of servers.
+------------------------------------------------------------------------
+r71702 | dcochran | 2008-05-22 16:12:23 +0100 (Thu, 22 May 2008) | 2 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581
+------------------------------------------------------------------------
+r71698 | dcochran | 2008-05-22 12:47:54 +0100 (Thu, 22 May 2008) | 1 line
+
+Moving LocalTestCase.java from a test resource to the test source folder so that it can be found on the classpath.
+------------------------------------------------------------------------
+r71697 | dcochran | 2008-05-22 12:33:03 +0100 (Thu, 22 May 2008) | 1 line
+
+Attempt to fail gracefully when running out of memory.
+------------------------------------------------------------------------
+r71696 | dcochran | 2008-05-22 11:44:05 +0100 (Thu, 22 May 2008) | 1 line
+
+Added resource needed for Legacy tests
+------------------------------------------------------------------------
+r71695 | dcochran | 2008-05-22 11:00:03 +0100 (Thu, 22 May 2008) | 3 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581 
+Fixing a test suite compilation error reported by Hudson
+------------------------------------------------------------------------
+r71694 | dcochran | 2008-05-22 10:41:35 +0100 (Thu, 22 May 2008) | 3 lines
+
+ASSIGNED - # 581: Allow different expected results for each command line option 
+https://mobius.ucd.ie/ticket/581
+Fixing a test suite compilation error reported by Hudson
+------------------------------------------------------------------------
+r71693 | dcochran | 2008-05-21 11:42:16 +0100 (Wed, 21 May 2008) | 1 line
+
+Distribute test load according to number of processors on each server.
+------------------------------------------------------------------------
+r71692 | dcochran | 2008-05-21 09:37:51 +0100 (Wed, 21 May 2008) | 1 line
+
+Packaging the JDK tests as a test suite called Legacy and re-enabling diagnostic messages so that the progress of tests can be seen from the build monitor
+------------------------------------------------------------------------
+r71691 | dcochran | 2008-05-21 09:30:51 +0100 (Wed, 21 May 2008) | 1 line
+
+Packaging the JDK tests as a test suite called Legacy
+------------------------------------------------------------------------
+r71690 | dcochran | 2008-05-20 17:08:35 +0100 (Tue, 20 May 2008) | 1 line
+
+Distribute test load according to number of processors on each server.
+------------------------------------------------------------------------
+r71689 | dcochran | 2008-05-20 16:10:00 +0100 (Tue, 20 May 2008) | 1 line
+
+Category is not yet being used as a test server.
+------------------------------------------------------------------------
+r71687 | dcochran | 2008-05-20 15:55:24 +0100 (Tue, 20 May 2008) | 1 line
+
+These files need to be under source control for Maven to work correctly - using 'make pre-maven' before you commit will keep these files up to date.
+------------------------------------------------------------------------
+r71679 | dcochran | 2008-05-19 15:10:21 +0100 (Mon, 19 May 2008) | 1 line
+
+#543: Updated URL for Continuum
+------------------------------------------------------------------------
+r71676 | dcochran | 2008-05-19 13:48:29 +0100 (Mon, 19 May 2008) | 1 line
+
+Clean up formatting of JML assertions
+------------------------------------------------------------------------
+r71674 | dcochran | 2008-05-19 13:42:24 +0100 (Mon, 19 May 2008) | 1 line
+
+Inner class generics still aren't supported.
+------------------------------------------------------------------------
+r71666 | dcochran | 2008-05-16 15:27:49 +0100 (Fri, 16 May 2008) | 1 line
+
+#543: The svn username was specified as 'maven'. This was causing authentication errors for Continuum when run as a different user. This username is no longer specified in the POM but can be edited in configuration of the Continuum server.
+------------------------------------------------------------------------
+r71665 | dcochran | 2008-05-16 14:55:28 +0100 (Fri, 16 May 2008) | 1 line
+
+#543: Undo latest change to JUnit version number
+------------------------------------------------------------------------
+r71658 | dcochran | 2008-05-08 17:30:53 +0100 (Thu, 08 May 2008) | 1 line
+
+#543: Fix 'too many open files' error in Distributed Test Suite
+------------------------------------------------------------------------
+r71650 | dcochran | 2008-05-08 11:21:09 +0100 (Thu, 08 May 2008) | 1 line
+
+#543: Limit the number of JUnit tests within a single process
+------------------------------------------------------------------------
+r71649 | dcochran | 2008-05-08 11:18:58 +0100 (Thu, 08 May 2008) | 1 line
+
+Add BSearch to the JUnit tests
+------------------------------------------------------------------------
+r71647 | chalin | 2008-05-07 02:12:18 +0100 (Wed, 07 May 2008) | 1 line
+
+Move definition of SPECS to just before the self_typecheck target because it needs this definition.
+------------------------------------------------------------------------
+r71645 | chalin | 2008-05-06 16:49:18 +0100 (Tue, 06 May 2008) | 1 line
+
+Refactored fix-perms target. Touching the stamp is now a separate target. New target to clean (reset) fix-perms.
+------------------------------------------------------------------------
+r71631 | dcochran | 2008-05-02 09:16:38 +0100 (Fri, 02 May 2008) | 1 line
+
+Add BSearch test as discussed
+------------------------------------------------------------------------
+r71630 | dcochran | 2008-05-01 17:34:24 +0100 (Thu, 01 May 2008) | 1 line
+
+Add BSearch test as discussed
+------------------------------------------------------------------------
+r71629 | dcochran | 2008-05-01 17:30:12 +0100 (Thu, 01 May 2008) | 1 line
+
+Fix test 300
+------------------------------------------------------------------------
+r71627 | dcochran | 2008-04-30 15:04:28 +0100 (Wed, 30 Apr 2008) | 1 line
+
+#543: Downgrade Surefire plugin to avoid issue with memory leaks
+------------------------------------------------------------------------
+r71624 | dcochran | 2008-04-30 12:04:09 +0100 (Wed, 30 Apr 2008) | 2 lines
+
+NEW - # 584: Add a list of theorem provers to be used with each test 
+https://mobius.ucd.ie/ticket/584
+------------------------------------------------------------------------
+r71623 | dcochran | 2008-04-30 10:17:54 +0100 (Wed, 30 Apr 2008) | 1 line
+
+#543: Change the default e-mail address for notification; don't automatically create a ticket - at least until the test framework is complete.
+------------------------------------------------------------------------
+r71584 | dcochran | 2008-04-24 11:29:29 +0100 (Thu, 24 Apr 2008) | 1 line
+
+#543: Add category and voting to the list of servers. Add a memory leak test, to be run on voting only.
+------------------------------------------------------------------------
+r71577 | dcochran | 2008-04-22 17:22:58 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Reset four of the six failing smoke tests
+------------------------------------------------------------------------
+r71568 | dcochran | 2008-04-22 14:43:03 +0100 (Tue, 22 Apr 2008) | 1 line
+
+Add Mobius logo to display on Continuum server
+------------------------------------------------------------------------
+r71567 | dcochran | 2008-04-22 14:16:49 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#196: Modify the build process under Cygwin/Windows
+------------------------------------------------------------------------
+r71562 | dcochran | 2008-04-22 12:26:43 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Add code coverage reporting
+------------------------------------------------------------------------
+r71558 | dcochran | 2008-04-22 11:54:42 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Restored file header from original file and updated copyright notice.
+------------------------------------------------------------------------
+r71557 | dcochran | 2008-04-22 11:27:48 +0100 (Tue, 22 Apr 2008) | 1 line
+
+#543: Tightly optimise the innermost loop so as to avoid memory leaks.
+------------------------------------------------------------------------
+r71554 | dcochran | 2008-04-21 17:30:28 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add a list of additional command line options to be cross-tested
+------------------------------------------------------------------------
+r71550 | dcochran | 2008-04-21 14:30:12 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add to list of developers
+------------------------------------------------------------------------
+r71548 | dcochran | 2008-04-21 14:14:33 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Test all paired combinations of command line options.
+------------------------------------------------------------------------
+r71546 | dcochran | 2008-04-21 12:59:34 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add another 10 command line options to be tested
+------------------------------------------------------------------------
+r71545 | dcochran | 2008-04-21 12:51:07 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Add 40 different sets of options to test
+------------------------------------------------------------------------
+r71540 | dcochran | 2008-04-21 11:19:49 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Continuum servers needs to use svn+ssh instead of https when accessing the svn repository
+------------------------------------------------------------------------
+r71538 | dcochran | 2008-04-21 10:26:08 +0100 (Mon, 21 Apr 2008) | 1 line
+
+#543: Generate as many reports as possible
+------------------------------------------------------------------------
+r71535 | dcochran | 2008-04-18 17:06:23 +0100 (Fri, 18 Apr 2008) | 1 line
+
+#543: Don't use https for svn connections from Continuum
+------------------------------------------------------------------------
+r71519 | dcochran | 2008-04-18 10:15:50 +0100 (Fri, 18 Apr 2008) | 1 line
+
+#543: Add extra build target
+------------------------------------------------------------------------
+r71517 | dcochran | 2008-04-18 09:19:38 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Add Dan's machines to the list of servers
+------------------------------------------------------------------------
+r71516 | chalin | 2008-04-18 03:28:25 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Cleaning up imports (in particular of AST nodes via hierarchy.j). Note that ESCTools now builds under WinXP Eclipse and the Cygwin command line.
+------------------------------------------------------------------------
+r71515 | chalin | 2008-04-18 02:32:52 +0100 (Fri, 18 Apr 2008) | 1 line
+
+Resolve ambiguous imports (so that ESCTools now compiles under WinXP Eclipse).
+------------------------------------------------------------------------
+r71512 | dcochran | 2008-04-17 14:29:51 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve ambiguous imports.
+------------------------------------------------------------------------
+r71511 | dcochran | 2008-04-17 13:53:27 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve more ambiguous imports.
+------------------------------------------------------------------------
+r71508 | dcochran | 2008-04-17 10:03:02 +0100 (Thu, 17 Apr 2008) | 1 line
+
+Resolve ambiguous imports.
+------------------------------------------------------------------------
+r71496 | dcochran | 2008-04-16 12:36:50 +0100 (Wed, 16 Apr 2008) | 1 line
+
+#593: Removed unnecessary dependency on Continuum XML-RPC plugin
+------------------------------------------------------------------------
+r71484 | dcochran | 2008-04-15 16:49:32 +0100 (Tue, 15 Apr 2008) | 1 line
+
+#543: remove bad option and reduce number of servers being tested
+------------------------------------------------------------------------
+r71482 | dcochran | 2008-04-15 13:15:27 +0100 (Tue, 15 Apr 2008) | 1 line
+
+#543: Remove local shell script for running Maven
+------------------------------------------------------------------------
+r71477 | dcochran | 2008-04-14 15:02:12 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71476 | dcochran | 2008-04-14 14:54:44 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Allow local paths to maven executable
+------------------------------------------------------------------------
+r71475 | dcochran | 2008-04-14 13:24:17 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Updating distribution script
+------------------------------------------------------------------------
+r71474 | dcochran | 2008-04-14 13:22:36 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Updating distribution script
+------------------------------------------------------------------------
+r71473 | dcochran | 2008-04-14 12:31:03 +0100 (Mon, 14 Apr 2008) | 1 line
+
+#543: Adding distribution script
+------------------------------------------------------------------------
+r71472 | dcochran | 2008-04-14 12:21:15 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71470 | dcochran | 2008-04-14 10:50:42 +0100 (Mon, 14 Apr 2008) | 2 lines
+
+ASSIGNED - # 543: Distributed continuous testing on multiple servers 
+https://mobius.ucd.ie/ticket/543
+------------------------------------------------------------------------
+r71460 | dcochran | 2008-04-10 17:07:42 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Let the number of option sets not be a multiple of the number of servers.
+------------------------------------------------------------------------
+r71459 | dcochran | 2008-04-10 16:49:46 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Renamed 'Default Settings Test' as 'Smoke Test' and fixed an error in the Distributed Tests.
+------------------------------------------------------------------------
+r71456 | dcochran | 2008-04-10 16:10:27 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Added configuration file for command line options
+------------------------------------------------------------------------
+r71455 | dcochran | 2008-04-10 15:34:57 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Move list of servers into a configuration file
+------------------------------------------------------------------------
+r71451 | dcochran | 2008-04-10 13:45:18 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Added infrastructure for distributed testing
+------------------------------------------------------------------------
+r71450 | dcochran | 2008-04-10 11:31:38 +0100 (Thu, 10 Apr 2008) | 1 line
+
+#543: Enhance unit test infrastructure to facilitate Maven unit tests
+------------------------------------------------------------------------
+r71444 | dcochran | 2008-04-09 15:53:45 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Ensure that ESC/Java2 arguments are passed in correctly for Maven tests and reset expected results to match actual results - this is valid because these tests already pass on the command line 'make test'.
+------------------------------------------------------------------------
+r71442 | dcochran | 2008-04-09 14:48:54 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Extend JUnit test framework so as to accept different sets of command line arguments
+------------------------------------------------------------------------
+r71440 | dcochran | 2008-04-09 12:34:53 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Make it easier to find Simplify when running tests from Maven
+------------------------------------------------------------------------
+r71435 | dcochran | 2008-04-09 11:03:08 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Ignore generated -ckd files
+------------------------------------------------------------------------
+r71434 | dcochran | 2008-04-09 10:51:46 +0100 (Wed, 09 Apr 2008) | 1 line
+
+#543: Configured legacy junit tests to run under Maven
+------------------------------------------------------------------------
+r71432 | dcochran | 2008-04-08 16:43:49 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Added empty test suite for Maven tests
+------------------------------------------------------------------------
+r71431 | dcochran | 2008-04-08 15:24:40 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Add folders to hold Maven specific tests. The existing command line tests are not directly reusable for Maven testing.
+------------------------------------------------------------------------
+r71430 | dcochran | 2008-04-08 14:27:59 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Refactored conflicting classnames as required for a Maven build
+------------------------------------------------------------------------
+r71428 | dcochran | 2008-04-08 12:37:08 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Fix buildpath and builder configuration so that ESC/Java2 builds from within Eclipse
+------------------------------------------------------------------------
+r71427 | dcochran | 2008-04-08 12:35:47 +0100 (Tue, 08 Apr 2008) | 1 line
+
+#543: Fix buildpath and builder configuration so that ESC/Java2 builds from within Eclipse
+------------------------------------------------------------------------
+r71425 | dcochran | 2008-04-07 17:35:22 +0100 (Mon, 07 Apr 2008) | 1 line
+
+Restore classpath
+------------------------------------------------------------------------
+r71421 | dcochran | 2008-04-07 12:05:15 +0100 (Mon, 07 Apr 2008) | 1 line
+
+#543: Add make target to copy files into a single source folder as expected by Maven
+------------------------------------------------------------------------
+r71420 | dcochran | 2008-04-07 12:03:45 +0100 (Mon, 07 Apr 2008) | 1 line
+
+#543: Add make target to copy files into a single source folder as expected by Maven
+------------------------------------------------------------------------
+r71419 | dcochran | 2008-04-04 16:09:53 +0100 (Fri, 04 Apr 2008) | 1 line
+
+Add Maven project nature and move POM to the top level folder
+------------------------------------------------------------------------
+r71417 | dcochran | 2008-04-03 16:01:17 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Add more information to the POM
+------------------------------------------------------------------------
+r71415 | dcochran | 2008-04-03 15:04:04 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Ignore local PMD settings
+------------------------------------------------------------------------
+r71414 | dcochran | 2008-04-03 15:02:39 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Add resources to POM
+------------------------------------------------------------------------
+r71413 | dcochran | 2008-04-03 13:49:48 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Fix typo (missing src) in URL for repository
+------------------------------------------------------------------------
+r71412 | dcochran | 2008-04-03 13:47:23 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Updated POM for ESC/Java2
+------------------------------------------------------------------------
+r71411 | dcochran | 2008-04-03 12:56:36 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: fixed project name in POM
+------------------------------------------------------------------------
+r71410 | dcochran | 2008-04-03 12:46:17 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: added sample configuration for Maven
+------------------------------------------------------------------------
+r71409 | dcochran | 2008-04-03 11:17:14 +0100 (Thu, 03 Apr 2008) | 1 line
+
+#543: Added intermediate build target for smoke testing
+------------------------------------------------------------------------
+r71408 | dcochran | 2008-04-03 10:49:33 +0100 (Thu, 03 Apr 2008) | 1 line
+
+Added new make target for continuous integration testing.
+------------------------------------------------------------------------
+r71404 | kiniry | 2008-03-31 15:26:10 +0100 (Mon, 31 Mar 2008) | 5 lines
+
+Updates for ETAPS'08 tutorial: updated date, fixed a few typos,
+updated URLs, removed mandatory use of luximono font (those that have
+the font and classfile installed and simply remove the comment
+character).
+
+------------------------------------------------------------------------
+r71400 | kiniry | 2008-03-27 16:11:26 +0000 (Thu, 27 Mar 2008) | 2 lines
+
+Ignoring new generated file ".svnversion".
+
+------------------------------------------------------------------------
+r71399 | kiniry | 2008-03-27 16:10:44 +0000 (Thu, 27 Mar 2008) | 5 lines
+
+Added view target to Makefile.  Simplified and made more generic
+Makefile design.  Incorporated use of svnversion.  Added Taxpayer
+example from Erik Poll---it is currently commented-out.  Wrote
+beginning of section on logging.
+
+------------------------------------------------------------------------
+r71398 | dcochran | 2008-03-27 13:35:21 +0000 (Thu, 27 Mar 2008) | 1 line
+
+Remove any mention of ssh access and just describe https access to subversion
+------------------------------------------------------------------------
+r71355 | woj | 2008-03-14 14:56:14 +0000 (Fri, 14 Mar 2008) | 1 line
+
+Further manual corrections
+------------------------------------------------------------------------
+r71351 | woj | 2008-03-14 14:06:18 +0000 (Fri, 14 Mar 2008) | 1 line
+
+Made the Escjava2-UsersManual.texinfo compile :/
+------------------------------------------------------------------------
+r71330 | dcochran | 2008-03-11 15:30:45 +0000 (Tue, 11 Mar 2008) | 1 line
+
+Adding test for Ticket 495
+------------------------------------------------------------------------
+r71293 | dcochran | 2008-03-03 17:10:00 +0000 (Mon, 03 Mar 2008) | 2 lines
+
+REOPENED - # 262: [ escjava-Bugs-217 ] The String class in JRE_1.4.2_10-build3 does not typecheck. 
+https://mobius.ucd.ie/ticket/262
+------------------------------------------------------------------------
+r71292 | dcochran | 2008-03-03 16:50:14 +0000 (Mon, 03 Mar 2008) | 1 line
+
+Adding test case for Ticket #262
+------------------------------------------------------------------------
+r71248 | dcochran | 2008-02-21 17:06:07 +0000 (Thu, 21 Feb 2008) | 1 line
+
+Prevent the test build from running automatically and use the workspace default compiler settings for Java.
+------------------------------------------------------------------------
+r71224 | dcochran | 2008-02-20 10:28:47 +0000 (Wed, 20 Feb 2008) | 1 line
+
+Set project specific Java compliance level to 1.4.2
+------------------------------------------------------------------------
+r71193 | dcochran | 2008-02-14 15:58:29 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Update SVN properties
+------------------------------------------------------------------------
+r71192 | dcochran | 2008-02-14 15:57:05 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Add ESC/Java2 tests to the manual build in Eclipse
+------------------------------------------------------------------------
+r71191 | dcochran | 2008-02-14 15:54:30 +0000 (Thu, 14 Feb 2008) | 1 line
+
+#482: Improve error reporting: do not throw a ClassCastException for an unhandled type
+------------------------------------------------------------------------
+r71190 | dcochran | 2008-02-14 15:49:10 +0000 (Thu, 14 Feb 2008) | 1 line
+
+Remove local user data from test results
+------------------------------------------------------------------------
+r71174 | g_karab | 2008-02-11 18:12:17 +0000 (Mon, 11 Feb 2008) | 1 line
+
+Added IDC test cases for arrays and pure methods.
+------------------------------------------------------------------------
+r71173 | g_karab | 2008-02-11 18:11:15 +0000 (Mon, 11 Feb 2008) | 1 line
+
+IDC expressions enclosed within \old(...).
+------------------------------------------------------------------------
+r71157 | dcochran | 2008-02-06 15:53:17 +0000 (Wed, 06 Feb 2008) | 1 line
+
+Remove SVN metadata from exported libraries.
+------------------------------------------------------------------------
+r71128 | test | 2008-02-01 09:23:56 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Test SVN access
+------------------------------------------------------------------------
+r71127 | g_karab | 2008-02-01 00:32:27 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Fix for ticket 446.
+------------------------------------------------------------------------
+r71126 | g_karab | 2008-02-01 00:30:48 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Added redundant if(options().idc) statement.
+------------------------------------------------------------------------
+r71125 | g_karab | 2008-02-01 00:29:36 +0000 (Fri, 01 Feb 2008) | 1 line
+
+Do not generate null checks for the this reference.
+------------------------------------------------------------------------
+r71089 | mikolas | 2008-01-24 16:46:43 +0000 (Thu, 24 Jan 2008) | 2 lines
+
+Changing some private accesses to public as I needed them in the generation of spectests.
+
+------------------------------------------------------------------------
+r71088 | mikolas | 2008-01-24 16:45:55 +0000 (Thu, 24 Jan 2008) | 2 lines
+
+Improving spectester and refactoring.
+
+------------------------------------------------------------------------
+r71060 | dcochran | 2008-01-23 11:35:21 +0000 (Wed, 23 Jan 2008) | 1 line
+
+Update Ant buildfile for ESC/Java2
+------------------------------------------------------------------------
+r71054 | dcochran | 2008-01-22 16:24:10 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Skipping tests 203 and 300
+------------------------------------------------------------------------
+r71053 | mikolas | 2008-01-22 15:35:08 +0000 (Tue, 22 Jan 2008) | 2 lines
+
+Adding an ersta option, a variant of spectesting.
+
+------------------------------------------------------------------------
+r71052 | dcochran | 2008-01-22 15:26:08 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Change Javafe library archive to Java 1.4 version
+------------------------------------------------------------------------
+r71050 | dcochran | 2008-01-22 14:50:18 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Remove test code from build path
+------------------------------------------------------------------------
+r71045 | rgrig | 2008-01-22 12:00:13 +0000 (Tue, 22 Jan 2008) | 1 line
+
+test
+------------------------------------------------------------------------
+r71042 | dcochran | 2008-01-22 10:23:10 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Automatically clean out the classfiles
+------------------------------------------------------------------------
+r71041 | dcochran | 2008-01-22 10:14:14 +0000 (Tue, 22 Jan 2008) | 1 line
+
+Automatically clean out any remaining Javafe or Simplify folders
+------------------------------------------------------------------------
+r71034 | dcochran | 2008-01-21 12:06:49 +0000 (Mon, 21 Jan 2008) | 1 line
+
+Include JavaCard specifications in the next release.
+------------------------------------------------------------------------
+r71028 | g_karab | 2008-01-20 19:18:25 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Added more test cases for IDCing invariants.
+------------------------------------------------------------------------
+r71027 | g_karab | 2008-01-20 19:15:57 +0000 (Sun, 20 Jan 2008) | 2 lines
+
+Moved the code to add invariant conditions to DefGCmd.
+The entry point for adding these conditions also moved to getSpecForBody so that bodyless methods are handled properly.
+------------------------------------------------------------------------
+r71026 | g_karab | 2008-01-20 19:13:01 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Created a method that adds conditions for the invariants.
+------------------------------------------------------------------------
+r71025 | g_karab | 2008-01-20 15:28:53 +0000 (Sun, 20 Jan 2008) | 1 line
+
+The previous version was crashing with Floating exception.  Recompiled from source and inserting the new copy.
+------------------------------------------------------------------------
+r71024 | g_karab | 2008-01-20 02:14:58 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Modified test300 - added tests for IDCing invariants.
+------------------------------------------------------------------------
+r71023 | g_karab | 2008-01-20 02:13:24 +0000 (Sun, 20 Jan 2008) | 1 line
+
+Initial support of IDCing invariants covering only methods with bodies. 
+------------------------------------------------------------------------
+r71022 | g_karab | 2008-01-19 21:37:30 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Removed invalid exported packages.
+------------------------------------------------------------------------
+r71021 | g_karab | 2008-01-19 21:35:55 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Removed missing libraries.
+------------------------------------------------------------------------
+r71020 | g_karab | 2008-01-19 20:47:24 +0000 (Sat, 19 Jan 2008) | 2 lines
+
+Fixed indentation.
+Added comments.
+------------------------------------------------------------------------
+r71019 | g_karab | 2008-01-19 20:46:16 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Fixed indentation.
+------------------------------------------------------------------------
+r71018 | g_karab | 2008-01-19 15:24:19 +0000 (Sat, 19 Jan 2008) | 3 lines
+
+Fixed a bug with IDC to properly handle exceptional postconditions.
+Changed the body added to spec methods from EC=ecReturn to SKIP
+Added a set of test cases that cover null and divZero checks in specs for constructors and methods with and without bodies.
+------------------------------------------------------------------------
+r71017 | g_karab | 2008-01-19 15:20:37 +0000 (Sat, 19 Jan 2008) | 1 line
+
+Added test300.
+------------------------------------------------------------------------
+r71003 | dcochran | 2008-01-17 17:35:39 +0000 (Thu, 17 Jan 2008) | 2 lines
+
+ASSIGNED - # 325: [ escjava-Research-195 ] JavaCard and MIDP support (generalised Java platform variant support) 
+https://mobius.ucd.ie/ticket/325
+------------------------------------------------------------------------
+r71002 | dcochran | 2008-01-17 16:24:12 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Taking copy of Java1.4 JDK specifications, to allow switching between java platforms
+------------------------------------------------------------------------
+r71000 | dcochran | 2008-01-17 14:38:05 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Added JavaCard specifications
+------------------------------------------------------------------------
+r70998 | dcochran | 2008-01-17 12:40:44 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Update ESC/Java2 batch file to use Javafe
+------------------------------------------------------------------------
+r70997 | dcochran | 2008-01-17 11:52:34 +0000 (Thu, 17 Jan 2008) | 1 line
+
+Fixed mistake in binary release process
+------------------------------------------------------------------------
+r70992 | dcochran | 2008-01-16 15:44:54 +0000 (Wed, 16 Jan 2008) | 1 line
+
+Updated build configuration for ESCJava 2.0b4 release
+------------------------------------------------------------------------
+r3376 | dcochran | 2008-01-15 12:41:04 +0000 (Tue, 15 Jan 2008) | 1 line
+
+Minor updates to documentation and build configurations
+------------------------------------------------------------------------
+r3375 | dcochran | 2008-01-15 10:53:01 +0000 (Tue, 15 Jan 2008) | 1 line
+
+Added a test case for conversion of array indexes to short
+------------------------------------------------------------------------
+r3374 | dcochran | 2008-01-14 16:48:19 +0000 (Mon, 14 Jan 2008) | 1 line
+
+First pass on documentation updates
+------------------------------------------------------------------------
+r3370 | dcochran | 2008-01-11 14:53:52 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3369 | dcochran | 2008-01-11 14:48:22 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3368 | dcochran | 2008-01-11 14:44:59 +0000 (Fri, 11 Jan 2008) | 2 lines
+
+ASSIGNED - # 429: Look over all tickets tranferred from GForge and update release notes 
+https://mobius.ucd.ie/ticket/429
+------------------------------------------------------------------------
+r3364 | dcochran | 2008-01-10 16:40:23 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Updating release notes to show which GForge tickets were feature requests or research questions rather than bugs.
+------------------------------------------------------------------------
+r3363 | dcochran | 2008-01-10 15:32:38 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Fixed layout of release notes
+------------------------------------------------------------------------
+r3362 | dcochran | 2008-01-10 14:42:24 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Updating release notes to distinguish tickets re-asssigned to Javafe or Simplify, and matching Trac ticket ID numbers with former GForge ticket ID numbers 
+------------------------------------------------------------------------
+r3361 | dcochran | 2008-01-10 14:08:34 +0000 (Thu, 10 Jan 2008) | 1 line
+
+Update target release date
+------------------------------------------------------------------------
 r3336 | rgrig | 2007-12-23 15:27:43 +0000 (Sun, 23 Dec 2007) | 1 line
 
 ------------------------------------------------------------------------
