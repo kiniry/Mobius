@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula;
 
+import escjava.sortedProver.Lifter.NullLiteral;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -17,6 +18,13 @@ public final class Ref {
                                              Expression.var("this", 
                                                             Heap.sortValue));
 
+  /** a term representing the literal null. */
+  private static Term fNullLiteral;
+
+  
+  static {
+    fNullLiteral = Formula.lf.mkNullLiteral();
+  }
   /**
    * @deprecated
    */
@@ -28,7 +36,7 @@ public final class Ref {
    * @return the term that represents null
    */
   public static Term nullValue() {
-    return Formula.lf.mkNullLiteral();
+    return fNullLiteral;
   }
 
   /**

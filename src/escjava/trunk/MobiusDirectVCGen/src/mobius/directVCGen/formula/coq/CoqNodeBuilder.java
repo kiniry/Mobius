@@ -368,7 +368,7 @@ public class CoqNodeBuilder extends AHeapNodeBuilder {
       return new CBool("vBool", new STerm[] {term});
     }
     else if (to == sortInt) {
-      return term; //new CInt("vInt", new STerm[] {val});
+      return new CInt("vInt", new STerm[] {term});
     }
     else if (to == sortReal) {
       throw new UnsupportedOperationException("We do not support reals right now...");

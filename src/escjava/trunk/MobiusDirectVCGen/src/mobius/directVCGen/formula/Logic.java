@@ -276,8 +276,17 @@ public final class Logic {
       t = Formula.lf.mkFnTerm(Formula.lf.symRealPred, new Term[] {left, right});
       t.tag = NodeBuilder.predEQ;
     }
+    else if ((l.getSort() == Heap.sortValue) &&
+              (r == Ref.nullValue())) {
+      t = Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
+    }
+    else if ((l.getSort() == Type.sort) &&
+        (r.getSort() == Type.sort)) {
+      t = Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
+    }
     else {
       t = Formula.lf.mkFnTerm(Formula.lf.symAnyEQ, new Term[]{left, right});
+      throw new IllegalArgumentException("Unsupported situation!");
     }
     return  t;
   }
