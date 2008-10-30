@@ -1,13 +1,23 @@
 package mobius.directVCGen.translator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javafe.ast.FormalParaDecl;
+import javafe.ast.FormalParaDeclVec;
+import javafe.ast.RoutineDecl;
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 
 import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.formula.MethodGetter;
 
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.Repository;
+
+import escjava.translate.UniqName;
 
 /**
  * An annotation generator that can be used to convert the annotations
@@ -17,38 +27,30 @@ import org.apache.bcel.util.Repository;
  */
 public class JMLAnnotationGenerator implements IAnnotationGenerator {
   
+
+  
   /** {@inheritDoc} */
-  public boolean annotateClass(Repository repo, final ClassGen clzz) {
+  public boolean annotateClass(final Repository repo, final ClassGen clzz) {
     MethodGetter.initTranslation(repo);
-    
-    
-    String [] pkg =  clzz.getJavaClass().getPackageName().split("\\.");
-    //System.out.println(pkg[0] + " " + pkg.length);
-    if (pkg[0].equals("")) {
-      pkg = new String[0];
-    }
-    final String [] n = clzz.getJavaClass().getClassName().split("\\.");
-    //System.out.println(n[n.length - 1]);
-    final TypeSig sig = OutsideEnv.lookup(pkg, n[n.length - 1]);
-    sig.typecheck();
+    final TypeSig sig = MethodGetter.getSig(clzz.getJavaClass());
     sig.getCompilationUnit().accept(new JmlVisitor(false), null);
     return checkConsistency(clzz, sig);
   }
+
+
   
   /**
    * Check if the field {@link #fClass} is consistent with the field
    * {@link #fSig}.
    * @param clzz the BCEL version of the class
-   * @param sig the ESCJava version of the class
    * @return true if both fields have the same class name and package
    */
-  private static boolean checkConsistency(final ClassGen clzz,
-                                   final TypeSig sig) {
+  private boolean checkConsistency(final ClassGen clzz, final TypeSig fSig) {
     // building the full name from fSig: basically an array
-    final String[] pk = sig.packageName;
+    final String[] pk = fSig.packageName;
     final String [] fullNameSig = new String[pk.length + 1];
     System.arraycopy(pk, 0, fullNameSig, 0, pk.length);
-    fullNameSig[pk.length] = sig.simpleName;
+    fullNameSig[pk.length] = fSig.simpleName;
     final String [] fullName = clzz.getClassName().split("\\.");
     
     // checking if both are equal
@@ -62,4 +64,22 @@ public class JMLAnnotationGenerator implements IAnnotationGenerator {
     }
     return true;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public List<String> getArgumentsName(final MethodGen mg) {
+    final TypeSig sig = MethodGetter.getSig(mg);
+    final RoutineDecl rd = MethodGetter.get(sig, mg.getMethod());
+    final List<String> v = new ArrayList<String>();
+    final FormalParaDeclVec fpdvec = rd.args;
+    
+    final FormalParaDecl[] args = fpdvec.toArray();
+    for (FormalParaDecl decl: args) {
+      final String name = UniqName.variable(decl);
+      v.add(name);
+    }
+    return v;
+  }
+
+
 }

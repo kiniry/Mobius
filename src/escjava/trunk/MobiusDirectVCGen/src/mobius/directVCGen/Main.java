@@ -68,7 +68,7 @@ public class Main extends escjava.Main {
       return;
     }
 
-    clear();
+
     String cp = "";
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
@@ -111,9 +111,6 @@ public class Main extends escjava.Main {
     }
   }
 
-  private static void clear() {
-    Lookup.clear();
-  }
 
   /**
    * Configure the basic directory to stock all the files.
@@ -220,6 +217,8 @@ public class Main extends escjava.Main {
 
     final long startTime = currentTime();
     // preparation: type checking + package dir creation
+    final IAnnotationGenerator gen = new JMLAnnotationGenerator(); 
+    Lookup.clear(gen);
     final TypeSig sig = TypeCheck.inst.getSig(td);
     sig.typecheck();
 
@@ -232,7 +231,7 @@ public class Main extends escjava.Main {
     }
     fOut.println("[" + timeUsed(startTime) + "]\n");
 
-    doBcVCGen(sig, new JMLAnnotationGenerator()); 
+    doBcVCGen(sig, gen); 
     doSrcVCGen(sig);
 
 

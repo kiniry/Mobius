@@ -5,6 +5,7 @@ import javafe.ast.ConstructorDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
+import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 
@@ -144,6 +145,31 @@ public final class MethodGetter  {
       throw new NullPointerException(mt);
     }
     return res;
+  }
+  
+  public static TypeSig getSig(final MethodGen mg) {
+    JavaClass clzz;
+    try {
+      clzz = org.apache.bcel.Repository.lookupClass(mg.getClassName());
+    } 
+    catch (ClassNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+    final TypeSig sig = getSig(clzz);
+    return sig;
+  }
+  public static  TypeSig getSig(final JavaClass clzz) {  
+    String [] pkg =  clzz.getPackageName().split("\\.");
+    //System.out.println(pkg[0] + " " + pkg.length);
+    if (pkg[0].equals("")) {
+      pkg = new String[0];
+    }
+    final String [] n = clzz.getClassName().split("\\.");
+    //System.out.println(n[n.length - 1]);
+    final TypeSig sig = OutsideEnv.lookup(pkg, n[n.length - 1]);
+    sig.typecheck();
+    return sig;
   }
  
 }

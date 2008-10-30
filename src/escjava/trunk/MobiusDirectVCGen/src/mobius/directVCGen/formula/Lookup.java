@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.formula.PositionHint.MethodHint;
 import mobius.directVCGen.vcgen.struct.Post;
 
@@ -18,7 +19,7 @@ import escjava.sortedProver.Lifter.Term;
 /**
  * @author Herman Lehner (hermann.lehner@inf.ethz.ch)
  */
-public class Lookup {
+public final class Lookup {
   
   /** Defines whether 'null' can be returned or not. 
    *  If fFailSave is true, a default Term is returned
@@ -26,7 +27,7 @@ public class Lookup {
   private static final boolean fFailSave = false;
   
   /** an instance of the lookup object. */
-  protected static Lookup inst = new Lookup();
+  private static Lookup inst;
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
@@ -47,13 +48,19 @@ public class Lookup {
     new HashMap<PositionHint, List<QuantVariableRef>>(); 
   /**  the argument lists of each precondition without the heap. */
   private final Map<PositionHint, List<QuantVariableRef>> fPreArgsWithoutHeap = 
-    new HashMap<PositionHint, List<QuantVariableRef>>(); 
+    new HashMap<PositionHint, List<QuantVariableRef>>();
+
+  
+  private IAnnotationGenerator fAnnotGen; 
   
   
 
-  public static void clear() {
-    inst = new Lookup();
-    
+  public Lookup(final IAnnotationGenerator gen) {
+    fAnnotGen = gen;
+  }
+  
+  public static void clear(IAnnotationGenerator gen) {
+    inst = new Lookup(gen); 
   }
   
   /**
@@ -274,7 +281,7 @@ public class Lookup {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     
     final org.apache.bcel.generic.Type [] args = rd.getArgumentTypes();
-    final String [] names = rd.getArgumentNames();
+    final List<String> names = fAnnotGen.getArgumentsName(rd);
     
     v.add(Heap.var);
     
@@ -284,7 +291,7 @@ public class Lookup {
     
     int i = 0;
     for (org.apache.bcel.generic.Type typ: args) {
-      v.add(Expression.rvar(names[i], Type.getSort(typ)));
+      v.add(Expression.rvar(names.get(i), Type.getSort(typ)));
       i++;
     }
     return v;
