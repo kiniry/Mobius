@@ -216,6 +216,7 @@ public class EscPrettyPrint extends DelegatingPrettyPrint
     case TagConstants.OBS_PURE: // Chalin-Kiniry experiments
     case TagConstants.PEER: // Universe type annotation
     case TagConstants.PURE:
+    case TagConstants.SAME:
     case TagConstants.READONLY: // Universe type annotation
     case TagConstants.REP: // Universe type annotation
     case TagConstants.SPEC_BIGINT_MATH:

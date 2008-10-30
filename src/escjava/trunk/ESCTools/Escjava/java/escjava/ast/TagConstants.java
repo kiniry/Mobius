@@ -373,7 +373,8 @@ public class TagConstants extends GeneratedTags
     public static final int PRECONDITION = PRECONDITION_REDUNDANTLY + 1;
     public static final int PURE = PRECONDITION + 1;
     // readable_if -- an ESC keyword
-    public static final int REFINE = PURE + 1;
+    public static final int SAME = PURE + 1;
+    public static final int REFINE = SAME + 1;
     public static final int REFINES = REFINE + 1;
     public static final int REPRESENTS_REDUNDANTLY = REFINES + 1;
     public static final int REPRESENTS = REPRESENTS_REDUNDANTLY + 1;
@@ -1006,6 +1007,7 @@ public class TagConstants extends GeneratedTags
         Identifier.intern("pre_redundantly"),
         Identifier.intern("pre"), // PRE not PRE (which is \old )
         Identifier.intern("pure"),
+        Identifier.intern("\\same"),
         Identifier.intern("refine"),
         Identifier.intern("refines"),
         Identifier.intern("represents_redundantly"),
