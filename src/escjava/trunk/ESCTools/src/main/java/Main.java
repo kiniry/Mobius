@@ -482,9 +482,23 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
        
        checkSoundnessAndCompleteness(cu);
      }
+    else {
+    	// Always warn about the use of "modifies \everything"
+    	checkModifiesEverything(cu);
+     }
   }
 
   /**
+   * Warn about the usage of "modifies \everything"
+   * 
+   * @param cu The compilation unit
+   */
+  private void checkModifiesEverything(/*@ non_null @*/ CompilationUnit cu) {
+	  ASTVisitor visitor = new ModificationSoundnessVisitor();	
+	  visitor.visitASTNode(cu);
+}
+
+/**
    * This method is called by SrcTool on the TypeDecl of each
    * outside type that SrcTool is to process.
    *

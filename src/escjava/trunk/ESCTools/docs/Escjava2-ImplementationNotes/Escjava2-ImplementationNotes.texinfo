@@ -3672,7 +3672,8 @@ contexts where a boolean expression is allowed.
 
 @*@strong{Status:}
 This feature is partly implemented in ESC/Java2 (as well as ESC/Java).  Informal predicates
-are currently interpreted as always true, regardless of context.
+are currently interpreted as always true, regardless of context, which may lead to unintended
+results.
 
 @end itemize
 
@@ -5544,7 +5545,7 @@ replacing it with the predicate @code{ x == \old(x) } for each argument
 @section Major features of Java not implemented in ESC/Java2
 
 @menu
-* Java 1.5 and 1.6::                    
+* Java 1.5::                    
 * anonymous and block-level classes::  
 * serialization::               
 * most multi-threading considerations::  

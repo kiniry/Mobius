@@ -426,7 +426,7 @@ releases-notests:
 	${MAKE} binary-release
 	${MAKE} source-release
 
-source-release: cleanup alldocs
+source-release: cleanup quiet-docs
 	@echo "Creating source release..."
 	cp -rf ${ESCJAVA2_SPECS} ${RELTEMP} 
 	cp -rf ${ESCJAVA2_SPECS_JAVA1_4} ${RELTEMP} 
@@ -511,7 +511,7 @@ srcjar:
 	rm -rf ${RELTEMP}/sub
 
 .PHONY: binary-release
-binary-release: build jars alldocs cleanup
+binary-release: build jars quiet-docs cleanup
 	@echo "Creating binary release .........."
 #       RELDIR is the staging area for all files
 #       First copy all .class files to sub and build a jar file
@@ -734,6 +734,7 @@ endif
 
 .PHONY: pre-maven
 export MAVEN_FILES_ROOT=${ESCTOOLS_ROOT}
+export MVN ?= /usr/bin/mvn
 
 ## Copy all Java files to default locations expected by Maven
 pre-maven: source
@@ -741,5 +742,8 @@ pre-maven: source
 	find ${ESCTOOLS_ROOT}/Escjava/java/escjava -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 	find ${ESCTOOLS_ROOT}/Escjava/mochalib/java -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
 	find ${ESCTOOLS_ROOT}/Utils/junitutils -name "*.java" -exec cp -f {} ${MAVEN_FILES_ROOT}/src/main/java \;
+
+maven: pre-maven
+	${MVN} clean test install
 
 # End of Makefile
