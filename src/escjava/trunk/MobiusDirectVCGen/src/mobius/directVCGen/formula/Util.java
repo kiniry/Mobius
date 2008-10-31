@@ -611,4 +611,20 @@ public final class Util extends mobius.bico.Util {
     
     return rd.toString();
   }
+  
+  //TODO: review
+  public static boolean isHelper(final RoutineDecl met) {
+    boolean helper = false;
+    if (met.pmodifiers != null) {
+      for (int i = 0; i < met.pmodifiers.size(); i++) {
+        final int tag = met.pmodifiers.elementAt(i).getTag();
+        if (tag == TagConstants.HELPER) {
+          helper = true;
+          break;
+        }
+      }
+    }
+    return helper;
+    
+  }
 }

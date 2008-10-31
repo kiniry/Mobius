@@ -1,7 +1,6 @@
 package mobius.directVCGen.translator.struct;
 
 import java.util.HashSet;
-import java.util.Properties;
 import java.util.Set;
 
 import javafe.ast.FieldAccess;
@@ -12,40 +11,22 @@ import javafe.ast.Identifier;
  * Made to replace Claudia's properties use. 
  * @author J. Charles (julien.charles@inria.fr)
  */
-public final class GlobalProperties extends Properties {
+public final class GlobalProperties {
   /** */
   private static final long serialVersionUID = 1L;
-
-  /** valid properties string. */
-  private static final String [] validStr = {
-  };
-
   
-  public Set<javafe.ast.Type> visibleTypeSet = new HashSet<javafe.ast.Type>();
-
+  private final Set<javafe.ast.Type> fVisibleTypeSet = 
+    new HashSet<javafe.ast.Type>();
   
-  public final Set<FieldAccess> subsetCheckingSet = new HashSet<FieldAccess>();
+  private final Set<FieldAccess> subsetCheckingSet = 
+    new HashSet<FieldAccess>();
 
   /** the currently inspected class identifier. */
   private Identifier fClassId = Identifier.intern("");
   
-  
-  public GlobalProperties() {
-    initProperties(); 
-  }
-  
-  private void initProperties() { 
-  }
-  
-  @Override
-  public Object put (final Object key, final Object value) {
-    for (String valid: validStr) {
-      if (key.equals(valid)) {
-        return super.put(key, value);
-      }
-    }
-    throw new IllegalArgumentException("Invalid key: " + key);
-  }
+
+
+
 
   /**
    * Returns the current class id
@@ -58,5 +39,25 @@ public final class GlobalProperties extends Properties {
 
   public void setClassId(final Identifier id) {
     fClassId = id;
+  }
+  
+  public void addVisibleTypes(Set<javafe.ast.Type> visibleTypeSet) {
+    fVisibleTypeSet.addAll(visibleTypeSet);
+  }
+  
+  public Set<javafe.ast.Type> getVisibleTypes() {
+    return fVisibleTypeSet;
+  }
+
+  public Set<FieldAccess> getSubsetCheckingSet() {
+    return subsetCheckingSet;
+  }
+
+  public void clearSubsetCheckingSet() {
+    subsetCheckingSet.clear();
+  }
+
+  public void addSubsetCheckingSet(FieldAccess fieldAccess) {
+    subsetCheckingSet.add(fieldAccess);
   }
 }

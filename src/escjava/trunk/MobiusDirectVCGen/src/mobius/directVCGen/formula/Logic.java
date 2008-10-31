@@ -2,11 +2,9 @@ package mobius.directVCGen.formula;
 
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import mobius.directVCGen.translator.struct.GlobalProperties;
 import escjava.sortedProver.NodeBuilder;
 import escjava.sortedProver.Lifter.FnTerm;
 import escjava.sortedProver.Lifter.QuantTerm;
@@ -341,6 +339,7 @@ public final class Logic {
     return Formula.lf.mkQuantTerm(true, new QuantVariable [] {v.qvar}, f, null, null);
   }
   
+  
   /**
    * Creates a universal binding for several vars from the formula f.
    * @param v the variable to bind
@@ -572,17 +571,14 @@ public final class Logic {
   /**
    * @param var The object for which we want to find out whether it could
    * have been modified by the method.
-   * @param o Parameter object also containing a list of motifiable types.
+   * @param list  a list of motifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isVisibleIn(final Term var, final GlobalProperties o) {
+  public static Term isVisibleIn(final Term var, final Set<javafe.ast.Type> list) {
     Term t1 = null;
     Term t2 = null;
-    final Set typeSet = o.visibleTypeSet;
-    final Iterator iter = typeSet.iterator();
-
-    while (iter.hasNext()) {
-      final javafe.ast.Type type = (javafe.ast.Type) iter.next();
+    
+    for (javafe.ast.Type type: list) {
       final QuantVariableRef typeTerm = Type.translateToType(type);
       t1 = Logic.equals(var, typeTerm);
       if (t2 == null) {
@@ -592,6 +588,7 @@ public final class Logic {
         t2 = Logic.or(t2, t1);
       }
     }
+    
     return t2;
   }
 

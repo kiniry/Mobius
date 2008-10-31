@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.bcel.generic.MethodGen;
+
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import mobius.directVCGen.formula.Logic;
@@ -205,6 +207,7 @@ class LookupJavaFe {
     else {
       pNew = new Post(mp.getResult(), term);
     }   
-    Lookup.getInst().addNormalPostcondition(mp.getBCELDecl(), pNew); 
+    final MethodGen mg = Translator.getInst().translate(mp.getDecl());
+    Lookup.getInst().addNormalPostcondition(mg, pNew); 
   }
 } 

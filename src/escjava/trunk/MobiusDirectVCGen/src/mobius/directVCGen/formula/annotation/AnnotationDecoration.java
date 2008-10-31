@@ -74,6 +74,7 @@ public class AnnotationDecoration extends ADecoration {
   
   /**
    * Retrieve the annotation preceding the instruction.
+   * @param met the current method where the node is located
    * @param n the node to retrieve the annotation from
    * @return an annotation or <code>null</code> if the 
    * node has not been decorated or there is no pre annotation
@@ -153,9 +154,10 @@ public class AnnotationDecoration extends ADecoration {
    * Sets the invariant associated with the given node.
    * @param n the node to decorate
    * @param inv the invariant to set
-   * @param prop the properties to add all the arguments to the invariant
+   * @param prop informations about the variables which have to be 
+   * added when the annotation is used
    */
-  public void setInvariant(final PositionHint n, final Term inv, ILocalVars prop) {
+  public void setInvariant(final PositionHint n, final Term inv, final ILocalVars prop) {
     Annotation res = getAnnot(n);
     if (res == null) {
       res = new Annotation();

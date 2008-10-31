@@ -39,10 +39,10 @@ public abstract class ADecoration {
   /**
    * Set the decoration for the given node.
    * @param n the node
-   * @param res the decoration to set
+   * @param obj the decoration to set
    */
-  protected void set(final PositionHint n, final Object res) {
-    fMap.put(n, res);
+  protected void set(final PositionHint n, final Object obj) {
+    fMap.put(n, obj);
   }
 
   /** {@inheritDoc} */

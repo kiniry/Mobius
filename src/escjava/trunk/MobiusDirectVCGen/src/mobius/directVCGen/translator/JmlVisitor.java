@@ -127,9 +127,9 @@ class JmlVisitor extends BasicJMLTranslator {
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
                                        final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    fGlobal.visibleTypeSet = VisibleTypeCollector.getVisibleTypeSet(x);
-    prop.put("routinebegin", Boolean.TRUE);
-    prop.fNothing = false;
+    fGlobal.addVisibleTypes(VisibleTypeCollector.getVisibleTypeSet(x));
+    prop.setRoutineBegin(true); 
+    prop.setModifiesNothing(false);
     
     final boolean hasPost = Util.hasPost(x);
     // If method is not decorated with any postcondition, 
@@ -149,7 +149,7 @@ class JmlVisitor extends BasicJMLTranslator {
     
     doAssignable(prop);
     
-    if (!prop.fIsHelper) {
+    if (!prop.isHelper()) {
       // if the method is not a helper the invariants have to
       // be checked
       addInvPredToPreconditions(prop);
@@ -172,7 +172,7 @@ class JmlVisitor extends BasicJMLTranslator {
     
     visitRoutineDecl(x, prop);
     
-    if (!prop.fIsHelper) {
+    if (!prop.isHelper()) {
       final Term constraints = LookupJavaFe.getInst().getConstraint(x.getParent());
       LookupJavaFe.getInst().addNormalPostcondition(prop, constraints);
       Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), constraints);
@@ -193,8 +193,8 @@ class JmlVisitor extends BasicJMLTranslator {
     prop.fResult =  null;
     visitRoutineDecl(x, prop);
     
-    if (!prop.fIsHelper) {
-      Term initially = (Term) prop.get("initiallyFOL");
+    if (!prop.isHelper()) {
+      Term initially = prop.getInitiallyFOL();
       if (initially == null) {
         initially = Logic.trueValue();
         // TODO: quick fix, double check it
@@ -210,11 +210,9 @@ class JmlVisitor extends BasicJMLTranslator {
   @Override
   public Object visitLocalVarDecl(final /*@non_null*/ LocalVarDecl x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    if (((Boolean) prop.get("quantifier")).booleanValue()) {
-      final java.util.Set<QuantVariable> qVarsSet = (HashSet) prop.get("quantVars");
+    if (prop.isQuantifier()) {
       final QuantVariable qvar = Expression.var(x);
-      qVarsSet.add(qvar);
-      prop.put("quantVars", qVarsSet);
+      prop.addQuantVars(qvar);
     }   
     return null;
   }
@@ -248,7 +246,7 @@ class JmlVisitor extends BasicJMLTranslator {
         prop.fAssignableSet.add(qvars);   
       } 
       else if (x.expr instanceof NothingExpr) {
-        prop.fNothing = true;
+        prop.setModifiesNothing(true);
       }
     }
     
@@ -466,8 +464,8 @@ class JmlVisitor extends BasicJMLTranslator {
     final MethodProperties prop = (MethodProperties) o;
     prop.fLocalVars.addLast(new Vector<QuantVariableRef>());
     //Save argument's values in prestate as ghosts at beginning of each routine (in annos)
-    if (((Boolean) prop.get("routinebegin"))) {
-      prop.put("routinebegin", Boolean.FALSE);
+    if (prop.isRoutineBegin()) {
+      prop.setRoutineBegin(false);
       argsToGhost(annos, prop);
     }
 
@@ -559,7 +557,7 @@ class JmlVisitor extends BasicJMLTranslator {
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    if (((MethodProperties)o).fIsConstructor) {
+    if (prop.isConstructor()) {
       final Term notEQThis = Logic.not(Logic.equals(x, Ref.varThis));
       andTerm = Logic.and(andTerm, notEQThis);
     }    
@@ -581,9 +579,10 @@ class JmlVisitor extends BasicJMLTranslator {
     final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
     final Term allocTerm = Logic.isAlive(Heap.var, x);
     Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    final java.util.Set<javafe.ast.Type> visSet = fGlobal.visibleTypeSet;
+    
+    final java.util.Set<javafe.ast.Type> visSet = fGlobal.getVisibleTypes();
     if (!visSet.isEmpty()) {
-      final Term visibleTerm = Logic.isVisibleIn(type, fGlobal);
+      final Term visibleTerm = Logic.isVisibleIn(type, visSet);
       andTerm = Logic.and(andTerm, visibleTerm);
     }
     
@@ -607,17 +606,12 @@ class JmlVisitor extends BasicJMLTranslator {
    * @param prop containing all field access of the invariant and the class id
    * @return boolean value whether the subset checking of the invariant fields was successfull 
    */
-  @SuppressWarnings("unchecked")
   public boolean doSubsetChecking(final ContextProperties prop) {
-    final java.util.Set<FieldAccess> subSet = (HashSet) prop.get("subsetCheckingSet");
-    FieldAccess fa;
-    final Identifier parentId = fGlobal.getClassId();
-    Identifier typeId;
+    final Identifier parentId = fGlobal.getClassId();    
     boolean result = true;
-    final Iterator iter = subSet.iterator();
-    while (iter.hasNext()) {   
-      fa = (FieldAccess)iter.next();
-      typeId = fa.decl.parent.id;
+    
+    for (FieldAccess fa: fGlobal.getSubsetCheckingSet()) {
+      final Identifier typeId = fa.decl.parent.id;
       if (!parentId.equals(typeId)) {
         System.out.println("Subset checking: failed! " +
             "The field \"" + fa.id + 
@@ -626,7 +620,8 @@ class JmlVisitor extends BasicJMLTranslator {
         result = false;
       }
     }
-    prop.put("subsetCheckingSet", new HashSet<FieldAccess>()); //empty set
+
+    fGlobal.clearSubsetCheckingSet();
     return result;
   }
   
@@ -637,7 +632,7 @@ class JmlVisitor extends BasicJMLTranslator {
    */
   public void doAssignable(final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    if (prop.fNothing || !prop.fAssignableSet.isEmpty()) {
+    if (prop.isModifiesNothing() || !prop.fAssignableSet.isEmpty()) {
       final QuantVariableRef target = Expression.rvar(Ref.sort);
       final QuantVariableRef field = Expression.rvar(Type.sortField);
       final QuantVariable[] vars = {target.qvar, field.qvar};

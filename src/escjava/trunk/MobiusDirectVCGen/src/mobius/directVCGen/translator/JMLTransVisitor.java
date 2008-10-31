@@ -148,8 +148,8 @@ class JMLTransVisitor extends JmlVisitor {
         final MethodProperties prop = (MethodProperties) o;
         final boolean initIsValid = doSubsetChecking(prop);
         if (initIsValid) {
-          t = Logic.Safe.and(t, (Term) prop.get("initiallyFOL"));
-          ((MethodProperties) o).put("initiallyFOL", t);
+          t = Logic.Safe.and(t, prop.getInitiallyFOL());
+          prop.setInitiallyFOL(t);
         }
         else {
           System.out.println("Initially error (subset check)! " +

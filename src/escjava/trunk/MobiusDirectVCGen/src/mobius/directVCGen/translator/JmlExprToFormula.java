@@ -1,7 +1,7 @@
 package mobius.directVCGen.translator;
 
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javafe.ast.BinaryExpr;
@@ -386,8 +386,9 @@ class JmlExprToFormula {
   }
 
   public Object variableAccess(final VariableAccess x, final Object o) {
-    final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
-    final boolean predProp = ((ContextProperties)o).fInspectingPred;
+    final ContextProperties prop = (ContextProperties) o;
+    final boolean oldProp = prop.isOld();
+    final boolean predProp = prop.fInspectingPred;
     Term res = null;
     
     
@@ -404,8 +405,9 @@ class JmlExprToFormula {
   }
 
   public Object genericVarDecl(final GenericVarDecl x, final Object o) {
-    final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
-    final boolean predProp = ((ContextProperties)o).fInspectingPred;
+    final ContextProperties prop = (ContextProperties) o;
+    final boolean oldProp = prop.isOld();
+    final boolean predProp = prop.fInspectingPred;
 
     Term res;
     if (oldProp) {
@@ -420,21 +422,18 @@ class JmlExprToFormula {
     return res;
   }
 
-  @SuppressWarnings("unchecked")
   public Object fieldAccess(final FieldAccess fieldAccess, final Object o) {
     final ContextProperties prop = (ContextProperties) o;
     if (prop.fresh) { 
       final QuantVariableRef qref = Expression.rvar(fieldAccess.decl);
-      final Set<Term> freshSet = (HashSet<Term>) ((ContextProperties)o).get("freshSet");
+      final Set<QuantVariableRef> freshSet = prop.getFreshVariables();
       freshSet.add(qref);
-      ((ContextProperties)o).put("freshSet", freshSet);
     }
     else { 
       if (fVisitor.getDoSubsetChecking()) {
-        final java.util.Set<FieldAccess> subSet = fVisitor.fGlobal.subsetCheckingSet;
-        subSet.add(fieldAccess);
+        fVisitor.fGlobal.addSubsetCheckingSet(fieldAccess);
       }
-      final boolean oldProp = (Boolean) ((ContextProperties) o).get("old");
+      final boolean oldProp = prop.isOld();
       final Term obj = (Term) fieldAccess.od.accept(fVisitor, o);
       QuantVariable var = null;
       QuantVariableRef heap = Heap.var;
@@ -452,27 +451,25 @@ class JmlExprToFormula {
   /**
    * Builds up a FOL term as: \fresh(x,y) --> and(%fresh(x:ref),%(y:ref)):PRED.
    * @param x the NaryExpr with TagConstant.FRESH
-   * @param o properties object holding whether fresh property is set and holds the freshSet
+   * @param prop properties object holding whether fresh property is set and holds the freshSet
    * @return the generated FOL term
    */
-  public Term freshExpr(final NaryExpr x, final ContextProperties o) { 
-    o.fresh = true;
-    fVisitor.visitGCExpr(x, o);
-    o.fresh = false;
-    final Set freshVars = (HashSet) o.get("freshSet");
+  public Term freshExpr(final NaryExpr x, final ContextProperties prop) { 
+    prop.fresh = true;
+    fVisitor.visitGCExpr(x, prop);
+    prop.fresh = false;
+    final Set<QuantVariableRef> freshVars = prop.getFreshVariables();
     
     Term res = null;
-    
-    final Iterator iter = freshVars.iterator();
-    while (iter.hasNext()) { 
+    for (QuantVariableRef qvr: freshVars) {
       if (res == null) {
-        res = doFreshTerm((QuantVariableRef)iter.next());
+        res = doFreshTerm(qvr);
       }
       else { 
-        res = Logic.and(res, doFreshTerm((QuantVariableRef) iter.next()));
+        res = Logic.and(res, doFreshTerm(qvr));
       }
-      
     }
+    
     return res;
   }
 
@@ -492,11 +489,11 @@ class JmlExprToFormula {
     return Logic.and(Logic.and(notEqualNull, isNotAliveInPreHeap), isAliveInHeap);
   }
   
-  public Term oldExpr(final NaryExpr x, final ContextProperties o) {
-    final boolean old = (Boolean) o.get("old"); 
-    o.put("old", Boolean.TRUE);
-    final Term res = (Term) fVisitor.visitGCExpr(x, o);
-    o.put("old", old);
+  public Term oldExpr(final NaryExpr x, final ContextProperties prop) {
+    final boolean old = prop.isOld();
+    prop.setOld(true);
+    final Term res = (Term) fVisitor.visitGCExpr(x, prop);
+    prop.setOld(old);
     return res;
   }
 
@@ -505,30 +502,24 @@ class JmlExprToFormula {
   }
 
   
-  @SuppressWarnings("unchecked")
   public Term quantifier(final QuantifiedExpr x, final Object o) {
-  
-    ((MethodProperties) o).put("quantifier", Boolean.TRUE); 
+    final MethodProperties prop = (MethodProperties) o;
+    prop.setQuantifier(true);
     fVisitor.visitGCExpr(x, o);  
-    ((MethodProperties) o).put("quantifier", Boolean.FALSE); 
+    prop.setQuantifier(false);
     
-    final java.util.Set<QuantVariable> qVarsSet = 
-      (HashSet) ((MethodProperties) o).get("quantVars");
-    final QuantVariable[] qVarArray = new QuantVariable[qVarsSet.size()];
-    final Iterator iter = qVarsSet.iterator();
-    int i = 0;
-    while (iter.hasNext()) {
-      qVarArray[i] = (QuantVariable) iter.next();
-      i++;
-    }  
-    ((MethodProperties) o).put("quantVars", new HashSet<QuantVariable>()); 
+    final List<QuantVariable> qVarsSet = new ArrayList<QuantVariable>(); 
+    qVarsSet.addAll(prop.getQuantVars());
+
+    prop.clearQuantVars();
     final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
+    final QuantVariable[] qVarsArray = qVarsSet.toArray(new QuantVariable[qVarsSet.size()]);
     
     if (x.quantifier == TagConstants.FORALL) {
-      return Logic.forall(qVarArray, exprTerm);
+      return Logic.forall(qVarsArray, exprTerm);
     }
     else {
-      return Logic.exists(qVarArray, exprTerm);
+      return Logic.exists(qVarsArray, exprTerm);
     }
   }
 

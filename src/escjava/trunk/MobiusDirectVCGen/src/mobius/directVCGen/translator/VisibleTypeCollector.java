@@ -92,9 +92,6 @@ final class VisibleTypeCollector extends VisitorArgResult {
   private boolean fEverything;
 
   private VisibleTypeCollector() {
-    //fProperties = new Properties();
-    //fProperties.put("old", Boolean.FALSE);
-    //fProperties.put("everything", Boolean.FALSE);
     fTypeSet = new HashSet<Type>();
   }
 

@@ -1,23 +1,24 @@
 package mobius.directVCGen.translator.struct;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javafe.ast.ConstructorDecl;
-import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Translator;
+import mobius.directVCGen.formula.Util;
 
 import org.apache.bcel.generic.MethodGen;
 
-import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
 
 /**
  * Properties that are passed as argument of the visitor. 
@@ -33,24 +34,24 @@ public final class MethodProperties extends ContextProperties implements ILocalV
   private static final List<String> validStr = 
     new ArrayList<String>();
 
+  /** the current method which is inspected. */
+  private final RoutineDecl fMethod;
   
+  /** tells whether or not we are inspecting a constructor. */
+  private final boolean fIsConstructor;
+  
+  /** the routine is a JML \helper routine. See JML reference */
+  private final boolean fIsHelper;
+  
+  /** the set of variables that can be assigned in the current method. */
+  public  final Set<QuantVariableRef[]> fAssignableSet = new HashSet<QuantVariableRef[]>(); 
+
   
   /** key to represent a result in the properties set. */  
   public QuantVariableRef fResult;
   
-  
-  /** tells whether or not we are inspecting a constructor. */
-  public final boolean fIsConstructor;
-  
-  /** the routine is a JML \helper routine. See JML reference */
-  public final boolean fIsHelper;
-  
-  /** the set of variables that can be assigned in the current method. */
-  public  final Set<QuantVariableRef[]> fAssignableSet = new HashSet<QuantVariableRef[]>(); 
-  
-  
   /** if the flag modifies nothing is set for the method. */
-  public boolean fNothing;
+  private boolean fNothing;
 
   /** the local variables. */
   public LinkedList<List<QuantVariableRef>> fLocalVars = 
@@ -59,18 +60,22 @@ public final class MethodProperties extends ContextProperties implements ILocalV
   /** the arguments of the method. */
   private LinkedList<QuantVariableRef> fArgs;
 
-  /** the current method which is inspected. */
-  private final RoutineDecl fMethod;
   
   /** the counter to get the assert number, for the naming. */
   private int fAssert;
+  
+
+  private boolean routinebegin = true;
+  private boolean quantifier = false;
+  private Set<QuantVariable> quantVars = new HashSet<QuantVariable>();
+
+  private Term initiallyFOL = null;
   
   /**
    * initialize the properties with default values.
    * @param met the method which is inspected
    */
   public MethodProperties(final RoutineDecl met) {
-    initProperties();
     
     validStr.addAll(super.getValidStr());
     fMethod = met;
@@ -78,51 +83,11 @@ public final class MethodProperties extends ContextProperties implements ILocalV
     fArgs.addAll(Lookup.getInst().mkArguments(getBCELDecl()));
 
     fIsConstructor = fMethod instanceof ConstructorDecl;
-    fIsHelper = isHelper(met);
+    fIsHelper = Util.isHelper(met);
     
   
   }
 
-
-
-  public static boolean isHelper(final RoutineDecl met) {
-    boolean helper = false;
-    if (met.pmodifiers != null) {
-      for (int i = 0; i < met.pmodifiers.size(); i++) {
-        final int tag = met.pmodifiers.elementAt(i).getTag();
-        if (tag == TagConstants.HELPER) {
-          helper = true;
-          break;
-        }
-      }
-    }
-    return helper;
-  }
-  
-
-  
-  private void initProperties() {
-    validStr.add("freshSet");
-    validStr.add("subsetCheckingSetConstraints");
-    validStr.add("subSetCheckingSetInitially");
-    validStr.add("routinebegin");
-    validStr.add("quantifier");
-    validStr.add("quantVars");
-    
-    put("freshSet", new HashSet<QuantVariableRef>());
-    put("subsetCheckingSetConstraints", new HashSet<FieldAccess>());
-    put("subSetCheckingSetInitially", new HashSet<FieldAccess>());
-    put("routinebegin", Boolean.TRUE);  
-    put("quantifier", Boolean.FALSE);
-    put("quantVars", new HashSet<QuantVariable>());
-    
-  }
-
-  
-
-  public List<String> getValidStr() {
-    return validStr;
-  }
   
   public RoutineDecl getDecl() {
     return fMethod;
@@ -161,4 +126,81 @@ public final class MethodProperties extends ContextProperties implements ILocalV
 
     return fAssignableSet;
   }
+
+
+
+  public void setQuantifier(boolean b) {
+    quantifier = b;
+  }
+
+
+
+  public Collection<QuantVariable> getQuantVars() {
+    return quantVars;
+  }
+
+
+
+  public void clearQuantVars() {
+    quantVars.clear();
+  }
+
+
+
+  public void setInitiallyFOL(Term initiallyFOL) {
+    this.initiallyFOL = initiallyFOL;
+  }
+
+
+
+  public Term getInitiallyFOL() {
+    return initiallyFOL;
+  }
+
+
+
+  public void addQuantVars(QuantVariable qvar) {
+    quantVars.add(qvar);
+  }
+
+
+
+  public boolean isQuantifier() {
+    return quantifier;
+  }
+
+
+
+  public void setRoutineBegin(boolean b) {
+    routinebegin = b;
+  }
+
+
+
+  public boolean isRoutineBegin() {
+    return routinebegin;
+  }
+
+
+
+  public boolean isConstructor() {
+    return fIsConstructor;
+  }
+
+
+
+  public boolean isHelper() {
+    return fIsHelper;
+  }
+
+
+  public void setModifiesNothing(boolean b) {
+    fNothing = b;
+  }
+
+
+  public boolean isModifiesNothing() {
+    return fNothing;
+  }
+
 }
