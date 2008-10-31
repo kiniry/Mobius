@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
+import javafe.ast.BinaryExpr;
 import javafe.ast.DoStmt;
 import javafe.ast.ForStmt;
 import javafe.ast.FormalParaDecl;
@@ -14,6 +15,7 @@ import javafe.ast.FormalParaDeclVec;
 import javafe.ast.LocalVarDecl;
 import javafe.ast.MethodDecl;
 import javafe.ast.ModifierPragma;
+import javafe.ast.OperatorTags;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Stmt;
 import javafe.ast.TypeDecl;
@@ -414,7 +416,7 @@ public final class Util extends mobius.bico.Util {
    * @return true if the method returns void
    */
   public static boolean isVoid(final MethodGen meth) {
-    org.apache.bcel.generic.Type t = meth.getReturnType();
+    final org.apache.bcel.generic.Type t = meth.getReturnType();
     return BasicType.VOID.equals(t);
   }
     
@@ -626,5 +628,21 @@ public final class Util extends mobius.bico.Util {
     }
     return helper;
     
+  }
+
+
+
+  public static boolean isAssignExpr(final BinaryExpr expr) {
+    final int op = expr.op;
+    return (op == OperatorTags.ASSIGN) || 
+            (op == OperatorTags.ASGMUL) ||
+            (op == OperatorTags.ASGDIV) || 
+            (op == OperatorTags.ASGREM) ||
+            (op == OperatorTags.ASGADD) ||
+            (op == OperatorTags.ASGSUB) ||
+            (op == OperatorTags.ASGLSHIFT) ||
+            (op == OperatorTags.ASGRSHIFT) ||
+            (op == OperatorTags.ASGURSHIFT) || 
+            (op == OperatorTags.ASGBITAND);
   }
 }

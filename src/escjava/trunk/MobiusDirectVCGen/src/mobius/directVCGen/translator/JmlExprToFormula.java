@@ -31,18 +31,17 @@ import escjava.sortedProver.NodeBuilder.Sort;
 
 class JmlExprToFormula {
 
-  private JmlVisitor fVisitor;
+  private final JmlVisitor fVisitor;
 
   public JmlExprToFormula(final JmlVisitor visitor) {
     fVisitor = visitor;
   }
 
-  public Term and(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term and(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred && 
+    if (!prop.isInspectingPred() && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
       return Bool.and(t1, t2);
@@ -53,12 +52,11 @@ class JmlExprToFormula {
   }
 
 
-  public Object or(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term or(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred && 
+    if (!prop.isInspectingPred() && 
         (t1.getSort() != Logic.sort) && 
         (t2.getSort() != Logic.sort)) {
       return Bool.or(t1, t2);
@@ -69,7 +67,7 @@ class JmlExprToFormula {
   }
 
 
-  public Term add(final BinaryExpr expr, final Object o) {
+  public Term add(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
@@ -80,17 +78,17 @@ class JmlExprToFormula {
    * Returns either a sortPred or sortBool equality term depending of the 
    * expection of the upper method.
    * @param expr binary expression with a left and a right expression
-   * @param o the Properties object, contains information about the excepted 
+   * @param prop the Properties object, contains information about the excepted 
    * sort of the return value
    * @return term in the excepted sort, if possible
    */
-  public Object eq(final BinaryExpr expr, final Object o) {
-    final boolean predOld = ((ContextProperties) o).fInspectingPred;
+  public Term eq(final BinaryExpr expr, final ContextProperties prop) {
+    final boolean predOld = prop.isInspectingPred();
     //set Properties.prop:=false (equality operation wants sortBool)
-    ((ContextProperties) o).fInspectingPred = false;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
-    ((ContextProperties) o).fInspectingPred = predOld;
+    prop.setInspectingPred(false);
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
+    prop.setInspectingPred(predOld);
     if (!predOld && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
@@ -110,11 +108,10 @@ class JmlExprToFormula {
   /**
    * ne(t1,t2) <--> not(equal(t1,t2)).
    */
-  public Object ne(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).fInspectingPred;
-    final Term t = (Term) eq(expr, o);
+  public Term ne(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t = eq(expr, prop);
 
-    if (!pred && (t.getSort() != Logic.sort)) {
+    if (!prop.isInspectingPred() && (t.getSort() != Logic.sort)) {
       return Bool.not(t);
     }
     else {
@@ -124,12 +121,12 @@ class JmlExprToFormula {
 
 
 
-  public Object ge(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term ge(final BinaryExpr expr, final ContextProperties prop) {
+        
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred.booleanValue()) {
+    if (!prop.isInspectingPred()) {
       return Bool.ge(t1, t2);
     }
     else {
@@ -138,12 +135,11 @@ class JmlExprToFormula {
   }
 
 
-  public Term gt(final BinaryExpr expr, final ContextProperties o) {
-    final Boolean pred = o.fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term gt(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred.booleanValue()) {
+    if (!prop.isInspectingPred()) {
       return Bool.gt(t1, t2);
     }
     else {
@@ -152,12 +148,11 @@ class JmlExprToFormula {
   }
 
 
-  public Object le(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term le(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred.booleanValue()) {
+    if (!prop.isInspectingPred()) {
       return Bool.le(t1, t2);
     }
     else {
@@ -166,12 +161,11 @@ class JmlExprToFormula {
   }
 
 
-  public Object lt(final BinaryExpr expr, final Object o) {
-    final Boolean pred = ((ContextProperties)o).fInspectingPred;
-    final Term t1 = (Term)expr.left.accept(fVisitor, o);
-    final Term t2 = (Term)expr.right.accept(fVisitor, o);
+  public Term lt(final BinaryExpr expr, final ContextProperties prop) {
+    final Term t1 = (Term)expr.left.accept(fVisitor, prop);
+    final Term t2 = (Term)expr.right.accept(fVisitor, prop);
 
-    if (!pred.booleanValue()) {
+    if (!prop.isInspectingPred()) {
       return Bool.lt(t1, t2);
     }
     else {
@@ -179,121 +173,72 @@ class JmlExprToFormula {
     }
   }
 
-  public Object bitor(final BinaryExpr expr, final Object o) {
+  public Term bitor(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Expression.bitor(t1, t2);
   }
 
-  public Object bitxor(final BinaryExpr expr, final Object o) {
+  public Term bitxor(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Expression.bitxor(t1, t2);
   }
 
-  public Object bitand(final BinaryExpr expr, final Object o) {
+  public Term bitand(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Expression.bitand(t1, t2);
   }
 
-  public Object lshift(final BinaryExpr expr, final Object o) {
+  public Term lshift(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.lshift(t1, t2);
   }
 
-  public Object rshift(final BinaryExpr expr, final Object o) {
+  public Term rshift(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.rshift(t1, t2);
   }
 
-  public Object urshift(final BinaryExpr expr, final Object o) {
+  public Term urshift(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.urshift(t1, t2);
   }
 
-  public Object sub(final BinaryExpr expr, final Object o) {
+  public Term sub(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.sub(t1, t2);
   }
 
-  public Object div(final BinaryExpr expr, final Object o) {
+  public Term div(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.div(t1, t2);
   }
 
-  public Object mod(final BinaryExpr expr, final Object o) {
+  public Term mod(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.mod(t1, t2);
   }
 
-  public Object star(final BinaryExpr expr, final Object o) {
+  public Term star(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
     return Num.mul(t1, t2);
   }
 
-  public Object assign(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
 
-  public Object asgmul(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgdiv(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgrem(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgadd(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgsub(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asglshift(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgrshift(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgurshif(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object asgbitand(final BinaryExpr expr, final Object o) {
-    return null;
-  }
-
-  public Object implies(final BinaryExpr expr, final Object o) {
-    final boolean pred = ((ContextProperties) o).fInspectingPred;
+  public Term implies(final BinaryExpr expr, final ContextProperties o) {
     final Term t1 = (Term)expr.left.accept(fVisitor, o);
     final Term t2 = (Term)expr.right.accept(fVisitor, o);
 
-    if (!pred && 
+    if (!o.isInspectingPred() && 
         (t1.getSort() != Logic.sort) &&
         (t2.getSort() != Logic.sort)) {
       return Bool.implies(t1, t2);
@@ -303,34 +248,8 @@ class JmlExprToFormula {
     }
   }
 
-  public Object explies(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
 
-
-  public Object iff(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object niff(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object subtype(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-  public Object dotdot(final BinaryExpr expr, final Object o) {
-    
-    return null;
-  }
-
-
-  public Object instanceOfExpr(final InstanceOfExpr x, final Object o) {
+  public Term instanceOfExpr(final InstanceOfExpr x, final ContextProperties o) {
     final Term refTerm = (Term) x.expr.accept(this.fVisitor, o);
 
     final Term sortType = Type.translateToType(x.type);
@@ -340,32 +259,32 @@ class JmlExprToFormula {
 
 
   
-  public Term literal(final LiteralExpr x, final Object o) {
+  public Term literal(final LiteralExpr x, final ContextProperties o) {
 
     switch (x.getTag()) {
-      case javafe.ast.TagConstants.BOOLEANLIT: 
+      case TagConstants.BOOLEANLIT: 
         return Bool.value((Boolean) x.value);
-      case javafe.ast.TagConstants.INTLIT:
+      case TagConstants.INTLIT:
         return Num.value((Integer) x.value);
-      case javafe.ast.TagConstants.LONGLIT:
+      case TagConstants.LONGLIT:
         return Num.value((Long) x.value);
-      case javafe.ast.TagConstants.CHARLIT:
+      case TagConstants.CHARLIT:
         return Num.value((Character) x.value);
-      case javafe.ast.TagConstants.FLOATLIT:
+      case TagConstants.FLOATLIT:
         return Num.value((Float) x.value);
-      case javafe.ast.TagConstants.DOUBLELIT:
+      case TagConstants.DOUBLELIT:
         return Num.value((Double) x.value);
 
-      case javafe.ast.TagConstants.STRINGLIT:
+      case TagConstants.STRINGLIT:
         return null;
       
-      case javafe.ast.TagConstants.NULLLIT:
+      case TagConstants.NULLLIT:
         return Ref.nullValue();
       
-      case javafe.ast.TagConstants.BYTELIT:
+      case TagConstants.BYTELIT:
         return Num.value((Byte) x.value);
       
-      case javafe.ast.TagConstants.SHORTLIT:
+      case TagConstants.SHORTLIT:
         return Num.value((Short) x.value);
       default: 
         throw new IllegalArgumentException("LiteralExpr " + x.toString() + 
@@ -385,46 +304,38 @@ class JmlExprToFormula {
     return qvr;
   }
 
-  public Object variableAccess(final VariableAccess x, final Object o) {
-    final ContextProperties prop = (ContextProperties) o;
-    final boolean oldProp = prop.isOld();
-    final boolean predProp = prop.fInspectingPred;
+  public Term variableAccess(final VariableAccess x, final ContextProperties prop) {
     Term res = null;
     
-    
-    if (oldProp) { 
+    if (prop.isOld()) { 
       res = Expression.old(x.decl); // x.decl cannot be null
     }
     else {
       res = Expression.rvar(x.decl);
     }
-    if (predProp && (res.getSort() == Bool.sort)) {
+    
+    if (prop.isInspectingPred() && (res.getSort() == Bool.sort)) {
       res = Logic.boolToPred(res);
     }
     return res;
   }
 
-  public Object genericVarDecl(final GenericVarDecl x, final Object o) {
-    final ContextProperties prop = (ContextProperties) o;
-    final boolean oldProp = prop.isOld();
-    final boolean predProp = prop.fInspectingPred;
-
+  public Term genericVarDecl(final GenericVarDecl x, final ContextProperties prop) {
     Term res;
-    if (oldProp) {
+    if (prop.isOld()) {
       res = Expression.old(x);
     }
     else { 
       res = Expression.rvar(x);
     }
-    if (predProp && (res.getSort() == Bool.sort)) {
+    if (prop.isInspectingPred() && (res.getSort() == Bool.sort)) {
       res = Logic.boolToPred(res);
     }
     return res;
   }
 
-  public Object fieldAccess(final FieldAccess fieldAccess, final Object o) {
-    final ContextProperties prop = (ContextProperties) o;
-    if (prop.fresh) { 
+  public Term fieldAccess(final FieldAccess fieldAccess, final ContextProperties prop) {
+    if (prop.isFresh()) { 
       final QuantVariableRef qref = Expression.rvar(fieldAccess.decl);
       final Set<QuantVariableRef> freshSet = prop.getFreshVariables();
       freshSet.add(qref);
@@ -434,7 +345,7 @@ class JmlExprToFormula {
         fVisitor.fGlobal.addSubsetCheckingSet(fieldAccess);
       }
       final boolean oldProp = prop.isOld();
-      final Term obj = (Term) fieldAccess.od.accept(fVisitor, o);
+      final Term obj = (Term) fieldAccess.od.accept(fVisitor, prop);
       QuantVariable var = null;
       QuantVariableRef heap = Heap.var;
       if (oldProp) {
@@ -455,9 +366,9 @@ class JmlExprToFormula {
    * @return the generated FOL term
    */
   public Term freshExpr(final NaryExpr x, final ContextProperties prop) { 
-    prop.fresh = true;
+    prop.setFresh(true);
     fVisitor.visitGCExpr(x, prop);
-    prop.fresh = false;
+    prop.setFresh(false);
     final Set<QuantVariableRef> freshVars = prop.getFreshVariables();
     
     Term res = null;
@@ -497,22 +408,21 @@ class JmlExprToFormula {
     return res;
   }
 
-  public Object thisLiteral(final ThisExpr x, final Object o) {
+  public Term thisLiteral(final ThisExpr x, final ContextProperties o) {
     return Ref.varThis;
   }
 
   
-  public Term quantifier(final QuantifiedExpr x, final Object o) {
-    final MethodProperties prop = (MethodProperties) o;
+  public Term quantifier(final QuantifiedExpr x, final MethodProperties prop) {
     prop.setQuantifier(true);
-    fVisitor.visitGCExpr(x, o);  
+    fVisitor.visitGCExpr(x, prop);  
     prop.setQuantifier(false);
     
     final List<QuantVariable> qVarsSet = new ArrayList<QuantVariable>(); 
     qVarsSet.addAll(prop.getQuantVars());
 
     prop.clearQuantVars();
-    final Term exprTerm = (Term) x.expr.accept(fVisitor, o);
+    final Term exprTerm = (Term) x.expr.accept(fVisitor, prop);
     final QuantVariable[] qVarsArray = qVarsSet.toArray(new QuantVariable[qVarsSet.size()]);
     
     if (x.quantifier == TagConstants.FORALL) {

@@ -60,28 +60,28 @@ class JMLTransVisitor extends JmlVisitor {
   @Override
   public final Object visitFormalParaDecl(final /*@non_null*/ FormalParaDecl x, 
                                           final Object o) {
-    return fTranslator.genericVarDecl(x, o);
+    return fTranslator.genericVarDecl(x, (ContextProperties) o);
   }
   
 
   /** {@inheritDoc} */
   @Override
   public final Object visitLiteralExpr(final /*@non_null*/ LiteralExpr x, final Object o) {
-    return fTranslator.literal(x, o);
+    return fTranslator.literal(x, (ContextProperties) o);
   }
 
   /** {@inheritDoc} */
   @Override
   public final Object visitVariableAccess(final /*@non_null*/ VariableAccess x, 
                                           final Object o) {
-    return fTranslator.variableAccess(x, o);
+    return fTranslator.variableAccess(x, (ContextProperties) o);
 
   }
   
   /** {@inheritDoc} */
   @Override
   public final Object visitFieldAccess(final /*@non_null*/ FieldAccess x, final Object o) {
-    return fTranslator.fieldAccess(x, o);
+    return fTranslator.fieldAccess(x, (ContextProperties) o);
   }
   
   /** {@inheritDoc} */
@@ -111,13 +111,13 @@ class JMLTransVisitor extends JmlVisitor {
   @Override
   public final Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, 
                                           final Object o) {
-    return fTranslator.instanceOfExpr(x, o);
+    return fTranslator.instanceOfExpr(x, (ContextProperties) o);
   }
 
   /** {@inheritDoc} */
   @Override
   public final Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
-    return fTranslator.thisLiteral(x, o);
+    return fTranslator.thisLiteral(x, (ContextProperties) o);
   }
 
   /** {@inheritDoc} */
@@ -180,76 +180,68 @@ class JMLTransVisitor extends JmlVisitor {
     final ContextProperties prop = (ContextProperties) o;
     switch(expr.op) {
       case TagConstants.EQ: 
-        return this.fTranslator.eq(expr, prop);
+        return fTranslator.eq(expr, prop);
       case TagConstants.OR: 
-        return this.fTranslator.or(expr, prop);
+        return fTranslator.or(expr, prop);
       case TagConstants.AND: 
-        return this.fTranslator.and(expr, prop);
+        return fTranslator.and(expr, prop);
       case TagConstants.NE:
-        return this.fTranslator.ne(expr, prop);
+        return fTranslator.ne(expr, prop);
       case TagConstants.GE: 
-        return this.fTranslator.ge(expr, prop);
+        return fTranslator.ge(expr, prop);
       case TagConstants.GT: 
-        return this.fTranslator.gt(expr, prop);
+        return fTranslator.gt(expr, prop);
       case TagConstants.LE: 
-        return this.fTranslator.le(expr, prop);
+        return fTranslator.le(expr, prop);
       case TagConstants.LT:  
-        return this.fTranslator.lt(expr, prop);
+        return fTranslator.lt(expr, prop);
       case TagConstants.BITOR: 
-        return this.fTranslator.bitor(expr, prop);
+        return fTranslator.bitor(expr, prop);
       case TagConstants.BITXOR: 
-        return this.fTranslator.bitxor(expr, prop);
+        return fTranslator.bitxor(expr, prop);
       case TagConstants.BITAND: 
-        return this.fTranslator.bitand(expr, prop);
+        return fTranslator.bitand(expr, prop);
       case TagConstants.LSHIFT:
-        return this.fTranslator.lshift(expr, prop);
+        return fTranslator.lshift(expr, prop);
       case TagConstants.RSHIFT: 
-        return this.fTranslator.rshift(expr, prop);
+        return fTranslator.rshift(expr, prop);
       case TagConstants.URSHIFT:
-        return this.fTranslator.urshift(expr, prop);
+        return fTranslator.urshift(expr, prop);
       case TagConstants.ADD: 
-        return this.fTranslator.add(expr, prop);
+        return fTranslator.add(expr, prop);
       case TagConstants.SUB: 
-        return this.fTranslator.sub(expr, prop);
+        return fTranslator.sub(expr, prop);
       case TagConstants.DIV: 
-        return this.fTranslator.div(expr, prop);
+        return fTranslator.div(expr, prop);
       case TagConstants.MOD: 
-        return this.fTranslator.mod(expr, prop);
+        return fTranslator.mod(expr, prop);
       case TagConstants.STAR: 
-        return this.fTranslator.star(expr, prop);
+        return fTranslator.star(expr, prop);
+        
+        
       case TagConstants.ASSIGN:
-        return this.fTranslator.assign(expr, prop);
       case TagConstants.ASGMUL: 
-        return this.fTranslator.asgmul(expr, prop);
       case TagConstants.ASGDIV: 
-        return this.fTranslator.asgdiv(expr, prop);
       case TagConstants.ASGREM: 
-        return this.fTranslator.asgrem(expr, prop);
       case TagConstants.ASGADD: 
-        return this.fTranslator.asgadd(expr, prop);
       case TagConstants.ASGSUB: 
-        return this.fTranslator.asgsub(expr, prop);
       case TagConstants.ASGLSHIFT: 
-        return this.fTranslator.asglshift(expr, prop);
       case TagConstants.ASGRSHIFT: 
-        return this.fTranslator.asgrshift(expr, prop);
       case TagConstants.ASGURSHIFT: 
-        return this.fTranslator.asgurshif(expr, prop);
       case TagConstants.ASGBITAND: 
-        return this.fTranslator.asgbitand(expr, prop);
+        return null; // no assignments in annotations
+        
         // jml specific operators 
       case TagConstants.IMPLIES: 
-        return this.fTranslator.implies(expr, prop);
+        return fTranslator.implies(expr, prop);
+        
+        // unsupported JML ops
       case TagConstants.EXPLIES:
-        return this.fTranslator.explies(expr, prop);
       case TagConstants.IFF: // equivalence (equality)
-        return this.fTranslator.iff(expr, prop);
       case TagConstants.NIFF:    // discrepance (xor)
-        return this.fTranslator.niff(expr, prop);
       case TagConstants.SUBTYPE: 
-        return this.fTranslator.subtype(expr, prop);
       case TagConstants.DOTDOT: 
-        return this.fTranslator.dotdot(expr, prop);
+        return null;
 
       default:
         throw new IllegalArgumentException("Unknown construct :" +
@@ -329,7 +321,7 @@ class JMLTransVisitor extends JmlVisitor {
   @Override
   public /*@non_null*/ Object visitQuantifiedExpr(final /*@non_null*/ QuantifiedExpr x, 
                                                   final Object o) {
-    return fTranslator.quantifier(x, o);
+    return fTranslator.quantifier(x, (MethodProperties) o);
   }
   
   /** {@inheritDoc} */

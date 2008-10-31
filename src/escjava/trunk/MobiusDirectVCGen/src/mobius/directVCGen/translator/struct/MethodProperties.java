@@ -65,11 +65,11 @@ public final class MethodProperties extends ContextProperties implements ILocalV
   private int fAssert;
   
 
-  private boolean routinebegin = true;
-  private boolean quantifier = false;
-  private Set<QuantVariable> quantVars = new HashSet<QuantVariable>();
+  private boolean fRoutineBegin = true;
+  private boolean fQuantifier = false;
+  private Set<QuantVariable> fQuantVars = new HashSet<QuantVariable>();
 
-  private Term initiallyFOL = null;
+  private Term fInitiallyFOL = null;
   
   /**
    * initialize the properties with default values.
@@ -130,55 +130,55 @@ public final class MethodProperties extends ContextProperties implements ILocalV
 
 
   public void setQuantifier(boolean b) {
-    quantifier = b;
+    fQuantifier = b;
   }
 
 
 
   public Collection<QuantVariable> getQuantVars() {
-    return quantVars;
+    return fQuantVars;
   }
 
 
 
   public void clearQuantVars() {
-    quantVars.clear();
+    fQuantVars.clear();
   }
 
 
 
   public void setInitiallyFOL(Term initiallyFOL) {
-    this.initiallyFOL = initiallyFOL;
+    this.fInitiallyFOL = initiallyFOL;
   }
 
 
 
   public Term getInitiallyFOL() {
-    return initiallyFOL;
+    return fInitiallyFOL;
   }
 
 
 
   public void addQuantVars(QuantVariable qvar) {
-    quantVars.add(qvar);
+    fQuantVars.add(qvar);
   }
 
 
 
   public boolean isQuantifier() {
-    return quantifier;
+    return fQuantifier;
   }
 
 
 
   public void setRoutineBegin(boolean b) {
-    routinebegin = b;
+    fRoutineBegin = b;
   }
 
 
 
   public boolean isRoutineBegin() {
-    return routinebegin;
+    return fRoutineBegin;
   }
 
 

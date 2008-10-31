@@ -21,15 +21,16 @@ public class ContextProperties {
  
  
   /** tell wether or not a predicate is being currently inspected. */
-  public boolean fInspectingPred =  true;
+  private boolean fInspectingPred;
   
   /** tell wether or not we are currently inside a fresh annotation. */
-  public boolean fresh = false;
+  private boolean fFresh;
   
   /** tell wether or not we are currently inside an old annotation. */
   private boolean fOld;
+  
   /** the set of fresh variables. */
-  private final Set<QuantVariableRef> fFresh = 
+  private final Set<QuantVariableRef> fFreshVars = 
     new HashSet<QuantVariableRef>();
     
   
@@ -39,7 +40,7 @@ public class ContextProperties {
   public ContextProperties() {
     fOld = false;
     fInspectingPred =  true;
-    fresh = false;
+    fFresh = false;
   }
   
   
@@ -49,7 +50,7 @@ public class ContextProperties {
    * @return a set, never null.
    */
   public Set<QuantVariableRef> getFreshVariables() {
-    return fFresh;
+    return fFreshVars;
   }
 
   
@@ -72,6 +73,26 @@ public class ContextProperties {
 
 
 
+  public boolean isFresh() {
+    return fFresh;
+  }
 
-  
+
+
+  public void setFresh(boolean b) {
+    fFresh = b;
+  }
+
+
+
+  public boolean isInspectingPred() {
+    return fInspectingPred;
+  }
+
+
+
+  public void setInspectingPred(boolean b) {
+    fInspectingPred = b;
+  }
+
 }

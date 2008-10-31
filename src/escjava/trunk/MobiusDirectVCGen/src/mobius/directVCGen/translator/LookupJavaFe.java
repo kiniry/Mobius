@@ -151,6 +151,8 @@ class LookupJavaFe {
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
     return Lookup.getInst().getPreconditionArgs(Translator.getInst().translate(m));
   }
+  
+  
   public Post getNormalPostcondition(final RoutineDecl m) {
     return Lookup.getInst().getNormalPostcondition(Translator.getInst().translate(m));
   }
