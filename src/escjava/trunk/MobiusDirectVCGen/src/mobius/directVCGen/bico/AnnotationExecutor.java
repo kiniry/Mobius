@@ -29,7 +29,7 @@ import org.apache.bcel.util.ClassPath;
  */
 public class AnnotationExecutor extends Executor {
 
-  
+  /** the annotation generator, used to generate annotations. */
   private final IAnnotationGenerator fGenerator;
 
   /**
@@ -159,8 +159,7 @@ public class AnnotationExecutor extends Executor {
     return new AnnotationClassExecutor(this, cg, fGenerator);
   }
 
-  /**
-   */
+  /** {@inheritDoc} */
   @Override
   public void generateClassMakefiles() {
     final ClassesMakefileGen cmg = new ClassMkfileGenerator(getBaseDir(), 
@@ -168,8 +167,7 @@ public class AnnotationExecutor extends Executor {
     cmg.generate();
   }
   
-  /**
-   */
+  /** {@inheritDoc} */
   @Override
   public void generateMainMakefile() {
     

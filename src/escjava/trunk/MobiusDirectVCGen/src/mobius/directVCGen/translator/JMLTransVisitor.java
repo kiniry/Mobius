@@ -304,17 +304,15 @@ class JMLTransVisitor extends JmlVisitor {
   /** {@inheritDoc} */
   @Override
   public final Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
-    //final MethodProperties prop = (MethodProperties) o;
-
-
     //It's only called if we have a ghost variable declaration with maybe a set stmt
-    final Set ghostVar = new Set();
+    
+    final QuantVariableRef decl = Expression.rvar(x.decl); 
+    Set.Assignment assign = null;
     if (x.decl.init != null) {
-      ghostVar.fAssignment = new Set.Assignment(Expression.rvar(x.decl),
+      assign = new Set.Assignment(Expression.rvar(x.decl),
                                                (Term) x.decl.init.accept(this, o));
     }
-    ghostVar.fDeclaration = Expression.rvar(x.decl); 
-    return ghostVar;
+    return new Set(decl, assign);
   }
   
   /** {@inheritDoc} */

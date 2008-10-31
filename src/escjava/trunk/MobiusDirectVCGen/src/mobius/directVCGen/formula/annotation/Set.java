@@ -8,16 +8,11 @@ public class Set extends AAnnotation {
 
   /** FOL-Terms  containing variable declarations. (Each Term is just a Variable) */
   //TODO: Could maybe be Vector<SortVar> instead
-  public QuantVariableRef fDeclaration;
+  private final QuantVariableRef fDeclaration;
 
   /** FOL-Terms translation of JML's set statement. */
-  public Assignment fAssignment;
-  
-  /**
-   * Default constructor.
-   */
-  public Set() {
-  }
+  private final Assignment fAssignment;
+
 
   /**
    * Build a new set from a variable and its assignment.
@@ -67,6 +62,22 @@ public class Set extends AAnnotation {
   @Override
   public String toString() {
     return "Declare " + fDeclaration + ", Set " + fAssignment;
+  }
+
+  /**
+   * Return the assignment of the set instruction.
+   * @return an assignment structure
+   */
+  public  Assignment getAssignment() {
+    return fAssignment;
+  }
+
+  /**
+   * Returns the declaration, the variable name which is set.
+   * @return a declaration
+   */
+  public QuantVariableRef getDeclaration() {
+    return fDeclaration;
   }
 
 }

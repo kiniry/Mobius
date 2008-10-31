@@ -38,18 +38,24 @@ public class Main extends escjava.Main {
   protected static PrintStream fOut = System.out;
 
   /** the basedir where to stock all the generated files. */
-  private final File fBasedir;
+  private final File fBaseDir;
 
   /** a custom classpath used to find the class to generate. */
   private final String fClassPath;
+
+  /** the file where bicolano is located. */
+  private File fBicoDir;
   
   /**
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files.
+   * @param bicodir the path to bicolano archive
    * @param classPath the class path specified by the user
    */
-  public Main(final File basedir, final String classPath) {
-    fBasedir = basedir;
+  public Main(final File basedir, final File bicodir, 
+              final String classPath) {
+    fBaseDir = basedir;
+    fBicoDir = bicodir;
     fClassPath = classPath;
   }
 
@@ -68,36 +74,20 @@ public class Main extends escjava.Main {
       return;
     }
 
-
-    String cp = "";
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
-      if (args[i].equals("-cp")) {
-        if (i + 1 < args.length) {
-          cp = args[i + 1];
-        }
-      }
     }
 
     try {
-
       fOut.println("Configuring everything:\n");
-      final File basedir = configBaseDir(args);
-
-      // Configuring bicolano and all the preludes
+      final File basedir = getBaseDir(args);
       final File bicodir = new File(args[1]);
-      final Unarchiver arc = new Unarchiver(bicodir);
-      arc.inflat(basedir);
-      
-      // Configuring log file
-      final File logfile = new File(basedir, "MobiusDirectVCGen.log");
-      fOut.println("Setting the output to the log file: " + logfile);
-      fOut = (new PrintStream(new FileOutputStream(logfile)));
+      final String cp = getClassPath(args);
       
       // Launching the beast
       System.out.println("Launching...");
-      final Main m = new Main(basedir, cp);
+      final Main m = new Main(basedir, bicodir, cp);
       m.start(escargs);
       System.out.println("I'm finished!");
       
@@ -112,15 +102,28 @@ public class Main extends escjava.Main {
   }
 
 
+  protected static String getClassPath(final String [] args) {
+    String cp = "";
+    for (int i = 0; i < args.length; i++) {
+      if (args[i].equals("-cp")) {
+        if (i + 1 < args.length) {
+          cp = args[i + 1];
+        }
+      }
+    }
+    return cp;
+  }
+
   /**
-   * Configure the basic directory to stock all the files.
+   * Retrieve from the arguments the basic directory, and configure 
+   * it.
    * @param args the arguments given to the main
    * @return the file representing the directory where to stock the
    * things
    * @throws FileNotFoundException if the directory doesn't exist/or cannot
    * be created
    */
-  protected static File configBaseDir(final String[] args) throws FileNotFoundException {
+  protected static File getBaseDir(final String[] args) throws FileNotFoundException {
     // Configuring base dir
     final File basedir = new File(args[0], "mobius" + File.separator);
     fOut.println("Output dir is set to: " + basedir);
@@ -140,9 +143,20 @@ public class Main extends escjava.Main {
    * Do the main operations; compute the vcs and everything.
    * @param args the current program arguments to parse
    * @return an error code or 0 if everything went fine
+   * @throws IOException if it fails to create the log file, or 
+   * a file from the prelude
    */
-  public int start(final String[] args) {
+  public int start(final String[] args) throws IOException {
+    // Configuring log file
+    final File logfile = new File(fBaseDir, "MobiusDirectVCGen.log");
+    fOut.println("Setting the output to the log file: " + logfile);
+    fOut = (new PrintStream(new FileOutputStream(logfile)));
+    // Configuring bicolano and all the preludes
+    final Unarchiver arc = new Unarchiver(fBicoDir);
+    arc.inflat(fBaseDir);
+    
     int res;
+    
     try {
       res = this.run(args);
     } 
@@ -253,7 +267,7 @@ public class Main extends escjava.Main {
     System.out.println("\n\nGenerating the Bytecode VCs:\n");
     // Compile the bytecode version of the file
     //System.out.println(fClassPath);
-    final AnnotationCompiler ac = new AnnotationCompiler(fBasedir, 
+    final AnnotationCompiler ac = new AnnotationCompiler(fBaseDir, 
                                                          sig.getExternalName(), 
                                                          fClassPath,
                                                          gen);
@@ -280,7 +294,7 @@ public class Main extends escjava.Main {
     System.out.println("\n\nGenerating the Source VCs:\n");
     final long endTime = currentTime();
     
-    sig.accept(new DirectVCGen(fBasedir));
+    sig.accept(new DirectVCGen(fBaseDir));
     fOut.println("[" + timeUsed(endTime) + "]\n");
   }
 
@@ -299,7 +313,7 @@ public class Main extends escjava.Main {
                                  final int errorCount) throws IOException {
 
 
-    File workingDir = new File(fBasedir, "src");
+    File workingDir = new File(fBaseDir, "src");
     workingDir = new File(workingDir, Util.getPkgDir(sig).getPath());
     workingDir.mkdirs();
     

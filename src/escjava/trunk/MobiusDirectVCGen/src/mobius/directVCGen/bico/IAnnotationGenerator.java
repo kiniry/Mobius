@@ -6,7 +6,12 @@ import org.apache.bcel.util.Repository;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 
-
+/**
+ * The interface used to represent the generator of annotations.
+ * The generator use the AnnotationDecorations to decorate the file.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public interface IAnnotationGenerator {
   /**
    * Annotates the given class by filling the Lookup structure

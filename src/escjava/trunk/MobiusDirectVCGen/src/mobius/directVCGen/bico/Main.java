@@ -1,21 +1,17 @@
 package mobius.directVCGen.bico;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.translator.JMLAnnotationGenerator;
-
 
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
+import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.translator.JMLAnnotationGenerator;
 import escjava.tc.TypeCheck;
 
 /**
- * The class to launch the MobiusDirectVCGen.
+ * The class to launch the Bico +.
  * Maybe temporary as it will be in a near future directly included
  * inside the Mobius tool (hopefully).
  * @author J. Charles (julien.charles@inria.fr)
@@ -26,9 +22,12 @@ public class Main extends mobius.directVCGen.Main {
   /**
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files
+   * @param bicodir bicodir the path to bicolano archive
+   * @param classPath the class path where to look for the files.
    */
-  public Main(final File basedir, final String classPath) {
-    super(basedir, classPath);
+  public Main(final File basedir, 
+              final File bicodir, final String classPath) {
+    super(basedir, bicodir, classPath);
     
   }
 
@@ -77,35 +76,24 @@ public class Main extends mobius.directVCGen.Main {
                   "and the path to the file bicolano.jar");
       return;
     }
-    
-    String cp = "";
+
     final String[] escargs = new String[args.length - 2];
     for (int i = 2; i < args.length; i++) {
       escargs[i - 2] = args[i];
-      if (args[i].equals("-cp")) {
-        if (i + 1 < args.length) {
-          cp = args[i + 1];
-        }
-      }
     }
 
     try {
 
       fOut.println("Configuring everything:\n");
-      final File basedir = configBaseDir(args);
+      final File basedir = getBaseDir(args);
       
       // Configuring bicolano and all the preludes
       final File bicodir = new File(args[1]);
-      final Unarchiver arc = new Unarchiver(bicodir);
-      arc.inflat(basedir);
+      final String cp = getClassPath(args);
       
-      // Configuring log file
-      final File logfile = new File(basedir, "MobiusDirectVCGen.log");
-      fOut.println("Setting the output to the log file: " + logfile);
-      fOut = (new PrintStream(new FileOutputStream(logfile)));
       
       // Launching the beast
-      final Main m = new Main(basedir, cp);
+      final Main m = new Main(basedir, bicodir, cp);
       m.start(escargs);
       
     }

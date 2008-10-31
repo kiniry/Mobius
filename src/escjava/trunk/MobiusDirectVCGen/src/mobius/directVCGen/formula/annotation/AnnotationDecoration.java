@@ -188,6 +188,7 @@ public class AnnotationDecoration extends ADecoration {
   
   /**
    * Retrieve the invariant associated with the node.
+   * @param met the method which contains the node
    * @param n the node decorated
    * @return the invariant the node is decorated with, or null
    */
@@ -224,16 +225,17 @@ public class AnnotationDecoration extends ADecoration {
     return v.fInv.getArgs();
   }
 
-  public List<AAnnotation> getAnnotPost(MethodGen met, ASTNode x) {
+  public List<AAnnotation> getAnnotPost(final MethodGen met, final ASTNode x) {
     return  getAnnotPost(new PositionHint(met, x));
   }
 
-  public void setAnnotPre(MethodGen met, Stmt s, List<AAnnotation> annos) {
+  public void setAnnotPre(final MethodGen met, final Stmt s, final List<AAnnotation> annos) {
     setAnnotPre(new PositionHint(met, s), annos);
     
   }
 
-  public void setInvariant(MethodGen met, Stmt s, Term inv, ILocalVars prop) {
+  public void setInvariant(final MethodGen met, final Stmt s, 
+                           final Term inv, final ILocalVars prop) {
     setInvariant(new PositionHint(met, s), inv, prop);
   }
 }

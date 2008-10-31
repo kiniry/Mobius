@@ -51,6 +51,7 @@ import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Set.Assignment;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -125,14 +126,15 @@ public class StmtVCGen extends ExpressionVisitor {
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 
             (mobius.directVCGen.formula.annotation.Set) aa;
-          if (s.fAssignment != null) {
-            post.subst(s.fAssignment.fVar, s.fAssignment.fExpr);
+          if (s.getAssignment() != null) {
+            final Assignment ass = s.getAssignment();
+            post.subst(ass.fVar, ass.fExpr);
           }
-          else if (s.fDeclaration != null) {
-            if (s.fAssignment == null) {
-              post = Logic.forall(s.fDeclaration.qvar, post);
+          else if (s.getDeclaration() != null) {
+            if (s.getAssignment() == null) {
+              post = Logic.forall(s.getDeclaration().qvar, post);
             }
-            addVarDecl(s.fDeclaration.qvar);
+            addVarDecl(s.getDeclaration().qvar);
           }
           break;
         }

@@ -434,23 +434,22 @@ class JmlVisitor extends BasicJMLTranslator {
 
   private Set treatSetStmt(final List<AAnnotation> annos, 
                            final MethodProperties prop, final Stmt s) {
-    Set.Assignment assignment;
-    assignment = (Set.Assignment)s.accept(fTranslator, prop);
-    final Set newSet = new Set();
-    newSet.fAssignment = assignment;
-    final Iterator iter = annos.iterator();
+    final Set.Assignment assignment = 
+      (Set.Assignment)s.accept(fTranslator, prop);
+    
+    QuantVariableRef decl = null;
 
-    while (iter.hasNext()) { 
-      final AAnnotation annot = (AAnnotation) iter.next();
+    for (final AAnnotation annot: annos) {
       if (annot instanceof Set) {
         final Set existingSet = (Set) annot;
-        if (existingSet.fDeclaration.equals(newSet.fAssignment.fVar)) {
+        if (existingSet.getDeclaration().equals(assignment.fVar)) {
           annos.remove(existingSet);
-          newSet.fDeclaration = existingSet.fDeclaration;
+          decl = existingSet.getDeclaration();
           break;
         }
       }
     }
+    final Set newSet = new Set(decl, assignment);
     return newSet;
   }
 
