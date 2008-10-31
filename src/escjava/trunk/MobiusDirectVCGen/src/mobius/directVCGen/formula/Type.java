@@ -330,8 +330,14 @@ public final class Type {
     return Formula.lf.typeToSort(x.returnType);
   }
 
-  public static Sort getSort(org.apache.bcel.generic.Type typ) {
-    Sort s= Ref.sort;
+  /**
+   * Get the sort from a BCEL type.
+   * @param typ the type to translate
+   * @return a valid sort, or {@link Ref#sort} if all
+   * else fails
+   */
+  public static Sort getSort(final org.apache.bcel.generic.Type typ) {
+    Sort s = Ref.sort;
     if (typ instanceof BasicType) {
       if (typ.equals(BasicType.BOOLEAN)) {
         s = Bool.sort;

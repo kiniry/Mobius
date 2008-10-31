@@ -7,7 +7,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import javafe.ast.ASTNode;
 import javafe.ast.Stmt;
-import mobius.directVCGen.formula.Decoration;
+import mobius.directVCGen.formula.ADecoration;
 import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Util;
@@ -20,7 +20,7 @@ import escjava.sortedProver.Lifter.Term;
  * @see ASTDecoration javafe.ast.ASTNode
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class AnnotationDecoration extends Decoration {
+public class AnnotationDecoration extends ADecoration {
   /** the current instance initialized of the annotation decorations. */
   public static final AnnotationDecoration inst = new AnnotationDecoration();
   

@@ -6,13 +6,10 @@ import java.util.List;
 import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
-import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
-
 import mobius.directVCGen.bico.IAnnotationGenerator;
-import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.formula.Translator;
 
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.Repository;
@@ -31,8 +28,8 @@ public class JMLAnnotationGenerator implements IAnnotationGenerator {
   
   /** {@inheritDoc} */
   public boolean annotateClass(final Repository repo, final ClassGen clzz) {
-    MethodGetter.initTranslation(repo);
-    final TypeSig sig = MethodGetter.getSig(clzz.getJavaClass());
+    Translator.init(repo);
+    final TypeSig sig = Translator.getInst().getSig(clzz.getJavaClass());
     sig.getCompilationUnit().accept(new JmlVisitor(false), null);
     return checkConsistency(clzz, sig);
   }
@@ -40,17 +37,18 @@ public class JMLAnnotationGenerator implements IAnnotationGenerator {
 
   
   /**
-   * Check if the field {@link #fClass} is consistent with the field
-   * {@link #fSig}.
+   * Check if the BCEL class is consistent with the ESC/Java2 signature.
    * @param clzz the BCEL version of the class
+   * @param sig the ESC/Java2 signature
    * @return true if both fields have the same class name and package
    */
-  private boolean checkConsistency(final ClassGen clzz, final TypeSig fSig) {
+  private boolean checkConsistency(final ClassGen clzz, 
+                                   final TypeSig sig) {
     // building the full name from fSig: basically an array
-    final String[] pk = fSig.packageName;
+    final String[] pk = sig.packageName;
     final String [] fullNameSig = new String[pk.length + 1];
     System.arraycopy(pk, 0, fullNameSig, 0, pk.length);
-    fullNameSig[pk.length] = fSig.simpleName;
+    fullNameSig[pk.length] = sig.simpleName;
     final String [] fullName = clzz.getClassName().split("\\.");
     
     // checking if both are equal
@@ -68,8 +66,7 @@ public class JMLAnnotationGenerator implements IAnnotationGenerator {
   /** {@inheritDoc} */
   @Override
   public List<String> getArgumentsName(final MethodGen mg) {
-    final TypeSig sig = MethodGetter.getSig(mg);
-    final RoutineDecl rd = MethodGetter.get(sig, mg.getMethod());
+    final RoutineDecl rd = Translator.getInst().get(mg);
     final List<String> v = new ArrayList<String>();
     final FormalParaDeclVec fpdvec = rd.args;
     

@@ -8,7 +8,7 @@ import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.translator.struct.MethodProperties;
 import mobius.directVCGen.vcgen.struct.Post;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -104,7 +104,7 @@ class LookupJavaFe {
    */
   public void addPrecondition(final RoutineDecl rd, 
                               final Term term) {
-    Lookup.getInst().addPrecondition(MethodGetter.translate(rd), term);
+    Lookup.getInst().addPrecondition(Translator.getInst().translate(rd), term);
   }
   
   /**
@@ -114,7 +114,7 @@ class LookupJavaFe {
    */
   public void addNormalPostcondition(final RoutineDecl rd, 
                                             final Post post) {
-    Lookup.getInst().addNormalPostcondition(MethodGetter.translate(rd), post);
+    Lookup.getInst().addNormalPostcondition(Translator.getInst().translate(rd), post);
   }
   
   
@@ -125,7 +125,7 @@ class LookupJavaFe {
    */
   public void addExceptionalPostcondition(final RoutineDecl rd, 
                                                  final Post post) {
-    Lookup.getInst().addExceptionalPostcondition(MethodGetter.translate(rd), post);
+    Lookup.getInst().addExceptionalPostcondition(Translator.getInst().translate(rd), post);
   }
 
 
@@ -136,7 +136,7 @@ class LookupJavaFe {
    */
   public void addExceptionalPostcondition(final RoutineDecl rd, 
                                                  final Term term) {
-    Lookup.getInst().addExceptionalPostcondition(MethodGetter.translate(rd), term); 
+    Lookup.getInst().addExceptionalPostcondition(Translator.getInst().translate(rd), term); 
   }
   
   
@@ -147,10 +147,10 @@ class LookupJavaFe {
    * @return a list of variables
    */
   public List<QuantVariableRef> getPreconditionArgs(final RoutineDecl m) {
-    return Lookup.getInst().getPreconditionArgs(MethodGetter.translate(m));
+    return Lookup.getInst().getPreconditionArgs(Translator.getInst().translate(m));
   }
   public Post getNormalPostcondition(final RoutineDecl m) {
-    return Lookup.getInst().getNormalPostcondition(MethodGetter.translate(m));
+    return Lookup.getInst().getNormalPostcondition(Translator.getInst().translate(m));
   }
   
   /**
@@ -161,7 +161,7 @@ class LookupJavaFe {
    * @return the exceptional postcondition or <code>True</code>
    */
   public Post getExceptionalPostcondition(final RoutineDecl m) {
-    return Lookup.getInst().getExceptionalPostcondition(MethodGetter.translate(m));
+    return Lookup.getInst().getExceptionalPostcondition(Translator.getInst().translate(m));
   }
   /**
    * Creates the arguments list of a method from its signature.
@@ -169,17 +169,17 @@ class LookupJavaFe {
    * @return a list of variables
    */
   public List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
-    return Lookup.getInst().mkArguments(MethodGetter.translate(rd));
+    return Lookup.getInst().mkArguments(Translator.getInst().translate(rd));
   }
 
   public Term[] getNormalPostconditionArgs(RoutineDecl meth) {
 
-    return Lookup.getInst().getNormalPostconditionArgs(MethodGetter.translate(meth));
+    return Lookup.getInst().getNormalPostconditionArgs(Translator.getInst().translate(meth));
   }
 
-  public Term[] getExcPostconditionArgs(RoutineDecl meth) {
+  public Term[] getExcPostconditionArgs(final RoutineDecl meth) {
 
-    return Lookup.getInst().getExcPostconditionArgs(MethodGetter.translate(meth));
+    return Lookup.getInst().getExcPostconditionArgs(Translator.getInst().translate(meth));
   }
   
   /**
@@ -188,7 +188,7 @@ class LookupJavaFe {
    * @return the precondition or <code>True</code>
    */
   public Term getPrecondition(final RoutineDecl m) {
-    return Lookup.getInst().getPrecondition(MethodGetter.translate(m));
+    return Lookup.getInst().getPrecondition(Translator.getInst().translate(m));
   }
   
   /**

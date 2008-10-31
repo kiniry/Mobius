@@ -31,15 +31,15 @@ public final class Lookup {
   
   
   /** map containing RoutineDecl as keys and Terms (the precondition) as value. **/
-  private final Map<PositionHint, Term> preconditions = 
+  private final Map<PositionHint, Term> fPreconditions = 
     new HashMap<PositionHint, Term>();
 
   /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
-  private Map<PositionHint, Post> postconditions = 
+  private Map<PositionHint, Post> fPostconditions = 
     new HashMap<PositionHint, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
-  private Map<PositionHint, Post> exceptionalPostconditions = 
+  private Map<PositionHint, Post> fExceptionalPostconditions = 
     new HashMap<PositionHint, Post>();
 
   
@@ -50,16 +50,26 @@ public final class Lookup {
   private final Map<PositionHint, List<QuantVariableRef>> fPreArgsWithoutHeap = 
     new HashMap<PositionHint, List<QuantVariableRef>>();
 
-  
+  /** the current annotation generator which generates the informations
+      of the lookup class. */
   private IAnnotationGenerator fAnnotGen; 
   
   
-
-  public Lookup(final IAnnotationGenerator gen) {
+  /**
+   * Creates a new instance of the lookup, using the given annotation
+   * generator.
+   * @param gen an annotation generator
+   */
+  private Lookup(final IAnnotationGenerator gen) {
     fAnnotGen = gen;
   }
   
-  public static void clear(IAnnotationGenerator gen) {
+  /**
+   * Initialize the lookup library with the proper annotation generator.
+   * @param gen the annotation generator
+   */
+  public static void clear(final IAnnotationGenerator gen) {
+    assert gen != null;
     inst = new Lookup(gen); 
   }
   
@@ -70,7 +80,7 @@ public final class Lookup {
    */
   public Term getPrecondition(final MethodGen m) {
     final PositionHint ph = PositionHint.getMethodPositionHint(m);
-    Term t = preconditions.get(ph);
+    Term t = fPreconditions.get(ph);
     if (t == null) {
       t = Logic.trueValue();
     }
@@ -85,7 +95,7 @@ public final class Lookup {
   public void addPrecondition(final MethodGen rd, 
                                             final Term term) {
     final PositionHint ph = PositionHint.getMethodPositionHint(rd);
-    final Term pOld = preconditions.get(ph);
+    final Term pOld = fPreconditions.get(ph);
     Term pNew;
     if (pOld == null) {
       pNew = term;
@@ -93,7 +103,7 @@ public final class Lookup {
     else {
       pNew = Logic.and(pOld, term);
     }
-    preconditions.put(ph, pNew);
+    fPreconditions.put(ph, pNew);
   }
   
   
@@ -107,7 +117,7 @@ public final class Lookup {
     //return new Post(buildStdCond (m, "_norm", true)); 
     final PositionHint ph = PositionHint.getMethodPositionHint(m);
     
-    Post p = postconditions.get(ph);
+    Post p = fPostconditions.get(ph);
     if (p == null) {
       p = new Post(Logic.trueValue());
     }
@@ -132,12 +142,12 @@ public final class Lookup {
       pNew = new Post(Expression.rvar(Ref.sort), pNew);
     }
     
-    final Post pOld = postconditions.get(ph);
+    final Post pOld = fPostconditions.get(ph);
     if (pOld != null) {
       // not the first time
       pNew = Post.and(pNew, pOld);
     }
-    postconditions.put(ph, pNew);
+    fPostconditions.put(ph, pNew);
   }
 
 
@@ -154,7 +164,7 @@ public final class Lookup {
   public Post getExceptionalPostcondition(final MethodGen m) {
     //return new Post(Expression.rvar(Ref.sort), buildStdCond (m, "_excp", false));
     final PositionHint ph = PositionHint.getMethodPositionHint(m);
-    Post p = exceptionalPostconditions.get(ph);
+    Post p = fExceptionalPostconditions.get(ph);
     if (p == null) {
       p = new Post(Expression.rvar(Heap.sortValue), Logic.trueValue());
     }
@@ -179,12 +189,12 @@ public final class Lookup {
       pNew = new Post(Expression.rvar(Ref.sort), pNew);
     }
     
-    final Post pOld = exceptionalPostconditions.get(ph);
+    final Post pOld = fExceptionalPostconditions.get(ph);
     if (pOld != null) {
       // not the first time
       pNew = Post.and(pNew, pOld);
     }
-    exceptionalPostconditions.put(ph, pNew);
+    fExceptionalPostconditions.put(ph, pNew);
   }
 
 
@@ -196,7 +206,7 @@ public final class Lookup {
   public void addExceptionalPostcondition(final MethodGen rd, 
                                                  final Term term) {
     final PositionHint ph = PositionHint.getMethodPositionHint(rd);
-    final Post pOld = exceptionalPostconditions.get(ph);
+    final Post pOld = fExceptionalPostconditions.get(ph);
     Post pNew;
     if (pOld == null) {
       pNew = new Post(Expression.rvar(Heap.sortValue), term);
@@ -204,7 +214,7 @@ public final class Lookup {
     else {
       pNew = Post.and(pOld, term);
     }
-    exceptionalPostconditions.put(ph, pNew);
+    fExceptionalPostconditions.put(ph, pNew);
   }
   
   /**
@@ -266,7 +276,7 @@ public final class Lookup {
   public String toString() {
     final String pre = "Preconditions: \n" +
                        "Arguments:" + fPreArgs + "\n" +
-                       "Terms: " + preconditions + "\n";
+                       "Terms: " + fPreconditions + "\n";
     return pre;     
   }
   

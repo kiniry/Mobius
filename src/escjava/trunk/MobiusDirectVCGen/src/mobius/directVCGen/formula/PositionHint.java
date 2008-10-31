@@ -82,7 +82,12 @@ public class PositionHint {
   }
 
 
-  
+  /**
+   * Returns a method hint corresponding to the given method.
+   * Cannot return null.
+   * @param met The method to wrap in a position hint 
+   * @return the position hint corresponding to the method.
+   */
   public static MethodHint getMethodPositionHint(final MethodGen met) {
     final String fullMethodName = met.getClassName() + "." + met.getName();
     MethodHint mh = methodHint.get(fullMethodName);
@@ -92,6 +97,8 @@ public class PositionHint {
     }
     return mh;
   }
+  
+  
   public static Collection<MethodHint> getMethodPositionList() {
     return methodHint.values();
   }

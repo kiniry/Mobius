@@ -29,7 +29,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
@@ -88,7 +88,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     
     //mking the args
 
-    final MethodGen meth = MethodGetter.translate(invokedMeth);
+    final MethodGen meth = Translator.getInst().translate(invokedMeth);
     final String name = Util.getMethodAnnotModule(meth);
     final LinkedList<Term> args = new LinkedList<Term> ();
     args.add(Heap.varPre);

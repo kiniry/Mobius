@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import mobius.directVCGen.formula.Decoration;
+import mobius.directVCGen.formula.ADecoration;
 import mobius.directVCGen.formula.PositionHint;
 
 import org.apache.bcel.generic.LocalVariableGen;
@@ -19,7 +19,7 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * and their bytecode equivalence.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class VarCorrDecoration extends Decoration {
+public class VarCorrDecoration extends ADecoration {
   
   /** the current instance initialized of the annotation decorations. */
   public static final VarCorrDecoration inst = new VarCorrDecoration();

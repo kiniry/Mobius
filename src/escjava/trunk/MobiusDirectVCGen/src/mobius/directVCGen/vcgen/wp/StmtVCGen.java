@@ -45,7 +45,7 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
@@ -570,9 +570,10 @@ public class StmtVCGen extends ExpressionVisitor {
                                       final /*@non_null*/ ConstructorInvocation ci, 
                                       final Object o) {
     final VCEntry entry = (VCEntry)o;
-    final Post normalPost = Lookup.getInst().getNormalPostcondition(MethodGetter.translate(ci.decl));
-    final Post excpPost = Lookup.getInst().getExceptionalPostcondition(MethodGetter.translate(ci.decl));
-    final Term pre = Lookup.getInst().getPrecondition(MethodGetter.translate(ci.decl));
+    final MethodGen mg = Translator.getInst().translate(ci.decl);
+    final Post normalPost = Lookup.getInst().getNormalPostcondition(mg);
+    final Post excpPost = Lookup.getInst().getExceptionalPostcondition(mg);
+    final Term pre = Lookup.getInst().getPrecondition(mg);
     final QuantVariableRef newThis = Expression.rvar(Ref.sort);
 
     // first: the exceptional post

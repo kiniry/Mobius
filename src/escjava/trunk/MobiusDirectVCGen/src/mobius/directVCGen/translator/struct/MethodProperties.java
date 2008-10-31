@@ -11,7 +11,7 @@ import javafe.ast.FieldAccess;
 import javafe.ast.RoutineDecl;
 import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.MethodGetter;
+import mobius.directVCGen.formula.Translator;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -128,7 +128,7 @@ public final class MethodProperties extends ContextProperties implements ILocalV
     return fMethod;
   }
   public MethodGen getBCELDecl() {
-    return MethodGetter.translate(fMethod);
+    return Translator.getInst().translate(fMethod);
   }
   public List<QuantVariableRef> getLocalVars() {
     final List<QuantVariableRef> res = new LinkedList<QuantVariableRef>();

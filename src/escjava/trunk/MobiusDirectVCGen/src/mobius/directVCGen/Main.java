@@ -20,7 +20,6 @@ import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.pojs.JavaCompiler;
 import mobius.directVCGen.translator.JMLAnnotationGenerator;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
@@ -41,12 +40,13 @@ public class Main extends escjava.Main {
   /** the basedir where to stock all the generated files. */
   private final File fBasedir;
 
-
+  /** a custom classpath used to find the class to generate. */
   private final String fClassPath;
   
   /**
    * Create a main object from a base directory.
    * @param basedir The directory where to stock all the files.
+   * @param classPath the class path specified by the user
    */
   public Main(final File basedir, final String classPath) {
     fBasedir = basedir;
@@ -139,6 +139,7 @@ public class Main extends escjava.Main {
   /**
    * Do the main operations; compute the vcs and everything.
    * @param args the current program arguments to parse
+   * @return an error code or 0 if everything went fine
    */
   public int start(final String[] args) {
     int res;
@@ -302,19 +303,27 @@ public class Main extends escjava.Main {
     workingDir = new File(workingDir, Util.getPkgDir(sig).getPath());
     workingDir.mkdirs();
     
-    doTypeSrcGen(td, sig, workingDir);
+    doTypeSrcGen(td, workingDir);
     //doDesugaredSrcGen(sig, workingDir);
     return true;
   }
 
-  
-  private void doTypeSrcGen(final TypeDecl td, final TypeSig sig,
-                            File workingDir) throws FileNotFoundException {
+  /**
+   * Generates the type version of the class file, a version of the 
+   * file with all the typing informations added.
+   * @param td the type declaration to print in the working directory
+   * @param workingDir the current working directory
+   * @throws FileNotFoundException if the output file has creation problems
+   */
+  private void doTypeSrcGen(final TypeDecl td,
+                            final File workingDir) throws FileNotFoundException {
     fOut.println("Writing the Source code with types.");
+    final TypeSig sig = TypeSig.getSig(td);
     NoWarn.typecheckRegisteredNowarns();
     // Create a pretty-printer that shows types
     final DelegatingPrettyPrint p = new javafe.tc.TypePrint();
     p.setDel(new EscPrettyPrint(p, new StandardPrettyPrint(p)));
+    
     final OutputStream out = new FileOutputStream(
                                  new File(workingDir, 
                                           sig.simpleName + ".typ"));
@@ -322,16 +331,20 @@ public class Main extends escjava.Main {
     p.print(out, 0, td);
   }
 
-  private void doDesugaredSrcGen(final TypeSig sig, File workingDir) {
-    //final JavacTool javac = JavacTool.createMobiusJavac();
-    //javac.setOption(name, args)
-    final JavaCompiler jc = new JavaCompiler();
-    final String[] args = {"-XD-printflat", "-d", workingDir.toString(),
-                           sig.simpleName + ".java" };
-    jc.compile(args);
-  }
+//  private void doDesugaredSrcGen(final TypeSig sig, File workingDir) {
+//    //final JavacTool javac = JavacTool.createMobiusJavac();
+//    //javac.setOption(name, args)
+//    final JavaCompiler jc = new JavaCompiler();
+//    final String[] args = {"-XD-printflat", "-d", workingDir.toString(),
+//                           sig.simpleName + ".java" };
+//    jc.compile(args);
+//  }
   
-  public static void setOut(OutputStream out) {
+  /**
+   * Changes the output stream where some log informations are written.
+   * @param out the output stream with which to replace the current one
+   */
+  public static void setOut(final OutputStream out) {
     fOut = new PrintStream(out);
   }
 

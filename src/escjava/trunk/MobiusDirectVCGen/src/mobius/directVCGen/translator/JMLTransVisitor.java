@@ -14,12 +14,9 @@ import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.MethodGetter;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.Set;
 import mobius.directVCGen.translator.struct.ContextProperties;
 import mobius.directVCGen.translator.struct.MethodProperties;
@@ -269,7 +266,7 @@ class JMLTransVisitor extends JmlVisitor {
     final MethodProperties prop = (MethodProperties) o;
     
     final RoutineDecl currentRoutine = prop.getDecl();
-    final Post allExPosts = Lookup.getInst().getExceptionalPostcondition(MethodGetter.translate(currentRoutine));
+    final Post allExPosts = LookupJavaFe.getInst().getExceptionalPostcondition(currentRoutine);
     final QuantVariableRef commonExceptionVar = allExPosts.getRVar();
 
     final Term typeOfException = Type.translateToType(x.arg.type);
