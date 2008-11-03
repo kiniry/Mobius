@@ -8,10 +8,13 @@ import jml2bml.exceptions.NotTranslatedException;
 import main.Main;
 
 public class Jml2BmlAPI {
+
   public static void compile(final String sourceFile, final String outputDir,
-                             final String classFile) throws ClassNotFoundException, ReadAttributeException, IOException  {
+                             final String classFile)
+    throws ClassNotFoundException, ReadAttributeException, IOException {
     try {
-      new Main().compile(sourceFile, new ClassFileLocation(outputDir, classFile));
+      new Main().compile(sourceFile,
+                         new ClassFileLocation(outputDir, classFile));
     } catch (NotTranslatedException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

@@ -1,7 +1,5 @@
 package jml2bml.rules;
 
-import jml2bml.exceptions.NotTranslatedRuntimeException;
-
 import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
@@ -101,386 +99,442 @@ import com.sun.source.util.TreeScanner;
 public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
     implements JmlTreeVisitor<R, P> {
 
-  protected R preVisit(Tree node, P p) {
+  protected R preVisit(final Tree node, final P p) {
     return null;
   }
 
-  public R visitCompilationUnit(CompilationUnitTree node, P p) {
+  @Override
+  public R visitCompilationUnit(final CompilationUnitTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitImport(ImportTree node, P p) {
+  @Override
+  public R visitImport(final ImportTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitClass(ClassTree node, P p) {
+  @Override
+  public R visitClass(final ClassTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitMethod(MethodTree node, P p) {
+  @Override
+  public R visitMethod(final MethodTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitVariable(VariableTree node, P p) {
+  @Override
+  public R visitVariable(final VariableTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitEmptyStatement(EmptyStatementTree node, P p) {
+  @Override
+  public R visitEmptyStatement(final EmptyStatementTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitBlock(BlockTree node, P p) {
+  @Override
+  public R visitBlock(final BlockTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitDoWhileLoop(DoWhileLoopTree node, P p) {
+  @Override
+  public R visitDoWhileLoop(final DoWhileLoopTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitWhileLoop(WhileLoopTree node, P p) {
+  @Override
+  public R visitWhileLoop(final WhileLoopTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitForLoop(ForLoopTree node, P p) {
+  @Override
+  public R visitForLoop(final ForLoopTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitEnhancedForLoop(EnhancedForLoopTree node, P p) {
+  @Override
+  public R visitEnhancedForLoop(final EnhancedForLoopTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitLabeledStatement(LabeledStatementTree node, P p) {
+  @Override
+  public R visitLabeledStatement(final LabeledStatementTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitSwitch(SwitchTree node, P p) {
+  @Override
+  public R visitSwitch(final SwitchTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitCase(CaseTree node, P p) {
+  @Override
+  public R visitCase(final CaseTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitSynchronized(SynchronizedTree node, P p) {
+  @Override
+  public R visitSynchronized(final SynchronizedTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitTry(TryTree node, P p) {
+  @Override
+  public R visitTry(final TryTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitCatch(CatchTree node, P p) {
+  @Override
+  public R visitCatch(final CatchTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitConditionalExpression(ConditionalExpressionTree node,
-                                           P p) {
+  @Override
+  public R visitConditionalExpression(final ConditionalExpressionTree node,
+                                           final P p) {
     return preVisit(node, p);
   }
 
-  public R visitIf(IfTree node, P p) {
+  @Override
+  public R visitIf(final IfTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitExpressionStatement(ExpressionStatementTree node, P p) {
+  @Override
+  public R visitExpressionStatement(final ExpressionStatementTree node,
+                                    final P p) {
     return preVisit(node, p);
   }
 
-  public R visitBreak(BreakTree node, P p) {
+  @Override
+  public R visitBreak(final BreakTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitContinue(ContinueTree node, P p) {
+  @Override
+  public R visitContinue(final ContinueTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitReturn(ReturnTree node, P p) {
+  @Override
+  public R visitReturn(final ReturnTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitThrow(ThrowTree node, P p) {
+  @Override
+  public R visitThrow(final ThrowTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitAssert(AssertTree node, P p) {
+  @Override
+  public R visitAssert(final AssertTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitMethodInvocation(MethodInvocationTree node, P p) {
+  @Override
+  public R visitMethodInvocation(final MethodInvocationTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitNewClass(NewClassTree node, P p) {
+  @Override
+  public R visitNewClass(final NewClassTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitNewArray(NewArrayTree node, P p) {
+  @Override
+  public R visitNewArray(final NewArrayTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitParenthesized(ParenthesizedTree node, P p) {
+  @Override
+  public R visitParenthesized(final ParenthesizedTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitAssignment(AssignmentTree node, P p) {
+  @Override
+  public R visitAssignment(final AssignmentTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitCompoundAssignment(CompoundAssignmentTree node, P p) {
+  @Override
+  public R visitCompoundAssignment(final CompoundAssignmentTree node,
+                                   final P p) {
     return preVisit(node, p);
   }
 
-  public R visitUnary(UnaryTree node, P p) {
+  @Override
+  public R visitUnary(final UnaryTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitBinary(BinaryTree node, P p) {
+  @Override
+  public R visitBinary(final BinaryTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitTypeCast(TypeCastTree node, P p) {
+  @Override
+  public R visitTypeCast(final TypeCastTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitInstanceOf(InstanceOfTree node, P p) {
+  @Override
+  public R visitInstanceOf(final InstanceOfTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitArrayAccess(ArrayAccessTree node, P p) {
+  @Override
+  public R visitArrayAccess(final ArrayAccessTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitMemberSelect(MemberSelectTree node, P p) {
+  @Override
+  public R visitMemberSelect(final MemberSelectTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitIdentifier(IdentifierTree node, P p) {
+  @Override
+  public R visitIdentifier(final IdentifierTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitLiteral(LiteralTree node, P p) {
+  @Override
+  public R visitLiteral(final LiteralTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitPrimitiveType(PrimitiveTypeTree node, P p) {
+  @Override
+  public R visitPrimitiveType(final PrimitiveTypeTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitArrayType(ArrayTypeTree node, P p) {
+  @Override
+  public R visitArrayType(final ArrayTypeTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitParameterizedType(ParameterizedTypeTree node, P p) {
+  @Override
+  public R visitParameterizedType(final ParameterizedTypeTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitTypeParameter(TypeParameterTree node, P p) {
+  @Override
+  public R visitTypeParameter(final TypeParameterTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitWildcard(WildcardTree node, P p) {
+  @Override
+  public R visitWildcard(final WildcardTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitModifiers(ModifiersTree node, P p) {
+  @Override
+  public R visitModifiers(final ModifiersTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitAnnotation(AnnotationTree node, P p) {
+  @Override
+  public R visitAnnotation(final AnnotationTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitOther(Tree node, P p) {
+  @Override
+  public R visitOther(final Tree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitErroneous(ErroneousTree node, P p) {
+  @Override
+  public R visitErroneous(final ErroneousTree node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlBinary(JmlBinary node, P p) {
+  public R visitJmlBinary(final JmlBinary node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlClassDecl(JmlClassDecl node, P p) {
+  public R visitJmlClassDecl(final JmlClassDecl node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlCompilationUnit(JmlCompilationUnit node, P p) {
+  public R visitJmlCompilationUnit(final JmlCompilationUnit node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlDoWhileLoop(JmlDoWhileLoop node, P p) {
+  public R visitJmlDoWhileLoop(final JmlDoWhileLoop node, final P p) {
     return preVisit(node, p);
 
   }
 
-  public R visitJmlEnhancedForLoop(JmlEnhancedForLoop node, P p) {
+  public R visitJmlEnhancedForLoop(final JmlEnhancedForLoop node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlForLoop(JmlForLoop node, P p) {
+  public R visitJmlForLoop(final JmlForLoop node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlFunction(JmlFunction node, P p) {
+  public R visitJmlFunction(final JmlFunction node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlGroupName(JmlGroupName node, P p) {
+  public R visitJmlGroupName(final JmlGroupName node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlImport(JmlImport node, P p) {
+  public R visitJmlImport(final JmlImport node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlLblExpression(JmlLblExpression node, P p) {
+  public R visitJmlLblExpression(final JmlLblExpression node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseAssignable(JmlMethodClauseAssignable node,
-                                               P p) {
+  public R visitJmlMethodClauseAssignable(final JmlMethodClauseAssignable node,
+                                          final P p) {
     return preVisit(node, p);
   }
 
   public R visitJmlMethodClauseConditional(
-                                                JmlMethodClauseConditional node,
-                                                P p) {
+     final JmlMethodClauseConditional node,
+     final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseDecl(JmlMethodClauseDecl node, P p) {
+  public R visitJmlMethodClauseDecl(final JmlMethodClauseDecl node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseExpr(JmlMethodClauseExpr node, P p) {
+  public R visitJmlMethodClauseExpr(final JmlMethodClauseExpr node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseGroup(JmlMethodClauseGroup node, P p) {
+  public R visitJmlMethodClauseGroup(final JmlMethodClauseGroup node,
+                                     final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseSigOnly(JmlMethodClauseSigOnly node, P p) {
+  public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSigOnly node,
+                                       final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseSignals(JmlMethodClauseSignals node, P p) {
+  public R visitJmlMethodClauseSignals(final JmlMethodClauseSignals node,
+                                       final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodDecl(JmlMethodDecl node, P p) {
+  public R visitJmlMethodDecl(final JmlMethodDecl node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodSpecs(JmlMethodSpecs node, P p) {
+  public R visitJmlMethodSpecs(final JmlMethodSpecs node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlPrimitiveTypeTree(JmlPrimitiveTypeTree node, P p) {
+  public R visitJmlPrimitiveTypeTree(final JmlPrimitiveTypeTree node,
+                                     final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlQuantifiedExpr(JmlQuantifiedExpr node, P p) {
+  public R visitJmlQuantifiedExpr(final JmlQuantifiedExpr node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlRefines(JmlRefines node, P p) {
+  public R visitJmlRefines(final JmlRefines node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlSetComprehension(JmlSetComprehension node, P p) {
+  public R visitJmlSetComprehension(final JmlSetComprehension node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlSingleton(JmlSingleton node, P p) {
+  public R visitJmlSingleton(final JmlSingleton node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlSpecificationCase(JmlSpecificationCase node, P p) {
+  public R visitJmlSpecificationCase(final JmlSpecificationCase node,
+                                     final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStatement(JmlStatement node, P p) {
+  public R visitJmlStatement(final JmlStatement node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStatementDecls(JmlStatementDecls node, P p) {
+  public R visitJmlStatementDecls(final JmlStatementDecls node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStatementExpr(JmlStatementExpr node, P p) {
+  public R visitJmlStatementExpr(final JmlStatementExpr node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStatementLoop(JmlStatementLoop node, P p) {
+  public R visitJmlStatementLoop(final JmlStatementLoop node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStatementSpec(JmlStatementSpec node, P p) {
+  public R visitJmlStatementSpec(final JmlStatementSpec node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStoreRefArrayRange(JmlStoreRefArrayRange node, P p) {
+  public R visitJmlStoreRefArrayRange(final JmlStoreRefArrayRange node,
+                                      final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStoreRefKeyword(JmlStoreRefKeyword node, P p) {
+  public R visitJmlStoreRefKeyword(final JmlStoreRefKeyword node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlStoreRefListExpression(JmlStoreRefListExpression node,
-                                               P p) {
+  public R visitJmlStoreRefListExpression(final JmlStoreRefListExpression node,
+                                               final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseConditional(JmlTypeClauseConditional node,
-                                              P p) {
+  public R visitJmlTypeClauseConditional(final JmlTypeClauseConditional node,
+                                              final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseConstraint(JmlTypeClauseConstraint node,
-                                             P p) {
+  public R visitJmlTypeClauseConstraint(final JmlTypeClauseConstraint node,
+                                             final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseDecl(JmlTypeClauseDecl node, P p) {
+  public R visitJmlTypeClauseDecl(final JmlTypeClauseDecl node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseExpr(JmlTypeClauseExpr node, P p) {
+  public R visitJmlTypeClauseExpr(final JmlTypeClauseExpr node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseIn(JmlTypeClauseIn node, P p) {
+  public R visitJmlTypeClauseIn(final JmlTypeClauseIn node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseInitializer(JmlTypeClauseInitializer node,
-                                              P p) {
+  public R visitJmlTypeClauseInitializer(final JmlTypeClauseInitializer node,
+                                              final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseMaps(JmlTypeClauseMaps node, P p) {
+  public R visitJmlTypeClauseMaps(final JmlTypeClauseMaps node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseMonitorsFor(JmlTypeClauseMonitorsFor node,
-                                              P p) {
+  public R visitJmlTypeClauseMonitorsFor(final JmlTypeClauseMonitorsFor node,
+                                              final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlTypeClauseRepresents(JmlTypeClauseRepresents node,
-                                             P p) {
+  public R visitJmlTypeClauseRepresents(final JmlTypeClauseRepresents node,
+                                             final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlVariableDecl(JmlVariableDecl node, P p) {
+  public R visitJmlVariableDecl(final JmlVariableDecl node, final P p) {
     return preVisit(node, p);
   }
 
-  public R visitJmlWhileLoop(JmlWhileLoop node, P p) {
+  public R visitJmlWhileLoop(final JmlWhileLoop node, final P p) {
     return preVisit(node, p);
   }
 }

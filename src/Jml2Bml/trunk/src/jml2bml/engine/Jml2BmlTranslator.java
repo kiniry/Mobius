@@ -24,9 +24,10 @@ import com.sun.tools.javac.util.Context;
  * @version 0-0.1
  *
  */
-public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> {
+public class Jml2BmlTranslator extends
+    ExtendedJmlTreeScanner < Symbols, Symbols > {
   /** Translation rules used. */
-  private final List<TranslationRule> rules;
+  private final List < TranslationRule > rules;
 
   /**
    * Application context.
@@ -35,11 +36,11 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> 
 
   /**
    * Creates a new instance of the Jml2BmlTranslator.
-   * @param context
+   * @param acontext
    */
-  public Jml2BmlTranslator(final Context context) {
-    this.context = context;
-    this.rules = new LinkedList<TranslationRule>();
+  public Jml2BmlTranslator(final Context acontext) {
+    this.context = acontext;
+    this.rules = new LinkedList < TranslationRule >();
   }
 
   /**
@@ -54,9 +55,9 @@ public class Jml2BmlTranslator extends ExtendedJmlTreeScanner<Symbols, Symbols> 
   protected Symbols preVisit(final Tree node, final Symbols v) {
     super.preVisit(node, v);
     final Symbols symbs = node.accept(new SymbolsBuilder(context), v);
-    for (Class<?> cl : JmlNodes.JML_CLASSES) {
+    for (Class < ? > cl : JmlNodes.JML_CLASSES) {
       if (cl.equals(node.getClass())) {
-        for (TranslationRule<String, Symbols> rule : rules) {
+        for (TranslationRule < String, Symbols > rule : rules) {
           // try to apply the rule
           node.accept(rule, symbs);
         }

@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package main;
 
@@ -89,10 +87,13 @@ public class Main {
    * corresponding to the source file
    * @throws ReadAttributeException
    * @throws ClassNotFoundException
-   * @throws NotTranslatedException 
+   * @throws NotTranslatedException
+   * @throws IOException in case the class file cannot be saved to the given
+   *   location
    */
   public void compile(final String sourceFile, final ClassFileLocation classLoc)
-      throws ClassNotFoundException, ReadAttributeException, NotTranslatedException, IOException {
+      throws ClassNotFoundException, ReadAttributeException,
+      NotTranslatedException, IOException {
     final Context context = createContext();
     context.put(ClassFileLocation.class, classLoc);
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
@@ -130,10 +131,11 @@ public class Main {
     } catch (NotTranslatedRuntimeException e) {
       throw new NotTranslatedException(e);
     }
-     
+
     clazz.saveToFile(classLoc.getClassFilePath());
     log.info(clazz.printCode());
   }
+
   /**
    * Creates a Java File Object for given source file.
    * @param context application context

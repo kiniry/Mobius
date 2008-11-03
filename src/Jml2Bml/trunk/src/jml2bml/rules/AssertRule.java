@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -37,7 +35,7 @@ import com.sun.tools.javac.util.Context;
  *
  * @version 0-0.1
  */
-public class AssertRule extends TranslationRule<String, Symbols> {
+public class AssertRule extends TranslationRule < String, Symbols > {
   /**
    * Application context.
    */
@@ -58,11 +56,12 @@ public class AssertRule extends TranslationRule<String, Symbols> {
    * @param node - node to visit
    * @param symb - additional data (not used)
    * @return bml-assert annotation or null.
-   * @throws NotTranslatedRuntimeException 
+   * @throws NotTranslatedRuntimeException
    */
   @Override
   public String visitJmlStatementExpr(final JmlStatementExpr node,
-                                      final Symbols symb) throws NotTranslatedRuntimeException {
+                                      final Symbols symb)
+    throws NotTranslatedRuntimeException {
 
     if (node.token == JmlToken.ASSERT) {
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);

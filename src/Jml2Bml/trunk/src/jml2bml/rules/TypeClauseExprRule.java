@@ -81,7 +81,8 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
       }
       clazz.setInvariant(classInvariant);
     } else
-      throw new NotTranslatedRuntimeException("Token != invariant - not implemented");
+      throw new NotTranslatedRuntimeException(
+        "Token != invariant - not implemented");
     return "";
   }
 }

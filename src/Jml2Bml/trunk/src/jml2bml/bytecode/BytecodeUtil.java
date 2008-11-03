@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-07 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-07 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
 
@@ -51,7 +49,8 @@ public final class BytecodeUtil {
    * @return BCMethod representing method <code>name</code>,
    * or null, if the method was not found.
    */
-  public static BCMethod findMethod(final CharSequence name, final BCClass clazz) {
+  public static BCMethod findMethod(final CharSequence name,
+                                    final BCClass clazz) {
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       if (method.getBcelMethod().getName().contentEquals(name))
@@ -79,8 +78,8 @@ public final class BytecodeUtil {
                                                                      name,
                                                                      symbols);
     if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name
-                                 + " does not exist in given class.");
+      throw new Jml2BmlException("Field " + name +
+                                 " does not exist in given class.");
     }
     return new FieldRef(isOld, clazz.getCp(), nameIndex);
 
@@ -121,15 +120,17 @@ public final class BytecodeUtil {
    * Returns map: bytecode instruction -> line number in the source file.
    * @param method - method, for which the map should be generated
    * @return map: <code>Bytecode Instruction -> line in the source code</code>
-   * @throws NotTranslatedRuntimeException 
+   * @throws NotTranslatedRuntimeException
    */
-  public static Map<InstructionHandle, Integer> getLineNumberMap(
-                                                                 final BCMethod method) throws NotTranslatedRuntimeException {
-    final Map<InstructionHandle, Integer> result = new HashMap<InstructionHandle, Integer>();
+  public static Map < InstructionHandle, Integer > getLineNumberMap(
+      final BCMethod method)
+      throws NotTranslatedRuntimeException {
+    final Map < InstructionHandle, Integer > result =
+      new HashMap < InstructionHandle, Integer >();
     for (LineNumberGen lng : method.getBcelMethod().getLineNumbers())
       if (result.containsKey(lng.getInstruction()))
         throw new NotTranslatedRuntimeException(
-                                         "One bytecode instruction has more than one line number");
+          "One bytecode instruction has more than one line number");
       else
         result.put(lng.getInstruction(), lng.getSourceLine());
     return result;

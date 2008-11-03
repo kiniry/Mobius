@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.ast;
 
@@ -112,8 +110,8 @@ import com.sun.source.util.TreeScanner;
  * @param <P>
  * @version 0-0.1
  */
-public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
-    JmlTreeVisitor<R, P> {
+public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
+    implements JmlTreeVisitor < R, P > {
 
   /**
    * visits the given node and returns the as a result reduction of given
@@ -135,7 +133,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param r - another visit result (for reduction)
    * @return - reduction of r and result of visiting nodes
    */
-  private R scanAndReduce(final Iterable<? extends Tree> nodes, final P p,
+  private R scanAndReduce(final Iterable < ? extends Tree > nodes, final P p,
                           final R r) {
     return reduce(scan(nodes, p), r);
   }
@@ -520,7 +518,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @return just the result of corresponding method from the superclass.
    */
   @Override
-  public R visitCompoundAssignment(final CompoundAssignmentTree node, final P p) {
+  public R visitCompoundAssignment(final CompoundAssignmentTree node,
+                                   final P p) {
     final P tmpP = preVisit(node, p);
     return super.visitCompoundAssignment(node, tmpP);
   }
@@ -903,7 +902,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  public R visitJmlMethodClauseGroup(final JmlMethodClauseGroup node, final P p) {
+  public R visitJmlMethodClauseGroup(final JmlMethodClauseGroup node,
+                                     final P p) {
     final P tmpP = preVisit(node, p);
     return scan(node.cases, tmpP);
   }
@@ -960,7 +960,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return null
    */
-  public R visitJmlPrimitiveTypeTree(final JmlPrimitiveTypeTree node, final P p) {
+  public R visitJmlPrimitiveTypeTree(final JmlPrimitiveTypeTree node,
+                                     final P p) {
     return null;
   }
 
@@ -1017,7 +1018,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner<R, P> implements
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  public R visitJmlSpecificationCase(final JmlSpecificationCase node, final P p) {
+  public R visitJmlSpecificationCase(final JmlSpecificationCase node,
+                                     final P p) {
     final P tmpP = preVisit(node, p);
     final R r = scan(node.clauses, tmpP);
     return scanAndReduce(node.modifiers, tmpP, r);

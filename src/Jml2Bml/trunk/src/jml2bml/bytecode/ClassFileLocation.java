@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-07 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-07 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
 
@@ -32,8 +30,7 @@ public class ClassFileLocation {
    * @param dirName directory name
    * @param qualifiedName qualified name of the class
    */
-  public ClassFileLocation(final String dirName,
-                           final String qualifiedName) {
+  public ClassFileLocation(final String dirName, final String qualifiedName) {
     this.directoryName = dirName;
     this.classQualifiedName = qualifiedName;
   }
@@ -60,6 +57,6 @@ public class ClassFileLocation {
    */
   public String getClassFilePath() {
     return directoryName + File.separator +
-    classQualifiedName.replace('.', File.separatorChar) + ".class";
+           classQualifiedName.replace('.', File.separatorChar) + ".class";
   }
 }

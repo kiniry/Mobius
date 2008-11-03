@@ -43,8 +43,8 @@ public final class TranslationManager {
    * @param context application context
    */
   private static void registerTranslationRules(
-                                               final Jml2BmlTranslator translator,
-                                               final Context context) {
+      final Jml2BmlTranslator translator,
+      final Context context) {
     translator.registerTranslationRule(RulesFactory.getAssertRule(context));
     translator.registerTranslationRule(RulesFactory
         .getSpecificationCaseRule(context));

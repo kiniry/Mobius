@@ -1,16 +1,13 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.symbols;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 import annot.bcclass.BCClass;
 
@@ -19,20 +16,20 @@ public class Symbols {
 
   private BCClass clazz;
 
-  private Map<String, Variable> variables;
+  private Map < String, Variable > variables;
 
   public Symbols() {
     parentSymbols = null;
-    variables = new HashMap<String, Variable>();
+    variables = new HashMap < String, Variable >();
   }
 
   /**
    * Creates new instance of Symbols, with given parentSymbols.
-   * @param parentSymbols - symbol table for enclosing block / method / class
+   * @param theparentSymbols - symbol table for enclosing block / method / class
    */
-  public Symbols(final Symbols parentSymbols) {
-    this.parentSymbols = parentSymbols;
-    variables = new HashMap<String, Variable>();
+  public Symbols(final Symbols theparentSymbols) {
+    this.parentSymbols = theparentSymbols;
+    variables = new HashMap < String, Variable >();
   }
 
   /**
@@ -75,9 +72,9 @@ public class Symbols {
 
   /**
    * Sets the class for this symbols.
-   * @param clazz new class value
+   * @param aclazz new class value
    */
-  public void setClass(final BCClass clazz) {
-    this.clazz = clazz;
+  public void setClass(final BCClass aclazz) {
+    this.clazz = aclazz;
   }
 }

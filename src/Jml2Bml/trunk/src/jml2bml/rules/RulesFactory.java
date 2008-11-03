@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -33,8 +31,8 @@ public final class RulesFactory {
    * @param context application context
    * @return instance of ExpressionRule
    */
-  public static TranslationRule<BCExpression, Symbols> getExpressionRule(
-                                                                         final Context context) {
+  public static TranslationRule < BCExpression, Symbols > getExpressionRule(
+      final Context context) {
     return new ExpressionRule(context);
   }
 
@@ -43,8 +41,8 @@ public final class RulesFactory {
    * @param context application context
    * @return instance of assert rule
    */
-  public static TranslationRule<String, Symbols> getAssertRule(
-                                                               final Context context) {
+  public static TranslationRule < String, Symbols > getAssertRule(
+      final Context context) {
     return new AssertRule(context);
   }
 
@@ -53,18 +51,19 @@ public final class RulesFactory {
    * @param context application context
    * @return instance of specification case rule.
    */
-  public static TranslationRule<String, Symbols> getSpecificationCaseRule(
-                                                                          final Context context) {
+  public static TranslationRule < String, Symbols > getSpecificationCaseRule(
+      final Context context) {
     return new SpecificationCaseRule(context);
   }
 
   /**
-   * Creates an instance of TypeClauseExprRule
+   * Creates an instance of TypeClauseExprRule.
+   *
    * @param context application context
    * @return created rule
    */
-  public static TranslationRule<String, Symbols> getTypeClauseExprRule(
-                                                                       final Context context) {
+  public static TranslationRule < String, Symbols > getTypeClauseExprRule(
+      final Context context) {
     return new TypeClauseExprRule(context);
   }
 
@@ -73,8 +72,8 @@ public final class RulesFactory {
    * @param context application context
    * @return loop invariant rule
    */
-  public static TranslationRule<String, Symbols> getLoopInvariantRule(
-                                                                      Context context) {
+  public static TranslationRule < String, Symbols > getLoopInvariantRule(
+      final Context context) {
     return new LoopInvariantRule(context);
   }
 }

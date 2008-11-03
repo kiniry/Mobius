@@ -61,10 +61,12 @@ public class MyControlFlowGraph {
    * @return map Instruction Context -> its number
    */
   private Map<InstructionContext, Integer> getInstrNum(final MethodGen mgen) {
-    final Map<InstructionContext, Integer> res = new HashMap<InstructionContext, Integer>();
+    final Map<InstructionContext, Integer> res =
+      new HashMap<InstructionContext, Integer>();
     final InstructionHandle[] instr = mgen.getInstructionList()
         .getInstructionHandles();
-    final Map<InstructionHandle, Integer> tmp = new HashMap<InstructionHandle, Integer>();
+    final Map<InstructionHandle, Integer> tmp =
+      new HashMap<InstructionHandle, Integer>();
     for (int i = 0; i < instr.length; i++) {
       tmp.put(instr[i], i);
     }
@@ -81,11 +83,13 @@ public class MyControlFlowGraph {
    * @return map instruction -> next instruction.
    */
   private Map<InstructionContext, InstructionContext> getNextInstructionMap(
-                                                                            final MethodGen mgen) {
-    final Map<InstructionContext, InstructionContext> res = new HashMap<InstructionContext, InstructionContext>();
+      final MethodGen mgen) {
+    final Map<InstructionContext, InstructionContext> res =
+      new HashMap<InstructionContext, InstructionContext>();
     final InstructionHandle[] instr = mgen.getInstructionList()
         .getInstructionHandles();
-    final Map<InstructionHandle, InstructionContext> tmp = new HashMap<InstructionHandle, InstructionContext>();
+    final Map<InstructionHandle, InstructionContext> tmp =
+      new HashMap<InstructionHandle, InstructionContext>();
     for (InstructionContext context : contexts) {
       tmp.put(context.getInstruction(), context);
     }
@@ -104,8 +108,10 @@ public class MyControlFlowGraph {
    * flow control graph.
    * @return instruction -> list of preceding instructions.
    */
-  private Map<InstructionContext, List<InstructionContext>> getIncomingInstructions() {
-    final Map<InstructionContext, List<InstructionContext>> res = new HashMap<InstructionContext, List<InstructionContext>>();
+  private Map<InstructionContext,
+              List<InstructionContext>> getIncomingInstructions() {
+    final Map<InstructionContext, List<InstructionContext>> res =
+      new HashMap<InstructionContext, List<InstructionContext>>();
     for (InstructionContext context : contexts) {
       res.put(context, new LinkedList<InstructionContext>());
     }
@@ -137,7 +143,7 @@ public class MyControlFlowGraph {
    * @return list of preceding instructions
    */
   public List<InstructionContext> getPrecedingInstructions(
-                                                           final InstructionContext instruction) {
+      final InstructionContext instruction) {
     return prec.get(instruction);
   }
 
@@ -158,7 +164,7 @@ public class MyControlFlowGraph {
    * @return next instruction
    */
   public InstructionContext getNextInstruction(
-                                               final InstructionContext instruction) {
+      final InstructionContext instruction) {
     return nextInstruction.get(instruction);
   }
 }

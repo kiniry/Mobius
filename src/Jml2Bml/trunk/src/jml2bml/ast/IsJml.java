@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-02-09 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-02-09 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.ast;
 
@@ -109,430 +107,479 @@ import com.sun.source.tree.WildcardTree;
  *
  * @author kjk (kjk@mimuw.edu.pl)
  */
-public class IsJml implements TreeVisitor<Boolean, Void>,
-    JmlTreeVisitor<Boolean, Void> {
+public class IsJml implements TreeVisitor < Boolean, Void >,
+    JmlTreeVisitor < Boolean, Void > {
 
-  public Boolean visitAnnotation(AnnotationTree node, Void p) {
+  public Boolean visitAnnotation(final AnnotationTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitArrayAccess(ArrayAccessTree node, Void p) {
+  public Boolean visitArrayAccess(final ArrayAccessTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitArrayType(ArrayTypeTree node, Void p) {
+  public Boolean visitArrayType(final ArrayTypeTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitAssert(AssertTree node, Void p) {
+  public Boolean visitAssert(final AssertTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitAssignment(AssignmentTree node, Void p) {
+  public Boolean visitAssignment(final AssignmentTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitBinary(BinaryTree node, Void p) {
+  public Boolean visitBinary(final BinaryTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitBlock(BlockTree node, Void p) {
+  public Boolean visitBlock(final BlockTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitBreak(BreakTree node, Void p) {
+  public Boolean visitBreak(final BreakTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitCase(CaseTree node, Void p) {
+  public Boolean visitCase(final CaseTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitCatch(CatchTree node, Void p) {
+  public Boolean visitCatch(final CatchTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitClass(ClassTree node, Void p) {
+  public Boolean visitClass(final ClassTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitCompilationUnit(CompilationUnitTree node, Void p) {
+  public Boolean visitCompilationUnit(final CompilationUnitTree node,
+                                      final Void p) {
     return false;
   }
 
-  public Boolean visitCompoundAssignment(CompoundAssignmentTree node, Void p) {
+  public Boolean visitCompoundAssignment(final CompoundAssignmentTree node,
+                                         final Void p) {
     return false;
   }
 
-  public Boolean visitConditionalExpression(ConditionalExpressionTree node,
-                                            Void p) {
+  public Boolean visitConditionalExpression(
+      final ConditionalExpressionTree node,
+      final Void p) {
     return false;
   }
 
-  public Boolean visitContinue(ContinueTree node, Void p) {
+  public Boolean visitContinue(final ContinueTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitDoWhileLoop(DoWhileLoopTree node, Void p) {
+  public Boolean visitDoWhileLoop(final DoWhileLoopTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitEmptyStatement(EmptyStatementTree node, Void p) {
+  public Boolean visitEmptyStatement(final EmptyStatementTree node,
+                                     final Void p) {
     return false;
   }
 
-  public Boolean visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
+  public Boolean visitEnhancedForLoop(final EnhancedForLoopTree node,
+                                      final Void p) {
     return false;
   }
 
-  public Boolean visitErroneous(ErroneousTree node, Void p) {
+  public Boolean visitErroneous(final ErroneousTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitExpressionStatement(ExpressionStatementTree node, Void p) {
+  public Boolean visitExpressionStatement(final ExpressionStatementTree node,
+                                          final Void p) {
     return false;
   }
 
-  public Boolean visitForLoop(ForLoopTree node, Void p) {
+  public Boolean visitForLoop(final ForLoopTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitIdentifier(IdentifierTree node, Void p) {
+  public Boolean visitIdentifier(final IdentifierTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitIf(IfTree node, Void p) {
+  public Boolean visitIf(final IfTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitImport(ImportTree node, Void p) {
+  public Boolean visitImport(final ImportTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitInstanceOf(InstanceOfTree node, Void p) {
+  public Boolean visitInstanceOf(final InstanceOfTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitLabeledStatement(LabeledStatementTree node, Void p) {
+  public Boolean visitLabeledStatement(final LabeledStatementTree node,
+                                       final Void p) {
     return false;
   }
 
-  public Boolean visitLiteral(LiteralTree node, Void p) {
+  public Boolean visitLiteral(final LiteralTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitMemberSelect(MemberSelectTree node, Void p) {
+  public Boolean visitMemberSelect(final MemberSelectTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitMethod(MethodTree node, Void p) {
+  public Boolean visitMethod(final MethodTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitMethodInvocation(MethodInvocationTree node, Void p) {
+  public Boolean visitMethodInvocation(final MethodInvocationTree node,
+                                       final Void p) {
     return false;
   }
 
-  public Boolean visitModifiers(ModifiersTree node, Void p) {
+  public Boolean visitModifiers(final ModifiersTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitNewArray(NewArrayTree node, Void p) {
+  public Boolean visitNewArray(final NewArrayTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitNewClass(NewClassTree node, Void p) {
+  public Boolean visitNewClass(final NewClassTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitOther(Tree node, Void p) {
+  public Boolean visitOther(final Tree node, final Void p) {
     return false;
   }
 
-  public Boolean visitParameterizedType(ParameterizedTypeTree node, Void p) {
+  public Boolean visitParameterizedType(final ParameterizedTypeTree node,
+                                        final Void p) {
     return false;
   }
 
-  public Boolean visitParenthesized(ParenthesizedTree node, Void p) {
+  public Boolean visitParenthesized(final ParenthesizedTree node,
+                                    final Void p) {
     return false;
   }
 
-  public Boolean visitPrimitiveType(PrimitiveTypeTree node, Void p) {
+  public Boolean visitPrimitiveType(final PrimitiveTypeTree node,
+                                    final Void p) {
     return false;
   }
 
-  public Boolean visitReturn(ReturnTree node, Void p) {
+  public Boolean visitReturn(final ReturnTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitSwitch(SwitchTree node, Void p) {
+  public Boolean visitSwitch(final SwitchTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitSynchronized(SynchronizedTree node, Void p) {
+  public Boolean visitSynchronized(final SynchronizedTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitThrow(ThrowTree node, Void p) {
+  public Boolean visitThrow(final ThrowTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitTry(TryTree node, Void p) {
+  public Boolean visitTry(final TryTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitTypeCast(TypeCastTree node, Void p) {
+  public Boolean visitTypeCast(final TypeCastTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitTypeParameter(TypeParameterTree node, Void p) {
+  public Boolean visitTypeParameter(final TypeParameterTree node,
+                                    final Void p) {
     return false;
   }
 
-  public Boolean visitUnary(UnaryTree node, Void p) {
+  public Boolean visitUnary(final UnaryTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitVariable(VariableTree node, Void p) {
+  public Boolean visitVariable(final VariableTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitWhileLoop(WhileLoopTree node, Void p) {
+  public Boolean visitWhileLoop(final WhileLoopTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitWildcard(WildcardTree node, Void p) {
+  public Boolean visitWildcard(final WildcardTree node, final Void p) {
     return false;
   }
 
-  public Boolean visitJmlBinary(JmlBinary arg0, Void arg1) {
+  public Boolean visitJmlBinary(final JmlBinary anArg0, final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlClassDecl(JmlClassDecl arg0, Void arg1) {
+  public Boolean visitJmlClassDecl(final JmlClassDecl anArg0,
+                                   final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlCompilationUnit(JmlCompilationUnit arg0, Void arg1) {
+  public Boolean visitJmlCompilationUnit(final JmlCompilationUnit anArg0,
+                                         final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlDoWhileLoop(JmlDoWhileLoop arg0, Void arg1) {
+  public Boolean visitJmlDoWhileLoop(final JmlDoWhileLoop anArg0,
+                                     final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlEnhancedForLoop(JmlEnhancedForLoop arg0, Void arg1) {
+  public Boolean visitJmlEnhancedForLoop(final JmlEnhancedForLoop anArg0,
+                                         final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlForLoop(JmlForLoop arg0, Void arg1) {
+  public Boolean visitJmlForLoop(final JmlForLoop anArg0, final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlFunction(JmlFunction arg0, Void arg1) {
+  public Boolean visitJmlFunction(final JmlFunction anArg0, final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlGroupName(JmlGroupName arg0, Void arg1) {
+  public Boolean visitJmlGroupName(final JmlGroupName anArg0,
+                                   final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlImport(JmlImport arg0, Void arg1) {
+  public Boolean visitJmlImport(final JmlImport anArg0, final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlLblExpression(JmlLblExpression arg0, Void arg1) {
+  public Boolean visitJmlLblExpression(final JmlLblExpression anArg0,
+                                       final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseAssignable(JmlMethodClauseAssignable arg0,
-                                                Void arg1) {
+  public Boolean visitJmlMethodClauseAssignable(
+      final JmlMethodClauseAssignable anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
   public Boolean visitJmlMethodClauseConditional(
-                                                 JmlMethodClauseConditional arg0,
-                                                 Void arg1) {
+      final JmlMethodClauseConditional anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseDecl(JmlMethodClauseDecl arg0, Void arg1) {
+  public Boolean visitJmlMethodClauseDecl(final JmlMethodClauseDecl anArg0,
+                                          final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseExpr(JmlMethodClauseExpr arg0, Void arg1) {
+  public Boolean visitJmlMethodClauseExpr(final JmlMethodClauseExpr anArg0,
+                                          final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseGroup(JmlMethodClauseGroup arg0, Void arg1) {
+  public Boolean visitJmlMethodClauseGroup(final JmlMethodClauseGroup anArg0,
+                                           final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseSigOnly(JmlMethodClauseSigOnly arg0,
-                                             Void arg1) {
+  public Boolean visitJmlMethodClauseSigOnly(
+      final JmlMethodClauseSigOnly anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodClauseSignals(JmlMethodClauseSignals arg0,
-                                             Void arg1) {
+  public Boolean visitJmlMethodClauseSignals(
+      final JmlMethodClauseSignals anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlMethodDecl(JmlMethodDecl arg0, Void arg1) {
+  public Boolean visitJmlMethodDecl(final JmlMethodDecl anArg0,
+                                    final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlMethodSpecs(JmlMethodSpecs arg0, Void arg1) {
+  public Boolean visitJmlMethodSpecs(final JmlMethodSpecs anArg0,
+                                     final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlPrimitiveTypeTree(JmlPrimitiveTypeTree arg0, Void arg1) {
+  public Boolean visitJmlPrimitiveTypeTree(final JmlPrimitiveTypeTree anArg0,
+                                           final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlQuantifiedExpr(JmlQuantifiedExpr arg0, Void arg1) {
+  public Boolean visitJmlQuantifiedExpr(final JmlQuantifiedExpr anArg0,
+                                        final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlRefines(JmlRefines arg0, Void arg1) {
+  public Boolean visitJmlRefines(final JmlRefines anArg0, final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlSetComprehension(JmlSetComprehension arg0, Void arg1) {
+  public Boolean visitJmlSetComprehension(final JmlSetComprehension anArg0,
+                                          final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlSingleton(JmlSingleton arg0, Void arg1) {
+  public Boolean visitJmlSingleton(final JmlSingleton anArg0,
+                                   final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlSpecificationCase(JmlSpecificationCase arg0, Void arg1) {
+  public Boolean visitJmlSpecificationCase(final JmlSpecificationCase anArg0,
+                                           final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStatement(JmlStatement arg0, Void arg1) {
+  public Boolean visitJmlStatement(final JmlStatement anArg0,
+                                   final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStatementDecls(JmlStatementDecls arg0, Void arg1) {
+  public Boolean visitJmlStatementDecls(final JmlStatementDecls anArg0,
+                                        final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStatementExpr(JmlStatementExpr arg0, Void arg1) {
+  public Boolean visitJmlStatementExpr(final JmlStatementExpr anArg0,
+                                       final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStatementLoop(JmlStatementLoop arg0, Void arg1) {
+  public Boolean visitJmlStatementLoop(final JmlStatementLoop anArg0,
+                                       final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStatementSpec(JmlStatementSpec arg0, Void arg1) {
+  public Boolean visitJmlStatementSpec(final JmlStatementSpec anArg0,
+                                       final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStoreRefArrayRange(JmlStoreRefArrayRange arg0,
-                                            Void arg1) {
+  public Boolean visitJmlStoreRefArrayRange(final JmlStoreRefArrayRange anArg0,
+                                            final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStoreRefKeyword(JmlStoreRefKeyword arg0, Void arg1) {
+  public Boolean visitJmlStoreRefKeyword(final JmlStoreRefKeyword anArg0,
+                                         final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlStoreRefListExpression(JmlStoreRefListExpression arg0,
-                                                Void arg1) {
+  public Boolean visitJmlStoreRefListExpression(
+      final JmlStoreRefListExpression anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseConditional(JmlTypeClauseConditional arg0,
-                                               Void arg1) {
+  public Boolean visitJmlTypeClauseConditional(
+      final JmlTypeClauseConditional anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseConstraint(JmlTypeClauseConstraint arg0,
-                                              Void arg1) {
+  public Boolean visitJmlTypeClauseConstraint(
+      final JmlTypeClauseConstraint anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseDecl(JmlTypeClauseDecl arg0, Void arg1) {
+  public Boolean visitJmlTypeClauseDecl(final JmlTypeClauseDecl anArg0,
+                                        final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseExpr(JmlTypeClauseExpr arg0, Void arg1) {
+  public Boolean visitJmlTypeClauseExpr(final JmlTypeClauseExpr anArg0,
+                                        final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseIn(JmlTypeClauseIn arg0, Void arg1) {
+  public Boolean visitJmlTypeClauseIn(final JmlTypeClauseIn anArg0,
+                                      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseInitializer(JmlTypeClauseInitializer arg0,
-                                               Void arg1) {
+  public Boolean visitJmlTypeClauseInitializer(
+      final JmlTypeClauseInitializer anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseMaps(JmlTypeClauseMaps arg0, Void arg1) {
+  public Boolean visitJmlTypeClauseMaps(final JmlTypeClauseMaps anArg0,
+                                        final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseMonitorsFor(JmlTypeClauseMonitorsFor arg0,
-                                               Void arg1) {
+  public Boolean visitJmlTypeClauseMonitorsFor(
+      final JmlTypeClauseMonitorsFor anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlTypeClauseRepresents(JmlTypeClauseRepresents arg0,
-                                              Void arg1) {
+  public Boolean visitJmlTypeClauseRepresents(
+      final JmlTypeClauseRepresents anArg0,
+      final Void anArg1) {
     // TODO Auto-generated method stub
     return true;
   }
 
-  public Boolean visitJmlVariableDecl(JmlVariableDecl arg0, Void arg1) {
+  public Boolean visitJmlVariableDecl(final JmlVariableDecl anArg0,
+                                      final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }
 
-  public Boolean visitJmlWhileLoop(JmlWhileLoop arg0, Void arg1) {
+  public Boolean visitJmlWhileLoop(final JmlWhileLoop anArg0,
+                                   final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
   }

@@ -31,7 +31,15 @@ import com.sun.tools.javac.util.Context;
  * @author Jedrek (fulara@mimuw.edu.pl)
  * @version 0.0-1
  */
-public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
+public class SymbolsBuilder extends
+    ExtendedJmlTreeScanner < Symbols, Symbols > {
+
+  int index;
+
+  BCMethod currentMethod;
+
+  Map < String, Integer > mapping;
+
   /**
    * Collection of ancestors for all AST nodes.
    */
@@ -68,7 +76,8 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
    * @return symbol table updated by this node
    */
   @Override
-  public Symbols scan(final Iterable<? extends Tree> nodes, final Symbols p) {
+  public Symbols scan(final Iterable < ? extends Tree > nodes,
+                      final Symbols p) {
     return p;
   };
 
@@ -92,8 +101,8 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     if (method != null && block != null) {
 
       final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
-      if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD)
-          || isGhost || isModal) {
+      if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD) ||
+          isGhost || isModal) {
         //field in an inner class
         handleField(node, clazz, p, isGhost, isModal);
       } else {
@@ -102,7 +111,6 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
       }
     } else if (method != null && !isGhost && !isModal) {
       //parameter
-      
       handleLocal(node, method, p);
     } else {
       //class field
@@ -125,24 +133,22 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     final BCClass cl = s.findClass();
     final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
                                                cl);
-    
     LocalVariable var = m.findLocalVariable(node.name.toString());
-    if (var == null){
-      int index = getIndex(m, node.getName().toString());
-      LocalVariableGen lvGen = new LocalVariableGen(index, null, m.getBcelMethod().getArgumentType(index - 1), null, null);
-      var = new LocalVariable(false, m, index, node.getName().toString(), lvGen);
+    if (var == null) {
+      int aindex = getIndex(m, node.getName().toString());
+      LocalVariableGen lvGen = new LocalVariableGen(aindex, null, m
+          .getBcelMethod().getArgumentType(aindex - 1), null, null);
+      var = new LocalVariable(false, m, aindex, node.getName().toString(),
+                              lvGen);
     }
     s.put(node.name.toString(), new Variable(var, node));
   }
 
-  int index = 0;
-  BCMethod currentMethod = null;
-  Map<String, Integer> mapping = null;
-  private int getIndex(BCMethod m, String name){
-    if (! m.equals(currentMethod)){
+  private int getIndex(final BCMethod m, final String name) {
+    if (m.equals(currentMethod)) {
       index = 0;
       currentMethod = m;
-      mapping = new HashMap<String, Integer>();
+      mapping = new HashMap < String, Integer >();
     }
     if (mapping.containsKey(name))
       return mapping.get(name).intValue();
@@ -151,6 +157,7 @@ public class SymbolsBuilder extends ExtendedJmlTreeScanner<Symbols, Symbols> {
     System.err.println("mapowanie " + name + " " + index);
     return index;
   }
+
   /**
    * Handles field declarations.
    * @param node field declaration

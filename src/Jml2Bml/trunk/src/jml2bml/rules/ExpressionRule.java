@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -70,7 +68,7 @@ import com.sun.tools.javac.util.Name;
  * @version 0.0-1
  *
  */
-public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
+public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
   /**
    * Indicates, if the currently translated expression is \old.
    */
@@ -98,8 +96,10 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    */
   @Override
   protected BCExpression preVisit(final Tree node, final Symbols p) {
-    throw new NotTranslatedRuntimeException("Node " + node + " not translated.");
+    throw new NotTranslatedRuntimeException("Node " + node +
+                                            " not translated.");
   }
+
   // TODO probably more nodes should be visited here
   /**
    * Creates an BCExpression for Binary Tree node.
@@ -127,7 +127,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    * @return translated node
    */
   @Override
-  public BCExpression visitIdentifier(final IdentifierTree node, final Symbols p) {
+  public BCExpression visitIdentifier(final IdentifierTree node,
+                                      final Symbols p) {
     final String name = node.getName().toString();
     if (Constants.THIS.equals(name)) {
       return new THIS(isOld, p.findClass());
@@ -152,13 +153,16 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
   };
 
   @Override
-  public BCExpression visitJmlStoreRefKeyword(org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword node, Symbols p) {
+  public BCExpression visitJmlStoreRefKeyword(
+      final org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword node,
+      final Symbols p) {
     if (node.token == JmlToken.BSNOTHING)
       return ModifyExpression.Nothing;
     if (node.token == JmlToken.BSEVERYTHING)
       return ModifyExpression.Everything;
     return null;
   };
+
   /**
    * This method handles the Literal node.
    * @param node - node to handle
@@ -193,8 +197,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    */
   @Override
   public BCExpression visitConditionalExpression(
-                                                 final ConditionalExpressionTree node,
-                                                 final Symbols p) {
+      final ConditionalExpressionTree node,
+      final Symbols p) {
     final BCExpression condition = scan(node.getCondition(), p);
     final BCExpression trueExpr = scan(node.getTrueExpression(), p);
     final BCExpression falseExpr = scan(node.getFalseExpression(), p);
@@ -294,8 +298,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
     }
     if (Constants.ARRAY_LENGTH.equals(identifier)) {
       //special case - array length
-      if (type != null
-          && type.toString().startsWith(Constants.ARRAYTYPE_PREFIX)) {
+      if (type != null &&
+          type.toString().startsWith(Constants.ARRAYTYPE_PREFIX)) {
         return new FieldAccess(Code.FIELD_ACCESS, expr, new ArrayLength());
       }
     }
@@ -314,8 +318,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(isOld, fieldRefIndex, p));
     }
-    throw new Jml2BmlException("Unresolved field access in type "
-                               + type.toString() + " to field " + identifier);
+    throw new Jml2BmlException("Unresolved field access in type " +
+                               type.toString() + " to field " + identifier);
 
   }
 
@@ -367,7 +371,8 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
    * @return translated node
    */
   @Override
-  public BCExpression visitJmlSingleton(final JmlSingleton node, final Symbols p) {
+  public BCExpression visitJmlSingleton(final JmlSingleton node,
+                                        final Symbols p) {
     if (JCUtils.isResult(node)) {
       final BCClass bcClazz = p.findClass();
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
@@ -375,13 +380,13 @@ public class ExpressionRule extends TranslationRule<BCExpression, Symbols> {
       final Tree nextClassMember = finder.getNextSibling(specs);
       if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
         throw new NotTranslatedRuntimeException(
-                                         "Cannot find method for the \result: "
-                                             + node);
+          "Cannot find method for the \result: " + node);
       final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
       final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),
                                                         bcClazz);
       return new RESULT(bcMethod);
     }
-    throw new NotTranslatedRuntimeException("Singleton type not translated: " + node);
+    throw new NotTranslatedRuntimeException("Singleton type not translated: " +
+                                            node);
   }
 }

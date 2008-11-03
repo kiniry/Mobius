@@ -37,7 +37,7 @@ public final class TranslationUtil {
    * @param symb symbol table
    * @param context application context
    * @return formula for given expression
-   * @throws NotTranslatedRuntimeException 
+   * @throws NotTranslatedRuntimeException
    */
   public static AbstractFormula getFormula(final JCExpression expression,
                                            final Symbols symb,
@@ -48,7 +48,8 @@ public final class TranslationUtil {
     final BCExpression bcExpr = expression.accept(RulesFactory
         .getExpressionRule(context), symb);
     if (bcExpr.getType1() != JavaBasicType.JavaBool)
-      throw new NotTranslatedRuntimeException("assert expression must be boolean");
+      throw new NotTranslatedRuntimeException(
+        "assert expression must be boolean");
     return (AbstractFormula) bcExpr;
   }
 }

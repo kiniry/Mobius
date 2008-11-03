@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-07 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-07 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
 
@@ -31,15 +29,15 @@ public class LoopDescription {
 
   /**
    * Creates the loop description object.
-   * @param start - start of the loop
-   * @param end - end of the loop
+   * @param astart - start of the loop
+   * @param anend - end of the loop
    * @param whereAdd - instruction to which the loop invariant should be added.
    */
-  public LoopDescription(final InstructionContext start,
-                         final InstructionContext end,
+  public LoopDescription(final InstructionContext astart,
+                         final InstructionContext anend,
                          final InstructionContext whereAdd) {
-    this.start = start;
-    this.end = end;
+    this.start = astart;
+    this.end = anend;
     this.add = whereAdd;
   }
 
@@ -98,6 +96,6 @@ public class LoopDescription {
   @Override
   public String toString() {
     return "Loop Description: (" + start.getInstruction() + "," +
-    end.getInstruction() + "): " + add.getInstruction();
+           end.getInstruction() + "): " + add.getInstruction();
   }
 }

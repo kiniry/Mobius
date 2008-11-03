@@ -27,15 +27,17 @@ public final class LoopDetector {
    * @param method - given method
    * @return list of loop descriptions (condition, start, end)
    */
-  public static List<LoopDescription> detectLoop(final BCMethod method) {
+  public static List < LoopDescription > detectLoop(final BCMethod method) {
     final MyControlFlowGraph graph = new MyControlFlowGraph(method);
     final InstructionContext[] instructions = graph.getInstructionContext();
-    final List<LoopDescription> res = new LinkedList<LoopDescription>(); 
+    final List < LoopDescription > res = new LinkedList < LoopDescription >();
     for (InstructionContext instruction : instructions) {
       LoopDescription loopDescription = null;
       loopDescription = firstKindLoop(instruction, graph);
       if (loopDescription != null) {
-        System.out.println("znalazlem petle pierwszego rodzaju: " + loopDescription.getInstructionToAnnotate() + " poczatek " + loopDescription.getLoopStart());
+        System.out.println("znalazlem petle pierwszego rodzaju: " +
+                           loopDescription.getInstructionToAnnotate() +
+                           " poczatek " + loopDescription.getLoopStart());
         res.add(loopDescription);
       } else {
         loopDescription = secondKindLoop(instruction, graph);
@@ -72,9 +74,9 @@ public final class LoopDetector {
    * @return triple (start [3], end [5], condition [5])
    */
   private static LoopDescription firstKindLoop(
-                                               final InstructionContext instruction,
-                                               final MyControlFlowGraph graph) {
-    final List<InstructionContext> precInstr = graph
+      final InstructionContext instruction,
+      final MyControlFlowGraph graph) {
+    final List < InstructionContext > precInstr = graph
         .getPrecedingInstructions(instruction);
     final int number = graph.getInstructionNumber(instruction);
     int min = number - 1;
@@ -90,10 +92,11 @@ public final class LoopDetector {
     if (beforeLoop != null) {
       InstructionContext loopCondition = null;
       start = findFirstLoopStart(beforeLoop, number, graph);
-      if (start == null){
+      if (start == null) {
         return null;
       }
-      final List<InstructionContext> prec = graph.getPrecedingInstructions(start);
+      final List < InstructionContext > prec = graph
+          .getPrecedingInstructions(start);
       int max = number;
       for (InstructionContext p : prec) {
         final int n = graph.getInstructionNumber(p);
@@ -104,23 +107,23 @@ public final class LoopDetector {
       }
       if (loopCondition == null)
         return null;
-      return new LoopDescription(start,
-                                 loopCondition, loopCondition);
+      return new LoopDescription(start, loopCondition, loopCondition);
     }
     return null;
   }
 
   private static InstructionContext findFirstLoopStart(
-                                                final InstructionContext beforeLoop,
-                                                final int number,
-                                                final MyControlFlowGraph graph) {
+      final InstructionContext beforeLoop,
+      final int number,
+      final MyControlFlowGraph graph) {
     InstructionContext tmp = beforeLoop;
     int n = graph.getInstructionNumber(tmp);
-    
+
     while (n < number) {
       tmp = graph.getNextInstruction(tmp);
       n = graph.getInstructionNumber(tmp);
-      final List<InstructionContext> prec = graph.getPrecedingInstructions(tmp);
+      final List < InstructionContext > prec = graph
+          .getPrecedingInstructions(tmp);
       for (InstructionContext p : prec) {
         if (graph.getInstructionNumber(p) > number) {
           return tmp;
@@ -148,9 +151,9 @@ public final class LoopDetector {
    * @return triple (start [2], end [5], loopCondition [3])
    */
   private static LoopDescription secondKindLoop(
-                                                final InstructionContext instruction,
-                                                final MyControlFlowGraph graph) {
-    final List<InstructionContext> precInstr = graph
+      final InstructionContext instruction,
+      final MyControlFlowGraph graph) {
+    final List < InstructionContext > precInstr = graph
         .getPrecedingInstructions(instruction);
     if (precInstr.size() <= 1) {
       return null;
@@ -170,7 +173,8 @@ public final class LoopDetector {
       InstructionContext loopStart = null;
       final InstructionContext c = graph.getNextInstruction(loopEnd);
       if (c != null) {
-        final List<InstructionContext> prec = graph.getPrecedingInstructions(c);
+        final List < InstructionContext > prec = graph
+            .getPrecedingInstructions(c);
         int min = max;
         for (InstructionContext p : prec) {
           final int n = graph.getInstructionNumber(p);
@@ -205,8 +209,8 @@ public final class LoopDetector {
    * @return ([1],[3],[1])
    */
   private static LoopDescription findDoWhileLoop(
-                                                 final InstructionContext instruction,
-                                                 final MyControlFlowGraph graph) {
+      final InstructionContext instruction,
+      final MyControlFlowGraph graph) {
     final int number = graph.getInstructionNumber(instruction);
     for (InstructionContext next : instruction.getSuccessors()) {
       final int n = graph.getInstructionNumber(next);

@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-28 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-28 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -56,14 +54,15 @@ import com.sun.tools.javac.util.Context;
  * @author kjk (kjk@mimuw.edu.pl)
  * @version 0.0-1
  */
-public class LoopInvariantRule extends TranslationRule<String, Symbols> {
+public class LoopInvariantRule extends TranslationRule < String, Symbols > {
 
   /**
    * Class for updating symbol table - we need to add loop condition to symbols.
    * @author kjk (kjk@mimuw.edu.pl)
    * @version 0.0-1
    */
-  private class SymbolTableUpdater extends TranslationRule<Symbols, Symbols> {
+  private class SymbolTableUpdater extends TranslationRule < Symbols,
+                                                             Symbols > {
     /** A SymbolsBuilder field. */
     private SymbolsBuilder builder;
 
@@ -80,8 +79,8 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
      */
     @Override
     protected Symbols preVisit(final Tree node, final Symbols symb) {
-      throw new NotTranslatedRuntimeException("Not implemented: " + node.getClass() +
-                                       " " + node);
+      throw new NotTranslatedRuntimeException("Not implemented: " +
+                                              node.getClass() + " " + node);
     }
 
     /**
@@ -140,11 +139,12 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
       return node.var.accept(builder, new Symbols(p));
     }
   }
+
   /** Application context. */
   private final Context myContext;
 
   /** Loops found in bytecode of the current method. */
-  private Collection<SourceLoopDescription> loops;
+  private Collection < SourceLoopDescription > loops;
 
   /** Helps to find ancestors for given nodes. */
   private TreeNodeFinder finder;
@@ -177,13 +177,13 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
 
     /**
      * Constructor of the class.
-     * @param loopDesc bytecode loop description.
+     * @param aloopDesc bytecode loop description.
      * @param line line to use in the beginning as start and end position of
      * loop in source code.
      */
-    public SourceLoopDescription(final LoopDescription loopDesc,
+    public SourceLoopDescription(final LoopDescription aloopDesc,
                                  final int line) {
-      this.loopDesc = loopDesc;
+      this.loopDesc = aloopDesc;
       this.sourceBegin = line;
       this.sourceEnd = line;
     }
@@ -215,13 +215,14 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     final BCMethod bcMethod = BytecodeUtil.findMethod(node.getName(), clazz);
     finder = myContext.get(TreeNodeFinder.class);
 
-    if (bcMethod.getBcelMethod().isAbstract()) return null;
-    final List<LoopDescription> bytecodeLoops =
-      LoopDetector.detectLoop(bcMethod);
-    final Map<InstructionHandle, Integer> lineNumbers =
-      BytecodeUtil.getLineNumberMap(bcMethod);
-    final Map<LoopDescription, SourceLoopDescription> sourceLoops =
-      new HashMap<LoopDescription, SourceLoopDescription>();
+    if (bcMethod.getBcelMethod().isAbstract())
+      return null;
+    final List < LoopDescription > bytecodeLoops = LoopDetector
+        .detectLoop(bcMethod);
+    final Map < InstructionHandle, Integer > lineNumbers = BytecodeUtil
+        .getLineNumberMap(bcMethod);
+    final Map < LoopDescription, SourceLoopDescription > sourceLoops =
+      new HashMap < LoopDescription, SourceLoopDescription >();
 
     int sourceLine = -1;
     for (InstructionHandle ih : bcMethod.getBcelMethod().getInstructionList()
@@ -258,10 +259,10 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
         if (matchedLoop == null)
           matchedLoop = loopDesc;
         else if (matchedLoop.sourceBegin >= loopDesc.sourceBegin &&
-            matchedLoop.sourceEnd <= loopDesc.sourceEnd)
+                 matchedLoop.sourceEnd <= loopDesc.sourceEnd)
           matchedLoop = loopDesc;
         else if (matchedLoop.sourceBegin <= loopDesc.sourceBegin &&
-            matchedLoop.sourceEnd >= loopDesc.sourceEnd)
+                 matchedLoop.sourceEnd >= loopDesc.sourceEnd)
           continue;
         else
           throw new NotTranslatedRuntimeException("Wrong loops in bytecode??");
@@ -286,14 +287,14 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     final BCClass clazz = symb.findClass();
     final MethodTree method = (MethodTree) finder.getAncestor(loopNode,
                                                               Kind.METHOD);
-    final Map<JCTree, Integer> endPosTable =
-      myContext.get(JCCompilationUnit.class).endPositions;
+    final Map < JCTree, Integer > endPosTable = myContext
+        .get(JCCompilationUnit.class).endPositions;
 
     final LineMap lineMap = myContext.get(LineMap.class);
-    final long beginLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getStartPosition());
-    final long endLine =
-      lineMap.getLineNumber(((JCTree) loopNode).getEndPosition(endPosTable));
+    final long beginLine = lineMap.getLineNumber(((JCTree) loopNode)
+        .getStartPosition());
+    final long endLine = lineMap.getLineNumber(((JCTree) loopNode)
+        .getEndPosition(endPosTable));
 
     final SourceLoopDescription matchedLoop = findMatchedLoop(beginLine,
                                                               endLine);
@@ -302,8 +303,8 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     for (SourceLoopDescription loop : loops)
       if (loop.sourceBegin == matchedLoop.sourceBegin &&
           loop.sourceEnd == matchedLoop.sourceEnd) {
-        final InstructionHandle loopAdd =
-          loop.loopDesc.getInstructionToAnnotate().getInstruction();
+        final InstructionHandle loopAdd = loop.loopDesc
+            .getInstructionToAnnotate().getInstruction();
         addLoopSpecs(BytecodeUtil.findMethod(method.getName(), clazz), loopAdd,
                      modifies, invariant, decreases);
       }
@@ -339,7 +340,8 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
    * @param invariant invariant of the attribute
    * @param decreases decreases of the attribute
    */
-  private void addLoopSpecs(final BCMethod bcMethod, final InstructionHandle ih,
+  private void addLoopSpecs(final BCMethod bcMethod,
+                            final InstructionHandle ih,
                             final ModifyList modifies,
                             final BCExpression invariant,
                             final BCExpression decreases) {
@@ -386,9 +388,9 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     }
     final int count = addNew ? ihs.size() : specs.getMinor();
     final SingleLoopSpecification attr = addNew ?
-        new SingleLoopSpecification(bcMethod, ih, count, modifies,
-                                    invariant, decreases) :
-          new SingleLoopSpecification(bcMethod, ih, count, oldModifies,
+        new SingleLoopSpecification(bcMethod, ih, count, modifies, invariant,
+                                    decreases) :
+        new SingleLoopSpecification(bcMethod, ih, count, oldModifies,
                                       oldInvariant, oldDecreases);
     if (addNew)
       bcMethod.addAttribute(attr);
@@ -415,14 +417,14 @@ public class LoopInvariantRule extends TranslationRule<String, Symbols> {
     AbstractFormula invariant = null;
     BCExpression decreases = null;
     if (node.token == JmlToken.LOOP_INVARIANT)
-      invariant = TranslationUtil.getFormula(node.expression,
-                                             newSymbols, myContext);
+      invariant = TranslationUtil.getFormula(node.expression, newSymbols,
+                                             myContext);
     else if (node.token == JmlToken.DECREASES)
       decreases = node.expression.accept(RulesFactory
           .getExpressionRule(myContext), newSymbols);
     else
-      throw new NotTranslatedRuntimeException("Not translating JmlStatementLoop of " +
-                                       "type: " + node.token);
+      throw new NotTranslatedRuntimeException(
+         "Not translating JmlStatementLoop of " + "type: " + node.token);
     insertSpecs(loopNode, newSymbols, modifies, invariant, decreases);
     return "";
   }

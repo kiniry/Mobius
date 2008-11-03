@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-12 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-12 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.ast;
 
@@ -25,7 +23,7 @@ public class PrettyPrinter {
    * @author kjk (kjk@mimuw.edu.pl)
    */
   private class PrettyPrinterVisitor extends
-      ExtendedJmlTreeScanner<String, String> {
+      ExtendedJmlTreeScanner < String, String > {
 
     /**
      * Method adds to default scan method printing the node class with

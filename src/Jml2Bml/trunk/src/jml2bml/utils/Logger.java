@@ -40,9 +40,14 @@ public final class Logger {
   private static final int CURRENT = ALL;
 
   /**
-   * Print stream for this logger.
+   * Print STREAM for this logger.
    */
-  private static PrintStream stream = null;
+  private static PrintStream STREAM;
+
+  /**
+   * The log file. If null, System.out will be used.
+   */
+  private static final String LOG_FILE = null;
 
   /**
    * Calendar (to determine current time).
@@ -53,37 +58,33 @@ public final class Logger {
    * Name of class corresponding to this logger.
    */
   private String className;
-  
-  /**
-   * The log file. If null, System.out will be used.
-   */
-  private static final String LOG_FILE = null;
-  /**
-   * Returns a new logger for the given class
-   * @param c class, for which the logger should be created
-   * @return Logger instance
-   */
-  public static Logger getLogger(final Class<?> c) {
-    return new Logger(c);
-  }
 
   /**
    * Hidden constructor.
    * @param c class, for which the logger is created.
    */
-  private Logger(final Class<?> c) {
-    if (stream == null) {
+  private Logger(final Class < ? > c) {
+    if (STREAM == null) {
       try {
         if (LOG_FILE == null) {
-          stream = System.out;
+          STREAM = System.out;
         } else {
-          stream = new PrintStream(new File(LOG_FILE));
+          STREAM = new PrintStream(new File(LOG_FILE));
         }
       } catch (FileNotFoundException e) {
-        stream = System.err;
+        STREAM = System.err;
       }
     }
     className = c.getSimpleName();
+  }
+
+  /**
+   * Returns a new logger for the given class.
+   * @param c class, for which the logger should be created
+   * @return Logger instance
+   */
+  public static Logger getLogger(final Class < ? > c) {
+    return new Logger(c);
   }
 
   /**
@@ -108,22 +109,22 @@ public final class Logger {
    */
   public void debug(final String message) {
     if (CURRENT <= DEBUG) {
-      stream.println(calendar.getTime() + " DEBUG: " + className + " "
-                     + determineLocation() + " " + ": " + message);
-      stream.flush();
+      STREAM.println(calendar.getTime() + " DEBUG: " + className + " " +
+                     determineLocation() + " " + ": " + message);
+      STREAM.flush();
     }
 
   }
 
   /**
-   * Prints an info to the logger (if info level is enabled)
+   * Prints an info to the logger (if info level is enabled).
    * @param message message to print
    */
   public void info(final String message) {
     if (CURRENT <= INFO) {
-      stream.println(calendar.getTime() + " INFO: " + className + " "
-                     + determineLocation() + " " + ": " + message);
-      stream.flush();
+      STREAM.println(calendar.getTime() + " INFO: " + className + " " +
+                     determineLocation() + " " + ": " + message);
+      STREAM.flush();
     }
   }
 
@@ -132,9 +133,9 @@ public final class Logger {
    * @param message message to print
    */
   public void error(final String message) {
-    stream.println(calendar.getTime() + " ERROR: " + className + " "
-                   + determineLocation() + " " + ": " + message);
-    stream.flush();
+    STREAM.println(calendar.getTime() + " ERROR: " + className + " " +
+                   determineLocation() + " " + ": " + message);
+    STREAM.flush();
   }
 
   /**
@@ -145,8 +146,8 @@ public final class Logger {
     final Throwable t = new Throwable();
     final StackTraceElement[] stack = t.getStackTrace();
     if (stack.length >= 3)
-      return "[" + stack[2].getMethodName() + " line "
-             + stack[2].getLineNumber() + "]";
+      return "[" + stack[2].getMethodName() + " line " +
+             stack[2].getLineNumber() + "]";
     return "";
   }
 }

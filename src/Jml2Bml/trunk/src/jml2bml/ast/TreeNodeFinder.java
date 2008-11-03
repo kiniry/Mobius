@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-06 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.ast;
 
@@ -32,7 +30,7 @@ public class TreeNodeFinder {
    * @author kjk    (kjk@mimuw.edu.pl)
    *
    */
-  private class ParentFinder extends ExtendedJmlTreeScanner<Tree, Tree> {
+  private class ParentFinder extends ExtendedJmlTreeScanner < Tree, Tree > {
     /** Informs if the ParentFinder is in Jml comment. */
     private boolean isInJmlComment = false;
 
@@ -69,9 +67,10 @@ public class TreeNodeFinder {
      * @return parent node (the same result as original scan)
      */
     @Override
-    public Tree scan(final Iterable<? extends Tree> nodes, final Tree parent) {
+    public Tree scan(final Iterable < ? extends Tree > nodes,
+                     final Tree parent) {
       if (nodes != null) {
-        final Iterator<? extends Tree> iter = nodes.iterator();
+        final Iterator < ? extends Tree > iter = nodes.iterator();
         if (iter.hasNext()) {
           Tree stmt = iter.next();
           while (iter.hasNext()) {
@@ -87,22 +86,22 @@ public class TreeNodeFinder {
   }
 
   /** Map of parents of tree nodes. */
-  private Map<Tree, Tree> parents;
+  private Map < Tree, Tree > parents;
 
   /** Maps a tree node to next sibling in a tree. */
-  private Map<Tree, Tree> nextSiblingMap;
+  private Map < Tree, Tree > nextSiblingMap;
 
   /** Maps a tree node to inforamtion if it is in jml comment. */
-  private Map<Tree, Boolean> isJml;
+  private Map < Tree, Boolean > isJml;
 
   /**
    * The constructor.
    * @param tree tree on which we want perform find operations.
    */
   public TreeNodeFinder(final Tree tree) {
-    parents = new HashMap<Tree, Tree>();
-    nextSiblingMap = new HashMap<Tree, Tree>();
-    isJml = new HashMap<Tree, Boolean>();
+    parents = new HashMap < Tree, Tree >();
+    nextSiblingMap = new HashMap < Tree, Tree >();
+    isJml = new HashMap < Tree, Boolean >();
     tree.accept(new ParentFinder(), tree);
   }
 
@@ -136,7 +135,7 @@ public class TreeNodeFinder {
    * @return the ancestor of treeElement that is assignable to type ofClass
    */
   //TODO: Is this dirty, should be changed??
-  public Tree getAncestor(final Tree treeElement, final Class<?> ofClass) {
+  public Tree getAncestor(final Tree treeElement, final Class < ? > ofClass) {
     if (!parents.containsKey(treeElement))
       throw new RuntimeException("tree element not from current tree");
 

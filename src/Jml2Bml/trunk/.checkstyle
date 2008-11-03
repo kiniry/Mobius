@@ -6,4 +6,9 @@
     <fileset name="all" enabled="true" check-config-name="mobius" local="true">
         <file-match-pattern match-pattern="." include-pattern="true"/>
     </fileset>
+    <filter name="FilesFromPackage" enabled="true">
+        <filter-data value="tests/oldTests"/>
+        <filter-data value="tests/testClasses"/>
+        <filter-data value="tests/tests"/>
+    </filter>
 </fileset-config>

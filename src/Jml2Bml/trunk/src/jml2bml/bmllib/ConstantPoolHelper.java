@@ -74,8 +74,8 @@ public final class ConstantPoolHelper {
     final String fieldType = findFieldType(trimmedClassName, fieldName);
 
     if (fieldType == null) {
-      throw new Jml2BmlException("Field " + fieldName + " not found in class "
-                                 + className + ".");
+      throw new Jml2BmlException("Field " + fieldName + " not found in class " +
+                                 className + ".");
     }
     final BCClass clazz = symbols.findClass();
     final BCConstantPool cp = clazz.getCp();
@@ -113,14 +113,12 @@ public final class ConstantPoolHelper {
     final int fieldNameIndex = cp.findConstant(fieldName);
     final int classNameIndex = cp.findConstant(trimmedClassName);
     final int classIndex = getConstantClassForNameIndex(classNameIndex, cp);
-    final List<Integer> nameAndTypeIndexes = getConstantNameAndTypeForNameIndex(
-                                                                                fieldNameIndex,
-                                                                                cp);
+    final List < Integer > nameAndTypeIndexes =
+      getConstantNameAndTypeForNameIndex(fieldNameIndex, cp);
     for (Integer nameAndTypeIndex : nameAndTypeIndexes) {
-      final int constantFieldrefIndex = getConstantFieldRefForClassAndNameAndType(
-                                                                                  classIndex,
-                                                                                  nameAndTypeIndex,
-                                                                                  cp);
+      final int constantFieldrefIndex =
+        getConstantFieldRefForClassAndNameAndType(classIndex, nameAndTypeIndex,
+                                                  cp);
       if (constantFieldrefIndex != -1) {
         return constantFieldrefIndex;
       }
@@ -158,11 +156,11 @@ public final class ConstantPoolHelper {
    * @param cp constant pool
    * @return List of indexes of the ConstantNameAndTypes
    */
-  private static List<Integer> getConstantNameAndTypeForNameIndex(
-                                                                  final int nameIndex,
-                                                                  final BCConstantPool cp) {
+  private static List < Integer > getConstantNameAndTypeForNameIndex(
+      final int nameIndex,
+      final BCConstantPool cp) {
     final int size = cp.size();
-    final List<Integer> res = new LinkedList<Integer>();
+    final List < Integer > res = new LinkedList < Integer >();
     for (int i = 0; i < size; i++) {
       final Constant c = cp.getConstant(i);
       if (c instanceof ConstantNameAndType) {
@@ -182,16 +180,16 @@ public final class ConstantPoolHelper {
    * @return index of the ConstantFieldref, or -1.
    */
   private static int getConstantFieldRefForClassAndNameAndType(
-                                                               final int classIndex,
-                                                               final int nameAndTypeindex,
-                                                               final BCConstantPool cp) {
+      final int classIndex,
+      final int nameAndTypeindex,
+      final BCConstantPool cp) {
     final int size = cp.size();
     for (int i = 0; i < size; i++) {
       final Constant c = cp.getConstant(i);
       if (c instanceof ConstantFieldref) {
         final ConstantFieldref cfr = (ConstantFieldref) c;
-        if (cfr.getClassIndex() == classIndex
-            && cfr.getNameAndTypeIndex() == nameAndTypeindex) {
+        if (cfr.getClassIndex() == classIndex &&
+            cfr.getNameAndTypeIndex() == nameAndTypeindex) {
           return i;
         }
       }
@@ -228,7 +226,8 @@ public final class ConstantPoolHelper {
    * @return - index of the newly inserted constant
    * (or of the old with the same value)
    */
-  private static int tryInsert(final BCConstantPool cp, final ConstantClass cl) {
+  private static int tryInsert(final BCConstantPool cp,
+                               final ConstantClass cl) {
     for (int i = 0; i < cp.size(); i++) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
@@ -247,8 +246,8 @@ public final class ConstantPoolHelper {
       }
     }
     //should never happen!!!
-    throw new Jml2BmlException("Serious error in constant pool "
-                               + "- already inserted constant not found.");
+    throw new Jml2BmlException("Serious error in constant pool " +
+                               "- already inserted constant not found.");
   }
 
   /**
@@ -265,8 +264,8 @@ public final class ConstantPoolHelper {
     for (int i = 0; i < cp.size(); i++) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
-        if ((tmp.getNameIndex() == cnt.getNameIndex())
-            && (tmp.getSignatureIndex() == cnt.getSignatureIndex())) {
+        if ((tmp.getNameIndex() == cnt.getNameIndex()) &&
+            (tmp.getSignatureIndex() == cnt.getSignatureIndex())) {
           return i;
         }
       }
@@ -275,21 +274,21 @@ public final class ConstantPoolHelper {
     for (int i = cp.size() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
-        if ((tmp.getNameIndex() == cnt.getNameIndex())
-            && (tmp.getSignatureIndex() == cnt.getSignatureIndex())) {
+        if ((tmp.getNameIndex() == cnt.getNameIndex()) &&
+            (tmp.getSignatureIndex() == cnt.getSignatureIndex())) {
           return i;
         }
       }
     }
     //should never happen!!!
-    throw new Jml2BmlException("Serious error in constant pool "
-                               + "- already inserted constant not found.");
+    throw new Jml2BmlException("Serious error in constant pool " +
+                               "- already inserted constant not found.");
 
   }
 
   public static void addGhostField(final String fieldType,
-                                   final String fieldName, final Symbols symbols) {
-
+                                   final String fieldName,
+                                   final Symbols symbols) {
     final BCClass clazz = symbols.findClass();
     final BCConstantPool cp = clazz.getCp();
     final String className = clazz.getJC().getClassName().replace('.', '/');
@@ -305,5 +304,5 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex));
     System.err.println(cp.printCode(new StringBuffer()));
-}
+  }
 }

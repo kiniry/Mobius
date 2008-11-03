@@ -1,10 +1,8 @@
 /*
- * @title       "Jml2Bml"
- * @description "JML to BML Compiler"
- * @copyright   "(c) 2008-01-10 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
+ * 2008-01-10 University of Warsaw" @license "All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the LGPL
+ * licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -23,7 +21,6 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
-import org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
 import annot.attributes.Exsure;
@@ -35,13 +32,10 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.javatype.JavaReferenceType;
-import annot.bcexpression.modifies.ModifiesEverything;
-import annot.bcexpression.modifies.ModifiesNothing;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.Code;
 
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
@@ -55,14 +49,14 @@ import com.sun.tools.javac.util.Context;
  *
  * @version 0-0.1
  */
-public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
+public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
 
   /**
    * Constructor.
    * @author kjk (kjk@mimuw.edu.pl)
    */
   private class SpecificationCaseBuilder extends
-      TranslationRule<String, Symbols> {
+      TranslationRule < String, Symbols > {
 
     /**
      * Default preVisit method. Throws NotTranslatedRuntimeException.
@@ -77,15 +71,15 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
 
     @Override
     public String visitJmlMethodClauseAssignable(
-                                                 JmlMethodClauseAssignable node,
-                                                 Symbols p) {
+        final JmlMethodClauseAssignable node,
+        final Symbols p) {
       ExpressionRule exRule = new ExpressionRule(myContext);
       for (JCTree n : node.list) {
-        BCExpression res = n.accept(exRule, p);
+        final BCExpression res = n.accept(exRule, p);
         if (res == null || !(res instanceof ModifyExpression)) {
           throw new NotTranslatedRuntimeException("Not implemented: " + node);
         }
-        if (modifies == null){
+        if (modifies == null) {
           modifies = new ModifyList();
         }
         modifies.addModify((ModifyExpression) res);
@@ -133,7 +127,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
      */
     private void appendExcondition(final Exsure exsure) {
       if (excondition == null)
-        excondition = new Vector<Exsure>();
+        excondition = new Vector < Exsure >();
       excondition.add(exsure);
     }
 
@@ -157,8 +151,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
         appendExcondition(new Exsure(type, form));
       } else
         throw new NotTranslatedRuntimeException(
-                                                "Not implemented signals type: "
-                                                    + node.vardef);
+          "Not implemented signals type: " + node.vardef);
       return "";
     }
   }
@@ -176,7 +169,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
   private AbstractFormula postcondition;
 
   /** Raises list of the current specification case. */
-  private Vector<Exsure> excondition;
+  private Vector < Exsure > excondition;
 
   /**
    * Creates a new instance of the rule.
@@ -225,8 +218,7 @@ public class SpecificationCaseRule extends TranslationRule<String, Symbols> {
     final Tree nextClassMember = finder.getNextSibling(specs);
     if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
       throw new NotTranslatedRuntimeException(
-                                              "Cannot find method for the requires: "
-                                                  + node);
+        "Cannot find method for the requires: " + node);
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
