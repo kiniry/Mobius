@@ -78,7 +78,7 @@ public class CPLineController extends BytecodeLineController {
 
 
   /**
-   * @param uptonow
+   * @param utonow
    * @return
    */
   private boolean parseEntry(boolean utonow) {

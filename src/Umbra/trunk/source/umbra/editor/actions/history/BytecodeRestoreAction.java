@@ -26,10 +26,9 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.actions.BytecodeEditorAction;
 import umbra.instructions.BytecodeController;
 import umbra.lib.EclipseIdentifiers;
+import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
-import umbra.lib.FileNames;
-import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
@@ -143,7 +142,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
                                     getDescription());
     } catch (UmbraSyntaxException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace(); 
+      e.printStackTrace();
     }
   }
 

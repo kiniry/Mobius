@@ -51,7 +51,7 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
 
   /**
    * This is the name of a content type assigned to areas of a byte code
-   * document that correspond to constant pool
+   * document that correspond to constant pool.
    */
   public static final String SECTION_CP = "__btc.cp";
 
@@ -80,9 +80,14 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   private static final int BML_RULE_SIMPLE = 1;
 
   /**
+   * Index for the rule to handle constant pool areas.
+   */
+  private static final int CP_RULE = 2;
+
+  /**
    * Index for the rule to handle throws lines.
    */
-  private static final int THROWS_RULE = 2;
+  private static final int THROWS_RULE = 3;
 
   /**
    * The total number of rules in the current scanner. It is by one greater
@@ -90,6 +95,11 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    */
   private static final int NUMBER_OF_RULES = THROWS_RULE + 1;
 
+  /**
+   * The string which indicates an empty line.
+   */
+  private static final String EMPTY_LINE_MARKER =
+    System.getProperty("line.separator") + System.getProperty("line.separator");
 
   /**
    * This constructor creates rules and configures the scanner with them.
@@ -105,26 +115,38 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    */
   public BytecodePartitionScanner() {
     final IToken head = new Token(SECTION_HEAD);
-    final IToken cp = new Token(SECTION_CP);
-    final IToken thr = new Token(SECTION_THROWS);
-    final IToken bml = new Token(SECTION_BML);
     final IPredicateRule[] rules = new IPredicateRule[NUMBER_OF_RULES +
                               BytecodeStrings.HEADER_PREFIX.length];
-    rules[BML_RULE] = new MultiLineRule(BytecodeStrings.ANNOT_START,
-                                        BytecodeStrings.ANNOT_END, bml);
-    rules[BML_RULE_SIMPLE] = new MultiLineRule(
-                                        BytecodeStrings.ANNOT_START,
-                                        BytecodeStrings.ANNOT_END_SIMPLE,
-                                        bml);
-    rules[BML_RULE] = new MultiLineRule(BytecodeStrings.JAVA_KEYWORDS[
-                                        BytecodeStrings.CP_KEYWORD_POS],
-                                        "  const #38 = Utf8 org.bmlspecs.LoopSpecificationTable;", cp);
-    rules[THROWS_RULE] = new EndOfLineRule("throws", thr);
+    generateFixedRules(rules);
     for (int i = 0; i < BytecodeStrings.HEADER_PREFIX.length;
          i++) {
       rules[NUMBER_OF_RULES + i] = new EndOfLineRule(
         BytecodeStrings.HEADER_PREFIX[i], head);
     }
     setPredicateRules(rules);
+  }
+
+  /**
+   * This method generates the rules which occupy fixed number of entries
+   * in the rules table.
+   *
+   * @param the_rules the rules table to fill in the actual rules
+   */
+  private void generateFixedRules(final IPredicateRule[] the_rules) {
+    final IToken cp = new Token(SECTION_CP);
+    final IToken thr = new Token(SECTION_THROWS);
+    final IToken bml = new Token(SECTION_BML);
+    the_rules[BML_RULE] = new MultiLineRule(BytecodeStrings.ANNOT_START,
+                                        BytecodeStrings.ANNOT_END, bml);
+    the_rules[BML_RULE_SIMPLE] = new MultiLineRule(
+                                        BytecodeStrings.ANNOT_START,
+                                        BytecodeStrings.ANNOT_END_SIMPLE,
+                                        bml);
+    the_rules[CP_RULE] = new MultiLineRule(BytecodeStrings.JAVA_KEYWORDS[
+                                        BytecodeStrings.CP_KEYWORD_POS],
+                                        EMPTY_LINE_MARKER,
+                                        cp);
+    the_rules[THROWS_RULE] = new EndOfLineRule(BytecodeStrings.THROWS_PREFIX[0],
+                                               thr);
   }
 }

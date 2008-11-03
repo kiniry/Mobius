@@ -99,7 +99,7 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
                                     getDescription());
     } catch (UmbraSyntaxException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace(); 
+      e.printStackTrace();
     }
   }
 

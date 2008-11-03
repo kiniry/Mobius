@@ -173,7 +173,7 @@ public class BytecodeContribution extends ControlContribution {
             GUIMessages.INITIAL_PARSING_MESSAGE_TITLE);
         } catch (UmbraSyntaxException e) {
           // TODO Auto-generated catch block
-          e.printStackTrace(); 
+          e.printStackTrace();
         }
       }
       try {
@@ -278,12 +278,15 @@ public class BytecodeContribution extends ControlContribution {
     }
 
     /**
-     * @param doc
-     * @param offset
+     * The method displays the information on the location of the cursor in
+     * the current window.
+     *
+     * @param a_doc the document to display the location
+     * @param an_offset the offset in the document
      */
-    private void displayPosition(BytecodeDocument doc, int offset) {
-      // TODO Auto-generated method stub
-      
+    private void displayPosition(final BytecodeDocument a_doc,
+                                 final int an_offset) {
+      //TODO empty method
     }
   }
 

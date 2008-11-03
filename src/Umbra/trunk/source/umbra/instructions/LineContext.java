@@ -265,7 +265,7 @@ public class LineContext {
   }
 
   /**
-   * 
+   *
    */
   public void setInsideCP() {
     my_state = STATE_CONSTANT_POOL;

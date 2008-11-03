@@ -217,7 +217,8 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "boolean",
                                                              "String", "byte",
                                                              "package",
-                                                             "}" };
+                                                             "}",
+                                                             "class"};
 
   /**
    * This constant contains an array with all the possible prefixes of constant

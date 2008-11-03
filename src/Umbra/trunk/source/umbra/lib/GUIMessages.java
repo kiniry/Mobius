@@ -156,6 +156,13 @@ public final class GUIMessages {
     "Problems with loading the file under the given location: " + SUBSTITUTE;
 
   /**
+   * The message which informs the user that the class file for the given
+   * source code file cannot be saved.
+   */
+  public static final String DISAS_SAVEFORSOURCE_PROBLEMS =
+    "Problems with saving a class file for the source code file: " + SUBSTITUTE;
+
+  /**
    * The message which informs the user that an operation on a class file
    * failed.
    */
@@ -198,10 +205,12 @@ public final class GUIMessages {
     "Classpath cannot be properly resolved, empty classpath is used instead";
 
   /**
-   * The message which informs the user that a path does not exists.
+   * The message which informs the user that the class file for the given
+   * source code file cannot be loaded.
    */
-  public static final String DISAS_PATH_DOES_NOT_EXIST =
-    "The path does not exist (" + SUBSTITUTE + ")";
+  public static final String DISAS_LOADFORSOURCE_PROBLEM =
+    "Problems with loading a class file for the source code file: " +
+    SUBSTITUTE;
 
   /**
    * The message which informs the user that the editor cannot be created

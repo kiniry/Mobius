@@ -16,14 +16,20 @@ import org.eclipse.jface.text.rules.WordRule;
 import umbra.lib.BytecodeStrings;
 
 /**
- * @author alx
- * @version a-01
+ * This class is responsible for colouring these texts in a byte code
+ * editor window which are inside constant pool areas. This class uses
+ * special 4 rules which describe the way the different sequences are coloured.
+ * Colours are chosen as a token array with a particular colouring
+ * style given in the constructor.
  *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class BytecodeCPSecScanner extends RuleBasedScanner {
 
   /**
-   * The number of the rule that handles the colouring of the BML keywords.
+   * The number of the rule that handles the colouring of the constant pool
+   * keywords.
    */
   private static final int KEYWORD_RULE = 0;
 
@@ -51,17 +57,16 @@ public class BytecodeCPSecScanner extends RuleBasedScanner {
 
     // Add rule for cosnt keyword
     rules[KEYWORD_RULE] = createKeywordRule(
-                                          tokens[ColorValues.SLOT_BMLKEYWORDS]);
-
+      tokens[ColorValues.SLOT_BMLKEYWORDS]);
     setRules(rules);
   }
 
   /**
    * This method creates a {@link WordRule} object which recognises all the
-   * BML keywords. It and assigns to them the given colour token.
+   * constant pool keywords. It and assigns to them the given colour token.
    *
    * @param a_token the token to assign to the returned word rule
-   * @return the scanning rule that recognises the BML keywords
+   * @return the scanning rule that recognises the constant pool keywords
    */
   private IRule createKeywordRule(final IToken a_token) {
     final WordRule insrule = new WordRule(new BytecodeWordDetector(), a_token);

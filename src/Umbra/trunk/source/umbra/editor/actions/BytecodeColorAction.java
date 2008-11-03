@@ -19,7 +19,6 @@ import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
-import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
@@ -102,7 +101,7 @@ public class BytecodeColorAction extends BytecodeEditorAction {
                                       getDescription());
       } catch (UmbraSyntaxException e) {
         // TODO Auto-generated catch block
-        e.printStackTrace(); 
+        e.printStackTrace();
       }
     }
   }

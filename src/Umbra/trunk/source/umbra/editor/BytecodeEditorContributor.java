@@ -344,7 +344,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
-   * @throws UmbraSyntaxException 
+   * @throws UmbraSyntaxException
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
@@ -375,7 +375,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
-   * @throws UmbraSyntaxException 
+   * @throws UmbraSyntaxException
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,

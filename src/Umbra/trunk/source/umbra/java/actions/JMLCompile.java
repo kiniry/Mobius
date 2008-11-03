@@ -11,38 +11,26 @@ package umbra.java.actions;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.rules.FastPartitioner;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.ui.IEditorActionDelegate;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-import annot.io.ReadAttributeException;
-import api.Jml2BmlAPI; 
-
-import umbra.editor.BytecodeDocument;
-import umbra.editor.BytecodeDocumentProvider;
-import umbra.editor.BytecodeEditor;
-import umbra.editor.ColorModeContainer;
-import umbra.editor.parsing.BytecodePartitionScanner;
-import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
+import annot.io.ReadAttributeException;
+import api.Jml2BmlAPI;
 
 /**
  * This class defines the action related to Java source editor.
- * Its execution causes generating new related byte code file
- * in a new editor window.
+ * Its execution causes generation of a new related byte code file
+ * in a new editor window. This action, in addition to the bytecode, generates
+ * the BML specifications generated from JML specifications using Jml2Bml
+ * compiler.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
@@ -51,7 +39,7 @@ import umbra.lib.GUIMessages;
  * @version a-01
  */
 
-public class JMLCompile implements IEditorActionDelegate {
+public class JMLCompile extends DisasBCEL {
 
   /**
    * The editor of a Java file for which the byte code file is
@@ -68,8 +56,8 @@ public class JMLCompile implements IEditorActionDelegate {
    * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
-    if (checkIfSaveNeeded()) return;
-    if (checkJavaExtension()) return;
+    if (checkInitialSavingConditions()) return;
+    final Shell shell = my_editor.getSite().getShell();
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
     final IFile bFile;
     try {
@@ -81,196 +69,48 @@ public class JMLCompile implements IEditorActionDelegate {
       return;
     }
     try {
-      String bName = bFile.getName();
-      IPath path = bFile.getLocation();
-      bName = bName.substring(0,bName.lastIndexOf("."));
-      String bPath = path.removeLastSegments(1).toOSString();
-      String sourceFile = jFile.getLocation().toOSString();
-      try {
-        Jml2BmlAPI.compile(sourceFile, bPath, bName);
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
+      compile(jFile, bFile);
       openBCodeEditorForJavaFile(jFile);
+    } catch (IOException e) {
+      MessageDialog.openError(shell,
+        GUIMessages.DISAS_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.DISAS_SAVEFORSOURCE_PROBLEMS,
+                               jFile.getLocation().toOSString()));
     } catch (JavaModelException e) {
-      MessageDialog.openError(my_editor.getSite().getShell(),
+      MessageDialog.openError(shell,
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
     } catch (PartInitException e) {
-      MessageDialog.openError(my_editor.getSite().getShell(),
+      MessageDialog.openError(shell,
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
-      System.out.println("problem1 is " + e +".");
-      messageClassNotFound(bFile.getProjectRelativePath());
+      messageProblemsWithLoading(jFile.getLocation());
     } catch (ReadAttributeException e) {
-      System.out.println("problem " + e);      
+      messageProblemsWithLoading(jFile.getLocation());
     }
-    
   }
 
   /**
-   * This method opens a byte code editor for the given file that corresponds
-   * to a Java resource. It figures out the name of the .btc file and opens
-   * a byte code editor for this file. Subsequently it retrieves the
-   * corresponding document and does the refresh of the byte code contained
-   * in the document. This operation generates the textual content of the
-   * document. Next the current method regenerates the colouring of the document
-   * so that the document is not gray. At last the fresh content of the
-   * document is saved to the .btc file on disc
+   * This method delegates the compilation of JML to the Jml2Bml compiler.
    *
-   * @param a_jfile the file with a path to the Java resource
-   * @return the path of the class file from which the textual representation
-   *   was generated
-   * @throws PartInitException in case the byte code editor cannot be open
-   * @throws JavaModelException in case the current project has no class file
-   *   output location set
-   * @throws ClassNotFoundException in case the class file for the given
-   *   Java file cannot be found
+   * @param a_jfile the file for the Java source code
+   * @param a_bfile the corresponding file for the class file
+   * @throws ClassNotFoundException in case the class for the given file
+   *   cannot be found
+   * @throws ReadAttributeException in case a BML attribute from the given class
+   *   file cannot be found
+   * @throws IOException in case the class file cannot be saved to the given
+   *   location
    */
-  private IPath openBCodeEditorForJavaFile(final IFile a_jfile)
-    throws PartInitException,
-           JavaModelException, ClassNotFoundException {
-    IPath cpath;
-    final IWorkbenchPage page = my_editor.getEditorSite().getPage();
-    final IFile btcFile = FileNames.getBTCFileName(a_jfile, my_editor);
-    final FileEditorInput input = new FileEditorInput(btcFile);
-    BytecodeEditor bc_editor;
-    bc_editor = (BytecodeEditor) (page.openEditor(input,
-                           EclipseIdentifiers.BYTECODE_EDITOR_CLASS, false));
-    bc_editor.setRelatedEditor(my_editor);
-    final BytecodeDocumentProvider bdp = (BytecodeDocumentProvider)bc_editor.
-      getDocumentProvider();
-    final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
-                                   // this doc is empty when there is no .btc
-                                   // file or contains the content of the file
-    cpath = FileNames.getClassFileFile(a_jfile, my_editor).getFullPath();
-    doc.getModel().initModTable();
-    try {
-      bc_editor.refreshBytecode(cpath, doc,
-                                null, null); //this works on the doc
-      openEditorAndDisassemble(page, bc_editor, input, doc);
-      bdp.saveDocument(null, input, doc, true);
-    } catch (CoreException e) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-        GUIMessages.DISAS_MESSAGE_TITLE,
-        GUIMessages.substitute(GUIMessages.DISAS_SAVING_PROBLEMS,
-                               input.getPath().toString()));
-    }
-    return cpath;
-  }
-
-  /**
-   * This method opens a warning dialog with the information that the given
-   * path does not exist.
-   *
-   * @param a_path the path which does not exist
-   */
-  private void messageClassNotFound(final IPath a_path) {
-    MessageDialog.openWarning(my_editor.getSite().getShell(),
-      GUIMessages.DISAS_MESSAGE_TITLE,
-      GUIMessages.substitute(GUIMessages.DISAS_PATH_DOES_NOT_EXIST,
-                             a_path.toString()));
-  }
-
-  /**
-   * This method checks if the source code editor edits .java file.
-   * In case the file is not a .java file a popup
-   * with appropriate message is shown.
-   *
-   * @return <code>true</code> if the file is not a .java file,
-   *   <code>false</code> otherwise
-   */
-  private boolean checkJavaExtension() {
-    final IPath active = ((FileEditorInput) (my_editor.getEditorInput())).
-    getFile().getFullPath();
-    if (active.toPortableString().
-        lastIndexOf(FileNames.JAVA_EXTENSION) == -1) {
-      MessageDialog.openInformation(my_editor.getSite().getShell(),
-                      GUIMessages.DISAS_MESSAGE_TITLE,
-                      GUIMessages.substitute(GUIMessages.INVALID_EXTENSION,
-                                             FileNames.JAVA_EXTENSION));
-      return true;
-    }  else
-      return false;
-  }
-
-  /**
-   * This method checks if the source code editor must be saved before an
-   * action can be performed. In case the editor must be saved a popup
-   * with appropriate message is shown.
-   *
-   * @return <code>true</code> when the save is needed, <code>false</code>
-   * otherwise
-   */
-  private boolean checkIfSaveNeeded() {
-    if (my_editor.isSaveOnCloseNeeded()) {
-      MessageDialog.openWarning(my_editor.getSite().getShell(),
-                    GUIMessages.DISAS_MESSAGE_TITLE,
-                    GUIMessages.SAVE_BYTECODE_FIRST);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * This method changes the colouring mode of a previously opened editor.
-   * Now, the content of the editor is coloured with the current colouring
-   * style instead of the gray style which is the default for documents with
-   * no connection with a class file.
-   *
-   * @param a_page a workbench page in which the new editor is reconfigured
-   * @param an_editor the editor to change the colouring for
-   * @param an_input an input which will be presented in the editor
-   * @param a_doc a document where the BCEL and BMLlib connection is already set
-   */
-  private void openEditorAndDisassemble(final IWorkbenchPage a_page,
-                                        final BytecodeEditor an_editor,
-                                        final FileEditorInput an_input,
-                                        final BytecodeDocument a_doc) {
-    ColorModeContainer.classKnown();
-    a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
-                                 null);
-    final IDocumentPartitioner partitioner =
-      new FastPartitioner(
-        new BytecodePartitionScanner(),
-        new String[] {
-          BytecodePartitionScanner.SECTION_BML,
-          BytecodePartitionScanner.SECTION_HEAD,
-          BytecodePartitionScanner.SECTION_THROWS});
-    partitioner.connect(a_doc);
-    a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
-                                 partitioner);
-    an_editor.renewConfiguration(a_doc);
-    an_editor.setRelation(my_editor);
-    a_page.bringToTop(an_editor);
-    ColorModeContainer.classUnknown();
-  }
-
-  /**
-   * Currently, does nothing.
-   *
-   * @param an_action see {@link
-   *   org.eclipse.ui.IActionDelegate#selectionChanged(IAction,ISelection)}
-   * @param a_selection see {@link
-   *   org.eclipse.ui.IActionDelegate#selectionChanged(IAction,ISelection)}
-   */
-  public void selectionChanged(final IAction an_action,
-                               final ISelection a_selection) {
-  }
-
-  /**
-   * It sets the editor with the Java source code.
-   *
-   * @param an_action see {@link
-   *   org.eclipse.ui.IEditorActionDelegate#setActiveEditor(IAction,
-   *   IEditorPart)}
-   * @param a_target_editor the new editor to be active for the action
-   */
-  public final void setActiveEditor(final IAction an_action,
-                                    final IEditorPart a_target_editor) {
-    my_editor = (CompilationUnitEditor)a_target_editor;
+  private void compile(final IFile a_jfile, final IFile a_bfile)
+    throws ClassNotFoundException, ReadAttributeException, IOException {
+    String bname = a_bfile.getName();
+    final IPath path = a_bfile.getLocation();
+    bname = bname.substring(0, bname.lastIndexOf("."));
+    final String bpath = path.removeLastSegments(1).toOSString();
+    final String sourceFile = a_jfile.getLocation().toOSString();
+    Jml2BmlAPI.compile(sourceFile, bpath, bname);
   }
 
 }

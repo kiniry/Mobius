@@ -63,13 +63,12 @@ public class DisasBCEL implements IEditorActionDelegate {
    * @param an_action see the IActionDelegate.run(IAction)
    * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
-  public final void run(final IAction an_action) {
+  public void run(final IAction an_action) {
     if (checkIfSaveNeeded()) return;
     if (checkJavaExtension()) return;
     final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
-    final IFile bFile;
     try {
-      bFile = FileNames.getClassFileFile(jFile, my_editor);
+      FileNames.getClassFileFile(jFile, my_editor);
     } catch (JavaModelException e) {
       MessageDialog.openError(my_editor.getSite().getShell(),
                               GUIMessages.DISAS_MESSAGE_TITLE,
@@ -87,7 +86,7 @@ public class DisasBCEL implements IEditorActionDelegate {
                                 GUIMessages.DISAS_MESSAGE_TITLE,
                                 GUIMessages.DISAS_EDITOR_PROBLEMS);
     } catch (ClassNotFoundException e) {
-      messageClassNotFound(bFile.getProjectRelativePath());
+      messageProblemsWithLoading(jFile.getLocation());
     }
   }
 
@@ -110,7 +109,7 @@ public class DisasBCEL implements IEditorActionDelegate {
    * @throws ClassNotFoundException in case the class file for the given
    *   Java file cannot be found
    */
-  private IPath openBCodeEditorForJavaFile(final IFile a_jfile)
+  protected IPath openBCodeEditorForJavaFile(final IFile a_jfile)
     throws PartInitException,
            JavaModelException, ClassNotFoundException {
     IPath cpath;
@@ -143,16 +142,30 @@ public class DisasBCEL implements IEditorActionDelegate {
   }
 
   /**
-   * This method opens a warning dialog with the information that the given
-   * path does not exist.
+   * This method opens a warning dialog which informs that there are problems
+   * with loading a class file for the given source code file.
    *
-   * @param a_path the path which does not exist
+   * @param a_path the path to Java source code
    */
-  private void messageClassNotFound(final IPath a_path) {
+  protected void messageProblemsWithLoading(final IPath a_path) {
     MessageDialog.openWarning(my_editor.getSite().getShell(),
       GUIMessages.DISAS_MESSAGE_TITLE,
-      GUIMessages.substitute(GUIMessages.DISAS_PATH_DOES_NOT_EXIST,
+      GUIMessages.substitute(GUIMessages.DISAS_LOADFORSOURCE_PROBLEM,
                              a_path.toString()));
+  }
+
+  /**
+   * This method checks if the initial conditions for generation of bytecode
+   * textual representation are met. These conditions are: the Java source
+   * code is saved and the Java source code file ends with .java.
+   *
+   * @return <code>true</code> in case one of the conditions is not met,
+   *   <code>false</code> in case the initial conditions are met
+   */
+  protected boolean checkInitialSavingConditions() {
+    if (checkIfSaveNeeded()) return true;
+    if (checkJavaExtension()) return true;
+    return false;
   }
 
   /**
@@ -216,6 +229,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     final IDocumentPartitioner partitioner =
       new FastPartitioner(
         new BytecodePartitionScanner(),
+        an_editor.get
         new String[] {
           BytecodePartitionScanner.SECTION_BML,
           BytecodePartitionScanner.SECTION_HEAD,
@@ -249,7 +263,7 @@ public class DisasBCEL implements IEditorActionDelegate {
    *   IEditorPart)}
    * @param a_target_editor the new editor to be active for the action
    */
-  public final void setActiveEditor(final IAction an_action,
+  public void setActiveEditor(final IAction an_action,
                                     final IEditorPart a_target_editor) {
     my_editor = (CompilationUnitEditor)a_target_editor;
   }

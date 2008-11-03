@@ -39,7 +39,6 @@ import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
-import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
@@ -300,7 +299,7 @@ public class BytecodeEditor extends TextEditor {
                                     GUIMessages.BYTECODE_MESSAGE_TITLE);
     } catch (UmbraSyntaxException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace(); 
+      e.printStackTrace();
     }
   }
 
@@ -457,4 +456,5 @@ public class BytecodeEditor extends TextEditor {
     isv.getTextWidget().setTopIndex(a_firstvisible);
   }
 
+  get
 }

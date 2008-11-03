@@ -42,7 +42,6 @@ import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraClassException;
-import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRangeException;
@@ -262,7 +261,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       throw new UmbraRangeException(e);
     } catch (UmbraSyntaxException e) {
       // TODO Auto-generated catch block
-      e.printStackTrace(); 
+      e.printStackTrace();
     }
   }
 

@@ -134,7 +134,7 @@ public final class ColorValues {
   /**
    * The colour of keywords in the BML annotations.
    */
-  public static final int SLOT_BMLKEYWORDS = 17;
+  public static final int SLOT_BMLKEYWORDS = 16;
 
   /**
    * Number of defined colour constants.

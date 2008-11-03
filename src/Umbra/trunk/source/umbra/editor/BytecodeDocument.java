@@ -151,7 +151,7 @@ public class BytecodeDocument extends Document {
    *   which is outside the current document
    * @throws UmbraMethodException in case the textual representation has
    *   more methods than the internal one
-   * @throws UmbraSyntaxException 
+   * @throws UmbraSyntaxException
    */
   public void init(final String[] a_comment_array,
                    final String[] an_interline)
