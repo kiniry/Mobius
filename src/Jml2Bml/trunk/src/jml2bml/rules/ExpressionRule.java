@@ -72,7 +72,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
   /**
    * Indicates, if the currently translated expression is \old.
    */
-  private boolean isOld = false;
+  private boolean isOld;
 
   /**
    * application context.

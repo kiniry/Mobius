@@ -69,7 +69,7 @@ public class Main {
     if (args.length != 3) {
       return;
     }
-    main.List list = new main.List();
+    final main.List list = new main.List();
     try {
       new Main().compile(args[2], new ClassFileLocation(args[0], args[1]));
     } catch (NotTranslatedException e) {
@@ -108,7 +108,7 @@ public class Main {
     log.info("LINE TABLES: ");
     for (Method m : clazz.getJC().getMethods()) {
       log.info(m.getName());
-      LineNumberTable lnt = m.getLineNumberTable();
+      final LineNumberTable lnt = m.getLineNumberTable();
       if (lnt != null) {
         log.info(lnt.toString());
       } else {

@@ -73,7 +73,7 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
     public String visitJmlMethodClauseAssignable(
         final JmlMethodClauseAssignable node,
         final Symbols p) {
-      ExpressionRule exRule = new ExpressionRule(myContext);
+      final ExpressionRule exRule = new ExpressionRule(myContext);
       for (JCTree n : node.list) {
         final BCExpression res = n.accept(exRule, p);
         if (res == null || !(res instanceof ModifyExpression)) {

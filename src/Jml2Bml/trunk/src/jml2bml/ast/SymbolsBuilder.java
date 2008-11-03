@@ -135,7 +135,7 @@ public class SymbolsBuilder extends
                                                cl);
     LocalVariable var = m.findLocalVariable(node.name.toString());
     if (var == null) {
-      int aindex = getIndex(m, node.getName().toString());
+      final int aindex = getIndex(m, node.getName().toString());
       LocalVariableGen lvGen = new LocalVariableGen(aindex, null, m
           .getBcelMethod().getArgumentType(aindex - 1), null, null);
       var = new LocalVariable(false, m, aindex, node.getName().toString(),

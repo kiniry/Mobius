@@ -1,7 +1,7 @@
 package main;
 
 public class List {
-  public int i = 0;
+  public int i;
 
   public int increase() {
     i++;

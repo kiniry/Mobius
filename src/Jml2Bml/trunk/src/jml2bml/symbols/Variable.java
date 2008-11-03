@@ -17,29 +17,29 @@ import com.sun.source.tree.Tree;
 
 public class Variable {
 
-  private boolean isBoundVariable = false;
+  private boolean isBoundVariable;
 
-  private boolean isLocalVariable = false;
+  private boolean isLocalVariable;
 
-  private boolean isField = false;
+  private boolean isField;
 
   private BCExpression var;
 
   private Tree jmlNode;
 
-  public Variable(BoundVar avar, Tree ajmlNode) {
+  public Variable(final BoundVar avar, final Tree ajmlNode) {
     this.var = avar;
     this.jmlNode = ajmlNode;
     this.isBoundVariable = true;
   }
 
-  public Variable(LocalVariable avar, Tree ajmlNode) {
+  public Variable(final LocalVariable avar, final Tree ajmlNode) {
     this.var = avar;
     this.jmlNode = ajmlNode;
     this.isLocalVariable = true;
   }
 
-  public Variable(FieldRef avar, JmlVariableDecl node) {
+  public Variable(final FieldRef avar, final JmlVariableDecl node) {
     this.var = avar;
     this.jmlNode = node;
     this.isField = true;
