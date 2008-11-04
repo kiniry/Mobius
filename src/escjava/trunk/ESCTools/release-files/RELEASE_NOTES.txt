@@ -5,12 +5,14 @@ No major new features have been added.
 The following tickets are FIXED or CLOSED in this release:
 
 Trac ID	Summary
+89		Nullable keyword within declaration of quantified varaible
 654		modifies \everything soundness
-
 
 The following issues are known to EXIST in this release:
 
 Gforge	Trac ID	Summary 
+n/a      99     java.lang.String.valueOf(float/double) inconsistency
+n/a		106		4 inconsistent specs in java.util.Arrays
 n/a		425		Modify specs_test to work with both Java 1.4 and Java 1.5
 55		283		inheritance of invariants
 105		284		handling DSA for recursive specs is broken
@@ -59,9 +61,9 @@ n/a		425		Modify specs_test to work with both Java 1.4 and Java 1.5
 414		203		non-pure methods can be used in assertion expressions
 474		256		attempting to process the escjava package with escjava2 results
 				in an infinite loop
-480		206		universes type system support breaks Java parsing of some
+480		71		universes type system support breaks Java parsing of some
 				existing code
-488		235		Can't generate VCs without having a Simplify binary around
+488		188		Can't generate VCs without having a Simplify binary around
 498		232		grammar change for JML expression \max
 499		227		stack too big in parsing background predicate - implement more
 				constant folding
