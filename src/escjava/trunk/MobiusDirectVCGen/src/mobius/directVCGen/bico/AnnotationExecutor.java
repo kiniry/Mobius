@@ -41,6 +41,7 @@ public class AnnotationExecutor extends Executor {
    * @param classToTreat the list of the class names to look at, 
    * additionnaly to what can be found in the source dir
    * @param classpath the class path where to find all the source files
+   * @param generator the generator used to generate the annotations
    */
   public AnnotationExecutor(final File sourceDir, 
                             final File outputDir,
@@ -59,6 +60,7 @@ public class AnnotationExecutor extends Executor {
    * @param classToTreat the list of the class names to look at, 
    * additionnaly to what can be found in the source dir
    * @param classpath the class path where to find all the source files
+   * @param generator the generator used to generate the annotations
    */
   public AnnotationExecutor(final File outputDir, final String classpath, 
                             final List<String> classToTreat,

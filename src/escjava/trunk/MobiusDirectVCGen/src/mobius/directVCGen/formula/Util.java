@@ -49,10 +49,8 @@ import escjava.tc.Types;
  */
 public final class Util extends mobius.bico.Util {
   
-  /**
-   */
-  private Util() {
-  }
+  /** */
+  private Util() { }
   
 
   
@@ -237,7 +235,21 @@ public final class Util extends mobius.bico.Util {
     }
     return min;
   }
-  
+
+  public static LineNumberGen getLineNumbers(final MethodGen met, final InstructionHandle ih) {
+    LineNumberGen res = null;
+    int olddiff = 100;
+    for (LineNumberGen lng: met.getLineNumbers()) {
+      final int diff = lng.getInstruction().getPosition() -
+                    ih.getPosition();
+      if (diff <= olddiff) {
+        res = lng;
+        olddiff = diff;
+      }
+    }
+    // TODO Auto-generated method stub
+    return res;
+  }
   /**
    * Return a list of line number gen corresponding at the
    * given instruction which starts at the given line on the 
@@ -302,18 +314,18 @@ public final class Util extends mobius.bico.Util {
     Post res = null;
     Post nottypeof = null;
     for (ExcpPost p: vce.lexcpost) {
-      final QuantVariableRef var = vce.fExcPost.getRVar();
-      final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.type));
-      nottypeof = new Post(var, Logic.not(Logic.assignCompat(Heap.var, var, p.type)));
+      final QuantVariableRef var = vce.getExcPost().getRVar();
+      final Post typeof = new Post(var, Logic.assignCompat(Heap.var, var, p.getType()));
+      nottypeof = new Post(var, Logic.not(Logic.assignCompat(Heap.var, var, p.getType())));
       
-      if (Type.isSubClassOrEq(typ, p.type)) {
+      if (Type.isSubClassOrEq(typ, p.getType())) {
         
         if (res == null) {
-          res = p.post;
+          res = p.getPost();
           //res = Post.implies(typeof, p.post);
         }
         else {
-          res = Post.and(Post.implies(nottypeof, res), p.post);
+          res = Post.and(Post.implies(nottypeof, res), p.getPost());
           //res = Post.and(Post.implies(typeof, p.post), res);
         }
         return res;
@@ -321,15 +333,15 @@ public final class Util extends mobius.bico.Util {
       else {
 
         if (res == null) {
-          res = Post.implies(typeof, p.post);
+          res = Post.implies(typeof, p.getPost());
         }
         else {
           res = Post.and(Post.implies(nottypeof, res),
-                         Post.implies(typeof, p.post));
+                         Post.implies(typeof, p.getPost()));
         }
       }
     }
-    final Post ex = vce.fExcPost;
+    final Post ex = vce.getExcPost();
     res = Post.and(res, Post.implies(nottypeof, ex));
     return res;
   }
@@ -645,4 +657,42 @@ public final class Util extends mobius.bico.Util {
             (op == OperatorTags.ASGURSHIFT) || 
             (op == OperatorTags.ASGBITAND);
   }
+
+  public static boolean isBinExpr(final BinaryExpr expr) {
+    final int op = expr.op;
+    return  (op == TagConstants.EQ) ||
+            (op == TagConstants.OR) ||
+            (op == TagConstants.AND) ||
+            (op == TagConstants.NE) ||
+            (op == TagConstants.GE) ||
+            (op == TagConstants.GT) ||
+            (op == TagConstants.LE) ||
+            (op == TagConstants.LT) ||
+            (op == TagConstants.BITOR) ||
+            (op == TagConstants.BITXOR) ||
+            (op == TagConstants.BITAND) ||
+            (op == TagConstants.LSHIFT) ||
+            (op == TagConstants.RSHIFT) ||
+            (op == TagConstants.URSHIFT) ||
+            (op == TagConstants.ADD) ||
+            (op == TagConstants.SUB) ||
+            (op == TagConstants.STAR) ||
+            (op == TagConstants.DIV) ||
+            (op == TagConstants.MOD);
+  }
+
+
+
+  public static boolean isJMLExpr(final BinaryExpr expr) {
+    final int op = expr.op;
+    return  (op == TagConstants.IMPLIES) ||
+            (op == TagConstants.EXPLIES) ||
+            (op == TagConstants.IFF) ||
+            (op == TagConstants.NIFF) ||
+            (op == TagConstants.SUBTYPE) ||
+            (op == TagConstants.DOTDOT);
+
+  }
+
+
 }

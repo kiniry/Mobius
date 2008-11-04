@@ -26,6 +26,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -54,63 +55,28 @@ public class ExpressionVisitor extends ABasicVisitor {
 
   @Override
   public Object visitBinaryExpr(final BinaryExpr expr, final Object o) {
-
+    Post res = null;
     //System out.println(TagConstants.toString(expr.op));
     final VCEntry post = (VCEntry) o;
-    switch(expr.op) {
-      case TagConstants.EQ:
-      case TagConstants.OR:
-      case TagConstants.AND:
-      case TagConstants.NE:
-      case TagConstants.GE:
-      case TagConstants.GT:
-      case TagConstants.LE:
-      case TagConstants.LT:
-      case TagConstants.BITOR:
-      case TagConstants.BITXOR:
-      case TagConstants.BITAND:
-      case TagConstants.LSHIFT:
-      case TagConstants.RSHIFT:
-      case TagConstants.URSHIFT:
-      case TagConstants.ADD:
-      case TagConstants.SUB:
-      case TagConstants.STAR:
-        return fVcg.stdBinExpression(expr.op, expr.left, expr.right, post);
-
-
-      case TagConstants.DIV:
-      case TagConstants.MOD:
-        return fVcg.stdBinExpression(expr.op, expr.left, expr.right, post);
-  
-  
-      case TagConstants.ASSIGN:
-        return fVcg.assign(expr, post);
-      case TagConstants.ASGMUL:
-      case TagConstants.ASGDIV:
-      case TagConstants.ASGREM:
-      case TagConstants.ASGADD:
-      case TagConstants.ASGSUB:
-      case TagConstants.ASGLSHIFT:
-      case TagConstants.ASGRSHIFT:
-      case TagConstants.ASGURSHIFT:
-      case TagConstants.ASGBITAND:
-      case TagConstants.ASGBITOR:
-      case TagConstants.ASGBITXOR:
-        return fVcg.assignSpecial(expr, post);
-  
-        // jml specific operators
-      case TagConstants.IMPLIES:
-      case TagConstants.EXPLIES:
-      case TagConstants.IFF: 
-      case TagConstants.NIFF:
-      case TagConstants.SUBTYPE:
-      case TagConstants.DOTDOT:
-        throw new IllegalArgumentException("Unmanaged construct :" +
-                                           TagConstants.toString(expr.op) + " " +  expr);
-      default:
-        throw new IllegalArgumentException("Unknown construct :" +
-                                           TagConstants.toString(expr.op) + " " +  expr);
+    if (Util.isBinExpr(expr)) {
+      res = fVcg.stdBinExpression(expr.op, expr.left, expr.right, post);
     }
+    else if (expr.op == TagConstants.ASSIGN) {
+      res = fVcg.assign(expr, post);
+    }
+    else if (Util.isAssignExpr(expr)) {
+      res = fVcg.assignSpecial(expr, post);
+    }
+    else if (Util.isJMLExpr(expr)) {
+      throw new IllegalArgumentException("Unmanaged construct :" +
+                                         TagConstants.toString(expr.op) + " " +  expr);
+    }
+    else {
+      throw new IllegalArgumentException("Unknown construct :" +
+                                         TagConstants.toString(expr.op) + " " +  expr);
+
+    }
+    return res;
   }
 
 
@@ -118,7 +84,7 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public Object visitLiteralExpr(final LiteralExpr expr,  final Object o) {
     final VCEntry vce = (VCEntry) o;
-    final Post result = vce.fPost;
+    final Post result = vce.getPost();
     Term term = null;
     int val;
 
@@ -181,7 +147,7 @@ public class ExpressionVisitor extends ABasicVisitor {
         term = result.substWith(Ref.strValue((String)expr.value));
         break;
       case TagConstants.NULLLIT: {
-        final QuantVariableRef v = vce.fPost.getRVar();
+        final QuantVariableRef v = vce.getPost().getRVar();
         Term t;
         if (v.getSort().equals(Heap.sortValue)) {
           t = Heap.sortToValue(Ref.nullValue());
@@ -203,41 +169,51 @@ public class ExpressionVisitor extends ABasicVisitor {
   @Override
   public Object visitUnaryExpr(final UnaryExpr expr, final Object o) {
     final VCEntry post = (VCEntry) o;
+    Post res = null;
     switch(expr.op) {
       case TagConstants.UNARYADD:
         // for the unary add we do nothing
-        return post.fPost;
+        res = post.getPost();
+        break;
       case TagConstants.POSTFIXINC:
-        return fVcg.postfixInc(expr, post);
+        res = fVcg.postfixInc(expr, post);
+        break;
       case TagConstants.INC:
-        return fVcg.inc(expr, post);
+        res = fVcg.inc(expr, post);
+        break;
       case TagConstants.POSTFIXDEC:
-        return fVcg.postfixDec(expr, post);
+        res = fVcg.postfixDec(expr, post);
+        break;
       case TagConstants.DEC:
-        return fVcg.dec(expr, post);
+        res = fVcg.dec(expr, post);
+        break;
       case TagConstants.BITNOT:
-        return fVcg.bitNot(expr, post);
+        res = fVcg.bitNot(expr, post);
+        break;
       case TagConstants.UNARYSUB:
-        return fVcg.unarySub(expr, post);
+        res = fVcg.unarySub(expr, post);
+        break;
       case TagConstants.NOT:
-        return fVcg.not(expr, post);
+        res = fVcg.not(expr, post);
+        break;
       default:
         throw new IllegalArgumentException("Unknown construct :" +
                                            TagConstants.toString(expr.op) + " " +  expr);
     }
+    return res;
   }
 
 
   @Override
   public /*@non_null*/ Object visitThisExpr(final /*@non_null*/ ThisExpr x, final Object o) {
     final VCEntry vce = (VCEntry) o;
-    final QuantVariableRef v = vce.fPost.getRVar();
+    final QuantVariableRef v = vce.getPost().getRVar();
     Term t;
     if (v.getSort().equals(Ref.sort)) {
-      t = vce.fPost.substWith(Heap.valueToSort(Ref.varThis, Ref.sort));
+      t = vce.getPost().substWith(Heap.valueToSort(Ref.varThis, Ref.sort));
     }
     else {
-      t = vce.fPost.substWith(Ref.varThis);
+      t = vce.getPost().substWith(Ref.varThis);
     }
     return new Post(t); // variable particuliere
   }
@@ -252,7 +228,9 @@ public class ExpressionVisitor extends ABasicVisitor {
   public /*@non_null*/ Object visitParenExpr(final /*@non_null*/ ParenExpr x, final Object o) {
     return fVcg.getPre(x.expr, (VCEntry) o);
   }
-
+  
+  
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitMethodInvocation(final /*@non_null*/ MethodInvocation x, 
                                                     final Object o) {
@@ -260,62 +238,68 @@ public class ExpressionVisitor extends ABasicVisitor {
   }
 
 
-  
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitInstanceOfExpr(final /*@non_null*/ InstanceOfExpr x, 
                                                   final Object o) {
     return fVcg.instanceOf(x, (VCEntry) o);
   }
   
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitCondExpr(final /*@non_null*/ CondExpr x, final Object o) {
     return fVcg.condExpr(x, (VCEntry) o);
   }
-
+  
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitCastExpr(final /*@non_null*/ CastExpr x, final Object o) {
     return fVcg.castExpr(x, (VCEntry) o);
   }
 
-
   @Override
   public Object visitVariableAccess(final VariableAccess m, final Object o) {
     final VCEntry res = (VCEntry) o;
     final Term v = Expression.rvar(m.decl);
-    return  new Post(res.fPost.substWith(v));
+    return  new Post(res.getPost().substWith(v));
   }
 
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitFieldAccess(final /*@non_null*/ FieldAccess x, 
                                                final Object o) {
     return fVcg.fieldAccess(x, (VCEntry) o);
   }
 
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitNewInstanceExpr(final /*@non_null*/ NewInstanceExpr x, 
                                                    final Object o) {
     return fVcg.newInstance(x, (VCEntry) o);
   }
   
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitObjectDesignator(final /*@non_null*/ ObjectDesignator od, 
                                                     final Object vce) {
     return fVcg.objectDesignator(od, (VCEntry) vce);
   }
 
-
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitArrayInit(final /*@non_null*/ ArrayInit init, 
                                              final Object o) {
     return fVcg.arrayInit(init, (VCEntry) o);
   }
-
+  
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitArrayRefExpr(final /*@non_null*/ ArrayRefExpr x, 
                                                 final Object o) {
     return fVcg.arrayRef(x, (VCEntry)o);
   }
   
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitNewArrayExpr(final /*@non_null*/ NewArrayExpr x, 
                                                 final Object o) {

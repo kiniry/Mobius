@@ -14,26 +14,30 @@ import javafe.ast.Identifier;
  */
 public class VCEntry {
   /** the postcondition of the method. */
-  public Post fPost;
+  private Post fPost;
 
   /** the exceptional postcondition for the method. */
-  public final Post fExcPost;
+  private final Post fExcPost;
   
-  /** the list of excp post condition; used for the try...catch constructs. */
-  public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
-
   /** the postcondition for the break, if there is no label. */
   public Post fBrPost;
-  
-  /** the list of postconditions for breaks in case of labels. */
-  public final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
 
   /** the postcondition of continue if there is no label. */
   public  Post fContPost;
   
+  /** the list of excp post condition; used for the try...catch constructs. */
+  public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
+
+
+  
+  
+  /** the list of postconditions for breaks in case of labels. */
+  public final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
+  
   /** the list of postconditions of the continue if there are labels attached to loops. */
   public final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
+  
   public boolean isBoolExpression = false;
 
   /**
@@ -66,7 +70,7 @@ public class VCEntry {
    * @param contpost the postcondition for a continue without any label
    */
   public VCEntry(final Post post, final Post excpost, final Post brpost, final Post contpost) {
-    this.fPost = post;
+    this.setPost(post);
     this.fBrPost = brpost;
     this.fContPost = contpost;
     this.fExcPost =  excpost;
@@ -79,10 +83,10 @@ public class VCEntry {
    * @param ve the object to copy
    */
   public VCEntry(final VCEntry ve) {
-    fPost = ve.fPost;
+    setPost(ve.getPost());
     fBrPost = ve.fBrPost;
     fContPost = ve.fContPost;
-    fExcPost = ve.fExcPost;
+    fExcPost = ve.getExcPost();
     lexcpost.addAll(ve.lexcpost);
     lbrpost.putAll(ve.lbrpost);
     lcontpost.putAll(ve.lcontpost);
@@ -98,5 +102,26 @@ public class VCEntry {
   @Override
   public Object clone() {
     return new VCEntry(this);
+  }
+
+  /**
+   * @param post the fPost to set
+   */
+  public void setPost(final Post post) {
+    fPost = post;
+  }
+
+  /**
+   * @return the post
+   */
+  public Post getPost() {
+    return fPost;
+  }
+
+  /**
+   * @return the fExcPost
+   */
+  public Post getExcPost() {
+    return fExcPost;
   }
 }

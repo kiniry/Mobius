@@ -442,7 +442,7 @@ class JmlVisitor extends BasicJMLTranslator {
     for (final AAnnotation annot: annos) {
       if (annot instanceof Set) {
         final Set existingSet = (Set) annot;
-        if (existingSet.getDeclaration().equals(assignment.fVar)) {
+        if (existingSet.getDeclaration().equals(assignment.getVar())) {
           annos.remove(existingSet);
           decl = existingSet.getDeclaration();
           break;

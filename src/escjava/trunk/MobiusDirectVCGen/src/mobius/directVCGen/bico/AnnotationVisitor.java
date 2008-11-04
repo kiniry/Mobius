@@ -3,18 +3,15 @@ package mobius.directVCGen.bico;
 import java.util.Iterator;
 import java.util.List;
 
-import javafe.util.Location;
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.PositionHint;
-import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
-import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -83,15 +80,12 @@ public final class AnnotationVisitor {
       }
       if (fAnnot.getInvariant(hint) != null) {
         // let's do a third thing
-        final int lineNum = Location.toLineNumber(hint.getStartLoc());
-        final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
+        
         final AAnnotation inv = fAnnot.getInvariant(hint);
         buildMker(inv);
         buildDefiner(inv);
         
-
-        final InstructionHandle last = Util.findLastInstruction(lineList);
-        res = "(PCM.update " + res + " " + last.getPosition() + "%N" +
+        res = "(PCM.update " + res + " " + hint.getPostion() + "%N" +
                       " (" + inv.getName() + ",," +  
                           fMet.getInstructionList().getEnd().getPosition() + "%nat))";
       }

@@ -3,10 +3,13 @@ package mobius.directVCGen.formula.annotation;
 import java.util.List;
 import java.util.Vector;
 
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.MethodGen;
 
 import javafe.ast.ASTNode;
 import javafe.ast.Stmt;
+import javafe.util.Location;
 import mobius.directVCGen.formula.ADecoration;
 import mobius.directVCGen.formula.ILocalVars;
 import mobius.directVCGen.formula.PositionHint;
@@ -83,7 +86,7 @@ public class AnnotationDecoration extends ADecoration {
   public List<AAnnotation> getAnnotPre(final MethodGen met, 
                                        final ASTNode n) {
 
-    return getAnnotPre(new PositionHint(met, n));
+    return getAnnotPre(mkPositionHint(met, n));
   }
 
 
@@ -166,10 +169,7 @@ public class AnnotationDecoration extends ADecoration {
     res.fInv = new Assert("invariant" + fInvCount,
                           Util.buildArgs(prop),
                           inv);
-
-    fInvCount++;
-    
-    
+    fInvCount++; 
   }
   
 
@@ -194,7 +194,7 @@ public class AnnotationDecoration extends ADecoration {
    */
   public AAnnotation getInvariant(final MethodGen met,
                                   final ASTNode n) {
-    return getInvariant(new PositionHint(met, n));
+    return getInvariant(mkInvariantPositionHint(met, n));
   }
   
   /**
@@ -225,17 +225,50 @@ public class AnnotationDecoration extends ADecoration {
     return v.fInv.getArgs();
   }
 
+  /**
+   * Used to return the decoration of the given node from the given method.
+   * @param met the method originating the node
+   * @param x  the node to get the decoration from
+   * @return the list of annotations being the decoration of the node
+   */
   public List<AAnnotation> getAnnotPost(final MethodGen met, final ASTNode x) {
-    return  getAnnotPost(new PositionHint(met, x));
+    return  getAnnotPost(mkPositionHint(met, x));
   }
 
+  /**
+   * Annotate a node with the given list of annotations.
+   * @param met the method in which the node is located
+   * @param s the node to annotate
+   * @param annos the list of annotation
+   */
   public void setAnnotPre(final MethodGen met, final Stmt s, final List<AAnnotation> annos) {
-    setAnnotPre(new PositionHint(met, s), annos);
+    setAnnotPre(mkPositionHint(met, s), annos);
     
   }
 
+  /**
+   * Decorate a node with an invariant.
+   * @param met the method in which the node is located
+   * @param s the node that has to be decorated with the invariant
+   * @param inv the invariant
+   * @param prop the local variables which are parameters to the invariant
+   */
   public void setInvariant(final MethodGen met, final Stmt s, 
                            final Term inv, final ILocalVars prop) {
-    setInvariant(new PositionHint(met, s), inv, prop);
+
+    setInvariant(mkInvariantPositionHint(met, s), inv, prop);
   }
+  
+  private static PositionHint mkInvariantPositionHint(final MethodGen met, final ASTNode s) {
+    final int lineNum = Location.toLineNumber(s.getStartLoc());
+    final List<LineNumberGen> lineList = Util.getLineNumbers(met, lineNum);
+    final InstructionHandle last = Util.findLastInstruction(lineList);
+    return new PositionHint(met, last);
+  }
+  private static PositionHint mkPositionHint(final MethodGen met, final ASTNode n) {
+    final int lineNum = Location.toLineNumber(n.getStartLoc());
+    final List<LineNumberGen> lines = Util.getLineNumbers(met, lineNum);
+    return new PositionHint(met, lines.get(0).getInstruction());
+  }
+
 }

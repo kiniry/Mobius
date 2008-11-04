@@ -136,11 +136,11 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                            left + " " + right);
 
     }
-    final Post rPost = new Post(rvar, post.fPost.substWith(formula));
-    post.fPost = rPost;
+    final Post rPost = new Post(rvar, post.getPost().substWith(formula));
+    post.setPost(rPost);
     Post pre = getPre(right, post);
     final Post lPost = new Post(lvar, pre);
-    post.fPost = lPost;
+    post.setPost(lPost);
     pre = getPre(left, post);
     return pre;
   }
@@ -171,13 +171,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                                                   excPost),
                                     Logic.implies(Logic.not(Logic.equals(rvar, 
                                                                          Num.value(0))), 
-                                                  post.fPost.substWith(formula))
+                                                  post.getPost().substWith(formula))
                                     ));
 
-    post.fPost = rPost;
+    post.setPost(rPost);
     Post pre = getPre(right, post);
     final Post lPost = new Post(lvar, pre);
-    post.fPost = lPost;
+    post.setPost(lPost);
     pre = getPre(left, post);
     return pre;
   }
@@ -190,7 +190,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
    */
   public Post assign(final BinaryExpr expr, final VCEntry entry) {
     Post pre = assign(expr.left, entry);
-    entry.fPost = pre;
+    entry.setPost(pre);
     pre = getPre(expr.right, entry);
     return pre;
   }
@@ -205,13 +205,13 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
    * @return a postcondition containing the proper assignment wp.
    */
   public Post assign(final Expr left, final VCEntry entry) {
-    final QuantVariableRef val = entry.fPost.getRVar();
+    final QuantVariableRef val = entry.getPost().getRVar();
     Post pre;
     if (left instanceof VariableAccess) {
       final VariableAccess va = (VariableAccess) left;
       final Term var = Expression.rvar(va.decl);
       
-      pre = new Post(val, Util.substVarWithVal(entry.fPost, var, val));
+      pre = new Post(val, Util.substVarWithVal(entry.getPost(), var, val));
                                             
     }
     else if (left instanceof FieldAccess) { 
@@ -229,12 +229,12 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
             Logic.implies(Logic.assignCompat(Heap.var, 
                                              Heap.sortToValue(val), 
                                              Type.getType(field)),
-                          entry.fPost.subst(Heap.var, 
+                          entry.getPost().subst(Heap.var, 
                                             Heap.store(Heap.var, 
                                                        obj, f.qvar, val)));
           p = Logic.implies(Expression.sym("fieldPred", new Term [] {Heap.var, obj, f}), 
                                  p);
-          entry.fPost = new Post(obj, p);
+          entry.setPost(new Post(obj, p));
           pre = getPre(od, entry);
           pre = new Post(val, pre);
           break;
@@ -242,16 +242,18 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
         case TagConstants.SUPEROBJECTDESIGNATOR:
           // I believe strongly (gasp) that super is not useful as it is 
           // contained in the field signature...
-        case TagConstants.TYPEOBJECTDESIGNATOR: {
+        case TagConstants.TYPEOBJECTDESIGNATOR: 
           // cannot be null
   
-          pre = new Post(f, entry.fPost.subst(Heap.var, Heap.store(Heap.var, f.qvar, val)));
+          pre = new Post(f, entry.getPost().subst(Heap.var, 
+                                                  Heap.store(Heap.var, 
+                                                             f.qvar, val)));
           //entry.post = pre;
           //pre = getPre(od, entry);
           pre = new Post(val, pre);
   
           break;
-        }
+        
         default: 
           throw new IllegalArgumentException("Unknown object designator type ! " + od);
 
@@ -271,22 +273,22 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
                       Util.getNewExcpPost(Type.javaLangNullPointerException(), entry));
 
       // the normal post
-      Term tNormal = entry.fPost.subst(Heap.var, 
+      Term tNormal = entry.getPost().subst(Heap.var, 
                                            Heap.storeArray(Heap.var, arrVar,  idx, val));
       tNormal = Logic.implies(Logic.not(Logic.equalsNull(arrVar)), tNormal);
       Post post;
       post  = new Post(Logic.and(tNormal, tExcp));
 
       post = new Post(idx, post);
-      entry.fPost = post;
+      entry.setPost(post);
       post = getPre(arr.index, entry);
 
       post = new Post(arrVar, post);
-      entry.fPost = post;
+      entry.setPost(post);
       post = getPre(arr.array, entry);
 
       pre = new Post(val, post);
-      entry.fPost = pre;
+      entry.setPost(pre);
 
     }
 
@@ -296,17 +298,17 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
 
   /**
    * Do the wp of an assignement followed by an operation. 
-   * @param expr
-   * @param post
-   * @return the corresponding postcondition
+   * @param expr the assign expression
+   * @param post the current postcondition
+   * @return the computed precondition
    */
   public Post assignSpecial(final BinaryExpr expr, final VCEntry post) {
     final Expr right = expr.right;
     final Expr left = expr.left;
-    final QuantVariableRef val = post.fPost.getRVar();
+    final QuantVariableRef val = post.getPost().getRVar();
     Post pre = assign(left, post);
     pre = new Post(val, pre);
-    post.fPost = pre;
+    post.setPost(pre);
     switch (expr.op) {
       case TagConstants.ASGMUL:
         pre = stdBinExpression(TagConstants.STAR, left, right, post);

@@ -3,7 +3,11 @@ package mobius.directVCGen.formula.annotation;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
-//TODO: add comments
+/**
+ * An annotation representing a set instruction.
+ * 
+ * @author H. Lehner and J. Charles (julien.charles@inria.fr)
+ */
 public class Set extends AAnnotation {
 
   /** FOL-Terms  containing variable declarations. (Each Term is just a Variable) */
@@ -36,25 +40,51 @@ public class Set extends AAnnotation {
    */
   public static class Assignment {
     /** the variable which is being assigned. */
-    public final QuantVariableRef fVar;
+    private final QuantVariableRef fVar;
     /** the expression which is assigned to the variable. */
-    public final Term fExpr;
-    
+    private final Term fExpr;
 
-
-    // TODO: add comments
+    /**
+     * Construct an assignment structure out of a variable and an expression.
+     * @param var a variable
+     * @param expr an expression
+     */
     public Assignment(final QuantVariableRef var, final Term expr) {
-      this.fVar = var;
-      this.fExpr = expr;
+      if (var == null || expr == null) {
+        throw new IllegalArgumentException("var (" + getVar() + ") " +
+                                           "or expr (" + getExpr() + ") " +
+                                           "shouldn't be null!");
+      }
+      fVar = var;
+      fExpr = expr;
     }
-
-
 
     /** {@inheritDoc} */
     @Override
     public String toString() {
-      return fVar + " := " + fExpr;
+      return getVar() + " := " + getExpr();
     }
+
+    /**
+     * Returns the ghost variable which is being assigned.
+     * @return a variable
+     */
+    public QuantVariableRef getVar() {
+      return fVar;
+    }
+
+    /**
+     * Returns the expression to which the variable is being 
+     * assigned.
+     * @return an expression
+     */
+    public Term getExpr() {
+      return fExpr;
+    }
+
+
+
+
   }
 
 

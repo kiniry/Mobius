@@ -21,6 +21,13 @@ import org.apache.bcel.generic.Type;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
+/**
+ * The Executor to generate the method formalisation with the annotations.
+ * 
+ * @see mobius.bico.executors.MethodExecutor
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class AnnotationMethodExecutor extends ABasicExecutor {
   
   /** the current method (routine) that is treated - bcel style. */
@@ -29,8 +36,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   /** the stream where to write the annotations. */
   private final CoqStream fAnnotOut;
   
-  /** the class from which the inspected method is taken. */
-  private ClassGen fClass;
 
   public AnnotationMethodExecutor(final ABasicExecutor be, 
                                   final CoqStream annotationOut, 
@@ -42,7 +47,6 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       throw new NullPointerException();
     }
     fMeth = new MethodGen(met, clzz.getClassName(), clzz.getConstantPool());
-    fClass = clzz;
     fAnnotOut = annotationOut;
   }
 
@@ -100,10 +104,20 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
   }
   
+  
   protected CoqStream getAnnotationOut() {
     return fAnnotOut;
   }
+  
+  
 
+  /**
+   * Prints the method precondition. Generates 2 definitions,
+   * one mk_namePre, being the one to use with the source memory model
+   * the other namePre, to use with the bytecode memory model. 
+   * 
+   * @param namePre the name of the precondition.
+   */
   private void doMethodPre(final String namePre) {
     final CoqStream out = getAnnotationOut();
     out.println("Definition mk_" + namePre + " := ");
@@ -229,6 +243,11 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
   }
   
+  /**
+   * Returns the let expression used to define pre, using the predicate
+   * mk_pre.
+   * @return a string representing the let expression
+   */
   private String doLetPre() {
     final CoqStream out = getAnnotationOut();
     String vars = "";

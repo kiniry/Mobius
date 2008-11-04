@@ -23,6 +23,7 @@ public class AnnotationCompiler {
    * @param pkgsdir the directory where to generate the file(s) 
    * @param clzz the class to treat
    * @param classpath the current classpath used by to find the source files
+   * @param generator the annotation generator used to decorate the AST.
    */
   public AnnotationCompiler(final File pkgsdir, final String clzz,
                             final String classpath,

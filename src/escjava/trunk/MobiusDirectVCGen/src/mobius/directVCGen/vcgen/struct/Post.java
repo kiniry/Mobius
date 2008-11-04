@@ -162,7 +162,7 @@ public class Post {
    * @param term the right part of the <code>and</code>
    * @return a new Post object with the properties mentionned above or p or term
    */
-  public static Post and(Post p, Term term) {
+  public static Post and(final Post p, final Term term) {
     if (p == null) {
       return new Post(term);
     }

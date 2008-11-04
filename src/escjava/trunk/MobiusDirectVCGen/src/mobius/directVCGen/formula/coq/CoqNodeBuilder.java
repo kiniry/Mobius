@@ -243,8 +243,6 @@ public class CoqNodeBuilder extends AHeapNodeBuilder {
   /** {@inheritDoc} */
   @Override
   public SPred buildPredCall(final PredSymbol fn, final SAny[] args) {
-    
-
     SPred pred = null;
     if ((fn == symIs) || (fn == symCast) || 
         (fn == symTypeNE) || (fn == symTypeEQ)) {

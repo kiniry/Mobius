@@ -9,9 +9,9 @@ import escjava.sortedProver.Lifter.Term;
  */
 public class ExcpPost {
   /** the type of the exception to which correspond the postcondition .*/
-  public final /*@ non_null @*/ Term type;
+  private final /*@ non_null @*/ Term fType;
   /** the post condition that is verified if the specified exception is triggered. */
-  public final /*@ non_null @*/ Post post;
+  private final /*@ non_null @*/ Post fPost;
 
   /**
    * Construct an exceptional postcondition from an exception type
@@ -20,8 +20,8 @@ public class ExcpPost {
    * @param pos the postcondition associated with it
    */
   public ExcpPost (final Term typ, final Post pos) {
-    type = typ;
-    post = pos;
+    fType = typ;
+    fPost = pos;
   }
 
 
@@ -30,7 +30,23 @@ public class ExcpPost {
    */
   @Override
   public String toString() {
-    return "( " + type + ", " + post + ")";
+    return "( " + getType() + ", " + getPost() + ")";
+  }
+
+
+  /**
+   * @return the type
+   */
+  public /*@ non_null @*/ Term getType() {
+    return fType;
+  }
+
+
+  /**
+   * @return the post
+   */
+  public /*@ non_null @*/ Post getPost() {
+    return fPost;
   }
 
 }

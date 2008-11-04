@@ -27,6 +27,8 @@ public class AnnotationClassExecutor extends ClassExecutor {
    * Create an executor that can produce annotations.
    * @param be the parent executor.
    * @param cg the class which is currently treated
+   * @param gen the generator used to annotate the AST with first order
+   * logic formulas
    * @throws FileNotFoundException in case the file cannot be written on the disk
    */
   public AnnotationClassExecutor(final AnnotationExecutor be, 
