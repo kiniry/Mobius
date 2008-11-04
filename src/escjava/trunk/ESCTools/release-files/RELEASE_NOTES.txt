@@ -1,11 +1,11 @@
-version 2.0.5 "First Stable Release" (October 2008)
+version 2.0.5 "First Stable Release" (5 November 2008)
 
-No major new features have been added.
+No major new features have been added.  
 
 The following tickets are FIXED or CLOSED in this release:
 
 Trac ID	Summary
-89		Nullable keyword within declaration of quantified varaible
+89		Nullable keyword within declaration of quantified variable
 654		modifies \everything soundness
 
 The following issues are known to EXIST in this release:
@@ -97,6 +97,8 @@ n/a		425		Modify specs_test to work with both Java 1.4 and Java 1.5
 596		242		NullPointerException thrown with @pure modified comes before
 				@modifies spec
 606		255		Problem with java.io.Outstream specification
+
+-------------------------------------------------------------
 
 version 2.0b4 "Mobius PVE Internal Release" (16 January 2008)
 
