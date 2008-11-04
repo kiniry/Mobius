@@ -259,13 +259,33 @@ public class AnnotationDecoration extends ADecoration {
     setInvariant(mkInvariantPositionHint(met, s), inv, prop);
   }
   
-  private static PositionHint mkInvariantPositionHint(final MethodGen met, final ASTNode s) {
+  /**
+   * Build a new position hint for invariants.
+   * The position which is annotated is the last instruction of the
+   * body of the loop.
+   * 
+   * @param met the method containing this annotation
+   * @param s the loop instruction annotated
+   * @return the position of the annotation inside of the loop
+   */
+  public static PositionHint mkInvariantPositionHint(final MethodGen met, final ASTNode s) {
     final int lineNum = Location.toLineNumber(s.getStartLoc());
     final List<LineNumberGen> lineList = Util.getLineNumbers(met, lineNum);
     final InstructionHandle last = Util.findLastInstruction(lineList);
     return new PositionHint(met, last);
   }
-  private static PositionHint mkPositionHint(final MethodGen met, final ASTNode n) {
+ 
+  /**
+   * Build a new position hint for annotations.
+   * The hypothesis taken into account is that the annotation
+   * either ends a line or is on a new line; so the node is corresponds
+   * to the first instruction on the following line.
+   * 
+   * @param met the method containing this annotation
+   * @param n the instruction annotated
+   * @return the position of the annotation
+   */
+  public static PositionHint mkPositionHint(final MethodGen met, final ASTNode n) {
     final int lineNum = Location.toLineNumber(n.getStartLoc());
     final List<LineNumberGen> lines = Util.getLineNumbers(met, lineNum);
     return new PositionHint(met, lines.get(0).getInstruction());
