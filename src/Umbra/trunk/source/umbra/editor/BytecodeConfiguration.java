@@ -105,11 +105,7 @@ public class BytecodeConfiguration extends SourceViewerConfiguration {
    */
   public final String[] getConfiguredContentTypes(
                                    final ISourceViewer a_source_viewer) {
-    return new String[] {
-      IDocument.DEFAULT_CONTENT_TYPE,
-      BytecodePartitionScanner.SECTION_HEAD,
-      BytecodePartitionScanner.SECTION_CP,
-      BytecodePartitionScanner.SECTION_BML };
+    return BytecodePartitionScanner.getPreconfiguredContentTypes();
   }
 
   /**

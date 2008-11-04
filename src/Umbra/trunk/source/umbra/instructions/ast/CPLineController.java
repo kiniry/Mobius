@@ -78,14 +78,14 @@ public class CPLineController extends BytecodeLineController {
 
 
   /**
-   * @param utonow
+   * @param an_utonow
    * @return
    */
-  private boolean parseEntry(boolean utonow) {
-    if (!utonow) {
-      return utonow;
+  private boolean parseEntry(final boolean an_utonow) {
+    if (!an_utonow) {
+      return an_utonow;
     }
-    boolean res = utonow;
+    boolean res = an_utonow;
     res = res && my_parser.swallowWhitespace();
     my_keyword = my_parser.swallowMnemonic(BytecodeStrings.CP_TYPE_KEYWORDS);
     res = res && (my_keyword >= 0);

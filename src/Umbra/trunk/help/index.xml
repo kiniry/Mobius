@@ -3,7 +3,7 @@
 
 <toc label="Umbra Guide" topic="help/overview.html">
     <topic label="Overview" href="help/overview.html"/>
-    <topic label="License information" href="help/epl.htm"/>
+    <topic label="License information" href="help/lgpl.html"/>
     <topic label="User Guide" href="help/user_guide/user_guide.html">
         <link toc="help/toc_user_guide.xml"/>
     </topic>

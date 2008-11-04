@@ -229,11 +229,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     final IDocumentPartitioner partitioner =
       new FastPartitioner(
         new BytecodePartitionScanner(),
-        an_editor.get
-        new String[] {
-          BytecodePartitionScanner.SECTION_BML,
-          BytecodePartitionScanner.SECTION_HEAD,
-          BytecodePartitionScanner.SECTION_THROWS});
+        an_editor.getConfiguration().getConfiguredContentTypes(null));
     partitioner.connect(a_doc);
     a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
                                  partitioner);

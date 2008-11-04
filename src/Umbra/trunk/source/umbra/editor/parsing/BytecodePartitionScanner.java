@@ -8,6 +8,7 @@
  */
 package umbra.editor.parsing;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -68,6 +69,16 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
    * document that correspond to BML annotations.
    */
   public static final String SECTION_BML = "__btc.bmlcode";
+
+  /**
+   * An array with the preconfigured content types of areas in a
+   * bytecode file.
+   */
+  private static final String[] CONFIGURED_CONTENT_TYPES = new String[] {
+    IDocument.DEFAULT_CONTENT_TYPE,
+    BytecodePartitionScanner.SECTION_HEAD,
+    BytecodePartitionScanner.SECTION_CP,
+    BytecodePartitionScanner.SECTION_BML };
 
   /**
    * Index for the rule to handle BML annotations ending "@*\/".
@@ -148,5 +159,14 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
                                         cp);
     the_rules[THROWS_RULE] = new EndOfLineRule(BytecodeStrings.THROWS_PREFIX[0],
                                                thr);
+  }
+
+  /**
+   * Returns the preconfigured content types.
+   *
+   * @return the preconfigured content types
+   */
+  public static String[] getPreconfiguredContentTypes() {
+    return CONFIGURED_CONTENT_TYPES;
   }
 }

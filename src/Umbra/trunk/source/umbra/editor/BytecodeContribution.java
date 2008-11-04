@@ -351,15 +351,16 @@ public class BytecodeContribution extends ControlContribution {
    * This method displays in the status line the information
    * about the cursor position inside the BML document.
    *
-   * @param doc the document to print the position for
-   * @param offset the offset within the document to report
+   * @param a_doc the document to print the position for
+   * @param an_offset the offset within the document to report
    */
-  private void displayPosition(final BytecodeDocument doc, final int offset) {
+  private void displayPosition(final BytecodeDocument a_doc,
+                               final int an_offset) {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
     int lno;
     try {
-      lno = doc.getLineOfOffset(offset);
-      final int chpos = offset - doc.getLineOffset(lno) + 1;
+      lno = a_doc.getLineOfOffset(an_offset);
+      final int chpos = an_offset - a_doc.getLineOffset(lno) + 1;
       bars.getStatusLineManager().setMessage("" + lno + " : " + chpos);
     } catch (BadLocationException e) {
       // TODO Auto-generated catch block

@@ -456,5 +456,13 @@ public class BytecodeEditor extends TextEditor {
     isv.getTextWidget().setTopIndex(a_firstvisible);
   }
 
-  get
+  /**
+   * Returns the graphical configuration of the editor.
+   *
+   * @return the graphical configuration of the editor
+   */
+  public BytecodeConfiguration getConfiguration() {
+    return my_bconf;
+  }
+
 }
