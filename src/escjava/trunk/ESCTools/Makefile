@@ -7,6 +7,8 @@
 ## author: Patrice Chalin
 ## author: Dermot Cochran
 ##
+## copyright (c) 2007-2008 Dermot Cochran
+##
 
 export TOP = .
 include Makefile.defs
@@ -436,7 +438,7 @@ source-release: cleanup quiet-docs
 #   Copy all source code, tests, libs, Makefiles, ChangeLog, etc. 
 	cp -rf ${UTILS_SOURCE_DIR} ${RELTEMP}
 	cp -rf ${ESCJAVA_ROOT} ${RELTEMP}
-	cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}/Escjava/mochalib
+	-cp -rf ${MOCHA_SOURCE_DIR} ${RELTEMP}/Escjava/mochalib
 	cp ${XMLRPC_LIB} ${RELTEMP}/Escjava/xmlrpc.jar 
 	cp Makefile ${RELTEMP}
 	cp Makefile.defs ${RELTEMP}
@@ -447,11 +449,11 @@ source-release: cleanup quiet-docs
 	cp -rf ${ORIG_SRC_SPECS} ${RELTEMP} 
 	cp -rf docs ${RELTEMP}
 	cp -rf papers ${RELTEMP}
-	cp -rf slides ${RELTEMP}
+	-cp -rf slides ${RELTEMP}
 	cp -rf specs* ${RELTEMP}
 	cp license.txt ${RELTEMP}
 	mkdir ${RELTEMP}/jars
-	cp -r jars/mochalib.jar ${RELTEMP}/jars
+	-cp -r ${ESCTOOLS_ROOT}/jars/mochalib.jar ${RELTEMP}/jars
 	mkdir -p ${RELTEMP}/Utils
 	cp -rf ${ESCTOOLS_ROOT}/Utils/BCEL ${RELTEMP}/Utils
 	cp -rf ${ESCTOOLS_ROOT}/Utils/Javafe ${RELTEMP}/Utils
@@ -533,9 +535,9 @@ binary-release: build jars quiet-docs cleanup
 	mkdir ${RELTEMP}/papers
 	cp papers/*.pdf ${RELTEMP}/papers
 	mkdir ${RELTEMP}/slides
-	cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
-	cp slides/introjml.pdf ${RELTEMP}/slides
-	cp slides/escjava_demo.pdf ${RELTEMP}/slides
+	-cp slides/ETAPSTutorial/*.pdf ${RELTEMP}/slides
+	-cp slides/introjml.pdf ${RELTEMP}/slides
+	-cp slides/escjava_demo.pdf ${RELTEMP}/slides
 	mkdir ${RELTEMP}/docs
 	cp docs/Escjava2-ImplementationNotes/*.pdf ${RELTEMP}/docs
 	cp docs/Escjava2-Extending/Escjava2-Extending.pdf ${RELTEMP}/docs
@@ -633,7 +635,7 @@ generate-toplevel-archive: clean
 		${ESCTOOLS_ROOT}/clean_env.sh ${RELTEMP}/ESCTools
 	cp -rf ${ESCTOOLS_ROOT}/docs ${RELTEMP}/ESCTools
 	cp -rf ${ESCTOOLS_ROOT}/papers ${RELTEMP}/ESCTools
-	cp -rf ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
+	-cp -rf ${ESCTOOLS_ROOT}/slides ${RELTEMP}/ESCTools
 	cp -rf ${ESCTOOLS_ROOT}/Utils ${RELTEMP}/ESCTools
 	cp -rf ${JAR_FILES} ${RELTEMP}/ESCTools
 # 	cp $(JML2_SPECS_JAR) ${RELTEMP}/ESCTools
