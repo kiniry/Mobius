@@ -130,7 +130,7 @@ public class TermOfExpr extends Evaluator<Term> {
   public Term eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
     String termId = "***unknown***";
     switch (op) {
-    case MINUS: return term.mk("-", term.mk("const_int", new BigInteger("0")), e.eval(this));
+    case MINUS: return term.mk("-", term.mk("literal_int", new BigInteger("0")), e.eval(this));
     case NOT: return term.mk("not", e.eval(this));
     default: assert false; return null;
     }

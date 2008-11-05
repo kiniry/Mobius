@@ -1,3 +1,4 @@
+ . Fix substitution bug (they are not done 'in parallel').
  . Desugar dependent types in procedure signatures.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
