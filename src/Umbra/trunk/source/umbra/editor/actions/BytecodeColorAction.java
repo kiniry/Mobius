@@ -19,10 +19,7 @@ import umbra.editor.ColorModeContainer;
 import umbra.editor.parsing.ColorValues;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 /**
  *  This class defines an action of changing the coloring style. Two
@@ -94,14 +91,8 @@ public class BytecodeColorAction extends BytecodeEditorAction {
       } catch (PartInitException e) {
         MessageDialog.openError(sh, getDescription(),
           GUIMessages.COLOURING_REFRESH_IMPOSSIBLE_MESSAGE);
-      } catch (UmbraLocationException e) {
-        GUIMessages.messageWrongLocation(sh, getDescription(), e);
-      } catch (UmbraMethodException e) {
-        GUIMessages.exceededRangeInfo(sh, new UmbraRangeException(e),
-                                      getDescription());
-      } catch (UmbraSyntaxException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+      } catch (UmbraRepresentationException e) {
+        wrongRepresentationMessage(sh, getDescription(), e);
       }
     }
   }

@@ -37,9 +37,7 @@ import umbra.editor.actions.history.HistoryAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.GUIMessages;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 
 /**
@@ -340,18 +338,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *   initialised
-   * @throws UmbraLocationException thrown in case a position has been reached
-   *   which is outside the current document
-   * @throws UmbraMethodException in case the textual representation has
-   *   more methods than the internal one
-   * @throws UmbraSyntaxException
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
    * @see #refreshEditor(BytecodeEditor, IEditorInput, String[], String[])
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final String[] the_comments,
                                   final String[] the_interline)
-    throws PartInitException, UmbraLocationException, UmbraMethodException,
-           UmbraSyntaxException {
+    throws PartInitException, UmbraRepresentationException {
     final IEditorInput input = an_editor.getEditorInput();
     return refreshEditor(an_editor, input, the_comments, the_interline);
   }
@@ -371,18 +365,14 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
    * @return the new editor
    * @throws PartInitException if the new editor could not be created or
    *    initialised
-   * @throws UmbraLocationException thrown in case a position has been reached
-   *   which is outside the current document
-   * @throws UmbraMethodException in case the textual representation has
-   *   more methods than the internal one
-   * @throws UmbraSyntaxException
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
    */
   public final BytecodeEditor refreshEditor(final BytecodeEditor an_editor,
                                   final IEditorInput an_input,
                                   final String[] a_comment_array,
                                   final String[] an_interline)
-    throws PartInitException, UmbraLocationException, UmbraMethodException,
-           UmbraSyntaxException {
+    throws PartInitException, UmbraRepresentationException {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();

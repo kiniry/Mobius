@@ -18,6 +18,7 @@ import umbra.lib.BMLParsing;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraRepresentationException;
 import umbra.lib.UmbraSyntaxException;
 import annot.bcclass.BCClass;
 
@@ -147,19 +148,26 @@ public class BytecodeDocument extends Document {
    *   i-th entry contains the comment for the i-th instruction in the file,
    *   if this parameter is null then the array is not taken into account
    * @param an_interline as above for multi-line comments
-   * @throws UmbraLocationException thrown in case a position has been reached
-   *   which is outside the current document
-   * @throws UmbraMethodException in case the textual representation has
-   *   more methods than the internal one
-   * @throws UmbraSyntaxException
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
    */
   public void init(final String[] a_comment_array,
                    final String[] an_interline)
-    throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
-    final String str = my_bcc.init(this, a_comment_array, an_interline);
+    throws UmbraRepresentationException {
+    String str;
+    try {
+      str = my_bcc.init(this, a_comment_array, an_interline);
+      setTextWithDeadUpdate(str);
+      my_bmlp.setCodeString(str);
+    } catch (UmbraLocationException e) {
+      throw new UmbraRepresentationException(e);
+    } catch (UmbraMethodException e) {
+      throw new UmbraRepresentationException(e);
+    } catch (UmbraSyntaxException e) {
+      throw new UmbraRepresentationException(e);
+    }
     my_ready_flag = true; //this causes the following line not to loop
-    setTextWithDeadUpdate(str);
-    my_bmlp.setCodeString(str);
+
     my_bcc.checkAllLines(0, getNumberOfLines() - 1);
   }
 

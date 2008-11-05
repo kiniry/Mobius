@@ -341,6 +341,14 @@ public final class GUIMessages {
    */
   public static final String INCORRECT_CODE = "Error detected: " + SUBSTITUTE;
 
+
+  /**
+   * The message informs the user that the operation led to inconsistency in
+   * the internal representation of the bytecode.
+   */
+  public static final String REPRESENTATION_ERROR_MESSAGE =
+    "Problem in establishing internal representation: " + SUBSTITUTE;
+
   /**
    * The empty constructor to forbid the creation of the instances.
    */

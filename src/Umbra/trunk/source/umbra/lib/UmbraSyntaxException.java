@@ -23,4 +23,27 @@ public class UmbraSyntaxException extends Exception {
    */
   private static final long serialVersionUID = 6561716806388549111L;
 
+
+  /**
+   *  This field contains the line number which contains the syntax error.
+   */
+  private final int my_wrong_line;
+
+  /**
+   * Creates an exception with the information on which line caused the error.
+   *
+   * @param the_line the line with the syntax error
+   */
+  public UmbraSyntaxException(final int the_line) {
+    my_wrong_line = the_line;
+  }
+
+  /**
+   * Returns the number of the wrong line.
+   *
+   * @return the number of the wrong line
+   */
+  public int getWrongLine() {
+    return my_wrong_line;
+  }
 }

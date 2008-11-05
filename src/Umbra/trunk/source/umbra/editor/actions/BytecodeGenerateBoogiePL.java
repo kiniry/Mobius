@@ -39,10 +39,18 @@ import b2bpl.translation.Translator;
 
 
 /**
- * @author alx
+ * This class defines action of compilation of the bytecode file to BoogiePL
+ * and checking the BoogiePL file with FreeBogie.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
+
+  /**
+   * The number of command line arguments supplied to FreeBoogie.
+   */
+  private static final int NO_OF_FREEBOOGIE_ARGS = 2;
 
   /**
    * The console which will contain the BoogiePL output.
@@ -73,11 +81,9 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
   }
 
   /**
-   * This method restores a saved copy of the original .class file that resulted
-   * from the Java source file (it is stored under the name of the class file
-   * prefixed with '_'). The class file with our modifications is removed, and
-   * the editor input is updated together with the editor window.
-   *
+   * This method compiles the class file to BoogiePL and then runs FreeBoogie
+   * to verify the correctness of the bytecode with regard to the BML
+   * specifications.
    */
   public final void run() {
     final Shell parent = getEditor().getSite().getShell();
@@ -95,21 +101,24 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
       final String bplName = compileToBPL(active, dirName, className);
       checkBPL(dirName, bplName);
     } catch (ClassNotFoundException e2) {
-      // TODO Auto-generated catch block
-      e2.printStackTrace();
+      wrongPathToClassMessage(parent, getDescription(), dirName + "/" +
+                              className);
     } catch (ReadAttributeException e2) {
-      // TODO Auto-generated catch block
-      e2.printStackTrace();
+      wrongBMLAttribute(parent, getDescription());
     }
   }
 
   /**
-   * @param a_dirname
-   * @param a_bplname
+   * This method verifies the BoogiePL file using FreeBoogie. It checks the
+   * file under the location being the concatenation of <code>a_dirname</code>
+   * and <code>a_bplname</code>.
+   *
+   * @param a_dirname a directory with the BoogiePL file
+   * @param a_bplname a BoogiePL file name
    */
   private void checkBPL(final String a_dirname,
                         final String a_bplname) {
-    final String[] args = new String[2];
+    final String[] args = new String[NO_OF_FREEBOOGIE_ARGS];
     args[0] = "-pfg";
     args[1] = a_dirname + "/" + a_bplname;
     my_console_stream.println("++++ FreeBoogie start ++++");
@@ -117,12 +126,18 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
   }
 
   /**
-   * @param an_active
-   * @param a_dirname
-   * @param a_classname
-   * @return
-   * @throws ClassNotFoundException
-   * @throws ReadAttributeException
+   * Compiles the file specifed by <code>a_dirname</code> and
+   * <code>a_classname</code> from the bytecode format to BoogiePL format.
+   *
+   * @param an_active the path to the current bytecode file
+   * @param a_dirname path of directory where .class file to compile to BoogiePL
+   *   is located, excluding directories included in <code>a_classname</code>
+   * @param a_classname the name of the file with the class to be translated
+   * @return the name of the BoogiePL file
+   * @throws ClassNotFoundException if .class file designated by
+   *   <code>a_classname</code> could not be found
+   * @throws ReadAttributeException if any of the BML attributes was not
+   *   correctly parsed by BMLlib
    */
   private String compileToBPL(final IPath an_active,
                               final String a_dirname,
@@ -130,20 +145,20 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     throws ClassNotFoundException, ReadAttributeException {
     BCClass clazz;
     clazz = new BCClass(a_dirname, a_classname);
-    final JClassType type = new JClassType(clazz.getJC().getClassName());
     final TranslatingVisitor v = new TranslatingVisitor();
     final String bplName = an_active.lastSegment().replace(
-      FileNames.BYTECODE_EXTENSION, ".bpl"); //TODO string
+      FileNames.BYTECODE_EXTENSION, FileNames.BOOGIEPL_EXTENSION);
     try {
       compile(bplName, v.visit(clazz));
     } catch (NullPointerException e) {
-      //e.printStackTrace();
+      e.printStackTrace(); // TODO strange ????
       try {
         compile(bplName, v.visit(clazz));
       } catch (NullPointerException e1) {
+        e1.printStackTrace(); // TODO strange ????
       }
     }
-    my_console_stream.println(a_classname + " compiled");
+    my_console_stream.println(a_classname + " compiled to BoogiePL");
     return bplName;
   }
 
@@ -167,14 +182,16 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
   }
 
   /**
+   * The method compiles the BoogiePL output out of the current bytecode.
    *
-   * @param an_outfile
-   * @param the_types
+   * @param an_outfile the name of the output to be generated
+   * @param the_types the types of the classes to be compiled
    */
   public void compile(final String an_outfile,
                       final JClassType... the_types) {
     final String[] s = new String[1];
-    s[0] = an_outfile.replace(".bpl", ".class");
+    s[0] = an_outfile.replace(FileNames.BOOGIEPL_EXTENSION,
+                              FileNames.CLASS_EXTENSION);
     final Project project = Project.fromCommandLine(s,
                        new PrintWriter(System.out));
     final b2bpl.Main main = new b2bpl.Main(project);
@@ -189,7 +206,6 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     for (IBPLTransformator transformator : project.getTransformators()) {
       program = transformator.transform(program);
     }
-
     try {
       PrintWriter writer;
       if ("-".equals(an_outfile)) {

@@ -48,9 +48,11 @@ public class JMLCompile extends DisasBCEL {
   private CompilationUnitEditor my_editor;
 
   /**
-   * Finds {@link org.apache.bcel.classfile.JavaClass} structure related to the
-   * current Java source code. Generates new byte code from it and displays
-   * it in a new byte code editor window.
+   * Finds the file for the current Java source code and to the resulting
+   * classfile and then compiles in the JML as BML into the classfile using
+   * Jml2Bml compiler. The compiler assumes that the classfile already exists.
+   * After the compilation completes the method will open the bytecode editor
+   * using the relevant functionality inherited from {@link DisasBCEL}.
    *
    * @param an_action see the IActionDelegate.run(IAction)
    * @see org.eclipse.ui.IActionDelegate#run(IAction)

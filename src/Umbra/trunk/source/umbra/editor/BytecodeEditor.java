@@ -39,10 +39,7 @@ import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -291,15 +288,10 @@ public class BytecodeEditor extends TextEditor {
       MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.DISAS_LOADING_PROBLEMS,
                                jc.getFileName()));
-    } catch (UmbraLocationException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    GUIMessages.BYTECODE_MESSAGE_TITLE);
-    } catch (UmbraMethodException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    GUIMessages.BYTECODE_MESSAGE_TITLE);
-    } catch (UmbraSyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (UmbraRepresentationException e) {
+      MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
+        GUIMessages.substitute(GUIMessages.REPRESENTATION_ERROR_MESSAGE,
+                               e.getProblemDescription()));
     }
   }
 

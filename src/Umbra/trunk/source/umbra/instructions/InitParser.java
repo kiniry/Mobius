@@ -179,7 +179,7 @@ public class InitParser extends BytecodeCommentParser {
     String line = getLineFromDoc(my_doc, the_current_lno, a_ctxt);
     BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     if (!(lc instanceof CPHeaderController)) {
-      throw new UmbraSyntaxException();
+      throw new UmbraSyntaxException(the_current_lno);
     }
     addEditorLine(the_current_lno, lc);
     a_ctxt.setInsideCP();

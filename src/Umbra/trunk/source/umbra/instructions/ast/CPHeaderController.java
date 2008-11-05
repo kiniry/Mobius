@@ -11,9 +11,11 @@ package umbra.instructions.ast;
 import umbra.lib.BytecodeStrings;
 
 /**
- * @author alx
- * @version a-01
+ * This is a class for lines in bytecode files with the constant pool header
+ * information (i.e. "Constant pool:" or "Second constant pool:" constants.
  *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class CPHeaderController extends BytecodeLineController {
 

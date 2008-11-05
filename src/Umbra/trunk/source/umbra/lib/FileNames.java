@@ -80,6 +80,12 @@ public final class FileNames {
   public static final String BYTECODE_EXTENSION   = ".btc";
 
   /**
+   * The file extension for the files with the BoogiePL files
+   * (i.e. .bpl).
+   */
+  public static final CharSequence BOOGIEPL_EXTENSION = ".bpl";
+
+  /**
    * The file extension for the history files.
    */
   public static final String BYTECODE_HISTORY_EXTENSION   = ".bt";

@@ -23,11 +23,7 @@ import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
-import umbra.lib.GUIMessages;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 /**
  * This class defines action of restoring the original version
@@ -91,15 +87,8 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
       wrongPathToClassMessage(parent, getDescription(), file.toString());
     } catch (CoreException e1) {
       wrongFileOperationMessage(parent, getDescription());
-    } catch (UmbraLocationException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getDescription());
-    } catch (UmbraMethodException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getDescription());
-    } catch (UmbraSyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (UmbraRepresentationException e) {
+      wrongRepresentationMessage(parent, getDescription(), e);
     }
   }
 

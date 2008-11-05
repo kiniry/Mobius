@@ -243,6 +243,13 @@ public class LineContext {
   }
 
   /**
+   * Sets the current state to be the state inside the constant pool.
+   */
+  public void setInsideCP() {
+    my_state = STATE_CONSTANT_POOL;
+  }
+
+  /**
    * Returns <code>true</code> when the object is in the state inside the
    * invariant area.
    *
@@ -265,14 +272,11 @@ public class LineContext {
   }
 
   /**
+   * Returns <code>true</code> when the object is in the state inside the
+   * constant pool.
    *
-   */
-  public void setInsideCP() {
-    my_state = STATE_CONSTANT_POOL;
-  }
-
-  /**
-   * @return
+   * @return <code>true</code> when the object is in the state inside the
+   *   constant pool, <code>false</code> otherwise
    */
   public boolean isInsideConstantPool() {
     return my_state == STATE_CONSTANT_POOL;

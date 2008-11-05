@@ -114,6 +114,11 @@ public final class EclipseIdentifiers {
    */
   public static final String SYNCHRONIZE_ACTION_NAME = "Synchronize";
 
+  /**
+   * The name of the action which runs the verification through BoogiePL.
+   *
+   * @see umbra.editor.actions.BytecodeSynchrAction
+   */
   public static final String GENBPL_ACTION_NAME = "BoogiePL";
 
   /**

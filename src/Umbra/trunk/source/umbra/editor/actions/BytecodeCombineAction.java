@@ -42,10 +42,7 @@ import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraClassException;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -152,13 +149,12 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       if (e1 instanceof ClassNotFoundException) {
         wrongPathToClassMessage(parent, getDescription(), clname);
       } else if (e1 instanceof ReadAttributeException) {
-        MessageDialog.openError(parent, getDescription(),
-          GUIMessages.BML_ATTRIBUTE_PROBLEM);
+        wrongBMLAttribute(parent, getDescription());
       }
     } catch (CoreException e) {
       wrongFileOperationMessage(parent, getDescription());
-    } catch (UmbraRangeException e) {
-      GUIMessages.exceededRangeInfo(parent, e, getDescription());
+    } catch (UmbraRepresentationException e) {
+      wrongRepresentationMessage(parent, getDescription(), e);
     }
   }
 
@@ -188,16 +184,17 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * @throws UmbraClassException in case the class for the given name cannot
    *   be found in the given class path repository or in case the parsing of
    *   the BML attributes in the class file failed
-   * @throws UmbraRangeException thrown in case a position has been reached
-   *   which is outside the current document or when the textual representation
-   *   has more methods than the internal one
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
+   * @throws UmbraClassException the class corresponding to the given path
+   *   cannot be found
    */
   private void updateMethodsLogic(final IFile a_file,
                                   final IPath a_path,
                                   final String the_last_segment,
                                   final String a_clname,
                                   final SyntheticRepository a_repo)
-    throws CoreException, UmbraClassException, UmbraRangeException {
+    throws CoreException, UmbraRepresentationException, UmbraClassException {
     final BytecodeEditor my_editor = (BytecodeEditor)getEditor();
     JavaClass jc;
     try {
@@ -235,14 +232,14 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    *   the BML attributes in the class file failed
    * @throws PartInitException if the new editor could not be created or
    *    initialised
-   * @throws UmbraRangeException thrown in case a position has been reached
-   *   which is outside the current document or when the textual representation
-   *   has more methods than the internal one
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
    */
   private void refreshEditorWithClass(final IFile a_file,
                                       final BytecodeEditor an_editor,
                                       final JavaClass a_jc)
-    throws UmbraClassException, PartInitException, UmbraRangeException {
+    throws UmbraClassException, PartInitException,
+           UmbraRepresentationException {
     BCClass bcc;
     try {
       bcc = new BCClass(a_jc);
@@ -253,16 +250,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
     final BMLParsing bmlp = new BMLParsing(bcc);
     an_editor.getDocument().setEditor(an_editor, bmlp);
     final IEditorInput input = new FileEditorInput(a_file);
-    try {
-      getContributor().refreshEditor(an_editor, input, null, null);
-    } catch (UmbraLocationException e) {
-      throw new UmbraRangeException(e);
-    } catch (UmbraMethodException e) {
-      throw new UmbraRangeException(e);
-    } catch (UmbraSyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    getContributor().refreshEditor(an_editor, input, null, null);
   }
 
   /**

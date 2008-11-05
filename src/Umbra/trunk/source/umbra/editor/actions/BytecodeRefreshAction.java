@@ -22,11 +22,7 @@ import umbra.editor.BytecodeEditorContributor;
 import umbra.instructions.BytecodeController;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
-import umbra.lib.GUIMessages;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 
 /**
@@ -96,11 +92,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
       wrongPathToClassMessage(parent, getDescription(), file.toString());
     } catch (CoreException e) {
       wrongFileOperationMessage(parent, getDescription());
-    } catch (UmbraRangeException e) {
-      GUIMessages.exceededRangeInfo(new Shell(), e, "Byte code refreshing");
-    } catch (UmbraSyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (UmbraRepresentationException e) {
+      wrongRepresentationMessage(parent, getDescription(), e);
     }
   }
 
@@ -118,15 +111,13 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
    *   cannot be found
    * @throws CoreException a file operation on the byte code file did not
    *   succeed
-   * @throws UmbraRangeException thrown in case a position has been reached
-   *   which is outside the current document or when the textual representation
-   *   has more methods than the internal one
-   * @throws UmbraSyntaxException
+   * @throws UmbraRepresentationException in case the internal representation
+   *   of the bytecode text cannot be initialised
    */
   private BytecodeEditor doRefresh(final BytecodeEditor the_editor,
                                final IFile a_file)
     throws ClassNotFoundException,
-           CoreException, UmbraRangeException, UmbraSyntaxException {
+           CoreException, UmbraRepresentationException {
     final BytecodeEditorContributor a_contributor = getContributor();
     final IPath active = FileNames.getClassFileFileFor(a_file, the_editor,
                              FileNames.BYTECODE_EXTENSION).getFullPath();
@@ -138,15 +129,9 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     final boolean[] modified = model.getModified();
     the_editor.refreshBytecode(active, doc, eolComments, interlineComm);
     final BytecodeEditor newEditor;
-    try {
-      newEditor = a_contributor.refreshEditor(the_editor,
-                                                      eolComments,
-                                                      interlineComm);
-    } catch (UmbraLocationException e) {
-      throw new UmbraRangeException(e);
-    } catch (UmbraMethodException e) {
-      throw new UmbraRangeException(e);
-    }
+    newEditor = a_contributor.refreshEditor(the_editor,
+                                                    eolComments,
+                                                    interlineComm);
     newEditor.getDocument().getModel().setModified(modified);
     return newEditor;
   }

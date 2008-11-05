@@ -65,25 +65,8 @@ public final class Preparsing {
    */
   public static BytecodeLineController getType(final String a_line,
                                          final LineContext a_context) {
-    if (a_context.isInsideComment()) {
-      final CommentLineController lc = new CommentLineController(a_line);
-      if (lc.isCommentEnd()) {
-        a_context.revertState();
-      }
-      return lc;
-    }
-    if (a_context.isInsideAnnotation()) {
-      final AnnotationLineController lc = new AnnotationLineController(a_line);
-      if (lc.isAnnotationEnd()) {
-        a_context.revertState();
-      }
-      return lc;
-    }
-    if (a_context.isInsideConstantPool()) {
-      if (CPLineController.isCPLineStart(a_line)) {
-        return new CPLineController(a_line);
-      }
-    }
+    final BytecodeLineController initial = getTypeForInsides(a_line, a_context);
+    if (initial != null) return initial;
     final DispatchingAutomaton automaton = Preparsing.getAutomaton();
     BytecodeLineController  blc;
     try {
@@ -99,6 +82,42 @@ public final class Preparsing {
       }
     }
     return blc;
+  }
+
+  /**
+   * This method checks if the current context is within one of the special
+   * areas (i.e. comments, BML annotations, or constant pool area) and if
+   * so generates appropriate line within the areas. In case the line
+   * represents the end of the particular area, the method changes the
+   * state of the context accordingly. In case the context is not in any
+   * of the special areas, the method returns <code>null</code>.
+   *
+   * @param a_line the string representation of the current line in the byte
+   *   code
+   * @param a_context the context which indicates in what area we are in
+   * @return a line controller corresponding to the area we are in or
+   *   <code>null</code> in case we are not in any of the areas
+   */
+  private static BytecodeLineController getTypeForInsides(
+      final String a_line,
+      final LineContext a_context) {
+    BytecodeLineController lc = null;
+    if (a_context.isInsideComment()) {
+      lc = new CommentLineController(a_line);
+      if (lc.isCommentEnd()) {
+        a_context.revertState();
+      }
+    } else if (a_context.isInsideAnnotation()) {
+      lc = new AnnotationLineController(a_line);
+      if (((AnnotationLineController)lc).isAnnotationEnd()) {
+        a_context.revertState();
+      }
+    } else if (a_context.isInsideConstantPool()) {
+      if (CPLineController.isCPLineStart(a_line)) {
+        return new CPLineController(a_line);
+      }
+    }
+    return lc;
   }
 
 

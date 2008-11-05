@@ -29,10 +29,7 @@ import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
-import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 /**
  * This class defines action of restoring byte code from
@@ -133,17 +130,10 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
       //the class corresponding to the Java source code file cannot be found
       MessageDialog.openError(parent, getDescription(),
                               GUIMessages.NO_CLASS_FILE_FOR_SOURCE);
-      return;
-    } catch (UmbraLocationException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getDescription());
-    } catch (UmbraMethodException e) {
-      GUIMessages.exceededRangeInfo(parent, new UmbraRangeException(e),
-                                    getDescription());
-    } catch (UmbraSyntaxException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+    } catch (UmbraRepresentationException e) {
+      wrongRepresentationMessage(parent, getDescription(), e);
     }
+    return;
   }
 
   /**

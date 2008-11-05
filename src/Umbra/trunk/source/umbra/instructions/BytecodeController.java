@@ -44,7 +44,7 @@ import umbra.lib.UmbraLocationException;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public final class BytecodeController extends BytecodeControllerContainer {
+public final class BytecodeController extends BytecodeControllerInstructions {
 
   /**
    * The constructor which initialises all the internal containers to be
@@ -277,34 +277,6 @@ public final class BytecodeController extends BytecodeControllerContainer {
   }
 
   /**
-   * This method removes from the internal structures the lines of the region
-   * from {@code a_start} to {@code a_stop} inclusively. This method
-   * also removes the connection between the removed lines and the BCEL
-   * representation of the byte code.
-   *
-   * @param a_start the first line to be removed
-   * @param a_stop the last line to be removed
-   * @throws UmbraException in case the structure of the editor lines is
-   *   malformed
-   */
-  private void removeEditorLines(final int a_start,
-                                 final int a_stop)
-    throws UmbraException {
-    for (int i = a_stop + 1; i <= a_start; i++) {
-      try {
-        final BytecodeLineController oldlc = getLineController(i);
-        if (oldlc instanceof InstructionLineController) {
-          ((InstructionLineController)oldlc).dispose();
-        }
-      } catch (ClassCastException e) { // malformed internal structure
-        UmbraPlugin.messagelog("IMPOSSIBLE: malformed structure of the " +
-                               "editor lines");
-        throw new UmbraException();
-      }
-    }
-  }
-
-  /**
    * This method adds to the internal structures the lines of the region from
    * {@code a_start} to {@code a_stop} inclusively. The
    * {@link BytecodeLineController} structures that correspond to the lines
@@ -454,38 +426,6 @@ public final class BytecodeController extends BytecodeControllerContainer {
       }
     }
     return mg;
-  }
-
-  /**
-   * The method finds the {@link InstructionLineController} which is located
-   * in the same method that the given position. We use here the strategy
-   * to examine the lines after the given one until something different that
-   * {@link EmptyLineController}, {@link AnnotationLineController}, or
-   * {@link CommentLineController} is found. In case the first other line
-   * found is an {@link InstructionLineController} we return that. Otherwise,
-   * <code>null</code> is returned.
-   *
-   * @param the_editor_lines the list of lines which is seeked for the
-   *   {@link InstructionLineController}
-   * @param a_pos the position for which we try to find the line controller
-   * @return the {@link InstructionLineController} which was found or
-   *   <code>null</code> in case all the "empty" lines were examined and no
-   *   instruction line was found
-   */
-  private InstructionLineController getInstructionLineAround(
-                        final LinkedList the_editor_lines,
-                        final int a_pos) {
-    int i = a_pos;
-    while (the_editor_lines.get(i) instanceof EmptyLineController ||
-           the_editor_lines.get(i) instanceof AnnotationLineController ||
-           the_editor_lines.get(i) instanceof CommentLineController) {
-      i++;
-    }
-    final Object o = the_editor_lines.get(i);
-    if (o instanceof InstructionLineController) {
-      return (InstructionLineController)o;
-    }
-    return null;
   }
 
   /**

@@ -27,9 +27,7 @@ import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
-import umbra.lib.UmbraMethodException;
-import umbra.lib.UmbraRangeException;
-import umbra.lib.UmbraSyntaxException;
+import umbra.lib.UmbraRepresentationException;
 
 /**
  * This class represents a GUI element that is contributed to the
@@ -164,16 +162,10 @@ public class BytecodeContribution extends ControlContribution {
         final Shell sh = my_editor.getEditorSite().getShell();
         try {
           doc.init(null, null); //this marks the document as ready
-        } catch (UmbraLocationException e) {
-          GUIMessages.messageWrongLocation(sh,
-            GUIMessages.INITIAL_PARSING_MESSAGE_TITLE, e);
-          return;
-        } catch (UmbraMethodException e) {
-          GUIMessages.exceededRangeInfo(sh, new UmbraRangeException(e),
-            GUIMessages.INITIAL_PARSING_MESSAGE_TITLE);
-        } catch (UmbraSyntaxException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+        } catch (UmbraRepresentationException e) {
+          MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
+            GUIMessages.substitute(GUIMessages.REPRESENTATION_ERROR_MESSAGE,
+                                   e.getProblemDescription()));
         }
       }
       try {
@@ -358,6 +350,7 @@ public class BytecodeContribution extends ControlContribution {
                                final int an_offset) {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
     int lno;
+    // TODO probably this must be done as in http://www.koders.com/java/fid0EFC07132C90D211D4D2868ECDB3C6BA3A025AB5.aspx
     try {
       lno = a_doc.getLineOfOffset(an_offset);
       final int chpos = an_offset - a_doc.getLineOffset(lno) + 1;

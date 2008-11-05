@@ -17,6 +17,7 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.GUIMessages;
+import umbra.lib.UmbraRepresentationException;
 
 /**
  * This class defines the common operations for all the byte code editor
@@ -130,4 +131,34 @@ public class BytecodeEditorAction extends Action {
       GUIMessages.substitute(GUIMessages.NO_CLASS_FILE_FOR_PATH,
                              a_path));
   }
+
+  /**
+   * Reports a problem with establishing the internal representation. It prints
+   * out the cause of the problem.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   * @param a_reason the exception which caused the error popup
+   */
+  public static void wrongRepresentationMessage(
+      final Shell a_shell,
+      final String a_title,
+      final UmbraRepresentationException a_reason) {
+    MessageDialog.openError(a_shell, a_title,
+      GUIMessages.substitute(GUIMessages.REPRESENTATION_ERROR_MESSAGE,
+                             a_reason.getProblemDescription()));
+  }
+
+  /**
+   * Reports a problem with reading of a BML attribute.
+   *
+   * @param a_shell the shell which displays the message
+   * @param a_title the title of the message window
+   */
+  public static void wrongBMLAttribute(final Shell a_shell,
+                                        final String a_title) {
+    MessageDialog.openError(a_shell, a_title,
+      GUIMessages.BML_ATTRIBUTE_PROBLEM);
+  }
+
 }

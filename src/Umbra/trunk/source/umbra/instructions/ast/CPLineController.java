@@ -13,14 +13,29 @@ import umbra.lib.BytecodeStrings;
 
 
 /**
- * @author alx
- * @version a-01
+ * This is a class for lines in bytecode files inside the constant pool.
+ * These are intended not to be edited by a user.
  *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
  */
 public class CPLineController extends BytecodeLineController {
 
+  /**
+   * The parser to parse the contents of the constant pool line.
+   */
   private InstructionParser my_parser;
+
+  /**
+   * The number of the constant in the constant pool which is represented
+   * by the current line.
+   */
   private int my_constno;
+
+  /**
+   * The keyword which identifies the type of the current constant pool
+   * constant.
+   */
   private int my_keyword;
 
 
@@ -78,8 +93,13 @@ public class CPLineController extends BytecodeLineController {
 
 
   /**
-   * @param an_utonow
-   * @return
+   * This method parses the content of the constant pool entry. Currently,
+   * it only checks the correctness of the constant pool entry kind.
+   *
+   * @param an_utonow the status of the parsing up to the current position
+   * @return <code>true</code> in case the method was called with
+   *   <code>true</code> and the parsing of the content of the constant pool
+   *   entry, <code>false</code> otherwise
    */
   private boolean parseEntry(final boolean an_utonow) {
     if (!an_utonow) {
@@ -90,5 +110,14 @@ public class CPLineController extends BytecodeLineController {
     my_keyword = my_parser.swallowMnemonic(BytecodeStrings.CP_TYPE_KEYWORDS);
     res = res && (my_keyword >= 0);
     return res;
+  }
+
+  /**
+   * Returns the number of the constant in the constant pool.
+   *
+   * @return the number of the constant in the constant pool
+   */
+  public int getConstantNumber() {
+    return my_constno;
   }
 }
