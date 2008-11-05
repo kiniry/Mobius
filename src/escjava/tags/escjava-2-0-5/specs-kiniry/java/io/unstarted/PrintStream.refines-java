@@ -1,0 +1,125 @@
+// @(#)$Id$
+
+// Copyright (C) 2004 Iowa State University
+
+// This file is part of JML
+
+// JML is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2, or (at your option)
+// any later version.
+
+// JML is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with JML; see the file COPYING.  If not, write to
+// the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+package java.io;
+
+/**
+ * JML's specification of {@link java.util.PrintStream}.
+ *
+ * @version $Revision$
+ * @author David R. Cok
+ * @author Joseph Kiniry
+ */
+
+public class PrintStream extends FilterOutputStream
+{
+    //@ public model JMLDataGroup output; in objectState;
+    //@ public ghost String outputText; in output;
+    //@ public ghost boolean endsInNewLine; in output;
+    //@ public ghost static final String eol = "\n";
+
+    public PrintStream(OutputStream fs);
+
+    public PrintStream(java.io.OutputStream Param0, boolean Param1);
+
+    public PrintStream(java.io.OutputStream Param0, boolean Param1, 
+                       java.lang.String Param2)
+        throws java.io.UnsupportedEncodingException;
+
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures endsInNewLine;
+    //@ ensures outputText.equals(\old(outputText) + eol);
+    //@ signals (Throwable) false;
+    public void println();
+
+    protected void setError();
+
+    public boolean checkError();
+
+    public void print(char Param0);
+
+    public void println(char Param0);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures endsInNewLine;
+    //@ ensures s != null ==> outputText.equals(\old(outputText) + s + eol);
+    //@ signals (Throwable) false;
+    public void println(String s);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures s != null ==> outputText.equals(\old(outputText) + s);
+    //@ signals (Throwable) false;
+    public void print(String s);
+
+    public void print(double Param0);
+
+    public void println(double Param0);
+
+    public void print(float Param0);
+
+    public void println(float Param0);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures endsInNewLine;
+    //@ ensures outputText.startsWith(\old(outputText));
+    public void println(Object o);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures outputText.startsWith(\old(outputText));
+    public void print(Object o);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures endsInNewLine;
+    //@ ensures outputText.startsWith(\old(outputText));
+    public void println(boolean b);
+
+    public void print(boolean Param0);
+
+    public void print(int Param0);
+
+    //@ requires true;
+    //@ modifies outputText, endsInNewLine;
+    //@ ensures endsInNewLine;
+    //@ ensures outputText.startsWith(\old(outputText));
+    public void println(int i);
+
+    public void print(long Param0);
+
+    public void println(long Param0);
+
+    public void flush();
+
+    public void print(char[] Param0);
+
+    public void println(char[] Param0);
+
+    public void write(int i);
+
+    public void write(byte[] b, int off, int len);
+
+    public void close();
+}

@@ -1,0 +1,195 @@
+ESCJ 29:  Design and implementation for translating inner classes
+Mark Lillibridge, 28 May 1999.
+(Originally posted to src.sparta, 28 May 1999.)
+
+
+     This note describes the design and implementation of the changes
+needed to the back end to correctly translate externally-nameable nested
+types; I.e., all 1.1 types except those defined inside of a routine.  We
+intend to either not check, or provide limited checking, for the
+remaining kinds of types once they can be parsed by the front end.  A
+future note will describe how we end up handling them.
+
+     Note: in this document, an inner class refers to a non-static class
+that is nested within another class.  (This term is sometimes used
+differently elsewhere.)  Such classes may access the instance members of
+their enclosing inner classes and of their innermost enclosing non-inner
+class.
+
+
+I.  1.1 features covered by this note:
+
+  nested types
+    - a type declared as a member of an existing type
+    - types declared inside routines (directly or not) are not covered
+
+  <typename>.this.
+    - "the enclosing instance of the type <typename>"
+    - Note: may be inferred before simple Expr names by the front end
+
+  [<expr>.]new I(...) where I refers to an inner class
+    - "create a new instance of I with <expr> as its immediate enclosing
+      instance"
+    - the <expr> is present iff I is an inner class in the input to the
+      back end.  (The front end infers it if the user omits it if
+      necessary.)
+
+  [<expr>.]super(...) where our superclass is an inner class
+    - "call our superclass constructor so that it has <expr> as its
+      immediate enclosing instance"
+    - the <expr> is present iff our superclass is an inner class in the
+      input to the back end.  (The front end infers it if the user omits
+      it if necessary.)
+
+
+II. The processing order of nested classes:
+
+  We check any type members a type may have after we finish checking the
+  rest of the containing type.  We thus implement a depth-first checker
+  that checks a node before its children.  We believe this behaviour
+  will be less surprising to users.
+
+  This decision may make the -start switch less useful for files
+  containing many nested classes.  If this turns out to be a problem in
+  practice, we will need to augment the -start switch somehow.  (Because
+  we use a class-specific background predicate, we can't easily suspend
+  processing the main class to check a nested class.)
+
+  This is implemented straightforwardly in escjava.Main.handleTD.
+
+
+III. Handling references to enclosing instances
+
+  The Java 1.1 spec document specifies that Java 1.1 be translated to
+  Java 1.0 by adding this$0 fields to all inner classes.  For example,
+  consider the following code:
+
+     class Outside {
+         // No this$0 field because not an inner class
+
+         int q;
+
+         static class Outer {
+	     // No this$0 field because not an inner class
+	     int x;
+
+             class Inside {
+	         // Outer this$0;
+
+	         int y;
+
+		 class Inner {
+		     // Inside this$0;
+
+		     int z = x + y;
+		     // [Inferred: int z = Outer.this.x + Inside.this.y;]
+		     // int z = this.this$0.this$0.x + this.this$0.y;
+	         }
+             }
+	 }
+     }
+
+  I have added comments to show the fields that the translation adds as
+  well as how references to enclosing instance fields are translated.
+
+
+  We do essentially the same translation.  We do not modify the AST directly
+  to add the this$0 fields, but instead add them when we translate the
+  AST into guarded commands.  The new class escjava.translate.Inner has
+  a routine that "unfolds" <class>.this expressions into
+  this.this$0...this$0 expressions.  TrAnExpr.trSpecExpr and
+  Translate.trExpr both call this routine when encountering a
+  <class>.this expression then recurse to translate the result.
+
+  Whenever FindContributors adds a type that is an inner class, it adds
+  that type's this$0 field (obtained from
+  Inner.getEnclosingInstanceField(TypeSig) -- each inner class has its
+  own this$0 field).  This ensures that we get sufficient background
+  information for any this$0 fields that might be used.  This is
+  guaranteed to be correct, but may pull in too many invariants in
+  certain cases.  (In particular, any reference to an inner class always
+  pulls in most of its enclosing types.)  We may need to revisit this
+  later if this becomes a problem.
+
+  Each created this$0 field has an attached non_null pragma and is
+  marked public and final to reflect the intent of the translation.
+
+
+IV.  Initializing the enclosing instance fields
+
+  According to the Java 1.1 spec, a this$0 field is initialized exactly
+  once to a non-null value by a constructor of its inner class.  To
+  increase flexibility, Java 1.1 allows the programmer to explicitly
+  specify which instance to initialize it to.  (This is the purpose of
+  the new E.new I(...) and E.super(...) forms.)
+
+  We model this by adding an extra argument, this$0arg, to every inner
+  class constructor.  Inner.getEnclosingInstanceArg(ConstructorDecl)
+  supplies this argument; it is marked non_null.  this$0arg is added to
+  the beginning of the constructor's existing argument list.
+
+  Inner class constructors can be called in 3 ways: E.new(...),
+  E.super(...), and this(...) [a sibling call].  We pass the result of
+  evaluating E (in the first 2 cases) and "this$0arg" (in the last case)
+  as the this$0arg argument of the constructor.  The remaining arguments
+  are unchanged.
+
+  In the first 2 cases, we need to check that E is not null.  We do this
+  by inserting a nullCheck after translating E.  This results in a Null
+  warning ("Possible null dereference") if E may be null.  The hotspot
+  is the '.' after the E.  This isn't quite the right warning message
+  (the E is passed as an argument, not dereferenced), but I didn't want
+  to introduce yet another Null-related warning category as nowarning
+  nulls is already too hard.
+
+  This is implemented in Translate.trConstructorCallStmt (for
+  E.super/this(...)), Translate.trExpr (for E.new(...)),
+  GetSpec.getCombinedMethodDecl(...) (to add the extra argument),
+  and Translate.call(...) (to remove a non-null warning since this$0arg
+  is declared non-null).
+
+
+  To actually do the initialization, we insert "this.this$0 =
+  this$0arg;" after the super- or sibling-class constructor call and
+  just before the instance initializers (if any) when translating an
+  inner class constructor body into a GC.  [Done in
+  Translate.trConstructorBody, a 
+  subroutine of Translate.trBody.]  So that callers know that we do
+  this (needed for reasoning), we add a free postcondition "RES.this$0
+  == this$0arg" to inner class constructors.  [Done in
+  trMethodDeclPostcondition.]
+
+
+  The inner-class constructor's preconditions, modifies clauses, exsures
+  clauses, and superclass constructor call occur before we initialize
+  the this$0 field (either in the constructor body, or in the caller);
+  to handle this, we substitute "this$0arg" for "this.this$0" in the
+  translation of these items.  (Note that the enclosing instance
+  argument to super may reference this.this$0, but not "this" without a
+  field dereference, or this.x for any other field x.)
+
+  Rather than doing a separate substitution step, we do this by having
+  Inner.unfoldThis(...) use the contents of Inner.firstThis0 instead of
+  "this.this$0" if it is set to a non-null value.  The translation
+  routines for the items in question [GetSpec.getCommonSpec calling
+  GetSpec.trMethodDecl and Translate.trConstructorBody calling
+  Translate.trConstructorCallStmt] then set that variable appropriately.
+  (For simplicity, we also do the same substitution on the
+  postconditions; alternatively, we could have substituted "RES.this$0"
+  instead.)
+
+
+V. Bad implementation workarounds
+
+  Unfortunately because of a bad implementation decision, we allocate
+  only 1 variable for "this" -- each type has the same variable.  It's
+  type is finessed by setting it to the current type being checked at
+  the start of Translate.trBody.  This isn't quite right (it leaves
+  "this" with the wrong type when translating specs), but it worked
+  before because the translation did not depend on "this"'s type.
+
+  Unfortunately, "this"-unfolding depends on "this"'s type (needed to
+  determine how many ".this$0"'s to put).  I made GetSpec.trMethodDecl
+  save "this"'s type and replace it with the correct value while
+  translating a spec.  This is somewhat ugly, but cleaning up the
+  original implementation looked too hard and error prone.

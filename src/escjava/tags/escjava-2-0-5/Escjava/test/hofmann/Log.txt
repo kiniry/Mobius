@@ -1,0 +1,214 @@
+----------------------------------------------------------------------
+First run ever:
+
+trystero:hofmann> escjava2-cvs *java
+ESC/Java version ESCJava-CURRENT-CVS
+    [0.286 s 5414872 bytes]
+
+InsSort ...
+  Prover started:0.192 s 11317256 bytes
+    [11.252 s 10131976 bytes]
+
+InsSort: main(java.lang.String[]) ...
+------------------------------------------------------------------------
+InsSort.java:4: Warning: Possible null dereference (Null)
+        List.init(2 * (args.length-1));
+                           ^
+------------------------------------------------------------------------
+InsSort.java:14: Warning: Possible unexpected exception (Exception)
+    }
+    ^
+Execution trace information:
+    Reached top of loop after 0 iterations in "InsSort.java", line 8, col 1.
+    Routine call returned exceptionally in "InsSort.java", line 9, col 27.
+
+------------------------------------------------------------------------
+    [13.483 s 10851984 bytes]  failed
+
+InsSort: printlist(List) ...
+    [0.861 s 11106304 bytes]  passed
+
+InsSort: insert(int, List) ...
+    [0.466 s 11731544 bytes]  passed
+
+InsSort: sort(List) ...
+    [0.315 s 12143104 bytes]  passed
+
+InsSort: InsSort() ...
+    [0.318 s 10788776 bytes]  passed
+  [27.074 s 10789656 bytes total]
+
+List ...
+    [0.132 s 11028144 bytes]
+
+List: List(int, List) ...
+    [0.174 s 11368904 bytes]  passed
+
+List: init(int) ...
+    [0.244 s 11677696 bytes]  passed
+
+List: free(List) ...
+------------------------------------------------------------------------
+List.java:21: Warning: Possible null dereference (Null)
+        l.tail = freelist;
+         ^
+------------------------------------------------------------------------
+    [0.304 s 12004440 bytes]  failed
+
+List: make() ...
+------------------------------------------------------------------------
+List.java:32: Warning: Possible violation of object invariant (Invariant)
+            return new List(0,(List)null);
+                           ^
+Associated declaration is "/usr/local/Java/ESCJava-2.0-CVS-HEAD/jmlspecs.jar:java/lang/String.jml", line 41, col 15:
+    //@ public invariant stringSeq != null;
+               ^
+Execution trace information:
+    Executed else branch in "List.java", line 30, col 8.
+
+------------------------------------------------------------------------
+List.java:32: Warning: Possible violation of object invariant (Invariant)
+            return new List(0,(List)null);
+                           ^
+Associated declaration is "/usr/local/Java/ESCJava-2.0-CVS-HEAD/jmlspecs.jar:java/lang/String.jml", line 42, col 15:
+    /*@ public invariant ...
+               ^
+Execution trace information:
+    Executed else branch in "List.java", line 30, col 8.
+
+------------------------------------------------------------------------
+List.java:34: Warning: Possible violation of object invariant (Invariant)
+    }
+    ^
+Associated declaration is "/usr/local/Java/ESCJava-2.0-CVS-HEAD/jmlspecs.jar:java/lang/String.jml", line 41, col 15:
+    //@ public invariant stringSeq != null;
+               ^
+Possibly relevant items from the counterexample context:  
+  (brokenObj%0 < longFirst)
+  (vAllocTime(brokenObj%0) < alloc)
+  typeof(brokenObj%0) <: T_java.lang.String
+  isAllocated(brokenObj%0 alloc)
+  typeof(brokenObj%0) == typeof(S_31.24)
+  java.lang.String#stringSeq(state:28.14 brokenObj%0) == null
+  !typeof(brokenObj%0) <: T_char
+  !typeof(brokenObj%0) <: T_int
+  !typeof(brokenObj%0) <: T_boolean
+  !typeof(brokenObj%0) <: T_short
+  !typeof(brokenObj%0) <: T_double
+  !typeof(brokenObj%0) <: T_long
+  !typeof(brokenObj%0) <: T_float
+  !typeof(brokenObj%0) <: T_byte
+  brokenObj%0 != null
+(brokenObj* refers to the object for which the invariant is broken.)
+
+Execution trace information:
+    Executed then branch in "List.java", line 26, col 23.
+    Executed return in "List.java", line 29, col 5.
+
+------------------------------------------------------------------------
+List.java:34: Warning: Possible violation of object invariant (Invariant)
+    }
+    ^
+Associated declaration is "/usr/local/Java/ESCJava-2.0-CVS-HEAD/jmlspecs.jar:java/lang/String.jml", line 42, col 15:
+    /*@ public invariant ...
+               ^
+Possibly relevant items from the counterexample context:  
+  (org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2) < longFirst)
+  (brokenObj<1>%0 < longFirst)
+  (vAllocTime(brokenObj<1>%0) < alloc)
+  (i:27.43.25%2 < org.jmlspecs.models.JMLValueSequence.length.519.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0)))
+  isAllocated(brokenObj<1>%0 alloc)
+  typeof(brokenObj<1>%0) <: T_java.lang.String
+  typeof(brokenObj<1>%0) == typeof(S_31.24)
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_boolean
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_short
+  !typeof(brokenObj<1>%0) <: T_float
+  !typeof(brokenObj<1>%0) <: T_byte
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_double
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_long
+  !typeof(brokenObj<1>%0) <: T_char
+  !typeof(brokenObj<1>%0) <: T_int
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_float
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_org.jmlspecs.models.JMLChar
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_byte
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_org.jmlspecs.models.JMLChar
+  !typeof(brokenObj<1>%0) <: T_boolean
+  !typeof(brokenObj<1>%0) <: T_short
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_float
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_boolean
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_char
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_byte
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_long
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_short
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_int
+  typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) != T_double
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_char
+  !typeof(org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2)) <: T_int
+  !typeof(brokenObj<1>%0) <: T_double
+  org.jmlspecs.models.JMLValueSequence.itemAt.430.4(java.lang.String#stringSeq(state:28.14 brokenObj<1>%0) i:27.43.25%2) != null
+  !typeof(brokenObj<1>%0) <: T_long
+  brokenObj<1>%0 != null
+(brokenObj* refers to the object for which the invariant is broken.)
+
+Execution trace information:
+    Executed then branch in "List.java", line 26, col 23.
+    Executed return in "List.java", line 29, col 5.
+
+------------------------------------------------------------------------
+    [4.014 s 12676280 bytes]  failed
+
+List: nil() ...
+    [0.083 s 12784784 bytes]  passed
+
+List: cons(int, List) ...
+------------------------------------------------------------------------
+List.java:42: Warning: Possible null dereference (Null)
+        res.head = i;
+           ^
+------------------------------------------------------------------------
+    [0.451 s 11463208 bytes]  failed
+
+List: isnil(List) ...
+    [0.117 s 11584320 bytes]  passed
+
+List: head(List) ...
+------------------------------------------------------------------------
+List.java:52: Warning: Possible null dereference (Null)
+        return l.head;
+                ^
+------------------------------------------------------------------------
+    [0.29 s 11905248 bytes]  failed
+
+List: tail(List) ...
+------------------------------------------------------------------------
+List.java:56: Warning: Possible null dereference (Null)
+        return l.tail;
+                ^
+------------------------------------------------------------------------
+    [0.36 s 12225552 bytes]  failed
+  [6.288 s 12226432 bytes total]
+10 warnings
+trystero:hofmann> 
+
+----------------------------------------------------------------------
+
+Next, glance over code and do light annotations for things like null
+references types, constant or completely obvious pre/post-conditions,
+pure methods, etc.  I simply annotated the statement prior to the
+println that should never happen with an //@ assert false; (10m)
+
+----------------------------------------------------------------------
+
+Notice a few funny things about the spec (20m):
+
+ o the main of InsSort does not use element args[0]; perhaps Martin
+   is thinking Java's args is like C's argv?
+ o many methods of InsSort explicitly guard for the null case, but
+   List's methods do not.
+ o 
+ o finally, odd invariant wrt String looks bogus; I'll have to look
+   into it separately.
+
+I wrote some informal and redundant specs now as well (e.g., on init).
+
+

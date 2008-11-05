@@ -1,0 +1,113 @@
+Talk -*- Outline -*-
+
+* Introduction
+** Objectives
+** Tutorial Overview (Outline)
+** Listener Names and Interests
+
+* JML Overview
+** Basics
+*** Goals and Purpose
+*** Sequential Behavior
+** Flavor of JML
+*** Introductory Example (stress viewpoint)
+*** Tools for JML
+*** How Tools Complement each Other
+** Importance of JML
+*** State of the Art
+*** Large Number of Researchers
+**** Papers
+**** Sharing customers, Reuse syntax, etc.
+** Related Work
+*** Eiffel
+*** Larch
+*** Spec#
+*** Jass
+*** OCL, Z, ...
+** Where to find more
+
+* Reading and Writing JML Specifications
+** Lightweight Specification of Functional Behavior
+*** requires and ensures
+*** assignable and pure
+*** invariants
+*** spec_public
+*** Semantics of Specifications
+** Exercise Specifying a Type
+** Basic Tool Use (demo + exercise) (Revised Bag example?, or Purse)
+*** ESC/Java2
+*** jmlc, jmlunit in Eclipse
+*** KeY (optional)
+** Tips and Pitfalls
+*** Object Identity (example)
+*** Aliasing (example)
+*** Protective Specifications (example)
+** Multiple Specification Cases
+*** Semantics
+*** Specifying Exceptional Behavior
+**** tips
+**** pitfalls
+*** exercise (if Time)
+*** Use of \same (not in ESC/Java2)
+
+* Abstraction in Specification
+** Motivation and Overview
+** Views of Specifications
+*** Client View
+*** Other Views
+**** Subtypes
+**** Private View
+*** Privacy and Modular Soundness
+**** Information Hiding for Maintenance
+**** Document Obligations for Soundness
+** Data abstration in JML
+*** Model Fields
+*** Represents Clauses
+*** Semantics
+*** Relation to spec_public
+** Frame Axioms and Datagroups
+*** Declarations
+*** Definition and Semantics
+*** Example
+** Advanced Data Abstraction
+*** Invariant Methodologies
+*** History Constraints
+** Other topics (omit?)
+*** Helper methods
+*** Ghost Fields
+
+* Subtyping
+** Modular Verification Problem
+*** Case Analysis
+*** Behavioral Subtyping
+*** Using Both Techniques by Casting
+** Specification Inheritance
+*** Forces Behavioral Subtyping
+*** Definitions and Semantics
+*** Exercise
+*** How Tools React to Bad Subtyping (omitted)
+** Advanced topics (optional)
+*** Code Contracts for Super Calls
+*** Modular Subclass Verification (Clyde Ruby)
+
+* ESC/Java2 (See notes)
+** Warnings
+*** Kinds of Warnings
+*** How to Interpret Messages
+*** Exercise
+** Connection to Provers
+
+* Conclusions
+** Advantages of JML
+** Needs, current work
+** Current Research
+*** Ownership and Invariants
+*** Multithreading
+*** Testing Research
+** Collaboration
+*** Future Work and Needs
+*** What Collaborations Might Interest You?
+** Acknowledgments
+** Website
+
+$Id$

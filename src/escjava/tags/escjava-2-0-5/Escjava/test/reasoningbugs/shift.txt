@@ -1,0 +1,30 @@
+/*
+
+In exapnding the meaning of \typeof to apply to primitive types as well,
+at one point this axiom was added to the background predicate.
+
+(BG_PUSH (FORALL (x)
+	(PATS (is x |T_int|))
+	(IFF (is x |T_int|) (EQ (typeof x) |T_int|)) ))
+
+this caused a test failure in test39, namely that the assert in
+
+  //@ requires m == l;
+  void p3(int k, int m, long l) {
+    //@ assert (l << k) == (m << k);
+  }
+
+no longer failed.  It should fail because a shift on a long does not 
+necessarily produce the same result as a shift on an int.
+
+When the axiom was changed to
+
+(BG_PUSH (FORALL (x)
+	(PATS (typeof x))
+	(IFF (is x |T_int|) (EQ (typeof x) |T_int|)) ))
+
+then both the type tests and the shift test went back to previous behavior.
+
+Now the same axiom is introduced and it is correct (I believe!).  It may be
+that the new PATS causes it not to be introduced in the proof of the
+case in shift.java.  But why does this cause the assert not to fail?

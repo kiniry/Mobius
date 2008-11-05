@@ -1,0 +1,39 @@
+-nowarn Deadlock -verboseTrace -testMode
+-nowarn Deadlock -verboseTrace -testMode -nonNullByDefault
+-nowarn Deadlock -verboseTrace -testMode -LoopSafe
+-nowarn Deadlock -verboseTrace -testMode -EnableAssertions
+-nowarn Deadlock -verboseTrace -testMode -eaJava
+-nowarn Deadlock -verboseTrace -testMode -eaJML
+-nowarn Deadlock -verboseTrace -testMode -Loop 5
+-nowarn Deadlock -verboseTrace -testMode -NoRedundancy
+-nowarn Deadlock -verboseTrace -testMode -InlineCheckDepth 1
+-nowarn Deadlock -verboseTrace -testMode -InlineFromConstructors
+-nowarn Deadlock -verboseTrace -testMode -InlineConstructors
+-nowarn Deadlock -verboseTrace -testMode -InlineDepthPastCheck 1
+-nowarn Deadlock -verboseTrace -testMode -NoStrongestPostconditionVC
+-nowarn Deadlock -verboseTrace -testMode -NoDynamicSingleAssignment
+-nowarn Deadlock -verboseTrace -testMode -AssertContinue
+-nowarn Deadlock -verboseTrace -testMode -FilterMethodSpecs
+-nowarn Deadlock -verboseTrace -testMode -LazySubst
+-nowarn Deadlock -verboseTrace -testMode -NoEPeepOpt
+-nowarn Deadlock -verboseTrace -testMode -NoGCPeepOpt
+-nowarn Deadlock -verboseTrace -testMode -MergeInv
+-nowarn Deadlock -verboseTrace -testMode -RewriteDepth 1
+-nowarn Deadlock -verboseTrace -testMode -NoOutCalls
+-nowarn Deadlock -verboseTrace -testMode -BubbleNotDown
+-nowarn Deadlock -verboseTrace -testMode -NoVarCheckDeclsAndUses
+-nowarn Deadlock -verboseTrace -testMode -NoLastVarUseOpt
+-nowarn Deadlock -verboseTrace -testMode -StrongAssertPostAlways
+-nowarn Deadlock -verboseTrace -testMode -StrongAssertPostAtomic
+-nowarn Deadlock -verboseTrace -testMode -StrongAssertPostNever
+-nowarn Deadlock -verboseTrace -testMode -ExcuseNullInitializers
+-nowarn Deadlock -verboseTrace -testMode -UseIntQuantAntecedents
+-nowarn Deadlock -verboseTrace -testMode -NestQuantifiers
+-nowarn Deadlock -verboseTrace -testMode -NoDirectTargetsOpt
+-nowarn Deadlock -verboseTrace -testMode -InferPredicates
+-nowarn Deadlock -verboseTrace -testMode -PreciseTargets
+-nowarn Deadlock -verboseTrace -testMode -FilterInvariants
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPreBody
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPostBody
+-nowarn Deadlock -verboseTrace -testMode -UseAllInvPostCall
+-nowarn Deadlock -verboseTrace -testMode -NoAllocUseOpt

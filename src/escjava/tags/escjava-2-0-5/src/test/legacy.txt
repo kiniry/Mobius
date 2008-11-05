@@ -1,0 +1,30 @@
+src/test/resources/TestAbstractList.java
+src/test/resources/TestArrayList2.java
+src/test/resources/TestArrays.java
+src/test/resources/TestBitSet.java
+src/test/resources/TestBoolean.java
+src/test/resources/TestByteArrayInputStream.java
+src/test/resources/TestCharacter.java
+src/test/resources/TestCharacter2.java
+src/test/resources/TestClass.java
+src/test/resources/TestCollection.java
+src/test/resources/TestComparable.java
+src/test/resources/TestException.java
+src/test/resources/TestFile.java
+src/test/resources/TestInputStream.java
+src/test/resources/TestInteger.java
+src/test/resources/TestList.java
+src/test/resources/TestLong.java
+-quiet src/test/resources/TestMap.java
+src/test/resources/TestMath.java
+src/test/resources/TestObject.java
+src/test/resources/TestProperties.java
+src/test/resources/TestSet.java
+src/test/resources/TestSet2.java
+src/test/resources/TestString.java
+src/test/resources/TestStringBuffer.java
+-Q src/test/resources/TestSystem1.java
+-Q src/test/resources/TestSystem2.java
+src/test/resources/TestThrowable.java
+src/test/resources/TestVector.java
+-useOldStringHandling src/test/resources/Test0C.java

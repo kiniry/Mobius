@@ -1,0 +1,25 @@
+Objectives for the CAV 2007 tutorial
+
+By the end of the tutorial attendees will:
+
+0. Be able to explain the goals of the JML effort
+   and how it relates to other work on formal specification and verification.
+
+1. Be able to read and write simple JML specifications
+   using specifications that do and do not mention model features.
+
+2. Be able to explain the semantics of the most important JML features.
+
+3. Be able to use the RAC and ESC/Java2 in the most basic ways.
+
+4. Know where to go for further information and help.
+
+What is omitted is:
+
+- standard techniques for various common specification situations.
+
+- use of jmlunit
+
+- avoiding common traps and pitfalls.
+
+$Id: Objectives.txt 2685 2007-06-20 20:07:36Z leavens $

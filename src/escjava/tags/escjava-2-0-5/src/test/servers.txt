@@ -1,0 +1,9 @@
+arrow.ucd.ie
+athena.insttech.washington.edu
+boomer.insttech.washington.edu
+category.ucd.ie
+galactica.insttech.washington.edu
+logic.ucd.ie
+morphism.icd.ie
+object.ucd.ie
+voting.ucd.ie

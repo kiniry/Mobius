@@ -1,0 +1,367 @@
+ESCJ 23b:  Unique names in ESC/Java
+11 December 1998
+
+
+This note describes the various forms of unique-ified names in 
+ESC/Java.
+
+It is important not only that names be distinct, but that they be 
+human understandable and as succinct as possible.  This is because
+when debugging ESC/Java itself, we will spend a lot of time looking 
+at the identifiers it spits out in guarded commands and in theorem
+prover S-expressions.
+
+Simplify takes a textual representation of an S-expression as input.
+(Since our checker is not written in Modula-3, we can't pass it a
+pointer to an S-expression AST.)  Thus, we are at the mercy of
+Simplify's S-expression reader.  This means that names cannot contain
+white space, and any name that contains "funny" characters (for some
+notion of "funny") must be surrounded by vertical bars ("|").  Our
+names will never contain vertical bars; when passing them Simplify, we
+surround them with a pair of vertical bars, if necessary.  (We could
+put vertical bars even when they are not necessary.)
+
+Here are the categories of names that we deal with and descriptions
+of what their unique-ified forms are.
+
+All of these cases may be followed by '<' <digits>+ '>' to further
+distinguish otherwise indistinguishable names.
+
+
+0. Simplify keywords, special functions, and special constants.
+   Examples:  DEFPRED, EQ, FORALL, select, store, @true, ...
+
+   Since Simplify is fixed, we have no choice but to use these names 
+   as they are.  (Thus, we'll make sure below not to introduce other 
+   names that clash with these.)
+
+1. Simplify-generated Skolem constants and Skolem functions.
+
+   We have no choice here either, but Simplify always generates these 
+   to contain a "%" character.
+
+   (Note:  Our verification conditions never contain Skolem constants 
+   or functions, but they may occur in counterexample contexts that
+   Simplify produces.)
+
+2. Functions and constants from ESCJ 8, "The Logic of ESC/Java".
+   Examples:  boolAnd, boolFalse, null, ...
+
+   (Note:  ESCJ 8 currently writes these names as bool$and and
+   bool$false.  After this document was written, we decided to instead 
+   name them like boolAnd and boolFalse, but we have still to update 
+   ESCJ 8.)
+
+   These names contain all alphanumeric characters (which implies 
+   no underscore ("_"), no "@", no ":", no ".", and no "%").  In 
+   addition, these names must not have any of the forms specified 
+   in (0) above--except, of course, in cases where the names used in
+   the logic are actually synonymous with names built into SIMPLIFY
+   (e.g., select)--or (3), (4), (5), (6), or (9) below.
+
+3.  Bound variables used in quantificiations, where we do not wish to or
+    cannot associate the variable with an existing VariableAccess.
+    Includes all bound variables used in the background predicate, as
+    well as some of the automatically generated bound variables.  (The
+    others are found in cases 11 and 15.)
+
+   These will have either the form:  <letter> <digit>* or the form
+   "brokenObj" (where the "*" denotes Kleene star, not the actual
+    character "*") and must not give rise to any local conflicts.  That
+    is, a quantifier must not bind the same name twice or bind a name
+    already bound by an outer quantifier.
+
+4. Special variables.
+   Namely:  this, EC, RES, XRES, LS, alloc, elems.
+
+   These names appear as themselves.
+
+5. Special labels.
+   Namely:  ecThrow, ecReturn.
+
+   (Note:  Various ESCJ notes may mention these as "ec$throw"
+   and "ec$return".  These ESCJ notes should be updated.)
+
+   These names appear as themselves.
+
+6. Temporary variables introduced in the translation.
+   Examples:  tmp0, tmp1, tmp2, ..., random0, random1, ...
+
+   (Note:  To make the document easier to read, ESCJ 16 sometimes
+   gives slightly more descriptive names to these identifiers, like
+   "old" or "s".  The actual names used are those described here.)
+
+   These have the forms:  tmp <sequence number> and random <sequence number>
+
+   (Note:  We have location information available when generating 
+   most of these names.  This gives us the opportunity to use names 
+   akin to "the result of the subexpression on line 218, columns 10
+   through 26."  However, we choose to use meaningless identifiers,
+   since we believe that keeping these human understandable will not
+   be a big deal.  Of course, if we ever need to print these to the
+   user, we still have the opportunity to give a fuller description.)
+
+7. Java types.
+   Namely:  built-in keywords (int, double, ...), declared ("T", 
+   ...) or pre-declared ("java.lang.Object", ...) types.
+
+   These have one of the forms:
+     T_ <built-in type name keyword>
+     T_ <fully qualified name>
+
+   Exception: the escjava built-in type TYPE is called "T_.TYPE" instead
+   of "T_TYPE" to distinguish it from the Java type <unnamed
+   package>.TYPE.
+
+8. Java String literals.
+   Examples:  "", "yo, dude!", "yeah, man, wazzahappenin?", ...
+
+   These have the form:  S_ <location>
+
+   where <location> is the location at which the string literal
+   appears in the Java source text.  (The grammar for <location>
+   is given below.)
+
+   (Note:  Mulitple occurrences of the the same string literal are
+   interened to the same object, even if they occur in different
+   packages [JLS, 3.10.5], though dynamically computed string objects
+   with identical contents need not be equal.  It is not clear how
+   completely we will wish to model the semantics of Java strings.
+   We might start by making the class-specific background predicate
+   contain assumptions of equality for all textually identical string
+   literals, and an a DISTINCT predicate whose argument list includes
+   a representative of each equivalence class (and null).)
+
+9. Java numeric literals
+   Examples:  12, -3, 4, 4.00, 0.1e+23d, ...
+
+   Integer literals of sufficiently small absolute value appear
+   as themselves, for example: 12, -1
+
+   Integer literals whose absolute value exceeds some threshold
+   (perhaps 1000000) will have the forms:
+       pos <digit>*
+       neg <digit>*
+   where "pos" or "neg" indicates the sign (positive or negative
+   respectiveley) and the sequence of digits is the absolute value
+   in decimal.  For example, the literal 123456789 would get the name
+   "pos123456789", and the literal -987654321 would get the name
+   "neg987654321".
+
+   (Note:  See Section 2.2.1 of ESCJ 8: The Logic of ESC/Java for
+   the contribution of integer literals to the background predicate.)
+   
+   A floating-point literal gets the name
+        F_ <the number>
+   where <the number> is the result of reading the literal from
+   the source program, converting it to a floating point number,
+   and subsequently converting that floating point number back
+   to a string.
+
+   (Note:  When a floating point literal reperesents an exact integer
+   of sufficienly small magnitude, we might represent it as an
+   integer literal.  For now we propose not to perform this
+   optimization.  Note also that, due to infelicities in Simplify,
+   we dare not introduce background assumptions like
+       (< 2 F_2.5)
+   and
+       (< F_2.5 3)
+   where "<" is Simplify's built-in arithmetic less-than operator
+   [see ESCJ 8, 2.2.1].)
+
+10. Java variables.
+    Namely:  parameters, local variables, instance variables, static 
+    fields.
+
+    The have the form:  <last segment of name> : <location>
+
+    (Remark:  Just ": <location>" would actually make these names
+    unique, but we prepend the name in order to make reading the
+    ESC/Java debugging output palatable.)
+
+    <Location> here refers to the location of the identifier in the
+    declaration of the variable, not its reference.
+
+11. Bound variables in annotations.
+    Example:  The "i" in:
+      (forall int i; 0 <= i && i < a.length ==> a[i] == 0)
+
+    These have the form:  <name> : <location>
+
+    (Remark:  Just ": <location>" would actually make these names
+    unique, but we prepend the name in order to make reading the
+    ESC/Java debugging output palatable.)
+
+    <Location> here refers to the location of the identifier in the
+    declaration of the variable, not its reference.
+
+12. Other names declared in annotations.
+    We don't have any such names in the ESC/Java we're planning.
+    But examples would include data groups and abstract variables,
+    should we decide to add such in the future.
+
+    These would have the form:  <last segment of name> : <location>
+
+    (Remark:  Just ": <location>" would actually make these names
+    unique, but we prepend the name in order to make reading the
+    ESC/Java debugging output palatable.)
+
+    <Location> here refers to the location of the identifier in the
+    declaration of the variable, not its reference.
+
+13. Adorned versions of (4), (10), and (12).
+    Examples, as written in ESCJ 16:  f@pre, f@init, f@L, ...
+
+    These have the form:  <name> @ <suffix> [ :<location> ]
+    if the unadorned name was <name>[:<location>]	
+
+    where <suffix> is either "pre", "init", or a <location>.
+
+14. Java labels.
+    In principle, Java features two kinds of labels, explicit
+    and implicit.  An implicit label is essentially the location
+    of a Java loop statement or of a statement that is explicitly
+    labeled.  Our implementation ignores all explicit labels and instead
+    uses the implicit counterparts.
+
+    Loops have two labels, one to which "break"-ing is done and one 
+    to which "continue"-ing is done.  Other statements have no
+    label for "continue".
+
+    The break labels have the form:  L_ <location>
+    The continue labels have the form:  C_ <location>
+
+    (Note:  The current implementation uses a symlit number
+    instead of a <location>.  This should change.)
+
+15. Intermediate variable states.
+    The VC generator introduces names for the intermediate states of the
+    program variables.
+
+    E.g., x := 2; x := 3; ... might translate to
+
+      (forall x' :: x' == 2 ==>
+	            [x'/x](forall x'' :: x'' == 3 ==> [x''/x]trStmt(...)))
+
+    where x' and x'' are the new names for the intermediate states of x.
+
+    These names have same form as case 10, but the <location> refers to
+    the location of the variable reference in the appropriate
+    assignment statement if available, otherwise to the location of
+    the identifier in declaration of the variable as in case 10.
+
+    These names may be used in foralls.
+
+
+A <location> refers to a point in the Java source text where
+an identifier or String literal has been declared.
+
+<location> ::=  <file id> . <line number> . <column number>
+            |   <line number> . <column number>
+
+The second form is used when the <file id> refers to the "current
+file".  We expect this will make the ESC/Java debugging output easier 
+to read.
+
+
+Simplify has one other name space, namely that for its labels (predicates 
+can be given a label using the Simplify LBLPOS and LBLNEG keywords).
+We use these labels for two things:  First, we label predicates that 
+come from proof obligations.  If Simplify finds a counterexample 
+to a proof obligation, ESC/Java extracts the necessary information
+from the label and prints an error message.  Second, our annotation
+language allows users to explicitly give labels that will be passed 
+through to Simplify.  This feature is intended for us to help in 
+debugging ESC/Java.
+
+0. Error type and locations information.
+
+   These have one of the forms:
+     <error type> @ <location>
+     <error type> . <location> @ <location>
+
+   where <error type> does not begin with "LBL_".
+   
+   The <location> that follows the "@" indicates the primary
+   source code location to which the checker should draw the user's 
+   attention in case of an error.  This can be the location of the 
+   "." for potential null dereferences, or the location of a call 
+   for potential precondition violations.  For potential postcondition 
+   violations, the location of the method or constructor is used.
+   For potential postcondition violations in a default constructor, 
+   the location of the surrounding class is used.
+
+   The <location> that follows the "." indicates the location of 
+   the annotation that gave rise to the check, if applicable and 
+   different from the other location.  For example, this can be the 
+   location of a "requires" or "invariant" annotation.
+
+1. Simplify labels in annotations.
+   Example:  The "ArrayNonEmpty" in:
+     (LBLNEG ArrayNonEmpty a != null && a.length != 0)
+
+   These have the form:  LBL_ <name>
+
+
+
+It is easy to see that the 2 categories for labels are disjoint.
+It may be less clear that the names in the 15 categories for
+other names are disjoint.  To justify their disjointness, we
+give an algorithm for determining the category of a given
+unique-ified name.
+
+Note:  There is no need for the computer to ever run this algorithm.
+Instead, we can insert the strings that are passed to Simplify into 
+a hash table.  This gives us a way to go from unique-ified names 
+to information about what these names represent, without having to 
+parse the names themselves.  However, when we humans look at ESC/Java 
+debugging output, we are likely to run an algorithm like this one.
+We could make this job easier by prepending a unique prefix of the 
+form "<letter> _" to each category above (like we did for some
+categories), but we believe that this extra clutter is not
+worthwhile, since the algorithm here seems fairly straightforward.
+
+  First remove any '<' <digit>+ '>' at the end of the name.
+
+  If the name contains "%",
+
+      The name is a Skolem constant or function (category (1))
+
+  elsif the name contains "@",
+
+      The name has the form "<name> @ <suffix>" or 
+      "<name> @ <suffix> : <location>>", which represent adorned
+      names (category (13)).
+
+  elsif the name contains ":",
+
+      The name has the form "<name> : <location>" (category
+      (10), (11), (12), or (15))
+
+  elsif the name begins with "L_", "C_", "S_", "F_", or "T_",
+
+      The name has one of the following forms:
+        L_ <location>                       (category (14))
+        C_ <location>                       (category (14))
+        S_ <location>                       (category (8))
+        F_ <floating-point literal>         (category (9))
+        T_ <built-in type name keyword>     (category (7))
+        T_ <fully qualified type name>      (category (7))
+
+  elsif the name has the form "tmp <digit>+" or "random <digit>+",
+
+      The name is a temporary variable (category (6))
+
+  elsif the name has the form "pos <digit>+" or "neg <digit>+",
+
+      The name represents an integer literal (category (9))
+
+  elsif the name has the form "<letter> <digit>*" or "brokenObj"
+
+      The name is a bound variable (category (3))
+
+  else
+
+      The name is a Simplify keyword (category (0)) or is
+      another name of the logic or translation (category (2),
+      (4), or (5)).

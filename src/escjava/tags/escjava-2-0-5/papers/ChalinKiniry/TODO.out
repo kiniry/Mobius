@@ -1,0 +1,30 @@
+* Ideas to writeup
+
+** approximating 3-value logic using TCCs in ESC
+*** where must these TCC-like things be generated
+**** spec-expressions, predicates, etc.?
+**** don't forget that assumes and axioms must generate TCCs which must be proven prior to the backend assumption being issued
+**** look into PVS docs for TCC generation algorithm/sketch
+**** describe algorithm for TCC generation and resolution (improper algorithm can lead to undue verification burdon)
+** new JML model classes ("real")
+*** immutable
+*** observationally pure
+*** referential equality
+** which 3-value logic is appropriate for ESC and VDBC?
+** realizing a lifted 3-value logic in classical provers in ESC
+** a 3-valued wp calculus for JML
+** JML core identification and semantics
+*** pay particular attention to invariants (v-v boogie)
+
+* Joe's responsibilities
+
+** implement null instead of may_be_null
+** send two logic papers to Patrice as PDFs.
+** click 'buy' on Amazon
+
+* Patrice's responsibilities
+
+** click 'buy' on Amazon
+
+* Other
+** A "standard" language for expressing FO proofs: e.g. Coq, (Isabelle, PVS) for HO ...

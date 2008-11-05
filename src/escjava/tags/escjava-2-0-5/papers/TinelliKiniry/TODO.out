@@ -1,0 +1,19 @@
+* Ideas to writeup
+
+** New object logic for ESC
+** Rewrite logic and translation of HOL object logic to SMT-LIB object logic
+** Formal comparison of old and new logics
+** Lattice decision procedure for Sammy
+** Interfacing SMT-LIB provers to ESC
+
+* Joe's responsibilities
+
+** Send diffs for cvcl and sammy to appropriate folks
+** Finish OCaml<->Java integration and demonstration prover and client
+** Integrate Sammy and ESC
+** writeup labelled expression semantics
+
+* Cesare's responsibilities
+
+** Get universal quantification working
+** Generate (partial) proofs for all is_valid calls

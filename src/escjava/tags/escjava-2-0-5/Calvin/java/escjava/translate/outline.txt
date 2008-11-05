@@ -1,0 +1,6 @@
+1. introduce annotations unwritable_by_env_if, unreadable_by_env_if,
+   elems_unwritable_by_env_if, elems_unreadable_by_env_if.
+2. unify the introduction of assertions for the case of reduction and 
+   no reduction to take place in addReductionCheck.
+3. introduce -race option which only checks races but doesn't do reduction.
+4. fix the reduction code to match the method in popl paper.
