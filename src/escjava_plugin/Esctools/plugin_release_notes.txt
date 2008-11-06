@@ -1,0 +1,14 @@
+Release Date: November 2008
+
+This ESC/Java2 plugin, version 2.0.8, uses 
+  ESC/Java2 command line version 2.0.5, 
+  Javafe plugin version 2.0.6 and 
+  Simplify plugin version 1.5.6.
+
+Issues fixed in version 2.0.8 of this plugin:
+
+  https://mobius.ucd.ie/trac/ticket/103: PVE Plugin experience
+  https://mobius.ucd.ie/trac/ticket/112: Update ESCJava2 plugin/feature to include Javafe 2.0.6 plugin/feature
+  https://mobius.ucd.ie/trac/ticket/514: JML menu, disable builder option fails to remove dependencies
+  https://mobius.ucd.ie/trac/ticket/515: Internal Simplify should be selected as a default option with the correct platform, if known
+
