@@ -2,7 +2,7 @@
  * This file is part of the ESC/Java2 plugin project. 
  * Copyright 2004-2005 David R. Cok
  * 
- * Modified 2007 by Dermot Cochran for Mobius IST-15905
+ * Modified 2007-2008 by Dermot Cochran for Mobius IST-15905
  * 
  * Created on Feb 2, 2005
  */

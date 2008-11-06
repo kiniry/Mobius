@@ -18,6 +18,16 @@ import pluginlib.Utils;
  * @author David R. Cok
  */
 public class Options {
+	public static final String[] WARNING_OPTIONS = { "ZeroDiv", "ArrayStore",
+			"Assert", "Cast", "Reachable", "Inconsistent", "Constraint",
+			"CLeak", "DecreasesBound", "Decreases", "Unreadable", "Undefined",
+			"UndefinedNormalPost", "UndefinedExceptionalPost", "IndexNegative",
+			"IndexTooBig", "Uninit", "ILeak", "Initially", "Deadlock",
+			"LoopInv", "LoopObjInv", "ModExt", "Modifies", "NegSize",
+			"NonNull", "NonNullInit", "NonNullResult", "Null", "Invariant",
+			"OwnerNull", "Post", "Pre", "Race", "RaceAllNull", "Unenforcable",
+			"Exception", "SpecificationException", "Deferred", "Writable" };
+
 	public static final String JAVA_CARD_2_1 = "JavaCard 2.1";
 
 	public static final String JAVA_1_4 = "1.4";
@@ -30,7 +40,7 @@ public class Options {
 	/** The option button corresponding to Eclipse logging. */
 	static public AbstractPreference.BooleanOption logging = new AbstractPreference.BooleanOption(
 			(PLUGINID + "Logging"),
-			false,
+			true,
 			"Enable Eclipse informational messages",
 			"Turns on Eclipse progress and debug messages (in the Console windows)");
 
@@ -56,11 +66,12 @@ public class Options {
 
 	/**
 	 * Whether to use the internal simplify.
+	 * @see https://mobius.ucd.ie/trac/ticket/515
 	 */
 	static final public AbstractPreference.BooleanOption internalSimplify =
 	  new AbstractPreference.BooleanOption(
 	      PLUGINID + "internalSimplify",
-	      false,
+	      true,
 	      "Use Internal Version",
 	      "Use the Simplify executable internal to the plug-in"
 	      );
@@ -92,7 +103,7 @@ public class Options {
 	 */
 	static final public AbstractPreference.BooleanOption quiet = new AbstractPreference.BooleanOption(
 			(PLUGINID + "quiet"),
-			true,
+			false,
 			"Disable ESC/Java informational messages",
 			"Turns off progress and timing messages (in the Console windows) [JML --Quiet option]");
 
@@ -131,7 +142,7 @@ public class Options {
 
 	/**
 	 * Enables caution as well as warning messages to be produced,
-	 * correpsonding to the inverse of the -nocaution option
+	 * corresponding to the inverse of the -nocaution option
 	 */
 	static final public AbstractPreference.BooleanOption cautionMessages = new AbstractPreference.BooleanOption(
 			(PLUGINID + "cautionMessages"),
@@ -213,11 +224,10 @@ public class Options {
 	/**
 	 * Creates and initializes the array of warning options
 	 */
-	//@ requires escjava.ast.TagConstants.escchecks.length > 4;
-	//@ ensures warningOptions != null;
+ 	//@ ensures warningOptions != null;
 	private static void initWarningOptions() {
-		String[] wnames = escjava.ast.TagConstants.escchecks;
-		int n = wnames.length-4;
+		String[] wnames = Options.WARNING_OPTIONS;
+		int n = wnames.length;
 		warningOptions = new AbstractPreference.BooleanOption[n];
 
 		for (int i=0; i<n; ++i) {

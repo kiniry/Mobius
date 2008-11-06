@@ -2,7 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="escsrc"/>
 	<classpathentry exported="true" kind="lib" path="bin/"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.4.2"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry exported="true" kind="lib" path="/JavafePlugin/Javafe2.0.5b.jar"/>
+	<classpathentry exported="true" kind="lib" path="/JavafePlugin/libs/bcel-5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Esctools/esctools2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

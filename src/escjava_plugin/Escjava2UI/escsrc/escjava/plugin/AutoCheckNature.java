@@ -42,6 +42,8 @@ public class AutoCheckNature implements IProjectNature {
 	 */
 	public void deconfigure() throws CoreException {
 		Utils.removeBuilder(getProject(),EscjavaPlugin.ESCJAVA_AUTOCHECK_BUILDER);
+		IJavaProject jp = JavaCore.create(getProject());
+		EscjavaUtils.removeDefaultSpecs(jp);
 	}
 
 

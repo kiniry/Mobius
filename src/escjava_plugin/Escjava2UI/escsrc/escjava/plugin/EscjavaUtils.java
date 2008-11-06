@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -350,6 +351,26 @@ public class EscjavaUtils {
 		else Log.log("Unexpected OS: " + osname);
 		return suffix;
   }
+
+/**
+ * Remove jmlspecs dependencies
+ * 
+ * @param javaproject
+ */
+public static void removeDefaultSpecs(IJavaProject javaProject) {
+ 	try {
+		// Check to see if the specs are already linked into the project
+		if (!isSpecsInstalled(javaProject)) return;
+		IProgressMonitor monitor = null;
+		// Remove project on the argument project's classpath
+		JavaCore.removeClasspathVariable(EscjavaPlugin.JMLSPECS_PROJECT_NAME, monitor);
+		return;
+	} catch (Exception e) {
+		Log.errorlog("Failed to remove dependencies",e);
+	}	
+}
+
+ 
 	
 }
 // FIXME - check all javadoc comments
