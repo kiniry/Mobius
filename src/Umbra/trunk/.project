@@ -5,6 +5,7 @@
 	<projects>
 		<project>BCEL5.1</project>
 		<project>BMLlib</project>
+		<project>FreeBoogie</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
