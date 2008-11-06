@@ -5,3 +5,4 @@ Bundle-SymbolicName: FreeBoogie_plugin
 Bundle-Version: 1.0.0
 Bundle-Vendor: MOBIUS and Radu Grigore
 Require-Bundle: org.junit
+Export-Package: freeboogie
