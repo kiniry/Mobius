@@ -1,3 +1,5 @@
+package mobius;
+
 /**
  * The Bill class provides an abstract implementation of the bill
  * functionality. It calculates the aggregate cost for series of
