@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 
+import bmllib.utils.BMLChangeException;
+
 import umbra.UmbraPlugin;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
@@ -258,7 +260,7 @@ public class BytecodeContribution extends ControlContribution {
       }
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
-      ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
+      updateBML(an_event);
       displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
         displayError(Integer.toString(doc.getModel().getFirstError() + 1));
@@ -266,6 +268,22 @@ public class BytecodeContribution extends ControlContribution {
         displayError(doc.getAnnotError());
       } else {
         displayCorrect();
+      }
+    }
+
+    /**
+     * The method updates the internal representation of the method in
+     * BML structures.
+     *
+     * @param an_event describes the change in the document
+     */
+    private void updateBML(final DocumentEvent an_event) {
+      try {
+        ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
+      } catch (BMLChangeException e) {
+        final Shell sh = my_editor.getEditorSite().getShell();
+        MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
+          GUIMessages.MALFORMED_MODIFICATION);
       }
     }
 

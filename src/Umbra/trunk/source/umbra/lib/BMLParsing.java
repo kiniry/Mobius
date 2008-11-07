@@ -1,7 +1,16 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package umbra.lib;
 
 import org.eclipse.jface.text.DocumentEvent;
 
+import bmllib.utils.BMLChangeException;
 
 import annot.bcclass.BCClass;
 import annot.textio.CodeFragment;
@@ -64,8 +73,9 @@ public class BMLParsing {
    * @param an_event -DocumentEvent describing document changes
    *    currently made, eg. event parameter of
    *    <code>documentChanged()</code> in editor's listener.
+   * @throws BMLChangeException in case the range of change is improper
    */
-  public void onChange(final DocumentEvent an_event) {
+  public void onChange(final DocumentEvent an_event) throws BMLChangeException {
     String msg = "";
     my_cFgmt.modify(an_event.fOffset, an_event.fLength, an_event.fText);
     msg += "annotations status: ";

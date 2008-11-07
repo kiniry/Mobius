@@ -187,6 +187,13 @@ public final class GUIMessages {
    * The message which informs the user that a problem with a BML attribute
    * occurred.
    */
+  public static final String MALFORMED_MODIFICATION =
+    "Wrong modification decription";
+
+  /**
+   * The message which informs the user that nothing has been modified
+   * however it should have been.
+   */
   public static final String NOTHING_MODIFIED =
     "Nothing has been modified";
 
