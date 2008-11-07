@@ -1,0 +1,84 @@
+package [default]
+
+Constant pool:
+  const #1 = Class #2;
+  const #2 = Utf8 Bill;
+  const #3 = Class #4;
+  const #4 = Utf8 java/lang/Object;
+  const #5 = Utf8 sum;
+  const #6 = Utf8 I;
+  const #7 = Utf8 <init>;
+  const #8 = Utf8 ()V;
+  const #9 = Utf8 Code;
+  const #10 = Methodref #3.#11;
+  const #11 = NameAndType #7:#8;
+  const #12 = Utf8 LineNumberTable;
+  const #13 = Utf8 LocalVariableTable;
+  const #14 = Utf8 this;
+  const #15 = Utf8 LBill;;
+  const #16 = Utf8 round_cost;
+  const #17 = Utf8 (I)I;
+  const #18 = Utf8 Exceptions;
+  const #19 = Class #20;
+  const #20 = Utf8 java/lang/Exception;
+  const #21 = Utf8 produce_bill;
+  const #22 = Utf8 (I)Z;
+  const #23 = Fieldref #1.#24;
+  const #24 = NameAndType #5:#6;
+  const #25 = Methodref #1.#26;
+  const #26 = NameAndType #16:#17;
+  const #27 = Utf8 n;
+  const #28 = Utf8 i;
+  const #29 = Utf8 e;
+  const #30 = Utf8 Ljava/lang/Exception;;
+  const #31 = Utf8 SourceFile;
+  const #32 = Utf8 Bill.java;
+  const #33 = Utf8 int;
+  const #34 = Utf8 org.bmlspecs.AssertTable;
+  const #35 = Utf8 org.bmlspecs.Invariants;
+  const #36 = Utf8 org.bmlspecs.MethodSpecification;
+  const #37 = Utf8 org.bmlspecs.SecondConstantPool;
+  const #38 = Utf8 org.bmlspecs.LoopSpecificationTable;
+
+class Bill
+
+/*@
+  @
+  @*/
+void <init>()
+0:    aload_0
+1:    invokespecial	java.lang.Object.<init> ()V (10)
+4:    return
+
+/*@
+  @
+  @*/
+abstract int round_cost(int)
+      throws java/lang/Exception
+
+/*@
+  @
+  @*/
+public boolean produce_bill(int n)
+0:    iconst_0
+1:    istore_2
+2:    iconst_1
+3:    istore_2
+4:    goto		#24
+7:    aload_0
+8:    dup
+9:    getfield		Bill.sum I (23)
+12:   aload_0
+13:   iload_2
+14:   invokevirtual	Bill.round_cost (I)I (25)
+17:   iadd
+18:   putfield		Bill.sum I (23)
+21:   iinc		%2	1
+24:   iload_2
+25:   iload_1
+26:   if_icmple		#7
+29:   iconst_1
+30:   ireturn
+31:   astore_3
+32:   iconst_0
+33:   ireturn

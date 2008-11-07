@@ -60,6 +60,7 @@ Export-Package: annot.attributes;
    org.apache.bcel.generic,
    annot.attributes",
  bmllib,
+ bmllib.utils,
  org.antlr.runtime;uses:="org.antlr.runtime.tree",
  org.antlr.runtime.debug;uses:="org.antlr.runtime.tree,org.antlr.runtime",
  org.antlr.runtime.misc,

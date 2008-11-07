@@ -1,6 +1,16 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package annot.textio;
 
 import java.util.Vector;
+
+import bmllib.utils.BMLChangeException;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.MLog;
@@ -24,7 +34,7 @@ import annot.bcclass.MLog;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class CodeFragment {
+public class CodeFragment extends CodeFragmentHelper {
 
   /**
    * Disable parsing single attributes; for debugging only.
@@ -37,15 +47,14 @@ public class CodeFragment {
    */
   private static final boolean SHOW_DECORATED_CODE = true;
 
-
   /**
    * BCClass related with current bytecode.
    */
   private final BCClass bcc;
 
   /**
-   * Position of first character on which old and current
-   * bytecodes differs.
+   * Position of the first character on which the old and the current
+   * bytecodes differ.
    */
   private int begin;
 
@@ -83,12 +92,6 @@ public class CodeFragment {
   private String oldCode;
 
   /**
-   * Position of first unaffected character (in original
-   * bytecode).
-   */
-  private int oldEnd;
-
-  /**
    * Common prefix for original and current bytecode.
    */
   private String prefix;
@@ -99,27 +102,10 @@ public class CodeFragment {
   private String suffix;
 
   /**
-   * Code that should be added in merged changes
-   * in bytecode.
-   */
-  private String toAdd;
-
-  /**
-   * Code that should be removed in merged changes
-   * in bytecode.
-   */
-  private String toRemove;
-
-  /**
    * The vector with positions of BML regions. It is <code>null</code> before
    * the parsing is done for the current BML string.
    */
   private Vector < PosInCode > bml_positions;
-
-  /**
-   * The array with lines of the current bytecode in the CodeFragment.
-   */
-  private String[] lines;
 
   /**
    * A standard contructor.
@@ -134,96 +120,43 @@ public class CodeFragment {
   }
 
   /**
-   * @return all keywords that can stand at the beginning
-   *     of an annotation.
-   */
-  private static String[] getAllAttributeNames() {
-    final String[] ret = {DisplayStyle._classInvariant,
-                          DisplayStyle._requires, DisplayStyle._assert,
-                          DisplayStyle._loopspec };
-    return ret;
-  }
-
-  /**
-   * Translates line number of a String to character number
-   * (offset).
-   *
-   * @param code - multi-line String,
-   * @param lnr - number of line in <code>code</code>.
-   * @return Offset of first character of <code>lnr</code>'s
-   *     line in <code>code</code>.
-   */
-  private static int getLineOffset(final String code, final int lnr) {
-    final String[] lines = code.split("\n");
-    int pos = 0;
-    for (int i = 0; i  <  lnr; i++) {
-      pos += lines[i].length() + 1;
-    }
-    return pos;
-  }
-
-  /**
-   * Translates character position in a String to number
-   * of line containing this character.
-   *
-   * @param code - multi-line String,
-   * @param pos - number of character (offset)
-   *     in <code>code</code>.
-   * @return Number of line in <code>code</code> containing
-   *     character with offset <code>pos</code>.
-   */
-  private static int getLineOfOffset(final String code, final int pos) {
-    return (code.substring(0, pos) + '.').split("\n").length - 1;
-  }
-
-  /**
-   * @return all keywords that can stand at the beginning
-   *     of an method annotation.
-   */
-  private static String[] getMethodAttributeNames() {
-    final String[] ret = {DisplayStyle._requires };
-    return ret;
-  }
-
-  /**
    * Adds a change (effect of bytecode editing) to this
    * bytecode. A change is replacing one fragment of this
    * bytecode with another String.
    *
-   * @param cfrom - position of first modified character,
-   * @param length - length of removed String,
-   * @param nc - new String added at removed String's
-   *     position.
+   * @param cfrom position of the first modified character
+   * @param length length of the removed String
+   * @param nc new String added at removed String's position
+   * @throws BMLChangeException in case the range of change is improper
    */
-  public void addChange(final int cfrom, final int length, final String nc) {
+  public void addChange(final int cfrom, final int length,
+                        final String nc) throws BMLChangeException {
     final int cto = cfrom + length;
     addChangeErrorChecking(cfrom, cto);
     updateAddedArea(cfrom, nc, cto);
-    this.prefix = this.code.substring(0, this.begin);
-    this.suffix = this.code.substring(this.end);
-    this.oldEnd = this.prefix.length() + this.toRemove.length();
-    this.end = this.prefix.length() + this.toAdd.length();
-    this.code = this.prefix + this.toAdd + this.suffix;
     this.bml_positions = null;
-    this.lines = this.code.split("\n");
   }
 
   /**
-   * @param cfrom
-   * @param cto
-   * @throws RuntimeException
+   * Checks if the range of the removed area is properly formed.
+   *
+   * @param cfrom position of the first modified character
+   * @param cto position of the first character after the removed area
+   * @throws BMLChangeException in case the range of change is improper
    */
   private void addChangeErrorChecking(final int cfrom, final int cto)
-    throws RuntimeException {
-    if (cfrom  >  cto) {
-      throw new RuntimeException("wrong parameter values: cfrom  >  cto");
+    throws BMLChangeException {
+    if (cfrom > cto) {
+      throw new BMLChangeException("start of the region (" + cfrom +
+                                   ") after the end (" + cto + ")");
     }
-    if (cto  >  this.code.length()) {
-      throw new RuntimeException("invalid position: " + cto + " (length = " +
-                                 this.code.length() + ")");
+    if (cto > this.code.length()) {
+      throw new BMLChangeException("end of the region (" + cto +
+                                   ") after the code (" + this.code.length() +
+                                   ")");
     }
-    if (cfrom  <  0) {
-      throw new RuntimeException("invalid parameter: " + cfrom + "  <  0");
+    if (cfrom < 0) {
+      throw new BMLChangeException("negative start of the region: " + cfrom);
     }
   }
 
@@ -255,7 +188,6 @@ public class CodeFragment {
     return this.correct;
   }
 
-
   /**
    * Modifies current bytecode, replacing given fragment
    * with another String and updating {@link BCClass}.
@@ -263,15 +195,17 @@ public class CodeFragment {
    * - {@link #addChange(int, int, String)} (one or more
    *     times (for merged changes)),<br>
    * - {@link #performChanges()},<br>
-   * - {@link #resetChanges()}.
+   * - in case the parsed code is correct {@link #resetChanges()}.
    *
-   * @param cfrom - position of first modified character,
-   * @param length - length of removed String,
-   * @param nc - new String added at removed String's
-   *     position.
+   * @param cfrom position of the first modified character
+   * @param length length of the removed String
+   * @param nc new String added at removed String's position
+   * @throws BMLChangeException in case the range of change is improper
    * @see #addChange(int, int, String)
    */
-  public void modify(final int cfrom, final int length, final String nc) {
+  public void modify(final int cfrom,
+                     final int length,
+                     final String nc) throws BMLChangeException {
     addChange(cfrom, length, nc);
     performChanges();
     MLog.putMsg(MLog.LEVEL_PINFO, toString());
@@ -284,11 +218,9 @@ public class CodeFragment {
    * Propagates the current document change to the BMLLib AST.
    * First, checks that current bytecode is correct,
    * then parses it, affecting as few elements of BCClass
-   * as it can. Parsing whole class can be uneffective
-   * (slow), so it tries to skip unaffected BML annotations,
-   * comments and methods. It can parse only BML
-   * annotations, not the bytecode itself (bytecode-level
-   * BCEL structures will be unaffected).
+   * as it can.
+   *
+   * Currently, it parses just the whole bytecode file.
    */
   public void performChanges() {
     this.correct = true;
@@ -315,11 +247,18 @@ public class CodeFragment {
     this.errMsg = this.bcc.getParser().getErrMsg();
   }
 
-  private String addLines(String toparse) {
-    StringBuffer buf = new StringBuffer();
-    String[] lines = toparse.split("\n");
-    for (int i = 0; i < lines.length; i++) {
-      buf.append("" + i + " -> " + lines[i] + "\n");
+  /**
+   * Adds line numbers in front of each line. This is a helper method for
+   * debugging purposes.
+   *
+   * @param scode string to add the line numbers to
+   * @return the string with added line numbers
+   */
+  private String addLines(final String scode) {
+    final StringBuffer buf = new StringBuffer();
+    final String[] lns = scode.split("\n");
+    for (int i = 0; i < lns.length; i++) {
+      buf.append("" + i + " -> " + lns[i] + "\n");
     }
     return buf.toString();
   }
@@ -339,15 +278,15 @@ public class CodeFragment {
     this.oldCode = this.code;
     this.begin = -1;
     this.end = -1;
-    this.oldEnd = -1;
-    this.toAdd = null;
-    this.toRemove = null;
     this.prefix = null;
     this.suffix = null;
     this.modified = false;
   }
+
   /**
    * Displays current state of this bytecode fragment.
+   *
+   * @return the text representation of the current fragment
    */
   public String toString() {
     if (!this.modified) {
@@ -364,257 +303,45 @@ public class CodeFragment {
     ret += "\nchanged fragment: " + this.begin + " to " + this.end;
     ret += "\ncode is currently " + (this.correct ? "correct" : "incorrect");
     */
-    if (this.errMsg.length()  >  0) {
+    if (this.errMsg.length() > 0) {
       ret += "\nlast error message: " + this.errMsg;
     }
     return ret;
   }
 
   /**
-   * @param cfrom
-   * @param nc
-   * @param cto
+   * This method updates the area of the code which is modified. The arguments
+   * of the method describe the new affected area which should be added to
+   * the representation of the current fragment.
+   *
+   * @param cfrom position of the first modified character
+   * @param nc the string which is to be added to the area
+   * @param cto position of the first character after the removed area
    */
   private void updateAddedArea(final int cfrom, final String nc,
                                final int cto) {
     if (!this.modified) {
       this.begin = cfrom;
       this.end = cto;
-      this.toRemove = this.code.substring(cfrom, cto);
-      this.toAdd = nc;
       this.modified = true;
+      this.oldCode = code;
     } else {
-      if (cto  <= this.begin) {
-        updateNewBeforeOld(cfrom, nc, cto);
-      } else if (cfrom  <= this.begin &&
-                 cto  >  this.begin && cto  <= this.end) {
-        updateNewOverlapsOld(cfrom, nc, cto);
-      } else if (cfrom  <= this.begin && cto  >  this.end) {
-        updateNewOverOld(cfrom, nc, cto);
-      } else if (cfrom  >  this.begin && cto  <= this.end) {
-        updateOldOverNew(cfrom, nc, cto);
-      } else if (cfrom  >  this.begin &&
-                 cfrom  <= this.end && cto  >  this.end) {
-        updateOldOverlapsNew(cfrom, nc, cto);
-      } else if (cfrom  >  this.end) {
-        updateOldBeforeNew(cfrom, nc, cto);
+      if (cfrom < this.begin) {
+        this.begin = cfrom;
+      }
+      if (cto > this.end) {
+        this.end = cto;
       }
     }
+    this.code = this.code.substring(0, cfrom) + nc + this.code.substring(cto);
   }
 
   /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateNewBeforeOld(final int cfrom, final String nc,
-                                  final int cto) {
-    //       oooooo
-    // nnnn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 1");
-    this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove;
-    this.toAdd = nc + this.code.substring(cto, this.begin) + this.toAdd;
-    this.begin = cfrom;
-  }
-
-  /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateNewOverlapsOld(final int cfrom, final String nc,
-                                    final int cto) {
-    //       oooooo
-    //    nnnnnn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 2");
-    this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove;
-    this.toAdd = nc + this.toAdd.substring(cto - this.begin);
-    this.begin = cfrom;
-  }
-
-  /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateNewOverOld(final int cfrom, final String nc,
-                                final int cto) {
-    //       oooooo
-    //    nnnnnnnnnnn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 3");
-    this.toRemove = this.code.substring(cfrom, this.begin) + this.toRemove +
-      this.code.substring(this.end, cto);
-    this.toAdd = nc;
-    this.begin = cfrom;
-    this.end = cto;
-  }
-
-  /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateOldBeforeNew(final int cfrom, final String nc,
-                                  final int cto) {
-    //       oooooo
-    //               nnnn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 6");
-    this.toRemove = this.toRemove + this.code.substring(this.end, cto);
-    this.toAdd = this.toAdd + this.code.substring(this.end, cfrom) + nc;
-    this.end = cto;
-  }
-
-  /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateOldOverlapsNew(final int cfrom, final String nc,
-                                    final int cto) {
-    //       oooooo
-    //         nnnnnnn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 5");
-    this.toRemove = this.toRemove + this.code.substring(this.end, cto);
-    this.toAdd = this.toAdd.substring(0, cfrom - this.begin) + nc;
-    this.end = cto;
-  }
-
-  /**
-   * @param cfrom
-   * @param nc
-   * @param cto
-   */
-  private void updateOldOverNew(final int cfrom, final String nc,
-                                final int cto) {
-    //       oooooo
-    //         nn
-    MLog.putMsg(MLog.LEVEL_PDEBUG, "branch no 4");
-    this.toAdd = this.toAdd.substring(0, cfrom - this.begin) + nc +
-      this.toAdd.substring(cto - this.begin);
-  }
-
-  /**
-   * This method strips out the one-line comments and BML signs @ at the
-   * beginning of a line, but inside a BML comment.
+   * Returns the last correct version of the code.
    *
-   * @param code the bytecode with BML to preprocess
-   * @return the preprocessed code
+   * @return the string with the last correct version of the code
    */
-  public static String preProcess(final String code) {
-    final StringBuffer buf = new StringBuffer(code.length());
-    int i = 0;
-    while (i < code.length()) {
-      char ch = code.charAt(i);
-      if (ch == '"') {
-        final int opos = i;
-        i = readString(i, code);
-        buf.append(code.substring(opos, i));
-        continue;
-      } else if (ch == '/') { // DisplayStyle.BML_COMMENT_START starts with '/'
-        i++;
-        String gdzie = code.substring(i);
-        ch = code.charAt(i);
-        if (ch == '/' &&
-            !code.substring(i+1).startsWith(
-                                         DisplayStyle.BML_AT_SIGN)) {
-          i = readOneLineComment(i, code);
-          continue;
-        } else if (code.substring(i).startsWith(
-                         DisplayStyle.BML_COMMENT_START.substring(1))) {
-          buf.append('/');
-          i = readBMLComment(i, code, buf);
-          continue;
-        } else {
-          buf.append('/');
-        }
-      }
-      buf.append(ch);
-      i++;
-    }
-    return buf.toString();
+  public String getLastCorrectCode() {
+    return oldCode;
   }
-
-  /**
-   * The method reads in a BML comment removing the @ signs at the beginnings
-   * of internal lines. It reads string from the <code>code</code> parameter.
-   * The first character to be read is pointed by the <code>pos</code>
-   * parameter. The resulting string is appended to the <code>buf</code>
-   * parameter. The result is the position of the first character in
-   * <code>code</code>which has not been swallowed in the course of the
-   * processing. This method assumes that <code>pos</code> is inside of a
-   * BML comment.
-   *
-   * @param pos the position of the first character to read
-   * @param code the string to read characters from
-   * @param buf the string to append characters to
-   * @return the position of the first character that was not read by the
-   *   procedure
-   */
-  private static int readBMLComment(final int pos, final String code,
-                                    final StringBuffer buf) {
-    int i = pos;
-    boolean newline = false;
-    while (i < code.length()) {
-      final char ch = code.charAt(i);
-      if (DisplayStyle.BML_AT_SIGN.charAt(0) == ch && newline) {
-        newline = false;
-        if (code.substring(i).startsWith(DisplayStyle.BML_COMMENT_END)) {
-          buf.append(DisplayStyle.BML_COMMENT_END);
-          return i + DisplayStyle.BML_COMMENT_END.length();
-        } else {
-          i++;
-          continue;
-        }
-      } else if (ch == '\n') {
-        newline = true;
-      } else if (!Character.isWhitespace(ch) && newline) {
-        newline = false;
-      }
-      buf.append(ch);
-      i++;
-    }
-    return i;
-  }
-
-  /**
-   * 
-   * @param pos
-   * @param code
-   * @return
-   */
-  private static int readOneLineComment(final int pos, final String code) {
-    int i = pos + 1;
-    while (i < code.length()) {
-      final char ch = code.charAt(i);
-      if (ch == '\n') {
-        return i;
-      }
-      i++;
-    }
-    return i;
-  }
-
-  /**
-   * 
-   * @param pos
-   * @param code
-   * @return
-   */
-  private static int readString(final int pos, final String code) {
-    int i = pos + 1;
-    while (i < code.length()) {
-      char ch = code.charAt(i);
-      if (ch == '\\') {
-        i++;
-        ch = code.charAt(i);
-        continue;
-      } else if (ch == '"') {
-        return ++i;
-      }
-      i++;
-    }
-    return i;
-  }
-
-
 }

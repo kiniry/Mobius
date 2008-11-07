@@ -84,7 +84,7 @@ public class NumberLiteral extends AbstractIntExpression {
   public String toString() {
     return "" + this.value;
   }
-  
+
   /**
    * Writes this expression to AttributeWirter.
    *
@@ -96,7 +96,7 @@ public class NumberLiteral extends AbstractIntExpression {
     aw.writeInt(this.value);
   }
 
-  public int getValue(){
+  public int getValue() {
     return this.value;
   }
 }

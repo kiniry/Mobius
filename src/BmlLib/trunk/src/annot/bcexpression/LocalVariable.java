@@ -144,7 +144,7 @@ public class LocalVariable extends OldExpression {
     aw.writeShort(this.lvar_id);
   }
 
-  public int getIndex(){
+  public int getIndex() {
     return lvar_id;
   }
 }

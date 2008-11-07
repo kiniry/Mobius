@@ -144,7 +144,7 @@ public abstract class AbstractPrettyPrinter {
 
   /**
    * Moves disallowed trailing characters
-   * (like '!', '~', '(') to the next line.
+   * (such as '!', '~', '(') to the next line.
    *
    * @param s - formatted (by prettyPrinter) single
    *     line String.

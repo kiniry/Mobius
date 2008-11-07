@@ -25,10 +25,10 @@ import annot.bcclass.MLog;
 public class Parsing {
 
   /**
-   * Shows token list (from lexer) befor parsing each
+   * Shows token list (from lexer) before parsing each
    * BCPrintableAttribute. Useful when parser crashes.
    */
-  private static final boolean goShowTokens = false;
+  private static final boolean GO_SHOW_TOKENS = false;
 
   /**
    * BCClass of all BML annotations parsing here.
@@ -237,7 +237,7 @@ public class Parsing {
     final CharStream chstr = new ANTLRStringStream(str);
     final BMLLexer lex = new BMLLexer(chstr);
     final CommonTokenStream tokens = new CommonTokenStream(lex);
-    if (goShowTokens) {
+    if (GO_SHOW_TOKENS) {
       MLog.putMsg(MLog.LEVEL_PINFO, "tokens:");
       for (int i = 0; i  <  100; i++) {
         MLog.putBitOfMsg(MLog.LEVEL_PINFO, " " + tokens.toString(i, i));
@@ -306,7 +306,13 @@ public class Parsing {
     return true;
   }
 
-  public Vector<PosInCode> getBMLPositions() {
+  /**
+   * Returns the structure with BML specification areas markers (i.e. / *@,
+   * @* / and / /@).
+   *
+   * @return a vector with positions of BML markers
+   */
+  public Vector < PosInCode > getBMLPositions() {
     return bml_positions;
   }
 }

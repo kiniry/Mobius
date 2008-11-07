@@ -70,7 +70,7 @@ public class Predicate0Ar extends AbstractFormula {
     return "" + this.value;
   }
 
-  public boolean getValue(){
+  public boolean getValue() {
     return value;
   }
 }
