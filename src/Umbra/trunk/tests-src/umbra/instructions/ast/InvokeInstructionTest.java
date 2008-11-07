@@ -1,15 +1,14 @@
 /*
- * @title       "Umbra"
- * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @title "Umbra" @description "An editor for the Java bytecode and BML
+ * specifications" @copyright "(c) 2006-2008 University of Warsaw" @license "All
+ * rights reserved. This program and the accompanying materials are made
+ * available under the terms of the LGPL licence see LICENCE.txt file"
  */
 package umbra.instructions.ast;
 
 import static org.junit.Assert.*;
 
+import org.apache.bcel.generic.Instruction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,15 +21,25 @@ import org.junit.Test;
 public class InvokeInstructionTest {
 
   String[] lines = {
-                    ""              
+      "18:   invokevirtual  pl.tls.mobius.quiz.Question.getQuestion ()Ljava/lang/String; (48)",
+      "7:    invokespecial  javax.microedition.lcdui.Form.<init> (Ljava/lang/String;)V (45)"
+  };
+
+  String[] wronglines = {
+      "18:   invokevirtual  pl.tls.mobius.quiz.Question.getQuestion ()Ljava/lang/String (48)",
+      "7:    invokesecial  javax.microedition.lcdui.Form.<init> (Ljava/lang/String;)V (45)"
   };
 
   String[] mnemonics = {
-                    ""              
+      "invokevirtual", "invokespecial"
+  };
+
+  String[] mnemonicnames = {
+      "invokeinterface", "invokespecial", "invokestatic", "invokevirtual"
   };
 
   InvokeInstruction[] instructions;
-  
+
   /**
    * @throws java.lang.Exception
    */
@@ -54,7 +63,11 @@ public class InvokeInstructionTest {
    */
   @Test
   public void testGetInstruction() {
-    fail("Not yet implemented");
+    for (int i = 0; i < lines.length; i++) {
+      Instruction ins = instructions[i].getInstruction();
+      String name = ins.getName();
+      assertEquals("ins number " + i, name, mnemonics[i]);
+    }
   }
 
   /**
@@ -62,7 +75,12 @@ public class InvokeInstructionTest {
    */
   @Test
   public void testCorrect() {
-    fail("Not yet implemented");
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("ins number " + i, instructions[i].correct());
+      InvokeInstruction iins = new InvokeInstruction(wronglines[i],
+                                                     mnemonics[i]);
+      assertFalse("ins number " + i, iins.correct());
+    }
   }
 
   /**
@@ -70,7 +88,10 @@ public class InvokeInstructionTest {
    */
   @Test
   public void testGetMnemonics() {
-    fail("Not yet implemented");
+    String[] mm = InvokeInstruction.getMnemonics();
+    for (int i = 0; i < mnemonicnames.length; i++) {
+      assertEquals("mnemonic " + mnemonicnames[i], mm[i], mnemonicnames[i]);
+    }
   }
 
   /**
@@ -78,7 +99,10 @@ public class InvokeInstructionTest {
    */
   @Test
   public void testInvokeInstruction() {
-    fail("Not yet implemented");
+    for (int i = 0; i < lines.length; i++) {
+      InvokeInstruction ins = new InvokeInstruction(lines[i], mnemonics[i]);
+      assertEquals("name " + i, ins.getName(), mnemonics[i]);
+    }
   }
 
 }

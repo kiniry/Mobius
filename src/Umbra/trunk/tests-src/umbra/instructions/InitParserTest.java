@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package adhoc;
+package umbra.instructions;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -14,15 +14,16 @@ import static org.junit.Assert.assertTrue;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
-import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import umbra.editor.BytecodeDocument;
-import umbra.editor.UmbraMethodException;
-import umbra.editor.parsing.UmbraLocationException;
 import umbra.instructions.InitParser;
 import umbra.instructions.LineContext;
+import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraMethodException;
+import umbra.lib.UmbraSyntaxException;
 
 /**
  * @author alx
@@ -122,6 +123,9 @@ public class InitParserTest {
       // TODO Auto-generated catch block
       e.printStackTrace();
     } catch (UmbraMethodException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (UmbraSyntaxException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

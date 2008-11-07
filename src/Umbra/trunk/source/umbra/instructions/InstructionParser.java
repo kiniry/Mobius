@@ -356,7 +356,7 @@ public class InstructionParser extends InstructionTypeParser {
   private boolean swallowReturnDescriptor() {
     final String line = getLine();
     final int index = getIndex();
-    boolean res = false;
+    boolean res = true;
     if (InstructionParserHelper.isBaseTypeDescriptor(
                                        line.charAt(index)) ||
         InstructionParserHelper.isVoidTypeDescriptor(
@@ -364,6 +364,7 @@ public class InstructionParser extends InstructionTypeParser {
       incIndex();
       return true;
     }
+    String rest = line.substring(index);
     res = res && swallowRefTypeDescriptor();
     return res;
   }
