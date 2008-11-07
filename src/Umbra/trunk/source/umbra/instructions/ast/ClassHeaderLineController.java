@@ -53,7 +53,9 @@ public class ClassHeaderLineController extends BytecodeLineController {
     parser.resetParser();
     res = res && parser.swallowClass();
     res = res && parser.swallowWhitespace();
-    res = res && parser.swallowIdentifier();
+    if (res) {
+      res = parseIdent(parser);
+    }
     if (parser.swallowWhitespace())
       parser.swallowExtendsClause();
     if (res && parser.swallowWhitespace())
@@ -62,6 +64,26 @@ public class ClassHeaderLineController extends BytecodeLineController {
       return res;
     else
       return false;
+  }
+
+  /**
+   * This method parses the class identifier. It tries to parse it so that
+   * the segments are separated with '.' and in case of failure it tries
+   * to parse it as if it was separated with '/'.
+   *
+   * @param a_parser the parser to parse the identifier
+   * @return <code>true</code> in case the identifier was correctly parsed,
+   *   <code>false</code> otherwise
+   */
+  private boolean parseIdent(final ClassHeaderParser a_parser) {
+    boolean res = true;
+    final int ind = a_parser.getIndex();
+    res = res && a_parser.swallowClassnameWithDelim('.');
+    if (!res) { //retry with '/'
+      a_parser.moveIndex(a_parser.getIndex() - ind);
+      res = res && a_parser.swallowClassnameWithDelim('/');
+    }
+    return res;
   }
 
   /**

@@ -261,7 +261,7 @@ public class BytecodeContribution extends ControlContribution {
       ((BytecodeDocument)(an_event.fDocument)).getBmlp().onChange(an_event);
       displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
-        displayError(Integer.toString(doc.getModel().getFirstError()));
+        displayError(Integer.toString(doc.getModel().getFirstError() + 1));
       } else if (!doc.annotCorrect()) {
         displayError(doc.getAnnotError());
       } else {

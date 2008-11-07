@@ -39,7 +39,7 @@ public class InvokeInstruction extends StringInstruction {
    * <code>a_line_text</code>. Currently it just calls the constructor of the
    * superclass.
    *
-   * @param a_line_text the line number of the instruction
+   * @param a_line_text the string representation of the line text
    * @param a_name the mnemonic name of the instruction
    * @see InstructionLineController#InstructionLineController(String, String)
    */

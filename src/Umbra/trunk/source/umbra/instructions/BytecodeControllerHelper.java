@@ -118,6 +118,8 @@ public abstract class BytecodeControllerHelper {
   }
 
   /**
+   * Returns a 0-based number of the line with the first error.
+   *
    * @return number of a line that the first error occurs
    * (not necessarily: number of the first line that an error occurs)
    */
