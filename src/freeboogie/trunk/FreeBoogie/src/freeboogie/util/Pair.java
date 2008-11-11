@@ -21,8 +21,8 @@ public class Pair<F, S> {
   public boolean equals(Object o) {
     if (!(o instanceof Pair)) return false;
     Pair p = (Pair)o;
-    boolean fok = (first == null && p.first == null) || first.equals(p.first);
-    boolean sok = (second == null && p.second == null) || second.equals(p.second);
+    boolean fok = first == null? p.first == null : first.equals(p.first);
+    boolean sok = second == null? p.second == null : second.equals(p.second);
     return fok && sok;
   }
 

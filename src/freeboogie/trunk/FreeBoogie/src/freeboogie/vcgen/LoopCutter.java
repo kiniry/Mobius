@@ -52,7 +52,7 @@ public class LoopCutter extends Transformer {
     seen.clear(); done.clear(); toRemove.clear();
     dfs(body.getBlocks());
     hasStuck = false;
-    Body newBody = body == null? null : (Body)body.eval(this);
+    Body newBody = (Body)body.eval(this);
     if (newBody != body || newTail != tail)
       implementation = Implementation.mk(sig, newBody, newTail);
     return implementation;

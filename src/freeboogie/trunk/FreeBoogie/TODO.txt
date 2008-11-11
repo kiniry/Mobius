@@ -1,5 +1,3 @@
- . Add line numbers to impl OK/NOK report.
- . Allow easy redirection of output.
  . Desugar dependent types in procedure signatures.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
    Take care of arrays (does the prover know about arrays?)
@@ -72,5 +70,6 @@
    (Three string interfaces to z3, one string interface to Simplify,
    native interface to z3, and so on. At least three users are needed
    to validate the design.)
+ . Allow easy redirection of output.
 
 vim:spell:ts=3:sw=3:fdm=manual:

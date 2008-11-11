@@ -133,7 +133,7 @@ public class Specializer extends Transformer {
     Signature sig = st.funcs.def(atomFun).getSig();
     try { 
       types = prepareTypeList(sig.getTypeVars());
-    } catch (UnknownSpecialization e) {}
+    } catch (UnknownSpecialization e) { /* used for control flow */ }
     return AtomFun.mk(function, types, args, atomFun.loc());
   }
 
@@ -144,7 +144,7 @@ public class Specializer extends Transformer {
     Signature sig = st.procs.def(callCmd).getSig();
     try {
       types = prepareTypeList(sig.getTypeVars());
-    } catch (UnknownSpecialization e) {}
+    } catch (UnknownSpecialization e) { /* used for control flow */ }
     return CallCmd.mk(procedure, types, results, args);
   }
 
