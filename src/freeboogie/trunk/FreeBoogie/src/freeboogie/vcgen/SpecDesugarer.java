@@ -6,8 +6,7 @@ import java.util.logging.Logger;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.Err;
-import freeboogie.util.Id;
+import freeboogie.util.*;
 import freeboogie.tc.*;
 
 /**

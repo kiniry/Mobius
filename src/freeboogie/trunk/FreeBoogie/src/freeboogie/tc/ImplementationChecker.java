@@ -83,6 +83,7 @@ public class ImplementationChecker extends Transformer {
       return;
     }
     paramMap.put(va, vb);
+    compare(va.getTail(), vb.getTail());
   }
   
   // assumes {@code a} and {@code b} are lists of {@code VariableDecl}

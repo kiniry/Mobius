@@ -64,7 +64,7 @@ public class SimplifyProcess {
    */
   public boolean isValid(String q) throws ProverException {
     checkAlive();
-    System.out.println(q);
+//System.out.println(q);
     out.println(q);
     checkOut();
     labels.clear();
