@@ -173,9 +173,11 @@ public class Main {
       else if (d instanceof Procedure) d = ((Procedure)d).getTail();
       else {
         Implementation impl = (Implementation)d;
-        String result = vcgen.verify(impl)? " OK" : "NOK";
-        System.out.print(result);
-        System.out.println(": " + impl.getSig().getName());
+        System.out.printf(
+          "%s: %s (%s)\n",
+          vcgen.verify(impl)? " OK" : "NOK",
+          impl.getSig().getName(),
+          impl.getSig().loc());
         d = impl.getTail();
       }
     }

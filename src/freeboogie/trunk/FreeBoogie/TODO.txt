@@ -1,4 +1,3 @@
- . Fix substitution bug (they are not done 'in parallel').
  . Add line numbers to impl OK/NOK report.
  . Allow easy redirection of output.
  . Desugar dependent types in procedure signatures.
