@@ -163,7 +163,7 @@ public abstract class BCCConstantPrinting {
     switch (cnst.getTag()) {
       case Constants.CONSTANT_Utf8:
         kwd = DisplayStyle.UTF8_KWD;
-        bts = ((ConstantUtf8)cnst).getBytes();
+        bts = ((ConstantUtf8)cnst).getBytes().replace("\n", "\\n");
         break;
       case Constants.CONSTANT_Integer:
         kwd = DisplayStyle.INTEGER_KWD;
@@ -248,7 +248,7 @@ public abstract class BCCConstantPrinting {
     res = DisplayStyle.INTERFACEMETHODREF_KWD + " " +
       printCPRef(((ConstantInterfaceMethodref)cnst).getClassIndex()) +
       DisplayStyle.DOT_SIGN +
-      printCPRef(((ConstantMethodref)cnst).getNameAndTypeIndex());
+      printCPRef(((ConstantInterfaceMethodref)cnst).getNameAndTypeIndex());
     return res;
   }
 
