@@ -82,21 +82,22 @@ public class SimplifyProver extends Prover {
         sb.append("TRUE");
       else
         sb.append("FALSE");
-    } else if (st.id.equals("literal_pred")) {
-      if ((Boolean)st.data)
-        sb.append("TRUE");
-      else
-        sb.append("FALSE");
-    } else if (st.id.equals("map_update")) {
-      sb.append("(update ");
+    } else if (st.id.startsWith("map_update")) {
+      sb.append("($$update ");
       printArgs(st.children, sb);
       sb.append(")");
-    } else if (st.id.equals("map_select")) {
-      sb.append("(select ");
+    } else if (st.id.startsWith("map_select")) {
+      sb.append("($$select ");
       printArgs(st.children, sb);
       sb.append(")");
     } else if (st.id.equals("tuple")) {
       printArgs(st.children, sb);
+    } else if (st.id.startsWith("xor")) {
+      sb.append("(NOT (IFF ");
+      printTerm(st.children[0], sb);
+      sb.append(" ");
+      printTerm(st.children[1], sb);
+      sb.append("))");
     } else if (st.id.startsWith("eq")) {
       sb.append("(EQ ");
       printTerm(st.children[0], sb);

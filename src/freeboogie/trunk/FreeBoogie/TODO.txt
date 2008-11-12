@@ -1,5 +1,5 @@
- . Desugar dependent types in procedure signatures.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
+ . Desugar dependent types in procedure signatures.
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
  . Provide a web interface.

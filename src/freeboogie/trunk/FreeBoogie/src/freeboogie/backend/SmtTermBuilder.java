@@ -23,21 +23,19 @@ public class SmtTermBuilder extends TermBuilder {
     def("or", Sort.BOOL, Sort.BOOL);
     def("implies", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
     def("iff", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+    def("xor", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
     def("var", String.class, Sort.VARVALUE);
     def("var_int", String.class, Sort.VARINT);
     def("var_bool", String.class, Sort.VARBOOL);
-    def("var_pred", String.class, Sort.BOOL);
 
     def("const", String.class, Sort.VALUE);
     def("const_int", String.class, Sort.INT);
     def("const_bool", String.class, Sort.BOOL);
-    def("const_pred", String.class, Sort.BOOL);
 
     def("literal", String.class, Sort.VALUE);
     def("literal_int", BigInteger.class, Sort.INT);
     def("literal_bool", Boolean.class, Sort.BOOL);
-    def("literal_pred", Boolean.class, Sort.BOOL);
 
     def("forall_int", new Sort[]{Sort.VARINT, Sort.BOOL}, Sort.BOOL);
 
@@ -53,12 +51,14 @@ public class SmtTermBuilder extends TermBuilder {
 
     def("eq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
     def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
-    def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
     def("neq", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
+    def("neq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
 
     def("<:", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
     def("tuple", Sort.VALUE, Sort.VALUE);
     def("map_select", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.VALUE);
+    def("map_select_int", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.INT);
+    def("map_select_bool", new Sort[]{Sort.VALUE, Sort.VALUE}, Sort.BOOL);
     def("map_update", new Sort[]{Sort.VALUE, Sort.VALUE, Sort.VALUE}, Sort.VALUE);
     pushDef(); // mark the end of the prover builtin definitions
     log.info("prepared SMT term builder");

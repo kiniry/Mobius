@@ -2,9 +2,11 @@ package freeboogie.backend;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Map;
 
 import freeboogie.ast.*;
 import freeboogie.tc.SymbolTable;
+import freeboogie.tc.TcInterface;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.
@@ -21,12 +23,19 @@ public class TermOfExpr extends Evaluator<Term> {
   private static final Term[] termArray = new Term[0];
 
   private TermBuilder term;
+  private TcInterface tc;
   private SymbolTable st;
+  private Map<Expr, Type> typeOf;
 
   public TermOfExpr() {}
 
   public void setBuilder(TermBuilder term) { this.term = term; }
-  public void setSymbolTable(SymbolTable st) { this.st = st; }
+
+  public void setTypeChecker(TcInterface tc) {
+    this.tc = tc;
+    this.st = tc.getST();
+    this.typeOf = tc.getTypes();
+  }
 
   @Override
   public Term eval(AtomCast atomCast, Expr e, Type type) {
@@ -73,7 +82,11 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
-    return term.mk("map_select", atom.eval(this), term.mk("tuple", tuple(idx)));
+    Type t = typeOf.get(atomMapSelect);
+    String termId = "map_select";
+    if (isInt(t)) termId = "map_select_int";
+    if (isBool(t)) termId = "map_select_bool";
+    return term.mk(termId, atom.eval(this), term.mk("tuple", tuple(idx)));
   }
 
   @Override
@@ -93,6 +106,7 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomOld atomOld, Expr e) {
+    assert false;
     return e.eval(this);
   }
 
@@ -105,14 +119,24 @@ public class TermOfExpr extends Evaluator<Term> {
   @Override
   public Term eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
     String termId = "***unknown***";
+    Type lt = typeOf.get(left);
+    Type rt = typeOf.get(right);
     switch (op) {
     case PLUS: termId = "+"; break;
     case MINUS: termId = "-"; break;
     case MUL: termId = "*"; break;
     case DIV: termId = "/"; break;
     case MOD: termId = "%"; break;
-    case EQ: termId = "eq"; break;
-    case NEQ: termId = "neq"; break;
+    case EQ: 
+      if (isBool(lt)) termId = "iff";
+      else if (isInt(lt) && isInt(rt)) termId = "eq_int";
+      else termId = "eq";
+      break;
+    case NEQ:
+      if (isBool(lt)) termId = "xor";
+      else if (isInt(lt) && isInt(rt)) termId = "neq_int";
+      else termId = "neq";
+      break;
     case LT: termId = "<"; break;
     case LE: termId = "<="; break;
     case GE: termId = ">="; break;

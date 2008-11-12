@@ -79,7 +79,7 @@ public class VcGenerator {
     assert prover != null;
     if (!globalsProcessed) processGlobals();
     sp.setFlowGraph(tc.getFlowGraph(implementation));
-    prover.getBuilder().setSymbolTable(tc.getST());
+    prover.getBuilder().setTypeChecker(tc);
     Term vc = sp.vc();
     return prover.isValid(vc);
   }

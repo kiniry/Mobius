@@ -3,7 +3,7 @@ package freeboogie.backend;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
-import freeboogie.tc.SymbolTable;
+import freeboogie.tc.TcInterface;
 import freeboogie.util.Err;
 import freeboogie.util.StackedHashMap;
 
@@ -33,10 +33,10 @@ public abstract class TermBuilder {
   }
   
   /** 
-   * Sets the symbol table used to figure out the sorts when
+   * Sets the type checker used to figure out the sorts when
    * translating Boogie expressions.
    */
-  public void setSymbolTable(SymbolTable st) { term.setSymbolTable(st); }
+  public void setTypeChecker(TcInterface tc) { term.setTypeChecker(tc); }
 
   /** Constructs a term out of a Boogie expression. */
   public Term of(Expr e) { return (SmtTerm)e.eval(term); }
