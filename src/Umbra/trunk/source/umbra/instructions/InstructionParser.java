@@ -159,7 +159,10 @@ public class InstructionParser extends InstructionTypeParser {
    * advance the index in case the first character to be analysed is not the
    * proper first character of a string. We assume the parsed string is not
    * finished before the method is called. We assume there is no newline
-   * character in the parsed string.
+   * character in the parsed string. The parser index is located at the
+   * return either at the position of the final " (when <code>true</code> is
+   * returned) or right after the end of the parsed string (when
+   * <code>false</code> is returned.
    *
    * The exact format, according to JLS 3rd edition 3.10.5 String Literals, is:
    * <pre>
@@ -181,14 +184,15 @@ public class InstructionParser extends InstructionTypeParser {
    */
   public boolean swallowString() {
     final String line = getLine();
-    while (line.charAt(getIndex()) != '"') {
+    final int len = line.length();
+    while (getIndex() < len && line.charAt(getIndex()) != '"') {
       if (line.charAt(getIndex()) == '\\') {
         if (!swallowEscape()) return false;
       } else {
         incIndex();
       }
     }
-    return true;
+    return getIndex() < len;
   }
 
   /**
@@ -364,7 +368,6 @@ public class InstructionParser extends InstructionTypeParser {
       incIndex();
       return true;
     }
-    String rest = line.substring(index);
     res = res && swallowRefTypeDescriptor();
     return res;
   }

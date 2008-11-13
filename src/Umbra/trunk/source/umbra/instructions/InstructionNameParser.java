@@ -53,11 +53,15 @@ public class InstructionNameParser extends InstructionParserGeneric {
   public boolean swallowClassnameWithDelim(final char a_separator) {
     final String line = getLine();
     while (swallowIdentifier()) {
-      if (!(line.charAt(getIndex()) == a_separator)) {
+      if (getIndex() < line.length() &&
+          line.charAt(getIndex()) != a_separator) {
         final int index = getIndex();
         return Character.isWhitespace(line.charAt(index)) ||
             line.charAt(index) == '>' ||
-            line.charAt(index) == ';';
+            line.charAt(index) == ';' ||
+            line.charAt(index) == ',';
+      } else if (getIndex() >= line.length()) {
+        return true;
       }
       incIndex();
     }
@@ -119,7 +123,8 @@ public class InstructionNameParser extends InstructionParserGeneric {
     do {
       buf.append(line.charAt(index));
       index = incIndex();
-    } while (Character.isJavaIdentifierPart(line.charAt(index)));
+    } while (index < line.length() &&
+             Character.isJavaIdentifierPart(line.charAt(index)));
     final String s = new String(buf);
     return !InstructionParserHelper.isJavaResLiteral(s) &&
            !InstructionParserHelper.isJavaKeyword(s);

@@ -119,11 +119,20 @@ public abstract class BytecodeTextParser {
    */
   public static final String removeCommentFromLine(final String a_line) {
     String res;
+    final InstructionParser parser = new InstructionParser(a_line);
     int j = a_line.length() - 1;
-
-    final int k = (a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK, 0));
-    if (k != -1)
-      j = k - 1;
+    int posq = a_line.indexOf("\"");
+    int posc = a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK);
+    parser.moveIndex(posq + 1);
+    while (0 <= posq && posq <= posc) {
+      parser.swallowString();
+      posq = a_line.indexOf("\"", parser.getIndex() + 1);
+      posc = a_line.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK,
+                            parser.getIndex() + 1);
+      parser.moveIndex(parser.getIndex() - posq - 1);
+    }
+    if (posc != -1)
+      j = posc - 1;
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
     res = a_line.substring(0, j + 1);
