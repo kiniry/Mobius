@@ -13,8 +13,8 @@ import java.util.logging.*;
  * detailed answer (such as counterexamples) can be obtained by a
  * subsequent call to {@code getDetailedAnswer}.
  *
- * As a convenience, provers might offer "assumption frames" thru
- * the methods {@code push()} and {@code pop()}. A call to {@code
+ * As a convenience, provers offer "assumption frames" thru the
+ * methods {@code push()} and {@code pop()}. A call to {@code
  * pop()} should {@code retract()} all assumptions since the
  * corresponding {@code push()}.
  *

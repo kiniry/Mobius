@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import freeboogie.ast.*;
-import freeboogie.tc.SymbolTable;
-import freeboogie.tc.TcInterface;
+import freeboogie.tc.*;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.
@@ -53,13 +52,13 @@ public class TermOfExpr extends Evaluator<Term> {
     Type t;
     if (d instanceof VariableDecl) {
       t = ((VariableDecl)d).getType();
-      if (isInt(t)) return term.mk("var_int", id);
-      if (isBool(t)) return term.mk("var_bool", id);
+      if (TypeUtils.isInt(t)) return term.mk("var_int", id);
+      if (TypeUtils.isBool(t)) return term.mk("var_bool", id);
       return term.mk("var", id);
     } else if (d instanceof ConstDecl) {
       t = ((ConstDecl)d).getType();
-      if (isInt(t)) return term.mk("const_int", id);
-      if (isBool(t)) return term.mk("const_bool", id);
+      if (TypeUtils.isInt(t)) return term.mk("const_int", id);
+      if (TypeUtils.isBool(t)) return term.mk("const_bool", id);
       return term.mk("const", id);
     } else assert false; // what is it then?
     return null;
@@ -84,8 +83,8 @@ public class TermOfExpr extends Evaluator<Term> {
   public Term eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     Type t = typeOf.get(atomMapSelect);
     String termId = "map_select";
-    if (isInt(t)) termId = "map_select_int";
-    if (isBool(t)) termId = "map_select_bool";
+    if (TypeUtils.isInt(t)) termId = "map_select_int";
+    if (TypeUtils.isBool(t)) termId = "map_select_bool";
     return term.mk(termId, atom.eval(this), term.mk("tuple", tuple(idx)));
   }
 
@@ -128,13 +127,13 @@ public class TermOfExpr extends Evaluator<Term> {
     case DIV: termId = "/"; break;
     case MOD: termId = "%"; break;
     case EQ: 
-      if (isBool(lt)) termId = "iff";
-      else if (isInt(lt) && isInt(rt)) termId = "eq_int";
+      if (TypeUtils.isBool(lt)) termId = "iff";
+      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) termId = "eq_int";
       else termId = "eq";
       break;
     case NEQ:
-      if (isBool(lt)) termId = "xor";
-      else if (isInt(lt) && isInt(rt)) termId = "neq_int";
+      if (TypeUtils.isBool(lt)) termId = "xor";
+      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) termId = "neq_int";
       else termId = "neq";
       break;
     case LT: termId = "<"; break;
@@ -168,19 +167,5 @@ public class TermOfExpr extends Evaluator<Term> {
       e = e.getTail();
     }
     return r.toArray(termArray);
-  }
-
-  private boolean isInt(Type t) {
-    return isPrimitive(t, PrimitiveType.Ptype.INT);
-  }
-
-  private boolean isBool(Type t) {
-    return isPrimitive(t, PrimitiveType.Ptype.BOOL);
-  }
-
-  private boolean isPrimitive(Type t, PrimitiveType.Ptype p) {
-    if (!(t instanceof PrimitiveType)) return false;
-    PrimitiveType pt = (PrimitiveType)t;
-    return pt.getPtype() == p;
   }
 }

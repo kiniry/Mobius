@@ -1,5 +1,9 @@
 package freeboogie.backend;
 
+import freeboogie.ast.PrimitiveType;
+import freeboogie.ast.Type;
+import freeboogie.tc.TypeUtils;
+
 /**
  * The sorts we use to inform the prover about Boogie types.
  *
@@ -42,5 +46,13 @@ public enum Sort {
     if (this == other) return true;
     if (superSort == null) return false;
     return superSort.isSubsortOf(other);
+  }
+
+  /** Returns a sort corresponding to a given Boogie type. */
+  public static Sort of(Type t) {
+    // TODO keep more information in the sort?
+    if (TypeUtils.isInt(t)) return INT;
+    else if (TypeUtils.isBool(t)) return BOOL;
+    return VALUE;
   }
 }

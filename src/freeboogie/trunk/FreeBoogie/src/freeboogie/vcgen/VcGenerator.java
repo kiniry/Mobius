@@ -43,10 +43,12 @@ public class VcGenerator {
   private HavocDesugarer havocDesugarer;
   private SpecDesugarer specDesugarer;
   private Passivator passivator;
+  private FunctionRegisterer functionRegisterer;
+  private AxiomSender axiomSender;
 
   private StrongestPostcondition sp;
+  private TermBuilder builder;
 
-  private boolean globalsProcessed;
 
   public VcGenerator() {
     loopCutter = new LoopCutter();
@@ -55,38 +57,57 @@ public class VcGenerator {
     specDesugarer = new SpecDesugarer();
     passivator = new Passivator();
     sp = new StrongestPostcondition();
-    globalsProcessed = false;
+    functionRegisterer = new FunctionRegisterer();
+    axiomSender = new AxiomSender();
   }
 
-  public void setProver(Prover prover) {
+  public void setProver(Prover prover) throws ProverException {
     this.prover = prover;
-    sp.setBuilder(prover.getBuilder());
-    globalsProcessed = false;
+    prover.push();
+    preverify();
   }
 
-  public Declaration process(Declaration d, TcInterface tc) {
+  /**
+   * Simplify {@code d} to a form where strongest postcondition
+   * can be computed.
+   */
+  public Declaration process(Declaration d, TcInterface tc)
+  throws ProverException {
     this.tc = tc;
     ast = loopCutter.process(d, tc);
     ast = callDesugarer.process(ast, tc);
     ast = havocDesugarer.process(ast, tc);
     ast = specDesugarer.process(ast, tc);
     ast = passivator.process(ast, tc);
-    globalsProcessed = false;
+    preverify();
     return ast;
   }
 
+  /**
+   * Compute strongest postcondition and query the prover. This
+   * {@code implementation} must be part the AST last processed.
+   * Also, a prover must have been set.
+   */
   public boolean verify(Implementation implementation) throws ProverException {
-    assert prover != null;
-    if (!globalsProcessed) processGlobals();
+    assert prover != null && ast != null;
     sp.setFlowGraph(tc.getFlowGraph(implementation));
-    prover.getBuilder().setTypeChecker(tc);
     Term vc = sp.vc();
     return prover.isValid(vc);
   }
 
   // === helpers ===
-  private void processGlobals() {
-    // TODO Add axioms and stuff
-    globalsProcessed = true;
+  private void preverify() throws ProverException {
+    if (prover == null || ast == null) return;
+    builder = prover.getBuilder();
+    sp.setBuilder(builder);
+    builder.setTypeChecker(tc);
+    functionRegisterer.setBuilder(builder);
+    axiomSender.setProver(prover);
+    builder.popDef();
+    functionRegisterer.process(ast);
+    builder.pushDef();
+    prover.pop();
+    // TODO add axioms
+    prover.push();
   }
 }

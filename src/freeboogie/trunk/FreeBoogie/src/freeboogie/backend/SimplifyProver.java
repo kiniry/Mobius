@@ -61,6 +61,7 @@ public class SimplifyProver extends Prover {
    */
   private void prepareTermBuilder() {
     builder = new SmtTermBuilder();
+    // TODO: send map axioms and stuff
   }
 
   // TODO This is quite incomplete now

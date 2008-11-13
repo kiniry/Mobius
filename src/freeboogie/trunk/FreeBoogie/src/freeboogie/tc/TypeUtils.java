@@ -148,4 +148,17 @@ public class TypeUtils {
       return sw.toString();
   }
   
+  public static boolean isInt(Type t) {
+    return isPrimitive(t, PrimitiveType.Ptype.INT);
+  }
+
+  public static boolean isBool(Type t) {
+    return isPrimitive(t, PrimitiveType.Ptype.BOOL);
+  }
+
+  public static boolean isPrimitive(Type t, PrimitiveType.Ptype p) {
+    if (!(t instanceof PrimitiveType)) return false;
+    PrimitiveType pt = (PrimitiveType)t;
+    return pt.getPtype() == p;
+  }
 }

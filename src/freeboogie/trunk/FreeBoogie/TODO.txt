@@ -5,6 +5,7 @@
  . Provide a web interface.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . Only parse function if they return exactly one value.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
  . Test typechecker thoroughly and add tests for the 'old' mode.
