@@ -42,12 +42,6 @@ import api.Jml2BmlAPI;
 public class JMLCompile extends DisasBCEL {
 
   /**
-   * The editor of a Java file for which the byte code file is
-   * generated.
-   */
-  private CompilationUnitEditor my_editor;
-
-  /**
    * Finds the file for the current Java source code and to the resulting
    * classfile and then compiles in the JML as BML into the classfile using
    * Jml2Bml compiler. The compiler assumes that the classfile already exists.
@@ -59,13 +53,14 @@ public class JMLCompile extends DisasBCEL {
    */
   public final void run(final IAction an_action) {
     if (checkInitialSavingConditions()) return;
-    final Shell shell = my_editor.getSite().getShell();
-    final IFile jFile = ((FileEditorInput)my_editor.getEditorInput()).getFile();
+    final Shell shell = getEditor().getSite().getShell();
+    final IFile jFile = ((FileEditorInput)getEditor().getEditorInput()).
+      getFile();
     final IFile bFile;
     try {
-      bFile = FileNames.getClassFileFile(jFile, my_editor);
+      bFile = FileNames.getClassFileFile(jFile, getEditor());
     } catch (JavaModelException e) {
-      MessageDialog.openError(my_editor.getSite().getShell(),
+      MessageDialog.openError(shell,
                               GUIMessages.DISAS_MESSAGE_TITLE,
                               GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
       return;

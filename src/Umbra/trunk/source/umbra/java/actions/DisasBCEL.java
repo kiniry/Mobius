@@ -264,4 +264,13 @@ public class DisasBCEL implements IEditorActionDelegate {
     my_editor = (CompilationUnitEditor)a_target_editor;
   }
 
+  /**
+   * Returns the editor associated with the action.
+   *
+   * @return the editor associated with the action
+   */
+  protected CompilationUnitEditor getEditor() {
+    return my_editor;
+  }
+
 }
