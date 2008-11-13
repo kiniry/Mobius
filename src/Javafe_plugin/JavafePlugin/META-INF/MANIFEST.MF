@@ -31,19 +31,6 @@ Export-Package: javafe;
  javafe.test;uses:="javafe,javafe.ast,javafe.tc",
  javafe.test.lex,
  javafe.util;uses:="javafe.genericfile",
- junitutils;uses:="junit.framework",
- org.apache.bcel;uses:="org.apache.bcel.classfile,org.apache.bcel.util",
- org.apache.bcel.classfile;uses:="org.apache.bcel,org.apache.bcel.generic,org.apache.bcel.util",
- org.apache.bcel.generic;uses:="org.apache.bcel.classfile,org.apache.bcel.util",
- org.apache.bcel.util;uses:="org.apache.bcel,org.apache.bcel.generic,org.apache.bcel.classfile",
- org.apache.bcel.verifier;uses:="javax.swing.event,javax.swing",
- org.apache.bcel.verifier.exc,
- org.apache.bcel.verifier.statics;
-  uses:="org.apache.bcel.verifier,
-   org.apache.bcel,
-   org.apache.bcel.generic,
-   org.apache.bcel.classfile",
- org.apache.bcel.verifier.structurals;uses:="org.apache.bcel.verifier,org.apache.bcel,org.apache.bcel.generic",
- tohtml;uses:="javafe,javafe.ast"
-Bundle-ClassPath: libs/bcel-5.2.jar,
- libs/Javafe2.0.5.jar
+ junitutils;uses:="junit.framework"
+Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Require-Bundle: bcel.plugin;bundle-version="5.2.0"
