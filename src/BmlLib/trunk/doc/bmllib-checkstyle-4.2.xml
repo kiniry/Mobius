@@ -23,6 +23,7 @@
             <property name="format" value="^[a-z][_a-zA-Z0-9]*$"/>
         </module>
         <module name="LocalVariableName">
+            <property name="severity" value="ignore"/>
             <property name="format" value="^[a-z][_a-z0-9]*$"/>
         </module>
         <module name="MemberName">

@@ -36,11 +36,11 @@ public abstract class BCCConstantPrinting {
    * The array which contains the types of constants which are primitive
    * i.e. do not refer to other constant pool entries.
    */
-  private static byte[] PRIMITIVE_TYPES = {Constants.CONSTANT_Utf8,
-                                           Constants.CONSTANT_Integer,
-                                           Constants.CONSTANT_Float,
-                                           Constants.CONSTANT_Long,
-                                           Constants.CONSTANT_Double };
+  private static final byte[] PRIMITIVE_TYPES = {Constants.CONSTANT_Utf8,
+                                                 Constants.CONSTANT_Integer,
+                                                 Constants.CONSTANT_Float,
+                                                 Constants.CONSTANT_Long,
+                                                 Constants.CONSTANT_Double };
 
   /**
    * Gives a constant from constant pool. Constants from
@@ -163,7 +163,9 @@ public abstract class BCCConstantPrinting {
     switch (cnst.getTag()) {
       case Constants.CONSTANT_Utf8:
         kwd = DisplayStyle.UTF8_KWD;
-        bts = ((ConstantUtf8)cnst).getBytes().replace("\n", "\\n");
+        bts = "\"" +
+          ((ConstantUtf8)cnst).getBytes().replace("\n", "\\n") +
+          "\"";
         break;
       case Constants.CONSTANT_Integer:
         kwd = DisplayStyle.INTEGER_KWD;

@@ -91,8 +91,7 @@ public class BCMethod {
    *     attributes wasn't correctly parsed
    *     by this library.
    */
-  public BCMethod(final BCClass abcc,
-                  final MethodGen m)
+  public BCMethod(final BCClass abcc, final MethodGen m)
     throws ReadAttributeException {
     MLog.putMsg(MessageLog.LEVEL_PINFO,
                 "  initializing method: " + m.getName());
@@ -101,13 +100,30 @@ public class BCMethod {
     this.amap = new BCAttributeMap(this);
     final LocalVariableGen[] lvgens = m.getLocalVariables();
     final int cnt = lvgens.length > 0 ? lvgens.length : 1;
-    this.lvars = new LocalVariable[cnt];
-    this.oldvars = new LocalVariable[cnt];
-    setLocalVariables(lvgens);
-    final Type[] types = m.getArgumentTypes();
-    this.params = new LocalVariable[types.length];
-    setParams(types);
+    this.lvars = setLocalVariables(lvgens, cnt);
+    this.oldvars = setOldLocalVariables(lvars);
+    this.params = setParams(m.getArgumentTypes());
     readBMLAttributes(m);
+  }
+
+  /**
+   * The method generates the old local variables table based on the table
+   * of the local variables. The method fills in the initial segment of the
+   * table with positions of the argument which are not null.
+   *
+   * @param lvars2 the array of local variables
+   * @return the array with the old local variables
+   */
+  private LocalVariable[] setOldLocalVariables(final LocalVariable[] lvars2) {
+    final LocalVariable[] res = new LocalVariable[lvars2.length];
+    for (int i = 0; i < lvars2.length; i++) {
+      if (lvars[i] != null) {
+        final String name = lvars[i].getName();
+        res[i] = new LocalVariable(true, this, i, name,
+                                   lvars[i].getBcelLvGen());
+      }
+    }
+    return res;
   }
 
   /**
@@ -130,16 +146,20 @@ public class BCMethod {
   }
 
   /**
-   * The method fills in the local variables and old local variables tables
-   * with the variables based on the values in the given array of local
-   * variable generators. The method fills in the initial segments of the
-   * tables. The size of the given array of local variables should be not
-   * greater than the sizes of the local tables. If this is greater the
-   * {@link IndexOutOfBoundsException} is thrown.
+   * The method creates the local variables table with the variables based on
+   * the values in the given array of local variable generators. The method
+   * creates an array of the given length and fills in the initial segment of
+   * it. This array handles the special case when the table with variable
+   * generators is empty. It assumes then that the local variables table
+   * should contain the representation of this.
    *
    * @param lvgens the array of local variable generators
+   * @param len the length of the local variable array
+   * @return the array with local variables
    */
-  private void setLocalVariables(final LocalVariableGen[] lvgens) {
+  private LocalVariable[] setLocalVariables(final LocalVariableGen[] lvgens,
+                                            final int len) {
+    final LocalVariable[] res = new LocalVariable[len];
     final int cnt = lvgens.length;
     if (cnt == 0) {
       final JavaClass jc = bcc.getJC();
@@ -148,13 +168,13 @@ public class BCMethod {
       final Type t = Type.getType(typename);
       this.lvars[0] = new LocalVariable(false, this, 0, "this",
         new LocalVariableGen(0, "this", t, null, null));
-      return;
+      return res;
     }
     for (int i = 0; i  <  cnt; i++) {
       final String name = lvgens[i].getName();
-      this.lvars[i] = new LocalVariable(false, this, i, name, lvgens[i]);
-      this.oldvars[i] = new LocalVariable(true, this, i, name, lvgens[i]);
+      res[i] = new LocalVariable(false, this, i, name, lvgens[i]);
     }
+    return res;
   }
 
   /**
@@ -165,8 +185,11 @@ public class BCMethod {
    * the {@link IndexOutOfBoundsException} is thrown.
    *
    * @param paramsNames the array of parameter types
+   * @return the array with the {@link LocalVariable} objects describing
+   *   the parameters
    */
-  private void setParams(final Type[] paramsNames) {
+  private LocalVariable[] setParams(final Type[] paramsNames) {
+    final LocalVariable[] res = new  LocalVariable[paramsNames.length];
     final int cnt = paramsNames.length;
     for (int i = 0; i  <  cnt; i++) {
       String name;
@@ -178,8 +201,9 @@ public class BCMethod {
         name = null;
         lvgen = new LocalVariableGen(i + 1, null, paramsNames[i], null, null);
       }
-      this.params[i] = new LocalVariable(false, this, i + 1, name, lvgen);
+      res[i] = new LocalVariable(false, this, i + 1, name, lvgen);
     }
+    return res;
   }
 
   /**
@@ -292,15 +316,19 @@ public class BCMethod {
    *     method.
    */
   public LocalVariable getLocalVariable(final boolean isOld, final int index) {
+    LocalVariable res;
     if (lvars.length > 1) {
       if (isOld) {
-        return this.oldvars[index];
+        res = this.oldvars[index];
+      } else {
+        res = this.lvars[index];
       }
-      return this.lvars[index];
+    } else if (index == 0) {
+      res = this.lvars[0];
+    } else {
+      res = this.params[index - 1];
     }
-    if (index == 0) return this.lvars[0];
-    else
-      return this.params[index - 1];
+    return res;
   }
 
   /**
@@ -492,11 +520,16 @@ public class BCMethod {
   }
 
   /**
+   * Checks if the given index is a proper index of a local
+   * variable in the current method. This method checks the local
+   * variable table and in case this is not present it refers
+   * to the number of parameters.
    *
-   * @param i
-   * @return
+   * @param i the index to check
+   * @return <code>true</code> in case the index can be a local
+   *   variable index, <code>false</code> otherwise
    */
-  public boolean canBeLocalVariable(int i) {
+  public boolean canBeLocalVariable(final int i) {
     if (lvars.length > 1) {
       return 0 <= i && i < lvars.length;
     }
