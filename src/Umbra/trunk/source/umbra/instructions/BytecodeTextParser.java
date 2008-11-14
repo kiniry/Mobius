@@ -79,11 +79,21 @@ public abstract class BytecodeTextParser {
   public static String extractCommentFromLine(final String a_line_text,
                                         final LineContext a_ctxt) {
     if (a_ctxt.isInsideComment()) return null;
-    final int i = a_line_text.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK);
-    if (i == -1) {
+    final InstructionParser parser = new InstructionParser(a_line_text);
+    int posq = a_line_text.indexOf("\"");
+    int posc = a_line_text.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK);
+    parser.moveIndex(posq + 1);
+    while (0 <= posq && posq <= posc) {
+      parser.swallowString();
+      posq = a_line_text.indexOf("\"", parser.getIndex() + 1);
+      posc = a_line_text.indexOf(BytecodeStrings.SINGLE_LINE_COMMENT_MARK,
+                            parser.getIndex() + 1);
+      parser.moveIndex(parser.getIndex() - posq - 1);
+    }
+    if (posc == -1) {
       return null;
     }
-    String nl = a_line_text.substring(i +
+    String nl = a_line_text.substring(posc +
                                   BytecodeStrings.SINGLE_LINE_COMMENT_MARK_LEN,
                                   a_line_text.length());
     if (nl.indexOf('\n') >= 0)

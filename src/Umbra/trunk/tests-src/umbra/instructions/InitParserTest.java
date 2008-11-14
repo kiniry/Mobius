@@ -18,9 +18,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import annot.bcclass.BCClass;
+
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeEditor;
 import umbra.instructions.InitParser;
 import umbra.instructions.LineContext;
+import umbra.lib.BMLParsing;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraSyntaxException;
@@ -34,6 +38,9 @@ public class InitParserTest {
 
   private static String my_content = 
     "package [default]\n" +
+    "\n" +
+    "Constant pool:\n" +
+    "  const #1 = Class #2;\n" +
     "\n" +
     "public class List\n" +
     "\n" +
@@ -85,10 +92,12 @@ public class InitParserTest {
     my_doc = new BytecodeDocument();
     my_doc.set(my_content);
     final ClassPath cp = 
-     new ClassPath("tests-src/tests");
+     new ClassPath("tests-src/data");
     final SyntheticRepository repo = SyntheticRepository.getInstance(cp);
     final JavaClass jc = repo.loadClass("List");
-    //my_parser = new InitParser(my_doc, null);
+    BytecodeEditor editor = new BytecodeEditor();
+    my_doc.setEditor(editor, new BMLParsing(new BCClass(jc)));
+    my_parser = new InitParser(my_doc, null, null);
   }
 
   /**

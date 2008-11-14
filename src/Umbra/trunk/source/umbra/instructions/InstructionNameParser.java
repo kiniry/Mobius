@@ -184,8 +184,8 @@ public class InstructionNameParser extends InstructionParserGeneric {
   protected boolean swallowMethodName() {
     final String line = getLine();
     while (swallowIdentifier()) {
-      if (!( (line.charAt(getIndex()) == '.') ||
-             (line.charAt(getIndex()) == '/'))) {
+      if (!((line.charAt(getIndex()) == '.') ||
+            (line.charAt(getIndex()) == '/'))) {
         return Character.isWhitespace(line.charAt(getIndex()));
       }
       incIndex();

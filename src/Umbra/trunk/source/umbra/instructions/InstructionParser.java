@@ -393,4 +393,31 @@ public class InstructionParser extends InstructionTypeParser {
     return swallowFieldType();
   }
 
+  /**
+   * This method swallows a signed number starting from the current
+   * position of the index. This method may not advance the index in case
+   * the first character to be analysed is not a digit or "-".
+   * This method assumes that a
+   * number is finished when a whitespace or end of string is met.
+   * In case the whitespace is not met after the string the number is not
+   * considered to be successfully swallowed.
+   *
+   * @return <code>true</code> when a number was successfully swallowed,
+   *   <code>false</code> otherwise
+   */
+  public boolean swallowSignedNumber() {
+    boolean res = true;
+    final String line = getLine();
+    final int index = getIndex();
+    if (index == line.length()) res = false;
+    if (line.charAt(index) == '-' && res) {
+      incIndex();
+      res = swallowNumber();
+      my_result = -my_result;
+    } else {
+      res = swallowNumber();
+    }
+    return res;
+  }
+
 }

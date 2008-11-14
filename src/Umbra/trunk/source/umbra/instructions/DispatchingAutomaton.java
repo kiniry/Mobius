@@ -43,7 +43,7 @@ public class DispatchingAutomaton {
    * This field represents the set of the outgoing edges from the current
    * node of the automaton.
    */
-  private TreeMap < Character, DispatchingAutomaton > my_outgoing;
+  private TreeMap my_outgoing;
 
   /**
    * This is the class which should be created in case the given parsed string
@@ -64,7 +64,7 @@ public class DispatchingAutomaton {
    */
   public DispatchingAutomaton() {
     my_rule = DEFAULT_RULE;
-    my_outgoing = new TreeMap < Character, DispatchingAutomaton > ();
+    my_outgoing = new TreeMap();
   }
 
   /**
@@ -123,7 +123,7 @@ public class DispatchingAutomaton {
     final String rest = a_string.substring(1);
     final DispatchingAutomaton next_auto;
     if (my_outgoing.containsKey(key)) {
-      next_auto = my_outgoing.get(key);
+      next_auto = (DispatchingAutomaton)my_outgoing.get(key);
     } else {
       next_auto = new DispatchingAutomaton();
       my_outgoing.put(key, next_auto);
@@ -165,7 +165,7 @@ public class DispatchingAutomaton {
     final String rest = a_string.substring(1);
     final DispatchingAutomaton next_auto;
     if (my_outgoing.containsKey(key)) {
-      next_auto = my_outgoing.get(key);
+      next_auto = (DispatchingAutomaton)my_outgoing.get(key);
     } else {
       next_auto = new DispatchingAutomaton();
       my_outgoing.put(key, next_auto);
@@ -213,7 +213,8 @@ public class DispatchingAutomaton {
     final Character key = Character.valueOf(a_string.charAt(0));
     final String next = a_string.substring(1);
     if (my_outgoing.containsKey(key)) {
-      final DispatchingAutomaton nexta = my_outgoing.get(key);
+      final DispatchingAutomaton nexta =
+        (DispatchingAutomaton)my_outgoing.get(key);
       return nexta.execForString(next, a_param);
     } else {
       return callConstructor(a_param);

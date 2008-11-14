@@ -128,7 +128,7 @@ public class InstructionParserGeneric {
 
   /*@
     @ requires 0 <=  a_step && a_step <= my_line.length() - my_index ||
-    @          - my_index <= a_step &&  a_step < 0 && ;
+    @          - my_index <= a_step &&  a_step < 0;
     @ ensures my_index == \old(my_index) + a_step;
     @*/
   /**

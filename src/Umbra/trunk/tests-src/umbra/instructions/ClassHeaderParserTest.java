@@ -6,9 +6,11 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package adhoc;
+package umbra.instructions;
 
 import static org.junit.Assert.*;
+
+import org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.AfterClass;

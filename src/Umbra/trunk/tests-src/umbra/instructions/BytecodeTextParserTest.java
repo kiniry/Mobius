@@ -48,7 +48,22 @@ public class BytecodeTextParserTest {
    */
   @Test
   public void testExtractCommentFromLine() {
-    fail("Not yet implemented");
+    LineContext ctxt = new LineContext(); 
+    assertEquals("simple comment",
+      " some comment",
+      BytecodeTextParser.extractCommentFromLine("a // some comment", ctxt));
+    assertEquals("no comment",
+      null,
+      BytecodeTextParser.extractCommentFromLine("a ", ctxt));
+    assertEquals("string + comment",
+      " c",
+      BytecodeTextParser.extractCommentFromLine("\"a\" // c", ctxt));
+    assertEquals("string + comment in string",
+      " c",
+      BytecodeTextParser.extractCommentFromLine("\"//\" // c", ctxt));
+    assertEquals("string + string in comment",
+      " \" \"c",
+      BytecodeTextParser.extractCommentFromLine("\"//\" // \" \"c", ctxt));
   }
 
   /**

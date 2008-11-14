@@ -71,7 +71,7 @@ public class PushInstruction extends NumInstruction {
     res = res && (parser.swallowMnemonic(BytecodeStrings.PUSH_INS) >= 0);
                            //mnemonic
     res = res && parser.swallowWhitespace(); //whitespace before the number
-    res = res && parser.swallowNumber(); // number
+    res = res && parser.swallowSignedNumber(); // number
     res = res && !parser.swallowWhitespace();
     return res;
   }
@@ -92,7 +92,7 @@ public class PushInstruction extends NumInstruction {
     parser.resetParser();
     parser.seekMnemonic(BytecodeStrings.PUSH_INS); // mnemonic
     parser.swallowWhitespace(); //whitespace before the num
-    parser.swallowNumber(); // number
+    parser.swallowSignedNumber(); // number
     return parser.getResult();
   }
 

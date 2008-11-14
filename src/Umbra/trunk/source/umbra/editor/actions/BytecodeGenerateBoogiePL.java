@@ -188,7 +188,7 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
    * @param the_types the types of the classes to be compiled
    */
   public void compile(final String an_outfile,
-                      final JClassType... the_types) {
+                      final JClassType the_types) {
     final String[] s = new String[1];
     s[0] = an_outfile.replace(FileNames.BOOGIEPL_EXTENSION,
                               FileNames.CLASS_EXTENSION);
@@ -203,8 +203,9 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     TypeLoader.setTroubleReporter(main);
     BPLProgram program = new Translator(project).translate(the_types);
 
-    for (IBPLTransformator transformator : project.getTransformators()) {
-      program = transformator.transform(program);
+    IBPLTransformator[] transformators = project.getTransformators();
+    for (int i = 0 ; i < transformators.length; i++) {
+      program = transformators[i].transform(program);
     }
     try {
       PrintWriter writer;
