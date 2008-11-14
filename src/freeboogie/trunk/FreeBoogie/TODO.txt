@@ -1,3 +1,4 @@
+ . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
  . Desugar dependent types in procedure signatures.
    Take care of arrays (does the prover know about arrays?)

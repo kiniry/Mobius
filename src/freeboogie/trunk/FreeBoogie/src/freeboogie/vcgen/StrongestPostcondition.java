@@ -30,7 +30,7 @@ import freeboogie.util.Closure;
  *
  * The formulas are built using a {@code TermBuilder} that is
  * handed to us by the user. That {@code TermBuilder} must know
- * about the terms "const_pred", "and", "or", and "implies".
+ * about the terms "literal_pred", "and", "or", and "implies".
  *
  * The nodes with no predecessors are considered
  * initial; the nodes with no successors are considered
@@ -85,7 +85,7 @@ public class StrongestPostcondition {
 
   public void setBuilder(TermBuilder term) { 
     this.term = term; 
-    TRUE = term.mk("literal_bool", Boolean.valueOf(true));
+    TRUE = term.mk("literal_formula", Boolean.valueOf(true));
   }
   
   /**

@@ -80,9 +80,9 @@ public class SimplifyProver extends Prover {
       sb.append(st.data);
     } else if (st.id.equals("literal_bool")) {
       if ((Boolean)st.data)
-        sb.append("TRUE");
+        sb.append("$$TRUE");
       else
-        sb.append("FALSE");
+        sb.append("$$FALSE");
     } else if (st.id.startsWith("map_update")) {
       sb.append("($$update ");
       printArgs(st.children, sb);

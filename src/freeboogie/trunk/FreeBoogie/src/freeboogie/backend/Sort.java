@@ -7,18 +7,28 @@ import freeboogie.tc.TypeUtils;
 /**
  * The sorts we use to inform the prover about Boogie types.
  *
- * Boogie 'bool' maps to prover booleans; Boogie 'int' maps to
- * prover integers. All other Boogie types have sort 'value'.
+ * Boogie 'int' maps to Sort.INT.
+ * Boogie 'bool' maps to Sort.BOOL. This may map to formulas or to terms.
+ * Boogie axioms map to Sort.PRED. This maps to formulas.
+ * 
+ * Provers have formulas that evaluate to true/false if all their
+ * variables are bound and terms that are just 'stuff'. Uninterpreted
+ * functions can *only* be applied to terms to give another term.
+ * Some provers allow the constructions of terms out of formulas
+ * (those that read SMT) but some don't (Simplify): (ite true/false t1 t2).
+ * For those that don't we can't map Boogie 'bool' to formulas,
+ * we must introduce constants "$$true" and "$$false".
  *
  * @author rgrig 
  */
 public enum Sort {
-  /** supertype for all non-predicates */ VALUE(null),
-  /** a variable with unknown sort */ VARVALUE(VALUE),
-  /** a boolean value */ BOOL(VALUE),
-  /** a boolean variable */ VARBOOL(BOOL),
-  /** an integer */ INT(VALUE),
-  /** an integer variable */ VARINT(INT);
+  FORMULA(null),
+  TERM(null),
+  VARTERM(TERM),
+  BOOL(TERM),
+  VARBOOL(BOOL),
+  INT(TERM),
+  VARINT(INT);
   
   
   /* Note: The VARx sorts are used for better checking of quantifiers.
@@ -53,6 +63,6 @@ public enum Sort {
     // TODO keep more information in the sort?
     if (TypeUtils.isInt(t)) return INT;
     else if (TypeUtils.isBool(t)) return BOOL;
-    return VALUE;
+    return TERM;
   }
 }

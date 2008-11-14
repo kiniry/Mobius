@@ -56,10 +56,11 @@ public class TermOfExpr extends Evaluator<Term> {
       if (TypeUtils.isBool(t)) return term.mk("var_bool", id);
       return term.mk("var", id);
     } else if (d instanceof ConstDecl) {
+      // TODO I might want to keep track of constness
       t = ((ConstDecl)d).getType();
-      if (TypeUtils.isInt(t)) return term.mk("const_int", id);
-      if (TypeUtils.isBool(t)) return term.mk("const_bool", id);
-      return term.mk("const", id);
+      if (TypeUtils.isInt(t)) return term.mk("var_int", id);
+      if (TypeUtils.isBool(t)) return term.mk("var_bool", id);
+      return term.mk("var", id);
     } else assert false; // what is it then?
     return null;
   }
@@ -68,11 +69,11 @@ public class TermOfExpr extends Evaluator<Term> {
   public Term eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
-      return term.mk("literal_bool", Boolean.valueOf(true));
+      return term.mk("literal_formula", Boolean.valueOf(true));
     case FALSE:
-      return term.mk("literal_bool", Boolean.valueOf(false));
+      return term.mk("literal_formula", Boolean.valueOf(false));
     case NULL:
-      return term.mk("literal", "null");
+      return term.mk("literal_term", "null");
     default:
       assert false;
       return null;
@@ -105,14 +106,14 @@ public class TermOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomOld atomOld, Expr e) {
-    assert false;
+    assert false : "old() should have dissapeared during passivation";
     return e.eval(this);
   }
 
   @Override
   public Term eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
-    assert false; // TODO: Implement.
-    return null;
+    // TODO
+    return term.mk("literal_formula", true);
   }
 
   @Override
