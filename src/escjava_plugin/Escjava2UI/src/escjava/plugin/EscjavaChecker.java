@@ -205,7 +205,7 @@ public class EscjavaChecker extends escjava.Main
 	  // Simplify can get installed without being executable.
 	  // This is an attempt to fix that, at least on Unix-like platforms
 	  // This fails benignly on Windows platforms, but they don't need 
-	  // any changes in premissions
+	  // any changes in permissions
 	  try {
 	    if (simplifyloc == null || !loc.equals(simplifyloc)) {
 		    Process p = Runtime.getRuntime().exec(
