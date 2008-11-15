@@ -4,3 +4,4 @@ Bundle-Name: BCEL library plugin
 Bundle-SymbolicName: bcel.plugin
 Bundle-Version: 5.2.0
 Bundle-ClassPath: bcel-5.2.jar
+Bundle-ActivationPolicy: lazy
