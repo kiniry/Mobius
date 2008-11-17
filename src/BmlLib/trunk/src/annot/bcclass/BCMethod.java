@@ -150,8 +150,8 @@ public class BCMethod {
    * the values in the given array of local variable generators. The method
    * creates an array of the given length and fills in the initial segment of
    * it. This array handles the special case when the table with variable
-   * generators is empty. It assumes then that the local variables table
-   * should contain the representation of this.
+   * generators is empty and method is an object method. It assumes then that
+   * the local variables table should contain the representation of this.
    *
    * @param lvgens the array of local variable generators
    * @param len the length of the local variable array
@@ -161,7 +161,7 @@ public class BCMethod {
                                             final int len) {
     final LocalVariable[] res = new LocalVariable[len];
     final int cnt = lvgens.length;
-    if (cnt == 0) {
+    if (cnt == 0 && !bcelMethod.isStatic()) {
       final JavaClass jc = bcc.getJC();
       final String typename = "L" + jc.getPackageName() +
                               jc.getClassName() + ";";
