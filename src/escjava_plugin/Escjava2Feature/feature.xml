@@ -756,10 +756,6 @@ limitations under the License.
          version="0.0.0"
          name="Simplify"/>
 
-   <includes
-         id="mobius.library.feature"
-         version="0.0.0"/>
-
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
