@@ -202,7 +202,7 @@ integer_cp_entry : INTEGER_CP ( sign )? NAT SEMICOLON;
 
 float_cp_entry : FLOAT_CP ( sign )? floating_point_literal SEMICOLON;
 
-long_cp_entry : LONG_CP ( sign )? NAT SEMICOLON;
+long_cp_entry : LONG_CP ( sign )? NATL SEMICOLON;
 
 double_cp_entry : DOUBLE_CP ( sign )? floating_point_literal SEMICOLON;
 
@@ -1104,6 +1104,7 @@ FLOAT_CP: 'Float';
 
 IDENT: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 NAT: ('0'..'9')+;
+NATL: ('0'..'9')+'L';
 STRING: '\"' (.* (~('\\')))? '\"';
 
 WS: (' '|'\t')+ {skip();};
