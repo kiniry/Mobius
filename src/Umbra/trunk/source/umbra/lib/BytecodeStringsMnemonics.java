@@ -49,7 +49,8 @@ public class BytecodeStringsMnemonics extends BytecodeStringsGeneric {
    * This constant contains an array with all the names of instructions handled
    * in {@link umbra.instructions.ast.IConstInstruction} class.
    */
-  public static final String[] ICONST_INS = new String[] {"iconst_0",
+  public static final String[] ICONST_INS = new String[] {"iconst_m1",
+                                                          "iconst_0",
                                                           "iconst_1",
                                                           "iconst_2",
                                                           "iconst_3",

@@ -70,10 +70,12 @@ public class IConstInstruction extends SingleInstruction {
                              final /*@ nullable @*/ Instruction a_res) {
     Instruction ires = a_res;
     final int num = extractConstNumber(getName(), MAX_ICONST_NUM);
-    if (num >= 0) {
+    if (num >= -1) {
       final String iName = extractInsName(getName());
       if (iName.equals("iconst"))
         ires = new ICONST(num);
+    } else if (getName().equals("iconst_m1")) {
+      ires = new ICONST(-1);
     }
     return ires;
   }
