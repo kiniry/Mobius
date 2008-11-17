@@ -2,20 +2,21 @@
 <feature
       id="mobius.Escjava2.feature"
       label="ESC/Java2"
-      version="2.0.7"
+      version="2.0.8"
       provider-name="David R. Cok and EU MOBIUS IST-15905 Project"
       plugin="mobius.escjava2.plugin">
    <install-handler/>
 
    <description>
-      This feature conatins the ESC/Java2 extended static checker and its subsystems, including Javafe.
+      This feature contains the ESC/Java2 version 2.0.5 extended static
+checker and its subsystems, including Javafe version 2.0.6.
    </description>
 
    <copyright>
       Copyright (c) 2004-2005 David R. Cok.
 Copyright (c) 2004-2007 Joe Kiniry, Radboud University Nijmegen,
 and University College Dublin.
-Copyright (c) 2006-2007 EU Mobius IST-15905 project.
+Copyright (c) 2006-2008 EU Mobius IST-15905 project.
    </copyright>
 
    <license>
@@ -755,6 +756,10 @@ limitations under the License.
          version="0.0.0"
          name="Simplify"/>
 
+   <includes
+         id="mobius.library.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
@@ -762,16 +767,12 @@ limitations under the License.
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.debug.core"/>
+      <import plugin="mobius.escjava2.esctools" version="2.0.8" match="greaterOrEqual"/>
+      <import plugin="mobius.pluginlib" version="1.0.0" match="greaterOrEqual"/>
+      <import plugin="mobius.javafe.plugin" version="2.0.8" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.console"/>
-      <import plugin="mobius.simplify.plugin"/>
    </requires>
-
-   <plugin
-         id="mobius.escjava2.esctools"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="mobius.escjava2.plugin"
@@ -780,13 +781,21 @@ limitations under the License.
          version="0.0.0"/>
 
    <plugin
-         id="mobius.javafe.plugin"
+         id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="mobius.pluginlib"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.simplify.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
