@@ -167,9 +167,9 @@ packageinfo :
 
 typename returns [String name] :
     i=IDENT { $name = $i.getText(); }
-    ((DIV | DOT) typename { $name +=  '/' + $typename.name; })?
+    ((DIV | DOT) n=typename { $name +=  '/' + $n.name; })?
   | STRING_CP { $name = "String"; }
-    ((DIV | DOT) typename { $name +=  '/' + $typename.name; })?;
+    ((DIV | DOT) n=typename { $name +=  '/' + $n.name; })?;
 
 constant_pools : constant_pool ( second_constant_pool )? EOL;
 
@@ -439,7 +439,7 @@ type :
   | built_in_type ;
   
 reference_type :
-  typename {syso("reference type");};
+  name=typename {syso("reference type: " + $name.name);};
 
 built_in_type :
   (  VOID
@@ -454,7 +454,7 @@ built_in_type :
 
 
 methodheader :
-  (i=IDENT | i=CONSNAME)
+  (i=IDENT | i=CONSNAME | i = STATICCONSNAME)
   {
      syso("method IDENT=" + $i.getText());
   }
@@ -467,14 +467,22 @@ formals :
   PAR_LEFT {syso("before param_declaration_list");} param_declaration_list? PAR_RIGHT;
 
 param_declaration_list : {syso("started param_declaration_list");}
-    param_declaration (COMMA param_declaration)*
+    param_declaration
+      {
+         syso("first param");
+      }
+    (COMMA param_declaration
+      {
+         syso("second or further param");
+      }
+    )*
   | param_declaration_noname (COMMA param_declaration_noname)*;
 
 param_declaration :
-  param_modifier? type_spec i=IDENT 
+  param_modifier? type_spec (i=IDENT
     {
        syso("IDENT=" + $i.getText());
-    } 
+    } | exponent_indicator | float_type_suffix)
   dims?
     {
       syso("param_declaration");
@@ -1010,6 +1018,7 @@ THROWS: 'throws';
 // IDisplayStyle must be modified as well
 
 CONSNAME: '<init>';
+STATICCONSNAME: '<clinit>';
 ASSERT: 'assert';
 LOOPSPEC: 'loop_specification';
 LINVARIANT: 'loop_inv';

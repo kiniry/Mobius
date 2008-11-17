@@ -7,7 +7,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="/BML_BPL_Translator/src"/>
 	<classpathentry kind="src" path="translation"/>
-	<classpathentry kind="lib" path="lib/antlr-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/antlr-3.0.1.jar" sourcepath="lib/antlr-3.0.1/runtime/Java/src"/>
 	<classpathentry kind="lib" path="lib/antlr-runtime-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/stringtemplate-3.1b1.jar"/>
 	<classpathentry kind="lib" path="lib/antlr-2.7.7.jar"/>
