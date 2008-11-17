@@ -23,6 +23,7 @@ import freeboogie.tc.TypeUtils;
  */
 public enum Sort {
   FORMULA(null),
+  VARFORMULA(FORMULA),
   TERM(null),
   VARTERM(TERM),
   BOOL(TERM),

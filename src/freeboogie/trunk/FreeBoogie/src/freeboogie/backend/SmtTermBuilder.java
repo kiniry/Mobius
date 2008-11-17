@@ -27,6 +27,7 @@ public class SmtTermBuilder extends TermBuilder {
     def("var", String.class, Sort.VARTERM);
     def("var_int", String.class, Sort.VARINT);
     def("var_bool", String.class, Sort.VARBOOL);
+    def("var_formula", String.class, Sort.VARFORMULA);
 
     def("literal_int", BigInteger.class, Sort.INT);
     def("literal_bool", Boolean.class, Sort.BOOL);
