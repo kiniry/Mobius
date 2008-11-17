@@ -3,5 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Simplify Plug-in
 Bundle-SymbolicName: mobius.simplify.plugin;singleton:=true
 Bundle-Version: 1.5.6
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: David R. Cok and EU Project "Mobius" (IST-159050)
