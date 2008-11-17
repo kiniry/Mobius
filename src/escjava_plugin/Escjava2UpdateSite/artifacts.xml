@@ -1,88 +1,108 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?artifactRepository class='org.eclipse.equinox.internal.p2.artifact.repository.simple.SimpleArtifactRepository' version='1.0.0'?>
-<repository name='file:/Users/dcochran/Sandbox/ESCJava2_Workspace/Escjava2UpdateSite/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
+<repository name='file:/Users/Dermot/Documents/LGSSE/workspace/Escjava2UpdateSite/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1226579544877'/>
+    <property name='p2.timestamp' value='1226775571357'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='11'>
+  <artifacts size='14'>
     <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
       <properties size='3'>
-        <property name='artifact.size' value='213799'/>
-        <property name='download.size' value='213799'/>
+        <property name='artifact.size' value='210636'/>
+        <property name='download.size' value='210636'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='osgi.bundle' id='org.eclipse.jdt.ui' version='3.4.1.r341_v20080827-1100'>
+    <artifact classifier='osgi.bundle' id='mobius.simplify.plugin' version='1.5.5'>
       <properties size='3'>
-        <property name='artifact.size' value='9644568'/>
-        <property name='download.size' value='9644568'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='mobius.library.feature' version='1.0.0'>
-      <properties size='2'>
-        <property name='artifact.size' value='9984'/>
-        <property name='download.size' value='9984'/>
-      </properties>
-    </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='mobius.Escjava2.feature' version='2.0.8'>
-      <properties size='2'>
-        <property name='artifact.size' value='9898'/>
-        <property name='download.size' value='9898'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='mobius.simplify.plugin' version='1.5.6'>
-      <properties size='3'>
-        <property name='artifact.size' value='6029386'/>
-        <property name='download.size' value='6029386'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
-      <properties size='3'>
-        <property name='artifact.size' value='213993'/>
-        <property name='download.size' value='213993'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
-      <properties size='3'>
-        <property name='artifact.size' value='213987'/>
-        <property name='download.size' value='213987'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='mobius.escjava2.esctools' version='2.0.8'>
-      <properties size='3'>
-        <property name='artifact.size' value='1935828'/>
-        <property name='download.size' value='1935828'/>
-        <property name='download.contentType' value='application/zip'/>
-      </properties>
-    </artifact>
-    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
-      <properties size='3'>
-        <property name='artifact.size' value='213804'/>
-        <property name='download.size' value='213804'/>
+        <property name='artifact.size' value='7014056'/>
+        <property name='download.size' value='7014056'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='mobius.pluginlib' version='1.0.0'>
       <properties size='3'>
-        <property name='artifact.size' value='41743'/>
-        <property name='download.size' value='41743'/>
+        <property name='artifact.size' value='41899'/>
+        <property name='download.size' value='41899'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
-    <artifact classifier='org.eclipse.update.feature' id='mobius.simplify.feature' version='1.5.6'>
+    <artifact classifier='osgi.bundle' id='mobius.simplify.plugin' version='1.5.6'>
+      <properties size='3'>
+        <property name='artifact.size' value='6029547'/>
+        <property name='download.size' value='6029547'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='mobius.simplify.feature' version='1.5.5'>
       <properties size='2'>
-        <property name='artifact.size' value='1593'/>
-        <property name='download.size' value='1593'/>
+        <property name='artifact.size' value='1755'/>
+        <property name='download.size' value='1755'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='mobius.Escjava2.feature' version='2.0.7'>
+      <properties size='2'>
+        <property name='artifact.size' value='9830'/>
+        <property name='download.size' value='9830'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.javafe.plugin' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='667603'/>
+        <property name='download.size' value='667603'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='mobius.simplify.feature' version='1.5.5'>
+      <properties size='2'>
+        <property name='artifact.size' value='1757'/>
+        <property name='download.size' value='1757'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='mobius.Escjava2.feature' version='2.0.8'>
+      <properties size='2'>
+        <property name='artifact.size' value='9864'/>
+        <property name='download.size' value='9864'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.escjava2.esctools' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='1929809'/>
+        <property name='download.size' value='1929809'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='210347'/>
+        <property name='download.size' value='210347'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='210633'/>
+        <property name='download.size' value='210633'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.pluginlib' version='1.0.0'>
+      <properties size='3'>
+        <property name='artifact.size' value='41878'/>
+        <property name='download.size' value='41878'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.escjava2.plugin' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='210599'/>
+        <property name='download.size' value='210599'/>
+        <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
   </artifacts>
