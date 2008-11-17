@@ -1,4 +1,4 @@
-Release Date: November 2008
+Release Date: 7 November 2008
 
 This ESC/Java2 plugin, version 2.0.8, uses 
   ESC/Java2 command line version 2.0.5, 
