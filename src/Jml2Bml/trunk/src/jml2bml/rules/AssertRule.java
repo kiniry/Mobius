@@ -71,7 +71,7 @@ public class AssertRule extends TranslationRule < String, Symbols > {
       final MethodTree method = (MethodTree) finder.getAncestor(node,
                                                                 Kind.METHOD);
       final BCMethod bcMethod = BytecodeUtil
-          .findMethod(method.getName(), clazz);
+          .findMethod(method.getName(), null, clazz);
 
       if (node.expression != null) {
         final AbstractFormula form = TranslationUtil

@@ -22,7 +22,6 @@ import annot.bcexpression.LocalVariable;
 import annot.bcexpression.javatype.JavaType;
 
 import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Context;
 
@@ -129,9 +128,8 @@ public class SymbolsBuilder extends
    */
   private void handleLocal(final JmlVariableDecl node, final Tree method,
                            final Symbols s) {
-    System.out.println(node.name.toString());
     final BCClass cl = s.findClass();
-    final BCMethod m = BytecodeUtil.findMethod(((MethodTree) method).getName(),
+    final BCMethod m = BytecodeUtil.findMethod(((JmlMethodDecl) method).getName(),((JmlMethodDecl) method).params, 
                                                cl);
     LocalVariable var = m.findLocalVariable(node.name.toString());
     if (var == null) {
@@ -145,7 +143,7 @@ public class SymbolsBuilder extends
   }
 
   private int getIndex(final BCMethod m, final String name) {
-    if (m.equals(currentMethod)) {
+    if (!m.equals(currentMethod)) {
       index = 0;
       currentMethod = m;
       mapping = new HashMap < String, Integer >();

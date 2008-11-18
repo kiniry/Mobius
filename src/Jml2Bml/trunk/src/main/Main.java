@@ -131,8 +131,7 @@ public class Main {
     } catch (NotTranslatedRuntimeException e) {
       throw new NotTranslatedException(e);
     }
-
-    clazz.saveToFile(classLoc.getClassFilePath());
+    clazz.saveToFile(classLoc.getClassFilePath() +"-wyn");
     log.info(clazz.printCode());
   }
 

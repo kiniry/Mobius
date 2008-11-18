@@ -31,6 +31,7 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
+import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.ModifyList;
@@ -103,7 +104,7 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
       if (node.token == JmlToken.REQUIRES) {
         final AbstractFormula form = TranslationUtil
             .getFormula(node.expression, symb, myContext);
-        if (precondition == null) {
+        if (precondition == TRUE) {
           precondition = form;
         } else {
           precondition = new Formula(Code.AND, precondition, form);
@@ -114,7 +115,7 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
         if (postcondition == null) {
           postcondition = form;
         } else {
-          postcondition = new Formula(Code.AND, precondition, form);
+          postcondition = new Formula(Code.AND, postcondition, form);
         }
       } else
         throw new NotTranslatedRuntimeException("Not implemented: " + node);
@@ -159,6 +160,9 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
   /** Application context. */
   private final Context myContext;
 
+  /** Predicate representing true */
+  private final AbstractFormula TRUE = new Predicate0Ar(true);
+  
   /** Precondition of the current specification case. */
   private AbstractFormula precondition;
 
@@ -207,7 +211,7 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
   public String visitJmlSpecificationCase(final JmlSpecificationCase node,
                                           final Symbols symb) {
     //FIXME: should be cleaned?? one instance of rule per execution??
-    precondition = null;
+    precondition = TRUE;
     modifies = null;
     postcondition = null;
     excondition = null;
@@ -222,8 +226,9 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
     final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
     final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
+    
     final BCMethod bcMethod = BytecodeUtil
-        .findMethod(method.getName(), bcClazz);
+        .findMethod(method.getName(), method.params, bcClazz);
     MethodSpecification spec = bcMethod.getMspec();
     if (spec == null) {
       spec = new MethodSpecification(bcMethod);

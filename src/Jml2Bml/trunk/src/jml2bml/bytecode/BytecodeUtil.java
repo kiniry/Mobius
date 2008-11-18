@@ -7,6 +7,8 @@
 package jml2bml.bytecode;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import jml2bml.bmllib.ConstantPoolHelper;
@@ -14,8 +16,10 @@ import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
+import org.apache.bcel.generic.Type;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
@@ -26,6 +30,7 @@ import annot.io.ReadAttributeException;
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
@@ -49,16 +54,47 @@ public final class BytecodeUtil {
    * @return BCMethod representing method <code>name</code>,
    * or null, if the method was not found.
    */
-  public static BCMethod findMethod(final CharSequence name,
+  public static BCMethod findMethod(final CharSequence name, List<JCVariableDecl> parameters,
                                     final BCClass clazz) {
+    List<BCMethod> candidates = new LinkedList < BCMethod >();
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
-      if (method.getBcelMethod().getName().contentEquals(name))
+      if (method.getBcelMethod().getName().contentEquals(name)){
+        Type[] types = method.getBcelMethod().getArgumentTypes();
+        
+        if (types.length != parameters.size()){
+          continue;
+        }
+        for (int j = 0; j < types.length; j++){
+          String bcelTypeName = extractNameFromType(types[j]);
+        
+          if (bcelTypeName != parameters.get(j).vartype.toString()){
+            continue;
+          }
+                    
+        }
+        candidates.add(method);
         return method;
+      }
     }
-    return null;
+    if (candidates.size() != 1){
+      String errMsg = "Multiple candidates for method " + name + ": ";
+      for (BCMethod met : candidates){
+        errMsg += met.getBcelMethod().getSignature() +" ";
+      }
+      throw new Jml2BmlException(errMsg);
+    }
+    return candidates.get(0);
   }
 
+  private static String extractNameFromType(Type type){
+    if (type instanceof BasicType){
+      return type.getSignature();
+    }
+    String[] splitted = type.getSignature().split("/");
+    String lastPart = splitted[splitted.length - 1]; 
+    return lastPart.substring(0, lastPart.length() - 1);
+  }
   /**
    * Creates FieldRef object for given field name in given class.
    * It is assumed that the field exists in this class. In the other case

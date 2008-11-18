@@ -28,6 +28,10 @@ public final class LoopDetector {
    * @return list of loop descriptions (condition, start, end)
    */
   public static List < LoopDescription > detectLoop(final BCMethod method) {
+    if (method.getInstructions() == null){
+      //abstract method
+      return new LinkedList<LoopDescription>();
+    }
     final MyControlFlowGraph graph = new MyControlFlowGraph(method);
     final InstructionContext[] instructions = graph.getInstructionContext();
     final List < LoopDescription > res = new LinkedList < LoopDescription >();
