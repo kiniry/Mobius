@@ -72,11 +72,11 @@
          id="mobius.escjava2.plugin.preferencesPage"
          name="ESCJava Preferences"
          point="org.eclipse.ui.preferencePages">
-      <page 
-         id="mobius.escjava2.plugin.preferences.EscJava" 
-         name="ESC/Java2" 
-         class="escjava.plugin.PreferencePage"
-         category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"> 
+      <page
+            category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
+            class="escjava.plugin.PreferencePage"
+            id="mobius.escjava2.plugin.preferences.EscJava"
+            name="ESC/Java2">
       </page>
    </extension>
    
@@ -124,15 +124,17 @@
       <persistent
             value="true">
       </persistent>
-      <attribute name="declarationInfo"/>
+      <attribute
+            name="declarationInfo">
+      </attribute>
    </extension>
 
    <!-- Provides the image for the markers -->
    <extension
          point="org.eclipse.ui.editors.markerAnnotationSpecification">
       <specification
-            icon="icons/escjava_problem.gif"
-            annotationType="escjava.plugin.escjavaProblemAnnotation">
+            annotationType="escjava.plugin.escjavaProblemAnnotation"
+            icon="icons/escjava_problem.gif">
       </specification>
    </extension>
    
@@ -140,10 +142,10 @@
    <extension
          point="org.eclipse.ui.editors.annotationTypes">
       <type
+            markerSeverity="2"
             markerType="mobius.escjava2.plugin.escjavaWarningMarker"
-            super="org.eclipse.ui.workbench.texteditor.error"
             name="escjava.plugin.escjavaProblemAnnotation"
-            markerSeverity="2">
+            super="org.eclipse.ui.workbench.texteditor.error">
       </type>
    </extension>
 
