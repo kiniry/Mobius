@@ -76,13 +76,18 @@ public class SimplifyProver extends Prover {
       sb.append(") ");
       printTerm(st.children[1], sb);
       sb.append(")");
-    } else if (st.id.equals("literal_int")) {
+    } else if (st.id.equals("literal_int") || st.id.equals("literal")) {
       sb.append(st.data);
     } else if (st.id.equals("literal_bool")) {
       if ((Boolean)st.data)
         sb.append("$$TRUE");
       else
         sb.append("$$FALSE");
+    } else if (st.id.equals("literal_formula")) {
+      if ((Boolean)st.data)
+        sb.append("TRUE");
+      else
+        sb.append("FALSE");
     } else if (st.id.startsWith("map_update")) {
       sb.append("($$update ");
       printArgs(st.children, sb);
@@ -93,12 +98,6 @@ public class SimplifyProver extends Prover {
       sb.append(")");
     } else if (st.id.equals("tuple")) {
       printArgs(st.children, sb);
-    } else if (st.id.startsWith("xor")) {
-      sb.append("(NOT (IFF ");
-      printTerm(st.children[0], sb);
-      sb.append(" ");
-      printTerm(st.children[1], sb);
-      sb.append("))");
     } else if (st.id.startsWith("eq")) {
       sb.append("(EQ ");
       printTerm(st.children[0], sb);

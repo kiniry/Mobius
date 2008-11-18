@@ -21,14 +21,14 @@ public class SmtTermBuilder extends TermBuilder {
     def("and", Sort.FORMULA, Sort.FORMULA);
     def("or", Sort.FORMULA, Sort.FORMULA);
     def("implies", new Sort[]{Sort.FORMULA, Sort.FORMULA}, Sort.FORMULA);
-
-    def("boolNand", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+    def("Tnand", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
     def("var", String.class, Sort.VARTERM);
     def("var_int", String.class, Sort.VARINT);
     def("var_bool", String.class, Sort.VARBOOL);
     def("var_formula", String.class, Sort.VARFORMULA);
 
+    def("literal", String.class, Sort.TERM);
     def("literal_int", BigInteger.class, Sort.INT);
     def("literal_bool", Boolean.class, Sort.BOOL);
     def("literal_formula", Boolean.class, Sort.FORMULA);
@@ -40,17 +40,26 @@ public class SmtTermBuilder extends TermBuilder {
     def("exists_int", new Sort[]{Sort.VARINT, Sort.FORMULA}, Sort.FORMULA);
     def("exists_bool", new Sort[]{Sort.VARBOOL, Sort.FORMULA}, Sort.FORMULA);
 
+    def("T<", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
     def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("/", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("%", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
-    def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.TERM);
+    def("<", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
+    def("<=", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
+    def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
+    def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
 
+    def("Teq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
+    def("Teq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def("Teq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
     def("eq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.FORMULA);
     def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
+    def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.FORMULA);
     def("neq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.FORMULA);
     def("neq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
+    def("neq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.FORMULA);
 
     def("tuple", Sort.TERM, Sort.TERM);
     def("map_select", new Sort[]{Sort.TERM, Sort.TERM}, Sort.TERM);

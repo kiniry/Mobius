@@ -22,13 +22,13 @@ import freeboogie.util.StackedHashMap;
 public abstract class TermBuilder {
   private static Logger log = Logger.getLogger("freeboogie.backend");
 
-  protected TermOfExpr term;
+  protected FormulaOfExpr term;
 
   private StackedHashMap<String, TermDef> termDefs =
     new StackedHashMap<String, TermDef>();
 
   public TermBuilder() {
-    term = new TermOfExpr();
+    term = new FormulaOfExpr(new TermOfExpr());
     term.setBuilder(this);
   }
   

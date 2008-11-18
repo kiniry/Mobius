@@ -1,11 +1,11 @@
 package freeboogie.backend;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.tc.*;
+import freeboogie.util.Err;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.
@@ -26,7 +26,12 @@ public class TermOfExpr extends Evaluator<Term> {
   private SymbolTable st;
   private Map<Expr, Type> typeOf;
 
-  public TermOfExpr() {}
+  private HashSet<String> boolsAsTerm;
+  private boolean trueFalseAxiom;
+
+  public TermOfExpr() {
+    boolsAsTerm = new HashSet<String>(103);
+  }
 
   public void setBuilder(TermBuilder term) { this.term = term; }
 
@@ -34,6 +39,18 @@ public class TermOfExpr extends Evaluator<Term> {
     this.tc = tc;
     this.st = tc.getST();
     this.typeOf = tc.getTypes();
+  }
+
+  public List<Term> getAssumptions() {
+    List<Term> result = new ArrayList<Term>(2 * boolsAsTerm.size());
+    for (String id : boolsAsTerm) {
+      result.add(term.mk("iff",
+        term.mk("var_formula", id),
+        term.mk("eq_bool",
+          term.mk("var_bool", "term$$" + id),
+          term.mk("literal_bool", "$$true"))));
+    }
+    return result;
   }
 
   @Override
@@ -49,31 +66,34 @@ public class TermOfExpr extends Evaluator<Term> {
   @Override
   public Term eval(AtomId atomId, String id, TupleType types) {
     Declaration d = st.ids.def(atomId);
-    Type t;
+    Type t = null;
     if (d instanceof VariableDecl) {
       t = ((VariableDecl)d).getType();
-      if (TypeUtils.isInt(t)) return term.mk("var_int", id);
-      if (TypeUtils.isBool(t)) return term.mk("var_bool", id);
-      return term.mk("var", id);
     } else if (d instanceof ConstDecl) {
       // TODO I might want to keep track of constness
       t = ((ConstDecl)d).getType();
-      if (TypeUtils.isInt(t)) return term.mk("var_int", id);
-      if (TypeUtils.isBool(t)) return term.mk("var_bool", id);
+    } else Err.internal("Unkknown id declaration type for " + id + ".");
+    if (TypeUtils.isInt(t)) {
+      return term.mk("var_int", id);
+    } else if (TypeUtils.isBool(t)) {
+      boolsAsTerm.add(id);
+      return term.mk("var_bool", "term$$" + id);
+    } else {
       return term.mk("var", id);
-    } else assert false; // what is it then?
-    return null;
+    }
   }
 
   @Override
   public Term eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
-      return term.mk("literal_formula", Boolean.valueOf(true));
+      trueFalseAxiom = true;
+      return term.mk("literal_bool", "$$true");
     case FALSE:
-      return term.mk("literal_formula", Boolean.valueOf(false));
+      trueFalseAxiom = true;
+      return term.mk("literal_bool", "$$false");
     case NULL:
-      return term.mk("literal_term", "null");
+      return term.mk("literal", "$$null");
     default:
       assert false;
       return null;
@@ -105,15 +125,10 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomOld atomOld, Expr e) {
-    assert false : "old() should have dissapeared during passivation";
-    return e.eval(this);
-  }
-
-  @Override
   public Term eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
-    // TODO
-    return term.mk("literal_formula", true);
+    // TODO implement; use term$$forall; 
+    //   also, introduce one axiom per quantified var
+    return term.mk("literal_bool", Boolean.valueOf(true));
   }
 
   @Override
@@ -121,33 +136,55 @@ public class TermOfExpr extends Evaluator<Term> {
     String termId = "***unknown***";
     Type lt = typeOf.get(left);
     Type rt = typeOf.get(right);
+    Term l = left.eval(this);
+    Term r = right.eval(this);
     switch (op) {
-    case PLUS: termId = "+"; break;
-    case MINUS: termId = "-"; break;
-    case MUL: termId = "*"; break;
-    case DIV: termId = "/"; break;
-    case MOD: termId = "%"; break;
+    case PLUS:
+      return term.mk("+", l, r);
+    case MINUS:
+      return term.mk("-", l, r);
+    case MUL:
+      return term.mk("*", l, r);
+    case DIV:
+      return term.mk("/", l, r);
+    case MOD:
+      return term.mk("%", l, r);
     case EQ: 
-      if (TypeUtils.isBool(lt)) termId = "iff";
-      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) termId = "eq_int";
-      else termId = "eq";
-      break;
+      if (TypeUtils.isBool(lt))
+        return term.mk("Teq_bool", l, r);
+      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) 
+        return term.mk("Teq_int", l, r);
+      else
+        return term.mk("Teq", l, r);
     case NEQ:
-      if (TypeUtils.isBool(lt)) termId = "xor";
-      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) termId = "neq_int";
-      else termId = "neq";
-      break;
-    case LT: termId = "<"; break;
-    case LE: termId = "<="; break;
-    case GE: termId = ">="; break;
-    case GT: termId = ">"; break;
-    case SUBTYPE: termId = "<:"; break;
-    case EQUIV: termId = "iff"; break;
-    case IMPLIES: termId = "implies"; break;
-    case AND: termId = "and"; break;
-    case OR: termId = "or"; break;
+      if (TypeUtils.isBool(lt))
+        return not(term.mk("Teq_bool", l, r));
+      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt))
+        return not(term.mk("Teq_int", l, r));
+      else
+        return not(term.mk("Teq", l, r));
+    case LT:
+      return term.mk("T<", l, r);
+    case LE:
+      return or(term.mk("T<", l, r), term.mk("Teq_int", l, r));
+    case GE:
+      return or(term.mk("T<", r, l), term.mk("Teq_int", r, l));
+    case GT:
+      return term.mk("T<", l, r);
+    case SUBTYPE:
+      return term.mk("<:", l, r);
+    case EQUIV:
+      return term.mk("Tnand", term.mk("Tnand", l, r), or(l, r));
+    case IMPLIES:
+      return term.mk("Tnand", l, not(r));
+    case AND:
+      return not(term.mk("Tnand", l, r));
+    case OR:
+      return or(l, r);
+    default:
+      Err.internal("Unknown binary operator.");
+      return null;
     }
-    return term.mk(termId, left.eval(this), right.eval(this));
   }
 
   @Override
@@ -155,7 +192,7 @@ public class TermOfExpr extends Evaluator<Term> {
     String termId = "***unknown***";
     switch (op) {
     case MINUS: return term.mk("-", term.mk("literal_int", new BigInteger("0")), e.eval(this));
-    case NOT: return term.mk("not", e.eval(this));
+    case NOT: return not(e.eval(this));
     default: assert false; return null;
     }
   }
@@ -168,5 +205,13 @@ public class TermOfExpr extends Evaluator<Term> {
       e = e.getTail();
     }
     return r.toArray(termArray);
+  }
+
+  private Term not(Term t) {
+    return term.mk("Tnand", t, t);
+  }
+
+  private Term or(Term x, Term y) {
+    return term.mk("Tnand", not(x), not(y));
   }
 }

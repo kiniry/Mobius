@@ -6,9 +6,6 @@ import java.util.Arrays;
  * S-expressions.
  *
  * TODO Add hash-consing and see the performance difference.
- *      at the moment I think it will be slower (because I can't
- *      imagine anything that I plan doing generate a lot of
- *      duplicates)
  *
  * @author rgrig 
  */
