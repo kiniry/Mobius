@@ -16,8 +16,6 @@ import freeboogie.tc.TypeUtils;
  * functions can *only* be applied to terms to give another term.
  * Some provers allow the constructions of terms out of formulas
  * (those that read SMT) but some don't (Simplify): (ite true/false t1 t2).
- * For those that don't we can't map Boogie 'bool' to formulas,
- * we must introduce constants "$$true" and "$$false".
  *
  * @author rgrig 
  */

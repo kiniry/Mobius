@@ -48,14 +48,19 @@ public class TermOfExpr extends Evaluator<Term> {
         term.mk("var_formula", id),
         term.mk("eq_bool",
           term.mk("var_bool", "term$$" + id),
-          term.mk("literal_bool", "$$true"))));
+          term.mk("literal_bool", Boolean.valueOf(true)))));
     }
     return result;
   }
 
   @Override
   public Term eval(AtomCast atomCast, Expr e, Type type) {
-    return e.eval(this);
+    Term result = e.eval(this);
+    if (TypeUtils.isInt(type))
+      return term.mk("cast_to_int", result);
+    if (TypeUtils.isBool(type))
+      return term.mk("cast_to_bool", result);
+    return result;
   }
 
   @Override
@@ -74,12 +79,14 @@ public class TermOfExpr extends Evaluator<Term> {
       t = ((ConstDecl)d).getType();
     } else Err.internal("Unkknown id declaration type for " + id + ".");
     if (TypeUtils.isInt(t)) {
-      return term.mk("var_int", id);
+      // this prefix is needed for z3, but not simplify
+      return term.mk("var_int", "term$$" + id);
     } else if (TypeUtils.isBool(t)) {
       boolsAsTerm.add(id);
       return term.mk("var_bool", "term$$" + id);
     } else {
-      return term.mk("var", id);
+      // this prefix is needed for z3, but not simplify
+      return term.mk("var", "term$$" + id);
     }
   }
 
@@ -88,10 +95,10 @@ public class TermOfExpr extends Evaluator<Term> {
     switch (val) {
     case TRUE:
       trueFalseAxiom = true;
-      return term.mk("literal_bool", "$$true");
+      return term.mk("literal_bool", Boolean.valueOf(true));
     case FALSE:
       trueFalseAxiom = true;
-      return term.mk("literal_bool", "$$false");
+      return term.mk("literal_bool", Boolean.valueOf(false));
     case NULL:
       return term.mk("literal", "$$null");
     default:

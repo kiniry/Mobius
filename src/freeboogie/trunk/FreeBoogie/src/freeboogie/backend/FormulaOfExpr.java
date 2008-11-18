@@ -47,7 +47,10 @@ public class FormulaOfExpr extends Evaluator<Term> {
 
   @Override
   public Term eval(AtomCast atomCast, Expr e, Type type) {
-    return e.eval(this);
+    if (TypeUtils.isBool(type))
+      return formulaOfTerm(atomCast.eval(termOfExpr));
+    Err.internal("Typechecking should have failed: non-bool in a bool's place.");
+    return null;
   }
 
   @Override
@@ -114,7 +117,8 @@ public class FormulaOfExpr extends Evaluator<Term> {
     case GT:
       return term.mk(">", left.eval(termOfExpr), right.eval(termOfExpr));
     case SUBTYPE:
-      return term.mk("<:", left.eval(termOfExpr), right.eval(termOfExpr));
+      return formulaOfTerm(
+        term.mk("<:", left.eval(termOfExpr), right.eval(termOfExpr)));
     case EQUIV:
       return term.mk("iff", left.eval(this), right.eval(this));
     case IMPLIES:
@@ -142,6 +146,6 @@ public class FormulaOfExpr extends Evaluator<Term> {
 
   // === helpers ===
   private Term formulaOfTerm(Term t) {
-    return term.mk("eq_bool", term.mk("literal_bool", "$$true"), t);
+    return term.mk("eq_bool", term.mk("literal_bool", Boolean.valueOf(true)), t);
   }
 }

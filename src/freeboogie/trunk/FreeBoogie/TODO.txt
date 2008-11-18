@@ -4,6 +4,7 @@
    Take care of arrays (does the prover know about arrays?)
  . Extract sharing in SimplifyProver, or use `flet' for z3
  . Provide a web interface.
+ . Get rid of SmtTerm, SmtTermBuilder. Keep only one class.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
  . Only parse function if they return exactly one value.

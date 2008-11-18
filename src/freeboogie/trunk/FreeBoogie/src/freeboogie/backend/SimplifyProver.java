@@ -80,26 +80,35 @@ public class SimplifyProver extends Prover {
       sb.append(st.data);
     } else if (st.id.equals("literal_bool")) {
       if ((Boolean)st.data)
-        sb.append("$$TRUE");
+        sb.append("term$$TRUE");
       else
-        sb.append("$$FALSE");
+        sb.append("term$$FALSE");
     } else if (st.id.equals("literal_formula")) {
       if ((Boolean)st.data)
         sb.append("TRUE");
       else
         sb.append("FALSE");
     } else if (st.id.startsWith("map_update")) {
-      sb.append("($$update ");
+      // TODO This is SOOOO ugly.
+      sb.append("($$update" + ((SmtTerm)st.children[1]).children.length + " ");
       printArgs(st.children, sb);
       sb.append(")");
     } else if (st.id.startsWith("map_select")) {
-      sb.append("($$select ");
+      sb.append("($$select" + ((SmtTerm)st.children[1]).children.length + " ");
       printArgs(st.children, sb);
       sb.append(")");
     } else if (st.id.equals("tuple")) {
       printArgs(st.children, sb);
+    } else if (st.id.startsWith("cast")) {
+      printTerm(st.children[0], sb);
     } else if (st.id.startsWith("eq")) {
       sb.append("(EQ ");
+      printTerm(st.children[0], sb);
+      sb.append(" ");
+      printTerm(st.children[1], sb);
+      sb.append(")");
+    } else if (st.id.startsWith("neq")) {
+      sb.append("(NEQ ");
       printTerm(st.children[0], sb);
       sb.append(" ");
       printTerm(st.children[1], sb);

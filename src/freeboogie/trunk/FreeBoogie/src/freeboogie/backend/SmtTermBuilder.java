@@ -18,8 +18,10 @@ public class SmtTermBuilder extends TermBuilder {
     // Classes that implement Prover and use this term builder should
     // know how to communicate these to the provers they wrap, including
     // the necessary axioms.
+    def("not", new Sort[]{Sort.FORMULA}, Sort.FORMULA);
     def("and", Sort.FORMULA, Sort.FORMULA);
     def("or", Sort.FORMULA, Sort.FORMULA);
+    def("iff", new Sort[]{Sort.FORMULA, Sort.FORMULA}, Sort.FORMULA);
     def("implies", new Sort[]{Sort.FORMULA, Sort.FORMULA}, Sort.FORMULA);
     def("Tnand", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
@@ -66,6 +68,13 @@ public class SmtTermBuilder extends TermBuilder {
     def("map_select_int", new Sort[]{Sort.TERM, Sort.TERM}, Sort.INT);
     def("map_select_bool", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
     def("map_update", new Sort[]{Sort.TERM, Sort.TERM, Sort.TERM}, Sort.TERM);
+
+    def("<:", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
+
+    // handles casts, doesn't get printed; shouldn't be in Boogie
+    def("cast_to_int", new Sort[]{Sort.TERM}, Sort.INT);
+    def("cast_to_bool", new Sort[]{Sort.TERM}, Sort.BOOL);
+
     pushDef(); // mark the end of the prover builtin definitions
     log.info("prepared SMT term builder");
   }
