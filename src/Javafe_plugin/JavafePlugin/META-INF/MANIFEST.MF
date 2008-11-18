@@ -4,3 +4,16 @@ Bundle-Name: Javafe plugin
 Bundle-SymbolicName: mobius.javafe.plugin
 Bundle-Version: 2.0.8
 Bundle-Vendor: HP Labs and EU Mobius IST-15905
+Export-Package: javafe,
+ javafe.ast,
+ javafe.decsrc,
+ javafe.filespace,
+ javafe.genericfile,
+ javafe.parser,
+ javafe.parser.test,
+ javafe.reader,
+ javafe.tc,
+ javafe.test,
+ javafe.test.lex,
+ javafe.util
+Require-Bundle: bcel.plugin;bundle-version="5.2.0"
