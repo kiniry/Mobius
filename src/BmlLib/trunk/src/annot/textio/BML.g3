@@ -208,7 +208,11 @@ double_cp_entry : DOUBLE_CP ( sign )? floating_point_literal SEMICOLON;
 
 name_and_type_cp_entry : NAMEANDTYPE_CP cp_ref COLON cp_ref SEMICOLON;
 
-utf8_cp_entry : UTF8_CP STRING SEMICOLON;
+utf8_cp_entry :
+  UTF8_CP StringLiteral SEMICOLON
+  {
+    syso("utf8_cp_entry");
+  };
 
 cp_ref : HASH NAT;
 
@@ -1020,6 +1024,8 @@ THROWS: 'throws';
 // bml level
 // IDisplayStyle must be modified as well
 
+EOF: '\f';
+EOL: '\n';
 CONSNAME: '<init>';
 STATICCONSNAME: '<clinit>';
 ASSERT: 'assert';
@@ -1106,11 +1112,36 @@ DOUBLE_CP: 'Double';
 NAMEANDTYPE_CP: 'NameAndType';
 FLOAT_CP: 'Float';
 
+fragment
+HNUM: ('0'..'9') | ('a'..'f') | ('A'..'F');
 IDENT: ('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
 NAT: ('0'..'9')+;
 NATL: ('0'..'9')+'L';
-STRING: '\"' (.* (~('\\')))? '\"';
 
-WS: (' '|'\t')+ {skip();};
-EOF: '\f';
-EOL: '\n';
+StringLiteral
+    :  '"' ( EscapeSequence | ~('\\'|'"') )* '"'
+    ;
+
+fragment
+EscapeSequence
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    |   UnicodeEscape
+    |   OctalEscape
+    ;
+
+fragment
+OctalEscape
+    :   '\\' ('0'..'3') ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7') ('0'..'7')
+    |   '\\' ('0'..'7')
+    ;
+
+fragment
+UnicodeEscape
+    :   '\\' 'u' HexDigit HexDigit HexDigit HexDigit
+    ;
+
+fragment
+HexDigit : ('0'..'9'|'a'..'f'|'A'..'F') ;
+
+WS: (' '|'\r'|'\t'|'\u000C'|'\n') {$channel=HIDDEN;} ;

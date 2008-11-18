@@ -294,7 +294,31 @@ public class BMLParserTest {
    */
   @Test
   public void testUtf8_cp_entry() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "Utf8 \"ala\";",
+                            "Utf8 \"\";",
+                            "Utf8 \"I have just completed the test! My score was: \";"
+                            };
+    String[] answers = { "Utf8 \"ala\" ;",
+                         "Utf8 \"\" ;",
+                         "Utf8 \"I have just completed the test! My score was: \" ;"
+                         };
+    System.out.println("testUtf8_cp_entry: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.utf8_cp_entry_return ret;
+      try {
+        ret = parser.utf8_cp_entry();
+        assertEquals("utf8_cp_entry: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testUtf8_cp_entry end");
   }
 
   /**
@@ -645,6 +669,7 @@ public class BMLParserTest {
                         "ala ( String x , int d ) \n",
                         "ala $ 1 ( String x , int d ) \n",
     };
+    System.out.println("testMethodheader: -----------------");
     for (int i = 0; i < paramdecls.length; i++) {
       final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
       final BMLLexer lex = new BMLLexer(chstr);
