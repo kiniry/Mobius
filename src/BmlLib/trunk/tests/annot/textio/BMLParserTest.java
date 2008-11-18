@@ -246,7 +246,31 @@ public class BMLParserTest {
    */
   @Test
   public void testLong_cp_entry() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "Long 1000L;",
+                            "Long 0L;",
+                            "Long -10L;"
+                            };
+    String[] answers = { "Long 1000L ;",
+                         "Long 0L ;",
+                         "Long - 10L ;"
+                         };
+    System.out.println("testLong_cp_entry: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.long_cp_entry_return ret;
+      try {
+        ret = parser.long_cp_entry();
+        assertEquals("long_cp_entry: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testLong_cp_entry end");
   }
 
   /**
@@ -610,14 +634,16 @@ public class BMLParserTest {
                             "<clinit>()\n",
                             "ala()\n",
                             "ala(int)\n",
-                            "ala(String x, int d)\n"
+                            "ala(String x, int d)\n",
+                            "ala$1(String x, int d)\n"
     };
     String[] answers = {
                         "<init> ( ) \n",
                         "<clinit> ( ) \n",
                         "ala ( ) \n",
                         "ala ( int ) \n",
-                        "ala ( String x , int d ) \n"
+                        "ala ( String x , int d ) \n",
+                        "ala $ 1 ( String x , int d ) \n",
     };
     for (int i = 0; i < paramdecls.length; i++) {
       final CharStream chstr = new ANTLRStringStream(paramdecls[i]);

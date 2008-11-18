@@ -208,8 +208,7 @@ double_cp_entry : DOUBLE_CP ( sign )? floating_point_literal SEMICOLON;
 
 name_and_type_cp_entry : NAMEANDTYPE_CP cp_ref COLON cp_ref SEMICOLON;
 
-//slight simplification, any non-newline character is accepted as string
-utf8_cp_entry : UTF8_CP (~('\n'))* SEMICOLON;
+utf8_cp_entry : UTF8_CP STRING SEMICOLON;
 
 cp_ref : HASH NAT;
 
@@ -293,7 +292,7 @@ typebody :
    })+
   {
      syso("methods parsed");
-  };
+  } EOL*;
 
 staticsection :
   staticfields? staticspec?
@@ -454,9 +453,13 @@ built_in_type :
 
 
 methodheader :
-  (i=IDENT | i=CONSNAME | i = STATICCONSNAME)
+  (i=IDENT | i=CONSNAME | i = STATICCONSNAME) (DOLARSIGN num=NAT)?
   {
-     syso("method IDENT=" + $i.getText());
+     String name = $i.getText();
+     if ($num != null) {
+       name += "$" + $num.getText();
+     }
+     syso("method IDENT=" + name);
   }
   formals dims? EOL throws_clause?
   {
@@ -1090,6 +1093,7 @@ ONE_LINE_COMMENT: '//';
 BML_START: '/*@';
 BML_END: '@*/';
 COMMENT_END: '*/';
+DOLARSIGN: '$';
 CLASS_CP: 'Class';
 FIELDREF_CP: 'Fieldref';
 METHODREF_CP: 'Methodref';
