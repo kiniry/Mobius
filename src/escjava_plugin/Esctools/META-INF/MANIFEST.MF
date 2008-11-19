@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Mobius ESCJava2 Library Plug-in
+Bundle-Name: MOBIUS ESCJava2 API plugin
 Bundle-SymbolicName: mobius.escjava2.esctools
 Bundle-Version: 2.0.8
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
