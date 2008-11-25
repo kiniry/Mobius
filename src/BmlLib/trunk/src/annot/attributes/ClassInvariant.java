@@ -1,6 +1,7 @@
 package annot.attributes;
 
 import org.antlr.runtime.RecognitionException;
+import org.apache.bcel.Constants;
 
 import annot.bcclass.BCClass;
 import annot.bcexpression.ExpressionRoot;
@@ -75,7 +76,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     throws ReadAttributeException {
     this.bcc = classRepresentation;
     this.access_flags = ar.readShort();
-    this.isInstance = (this.access_flags & AttributeFlags.ACC_STATIC) == 0;
+    this.isInstance = (this.access_flags & Constants.ACC_STATIC) == 0;
     this.invariant = new ExpressionRoot < AbstractFormula > (this,
         ar.readFormula());
   }
@@ -101,7 +102,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    */
   private void commitInstanceFlag() {
     if (!this.isInstance) {
-      this.access_flags = this.access_flags | AttributeFlags.ACC_STATIC;
+      this.access_flags = this.access_flags | Constants.ACC_STATIC;
     }
   }
 

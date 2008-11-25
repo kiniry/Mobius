@@ -14,7 +14,7 @@ import jml2bml.symbols.Symbols;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlTypeClauseExpr;
 
-import annot.attributes.AttributeFlags;
+import org.apache.bcel.Constants;
 import annot.attributes.ClassInvariant;
 import annot.bcclass.BCClass;
 import annot.bcexpression.formula.AbstractFormula;
@@ -70,7 +70,7 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
           .getFormula(node.expression, symb, myContext);
 
       ClassInvariant classInvariant =
-        clazz.getInvariant(AttributeFlags.ACC_PUBLIC);
+        clazz.getInvariant(Constants.ACC_PUBLIC);
       if (classInvariant == null) {
         //currently only instance invariants are handled
         classInvariant = new ClassInvariant(clazz, formula, true);
