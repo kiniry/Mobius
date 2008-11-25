@@ -4,14 +4,14 @@
 package annot.attributes;
 
 /**
- * @author Aleksy Schubert (alx@mimuw.edu.pl), Jacek Chrzaszcz
- * (chrzaszcz@mimuw.edu.pl)
- * @version a-01
- *
  * Constants encoding the BML modifiers, described in section
  * "Encoding of Modifiers" in "BML Reference Manual". Standard JVM access
  * flags are in
  * @see org.apache.bcel.Constants
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl), Jacek Chrzaszcz
+ * (chrzaszcz@mimuw.edu.pl)
+ * @version a-01
  */
 public final class BMLModifiersFlags {
 
