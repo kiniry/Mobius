@@ -9,4 +9,4 @@ Bundle-ClassPath: Jml2Bml.jar,
  lib/openjml.jar
 Export-Package: api
 Require-Bundle: mobius.bmllib,
- bcel_5.1;bundle-version="1.0.0"
+ org.apache.bcel_5.1;bundle-version="1.0.0"
