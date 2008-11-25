@@ -25,6 +25,19 @@
     />
   </target>
 
+  <target name="jar_astgen" 
+          depends="compile_astgen" 
+          description="creates a jar file with the ast generator"> 
+    <mkdir dir="distinct"/>
+    <jar destfile="dist/astgen.jar" 
+         basedir="${build}"
+	 includes="freeboogie/ast/gen/*.class,freeboogie/util/*.class,">
+      <manifest>
+	<attribute name="Main-Class" value="freeboogie.ast.gen.Main"/>
+      </manifest>
+     </jar>
+  </target>
+
   <target name="generate_ast" depends="clean_ast,compile_astgen" 
     description="generates AST">
     <java fork="yes" dir="${ast}" classpath="${build}"
