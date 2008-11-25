@@ -23,14 +23,6 @@ public class FeatureSpecificationInstance {
     return name;
   }
 
-  public String getClassName() {
-    return featureSpec.getClassName();
-  }
-  
-  public boolean isDeferred() {
-    return featureSpec.isDeferred();
-  }
-
   public SourceLocation getSourceLocation() {
     return loc;
   }

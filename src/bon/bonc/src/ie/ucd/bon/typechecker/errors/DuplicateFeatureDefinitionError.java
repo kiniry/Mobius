@@ -22,7 +22,7 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
   public DuplicateFeatureDefinitionError(SourceLocation loc, FeatureSpecificationInstance other) {
     super(loc);
     this.featureName = other.getName();
-    this.className = other.getClassName();
+    this.className = other.getFeatureSpec().getClassName();
     this.otherFeatureFile = other.getSourceLocation().getSourceFile();
     this.otherFeatureLineNumber = other.getSourceLocation().getLineNumber();
   }

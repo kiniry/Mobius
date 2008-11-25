@@ -17,7 +17,17 @@ public class FormalGeneric {
     this.loc = loc;
     this.type = type;
   }
-  
-  
+
+  public SourceLocation getLoc() {
+    return loc;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Type getType() {
+    return type;
+  }
   
 }

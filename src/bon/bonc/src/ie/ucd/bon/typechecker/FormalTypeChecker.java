@@ -202,7 +202,7 @@ public class FormalTypeChecker {
     Collection<FeatureSpecificationInstance> deferredFeatures = deferredParent.getDeferredFeatures();
     for (FeatureSpecificationInstance feature : deferredFeatures) {
       //TODO does it have to be labelled effective to override?
-      if (!effectiveChild.constainsFeatureByName(feature.getName())) {
+      if (!effectiveChild.containsFeatureByName(feature.getName())) {
         problems.addProblem(new EffectiveClassDoesNotDefineDeferredFeatureError(
                                             effectiveChild.getSourceLocation(),
                                             feature.getName(),
@@ -417,7 +417,7 @@ public class FormalTypeChecker {
   
   public void checkRenaming(String className, String featureName, SourceLocation loc) {
     ClassDefinition parent = classes.get(className);
-    if (parent != null && !parent.constainsFeatureByName(featureName)) {
+    if (parent != null && !parent.containsFeatureByName(featureName)) {
       problems.addProblem(new ClassDoesNotDeclareFeatureError(loc, className, featureName));
     }
     

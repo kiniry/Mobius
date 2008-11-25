@@ -111,6 +111,10 @@ public class Type {
   public String getNonGenericType() {
     return firstBit;
   }
+
+  public Collection<Type> getGenerics() {
+    return generics;
+  }
   
   
   

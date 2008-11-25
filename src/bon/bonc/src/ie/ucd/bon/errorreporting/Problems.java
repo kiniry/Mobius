@@ -88,5 +88,15 @@ public class Problems {
     
     return equal;
   }
+
+  public int getNumberOfErrors() {
+    return numberOfErrors;
+  }
+
+  public int getNumberOfWarnings() {
+    return numberOfWarnings;
+  }
+  
+  
   
 }

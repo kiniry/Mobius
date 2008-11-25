@@ -1071,6 +1071,7 @@ class_interface  :  (indexing)?
                  ;
                     
 class_invariant  :  'invariant' assertion 
+                    { getTI().addInvariant($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
                   ->
                   ^(
                     CLASS_INVARIANT assertion
@@ -1169,6 +1170,7 @@ contracting_conditions  :  ((precondition (postcondition)?) | postcondition)
 //              ;
         
 precondition  :  'require' assertion 
+                 { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
                ->
                ^(
                  PRECONDITION assertion
@@ -1176,6 +1178,7 @@ precondition  :  'require' assertion
               ;
               
 postcondition  :  'ensure' assertion 
+                  { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
                 ->
                 ^(
                   POSTCONDITION assertion
@@ -1650,7 +1653,7 @@ boolean_constant  :  'true'
                   ;
 
 
-//Changed to lexer rule, as we geedily take any character preceded and followed by a '                  
+//Changed to lexer rule, as we greedily take any character preceded and followed by a '                  
 CHARACTER_CONSTANT  :  '\'' . '\'' 
                     ;
 

@@ -12,6 +12,7 @@ import ie.ucd.bon.graph.display.PrefuseGraphDisplay;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
+import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.commandline.options.InvalidOptionsSetException;
 import ie.ucd.commandline.options.Options;
@@ -44,7 +45,8 @@ public final class Main {
   private static boolean debug = false;
   private static String version;
 
-  private static Problems problems;   
+  private static Problems problems;  
+  private static TypingInformation typingInfo;
 
   /** Prevent instantiation of Main. */
   private Main() { }
@@ -83,7 +85,7 @@ public final class Main {
     }
   }
 
-  public static void main2(final String[] args, final boolean exitOnFailure) {
+  public static boolean main2(final String[] args, final boolean exitOnFailure) {
     try {
       CommandlineParser cp = processArguments(args);
 
@@ -94,16 +96,22 @@ public final class Main {
 
         if (so.isBooleanOptionByNameSelected("--print-man")) {
           cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
+          return true;
         } else if (so.isBooleanOptionByNameSelected("--print-readme")) {
           cp.printOptionsInReadmeFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false, 80, 2);
+          return true;
         } else if (so.isBooleanOptionByNameSelected("--print-bash-completion")) {
           cp.printBashCompletionOptionsScript(System.out, false);
+          return true;
         } else if (so.isBooleanOptionByNameSelected("-hh")) {
           cp.printOptions(System.out, true);
+          return true;
         } else if (so.isBooleanOptionByNameSelected("--help")) {
           cp.printOptions(System.out, false);
+          return true;
         } else if (so.isBooleanOptionByNameSelected("--version")) {
           System.out.println(getVersion());
+          return true;
         } else {
           Collection<String> files = cp.getActualArgs();
           Main.logDebug(files.size() + " files:");
@@ -113,14 +121,20 @@ public final class Main {
           boolean success = run(cp.getActualArgs(), so);
           if (!success && exitOnFailure) {
             System.exit(1);
+          } else {
+            return success;
           }
         }
       }
+      return false;
     } catch (InvalidOptionsSetException iose) {
       //This shouldn't happen, if the options are set up correctly!
       //System.out.println("Error: ");
-      System.exit(1);
-    } 
+      if (exitOnFailure) {
+        System.exit(1);
+      }
+      return false;
+    }
   }
 
   private static Collection<File> getValidFiles(final Collection<String> fileNames, final ParsingTracker tracker, final Options so) {
@@ -310,11 +324,12 @@ public final class Main {
     displayGraphs(tracker, so);
 
     //TODO - return false here if we have problems...
-    return true;
+    return tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency).getNumberOfErrors() == 0;
   }
 
   private static void printResults(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
     problems = tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency);
+    typingInfo = tracker.getTypingInformation();
     problems.printProblems(System.out);
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
@@ -345,4 +360,8 @@ public final class Main {
     return problems;
   }
 
+  public static TypingInformation getTypingInfo() {
+    return typingInfo;
+  }
+  
 }

@@ -13,27 +13,30 @@ public class ParsingTester {
 
   public static void main(String[] args) {
 
-    String testDir = "../test/";
-    //String testDir = "/home/fintan/workspace/ebon/docs/examples/";
+    String testDir = "../test/test-examples/";
 
-    testDirectory(testDir);
+    testDirectory(new File(testDir));
   }
   
-  public static void testDirectory(String directory) {
-    String[] testFiles = new File(directory).list();
+  public static void testDirectory(File directory) {
+    File[] testFiles = directory.listFiles();
     
-    for (String s : testFiles) {
-      testFile(s, directory);
+    for (File f : testFiles) {
+      testFile(f);
     }    
   }
   
-  public static void testFile(String fileName, String directory) {
-    if (fileName.startsWith(".") || new File(directory + fileName).isDirectory()) {
+  public static void testFile(File file) {
+    if (file.getName().startsWith(".")) {
       return;
     }
-    System.out.println("Testing parsing on file: " + fileName + " (" + directory + fileName + ")");
-    String[] args = { "-time", directory + fileName };
-    Main.main(args);
+    if (file.isDirectory()) { 
+      testDirectory(file);
+    } else {
+      System.out.println("Testing parsing on file: " + file);
+      String[] args = { "-ntc", "-time", file.getAbsolutePath() };
+      Main.main(args);
+    }
     
   }
 

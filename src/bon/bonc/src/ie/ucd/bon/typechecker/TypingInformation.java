@@ -17,6 +17,7 @@ import ie.ucd.bon.typechecker.errors.DuplicateFormalGenericNameError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -160,6 +161,22 @@ public class TypingInformation {
     }
   }
   
+  public void addInvariant(String invariant, SourceLocation loc) {
+    String currentClassName = context.getClassName();
+    ClassDefinition classDef = classes.get(currentClassName);
+    if (classDef != null) {
+      classDef.addInvariant(invariant);
+    }
+  }
+  
+  public void setPrecondition(String precondition, SourceLocation loc) {
+    context.getFeatureSpec().setPrecondition(precondition);
+  }
+  
+  public void setPostcondition(String postcondition, SourceLocation loc) {
+    context.getFeatureSpec().setPostcondition(postcondition);
+  }
+  
   public void featureSpecDeferred() {
     context.getFeatureSpec().setDeferred(); 
   } 
@@ -175,7 +192,7 @@ public class TypingInformation {
       FeatureSpecificationInstance instance = new FeatureSpecificationInstance(name, context.getFeatureSpec(), loc);
       
       ClassDefinition def = classes.get(context.getClassName());
-      if (def.constainsFeatureByName(name)) {
+      if (def.containsFeatureByName(name)) {
         FeatureSpecificationInstance other = def.getFeatureByName(name);
         problems.addProblem(new DuplicateFeatureDefinitionError(instance.getSourceLocation(), other));
       } else {

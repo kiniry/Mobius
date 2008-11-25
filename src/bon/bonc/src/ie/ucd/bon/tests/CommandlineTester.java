@@ -23,9 +23,9 @@ public class CommandlineTester {
     for (String s : tests) {
       System.out.println("Testing with arguments: " + s);
       if (s.equals("")) {
-        Main.main(new String[0]);
+        Main.main2(new String[0],false);
       } else {
-        Main.main(s.split("\\s+"));
+        Main.main2(s.split("\\s+"),false);
       }
     }
     

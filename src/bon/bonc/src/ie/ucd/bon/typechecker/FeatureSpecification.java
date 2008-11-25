@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -18,9 +19,12 @@ public class FeatureSpecification {
   private boolean redefined;
   private Type type;
   private Renaming renaming;
-  private final Collection<FeatureArgument> args;
+  private final List<FeatureArgument> args;
   private final Map<String,FeatureArgument> argsMap;
   private final Collection<FeatureSpecificationInstance> instances;
+  
+  private String precondition;
+  private String postcondition;
   
   public FeatureSpecification(Feature feature) {
     this.feature = feature;
@@ -44,6 +48,18 @@ public class FeatureSpecification {
     return deferred;
   }
 
+  public boolean isEffective() {
+    return effective;
+  }
+
+  public boolean isRedefined() {
+    return redefined;
+  }
+
+  public Renaming getRenaming() {
+    return renaming;
+  }
+
   public void setEffective() {
     this.effective = true;
   }
@@ -56,12 +72,32 @@ public class FeatureSpecification {
     this.type = type;
   }  
     
+  public String getPrecondition() {
+    return precondition;
+  }
+
+  public void setPrecondition(String precondition) {
+    this.precondition = precondition;
+  }
+
+  public String getPostcondition() {
+    return postcondition;
+  }
+
+  public void setPostcondition(String postcondition) {
+    this.postcondition = postcondition;
+  }
+
   public String getClassName() {
     return feature.getClassName();
   }
 
   public Type getType() {
     return type;
+  }
+
+  public List<FeatureArgument> getArgs() {
+    return args;
   }
 
   public void setRenaming(String className, String featureName) {

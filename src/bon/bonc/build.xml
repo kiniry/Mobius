@@ -96,13 +96,6 @@
       <classpath refid="test.path"/>
     </java>
   </target>
-
-  <target name="test-typechecker" depends="compile">
-    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.TypeCheckerTester">
-      <classpath refid="test.path"/>
-    	<arg value="timing=true"/>
-    </java>
-  </target>
 	
   <target name="test-prettyprinter" depends="compile">
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.PrettyPrinterTester">
@@ -372,7 +365,7 @@
 	</target>
 	
 	<!-- High-level targets -->
-  <target name="all-tests" depends="test-parser,test-typechecker,test-prettyprinter,test-commandline,test-dist" description="Run all tests"/>
+  <target name="all-tests" depends="test-parser,test-prettyprinter,test-commandline,test-dist" description="Run all tests"/>
   
   <target name="all-src" depends="init,antlr" description="Create all source files"/>
   

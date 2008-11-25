@@ -10,10 +10,9 @@ import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.Vector;
 
 public class ClassDefinition extends ClassChartDefinition implements Comparable<ClassDefinition> {
@@ -28,10 +27,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   private final Map<String,FeatureSpecificationInstance> features;
   private Collection<FeatureSpecificationInstance> deferredFeatures;
   
-  //Ancestors
-  private boolean hasInfiniteCycle;
-  private boolean ancestorClassesComputed;
-  private Set<ClassDefinition> computedAncestorClasses;
+  private final Collection<String> invariants;
   
   public ClassDefinition(String className, SourceLocation loc) {
     super(className, loc);
@@ -41,14 +37,12 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     formalGenerics = new HashMap<String,FormalGeneric>();
     hasFormalGenerics = false;
     features = new HashMap<String,FeatureSpecificationInstance>();
+   
+    invariants = new LinkedList<String>();
     
     root = false;
     deferred = false;
     effective = false;
-    
-    hasInfiniteCycle = false;
-    ancestorClassesComputed = false;
-    computedAncestorClasses = new HashSet<ClassDefinition>();
   }
 
   public void addParentClass(Type parentType) {
@@ -68,6 +62,10 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   public void addFormalGeneric(String name, Type type, SourceLocation loc) {
     hasFormalGenerics = true;
     formalGenerics.put(name, new FormalGeneric(name,type,loc));
+  }
+  
+  public Collection<FormalGeneric> getFormalGenerics() {
+    return formalGenerics.values();
   }
   
   public boolean hasFormalGeneric(String name) {
@@ -98,11 +96,15 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     return effective;
   }
 
+  public boolean isRoot() {
+    return root;
+  }
+
   public void addFeature(FeatureSpecificationInstance instance) {
     features.put(instance.getName(), instance);
   }
   
-  public boolean constainsFeatureByName(String name) {
+  public boolean containsFeatureByName(String name) {
     return features.containsKey(name);
   }
   
@@ -127,7 +129,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
       deferredFeatures = new Vector<FeatureSpecificationInstance>();
       
       for (FeatureSpecificationInstance i : features.values()) {
-        if (i.isDeferred()) {
+        if (i.getFeatureSpec().isDeferred()) {
           deferredFeatures.add(i);
         }
       }
@@ -148,14 +150,16 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     return "ClassDefinition:" + getClassName();
   }
 
-  public boolean hasInfiniteCycle() {
-    return hasInfiniteCycle;
-  }
-
   public int compareTo(ClassDefinition o) {
     return this.getClassName().compareTo(o.getClassName());
   }
+
+  public Collection<String> getInvariants() {
+    return invariants;
+  }
   
-  
+  public void addInvariant(String invariant) {
+    invariants.add(invariant);
+  }
   
 }
