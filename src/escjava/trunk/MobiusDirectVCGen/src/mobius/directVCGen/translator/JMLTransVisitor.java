@@ -178,45 +178,65 @@ class JMLTransVisitor extends JmlVisitor {
   public final Object visitBinaryExpr(final /*@non_null*/ BinaryExpr expr, 
                                       final Object o) {
     final ContextProperties prop = (ContextProperties) o;
+    Term res = null;
     switch(expr.op) {
       case TagConstants.EQ: 
-        return fTranslator.eq(expr, prop);
+        res = fTranslator.eq(expr, prop);
+        break;
       case TagConstants.OR: 
-        return fTranslator.or(expr, prop);
+        res = fTranslator.or(expr, prop);
+        break;
       case TagConstants.AND: 
-        return fTranslator.and(expr, prop);
+        res = fTranslator.and(expr, prop);
+        break;
       case TagConstants.NE:
-        return fTranslator.ne(expr, prop);
+        res = fTranslator.ne(expr, prop);
+        break;
       case TagConstants.GE: 
-        return fTranslator.ge(expr, prop);
+        res = fTranslator.ge(expr, prop);
+        break;
       case TagConstants.GT: 
-        return fTranslator.gt(expr, prop);
+        res = fTranslator.gt(expr, prop);
+        break;
       case TagConstants.LE: 
-        return fTranslator.le(expr, prop);
+        res = fTranslator.le(expr, prop);
+        break;
       case TagConstants.LT:  
-        return fTranslator.lt(expr, prop);
+        res = fTranslator.lt(expr, prop);
+        break;
       case TagConstants.BITOR: 
-        return fTranslator.bitor(expr, prop);
+        res = fTranslator.bitor(expr, prop);
+        break;
       case TagConstants.BITXOR: 
-        return fTranslator.bitxor(expr, prop);
+        res = fTranslator.bitxor(expr, prop);
+        break;
       case TagConstants.BITAND: 
-        return fTranslator.bitand(expr, prop);
+        res = fTranslator.bitand(expr, prop);
+        break;
       case TagConstants.LSHIFT:
-        return fTranslator.lshift(expr, prop);
+        res = fTranslator.lshift(expr, prop);
+        break;
       case TagConstants.RSHIFT: 
-        return fTranslator.rshift(expr, prop);
+        res = fTranslator.rshift(expr, prop);
+        break;
       case TagConstants.URSHIFT:
-        return fTranslator.urshift(expr, prop);
+        res = fTranslator.urshift(expr, prop);
+        break;
       case TagConstants.ADD: 
-        return fTranslator.add(expr, prop);
+        res = fTranslator.add(expr, prop);
+        break;
       case TagConstants.SUB: 
-        return fTranslator.sub(expr, prop);
+        res = fTranslator.sub(expr, prop);
+        break;
       case TagConstants.DIV: 
-        return fTranslator.div(expr, prop);
+        res = fTranslator.div(expr, prop);
+        break;
       case TagConstants.MOD: 
-        return fTranslator.mod(expr, prop);
+        res = fTranslator.mod(expr, prop);
+        break;
       case TagConstants.STAR: 
-        return fTranslator.star(expr, prop);
+        res = fTranslator.star(expr, prop);
+        break;
         
         
       case TagConstants.ASSIGN:
@@ -229,11 +249,13 @@ class JMLTransVisitor extends JmlVisitor {
       case TagConstants.ASGRSHIFT: 
       case TagConstants.ASGURSHIFT: 
       case TagConstants.ASGBITAND: 
-        return null; // no assignments in annotations
+        res = null; // no assignments in annotations
+        break;
         
         // jml specific operators 
       case TagConstants.IMPLIES: 
-        return fTranslator.implies(expr, prop);
+        res = fTranslator.implies(expr, prop);
+        break;
         
         // unsupported JML ops
       case TagConstants.EXPLIES:
@@ -241,13 +263,14 @@ class JMLTransVisitor extends JmlVisitor {
       case TagConstants.NIFF:    // discrepance (xor)
       case TagConstants.SUBTYPE: 
       case TagConstants.DOTDOT: 
-        return null;
-
+        res = null;
+        break;
       default:
         throw new IllegalArgumentException("Unknown construct :" +
                                            TagConstants.toString(expr.op) +
                                            " " +  expr);
     }
+    return res;
 
   }
   

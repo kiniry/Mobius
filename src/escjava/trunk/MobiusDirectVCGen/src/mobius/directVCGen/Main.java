@@ -101,7 +101,13 @@ public class Main extends escjava.Main {
     }
   }
 
-
+  /**
+   * Get the classpath argument from the arguments given to the 
+   * DirectVCGen. The class path argument is the string which follows
+   * the option <code>-cp</code>.
+   * @param args the arguments from the command line
+   * @return a string, which can be empty
+   */
   protected static String getClassPath(final String [] args) {
     String cp = "";
     for (int i = 0; i < args.length; i++) {

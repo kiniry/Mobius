@@ -68,6 +68,14 @@ public final class Util extends mobius.bico.Util {
     return name + "Annotations." + Util.coqify(decl.getName());
     
   }
+  
+  /**
+   * Returns the string representing the signature of 
+   * this method. The form of what is returned is: 
+   * <code>classNameSignature.methName</code>
+   * @param decl the method from which we want to get the signature
+   * @return The name of the Signature version of the method
+   */
   public static String getMethodSigModule(final MethodGen decl) {
 
     final String name = decl.getClassName().replace('.', '_');
@@ -75,6 +83,14 @@ public final class Util extends mobius.bico.Util {
     return name + "Signature." + Util.coqify(decl.getName());
     
   }
+  
+  /**
+   * Returns the string representing the main module of 
+   * this method. The form of what is returned is: 
+   * <code>className.methName</code>
+   * @param decl the method from which we want to get the module
+   * @return The name of the module version of the method
+   */
   public static String getMethodModule(final MethodGen decl) {
 
     final String name = decl.getClassName().replace('.', '_');
@@ -83,54 +99,7 @@ public final class Util extends mobius.bico.Util {
     
   }
 
-  /**
-   * Returns the string representing the annotations 
-   * bounded to this method. The form of what is returned is: 
-   * <code>classNameAnnotations.methName</code>
-   * @param decl the method from which we want to get the annotations
-   * @return The name of the Annotations version of the method
-   * @deprecated
-   */
-  public static String getMethodAnnotModule(final RoutineDecl decl) {
-    final TypeDecl clzz = decl.parent;
-    final TypeSig sig = TypeSig.getSig(clzz);
-    final String name = sig.getExternalName().replace('.', '_');
 
-    if (decl instanceof MethodDecl) {
-      return name + "Annotations." + decl.id();
-    }
-    else {
-      return name + "Annotations._init_";
-    }
-  }
-  
-  /** @deprecated */
-  public static String getMethodSigModule(final RoutineDecl decl) {
-    final TypeDecl clzz = decl.parent;
-    final TypeSig sig = TypeSig.getSig(clzz);
-    final String name = sig.getExternalName().replace('.', '_');
-
-    if (decl instanceof MethodDecl) {
-      return name + "Signature." + decl.id();
-    }
-    else {
-      return name + "Signature._init_";
-    }
-  }
-  
-  /** @deprecated */
-  public static String getMethodModule(final RoutineDecl decl) {
-    final TypeDecl clzz = decl.parent;
-    final TypeSig sig = TypeSig.getSig(clzz);
-    final String name = sig.getExternalName().replace('.', '_');
-
-    if (decl instanceof MethodDecl) {
-      return name + "." + decl.id();
-    }
-    else {
-      return name + "._init_";
-    }
-  }
   /**
    * Find the last instruction of a loop.
    * In practice, it finds the last instruction before the test.
@@ -162,53 +131,8 @@ public final class Util extends mobius.bico.Util {
   }
   
   
-  /**
-   * Returns the variables of a method, alive at a given line.
-   * @deprecated not used anymore, a more precise method of
-   * collecting the variables is used instead
-   * @param met the method to inspect
-   * @param lines the lines to consider
-   * @return the variables used in a given method
-   */
-  public static List<LocalVariableGen> getValidVariables(final MethodGen met, 
-                                                         final List<LineNumberGen> lines) {
-    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
-    final LocalVariableGen[] lvt = met.getLocalVariables();
-    int skip = met.getArgumentNames().length; // we skip the n first variables
-   
-    for (LocalVariableGen local: lvt) {
-      if (skip > 0) {
-        skip--;
-      }
-      else if (Util.belongs(local, lines)) {
-        
-        res.add(local);
-      }
-    }
-    return res;
-  }
-  
-  /**
-   * Returns true if a variable is alive for a given program point.
-   * @deprecated used only by {@link #getValidVariables(MethodGen, List)}
-   * which is deprecated.
-   * @param local a local variable
-   * @param lines lines of a method
-   * @return if a variable is alive at given line(s)
-   */
-  private static boolean belongs(final LocalVariableGen local, 
-                                final List<LineNumberGen> lines) {
-    
-    for (LineNumberGen line: lines) {
-      final int linePc = line.getLineNumber().getStartPC();
-      final int localPc = local.getStart().getPosition();
-      if ((linePc >= localPc) &&
-          (line.getLineNumber().getStartPC() <= localPc + local.getStart().getPosition())) {
-        return true;
-      }
-    }
-    return false;
-  }
+
+
   
   /**
    * Return a line number gen corresponding to the given line.
@@ -236,7 +160,8 @@ public final class Util extends mobius.bico.Util {
     return min;
   }
 
-  public static LineNumberGen getLineNumbers(final MethodGen met, final InstructionHandle ih) {
+  public static LineNumberGen getLineNumbers(final MethodGen met, 
+                                             final InstructionHandle ih) {
     LineNumberGen res = null;
     int olddiff = 100;
     for (LineNumberGen lng: met.getLineNumbers()) {
@@ -406,21 +331,7 @@ public final class Util extends mobius.bico.Util {
     args.addAll(prop.getLocalVars());
     return args;
   }
-  
-  /**
-   * Tells whether or not the method return type is void.
-   * @param meth the method to inspect
-   * @return true if the method returns void
-   */
-  public static boolean isVoid(final RoutineDecl meth) {
-    if (meth instanceof MethodDecl) {
-      final MethodDecl md = (MethodDecl) meth;
-      return javafe.tc.Types.isVoidType(md.returnType);  
-    }
-    else {
-      return true;
-    }
-  }
+
   
   /**
    * Tells whether or not the method return type is void.
@@ -510,7 +421,11 @@ public final class Util extends mobius.bico.Util {
     return resName;
   }
   
-  
+  /**
+   * Tells whether or not the given variable is a ghost variable.
+   * @param s the variable to check
+   * @return true if s is a ghost variable
+   */
   public static boolean isGhostVar(final LocalVarDecl s) {
     for (final ModifierPragma p: s.pmodifiers.toArray()) {
       if (p.getTag() == TagConstants.GHOST) {
@@ -626,7 +541,12 @@ public final class Util extends mobius.bico.Util {
     return rd.toString();
   }
   
-  //TODO: review
+  
+  /**
+   * Tells whether or not the given method is a helper.
+   * @param met the method to check
+   * @return true if met is a helper
+   */
   public static boolean isHelper(final RoutineDecl met) {
     boolean helper = false;
     if (met.pmodifiers != null) {
@@ -643,7 +563,13 @@ public final class Util extends mobius.bico.Util {
   }
 
 
-
+  /**
+   * Returns true if the expression is a JavaFE assign expression. 
+   * eg. assign, asgmul, asgrem, asgadd, asgsub, asglshift, asgrshift
+   * asgurshift, asgbitand
+   * @param expr the expression to check
+   * @return true if the expression is a binary assign expression
+   */
   public static boolean isAssignExpr(final BinaryExpr expr) {
     final int op = expr.op;
     return (op == OperatorTags.ASSIGN) || 
@@ -657,6 +583,22 @@ public final class Util extends mobius.bico.Util {
             (op == OperatorTags.ASGURSHIFT) || 
             (op == OperatorTags.ASGBITAND);
   }
+  
+  public static boolean isArithBinExpr(final BinaryExpr expr) {
+    final int op = expr.op;
+    return  (op == TagConstants.BITOR) ||
+            (op == TagConstants.BITXOR) ||
+            (op == TagConstants.BITAND) ||
+            (op == TagConstants.LSHIFT) ||
+            (op == TagConstants.RSHIFT) ||
+            (op == TagConstants.URSHIFT) ||
+            (op == TagConstants.ADD) ||
+            (op == TagConstants.SUB) ||
+            (op == TagConstants.STAR) ||
+            (op == TagConstants.DIV) ||
+            (op == TagConstants.MOD);
+
+  }
 
   public static boolean isBinExpr(final BinaryExpr expr) {
     final int op = expr.op;
@@ -668,21 +610,17 @@ public final class Util extends mobius.bico.Util {
             (op == TagConstants.GT) ||
             (op == TagConstants.LE) ||
             (op == TagConstants.LT) ||
-            (op == TagConstants.BITOR) ||
-            (op == TagConstants.BITXOR) ||
-            (op == TagConstants.BITAND) ||
-            (op == TagConstants.LSHIFT) ||
-            (op == TagConstants.RSHIFT) ||
-            (op == TagConstants.URSHIFT) ||
-            (op == TagConstants.ADD) ||
-            (op == TagConstants.SUB) ||
-            (op == TagConstants.STAR) ||
-            (op == TagConstants.DIV) ||
-            (op == TagConstants.MOD);
+            isArithBinExpr(expr);
   }
+         
 
 
-
+  /**
+   * Returns true in case the expression is a JML specific expression.
+   * eg. implies, explies, iff, niff, subtype, dotdot
+   * @param expr the expression to check
+   * @return true if the operator is a JML op.
+   */
   public static boolean isJMLExpr(final BinaryExpr expr) {
     final int op = expr.op;
     return  (op == TagConstants.IMPLIES) ||
@@ -693,6 +631,120 @@ public final class Util extends mobius.bico.Util {
             (op == TagConstants.DOTDOT);
 
   }
+  
+  
+  /**
+   * Tells whether or not the method return type is void.
+   * @param meth the method to inspect
+   * @return true if the method returns void
+   * @deprecated use {@link #isVoid(MethodGen)} instead
+   */
+  public static boolean isVoid(final RoutineDecl meth) {
+    if (meth instanceof MethodDecl) {
+      final MethodDecl md = (MethodDecl) meth;
+      return Types.isVoidType(md.returnType);  
+    }
+    else {
+      return true;
+    }
+  }
+  /**
+   * Returns the string representing the annotations 
+   * bounded to this method. The form of what is returned is: 
+   * <code>classNameAnnotations.methName</code>
+   * @param decl the method from which we want to get the annotations
+   * @return The name of the Annotations version of the method
+   * @deprecated use {@link #getMethodAnnotModule(MethodGen)} instead
+   */
+  public static String getMethodAnnotModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
 
+    if (decl instanceof MethodDecl) {
+      return name + "Annotations." + decl.id();
+    }
+    else {
+      return name + "Annotations._init_";
+    }
+  }
+  
+  /** @deprecated use {@link #getMethodSigModule(MethodGen)} instead */
+  public static String getMethodSigModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
 
+    if (decl instanceof MethodDecl) {
+      return name + "Signature." + decl.id();
+    }
+    else {
+      return name + "Signature._init_";
+    }
+  }
+  
+  /** 
+   * @deprecated use {@link #getMethodModule(MethodGen)} instead. 
+   */
+  public static String getMethodModule(final RoutineDecl decl) {
+    final TypeDecl clzz = decl.parent;
+    final TypeSig sig = TypeSig.getSig(clzz);
+    final String name = sig.getExternalName().replace('.', '_');
+
+    if (decl instanceof MethodDecl) {
+      return name + "." + decl.id();
+    }
+    else {
+      return name + "._init_";
+    }
+  }
+  
+  /**
+   * Returns true if a variable is alive for a given program point.
+   * @deprecated used only by {@link #getValidVariables(MethodGen, List)}
+   * which is deprecated.
+   * @param local a local variable
+   * @param lines lines of a method
+   * @return if a variable is alive at given line(s)
+   */
+  private static boolean belongs(final LocalVariableGen local, 
+                                final List<LineNumberGen> lines) {
+    
+    for (LineNumberGen line: lines) {
+      final int linePc = line.getLineNumber().getStartPC();
+      final int localPc = local.getStart().getPosition();
+      if ((linePc >= localPc) &&
+          (line.getLineNumber().getStartPC() <= localPc + local.getStart().getPosition())) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Returns the variables of a method, alive at a given line.
+   * @deprecated not used anymore, a more precise method of
+   * collecting the variables is used instead
+   * @param met the method to inspect
+   * @param lines the lines to consider
+   * @return the variables used in a given method
+   */
+  public static List<LocalVariableGen> getValidVariables(final MethodGen met, 
+                                                         final List<LineNumberGen> lines) {
+    final List<LocalVariableGen> res = new Vector<LocalVariableGen>();
+    final LocalVariableGen[] lvt = met.getLocalVariables();
+    int skip = met.getArgumentNames().length; // we skip the n first variables
+   
+    for (LocalVariableGen local: lvt) {
+      if (skip > 0) {
+        skip--;
+      }
+      else if (Util.belongs(local, lines)) {
+        
+        res.add(local);
+      }
+    }
+    return res;
+  }
+  
 }

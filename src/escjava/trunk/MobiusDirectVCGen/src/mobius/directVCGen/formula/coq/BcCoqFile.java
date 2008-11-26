@@ -59,5 +59,3 @@ public class BcCoqFile extends CoqFile {
     return proof;
   }
 }
-
-

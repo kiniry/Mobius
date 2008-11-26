@@ -18,6 +18,7 @@ import escjava.sortedProver.Lifter.Term;
 
 /**
  * @author Herman Lehner (hermann.lehner@inf.ethz.ch)
+ * @author J. Charles (julien.charles@inria.fr)
  */
 public final class Lookup {
   
@@ -35,11 +36,11 @@ public final class Lookup {
     new HashMap<PositionHint, Term>();
 
   /** map containing RoutineDecl as keys and Terms (the postcondition) as value. **/
-  private Map<PositionHint, Post> fPostconditions = 
+  private final Map<PositionHint, Post> fPostconditions = 
     new HashMap<PositionHint, Post>();
 
   /** map containing RoutineDecl as keys and Terms (the exceptional postcondition) as value. */
-  private Map<PositionHint, Post> fExceptionalPostconditions = 
+  private final Map<PositionHint, Post> fExceptionalPostconditions = 
     new HashMap<PositionHint, Post>();
 
   
@@ -52,7 +53,7 @@ public final class Lookup {
 
   /** the current annotation generator which generates the informations
       of the lookup class. */
-  private IAnnotationGenerator fAnnotGen; 
+  private final IAnnotationGenerator fAnnotGen; 
   
   
   /**

@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mobius.bico.bicolano.coq.CoqStream;
-import mobius.bico.dico.MethodHandler;
 import mobius.bico.executors.ABasicExecutor;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
@@ -29,6 +28,17 @@ import escjava.sortedProver.Lifter.Term;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class AnnotationMethodExecutor extends ABasicExecutor {
+  /** precondition name. */
+  private static final String namePre = "pre";
+  /** postcondition name. */
+  private static final String namePost = "post";
+  /** assertion list name. */
+  private static final String nameAssertion = "assertion";
+  /** assumption list name. */
+  private static final String nameAssumption = "assumption";
+  /** specification name. */
+  private static final String nameSpec = "spec";
+  
   
   /** the current method (routine) that is treated - bcel style. */
   private final MethodGen fMeth;
@@ -37,6 +47,14 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   private final CoqStream fAnnotOut;
   
 
+  
+  /**
+   * Creates a method executor.
+   * @param be the parent executor
+   * @param annotationOut the stream to write the annotations to
+   * @param clzz the class that is being treated
+   * @param met the method that is being treated
+   */
   public AnnotationMethodExecutor(final ABasicExecutor be, 
                                   final CoqStream annotationOut, 
                                   final ClassGen clzz, 
@@ -58,53 +76,45 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
   }
   
   private void doMethodPreAndPostDefinition() {
-    final MethodHandler hdl = getMethodHandler();
-    final String name = hdl.getName(fMeth);
-    final String nameModule = name;
-    final String namePre = "pre";
-    final String namePost = "post";
-    final String nameAssertion = "assertion";
-    final String nameAssumption = "assumption";
-    final String nameSpec = "spec";
+    final String nameModule = getMethodHandler().getName(fMeth);
+
     int needed = 0;
     if (fMeth.getInstructionList() != null) {
       needed = fMeth.getInstructionList().getEnd().getPosition(); 
     }
-    final String defaultSpecs = "(" +
-             needed + 
-            "%nat,,global_spec)";
+    final String defaultSpecs = "(" + needed + "%nat,,global_spec)";
 
     final CoqStream out = getAnnotationOut();
-    
-    out.println("Module " + nameModule + ".");
-    out.incTab();
+    out.startModule(nameModule);
     
     // pre and post def
-    doMethodPre(namePre);
-    doMethodPost(namePost);
-    out.println("Definition global_spec: GlobalMethSpec := (" + namePre + 
-                " ,, " + namePost + ").\n");
-
-    // assertion and assumption def
+    doMethodPre();
+    doMethodPost();
+    out.definition("global_spec", "GlobalMethSpec", 
+                   "(" + namePre + " ,, " + namePost + ")");
+    out.println();
     
-    out.println("Definition " + nameAssertion + " := " +
-                AnnotationVisitor.getAssertion(out, fMeth) + ".");
-    out.println("Definition " + nameAssumption + " :=" +
-                  " (PCM.empty Assumption).");
-    out.println("Definition local_spec: LocMethSpec := (" + nameAssertion + " ,, " + 
-                nameAssumption + ").\n");
+    // assertion and assumption def
+    final String [] annots =  AnnotationCollector.getAssertion(out, fMeth); 
+    out.definition(nameAssertion, annots[0]);
+    out.definition(nameAssumption, annots[1]);
+    out.definition("local_spec", "LocMethSpec",
+                   "(" + nameAssertion + " ,, " + nameAssumption + ")");
+    out.println();
     
     // al together
-    out.println("Definition " + nameSpec + " :=");
-    out.incTab();
+    out.definitionStart(nameSpec);
+    out.incPrintln();
     out.println("(" + defaultSpecs + ",,local_spec). ");
     out.decTab();
-    out.decTab();
-    out.println("End " + nameModule + ".\n");
-    
+    out.endModule(nameModule);
+    out.println();    
   }
   
-  
+  /**
+   * Returns the output stream to write the annotation file.
+   * @return an outputstream
+   */
   protected CoqStream getAnnotationOut() {
     return fAnnotOut;
   }
@@ -116,11 +126,10 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
    * one mk_namePre, being the one to use with the source memory model
    * the other namePre, to use with the bytecode memory model. 
    * 
-   * @param namePre the name of the precondition.
    */
-  private void doMethodPre(final String namePre) {
+  private void doMethodPre() {
     final CoqStream out = getAnnotationOut();
-    out.println("Definition mk_" + namePre + " := ");
+
     final List<QuantVariableRef> list = Lookup.getInst().getPreconditionArgs(fMeth);
 
     String varsAndType = "";
@@ -130,15 +139,17 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
       varsAndType += " (" + vname + ": " + Formula.generateType(qvr.getSort()) +  ")";
       
     }
-
-    out.incTab();
+    
+    out.definitionStart("mk_" + namePre);
+    out.incPrintln();
     out.println("fun " + varsAndType + " => ");
     out.incTab();
     out.println(Formula.generateFormulas(Lookup.getInst().getPrecondition(fMeth)) + ".");
     out.decTab();
     out.decTab();
-    out.println("Definition " + namePre + " (s0:InitState): list Prop := ");
-    out.incTab();
+    
+    out.definitionStart(namePre + " (s0:InitState)", "list Prop");
+    out.incPrintln();
     final String vars = doLetPre();
     out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
@@ -147,8 +158,12 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.decTab();
   }
   
-  
-  private void doMethodPost(final String namePost) {
+  /**
+   * Prints the method postcondition. Generates 2 definitions,
+   * one mk_namePost, being the one to use with the source memory model
+   * the other namePost, to use with the bytecode memory model. 
+   */
+  private void doMethodPost() {
     final CoqStream out = getAnnotationOut();
     // definition of the mk method
     out.println("Definition mk_" + namePost + " := ");
@@ -231,9 +246,8 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     out.decTab();
     
     // definition of the usable version
-    out.println("Definition " + namePost + " (s0:InitState) (t:ReturnState): " +
-        "list Prop := ");
-    out.incTab();
+    out.definitionStart(namePost + " (s0:InitState) (t:ReturnState)", "list Prop");
+    out.incPrintln();
     final String vars = doLetPost();
     out.incTab();
     //out.println(tab, "   let " + Ref.varThis + " := (do_lvget (fst s0) 0%N)" + " in " +
@@ -264,7 +278,11 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     return vars;
   }
   
-  
+  /**
+   * Returns the let expression used to define post, using the predicate
+   * mk_post.
+   * @return a string representing the let expression
+   */
   private String doLetPost() {
     final CoqStream out = getAnnotationOut();
     String vars = "";

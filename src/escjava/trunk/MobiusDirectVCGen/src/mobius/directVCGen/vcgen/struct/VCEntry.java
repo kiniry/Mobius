@@ -27,9 +27,6 @@ public class VCEntry {
   
   /** the list of excp post condition; used for the try...catch constructs. */
   public final List<ExcpPost> lexcpost = new ArrayList<ExcpPost>();
-
-
-  
   
   /** the list of postconditions for breaks in case of labels. */
   public final Map<Identifier, Post> lbrpost = new HashMap<Identifier, Post>(); 
@@ -37,7 +34,7 @@ public class VCEntry {
   /** the list of postconditions of the continue if there are labels attached to loops. */
   public final Map<Identifier, Post> lcontpost = new HashMap<Identifier, Post>(); 
 
-  
+  /** tells if a boolean expression is currently inspected. */
   public boolean isBoolExpression = false;
 
   /**
@@ -70,10 +67,10 @@ public class VCEntry {
    * @param contpost the postcondition for a continue without any label
    */
   public VCEntry(final Post post, final Post excpost, final Post brpost, final Post contpost) {
-    this.setPost(post);
-    this.fBrPost = brpost;
-    this.fContPost = contpost;
-    this.fExcPost =  excpost;
+    setPost(post);
+    fBrPost = brpost;
+    fContPost = contpost;
+    fExcPost =  excpost;
   }
 
   /**
@@ -83,10 +80,7 @@ public class VCEntry {
    * @param ve the object to copy
    */
   public VCEntry(final VCEntry ve) {
-    setPost(ve.getPost());
-    fBrPost = ve.fBrPost;
-    fContPost = ve.fContPost;
-    fExcPost = ve.getExcPost();
+    this(ve.getPost(), ve.fBrPost, ve.fContPost, ve.getExcPost());
     lexcpost.addAll(ve.lexcpost);
     lbrpost.putAll(ve.lbrpost);
     lcontpost.putAll(ve.lcontpost);

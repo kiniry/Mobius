@@ -52,6 +52,8 @@ import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Set.Assignment;
+import mobius.directVCGen.vcgen.MethodVisitor;
+import mobius.directVCGen.vcgen.VarCorrDecoration;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
@@ -71,7 +73,7 @@ import escjava.sortedProver.Lifter.Term;
  */
 public class StmtVCGen extends ExpressionVisitor {
   /** the side conditions that were generated. */
-  private List<Term> fVcs = new Vector<Term>();
+  private LinkedList<Term> fVcs = new LinkedList<Term>();
   
   /** the visitor to visit expressions. */
   private final ExpressionVisitor fExprVisitor = new ExpressionVisitor();
@@ -91,8 +93,9 @@ public class StmtVCGen extends ExpressionVisitor {
     return fVariables;
   }
 
-  public StmtVCGen(final MethodGen meth, List<QuantVariableRef> variables) {
+  public StmtVCGen(final MethodGen meth) {
     fMeth = meth;
+    final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
     fVariables = variables;
     
   }
@@ -108,34 +111,36 @@ public class StmtVCGen extends ExpressionVisitor {
     if (annot == null) {
       return vce.getPost();
     }
-    Term post = vce.getPost().getPost();
+    Term post = null;
     final int len = annot.size();
     for (int i = len - 1; i >= 0; i--) {
       final AAnnotation aa = annot.get(i);
       switch(aa.getID()) {
         case AAnnotation.annotAssert:
-          fVcs.add(Logic.implies(aa.getFormula(), post));
+          fVcs.add(Post.implies(aa.getFormula(), vce.getPost()));
           post = aa.getFormula();
           break;
         case AAnnotation.annotCut:
-          post = Logic.and(aa.getFormula(), Logic.implies(aa.getFormula(), post));
+          post = Logic.and(aa.getFormula(), Post.implies(aa.getFormula(), vce.getPost()));
           break;
         case AAnnotation.annotAssume:
-          post = Logic.implies(aa.getFormula(), post);
+          post = Post.implies(aa.getFormula(), vce.getPost());
           break;
         case AAnnotation.annotSet: {
           final mobius.directVCGen.formula.annotation.Set s = 
             (mobius.directVCGen.formula.annotation.Set) aa;
+          Term p = vce.getPost().getPost();
           if (s.getAssignment() != null) {
             final Assignment ass = s.getAssignment();
-            post.subst(ass.getVar(), ass.getExpr());
+            p = p.subst(ass.getVar(), ass.getExpr());
           }
           else if (s.getDeclaration() != null) {
             if (s.getAssignment() == null) {
-              post = Logic.forall(s.getDeclaration().qvar, post);
+              p = Logic.forall(s.getDeclaration().qvar, p);
             }
             addVarDecl(s.getDeclaration().qvar);
           }
+          post = p;
           break;
         }
   
@@ -156,7 +161,7 @@ public class StmtVCGen extends ExpressionVisitor {
     Post post = treatAnnot(entry, getAnnotPost(x));
     final QuantVariableRef b  = Expression.rvar(Bool.sort);
 
-    post = new Post(b, Logic.and(b, Logic.implies(b, post.getPost())));
+    post = new Post(b, Logic.and(b, Post.implies(b, post)));
     entry.setPost(post);
     post = (Post)x.pred.accept(fExprVisitor, entry);
     return treatAnnot(entry, getAnnotPre(x));
@@ -246,11 +251,11 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final QuantVariableRef v = Expression.rvar(Bool.sort);
     vce.setPost(new Post(v,
-                        Logic.and(Logic.implies(Logic.boolToPred(v), bodypre.getPost()),
+                        Logic.and(Post.implies(Logic.boolToPred(v), bodypre),
                                   Logic.implies(Logic.not(Logic.boolToPred(v)), post))));
     // the only field that can be modified in a VCentry is post 
-    final Term aux = ((Post) x.expr.accept(fExprVisitor, vce)).getPost();
-    fVcs.add(Logic.implies(inv, aux));
+    final Post aux = ((Post) x.expr.accept(fExprVisitor, vce));
+    fVcs.add(Post.implies(inv, aux));
 
     vce.setPost(pinv);
     return treatAnnot(vce, getAnnotPre(x));
@@ -545,7 +550,7 @@ public class StmtVCGen extends ExpressionVisitor {
     final List<Term> oldvcs = fVcs;
 
     final QuantVariableRef qvr = Expression.rvar(qv);
-    fVcs = new Vector<Term>();
+    fVcs = new LinkedList<Term>();
     for (Term t: oldvcs) {
       // the quantification is preemptive
       fVcs.add(t);
@@ -588,7 +593,7 @@ public class StmtVCGen extends ExpressionVisitor {
     // the normal post
     //QuantVariableRef res = entry.post.var;
     Term tNormal = normalPost.getPost();
-    tNormal = Logic.implies(tNormal, entry.getPost().getPost()).subst(Ref.varThis, newThis);
+    tNormal = Post.implies(tNormal, entry.getPost()).subst(Ref.varThis, newThis);
 
     entry.setPost(new Post(Logic.and(pre, Logic.implies(pre, Logic.and(tNormal, tExcp)))));
     final List<QuantVariableRef> v = mkArguments(ci);
@@ -635,11 +640,11 @@ public class StmtVCGen extends ExpressionVisitor {
 
     final QuantVariableRef v = Expression.rvar(Logic.sort);
     vce.setPost(new Post(v, 
-                        Logic.and(Logic.implies(v, bodypre.getPost()),
+                        Logic.and(Post.implies(v, bodypre),
                                   Logic.implies(Logic.not(v), post))));
 
-    final Term aux = ((Post) x.test.accept(fExprVisitor, vce)).getPost();
-    final Term vc = Logic.implies(inv, aux);
+    final Post aux = ((Post) x.test.accept(fExprVisitor, vce));
+    final Term vc = Post.implies(inv, aux);
     // we add the for declared variables
 //    for (int i = x.forInit.size() - 1; i >= 0; i--) {
 //      final Stmt s = (Stmt) x.forInit.elementAt(i);
@@ -718,7 +723,7 @@ public class StmtVCGen extends ExpressionVisitor {
   }
 
 
-  public List<Term> getVcs() {
+  public LinkedList<Term> getVcs() {
     return fVcs;
   }
   
@@ -731,5 +736,22 @@ public class StmtVCGen extends ExpressionVisitor {
   
   AAnnotation getInvariant(final ASTNode n) {
     return fAnnot.getInvariant(fMeth, n);
+  }
+
+  public static List<Term> doWp(final MethodGen meth, final BlockStmt x, 
+                          final Term precondition, final VCEntry post) {
+    final StmtVCGen dvcg = new StmtVCGen(meth);
+    final Post wp = (Post)x.accept(dvcg, post);
+    
+    Term pre = Post.implies(precondition, wp);    
+    pre = MethodVisitor.addVarDecl(meth, pre);
+    final List<QuantVariableRef> largs = Lookup.getInst().getPreconditionArgs(meth);
+    for (Term vars: largs) {
+      final QuantVariableRef qvr = (QuantVariableRef) vars;
+      pre = pre.subst(Expression.old(qvr), qvr);
+    }
+    final LinkedList<Term> vcs = dvcg.getVcs();
+    vcs.addFirst(pre);
+    return vcs;
   }
 }

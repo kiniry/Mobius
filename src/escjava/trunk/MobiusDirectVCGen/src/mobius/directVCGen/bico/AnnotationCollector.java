@@ -9,6 +9,8 @@ import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Assume;
+import mobius.directVCGen.formula.annotation.Cut;
 
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -22,12 +24,14 @@ import escjava.sortedProver.Lifter.QuantVariableRef;
  * to mix them with bico.
  * @author J. Charles (julien.charles@inria.fr)
  */
-public final class AnnotationVisitor {
+public final class AnnotationCollector {
   /** the Coq type of the assertions. */
   private static final String assertionType = "(InitState -> LocalState -> list Prop)";
   /** the Coq representation of an empty assertion. */
   private static final String assertionEmpty = "(PCM.empty (" + assertionType + " " +
                                                               "** nat))";
+  /** the Coq representation of an empty assumption. */
+  private static final String assumptionEmpty = "(PCM.empty ( Assumption ** nat))";
   /** the decorator that add the annotations or read the annotations from a node. */
   private final AnnotationDecoration fAnnot = AnnotationDecoration.inst;
 
@@ -39,6 +43,11 @@ public final class AnnotationVisitor {
   /** the output file. */
   private final CoqStream fOut;
   
+  /** the list of collected assertions. */
+  private String fAssertionList;
+  /** the list of collected assumptions. */
+  private String fAssumptionList;
+  
 
 
   /**
@@ -46,7 +55,7 @@ public final class AnnotationVisitor {
    * @param out the file where to output the annotations
    * @param met the method to inspect
    */
-  private AnnotationVisitor(final CoqStream out, 
+  private AnnotationCollector(final CoqStream out, 
                             final MethodGen met) {
     fOut = out;
     fMet = met;
@@ -54,14 +63,21 @@ public final class AnnotationVisitor {
 
   }
 
-  /** {@inheritDoc} */
-  public String start() {
+  /**
+   * Starts the process of collecting the annotations.
+   * @return an array containing the list of assertion and the list of 
+   * assumption of the form [assertions, assumptions]
+   */
+  public String[] start() {
     final InstructionList il = fMet.getInstructionList();
     
-    String res = assertionEmpty;
+    fAssertionList =  assertionEmpty;
+    fAssumptionList = assumptionEmpty;
     if (il == null) {
-      return res;
+      return null;
     }
+    final String endOfMeth = fMet.getInstructionList().getEnd().getPosition() + "%nat";
+    
     for (InstructionHandle ih: il.getInstructionHandles()) {
       final PositionHint hint = new PositionHint(fMet, ih);
       if (fAnnot.getAnnotPost(hint) != null) {
@@ -70,12 +86,20 @@ public final class AnnotationVisitor {
       }
       if (fAnnot.getAnnotPre(hint) != null) {
         // let's do something else
-        //final int lineNum = Location.toLineNumber(x.getStartLoc());
-        //final List<LineNumberGen> lineList = Util.getLineNumbers(fMet, lineNum);
         final List<AAnnotation> list = fAnnot.getAnnotPre(hint);
+        final String position = hint.getPostion() + "%N";
         for (AAnnotation annot: list) {
           buildMker(annot);
-          buildDefiner(annot);      
+          buildDefiner(annot);  
+          if (annot instanceof Cut) {
+            fAssertionList = "(PCM.update " + fAssertionList + " " + position +
+                            " (" + annot.getName() + ",," + endOfMeth + "))";
+          }
+          else if (annot instanceof Assume) {
+            fAssumptionList = "(PCM.update " + fAssumptionList + " " + position +
+                            " (" + annot.getName() + ",," + endOfMeth + "))";
+
+          }
         }
       }
       if (fAnnot.getInvariant(hint) != null) {
@@ -85,13 +109,12 @@ public final class AnnotationVisitor {
         buildMker(inv);
         buildDefiner(inv);
         
-        res = "(PCM.update " + res + " " + hint.getPostion() + "%N" +
-                      " (" + inv.getName() + ",," +  
-                          fMet.getInstructionList().getEnd().getPosition() + "%nat))";
+        fAssertionList = "(PCM.update " + fAssertionList + " " + hint.getPostion() + "%N" +
+                      " (" + inv.getName() + ",," +  endOfMeth + "))";
       }
     }
+    return new String [] {fAssertionList, fAssumptionList};
     
-    return res;
   }
   
   
@@ -178,15 +201,14 @@ public final class AnnotationVisitor {
    * Returns the assertion enumeration.
    * @param out the file to dump the assertion definition to
    * @param met the method to inspect, from BCEL
-   * @return an enumeration of assertions
+   * @return an array containing the enumeration of assertions, assumptions. 
    */
-  public static String getAssertion(final CoqStream out,  
+  public static String[] getAssertion(final CoqStream out,  
                                     final MethodGen met) {
-    final AnnotationVisitor vis = new AnnotationVisitor(out, met);
+    final AnnotationCollector vis = new AnnotationCollector(out, met);
     //VarCorrVisitor.annotateWithVariables(met);
-    final String res = vis.start();
- 
-    return res;
+    
+    return vis.start();
   }
   
 }

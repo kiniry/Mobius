@@ -5,11 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import org.apache.bcel.generic.MethodGen;
 
 import javafe.ast.BlockStmt;
 import javafe.ast.RoutineDecl;
@@ -18,8 +15,8 @@ import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
@@ -27,6 +24,9 @@ import mobius.directVCGen.formula.coq.EquivCoqFile;
 import mobius.directVCGen.vcgen.struct.Post;
 import mobius.directVCGen.vcgen.struct.VCEntry;
 import mobius.directVCGen.vcgen.wp.StmtVCGen;
+
+import org.apache.bcel.generic.MethodGen;
+
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.STerm;
@@ -37,6 +37,9 @@ import escjava.sortedProver.NodeBuilder.STerm;
  * @author J. Charles (julien.charles@inria.fr)
  */
 public final class MethodVisitor extends DirectVCGen {
+  /** the suffix for the raw files. */
+  private static final String rawsuffix = ".raw";
+  
   /** the name of the method associated with this object. */
   private MethodGen fMeth;
   
@@ -84,46 +87,18 @@ public final class MethodVisitor extends DirectVCGen {
    * Dump the proof obligations to the raw file and to prover specific files.
    */
   private void dump() {
-    int num = 1;
-    final String rawsuffix = ".raw";
-        
+    
+    // write the goals
+    final Term all = writeGoalFiles();
+    
+    // write the files containing the method proof obligations
     try {
       final BcCoqFile bcf = new BcCoqFile(getBaseDir(), getWorkingDir());
       bcf.doIt(fMeth);
-    } 
-    catch (FileNotFoundException e1) {
-      e1.printStackTrace();
-    }
-    Term all = null;
-    for (Term t: fVcs) {
-      final String name = "goal" + num++;
-      try {
-        final PrintStream fos = new PrintStream(
-               new FileOutputStream(new File(getWorkingDir(), name + rawsuffix)));
-        fos.println(t);
-        fos.close();
-        final CoqFile cf = new CoqFile(getBaseDir(), getWorkingDir(), name);
-        cf.writeProof(Formula.generateFormulas(t));
-        if (all == null) {
-          all = t;
-        }
-        else {
-          all = Logic.and(t, all);
-        }
-      }
-      catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    
-    // write the file
-
-    try {
+      
       final CoqFile cf = new CoqFile(getBaseDir(), getWorkingDir());
       final STerm term = Formula.generateFormulas(all);
       cf.writeProof(term);
-      
-      
       
       final EquivCoqFile ecf = new EquivCoqFile(getBaseDir(), getWorkingDir());
       ecf.doIt(fMeth, term);
@@ -134,6 +109,42 @@ public final class MethodVisitor extends DirectVCGen {
 
   }
 
+  
+  /**
+   * Writes the goal files and the raw goal files, 
+   * and returns the source proof obligation for the whole method.
+   * 
+   * @return A term being the conjunction of all the goals
+   */
+  private Term writeGoalFiles() {
+    int num = 1;  
+    Term all = null;
+    for (Term t: fVcs) {
+      final String name = "goal" + num++;
+      try {
+        final PrintStream fos = new PrintStream(
+               new FileOutputStream(new File(getWorkingDir(), name + rawsuffix)));
+        fos.println(t);
+        fos.close();
+        
+        final CoqFile cf = new CoqFile(getBaseDir(), getWorkingDir(), name);
+        cf.writeProof(Formula.generateFormulas(t));
+        
+      }
+      catch (IOException e) {
+        e.printStackTrace();
+      }
+      
+      if (all == null) {
+        all = t;
+      }
+      else {
+        all = Logic.and(t, all);
+      }
+    }
+    return all;
+  }
+
 
 
   /**
@@ -142,20 +153,38 @@ public final class MethodVisitor extends DirectVCGen {
    */
   @Override
   public void visitBlockStmt(final /*@non_null*/ BlockStmt x) {
+    final String name = Util.getMethodAnnotModule(fMeth);
+      
+    final VCEntry post = getPostcondition();
+    
+    final List<QuantVariableRef> largs = Lookup.getInst().getPreconditionArgs(fMeth);
+    final Term[] args = largs.toArray(new Term [largs.size()]);
+    final Term pre = Expression.sym(name + ".mk_pre", args);
+
+    final List<Term> vcs = StmtVCGen.doWp(fMeth, x, pre, post);
+    for (Term t: vcs) { 
+      fVcs.add(t);
+    }
+    addVarDecl();
+  }
+
+  /**
+   * Prepares the postcondition to be used with the wp calculus.
+   * @return the postcondition that will be used with the wp
+   */
+  private VCEntry getPostcondition() {
+    final String name = Util.getMethodAnnotModule(fMeth);
+    final Lookup lkUp = Lookup.getInst();
     Post normPost;
     Post excpPost;
-    final Lookup lkUp = Lookup.getInst();
-    final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(fMeth);
-    
-    final String name = Util.getMethodAnnotModule(fMeth);
-    Term[] tab = lkUp.getNormalPostconditionArgs(fMeth);
+    final Term[] tabNormPost = lkUp.getNormalPostconditionArgs(fMeth);
     normPost = new Post(lkUp.getNormalPostcondition(fMeth).getRVar(), 
-                        Expression.sym(name + ".mk_post", tab));
+                        Expression.sym(name + ".mk_post", tabNormPost));
   
 
-    tab = lkUp.getExcPostconditionArgs(fMeth);
+    final Term [] tabExcPost = lkUp.getExcPostconditionArgs(fMeth);
     excpPost = new Post(lkUp.getExceptionalPostcondition(fMeth).getRVar(), 
-                        Expression.sym(name + ".mk_post", tab));
+                        Expression.sym(name + ".mk_post", tabExcPost));
 
     
     final Term varThis = Ref.varThis;
@@ -166,42 +195,13 @@ public final class MethodVisitor extends DirectVCGen {
                         excpPost.subst(varThis, oldThis));
     System.out.println(normPost);
     final VCEntry post = new VCEntry(normPost, excpPost);
-    final StmtVCGen dvcg = new StmtVCGen(fMeth, variables);
-    final Post wp = (Post)x.accept(dvcg, post);
-    final List<Term> vcs = new ArrayList<Term>(); 
-    Term pre;
-
-    final List<QuantVariableRef> largs = lkUp.getPreconditionArgs(fMeth);
-    final Term[] args = largs.toArray(new Term [largs.size()]);
-    pre = Expression.sym(name + ".mk_pre", args);
-
-
-    pre = Logic.implies(pre, wp.getPost());
-    
-    pre = addVarDecl(fMeth, pre);
-    vcs.addAll (dvcg.getVcs());
-    
-    
-    for (Term vars: largs) {
-      final QuantVariableRef qvr = (QuantVariableRef) vars;
-      pre = pre.subst(Expression.old(qvr), qvr);
-    }
-    for (Term t: vcs) {
-      
-      fVcs.add(t);
-    }
-
-    addVarDecl();
-    
-    fVcs.addFirst(pre);    
-
+    return post;
   }
-
   
 
-
   /**
-   * Add the given variables to all the current vcs.
+   * Add the method variables to all the current vcs.
+   * It means the method arguments, the heap, plus their old versions.
    */
   public void addVarDecl() {
     final List<Term> oldvcs = fVcs;
@@ -215,8 +215,14 @@ public final class MethodVisitor extends DirectVCGen {
 
   }
   
-
-  public static Term addVarDecl(final MethodGen met, Term t) {
+  /**
+   * Adds all the variable declarations (arguments of the method), 
+   * plus the heap to the given term.
+   * @param met the method to get the variables from
+   * @param t the term to modify
+   * @return the term with the declarations added.
+   */
+  public static Term addVarDecl(final MethodGen met, final Term t) {
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(met);
     Term res = t;
     res = Logic.forall(Heap.var, res);
@@ -226,7 +232,14 @@ public final class MethodVisitor extends DirectVCGen {
     return res;
   }
 
-  public static Term addOldVarDecl(final MethodGen meth, Term t) {
+  /**
+   * Adds all the old variables declarations (arguments of the method put to
+   * old), plus the old heap to the given term.
+   * @param meth the method to get the variables from
+   * @param t the term to modify
+   * @return the term with the declarations added.
+   */
+  private static Term addOldVarDecl(final MethodGen meth, final Term t) {
     final List<QuantVariableRef> variables = VarCorrDecoration.inst.get(meth);
     Term res = t;
     res = Logic.forall(Heap.varPre, res);

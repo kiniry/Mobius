@@ -27,12 +27,8 @@ public final class Logic {
   /** the sort to represent the predicates. */
   public static final Sort sort = Formula.lf.sortPred;
 
-  /**
-   * @deprecated
-   */
-  private Logic() {
-    
-  }
+  /** */
+  private Logic() { }
   
   /**
    * Build a predicate term from two predicate terms.
@@ -228,6 +224,7 @@ public final class Logic {
   /**
    * Create an equals object; it has 2 arguments, and
    * they must have the same type.
+   * 
    * @param l the left argument
    * @param r the right argument
    * @return an equal object
@@ -248,12 +245,12 @@ public final class Logic {
                                          "found: " + l.getSort() + " and " + r.getSort());
     }
     
-    FnTerm t = null;
-    if ((l.getSort() == Bool.sort)) {
+    final FnTerm t;
+    if (l.getSort() == Bool.sort) {
       t = Formula.lf.mkFnTerm(Formula.lf.symBoolPred, new Term[] {left, right});
       t.tag = NodeBuilder.predEQ;
     }
-    if ((l.getSort() == Ref.sort)) {
+    else if (l.getSort() == Ref.sort) {
       t = Formula.lf.mkFnTerm(Formula.lf.symRefEQ, new Term[] {left, right});
     }
     else if (l.getSort() == Num.sortInt) {
@@ -523,27 +520,27 @@ public final class Logic {
   }
 
   /**
-   * Create the predicate that tells if a value is compatible with a specific type.
+   * Create the predicate that tells if a value is compatible 
+   * with a specific type.
+   * 
    * @param heap the current heap
    * @param val the value to check
    * @param type the type to check
    * @return the newly formed predicate
    */
   public static Term assignCompat(final Term heap, final Term val, final Term type) {
-    if (heap.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the first param should be heap (" + 
-                                         Heap.sort + "), found: " + heap.getSort());
-    }
-    if (type.getSort() != Type.sort) {
-      throw new IllegalArgumentException("Type of the second param should be ref (" + 
-                                         Type.sort + "), found: " + type.getSort());
-    }
+    checkType("the first param", heap, Heap.sort);
+    checkType("the second param", type, Type.sort);
+
     return Formula.lf.mkFnTerm(Formula.lf.symAssignCompat, new Term [] {heap, val, type});
   }
 
 
   /**
-   * @param heap Da heap
+   * The invariant predicate, representing the objects invariants.
+   * It builds the trem: <code>inv heap x t</code>.
+   * 
+   * @param heap the heap
    * @param x The object for which we want to get the invariant.
    * @param t The type where the invariant is defined.
    * @return A Predicate 'inv' representing an invariant of type t for object x.
@@ -554,21 +551,30 @@ public final class Logic {
 
 
   /**
+   * A predicate that expresses the fact whether a variable is alive,
+   * which means if it is allocated.
+   * The term is: <code>isAlive heap v</code>.
+   * 
    * @param heap Heap for which we want to know whether or not val is alive.
    * @param val The object in question.
    * @return A Term that expresses the predicate isAlloc(heap,val)
    */
   public static Term isAlive(final Term heap, final Term val) {
-    if (heap.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the first param should be heap (" + 
-                                         Heap.sort + "), found: " + heap.getSort());
-    }
+    checkType("the first param", heap, Heap.sort);
+    
     return Formula.lf.mkFnTerm(Formula.lf.symIsAlive, new Term [] {heap, val});
   }
 
 
 
   /**
+   * Creates a series of equality, which equals the variable with the types
+   * in the list. It creates the following term:
+   * <code>
+   * var = t1 \/ var = t2 \/ var = t3...
+   * </code>
+   * where <code>t1 t2 t3</code> belongs to list.
+   * 
    * @param var The object for which we want to find out whether it could
    * have been modified by the method.
    * @param list  a list of motifiable types.
@@ -593,30 +599,26 @@ public final class Logic {
   }
 
   /**
+   * A predicate to give the information that a field of a given object is
+   * assignable. It gives a term of the form: 
+   * <code>assignable heap heapPre target field</code>.
+   * 
    * @param heap the current heap
    * @param heapPre the old heap
    * @param target the object containing fieldVar
    * @param field field signature
    * @return A term used for assignable clauses
    */
-  public static Term assignablePred(
-                                    final QuantVariableRef heap, 
+  public static Term assignablePred(final QuantVariableRef heap, 
                                     final QuantVariableRef heapPre, 
                                     final QuantVariableRef target, 
                                     final QuantVariableRef field) {
-    if (heap.getSort() != Heap.sort || heapPre.getSort() != Heap.sort) {
-      throw new IllegalArgumentException("Type of the first and second " +
-          "param should be heap (" + Heap.sort + "), found: " + 
-          heap.getSort() + " and " + heapPre.getSort());
-    }
-    if (target.getSort() != Ref.sort) {
-      throw new IllegalArgumentException("Type of the third param should be ref (" + 
-                                         Ref.sort + "), found: " + target.getSort());
-    }
-    if (field.getSort() != Type.sortField) {
-      throw new IllegalArgumentException("Type of the fourth param should be fieldsig (" + 
-                                         Type.sortField + "), found: " + field.getSort());
-    }
+    
+    checkType("the first param", heap, Heap.sort);
+    checkType("the second param", heapPre, Heap.sort);
+    checkType("the third param", target, Ref.sort);
+    checkType("the fourth param", field, Type.sortField);
+
     return Formula.lf.mkFnTerm(Formula.lf.symAssignPred, 
                                new Term [] {heap, heapPre, 
                                             target, field});
@@ -640,6 +642,21 @@ public final class Logic {
                                                    Logic.falseValue())));
     System.out.println(Logic.and(Logic.trueValue(), Logic.falseValue()));
   }
-
+  
+  /**
+   * Check the type of the term against the given sort.
+   * 
+   * @param name common name of the term, e.g. the heap argument, 
+   * the second argument
+   * @param t the term to check against the type
+   * @param s the supposed type of the term
+   */
+  public static void checkType(final String name, 
+                               final Term t, final Sort s) {
+    if (t.getSort().equals(s)) {
+      throw new  IllegalArgumentException("Type of " + name + " should be " + s +
+                                          " found " + t.getSort() + "."); 
+    }
+  }
 
 }

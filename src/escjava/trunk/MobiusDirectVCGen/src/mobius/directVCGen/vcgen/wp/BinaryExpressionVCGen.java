@@ -267,7 +267,7 @@ public class BinaryExpressionVCGen extends ABasicExpressionVCGEn {
       System.out.println(Type.getSort(arr));
       //QuantVariableRef val = Expression.rvar(Type.getSort(arr));
       final QuantVariableRef idx = Expression.rvar(Num.sortInt);
-      final QuantVariableRef exc = Expression.rvar(Ref.sort);
+      //final QuantVariableRef exc = Expression.rvar(Ref.sort);
       final Term tExcp = 
         Logic.implies(Logic.equalsNull(arrVar), 
                       Util.getNewExcpPost(Type.javaLangNullPointerException(), entry));

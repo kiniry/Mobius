@@ -480,7 +480,7 @@ class JmlVisitor extends BasicJMLTranslator {
     return null;
   }
 
-
+  /** {@inheritDoc} */
   @Override
   public Object visitVarDeclStmt(final /*@non_null*/ VarDeclStmt x, final Object o) {
     final MethodProperties prop = (MethodProperties) o;
@@ -496,7 +496,7 @@ class JmlVisitor extends BasicJMLTranslator {
     return visitASTNode(x, o);
   }
 
-
+  /** {@inheritDoc} */
   @Override
   public final Object visitGCExpr(final /*@non_null*/ GCExpr x, final Object o) {
     if (x instanceof TypeExpr) { 
@@ -520,7 +520,7 @@ class JmlVisitor extends BasicJMLTranslator {
     return visitASTNode(x, o);
   }
 
-
+  /** {@inheritDoc} */
   @Override
   public final Object visitSetStmtPragma(final /*@non_null*/ SetStmtPragma x, 
                                          final Object o) {
@@ -533,11 +533,14 @@ class JmlVisitor extends BasicJMLTranslator {
   }
 
 
+  // FIXME: totally wrong
+  /** {@inheritDoc} */
   @Override
   public /*@non_null*/ Object visitNewInstanceExpr(final /*@non_null*/ NewInstanceExpr x, 
                                                    final Object o) {
-    final String name = Types.printName(x.type);
-    return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
+//    final String name = Types.printName(x.type);
+//    return Expression.rvar(name, Type.typeToSort(x.type)); // Ref.sort);
+    return Expression.rvar(Ref.sort);
   }
   
 
@@ -580,6 +583,7 @@ class JmlVisitor extends BasicJMLTranslator {
     
     final java.util.Set<javafe.ast.Type> visSet = fGlobal.getVisibleTypes();
     if (!visSet.isEmpty()) {
+      
       final Term visibleTerm = Logic.isVisibleIn(type, visSet);
       andTerm = Logic.and(andTerm, visibleTerm);
     }

@@ -16,6 +16,13 @@ import mobius.directVCGen.vcgen.struct.Post;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 
+
+/**
+ * A lookup class specific to JavaFE; using specific JavaFE structures.
+ * 
+ * @see mobius.directVCGen.formula.Lookup
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 class LookupJavaFe {
   
   /** an instance of the lookup object. */
@@ -152,7 +159,11 @@ class LookupJavaFe {
     return Lookup.getInst().getPreconditionArgs(Translator.getInst().translate(m));
   }
   
-  
+  /**
+   * Returns the FOL Term representation of the normal postcondition of routine m.
+   * @param m the method of interest
+   * @return the normal postcondition or <code>True</code>
+   */
   public Post getNormalPostcondition(final RoutineDecl m) {
     return Lookup.getInst().getNormalPostcondition(Translator.getInst().translate(m));
   }
@@ -175,12 +186,24 @@ class LookupJavaFe {
   public List<QuantVariableRef> mkArguments(final RoutineDecl rd) {
     return Lookup.getInst().mkArguments(Translator.getInst().translate(rd));
   }
-
-  public Term[] getNormalPostconditionArgs(RoutineDecl meth) {
+  
+  /**
+   * Returns a new array containing all the arguments of the
+   * postcondition.
+   * @param meth the method from which to compute the postcondition arguments
+   * @return a newly created array
+   */
+  public Term[] getNormalPostconditionArgs(final RoutineDecl meth) {
 
     return Lookup.getInst().getNormalPostconditionArgs(Translator.getInst().translate(meth));
   }
 
+  /**
+   * Returns the arguments that will be used to instanciate an 
+   * exceptionnal postcondition.
+   * @param meth the method context
+   * @return the array containing all the arguments.
+   */
   public Term[] getExcPostconditionArgs(final RoutineDecl meth) {
 
     return Lookup.getInst().getExcPostconditionArgs(Translator.getInst().translate(meth));

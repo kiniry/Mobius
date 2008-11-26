@@ -81,11 +81,12 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     return entry.getPost();
   }
 
-  private void getInvocation(final RoutineDecl invokedMeth, ExprVec methArgs, final VCEntry entry) {
+  private void getInvocation(final RoutineDecl invokedMeth, 
+                             final ExprVec methArgs, final VCEntry entry) {
     
     final QuantVariableRef newThis = Expression.rvar(Heap.sortValue);
     final QuantVariableRef newHeap = Heap.newVar();
-    
+    final Lookup lkUp = Lookup.getInst();
     //mking the args
 
     final MethodGen meth = Translator.getInst().translate(invokedMeth);
@@ -95,7 +96,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     args.addAll(Lookup.getInst().getPreconditionArgs(meth));
     
     // mking the meth norm post
-    final QuantVariableRef resVar = Lookup.getInst().getNormalPostcondition(meth).getRVar();
+    final QuantVariableRef resVar = lkUp.getNormalPostcondition(meth).getRVar();
     if (!Util.isVoid(meth)) {
       args.addFirst(Expression.normal(Expression.some(Heap.sortToValue(resVar))));
     }
@@ -117,7 +118,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     final Post methNormPost = new Post(resVar, Expression.sym(name + ".mk_post", tab));
     
     // mking the meth excp post
-    final QuantVariableRef excVar = Lookup.getInst().getExceptionalPostcondition(meth).getRVar();
+    final QuantVariableRef excVar = lkUp.getExceptionalPostcondition(meth).getRVar();
     tab = args.toArray(new Term [args.size()]);
     tab [0] = Expression.sym("Exception", new Term [] {excVar});
     for (int i = 0; i < tab.length; i++) {
@@ -136,7 +137,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
    
    
     // mking the meth pre
-    final List<QuantVariableRef> preArgs = Lookup.getInst().getPreconditionArgs(meth);
+    final List<QuantVariableRef> preArgs = lkUp.getPreconditionArgs(meth);
     
     tab = preArgs.toArray(new Term [preArgs.size()]);
     for (int i = 0; i < tab.length; i++) {
@@ -215,10 +216,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     e.setPost(pelse);
     pelse = getPre(x.els, e);
 
-    Post pcond = new Post(cond, Logic.and(Logic.implies(Logic.boolToPred(cond), 
-                                                        pthen.getPost()),
-                                          Logic.implies(Logic.not(Logic.boolToPred(cond)), 
-                                                        pelse.getPost())));
+    Post pcond = new Post(cond, Logic.and(Post.implies(Logic.boolToPred(cond), 
+                                                        pthen),
+                                          Post.implies(Logic.not(Logic.boolToPred(cond)), 
+                                                        pelse)));
     // now for the wp...
     e.setPost(pcond);
     pcond = getPre(x.test, e);
@@ -227,10 +228,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post castExpr(final CastExpr x, final VCEntry e) {
     Post p = new Post(e.getPost().getRVar(), 
-                      Logic.implies(Logic.assignCompat(Heap.var, 
+                      Post.implies(Logic.assignCompat(Heap.var, 
                                                        e.getPost().getRVar(),
                                                        Type.translate(x.type)),
-                                    e.getPost().getPost()));
+                                    e.getPost()));
     e.setPost(p);
     p = getPre(x.expr, e);
     return p;
@@ -238,7 +239,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
   public Post objectDesignator(final ObjectDesignator od, final VCEntry entry) {
     switch(od.getTag()) {
-      case TagConstants.EXPROBJECTDESIGNATOR: {
+      case TagConstants.EXPROBJECTDESIGNATOR:
         // can be null
         //System.out.println(field.decl.parent);
         final ExprObjectDesignator eod = (ExprObjectDesignator) od;
@@ -249,19 +250,18 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
           Util.getNewExcpPost(Type.javaLangNullPointerExceptionName(), entry);
         entry.setPost(new Post(obj, 
                  Logic.and(Logic.implies(Logic.equalsNull(obj), excPost),
-                           Logic.implies(Logic.not(Logic.equalsNull(obj)), 
-                                         entry.getPost().getPost()))));
+                           Post.implies(Logic.not(Logic.equalsNull(obj)), 
+                                         entry.getPost()))));
         return getPre(eod.expr, entry);
   
-      }
       case TagConstants.SUPEROBJECTDESIGNATOR:
         // I believe strongly (gasp) that super is not useful as it is 
         // contained in the method/field signature...
-      case TagConstants.TYPEOBJECTDESIGNATOR: {
+      case TagConstants.TYPEOBJECTDESIGNATOR: 
         // cannot be null
         //System.out.println(field);
         return entry.getPost();
-      }
+      
       default: 
         throw new IllegalArgumentException("Unknown object designator type ! " + od);
 
@@ -335,10 +335,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
 
       Logic.forall(dim, 
                    Logic.implies(Logic.interval0To(dim, idx),
-                                 Logic.implies(Heap.newArray(Heap.var, 
+                                 Post.implies(Heap.newArray(Heap.var, 
                                                              type, newHeap, 
                                                              dim, loc), 
-                                               pre.getPost())));
+                                               pre)));
       //type = Type.arrayof(type);
     }
     dim = Expression.rvar(Num.sortInt);
@@ -346,7 +346,7 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
     pre = new Post(dim, 
                    Logic.forall(loc, 
                                 Logic.forall(newHeap, 
-                                             Logic.implies(arr, pre.getPost()))));
+                                             Post.implies(arr, pre))));
     dimVec.add(dim);
 
 
@@ -362,19 +362,20 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
   public Post arrayRef(final ArrayRefExpr arr, final VCEntry entry) {
     final QuantVariableRef var = Expression.rvar(Ref.sort);
     final QuantVariableRef idx = Expression.rvar(Num.sortInt);
-    Term pre = entry.getPost().getPost();
+    
     final Term length = Heap.select(Heap.var, var, Expression.length, Num.sortInt);
-
+    Term pre = entry.getPost().getPost();
     pre = entry.getPost().substWith(Heap.selectArray(Heap.var, var, idx, Type.getSort(arr)));
+    
     Term norm = Logic.implies(Logic.interval0To(length, idx), pre);
 
     Term tExcp = Logic.implies(Logic.not(Logic.interval0To(length, idx)), 
                                             Util.getNewExcpPost(
                                                   Type.javaLangArrayOutOfBoundException(), 
                                                                   entry));
-
-    pre = Logic.and(norm, tExcp);
-    entry.setPost(new Post(idx, pre));
+    
+    
+    entry.setPost(new Post(idx, Logic.and(norm, tExcp)));
     pre = getPre(arr.index, entry).getPost();
 
     norm = Logic.implies(Logic.not(Logic.equalsNull(var)), pre);
@@ -383,11 +384,10 @@ public class ExpressionVCGen extends BinaryExpressionVCGen {
                                                 Type.javaLangNullPointerException(), 
                                                 entry));
 
-    pre = Logic.and(norm, tExcp);
-    entry.setPost(new Post(var, pre));
-    pre = getPre(arr.array, entry).getPost();
+    entry.setPost(new Post(var, Logic.and(norm, tExcp)));
+    final Post pRes = getPre(arr.array, entry);
 
-    return new Post(pre);
+    return pRes;
   }
 
   public Post arrayInit(final ArrayInit init, final VCEntry entry) {
