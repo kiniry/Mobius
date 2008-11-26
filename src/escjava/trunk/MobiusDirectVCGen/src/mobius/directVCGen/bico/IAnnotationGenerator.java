@@ -9,6 +9,7 @@ import org.apache.bcel.generic.MethodGen;
 /**
  * The interface used to represent the generator of annotations.
  * The generator use the AnnotationDecorations to decorate the file.
+ * It also fills the Lookup utility object.
  * @see mobius.directVCGen.formula.annotation.AnnotationDecoration
  * @see mobius.directVCGen.formula.Lookup
  * @author J. Charles (julien.charles@inria.fr)
