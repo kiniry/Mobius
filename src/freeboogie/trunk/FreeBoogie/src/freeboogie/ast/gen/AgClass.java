@@ -7,16 +7,22 @@ import java.util.List;
  * Represents a class from the abstract grammar.
  * 
  * @author rgrig 
+ * @author Mikolas Janota
  */
 public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */
   public String name = null;
   
-  /** The base class of this class. Should be nonnull for a consistent grammar. */
-  public String base = null;
-  
+  /** The base class name of this class. Should be nonnull for a consistent grammar. */
+  private String base = null;
+
+  /** A base class which has has been declared in the grammar.
+   *  If {@code baseClass} is {@code null}, {@code base} can be used to textually
+   *  represent a class outside the grammar's context. */
+  private AgClass baseClass = null;  
+
   /** The class members. */
-  public List<AgMember> members = new ArrayList<AgMember>(10);
+  private List<AgMember> members = new ArrayList<AgMember>(10);
   
   /** The enums defined in this class. */
   public List<AgEnum> enums = new ArrayList<AgEnum>();
@@ -28,6 +34,58 @@ public class AgClass implements Comparable<AgClass> {
     for (AgEnum e : enums) if (e.name.equals(enumName)) return e;
     return null;
   }
+
+  /** Returns all the members in this class, including the inherited ones.
+   * @return a concatenation of {@code getInheritedMembers} and {@code getSelfMembers}
+   */
+  public List<AgMember> getMembers() {
+    List<AgMember> retv = getInheritedMembers();
+    retv.addAll(members);
+    return retv;
+  }
+
+
+  /** Returns inherited members.
+   * @return a freshly allocated list of members */
+  public List<AgMember> getInheritedMembers() {
+    return baseClass==null ? new ArrayList<AgMember>(0) : baseClass.getMembers();
+  }
+
+
+
+  /** Returns members of this class introduced by this class.*/ 
+  public List<AgMember> getSelfMembers() {
+    return new ArrayList<AgMember>(members);
+  }
+
+  /** Set base class name in the case that there is no base class within the grammar,
+   *  i.e. should be called only if {@code getBaseClass()==null}.
+   *  {@link freeboogie.ast.gen.AgClass#setBaseClass(AgClass)} should be used othwise.
+   */
+  public void setBaseClassName(String name) {
+    assert baseClass == null || baseClass.name.equals(name);
+    base = name;
+  }
+
+  public void setBaseClass(AgClass baseClass) {
+    base = baseClass.name;
+    this.baseClass = baseClass;
+  }
+
+  public String getBaseClassName() {
+    return base;
+  }
+
+  public AgClass getBaseClass() {
+    return baseClass;
+  }
+
+  public void addMember(AgMember member) {
+    assert !members.contains(member);
+    members.add(member);
+  }
+
+
   
   /**
    * Returns whether an enum with the given name exists already.

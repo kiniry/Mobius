@@ -17,6 +17,8 @@ public class TemplateToken extends Token {
     /** \class_name */ CLASS_NAME,
     /** \base_name */ BASE_NAME,
     /** \members */ MEMBERS,
+    /** \selfmembers */ SELFMEMBERS,
+    /** \inheritemembers */ INHERITEDMEMBERS,
     /** \member_type */ MEMBER_TYPE,
     /** \member_name */ MEMBER_NAME,
     /** \if_primitive */ IF_PRIMITIVE,

@@ -138,7 +138,7 @@ public class AgParser {
         return;
       }
       mem.name = t.rep;
-      cls.members.add(mem);
+      cls.addMember(mem);
       ++memCnt;
       t = nextToken();
     }
@@ -164,7 +164,7 @@ public class AgParser {
   
   private void parseSubclasses(String className) 
   throws IOException, EofReached {
-    grammar.getAgClass(className);
+    AgClass agClass = grammar.getAgClass(className);
     AgToken id, sep;
     id = nextToken();
     if (id.type == AgToken.Type.SEMICOLON) {
@@ -177,11 +177,11 @@ public class AgParser {
         return;
       }
       AgClass derived = grammar.getAgClass(id.rep);
-      if (derived.base != null) {
+      if (derived.getBaseClass() != null) {
         err("You specify multiple base classes for '" + derived.name +"'");
-        Err.help("I'll use '" + derived.base + "'");
+        Err.help("I'll use '" + derived.getBaseClassName() + "'");
       } else
-        derived.base = className;
+        derived.setBaseClass(agClass); //derived.base = className;
       sep = nextToken();
       if (sep.type == AgToken.Type.SEMICOLON) break;
       if (sep.type != AgToken.Type.COMMA) {

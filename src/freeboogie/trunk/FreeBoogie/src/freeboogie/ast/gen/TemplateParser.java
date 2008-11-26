@@ -148,6 +148,10 @@ public class TemplateParser {
         processBaseName(); break;
       case MEMBERS:
         processMembers(); break;
+      case SELFMEMBERS:
+        processSelfMembers(); break;
+      case INHERITEDMEMBERS:
+        processInheritedMembers(); break;
       case MEMBER_TYPE:
         processMemberType(); break;
       case MEMBER_NAME:
@@ -212,6 +216,9 @@ public class TemplateParser {
     }
   }
   
+  /** Reads the separator that will separate the members of {@code set}, 
+   *  which are communicated via {@code stack}. 
+   */
   private <T> void processList(Collection<T> set, Stack<T> stack) throws IOException {
     readToken();
     String separator = "";
@@ -274,7 +281,7 @@ public class TemplateParser {
       skipToRc(curlyCnt, true);
       return;
     }
-    processYesNo(classContext.peek().members.isEmpty());
+    processYesNo(classContext.peek().getMembers().isEmpty());
   }
   
   private void splitClasses() {
@@ -284,7 +291,7 @@ public class TemplateParser {
     normalClasses = new TreeSet<AgClass>();
     for (AgClass c: grammar.classes.values()) {
       orderedClasses.add(c);
-      if (c.members.isEmpty())
+      if (c.getMembers().isEmpty())
         abstractClasses.add(c);
       else
         normalClasses.add(c);
@@ -317,7 +324,7 @@ public class TemplateParser {
   
   private void processBaseName() throws IOException {
     if (checkContext(classContext))  
-      writeId(classContext.peek().base, lastToken.idCase);
+      writeId(classContext.peek().getBaseClassName(), lastToken.idCase);
   }
   
   private void processMembers() throws IOException {
@@ -325,8 +332,25 @@ public class TemplateParser {
       skipToRc(curlyCnt, true);
       return;
     }
-    processList(classContext.peek().members, memberContext);
+    processList(classContext.peek().getMembers(), memberContext);
   }
+
+  private void processSelfMembers() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processList(classContext.peek().getSelfMembers(), memberContext);
+  }
+
+  private void processInheritedMembers() throws IOException {
+    if (!checkContext(classContext)) {
+      skipToRc(curlyCnt, true);
+      return;
+    }
+    processList(classContext.peek().getInheritedMembers(), memberContext);
+  }
+
   
   private void processMemberType() throws IOException {
     if (checkContext(memberContext))
@@ -371,7 +395,7 @@ public class TemplateParser {
       return;
     }
     List<AgMember> children = new ArrayList<AgMember>(23);
-    for (AgMember m : classContext.peek().members)
+    for (AgMember m : classContext.peek().getMembers())
       if (!m.primitive) children.add(m);
     processList(children, memberContext);
   }
@@ -382,7 +406,7 @@ public class TemplateParser {
       return;
     }
     List<AgMember> primitives = new ArrayList<AgMember>(23);
-    for (AgMember m : classContext.peek().members)
+    for (AgMember m : classContext.peek().getMembers())
       if (m.primitive) primitives.add(m);
     processList(primitives, memberContext);
   }
