@@ -1,6 +1,7 @@
 package freeboogie.backend;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
@@ -11,6 +12,7 @@ import freeboogie.ast.Expr;
  * @author rgrig 
  */
 public class SmtTermBuilder extends TermBuilder {
+  private static final Term[] termArray = new Term[0];
   private static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public SmtTermBuilder() {
@@ -91,11 +93,21 @@ public class SmtTermBuilder extends TermBuilder {
 
   @Override
   protected SmtTerm reallyMkNary(Sort sort, String termId, Term[] a) {
-    // TODO For "and" and "or":
-    //         Eliminate ocurrences of the id element in a
-    //         If there is one argument left return it
-    //         If there is no argument left return the id element
+    if (termId.equals("and") || termId.equals("or")) {
+      boolean id = termId.equals("or") ? false : true;
+      ArrayList<SmtTerm> children = new ArrayList<SmtTerm>(a.length);
+      for (Term t : a) {
+        SmtTerm c = (SmtTerm)t;
+        if (!c.id.equals("literal_formula") || (Boolean)c.data != id)
+          children.add(c);
+      }
+      if (children.size() == 1)
+        return children.get(0);
+      if (children.size() == 0)
+        return (SmtTerm)mk("literal_formula", Boolean.valueOf(id));
+      if (children.size() != a.length)
+        a = children.toArray(termArray);
+    }
     return new SmtTerm(sort, termId, a);
   }
-
 }

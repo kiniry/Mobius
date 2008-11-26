@@ -1,6 +1,6 @@
 package freeboogie.vcgen;
 
-import freeboogie.ast.Transformer;
+import freeboogie.ast.*;
 import freeboogie.backend.Prover;
 
 public class AxiomSender extends Transformer {
@@ -8,5 +8,9 @@ public class AxiomSender extends Transformer {
 
   public void setProver(Prover prover) {
     this.prover = prover;
+  }
+
+  public void process(Declaration ast) {
+    // TODO implement
   }
 }

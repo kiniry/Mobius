@@ -105,6 +105,7 @@ public class VcGenerator {
     axiomSender.setProver(prover);
     builder.popDef();
     functionRegisterer.process(ast);
+    axiomSender.process(ast);
     builder.pushDef();
     prover.pop();
     // TODO add axioms

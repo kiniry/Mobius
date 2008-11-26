@@ -1,3 +1,4 @@
+ . Add axioms for term counterparts of formulas.
  . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
  . Desugar dependent types in procedure signatures.
@@ -7,15 +8,17 @@
  . Get rid of SmtTerm, SmtTermBuilder. Keep only one class.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . \self_members and \super_members for AST gen
+ . Have some unified mechanism for making sure that terms start with
+   "term$$".
+ . Have a way to cope with identifiers in the input that contain $$.
+   In general, think harder about possible name clashes.
  . Only parse function if they return exactly one value.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
  . Test typechecker thoroughly and add tests for the 'old' mode.
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
- . When making SmtTerms do small simplifications for "and", "or"
-   (such as skip "TRUE", respectively "FALSE"; and return
-   neutral element when there are no operands)
  . Make flow graphs reducible
  . Simple interface to parse from strings
  . In some cases Spec# generates (assume ... h1[n1] == h2[n2]...) which

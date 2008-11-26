@@ -14,8 +14,6 @@ import freeboogie.util.StackedHashMap;
  *
  * Terms can be built by specifying a name and arguments, or by
  * giving a BoogiePL expression to be converted into a Term.
- * (TODO: Specify exactly what is allowed in the BoogiePL
- * expression.)
  *
  * @author rgrig 
  */

@@ -64,8 +64,8 @@ public class SimplifyProver extends Prover {
     // TODO: send map axioms and stuff
   }
 
-  // TODO This is quite incomplete now
-  // TODO Exploit the regularity to make the code nicer
+  // TODO treat everything that is registered in SmtTermBuilder
+  //      and drop the toUpperCase()
   private void printTerm(Term t, StringBuilder sb) {
     SmtTerm st = (SmtTerm)t;
     if (st.id.startsWith("var")) { 
