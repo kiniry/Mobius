@@ -10,9 +10,16 @@ package umbra.instructions;
 
 import static org.junit.Assert.*;
 
+import java.util.LinkedList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.ClassHeaderLineController;
+import umbra.instructions.ast.HeaderLineController;
+import umbra.instructions.ast.InstructionLineController;
 
 /**
  * @author alx
@@ -101,7 +108,20 @@ public class BytecodeTextParserTest {
    */
   @Test
   public void testGetEditorLines() {
-    fail("Not yet implemented");
+    BytecodeTextParser tp = new InitParser(null, null, null);
+    String ca = "class Ala";
+    String ma = "public void a()";
+    tp.addEditorLine(new ClassHeaderLineController(ca));
+    tp.addEditorLine(new HeaderLineController(ma));
+    LinkedList el = tp.getEditorLines();
+    assertEquals("class header",
+                 ((ClassHeaderLineController)el.get(0)).getLineContent(),
+                 ca);
+    assertEquals("method header",
+                 ((HeaderLineController)el.get(1)).getLineContent(),
+                 ma);
+    el = tp.getEditorLines();
+    assertNull(el);
   }
 
   /**
@@ -207,5 +227,4 @@ public class BytecodeTextParserTest {
   public void testGetInstructionNoForLine() {
     fail("Not yet implemented");
   }
-
 }

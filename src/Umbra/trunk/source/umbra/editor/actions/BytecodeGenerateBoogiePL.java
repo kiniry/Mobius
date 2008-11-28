@@ -203,10 +203,21 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     TypeLoader.setTroubleReporter(main);
     BPLProgram program = new Translator(project).translate(the_types);
 
-    IBPLTransformator[] transformators = project.getTransformators();
-    for (int i = 0 ; i < transformators.length; i++) {
+    final IBPLTransformator[] transformators = project.getTransformators();
+    for (int i = 0; i < transformators.length; i++) {
       program = transformators[i].transform(program);
     }
+    generateBPLFile(program, an_outfile);
+  }
+
+  /**
+   * This method generates the file with BoogiePL output.
+   *
+   * @param a_prog the program to generate BoogiePL output from
+   * @param an_outfile the name of the file to generate output to
+   */
+  private void generateBPLFile(final BPLProgram a_prog,
+                               final String an_outfile) {
     try {
       PrintWriter writer;
       if ("-".equals(an_outfile)) {
@@ -214,7 +225,7 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
       } else {
         writer = new PrintWriter(new FileOutputStream(an_outfile));
       }
-      program.accept(new BPLPrinter(writer));
+      a_prog.accept(new BPLPrinter(writer));
       writer.flush();
       writer.close();
 

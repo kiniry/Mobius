@@ -11,7 +11,6 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 
 import umbra.instructions.BytecodeController;

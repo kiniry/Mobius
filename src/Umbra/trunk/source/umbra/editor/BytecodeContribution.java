@@ -368,7 +368,8 @@ public class BytecodeContribution extends ControlContribution {
                                final int an_offset) {
     final IActionBars bars = my_editor.getEditorSite().getActionBars();
     int lno;
-    // TODO probably this must be done as in http://www.koders.com/java/fid0EFC07132C90D211D4D2868ECDB3C6BA3A025AB5.aspx
+  // TODO probably this must be done as in
+  //http://www.koders.com/java/fid0EFC07132C90D211D4D2868ECDB3C6BA3A025AB5.aspx
     try {
       lno = a_doc.getLineOfOffset(an_offset);
       final int chpos = an_offset - a_doc.getLineOffset(lno) + 1;
