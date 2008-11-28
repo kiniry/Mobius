@@ -11,10 +11,10 @@ package jml2bml.rules;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.Constants;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlTypeClauseExpr;
 
-import org.apache.bcel.Constants;
 import annot.attributes.ClassInvariant;
 import annot.bcclass.BCClass;
 import annot.bcexpression.formula.AbstractFormula;

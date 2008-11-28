@@ -85,8 +85,10 @@ public class Main {
    *            source containing compiled JML
    * @param classLoc class file location (directory and filename)
    * corresponding to the source file
-   * @throws ReadAttributeException
-   * @throws ClassNotFoundException
+   * @throws ClassNotFoundException if the classfile for the
+   *   given class file location could not be found
+   * @throws ReadAttributeException if any of BML attributes was not correctly
+   *   parsed by BMLlib library
    * @throws NotTranslatedException
    * @throws IOException in case the class file cannot be saved to the given
    *   location

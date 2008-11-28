@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jml2Bml
-Bundle-SymbolicName: Jml2Bml
+Bundle-SymbolicName: mobius.jml2bml
 Bundle-Version: 1.0.0
 Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlruntime.jar,
@@ -9,4 +9,5 @@ Bundle-ClassPath: Jml2Bml.jar,
  lib/openjml.jar
 Export-Package: api
 Require-Bundle: mobius.bmllib,
- org.apache.bcel_5.1;bundle-version="1.0.0"
+ org.apache.bcel_5.1
+Bundle-Vendor: Mobius & Warsaw University

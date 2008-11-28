@@ -9,6 +9,16 @@ import main.Main;
 
 public class Jml2BmlAPI {
 
+  /**
+   *
+   * @param sourceFile
+   * @param outputDir
+   * @param classFile
+   * @throws ClassNotFoundException
+   * @throws ReadAttributeException
+   * @throws IOException in case the class file cannot be saved to the given
+   *   location
+   */
   public static void compile(final String sourceFile, final String outputDir,
                              final String classFile)
     throws ClassNotFoundException, ReadAttributeException, IOException {
