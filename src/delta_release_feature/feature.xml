@@ -2,7 +2,8 @@
 <feature
       id="Mobius_Delta_Release"
       label="Mobius_Delta_Release Feature"
-      version="1.0.0">
+      version="1.0.0"
+      plugin="mobius.pluginlib">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -33,15 +34,7 @@
          version="0.0.0"/>
 
    <includes
-         id="mobius.library.feature"
-         version="0.0.0"/>
-
-   <includes
          id="mobius.RCC.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="mobius.Umbra.feature"
          version="0.0.0"/>
 
    <includes
@@ -54,6 +47,14 @@
 
    <includes
          id="Prover_Editor_feature"
+         version="0.0.0"/>
+
+   <includes
+         id="DirectVCGen"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.Umbra.feature"
          version="0.0.0"/>
 
 </feature>
