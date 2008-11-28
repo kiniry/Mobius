@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/FreeBoogie_feature_1.0.0.jar" id="FreeBoogie_feature" version="1.0.0"/>
+   <feature url="features/FreeBoogieFeature_1.0.0.jar" id="FreeBoogieFeature" version="1.0.0"/>
 </site>

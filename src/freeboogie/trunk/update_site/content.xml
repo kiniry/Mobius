@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <?metadataRepository class='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'?>
-<repository name='file:/Users/dcochran/Sandbox/ESCJava2_Workspace/FreeBoogieUpdateSite/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1'>
+<repository name='file:/Users/dcochran/Sandbox/ESCJava2_Workspace/FreeBoogieUpdateSite/ - metadata' type='org.eclipse.equinox.internal.p2.metadata.repository.LocalMetadataRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1221577346081'/>
+    <property name='p2.timestamp' value='1227885714624'/>
   </properties>
   <units size='8'>
     <unit id='FreeBoogieFeature.feature.group' version='1.0.0' singleton='false'>
@@ -106,7 +106,7 @@
       <touchpointData size='1'>
         <instructions size='2'>
           <instruction key='manifest'>
-            Bundle-SymbolicName: FreeBoogiePlugin&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Name: FreeBoogiePlugin Plug-in&#xA;Manifest-Version: 1.0&#xA;
+            Bundle-SymbolicName: FreeBoogiePlugin&#xA;Bundle-ManifestVersion: 2&#xA;Bundle-Version: 1.0.0&#xA;Bundle-Name: FreeBoogiePlugin Plug-in&#xA;Manifest-Version: 1.0
           </instruction>
           <instruction key='zipped'>
             true
