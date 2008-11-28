@@ -16,142 +16,44 @@
       [Enter License Description here.]
    </license>
 
-   <plugin
-         id="coq.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="coq.sugar"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.escjava2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.escjava2.esctools"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.escjava2.plugin"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="FreeBoogieFeature"
          version="0.0.0"/>
 
-   <plugin
-         id="mobius.escjava2.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="mobius.javafe"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.javafe.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="mobius.pluginlib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.simplify.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="prover.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="PvsEditor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
+   <includes
          id="ie.ucd.bon.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.freeboogie"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="FreeBoogiePlugin"
-         download-size="0"
-         install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="grok"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.bmllib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="mobius.jml2bml"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="mobius.BMLLib.feature"
          version="0.0.0"/>
 
-   <plugin
-         id="mobius.umbra"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="mobius.escjava2.feature"
          version="0.0.0"/>
 
-   <plugin
-         id="org.apache.bcel"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="mobius.library.feature"
          version="0.0.0"/>
 
-   <plugin
-         id="org.apache.bcel_5.1"
-         download-size="0"
-         install-size="0"
+   <includes
+         id="mobius.RCC.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.Umbra.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="MOBIUS_Coq_Editor"
+         version="0.0.0"/>
+
+   <includes
+         id="MOBIUS_PVE_Editor"
+         version="0.0.0"/>
+
+   <includes
+         id="Prover_Editor_feature"
          version="0.0.0"/>
 
 </feature>
