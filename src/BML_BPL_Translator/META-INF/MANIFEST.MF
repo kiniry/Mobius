@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BML_BPL_Translator
-Bundle-SymbolicName: BML_BPL_Translator
+Bundle-Name: BML to BPL Translator
+Bundle-SymbolicName: mobius.b2bpl
 Bundle-Version: 0.0.1
 Export-Package: b2bpl;uses:="b2bpl.bytecode,b2bpl.bytecode.bml",
  b2bpl.bpl;uses:="b2bpl.bpl.ast",
@@ -51,3 +51,4 @@ Export-Package: b2bpl;uses:="b2bpl.bytecode,b2bpl.bytecode.bml",
    javax.xml.transform,
    org.xml.sax.helpers,
    org.xml.sax"
+Bundle-Vendor: Mobius & ETH Zürich
