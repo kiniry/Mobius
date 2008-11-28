@@ -40,6 +40,6 @@ Export-Package: escjava,
  escjava.vcGeneration.pvs,
  escjava.vcGeneration.sammy,
  escjava.vcGeneration.simplify,
- escjava.vcGeneration.xml,
- libs.specs
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+ escjava.vcGeneration.xml
+Bundle-ClassPath: esctools2.jar,
+ .

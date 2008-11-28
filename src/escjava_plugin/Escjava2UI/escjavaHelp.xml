@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="ESC/Java2"  topic="html/escjavaHelp.html">
-    <topic label="ESC/Java2 Eclipse User Guide" href="html/escjavaHelp.html">
+<toc label="MOBIUS Program Verification Environment"  topic="html/escjavaHelp.html">
+    <topic label="Extended Static Checking for Java" href="html/escjavaHelp.html">
       <topic label="Overview" href="html/escjavaHelp.html#Overview"/>
       <topic label="Installation" href="html/escjavaHelp.html#Installation"/>
       <topic label="General comments" href="html/escjavaHelp.html#General_comments"/>
       <topic label="Menu and toolbar items" href="html/escjavaHelp.html#Menus">
-          <topic label="Esc/Java2 Checking" href="html/escjavaHelp.html#Checks"/>
-          <topic label="Clear Esc/Java2 Markers" href="html/escjavaHelp.html#Clear"/>
+          <topic label="Extended Static Checking" href="html/escjavaHelp.html#Checks"/>
+          <topic label="Clear ESC Markers" href="html/escjavaHelp.html#Clear"/>
           <topic label="Go to associated declaration" href="html/escjavaHelp.html#GoTo"/>
           <topic label="Setup" href="html/escjavaHelp.html#Setup"/>
           <topic label="Enable ESC/Java2 auto checking" href="html/escjavaHelp.html#Enable"/>

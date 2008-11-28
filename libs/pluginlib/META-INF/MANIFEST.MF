@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jface.text,
- org.eclipse.debug.core
+ org.eclipse.debug.core,
+ org.eclipse.help
 Export-Package: pluginlib;
   uses:="org.eclipse.jdt.core,
    org.eclipse.jface.viewers,
@@ -23,4 +24,3 @@ Export-Package: pluginlib;
    org.eclipse.jface.resource,
    org.eclipse.swt.widgets,
    org.eclipse.core.runtime"
-Bundle-RequiredExecutionEnvironment: J2SE-1.4

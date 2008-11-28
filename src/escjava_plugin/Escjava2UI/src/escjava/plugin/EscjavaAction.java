@@ -573,7 +573,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 				  }
 				});
 			} catch (Exception e) {
-				Log.errorlog("Failed to enable Esc/Java nature", e);
+				Log.errorlog("Failed to enable Esc/Java nature; classpath:" + System.getProperty("java.class.path"), e);
 			}
 			if (Log.on) Log.log("Completed Enable Esc/Java operation " + (new Date()));
 		}

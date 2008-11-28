@@ -748,6 +748,22 @@ limitations under the License.
       <update label="Mobius PVE  Update Site" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
    </url>
 
+   <includes
+         id="JML4Eclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.escjava2.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.javafe.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.simplify.feature"
+         version="0.0.0"/>
+
    <requires>
       <import plugin="org.eclipse.ui" version="3.3.0" match="compatible"/>
       <import plugin="org.eclipse.ui.console" version="3.2.0" match="compatible"/>
