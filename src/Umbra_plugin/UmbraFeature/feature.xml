@@ -2,8 +2,8 @@
 <feature
       id="mobius.Umbra.feature"
       label="Umbra"
-      version="0.0.7"
-      provider-name="EU MOBIUS IST-15905 Project">
+      version="0.0.8"
+      provider-name="EU MOBIUS IST-15905 Project &amp; Warsaw University">
 
    <description>
       This feature makes available the Umbra editor together with accompanying libraries.
@@ -190,7 +190,8 @@ Library.
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.osgi"/>
+      <import plugin="org.eclipse.ui.console"/>
+      <import plugin="org.junit"/>
    </requires>
 
    <plugin
@@ -208,6 +209,26 @@ Library.
 
    <plugin
          id="mobius.umbra"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.b2bpl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.jml2bml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="mobius.freeboogie"
          download-size="0"
          install-size="0"
          version="0.0.0"
