@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: BmlLib3 Plug-in
+Bundle-Name: BmlLib Plug-in
 Bundle-SymbolicName: mobius.bmllib
-Bundle-Version: 1.1.7
+Bundle-Version: 1.1.8
 Bundle-Localization: plugin
 Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.core.runtime,
- BML_BPL_Translator;bundle-version="0.0.1"
+ mobius.b2bpl
 Export-Package: annot.attributes;
   uses:="annot.io,
    annot.bcclass,
@@ -70,4 +70,4 @@ Bundle-ClassPath: .,
  lib/antlr-3.0.1.jar,
  lib/antlr-runtime-3.0.jar,
  translation/
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-Vendor: Mobious & Warsaw University

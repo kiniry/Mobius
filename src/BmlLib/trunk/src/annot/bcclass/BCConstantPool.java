@@ -182,6 +182,7 @@ public class BCConstantPool extends BCCConstantPrinting {
     cpg.addUtf8(DisplayStyle.METHOD_SPECIFICATION_ATTR);
     cpg.addUtf8(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
     cpg.addUtf8(DisplayStyle.LOOP_SPECIFICATION_TABLE);
+    cpg.addUtf8(DisplayStyle.FIELD_MODIFIERS_ATTR);
   }
 
   /**

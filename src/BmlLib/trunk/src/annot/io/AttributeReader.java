@@ -48,6 +48,7 @@ import annot.bcexpression.modifies.ModifiesSingleIndex;
 import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.SpecArray;
+import annot.modifiers.BMLModifier;
 import annot.textio.DisplayStyle;
 
 /**
@@ -99,12 +100,18 @@ public class AttributeReader {
    */
   private BCMethod method;
 
+  /**
+   * Field containing currently read attribute, if any.
+   */
+  private BMLModifier modifier;
+
   // environment:
 
   /**
    * Current position in input stream.
    */
   private int pos;
+
 
   /**
    * A Constructor used for reading class attributes.
@@ -126,6 +133,16 @@ public class AttributeReader {
   public AttributeReader(final BCMethod bcm) {
     this.bcc = bcm.getBcc();
     this.method = bcm;
+    this.bvars = new Vector < BoundVar > ();
+  }
+
+  /**
+   *
+   * @param amodifier
+   */
+  public AttributeReader(final BMLModifier amodifier) {
+    this.bcc = null;
+    this.modifier = amodifier;
     this.bvars = new Vector < BoundVar > ();
   }
 
@@ -224,6 +241,10 @@ public class AttributeReader {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.LOOP_SPECIFICATION_TABLE);
       this.method.getAmap().getLstab().load(this);
+    } else if (aname.equals(DisplayStyle.FIELD_MODIFIERS_ATTR)) {
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
+                  DisplayStyle.FIELD_MODIFIERS_ATTR);
+      this.modifier.load(this);
     } else {
       MLog.putMsg(MessageLog.LEVEL_PTODO,
                   "    unrecognized attribute: " + aname);

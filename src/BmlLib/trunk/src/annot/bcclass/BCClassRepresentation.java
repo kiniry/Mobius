@@ -9,6 +9,7 @@
 package annot.bcclass;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -32,6 +33,7 @@ import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
+import annot.modifiers.BMLModifier;
 import annot.textio.DisplayStyle;
 import bmllib.utils.FileUtils;
 
@@ -78,6 +80,12 @@ public abstract class BCClassRepresentation {
    * Array with methods.
    */
   private BCMethod[] methods;
+
+  /**
+   * The BML modifiers for fields in the class.
+   */
+  private BMLModifier[] bml_fmodifiers;
+
 
   /**
    * Removes all Attributes used by this library from
@@ -255,12 +263,23 @@ public abstract class BCClassRepresentation {
         ar.readAttribute((Unknown) attrs[i]);
       }
     }
+
+    final Field[] fields = ajc.getFields();
+    this.bml_fmodifiers = new BMLModifier[fields.length];
+    for (int i = 0; i  <  fields.length; i++) {
+      this.bml_fmodifiers[i] = getFreshFieldMod(fields[i]);
+    }
+
     final Method[] mtab = ajc.getMethods();
     this.methods = new BCMethod[mtab.length];
     for (int i = 0; i  <  mtab.length; i++) {
       this.methods[i] = getFreshMethod(mtab[i], ajc.getClassName(),
                                        ajc.getConstantPool());
     }
+  }
+
+  private BMLModifier getFreshFieldMod(Field field) throws ReadAttributeException {
+    return new BMLModifier(field, this);
   }
 
   /**
@@ -420,9 +439,22 @@ public abstract class BCClassRepresentation {
       attrs = addAttribute(attrs, aw.writeAttribute(inv));
     }
     this.jc.setAttributes(attrs);
+    updateFieldAttributes();
     this.cp.save(this.jc);
   }
 
+
+  private void updateFieldAttributes() {
+    Field[] fields = jc.getFields();
+    for (int i = 0; i < fields.length; i++) {
+      AttributeWriter aw = new AttributeWriter(this);
+      Attribute[] attrs = removeBMLAttributes(fields[i].getAttributes());
+      Attribute[] attrsa = new Attribute[attrs.length + 1];
+      System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
+      attrsa[attrs.length] = aw.writeAttribute(bml_fmodifiers[i].getAttribute());
+      fields[i].setAttributes(attrsa);
+    }
+  }
 
   /**
    * @param suffix - tree walk order (prefix order for false

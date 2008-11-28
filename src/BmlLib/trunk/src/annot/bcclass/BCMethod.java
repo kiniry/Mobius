@@ -166,7 +166,7 @@ public class BCMethod {
       final String typename = "L" + jc.getPackageName() +
                               jc.getClassName() + ";";
       final Type t = Type.getType(typename);
-      this.lvars[0] = new LocalVariable(false, this, 0, "this",
+      res[0] = new LocalVariable(false, this, 0, "this",
         new LocalVariableGen(0, "this", t, null, null));
       return res;
     }
