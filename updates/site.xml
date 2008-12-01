@@ -27,5 +27,11 @@
    <feature url="features/ie.ucd.bon.plugin_0.1.0.jar" id="ie.ucd.bon.plugin" version="0.1.0">
       <category name="Mobius"/>
    </feature>
+   <feature url="features/ch.ethz.inf.pm.jml.plugin_1.1.1.jar" id="ch.ethz.inf.pm.jml.plugin" version="1.1.1">
+      <category name="Mobius"/>
+   </feature>
+   <feature url="features/ch.ethz.inf.pm.jml.plugin.help_1.0.3.jar" id="ch.ethz.inf.pm.jml.plugin.help" version="1.0.3">
+      <category name="Mobius"/>
+   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
 </site>
