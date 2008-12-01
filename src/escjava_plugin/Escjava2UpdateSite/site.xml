@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <description url="http://kind.ucd.ie/products/opensource/ESCjava2/escjava-eclipse/updates">
-      The ESC/Java2 plugin update site.
-   </description>
-   <feature url="features/mobius.escjava2.feature_2.0.8.jar" id="mobius.escjava2.feature" version="2.0.8">
-      <category name="ESCJava2"/>
-   </feature>
-   <category-def name="ESCJava2" label="MOBIUS delta release">
-      <description>
-         MOBIUS Program Verification Environment for Eclipse 3.4
-      </description>
-   </category-def>
+   <feature url="features/ExtendedStaticChecker_1.0.0.jar" id="ExtendedStaticChecker" version="1.0.0"/>
 </site>
