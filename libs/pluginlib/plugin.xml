@@ -9,5 +9,17 @@
             primary="true">
       </toc>
    </extension>
+   <extension
+         id="delta"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Mobius Program Verification Environment">
+         <property
+               name="appName"
+               value="Mobius Program Verification Environment">
+         </property>
+      </product>
+   </extension>
 
 </plugin>
