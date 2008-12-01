@@ -36,8 +36,5 @@
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/com.sun.jna_3.0.9.jar" id="com.sun.jna" version="3.0.9">
-      <category name="Mobius"/>
-   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
 </site>
