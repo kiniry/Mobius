@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Escjava2Feature</name>
+	<name>ExtendedStaticChecker</name>
 	<comment></comment>
 	<projects>
-		<project>Escjava2UI</project>
-		<project>Esctools</project>
-		<project>JavafeFeature</project>
-		<project>JavafePlugin</project>
-		<project>MobiusUILibrary</project>
-		<project>MobiusUILibraryFeature</project>
-		<project>SimplifyFeature</project>
-		<project>SimplifyPlugin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
