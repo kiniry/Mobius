@@ -3,52 +3,22 @@
    <description url="http://kind.ucd.ie/products/opensource/Mobius/updates/">
       This is the general update site for all the plugins and features that are included with the Mobius Program Verification Environment.
    </description>
-   <feature url="features/Mobius_Delta_Release_1.0.0.jar" id="Mobius_Delta_Release" version="1.0.0">
+   <feature url="features/ExtendedStaticChecker_1.0.0.jar" id="ExtendedStaticChecker" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <feature url="features/DirectVCGen_1.0.8.jar" id="DirectVCGen" version="1.0.8">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/mobius.escjava2.feature_2.0.8.jar" id="mobius.escjava2.feature" version="2.0.8">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/ProverEditorFeature_1.0.0.jar" id="ProverEditorFeature" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/ie.ucd.bon.plugin_0.1.0.jar" id="ie.ucd.bon.plugin" version="0.1.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.BMLLib.feature_0.0.7.jar" id="mobius.BMLLib.feature" version="0.0.7">
+   <feature url="features/FreeBoogieFeature_1.0.0.jar" id="FreeBoogieFeature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <feature url="features/mobius.RCC.feature_1.0.0.jar" id="mobius.RCC.feature" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.Umbra.feature_0.0.8.jar" id="mobius.Umbra.feature" version="0.0.8">
       <category name="Mobius"/>
    </feature>
    <feature url="features/MOBIUS_Coq_Editor_1.0.0.jar" id="MOBIUS_Coq_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/FreeBoogie_feature_1.0.0.jar" id="FreeBoogie_feature" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/JML4Eclipse_0.0.1.jar" id="JML4Eclipse" version="0.0.1">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.javafe.feature_2.0.8.jar" id="mobius.javafe.feature" version="2.0.8">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.library.feature_1.0.0.jar" id="mobius.library.feature" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.simplify.feature_1.5.6.jar" id="mobius.simplify.feature" version="1.5.6">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/Prover_Editor_feature_1.0.0.jar" id="Prover_Editor_feature" version="1.0.0">
       <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
