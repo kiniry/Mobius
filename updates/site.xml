@@ -21,5 +21,11 @@
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
+   <feature url="features/mobius.Umbra.feature_0.0.8.jar" id="mobius.Umbra.feature" version="0.0.8">
+      <category name="Mobius"/>
+   </feature>
+   <feature url="features/ie.ucd.bon.plugin_0.1.0.jar" id="ie.ucd.bon.plugin" version="0.1.0">
+      <category name="Mobius"/>
+   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
 </site>
