@@ -18,9 +18,6 @@
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/mobius.Umbra.feature_0.0.8.jar" id="mobius.Umbra.feature" version="0.0.8">
-      <category name="Mobius"/>
-   </feature>
    <feature url="features/ie.ucd.bon.plugin_0.1.0.jar" id="ie.ucd.bon.plugin" version="0.1.0">
       <category name="Mobius"/>
    </feature>
@@ -36,16 +33,19 @@
    <feature url="features/com.atlassw.tools.eclipse.checkstyle_4.3.3.jar" id="com.atlassw.tools.eclipse.checkstyle" version="4.3.3">
       <category name="Optional"/>
    </feature>
-   <feature url="features/com.mountainminds.eclemma.feature_1.3.0.jar" id="com.mountainminds.eclemma.feature" version="1.3.0">
-      <category name="Optional"/>
-   </feature>
-   <feature url="features/edu.umd.cs.findbugs.plugin.eclipse_1.2.1.20070531.jar" id="edu.umd.cs.findbugs.plugin.eclipse" version="1.2.1.20070531">
-      <category name="Optional"/>
-   </feature>
    <feature url="features/net.sourceforge.metrics_1.3.6.jar" id="net.sourceforge.metrics" version="1.3.6">
       <category name="Optional"/>
    </feature>
-   <feature url="features/net.sourceforge.pmd.eclipse_3.2.3.v200712041040.jar" id="net.sourceforge.pmd.eclipse" version="3.2.3.v200712041040">
+   <feature url="features/com.mountainminds.eclemma.feature_1.3.2.jar" id="com.mountainminds.eclemma.feature" version="1.3.2">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/edu.umd.cs.findbugs.plugin.eclipse_1.3.6.20081113.jar" id="edu.umd.cs.findbugs.plugin.eclipse" version="1.3.6.20081113">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/net.sourceforge.pmd.eclipse_3.2.5.v200810131150.jar" id="net.sourceforge.pmd.eclipse" version="3.2.5.v200810131150">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/JML4Eclipse_0.0.1.jar" id="JML4Eclipse" version="0.0.1">
       <category name="Optional"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
