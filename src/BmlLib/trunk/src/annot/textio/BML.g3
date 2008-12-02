@@ -437,23 +437,28 @@ methodmodifier :
 type_spec :
     type (dims)? {syso("type_spec");};
 
-type :
-    reference_type
-  | built_in_type ;
+type returns [String name] :
+    rname=reference_type { $name = $rname.name; }
+  | bname=built_in_type { $name = $bname.name; };
   
-reference_type :
-  name=typename {syso("reference type: " + $name.name);};
+reference_type returns [String name] :
+  rname=typename
+  {
+    syso("reference type: " + $rname.name);
+    $name = $rname.name;
+  };
 
-built_in_type :
-  (  VOID
-   | BOOLEAN
-   | BYTE
-   | CHAR
-   | SHORT
-   | INT
-   | LONG
-   | FLOAT
-   | DOUBLE) {syso("built in type");};
+built_in_type returns [String name] :
+  (  VOID { $name = "void"; }
+   | BOOLEAN { $name = "boolean"; }
+   | BYTE { $name = "byte"; }
+   | CHAR { $name = "char"; }
+   | SHORT { $name = "short"; }
+   | INT { $name = "int"; }
+   | LONG { $name = "long"; }
+   | FLOAT { $name = "float"; }
+   | DOUBLE { $name = "double"; }
+  ) {syso("built in type");};
 
 
 methodheader :
@@ -905,34 +910,44 @@ additiveExpr returns [BCExpression ast] :
 
 multExpr returns [BCExpression ast] :
   e=quantifiedFormula {$ast = $e.ast;}
-  (MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
-  | DIV r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
-  | REM r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
+  (  MULT r1=quantifiedFormula {$ast = new ArithmeticExpression(Code.MULT, $ast, $r1.ast);}
+   | DIV  r2=quantifiedFormula {$ast = new ArithmeticExpression(Code.DIV, $ast, $r2.ast);}
+   | REM  r3=quantifiedFormula {$ast = new ArithmeticExpression(Code.REM, $ast, $r3.ast);}
   )*
   ;
 
 quantifiedFormula returns [BCExpression ast] :
-  ((FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
-  | EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;})
-   (t=ident v=ident {try {
-      JavaBasicType jt = JavaType.getJavaBasicType($t.text);
-      lqfs++;
-      BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
-      // uncomment this to forbid bound variable shadowing
-//      if (env.containsKey($v.text))
-//        reportError(null);
-      env.put($v.text, bv);
-       ((QuantifiedFormula)$ast).addVariable(bv);
-     } catch(ReadAttributeException e) {
-       reportError(null);
-       //throw new RuntimeException("Error in BML.g3.quantifiedFormula");
-     }})+
-     SEMICOLON 
-     f=uncheckedExpression {((QuantifiedFormula)$ast).setFormula($f.ast);
+  ((  FORALL {$ast = new QuantifiedFormula(Code.FORALL_WITH_NAME); lqfs=0;}
+    | EXISTS {$ast = new QuantifiedFormula(Code.EXISTS_WITH_NAME); lqfs=0;}
+   )
+   (t=type v=ident
+      {
+        try {
+          JavaBasicType jt = JavaType.getJavaBasicType($t.text);
+          lqfs++;
+          BoundVar bv = new BoundVar(jt, bvc++, (QuantifiedFormula)$ast, $v.text);
+          // uncomment this to forbid bound variable shadowing 
+          //      if (env.containsKey($v.text))
+          //        reportError(null);
+          env.put($v.text, bv);
+          ((QuantifiedFormula)$ast).addVariable(bv);
+        } catch(ReadAttributeException e) {
+          reportError(new MismatchedRangeException(t.start.getTokenIndex(),
+                                                   t.stop.getTokenIndex(),
+                                                   input));
+          //throw new RuntimeException("Error in BML.g3.quantifiedFormula");
+        }
+      }
+   )+
+   SEMICOLON
+   f=uncheckedExpression
+     {
+       ((QuantifiedFormula)$ast).setFormula($f.ast);
        env.remove($v.text);
        bvc -= lqfs;
-     }) |
-  p=dotExpr {$ast = $p.ast;};
+     }
+  )
+  | p=dotExpr {$ast = $p.ast;};
 
 dotExpr returns [BCExpression ast] :
   l=primaryExpr {$ast = $l.ast;}

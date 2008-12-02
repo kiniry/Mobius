@@ -1,0 +1,301 @@
+package pl.tls.mobius.quiz
+
+Constant pool:
+  const #1 = Class #2;
+  const #2 = Utf8 pl/tls/mobius/quiz/Question;
+  const #3 = Class #4;
+  const #4 = Utf8 java/lang/Object;
+  const #5 = Utf8 question;
+  const #6 = Utf8 Ljava/lang/String;;
+  const #7 = Utf8 answers;
+  const #8 = Utf8 Ljava/util/Vector;;
+  const #9 = Utf8 correctAnswer;
+  const #10 = Utf8 I;
+  const #11 = Utf8 qForm;
+  const #12 = Utf8 Ljavax/microedition/lcdui/Form;;
+  const #13 = Utf8 choiceGroup;
+  const #14 = Utf8 Ljavax/microedition/lcdui/ChoiceGroup;;
+  const #15 = Utf8 <init>;
+  const #16 = Utf8 ()V;
+  const #17 = Utf8 Code;
+  const #18 = Methodref #3.#19;
+  const #19 = NameAndType #15:#16;
+  const #20 = Fieldref #1.#21;
+  const #21 = NameAndType #5:#6;
+  const #22 = Fieldref #1.#23;
+  const #23 = NameAndType #11:#12;
+  const #24 = Class #25;
+  const #25 = Utf8 java/util/Vector;
+  const #26 = Methodref #24.#19;
+  const #27 = Fieldref #1.#28;
+  const #28 = NameAndType #7:#8;
+  const #29 = Utf8 LineNumberTable;
+  const #30 = Utf8 LocalVariableTable;
+  const #31 = Utf8 this;
+  const #32 = Utf8 Lpl/tls/mobius/quiz/Question;;
+  const #33 = Utf8 getQForm;
+  const #34 = Utf8 ()Ljavax/microedition/lcdui/Form;;
+  const #35 = Utf8 getChoiceGroup;
+  const #36 = Utf8 ()Ljavax/microedition/lcdui/ChoiceGroup;;
+  const #37 = Fieldref #1.#38;
+  const #38 = NameAndType #13:#14;
+  const #39 = Utf8 buildQForm;
+  const #40 = Utf8 (Ljavax/microedition/lcdui/CommandListener;Ljavax/microedition/lcdui/Command;Ljavax/microedition/lcdui/Command;)Ljavax/microedition/lcdui/Form;;
+  const #41 = Class #42;
+  const #42 = Utf8 javax/microedition/lcdui/Form;
+  const #43 = String #44;
+  const #44 = Utf8 Question;
+  const #45 = Methodref #41.#46;
+  const #46 = NameAndType #15:#47;
+  const #47 = Utf8 (Ljava/lang/String;)V;
+  const #48 = Methodref #1.#49;
+  const #49 = NameAndType #50:#51;
+  const #50 = Utf8 getQuestion;
+  const #51 = Utf8 ()Ljava/lang/String;;
+  const #52 = Methodref #41.#53;
+  const #53 = NameAndType #54:#55;
+  const #54 = Utf8 append;
+  const #55 = Utf8 (Ljava/lang/String;)I;
+  const #56 = Class #57;
+  const #57 = Utf8 javax/microedition/lcdui/ChoiceGroup;
+  const #58 = String #59;
+  const #59 = Utf8 Answers;
+  const #60 = Methodref #1.#61;
+  const #61 = NameAndType #62:#63;
+  const #62 = Utf8 getAnswersArray;
+  const #63 = Utf8 ()[Ljava/lang/String;;
+  const #64 = Methodref #56.#65;
+  const #65 = NameAndType #15:#66;
+  const #66 = Utf8 (Ljava/lang/String;I[Ljava/lang/String;[Ljavax/microedition/lcdui/Image;)V;
+  const #67 = Methodref #41.#68;
+  const #68 = NameAndType #54:#69;
+  const #69 = Utf8 (Ljavax/microedition/lcdui/Item;)I;
+  const #70 = Methodref #41.#71;
+  const #71 = NameAndType #72:#73;
+  const #72 = Utf8 addCommand;
+  const #73 = Utf8 (Ljavax/microedition/lcdui/Command;)V;
+  const #74 = Methodref #41.#75;
+  const #75 = NameAndType #76:#77;
+  const #76 = Utf8 setCommandListener;
+  const #77 = Utf8 (Ljavax/microedition/lcdui/CommandListener;)V;
+  const #78 = Utf8 listener;
+  const #79 = Utf8 Ljavax/microedition/lcdui/CommandListener;;
+  const #80 = Utf8 cmd_ok;
+  const #81 = Utf8 Ljavax/microedition/lcdui/Command;;
+  const #82 = Utf8 cmd_back;
+  const #83 = Utf8 setQuestion;
+  const #84 = Utf8 q;
+  const #85 = Utf8 addAnswer;
+  const #86 = Methodref #24.#87;
+  const #87 = NameAndType #88:#89;
+  const #88 = Utf8 addElement;
+  const #89 = Utf8 (Ljava/lang/Object;)V;
+  const #90 = Utf8 a;
+  const #91 = Utf8 getAnswerNum;
+  const #92 = Utf8 ()I;
+  const #93 = Methodref #24.#94;
+  const #94 = NameAndType #95:#92;
+  const #95 = Utf8 size;
+  const #96 = Utf8 getAnswer;
+  const #97 = Utf8 (I)Ljava/lang/String;;
+  const #98 = Methodref #24.#99;
+  const #99 = NameAndType #100:#101;
+  const #100 = Utf8 elementAt;
+  const #101 = Utf8 (I)Ljava/lang/Object;;
+  const #102 = Class #103;
+  const #103 = Utf8 java/lang/String;
+  const #104 = Utf8 idx;
+  const #105 = Utf8 ret;
+  const #106 = Utf8 [Ljava/lang/String;;
+  const #107 = Utf8 i;
+  const #108 = Utf8 setCorrectAnswer;
+  const #109 = Utf8 (I)V;
+  const #110 = Fieldref #1.#111;
+  const #111 = NameAndType #9:#10;
+  const #112 = Utf8 getCorrectAnswer;
+  const #113 = Utf8 SourceFile;
+  const #114 = Utf8 Question.java;
+  const #115 = Utf8 int;
+  const #116 = Utf8 org.bmlspecs.AssertTable;
+  const #117 = Utf8 org.bmlspecs.Invariants;
+  const #118 = Utf8 org.bmlspecs.MethodSpecification;
+  const #119 = Utf8 org.bmlspecs.SecondConstantPool;
+  const #120 = Utf8 org.bmlspecs.LoopSpecificationTable;
+
+class pl.tls.mobius.quiz.Question
+
+/*@
+  @ requires true
+  @*/
+public void <init>()
+0:    aload_0
+1:    invokespecial	java.lang.Object.<init> ()V (18)
+4:    aload_0
+5:    aconst_null
+6:    putfield		pl.tls.mobius.quiz.Question.question Ljava/lang/String; (20)
+9:    aload_0
+10:   aconst_null
+11:   putfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+14:   aload_0
+15:   new		<java.util.Vector> (24)
+18:   dup
+19:   invokespecial	java.util.Vector.<init> ()V (26)
+22:   putfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+25:   return
+
+/*@
+  @
+  @*/
+public javax.microedition.lcdui.Form getQForm()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+4:    areturn
+
+/*@
+  @
+  @*/
+public javax.microedition.lcdui.ChoiceGroup getChoiceGroup()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.choiceGroup Ljavax/microedition/lcdui/ChoiceGroup; (37)
+4:    areturn
+
+/*@
+  @
+  @*/
+public javax.microedition.lcdui.Form buildQForm(javax.microedition.lcdui.CommandListener listener, javax.microedition.lcdui.Command cmd_ok, javax.microedition.lcdui.Command cmd_back)
+0:    aload_0
+1:    new		<javax.microedition.lcdui.Form> (41)
+4:    dup
+5:    ldc		"Question" (43)
+7:    invokespecial	javax.microedition.lcdui.Form.<init> (Ljava/lang/String;)V (45)
+10:   putfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+13:   aload_0
+14:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+17:   aload_0
+18:   invokevirtual	pl.tls.mobius.quiz.Question.getQuestion ()Ljava/lang/String; (48)
+21:   invokevirtual	javax.microedition.lcdui.Form.append (Ljava/lang/String;)I (52)
+24:   pop
+25:   aload_0
+26:   new		<javax.microedition.lcdui.ChoiceGroup> (56)
+29:   dup
+30:   ldc		"Answers" (58)
+32:   iconst_1
+33:   aload_0
+34:   invokevirtual	pl.tls.mobius.quiz.Question.getAnswersArray ()[Ljava/lang/String; (60)
+37:   aconst_null
+38:   invokespecial	javax.microedition.lcdui.ChoiceGroup.<init> (Ljava/lang/String;I[Ljava/lang/String;[Ljavax/microedition/lcdui/Image;)V (64)
+41:   putfield		pl.tls.mobius.quiz.Question.choiceGroup Ljavax/microedition/lcdui/ChoiceGroup; (37)
+44:   aload_0
+45:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+48:   aload_0
+49:   getfield		pl.tls.mobius.quiz.Question.choiceGroup Ljavax/microedition/lcdui/ChoiceGroup; (37)
+52:   invokevirtual	javax.microedition.lcdui.Form.append (Ljavax/microedition/lcdui/Item;)I (67)
+55:   pop
+56:   aload_0
+57:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+60:   aload_2
+61:   invokevirtual	javax.microedition.lcdui.Form.addCommand (Ljavax/microedition/lcdui/Command;)V (70)
+64:   aload_0
+65:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+68:   aload_3
+69:   invokevirtual	javax.microedition.lcdui.Form.addCommand (Ljavax/microedition/lcdui/Command;)V (70)
+72:   aload_0
+73:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+76:   aload_1
+77:   invokevirtual	javax.microedition.lcdui.Form.setCommandListener (Ljavax/microedition/lcdui/CommandListener;)V (74)
+80:   aload_0
+81:   getfield		pl.tls.mobius.quiz.Question.qForm Ljavax/microedition/lcdui/Form; (22)
+84:   areturn
+
+/*@
+  @
+  @*/
+public String getQuestion()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.question Ljava/lang/String; (20)
+4:    areturn
+
+/*@
+  @
+  @*/
+public void setQuestion(String q)
+0:    aload_0
+1:    aload_1
+2:    putfield		pl.tls.mobius.quiz.Question.question Ljava/lang/String; (20)
+5:    return
+
+/*@
+  @
+  @*/
+public void addAnswer(String a)
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+4:    aload_1
+5:    invokevirtual	java.util.Vector.addElement (Ljava/lang/Object;)V (86)
+8:    return
+
+/*@
+  @
+  @*/
+public int getAnswerNum()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+4:    invokevirtual	java.util.Vector.size ()I (93)
+7:    ireturn
+
+/*@
+  @
+  @*/
+public String getAnswer(int idx)
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+4:    iload_1
+5:    invokevirtual	java.util.Vector.elementAt (I)Ljava/lang/Object; (98)
+8:    checkcast		<java.lang.String> (102)
+11:   areturn
+
+/*@
+  @
+  @*/
+public String[] getAnswersArray()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+4:    invokevirtual	java.util.Vector.size ()I (93)
+7:    anewarray		<java.lang.String> (102)
+10:   astore_1
+11:   iconst_0
+12:   istore_2
+13:   goto		#33
+16:   aload_1
+17:   iload_2
+18:   aload_0
+19:   getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+22:   iload_2
+23:   invokevirtual	java.util.Vector.elementAt (I)Ljava/lang/Object; (98)
+26:   checkcast		<java.lang.String> (102)
+29:   aastore
+30:   iinc		%2	1
+33:   iload_2
+34:   aload_0
+35:   getfield		pl.tls.mobius.quiz.Question.answers Ljava/util/Vector; (27)
+38:   invokevirtual	java.util.Vector.size ()I (93)
+41:   if_icmplt		#16
+44:   aload_1
+45:   areturn
+
+/*@
+  @
+  @*/
+public void setCorrectAnswer(int i)
+0:    aload_0
+1:    iload_1
+2:    putfield		pl.tls.mobius.quiz.Question.correctAnswer I (110)
+5:    return
+
+/*@
+  @
+  @*/
+public int getCorrectAnswer()
+0:    aload_0
+1:    getfield		pl.tls.mobius.quiz.Question.correctAnswer I (110)
+4:    ireturn

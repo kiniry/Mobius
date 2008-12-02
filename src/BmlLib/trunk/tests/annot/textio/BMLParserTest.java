@@ -1067,7 +1067,34 @@ public class BMLParserTest {
    */
   @Test
   public void testQuantifiedFormula() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "\\forall int i; true",
+                            "\\exists int i; true",
+                            "\\forall int i; i == i",
+                            "\\forall int i; i != i"
+    };
+    String[] answers = {
+                        "\\forall int i ; true",
+                        "\\exists int i ; true",
+                        "\\forall int i ; i == i",
+                        "\\forall int i ; i != i"
+    };
+    System.out.println("testQuantifiedFormula: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.expression_return ret;
+      try {
+        ret = parser.expression(); //initialisation of env
+        assertEquals("quantified formula: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testQuantifiedFormula end");
   }
 
   /**

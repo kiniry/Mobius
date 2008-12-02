@@ -13,6 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import bmllib.utils.BMLChangeException;
+
 import annot.bcclass.BCClass;
 
 /**
@@ -25,11 +27,16 @@ public class CodeFragmentTest {
   String dirname = "tests/annot/textio/";
 
   String[] filenames = {
-      "Question"
+      "Question",
+  };
+
+  String[] filenames_btc = {
+      "Question-req",
   };
 
   String[] texts;
-
+  String[] texts_btc;
+  
   BCClass[] classes;
 
   CodeFragment[] fragments;
@@ -56,6 +63,20 @@ public class CodeFragmentTest {
       classes[i] = new BCClass(dirname, filenames[i]);
       fragments[i] = new CodeFragment(classes[i], texts[i]);
     }
+    texts_btc = new String[filenames_btc.length];
+    for (int i = 0; i < filenames_btc.length; i++) {
+      final byte[] buf = new byte[1024];
+      final File f = new File(dirname + filenames_btc[i] + ".btc");
+      final InputStream is = new FileInputStream(f);
+      texts_btc[i] = new String();
+      while (is.available() > 0) {
+        final int hm = (is.available() < 1024) ? is.available() : 1024;
+        is.read(buf);
+        texts_btc[i] += new String(buf, 0, hm);
+      }
+      is.close();
+    }
+
   }
 
   /**
@@ -79,7 +100,14 @@ public class CodeFragmentTest {
    */
   @Test
   public void testAddChange() {
-    fail("Not yet implemented");
+    final CodeFragment cf = new CodeFragment(classes[0], texts[0]);
+    try {
+      cf.addChange(4518, 0, " requires true");
+    } catch (BMLChangeException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    assertEquals("changed code:", cf.getCode(), texts_btc[0]);
   }
 
   /**
