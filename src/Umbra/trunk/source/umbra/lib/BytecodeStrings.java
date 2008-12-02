@@ -88,6 +88,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
     "goto",
     "implements",
     "Constant pool:",
+    "Second constant pool:",
     "instanceof",
     "int",
     "interface",
@@ -162,6 +163,11 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
   public static final int CLASS_KEYWORD_POS = 8;
 
   /**
+   * The position of the "const" keyword in {@link #JAVA_KEYWORDS}.
+   */
+  public static final int CP_ENTRY_KEYWORD_POS = 9;
+
+  /**
    * The position of the "extends" keyword in {@link #JAVA_KEYWORDS}.
    */
   public static final int EXTENDS_KEYWORD_POS = 16;
@@ -177,9 +183,10 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
   public static final int CP_KEYWORD_POS = 24;
 
   /**
-   * The position of the "const" keyword in {@link #JAVA_KEYWORDS}.
+   * The position of the "Second constant pool:" keyword in
+   * {@link #JAVA_KEYWORDS}.
    */
-  public static final int CP_ENTRY_KEYWORD_POS = 9;
+  public static final int SCP_KEYWORD_POS = 25;
 
   /**
    * This constant contains an array with all the keywords that occur in the

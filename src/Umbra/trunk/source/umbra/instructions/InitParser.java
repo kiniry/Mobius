@@ -22,6 +22,7 @@ import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
+import umbra.lib.BytecodeStrings;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraSyntaxException;
@@ -163,7 +164,8 @@ public class InitParser extends BytecodeCommentParser {
    * starting with the line after the header and tries to parse the lines and
    * associate them with constant pool entries. In case the first line is not
    * a constant pool header line the {@link UmbraSyntaxException} is
-   * thrown.
+   * thrown. Then it tries to parse the second constant pool header and its
+   * lines in the manner as the first constant pool.
    *
    * @param the_current_lno the line from which we start the parsing
    * @param a_ctxt the parsing context
@@ -176,24 +178,59 @@ public class InitParser extends BytecodeCommentParser {
   private int swallowConstantPools(final int the_current_lno,
                                    final LineContext a_ctxt)
     throws UmbraLocationException, UmbraSyntaxException {
-    String line = getLineFromDoc(my_doc, the_current_lno, a_ctxt);
-    BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
+    final String line = getLineFromDoc(my_doc, the_current_lno, a_ctxt);
+    final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
     if (!(lc instanceof CPHeaderController)) {
       throw new UmbraSyntaxException(the_current_lno);
     }
     addEditorLine(the_current_lno, lc);
     a_ctxt.setInsideCP();
     int j = the_current_lno + 1;
-    while (j < my_doc.getNumberOfLines()) {
-      line = getLineFromDoc(my_doc, j, a_ctxt);
+    j = swallowCPContent(a_ctxt, j);
+    j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines(), a_ctxt);
+    final String dline = getLineFromDoc(my_doc, j, a_ctxt);
+    final BytecodeLineController dlc = Preparsing.getType(dline, a_ctxt);
+    if (dlc instanceof CPHeaderController) {
+      final CPHeaderController lcc = (CPHeaderController)dlc;
+      if (!lcc.getLineContent().startsWith(BytecodeStrings.
+             JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS])) {
+        throw new UmbraSyntaxException(the_current_lno);
+      }
+      addEditorLine(j, dlc);
+      a_ctxt.setInsideCP();
+      j = swallowCPContent(a_ctxt, ++j);
+    }
+    return j;
+  }
+
+  /**
+   * This method handles the parsing of these lines of a textual representation
+   * which contain the content of a class pool. This method subsequently parses
+   * line by line the given document starting with the given line number
+   * and tries to parse the lines and associate them with constant pool entries.
+   * In case the first line is not
+   *
+   * @param a_ctxt the parsing context
+   * @param a_lineno the number of the first line to be parsed
+   * @return the number of the first line after the constant pool
+   * @throws UmbraLocationException in case a line number is reached which is
+   *   not within the given document
+   */
+  private int swallowCPContent(final LineContext a_ctxt, final int a_lineno)
+    throws UmbraLocationException {
+    String line;
+    int num = a_lineno;
+    BytecodeLineController lc;
+    while (num < my_doc.getNumberOfLines()) {
+      line = getLineFromDoc(my_doc, num, a_ctxt);
       lc = Preparsing.getType(line, a_ctxt);
       if (!(lc instanceof CPLineController)) {
         break;
       }
       addEditorLine(lc);
-      j++;
+      num++;
     }
-    return j;
+    return num;
   }
 
   /**

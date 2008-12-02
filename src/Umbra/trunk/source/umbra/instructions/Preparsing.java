@@ -166,6 +166,9 @@ public final class Preparsing {
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_KEYWORD_POS],
         CPHeaderController.class);
+      my_preparse_automaton.addSimple(
+        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS],
+        CPHeaderController.class);
 
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);

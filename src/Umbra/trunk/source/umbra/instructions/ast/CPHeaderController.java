@@ -33,13 +33,16 @@ public class CPHeaderController extends BytecodeLineController {
   /**
    * This method checks the correctness of a class pool header line. In case of
    * the {@link CPHeaderController} this means that the line text starts with
-   * the constant pool keyword.
+   * the constant pool keyword (first or second one).
    *
    * @return  true if the instruction is correct
    */
   public boolean correct()  {
     return getLineContent().
              startsWith(BytecodeStrings.
-                          JAVA_KEYWORDS[BytecodeStrings.CP_KEYWORD_POS]);
+                          JAVA_KEYWORDS[BytecodeStrings.CP_KEYWORD_POS]) ||
+           getLineContent().
+             startsWith(BytecodeStrings.
+                          JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS]);
   }
 }

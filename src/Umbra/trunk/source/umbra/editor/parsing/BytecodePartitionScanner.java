@@ -96,9 +96,14 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   private static final int CP_RULE = 2;
 
   /**
+   * Index for the rule to handle constant pool areas.
+   */
+  private static final int SCP_RULE = 3;
+
+  /**
    * Index for the rule to handle throws lines.
    */
-  private static final int THROWS_RULE = 3;
+  private static final int THROWS_RULE = 4;
 
   /**
    * The total number of rules in the current scanner. It is by one greater
@@ -155,6 +160,10 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
                                         bml);
     the_rules[CP_RULE] = new MultiLineRule(BytecodeStrings.JAVA_KEYWORDS[
                                         BytecodeStrings.CP_KEYWORD_POS],
+                                        EMPTY_LINE_MARKER,
+                                        cp);
+    the_rules[SCP_RULE] = new MultiLineRule(BytecodeStrings.JAVA_KEYWORDS[
+                                        BytecodeStrings.SCP_KEYWORD_POS],
                                         EMPTY_LINE_MARKER,
                                         cp);
     the_rules[THROWS_RULE] = new EndOfLineRule(BytecodeStrings.THROWS_PREFIX[0],
