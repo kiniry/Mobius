@@ -3,9 +3,6 @@
    <description url="http://kind.ucd.ie/products/opensource/Mobius/updates/">
       This is the general update site for all the plugins and features that are included with the Mobius Program Verification Environment.
    </description>
-   <feature url="features/ExtendedStaticChecker_1.0.0.jar" id="ExtendedStaticChecker" version="1.0.0">
-      <category name="Mobius"/>
-   </feature>
    <feature url="features/DirectVCGen_1.0.8.jar" id="DirectVCGen" version="1.0.8">
       <category name="Mobius"/>
    </feature>
@@ -33,5 +30,28 @@
    <feature url="features/ch.ethz.inf.pm.jml.plugin.help_1.0.3.jar" id="ch.ethz.inf.pm.jml.plugin.help" version="1.0.3">
       <category name="Mobius"/>
    </feature>
+   <feature url="features/mobius.escjava2.feature_2.0.8.jar" id="mobius.escjava2.feature" version="2.0.8">
+      <category name="Mobius"/>
+   </feature>
+   <feature url="features/com.atlassw.tools.eclipse.checkstyle_4.3.3.jar" id="com.atlassw.tools.eclipse.checkstyle" version="4.3.3">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/com.mountainminds.eclemma.feature_1.3.0.jar" id="com.mountainminds.eclemma.feature" version="1.3.0">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/edu.umd.cs.findbugs.plugin.eclipse_1.2.1.20070531.jar" id="edu.umd.cs.findbugs.plugin.eclipse" version="1.2.1.20070531">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/net.sourceforge.metrics_1.3.6.jar" id="net.sourceforge.metrics" version="1.3.6">
+      <category name="Optional"/>
+   </feature>
+   <feature url="features/net.sourceforge.pmd.eclipse_3.2.3.v200712041040.jar" id="net.sourceforge.pmd.eclipse" version="3.2.3.v200712041040">
+      <category name="Optional"/>
+   </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
+   <category-def name="Optional" label="Optional">
+      <description>
+         Third-party related plugins and features
+      </description>
+   </category-def>
 </site>
