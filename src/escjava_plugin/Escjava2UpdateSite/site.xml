@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/ExtendedStaticChecker_1.0.0.jar" id="ExtendedStaticChecker" version="1.0.0"/>
+   <feature url="features/mobius.escjava2.feature_2.0.8.jar" id="mobius.escjava2.feature" version="2.0.8"/>
 </site>

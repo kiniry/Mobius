@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="ExtendedStaticChecker"
-      label="ExtendedStaticChecker Feature"
-      version="1.0.0">
+      id="mobius.escjava2.feature"
+      label="Extended Static Checker for Java"
+      version="2.0.8">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
