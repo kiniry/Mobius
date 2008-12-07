@@ -86,6 +86,7 @@ public class Main {
     opt.regBool("-dcall", "desugar calls");
     opt.regBool("-dhavoc", "desugar havoc");
     opt.regBool("-cut", "cut loops by removing back-edges");
+    opt.regBool("-dmap", "desugar maps");
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-pvc", "print verification condition");
     opt.regBool("-verify", "do everything");
@@ -135,6 +136,11 @@ public class Main {
     ast = p.process(ast, tc);
   }
 
+  private void removeMaps() {
+    MapRemover mr = new MapRemover();
+    ast = mr.process(ast);
+  }
+
   private void desugarSpecs() {
     SpecDesugarer d = new SpecDesugarer();
     ast = d.process(ast, tc);
@@ -156,8 +162,8 @@ public class Main {
   }
 
   private void verify() throws ProverException {
-    ast = vcgen.process(ast, tc);
     vcgen.setProver(new SimplifyProver(new String[]{"z3", "-si"}));
+    ast = vcgen.process(ast, tc);
 
     // This is ugly. Perhaps put this in a visitor that also knows
     // how to filter which implementations to check.
@@ -220,6 +226,7 @@ public class Main {
           if (opt.boolVal("-dhavoc")) desugarHavoc();
           if (opt.boolVal("-dspec")) desugarSpecs();
           if (opt.boolVal("-pass")) passivate();
+          if (opt.boolVal("-dmap")) removeMaps();
         } else verify();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
         if (opt.boolVal("-pp")) ast.eval(pp);

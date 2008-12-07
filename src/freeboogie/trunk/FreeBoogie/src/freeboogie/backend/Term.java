@@ -1,8 +1,15 @@
 package freeboogie.backend;
 
 /**
- * A term that knows its sort. This class is intended to
- * be subclassed (in conjunction with concrete prover classes).
+ * A term that knows its sort. In theorem prover jargon,
+ * instances of this class represent both terms and formulas.
+ *
+ * Terms are built under the assumption that the prover will
+ * see certain axioms before seeing the term. These axioms are
+ * returned by {@code axioms()}.
+ *
+ * The class {@code Term} is intended to be subclassed (in
+ * conjunction with concrete prover classes).
  *
  * @author rgrig 
  */

@@ -89,12 +89,11 @@ public class SimplifyProver extends Prover {
       else
         sb.append("FALSE");
     } else if (st.id.startsWith("map_update")) {
-      // TODO This is SOOOO ugly.
-      sb.append("($$update" + ((SmtTerm)st.children[1]).children.length + " ");
+      sb.append("($$update" + (st.children[1]).children.length + " ");
       printArgs(st.children, sb);
       sb.append(")");
     } else if (st.id.startsWith("map_select")) {
-      sb.append("($$select" + ((SmtTerm)st.children[1]).children.length + " ");
+      sb.append("($$select" + (st.children[1]).children.length + " ");
       printArgs(st.children, sb);
       sb.append(")");
     } else if (st.id.equals("tuple")) {

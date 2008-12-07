@@ -1,3 +1,4 @@
+ . ArrayRemover visitor.
  . Add axioms for term counterparts of formulas.
  . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
@@ -8,7 +9,6 @@
  . Get rid of SmtTerm, SmtTermBuilder. Keep only one class.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
- . \self_members and \super_members for AST gen
  . Have some unified mechanism for making sure that terms start with
    "term$$".
  . Have a way to cope with identifiers in the input that contain $$.
@@ -77,5 +77,8 @@
    native interface to z3, and so on. At least three users are needed
    to validate the design.)
  . Allow easy redirection of output.
+ . Have some mechanism to allow reprocessing of some boogie.
+   (`Internal' ids, that contain $$ are assumed to not be in the
+   input but they are allowed in the output.)
 
 vim:spell:ts=3:sw=3:fdm=manual:

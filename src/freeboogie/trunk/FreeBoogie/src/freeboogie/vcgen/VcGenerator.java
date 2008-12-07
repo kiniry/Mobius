@@ -17,19 +17,19 @@ public class VcGenerator {
   /* IMPLEMENTATION
    *
    * The phases of VC generation are:
-   *  (1) make graphs reducible 
-   *  (2) infer invariants 
+   *  (1) make graphs reducible TODO
+   *  (2) infer invariants TODO
    *  (3) cut loops 
    *  (4) desugar calls 
    *  (5) desugar havoc
-   *  (6) desugar where clauses 
+   *  (6) desugar where clauses TODO
    *  (7) desugar specifications 
    *  (8) make passive 
-   *  (9) strongest postcondition 
-   * (10) add axioms, depending on the prover, for
-   *      (a) the partial order <: 
-   *      (b) map selection and updating
-   *      (c) distinct constants (unique) 
+   *  (9) desugar maps, if the prover doesn't know about arrays
+   * (10) desugar uniq on constants TODO
+   * (11) desugar <: is prover doesn't know it TODO
+   * (12) strongest postcondition 
+   * (13) add axioms collected by the term builder TODO
    */
 
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
@@ -43,6 +43,7 @@ public class VcGenerator {
   private HavocDesugarer havocDesugarer;
   private SpecDesugarer specDesugarer;
   private Passivator passivator;
+  private MapRemover mapRemover;
   private FunctionRegisterer functionRegisterer;
   private AxiomSender axiomSender;
 
@@ -56,6 +57,7 @@ public class VcGenerator {
     havocDesugarer = new HavocDesugarer(); 
     specDesugarer = new SpecDesugarer();
     passivator = new Passivator();
+    mapRemover = new MapRemover();
     sp = new StrongestPostcondition();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender();
@@ -79,6 +81,7 @@ public class VcGenerator {
     ast = havocDesugarer.process(ast, tc);
     ast = specDesugarer.process(ast, tc);
     ast = passivator.process(ast, tc);
+    ast = mapRemover.process(ast);
     preverify();
     return ast;
   }

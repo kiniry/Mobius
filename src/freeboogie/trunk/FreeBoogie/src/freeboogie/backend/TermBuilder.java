@@ -183,8 +183,6 @@ public abstract class TermBuilder {
    * Subclasses should either construct a tree ar communicate with
    * the prover such that the prover constructs a tree.
    * 
-   * TODO The builder would need to know about the prover to do so.
-   * 
    * @param termId the term to be constructed
    * @param a the argument
    * @return the constructed term

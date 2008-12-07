@@ -24,7 +24,7 @@ public class SmtTerm extends Term {
   final public Object data;
   
   /** The children of this term, nonnull. */
-  final public Term[] children;
+  final public SmtTerm[] children;
   
   /**
    * Creates a new term represented by an s-expression.
@@ -32,7 +32,7 @@ public class SmtTerm extends Term {
    * @param id the identifier of this term
    * @param children the children of this term
    */
-  public SmtTerm(Sort sort, String id, Term[] children) {
+  public SmtTerm(Sort sort, String id, SmtTerm[] children) {
     super(sort); 
     this.id = id;
     this.data = null;
