@@ -6,6 +6,7 @@ import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.BONWarning;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.plugin.BONPlugin;
+import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -115,10 +116,11 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     try {
       for (BONProblem bonProblem : actualProblems) {
 
-        File file = bonProblem.getLocation().getSourceFile();
-        int lineNumber = bonProblem.getLocation().getLineNumber();
-        int charPositionStart = bonProblem.getLocation().getAbsoluteCharPositionStart();
-        int charPositionEnd = bonProblem.getLocation().getAbsoluteCharPositionEnd();
+        SourceLocation location = bonProblem.getLocation();
+        File file = location == null ? null : bonProblem.getLocation().getSourceFile();
+        int lineNumber = location == null ? -1 : bonProblem.getLocation().getLineNumber();
+        int charPositionStart = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionStart();
+        int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
         //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
 
