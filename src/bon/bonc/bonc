@@ -58,8 +58,8 @@ if [[ "$TERM" == "cygwin" ]]; then
   cp=`cygpath -wp $cp`
 fi
 
-#"$JAVA" -Xloggc:bon.log -cp $cp ie.ucd.bon.Main $*
-"$JAVA" -cp $cp ie.ucd.bon.Main $*
+#"$JAVA" -Xloggc:bon.log -cp $cp ie.ucd.bon.Main "$@"
+"$JAVA" -cp $cp ie.ucd.bon.Main "$@"
 
 
 
