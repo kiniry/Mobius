@@ -147,6 +147,9 @@ public class SourceLocation implements Comparable<SourceLocation> {
 	}
 
 	public int compareTo(SourceLocation o) {
+	  if (o == null) {
+	    return 1;
+	  }
 		int fileCompare = this.compareFile(o);
 		if (fileCompare != 0) {
 			return fileCompare;

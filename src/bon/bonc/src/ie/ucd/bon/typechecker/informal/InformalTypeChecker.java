@@ -12,11 +12,11 @@ import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
-import ie.ucd.bon.typechecker.errors.SystemNotDefinedError;
 import ie.ucd.bon.typechecker.informal.errors.ClassNotInAnyClusterError;
 import ie.ucd.bon.typechecker.informal.errors.ClusterNotInAnyClusterOrSystemError;
 import ie.ucd.bon.typechecker.informal.errors.IncorrectSystemNameError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
+import ie.ucd.bon.typechecker.informal.errors.SystemNotDefinedError;
 
 import java.util.Collection;
 import java.util.Map;

@@ -20,7 +20,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
 
   private String getSourceLine() {
-    if (location.getLineNumber() <= 0) {
+    if (location == null || location.getLineNumber() <= 0) {
       return null;
     }
     return SourceReader.getInstance().getSource(location.getSourceFile(), location.getLineNumber());
@@ -36,6 +36,9 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   public abstract String getMessage();
 
   public int compareTo(final BONProblem o) {
+    if (this.getLocation() == null) {
+      return o.getLocation() == null ? 0 : -1;
+    }
     int compare = this.getLocation().compareTo(o.getLocation());
 
     if (compare != 0) {
@@ -71,14 +74,16 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
 
   protected void printStart(PrintStream ps) {
-    ps.print(location.getSourceFilePath());
-    ps.print(':');
+    if (location != null) {
+      ps.print(location.getSourceFilePath());
+      ps.print(':');
 
-    if (location.getLineNumber() > 0) {
-      ps.print(location.getLineNumber());
-      ps.print(": ");
-    } else {
-      ps.print(' ');
+      if (location.getLineNumber() > 0) {
+        ps.print(location.getLineNumber());
+        ps.print(": ");
+      } else {
+        ps.print(' ');
+      }
     }
   }
 
@@ -87,7 +92,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
 
   protected void printSourcePosition(PrintStream ps) {
-    if (location.getCharPositionInLine() >= 0 && sourceLine != null) {
+    if (location != null && location.getCharPositionInLine() >= 0 && sourceLine != null) {
 
       int tabCount = 0;
       StringBuilder sb = new StringBuilder();
