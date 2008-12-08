@@ -11,6 +11,7 @@ import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.backend.ProverException;
 import freeboogie.backend.SimplifyProver;
+import freeboogie.backend.SmtTerm;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
@@ -73,7 +74,7 @@ public class Main {
   private TcInterface tc;
   private Declaration ast;
 
-  private VcGenerator vcgen;
+  private VcGenerator<SmtTerm> vcgen;
 
   public Main() {
     opt = new Options();
@@ -94,7 +95,7 @@ public class Main {
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
-    vcgen = new VcGenerator();
+    vcgen = new VcGenerator<SmtTerm>();
   }
 
   private void printSymbolTable() {

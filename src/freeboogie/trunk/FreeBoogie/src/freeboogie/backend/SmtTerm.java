@@ -1,5 +1,6 @@
 package freeboogie.backend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -10,8 +11,7 @@ import java.util.Arrays;
  * @author rgrig 
  */
 public class SmtTerm extends Term {
-  
-  static final private SmtTerm[] noChild = new SmtTerm[0]; 
+  static final private ArrayList<SmtTerm> noChild = new ArrayList<SmtTerm>();
   
   /** The identifier or this term. */
   final public String id;
@@ -24,7 +24,7 @@ public class SmtTerm extends Term {
   final public Object data;
   
   /** The children of this term, nonnull. */
-  final public SmtTerm[] children;
+  final public ArrayList<SmtTerm> children;
   
   /**
    * Creates a new term represented by an s-expression.
@@ -32,13 +32,13 @@ public class SmtTerm extends Term {
    * @param id the identifier of this term
    * @param children the children of this term
    */
-  public SmtTerm(Sort sort, String id, SmtTerm[] children) {
+  public SmtTerm(Sort sort, String id, ArrayList<SmtTerm> children) {
     super(sort); 
     this.id = id;
     this.data = null;
-    this.children = Arrays.copyOf(children, children.length);
-    //System.out.println("mk> " + id + " " + children.length);
-    assert this.children.length > 0;
+    this.children = children;
+System.out.println("s.mk> " + id + " " + children.size());
+    assert this.children.size() > 0;
   }
 
   /**
@@ -52,7 +52,7 @@ public class SmtTerm extends Term {
     this.id = id;
     this.data = data;
     this.children = noChild;
-    //System.out.println("mk2> " + id + " " + data);
+System.out.println("s.mk2> " + id + " " + data);
   }
 
   /* For debug. */
@@ -67,10 +67,9 @@ public class SmtTerm extends Term {
       sb.append(data.toString());
       sb.append("]");
     }
-    if (children != null) for (int i = 0; i < children.length; ++i) {
-      if (i != 0) sb.append(" ");
-      if (children[i] != null) sb.append(children[i].toString());
-      else sb.append("null");
+    for (SmtTerm c : children) {
+      sb.append(" ");
+      sb.append(c.toString());
     }
     sb.append(")");
     return sb.toString();

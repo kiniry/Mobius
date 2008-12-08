@@ -5,14 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.math.BigInteger;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.*;
+import java.util.logging.*;
 
 import freeboogie.util.Err;
 
@@ -33,7 +27,7 @@ import freeboogie.util.Err;
  *
  * @author rgrig 
  */
-public class SimplifyProver extends Prover {
+public class SimplifyProver extends Prover<SmtTerm> {
   /* IMPLEMENTATION NOTE:
    * The reason why strings are built, instead of sending pieces
    * to the output stream is that it is easier to debug. The downside
@@ -61,61 +55,51 @@ public class SimplifyProver extends Prover {
    */
   private void prepareTermBuilder() {
     builder = new SmtTermBuilder();
-    // TODO: send map axioms and stuff
   }
 
   // TODO treat everything that is registered in SmtTermBuilder
   //      and drop the toUpperCase()
-  private void printTerm(Term t, StringBuilder sb) {
-    SmtTerm st = (SmtTerm)t;
-    if (st.id.startsWith("var")) { 
-      sb.append((String)st.data);
-    } else if (st.id.startsWith("forall")) {
+  private void printTerm(SmtTerm t, StringBuilder sb) {
+    if (t.id.startsWith("var")) { 
+      sb.append((String)t.data);
+    } else if (t.id.startsWith("forall")) {
       sb.append("(FORALL (");
-      printTerm(st.children[0], sb);
+      printTerm(t.children.get(0), sb);
       sb.append(") ");
-      printTerm(st.children[1], sb);
+      printTerm(t.children.get(1), sb);
       sb.append(")");
-    } else if (st.id.equals("literal_int") || st.id.equals("literal")) {
-      sb.append(st.data);
-    } else if (st.id.equals("literal_bool")) {
-      if ((Boolean)st.data)
+    } else if (t.id.equals("literal_int") || t.id.equals("literal")) {
+      sb.append(t.data);
+    } else if (t.id.equals("literal_bool")) {
+      if ((Boolean)t.data)
         sb.append("term$$TRUE");
       else
         sb.append("term$$FALSE");
-    } else if (st.id.equals("literal_formula")) {
-      if ((Boolean)st.data)
+    } else if (t.id.equals("literal_formula")) {
+      if ((Boolean)t.data)
         sb.append("TRUE");
       else
         sb.append("FALSE");
-    } else if (st.id.startsWith("map_update")) {
-      sb.append("($$update" + (st.children[1]).children.length + " ");
-      printArgs(st.children, sb);
-      sb.append(")");
-    } else if (st.id.startsWith("map_select")) {
-      sb.append("($$select" + (st.children[1]).children.length + " ");
-      printArgs(st.children, sb);
-      sb.append(")");
-    } else if (st.id.equals("tuple")) {
-      printArgs(st.children, sb);
-    } else if (st.id.startsWith("cast")) {
-      printTerm(st.children[0], sb);
-    } else if (st.id.startsWith("eq")) {
+    } else if (t.id.equals("tuple")) {
+      printArgs(t.children, sb);
+    } else if (t.id.startsWith("cast")) {
+      printTerm(t.children.get(0), sb);
+    } else if (t.id.startsWith("eq")) {
       sb.append("(EQ ");
-      printTerm(st.children[0], sb);
+      printTerm(t.children.get(0), sb);
       sb.append(" ");
-      printTerm(st.children[1], sb);
+      printTerm(t.children.get(1), sb);
       sb.append(")");
-    } else if (st.id.startsWith("neq")) {
+    } else if (t.id.startsWith("neq")) {
       sb.append("(NEQ ");
-      printTerm(st.children[0], sb);
+      printTerm(t.children.get(0), sb);
       sb.append(" ");
-      printTerm(st.children[1], sb);
+      printTerm(t.children.get(1), sb);
       sb.append(")");
     } else {
       sb.append("(");
-      sb.append(st.id.toUpperCase());
-      for (Term c : st.children) {
+      sb.append(t.id.toUpperCase());
+      for (SmtTerm c : t.children) {
         sb.append(" ");
         printTerm(c, sb);
       }
@@ -123,15 +107,15 @@ public class SimplifyProver extends Prover {
     }
   }
 
-  private void printArgs(Term[] a, StringBuilder sb) {
-    for (int i = 0; i < a.length; ++i) {
-      if (i != 0) sb.append(" ");
-      printTerm(a[i], sb);
+  private void printArgs(ArrayList<SmtTerm> a, StringBuilder sb) {
+    for (SmtTerm t : a) {
+      sb.append(" ");
+      printTerm(t, sb);
     }
   }
 
   @Override
-  protected void sendAssume(Term t) throws ProverException {
+  protected void sendAssume(SmtTerm t) throws ProverException {
     strBuilder.setLength(0);
     strBuilder.append("(BG_PUSH ");
     printTerm(t, strBuilder);
@@ -147,7 +131,7 @@ public class SimplifyProver extends Prover {
   }
   
   @Override
-  public boolean isValid(Term t) throws ProverException {
+  public boolean isValid(SmtTerm t) throws ProverException {
     strBuilder.setLength(0);
     printTerm(t, strBuilder);
     log.fine("ask simplify: " + strBuilder);
@@ -185,11 +169,11 @@ public class SimplifyProver extends Prover {
       log.setLevel(Level.OFF);
     }
     
-    Prover p = new SimplifyProver(args);
-    TermBuilder b = p.getBuilder();
-    Term x = b.mk("var_pred", "x");
-    Term y = b.mk("var_pred", "y");
-    Term q = b.mk("not", b.mk("iff", 
+    Prover<SmtTerm> p = new SimplifyProver(args);
+    TermBuilder<SmtTerm> b = p.getBuilder();
+    SmtTerm x = b.mk("var_pred", "x");
+    SmtTerm y = b.mk("var_pred", "y");
+    SmtTerm q = b.mk("not", b.mk("iff", 
       b.mk("iff", b.mk("and", x, y), b.mk("or", x, y)),
       b.mk("iff", x, y)
     ));

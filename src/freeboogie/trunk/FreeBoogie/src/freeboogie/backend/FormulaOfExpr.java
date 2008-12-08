@@ -18,22 +18,19 @@ import freeboogie.util.Err;
  * TODO The stuff that is mentioned here should be registered by
  *      TermBuilder, not SmtTermBuilder.
  */
-public class FormulaOfExpr extends Evaluator<Term> {
-  // used only for its type
-  private static final Term[] termArray = new Term[0];
+public class FormulaOfExpr<T extends Term> extends Evaluator<T> {
+  private TermOfExpr<T> termOfExpr;
+  private TermBuilder<T> term;
 
-  private TermOfExpr termOfExpr;
-
-  private TermBuilder term;
   private TcInterface tc;
   private SymbolTable st;
   private Map<Expr, Type> typeOf;
 
-  public FormulaOfExpr(TermOfExpr termOfExpr) {
+  public FormulaOfExpr(TermOfExpr<T> termOfExpr) {
     this.termOfExpr = termOfExpr;
   }
 
-  public void setBuilder(TermBuilder term) {
+  public void setBuilder(TermBuilder<T> term) {
     this.term = term;
     termOfExpr.setBuilder(term);
   }
@@ -46,7 +43,7 @@ public class FormulaOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomCast atomCast, Expr e, Type type) {
+  public T eval(AtomCast atomCast, Expr e, Type type) {
     if (TypeUtils.isBool(type))
       return formulaOfTerm(atomCast.eval(termOfExpr));
     Err.internal("Typechecking should have failed: non-bool in a bool's place.");
@@ -54,18 +51,18 @@ public class FormulaOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
+  public T eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
     return formulaOfTerm(atomFun.eval(termOfExpr));
   }
 
   @Override
-  public Term eval(AtomId atomId, String id, TupleType types) {
+  public T eval(AtomId atomId, String id, TupleType types) {
     // TODO check that atomId's boogie type is bool
     return term.mk("var_formula", id);
   }
 
   @Override
-  public Term eval(AtomLit atomLit, AtomLit.AtomType val) {
+  public T eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
       return term.mk("literal_formula", Boolean.valueOf(true));
@@ -78,18 +75,18 @@ public class FormulaOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
+  public T eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     return formulaOfTerm(atomMapSelect.eval(termOfExpr));
   }
 
   @Override
-  public Term eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
     // TODO
     return term.mk("literal_formula", true);
   }
 
   @Override
-  public Term eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
+  public T eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
     String termId = "***unknown***";
     Type lt = typeOf.get(left);
     Type rt = typeOf.get(right);
@@ -134,7 +131,7 @@ public class FormulaOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
+  public T eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
     String termId = "***unknown***";
     switch (op) {
     case NOT: return term.mk("not", e.eval(this));
@@ -145,7 +142,7 @@ public class FormulaOfExpr extends Evaluator<Term> {
   }
 
   // === helpers ===
-  private Term formulaOfTerm(Term t) {
+  private T formulaOfTerm(T t) {
     return term.mk("eq_bool", term.mk("literal_bool", Boolean.valueOf(true)), t);
   }
 }

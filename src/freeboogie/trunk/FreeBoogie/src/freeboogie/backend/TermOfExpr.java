@@ -17,11 +17,8 @@ import freeboogie.util.Err;
  * TODO The stuff that is mentioned here should be registered by
  *      TermBuilder, not SmtTermBuilder.
  */
-public class TermOfExpr extends Evaluator<Term> {
-  // used only for its type
-  private static final Term[] termArray = new Term[0];
-
-  private TermBuilder term;
+public class TermOfExpr<T extends Term> extends Evaluator<T> {
+  private TermBuilder<T> term;
   private TcInterface tc;
   private SymbolTable st;
   private Map<Expr, Type> typeOf;
@@ -33,7 +30,7 @@ public class TermOfExpr extends Evaluator<Term> {
     boolsAsTerm = new HashSet<String>(103);
   }
 
-  public void setBuilder(TermBuilder term) { this.term = term; }
+  public void setBuilder(TermBuilder<T> term) { this.term = term; }
 
   public void setTypeChecker(TcInterface tc) {
     this.tc = tc;
@@ -41,8 +38,8 @@ public class TermOfExpr extends Evaluator<Term> {
     this.typeOf = tc.getTypes();
   }
 
-  public List<Term> getAssumptions() {
-    List<Term> result = new ArrayList<Term>(2 * boolsAsTerm.size());
+  public List<T> getAssumptions() {
+    List<T> result = new ArrayList<T>(2 * boolsAsTerm.size());
     for (String id : boolsAsTerm) {
       result.add(term.mk("iff",
         term.mk("var_formula", id),
@@ -54,8 +51,8 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomCast atomCast, Expr e, Type type) {
-    Term result = e.eval(this);
+  public T eval(AtomCast atomCast, Expr e, Type type) {
+    T result = e.eval(this);
     if (TypeUtils.isInt(type))
       return term.mk("cast_to_int", result);
     if (TypeUtils.isBool(type))
@@ -64,12 +61,12 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
+  public T eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
     return term.mk(function, tuple(args));
   }
 
   @Override
-  public Term eval(AtomId atomId, String id, TupleType types) {
+  public T eval(AtomId atomId, String id, TupleType types) {
     Declaration d = st.ids.def(atomId);
     Type t = null;
     if (d instanceof VariableDecl) {
@@ -77,7 +74,7 @@ public class TermOfExpr extends Evaluator<Term> {
     } else if (d instanceof ConstDecl) {
       // TODO I might want to keep track of constness
       t = ((ConstDecl)d).getType();
-    } else Err.internal("Unkknown id declaration type for " + id + ".");
+    } else Err.internal("Unknown id declaration type for " + id + ".");
     if (TypeUtils.isInt(t)) {
       // this prefix is needed for z3, but not simplify
       return term.mk("var_int", "term$$" + id);
@@ -91,7 +88,7 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomLit atomLit, AtomLit.AtomType val) {
+  public T eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
       trueFalseAxiom = true;
@@ -108,7 +105,7 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
+  public T eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
     Type t = typeOf.get(atomMapSelect);
     String termId = "map_select";
     if (TypeUtils.isInt(t)) termId = "map_select_int";
@@ -117,7 +114,7 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
+  public T eval(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
     return term.mk(
       "map_update", 
       new Term[] {
@@ -127,24 +124,24 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(AtomNum atomNum, BigInteger val) {
+  public T eval(AtomNum atomNum, BigInteger val) {
     return term.mk("literal_int", val);
   }
 
   @Override
-  public Term eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
     // TODO implement; use term$$forall; 
     //   also, introduce one axiom per quantified var
     return term.mk("literal_bool", Boolean.valueOf(true));
   }
 
   @Override
-  public Term eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
+  public T eval(BinaryOp binaryOp, BinaryOp.Op op, Expr left, Expr right) {
     String termId = "***unknown***";
     Type lt = typeOf.get(left);
     Type rt = typeOf.get(right);
-    Term l = left.eval(this);
-    Term r = right.eval(this);
+    T l = left.eval(this);
+    T r = right.eval(this);
     switch (op) {
     case PLUS:
       return term.mk("+", l, r);
@@ -195,7 +192,7 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   @Override
-  public Term eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
+  public T eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
     String termId = "***unknown***";
     switch (op) {
     case MINUS: return term.mk("-", term.mk("literal_int", new BigInteger("0")), e.eval(this));
@@ -205,20 +202,20 @@ public class TermOfExpr extends Evaluator<Term> {
   }
 
   // === helpers ===
-  private Term[] tuple(Exprs e) {
-    ArrayList<Term> r = new ArrayList<Term>(23);
+  private ArrayList<T> tuple(Exprs e) {
+    ArrayList<T> r = new ArrayList<T>(23);
     while (e != null) {
       r.add(e.getExpr().eval(this));
       e = e.getTail();
     }
-    return r.toArray(termArray);
+    return r;
   }
 
-  private Term not(Term t) {
+  private T not(T t) {
     return term.mk("Tnand", t, t);
   }
 
-  private Term or(Term x, Term y) {
+  private T or(T x, T y) {
     return term.mk("Tnand", not(x), not(y));
   }
 }

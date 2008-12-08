@@ -1,5 +1,6 @@
 package freeboogie.backend;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
@@ -15,18 +16,20 @@ import freeboogie.util.StackedHashMap;
  * Terms can be built by specifying a name and arguments, or by
  * giving a BoogiePL expression to be converted into a Term.
  *
+ * @param <T> the type of terms
+ *
  * @author rgrig 
  */
-public abstract class TermBuilder {
+public abstract class TermBuilder<T extends Term> {
   private static Logger log = Logger.getLogger("freeboogie.backend");
 
-  protected FormulaOfExpr term;
+  protected FormulaOfExpr<T> term;
 
   private StackedHashMap<String, TermDef> termDefs =
     new StackedHashMap<String, TermDef>();
 
   public TermBuilder() {
-    term = new FormulaOfExpr(new TermOfExpr());
+    term = new FormulaOfExpr<T>(new TermOfExpr<T>());
     term.setBuilder(this);
   }
   
@@ -37,7 +40,7 @@ public abstract class TermBuilder {
   public void setTypeChecker(TcInterface tc) { term.setTypeChecker(tc); }
 
   /** Constructs a term out of a Boogie expression. */
-  public Term of(Expr e) { return (SmtTerm)e.eval(term); }
+  public T of(Expr e) { return e.eval(term); }
  
   /**
    * Define {@code name : s1 x ... x sn -> s}.
@@ -109,7 +112,8 @@ public abstract class TermBuilder {
    * @param a the argument
    * @return the constructed term
    */
-  public final Term mk(String termId, Object a) {
+  public final T mk(String termId, Object a) {
+System.out.println("mk1> " + termId);
     TermDef def = getTermDef(termId);
     if (def == null) 
       Err.internal("sort " + termId + " not registered");
@@ -121,27 +125,20 @@ public abstract class TermBuilder {
     }
     return reallyMk(def.retSort, termId, a);
   }
-  
-  /**
-   * Helper for constructing terms with only one argument.
-   * @param termId what term to be constructed
-   * @param a the argument
-   * @return the constructed term
-   */
-  public final Term mk(String termId, Term a) {
-    return mk(termId, new Term[] {a});
+
+  /** Helper for unary operators. */
+  public final T mk(String termId, T a) {
+    ArrayList<T> all = new ArrayList<T>(3);
+    all.add(a);
+    return mk(termId, all);
   }
-  
-  /**
-   * Helper for constructing terms with only two arguments.
-   * 
-   * @param termId what term to construct
-   * @param a the first argument
-   * @param b the second argument
-   * @return the newly constructed term
-   */
-  public final Term mk(String termId, Term a, Term b) {
-    return mk(termId, new Term[] {a, b});
+
+  /** Helper for binary operators. */
+  public final T mk(String termId, T a, T b) {
+    ArrayList<T> all = new ArrayList<T>(7);
+    all.add(a);
+    all.add(b);
+    return mk(termId, all);
   }
   
   /**
@@ -152,26 +149,25 @@ public abstract class TermBuilder {
    * @param a the arguments
    * @return the newly built term
    */
-  public final Term mk(String termId, Term[] a) {
+  public final T mk(String termId, ArrayList<T> a) {
     TermDef def = getTermDef(termId);
     if (def == null) Err.internal("Unregistered sort " + termId);
-    for (int i = 0; i < a.length; ++i)
-      assert a[i] != null; // hmm
+    for (T t : a) assert t != null;
     if (def.naryArgSort != null) {
-      for (int i = 0; i < a.length; ++i) {
-        if (!a[i].sort().isSubsortOf(def.naryArgSort)) {
+      for (T t : a) {
+        if (!t.sort().isSubsortOf(def.naryArgSort)) {
           Err.internal(
-            "" + a[i] + ":" + a[i].sort() + " is used as an argument of '"
+            "" + t + ":" + t.sort() + " is used as an argument of '"
             + termId + "' where sort " + def.naryArgSort + " is expected.");
         }
       }
       return reallyMkNary(def.retSort, termId, a);
     } else {
-      assert def.argSorts.length == a.length;
-      for (int i = 0; i < a.length; ++i) {
-        if (!a[i].sort().isSubsortOf(def.argSorts[i])) {
+      assert def.argSorts.length == a.size();
+      for (int i = 0; i < a.size(); ++i) {
+        if (!a.get(i).sort().isSubsortOf(def.argSorts[i])) {
           Err.internal(
-            "" + a[i] + ":" + a[i].sort() + " is used as an argument of '"
+            "" + a.get(i) + ":" + a.get(i).sort() + " is used as an argument of '"
             + termId + "' where sort " + def.argSorts[i] + " is expected.");
         }
       }
@@ -187,7 +183,7 @@ public abstract class TermBuilder {
    * @param a the argument
    * @return the constructed term
    */
-  protected abstract Term reallyMk(Sort sort, String termId, Object a);
+  protected abstract T reallyMk(Sort sort, String termId, Object a);
   
   /**
    * Subclasses should either construct a tree ar communicate with
@@ -197,7 +193,7 @@ public abstract class TermBuilder {
    * @param a the arguments
    * @return the constructed term
    */
-  protected abstract Term reallyMk(Sort sort, String termId, Term[] a);
+  protected abstract T reallyMk(Sort sort, String termId, ArrayList<T> a);
   
   /**
    * Subclasses should either construct a tree ar communicate with
@@ -207,5 +203,5 @@ public abstract class TermBuilder {
    * @param a the arguments
    * @return the constructed term
    */
-  protected abstract Term reallyMkNary(Sort sort, String termId, Term[] a);
+  protected abstract T reallyMkNary(Sort sort, String termId, ArrayList<T> a);
 }

@@ -59,12 +59,12 @@ import freeboogie.util.Closure;
  *
  * @author rgrig
  */
-public class StrongestPostcondition {
+public class StrongestPostcondition<T extends Term> {
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
   // builds terms for a specific theorem prover
-  private TermBuilder term;
+  private TermBuilder<T> term;
 
   // the control flow graph currently being processed
   private SimpleGraph<Block> flow;
@@ -73,17 +73,17 @@ public class StrongestPostcondition {
   private boolean aaa;
   
   // the preconditions of each command
-  private HashMap<Block, Term> preCache;
+  private HashMap<Block, T> preCache;
 
   // the postconditions of each command
-  private HashMap<Block, Term> postCache;
+  private HashMap<Block, T> postCache;
 
-  private Term TRUE;
+  private T TRUE;
 
 
   public StrongestPostcondition() {}
 
-  public void setBuilder(TermBuilder term) { 
+  public void setBuilder(TermBuilder<T> term) { 
     this.term = term; 
     TRUE = term.mk("literal_formula", Boolean.valueOf(true));
   }
@@ -98,8 +98,8 @@ public class StrongestPostcondition {
     this.flow = flow;
     assert flow.isFrozen();
     assert !flow.hasCycle(); // please cut loops first
-    preCache = new HashMap<Block, Term>();
-    postCache = new HashMap<Block, Term>();
+    preCache = new HashMap<Block, T>();
+    postCache = new HashMap<Block, T>();
   }
 
   /**
@@ -118,22 +118,22 @@ public class StrongestPostcondition {
    * Returns the precondition of {@code b}, which must be in
    * the last set flow graph.
    */
-  public Term pre(Block b) {
-    Term r = preCache.get(b);
+  public T pre(Block b) {
+    T r = preCache.get(b);
     if (r != null) return r;
-    ArrayList<Term> toOr = new ArrayList<Term>();
+    ArrayList<T> toOr = new ArrayList<T>();
     for (Block p : flow.from(b)) 
       toOr.add(post(p));
     if (toOr.isEmpty())
       r = TRUE;
     else
-      r = term.mk("or", toOr.toArray(new Term[0]));
+      r = term.mk("or", toOr);
     preCache.put(b, r);
     return r;
   }
 
-  public Term post(Block b) {
-    Term r = postCache.get(b);
+  public T post(Block b) {
+    T r = postCache.get(b);
     if (r != null) return r;
     r = pre(b);
     if (aaa || isAssume(b))
@@ -146,7 +146,7 @@ public class StrongestPostcondition {
    * Returns the verification condition for a particular command.
    * If {@code cmd} is an assume then I return TRUE.
    */
-  public Term vc(Block b) {
+  public T vc(Block b) {
     if (!isAssert(b)) return TRUE;
     return term.mk("implies", pre(b), term(b));
   }
@@ -154,7 +154,7 @@ public class StrongestPostcondition {
   /**
    * Returns a verification condition for the whole flow graph.
    */
-  public Term vc() {
+  public T vc() {
     final ArrayList<Term> vcs = new ArrayList<Term>();
     flow.iterNode(new Closure<Block>() {
       @Override
@@ -162,7 +162,7 @@ public class StrongestPostcondition {
         vcs.add(vc(b));
       }
     });
-    return term.mk("and", vcs.toArray(new Term[0]));
+    return term.mk("and", vcs);
   }
 
   // === helpers ===
@@ -181,7 +181,7 @@ public class StrongestPostcondition {
     return is(b, AssertAssumeCmd.CmdType.ASSERT);
   }
 
-  private Term term(Block b) {
+  private T term(Block b) {
     if (b == null) return TRUE;
     Command c = b.getCmd();
     if (!(c instanceof AssertAssumeCmd)) return TRUE;

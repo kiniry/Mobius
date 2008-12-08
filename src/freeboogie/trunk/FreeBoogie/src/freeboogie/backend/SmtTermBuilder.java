@@ -11,15 +11,14 @@ import freeboogie.ast.Expr;
  *
  * @author rgrig 
  */
-public class SmtTermBuilder extends TermBuilder {
-  private static final Term[] termArray = new Term[0];
+public class SmtTermBuilder extends TermBuilder<SmtTerm> {
+  private static final SmtTerm[] termArray = new SmtTerm[0];
   private static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public SmtTermBuilder() {
     // Register terms that are necessary to translate Boogie expressions
     // Classes that implement Prover and use this term builder should
-    // know how to communicate these to the provers they wrap, including
-    // the necessary axioms.
+    // know how to communicate these to the provers they wrap.
     def("not", new Sort[]{Sort.FORMULA}, Sort.FORMULA);
     def("and", Sort.FORMULA, Sort.FORMULA);
     def("or", Sort.FORMULA, Sort.FORMULA);
@@ -87,26 +86,25 @@ public class SmtTermBuilder extends TermBuilder {
   }
 
   @Override
-  protected SmtTerm reallyMk(Sort sort, String termId, Term[] a) {
+  protected SmtTerm reallyMk(Sort sort, String termId, ArrayList<SmtTerm> a) {
     return new SmtTerm(sort, termId, a);
   }
 
   @Override
-  protected SmtTerm reallyMkNary(Sort sort, String termId, Term[] a) {
+  protected SmtTerm reallyMkNary(Sort sort, String termId, ArrayList<SmtTerm> a) {
     if (termId.equals("and") || termId.equals("or")) {
       boolean id = termId.equals("or") ? false : true;
-      ArrayList<SmtTerm> children = new ArrayList<SmtTerm>(a.length);
-      for (Term t : a) {
-        SmtTerm c = (SmtTerm)t;
-        if (!c.id.equals("literal_formula") || (Boolean)c.data != id)
-          children.add(c);
+      ArrayList<SmtTerm> children = new ArrayList<SmtTerm>(a.size());
+      for (SmtTerm t : a) {
+        if (!t.id.equals("literal_formula") || (Boolean)t.data != id)
+          children.add(t);
       }
       if (children.size() == 1)
         return children.get(0);
       if (children.size() == 0)
-        return (SmtTerm)mk("literal_formula", Boolean.valueOf(id));
-      if (children.size() != a.length)
-        a = children.toArray(termArray);
+        return mk("literal_formula", Boolean.valueOf(id));
+      if (children.size() != a.size())
+        a = children;
     }
     return new SmtTerm(sort, termId, a);
   }

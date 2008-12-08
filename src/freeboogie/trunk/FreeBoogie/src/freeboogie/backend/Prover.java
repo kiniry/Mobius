@@ -30,23 +30,23 @@ import java.util.logging.*;
  *
  * @author rgrig 
  */
-public abstract class Prover {
-  protected Deque<Term> assumptions;
-  protected static final Term marker = new Term(null);
+public abstract class Prover<T extends Term> {
+  protected Deque<T> assumptions;
+  protected final T marker = null;
     // marks the end of an assumption frame in |assumptions|
 
-  protected TermBuilder builder;
+  protected TermBuilder<T> builder;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
-    assumptions = new ArrayDeque<Term>();
+    assumptions = new ArrayDeque<T>();
   }
 
   /**
    * Returns a term builder whose terms are understood by this prover.
    * @return a builder for terms and formulas
    */
-  public TermBuilder getBuilder() {
+  public TermBuilder<T> getBuilder() {
     return builder;
   }
 
@@ -57,7 +57,7 @@ public abstract class Prover {
    * @param t the assumption
    * @throws ProverException if something goes wrong
    */
-  public void assume(Term t) throws ProverException {
+  public void assume(T t) throws ProverException {
     assert t != null;
     sendAssume(t);
     assumptions.addLast(t);
@@ -66,7 +66,7 @@ public abstract class Prover {
   /**
    * Actually sends {@code t} to the prover as an assumption.
    */
-  abstract protected void sendAssume(Term t) throws ProverException;
+  abstract protected void sendAssume(T t) throws ProverException;
   
   /**
    * Retract the last assumption. This discards all the empty 
@@ -115,7 +115,7 @@ public abstract class Prover {
    * @return whether {@code t} is valid 
    * @throws ProverException if something goes wrong
    */
-  abstract public boolean isValid(Term t) throws ProverException;
+  abstract public boolean isValid(T t) throws ProverException;
   
   /**
    * If the last call to {@code isValid} returned false then

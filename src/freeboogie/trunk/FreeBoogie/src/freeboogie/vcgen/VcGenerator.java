@@ -13,7 +13,7 @@ import freeboogie.tc.TcInterface;
  * for individual implementations to be checked. The prover to be
  * used is given by the user.
  */
-public class VcGenerator {
+public class VcGenerator<T extends Term> {
   /* IMPLEMENTATION
    *
    * The phases of VC generation are:
@@ -36,7 +36,6 @@ public class VcGenerator {
 
   private Declaration ast;
   private TcInterface tc;
-  private Prover prover;
 
   private LoopCutter loopCutter;
   private CallDesugarer callDesugarer;
@@ -47,8 +46,10 @@ public class VcGenerator {
   private FunctionRegisterer functionRegisterer;
   private AxiomSender axiomSender;
 
-  private StrongestPostcondition sp;
-  private TermBuilder builder;
+  private StrongestPostcondition<T> sp;
+
+  private Prover<T> prover;
+  private TermBuilder<T> builder;
 
 
   public VcGenerator() {
@@ -58,12 +59,12 @@ public class VcGenerator {
     specDesugarer = new SpecDesugarer();
     passivator = new Passivator();
     mapRemover = new MapRemover();
-    sp = new StrongestPostcondition();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender();
+    sp = new StrongestPostcondition<T>();
   }
 
-  public void setProver(Prover prover) throws ProverException {
+  public void setProver(Prover<T> prover) throws ProverException {
     this.prover = prover;
     prover.push();
     preverify();
@@ -94,7 +95,7 @@ public class VcGenerator {
   public boolean verify(Implementation implementation) throws ProverException {
     assert prover != null && ast != null;
     sp.setFlowGraph(tc.getFlowGraph(implementation));
-    Term vc = sp.vc();
+    T vc = sp.vc();
     return prover.isValid(vc);
   }
 
