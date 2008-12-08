@@ -3,6 +3,8 @@ package freeboogie.backend;
 import java.util.*;
 import java.util.logging.*;
 
+import freeboogie.util.FramedStack;
+
 /**
  * A prover can be used to check if a formula is valid.
  *
@@ -31,15 +33,14 @@ import java.util.logging.*;
  * @author rgrig 
  */
 public abstract class Prover<T extends Term> {
-  protected Deque<T> assumptions;
-  protected final T marker = null;
-    // marks the end of an assumption frame in |assumptions|
+  protected FramedStack<T> assumptions;
+  protected T marker = null;
 
   protected TermBuilder<T> builder;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
 
   public Prover() {
-    assumptions = new ArrayDeque<T>();
+    assumptions = new FramedStack<T>();
   }
 
   /**
@@ -60,7 +61,7 @@ public abstract class Prover<T extends Term> {
   public void assume(T t) throws ProverException {
     assert t != null;
     sendAssume(t);
-    assumptions.addLast(t);
+    assumptions.push(t);
   }
 
   /**
@@ -77,11 +78,8 @@ public abstract class Prover<T extends Term> {
    */
   public void retract() throws ProverException {
     int i, j;
-    while (!assumptions.isEmpty() && assumptions.peekFirst() == marker)
-      assumptions.removeFirst();
-    assert !assumptions.isEmpty();
     sendRetract();
-    assumptions.removeFirst();
+    assumptions.pop();
   }
 
   /**
@@ -94,7 +92,7 @@ public abstract class Prover<T extends Term> {
    * @throws ProverException if something goes wrong
    */
   public void push() throws ProverException {
-    assumptions.addFirst(marker);
+    assumptions.pushFrame();
   }
   
   /**
@@ -102,9 +100,7 @@ public abstract class Prover<T extends Term> {
    * @throws ProverException if something goes wrong
    */
   public void pop() throws ProverException {
-    Term t;
-    do t = assumptions.removeFirst();
-    while (t != marker);
+    assumptions.popFrame();
   }
 
   /**
