@@ -80,8 +80,7 @@ public class BytecodeRestoreAction extends BytecodeEditorAction {
     IFile a_classfile;
     try {
       a_classfile = FileNames.getClassFileFileFor(btcFile,
-                                             editor.getRelatedEditor(),
-                                             FileNames.BYTECODE_EXTENSION);
+                                             editor.getRelatedEditor());
     } catch (JavaModelException e2) {
       GUIMessages.wrongClassFileOptMessage(parent, getDescription());
       return;

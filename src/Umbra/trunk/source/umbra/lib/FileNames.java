@@ -23,13 +23,13 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 
 /**
@@ -37,11 +37,10 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
  * plugin (i.e. .java, .class, .btc). It contains the methods to convert
  * from one kind of name to another one with the whole logic.
  *
- * FIXME: the logic should be as follows:
+ * The logic of file location is as follows:
  * - the class files and all their historical versions should be kept where
  *   the output directory for the current project is
- * - the .btc files should be located where the .java files are
- *   https://mobius.ucd.ie/ticket/546
+ * - the .btc files are located where the .java files are
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @author Krzysztof Jakubczyk (kjk@mimuw.edu.pl)
@@ -181,23 +180,22 @@ public final class FileNames {
   public static IFile getClassFileFile(final IFile a_java_file,
                      final CompilationUnitEditor an_editor)
     throws JavaModelException {
-    return getClassFileFileFor(a_java_file, an_editor, JAVA_EXTENSION);
+    return getClassFileFileFor(a_java_file, an_editor);
   }
 
   /**
    * This method gives the proper .btc file for a given
-   * Java file.
+   * Java file or class file.
    *
    * @param a_file Java source code file for which we try to find the
    *        .btc file
-   * @param an_editor in which the .java file is edited
    * @return the IFile for the corresponding .btc file
    */
-  public static IFile getBTCFileName(final IFile a_file,
-                                     final CompilationUnitEditor an_editor) {
+  public static IFile getBTCFileName(final IFile a_file) {
+    final String ext = a_file.getFullPath().getFileExtension();
     final String fname = replaceLast(a_file.getFullPath().
                                           toPortableString(),
-                               JAVA_EXTENSION, BYTECODE_EXTENSION);
+                               ext, BYTECODE_EXTENSION.substring(1));
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     return workspace.getRoot().getFile(Path.fromPortableString(fname));
   }
@@ -257,30 +255,33 @@ public final class FileNames {
    * This method gives the proper class file file for a given source
    * file (usually Java or .btc file).
    *
-   * @param a_java_file a source code file for which we try to find the
+   * @param a_file a source code file for which we try to find the
    *   class file
    * @param an_editor a Java file editor in which the corresponding Java file
    *   is edited
-   * @param an_extension an extension of the file for which we generate
-   *   the .class file name (usually .java or .btc)
    * @return the {@link IFile}for the corresponding .class file
    * @throws JavaModelException in case the project in which the editor operates
    *                            has no class file output location set
    */
-  public static IFile getClassFileFileFor(final IFile a_java_file,
-                     final AbstractTextEditor an_editor,
-                     final String an_extension)
+  public static IFile getClassFileFileFor(final IFile a_file,
+                     final CompilationUnitEditor an_editor)
     throws JavaModelException {
     final IProject project = ((FileEditorInput)an_editor.
         getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
     final IPath outputloc = jproject.getOutputLocation();
-    final String newloc = outputloc.append(a_java_file.getFullPath().
-              removeFirstSegments(1)).toPortableString();
-    final String fname = replaceLast(newloc, an_extension, CLASS_EXTENSION);
+    final IPath elempath = a_file.getProjectRelativePath().
+      removeFileExtension().addFileExtension(JAVA_EXTENSION.substring(1));
+    final CompilationUnit elem =
+      (CompilationUnit) jproject.findElement(elempath);
+    final IType typ = elem.findPrimaryType();
+    final String fqn = typ.getFullyQualifiedName();
+    final IPath np = outputloc.append(fqn.replace(Signature.C_DOT,
+                                            File.separatorChar)).
+      addFileExtension(CLASS_EXTENSION.substring(1));
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile file = workspace.getRoot().
-             getFile(Path.fromPortableString(fname));
+             getFile(np);
     return file;
   }
 
@@ -306,7 +307,7 @@ public final class FileNames {
   }
 
   /**
-   * This method returns java class file path file of e java element.
+   * This method returns java class file path file of a java element.
    * Proposed usage:
    *  getClassFilePath(getSelectedType(editor))
    * @param a_java_type type to find output class file path

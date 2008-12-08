@@ -127,8 +127,7 @@ public final class HistoryOperations {
                                     final CompilationUnitEditor an_editor)
     throws CoreException {
     final IFile classFrom = FileNames.getClassFileFileFor(a_file_from,
-                                              an_editor,
-                                              FileNames.BYTECODE_EXTENSION);
+                                              an_editor);
     final IFile classTo = getHistoryClassFile(a_file_from, a_hist_num);
     classTo.delete(true, null);
     classFrom.copy(classTo.getFullPath(), true, null);
@@ -196,8 +195,7 @@ public final class HistoryOperations {
                                        final CompilationUnitEditor an_editor)
     throws CoreException {
     final IFile classFile = FileNames.getClassFileFileFor(a_file_from,
-                               an_editor,
-                               FileNames.BYTECODE_EXTENSION);
+                               an_editor);
     final IFile histClassFile = getHistoryClassFile(a_file_from, a_hist_num);
     classFile.delete(true, null);
     histClassFile.copy(classFile.getFullPath(), true, null);

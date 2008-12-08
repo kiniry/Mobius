@@ -119,8 +119,8 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     throws ClassNotFoundException,
            CoreException, UmbraRepresentationException {
     final BytecodeEditorContributor a_contributor = getContributor();
-    final IPath active = FileNames.getClassFileFileFor(a_file, the_editor,
-                             FileNames.BYTECODE_EXTENSION).getFullPath();
+    final IPath active = FileNames.getClassFileFileFor(a_file,
+                             the_editor.getRelatedEditor()).getFullPath();
     //memorise the current state of the session
     final BytecodeDocument doc = the_editor.getDocument();
     final BytecodeController model = doc.getModel();

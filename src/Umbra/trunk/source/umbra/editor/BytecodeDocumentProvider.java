@@ -10,7 +10,16 @@ package umbra.editor;
 
 import java.io.ByteArrayInputStream;
 
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.SyntheticRepository;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -18,9 +27,16 @@ import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
+import org.eclipse.ui.part.FileEditorInput;
+
+import annot.bcclass.BCClass;
+import annot.io.ReadAttributeException;
 
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.lib.BMLParsing;
+import umbra.lib.ClassFileOperations;
+import umbra.lib.FileNames;
+import umbra.lib.UmbraRepresentationException;
 
 
 /**
@@ -68,17 +84,23 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
    */
   protected final IDocument createDocument(final Object an_element)
     throws CoreException {
-    if (an_element != null && an_element instanceof IEditorInput) {
-      final IEditorInput iInput = (IEditorInput) an_element;
+    if (an_element != null && an_element instanceof IFileEditorInput) {
+      final IFileEditorInput iInput = (IFileEditorInput) an_element;
       final IDocument document = createEmptyDocument();
-      if (!((IFileEditorInput) iInput).getFile().isAccessible()) {
-        ((IFileEditorInput) iInput).getFile().create(
-            new ByteArrayInputStream(new byte[0]), true, null);
+      if (!iInput.getFile().isAccessible()) {
+        iInput.getFile().create(
+          new ByteArrayInputStream(new byte[0]), true, null);
+
       }
-      if (setDocumentContent(document,
-                   (IEditorInput) an_element,
-                   getEncoding(an_element))) {
-        setupDocument(an_element, document);
+      IFileEditorInput btcfile = iInput;
+      if (isClassFile(iInput)) {
+        ColorModeContainer.classKnown();
+        btcfile = createBTCFile(iInput);
+
+      }
+      if (setDocumentContent(document, btcfile,
+                   getEncoding(btcfile))) {
+        setupDocument(btcfile, document);
       }
       final IDocumentPartitioner partitioner =
         new FastPartitioner(
@@ -88,9 +110,60 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
       partitioner.connect(document);
       final BytecodeContribution contribution = BytecodeContribution.inUse();
       contribution.addListener(document);
+      if (isClassFile(iInput)) {
+        ColorModeContainer.classUnknown();
+      }
       return document;
     }
     return null;
+  }
+
+  /**
+   * @param a_input 
+   */
+  private IFileEditorInput createBTCFile(final IFileEditorInput a_input) {
+    final IPath apath = a_input.getFile().getFullPath();
+    try {
+      final String pathName = FileNames.getPath(apath).removeLastSegments(1).
+        addTrailingSeparator().
+        toPortableString();
+      final ClassPath cp = new ClassPath(pathName);
+      final SyntheticRepository a_repo = SyntheticRepository.getInstance(cp);
+      final JavaClass jc = a_repo.findClass(a_input.getFile().getFullPath().
+                                            toOSString());
+      final BCClass bcc = new BCClass(jc);
+      final BMLParsing bmlp = new BMLParsing(bcc);
+      final BytecodeDocument a_doc = new BytecodeDocument();
+      a_doc.setEditor(null, bmlp); //refresh BCEL structures
+      a_doc.setTextWithDeadUpdate(a_doc.printCode()); //this is where the
+                                    //textual representation is generated
+      final IFile btcFile = FileNames.getBTCFileName(a_input.getFile());
+      final FileEditorInput btcInput = new FileEditorInput(btcFile);
+      saveDocument(null, btcInput, a_doc, true);
+      return btcInput;
+    } catch (JavaModelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (ReadAttributeException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (CoreException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  /**
+   * Checks if the given {@link FileEditorInput} can be a class file. The check
+   * is based only on the extension of the file name.
+   *
+   * @param a_input the input to check
+   * @return <code>true</code> in case the file is a class file,
+   *   <code>false</code> otherwise
+   */
+  private boolean isClassFile(final IFileEditorInput a_input) {
+    return a_input.getFile().getFileExtension().equals("class");
   }
 
   /**

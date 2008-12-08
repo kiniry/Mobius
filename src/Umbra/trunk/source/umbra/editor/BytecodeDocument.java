@@ -107,7 +107,7 @@ public class BytecodeDocument extends Document {
   public final void setEditor(final BytecodeEditor an_editor,
                               final BMLParsing a_bmlp) {
     my_bcode_editor = an_editor;
-    an_editor.setDocument(this);
+    if (an_editor != null) an_editor.setDocument(this);
     if (a_bmlp != my_bmlp) {
       my_bmlp = a_bmlp;
     }

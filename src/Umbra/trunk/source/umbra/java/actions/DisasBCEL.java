@@ -114,7 +114,7 @@ public class DisasBCEL implements IEditorActionDelegate {
            JavaModelException, ClassNotFoundException {
     IPath cpath;
     final IWorkbenchPage page = my_editor.getEditorSite().getPage();
-    final IFile btcFile = FileNames.getBTCFileName(a_jfile, my_editor);
+    final IFile btcFile = FileNames.getBTCFileName(a_jfile);
     final FileEditorInput input = new FileEditorInput(btcFile);
     BytecodeEditor bc_editor;
     bc_editor = (BytecodeEditor) (page.openEditor(input,

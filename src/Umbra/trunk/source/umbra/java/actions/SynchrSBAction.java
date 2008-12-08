@@ -89,7 +89,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
       return;
     }
 
-    final IFile file = FileNames.getBTCFileName(activef, my_editor);
+    final IFile file = FileNames.getBTCFileName(activef);
     final FileEditorInput input = new FileEditorInput(file);
     try {
       final BytecodeEditor bcEditor = (BytecodeEditor)my_editor.getSite().

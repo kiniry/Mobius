@@ -36,6 +36,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
 import umbra.lib.BMLParsing;
+import umbra.lib.ClassFileOperations;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
@@ -206,7 +207,7 @@ public class BytecodeEditor extends TextEditor {
     try {
       a_file_from = FileNames.getClassFileFileFor(
                ((FileEditorInput)getEditorInput()).getFile(),
-               this, FileNames.BYTECODE_EXTENSION);
+               my_related_editor);
     } catch (JavaModelException e2) {
       MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
@@ -306,21 +307,23 @@ public class BytecodeEditor extends TextEditor {
    */
   private JavaClass loadJavaClass(final IPath a_path,
                                   final SyntheticRepository a_repo) {
-    final String tmp = a_path.removeFirstSegments(1).toOSString();
-    final String clname = (tmp.substring(0, tmp.lastIndexOf(".")));
-    if (FileNames.DEBUG_MODE)
-      UmbraPlugin.messagelog("We open class: " + clname);
-    final JavaClass jc;
     try {
-      jc = a_repo.loadClass(clname);
+      final IProject project = ((FileEditorInput)my_related_editor.
+          getEditorInput()).getFile().getProject();
+      final IJavaProject jproject = JavaCore.create(project);
+      final IPath ol = jproject.getOutputLocation();
+      return ClassFileOperations.loadJavaClass(a_path, a_repo, ol);
     } catch (ClassNotFoundException e) {
       MessageDialog.openError(getSite().getShell(),
         GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.CANNOT_FIND_CLASS,
-                               clname + ".class"));
+                               a_path.lastSegment()));
+      return null;
+    } catch (JavaModelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
       return null;
     }
-    return jc;
   }
 
   /**
@@ -337,13 +340,7 @@ public class BytecodeEditor extends TextEditor {
     final IProject project = ((FileEditorInput)my_related_editor.
         getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
-    final IPath outputloc = jproject.getOutputLocation().append("/-"); //bogus
-    final String pathName = FileNames.getPath(outputloc).
-                                               removeLastSegments(1).
-                                               addTrailingSeparator().
-                                               toPortableString();
-    final ClassPath cp = new ClassPath(pathName);
-    return SyntheticRepository.getInstance(cp);
+    return ClassFileOperations.getClassRepoForProject(jproject);
   }
 
   /**
