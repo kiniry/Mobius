@@ -1,3 +1,5 @@
+ . Register multiple term ids for (generic) functions and pick the
+   right one according to the typechecker.
  . ArrayRemover visitor.
  . Add axioms for term counterparts of formulas.
  . Build (smt) quantifiers.
