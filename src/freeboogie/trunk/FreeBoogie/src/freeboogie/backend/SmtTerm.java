@@ -1,7 +1,6 @@
 package freeboogie.backend;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * S-expressions.
@@ -10,7 +9,7 @@ import java.util.Arrays;
  *
  * @author rgrig 
  */
-public class SmtTerm extends Term {
+public class SmtTerm extends Term<SmtTerm> {
   static final private ArrayList<SmtTerm> noChild = new ArrayList<SmtTerm>();
   
   /** The identifier or this term. */
@@ -25,6 +24,8 @@ public class SmtTerm extends Term {
   
   /** The children of this term, nonnull. */
   final public ArrayList<SmtTerm> children;
+
+  private HashSet<SmtTerm> axioms;
   
   /**
    * Creates a new term represented by an s-expression.
@@ -53,6 +54,39 @@ public class SmtTerm extends Term {
     this.data = data;
     this.children = noChild;
 //System.out.println("s.mk2> " + id + " " + data);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof SmtTerm)) return false;
+    SmtTerm t = (SmtTerm)o;
+    if (!id.equals(t.id)) return false;
+    if (data == null ^ t.data == null) return false;
+    if (data != null && !data.equals(t.data)) return false;
+    return children.equals(t.children);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id.hashCode();
+    if (data != null) result += data.hashCode();
+    result += children.hashCode();
+    return result;
+  }
+
+  @Override
+  public void collectAxioms(Set<SmtTerm> axiomBag) {
+    if (axioms != null) for (SmtTerm t : axioms) {
+      axiomBag.add(t);
+      t.collectAxioms(axiomBag);
+    }
+    for (SmtTerm t : children) t.collectAxioms(axiomBag);
+  }
+
+  // TODO perhaps move this in Term and implement there the axiom bookkeeping?
+  public void addAxiom(SmtTerm t) {
+    if (axioms == null) axioms = new HashSet<SmtTerm>();
+    axioms.add(t);
   }
 
   /* For debug. */

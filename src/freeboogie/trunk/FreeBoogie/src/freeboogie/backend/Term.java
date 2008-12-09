@@ -1,5 +1,7 @@
 package freeboogie.backend;
 
+import java.util.Set;
+
 /**
  * A term that knows its sort. In theorem prover jargon,
  * instances of this class represent both terms and formulas.
@@ -13,7 +15,7 @@ package freeboogie.backend;
  *
  * @author rgrig 
  */
-public class Term {
+public abstract class Term<T> {
   private Sort sort;
   
   /**
@@ -31,4 +33,9 @@ public class Term {
   public Sort sort() {
     return sort;
   }
+
+  /**
+   * Adds axioms needed to read {@code this} to {@code axiomBag}.
+   */
+  public abstract void collectAxioms(Set<T> axiomBag);
 }

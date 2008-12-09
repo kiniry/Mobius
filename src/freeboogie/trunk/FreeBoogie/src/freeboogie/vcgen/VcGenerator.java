@@ -1,5 +1,8 @@
 package freeboogie.vcgen;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
@@ -13,7 +16,7 @@ import freeboogie.tc.TcInterface;
  * for individual implementations to be checked. The prover to be
  * used is given by the user.
  */
-public class VcGenerator<T extends Term> {
+public class VcGenerator<T extends Term<T>> {
   /* IMPLEMENTATION
    *
    * The phases of VC generation are:
@@ -51,6 +54,8 @@ public class VcGenerator<T extends Term> {
   private Prover<T> prover;
   private TermBuilder<T> builder;
 
+  private Set<T> lowLevelAxiomBag;
+
 
   public VcGenerator() {
     loopCutter = new LoopCutter();
@@ -62,6 +67,7 @@ public class VcGenerator<T extends Term> {
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender();
     sp = new StrongestPostcondition<T>();
+    lowLevelAxiomBag = new HashSet<T>(13);
   }
 
   public void setProver(Prover<T> prover) throws ProverException {
@@ -96,7 +102,13 @@ public class VcGenerator<T extends Term> {
     assert prover != null && ast != null;
     sp.setFlowGraph(tc.getFlowGraph(implementation));
     T vc = sp.vc();
-    return prover.isValid(vc);
+    lowLevelAxiomBag.clear();
+    vc.collectAxioms(lowLevelAxiomBag);
+    prover.push();
+    for (T t : lowLevelAxiomBag) prover.assume(t);
+    boolean result = prover.isValid(vc);
+    prover.pop();
+    return result;
   }
 
   // === helpers ===
