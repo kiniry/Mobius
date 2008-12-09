@@ -82,7 +82,7 @@ public class VcGenerator<T extends Term> {
     ast = havocDesugarer.process(ast, tc);
     ast = specDesugarer.process(ast, tc);
     ast = passivator.process(ast, tc);
-    ast = mapRemover.process(ast);
+    ast = mapRemover.process(ast, tc);
     preverify();
     return ast;
   }

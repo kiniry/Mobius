@@ -69,8 +69,8 @@ AtomId = String! id, TupleType types;
 AtomFun = String! function, TupleType types, Exprs args;
 AtomOld = Expr! e;
 AtomCast = Expr! e, Type! type;
-AtomQuant = enum(QuantType: EXISTS, FORALL) quant, Declaration! vars,
-            Trigger trig, Expr! e;
+AtomQuant = enum(QuantType: EXISTS, FORALL) quant,
+            Declaration! vars, Trigger trig, Expr! e;
 AtomMapSelect = Atom! atom, Exprs! idx;
 AtomMapUpdate = Atom! atom, Exprs! idx, Expr! val;
 

@@ -139,7 +139,7 @@ public class Main {
 
   private void removeMaps() {
     MapRemover mr = new MapRemover();
-    ast = mr.process(ast);
+    ast = mr.process(ast, tc);
   }
 
   private void desugarSpecs() {

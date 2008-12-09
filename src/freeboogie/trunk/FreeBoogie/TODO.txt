@@ -1,4 +1,4 @@
- . ArrayRemover visitor.
+ . MapRemover visitor.
  . Add axioms for term counterparts of formulas.
  . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
