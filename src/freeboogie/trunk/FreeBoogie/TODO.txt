@@ -1,14 +1,11 @@
- . MapRemover visitor.
  . Add axioms for term counterparts of formulas.
  . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
  . Desugar dependent types in procedure signatures.
-   Take care of arrays (does the prover know about arrays?)
- . Extract sharing in SimplifyProver, or use `flet' for z3
- . Provide a web interface.
- . Get rid of SmtTerm, SmtTermBuilder. Keep only one class.
+ . Extract sharing.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . Provide a web interface.
  . Have some unified mechanism for making sure that terms start with
    "term$$".
  . Have a way to cope with identifiers in the input that contain $$.
