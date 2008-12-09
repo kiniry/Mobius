@@ -155,7 +155,7 @@ public class StrongestPostcondition<T extends Term> {
    * Returns a verification condition for the whole flow graph.
    */
   public T vc() {
-    final ArrayList<Term> vcs = new ArrayList<Term>();
+    final ArrayList<T> vcs = new ArrayList<T>();
     flow.iterNode(new Closure<Block>() {
       @Override
       public void go(Block b) {

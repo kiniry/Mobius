@@ -91,7 +91,7 @@ public class Err {
    */
   public static void fatal(String m, int code) {
     System.err.println(m);
-    System.exit(code);
+    throw new AssertionError();
   }
   
   public static void internal(String m) {

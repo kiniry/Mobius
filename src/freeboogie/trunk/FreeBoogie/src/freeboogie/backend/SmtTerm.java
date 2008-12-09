@@ -37,7 +37,7 @@ public class SmtTerm extends Term {
     this.id = id;
     this.data = null;
     this.children = children;
-System.out.println("s.mk> " + id + " " + children.size());
+//System.out.println("s.mk> " + id + " " + children.size());
     assert this.children.size() > 0;
   }
 
@@ -52,7 +52,7 @@ System.out.println("s.mk> " + id + " " + children.size());
     this.id = id;
     this.data = data;
     this.children = noChild;
-System.out.println("s.mk2> " + id + " " + data);
+//System.out.println("s.mk2> " + id + " " + data);
   }
 
   /* For debug. */

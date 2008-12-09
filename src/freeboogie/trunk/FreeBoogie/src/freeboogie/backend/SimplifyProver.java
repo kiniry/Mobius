@@ -96,13 +96,15 @@ public class SimplifyProver extends Prover<SmtTerm> {
       sb.append(" ");
       printTerm(t.children.get(1), sb);
       sb.append(")");
+    } else if (t.id.startsWith("fun")) {
+      sb.append("(");
+      sb.append(t.id.substring(5));
+      printArgs(t.children, sb);
+      sb.append(")");
     } else {
       sb.append("(");
       sb.append(t.id.toUpperCase());
-      for (SmtTerm c : t.children) {
-        sb.append(" ");
-        printTerm(c, sb);
-      }
+      printArgs(t.children, sb);
       sb.append(")");
     }
   }

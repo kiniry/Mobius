@@ -161,4 +161,9 @@ public class TypeUtils {
     PrimitiveType pt = (PrimitiveType)t;
     return pt.getPtype() == p;
   }
+
+  public static boolean isTypeVar(Type t) {
+    assert false : "todo";
+    return false;
+  }
 }

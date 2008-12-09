@@ -62,7 +62,12 @@ public class TermOfExpr<T extends Term> extends Evaluator<T> {
 
   @Override
   public T eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
-    return term.mk(function, tuple(args));
+    String prefix = "funT_";
+    if (TypeUtils.isInt(typeOf.get(atomFun)))
+      prefix = "funI_";
+    if (TypeUtils.isBool(typeOf.get(atomFun)))
+      prefix = "funT_";
+    return term.mk(prefix + function, tuple(args));
   }
 
   @Override

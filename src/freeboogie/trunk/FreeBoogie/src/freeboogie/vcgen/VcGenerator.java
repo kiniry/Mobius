@@ -108,7 +108,7 @@ public class VcGenerator<T extends Term> {
     functionRegisterer.setBuilder(builder);
     axiomSender.setProver(prover);
     builder.popDef();
-    functionRegisterer.process(ast);
+    functionRegisterer.process(ast, tc);
     axiomSender.process(ast);
     builder.pushDef();
     prover.pop();

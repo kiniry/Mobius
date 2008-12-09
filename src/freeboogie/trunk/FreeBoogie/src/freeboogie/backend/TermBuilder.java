@@ -113,7 +113,7 @@ public abstract class TermBuilder<T extends Term> {
    * @return the constructed term
    */
   public final T mk(String termId, Object a) {
-System.out.println("mk1> " + termId);
+//System.out.println("mk1> " + termId);
     TermDef def = getTermDef(termId);
     if (def == null) 
       Err.internal("sort " + termId + " not registered");
