@@ -18,7 +18,7 @@ import freeboogie.util.Err;
  * TODO The stuff that is mentioned here should be registered by
  *      TermBuilder, not SmtTermBuilder.
  */
-public class FormulaOfExpr<T extends Term> extends Evaluator<T> {
+public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
   private TermOfExpr<T> termOfExpr;
   private TermBuilder<T> term;
 

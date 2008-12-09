@@ -76,14 +76,11 @@ public class SmtTerm extends Term<SmtTerm> {
 
   @Override
   public void collectAxioms(Set<SmtTerm> axiomBag) {
-    if (axioms != null) for (SmtTerm t : axioms) {
-      axiomBag.add(t);
-      t.collectAxioms(axiomBag);
-    }
+    if (axioms != null) axiomBag.addAll(axioms);
     for (SmtTerm t : children) t.collectAxioms(axiomBag);
   }
 
-  // TODO perhaps move this in Term and implement there the axiom bookkeeping?
+  @Override
   public void addAxiom(SmtTerm t) {
     if (axioms == null) axioms = new HashSet<SmtTerm>();
     axioms.add(t);

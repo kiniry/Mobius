@@ -32,7 +32,7 @@ import freeboogie.util.FramedStack;
  *
  * @author rgrig 
  */
-public abstract class Prover<T extends Term> {
+public abstract class Prover<T extends Term<T>> {
   protected FramedStack<T> assumptions;
   protected T marker = null;
 

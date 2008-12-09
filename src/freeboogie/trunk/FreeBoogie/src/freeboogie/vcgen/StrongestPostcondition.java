@@ -59,7 +59,7 @@ import freeboogie.util.Closure;
  *
  * @author rgrig
  */
-public class StrongestPostcondition<T extends Term> {
+public class StrongestPostcondition<T extends Term<T>> {
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 

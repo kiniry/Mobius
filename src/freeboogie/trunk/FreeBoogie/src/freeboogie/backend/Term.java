@@ -36,6 +36,13 @@ public abstract class Term<T> {
 
   /**
    * Adds axioms needed to read {@code this} to {@code axiomBag}.
+   * The collection is not done recursively so that axioms can
+   * have as sub-terms the terms to which they are attached. For
+   * example "(neq term$$true term$$false)" is attached as an axiom
+   * to "term$$true".
    */
   public abstract void collectAxioms(Set<T> axiomBag);
+
+  /** {@code newAxiom} is needed to read {@code this} */
+  public abstract void addAxiom(T newAxiom);
 }

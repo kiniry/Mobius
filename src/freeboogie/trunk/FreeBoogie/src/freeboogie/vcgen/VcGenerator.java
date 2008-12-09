@@ -47,7 +47,7 @@ public class VcGenerator<T extends Term<T>> {
   private Passivator passivator;
   private MapRemover mapRemover;
   private FunctionRegisterer functionRegisterer;
-  private AxiomSender axiomSender;
+  private AxiomSender<T> axiomSender;
 
   private StrongestPostcondition<T> sp;
 
@@ -65,7 +65,7 @@ public class VcGenerator<T extends Term<T>> {
     passivator = new Passivator();
     mapRemover = new MapRemover();
     functionRegisterer = new FunctionRegisterer();
-    axiomSender = new AxiomSender();
+    axiomSender = new AxiomSender<T>();
     sp = new StrongestPostcondition<T>();
     lowLevelAxiomBag = new HashSet<T>(13);
   }

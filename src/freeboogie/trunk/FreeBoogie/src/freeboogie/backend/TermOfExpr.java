@@ -17,37 +17,29 @@ import freeboogie.util.Err;
  * TODO The stuff that is mentioned here should be registered by
  *      TermBuilder, not SmtTermBuilder.
  */
-public class TermOfExpr<T extends Term> extends Evaluator<T> {
+public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
+  private T TRUE_TERM;
+  private T FALSE_TERM;
+  private T TRUE_NEQ_FALSE;
+
   private TermBuilder<T> term;
   private TcInterface tc;
   private SymbolTable st;
   private Map<Expr, Type> typeOf;
 
-  private HashSet<String> boolsAsTerm;
-  private boolean trueFalseAxiom;
-
-  public TermOfExpr() {
-    boolsAsTerm = new HashSet<String>(103);
+  public void setBuilder(TermBuilder<T> term) {
+    this.term = term;
+    TRUE_TERM = term.mk("literal_bool", Boolean.valueOf(true));
+    FALSE_TERM = term.mk("literal_bool", Boolean.valueOf(false));
+    TRUE_NEQ_FALSE = term.mk("neq", TRUE_TERM, FALSE_TERM);
+    TRUE_TERM.addAxiom(TRUE_NEQ_FALSE);
+    FALSE_TERM.addAxiom(TRUE_NEQ_FALSE);
   }
-
-  public void setBuilder(TermBuilder<T> term) { this.term = term; }
 
   public void setTypeChecker(TcInterface tc) {
     this.tc = tc;
     this.st = tc.getST();
     this.typeOf = tc.getTypes();
-  }
-
-  public List<T> getAssumptions() {
-    List<T> result = new ArrayList<T>(2 * boolsAsTerm.size());
-    for (String id : boolsAsTerm) {
-      result.add(term.mk("iff",
-        term.mk("var_formula", id),
-        term.mk("eq_bool",
-          term.mk("var_bool", "term$$" + id),
-          term.mk("literal_bool", Boolean.valueOf(true)))));
-    }
-    return result;
   }
 
   @Override
@@ -66,7 +58,7 @@ public class TermOfExpr<T extends Term> extends Evaluator<T> {
     if (TypeUtils.isInt(typeOf.get(atomFun)))
       prefix = "funI_";
     if (TypeUtils.isBool(typeOf.get(atomFun)))
-      prefix = "funT_";
+      prefix = "funB_";
     return term.mk(prefix + function, tuple(args));
   }
 
@@ -84,8 +76,7 @@ public class TermOfExpr<T extends Term> extends Evaluator<T> {
       // this prefix is needed for z3, but not simplify
       return term.mk("var_int", "term$$" + id);
     } else if (TypeUtils.isBool(t)) {
-      boolsAsTerm.add(id);
-      return term.mk("var_bool", "term$$" + id);
+      return booleanVarTerm(id);
     } else {
       // this prefix is needed for z3, but not simplify
       return term.mk("var", "term$$" + id);
@@ -96,11 +87,9 @@ public class TermOfExpr<T extends Term> extends Evaluator<T> {
   public T eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
-      trueFalseAxiom = true;
-      return term.mk("literal_bool", Boolean.valueOf(true));
+      return TRUE_TERM;
     case FALSE:
-      trueFalseAxiom = true;
-      return term.mk("literal_bool", Boolean.valueOf(false));
+      return FALSE_TERM;
     case NULL:
       return term.mk("literal", "$$null");
     default:
@@ -222,5 +211,16 @@ public class TermOfExpr<T extends Term> extends Evaluator<T> {
 
   private T or(T x, T y) {
     return term.mk("Tnand", not(x), not(y));
+  }
+
+  private T booleanVarTerm(String id) {
+    T result = term.mk("var_bool", "term$$" + id);
+    T axiom = term.mk("iff",
+        term.mk("var_formula", id),
+        term.mk("eq_bool",
+          term.mk("var_bool", "term$$" + id),
+          term.mk("literal_bool", Boolean.valueOf(true))));
+    result.addAxiom(axiom);
+    return result;
   }
 }
