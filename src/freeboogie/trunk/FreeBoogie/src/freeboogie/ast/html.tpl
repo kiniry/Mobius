@@ -50,7 +50,7 @@ Here is a graphical representation of the hierarchy:
 </body>
 </html>
 
-\file{/dev/null}
+\file{null}
 We also generate the dot file from which the hierarchy is generated.
 
 \file{hierarchy.dot}
