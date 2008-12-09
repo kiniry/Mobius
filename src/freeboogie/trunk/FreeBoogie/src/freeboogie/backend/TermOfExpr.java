@@ -12,10 +12,6 @@ import freeboogie.util.Err;
  *
  * NOTE that some Boogie expressions should be dealt with
  * earlier, such as the old() built-in.
- *
- * TODO Make this (more) sorted. And test more.
- * TODO The stuff that is mentioned here should be registered by
- *      TermBuilder, not SmtTermBuilder.
  */
 public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   private T TRUE_TERM;

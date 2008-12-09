@@ -123,13 +123,13 @@ public class SimplifyProver extends Prover<SmtTerm> {
     printTerm(t, strBuilder);
     strBuilder.append(")");
     simplify.sendCommand(strBuilder.toString());
-    log.fine("simplify BG_PUSH: " + strBuilder);
+    log.fine("simplify: " + strBuilder);
   }
 
   @Override
   protected void sendRetract() throws ProverException {
     simplify.sendCommand("(BG_POP)");
-    log.fine("simplify BG_POP");
+    log.fine("simplify: (BG_POP)");
   }
   
   @Override

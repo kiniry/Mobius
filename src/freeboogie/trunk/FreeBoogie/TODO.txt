@@ -1,5 +1,6 @@
+ . Add an axiom for select/update at different location
+ . Add a big distinct as an axiom (with all variables?)
  . Add axioms for term counterparts of formulas.
- . Build (smt) quantifiers.
  . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
  . Desugar dependent types in procedure signatures.
  . Extract sharing.

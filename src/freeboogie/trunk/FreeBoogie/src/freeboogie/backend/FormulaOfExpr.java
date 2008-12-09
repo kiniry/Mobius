@@ -81,8 +81,15 @@ public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
 
   @Override
   public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
-    // TODO
-    return term.mk("literal_formula", true);
+    T result = e.eval(this);
+    while (vars != null) {
+      VariableDecl vd = (VariableDecl) vars;      
+      result = term.mk("forall", 
+        term.mk("var", "term$$" + vd.getName()),
+        result);
+      vars = vd.getTail();
+    }
+    return result;
   }
 
   @Override
@@ -92,9 +99,8 @@ public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
     Type rt = typeOf.get(right);
     switch (op) {
     case EQ: 
-      if (TypeUtils.isBool(lt))
-        return term.mk("iff", left.eval(this), right.eval(this));
-      else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) 
+      // TODO figure out when EQ can be treated as EQUIV
+      if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) 
         return term.mk("eq_int", left.eval(termOfExpr), right.eval(termOfExpr));
       else 
         return term.mk("eq", left.eval(termOfExpr), right.eval(termOfExpr));
