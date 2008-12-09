@@ -14,22 +14,82 @@ import freeboogie.util.Err;
  * earlier, such as the old() built-in.
  */
 public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
-  private T TRUE_TERM;
-  private T FALSE_TERM;
-  private T TRUE_NEQ_FALSE;
-
   private TermBuilder<T> term;
   private TcInterface tc;
   private SymbolTable st;
   private Map<Expr, Type> typeOf;
+  private Map<String, T> axioms = new HashMap<String, T>();
 
   public void setBuilder(TermBuilder<T> term) {
     this.term = term;
-    TRUE_TERM = term.mk("literal_bool", Boolean.valueOf(true));
-    FALSE_TERM = term.mk("literal_bool", Boolean.valueOf(false));
-    TRUE_NEQ_FALSE = term.mk("neq", TRUE_TERM, FALSE_TERM);
-    TRUE_TERM.addAxiom(TRUE_NEQ_FALSE);
-    FALSE_TERM.addAxiom(TRUE_NEQ_FALSE);
+    axioms.put("literal_bool",
+      term.mk("neq",
+        term.mk("literal_bool", true),
+        term.mk("literal_bool", false)));
+    axioms.put("Tnand",
+      term.mk("forall_bool", term.mk("var_bool", "a"),
+      term.mk("forall_bool", term.mk("var_bool", "b"),
+        term.mk("iff",
+          term.mk("eq_bool",
+            term.mk("Tnand",
+              term.mk("var_bool", "a"),
+              term.mk("var_bool", "b")),
+            term.mk("literal_bool", true)),
+          term.mk("not", term.mk("and",
+            term.mk("eq_bool",
+              term.mk("var_bool", "a"),
+              term.mk("literal_bool", true)),
+            term.mk("eq_bool",
+              term.mk("var_bool", "b"),
+              term.mk("literal_bool", true))))))));
+    axioms.put("T<",
+      term.mk("forall_int", term.mk("var_int", "a"),
+      term.mk("forall_int", term.mk("var_int", "b"),
+        term.mk("iff",
+          term.mk("eq_bool",
+            term.mk("T<",
+              term.mk("var_int", "a"),
+              term.mk("var_int", "b")),
+            term.mk("literal_bool", true)),
+          term.mk("<",
+            term.mk("var_int", "a"),
+            term.mk("var_int", "b"))))));
+    axioms.put("Teq",
+      term.mk("forall", term.mk("var", "a"),
+      term.mk("forall", term.mk("var", "b"),
+        term.mk("iff",
+          term.mk("eq_bool",
+            term.mk("Teq", term.mk("var", "a"), term.mk("var", "b")),
+            term.mk("literal_bool", true)),
+          term.mk("eq", term.mk("var", "a"), term.mk("var", "b"))))));
+    axioms.put("Teq_int",
+      term.mk("forall_int", term.mk("var_int", "a"),
+      term.mk("forall_int", term.mk("var_int", "b"),
+        term.mk("iff",
+          term.mk("eq_bool",
+            term.mk("Teq_int",
+              term.mk("var_int", "a"),
+              term.mk("var_int", "b")),
+            term.mk("literal_bool", true)),
+          term.mk("eq_int",
+            term.mk("var_int", "a"),
+            term.mk("var_int", "b"))))));
+    axioms.put("Teq_bool",
+      term.mk("forall_bool", term.mk("var_bool", "a"),
+      term.mk("forall_bool", term.mk("var_bool", "b"),
+        term.mk("iff",
+          term.mk("eq_bool",
+            term.mk("Teq_bool",
+              term.mk("var_bool", "a"),
+              term.mk("var_bool", "b")),
+            term.mk("literal_bool", true)),
+          term.mk("iff",
+            term.mk("eq_bool",
+              term.mk("var_bool", "a"),
+              term.mk("literal_bool", true)),
+            term.mk("eq_bool",
+              term.mk("var_bool", "b"),
+              term.mk("literal_bool", true)))))));
   }
 
   public void setTypeChecker(TcInterface tc) {
@@ -70,12 +130,19 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
     } else Err.internal("Unknown id declaration type for " + id + ".");
     if (TypeUtils.isInt(t)) {
       // this prefix is needed for z3, but not simplify
-      return term.mk("var_int", "term$$" + id);
+      return mk("var_int", "term$$" + id);
     } else if (TypeUtils.isBool(t)) {
-      return booleanVarTerm(id);
+      // add axiom that connects terms to formulas
+      T result = mk("var_bool", "term$$" + id);
+      result.addAxiom(term.mk("iff",
+        term.mk("var_formula", id),
+        term.mk("eq_bool",
+          term.mk("var_bool", "term$$" + id),
+          term.mk("literal_bool", true))));
+      return result;
     } else {
       // this prefix is needed for z3, but not simplify
-      return term.mk("var", "term$$" + id);
+      return mk("var", "term$$" + id);
     }
   }
 
@@ -83,11 +150,11 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   public T eval(AtomLit atomLit, AtomLit.AtomType val) {
     switch (val) {
     case TRUE:
-      return TRUE_TERM;
+      return mk("literal_bool", true);
     case FALSE:
-      return FALSE_TERM;
+      return mk("literal_bool", false);
     case NULL:
-      return term.mk("literal", "$$null");
+      return mk("literal", "$$null");
     default:
       assert false;
       return null;
@@ -134,45 +201,45 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
     T r = right.eval(this);
     switch (op) {
     case PLUS:
-      return term.mk("+", l, r);
+      return mk("+", l, r);
     case MINUS:
-      return term.mk("-", l, r);
+      return mk("-", l, r);
     case MUL:
-      return term.mk("*", l, r);
+      return mk("*", l, r);
     case DIV:
-      return term.mk("/", l, r);
+      return mk("/", l, r);
     case MOD:
-      return term.mk("%", l, r);
+      return mk("%", l, r);
     case EQ: 
       if (TypeUtils.isBool(lt))
-        return term.mk("Teq_bool", l, r);
+        return mk("Teq_bool", l, r);
       else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt)) 
-        return term.mk("Teq_int", l, r);
+        return mk("Teq_int", l, r);
       else
-        return term.mk("Teq", l, r);
+        return mk("Teq", l, r);
     case NEQ:
       if (TypeUtils.isBool(lt))
-        return not(term.mk("Teq_bool", l, r));
+        return not(mk("Teq_bool", l, r));
       else if (TypeUtils.isInt(lt) && TypeUtils.isInt(rt))
-        return not(term.mk("Teq_int", l, r));
+        return not(mk("Teq_int", l, r));
       else
-        return not(term.mk("Teq", l, r));
+        return not(mk("Teq", l, r));
     case LT:
-      return term.mk("T<", l, r);
+      return mk("T<", l, r);
     case LE:
-      return or(term.mk("T<", l, r), term.mk("Teq_int", l, r));
+      return or(mk("T<", l, r), mk("Teq_int", l, r));
     case GE:
-      return or(term.mk("T<", r, l), term.mk("Teq_int", r, l));
+      return or(mk("T<", r, l), mk("Teq_int", r, l));
     case GT:
-      return term.mk("T<", l, r);
+      return mk("T<", l, r);
     case SUBTYPE:
-      return term.mk("<:", l, r);
+      return mk("<:", l, r);
     case EQUIV:
-      return term.mk("Tnand", term.mk("Tnand", l, r), or(l, r));
+      return mk("Tnand", mk("Tnand", l, r), or(l, r));
     case IMPLIES:
-      return term.mk("Tnand", l, not(r));
+      return mk("Tnand", l, not(r));
     case AND:
-      return not(term.mk("Tnand", l, r));
+      return not(mk("Tnand", l, r));
     case OR:
       return or(l, r);
     default:
@@ -185,7 +252,7 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   public T eval(UnaryOp unaryOp, UnaryOp.Op op, Expr e) {
     String termId = "***unknown***";
     switch (op) {
-    case MINUS: return term.mk("-", term.mk("literal_int", new BigInteger("0")), e.eval(this));
+    case MINUS: return mk("-", mk("literal_int", new BigInteger("0")), e.eval(this));
     case NOT: return not(e.eval(this));
     default: assert false; return null;
     }
@@ -202,21 +269,32 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   }
 
   private T not(T t) {
-    return term.mk("Tnand", t, t);
+    return mk("Tnand", t, t);
   }
 
   private T or(T x, T y) {
-    return term.mk("Tnand", not(x), not(y));
+    return mk("Tnand", not(x), not(y));
   }
 
-  private T booleanVarTerm(String id) {
-    T result = term.mk("var_bool", "term$$" + id);
-    T axiom = term.mk("iff",
-        term.mk("var_formula", id),
-        term.mk("eq_bool",
-          term.mk("var_bool", "term$$" + id),
-          term.mk("literal_bool", Boolean.valueOf(true))));
-    result.addAxiom(axiom);
-    return result;
+  private T decorate(String id, T t) {
+    T a = axioms.get(id);
+    if (a != null) t.addAxiom(a);
+    return t;
+  }
+
+  private T mk(String id, Object a) {
+    return decorate(id, term.mk(id, a));
+  }
+
+  private T mk(String id, T a) {
+    return decorate(id, term.mk(id, a));
+  }
+
+  private T mk(String id, T a, T b) {
+    return decorate(id, term.mk(id, a, b));
+  }
+
+  private T mk(String id, ArrayList<T> a) {
+    return decorate(id, term.mk(id, a));
   }
 }

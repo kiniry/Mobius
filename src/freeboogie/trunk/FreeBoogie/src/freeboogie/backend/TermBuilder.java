@@ -38,7 +38,6 @@ public abstract class TermBuilder<T extends Term<T>> {
     def("or", Sort.FORMULA, Sort.FORMULA);
     def("iff", new Sort[]{Sort.FORMULA, Sort.FORMULA}, Sort.FORMULA);
     def("implies", new Sort[]{Sort.FORMULA, Sort.FORMULA}, Sort.FORMULA);
-    def("Tnand", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
     def("var", String.class, Sort.VARTERM);
     def("var_int", String.class, Sort.VARINT);
@@ -57,7 +56,6 @@ public abstract class TermBuilder<T extends Term<T>> {
     def("exists_int", new Sort[]{Sort.VARINT, Sort.FORMULA}, Sort.FORMULA);
     def("exists_bool", new Sort[]{Sort.VARBOOL, Sort.FORMULA}, Sort.FORMULA);
 
-    def("T<", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
     def("+", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("-", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
     def("*", new Sort[]{Sort.INT, Sort.INT}, Sort.INT);
@@ -68,9 +66,6 @@ public abstract class TermBuilder<T extends Term<T>> {
     def(">=", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
     def(">", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
 
-    def("Teq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
-    def("Teq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
-    def("Teq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
     def("eq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.FORMULA);
     def("eq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.FORMULA);
     def("eq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.FORMULA);
@@ -89,6 +84,15 @@ public abstract class TermBuilder<T extends Term<T>> {
     // handles casts, doesn't get printed; shouldn't be in Boogie
     def("cast_to_int", new Sort[]{Sort.TERM}, Sort.INT);
     def("cast_to_bool", new Sort[]{Sort.TERM}, Sort.BOOL);
+
+    // These are used to mimic formulas in terms. Each has an
+    // axiom associated.
+    def("Tnand", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+    def("T<", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def("Teq", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
+    def("Teq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
+    def("Teq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
+
 
     pushDef(); // mark the end of the prover builtin definitions
 

@@ -4,6 +4,7 @@
  . Extract sharing.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
  . Desugar dependent types in procedure signatures.
  . Provide a web interface.
  . Have some unified mechanism for making sure that terms start with

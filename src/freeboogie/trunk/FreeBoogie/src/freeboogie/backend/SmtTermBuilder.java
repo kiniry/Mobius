@@ -2,6 +2,7 @@ package freeboogie.backend;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import freeboogie.ast.Expr;
@@ -12,8 +13,8 @@ import freeboogie.ast.Expr;
  * @author rgrig 
  */
 public class SmtTermBuilder extends TermBuilder<SmtTerm> {
-  private static final SmtTerm[] termArray = new SmtTerm[0];
   private static final Logger log = Logger.getLogger("freeboogie.backend");
+  private HashMap<String, SmtTerm> axioms = new HashMap<String, SmtTerm>();
 
   @Override
   protected SmtTerm reallyMk(Sort sort, String termId, Object a) {
