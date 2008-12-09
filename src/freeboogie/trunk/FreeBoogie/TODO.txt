@@ -1,14 +1,13 @@
- . Add axioms for term counterparts of formulas.
+ . Extract sharing.
  . Add an axiom for select/update at different location
  . Add a big DISTINCT as an axiom (with all variables?)
- . Extract sharing.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
  . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
  . Desugar dependent types in procedure signatures.
  . Provide a web interface.
  . Have some unified mechanism for making sure that terms start with
-   "term$$".
+   "term$$". Check that term$$ is not prepended to number literals.
  . Have a way to cope with identifiers in the input that contain $$.
    In general, think harder about possible name clashes.
  . Only parse function if they return exactly one value.

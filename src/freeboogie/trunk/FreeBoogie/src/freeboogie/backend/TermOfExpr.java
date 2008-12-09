@@ -187,9 +187,9 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
 
   @Override
   public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
-    // TODO implement; use term$$forall; 
-    //   also, introduce one axiom per quantified var
-    return term.mk("literal_bool", Boolean.valueOf(true));
+    // TODO can this be done without HOL?
+    Err.internal("Quantifiers are not supported in this position.");
+    return null;
   }
 
   @Override

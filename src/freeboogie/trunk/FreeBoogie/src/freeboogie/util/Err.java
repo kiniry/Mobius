@@ -91,11 +91,12 @@ public class Err {
    */
   public static void fatal(String m, int code) {
     System.err.println(m);
-    throw new AssertionError();
+    System.exit(code);
   }
   
   public static void internal(String m) {
-    fatal("INTERNAL ERROR: " + m, 255);
+    System.err.println("INTERNAL ERROR: " + m);
+    throw new AssertionError();
   }
   
   /** Aborts execution. */

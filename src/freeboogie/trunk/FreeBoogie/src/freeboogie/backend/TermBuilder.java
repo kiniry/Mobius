@@ -93,6 +93,13 @@ public abstract class TermBuilder<T extends Term<T>> {
     def("Teq_int", new Sort[]{Sort.INT, Sort.INT}, Sort.BOOL);
     def("Teq_bool", new Sort[]{Sort.BOOL, Sort.BOOL}, Sort.BOOL);
 
+    def("Tforall", new Sort[]{Sort.VARTERM, Sort.BOOL}, Sort.BOOL);
+    def("Tforall_int", new Sort[]{Sort.VARINT, Sort.BOOL}, Sort.BOOL);
+    def("Tforall_bool", new Sort[]{Sort.VARBOOL, Sort.BOOL}, Sort.BOOL);
+    def("Texists", new Sort[]{Sort.VARTERM, Sort.BOOL}, Sort.BOOL);
+    def("Texists_int", new Sort[]{Sort.VARINT, Sort.BOOL}, Sort.BOOL);
+    def("Texists_bool", new Sort[]{Sort.VARBOOL, Sort.BOOL}, Sort.BOOL);
+
 
     pushDef(); // mark the end of the prover builtin definitions
 
