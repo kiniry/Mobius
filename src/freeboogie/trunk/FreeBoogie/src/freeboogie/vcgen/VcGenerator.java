@@ -32,7 +32,6 @@ public class VcGenerator<T extends Term<T>> {
    * (10) desugar uniq on constants TODO
    * (11) desugar <: is prover doesn't know it TODO
    * (12) strongest postcondition 
-   * (13) add axioms collected by the term builder TODO
    */
 
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
@@ -121,10 +120,9 @@ public class VcGenerator<T extends Term<T>> {
     axiomSender.setProver(prover);
     builder.popDef();
     functionRegisterer.process(ast, tc);
-    axiomSender.process(ast);
-    builder.pushDef();
     prover.pop();
-    // TODO add axioms
+    axiomSender.process(ast);
     prover.push();
+    builder.pushDef();
   }
 }

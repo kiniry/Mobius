@@ -123,6 +123,8 @@ public class MapRemover extends Transformer {
 
   @Override
   public AtomFun eval(AtomMapSelect atomMapSelect, Atom atom, Exprs idx) {
+    atom = (Atom)atom.eval(this);
+    idx = (Exprs)idx.eval(this);
     int n = size(idx);
     arities.add(n);
     return AtomFun.mk("$$select" + n, null, Exprs.mk(atom, idx));
@@ -130,6 +132,9 @@ public class MapRemover extends Transformer {
 
   @Override
   public AtomFun eval(AtomMapUpdate atomMapUpdate, Atom atom, Exprs idx, Expr val) {
+    atom = (Atom)atom.eval(this);
+    idx = (Exprs)idx.eval(this);
+    val = (Expr)val.eval(this);
     int n = size(idx);
     arities.add(n);
     return AtomFun.mk(

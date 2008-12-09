@@ -34,7 +34,6 @@ import freeboogie.util.FramedStack;
  */
 public abstract class Prover<T extends Term<T>> {
   protected FramedStack<T> assumptions;
-  protected T marker = null;
 
   protected TermBuilder<T> builder;
   protected static final Logger log = Logger.getLogger("freeboogie.backend");
@@ -77,7 +76,6 @@ public abstract class Prover<T extends Term<T>> {
    * @throws ProverException if something goes wrong
    */
   public void retract() throws ProverException {
-    int i, j;
     sendRetract();
     assumptions.pop();
   }
@@ -100,7 +98,8 @@ public abstract class Prover<T extends Term<T>> {
    * @throws ProverException if something goes wrong
    */
   public void pop() throws ProverException {
-    assumptions.popFrame();
+    for (int i = assumptions.popFrame().size(); i > 0; --i)
+      sendRetract();
   }
 
   /**

@@ -24,7 +24,7 @@ public class FramedStack<T> {
     data.addFirst(new ArrayDeque<T>());
   }
 
-  public void popFrame() {
-    data.removeFirst();
+  public Deque<T> popFrame() {
+    return data.removeFirst();
   }
 }

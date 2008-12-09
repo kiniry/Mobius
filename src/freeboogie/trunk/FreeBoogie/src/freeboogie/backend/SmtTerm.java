@@ -35,11 +35,11 @@ public class SmtTerm extends Term<SmtTerm> {
    */
   public SmtTerm(Sort sort, String id, ArrayList<SmtTerm> children) {
     super(sort); 
+    assert children != null;
     this.id = id;
     this.data = null;
     this.children = children;
 //System.out.println("s.mk> " + id + " " + children.size());
-    assert this.children.size() > 0;
   }
 
   /**
