@@ -1,11 +1,10 @@
- . Add an axiom for select/update at different location
- . Add a big distinct as an axiom (with all variables?)
  . Add axioms for term counterparts of formulas.
- . Transform Boogie expressions into SmtTerms (SmtTermBuilder)
- . Desugar dependent types in procedure signatures.
+ . Add an axiom for select/update at different location
+ . Add a big DISTINCT as an axiom (with all variables?)
  . Extract sharing.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . Desugar dependent types in procedure signatures.
  . Provide a web interface.
  . Have some unified mechanism for making sure that terms start with
    "term$$".
