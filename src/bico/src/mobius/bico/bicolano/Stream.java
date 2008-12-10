@@ -41,9 +41,20 @@ public class Stream extends PrintStream {
     str.append(s);
     super.println(str.toString());
   }
-  
   /**
    * Print the given string, but putting tabulations wherever necessary.
+   * 
+   * @param s the string to print tabbed
+   */
+  public void print(final String s) {
+    String str = fStrTab + s;
+    str = str.replaceAll("\n", "\n" + fStrTab);
+    super.print(str);
+  }
+  
+  /**
+   * Print the given string and a new line, but 
+   * it puts tabulations wherever necessary.
    * 
    * @param s the string to print tabbed
    */
