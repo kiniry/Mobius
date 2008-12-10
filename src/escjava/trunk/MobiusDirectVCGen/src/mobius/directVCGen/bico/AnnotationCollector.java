@@ -74,7 +74,7 @@ public final class AnnotationCollector {
     fAssertionList =  assertionEmpty;
     fAssumptionList = assumptionEmpty;
     if (il == null) {
-      return null;
+      return new String [] {fAssertionList, fAssumptionList};
     }
     final String endOfMeth = fMet.getInstructionList().getEnd().getPosition() + "%nat";
     
