@@ -653,7 +653,7 @@ public final class Logic {
    */
   public static void checkType(final String name, 
                                final Term t, final Sort s) {
-    if (t.getSort().equals(s)) {
+    if (!t.getSort().equals(s)) {
       throw new  IllegalArgumentException("Type of " + name + " should be " + s +
                                           " found " + t.getSort() + "."); 
     }

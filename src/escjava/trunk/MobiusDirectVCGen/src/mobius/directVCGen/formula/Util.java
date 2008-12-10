@@ -268,6 +268,9 @@ public final class Util extends mobius.bico.Util {
     }
     final Post ex = vce.getExcPost();
     res = Post.and(res, Post.implies(nottypeof, ex));
+    if (res == null) {
+      throw new NullPointerException();
+    }
     return res;
   }
   
@@ -282,7 +285,7 @@ public final class Util extends mobius.bico.Util {
     final Post p = Util.getExcpPost(type, post);
     final QuantVariableRef e = Expression.rvar(Heap.sortValue);
     final QuantVariableRef heap = Heap.newVar();
-    
+
     return Logic.forall(heap,
              Logic.forall(e,
                           Logic.implies(Heap.newObject(Heap.var, type, heap, e),

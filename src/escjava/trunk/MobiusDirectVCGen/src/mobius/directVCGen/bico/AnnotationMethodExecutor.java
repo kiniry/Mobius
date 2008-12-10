@@ -96,6 +96,9 @@ public class AnnotationMethodExecutor extends ABasicExecutor {
     
     // assertion and assumption def
     final String [] annots =  AnnotationCollector.getAssertion(out, fMeth); 
+    if (annots == null) {
+      System.out.println(fMeth + " was not annotated!");
+    }
     out.definition(nameAssertion, annots[0]);
     out.definition(nameAssumption, annots[1]);
     out.definition("local_spec", "LocMethSpec",

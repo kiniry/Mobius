@@ -67,6 +67,9 @@ public class VCEntry {
    * @param contpost the postcondition for a continue without any label
    */
   public VCEntry(final Post post, final Post excpost, final Post brpost, final Post contpost) {
+    if (excpost == null) {
+      throw new IllegalArgumentException();
+    }
     setPost(post);
     fBrPost = brpost;
     fContPost = contpost;
@@ -80,7 +83,7 @@ public class VCEntry {
    * @param ve the object to copy
    */
   public VCEntry(final VCEntry ve) {
-    this(ve.getPost(), ve.fBrPost, ve.fContPost, ve.getExcPost());
+    this(ve.getPost(), ve.getExcPost(), ve.fBrPost, ve.fContPost);
     lexcpost.addAll(ve.lexcpost);
     lbrpost.putAll(ve.lbrpost);
     lcontpost.putAll(ve.lcontpost);
