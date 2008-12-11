@@ -46,7 +46,7 @@ public class POsContentProvider implements ITreeContentProvider {
   
  /** {@inheritDoc} */
   public void inputChanged(final Viewer viewer, final Object oldInput, final Object newInput) {
-    if (newInput.equals(fInput)) {
+    if (newInput == null || newInput.equals(fInput)) {
       return;
     }
     fInput = (IProject[]) newInput;
