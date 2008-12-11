@@ -31,7 +31,7 @@ public final class AnnotationCollector {
   private static final String assertionEmpty = "(PCM.empty (" + assertionType + " " +
                                                               "** nat))";
   /** the Coq representation of an empty assumption. */
-  private static final String assumptionEmpty = "(PCM.empty ( Assumption ** nat))";
+  private static final String assumptionEmpty = "(PCM.empty Assumption)";
   /** the decorator that add the annotations or read the annotations from a node. */
   private final AnnotationDecoration fAnnot = AnnotationDecoration.inst;
 
