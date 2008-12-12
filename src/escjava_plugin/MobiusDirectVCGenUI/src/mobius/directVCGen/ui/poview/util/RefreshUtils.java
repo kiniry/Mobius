@@ -7,6 +7,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.ui.progress.UIJob;
 
 /**
@@ -116,12 +118,19 @@ public final class RefreshUtils {
 
     /** {@inheritDoc} */
     public IStatus runInUIThread(final IProgressMonitor monitor) {
-      if (fElem != null) {
-        fViewer.refresh(fElem);
-        fViewer.update(fElem, null);
+      try {
+        if (fElem != null) {
+          fViewer.refresh(fElem);
+          fViewer.update(fElem, null);
+        }
+        else {
+          fViewer.refresh();
+        }
       }
-      else {
-        fViewer.refresh();
+      catch (SWTException e) {
+        if (e.code != SWT.ERROR_WIDGET_DISPOSED) {
+          throw e; // le concept de la patate chaude
+        }
       }
       return ImagesUtils.getOkStatus();
     }  

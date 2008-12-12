@@ -187,10 +187,14 @@ public class POsContentProvider implements ITreeContentProvider {
       AWorkspaceElement pe = AWorkspaceElement.getElement(res);      
       if (pe == null) { // we try to be more specific
         pe = AWorkspaceElement.getElement(res.getParent());
+        if (pe == null) { // we are a total failure
+          return null;
+        }
         final AWorkspaceElement [] os = pe.getElementChildren();
         for (int i = 0; i < os.length; i++) {
           String name = res.getName();
-          name = name.substring(0, name.length() - res.getFileExtension().length());
+          final String ext = "" + res.getFileExtension();
+          name = name.substring(0, name.length() - ext.length());
           if (os[i].getName().startsWith(name)) {
             pe = os[i];
           }
