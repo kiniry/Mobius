@@ -3,6 +3,8 @@
  . Add a big DISTINCT as an axiom (with all variables?)
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
+ . Convert the BPLs in the test suite to Boogie 2.
+ . Update b2bpl to produce Boogie 2.
  . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
  . Desugar dependent types in procedure signatures.
  . Provide a web interface.
@@ -10,7 +12,7 @@
    "term$$". Check that term$$ is not prepended to number literals.
  . Have a way to cope with identifiers in the input that contain $$.
    In general, think harder about possible name clashes.
- . Only parse function if they return exactly one value.
+ . Only parse functions if they return exactly one value.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
  . Test typechecker thoroughly and add tests for the 'old' mode.
@@ -32,7 +34,7 @@
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
  . Check (during type-check) that I never assign to a constant.
- . Incorporate IndexedType into UserType, and allow for an arbitrary
+ . Incorporate MapType into UserType, and allow for an arbitrary
    number of type arguments (besides the name).
  . There is some duplication between VarCollector and ReadWriteSetFinder.
    Probably only one should remain.
@@ -67,15 +69,9 @@
  . Target the native format of Z3.
  . Target the SMTLIB format.
  . Report the location of the implementation being checked.
- . Revisit the design of the sorted prover backend. It seems badly
-   broken. Try to (1) simplify code (do we need Term/SmtTerm at all?
-   is the AST for Expr enough?) and (2) make it work with many provers
-   (Three string interfaces to z3, one string interface to Simplify,
-   native interface to z3, and so on. At least three users are needed
-   to validate the design.)
  . Allow easy redirection of output.
- . Have some mechanism to allow reprocessing of some boogie.
-   (`Internal' ids, that contain $$ are assumed to not be in the
-   input but they are allowed in the output.)
+ . Write a Z3Prover that uses the C API of Z3.
+ . Add a parser for SMT so that you can provide a piece of text to
+   build an SmtTerm.
 
 vim:spell:ts=3:sw=3:fdm=manual:

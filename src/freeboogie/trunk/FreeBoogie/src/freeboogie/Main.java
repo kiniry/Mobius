@@ -9,9 +9,7 @@ import org.antlr.runtime.CommonTokenStream;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.backend.ProverException;
-import freeboogie.backend.SimplifyProver;
-import freeboogie.backend.SmtTerm;
+import freeboogie.backend.*;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
@@ -75,6 +73,7 @@ public class Main {
   private Declaration ast;
 
   private VcGenerator<SmtTerm> vcgen;
+  private Prover<SmtTerm> prover;
 
   public Main() {
     opt = new Options();
@@ -163,7 +162,11 @@ public class Main {
   }
 
   private void verify() throws ProverException {
-    vcgen.setProver(new SimplifyProver(new String[]{"z3", "-si"}));
+    if (prover == null) {
+      //prover = new SimplifyProver(new String[]{"z3", "-si"});
+      prover = new YesSmtProver();
+      vcgen.setProver(prover);
+    }
     ast = vcgen.process(ast, tc);
 
     // This is ugly. Perhaps put this in a visitor that also knows
@@ -233,7 +236,7 @@ public class Main {
         if (opt.boolVal("-pp")) ast.eval(pp);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
-      } catch (Exception e) {
+      } catch (Throwable e) {
         Err.error(e.getMessage());
         e.printStackTrace();
         Err.error("Unexpected error while processing " + file);

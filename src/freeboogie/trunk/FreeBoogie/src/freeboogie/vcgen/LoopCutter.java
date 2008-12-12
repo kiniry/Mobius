@@ -38,7 +38,7 @@ public class LoopCutter extends Transformer {
       PrintWriter pw = new PrintWriter(System.out);
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp); pw.flush();
-      Err.fatal("INTERNAL ERROR: LoopCutter produced invalid Boogie.");
+      Err.internal("LoopCutter produced invalid Boogie.");
     }
     return tc.getAST();
   }

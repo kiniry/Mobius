@@ -9,9 +9,14 @@ import java.util.*;
  *
  * @author rgrig 
  */
-public class SmtTerm extends Term<SmtTerm> {
+public final class SmtTerm extends Term<SmtTerm> {
   static final private ArrayList<SmtTerm> noChild = new ArrayList<SmtTerm>();
   
+  static final private HashMap<SmtTerm, SmtTerm> cache =
+    new HashMap<SmtTerm, SmtTerm>(100003);
+
+  private int hash;
+
   /** The identifier or this term. */
   final public String id;
   
@@ -33,7 +38,7 @@ public class SmtTerm extends Term<SmtTerm> {
    * @param id the identifier of this term
    * @param children the children of this term
    */
-  public SmtTerm(Sort sort, String id, ArrayList<SmtTerm> children) {
+  private SmtTerm(Sort sort, String id, ArrayList<SmtTerm> children) {
     super(sort); 
     assert children != null;
     this.id = id;
@@ -42,13 +47,8 @@ public class SmtTerm extends Term<SmtTerm> {
 //System.out.println("s.mk> " + id + " " + children.size());
   }
 
-  /**
-   * Creates a new constant.
-   * @param sort the sort of this constant
-   * @param id the identifier of this constant type
-   * @param data the constant
-   */
-  public SmtTerm(Sort sort, String id, Object data) {
+  /** Creates a new constant. */
+  private SmtTerm(Sort sort, String id, Object data) {
     super(sort); 
     this.id = id;
     this.data = data;
@@ -56,8 +56,26 @@ public class SmtTerm extends Term<SmtTerm> {
 //System.out.println("s.mk2> " + id + " " + data);
   }
 
+  static public SmtTerm mk(Sort sort, String id, ArrayList<SmtTerm> children) {
+    return hashCons(new SmtTerm(sort, id, children));
+  }
+
+  static public SmtTerm mk(Sort sort, String id, Object data) {
+    return hashCons(new SmtTerm(sort, id, data));
+  }
+
+  static private SmtTerm hashCons(SmtTerm n) {
+    SmtTerm old = cache.get(n);
+    if (old == null)
+      cache.put(n, n);
+    else
+      n = old;
+    return n;
+  }
+
   @Override
   public boolean equals(Object o) {
+    if (o == this) return true;
     if (!(o instanceof SmtTerm)) return false;
     SmtTerm t = (SmtTerm)o;
     if (!id.equals(t.id)) return false;
@@ -68,10 +86,11 @@ public class SmtTerm extends Term<SmtTerm> {
 
   @Override
   public int hashCode() {
-    int result = id.hashCode();
-    if (data != null) result += data.hashCode();
-    result += children.hashCode();
-    return result;
+    if (hash != 0) return hash;
+    hash = id.hashCode();
+    if (data != null) hash += data.hashCode();
+    hash += children.hashCode();
+    return hash;
   }
 
   @Override

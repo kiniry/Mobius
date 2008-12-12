@@ -7,7 +7,7 @@ import java.util.*;
  *  Starts a Simplify/Z3 subprocess and manages sending string
  *  commands and parsing the prover responses. The goal is to
  *  have parsing that is robust enough to handle both Simplify
- *  and Z3 running in Simplify mode ("/si"). Also, the parsing
+ *  and Z3 running in Simplify mode ("-si"). Also, the parsing
  *  should handle unexpected output gracefully.
  *
  *  NOTE: This class was first developed for ESC/Java
@@ -52,7 +52,7 @@ public class SimplifyProcess {
    */
   public void sendCommand(String cmd) throws ProverException {
     checkAlive();
-    //System.out.println(cmd);
+//System.out.println(cmd);
     out.println(cmd);
     checkOut();
   }

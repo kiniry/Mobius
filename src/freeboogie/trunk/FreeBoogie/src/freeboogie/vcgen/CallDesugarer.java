@@ -71,7 +71,7 @@ public class CallDesugarer extends Transformer {
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.fatal("INTERNAL ERROR: CallDesugarer produced invalid Boogie.");
+      Err.internal("CallDesugarer produced invalid Boogie.");
     }
     return tc.getAST();
   }

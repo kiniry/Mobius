@@ -28,12 +28,10 @@ import freeboogie.util.Err;
  * @author rgrig 
  */
 public class SimplifyProver extends Prover<SmtTerm> {
-  /* IMPLEMENTATION NOTE:
-   * The reason why strings are built, instead of sending pieces
-   * to the output stream is that it is easier to debug. The downside
-   * is that we use O(n) memory instead of O(1) just for printing,
-   * where n is the size of the formula.
-   */
+  // TODO Perhaps stop building the strings to save memory if logging
+  //      is not enabled.
+  private static final Logger log = Logger.getLogger("freeboogie.backend");
+
   private SimplifyProcess simplify;
   private StringBuilder strBuilder;
   
@@ -57,7 +55,7 @@ public class SimplifyProver extends Prover<SmtTerm> {
     builder = new SmtTermBuilder();
   }
 
-  // TODO treat everything that is registered in SmtTermBuilder
+  // TODO treat everything that is registered in TermBuilder
   //      and drop the toUpperCase()
   private void printTerm(SmtTerm t, StringBuilder sb) {
     if (t.id.startsWith("var")) { 
@@ -118,6 +116,7 @@ public class SimplifyProver extends Prover<SmtTerm> {
 
   @Override
   protected void sendAssume(SmtTerm t) throws ProverException {
+    t = SmtTerms.eliminateSharing(t, builder);
     strBuilder.setLength(0);
     strBuilder.append("(BG_PUSH ");
     printTerm(t, strBuilder);
@@ -134,8 +133,10 @@ public class SimplifyProver extends Prover<SmtTerm> {
   
   @Override
   public boolean isValid(SmtTerm t) throws ProverException {
+    t = SmtTerms.eliminateSharing(t, builder);
     strBuilder.setLength(0);
     printTerm(t, strBuilder);
+    log.fine("simplify: " + strBuilder);
     log.fine("ask simplify: " + strBuilder);
     boolean r = simplify.isValid(strBuilder.toString());
     log.fine("simplify says: " + r);

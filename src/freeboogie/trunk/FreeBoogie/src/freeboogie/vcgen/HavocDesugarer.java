@@ -65,7 +65,7 @@ public class HavocDesugarer extends Transformer {
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.fatal("INTERNAL ERROR: HavocDesugarer produced invalid Boogie.");
+      Err.internal("HavocDesugarer produced invalid Boogie.");
     }
     return tc.getAST();
   }

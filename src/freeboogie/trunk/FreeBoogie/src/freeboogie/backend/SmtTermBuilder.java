@@ -18,12 +18,12 @@ public class SmtTermBuilder extends TermBuilder<SmtTerm> {
 
   @Override
   protected SmtTerm reallyMk(Sort sort, String termId, Object a) {
-    return new SmtTerm(sort, termId, a);
+    return SmtTerm.mk(sort, termId, a);
   }
 
   @Override
   protected SmtTerm reallyMk(Sort sort, String termId, ArrayList<SmtTerm> a) {
-    return new SmtTerm(sort, termId, a);
+    return SmtTerm.mk(sort, termId, a);
   }
 
   @Override
@@ -42,6 +42,6 @@ public class SmtTermBuilder extends TermBuilder<SmtTerm> {
       if (children.size() != a.size())
         a = children;
     }
-    return new SmtTerm(sort, termId, a);
+    return SmtTerm.mk(sort, termId, a);
   }
 }

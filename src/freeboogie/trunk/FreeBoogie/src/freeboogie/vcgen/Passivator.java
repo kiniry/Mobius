@@ -91,7 +91,7 @@ public class Passivator extends Transformer {
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.fatal("INTERNAL ERROR: Passivator produced invalid Boogie.");
+      Err.internal("Passivator produced invalid Boogie.");
     }
     return tc.getAST();
   }

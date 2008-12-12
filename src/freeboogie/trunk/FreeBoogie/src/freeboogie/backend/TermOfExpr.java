@@ -127,7 +127,7 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
     } else if (d instanceof ConstDecl) {
       // TODO I might want to keep track of constness
       t = ((ConstDecl)d).getType();
-    } else Err.internal("Unknown id declaration type for " + id + ".");
+    } else Err.internal("Unknown id declaration type for " + atomId + ": " + d);
     if (TypeUtils.isInt(t)) {
       // this prefix is needed for z3, but not simplify
       return mk("var_int", "term$$" + id);

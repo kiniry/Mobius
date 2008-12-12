@@ -76,7 +76,7 @@ public class SpecDesugarer extends Transformer {
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.fatal("INTERNAL ERROR: SpecDesugarer produced invalid Boogie.");
+      Err.internal("SpecDesugarer produced invalid Boogie.");
     }
     return tc.getAST();
   }

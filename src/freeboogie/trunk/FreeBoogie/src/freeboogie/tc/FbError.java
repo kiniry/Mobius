@@ -94,7 +94,7 @@ public class FbError {
           sb.append(data[idx].toString());
         } catch (Exception e) {
           Err.error(e.toString());
-          Err.fatal("INTERNAL ERROR: idx="+idx + " err_type="+type);
+          Err.internal("INTERNAL ERROR: idx="+idx + " err_type="+type);
         }
       }
     }

@@ -116,7 +116,7 @@ public class MapRemover extends Transformer {
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.fatal("INTERNAL ERROR: MapRemover produced invalid Boogie.");
+      Err.internal("MapRemover produced invalid Boogie.");
     }
     return tc.getAST();
   }

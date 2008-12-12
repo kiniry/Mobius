@@ -31,7 +31,7 @@ public class VcGenerator<T extends Term<T>> {
    *  (9) desugar maps, if the prover doesn't know about arrays
    * (10) desugar uniq on constants TODO
    * (11) desugar <: is prover doesn't know it TODO
-   * (12) strongest postcondition 
+   * (12) strongest postcondition
    */
 
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
