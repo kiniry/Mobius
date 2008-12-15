@@ -36,7 +36,7 @@ public class MapRemover extends Transformer {
               UserType.mk("TV")
             ),
             null,
-            nVarDecl(n)),
+            nVarDecl("x", n, null)),
           VariableDecl.mk(
             "result",
             UserType.mk("TV"),
@@ -44,6 +44,7 @@ public class MapRemover extends Transformer {
             null),
           Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n))),
         ast);
+
       // add "function $$updateN<TV, T1, ..., TN>
       //        (val : TV, map : [T1, ..., TN]TV, x1 : T1, ..., xN : TN)
       //        returns (result : [T1, ..., TN]TV);"
@@ -60,7 +61,7 @@ public class MapRemover extends Transformer {
                 nTypes(n),
                 UserType.mk("TV")),
               null,
-            nVarDecl(n))),
+            nVarDecl("x", n, null))),
           VariableDecl.mk(
             "result",
             MapType.mk(
@@ -70,9 +71,10 @@ public class MapRemover extends Transformer {
             null),
           Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n))),
         ast);
+
       // add "axiom<TV, T1, ..., TN>
       //        (forall m : [T1, ..., TN]TV, v : TV, x1 : T1, ..., xN : TN ::
-      //          select(update(v, m, x1, ..., xN), x1, ..., xN) == v
+      //          $$selectN($$updateN(v, m, x1, ..., xN), x1, ..., xN) == v
       //        );
       Expr axiomExpr;
       axiomExpr = BinaryOp.mk(
@@ -99,14 +101,65 @@ public class MapRemover extends Transformer {
           "v",
           UserType.mk("TV"),
           null,
-        nVarDecl(n))),
-        null, // TODO
+        nVarDecl("x", n, null))),
+        null, 
         axiomExpr);
       ast = Axiom.mk(
         Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n)),
         axiomExpr,
         ast);
-    }
+
+      for (int i = n; i > 0; --i) {
+        // "axiom<TV, T1, ..., TN>
+        //    (forall m : [T1, ..., TN] TV, v : TV,
+        //      x1 : T1, ..., xN : TN, y1 : T1, ..., yN : TN ::
+        //      xi != yi ==>
+        //      $$selectN($$updateN(v, m, x1, ..., xN), y1, ..., yN) ==
+        //        $$selectN(m, y1, ..., yN));
+        axiomExpr = BinaryOp.mk(
+          BinaryOp.Op.IMPLIES,
+          BinaryOp.mk(
+            BinaryOp.Op.NEQ,
+            AtomId.mk("x" + i, null),
+            AtomId.mk("y" + i, null)),
+          BinaryOp.mk(
+            BinaryOp.Op.EQ,
+            AtomFun.mk(
+              "$$select" + n,
+              null,
+              Exprs.mk(
+                AtomFun.mk(
+                  "$$update" + n,
+                  null,
+                  Exprs.mk(AtomId.mk("v", null),
+                  Exprs.mk(AtomId.mk("m", null),
+                  nExprs("x", n)))),
+                nExprs("y", n))),
+            AtomFun.mk(
+              "$$select" + n,
+              null,
+              Exprs.mk(AtomId.mk("m", null),
+              nExprs("y", n)))));
+        axiomExpr = AtomQuant.mk(
+          AtomQuant.QuantType.FORALL,
+          VariableDecl.mk(
+            "m",
+            MapType.mk(nTypes(n), UserType.mk("TV")),
+            null,
+          VariableDecl.mk(
+            "v",
+            UserType.mk("TV"),
+            null,
+          nVarDecl("x", n,
+          nVarDecl("y", n, null)))),
+          null,
+          axiomExpr);
+        ast = Axiom.mk(
+          Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n)),
+          axiomExpr,
+          ast);
+      } // for i
+    } // for arities
 
     log.info("Start to typecheck after map removing.");
     List<FbError> errors = tc.process(ast);
@@ -172,11 +225,10 @@ public class MapRemover extends Transformer {
     return result;
   }
 
-  // returns "x1 : T1, ...., xN, TN"
-  private VariableDecl nVarDecl(int n) {
-    VariableDecl result;
-    for (result = null; n > 0; --n)
-      result = VariableDecl.mk("x" + n, UserType.mk("T" + n), null, result);
-    return result;
+  // returns "x1 : T1, ...., xN : TN, tail"
+  private VariableDecl nVarDecl(String prefix, int n, VariableDecl tail) {
+    for (; n > 0; --n)
+      tail = VariableDecl.mk(prefix + n, UserType.mk("T" + n), null, tail);
+    return tail;
   }
 }

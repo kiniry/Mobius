@@ -95,8 +95,7 @@ public final class SmtTerm extends Term<SmtTerm> {
 
   @Override
   public void collectAxioms(Set<SmtTerm> axiomBag) {
-    if (axioms != null) axiomBag.addAll(axioms);
-    for (SmtTerm t : children) t.collectAxioms(axiomBag);
+    recCollectAxioms(axiomBag, new HashSet<SmtTerm>());
   }
 
   @Override
@@ -123,5 +122,12 @@ public final class SmtTerm extends Term<SmtTerm> {
     }
     sb.append(")");
     return sb.toString();
+  }
+
+  private void recCollectAxioms(Set<SmtTerm> axiomBag, HashSet<SmtTerm> seen) {
+    if (seen.contains(this)) return;
+    seen.add(this);
+    if (axioms != null) axiomBag.addAll(axioms);
+    for (SmtTerm t : children) t.recCollectAxioms(axiomBag, seen);
   }
 }

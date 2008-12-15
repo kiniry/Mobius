@@ -1,10 +1,12 @@
- . Extract sharing.
- . Add an axiom for select/update at different location
- . Add a big DISTINCT as an axiom (with all variables?)
+ . Add a big DISTINCT as an axiom (with all uniq constants)
+ . Fix bml2bpl so it's usable.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.
  . Convert the BPLs in the test suite to Boogie 2.
- . Update b2bpl to produce Boogie 2.
+ . Move to Boogie 2.
+ . Add a "for all types" construct.
+ . Release FreeBoogie 0.2.
+ . Simple interface to parse from strings
  . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
  . Desugar dependent types in procedure signatures.
  . Provide a web interface.
@@ -19,18 +21,14 @@
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
  . Make flow graphs reducible
- . Simple interface to parse from strings
  . In some cases Spec# generates (assume ... h1[n1] == h2[n2]...) which
    gets 'fixed' in old mode by adding a generic on procedure/implementation.
    Is this a problem?
- . Add a "for all types" construct.
  . Test if errors are reported correctly in old mode.
  . Get someone to review the code.
  . Implement the 'transform' (desugar) function in the parser.
    This makes sure there is exactly one command in each block
    and simplifies later steps.
- . Move to Boogie 2 (and still support the old form only if needed by
-   benchmarks or bml2bpl)
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
  . Check (during type-check) that I never assign to a constant.
@@ -66,11 +64,10 @@
  . Performance: It should work with a stack of 64MB and a heap of
    64MB. Right now it eats too much memory.
  . Make TermOfExpr (more) sorted. And test it more extensively.
- . Target the native format of Z3.
+ . Use the Z3 API, if possible on Linux.
  . Target the SMTLIB format.
  . Report the location of the implementation being checked.
  . Allow easy redirection of output.
- . Write a Z3Prover that uses the C API of Z3.
  . Add a parser for SMT so that you can provide a piece of text to
    build an SmtTerm.
 

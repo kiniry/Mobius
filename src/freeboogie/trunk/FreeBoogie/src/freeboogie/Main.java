@@ -163,8 +163,8 @@ public class Main {
 
   private void verify() throws ProverException {
     if (prover == null) {
-      //prover = new SimplifyProver(new String[]{"z3", "-si"});
-      prover = new YesSmtProver();
+      prover = new SimplifyProver(new String[]{"z3", "-si"});
+//prover = new YesSmtProver();
       vcgen.setProver(prover);
     }
     ast = vcgen.process(ast, tc);
