@@ -155,7 +155,7 @@ public class GlobalsCollector extends Transformer {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, Declaration tail) {
+  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
     addConstDef(id, constDecl);
     if (tail != null) tail.eval(this);
   }

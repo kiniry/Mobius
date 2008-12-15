@@ -80,6 +80,10 @@ public class SimplifyProver extends Prover<SmtTerm> {
         sb.append("FALSE");
     } else if (t.id.equals("tuple")) {
       printArgs(t.children, sb);
+    } else if (t.id.equals("distinct")) {
+      sb.append("(DISTINCT ");
+      printArgs(t.children, sb);
+      sb.append(")");
     } else if (t.id.startsWith("cast")) {
       printTerm(t.children.get(0), sb);
     } else if (t.id.startsWith("eq")) {

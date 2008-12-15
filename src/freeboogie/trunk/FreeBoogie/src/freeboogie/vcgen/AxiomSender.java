@@ -1,18 +1,19 @@
 package freeboogie.vcgen;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import freeboogie.ast.*;
 import freeboogie.backend.*;
 
 /**
- * Sends Boogie axioms to the prover.
+ * Sends global axioms to the prover. These include Boogie axioms
+ * and axioms for uniqueness of constants.
  */
 public class AxiomSender<T extends Term<T>> extends Transformer {
   private Prover<T> prover;
   private TermBuilder<T> term;
   private Set<T> axioms = new HashSet<T>(109);
+  private List<String> uniqConst = new ArrayList<String>(109);
 
   public void setProver(Prover<T> prover) {
     this.prover = prover;
@@ -21,7 +22,14 @@ public class AxiomSender<T extends Term<T>> extends Transformer {
 
   public void process(Declaration ast) throws ProverException {
     axioms.clear();
+    uniqConst.clear();
     ast.eval(this);
+
+    ArrayList<T> uc = new ArrayList<T>(uniqConst.size());
+    for (String cn : uniqConst)
+      uc.add(term.mk("var", "term$$" + cn));
+    axioms.add(term.mk("distinct", uc));
+
     for (T t : axioms) prover.assume(t);
   }
 
@@ -30,6 +38,12 @@ public class AxiomSender<T extends Term<T>> extends Transformer {
     T a = term.of(expr);
     axioms.add(a);
     a.collectAxioms(axioms);
+    if (tail != null) tail.eval(this);
+  }
+
+  @Override
+  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
+    if (uniq) uniqConst.add(id);
     if (tail != null) tail.eval(this);
   }
 }

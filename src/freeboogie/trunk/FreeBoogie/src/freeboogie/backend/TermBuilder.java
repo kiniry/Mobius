@@ -80,6 +80,7 @@ public abstract class TermBuilder<T extends Term<T>> {
     def("map_update", new Sort[]{Sort.TERM, Sort.TERM, Sort.TERM}, Sort.TERM);
 
     def("<:", new Sort[]{Sort.TERM, Sort.TERM}, Sort.BOOL);
+    def("distinct", Sort.TERM, Sort.FORMULA);
 
     // handles casts, doesn't get printed; shouldn't be in Boogie
     def("cast_to_int", new Sort[]{Sort.TERM}, Sort.INT);
@@ -141,7 +142,7 @@ public abstract class TermBuilder<T extends Term<T>> {
 
   /**
    * This maps a Java type to a prover sort.
-   * @param name a unique identifier (for example, "const_int")
+   * @param name a unique identifier (for example, "literal_int")
    * @param cls the Java type
    * @param retSort the prover sort
    */

@@ -308,8 +308,9 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, Declaration tail) {
+  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
     say("const ");
+    if (uniq) say("unique ");
     say(id);
     say(" : ");
     type.eval(this);

@@ -97,8 +97,6 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   
   // === visit methods ===
   
-  // Grr, why doesn't Java have functions as parameters or at least macros?
-  
   @Override
   public void see(UserType userType, String name) {
     AtomId tv = typeVarDecl.get(name);
@@ -150,7 +148,7 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, Declaration tail) {
+  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
     symbolTable.ids.seenDef(constDecl);
     type.eval(this);
     if (tail != null) tail.eval(this);

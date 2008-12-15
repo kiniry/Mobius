@@ -113,16 +113,22 @@ public class VcGenerator<T extends Term<T>> {
   // === helpers ===
   private void preverify() throws ProverException {
     if (prover == null || ast == null) return;
+
+    // prepare fields for verify() to use
     builder = prover.getBuilder();
     sp.setBuilder(builder);
     builder.setTypeChecker(tc);
     functionRegisterer.setBuilder(builder);
     axiomSender.setProver(prover);
+
+    // register function name symbols with the builder
     builder.popDef();
     functionRegisterer.process(ast, tc);
+    builder.pushDef();
+
+    // send global axioms
     prover.pop();
     axiomSender.process(ast);
     prover.push();
-    builder.pushDef();
   }
 }

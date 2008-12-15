@@ -53,9 +53,11 @@ type_decl_tail returns [Declaration v]:
 ;
 
 const_decl_tail returns [Declaration v]:
-    'unique'? ID ':' type (
-    (';' t1=declarations    { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$t1.v,tokLoc($ID)); })
-  | (',' t2=const_decl_tail { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$t2.v,tokLoc($ID)); }))
+    (u='unique')? ID ':' type (
+    (';' t1=declarations    
+      { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$u!=null,$t1.v,tokLoc($ID)); })
+  | (',' t2=const_decl_tail 
+      { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$u!=null,$t2.v,tokLoc($ID)); }))
 ;
 
 function_decl_tail returns [Declaration v]:

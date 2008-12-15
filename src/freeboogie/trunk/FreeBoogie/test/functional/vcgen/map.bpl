@@ -1,8 +1,8 @@
 // heapsucc0.bpl
 
 var Heap : [ref, name]int;
-const FIELD : name;
-const OTHERFIELD : name;
+const unique FIELD : name;
+const unique OTHERFIELD : name;
 var x : int, y : int, z : int;
 
 procedure M(this : ref)

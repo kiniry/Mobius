@@ -1,4 +1,3 @@
- . Add a big DISTINCT as an axiom (with all uniq constants)
  . Fix bml2bpl so it's usable.
  . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
    one Java example. Test end-to-end.

@@ -6,7 +6,7 @@ Declaration :> TypeDecl, ConstDecl, Axiom,
                Function, VariableDecl, Procedure, Implementation;
 
 TypeDecl =     String! name, Declaration tail;
-ConstDecl=     String! id, Type! type, Declaration tail;
+ConstDecl=     String! id, Type! type, boolean uniq, Declaration tail;
 
 // These are declarations that may introduce type variables
 Axiom =        Identifiers typeVars, Expr! expr, Declaration tail;
