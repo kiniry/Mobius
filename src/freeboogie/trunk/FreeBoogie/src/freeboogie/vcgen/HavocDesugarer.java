@@ -59,15 +59,7 @@ public class HavocDesugarer extends Transformer {
 
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
-    ast = (Declaration)ast.eval(this);
-    if (!tc.process(ast).isEmpty()) {
-      PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
-      ast.eval(pp);
-      pw.flush();
-      Err.internal("HavocDesugarer produced invalid Boogie.");
-    }
-    return tc.getAST();
+    return TypeUtils.internalTypecheck((Declaration)ast.eval(this), tc);
   }
 
   // === transformer methods ===

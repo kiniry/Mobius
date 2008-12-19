@@ -9,6 +9,7 @@ import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.FbError;
 import freeboogie.tc.TcInterface;
+import freeboogie.tc.TypeUtils;
 import freeboogie.util.Err;
 
 /**
@@ -161,17 +162,7 @@ public class MapRemover extends Transformer {
       } // for i
     } // for arities
 
-    log.info("Start to typecheck after map removing.");
-    List<FbError> errors = tc.process(ast);
-    if (!errors.isEmpty()) {
-      FbError.reportAll(errors);
-      PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
-      ast.eval(pp);
-      pw.flush();
-      Err.internal("MapRemover produced invalid Boogie.");
-    }
-    return tc.getAST();
+    return TypeUtils.internalTypecheck(ast, tc);
   }
 
   @Override

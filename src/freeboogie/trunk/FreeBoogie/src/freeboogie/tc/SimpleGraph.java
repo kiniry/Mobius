@@ -127,6 +127,6 @@ public class SimpleGraph<N> {
    */
   public void iterEdge(Closure<Pair<N,N>> f) {
     for (Map.Entry<N, HashSet<N>> a : parents.entrySet())
-      for (N b : a.getValue()) f.go(new Pair<N,N>(b, a.getKey()));
+      for (N b : a.getValue()) f.go(Pair.of(b, a.getKey()));
   }
 }

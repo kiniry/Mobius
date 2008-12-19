@@ -126,13 +126,13 @@ public class SimplifyProver extends Prover<SmtTerm> {
     printTerm(t, strBuilder);
     strBuilder.append(")");
     simplify.sendCommand(strBuilder.toString());
-    log.fine("simplify: " + strBuilder);
+    log.info("simplify: " + strBuilder);
   }
 
   @Override
   protected void sendRetract() throws ProverException {
     simplify.sendCommand("(BG_POP)");
-    log.fine("simplify: (BG_POP)");
+    log.info("simplify: (BG_POP)");
   }
   
   @Override
@@ -140,10 +140,8 @@ public class SimplifyProver extends Prover<SmtTerm> {
     t = SmtTerms.eliminateSharing(t, builder);
     strBuilder.setLength(0);
     printTerm(t, strBuilder);
-    log.fine("simplify: " + strBuilder);
-    log.fine("ask simplify: " + strBuilder);
+    log.info("simplify: " + strBuilder);
     boolean r = simplify.isValid(strBuilder.toString());
-    log.fine("simplify says: " + r);
     return r;
   }
 

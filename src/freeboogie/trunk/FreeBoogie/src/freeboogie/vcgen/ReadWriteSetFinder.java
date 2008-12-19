@@ -45,7 +45,7 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
       if (context.getFirst()) w = CSeq.mk(vd);
       else r = CSeq.mk(vd);
     }
-    return memo(atomId, new Pair<CSeq<VariableDecl>, CSeq<VariableDecl>>(r, w));
+    return memo(atomId, Pair.of(r, w));
   }
 
   @Override
@@ -85,4 +85,5 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     return memo(atomIdx, r);
   }
 
+  // TODO: havoc is a write (only)
 }

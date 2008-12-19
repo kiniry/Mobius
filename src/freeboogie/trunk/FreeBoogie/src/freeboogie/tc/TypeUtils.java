@@ -1,9 +1,11 @@
 package freeboogie.tc;
 
+import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
+import freeboogie.util.Err;
 
 /**
  * Various utilities for handling {@code Type}. For the moment, it contains
@@ -165,5 +167,20 @@ public class TypeUtils {
   public static boolean isTypeVar(Type t) {
     assert false : "todo";
     return false;
+  }
+
+  /**
+   * Typechecks {@code ast} using {@code tc}. Raises an internal
+   * error if the typecheck fails.
+   */
+  public static Declaration internalTypecheck(Declaration ast, TcInterface tc) {
+    if (!tc.process(ast).isEmpty()) {
+      PrintWriter pw = new PrintWriter(System.out);
+      PrettyPrinter pp = new PrettyPrinter(pw);
+      ast.eval(pp);
+      pw.flush();
+      Err.internal("Invalid Boogie produced.");
+    }
+    return tc.getAST();
   }
 }

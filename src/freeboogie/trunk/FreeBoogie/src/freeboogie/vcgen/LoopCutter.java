@@ -1,6 +1,7 @@
 package freeboogie.vcgen;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
@@ -8,10 +9,12 @@ import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
+import freeboogie.tc.TypeUtils;
 import freeboogie.util.*;
 
 /**
- * Cuts back edges and removes unreachable blocks.
+ * Cuts back edges and removes unreachable blocks. (Back edges
+ * according to some arbitrary DFS.
  */
 public class LoopCutter extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
@@ -32,15 +35,7 @@ public class LoopCutter extends Transformer {
 
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
-    ast = (Declaration)ast.eval(this);
-
-    if (!tc.process(ast).isEmpty()) {
-      PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
-      ast.eval(pp); pw.flush();
-      Err.internal("LoopCutter produced invalid Boogie.");
-    }
-    return tc.getAST();
+    return TypeUtils.internalTypecheck((Declaration)ast.eval(this), tc);
   }
 
   // === transformer methods ===
@@ -60,7 +55,7 @@ public class LoopCutter extends Transformer {
 
   @Override
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
-    Pair<Block, String> pair = new Pair<Block, String>(block, null);
+    Pair<Block, String> pair = Pair.of(block, null);
     boolean same = true;
     Identifiers newSucc = null;
     if (succ != null) {
@@ -106,7 +101,7 @@ public class LoopCutter extends Transformer {
     for (Block c : currentFG.to(b)) {
       if (done.contains(c)) continue;
       if (seen.contains(c))
-        toRemove.add(new Pair<Block, String>(b, c.getName()));
+        toRemove.add(Pair.of(b, c.getName()));
       else
         dfs(c);
     }

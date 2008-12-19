@@ -12,10 +12,10 @@ public class PairAssocOp<U, V> implements AssociativeOperator<Pair<U,V>>{
   }
 
   @Override public Pair<U,V> zero() { 
-    return new Pair<U,V>(uop.zero(), vop.zero()); 
+    return Pair.of(uop.zero(), vop.zero()); 
   }
 
   @Override public Pair<U, V> plus(Pair<U, V> a, Pair<U, V> b) {
-    return new Pair<U, V>(uop.plus(a.first, b.first), vop.plus(a.second, b.second));
+    return Pair.of(uop.plus(a.first, b.first), vop.plus(a.second, b.second));
   }
 }

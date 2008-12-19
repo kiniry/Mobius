@@ -85,6 +85,7 @@ public class Main {
     opt.regBool("-dspec", "desugar specs");
     opt.regBool("-dcall", "desugar calls");
     opt.regBool("-dhavoc", "desugar havoc");
+    opt.regBool("-dloop", "havoc loop variables at loop entry");
     opt.regBool("-cut", "cut loops by removing back-edges");
     opt.regBool("-dmap", "desugar maps");
     opt.regBool("-old", "accept old constructs");
@@ -149,6 +150,11 @@ public class Main {
   private void desugarCalls() {
     CallDesugarer d = new CallDesugarer();
     ast = d.process(ast, tc);
+  }
+
+  private void makeHavoc() {
+    HavocMaker hm = new HavocMaker();
+    ast = hm.process(ast, tc);
   }
 
   private void cutLoops() {
@@ -225,6 +231,7 @@ public class Main {
         ast = tc.getAST();
         if (opt.boolVal("-pst")) printSymbolTable();
         if (!opt.boolVal("-verify")) {
+          if (opt.boolVal("-dloop")) makeHavoc();
           if (opt.boolVal("-cut")) cutLoops();
           if (opt.boolVal("-dcall")) desugarCalls();
           if (opt.boolVal("-dhavoc")) desugarHavoc();

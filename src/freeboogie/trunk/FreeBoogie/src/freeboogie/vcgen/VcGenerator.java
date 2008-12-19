@@ -39,6 +39,7 @@ public class VcGenerator<T extends Term<T>> {
   private Declaration ast;
   private TcInterface tc;
 
+  private HavocMaker havocMaker;
   private LoopCutter loopCutter;
   private CallDesugarer callDesugarer;
   private HavocDesugarer havocDesugarer;
@@ -57,6 +58,7 @@ public class VcGenerator<T extends Term<T>> {
 
 
   public VcGenerator() {
+    havocMaker = new HavocMaker();
     loopCutter = new LoopCutter();
     callDesugarer = new CallDesugarer();
     havocDesugarer = new HavocDesugarer(); 
@@ -82,7 +84,8 @@ public class VcGenerator<T extends Term<T>> {
   public Declaration process(Declaration d, TcInterface tc)
   throws ProverException {
     this.tc = tc;
-    ast = loopCutter.process(d, tc);
+    ast = havocMaker.process(d, tc);
+    ast = loopCutter.process(ast, tc);
     ast = callDesugarer.process(ast, tc);
     ast = havocDesugarer.process(ast, tc);
     ast = specDesugarer.process(ast, tc);
