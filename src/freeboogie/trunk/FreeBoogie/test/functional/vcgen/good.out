@@ -1,0 +1,7 @@
+ OK: indexOf (indexof.bpl:1:11)
+ OK: M (map.bpl:8:11)
+ OK: M (sorts.bpl:7:11)
+NOK: swap (subst.bpl:6:16)
+ OK: swap (subst.bpl:14:16)
+ OK: swap (subst.bpl:22:16)
+NOK: swap (subst.bpl:30:16)
