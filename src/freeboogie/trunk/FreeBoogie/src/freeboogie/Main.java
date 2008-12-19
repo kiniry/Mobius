@@ -89,7 +89,7 @@ public class Main {
     opt.regBool("-cut", "cut loops by removing back-edges");
     opt.regBool("-dmap", "desugar maps");
     opt.regBool("-old", "accept old constructs");
-    opt.regBool("-pvc", "print verification condition");
+    opt.regBool("-win", "windows mode");
     opt.regBool("-verify", "do everything");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
@@ -169,7 +169,10 @@ public class Main {
 
   private void verify() throws ProverException {
     if (prover == null) {
-      prover = new SimplifyProver(new String[]{"z3", "-si"});
+      if (opt.boolVal("-win"))
+        prover = new SimplifyProver(new String[]{"Z3.exe", "/si"});
+      else
+        prover = new SimplifyProver(new String[]{"z3", "-si"});
 //prover = new YesSmtProver();
       vcgen.setProver(prover);
     }
