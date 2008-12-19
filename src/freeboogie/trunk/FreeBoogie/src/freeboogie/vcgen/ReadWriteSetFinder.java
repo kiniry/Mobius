@@ -74,6 +74,16 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
   }
 
   @Override
+  public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(HavocCmd havocCmd, Identifiers ids) {
+    assert !context.getFirst();
+    Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
+    context.addFirst(true);
+    if (ids != null) r = assocOp.plus(r, ids.eval(this));
+    context.removeFirst();
+    return memo(havocCmd, r);
+  }
+
+  @Override
   public Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> eval(AtomMapSelect atomIdx, Atom atom, Exprs idx) {
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> r = assocOp.zero();
     r = assocOp.plus(r, atom.eval(this));
@@ -84,6 +94,4 @@ extends AssociativeEvaluator<Pair<CSeq<VariableDecl>,CSeq<VariableDecl>>> {
     }
     return memo(atomIdx, r);
   }
-
-  // TODO: havoc is a write (only)
 }
