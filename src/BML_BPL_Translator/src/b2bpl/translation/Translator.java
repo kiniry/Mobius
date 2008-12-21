@@ -821,7 +821,7 @@ public class Translator implements ITranslationConstants {
    */
   private void axiomatizeHeap() {
     //
-    // Müller/Poetzsch Heffter BoogiePL store axiomatization
+    // Muller/Poetzsch Heffter BoogiePL store axiomatization
     //
     addTypes(HEAP_TYPE);
     
@@ -1852,6 +1852,7 @@ public class Translator implements ITranslationConstants {
       //            Should later be replaced with either an on-the-fly compilation
       //            of (BML annotated) Java Runtime Libraries or a
       //            precompiled BoogiePL version.
+      typeRef(TypeLoader.getClassType("java.lang.Exception"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Object..init", "$java.lang.Object"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Throwable..init", "$java.lang.Throwable"));
       declarations.add(axiomatizeHelperProcedure("java.lang.Exception..init", "$java.lang.Exception")); // $java.lang.Throwable is sufficient

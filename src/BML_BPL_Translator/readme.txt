@@ -1,10 +1,11 @@
-USAGE
-=====
+Compile using:
+  ant
 
-  The translator can be used by putting the JAR file to the CLASSPATH and then
-  typing "java b2bpl.Main" followed by a list of class names that you want to
-  translate.
-  
-  For more information, please type "java b2bpl.Main -?".
+Run using:
+  java -jar dist/bml2bpl.jar [FILES] > result.bpl
 
-  Hermann Lehner
+You should be able to get more info with:
+  java -jar dist/bml2bpl.jar -h
+
+Hermann Lehner
+readme modified by Radu Grigore

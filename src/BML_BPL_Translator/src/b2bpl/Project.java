@@ -167,9 +167,9 @@ public class Project {
       PrintWriter messageWriter) {
     Project project = new Project();
   
-    System.out.print("> b2bpl.Main ");
-    for (String arg : args) System.out.print(arg + " ");
-    System.out.println();
+//System.out.print("> b2bpl.Main ");
+//for (String arg : args) System.out.print(arg + " ");
+//System.out.println();
     
     
     List<String> types = new ArrayList<String>();

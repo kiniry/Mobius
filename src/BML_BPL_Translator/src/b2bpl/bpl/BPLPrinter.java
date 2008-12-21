@@ -171,7 +171,7 @@ public class BPLPrinter implements IBPLVisitor<Object> {
   }
 
   public Object visitConstantDeclaration(BPLConstantDeclaration declaration) {
-    print("const ");
+    print("const unique ");
     printList(declaration.getConstants());
     print(';');
     return null;

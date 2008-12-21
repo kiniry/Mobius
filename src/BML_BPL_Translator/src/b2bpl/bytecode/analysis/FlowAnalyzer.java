@@ -67,6 +67,7 @@ public class FlowAnalyzer extends Analyzer {
    * The exception handlers active at the individual instructions of the
    * {@code BCMethod} being analyzed.
    */
+  @SuppressWarnings("unchecked")
   private List<ExceptionHandler>[] activeHandlers;
 
   /**

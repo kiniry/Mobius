@@ -70,6 +70,7 @@ public class TypeLoader {
   }
 
   public static void setSpecificationProvider(ISpecificationProvider provider) {
+    assert provider != null;
     specProvider = provider;
   }
 
@@ -97,11 +98,11 @@ public class TypeLoader {
   private static ClassReader getClassReader(String typeName) {
     try {
       // Create class reader from type name
-      System.out.println("Reading class from name:\t" + typeName);
+//System.out.println("Reading class from name:\t" + typeName);
       return new ClassReader(typeName);
     } catch (IOException ioex) {
       // Create class reader from file stream
-      System.out.println("Reading class from stream:\t" + typeName);
+//System.out.println("Reading class from stream:\t" + typeName);
          
       InputStream is = null;
       
@@ -110,7 +111,7 @@ public class TypeLoader {
       
       try {
         // Convert File to a URL
-        URL url = file.toURL();         // file:/c:/myclasses/
+        URL url = file.toURI().toURL();         // file:/c:/myclasses/
         URL[] urls = new URL[] { url };
         
         // Create a new class loader with the directory
@@ -163,7 +164,7 @@ public class TypeLoader {
           flags |= ClassReader.SKIP_CODE;
         }
        
-        System.out.println("L 166: " + type.getName());
+//System.out.println("L 167: " + type.getName());
         ClassReader reader = getClassReader(type.getName());
 
         JClassTypeBuilder builder = new JClassTypeBuilder(type);
@@ -191,7 +192,7 @@ public class TypeLoader {
   public static ClassNode getASMClassTypeNode(JClassType type) {
     try {
       ClassNode cn = new ClassNode();
-      System.out.println("L 194: " + type.getName());
+//System.out.println("L 194: " + type.getName());
       ClassReader cr = TypeLoader.getClassReader(type.getName()); // new ClassReader(type.getName());
       cr.accept(cn, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
       return cn;

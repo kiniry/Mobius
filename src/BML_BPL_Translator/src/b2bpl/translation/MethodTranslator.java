@@ -460,7 +460,7 @@ public class MethodTranslator implements ITranslationConstants {
         getEnsuresClauses()
     );
     
-    //System.out.println("[" + method.getName() + "]  " + translateMethodFrame(method, getInParameters()).toString());
+//System.out.println("[" + method.getName() + "]  " + translateMethodFrame(method, getInParameters()).toString());
     printSpecification(spec);
 
     return new BPLProcedure(
@@ -472,10 +472,10 @@ public class MethodTranslator implements ITranslationConstants {
 
   
   private void printSpecification(BPLSpecification spec) {
-    System.out.println("Specification for " + method.getQualifiedName());
+//System.out.println("Specification for " + method.getQualifiedName());
     for (BPLSpecificationClause clause : spec.getClauses()) {
       // TODO
-      System.out.println("\t" + clause.toString());
+//System.out.println("\t" + clause.toString());
     }
   }
   
@@ -698,9 +698,9 @@ public class MethodTranslator implements ITranslationConstants {
   
   private BPLExpression getInvariantAfterLeavingMethod() {
 
-    for (BPLVariableExpression s : modifiedVariables) {
-      System.out.println("\t" + s.getIdentifier() /* + "\t" + s.getType().toString() */);
-    }
+//    for (BPLVariableExpression s : modifiedVariables) {
+//      System.out.println("\t" + s.getIdentifier() /* + "\t" + s.getType().toString() */);
+//    }
     
     String o = quantVarName("o");
     BPLVariable oVar = new BPLVariable(o, BPLBuiltInType.REF);
@@ -734,14 +734,12 @@ public class MethodTranslator implements ITranslationConstants {
     ); */
   }
    
-  
-  /**
-   * TODO
-   * 
-   * @return BPLMeasureClauses declaring global variables that are modifies in
+ 
+  /*
+   * @return BPLMeasureClauses declaring global variables that are modified in
    *         the procedure.
-   * @deprecated
    */
+  @Deprecated
   private BPLModifiesClause[] getModifiesClauses() {
 
     return null;
@@ -1160,6 +1158,7 @@ public class MethodTranslator implements ITranslationConstants {
    * </ul>
    * @deprecated
    */
+  @Deprecated
   private void translatePre() {
     startBlock(PRE_BLOCK_LABEL);
 
@@ -1333,6 +1332,7 @@ public class MethodTranslator implements ITranslationConstants {
   /** 
    * @deprecated
    */
+  @Deprecated
   private BPLRequiresClause requireAllInvariants(boolean excludeThisObject) {
     // TODO
     String t = quantVarName("t");
@@ -1392,6 +1392,7 @@ public class MethodTranslator implements ITranslationConstants {
   /**
    * @deprecated
    */
+  @Deprecated
   private BPLEnsuresClause ensureExposedInvariants(boolean excludeThisObject) {
     BPLExpression type = typeRef(method.getOwner());
     
@@ -1715,12 +1716,12 @@ public class MethodTranslator implements ITranslationConstants {
       
       
       // TODO REMOVE
-      System.out.println("Modified types for " + override.getName() + ":");
+//System.out.println("Modified types for " + override.getName() + ":");
       BPLExpression[] refs = override.getModifiedObjectRefs();
-      if (refs.length == 0) System.out.println("  (none)");
-      for (BPLExpression ref : refs) {
-        System.out.println("  - " + ref);
-      }
+//if (refs.length == 0) System.out.println("  (none)");
+//      for (BPLExpression ref : refs) {
+//        System.out.println("  - " + ref);
+//      }
       /*
       System.out.println("Propagated types for " + override.getName());
       refs = override.getPropagatedFields();
@@ -1963,7 +1964,7 @@ public class MethodTranslator implements ITranslationConstants {
           }
         }
       } else {
-        System.out.println("Class of Expression: " + rhs.getClass().getName());
+//        System.out.println("Class of Expression: " + rhs.getClass().getName());
       }
     }    
   }
@@ -2401,14 +2402,14 @@ public class MethodTranslator implements ITranslationConstants {
     
     // TODO: remove
     // dump current hash table
-    System.out.println("CURRENT ALIASING HASHMAP:");
-    System.out.println("-------------------------");
-    for (String key : aliasMap.keySet()) {
-      System.out.println(key + " =>");
-      for (String value : aliasMap.get(key)) {
-        System.out.println("\t" + value);
-      }
-    }
+//    System.out.println("CURRENT ALIASING HASHMAP:");
+//    System.out.println("-------------------------");
+//    for (String key : aliasMap.keySet()) {
+//      System.out.println(key + " =>");
+//      for (String value : aliasMap.get(key)) {
+//        System.out.println("\t" + value);
+//      }
+//    }
     
     if (aliasMap.containsKey(alias)) {
       return aliasMap.get(alias);
@@ -2448,6 +2449,7 @@ public class MethodTranslator implements ITranslationConstants {
    * @return {@code true} if it is a locally defined variable, {@code false} if it is a globally defined variable or a method argument.
    * @deprecated
    */
+  @Deprecated
   private static boolean isLocalVariable(BPLVariableExpression v) {
     Pattern pattern = Pattern.compile("^(" + LOCAL_VAR_PREFIX + "|" + STACK_VAR_PREFIX + "|" + RETURN_VALUE_VAR + ")(\\d)+" + REF_TYPE_ABBREV + "$");
     Matcher matcher = pattern.matcher(v.getIdentifier());

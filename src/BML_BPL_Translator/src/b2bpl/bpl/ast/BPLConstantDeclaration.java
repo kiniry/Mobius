@@ -22,7 +22,7 @@ public class BPLConstantDeclaration extends BPLDeclaration {
   public String toString() {
     StringBuffer sb = new StringBuffer();
 
-    sb.append("const ");
+    sb.append("const unique ");
     for (int i = 0; i < constants.length; i++) {
       if (i > 0) {
         sb.append(", ");
