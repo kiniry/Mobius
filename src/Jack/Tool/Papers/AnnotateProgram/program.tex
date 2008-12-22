@@ -1,5 +1,3 @@
-
-
 \section{Programs and Semantics}\label{SecProgram}
 
 This section first defines an abstract syntax of programs, followed by
@@ -14,9 +12,7 @@ Our language is a restricted subset of (sequential) Java, abstracting
 away from typical object-oriented features. This means in particular
 that we abstract away from method resolution; instead we assume that
 the annotated class contains method bodies for the relevant methods,
-thus method lookup is trivial. Similarly, we assume that lookup of
-class invariants returns the complete class invariant, including those
-invariants that are inherited from superclasses. We consider
+thus method lookup is trivial. We consider
 only a few exceptions, and assume that methods have only one
 parameter. We believe, however, that our formalisation contains all
 constructs that are relevant for proving correctness of our inlining
@@ -78,9 +74,12 @@ algorithm for the full language is mainly an engineering issue.
 \end{figure}
 
 
-Figure~\ref{FigExprStmt} defines expressions and statements as a
-mutually recursive data type (we use the term \emph{body} to denote
-either an expression or a statement). Notice that we define several special
+Figure~\ref{FigExprStmt} defines expressions and statements
+% as a mutually recursive data type
+(we use the term \emph{body} to denote either an expression or a statement),
+e.g., \(\Call\) represents a call to the method \(mn\), with argument
+\(p\) and whose target is given by \(o\).
+Notice that we define several special
 language constructs to represent JML annotations: \Set,
 to update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
@@ -297,6 +296,8 @@ for the annotated program semantics, but the \(\gamma\)-relation also
 updates the state of the monitor. For example, \(\gammain\) is defined
 in terms of \(\gammain\) for annotated programs, as defined in
 Figure~\ref{FigAnnotatedSem}.
+We assume that \(\lookupinv\) returns the complete class invariant, including
+those invariants that are inherited from superclasses.
 \[
 {\small
 \begin{array}{c}

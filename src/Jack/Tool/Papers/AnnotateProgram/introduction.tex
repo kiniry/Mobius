@@ -59,7 +59,7 @@ to the method body and prove equivalence of the run-time checking behaviour.
 All results in the paper have been established formally using
 the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation
 is available via \url{http://www.cs.ru.nl/~tamalet/}. To be able to
-establish the correctness proof, the order in which method
+establish the proof of correctness, the order in which method
 specifications are evaluated is important. Further, we had to add an
 explicit requirement that \texttt{finally} blocks could not override
 annotation violation exceptions thrown inside \texttt{try} or
@@ -73,7 +73,7 @@ about the proofs is given in Section~\ref{SecAnnotGen}.
 \psfrag{s2}{\tiny{\(s_2\)}}
 \psfrag{exit(sendSMS)? true -> n := n + 1;}
 {\begin{tabular}{l}
-\tiny{\exit(\texttt{SendSMS})?\ttt\(\rightarrow\)}\vspace*{-.8em}\\
+\tiny{\exit(\texttt{sendSMS})?\ttt\(\rightarrow\)}\vspace*{-.8em}\\
 \tiny{\texttt{n := n + 1};}
 \end{tabular}}
 \psfrag{exitE(sendSMS)? true -> ;}
@@ -91,11 +91,16 @@ about the proofs is given in Section~\ref{SecAnnotGen}.
 \tiny{\entry(\texttt{sendSMS})? \texttt{n} \(<\) \texttt{N} \(\rightarrow\)} %\vspace*{-.8em} \\
 \tiny{\actskip;}
 \end{tabular}}
+\psfrag{Automaton vars}
+{\small{Automaton vars = \(\{n\}\)}}
+\psfrag{Program vars}
+{\small{Program vars = \(\emptyset\)}}
 \begin{floatingfigure}{6cm}
 \begin{center}
 \epsfig{file=limited_sms.eps, width=5.5cm}
 \end{center}
-\caption{Example Security Automaton}\label{FigExample}
+\vspace{-1.5em}
+\caption{Example Property Automaton}\label{FigExample}
 \end{floatingfigure}
 Throughout this paper, we use the \emph{limited SMS} example property of
 Figure~\ref{FigExample} (where \(\epsilon\) denotes a skip) to

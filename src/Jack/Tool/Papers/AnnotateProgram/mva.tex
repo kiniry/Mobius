@@ -1,9 +1,11 @@
 \section{Modelling Security Properties with Automata}\label{SecMVA}
 
-This section formally defines the format of security automata.  These
+This section formally defines the format of security automata. These
 are extended finite state machines particularly suited for monitoring,
-since transitions can depend on the state of the monitored program.
-We call them Property Automata (PA).  Transitions between states are
+since transitions can depend on the state\footnote{The state of a PA
+consist of the current control point and values for the PA variables.}
+of the monitored program.
+We call them Property Automata (PA). Transitions between control points are
 labelled with guards, events and a list of actions. The event
 specifies the method whose entry and/or exit is being monitored, with
 a distinction between normal and exceptional exits.  The guard
@@ -52,7 +54,7 @@ A PA consists of
 \item an initial control point,
 \item a set of events, to specify which methods are being monitored,
 \item a set of PA variable declarations, to describe
-the internal state of the automaton
+the internal state of the automaton,
 \item a set of program variable declarations, to specify which
 program variables will be inspected by the monitor, and
 \item a set of transitions.
@@ -125,7 +127,7 @@ automaton variables (the program store is not part of the automaton state):
 \({\small
 \PAstate = \opr \cp : \CP, \stA : \Store \clr}
 \). Given PA \(a\), the transition function \(\Delta_a\) specifies how
-an automaton state \(\sigma_A\) is updated for a given program store
+an automaton state \(\sigma_A\) is updated for a given program state
 \(\sigma_P\) an event \(e\) and a value or exception \(v\) (where
 \(\chooseop\) is the arbitrary choice operator, and \textsf{apply} is
 a function that updates the automaton store according to a list of
@@ -155,7 +157,7 @@ completed PA reaches the state \halted.
 \vspace*{-.5em}
 \begin{equation}\label{PAcompletionProp}
 \Delta_a(\sigma_A, \sigma_P, e, v) = \perp \Leftrightarrow
-\cp (\Delta_{\complete(a)}(\sigma_A, \sigma_P, e, v)) = \halted
+\Delta_{\complete(a)}(\sigma_A, \sigma_P, e, v).\cp = \halted
 \end{equation}
 
 
@@ -207,13 +209,13 @@ completed PA (where new transitions are dashed).
         \begin{array}[t]{l}
            \scp := s_2, \tcp := s_1, \\
            \event := \opri \etype := \excexit,
-           \mname := \texttt{sendSMS} \clri, \clri,
+           \mname := \texttt{sendSMS} \clri \clri,
         \end{array}\)\\
 &&
      \(\opri
         \begin{array}[t]{l}
            \scp := s_1, \tcp := s_1,
-           \action := [\opri \target := n, \expr := 0 \clri] \\
+           \action := [\opri \target := n, \expr := 0 \clri], \\
            \event := \opri \etype := \exit, \mname := \texttt{reset}
            \clri \clri \} \clri
         \end{array}\)
