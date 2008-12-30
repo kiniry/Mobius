@@ -84,7 +84,9 @@ public class HavocMaker extends Transformer {
     Block newTail = tail == null? null : (Block)tail.eval(this);
     Integer blockScc = sccOfEntryPoint.get(block);
 //System.out.println("process " + name);
-    if (blockScc != null && sccSize.get(blockScc) > 1) {
+    if (blockScc != null 
+        && sccSize.get(blockScc) > 1 
+        && !assignedVars.get(blockScc).isEmpty()) {
 //System.out.println("change " + name);
       String tmpName = Id.get("loop_entry");
       block = Block.mk(tmpName, cmd, succ, newTail);

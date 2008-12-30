@@ -1,3 +1,8 @@
 This records mistakes done while coding and designing.
 
+In the desugarring of specifications I replaced implementation
+argument names for procedure argument names one-by-one hence
+leading to a name capture. Be very careful when doing substitution
+not to capture names.
+
 

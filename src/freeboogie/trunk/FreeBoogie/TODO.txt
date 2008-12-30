@@ -1,9 +1,5 @@
- . Log stuff sent to the prover in a file.
- . Release FreeBoogie 0.1. Package it with jml2bml, bml2bpl, z3, and
-   one Java example. Test end-to-end.
- . Add null-by-default switch to bml2bpl.
- . Compress AND/OR to avoid things like (AND (AND (AND x y) z) w).
  . Convert the BPLs in the test suite to Boogie 2.
+ . Add null-by-default switch to bml2bpl.
  . Move to Boogie 2.
  . Add a "for all types" construct.
  . Release FreeBoogie 0.2.

@@ -32,15 +32,16 @@ public class SmtTermBuilder extends TermBuilder<SmtTerm> {
       boolean id = termId.equals("or") ? false : true;
       ArrayList<SmtTerm> children = new ArrayList<SmtTerm>(a.size());
       for (SmtTerm t : a) {
-        if (!t.id.equals("literal_formula") || (Boolean)t.data != id)
+        if (t.id.equals(termId))
+          children.addAll(t.children);
+        else if (!t.id.equals("literal_formula") || (Boolean)t.data != id)
           children.add(t);
       }
       if (children.size() == 1)
         return children.get(0);
       if (children.size() == 0)
-        return mk("literal_formula", Boolean.valueOf(id));
-      if (children.size() != a.size())
-        a = children;
+        return mk("literal_formula", id);
+      a = children;
     }
     return SmtTerm.mk(sort, termId, a);
   }
