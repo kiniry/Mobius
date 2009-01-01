@@ -103,12 +103,12 @@ about the proofs is given in Section~\ref{SecAnnotGen}.
 \caption{Example Property Automaton}\label{FigExample}
 \end{floatingfigure}
 Throughout this paper, we use the \emph{limited SMS} example property of
-Figure~\ref{FigExample} (where \(\epsilon\) denotes a skip) to
+Fig.~\ref{FigExample} (where \(\epsilon\) denotes a skip) to
 illustrate the different translations: the method \texttt{sendSMS} can
-be called and terminate successfully at most \(N\) times in between
-calls to a \texttt{reset} method. Notice that the counter is not
-increased if \texttt{sendSMS} terminates with an uncaught exception
-(labelled \excexit{(\texttt{sendSMS})}), and that \texttt{reset}
+be called and terminate successfully at most \(\mathtt{N}\) times in between
+calls to \texttt{reset}. The counter is not
+increased if \texttt{sendSMS} terminates because of an uncaught exception
+(with label \excexit{(\texttt{sendSMS})}), and \texttt{reset}
 should not be called from within \texttt{sendSMS}.  Even though very
 basic, this example is representative of a wide range of important
 resource-related security properties.

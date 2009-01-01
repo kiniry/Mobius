@@ -2,15 +2,18 @@
 
 This section formally defines the format of security automata. These
 are extended finite state machines particularly suited for monitoring,
-since transitions can depend on the state\footnote{The state of a PA
-consist of the current control point and values for the PA variables.}
-of the monitored program.
-We call them Property Automata (PA). Transitions between control points are
-labelled with guards, events and a list of actions. The event
-specifies the method whose entry and/or exit is being monitored, with
-a distinction between normal and exceptional exits.  The guard
-describes the conditions under which the transition can be applied. It
-depends on
+since transitions not only depend on the automaton's state (containing
+the current control point and a valuation for the automaton's
+variables), but also on the state of the monitored program. 
+% can
+%depend on the state\footnote{The state of a PA
+% consist of the current control point and values for the PA variables.}
+% of the monitored program.
+We call them Property Automata (PA). Transitions are labelled with
+guards, events and a list of actions. The event specifies the method
+whose entry and/or exit is being monitored, with a distinction between
+normal and exceptional exits.  The guard describes the conditions
+under which the transition can be applied. It depends on
 \begin{inparaenum}[(\itshape i\upshape)]
 \item the automaton state,
 \item the state of the program that is being monitored, and
@@ -59,7 +62,7 @@ the internal state of the automaton,
 program variables will be inspected by the monitor, and
 \item a set of transitions.
 \end{inparaenum}
-Transitions go from source to target control points. They are labelled
+Transitions relate source and target control points. They are labelled
 with events, where an event is a tuple of an event type (entry, exit
 or exceptional exit) and a method name, a guard and a list of
 actions. Each action assigns the result of an expression (containing
@@ -96,9 +99,8 @@ control point and event there is always at most one guard that holds.
 % Notice that it is not obvious how to transform a non-deterministic PA into
 % a deterministic one, because the actions made by the overlapping transitions
 % might differ.
-In theory it is possible to relax this requirement by having a set of
-possible PA states (including values for the variables) but in practice it
-becomes clumsy.
+In theory it would be possible to relax this requirement by having a set of
+possible PA states (including values for the variables) but in practice this becomes clumsy.
 
 A PA is \emph{total} if for any source control point and event,
 there is always a guard that holds; otherwise it is
@@ -128,7 +130,7 @@ automaton variables (the program store is not part of the automaton state):
 \PAstate = \opr \cp : \CP, \stA : \Store \clr}
 \). Given PA \(a\), the transition function \(\Delta_a\) specifies how
 an automaton state \(\sigma_A\) is updated for a given program state
-\(\sigma_P\) an event \(e\) and a value or exception \(v\) (where
+\(\sigma_P\), an event \(e\), and a value or exception \(v\) (where
 \(\chooseop\) is the arbitrary choice operator, and \textsf{apply} is
 a function that updates the automaton store according to a list of
 actions in the obvious way).
@@ -162,10 +164,10 @@ completed PA reaches the state \halted.
 
 
 \paragraph{Example}
-The property specified in Figure~\ref{FigExample} is encoded by the
+The property specified in Fig.~\ref{FigExample} is encoded by the
 following PA\footnote{Where we leave the default guard
 \(\lambda(\sigma_A, \sigma_P, v). \ttt\) and  empty action
-\(\actskip\) implicit.}, while Figure~\ref{FigCompletePA} shows the
+\(\actskip\) implicit.}, while Fig.~\ref{FigCompletePA} shows the
 completed PA (where new transitions are dashed).
 
 \vspace*{-1em}
@@ -310,5 +312,5 @@ completed PA (where new transitions are dashed).
 \begin{center}
 \epsfig{file=complete.eps, width=7cm}
 \end{center}
-\caption{Automaton of Figure~\ref{FigExample}, after completion}\label{FigCompletePA}
+\caption{Automaton of Fig.~\ref{FigExample}, after completion}\label{FigCompletePA}
 \end{figure}

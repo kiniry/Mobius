@@ -31,16 +31,19 @@ of annotations and the possibility that a
 The formalisation has been developed for a subset of Java. We believe
 that extending it to full (sequential) Java would be relatively
 straightforward. However, generalising to properties that are not
-restricted to a single class or to multithreading might be more
-challenging.
+restricted to a single class or that are related to multithreading
+might be more challenging.
 
 The ultimate goal of our work is to statically verify adherence to
-security policies. To achieve this, a weakest precondition calculus can
-be used to generate pre- and postconditions, based on the generated
-\Set annotations. In earlier work, we presented such a
-propagation algorithm~\cite{PavlovaBBHL04}, and proved correctness for
-a limited case (instance variables and branches are not
-considered). It is future work to overcome these limitations.
+security policies. 
+To achieve this, a weakest precondition calculus can
+be used to generate pre- and postconditions, 
+based on the generated
+\Set annotations. 
+In earlier work, we presented such a propagation
+algorithm~\cite{PavlovaBBHL04}, and proved correctness for a limited
+case (instance variables and branches are not considered). It is
+future work to overcome these limitations.
 %  We will then
 % also exploit the existing PVS formalisation, to prove the formal
 % correctness of the propagation with a theorem prover.

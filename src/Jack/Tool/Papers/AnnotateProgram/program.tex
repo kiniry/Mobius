@@ -9,8 +9,8 @@ differently upon method call and exit.
 
 \subsection{Program Syntax}\label{SecSyntax}
 Our language is a restricted subset of (sequential) Java, abstracting
-away from typical object-oriented features. This means in particular
-that we abstract away from method resolution; instead we assume that
+away from typical object-oriented features, and in particular
+from method resolution; instead we assume that
 the annotated class contains method bodies for the relevant methods,
 thus method lookup is trivial. We consider
 only a few exceptions, and assume that methods have only one
@@ -76,12 +76,11 @@ algorithm for the full language is mainly an engineering issue.
 
 Figure~\ref{FigExprStmt} defines expressions and statements
 % as a mutually recursive data type
-(we use the term \emph{body} to denote either an expression or a statement),
-e.g., \(\Call\) represents a call to the method \(mn\), with argument
-\(p\) and whose target is given by \(o\).
-Notice that we define several special
-language constructs to represent JML annotations: \Set,
-to update ghost variables (\emph{i.e.}, specification-only variables),
+(we use the term \emph{body} to denote either an expression or a
+statement), e.g., \(\Call\) represents a call to method \(mn\) on
+target \(o\) with argument \(p\). Notice that we define several
+special language constructs to represent JML annotations: \Set, to
+update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
 and \Assert, to evaluate a condition on the program state. A standard
 program semantics ignores these statements, but the annotated program
@@ -295,7 +294,7 @@ appropriate instantiations for the \(\gamma\)- and
 for the annotated program semantics, but the \(\gamma\)-relation also
 updates the state of the monitor. For example, \(\gammain\) is defined
 in terms of \(\gammain\) for annotated programs, as defined in
-Figure~\ref{FigAnnotatedSem}.
+Fig.~\ref{FigAnnotatedSem}.
 We assume that \(\lookupinv\) returns the complete class invariant, including
 those invariants that are inherited from superclasses.
 \[
@@ -320,7 +319,7 @@ those invariants that are inherited from superclasses.
 \begin{array}[t]{l}
 \mathsf{let\ }
 \begin{array}[t]{rcl}
-  e & = & \opri \etype := \ev, \mname := \md.\name \clri\\
+  e & = & \opri \etype := \ev, \mname := \md.\name \clri,\\
  \tau & = & \Delta_{P.\pa}(\sigma.\pastate, \sigma.\progstate, e, \act)
 \mathsf{\ in\ }\end{array}
 \\
