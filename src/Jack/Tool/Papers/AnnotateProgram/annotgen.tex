@@ -55,7 +55,7 @@ monitor did not reach the \halted state).
 \paragraph{Completion of the automaton}
 The first translation step does not change the program itself, it only
 completes the PA. Suppose that \(P\) is a monitored program, where the
-monitor \(\pa(P)\) is deterministic and wellformed. Then the
+monitor \(P.\pa\) is deterministic and wellformed. Then the
 translation to a monitored program with a total PA, \(\alpha_1(P)\),
 is defined as:
 %% This is complete_MP in MonitoredProgramCompletessRelation
@@ -111,7 +111,6 @@ monitored by the total PA in Fig.~\ref{FigCompletePA}.
 
 
 \paragraph{From PA to Annotations}
-%TODO: Try to avoid overfulls (the problem ofc is space)
 \begin{figure}[t]
 \[{\small
 \begin{array}{rcl}
