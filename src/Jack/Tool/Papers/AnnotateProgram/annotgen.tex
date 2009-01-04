@@ -12,17 +12,17 @@ as special set-annotations; and
 \item the method specification-level set-annotations are inlined in
 the method body.
 \end{inparaenum}
-Notice that the special \CaseJML statement could be translated into
+Notice that the special \CaseJML annotation could be translated into
 standard JML annotations as well.
 
 For each step we prove that the new program simulates the old program,
 \emph{i.e.}, we show for every translation step
 \(\alpha\) there exists a relation \(R\) such that:
 \[{\small
-\begin{array}{l}
+\begin{array}{r}
 \forall b, \sigma_1, \sigma_2, \tau_1, v_1.
 \etp{P}{b,\sigma_1}{v_1, \sigma_2} \wedge
-R(\sigma_1, \tau_1) \Rightarrow \\
+R(\sigma_1, \tau_1) \Rightarrow \qquad \\
 \qquad
 \exists \tau_2, v_2.
 \etp{\alpha(P)}{b, \tau_1}{v_2, \tau_2} \wedge
@@ -81,7 +81,7 @@ R(\sigma, \tau) =\\
 \]
 
 To prove that this relation is preserved for any body \(b\), we
-use equivalence (\ref{PAcompletionProp}) on
+use equivalence~(\ref{PAcompletionProp}) on
 Page~\pageref{PAcompletionProp} and we observe further that
 \begin{inparaenum}[(\itshape i\upshape)]
 \item if \stuck has been set, it remains set,
@@ -315,7 +315,6 @@ newly generated set annotations, followed by an \Assert to check
 whether
 \halted has been reached. Here we cannot use the induction hypothesis,
 but instead we show manually that relation \(R\) is preserved.
-
 Notice that in \postset or \excset we do not have an \Assert
 statement. Since the invariant is evaluated immediately after the
 set-annotations, the reaching of \halted will be detected

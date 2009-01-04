@@ -56,13 +56,15 @@ executions as the monitored program.
 \item We inline the set-annotations from the method specification
 to the method body and prove equivalence of the run-time checking behaviour.
 \end{inparaenum}
-All results in the paper have been established formally using
-the PVS theorem prover~\cite{OwreRRSS96}. The complete formalisation
-is available via \url{http://www.cs.ru.nl/~tamalet/}. To be able to
-establish the proof of correctness, the order in which method
-specifications are evaluated is important. Further, we had to add an
-explicit requirement that \texttt{finally} blocks could not override
-annotation violation exceptions thrown inside \texttt{try} or
+All results in the paper have been established formally using the PVS
+theorem prover~\cite{OwreRRSS96}. The complete formalisation is
+available via \url{http://www.cs.ru.nl/~tamalet/}. 
+
+To prove
+correctness, the order in which method specifications are evaluated is
+important. Further, we had to add an explicit requirement that
+\texttt{finally} blocks could not override annotation violation
+exceptions thrown inside \texttt{try} or
 \texttt{catch} statements (see also~\cite{Huisman08}). The last
 complication that we encountered was how to specify conveniently that
 specification-only constructs and steps taken by the monitor did not

@@ -77,13 +77,13 @@ algorithm for the full language is mainly an engineering issue.
 Figure~\ref{FigExprStmt} defines expressions and statements
 % as a mutually recursive data type
 (we use the term \emph{body} to denote either an expression or a
-statement), e.g., \(\Call\) represents a call to method \(mn\) on
+statement), \emph{e.g.}, \(\Call\) represents a call to method \(mn\) on
 target \(o\) with argument \(p\). Notice that we define several
 special language constructs to represent JML annotations: \Set, to
 update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
 and \Assert, to evaluate a condition on the program state. A standard
-program semantics ignores these statements, but the annotated program
+program semantics ignores these statements, where the annotated program
 semantics evaluates them.
 
 Figure~\ref{FigProgram} describes the syntax for methods,
@@ -97,7 +97,7 @@ the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively.
 Pre- and postcondition and the different method specification-level set
 annotations have a function type, to allow the use of the method parameter,
-the method result or the returned exception, respectively.
+the method result, or the returned exception, respectively.
 
 A program is said to be \emph{wellformed} if
 \begin{inparaenum}[(\itshape i\upshape)]
@@ -207,17 +207,20 @@ ghost variables:
 The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
-instantiations of the semantics parameters; % (presented in rule format);
-the other instantiations are similar. The relation \gammain uses
-the auxiliary relation \(\beta\) which checks a boolean expression \(e\) and
-raises a special \JMLExc if it evaluates to false. Upon method
-entry, the class invariant and precondition are evaluated. If they
-fail, a \JMLExc is thrown, otherwise the method's \preset statement is
-executed. Finally, we ensure that the program store is not changed.
-The function \deltaset updates a ghost variable: it first evaluates the
-expression and if this did not result in an exceptional state, it updates the
-value of the ghost variable\footnote{We use \(\tau(\gvs.n := v)\) to
-abbreviate that the value of \(\gvs(n)\) in \(\tau\) is updated to
+instantiations of the semantics parameters; % (presented in rule
+format); the other instantiations are similar. The relation \gammain
+uses the auxiliary relation \(\beta\) which checks a boolean
+expression \(e\) and raises a special \JMLExc if it evaluates to
+false. Upon method entry, the class invariant and precondition are
+evaluated. We assume that \(\lookupinv\) returns the complete class
+invariant, including those invariants that are inherited from
+superclasses.  If they fail, a \JMLExc is thrown, otherwise the
+method's \preset statement is executed. Finally, we ensure that the
+program store is not changed.  The function \deltaset updates a ghost
+variable: it first evaluates the expression and if this did not result
+in an exceptional state, it updates the value of the ghost
+variable\footnote{Where \(\tau(\gvs.n := v)\) abbreviates that the
+value of \(\gvs(n)\) in \(\tau\) is updated to
 \(v\).} appropriately.
 
 %% Relation with the code:
@@ -295,8 +298,6 @@ for the annotated program semantics, but the \(\gamma\)-relation also
 updates the state of the monitor. For example, \(\gammain\) is defined
 in terms of \(\gammain\) for annotated programs, as defined in
 Fig.~\ref{FigAnnotatedSem}.
-We assume that \(\lookupinv\) returns the complete class invariant, including
-those invariants that are inherited from superclasses.
 \[
 {\small
 \begin{array}{c}
