@@ -138,7 +138,7 @@ monitored by the total PA in Fig.~\ref{FigCompletePA}.
   \end{array}\\
 \alpha_{2, \mathcal{E}}(e, n, a) & = &
   \alpha_{2, \mathcal{T}}(\{t \mid t \in a.\trans \wedge
-                                   t.\event = \opri \event := e,
+                                   t.\etype = \opri \event := e,
                                                     \mname := m \clri
                            \}, a)\\
 \alpha_{2, \mathcal{T}}(ts, a) & = &
@@ -159,7 +159,7 @@ monitored by the total PA in Fig.~\ref{FigCompletePA}.
 
 Figure~\ref{FigPAtoAnnot} contains the formal definition of the
 second translation step: from PA to method-level set-annotations.
-Given a monitored program \(P\) where \(\pa(P)\) is total,
+Given a monitored program \(P\) where \(P.\pa\) is total,
 the annotation generation algorithm \(\alpha_2\) applies
 \(\alpha_{2, \mathcal{C}}\) to all classes.
 This function checks whether the class is the one being
@@ -223,7 +223,7 @@ the class \texttt{Messaging} and the completed
 PA, encoding the \emph{limited SMS} policy, in
 Fig.~\ref{FigCompletePA}. Figure~\ref{FigExampleStep2} shows the
 generated annotations that result from applying translation
-\(\alpha_2,\mathcal{C}\) on this class and this PA. Notice that for methods
+\(\alpha_{2,\mathcal{C}}\) on this class and this PA. Notice that for methods
 and events that are not involved in the property, an empty \CaseJML is
 generated~--~this is equivalent to a
 \Skip statement.
@@ -249,7 +249,7 @@ void sendSMS()\{/* body sendSMS */\}\vspace*{.5em}
     post_set CaseSet []; exc_set  CaseSet []; @*/
 void receiveSMS()\{/* body receiveSMS */\}\vspace*{.5em}
 /*@ pre_set  CaseSet []; Assert cp != halted; exc_set CaseSet [];
-    post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1)]),
+    post_set CaseSet [(cp == s1, CaseSet [(true, cp = s1; n = 0)]),
                       (cp == s2, CaseSet [(true, cp = halted)]),
                       (cp == halted, CaseSet [(true, cp = halted)])]; @*/
 void reset() \{/* body reset */\} \}\end{alltt}\vspace*{-1em}}
@@ -286,7 +286,7 @@ S(\sigma, \tau) & = &
 This relation specifies that if the monitor has reached
 control point  \halted, the annotated program must have thrown a
 \JMLExc. Otherwise, the state of the annotated program corresponds to
-the state of the original program, extended with the modeling of the
+the state of the original program, extended with the modelling of the
 monitor's state. This means that the program states (fields,
 local variables and exceptions) have to coincide, just as the values
 of the ghost variables that are declared in the original program
@@ -320,8 +320,8 @@ set-annotations, the reaching of \halted will be detected
 immediately. For this part of the proof it is crucial that
 the newly added invariant is evaluated first.
 
-Finally,  to complete the proof, we have to make a
-restriction on the behaviour of \TryCatch. We follow the Java Language
+Finally, to complete the proof, we have to add a
+restriction to programs. We follow the Java Language
 Specification in describing its behaviour~\cite{GoslingJSB05}. This
 means in particular that if the \emph{finally} block in the statement
 terminates abnormally (because of an exception, or any other reason
@@ -332,10 +332,10 @@ exception might be overwritten by an exception thrown in the
 \emph{finally} block (see also~\cite{Huisman08} for a discussion of
 this problem), which would mean that the violation of the security
 policy is not signalled to the user, and instead execution
-continues. To avoid this, we require that for all \TryCatch statements
-in the program, if the \emph{try} or
-\emph{catch} block throws a \JMLExc, the whole statement
-also terminates exceptionally because of a \JMLExc.
+continues (with another exception). To avoid this, for all \TryCatch statements
+in the program, we require that if the \emph{try} or \emph{catch} block throws
+a \JMLExc, the whole statement also terminates exceptionally
+because of a \JMLExc.
 
 
 

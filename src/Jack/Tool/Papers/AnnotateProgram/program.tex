@@ -83,7 +83,7 @@ special language constructs to represent JML annotations: \Set, to
 update ghost variables (\emph{i.e.}, specification-only variables),
 \CaseJML, to abbreviate a list of conditional ghost variable updates,
 and \Assert, to evaluate a condition on the program state. A standard
-program semantics ignores these statements, where the annotated program
+program semantics ignores these statements, whereas the annotated program
 semantics evaluates them.
 
 Figure~\ref{FigProgram} describes the syntax for methods,
@@ -96,7 +96,7 @@ algorithm, we define special annotations called
 the updates to the ghost variables at method entry, exit and
 exceptional exit, respectively.
 Pre- and postcondition and the different method specification-level set
-annotations have a function type, to allow the use of the method parameter,
+annotations have a function type to allow the use of the method parameter,
 the method result, or the returned exception, respectively.
 
 A program is said to be \emph{wellformed} if
@@ -207,8 +207,8 @@ ghost variables:
 The types \FullProgram and \Program coincide, while \FullState is
 instantiated as \Astate, and the mapping \progstate is defined as
 \pstate. Figure~\ref{FigAnnotatedSem} shows some of the
-instantiations of the semantics parameters; % (presented in rule
-format); the other instantiations are similar. The relation \gammain
+instantiations of the semantics parameters; % (presented in rule format);
+the other instantiations are similar. The relation \gammain
 uses the auxiliary relation \(\beta\) which checks a boolean
 expression \(e\) and raises a special \JMLExc if it evaluates to
 false. Upon method entry, the class invariant and precondition are

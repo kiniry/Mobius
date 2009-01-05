@@ -5,11 +5,7 @@ called Property Automata (PA).  These
 are extended finite state machines particularly suited for monitoring,
 since transitions do not only depend on the automaton's state (\emph{i.e.},\
 the current control point and a valuation for the automaton's
-variables), but also on the state of the monitored program. 
-% can
-%depend on the state\footnote{The state of a PA
-% consist of the current control point and values for the PA variables.}
-% of the monitored program.
+variables), but also on the state of the monitored program.
 Transitions are labelled with guards, events and a list of
 actions. Events specify the method whose entry and/or exit is being
 monitored, with a distinction between normal and exceptional exits.
@@ -63,12 +59,12 @@ the internal state of the automaton,
 program variables will be inspected by the monitor, and
 \item a set of transitions.
 \end{inparaenum}
-Transitions relate source and target control points. They are labelled
-with events, where an event is a tuple of an event type (entry, exit
-or exceptional exit) and a method name, a guard and a list of
-actions. Each action assigns the result of an expression (containing
-both program and PA variables) to a PA
-variable. Notice that we only monitor classes here. This is often
+Transitions relate source and target control points; they are labelled with
+events, a guard and a list of actions. An event is a tuple of an event type
+(entry, exit or exceptional exit), and a method name.
+Each action assigns the result of an expression (containing
+both program and PA variables) to a PA variable.
+Notice that we only monitor classes here. This is often
 the case in practice, because security-critical methods are often
 static API methods. However, a more precise formalisation of Java's semantics
 would allow to monitor objects as well. Formally, a PA is defined as follows.
@@ -108,8 +104,8 @@ there is always a guard that holds; otherwise it is
 one (by function \complete): add a special control point
 \halted, together with transitions for every control point and every event
 to \halted, where the guard is the negation of the
-disjunction of all other guards for this control point and event, and
-in addition, add unconditional transitions from \halted to \halted
+disjunction of all other guards for this control point and event.
+Additionally, add unconditional transitions from \halted to \halted
 for every possible event.
 
 % NOTE: these are not all the condition (for instance we are not saying that
@@ -136,7 +132,7 @@ a function that updates the automaton store according to a list of
 actions in the obvious way).
 \[{\small
 \begin{array}{l}
-\Delta_a  :  \PAstate \times \Pstate \times \EVENT \times (\Val \mid
+\Delta_a : \PAstate \times \Pstate \times \EVENT \times (\Val \mid
 \Excpt) \hookrightarrow
 \PAstate\\
 \Delta_a(\sigma_A, \sigma_P, e, v) = \\
@@ -194,7 +190,7 @@ completed PA (where new transitions are dashed).
        \(\opri
         \begin{array}[t]{l}
            \scp := s_1, \tcp := s_2,
-           \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
+           \guard := \lambda(\sigma_A, \sigma_P, v). \sigma_A(n) < N,\\
            \event := \opri \etype := \entry,
                      \mname := \texttt{sendSMS} \clri \clri,
         \end{array}\)\\
@@ -224,53 +220,6 @@ completed PA (where new transitions are dashed).
 \end{longtable}
 }}
 
-% \small{
-% \hspace{-0.3em}
-% \begin{longtable}[t]{l}
-% \opri
-% \begin{longtable}[t]{l}
-% \(\name := \textrm{LimitSMS}, \clname := \texttt{Messaging},
-% \cps := \{s_1, s_2\},
-% \init := s_1,\)\\
-% \(\evs :=
-% \begin{array}[t]{l}
-% \{ \opri \etype := e, \mname := \texttt{sendSMS} \clri \mid e \in \{ \entry,
-% \exit, \excexit \} \} \:\cup \\
-% \{ \opri \etype := \exit, \mname := \texttt{reset} \clri\},
-% \end{array}\)
-% \\
-% \(\vdsA := \{\opri \name := n, \type := \Int, \init := 0 \clri\},
-% \vdsP := \emptyset,\)\\
-% \(\trans := \{
-% \begin{array}[t]{l}
-% \opri
-%  \begin{array}[t]{l}
-% \scp := s_1, \tcp := s_2, \guard := \lambda(\sigma_A, \sigma_P, v). n(\sigma_A) < N,\\
-%              \event := \opri \etype := \entry,
-%                              \mname := \texttt{sendSMS} \clri \clri,
-% \end{array}\)\\
-% \(\opri
-%  \begin{array}[t]{l}
-% \scp := s_2, \tcp := s_1, \action := [\opri \target := n, \expr := n + 1 \clri]\\
-%              \event := \opri \etype := \exit,
-%                              \mname := \texttt{sendSMS} \clri \clri,
-% \end{array}\\
-% \opri
-%  \begin{array}[t]{l}
-% \scp := s_2, \tcp := s_1, \\
-%              \event := \opri \etype := \excexit,
-%                              \mname := \texttt{sendSMS} \clri, \clri,
-% \end{array}\\
-% \opri
-% \begin{array}[t]{l}
-% \scp := s_1, \tcp := s_1, \action := [\opri \target := n, \expr := 0 \clri] \\
-%              \event := \opri \etype := \exit, \mname := \texttt{reset} \clri \clri
-% \} \clri
-% \end{array}
-% \end{array}\)
-% \end{longtable}\\
-% \end{longtable}
-% }
 
 \begin{figure}[h]
 
