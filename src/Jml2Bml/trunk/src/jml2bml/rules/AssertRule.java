@@ -15,6 +15,7 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlAbstractStatement;
+import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
 
 import annot.attributes.SingleAssert;
@@ -68,10 +69,9 @@ public class AssertRule extends TranslationRule < String, Symbols > {
       final BCClass clazz = symb.findClass();
 
       //Find an enclosing method
-      final MethodTree method = (MethodTree) finder.getAncestor(node,
+      final JmlMethodDecl method = (JmlMethodDecl) finder.getAncestor(node,
                                                                 Kind.METHOD);
-      final BCMethod bcMethod = BytecodeUtil
-          .findMethod(method.getName(), null, clazz);
+      final BCMethod bcMethod = BytecodeUtil.findMethod(method, clazz);
 
       if (node.expression != null) {
         final AbstractFormula form = TranslationUtil

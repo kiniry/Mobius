@@ -7,9 +7,9 @@
 package main;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
 
 import jml2bml.ast.PrettyPrinter;
 import jml2bml.ast.TreeNodeFinder;
@@ -23,8 +23,15 @@ import jml2bml.utils.Logger;
 
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Method;
+import org.jmlspecs.openjml.JmlCompiler;
+import org.jmlspecs.openjml.JmlPretty;
 import org.jmlspecs.openjml.JmlSpecs;
 import org.jmlspecs.openjml.JmlTree;
+import org.jmlspecs.openjml.Utils;
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
@@ -43,9 +50,10 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacFileManager;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Options;
 
-/**
+/*
  * @author Jedrek
  */
 
@@ -55,6 +63,28 @@ public class Main {
    */
   private static final Logger log = Logger.getLogger(Main.class);
 
+  @Option(name = "-o", usage = "output to this file", metaVar = "OUTPUT")
+  private String out;
+
+  @Option(name = "-v", usage = "verbose")
+  private boolean verbose = false;
+
+  @Argument
+  private java.util.List < String > arguments = new ArrayList < String >();
+
+  public void doMain(String[] args) throws IOException, CmdLineException,
+      ClassNotFoundException, ReadAttributeException, NotTranslatedException {
+    CmdLineParser parser = new CmdLineParser(this);
+    parser.parseArgument(args);
+    if (arguments.size() != 3)
+      throw new CmdLineException("Invalid argument number");
+    ClassFileLocation loc = new ClassFileLocation(arguments.get(0), arguments
+        .get(1));
+    if (out == null)
+      out = loc.getClassFilePath() + "-wyn";
+    compile(arguments.get(2), loc);
+  }
+
   /**
    * Main method of the Jml2Bml compiler. For given class and source,
    * inserts into bytecode the translated Jml annotations from the source code.
@@ -63,19 +93,13 @@ public class Main {
    * <code>args[2]</code> source file (whole path)
    * @throws ClassNotFoundException
    * @throws ReadAttributeException
+   * @throws NotTranslatedException 
+   * @throws CmdLineException 
    */
   public static void main(final String[] args) throws ClassNotFoundException,
-      ReadAttributeException, IOException {
-    if (args.length != 3) {
-      return;
-    }
-    final main.List list = new main.List();
-    try {
-      new Main().compile(args[2], new ClassFileLocation(args[0], args[1]));
-    } catch (NotTranslatedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+      ReadAttributeException, IOException, CmdLineException,
+      NotTranslatedException {
+    new Main().doMain(args);
   }
 
   /**
@@ -93,7 +117,8 @@ public class Main {
    * @throws IOException in case the class file cannot be saved to the given
    *   location
    */
-  public void compile(final String sourceFile, final ClassFileLocation classLoc)
+  public void compile(final String sourceFile,
+                      final ClassFileLocation classLoc)
       throws ClassNotFoundException, ReadAttributeException,
       NotTranslatedException, IOException {
     final Context context = createContext();
@@ -101,23 +126,39 @@ public class Main {
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
         .getClassQualifiedName());
     context.put(BCClass.class, clazz);
-    final JavaCompiler compiler = JavaCompiler.instance(context);
-    final JCCompilationUnit tree = compiler
-        .parse(getJavaFileObject(context, sourceFile));
 
-    log.info("------------- PRETTY PRINT ------------");
-    new PrettyPrinter(System.out).prettyPrint(tree);
-    log.info("LINE TABLES: ");
-    for (Method m : clazz.getJC().getMethods()) {
-      log.info(m.getName());
-      final LineNumberTable lnt = m.getLineNumberTable();
-      if (lnt != null) {
-        log.info(lnt.toString());
-      } else {
-        log.info("NO LINE NUMBER TABLE!!!");
+    JavacFileManager fileManager = (JavacFileManager) context
+        .get(JavaFileManager.class);
+
+    final JavaCompiler compiler = JavaCompiler.instance(context);
+
+    List < JCCompilationUnit > files = compiler.parseFiles(List.of(fileManager
+        .getFileForInput(sourceFile)));
+    //    final JCCompilationUnit tree = compiler.parseFiles(List.of(fileManager.getFileForInput(sourceFile))).head;
+    compiler.enterTrees(files);
+    final JCCompilationUnit tree = files.head;
+    //    final JCCompilationUnit tree = compiler
+    //        .parse(getJavaFileObject(context, sourceFile));
+    //
+    ////    Build symbol table/type analysis
+    //    ListBuffer < JCCompilationUnit > roots = lb();
+    //    roots.append(tree);
+    //    compiler.enterTrees(roots.toList());
+    if (verbose) {
+      log.info("------------- PRETTY PRINT ------------");
+      new PrettyPrinter(System.out).prettyPrint(tree);
+      log.info("LINE TABLES: ");
+      for (Method m : clazz.getJC().getMethods()) {
+        log.info(m.getName());
+        final LineNumberTable lnt = m.getLineNumberTable();
+        if (lnt != null) {
+          log.info(lnt.toString());
+        } else {
+          log.info("NO LINE NUMBER TABLE!!!");
+        }
       }
+      log.info("----------- END PRETTY PRINT ----------");
     }
-    log.info("----------- END PRETTY PRINT ----------");
     context.put(LineMap.class, tree.getLineMap());
 
     context.put(JCCompilationUnit.class, tree);
@@ -133,22 +174,10 @@ public class Main {
     } catch (NotTranslatedRuntimeException e) {
       throw new NotTranslatedException(e);
     }
-    clazz.saveToFile(classLoc.getClassFilePath() +"-wyn");
-    log.info(clazz.printCode());
-  }
-
-  /**
-   * Creates a Java File Object for given source file.
-   * @param context application context
-   * @param filename source file name
-   * @return corresponding java file
-   */
-  private JavaFileObject getJavaFileObject(final Context context,
-                                           final String filename) {
-    final JavacFileManager fm = (JavacFileManager) context
-        .get(JavaFileManager.class);
-    return fm.getJavaFileObjectsFromStrings(List.of(filename)).iterator()
-        .next();
+    clazz.saveToFile(out);
+    if (verbose)
+      log.info(clazz.printCode());
+    System.out.println("Written to: " + out);
   }
 
   /**
@@ -157,20 +186,36 @@ public class Main {
    */
   private Context createContext() {
     final Context context = new Context();
-    JmlSpecs.preRegister(context);
-    JmlParser.JmlFactory.preRegister(context);
-    JmlScanner.JmlFactory.preRegister(context);
-    JmlTree.Maker.preRegister(context);
+    Messages.instance(context).add(Utils.messagesJML); // registering an additional source of JML-specific error messages
+
+    JmlSpecs.preRegister(context); // registering the specifications repository
+    JmlParser.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlParsers
+    JmlScanner.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlScanners
+    JmlTree.Maker.preRegister(context); // registering a JML-aware factory for generating JmlTree nodes
+    JmlCompiler.preRegister(context);
     JmlEnter.preRegister(context);
     JmlResolve.preRegister(context);
     JmlMemberEnter.preRegister(context);
     JmlFlow.preRegister(context);
-    JmlAttr.preRegister(context);
+    JmlAttr.preRegister(context); // registering a JML-aware type checker
+//    JmlPretty.preRegister(context);
+
+    //    
+    //    JmlSpecs.preRegister(context);
+    //    JmlParser.JmlFactory.preRegister(context);
+    //    JmlScanner.JmlFactory.preRegister(context);
+    //    JmlTree.Maker.preRegister(context);
+    //    JmlEnter.preRegister(context);
+    //    JmlResolve.preRegister(context);
+    //    JmlMemberEnter.preRegister(context);
+    //    JmlFlow.preRegister(context);
+    //    JmlAttr.preRegister(context);
     JavacFileManager.preRegister(context);
     final Options opts = Options.instance(context);
-
+    //
     opts.put(OptionName.XJCOV.optionName, "true");
 
+    JmlSpecs.instance(context).initializeSpecsPath();
     return context;
   }
 

@@ -44,10 +44,7 @@ public final class JCUtils {
    * @return if the singleton is \result
    */
   public static boolean isResult(final JmlSingleton node) {
-    if ("BSRESULT".equals(node.token.name())) {
-      return true;
-    }
-    return false;
+    return "BSRESULT".equals(node.token.name());
   }
 
   /**

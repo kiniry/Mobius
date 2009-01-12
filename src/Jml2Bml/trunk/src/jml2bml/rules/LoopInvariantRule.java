@@ -42,7 +42,6 @@ import annot.bcexpression.modifies.ModifyList;
 
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;

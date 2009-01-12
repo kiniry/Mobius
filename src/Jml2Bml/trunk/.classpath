@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="tests"/>
-	<classpathentry kind="lib" path="lib/jmlruntime.jar"/>
-	<classpathentry kind="lib" path="lib/jmlspecs.jar"/>
-	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test_input"/>
+	<classpathentry kind="src" path="tests"/>
+	<classpathentry exported="true" kind="lib" path="lib/jmlruntime.jar" sourcepath="Jml2Bmlsrc.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/jmlspecs.jar" sourcepath="Jml2Bmlsrc.zip"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJML"/>
+	<classpathentry exported="true" kind="lib" path="lib/args4j-2.0.1.jar" sourcepath="Jml2Bmlsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -20,6 +20,7 @@ import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
 import org.apache.bcel.generic.Type;
+import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
@@ -29,7 +30,9 @@ import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -47,6 +50,55 @@ public final class BytecodeUtil {
   private BytecodeUtil() {
   }
 
+  /**
+   * Searches for method of given name in given class.
+   * @param sourceMethod source method object
+   * @param clazz BCClass object representing the class
+   * @return BCMethod representing method <code>name</code>,
+   * or null, if the method was not found.
+   */
+  public static BCMethod findMethod(final JmlMethodDecl sourceMethod,
+                                    final BCClass clazz) {
+    final CharSequence name = sourceMethod.getName();
+    final List<JCVariableDecl> parameters = sourceMethod.getParameters();
+    List<BCMethod> candidates = new LinkedList < BCMethod >();
+    for (int i = 0; i < clazz.getMethodCount(); i++) {
+      final BCMethod method = clazz.getMethod(i);
+      if (!method.getBcelMethod().getName().contentEquals(name))
+        continue;
+      Type[] types = method.getBcelMethod().getArgumentTypes();
+      
+      if (types.length != parameters.size())
+        continue;
+      boolean ok = true;
+      for(int j = 0; j < types.length; j++) {
+        Type bytecodeType = types[j];
+        JCTree parameterType = parameters.get(j).getType();
+        String sourceTypeName = null;
+        if (parameterType.getKind() == Kind.PRIMITIVE_TYPE){
+           sourceTypeName = parameterType.toString();
+        } else if (parameterType.getKind() == Kind.IDENTIFIER) {
+          sourceTypeName = ((JCIdent) parameterType).sym.toString();          
+        } else
+          throw new RuntimeException("Unknown type kind: "+ parameterType + ":" + parameterType.getKind());
+        if (sourceTypeName.contentEquals(bytecodeType.toString())){
+          ok = false;
+          break;
+        }
+      }
+      if (ok)
+        candidates.add(method);
+    }
+    if (candidates.size() != 1){
+      String errMsg = "Multiple candidates for method " + name + ": ";
+      for (BCMethod met : candidates){
+        errMsg += met.getBcelMethod().getSignature() +" ";
+      }
+      throw new Jml2BmlException(errMsg);
+    }
+    return candidates.get(0);
+  }
+  
   /**
    * Searches for method of given name in given class.
    * @param name name of the method

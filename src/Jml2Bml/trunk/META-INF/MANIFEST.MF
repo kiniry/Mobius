@@ -6,8 +6,11 @@ Bundle-Version: 1.0.0
 Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlruntime.jar,
  lib/jmlspecs.jar,
- lib/openjml.jar
+ lib/openjml.jar,
+ lib/args4j-2.0.1.jar
 Export-Package: api
 Require-Bundle: mobius.bmllib,
- org.apache.bcel_5.1
+ org.apache.bcel_5.1,
+ org.junit,
+ org.junit4;bundle-version="4.3.1"
 Bundle-Vendor: Mobius & Warsaw University

@@ -1,8 +1,10 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-10 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
- * licence see LICENCE.txt file"
+ * @title       "Jml2Bml"
+ * @description "JML to BML Compiler"
+ * @copyright   "(c) 2008-01-10 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
 package jml2bml.rules;
 
@@ -227,8 +229,8 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
     final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
     
-    final BCMethod bcMethod = BytecodeUtil
-        .findMethod(method.getName(), method.params, bcClazz);
+    final BCMethod bcMethod = BytecodeUtil.findMethod(method, bcClazz);
+    
     MethodSpecification spec = bcMethod.getMspec();
     if (spec == null) {
       spec = new MethodSpecification(bcMethod);

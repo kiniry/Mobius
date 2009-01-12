@@ -52,5 +52,7 @@ public final class TranslationManager {
         .getTypeClauseExprRule(context));
     translator.registerTranslationRule(RulesFactory
         .getLoopInvariantRule(context));
+//    translator.registerTranslationRule(RulesFactory
+//                                       .getMethodSpecsRule(context));
   }
 }

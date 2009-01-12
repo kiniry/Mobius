@@ -377,6 +377,13 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       final BCClass bcClazz = p.findClass();
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
+
+      final Tree methodDecl = finder.getParent(specs);
+//      if (!(methodDecl instanceof JmlMethodDecl)) {
+//        throw new NotTranslatedRuntimeException("Cannot find method for the requires: " + node);
+//      }
+//      final JmlMethodDecl method = (JmlMethodDecl) finder.getParent(specs);
+
       final Tree nextClassMember = finder.getNextSibling(specs);
       if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
         throw new NotTranslatedRuntimeException(
