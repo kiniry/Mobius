@@ -81,7 +81,7 @@ public final class BytecodeUtil {
           sourceTypeName = ((JCIdent) parameterType).sym.toString();          
         } else
           throw new RuntimeException("Unknown type kind: "+ parameterType + ":" + parameterType.getKind());
-        if (sourceTypeName.contentEquals(bytecodeType.toString())){
+        if (!sourceTypeName.contentEquals(bytecodeType.toString())){
           ok = false;
           break;
         }
