@@ -96,7 +96,8 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
         newSymbols = stmtNode.accept(builder, newSymbols);
       for (JCStatement stmtNode : node.step)
         newSymbols = stmtNode.accept(builder, newSymbols);
-      newSymbols = node.cond.accept(builder, newSymbols);
+      if (node.cond != null)
+        newSymbols = node.cond.accept(builder, newSymbols);
       return newSymbols;
     }
 
