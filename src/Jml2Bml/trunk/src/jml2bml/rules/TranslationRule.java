@@ -7,7 +7,6 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
-import org.jmlspecs.openjml.JmlTree.JmlFunction;
 import org.jmlspecs.openjml.JmlTree.JmlGroupName;
 import org.jmlspecs.openjml.JmlTree.JmlImport;
 import org.jmlspecs.openjml.JmlTree.JmlLblExpression;
@@ -19,6 +18,7 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlPrimitiveTypeTree;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
@@ -371,10 +371,6 @@ public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
     return preVisit(node, p);
   }
 
-  public R visitJmlFunction(final JmlFunction node, final P p) {
-    return preVisit(node, p);
-  }
-
   public R visitJmlGroupName(final JmlGroupName node, final P p) {
     return preVisit(node, p);
   }
@@ -535,6 +531,10 @@ public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
   }
 
   public R visitJmlWhileLoop(final JmlWhileLoop node, final P p) {
+    return preVisit(node, p);
+  }
+
+  public R visitJmlMethodInvocation(final JmlMethodInvocation node, final P p) {
     return preVisit(node, p);
   }
 }

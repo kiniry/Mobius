@@ -21,6 +21,7 @@ import jml2bml.utils.UniqueIndexGenerator;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
@@ -53,11 +54,11 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 
@@ -230,13 +231,14 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
                                              final Symbols p) {
     final int quantifierType = BmlLibUtils.mapJCOperatorToBmlLib(node.op);
     final QuantifiedFormula formula = new QuantifiedFormula(quantifierType);
-    final JavaBasicType type = (JavaBasicType) scan(node.localtype, p);
     final Symbols symbols = new Symbols(p);
-    for (Name name : node.names) {
-      final BoundVar var = new BoundVar(type, UniqueIndexGenerator.getNext(),
+    for (JCVariableDecl var: node.decls) {
+      final JavaBasicType type = (JavaBasicType) scan(var.getType(), p);
+      final Name name = var.getName();
+      final BoundVar bvar = new BoundVar(type, UniqueIndexGenerator.getNext(),
                                         formula, name.toString());
-      formula.addVariable(var);
-      symbols.put(name.toString(), new Variable(var, node));
+      formula.addVariable(bvar);
+      symbols.put(name.toString(), new Variable(bvar, node));
     }
     final BCExpression predicate = scan(node.predicate, symbols);
     formula.setFormula(predicate);
@@ -344,22 +346,22 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
    * @return translated node
    */
   @Override
-  public BCExpression visitMethodInvocation(final MethodInvocationTree node,
-                                            final Symbols p) {
-    if (JCUtils.isOld(node.getMethodSelect())) {
+  public BCExpression visitJmlMethodInvocation(final JmlMethodInvocation node,
+                                               final Symbols p) {
+    if (node.token == JmlToken.BSOLD){
       final boolean tmp = isOld;
       isOld = true;
       final BCExpression expr = scan(node.getArguments(), p);
       isOld = tmp;
       return expr;
     }
-    if (JCUtils.isOld(node.getMethodSelect())) {
-      final boolean tmp = isOld;
-      isOld = false;
-      final BCExpression expr = scan(node.getArguments(), p);
-      isOld = tmp;
-      return expr;
-    }
+//    if (JCUtils.isOld(node.getMethodSelect())) {
+//      final boolean tmp = isOld;
+//      isOld = false;
+//      final BCExpression expr = scan(node.getArguments(), p);
+//      isOld = tmp;
+//      return expr;
+//    }
     throw new NotTranslatedRuntimeException("Method invocation not supported!");
   }
 
@@ -377,18 +379,11 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       final BCClass bcClazz = p.findClass();
       final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
       final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
-
-      final Tree methodDecl = finder.getParent(specs);
-//      if (!(methodDecl instanceof JmlMethodDecl)) {
-//        throw new NotTranslatedRuntimeException("Cannot find method for the requires: " + node);
-//      }
-//      final JmlMethodDecl method = (JmlMethodDecl) finder.getParent(specs);
-
-      final Tree nextClassMember = finder.getNextSibling(specs);
-      if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
+      final Tree methodTree = finder.getParent(specs);
+      if (methodTree == null || methodTree.getKind() != Kind.METHOD)
         throw new NotTranslatedRuntimeException(
           "Cannot find method for the \result: " + node);
-      final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
+      final JmlMethodDecl method = (JmlMethodDecl) methodTree;
       final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),method.params, 
                                                         bcClazz);
       return new RESULT(bcMethod);

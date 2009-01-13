@@ -221,11 +221,11 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
     final BCClass bcClazz = symb.findClass();
     final TreeNodeFinder finder = myContext.get(TreeNodeFinder.class);
     final Tree specs = finder.getAncestor(node, JmlMethodSpecs.class);
-    final Tree nextClassMember = finder.getNextSibling(specs);
-    if (nextClassMember == null || nextClassMember.getKind() != Kind.METHOD)
+    final Tree methodTree = finder.getParent(specs);
+    if (methodTree == null || methodTree.getKind() != Kind.METHOD)
       throw new NotTranslatedRuntimeException(
         "Cannot find method for the requires: " + node);
-    final JmlMethodDecl method = (JmlMethodDecl) nextClassMember;
+    final JmlMethodDecl method = (JmlMethodDecl) methodTree;
     final Symbols withParams = createSymbolsWithParams(symb, method);
     //TODO: here make Specification case for Bmllib
     

@@ -13,7 +13,6 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
-import org.jmlspecs.openjml.JmlTree.JmlFunction;
 import org.jmlspecs.openjml.JmlTree.JmlGroupName;
 import org.jmlspecs.openjml.JmlTree.JmlImport;
 import org.jmlspecs.openjml.JmlTree.JmlLblExpression;
@@ -25,6 +24,7 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlPrimitiveTypeTree;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
@@ -349,11 +349,6 @@ public class IsJml implements TreeVisitor < Boolean, Void >,
     return false;
   }
 
-  public Boolean visitJmlFunction(final JmlFunction anArg0, final Void anArg1) {
-    // TODO Auto-generated method stub
-    return true;
-  }
-
   public Boolean visitJmlGroupName(final JmlGroupName anArg0,
                                    final Void anArg1) {
     // TODO Auto-generated method stub
@@ -582,6 +577,11 @@ public class IsJml implements TreeVisitor < Boolean, Void >,
                                    final Void anArg1) {
     // TODO Auto-generated method stub
     return false;
+  }
+
+  public Boolean visitJmlMethodInvocation(JmlMethodInvocation that, Void p) {
+    // TODO Auto-generated method stub
+    return true;
   }
 
 }

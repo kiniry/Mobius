@@ -42,13 +42,13 @@ import com.sun.tools.javac.comp.JmlEnter;
 import com.sun.tools.javac.comp.JmlFlow;
 import com.sun.tools.javac.comp.JmlMemberEnter;
 import com.sun.tools.javac.comp.JmlResolve;
+import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.main.OptionName;
 import com.sun.tools.javac.parser.JmlParser;
 import com.sun.tools.javac.parser.JmlScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JavacFileManager;
 import com.sun.tools.javac.util.List;
 import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Options;
@@ -198,7 +198,7 @@ public class Main {
     JmlMemberEnter.preRegister(context);
     JmlFlow.preRegister(context);
     JmlAttr.preRegister(context); // registering a JML-aware type checker
-//    JmlPretty.preRegister(context);
+    JmlPretty.preRegister(context);
 
     //    
     //    JmlSpecs.preRegister(context);

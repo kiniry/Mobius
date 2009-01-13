@@ -1,4 +1,4 @@
-package methodspecs;
+package tests.methodspecs;
 
 abstract class Test3 {
   private int sum;

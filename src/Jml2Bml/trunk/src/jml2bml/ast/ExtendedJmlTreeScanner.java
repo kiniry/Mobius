@@ -13,7 +13,6 @@ import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
-import org.jmlspecs.openjml.JmlTree.JmlFunction;
 import org.jmlspecs.openjml.JmlTree.JmlGroupName;
 import org.jmlspecs.openjml.JmlTree.JmlImport;
 import org.jmlspecs.openjml.JmlTree.JmlLblExpression;
@@ -25,6 +24,7 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
+import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlPrimitiveTypeTree;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
@@ -804,16 +804,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
   }
 
   /**
-   * Visiting JML function node.
-   * @param node - node to visit.
-   * @param p - additional data that might be useful while visiting the node.
-   * @return just the result of corresponding method from the superclass.
-   */
-  public R visitJmlFunction(final JmlFunction node, final P p) {
-    return null;
-  }
-
-  /**
    * Visiting JmlGroupName node.
    * @param node - node to visit.
    * @param p - additional data that might be useful while visiting the node.
@@ -940,6 +930,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    */
   public R visitJmlMethodDecl(final JmlMethodDecl node, final P p) {
     final P tmpP = preVisit(node, p);
+    R r = scan(node.methodSpecs, tmpP);
     return super.visitMethod(node, tmpP);
   }
 
@@ -973,9 +964,8 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    */
   public R visitJmlQuantifiedExpr(final JmlQuantifiedExpr node, final P p) {
     final P tmpP = preVisit(node, p);
-    R r = scan(node.localtype, tmpP);
+    R r = scan(node.decls, tmpP);
     r = scanAndReduce(node.range, tmpP, r);
-    r = scanAndReduce(node.modifiers, tmpP, r);
     return scanAndReduce(node.predicate, tmpP, r);
   }
 
@@ -1264,5 +1254,19 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
     final R r = scan(node.loopSpecs, tmpP);
     final R tmpR = super.visitWhileLoop(node, tmpP);
     return reduce(r, tmpR);
+  }
+
+  /**
+   * Visiting jml method invocation node.
+   * @param node - node to visit.
+   * @param p - additional data that might be useful while visiting the node.
+   * @return result of visiting children.
+   */
+  public R visitJmlMethodInvocation(final JmlMethodInvocation node, final P p) {
+    final P tmpP = preVisit(node, p);
+    R r = scan(node.getTypeArguments(), tmpP);
+    r = scanAndReduce(node.getMethodSelect(), tmpP, r);
+    r = scanAndReduce(node.getArguments(), tmpP, r);    
+    return r;
   }
 }

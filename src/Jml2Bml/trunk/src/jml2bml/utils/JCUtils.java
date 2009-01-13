@@ -27,18 +27,6 @@ public final class JCUtils {
   }
 
   /**
-   * Check if the expression is marked as \old.
-   * @param node the expression to check
-   * @return if it is declared \old
-   */
-  public static boolean isOld(final ExpressionTree node) {
-    if ("\\old".equals(node.toString())) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
    * Checks if the given JmlSingleton is \result.
    * @param node JmlSingleton to check
    * @return if the singleton is \result

@@ -1,4 +1,4 @@
-package methodspecs;
+package tests.methodspecs;
 
 public class Test1 {
   private static Test1 instance = null;

@@ -1,4 +1,4 @@
-package methodspecs;
+package tests.methodspecs;
 
 
 public class Test2 {

@@ -24,7 +24,6 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 
 import com.sun.source.tree.LineMap;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.util.Context;
