@@ -6,7 +6,6 @@ package ie.ucd.bon.typechecker;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -19,7 +18,6 @@ public class FeatureSpecification {
   private boolean redefined;
   private Type type;
   private Renaming renaming;
-  private final List<FeatureArgument> args;
   private final Map<String,FeatureArgument> argsMap;
   private final Collection<FeatureSpecificationInstance> instances;
   
@@ -35,7 +33,6 @@ public class FeatureSpecification {
     type = null;
     renaming = null;
     
-    args = new Vector<FeatureArgument>();
     argsMap = new HashMap<String,FeatureArgument>();
     instances = new Vector<FeatureSpecificationInstance>();
   }
@@ -96,8 +93,8 @@ public class FeatureSpecification {
     return type;
   }
 
-  public List<FeatureArgument> getArgs() {
-    return args;
+  public Map<String,FeatureArgument> getArgs() {
+    return argsMap;
   }
 
   public void setRenaming(String className, String featureName) {
