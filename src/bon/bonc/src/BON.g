@@ -1065,7 +1065,7 @@ class_interface  :  (indexing)?
                     CLASS_INTERFACE
                     (indexing)?
                     (parent_class_list)?
-                    features
+                    (features)?
                     (class_invariant)?
                    )
                  ;
