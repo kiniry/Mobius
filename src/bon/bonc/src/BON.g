@@ -765,9 +765,10 @@ classX  :	 (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, g
 						| ( c='class' c4=class_name              { getTI().addClass($c4.text, getSLoc($c,$c4.stop), null); getContext().enterClass($c4.text); }        )
 					 )             
            (formal_generics)?
-           ('reused')? 
-           ('persistent')?   
-           ('interfaced')? (COMMENT)?
+           ('reused' { getTI().setClassReused(); } )? 
+           ('persistent' { getTI().setClassPersistent(); })?   
+           ('interfaced' { getTI().setClassInterfaced(); })? 
+           (COMMENT)?
            (class_interface)? 
            { getContext().leaveClass(); }
          ->

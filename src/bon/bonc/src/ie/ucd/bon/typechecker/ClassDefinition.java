@@ -20,6 +20,9 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   private boolean root;
   private boolean deferred;
   private boolean effective;
+  private boolean reused;
+  private boolean persistent;
+  private boolean interfaced;
   private final Set<Type> parentClasses;
   private final Set<String> simpleParentClasses; //Minus generics
   private final Map<String,FormalGeneric> formalGenerics;
@@ -43,6 +46,9 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     root = false;
     deferred = false;
     effective = false;
+    reused = false;
+    persistent = false;
+    interfaced = false;
   }
 
   public void addParentClass(Type parentType) {
@@ -161,5 +167,31 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   public void addInvariant(String invariant) {
     invariants.add(invariant);
   }
+
+  public boolean isReused() {
+    return reused;
+  }
+
+  public void setReused(boolean reused) {
+    this.reused = reused;
+  }
+
+  public boolean isPersistent() {
+    return persistent;
+  }
+
+  public void setPersistent(boolean persistent) {
+    this.persistent = persistent;
+  }
+
+  public boolean isInterfaced() {
+    return interfaced;
+  }
+
+  public void setInterfaced(boolean interfaced) {
+    this.interfaced = interfaced;
+  }
+  
+  
   
 }

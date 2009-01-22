@@ -17,7 +17,6 @@ import ie.ucd.bon.typechecker.errors.DuplicateFormalGenericNameError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,21 +28,21 @@ import java.util.Map;
 public class TypingInformation {
 
   private final InformalTypingInformation informal;
-  
+
   private final Problems problems;
-    
+
   private final Context context;
-  
+
   private final Map<String,ClusterDefinition> clusters;
   private final Map<String,ClassDefinition> classes;
   private final Map<String,Type> types;
-  
+
   private final Graph<String,Type> classInheritanceGraph;
   private final Graph<String,String> simpleClassInheritanceGraph; //Non-generic 
-  
+
   private final Graph<String,ClusterDefinition> classClusterGraph;
   private final Graph<String,ClusterDefinition> clusterClusterGraph;
-    
+
   public TypingInformation() {
     context = Context.getContext();
     informal = new InformalTypingInformation(context);
@@ -51,19 +50,19 @@ public class TypingInformation {
     clusters = new HashMap<String,ClusterDefinition>();
     classes = new HashMap<String,ClassDefinition>();
     types = new HashMap<String,Type>();
-    
+
     classInheritanceGraph = new Graph<String,Type>();
     simpleClassInheritanceGraph = new Graph<String,String>();
-    
+
     classClusterGraph = new Graph<String,ClusterDefinition>();
     clusterClusterGraph = new Graph<String,ClusterDefinition>();
   }
-  
+
   public void classNameListEntry(String className, SourceLocation loc) {
     informal.classNameListEntry(className, loc);
-    
+
     if (context.isInSelectiveExport()) {
-            
+
       if (className.equals("NONE")) {
         //TODO check for already defined selective exports
         context.getFeature().setPrivate();
@@ -77,7 +76,7 @@ public class TypingInformation {
   public Problems getProblems() {
     return problems;
   }  
-  
+
   public void addCluster(String clusterName, SourceLocation loc) {
     ClusterDefinition def = clusters.get(clusterName);
     if (def == null) {
@@ -87,17 +86,17 @@ public class TypingInformation {
       //TODO this might not actually be an error... (If we allow clusters to be mentioned in one place and defined elsewhere)
       problems.addProblem(new DuplicateClusterDefinitionError(loc, def));
     }
-    
+
     if (context.isInCluster()) {
       clusterClusterGraph.addEdge(clusterName, clusters.get(context.getInnermostCluster()));
     } 
   }
-  
+
   public void addClass(String className, SourceLocation loc, String keyword) {
     ClassDefinition def = classes.get(className);
     if (def == null) {
       def = new ClassDefinition(className, loc);
-      
+
       if (keyword != null) {
         if (keyword.equals("root")) {
           def.setRoot();
@@ -107,18 +106,18 @@ public class TypingInformation {
           def.setEffective();
         }
       }
-      
+
       classes.put(className, def);
     } else {
-    //TODO this might not actually be an error... (If we allow classes to be mentioned in one place and defined elsewhere)
+      //TODO this might not actually be an error... (If we allow classes to be mentioned in one place and defined elsewhere)
       problems.addProblem(new DuplicateClassDefinitionError(loc, def));
     }
-    
+
     if (context.isInCluster()) {
       classClusterGraph.addEdge(className, clusters.get(context.getInnermostCluster()));
     } 
   }
-  
+
   public Type getType(String typeString) {
     Type type = types.get(typeString);
     if (type == null) {
@@ -126,7 +125,7 @@ public class TypingInformation {
     }
     return type;
   }
-  
+
   public void formalGeneric(String name, String typeString, SourceLocation loc) {
     if (context.isInClass()) {
       ClassDefinition def = classes.get(context.getClassName());
@@ -142,14 +141,14 @@ public class TypingInformation {
       }      
     }
   }
-  
+
   public void addParentClass(String parent, SourceLocation loc) {
     Type parentType = getType(parent);
     String currentClassName = context.getClassName();
     if (parentType.getNonGenericType().equals(currentClassName)) {
       problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClassName));
     } else {
-     
+
       if (simpleClassInheritanceGraph.hasEdge(currentClassName,parentType.getNonGenericType())) {
         problems.addProblem(new DuplicateSuperclassWarning(loc,currentClassName,parent));
       } else {
@@ -160,7 +159,7 @@ public class TypingInformation {
       }
     }
   }
-  
+
   public void addInvariant(String invariant, SourceLocation loc) {
     String currentClassName = context.getClassName();
     ClassDefinition classDef = classes.get(currentClassName);
@@ -168,15 +167,15 @@ public class TypingInformation {
       classDef.addInvariant(invariant);
     }
   }
-  
+
   public void setPrecondition(String precondition, SourceLocation loc) {
     context.getFeatureSpec().setPrecondition(precondition);
   }
-  
+
   public void setPostcondition(String postcondition, SourceLocation loc) {
     context.getFeatureSpec().setPostcondition(postcondition);
   }
-  
+
   public void featureSpecDeferred() {
     context.getFeatureSpec().setDeferred(); 
   } 
@@ -186,11 +185,11 @@ public class TypingInformation {
   public void featureSpecRedefined() {
     context.getFeatureSpec().setRedefined();
   }
-  
+
   public void featureNameListEntry(String name, SourceLocation loc) {
     if (context.isInFeatureSpecification()) {
       FeatureSpecificationInstance instance = new FeatureSpecificationInstance(name, context.getFeatureSpec(), loc);
-      
+
       ClassDefinition def = classes.get(context.getClassName());
       if (def.containsFeatureByName(name)) {
         FeatureSpecificationInstance other = def.getFeatureByName(name);
@@ -200,16 +199,16 @@ public class TypingInformation {
       }
     }
   }
-  
+
   public void renaming(String className, String featureName, SourceLocation loc) {
     boolean valid = true;
-    
+
     FeatureSpecification current = context.getFeatureSpec();
-       
+
     if (current.getNumberOfInstances() > 1) {
       problems.addProblem(new CannotRenameMultipleFeaturesError(loc));
     }
-    
+
     //TODO - if we allow other ways of defining inheritance (inheritance relations)
     //       then this cannot be done here.
     ClassDefinition def = classes.get(context.getClassName());
@@ -217,12 +216,12 @@ public class TypingInformation {
       problems.addProblem(new ClassDoesNotHaveAsSuperTypeError(loc, context.getClassName(), className));
       valid = false;
     } 
-    
+
     if (valid) {
       context.getFeatureSpec().setRenaming(className, featureName);
     }
   }
-  
+
   public void featureArg(String names, String type) {
     Type t = getType(type);
     if (names != null) {
@@ -235,15 +234,15 @@ public class TypingInformation {
       context.getFeatureSpec().addArgument(null, t);
     }
   }
-  
+
   public void hasType(String typeString) {
     context.getFeatureSpec().setType(getType(typeString));
   }
-  
+
   public InformalTypingInformation informal() {
     return informal;
   }
-  
+
   //For Graphing
   public Map<String, ClusterDefinition> getClusters() {
     return clusters;
@@ -255,13 +254,56 @@ public class TypingInformation {
 
   public void setDescription(String description) {
     //Currently nothing here
-    
+
     informal.setDescription(description);
   }
-  
+
   public FormalTypeChecker getFormalTypeChecker() {
     return new FormalTypeChecker(clusters, classes, types, classInheritanceGraph, simpleClassInheritanceGraph, classClusterGraph, clusterClusterGraph);
   }
-  
+
+  public Graph<String, Type> getClassInheritanceGraph() {
+    return classInheritanceGraph;
+  }
+
+  public Graph<String, String> getSimpleClassInheritanceGraph() {
+    return simpleClassInheritanceGraph;
+  }
+
+  public Graph<String, ClusterDefinition> getClassClusterGraph() {
+    return classClusterGraph;
+  }
+
+  public Graph<String, ClusterDefinition> getClusterClusterGraph() {
+    return clusterClusterGraph;
+  }
+
+  public void setClassReused() {
+    if (context.isInClass()) {
+      ClassDefinition def = classes.get(context.getClassName());
+      if (def != null) {
+        def.setReused(true);
+      }
+    }
+  }
+
+  public void setClassPersistent() {
+    if (context.isInClass()) {
+      ClassDefinition def = classes.get(context.getClassName());
+      if (def != null) {
+        def.setPersistent(true);
+      }
+    }
+  }
+
+  public void setClassInterfaced() {
+    if (context.isInClass()) {
+      ClassDefinition def = classes.get(context.getClassName());
+      if (def != null) {
+        def.setInterfaced(true);
+      }
+    }
+  }
+
 }
 
