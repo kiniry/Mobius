@@ -256,6 +256,7 @@ allsource =	$(javafiles) \
 .PHONY: textfiles archives sources classes clean_source test onetest 
 .PHONY: documentation javadocs manual clean_docs clean_html clean_javadoc
 .PHONY: packaging clean_packaging
+.PHONY: jml escjava
 
 all:	textfiles sources documentation packaging distribution
 
@@ -324,6 +325,12 @@ clean_source:
 	rm -f $(classfiles) \
 		$(hcjavafiles) $(stdjavafiles) \
 		$(otherclassfiles)
+
+jml:
+	jml -classpath ../jmlspecs/:libs/servlet.jar:src mobius.logging
+
+escjava:
+	escjava2 -classpath libs/servlet.jar:src -specs ../jmlspecs/ mobius.logging
 
 #---------------------------------------------------------------------
 # Tests
