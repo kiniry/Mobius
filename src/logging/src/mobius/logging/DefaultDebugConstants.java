@@ -140,9 +140,9 @@ public class DefaultDebugConstants
    * Associated declaration is "./mobius/logging/DefaultDebugConstants.java", line 139, col 6:
    */
   //@ also
-  // @ ensures the_categories_map.size() >= 6; XXX
+  //@ ensures the_categories_map.size() >= 6;
   public void initCategories(/*@ non_null @*/ Map the_categories_map) {
-	the_categories_map.clear();
+	  the_categories_map.clear();
     the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
     the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
     the_categories_map.put(CRITICAL, Integer.valueOf(CRITICAL_LEVEL));

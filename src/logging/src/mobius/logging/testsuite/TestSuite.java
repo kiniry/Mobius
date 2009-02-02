@@ -86,6 +86,10 @@ package mobius.logging.testsuite;
 public class TestSuite {
   // Attributes
   // Constructors
+  private TestSuite() {
+    assert false;
+  }
+
   // Inherited Methods
   // Public Methods
 
@@ -155,25 +159,25 @@ public class TestSuite {
    * this string exists then show a version message via System.out
    * and return the value true.  Otherwise, return a false.
    *
-   * @param argv the arguments passed to this program from the command-line.
+   * @param the_arguments the arguments passed to this program from the command-line.
    * @return true iff we have shown the version information on the console.
    * @postcondition (("--version" in argv) implies show version info)
    * @postcondition (Result == ("--version" in argv))
    */
-  private static boolean showVersion(String [] argv) {
-    if (argv == null)
+  private static boolean showVersion(String [] the_arguments) {
+    if (the_arguments == null)
       return false;
-    if (argv.length == 0)
+    if (the_arguments.length == 0)
       return false;
 
-    for (int i = 0; i < argv.length; i++) {
-      if (argv[i].indexOf("--version") != -1) {
+    for (int i = 0; i < the_arguments.length; i++) {
+      if (the_arguments[i].indexOf("--version") != -1) {
         System.out.println("The Mobius Logging test suite.\n");
-        System.out.println("Copyright (c) 1997-2007 Joseph Kiniry");
+        System.out.println("Copyright (c) 1997-2009 Joseph Kiniry");
         System.out.println("Copyright (c) 2000-2001 KindSoftware, LLC");
         System.out.println("Copyright (c) 1997-1999 " +
                            "California Institute of Technology");
-        System.out.println("Copyright (c) 2007 University College Dublin");
+        System.out.println("Copyright (c) 2007-2009 University College Dublin");
         System.out.println("All rights reserved.");
         System.out.println("See accompanying LICENSE files for more " +
                            "information.");
@@ -188,19 +192,19 @@ public class TestSuite {
    * this string exists in the parameter then show a help message on
    * System.out and return the value true.  Otherwise, return a false.
    *
-   * @param argv the arguments passed to this program from the command-line.
+   * @param the_arguments the arguments passed to this program from the command-line.
    * @return true iff a help message ws printed.
    * @postcondition (("--help" in argv) implies show help)
    * @postcondition (Result == ("--help" in argv))
    */
-  private static boolean showHelp(String [] argv) {
-    if (argv == null)
+  private static boolean showHelp(String [] the_arguments) {
+    if (the_arguments == null)
       return false;
-    if (argv.length == 0)
+    if (the_arguments.length == 0)
       return false;
 
-    for (int i = 0; i < argv.length; i++) {
-      if (argv[i] == "--help") {
+    for (int i = 0; i < the_arguments.length; i++) {
+      if (the_arguments[i] == "--help") {
         System.out.println("Usage: TestSuite [TESTOPTION]...");
         System.out.println("Test the IDebug debugging framework according to TESTOPTION.");
         System.out.println("Example: java idebughc.testsuite.TestSuite --window\n");

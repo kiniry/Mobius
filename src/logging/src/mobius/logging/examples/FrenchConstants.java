@@ -77,7 +77,6 @@ public interface FrenchConstants extends DebugConstants {
   // Various messages that can be localized or otherwise customized.
   /** What is an error called? */
   String ERROR_STRING = "l'error";
-  // "affirmation �chou�e";
   /** What is a failed assertion called? */
   String FAILED_ASSERTION_STRING = "affirmation echouee";
 

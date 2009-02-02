@@ -62,7 +62,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * <p> The output channel used by this <code>WriterOutput</code>
    * object. </p>
    */
-  private /*@ non_null @*/ PrintWriter my_print_writer = new PrintWriter(System.err);
+  private transient /*@ non_null @*/ PrintWriter my_print_writer = new PrintWriter(System.err);
 
   // Constructors
 

@@ -141,7 +141,7 @@ import java.util.Map;
  * this VM; you are adding all classes currently defined and all classes that
  * might ever be defined in this VM.
  * </p>
- * 
+ *
  * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
  * @history Versions 0.01 through 0.10 were developed as
@@ -205,761 +205,760 @@ import java.util.Map;
  */
 //+@ nullable_by_default
 public class Debug implements Cloneable {
-	// Attributes
+  // Attributes
 
-	/**
-	 * <p>
-	 * <code>my_thread_map</code> is a map of all threads that have some
-	 * per-thread specific debugging attributes defined. Per-thread attributes
-	 * include categories and classes. A key of this map is a reference to a
-	 * <code>Thread</code>, while a data value is a <code>Context</code>
-	 * object which contains the information specific to this thread.
-	 * </p>
-	 * 
-	 * <p>
-	 * <code>my_thread_map</code> always has two entries, one under the key
-	 * "GLOBAL_CATEGORIES" and one under the key "GLOBAL_CLASSES". These entries
-	 * contain all the class-global categories and class-specific information
-	 * for debugging, respectively.
-	 * </p>
-	 * 
-	 * <p>
-	 * Internal class handling is somewhat complicated. If the expression "*" is
-	 * <em>removed</em>, the database is simply cleared. If the expression
-	 * "*" is <em>added</em>, the entry is inserted in the table. So, if one
-	 * removes specific classes after removing "*", or if one adds specific
-	 * classes after adding "*", there is no change to the database.
-	 * <em>But</em>, if you remove specific classes after adding "*", or if
-	 * you add specific classes after removing "*", your changes will be noted.
-	 * I.e. <code>Debug</code> handles both additive and reductive
-	 * specification of classes.
-	 * </p>
-	 */
-	protected /*@ non_null @*/ Map my_thread_map;
+  /**
+   * <p>
+   * <code>my_thread_map</code> is a map of all threads that have some
+   * per-thread specific debugging attributes defined. Per-thread attributes
+   * include categories and classes. A key of this map is a reference to a
+   * <code>Thread</code>, while a data value is a <code>Context</code>
+   * object which contains the information specific to this thread.
+   * </p>
+   * 
+   * <p>
+   * <code>my_thread_map</code> always has two entries, one under the key
+   * "GLOBAL_CATEGORIES" and one under the key "GLOBAL_CLASSES". These entries
+   * contain all the class-global categories and class-specific information
+   * for debugging, respectively.
+   * </p>
+   * 
+   * <p>
+   * Internal class handling is somewhat complicated. If the expression "*" is
+   * <em>removed</em>, the database is simply cleared. If the expression
+   * "*" is <em>added</em>, the entry is inserted in the table. So, if one
+   * removes specific classes after removing "*", or if one adds specific
+   * classes after adding "*", there is no change to the database.
+   * <em>But</em>, if you remove specific classes after adding "*", or if
+   * you add specific classes after removing "*", your changes will be noted.
+   * I.e. <code>Debug</code> handles both additive and reductive
+   * specification of classes.
+   * </p>
+   */
+  protected /*@ non_null @*/ Map my_thread_map;
 
-	/**
-	 * <p>
-	 * The debugging constants for this class.
-	 * </p>
-	 * 
-	 * @modifies SINGLE-ASSIGNMENT
-	 */
-	/*@ constraint \old(my_debug_constants) == my_debug_constants;
-	 */
-	protected /*@ non_null @*/ DebugConstants my_debug_constants;
+  /**
+   * <p>
+   * The debugging constants for this class.
+   * </p>
+   * 
+   * @modifies SINGLE-ASSIGNMENT
+   */
+  /*@ constraint \old(my_debug_constants) == my_debug_constants;
+   */
+  protected /*@ non_null @*/ DebugConstants my_debug_constants;
 
-	/**
-	 * <p>
-	 * The current "global" (<code>Debug</code> instance scoped) flag
-	 * indicating if any debugging is enabled. If (isOn == false), all calls
-	 * like <code>Assert.assert()</code> and <code>DebugOutput.print()</code>,
-	 * but for the query and state change functions (like <code>isOn()</code>,
-	 * <code>turnOn()</code>, etc.) are short-circuited and do nothing.
-	 * </p>
-	 */
-	protected boolean my_is_on;
+  /**
+   * <p>
+   * The current "global" (<code>Debug</code> instance scoped) flag
+   * indicating if any debugging is enabled. If (isOn == false), all calls
+   * like <code>Assert.assert()</code> and <code>DebugOutput.print()</code>,
+   * but for the query and state change functions (like <code>isOn()</code>,
+   * <code>turnOn()</code>, etc.) are short-circuited and do nothing.
+   * </p>
+   */
+  protected boolean my_is_on;
 
-	/**
-	 * <p>
-	 * The current global (<code>Debug</code> instance scoped) debug level of
-	 * the <code>Debug</code> class.
-	 * </p>
-	 * 
-	 * @design Higher valued levels usually indicate higher priorities. E.g. A
-	 *         level 9 message is in the default implementation an asssertion;
-	 *         if it fails, the program exits. A level 5 message is an error and
-	 *         the user should probably be informed of the problem. You can
-	 *         override this behavior by subtyping <code>DebugConstants</code>
-	 *         and installing the new constant set when constructing
-	 *         <code>Debug</code>.
-	 * 
-	 * @values (my_debug_constants.LEVEL_MIN <= level <=
-	 *         my_debug_constants.LEVEL_MAX)
-	 */
-	/*@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <=
+  /**
+   * <p>
+   * The current global (<code>Debug</code> instance scoped) debug level of
+   * the <code>Debug</code> class.
+   * </p>
+   * 
+   * @design Higher valued levels usually indicate higher priorities. E.g. A
+   *         level 9 message is in the default implementation an asssertion;
+   *         if it fails, the program exits. A level 5 message is an error and
+   *         the user should probably be informed of the problem. You can
+   *         override this behavior by subtyping <code>DebugConstants</code>
+   *         and installing the new constant set when constructing
+   *         <code>Debug</code>.
+   * 
+   * @values (my_debug_constants.LEVEL_MIN <= level <=
+   *         my_debug_constants.LEVEL_MAX)
+   */
+  /*@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <=
 	  @ my_debug_constants.LEVEL_MAX;
-	 */
-	protected int my_level;
+   */
+  protected int my_level;
 
-	/**
-	 * <p>
-	 * The <code>Assert</code> object associated with this <code>Debug</code>
-	 * object, when instantiated.
-	 * </p>
-	 * 
-	 * @modifies SINGLE-ASSIGNMENT
-	 */
-	protected /*@ non_null @*/ Assert my_assert;
+  /**
+   * <p>
+   * The <code>Assert</code> object associated with this <code>Debug</code>
+   * object, when instantiated.
+   * </p>
+   *
+   * @modifies SINGLE-ASSIGNMENT
+   */
+  protected /*@ non_null @*/ Assert my_assert;
 
-	/**
-	 * <p>
-	 * The <code>Collect</code> object associated with this <code>Debug</code>
-	 * object, when instantiated.
-	 * </p>
-	 * 
-	 * @modifies SINGLE-ASSIGNMENT
-	 */
-	protected AbstractCollect my_collect;
+  /**
+   * <p>
+   * The <code>Collect</code> object associated with this <code>Debug</code>
+   * object, when instantiated.
+   * </p>
+   *
+   * @modifies SINGLE-ASSIGNMENT
+   */
+  protected AbstractCollect my_collect;
 
-	/**
-	 * <p>
-	 * Private debugging utility class that encapsulates several helpful
-	 * algorithms.
-	 * </p>
-	 * 
-	 * @modifies SINGLE-ASSIGNMENT
-	 */
-	protected /*@ non_null @*/ Utilities my_debug_utilities;
+  /**
+   * <p>
+   * Private debugging utility class that encapsulates several helpful
+   * algorithms.
+   * </p>
+   *
+   * @modifies SINGLE-ASSIGNMENT
+   */
+  protected /*@ non_null @*/ Utilities my_debug_utilities;
 
-	/**
-	 * <p>
-	 * The class used by this thread to control debugging output device. All
-	 * global debugging messages will use this interface for output.
-	 * </p>
-	 */
-	protected transient DebugOutput my_debug_output_interface;
+  /**
+   * <p>
+   * The class used by this thread to control debugging output device. All
+   * global debugging messages will use this interface for output.
+   * </p>
+   */
+  protected transient DebugOutput my_debug_output_interface;
 
-	// Constructors
+  // Constructors
 
-	/**
-	 * <p>
-	 * Construct a new <code>Debug</code> class. Note that the method
-	 * <code>setOutputInterface</code> need be called on the newly constructed
-	 * <code>Debug</code> object before it can be used.
-	 * </p>
-	 */
-	public Debug() {
-		init(new DefaultDebugConstants(), null);
-	}
+  /**
+   * <p>
+   * Construct a new <code>Debug</code> class. Note that the method
+   * <code>setOutputInterface</code> need be called on the newly constructed
+   * <code>Debug</code> object before it can be used.
+   * </p>
+   */
+  public Debug() {
+    init(new DefaultDebugConstants(), null);
+  }
 
-	/**
-	 * <p>
-	 * Construct a new <code>Debug</code> class. Note that the method
-	 * <code>setOutputInterface</code> need be called on the newly constructed
-	 * <code>Debug</code> object before it can be used.
-	 * </p>
-	 * 
-	 * @param some_constants
-	 *            an implementation of the <code>DebugConstants</code>
-	 *            interface that defines the semantics of this debug context.
-	 * @param a_collect
-	 *            an implementation of the <code>Collect</code> class.
-	 * @see mobius.logging.examples.SimpleCollect
-	 */
-	public Debug(final /*@ non_null @*/ DebugConstants some_constants,
-			final /*@ non_null @*/ AbstractCollect a_collect) {
-		init(some_constants, a_collect);
-	}
+  /**
+   * <p>
+   * Construct a new <code>Debug</code> class. Note that the method
+   * <code>setOutputInterface</code> need be called on the newly constructed
+   * <code>Debug</code> object before it can be used.
+   * </p>
+   * 
+   * @param some_constants
+   *            an implementation of the <code>DebugConstants</code>
+   *            interface that defines the semantics of this debug context.
+   * @param a_collect
+   *            an implementation of the <code>Collect</code> class.
+   * @see mobius.logging.examples.SimpleCollect
+   */
+  public Debug(final /*@ non_null @*/ DebugConstants some_constants,
+               final /*@ non_null @*/ AbstractCollect a_collect) {
+    init(some_constants, a_collect);
+  }
 
-	// Public Methods
+  // Public Methods
 
-	// Inherited Methods
+  // Inherited Methods
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public final Object clone() throws CloneNotSupportedException {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException cnse) {
-			throw new RuntimeException(cnse.getMessage(), cnse);
-		}
-	}
+  /**
+   * {@inheritDoc}
+   */
+  public final Object clone() throws CloneNotSupportedException {
+    try {
+      return super.clone();
+    } catch (CloneNotSupportedException cnse) {
+      throw new RuntimeException(cnse.getMessage(), cnse);
+    }
+  }
 
-	/**
-	 * <p>
-	 * Set the global output interface to a new <code>DebugOutput</code>.
-	 * </p>
-	 * 
-	 * @concurrency CONCURRENT
-	 * @modifies debugOutputInterface
-	 * @param the_new_debug_output
-	 *            the new output interface.
-	 */
-	//@ ensures my_debug_output_interface == the_new_debug_output;
-	public void setOutputInterface(final DebugOutput the_new_debug_output) {
-		this.my_debug_output_interface = the_new_debug_output;
-	}
+  /**
+   * <p>
+   * Set the global output interface to a new <code>DebugOutput</code>.
+   * </p>
+   * 
+   * @concurrency CONCURRENT
+   * @modifies debugOutputInterface
+   * @param the_new_debug_output
+   *            the new output interface.
+   */
+  //@ ensures my_debug_output_interface == the_new_debug_output;
+  public void setOutputInterface(final DebugOutput the_new_debug_output) {
+    this.my_debug_output_interface = the_new_debug_output;
+  }
 
-	/**
-	 * @concurrency CONCURRENT
-	 * @modifies QUERY
-	 * @return the <code>Assert</code> object associated with this
-	 *         <code>Debug</code> object.
-	 */
-	//@ ensures \result != null;
-	public /*@ pure @*/ Assert getAssert() {
-		return my_assert;
-	}
+  /**
+   * @concurrency CONCURRENT
+   * @modifies QUERY
+   * @return the <code>Assert</code> object associated with this
+   *         <code>Debug</code> object.
+   */
+  //@ ensures \result != null;
+  public /*@ pure @*/ Assert getAssert() {
+    return my_assert;
+  }
 
-	/**
-	 * @concurrency CONCURRENT
-	 * @modifies QUERY
-	 * @return the <code>Collect</code> object associated with this
-	 *         <code>Debug</code> object.
-	 */
-	public /*@ pure @*/ AbstractCollect getCollect() {
-		return my_collect;
-	}
+  /**
+   * @concurrency CONCURRENT
+   * @modifies QUERY
+   * @return the <code>Collect</code> object associated with this
+   *         <code>Debug</code> object.
+   */
+  public /*@ pure @*/ AbstractCollect getCollect() {
+    return my_collect;
+  }
 
-	/**
-	 * @concurrency CONCURRENT
-	 * @modifies QUERY
-	 * @return the <code>DebugOutput</code> corresponding to the invoking
-	 *         thread or, if that thread has no interface, the global output
-	 *         interface.
-	 */
-	public /*@ pure @*/ DebugOutput getOutputInterface() {
-		final Thread currentThread = Thread.currentThread();
+  /**
+   * @concurrency CONCURRENT
+   * @modifies QUERY
+   * @return the <code>DebugOutput</code> corresponding to the invoking
+   *         thread or, if that thread has no interface, the global output
+   *         interface.
+   */
+  public /*@ pure @*/ DebugOutput getOutputInterface() {
+    final Thread currentThread = Thread.currentThread();
 
-		if (my_thread_map.containsKey( currentThread)) {
-			final Context debugContext = (Context)
-					(my_thread_map.get( currentThread));
-			//@ assume debugContext != null;
-			return debugContext.getOutputInterface();
-		} else
-			return this.my_debug_output_interface;
-	}
+    if (my_thread_map.containsKey(currentThread)) {
+      final Context debugContext = (Context)(my_thread_map.get(currentThread));
+      //@ assume debugContext != null;
+      return debugContext.getOutputInterface();
+    } else
+      return this.my_debug_output_interface;
+  }
 
-	/**
-	 * @concurrency CONCURRENT
-	 * @modifies QUERY
-	 * @return the <code>DebugConstants</code> for this <code>Debug</code>
-	 *         object.
-	 */
-	public /*@ pure non_null @*/ DebugConstants getDebugConstants() {
-		return my_debug_constants;
-	}
+  /**
+   * @concurrency CONCURRENT
+   * @modifies QUERY
+   * @return the <code>DebugConstants</code> for this <code>Debug</code>
+   *         object.
+   */
+  public /*@ pure non_null @*/ DebugConstants getDebugConstants() {
+    return my_debug_constants;
+  }
 
-	/**
-	 * <p>
-	 * Returns a boolean indicating if any debugging is turned on.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return a boolean indicating if any debugging is turned on.
-	 */
-	public /*@ pure @*/ synchronized boolean isOn() {
-		return my_is_on;
-	}
+  /**
+   * <p>
+   * Returns a boolean indicating if any debugging is turned on.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return a boolean indicating if any debugging is turned on.
+   */
+  public /*@ pure @*/ synchronized boolean isOn() {
+    return my_is_on;
+  }
 
-	/**
-	 * <p>
-	 * Returns a boolean indicating whether any debugging facilities are turned
-	 * on for a particular thread.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @ensures Debugging turned on for passed thread.
-	 * @param thread
-	 *            is the thread that we are interested in.
-	 * @return a boolean indicating whether any debugging facilities are turned
-	 *         on for a particular thread.
-	 */
-	public synchronized boolean isOn( /*@ non_null @*/ Thread thread) {
-		// Make sure that there is a legal entry in the my_thread_map
-		// for this particular thread.
-		if (my_thread_map.containsKey(thread)) {
-			// Get the object that describes the per-thread debugging state.
-			final Context the_debug_context = (Context) (my_thread_map
-					.get(thread)); //@ nowarn Exception;
-			//@ assume the_debug_context != null;
+  /**
+   * <p>
+   * Returns a boolean indicating whether any debugging facilities are turned
+   * on for a particular thread.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @ensures Debugging turned on for passed thread.
+   * @param thread
+   *            is the thread that we are interested in.
+   * @return a boolean indicating whether any debugging facilities are turned
+   *         on for a particular thread.
+   */
+  public synchronized boolean isOn(/*@ non_null @*/ Thread thread) {
+    // Make sure that there is a legal entry in the my_thread_map
+    // for this particular thread.
+    if (my_thread_map.containsKey(thread)) {
+      // Get the object that describes the per-thread debugging state.
+      final Context the_debug_context = (Context) (my_thread_map
+          .get(thread)); //@ nowarn Exception;
+      //@ assume the_debug_context != null;
 
-			return the_debug_context.isOn();
-		} else
-			return false;
-	}
+      return the_debug_context.isOn();
+    } else
+      return false;
+  }
 
-	/**
-	 * <p>
-	 * Returns a boolean indicating if any debugging is turned off.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return a boolean indicating if any debugging is turned on.
-	 * @review kiniry Are the isOff() methods necessary at all?
-	 */
-	public synchronized boolean isOff() {
-		return (!isOn());
-	}
+  /**
+   * <p>
+   * Returns a boolean indicating if any debugging is turned off.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return a boolean indicating if any debugging is turned on.
+   * @review kiniry Are the isOff() methods necessary at all?
+   */
+  public synchronized boolean isOff() {
+    return (!isOn());
+  }
 
-	/**
-	 * <p>
-	 * Returns a boolean indicating whether any debugging facilities are turned
-	 * off for a particular thread.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @param thread
-	 *            is the thread that we are interested in.
-	 * @return a boolean indicating whether any debugging facilities are turned
-	 *         off for a particular thread.
-	 * @review kiniry Are the isOff() methods necessary at all?
-	 */
-	public synchronized boolean isOff( /*@ non_null @*/ Thread thread) {
-		return (!isOn(thread));
-	}
+  /**
+   * <p>
+   * Returns a boolean indicating whether any debugging facilities are turned
+   * off for a particular thread.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @param thread
+   *            is the thread that we are interested in.
+   * @return a boolean indicating whether any debugging facilities are turned
+   *         off for a particular thread.
+   * @review kiniry Are the isOff() methods necessary at all?
+   */
+  public synchronized boolean isOff(/*@ non_null @*/ Thread thread) {
+    return (!isOn(thread));
+  }
 
-	/**
-	 * <p>
-	 * Turns on class-global debugging facilities.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies isOn
-	 */
-	//@ assignable my_is_on;
-	//@ ensures my_is_on == true;
-	public synchronized void turnOn() {
-		my_is_on = true;
-	}
+  /**
+   * <p>
+   * Turns on class-global debugging facilities.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies isOn
+   */
+  //@ assignable my_is_on;
+  //@ ensures my_is_on == true;
+  public synchronized void turnOn() {
+    my_is_on = true;
+  }
 
-	/**
-	 * <p>
-	 * Turns off class-global debugging facilities.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies isOn
-	 */
-	//@ assignable my_is_on;
-	//@ ensures my_is_on == false;
-	public synchronized void turnOff() {
-		my_is_on = false;
-	}
+  /**
+   * <p>
+   * Turns off class-global debugging facilities.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies isOn
+   */
+  //@ assignable my_is_on;
+  //@ ensures my_is_on == false;
+  public synchronized void turnOff() {
+    my_is_on = false;
+  }
 
-	/**
-	 * <p>
-	 * Adds a category to the database of legal debugging categories. Once a
-	 * category exists in the database, its debugging level cannot be changed.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies my_thread_map, categoryMap
-	 * @param category
-	 *            the category to add to the global set of categories.
-	 * @param level
-	 *            the debugging level associated with the passed category.
-	 * @return a boolean indicating if the category was successfully added to
-	 *         the database. A false indicates either the category was already
-	 *         in the database at a different level or the parameters were
-	 *         invalid.
-	 */
-	//@ requires 0 < category.length();
-	public synchronized boolean addCategory(/*@ non_null @*/String category,
-			int level) {
-		// Get a reference to the global category map.
-		final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-		//@ assume categoryMap != null;
+  /**
+   * <p>
+   * Adds a category to the database of legal debugging categories. Once a
+   * category exists in the database, its debugging level cannot be changed.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies my_thread_map, categoryMap
+   * @param category
+   *            the category to add to the global set of categories.
+   * @param level
+   *            the debugging level associated with the passed category.
+   * @return a boolean indicating if the category was successfully added to
+   *         the database. A false indicates either the category was already
+   *         in the database at a different level or the parameters were
+   *         invalid.
+   */
+  //@ requires 0 < category.length();
+  public synchronized boolean addCategory(/*@ non_null @*/String category,
+                                          int level) {
+    // Get a reference to the global category map.
+    final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
+    //@ assume categoryMap != null;
 
-		return addCategoryToMap(categoryMap, category, level);
-	}
+    return addCategoryToMap(categoryMap, category, level);
+  }
 
-	/**
-	 * <p>
-	 * Removes a category to the database of legal debugging categories.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies threadMap, categoryMap
-	 * @param category
-	 *            the category to remove.
-	 * @return a boolean indicating if the category was successfully removed
-	 *         from the database. A false indicates that the parameters were
-	 *         invalid.
-	 */
-	//@ requires 0 < category.length();
-	public synchronized boolean removeCategory(/*@ non_null @*/String category) {
-		// Get a reference to the global category map.
-		final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-		//@ assume categoryMap != null;
+  /**
+   * <p>
+   * Removes a category to the database of legal debugging categories.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies threadMap, categoryMap
+   * @param category
+   *            the category to remove.
+   * @return a boolean indicating if the category was successfully removed
+   *         from the database. A false indicates that the parameters were
+   *         invalid.
+   */
+  //@ requires 0 < category.length();
+  public synchronized boolean removeCategory(/*@ non_null @*/String category) {
+    // Get a reference to the global category map.
+    final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
+    //@ assume categoryMap != null;
 
-		return removeCategoryFromMap(categoryMap, category);
-	}
+    return removeCategoryFromMap(categoryMap, category);
+  }
 
-	/**
-	 * <p>
-	 * Returns a boolean indicating if a category is in the class-global
-	 * category database.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @param category
-	 *            is the category to lookup.
-	 * @return a boolean indicating if a category is in the class-global
-	 *         category database.
-	 */
-	//@ requires 0 < category.length();
-	public synchronized boolean containsCategory(
-			/*@ non_null @*/String category) {
-		// Get global category map.
-		final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-		//@ assume map != null;
+  /**
+   * <p>
+   * Returns a boolean indicating if a category is in the class-global
+   * category database.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @param category
+   *            is the category to lookup.
+   * @return a boolean indicating if a category is in the class-global
+   *         category database.
+   */
+  //@ requires 0 < category.length();
+  public synchronized boolean containsCategory(
+                                               /*@ non_null @*/String category) {
+    // Get global category map.
+    final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
+    //@ assume map != null;
 
-		// If entry exists, return a true; otherwise return a false.
-		return (map.containsKey(category));
-	}
+    // If entry exists, return a true; otherwise return a false.
+    return (map.containsKey(category));
+  }
 
-	/**
-	 * <p>
-	 * Returns an <code>Iterator</code> that contains the list of class-global
-	 * debugging categories that are currently in the category database.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return an <code>Iterator</code> that contains the list of class-global
-	 *         debugging categories that are currently in the category database.
-	 * @see Map#values
-	 */
-	public synchronized Iterator listCategories() {
-		// Get global category map.
-		final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-		//@ assume map != null;
+  /**
+   * <p>
+   * Returns an <code>Iterator</code> that contains the list of class-global
+   * debugging categories that are currently in the category database.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return an <code>Iterator</code> that contains the list of class-global
+   *         debugging categories that are currently in the category database.
+   * @see Map#values
+   */
+  public synchronized Iterator listCategories() {
+    // Get global category map.
+    final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
+    //@ assume map != null;
 
-		return (map.values().iterator());
-	}
+    return (map.values().iterator());
+  }
 
-	/**
-	 * <p>
-	 * Adds a class the the class-global database of classes that have debugging
-	 * enabled.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies threadMap, classMap
-	 * @param classRef
-	 *            the class to add to the global table of classes that have
-	 *            debugging enabled.
-	 */
-	public synchronized void addClass( /*@ non_null @*/ Class classRef) {
-		// Get a reference to the global class map.
-		final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-		//@ assume classMap != null;
+  /**
+   * <p>
+   * Adds a class the the class-global database of classes that have debugging
+   * enabled.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies threadMap, classMap
+   * @param classRef
+   *            the class to add to the global table of classes that have
+   *            debugging enabled.
+   */
+  public synchronized void addClass(/*@ non_null @*/ Class classRef) {
+    // Get a reference to the global class map.
+    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
+    //@ assume classMap != null;
 
-		Utilities.addClassToMap(classMap, classRef.getName());
-	}
+    Utilities.addClassToMap(classMap, classRef.getName());
+  }
 
-	/**
-	 * <p>
-	 * Adds a class the the class-global database of classes that have debugging
-	 * enabled. Note that a class of "*" means that all classes will now have
-	 * debugging enabled. There is no way to "undo" such a command short of
-	 * manually adding the individual classes back to the database. (Or,
-	 * equivalently, removing the complement.)
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies threadMap, classMap
-	 * @param className
-	 *            the name of the class to add.
-	 */
-	//@ requires 0 < className.length();
-	public synchronized void addClass( /*@ non_null @*/ String className) {
-		// Get a reference to the global class map.
-		final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-		//@ assume classMap != null;
+  /**
+   * <p>
+   * Adds a class the the class-global database of classes that have debugging
+   * enabled. Note that a class of "*" means that all classes will now have
+   * debugging enabled. There is no way to "undo" such a command short of
+   * manually adding the individual classes back to the database. (Or,
+   * equivalently, removing the complement.)
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies threadMap, classMap
+   * @param className
+   *            the name of the class to add.
+   */
+  //@ requires 0 < className.length();
+  public synchronized void addClass(/*@ non_null @*/ String className) {
+    // Get a reference to the global class map.
+    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
+    //@ assume classMap != null;
 
-		Utilities.addClassToMap(classMap, className);
-	}
+    Utilities.addClassToMap(classMap, className);
+  }
 
-	/**
-	 * <p>
-	 * Removes a class the the class-global database of classes that have
-	 * debugging enabled.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies threadMap, classMap
-	 * @param classRef
-	 *            the class to remove.
-	 */
-	public synchronized void removeClass( /*@ non_null @*/ Class classRef) {
-		// Get a reference to the global class map.
-		final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-		//@ assume classMap != null;
+  /**
+   * <p>
+   * Removes a class the the class-global database of classes that have
+   * debugging enabled.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies threadMap, classMap
+   * @param classRef
+   *            the class to remove.
+   */
+  public synchronized void removeClass(/*@ non_null @*/ Class classRef) {
+    // Get a reference to the global class map.
+    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
+    //@ assume classMap != null;
 
-		Utilities.removeClassFromMap(classMap, classRef.getName());
-	}
+    Utilities.removeClassFromMap(classMap, classRef.getName());
+  }
 
-	/**
-	 * <p>
-	 * Removes a class the the class-global database of classes that have
-	 * debugging enabled. Removes a class from a database of debugging-enabled
-	 * classes. Note that a class of "*" means that all classes will be removed
-	 * and debugging disabled. There is no way to "undo" such a command.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies threadMap, classMap
-	 * @param className
-	 *            the name of the class to remove.
-	 */
-	//@ requires 0 < className.length();
-	public synchronized void removeClass( /*@ non_null @*/ String className) {
-		// Get a reference to the global class map.
-		final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-		//@ assume classMap != null;
+  /**
+   * <p>
+   * Removes a class the the class-global database of classes that have
+   * debugging enabled. Removes a class from a database of debugging-enabled
+   * classes. Note that a class of "*" means that all classes will be removed
+   * and debugging disabled. There is no way to "undo" such a command.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies threadMap, classMap
+   * @param className
+   *            the name of the class to remove.
+   */
+  //@ requires 0 < className.length();
+  public synchronized void removeClass(/*@ non_null @*/ String className) {
+    // Get a reference to the global class map.
+    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
+    //@ assume classMap != null;
 
-		Utilities.removeClassFromMap(classMap, className);
-	}
+    Utilities.removeClassFromMap(classMap, className);
+  }
 
-	/**
-	 * <p>
-	 * Get the context for a specific thread.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @modifies threadMap
-	 * @param thread
-	 *            the thread that we are interested in.
-	 * @return the <code>Context</code> corresponding to thread, or
-	 *         <code>null</code> if no such context exists.
-	 */
-	public synchronized /*@ pure @*/ Context getContext( /*@ non_null @*/ Thread thread) {
-		if (my_thread_map.containsKey(thread))
-			return (Context) (my_thread_map.get(thread));
-		else
-			return null;
-	}
+  /**
+   * <p>
+   * Get the context for a specific thread.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @modifies threadMap
+   * @param thread
+   *            the thread that we are interested in.
+   * @return the <code>Context</code> corresponding to thread, or
+   *         <code>null</code> if no such context exists.
+   */
+  public synchronized /*@ pure @*/ Context getContext(/*@ non_null @*/ Thread thread) {
+    if (my_thread_map.containsKey(thread))
+      return (Context) (my_thread_map.get(thread));
+    else
+      return null;
+  }
 
-	/**
-	 * <p>
-	 * Adds a context to the the class-global database of threads that have
-	 * debugging context.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies my_thread_map
-	 * @param the_debug_context
-	 *            is the context that we are interested in adding.
-	 * @return a boolean indicating if the context was added to the database
-	 *         sucessfully or that the thread was already in the database. A
-	 *         false indicates that the context was invalid.
-	 */
-	public synchronized boolean addContext(
-			/*@ non_null @*/Context the_debug_context) {
-		// @review kiniry Why is a null value being checked given the
-		// precondition?
-		if (the_debug_context == null)
-			return false;
+  /**
+   * <p>
+   * Adds a context to the the class-global database of threads that have
+   * debugging context.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies my_thread_map
+   * @param the_debug_context
+   *            is the context that we are interested in adding.
+   * @return a boolean indicating if the context was added to the database
+   *         sucessfully or that the thread was already in the database. A
+   *         false indicates that the context was invalid.
+   */
+  public synchronized boolean addContext(
+                                         /*@ non_null @*/Context the_debug_context) {
+    // @review kiniry Why is a null value being checked given the
+    // precondition?
+    if (the_debug_context == null)
+      return false;
 
-		my_thread_map.put(the_debug_context.getThread(), the_debug_context);
-		return true;
-	}
+    my_thread_map.put(the_debug_context.getThread(), the_debug_context);
+    return true;
+  }
 
-	/**
-	 * <p>
-	 * Removes a context from the the class-global database of threads that have
-	 * debugging context.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies my_thread_map
-	 * @param debugContext
-	 *            is the context that we are interested in removing.
-	 * @return a boolean indicating if the context was removed from the database
-	 *         sucessfully or that the thread was not in the database at all. A
-	 *         false indicates that the context was invalid or not in the table.
-	 */
-	public synchronized boolean removeContext(
-			/*@ non_null @*/ Context debugContext) {
-		// @review kiniry Why is a null value being checked given the
-		// precondition?
-		if ((debugContext != null) && (my_thread_map.containsKey(debugContext))) {
-			my_thread_map.remove(debugContext);
-			return true;
-		} else
-			return false;
-	}
+  /**
+   * <p>
+   * Removes a context from the the class-global database of threads that have
+   * debugging context.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies my_thread_map
+   * @param debugContext
+   *            is the context that we are interested in removing.
+   * @return a boolean indicating if the context was removed from the database
+   *         sucessfully or that the thread was not in the database at all. A
+   *         false indicates that the context was invalid or not in the table.
+   */
+  public synchronized boolean removeContext(
+                                            /*@ non_null @*/ Context debugContext) {
+    // @review kiniry Why is a null value being checked given the
+    // precondition?
+    if ((debugContext != null) && (my_thread_map.containsKey(debugContext))) {
+      my_thread_map.remove(debugContext);
+      return true;
+    } else
+      return false;
+  }
 
-	/**
-	 * <p>
-	 * Returns an <code>Enumeration</code> that is the list of class-global
-	 * classes that have debugging enabled.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return an <code>Enumeration</code> that is the list of class-global
-	 *         classes that currently have debugging enabled (they are in the
-	 *         class database). Returns a null if a null is passed, otherwise a
-	 *         zero-length Enumeration will be returned if there is no
-	 *         information on the thread at all.
-	 */
-	public synchronized Iterator listClasses() {
-		// Get global category map.
-		final Map map = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-		//@ assume map != null;
+  /**
+   * <p>
+   * Returns an <code>Enumeration</code> that is the list of class-global
+   * classes that have debugging enabled.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return an <code>Enumeration</code> that is the list of class-global
+   *         classes that currently have debugging enabled (they are in the
+   *         class database). Returns a null if a null is passed, otherwise a
+   *         zero-length Enumeration will be returned if there is no
+   *         information on the thread at all.
+   */
+  public synchronized Iterator listClasses() {
+    // Get global category map.
+    final Map map = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
+    //@ assume map != null;
 
-		return (map.values().iterator());
-	}
+    return (map.values().iterator());
+  }
 
-	/**
-	 * <p>
-	 * Set a new class-global debugging level.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies level
-	 * @param level
-	 *            the new debugging level.
-	 * @return a boolean indicating whether the level change succeeded. The only
-	 *         reason why a setLevel might fail is if the level passed is out of
-	 *         range.
-	 */
-	public synchronized boolean setLevel(int level) {
-		if ((level >= my_debug_constants.LEVEL_MIN)
-				&& (level <= my_debug_constants.LEVEL_MAX)) {
-			this.my_level = level;
-			return true;
-		} else
-			return false;
+  /**
+   * <p>
+   * Set a new class-global debugging level.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies level
+   * @param level
+   *            the new debugging level.
+   * @return a boolean indicating whether the level change succeeded. The only
+   *         reason why a setLevel might fail is if the level passed is out of
+   *         range.
+   */
+  public synchronized boolean setLevel(int level) {
+    if ((level >= my_debug_constants.LEVEL_MIN) &&
+        (level <= my_debug_constants.LEVEL_MAX)) {
+      this.my_level = level;
+      return true;
+    } else
+      return false;
 
-	}
+  }
 
-	/**
-	 * <p>
-	 * Returns the current class-global debugging level.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return the current class-global debugging level.
-	 */
+  /**
+   * <p>
+   * Returns the current class-global debugging level.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return the current class-global debugging level.
+   */
 
-	public /*@ pure @*/ synchronized int getLevel() {
-		return my_level;
-	}
+  public /*@ pure @*/ synchronized int getLevel() {
+    return my_level;
+  }
 
-	/**
-	 * <p>
-	 * Returns an <code>Enumeration</code> that is the list of class-global
-	 * threads that have debugging enabled.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @return an <code>Enumeration</code> that is the list of class-global
-	 *         threads that currently have debugging enabled (they are in the
-	 *         thread database).
-	 */
-	public synchronized Iterator listThreads() {
-		return my_thread_map.keySet().iterator();
-	}
+  /**
+   * <p>
+   * Returns an <code>Enumeration</code> that is the list of class-global
+   * threads that have debugging enabled.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @return an <code>Enumeration</code> that is the list of class-global
+   *         threads that currently have debugging enabled (they are in the
+   *         thread database).
+   */
+  public synchronized Iterator listThreads() {
+    return my_thread_map.keySet().iterator();
+  }
 
-	// Protected Methods
-	// Package Methods
-	// Private Methods
+  // Protected Methods
+  // Package Methods
+  // Private Methods
 
-	/**
-	 * <p>
-	 * Initialize all the static data-structures used by the <code>Debug</code>
-	 * class. Note that the <code>initCategories()</code> method is
-	 * automatically called as necessary to initialize the default categories
-	 * database of the <code>Debug</code> class.
-	 * </p>
-	 * 
-	 * @concurrency CONCURRENT
-	 * @modifies my_thread_map, debugConstants, assert, collect, debugUtilities
-	 * @param the_debug_constants
-	 *            an implementation of the <code>DebugConstants</code> that
-	 *            defines the semantics of this debug context.
-	 * @param the_collect
-	 *            an implementation of the <code>Collect</code> class.
-	 */
-	//@ ensures my_thread_map != null;
-	//@ ensures getAssert() != null;
-	//@ ensures getCollect() == the_collect;
-	//@ ensures my_debug_utilities != null;
-	//@ ensures getDebugConstants() == the_debug_constants;
-	//@ nowarn Exception;
-	private /*@ helper @*/ void init(/*@ non_null @*/ DebugConstants the_debug_constants,
-			AbstractCollect the_collect) {
-		my_thread_map = new ConcurrentHashMap();
-		//@ set my_thread_map.keyType = \type(Thread);
-		//@ set my_thread_map.elementType = \type(Context);
-		final Map categoryMap = new ConcurrentHashMap();
-		my_thread_map.put("GLOBAL_CATEGORIES", categoryMap); //@nowarn Exception;
+  /**
+   * <p>
+   * Initialize all the static data-structures used by the <code>Debug</code>
+   * class. Note that the <code>initCategories()</code> method is
+   * automatically called as necessary to initialize the default categories
+   * database of the <code>Debug</code> class.
+   * </p>
+   * 
+   * @concurrency CONCURRENT
+   * @modifies my_thread_map, debugConstants, assert, collect, debugUtilities
+   * @param the_debug_constants
+   *            an implementation of the <code>DebugConstants</code> that
+   *            defines the semantics of this debug context.
+   * @param the_collect
+   *            an implementation of the <code>Collect</code> class.
+   */
+  //@ ensures my_thread_map != null;
+  //@ ensures getAssert() != null;
+  //@ ensures getCollect() == the_collect;
+  //@ ensures my_debug_utilities != null;
+  //@ ensures getDebugConstants() == the_debug_constants;
+  //@ nowarn Exception;
+  private /*@ helper @*/ void init(/*@ non_null @*/ DebugConstants the_debug_constants,
+                                   AbstractCollect the_collect) {
+    my_thread_map = new ConcurrentHashMap();
+    //@ set my_thread_map.keyType = \type(Thread);
+    //@ set my_thread_map.elementType = \type(Context);
+    final Map categoryMap = new ConcurrentHashMap();
+    my_thread_map.put("GLOBAL_CATEGORIES", categoryMap); //@nowarn Exception;
 
-		my_debug_constants = the_debug_constants;
-		my_debug_constants.initCategories(categoryMap);
+    my_debug_constants = the_debug_constants;
+    my_debug_constants.initCategories(categoryMap);
 
-		final Map classMap = new ConcurrentHashMap();
-		my_thread_map.put("GLOBAL_CLASSES", classMap); //@ nowarn Exception;
-		classMap.put("*", Boolean.TRUE);
+    final Map classMap = new ConcurrentHashMap();
+    my_thread_map.put("GLOBAL_CLASSES", classMap); //@ nowarn Exception;
+    classMap.put("*", Boolean.TRUE);
 
-		// Note that we need to actually initialize our own debugging context!
-		my_assert = new Assert(this);
-		my_collect = the_collect;
+    // Note that we need to actually initialize our own debugging context!
+    my_assert = new Assert(this);
+    my_collect = the_collect;
 
-		my_debug_utilities = new Utilities(this);
-	}
+    my_debug_utilities = new Utilities(this);
+  }
 
-	/**
-	 * <p>
-	 * Adds a category to a map of legal debugging categories. Once a category
-	 * exists in the database, its debugging level cannot be changed without
-	 * removing and re-adding the category to the database.
-	 * </p>
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies QUERY
-	 * @param map
-	 *            the map to remove the class from.
-	 * @param category
-	 *            the category to add to the set of defined categories.
-	 * @param level
-	 *            the debugging level associated with the passed category.
-	 * @return a boolean indicating if the category was sucessfully added to the
-	 *         database. A false indicates either the category was already in
-	 *         the database at a different level or the parameters were invalid.
-	 */
-	//@ requires 0 < category.length();
-	private synchronized boolean addCategoryToMap(/*@ non_null @*/Map map,
-			/*@ non_null @*/ String category, int level) {
-		// See if an entry for the passed category exists.
-		if (map.containsKey(category)) {
-			Integer i = (Integer) map.get(category);
-			//@ assume i != null;
-			return i.intValue() == level;
-		}
+  /**
+   * <p>
+   * Adds a category to a map of legal debugging categories. Once a category
+   * exists in the database, its debugging level cannot be changed without
+   * removing and re-adding the category to the database.
+   * </p>
+   * 
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @param map
+   *            the map to remove the class from.
+   * @param category
+   *            the category to add to the set of defined categories.
+   * @param level
+   *            the debugging level associated with the passed category.
+   * @return a boolean indicating if the category was sucessfully added to the
+   *         database. A false indicates either the category was already in
+   *         the database at a different level or the parameters were invalid.
+   */
+  //@ requires 0 < category.length();
+  private synchronized boolean addCategoryToMap(/*@ non_null @*/Map map,
+                                                /*@ non_null @*/ String category, int level) {
+    // See if an entry for the passed category exists.
+    if (map.containsKey(category)) {
+      Integer i = (Integer) map.get(category);
+      //@ assume i != null;
+      return i.intValue() == level;
+    }
 
-		// Add a new entry for the passed category.
-		map.put(category, Integer.valueOf(level));
-		return true;
-	}
+    // Add a new entry for the passed category.
+    map.put(category, Integer.valueOf(level));
+    return true;
+  }
 
-	/**
-	 * <p>
-	 * Removes a category from a database of legal debugging categories.
-	 * </p> 
-	 * 
-	 * @concurrency GUARDED
-	 * @modifies my_thread_map, categoryMap
-	 * @param map
-	 *            is the thread that we are interested in.
-	 * @param category
-	 *            the category to remove.
-	 * @return a boolean indicating if the category was sucessfully removed from
-	 *         the database. A false indicates that the parameters were invalid.
-	 */
-	//@ requires 0 < category.length();
-	private synchronized boolean removeCategoryFromMap(
-			/*@ non_null @*/Map map,
-			/*@ non_null @*/String category) {
-		// If is in the map, remove it.
-		if (map.containsKey(category))
-			map.remove(category);
+  /**
+   * <p>
+   * Removes a category from a database of legal debugging categories.
+   * </p> 
+   * 
+   * @concurrency GUARDED
+   * @modifies my_thread_map, categoryMap
+   * @param map
+   *            is the thread that we are interested in.
+   * @param category
+   *            the category to remove.
+   * @return a boolean indicating if the category was sucessfully removed from
+   *         the database. A false indicates that the parameters were invalid.
+   */
+  //@ requires 0 < category.length();
+  private synchronized boolean removeCategoryFromMap(
+                                                     /*@ non_null @*/Map map,
+                                                     /*@ non_null @*/String category) {
+    // If is in the map, remove it.
+    if (map.containsKey(category))
+      map.remove(category);
 
-		return true;
-	}
+    return true;
+  }
 
 } // end of class Debug
 

@@ -97,13 +97,13 @@ public class TestSuiteThread extends Thread {
     // Build the appropriate DebugOutput implementation depending upon the
     // value of testMode.
     DebugOutput the_debug_output = null;
-    if (my_test_mode.equals("console")) {
+    if ("console".equals(my_test_mode)) {
       the_debug_output = new ConsoleOutput(the_debug);
-    } else if (my_test_mode.equals("servletlog")) {
+    } else if ("servletlog".equals(my_test_mode)) {
       the_debug_output = new ServletLogOutput(the_debug);
-    } else if (my_test_mode.equals("window")) {
+    } else if ("window".equals(my_test_mode)) {
       the_debug_output = new WindowOutput(the_debug);
-    } else if (my_test_mode.equals("writer")) {
+    } else if ("writer".equals(my_test_mode)) {
       the_debug_output = new WriterOutput(the_debug);
     } else
       throw new RuntimeException("Illegal test mode: " + my_test_mode);

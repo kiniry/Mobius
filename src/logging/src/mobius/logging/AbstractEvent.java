@@ -165,7 +165,7 @@ public abstract class AbstractEvent extends Object
    * use this method sparingly.  Also, the length of the output is directly
    * proportional to the event description.
    */
-  public /*@ pure @*/ String toString() {
+  public /*@ pure nullable @*/ String toString() {
     return "[" + my_creation_date.toString() + " | " + my_source_host + " | " +
       my_source_component + "] " + my_type + ":" + my_level + " - " + my_description;
   }
@@ -173,12 +173,12 @@ public abstract class AbstractEvent extends Object
   /** {@inheritDoc} */
   public /*@ pure @*/ int hashCode() {
     return
-       my_source_host.hashCode()
-      +my_source_component.hashCode()
-      +my_creation_date.hashCode()
-      +my_description.hashCode()
-      +my_type.hashCode()
-      +my_level;
+      my_source_host.hashCode() +
+      my_source_component.hashCode() +
+      my_creation_date.hashCode() +
+      my_description.hashCode() +
+      my_type.hashCode() +
+      my_level;
   }
 
   /**

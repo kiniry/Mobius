@@ -160,7 +160,7 @@ public class Context
    * constant during the construction of a Context.
    */
   private int my_level;
-  //@ invariant validLevel( my_level);
+  //@ invariant validLevel(my_level);
 
   /**
    * @serial A map that binds category keys (Strings) to levels
@@ -206,7 +206,7 @@ public class Context
   // @todo kiniry put fields in objectState and use datagroup in frame axiom
   //@ ensures my_is_on == false;
   //@ ensures my_level == my_debug_constants.LEVEL_MIN;
-  //@ ensures validLevel( my_level);
+  //@ ensures validLevel(my_level);
   //@ ensures my_category_map != null;
   //@ ensures my_class_map != null;
   //@ ensures my_debug_constants != null;
@@ -245,7 +245,7 @@ public class Context
     Context contextClone = null;
     try {
       contextClone = (Context)super.clone();
-      //@ assume \fresh( contextClone);
+      //@ assume \fresh(contextClone);
     } catch (CloneNotSupportedException cnse) {
       throw new RuntimeException(cnse.getMessage(), cnse);
     }
@@ -327,9 +327,9 @@ public class Context
                                           int level) {
     // See if an entry for the passed category exists.
     if (my_category_map.containsKey(category)) {
-      Integer i = (Integer)my_category_map.get(category);
-      //@ assume i != null;
-      return i.intValue() == level;
+      Integer aLevel = (Integer)my_category_map.get(category);
+      //@ assume aLevel != null;
+      return aLevel.intValue() == level;
     }
 
     // Add a new entry for the passed category.

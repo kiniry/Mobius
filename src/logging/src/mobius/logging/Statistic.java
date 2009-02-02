@@ -167,8 +167,8 @@ public class Statistic
                                 final double the_scale, final float the_start,
                                 final float the_increment, final float the_decrement) {
     synchronized (this) {
-        my_unique_ID = my_current_ID;
-    	my_current_ID++;
+      my_unique_ID = my_current_ID;
+      my_current_ID++;
     }
     this.my_units = the_units;
     this.my_scale = the_scale;

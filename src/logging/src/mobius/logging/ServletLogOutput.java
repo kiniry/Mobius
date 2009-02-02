@@ -181,7 +181,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
       System.err.print(msg);
     }
     /** {@inheritDoc} */
-    public void log( Exception exception, String msg) {
+    public void log(Exception exception, String msg) {
       System.err.print(msg);
       if (exception != null)
 	      exception.printStackTrace(System.err);
