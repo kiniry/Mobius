@@ -9,7 +9,6 @@ import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -23,8 +22,6 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   private boolean reused;
   private boolean persistent;
   private boolean interfaced;
-  private final Set<Type> parentClasses;
-  private final Set<String> simpleParentClasses; //Minus generics
   private final Map<String,FormalGeneric> formalGenerics;
   private boolean hasFormalGenerics;
   private final Map<String,FeatureSpecificationInstance> features;
@@ -32,11 +29,12 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   
   private final Collection<String> invariants;
   
-  public ClassDefinition(String className, SourceLocation loc) {
+  private final TypingInformation typingInfo;
+  
+  public ClassDefinition(String className, SourceLocation loc, TypingInformation typingInfo) {
     super(className, loc);
     
-    parentClasses = new HashSet<Type>();
-    simpleParentClasses = new HashSet<String>();
+    this.typingInfo = typingInfo;
     formalGenerics = new HashMap<String,FormalGeneric>();
     hasFormalGenerics = false;
     features = new HashMap<String,FeatureSpecificationInstance>();
@@ -51,18 +49,8 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     interfaced = false;
   }
 
-  public void addParentClass(Type parentType) {
-    parentClasses.add(parentType);
-    simpleParentClasses.add(parentType.getNonGenericType());
-    //TODO confusion here with parent classes (formal level, as Types)
-    //vs. super classes (informal level, as strings)
-    //Reuse storage for simple string names of parent types anyway
-    super.addSuperClass(parentType.getNonGenericType());
-  }
-  
   public boolean hasParentClass(Type parent) {
-    //return parentClasses.contains(parent);
-    return simpleParentClasses.contains(parent.getNonGenericType());
+    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getClassName()).contains(parent.getNonGenericType());
   }
   
   public void addFormalGeneric(String name, Type type, SourceLocation loc) {
@@ -123,11 +111,11 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public Set<Type> getParentClasses() {
-    return parentClasses;
+    return typingInfo.getClassInheritanceGraph().getLinkedNodes(getClassName());
   }
   
   public Set<String> getSimpleParentClasses() {
-    return simpleParentClasses;
+    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getClassName());
   }
   
   public Collection<FeatureSpecificationInstance> getDeferredFeatures() {
@@ -190,6 +178,11 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
 
   public void setInterfaced(boolean interfaced) {
     this.interfaced = interfaced;
+  }
+
+  @Override
+  public Collection<String> getSuperClasses() {
+    return getSimpleParentClasses();
   }
   
   

@@ -797,6 +797,7 @@ static_relation  :  ir=inheritance_relation
 
 inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')? 
                          parent (semantic_label)? 
+                         { getTI().addParentClass(ie.ucd.bon.util.StringUtil.getComponentNameFromStaticRef($c.text),$parent.text,getSLoc($c.start,$parent.stop)); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]

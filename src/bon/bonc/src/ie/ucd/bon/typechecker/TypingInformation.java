@@ -95,7 +95,7 @@ public class TypingInformation {
   public void addClass(String className, SourceLocation loc, String keyword) {
     ClassDefinition def = classes.get(className);
     if (def == null) {
-      def = new ClassDefinition(className, loc);
+      def = new ClassDefinition(className, loc, this);
 
       if (keyword != null) {
         if (keyword.equals("root")) {
@@ -141,21 +141,21 @@ public class TypingInformation {
       }      
     }
   }
-
+  
   public void addParentClass(String parent, SourceLocation loc) {
+    addParentClass(context.getClassName(), parent, loc);
+  }
+  
+  public void addParentClass(String child, String parent, SourceLocation loc) {
     Type parentType = getType(parent);
-    String currentClassName = context.getClassName();
-    if (parentType.getNonGenericType().equals(currentClassName)) {
-      problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClassName));
+    if (parentType.getNonGenericType().equals(child)) {
+      problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child));
     } else {
-
-      if (simpleClassInheritanceGraph.hasEdge(currentClassName,parentType.getNonGenericType())) {
-        problems.addProblem(new DuplicateSuperclassWarning(loc,currentClassName,parent));
+      if (simpleClassInheritanceGraph.hasEdge(child, parentType.getNonGenericType())) {
+        problems.addProblem(new DuplicateSuperclassWarning(loc, child, parent));
       } else {
-        classInheritanceGraph.addEdge(currentClassName, parentType);
-        simpleClassInheritanceGraph.addEdge(currentClassName, parentType.getNonGenericType());
-        ClassDefinition def = classes.get(currentClassName);
-        def.addParentClass(parentType);
+        classInheritanceGraph.addEdge(child, parentType);
+        simpleClassInheritanceGraph.addEdge(child, parentType.getNonGenericType());
       }
     }
   }

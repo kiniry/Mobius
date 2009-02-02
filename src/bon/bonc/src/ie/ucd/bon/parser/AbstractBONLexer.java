@@ -52,7 +52,7 @@ public abstract class AbstractBONLexer extends Lexer {
       msg = "Unexpected character "+getCharErrorDisplay(e.c)+", expecting "+getCharErrorDisplay(mte.expecting);
     }
     else if ( e instanceof NoViableAltException ) {
-      NoViableAltException nvae = (NoViableAltException)e;
+      //NoViableAltException nvae = (NoViableAltException)e;
       // for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
       // and "(decision="+nvae.decisionNumber+") and
       // "state "+nvae.stateNumber
@@ -60,7 +60,7 @@ public abstract class AbstractBONLexer extends Lexer {
       msg = "Unexpected " + getCharErrorDisplay(e.c);
     }
     else if ( e instanceof EarlyExitException ) {
-      EarlyExitException eee = (EarlyExitException)e;
+      //EarlyExitException eee = (EarlyExitException)e;
       // for development, can add "(decision="+eee.decisionNumber+")"
       msg = "required (...)+ loop did not match anything at character "+getCharErrorDisplay(e.c);
     }

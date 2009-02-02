@@ -37,7 +37,8 @@ public class Graph<A,B> {
   }
   
   public final Set<B> getLinkedNodes(final A from) {
-    return edges.get(from);
+    Set<B> result = edges.get(from);
+    return result == null ? new HashSet<B>() : result;
   }
   
   public final Set<A> getStartingNodes() {

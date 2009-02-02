@@ -48,7 +48,7 @@ public class ClassChartDefinition {
     }
     
     public boolean hasSuperClass(String className) {
-      return superClasses.contains(className);
+      return getSuperClasses().contains(className);
     }
 
     public Collection<String> getSuperClasses() {

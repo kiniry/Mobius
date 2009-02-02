@@ -123,5 +123,12 @@ public class FeatureSpecification {
       this.className = className;
       this.featureName = featureName;
     }
+    public String getClassName() {
+      return className;
+    }
+    public String getFeatureName() {
+      return featureName;
+    }
+    
   }
 }

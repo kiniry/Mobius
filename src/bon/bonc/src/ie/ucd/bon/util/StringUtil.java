@@ -59,4 +59,12 @@ public class StringUtil {
     return trimmed.substring(1, trimmed.length()-1); //Lose leading and trailing '/'
   }
   
+  public static String getComponentNameFromStaticRef(String staticRef) {
+    if (!staticRef.contains(".")) {
+      return staticRef;
+    } else {
+      return staticRef.substring(staticRef.lastIndexOf("."));
+    }
+  }
+  
 }
