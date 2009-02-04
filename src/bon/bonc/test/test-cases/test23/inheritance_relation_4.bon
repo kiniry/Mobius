@@ -1,7 +1,11 @@
 
 system_chart SYS
+  cluster SUP_CLUST description ""
   cluster CLUSTER_A description ""
   cluster CLUSTER_B description ""
+end
+
+cluster_chart SUP_CLUST
   cluster CLUSTER_C description ""
 end
 
@@ -33,23 +37,27 @@ end
 
 static_diagram
 component
-  cluster CLUSTER_A
+  cluster SUP_CLUST
   component
-    class A_1
-    class A_2
+    cluster CLUSTER_A
+    component
+      class A_1
+      class A_2
+    end
+    
+      cluster CLUSTER_C
+      component
+        class C
+      end
   end
   
   cluster CLUSTER_B
   component
     class B
   end
+
   
-  cluster CLUSTER_C
-  component
-    class C
-  end
-  
-  CLUSTER_C inherit CLUSTER_B
-  CLUSTER_C inherit CLUSTER_A
-  CLUSTER_C[A] inherit CLUSTER_C
+  SUP_CLUST.CLUSTER_C inherit CLUSTER_B
+  SUP_CLUST.CLUSTER_C inherit SUP_CLUST.CLUSTER_A
+  SUP_CLUST.CLUSTER_C inherit CLUSTER_C
 end

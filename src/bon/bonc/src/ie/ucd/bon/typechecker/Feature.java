@@ -44,6 +44,14 @@ public class Feature {
     return priv;
   }
 
+  public boolean isPub() {
+    return pub;
+  }
+
+  public Set<String> getExports() {
+    return exports;
+  }
+
   public boolean isVisible(String className) {
     return (pub && !priv) ? true : exports.contains(className);
   }

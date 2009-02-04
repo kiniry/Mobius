@@ -163,21 +163,27 @@ public class TypingInformation {
   }
   
   public void addParent(String child, String parent, SourceLocation loc) {
-    Type parentType = getType(parent);
-    Type childType = getType(child);
+    //Handle static refs
+    String[] actualChildParts = child.contains(".") ? child.split("\\.") : new String[] {child};
+    String actualChild = actualChildParts[actualChildParts.length-1];
+    String[] actualParentParts = parent.contains(".") ? parent.split("\\.") : new String[] {parent};
+    String actualParent = actualParentParts[actualParentParts.length-1];
+    
+    Type parentType = getType(actualParent);
+    Type childType = getType(actualChild);
     
     if (childType.hasGenerics()) {
       problems.addProblem(new StaticTypeCannotHaveGenericsHere(loc, childType.getNonGenericType(), " as the child in an inheritance relation."));
     } else {
 
-      if (parentType.getNonGenericType().equals(child)) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child));
+      if (parentType.getNonGenericType().equals(actualChild)) {
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, actualChild));
       } else {
-        if (simpleClassInheritanceGraph.hasEdge(child, parentType.getNonGenericType())) {
-          problems.addProblem(new DuplicateSuperclassWarning(loc, child, parent));
+        if (simpleClassInheritanceGraph.hasEdge(actualChild, parentType.getNonGenericType())) {
+          problems.addProblem(new DuplicateSuperclassWarning(loc, actualChild, actualParent));
         } else {
-          classInheritanceGraph.addEdge(child, parentType);
-          simpleClassInheritanceGraph.addEdge(child, parentType.getNonGenericType());
+          classInheritanceGraph.addEdge(actualChild, parentType);
+          simpleClassInheritanceGraph.addEdge(actualChild, parentType.getNonGenericType());
         }
       }
     }

@@ -37,6 +37,10 @@ public class FeatureSpecification {
     instances = new Vector<FeatureSpecificationInstance>();
   }
 
+  public Feature getFeature() {
+    return feature;
+  }
+
   public void setDeferred() {
     this.deferred = true;
   }  

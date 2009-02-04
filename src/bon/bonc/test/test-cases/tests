@@ -177,4 +177,4 @@
 @Test-name: "Inheritance relation #4."
 @Location { test23/ }
 @Input { inheritance_relation_4.bon }
-@Output { < ClassCannotHaveSelfAsParentError, #File:inheritance_relation_4.bon, 54, 2, "C" > }
+@Output { < ClassCannotHaveSelfAsParentError, #File:inheritance_relation_4.bon, 62, 2, "C" > }
