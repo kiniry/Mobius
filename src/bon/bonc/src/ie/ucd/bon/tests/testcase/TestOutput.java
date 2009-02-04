@@ -17,7 +17,7 @@ import java.util.Vector;
 
 public class TestOutput {
 
-  private static final String[] PACKAGES = { "ie.ucd.bon.errorreporting", "ie.ucd.bon.parser.errors", "ie.ucd.bon.typechecker.errors", "ie.ucd.bon.typechecker.informal.errors" };
+  private static final String[] PACKAGES = { "ie.ucd.bon.errorreporting", "ie.ucd.bon.parser.errors", "ie.ucd.bon.typechecker.errors", "ie.ucd.bon.typechecker.informal", "ie.ucd.bon.typechecker.informal.errors" };
 
   private String errorType;
   private final Collection<String> extraParams;

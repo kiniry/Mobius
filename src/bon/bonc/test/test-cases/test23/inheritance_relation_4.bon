@@ -1,0 +1,55 @@
+
+system_chart SYS
+  cluster CLUSTER_A description ""
+  cluster CLUSTER_B description ""
+  cluster CLUSTER_C description ""
+end
+
+cluster_chart CLUSTER_A
+  class A_1 description ""
+  class A_2 description ""
+end
+
+cluster_chart CLUSTER_B
+  class B description ""
+end
+
+cluster_chart CLUSTER_C
+  class C description ""
+end
+
+class_chart A_1
+end
+
+class_chart A_2
+end
+
+class_chart B
+end
+
+class_chart C
+  inherit A_1, A_2, B
+end
+
+static_diagram
+component
+  cluster CLUSTER_A
+  component
+    class A_1
+    class A_2
+  end
+  
+  cluster CLUSTER_B
+  component
+    class B
+  end
+  
+  cluster CLUSTER_C
+  component
+    class C
+  end
+  
+  CLUSTER_C inherit CLUSTER_B
+  CLUSTER_C inherit CLUSTER_A
+  CLUSTER_C[A] inherit CLUSTER_C
+end

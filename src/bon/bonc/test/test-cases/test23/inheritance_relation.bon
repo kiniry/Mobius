@@ -1,0 +1,27 @@
+
+system_chart SYS
+  cluster CLUSTER_A description ""
+end
+
+cluster_chart CLUSTER_A
+  class A description ""
+  class B description ""
+end
+
+class_chart A
+  inherit B
+end
+
+class_chart B
+end
+
+static_diagram
+component
+  cluster CLUSTER_A
+  component
+    class A
+    class B
+  end
+  
+  A inherit B
+end

@@ -361,6 +361,9 @@ public final class Main {
   }
 
   public static TypingInformation getTypingInfo() {
+    if (typingInfo != null) {
+      typingInfo.finalProcess();
+    }
     return typingInfo;
   }
   

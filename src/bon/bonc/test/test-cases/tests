@@ -160,3 +160,21 @@
 @Prog-args: -informal
 @Location { ./ }
 @Input { ClusteringSportsExample.bon }
+
+@Test-name: "Inheritance relation #1."
+@Location { test23/ }
+@Input { inheritance_relation.bon }
+
+@Test-name: "Inheritance relation #2."
+@Location { test23/ }
+@Input { inheritance_relation_2.bon }
+@Output { < ClassInheritanceInconsistencyError, #File:inheritance_relation_2.bon, 11, 0, "Class chart", "A", "B", "formal definition" > }
+
+@Test-name: "Inheritance relation #3."
+@Location { test23/ }
+@Input { inheritance_relation_3.bon }
+
+@Test-name: "Inheritance relation #4."
+@Location { test23/ }
+@Input { inheritance_relation_4.bon }
+@Output { < ClassCannotHaveSelfAsParentError, #File:inheritance_relation_4.bon, 54, 2, "C" > }

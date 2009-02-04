@@ -797,7 +797,7 @@ static_relation  :  ir=inheritance_relation
 
 inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')? 
                          parent (semantic_label)? 
-                         { getTI().addParentClass(ie.ucd.bon.util.StringUtil.getComponentNameFromStaticRef($c.text),$parent.text,getSLoc($c.start,$parent.stop)); }
+                         { getTI().addParent(ie.ucd.bon.util.StringUtil.getComponentNameFromStaticRef($c.text),$parent.text,getSLoc($c.start,$parent.stop)); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]
@@ -1080,7 +1080,7 @@ class_invariant  :  'invariant' assertion
                    )                
                  ;
                  
-parent_class_list  :  'inherit' c1=class_type { getTI().addParentClass($c1.text,getSLoc($c1.start,$c1.stop)); } (';' c=class_type { getTI().addParentClass($c.text,getSLoc($c.start,$c.stop)); } )* ';'? 
+parent_class_list  :  'inherit' c1=class_type { getTI().addParent($c1.text,getSLoc($c1.start,$c1.stop)); } (';' c=class_type { getTI().addParent($c.text,getSLoc($c.start,$c.stop)); } )* ';'? 
                     -> 
                     ^(
                       PARENT_CLASS_LIST (class_type)+

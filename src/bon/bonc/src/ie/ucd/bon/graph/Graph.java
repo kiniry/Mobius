@@ -8,9 +8,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 public class Graph<A,B> {
+  private static final boolean REMOVE_EDGES_TO_EMPTY_SET = true;
   
   private final HashMap<A,Set<B>> edges;
   
@@ -25,6 +28,19 @@ public class Graph<A,B> {
       edges.put(from, bs);
     }
     bs.add(to);
+  }
+  
+  public boolean removeEdge(final A from, final B to) {
+    Set<B> bs = edges.get(from);
+    if (bs != null) {
+      boolean success = bs.remove(to);
+      if (success && REMOVE_EDGES_TO_EMPTY_SET && bs.size() == 0) {
+        edges.remove(from);
+      }
+      return success;
+    } else {
+      return false;
+    }
   }
   
   public final boolean hasEdge(final A from) {
@@ -50,7 +66,7 @@ public class Graph<A,B> {
    * or {@code null} if no such cycle exists. Algorithm: BFS (so
    * the complexity is O(V+E)).
    *
-   * NOTE: It is asymptotcally faster to find cycles in one go rather
+   * NOTE: It is asymptotically faster to find cycles in one go rather
    *       than repeatedly calling this function for each node.
    */
   public final Collection<A> findCycle(A startNode, Converter<B,A> converter) {
@@ -81,76 +97,23 @@ public class Graph<A,B> {
     return null;
   }
   
-/*  public final Collection<A> findCycle(A startNode, Converter<B,A> converter) {
-    Stack<A> currentPath = new Stack<A>(); //Stores the path we are currently exploring
-    Stack<SortedSet<A>> waitingPaths = new Stack<SortedSet<A>>(); //Stores the alternative choices at each step
-    
-    Set<A> explored = new HashSet<A>(); //Store all explored 
-    
-    //Initially our path is just our starting point
-    currentPath.push(startNode);
-    
-    //While we haven't explored all paths
-    while (currentPath.size() > 0) {
-      A currentToExplore = currentPath.peek();
-      
-      if (explored.contains(currentToExplore)) {
-        currentPath.pop();
-        continue;
-      }
-      
-      //Get all nodes linked from here
-      Set<B> successorsB = edges.get(currentToExplore);
-      
-      //We've now explored from here
-      explored.add(currentToExplore);
-      
-      SortedSet<A> successorsA = null;
-      if (successorsB != null) {
-        //Convert
-        successorsA = converter.convert(successorsB);
+  public Set<Map.Entry<A, Set<B>>> getEdges() {
+    return edges.entrySet();
+  }
 
-        //If we've reached a cycle
-        if (successorsA.contains(startNode)) {
-          return currentPath;
-        }
-
-        //Avoid exploring already explored nodes
-        successorsA.removeAll(explored);
-      }
-      
-      //If we have successor nodes to explore
-      if (successorsA != null && successorsA.size() > 0) {
-        //Take the first
-        A first = successorsA.first();
-        //Add it to our current path
-        currentPath.push(first);
-        
-        successorsA.remove(first);
-        
-        //Store the alternative routes
-        if (successorsA.size() > 0) {
-          waitingPaths.push(successorsA);
-        }
-      } else {
-        //Backtrack
-        currentPath.pop();
-        
-        if (waitingPaths.size() > 0) {
-          SortedSet<A> waiting = waitingPaths.peek();
-          //If there's alternatives from here
-          if (waiting.size() > 0) {
-            //Take the first and add it to our current path
-            A first = waiting.first();
-            currentPath.push(first);
-            waiting.remove(first);
-          } else {
-            waitingPaths.pop();
-          }
-        }
-      }
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    
+    for (Entry<A,Set<B>> edge : edges.entrySet()) {
+      sb.append(edge.getKey());
+      sb.append(" -> ");
+      sb.append(edge.getValue());
+      sb.append("\n");
     }
     
-    return null;
-  }*/
+    return sb.toString();
+  }
+  
+  
 }
