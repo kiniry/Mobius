@@ -1,0 +1,33 @@
+
+system_chart SYS
+  cluster A description ""
+  cluster B description ""
+end
+
+cluster_chart A
+ class A description ""
+end
+
+class_chart A
+end
+
+class_chart B
+end
+
+cluster_chart B
+ class B description ""
+end
+
+static_diagram 
+component
+
+  cluster A
+  component
+    class A
+  end
+
+  class B
+  
+  cluster B
+
+end

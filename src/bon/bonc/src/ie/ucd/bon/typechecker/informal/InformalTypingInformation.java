@@ -11,6 +11,7 @@ import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
 import ie.ucd.bon.typechecker.errors.DuplicateSystemDefinitionError;
+import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
@@ -74,6 +75,10 @@ public class InformalTypingInformation {
    * @param clusterName The name of the cluster to add.
    */
   public void addCluster(String clusterName, SourceLocation loc) {
+    ClassChartDefinition classDef = classes.get(clusterName);
+    if (classDef != null) {
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", clusterName, "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
+    }
     ClusterChartDefinition cluster = clusters.get(clusterName);
     if (cluster != null) {
       problems.addProblem(new DuplicateClusterChartError(loc, cluster));
@@ -88,6 +93,10 @@ public class InformalTypingInformation {
    * @param className The name of the class to add.
    */
   public void addClass(String className, SourceLocation loc) {
+    ClusterChartDefinition clusterDef = clusters.get(className);
+    if (clusterDef != null) {
+      problems.addProblem(new NameNotUniqueError(loc, "Class chart", className, "cluster chart", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
+    }
     ClassChartDefinition classDef = classes.get(className);
     if (classDef != null) {
       problems.addProblem(new DuplicateClassChartError(loc, classDef));

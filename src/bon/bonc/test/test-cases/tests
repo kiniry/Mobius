@@ -178,3 +178,11 @@
 @Location { test23/ }
 @Input { inheritance_relation_4.bon }
 @Output { < ClassCannotHaveSelfAsParentError, #File:inheritance_relation_4.bon, 62, 2, "C" > }
+
+@Test-name: "Identifier uniqueness."
+@Location { test24/ }
+@Input { uniqueness.bon }
+@Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 0, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7 >,
+          < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14 >, 
+          < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24 >,
+          < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29 > }

@@ -16,6 +16,7 @@ import ie.ucd.bon.typechecker.errors.DuplicateClusterDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateFeatureDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateFormalGenericNameError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
+import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.errors.StaticTypeCannotHaveGenericsHere;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
@@ -92,6 +93,10 @@ public class TypingInformation {
   }  
 
   public void addCluster(String clusterName, SourceLocation loc) {
+    ClassDefinition classDef = classes.get(clusterName);
+    if (classDef != null) {
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", clusterName, "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
+    }
     ClusterDefinition def = clusters.get(clusterName);
     if (def == null) {
       def = new ClusterDefinition(clusterName, loc);
@@ -108,6 +113,10 @@ public class TypingInformation {
   }
 
   public void addClass(String className, SourceLocation loc, String keyword) {
+    ClusterDefinition clusterDef = clusters.get(className);
+    if (clusterDef != null) {
+      problems.addProblem(new NameNotUniqueError(loc, "Class", className, "cluster", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
+    }
     ClassDefinition def = classes.get(className);
     if (def == null) {
       def = new ClassDefinition(className, loc, this);
