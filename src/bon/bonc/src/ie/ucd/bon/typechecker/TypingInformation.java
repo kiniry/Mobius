@@ -11,6 +11,7 @@ import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.CannotRenameMultipleFeaturesError;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.ClassDoesNotHaveAsSuperTypeError;
+import ie.ucd.bon.typechecker.errors.DeferredFeatureInNonDeferredClassError;
 import ie.ucd.bon.typechecker.errors.DuplicateClassDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateClusterDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateFeatureDefinitionError;
@@ -23,6 +24,7 @@ import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -216,6 +218,30 @@ public class TypingInformation {
 
   public void featureSpecDeferred() {
     context.getFeatureSpec().setDeferred(); 
+    String currentClass = context.getClassName();
+    if (currentClass != null) {
+      ClassDefinition classDef = classes.get(currentClass);
+      if (classDef != null && !classDef.isDeferred()) {
+        FeatureSpecification featureSpec = context.getFeatureSpec();
+        List<FeatureSpecificationInstance> instances = featureSpec.getInstances();
+        SourceLocation loc;
+        if (instances.size() > 1) {
+          loc = instances.get(0).getSourceLocation();
+        } else {
+          loc = new SourceLocation(instances.get(0).getSourceLocation(), instances.get(instances.size()-1).getSourceLocation());
+        }
+        StringBuilder sb = new StringBuilder();
+        for (FeatureSpecificationInstance instance : instances) {
+          sb.append(instance.getName());
+          sb.append(", ");
+        }
+        if (sb.length() >= 2) {
+          sb.delete(sb.length()-2, sb.length());
+        }
+        
+        problems.addProblem(new DeferredFeatureInNonDeferredClassError(loc, sb.toString(), context.getClassName()));
+      }
+    }
   } 
   public void featureSpecEffective(){ 
     context.getFeatureSpec().setEffective(); 

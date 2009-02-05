@@ -1,0 +1,10 @@
+
+static_diagram
+component
+
+  class A
+    feature 
+      deferred X, Y
+  end
+
+end

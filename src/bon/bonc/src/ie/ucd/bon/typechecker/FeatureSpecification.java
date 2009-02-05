@@ -4,8 +4,8 @@
  */
 package ie.ucd.bon.typechecker;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -19,7 +19,7 @@ public class FeatureSpecification {
   private Type type;
   private Renaming renaming;
   private final Map<String,FeatureArgument> argsMap;
-  private final Collection<FeatureSpecificationInstance> instances;
+  private final List<FeatureSpecificationInstance> instances;
   
   private String precondition;
   private String postcondition;
@@ -120,6 +120,10 @@ public class FeatureSpecification {
     return instances.size();
   }
   
+  public List<FeatureSpecificationInstance> getInstances() {
+    return instances;
+  }
+
   public class Renaming {
     private final String className;
     private final String featureName;

@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class ClassIsNotGenericError extends TypeCheckingError {
 
-  private static final String message = "Class %s is not generic ";
+  private static final String message = "Class %s is not generic";
   
   private final String className;
 

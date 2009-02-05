@@ -69,6 +69,10 @@ public class SourceLocation implements Comparable<SourceLocation> {
 		}
 	}
 	
+	public SourceLocation(SourceLocation start, SourceLocation end) {
+	  this(start.sourceFile, start.lineNumber, start.charPositionInLine, start.absoluteCharPositionStart, end.absoluteCharPositionEnd);
+	}
+	
 	public void setStartToken(Token start) {
 	  this.lineNumber = start.getLine();
 	  this.charPositionInLine = start.getCharPositionInLine();

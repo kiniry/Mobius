@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.Main;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 
@@ -169,6 +170,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public void setPersistent(boolean persistent) {
+    Main.logDebug("Setting persistent: " + persistent);
     this.persistent = persistent;
   }
 

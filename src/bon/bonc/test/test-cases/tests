@@ -186,3 +186,9 @@
           < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14 >, 
           < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24 >,
           < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29 > }
+
+@Test-name: "Deferred feature in non-deferred class"
+@Prog-args: -formal
+@Location { test25/ }
+@Input { deferred_feature_in_non_deferred_class.bon }
+@Output { < DeferredFeatureInNonDeferredClassError, #File:deferred_feature_in_non_deferred_class.bon, 7, 15, "X, Y", A > }
