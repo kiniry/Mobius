@@ -95,9 +95,11 @@ public class Assert
    */
   /*@ public normal_behavior
     @   requires the_assertion;
+    @   assignable \nothing;
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
+    @   assignable \nothing;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/
@@ -121,9 +123,11 @@ public class Assert
    */
   /*@ public normal_behavior
     @   requires the_assertion;
+    @   assignable \nothing;
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
+    @   assignable \nothing;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/
@@ -155,9 +159,11 @@ public class Assert
    */
   /*@ public normal_behavior
     @   requires the_assertion;
+    @   assignable \nothing;
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
+    @   assignable \nothing;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/
