@@ -358,7 +358,7 @@ public class Debug implements Cloneable {
   /**
    * {@inheritDoc}
    */
-  public final Object clone() throws CloneNotSupportedException {
+  public final /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

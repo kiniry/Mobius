@@ -104,7 +104,7 @@ public class WindowOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(final String the_category, final String the_message) {
+  public synchronized void printMsg(final /*@ non_null */ String the_category, final String the_message) {
     my_text_area.append("<" + the_category + ">: " + the_message);
   }
 
@@ -132,7 +132,7 @@ public class WindowOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public Object clone() throws CloneNotSupportedException {
+  public /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

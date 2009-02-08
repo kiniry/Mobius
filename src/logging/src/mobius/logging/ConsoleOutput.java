@@ -76,7 +76,7 @@ public class ConsoleOutput extends AbstractDebugOutputBase
   // Inherited Methods
 
   /** {@inheritDoc} */
-  public synchronized void printMsg(String category, String message) {
+  public synchronized void printMsg(/*@ non_null */ String category, String message) {
     System.err.print("<" + category + ">: " + message);
   }
 
@@ -96,7 +96,7 @@ public class ConsoleOutput extends AbstractDebugOutputBase
   }
 
   /** {@inheritDoc} */
-  public Object clone() throws CloneNotSupportedException {
+  public /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

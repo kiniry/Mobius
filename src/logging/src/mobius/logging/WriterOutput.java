@@ -112,7 +112,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(final String a_category, final String a_message) {
+  public synchronized void printMsg(final /*@ non_null */ String a_category, final String a_message) {
     my_print_writer.print("<" + a_category + ">: " + ((a_message != null) ? a_message : "null"));
     my_print_writer.flush();
   }
@@ -147,7 +147,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public Object clone() throws CloneNotSupportedException {
+  public /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

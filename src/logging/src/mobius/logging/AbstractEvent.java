@@ -165,7 +165,7 @@ public abstract class AbstractEvent extends Object
    * use this method sparingly.  Also, the length of the output is directly
    * proportional to the event description.
    */
-  public /*@ pure nullable @*/ String toString() {
+  public /*@ pure non_null @*/ String toString() {
     return "[" + my_creation_date.toString() + " | " + my_source_host + " | " +
       my_source_component + "] " + my_type + ":" + my_level + " - " + my_description;
   }
@@ -203,7 +203,7 @@ public abstract class AbstractEvent extends Object
   }
 
   /** {@inheritDoc} */
-  public Object clone() throws CloneNotSupportedException {
+  public /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {

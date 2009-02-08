@@ -108,7 +108,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public Object clone() throws CloneNotSupportedException {
+  public /*@ non_null */ Object clone() throws CloneNotSupportedException {
     try {
       return super.clone();
     } catch (CloneNotSupportedException cnse) {
@@ -119,7 +119,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(String a_category, String a_message) {
+  public synchronized void printMsg(/*@ non_null */ String a_category, String a_message) {
     my_servlet_context.log("<" + a_category + ">: " + a_message);
   }
 
