@@ -1,0 +1,68 @@
+cluster_chart BON_TYPES
+indexing
+ authors: "Dermot Cochran", "Fintan Fairmichael", "Joe Kiniry", "Dan Zimmerman";
+ created: "2008-07-10-dc";
+ revised: "2008-07-17-dc";
+ level_of_detail: "2"
+explanation
+ "Standard built-in and primitive classes reusable in all BON designs"
+class ANY description "Abstract base type of all objects"
+class BOOLEAN description "A binary true or false value"
+class NATURAL_NUMBER description "Non-negative whole number"
+class REAL_NUMBER description "Any measurable value"
+class RELATIONSHIP description "Association between two objects"
+class STRING description "A sequence of text characters"
+class SET description "A collection of objects of the same type"
+class VALUE description "Abstract number, quantity or index with a linear ordering\
+                       \i.e. that can be compared with other values of the same type."
+end
+
+class_chart BOOLEAN
+indexing
+ author: "Dermot Cochran";
+ created: "2008-07-17-dc";
+ level_of_detail: "2";
+ proposed_refinement: "java.lang.Boolean"
+explanation
+ "A binary true or false value"
+inherit VALUE
+end
+
+class_chart NATURAL_NUMBER
+indexing
+ author: "Dermot Cochran", "Joe Kiniry";
+ created: "2008-07-17";
+ level_of_detail: "2"
+explanation
+ "Any non-negative whole number"
+inherit VALUE
+query
+ "What is my value?",
+ "Is my value higher than another natural number?",
+ "Is my value equal to another natural number?"
+command
+ "Change my value to this natural number"
+constraint
+ "My initial value is zero",
+ "My value is greater than or equal to zero",
+ "My value is a whole number"
+end
+
+class_chart REAL_NUMBER
+explanation
+ "Any measureable value"
+inherit VALUE
+end
+
+class_chart RELATIONSHIP
+inherit ANY
+end
+
+class_chart SET
+explanation
+ "Collection of objects of the same type"
+inherit ANY
+end
+
+class_chart STRING
+end
