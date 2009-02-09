@@ -59,7 +59,7 @@ class Utilities {
   /**
    * <p> The Debug object associated with this object. </p>
    */
-  private /*@ non_null @*/ Debug my_debug;
+  private /*@ non_null spec_public @*/ Debug my_debug;
 
   // Inherited Methods
   // Constructors

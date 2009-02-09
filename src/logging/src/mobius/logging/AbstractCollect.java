@@ -86,7 +86,7 @@ public abstract class AbstractCollect {
    * <p> A <code>Map</code> used to track statistics
    * definitions. </p>
    */
-  private /*@ non_null @*/ Map my_statistics;
+  private /*@ non_null spec_public @*/ Map my_statistics;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -95,7 +95,7 @@ public abstract class AbstractCollect {
    * @modifies SINGLE-ASSIGNMENT
    */
   //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
-  private Debug my_debug;
+  private /*@ spec_public @*/ Debug my_debug;
   
   // Inherited Methods
   // Constructors

@@ -140,7 +140,7 @@ public class Context
   /**
    * @serial The debugging constants for this class.
    */
-  private final DebugConstants my_debug_constants;
+  private final /*@ spec_public @*/ DebugConstants my_debug_constants;
 
   /**
    * @serial A flag indicating if debugging is enabled for this
@@ -148,7 +148,7 @@ public class Context
    * print(), but for the query and state change functions (like
    * isOn(), turnOn(), etc.), are short-circuited and do nothing.
    */
-  private boolean my_is_on;
+  private /*@ spec_public @*/ boolean my_is_on;
 
   /**
    * @serial The current debug level of this context.
@@ -159,32 +159,32 @@ public class Context
    * this behavior by subtyping DebugConstants and installing the new
    * constant during the construction of a Context.
    */
-  private int my_level;
+  private /*@ spec_public @*/ int my_level;
   //@ invariant validLevel(my_level);
 
   /**
    * @serial A map that binds category keys (Strings) to levels
    * (Integers).
    */
-  private /*@ non_null @*/ Map my_category_map;
+  private /*@ non_null spec_public @*/ Map my_category_map;
 
   /**
    * @serial A map that binds class names (Strings) to enable flags
    * (Booleans).
    */
-  private /*@ non_null @*/ Map my_class_map;
+  private /*@ non_null spec_public @*/ Map my_class_map;
 
   /**
    * The thread that owns this context.
    */
-  private transient Thread my_thread;
+  private transient /*@ spec_public @*/ Thread my_thread;
 
   /**
    * <p> The object used by this thread to control debugging output device.
    * All debugging messages that come from the owning thread will use this
    * output interface. </p>
    */
-  private transient DebugOutput my_debug_output_interface;
+  private transient /*@ spec_public @*/ DebugOutput my_debug_output_interface;
 
   /**
    * <p> The standard constructor.  The thread that is constructing the

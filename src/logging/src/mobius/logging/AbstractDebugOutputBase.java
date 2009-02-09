@@ -77,7 +77,7 @@ public abstract class AbstractDebugOutputBase
    * @return What is my debugging object?
    */
   //@ ensures \result == my_debug;
-  public /*@ pure @*/ Debug getDebug() {
+  public /*@ pure spec_public @*/ Debug getDebug() {
     return my_debug;
   }
 

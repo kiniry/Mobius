@@ -257,7 +257,7 @@ public class Debug implements Cloneable {
    * <code>turnOn()</code>, etc.) are short-circuited and do nothing.
    * </p>
    */
-  protected boolean my_is_on;
+  protected /*@ spec_public @*/ boolean my_is_on;
 
   /**
    * <p>

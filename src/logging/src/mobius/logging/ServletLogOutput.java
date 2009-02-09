@@ -67,7 +67,7 @@ public class ServletLogOutput extends AbstractDebugOutputBase
    * instance of ServletLogOutput. </p>
    */
 
-  private /*@ non_null @*/ ServletContext my_servlet_context;
+  private /*@ non_null spec_public @*/ ServletContext my_servlet_context;
 
   // Constructors
 

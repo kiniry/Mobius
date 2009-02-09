@@ -82,7 +82,7 @@ public class Statistic
    *
    * @see Statistic
    */
-  private static volatile int my_current_ID;
+  private static /*@ spec_public @*/ volatile int my_current_ID;
 
   /**
    * <p> The unique ID for this statistic. </p>
@@ -98,7 +98,7 @@ public class Statistic
    * @see #getUnits
    * @example units = "messages/second"
    */
-  private final String my_units;
+  private final /*@ spec_public @*/ String my_units;
 
   /**
    * <p> Scaling factor of values. </p>
@@ -111,7 +111,7 @@ public class Statistic
    * whatever thing is reporting is moving/delivering/deleting/whatever
    * 4,200 messages/second.
    */
-  private final double my_scale;
+  private final /*@ spec_public @*/ double my_scale;
 
   /**
    * <p> Default starting value for statistic. </p>
@@ -119,7 +119,7 @@ public class Statistic
    * @see #getStart
    * @see AbstractCollect#reset
    */
-  private final double my_default_start_value;
+  private final /*@ spec_public @*/ double my_default_start_value;
 
   /**
    * <p> Default increment value for statistic. </p>
@@ -127,7 +127,7 @@ public class Statistic
    * @see #getIncrement
    * @see AbstractCollect#increment(Statistic)
    */
-  private double my_default_increment;
+  private /*@ spec_public @*/ double my_default_increment;
 
   /**
    * <p> Default decrement value for statistic. </p>
@@ -135,7 +135,7 @@ public class Statistic
    * @see #getDecrement
    * @see AbstractCollect#decrement(Statistic)
    */
-  private final double my_default_decrement;
+  private final /*@ spec_public @*/ double my_default_decrement;
 
   // Constructors
 
