@@ -99,7 +99,7 @@ public class Assert
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
-    @   assignable \nothing;
+    @   assignable \everything;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/
@@ -127,7 +127,7 @@ public class Assert
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
-    @   assignable \nothing;
+    @   assignable \everything;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/
@@ -163,7 +163,7 @@ public class Assert
     @ also
     @ public exceptional_behavior
     @   requires !the_assertion;
-    @   assignable \nothing;
+    @   assignable \everything;
     @   signals_only FailedAssertionException;
     @   signals (FailedAssertionException) !the_assertion;
     @*/

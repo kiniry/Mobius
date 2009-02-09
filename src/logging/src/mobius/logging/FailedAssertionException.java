@@ -56,7 +56,7 @@ public class FailedAssertionException extends RuntimeException {
   private static final long serialVersionUID = 1L;
 
   /** Create a new, empty exception. */
-  public FailedAssertionException() {
+  public /*@ pure @*/ FailedAssertionException() {
     super();
   }
 
@@ -65,7 +65,7 @@ public class FailedAssertionException extends RuntimeException {
    *
    * @param a_message the message to embed in the exception.
    */
-  public FailedAssertionException(final String a_message) {
+  public /*@ pure @*/ FailedAssertionException(final String a_message) {
     super(a_message);
   }
 

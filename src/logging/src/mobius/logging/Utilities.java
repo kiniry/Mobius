@@ -89,7 +89,7 @@ class Utilities {
   }
 
   /**
-   * <p> Dumps the current stack and but <em>doesn't</em> shut down the
+   * <p> Dumps the current stack, but <em>doesn't</em> shut down the
    * current thread.  This method can be called from any thread
    * context. </p>
    *
