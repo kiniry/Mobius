@@ -10,6 +10,9 @@ package annot.bcclass;
 
 import java.util.Enumeration;
 
+import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.Utility;
+
 import annot.attributes.ClassInvariant;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
@@ -39,6 +42,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     final BMLConfig conf = new BMLConfig();
     //fileheader typeheader
     final StringBuffer code = new StringBuffer(toString());
+    code.append("\n");
     //typebody
     return conf.getPrettyPrinter().afterDisplay(
       code.append(printTypeBody(conf)).toString());
@@ -58,15 +62,185 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    */
   public String printTypeBody(final BMLConfig conf) {
     final StringBuffer code = new StringBuffer("");
+    printUpperSection(conf, code, true);
+    printUpperSection(conf, code, false);
+    printConstructors(conf, code);
+    printMethods(conf, code);
     for (final Enumeration i = getInvariantEnum(); i.hasMoreElements();) {
       final ClassInvariant inv = (ClassInvariant) i.nextElement();
       code.append(inv.printCode(conf));
     }
+    return conf.getPrettyPrinter().afterDisplay(code.toString());
+  }
+
+  /**
+   * The method prints out the representation of all the non-constructor
+   * methods. The methods are printed out using the grammar:
+   *
+   *   method ::= [ methodspec ] methodheader [ methodbody ]
+   *
+   * from "BML Reference Manual" section "Class Member Declarations".
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   */
+  private void printMethods(final BMLConfig conf, final StringBuffer code) {
     for (int i = 0; i  <  getMethodCount(); i++) {
       code.append("\n");
-      code.append(getMethod(i).printCode(conf));
+      final BCMethod m = getMethod(i);
+      if (!m.isConstructor()) {
+        code.append(m.printCode(conf));
+      }
     }
-    return conf.getPrettyPrinter().afterDisplay(code.toString());
+  }
+
+  /**
+   * The method prints out the representation of all the constructors.
+   * The constructors are printed out using the grammar:
+   *
+   *   method ::= [ methodspec ] methodheader [ methodbody ]
+   *
+   * from "BML Reference Manual" section "Class Member Declarations".
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   */
+  private void printConstructors(final BMLConfig conf,
+                                 final StringBuffer code) {
+    for (int i = 0; i  <  getMethodCount(); i++) {
+      code.append("\n");
+      final BCMethod m = getMethod(i);
+      if (m.isConstructor()) {
+        code.append(m.printCode(conf));
+      }
+    }
+  }
+
+
+  /**
+   * The method prints out the representation of the specifications.
+   * The specifications are printed out using the grammar:
+   *
+   *   staticspec ::= [ staticinvariants ] [ staticconstraints ]
+   *                  [ staticrepresents ] [ staticinitially ]
+   * or the grammar
+   *
+   *   objectspec ::= [ objectinvariants ] [ objectconstraints ]
+   *                  [ objectrepresents ] [ objectinitially ]
+   *
+   * from "BML Reference Manual" section "Textual Representation of
+   * Specifications". The choice depends on the flag isStatic. If the
+   * flag is <code>true</code> then the static version is generated
+   * otherwise the object one.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   */
+  private void printSpecs(final BMLConfig conf,
+                          final StringBuffer code,
+                          final boolean isStatic) {
+    printInvariants(conf, code, isStatic);
+    // currently there is no representation for constraints, represents and
+    // initially
+  }
+
+
+  /**
+   * The method prints out the representation of the invariants.
+   * The invariants are printed out using the grammar:
+   *
+   *   staticinvariants ::= [ static invariant nl ]...
+   *
+   * or the grammar
+   *
+   *   objectinvariants ::= [ invariant nl ]...
+   *
+   * from "BML Reference Manual" section "Textual Representation of
+   * Specifications". The choice depends on the flag isStatic. If the
+   * flag is <code>true</code> then the static version is generated
+   * otherwise the object one.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   */
+  private void printInvariants(final BMLConfig conf,
+                               final StringBuffer code,
+                               final boolean isStatic) {
+    final Enumeration e = getInvariantEnum();
+    while (e.hasMoreElements()) {
+      final ClassInvariant inv = (ClassInvariant)e.nextElement();
+      if (isStatic != inv.isInstance()) {
+        code.append(inv.printCode(conf));
+      }
+    }
+  }
+
+  /**
+   * The method prints out the representation of the fields.
+   * The fields are printed out using the grammar:
+   *
+   *   staticfields ::= [ staticfield ]...
+   *   staticfield ::= static field
+   *   field ::= [ nsfieldmodifiers ] type ident ;
+   *
+   * or the grammar
+   *
+   *   objectfields ::= [ objectfield ]...
+   *   objectfield ::= field
+   *   field ::= [ nsfieldmodifiers ] type ident ;
+   *
+   * from "BML Reference Manual" section "Textual Representation of
+   * Specifications". The choice depends on the flag isStatic. If the
+   * flag is <code>true</code> then the static version is generated
+   * otherwise the object one.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   */
+  private void printFields(final BMLConfig conf, final StringBuffer code,
+                           final boolean isStatic) {
+    final Field[] fds = getJC().getFields();
+    for (int i = 0; i < fds.length; i++) {
+      final Field fd = fds[i];
+      if (fd.isStatic() == isStatic) {
+        final int af = fd.getModifiers();
+        code.append(Utility.accessToString(af));
+        code.append(" ");
+        code.append(fd.getType().toString());
+        code.append(" ");
+        code.append(fd.getName());
+        code.append(";\n");
+      }
+    }
+  }
+
+  /**
+   * The method prints out the representation of the static section of the
+   * class. It uses the grammar:
+   *
+   *   staticsection ::= [ staticfields ] [ staticspec ]
+   *
+   * or
+   *
+   *   objectsection ::= [ objectfields ] [ objectspec ]
+   *
+   * from "BML Reference Manual" section "Textual Representation of
+   * Specifications". The choice depends on the flag isStatic. If the
+   * flag is <code>true</code> then the static version is generated
+   * otherwise the object one.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   */
+  private void printUpperSection(final BMLConfig conf,
+                                 final StringBuffer code,
+                                 final boolean isStatic) {
+    printFields(conf, code, isStatic);
+    printSpecs(conf, code, isStatic);
   }
 
 

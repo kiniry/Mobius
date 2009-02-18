@@ -278,7 +278,31 @@ public class BMLParserTest {
    */
   @Test
   public void testDouble_cp_entry() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "Double 1000.0D;",
+                            "Double 0.0D;",
+                            "Double -10.0d;"
+                            };
+    String[] answers = { "Double 1000 . 0 D ;",
+                         "Double 0 . 0 D ;",
+                         "Double - 10 . 0 d ;"
+                         };
+    System.out.println("testDouble_cp_entry: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.double_cp_entry_return ret;
+      try {
+        ret = parser.double_cp_entry();
+        assertEquals("double_cp_entry: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testDouble_cp_entry end");
   }
 
   /**
@@ -478,7 +502,92 @@ public class BMLParserTest {
    */
   @Test
   public void testStaticfields() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "static private int sum;\n",
+                            "static private int sum;\n"+
+                            "static private int sum1;\n"
+                            };
+    String[] answers = { "static private int sum ; \n",
+                         "static private int sum ; \n "+
+                         "static private int sum1 ; \n"
+                         };
+    System.out.println("testStaticfields: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.staticfields_return ret;
+      try {
+        ret = parser.staticfields();
+        String res =  ret.tree.toStringTree();
+        assertEquals("staticfields: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testStaticfields end");
+  }
+
+  /**
+   * Test method for {@link annot.textio.BMLParser#field()}.
+   */
+  @Test
+  public void testStaticfield() {
+    String[] paramdecls = { "static private int sum;",
+                            "static public java.lang.Object a;"
+                            };
+    String[] answers = { "static private int sum ;",
+                         "static public java . lang . Object a ;"
+                         };
+    System.out.println("testStaticfield: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.staticfield_return ret;
+      try {
+        ret = parser.staticfield();
+        assertEquals("field: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testStaticfield end");
+  }
+
+  /**
+   * Test method for {@link annot.textio.BMLParser#field()}.
+   */
+  @Test
+  public void testField() {
+    String[] paramdecls = { "private int sum;",
+                            "public java.lang.Object a;"
+                            };
+    String[] answers = { "private int sum ;",
+                         "public java . lang . Object a ;"
+                         };
+    System.out.println("testField: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.field_return ret;
+      try {
+        ret = parser.field();
+        assertEquals("field: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testField end");
   }
 
   /**

@@ -9,7 +9,6 @@
 package annot.bcclass;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -26,9 +25,11 @@ import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
+import annot.attributes.BMLModifiersFlags;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -278,7 +279,8 @@ public abstract class BCClassRepresentation {
     }
   }
 
-  private BMLModifier getFreshFieldMod(Field field) throws ReadAttributeException {
+  private BMLModifier getFreshFieldMod(Field field)
+    throws ReadAttributeException {
     return new BMLModifier(field, this);
   }
 
@@ -445,13 +447,14 @@ public abstract class BCClassRepresentation {
 
 
   private void updateFieldAttributes() {
-    Field[] fields = jc.getFields();
+    final Field[] fields = jc.getFields();
     for (int i = 0; i < fields.length; i++) {
-      AttributeWriter aw = new AttributeWriter(this);
-      Attribute[] attrs = removeBMLAttributes(fields[i].getAttributes());
-      Attribute[] attrsa = new Attribute[attrs.length + 1];
+      final AttributeWriter aw = new AttributeWriter(this);
+      final Attribute[] attrs = removeBMLAttributes(fields[i].getAttributes());
+      final Attribute[] attrsa = new Attribute[attrs.length + 1];
       System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
-      attrsa[attrs.length] = aw.writeAttribute(bml_fmodifiers[i].getAttribute());
+      attrsa[attrs.length] =
+        aw.writeAttribute(bml_fmodifiers[i].getAttribute());
       fields[i].setAttributes(attrsa);
     }
   }

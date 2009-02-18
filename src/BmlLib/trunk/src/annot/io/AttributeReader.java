@@ -369,11 +369,6 @@ public class AttributeReader {
         }
         final String name = ((ConstantUtf8) c).getBytes();
         return JavaType.getJavaType(name);
-        // TODO: deprecated
-      case 0xE1:
-        return new QuantifiedFormula(this, 0x0A);
-      case 0xE2:
-        return new QuantifiedFormula(this, 0x0B);
       default:
         throw new ReadAttributeException("Unknown expression code: " + b);
     }

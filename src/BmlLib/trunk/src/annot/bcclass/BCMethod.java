@@ -10,6 +10,7 @@ package annot.bcclass;
 
 import java.util.Iterator;
 
+import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -83,6 +84,11 @@ public class BCMethod {
   private final LocalVariable[] oldvars;
 
   /**
+   * The boolean flag which indicates if the method is a constructor.
+   */
+  private boolean isConstructor;
+
+  /**
    * A standard constructor from BCClass and MethodGen.
    *
    * @param abcc - BCClass containing this method,
@@ -99,10 +105,11 @@ public class BCMethod {
     this.bcelMethod = m;
     this.amap = new BCAttributeMap(this);
     final LocalVariableGen[] lvgens = m.getLocalVariables();
-    final int cnt = lvgens.length > 0 ? lvgens.length : 1;
+    final int cnt = lvgens.length;
     this.lvars = setLocalVariables(lvgens, cnt);
     this.oldvars = setOldLocalVariables(lvars);
     this.params = setParams(m.getArgumentTypes());
+    this.isConstructor = m.getName().equals(Constants.CONSTRUCTOR_NAME);
     readBMLAttributes(m);
   }
 
@@ -159,9 +166,10 @@ public class BCMethod {
    */
   private LocalVariable[] setLocalVariables(final LocalVariableGen[] lvgens,
                                             final int len) {
-    final LocalVariable[] res = new LocalVariable[len];
+    LocalVariable[] res = new LocalVariable[len];
     final int cnt = lvgens.length;
     if (cnt == 0 && !bcelMethod.isStatic()) {
+      res = new LocalVariable[1];
       final JavaClass jc = bcc.getJC();
       final String typename = "L" + jc.getPackageName() +
                               jc.getClassName() + ";";
@@ -255,7 +263,8 @@ public class BCMethod {
   }
 
   /**
-   * Seraches for local variable of given name and range.
+   * Searches for local variable of the given name which is visible
+   * and range of instructions.
    *
    * @param name - name of local variable to look for,
    * @param startIH - instruction handle of first
@@ -267,11 +276,14 @@ public class BCMethod {
   public LocalVariable findLocalVariable(final String name,
                                          final InstructionHandle startIH) {
     for (int i = 0; i  <  this.lvars.length; i++) {
-      if (this.lvars[i].getName().equals(name)) {
+      if (this.lvars[i].getName() != null &&
+          this.lvars[i].getName().equals(name)) {
         if (startIH == null ||
             startIH == this.lvars[i].getBcelLvGen().getStart()) {
           return this.lvars[i];
         }
+      } else if (this.lvars[i].getName() == name) {
+        return this.lvars[i]; // no name => parameter
       }
     }
     return null;
@@ -534,5 +546,15 @@ public class BCMethod {
       return 0 <= i && i < lvars.length;
     }
     return i == 0 || (0 <= i - 1 &&  i - 1 < params.length);
+  }
+
+  /**
+   * Returns <code>true</code> in case the method is a constructor.
+   *
+   * @return <code>true</code> in case the method is a constructor,
+   *   <code>false</code> otherwise.
+   */
+  public boolean isConstructor() {
+    return isConstructor;
   }
 }

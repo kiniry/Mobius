@@ -304,10 +304,34 @@ staticsection :
      syso("static section");
   };
 
-staticfields : STATIC STATIC;
+staticfields :
+  (staticfield EOL)* EOL*
+  {
+     syso("static fields");
+  };
+
+staticfield :
+  STATIC field
+  {
+     syso("static field");
+  };
+
+field :
+  (nsfieldmodifier)* type ident SEMICOLON
+  {
+     syso("field");
+  }; 
 
 staticspec : staticinvariants? staticconstraints?
-             staticrepresents? staticinitially?;
+             staticrepresents? staticinitially? EOL*;
+
+nsfieldmodifier  :
+  (  PUBLIC
+   | PROTECTED
+   | PRIVATE
+   | ABSTRACT
+   | FINAL
+   | STRICTFP) {syso("ns field modifier");};
 
 staticinvariants : BML_START STATIC INVARIANT BML_END EOL;
 
