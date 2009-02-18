@@ -156,7 +156,8 @@ public class InstructionNameParser extends InstructionParserGeneric {
     final String line = getLine();
     while (swallowIdentifier()) {
       if (!(line.charAt(getIndex()) == '.')) {
-        return Character.isWhitespace(line.charAt(getIndex()));
+        return Character.isWhitespace(line.charAt(getIndex())) ||
+               line.charAt(getIndex()) == ';';
       }
       incIndex();
     }

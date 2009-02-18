@@ -10,6 +10,8 @@ package umbra.instructions;
 
 import java.util.Iterator;
 
+import javax.transaction.TransactionRequiredException;
+
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
@@ -19,6 +21,7 @@ import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CPHeaderController;
 import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.FieldLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
@@ -84,6 +87,12 @@ public class InitParser extends BytecodeCommentParser {
    * in the original textual representation. The method returns the changed
    * representation.
    *
+   * The exact format is, according to BML Reference Manual, section 'Textual
+   * Representation of Specifications':
+   * <pre>
+   *    classfile ::= fileheader typeheader typebody
+   * </pre>
+   *
    * This method initialises the parsing context, then it parses the header
    * of the class and then one by one parses the methods. At the end
    * the method initialises the structures to keep track of the modified
@@ -100,17 +109,138 @@ public class InitParser extends BytecodeCommentParser {
     throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
     initInstructionNo();
     int a_line_no = 0;
-    int a_method_count = 0;
     final LineContext ctxt = new LineContext();
-    a_line_no = swallowClassHeader(a_line_no, ctxt);
-    while (a_line_no < my_doc.getNumberOfLines()) {
-      ctxt.incMethodNo();
-      updateAnnotations(ctxt);
-      a_line_no = swallowMethod(a_line_no, a_method_count, ctxt);
-      a_method_count++;
-    }
+    a_line_no = swallowClassHeader(a_line_no, ctxt); //fileheader typeheader
+    a_line_no = swallowTypeBody(a_line_no, ctxt); //typebody
     final String str = getNewContent();
     return str;
+  }
+
+  /**
+   * The method parses the portion of a byte code text which is the content
+   * of the type declaration.
+   * The exact format is, according to "BML Reference Manual", section "Textual
+   * Representation of Specifications":
+   * <pre>
+   *    typebody ::= [ staticsection ] [ objectsection ] constructors
+   *                 [ methods ]
+   * </pre>
+   * @param a_line_no the line from which we start the parsing
+   * @param a_ctxt the parsing context
+   * @return the advanced line number, the first line number which has not been
+   *   analysed by the current method
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException thrown in case a method number has been
+   *   reached which is outside the number of available methods in the document
+   *
+   */
+  private int swallowTypeBody(final int a_line_no,
+                              final LineContext a_ctxt)
+    throws UmbraLocationException, UmbraMethodException {
+    int line_no = a_line_no;
+    line_no = swallowUpperSection(line_no, a_ctxt, true); //staticsection
+    line_no = swallowUpperSection(line_no, a_ctxt, false); //objectsection
+    a_ctxt.setMethodsToBeRead();
+    line_no = swallowMethodsAndConstructors(line_no, a_ctxt); // constructors
+                                                              // [ methods ]
+    return line_no;
+  }
+
+  /**
+   * The method parses the portion of a byte code text which contains the
+   * declarations of constructors and methods.
+   * The exact format is, according to "BML Reference Manual", section "Textual
+   * Representation of Specifications":
+   * <pre>
+   *    allmethods ::= constructors [ methods ]
+   *    constructors ::= constructor [ constructor ]...
+   *    methods ::= [ method ]...
+   * </pre>
+   * Currently, we rely on the assumption that in a real class file constructors
+   * come first and then methods so all the methods can be handled in the same
+   * way.
+   *
+   * @param a_line_no the line from which we start the parsing
+   * @param a_ctxt the parsing context
+   * @return the advanced line number, the first line number which has not been
+   *   analysed by the current method
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException thrown in case a method number has been
+   *   reached which is outside the number of available methods in the document
+   */
+  private int swallowMethodsAndConstructors(final int a_line_no,
+                                            final LineContext a_ctxt)
+    throws UmbraLocationException, UmbraMethodException {
+    int line_no = a_line_no;
+    int a_method_count = 0;
+    while (line_no < my_doc.getNumberOfLines()) {
+      a_ctxt.incMethodNo();
+      updateAnnotations(a_ctxt);
+      line_no = swallowMethod(line_no, a_method_count, a_ctxt);
+      a_method_count++;
+    }
+    return 0;
+  }
+
+  /**
+   * The method parses the portion of a byte code text which contains the
+   * declarations of fields.
+   * The exact format is, according to "BML Reference Manual", section "Textual
+   * Representation of Specifications":
+   * <pre>
+   *    staticsection ::= [ staticfields ] [ staticspec ]
+   * </pre>
+   * or
+   * <pre>
+   *    objectsection ::= [ objectfields ] [ objectspec ]
+   * </pre>
+   * The upper version is chosen when a_isstatic is <code>true</code>.
+   *
+   * @param a_line_no the line from which we start the parsing
+   * @param a_ctxt the parsing context
+   * @param a_isstatic the flag which indicates if the upper section is static
+   * @return the advanced line number, the first line number which has not been
+   *   analysed by the current method
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   * @throws UmbraMethodException thrown in case a method number has been
+   *   reached which is outside the number of available methods in the document
+   */
+  private int swallowUpperSection(final int a_line_no,
+                                  final LineContext a_ctxt,
+                                  final boolean a_isstatic)
+    throws UmbraLocationException {
+    a_ctxt.setFieldsToBeRead();
+    return swallowFields(a_line_no, a_ctxt, a_isstatic); //no specs currently
+  }
+
+  /**
+   * @param a_line_no the line from which we start the parsing
+   * @param a_ctxt the parsing context
+   * @param a_isstatic the flag which indicates if the upper section is static
+   * @return the advanced line number, the first line number which has not been
+   *   analysed by the current method
+   * @throws UmbraLocationException thrown in case a position has been reached
+   *   which is outside the current document
+   */
+  private int swallowFields(final int a_line_no,
+                            final LineContext a_ctxt,
+                            final boolean a_isstatic)
+    throws UmbraLocationException {
+    int res = a_line_no;
+    while (res < my_doc.getNumberOfLines()) {
+      final String a_linename = getLineFromDoc(my_doc, res, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(a_linename, a_ctxt);
+      if (!(lc instanceof FieldLineController) &&
+          !(lc instanceof EmptyLineController)) {
+        break;
+      }
+      addEditorLine(lc);
+      res++;
+    }
+    return res;
   }
 
   /**
@@ -119,8 +249,13 @@ public class InitParser extends BytecodeCommentParser {
    * The exact format is, according to BML Reference Manual, section 'Textual
    * Representation of Specifications':
    * <pre>
-   *    fileheader ::= packageinfo [imports]
-   *    imports ::= [ java-imports ] [ bml-imports ]
+   *    header ::= fileheader typeheader
+   *    fileheader ::= packageinfo constant-pools
+   *    typeheader ::= classmodifiers class ident
+   *                   [ class-extends-clause ] [ implements-clause ] nl...
+   *                 | interfacemodifiers interface ident
+   *                   [ interface-extends-clause ] [ implements-clause ] nl...
+   *
    * </pre>
    * Note that whitespace may be comments as well.
    *
@@ -145,11 +280,10 @@ public class InitParser extends BytecodeCommentParser {
     j++;
     j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
                                                                   //empty lines
-    j = swallowConstantPools(j, a_ctxt);
+    j = swallowConstantPools(j, a_ctxt); //constant-pools
     j = swallowEmptyLines(my_doc, j, my_doc.getNumberOfLines() - 1, a_ctxt);
                                                                   //empty lines
-    line = getLineFromDoc(my_doc, j, a_ctxt); //class
-    a_ctxt.setClassToBeRead();
+    line = getLineFromDoc(my_doc, j, a_ctxt); //typeheader
     lc = Preparsing.getType(line, a_ctxt);
     addEditorLine(j, lc);
     lc.setMethodNo(a_ctxt.getMethodNo());

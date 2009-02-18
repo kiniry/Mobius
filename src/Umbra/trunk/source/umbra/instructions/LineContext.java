@@ -47,34 +47,40 @@ public class LineContext {
   private static final int STATE_CONSTANT_POOL = 2;
 
   /**
-   * The context state which is used in case we expect that the content
+   * The context state which is used in case we expect that the fields
    * of a class will be read.
    */
-  private static final int STATE_CLASS_TO_BE_READ = 3;
+  private static final int STATE_FIELDS_TO_BE_READ = 3;
+
+  /**
+   * The context state which is used in case we expect that the methods
+   * of a class will be read.
+   */
+  private static final int STATE_METHODS_TO_BE_READ = 4;
 
   /**
    * The context state which is uset in case the parsing is inside of a
    * multi-line comment.
    */
-  private static final int STATE_INSIDE_COMMENT = 4;
+  private static final int STATE_INSIDE_COMMENT = 5;
 
   /**
    * The context state which is used in case the parsing is inside of a
    * BML annotation comment.
    */
-  private static final int STATE_INSIDE_ANNOTATION = 5;
+  private static final int STATE_INSIDE_ANNOTATION = 6;
 
   /**
    * The context state which is used in case the parsing is inside of a
    * method.
    */
-  private static final int STATE_INSIDE_METHOD = 6;
+  private static final int STATE_INSIDE_METHOD = 7;
 
   /**
    * The context state which is used in case the parsing is inside of the
    * invariant area of the class.
    */
-  private static final int STATE_INVARIANT_AREA = 7;
+  private static final int STATE_INVARIANT_AREA = 8;
 
   /**
    * The current state of the context.
@@ -118,10 +124,18 @@ public class LineContext {
 
   /**
    * The method sets the internal state of the object to the state in which
-   * we are about to parse the class.
+   * we are about to parse the fields.
    */
-  public void setClassToBeRead() {
-    my_state = STATE_CLASS_TO_BE_READ;
+  public void setFieldsToBeRead() {
+    my_state = STATE_FIELDS_TO_BE_READ;
+  }
+
+  /**
+   * The method sets the internal state of the object to the state in which
+   * we are about to parse the methods.
+   */
+  public void setMethodsToBeRead() {
+    my_state = STATE_METHODS_TO_BE_READ;
   }
 
   /**
@@ -254,10 +268,21 @@ public class LineContext {
    * invariant area.
    *
    * @return <code>true</code> when the object is in the state inside the
-   *   invariant ares, <code>false</code> otherwise
+   *   invariant area, <code>false</code> otherwise
    */
   public boolean isInInvariantArea() {
     return my_state == STATE_INVARIANT_AREA;
+  }
+
+  /**
+   * Returns <code>true</code> when the object is in the state inside the
+   * area of fields.
+   *
+   * @return <code>true</code> when the object is in the state inside the
+   *   field area, <code>false</code> otherwise
+   */
+  public boolean isInFieldsArea() {
+    return my_state == STATE_FIELDS_TO_BE_READ;
   }
 
   /**

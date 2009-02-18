@@ -211,6 +211,19 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                              "code_length"};
 
   /**
+   * This constant contains an array with all the possible prefixes of field
+   * declaration lines in byte code text files. The lines are handled by
+   * {@link umbra.instructions.ast.FieldLineController} class.
+   */
+  public static final String[] FIELD_PREFIX = new String[] {"public",
+                                                            "protected",
+                                                            "private",
+                                                            "static",
+                                                            "abstract",
+                                                            "final",
+                                                            "strictfp"};
+
+  /**
    * This constant contains an array with all the possible prefixes of method
    * headers in byte code text files. The header lines are handled by
    * {@link umbra.instructions.ast.HeaderLineController} class.

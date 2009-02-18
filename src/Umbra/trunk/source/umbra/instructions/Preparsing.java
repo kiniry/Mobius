@@ -18,6 +18,7 @@ import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.FieldLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
@@ -115,6 +116,10 @@ public final class Preparsing {
     } else if (a_context.isInsideConstantPool()) {
       if (CPLineController.isCPLineStart(a_line)) {
         return new CPLineController(a_line);
+      }
+    } else if (a_context.isInFieldsArea()) {
+      if (FieldLineController.isFieldLineStart(a_line)) {
+        return new FieldLineController(a_line);
       }
     }
     return lc;
