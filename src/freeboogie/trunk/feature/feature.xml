@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="FreeBoogie_feature"
-      label="FreeBoogie_feature Feature"
+      id="FreeBoogie"
+      label="FreeBoogie"
       version="1.0.0"
       provider-name="MOBIUS and Radu Grigore">
 
