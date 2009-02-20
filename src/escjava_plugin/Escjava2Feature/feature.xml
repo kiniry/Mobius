@@ -5,8 +5,7 @@
       version="2.0.8">
 
    <description url="http://www.example.com/description">
-      This feature contains the ESC/Java2 version 2.0.5 extended static
-checker and its subsystems, including Javafe version 2.0.6.
+      This feature contains the ESC/Java2 extended static checker and its subsystems
    </description>
 
    <copyright url="http://www.example.com/copyright">
