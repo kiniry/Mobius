@@ -3,14 +3,14 @@
 <repository name='file:/Users/dcochran/Sandbox/workspaces/ESCJava2/ESC Update Site/ - artifacts' type='org.eclipse.equinox.p2.artifact.repository.simpleRepository' version='1.0.0'>
   <properties size='2'>
     <property name='p2.compressed' value='false'/>
-    <property name='p2.timestamp' value='1228233154333'/>
+    <property name='p2.timestamp' value='1235400381171'/>
   </properties>
   <mappings size='3'>
     <rule filter='(&amp; (classifier=osgi.bundle))' output='${repoUrl}/plugins/${id}_${version}.jar'/>
     <rule filter='(&amp; (classifier=binary))' output='${repoUrl}/binary/${id}_${version}'/>
     <rule filter='(&amp; (classifier=org.eclipse.update.feature))' output='${repoUrl}/features/${id}_${version}.jar'/>
   </mappings>
-  <artifacts size='10'>
+  <artifacts size='12'>
     <artifact classifier='org.eclipse.update.feature' id='ExtendedStaticChecker' version='1.0.0'>
       <properties size='2'>
         <property name='artifact.size' value='737'/>
@@ -22,6 +22,12 @@
         <property name='artifact.size' value='1294349'/>
         <property name='download.size' value='1294349'/>
         <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='org.eclipse.update.feature' id='mobius.escjava2.feature' version='2.0.8'>
+      <properties size='2'>
+        <property name='artifact.size' value='9632'/>
+        <property name='download.size' value='9632'/>
       </properties>
     </artifact>
     <artifact classifier='osgi.bundle' id='mobius.escjava2.esctools' version='2.0.8'>
@@ -68,6 +74,13 @@
       <properties size='3'>
         <property name='artifact.size' value='32293'/>
         <property name='download.size' value='32293'/>
+        <property name='download.contentType' value='application/zip'/>
+      </properties>
+    </artifact>
+    <artifact classifier='osgi.bundle' id='mobius.escjava2.esctools' version='2.0.8'>
+      <properties size='3'>
+        <property name='artifact.size' value='4384390'/>
+        <property name='download.size' value='4384390'/>
         <property name='download.contentType' value='application/zip'/>
       </properties>
     </artifact>
