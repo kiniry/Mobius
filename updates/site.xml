@@ -39,13 +39,7 @@
    <feature url="features/com.mountainminds.eclemma.feature_1.3.2.jar" id="com.mountainminds.eclemma.feature" version="1.3.2">
       <category name="Optional"/>
    </feature>
-   <feature url="features/edu.umd.cs.findbugs.plugin.eclipse_1.3.6.20081113.jar" id="edu.umd.cs.findbugs.plugin.eclipse" version="1.3.6.20081113">
-      <category name="Optional"/>
-   </feature>
    <feature url="features/net.sourceforge.pmd.eclipse_3.2.5.v200810131150.jar" id="net.sourceforge.pmd.eclipse" version="3.2.5.v200810131150">
-      <category name="Optional"/>
-   </feature>
-   <feature url="features/JML4Eclipse_0.0.1.jar" id="JML4Eclipse" version="0.0.1">
       <category name="Optional"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
