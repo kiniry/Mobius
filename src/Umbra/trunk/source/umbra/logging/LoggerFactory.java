@@ -44,15 +44,16 @@ public class LoggerFactory {
   }
   
   /**
-   * @return
+   * @return mode the factory is currently in
    */
   public static Mode getMode() {
     return mode;
   }
   
   /**
-   * @param loggerName
-   * @return
+   * @param c class we create logger for
+   * @return new instance of logger with formatters and handlers set by
+   * currently used factory implementation
    */
   public static Logger getClassLogger(final Class<?> c) {
     return loggerFactoryImpl.getClassLogger(c);
