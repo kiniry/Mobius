@@ -43,4 +43,11 @@ public abstract class LoggerFactoryImpl {
    */
   abstract public Logger getClassLogger(Class<?> c);
   
+  /**
+   * @param name
+   * @return new logger with default settings
+   */
+  public Logger getDefaultLogger(String name) {
+    return Logger.getLogger(name);
+  }
 }
