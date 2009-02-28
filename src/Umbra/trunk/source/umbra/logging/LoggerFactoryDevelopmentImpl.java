@@ -8,6 +8,7 @@
  */
 package umbra.logging;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,25 +19,28 @@ import java.util.logging.SimpleFormatter;
 
 /**
  * @version a-01
- *
  */
 public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
 
-  /* (non-Javadoc)
-   * @see umbra.logging.LoggerFactoryImpl#getClassLogger(java.lang.Class)
+  LoggerFactoryDevelopmentImpl() {
+    super("umbra_logs/dvpmt/");
+  }
+
+  /**
+   * @return new class logger
    */
   @Override
   public Logger getClassLogger(final Class<?> c) {
     String className = c.getName();
     
-    Logger logger = Logger.getLogger(c.getName());
+    Logger logger = Logger.getLogger(className);
     logger.setLevel(Level.ALL);
     
     for (Handler h : logger.getHandlers()) {
       h.setLevel(Level.INFO);
     }
     
-  /*  try {
+    try {
       FileHandler fileHandler = new FileHandler(logPath + className + logSuffix);
       fileHandler.setLevel(Level.ALL);
       Formatter formatter = new SimpleFormatter();
@@ -46,8 +50,14 @@ public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
     } catch (SecurityException e) {
       e.printStackTrace();
     } catch (IOException e) {
-      e.printStackTrace();
-    } */
+      System.out.println("mkdir: " + System.getProperty("user.dir") + "/" + logPath);
+      boolean ok = (new File(logPath)).mkdirs();
+      if (ok) {
+        System.out.println("done");
+      } else {
+        System.out.println("fail");
+      }
+    }
     
     return logger;
   }
