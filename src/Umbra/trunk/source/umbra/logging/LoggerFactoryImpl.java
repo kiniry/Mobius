@@ -11,23 +11,36 @@ package umbra.logging;
 import java.util.logging.Logger;
 
 /**
+ * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
- *
  */
 public abstract class LoggerFactoryImpl {
 
   /**
-   * 
+   * relative path for logs produced by loggers from this factory
    */
-  public String logPath = "logs/";
-  /**
-   * 
-   */
-  public String logSuffix = ".log";
+  protected String logPath;
   
   /**
-   * @param c
-   * @return
+   * suffix for log files 
+   */
+  protected String logSuffix = ".log";
+  
+  LoggerFactoryImpl(String logPath) {
+    this.logPath = logPath;
+  }
+  
+  /**
+   * @return path where logs go
+   */
+  public String getLogPath() {
+    return logPath;
+  }
+  
+  /**
+   * @param c class for which the logger is created 
+   * @return new logger
    */
   abstract public Logger getClassLogger(Class<?> c);
+  
 }
