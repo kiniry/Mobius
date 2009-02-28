@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Package mobius.bmlvcgen.logging</title>
+</head>
+<body>
+<p>
+This package implements logging functions. All log entries are
+written through objects implementing the 
+{@link mobius.bmlvcgen.logging.Logger Logger} 
+interface. Such objects are created by 
+{@link mobius.bmlvcgen.logging.LoggerFactory LoggerFactories}.
+</p>
+<div>
+Two implementations of {@link mobius.bmlvcgen.logging.Logger Logger} 
+are provided
+<ul>
+  <li>
+  {@link mobius.bmlvcgen.logging.SimpleLogger SimpleLogger}, 
+  which writes all messages to an output stream.
+  </li>
+  <li>
+  {@link mobius.bmlvcgen.logging.CompositeLogger CompositeLogger},
+  which passes all message to a collection of other loggers.
+  </li>
+</ul>
+</div>
+<p>
+One implementation of 
+{@link mobius.bmlvcgen.logging.LoggerFactory LoggerFactory} is provided, 
+in class 
+{@link mobius.bmlvcgen.logging.DefaultLoggerFactory DefaultLoggerFactory}.
+It creates loggers which write messages to stderr and to a file in 
+current working directory.
+</p>
+</body>
+</html>

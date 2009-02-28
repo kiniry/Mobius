@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="tests/src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="tests/lib/junit-4.5.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BML_BPL_Translator"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MobiusDirectVCGen"/>
+	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/escjava.jar" sourcepath="/ESCJava2">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Users/Administrator/escjava-docs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/Javafe2.0.5.jar" sourcepath="/Javafe/Javafe/"/>
+	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/bcel-5.2.jar" sourcepath="/MobiusDirectVCGen/bcel-5.2-src.zip"/>
+	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/javac.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
