@@ -8,6 +8,8 @@
  */
 package umbra.logging;
 
+import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -57,6 +59,27 @@ public class LoggerFactory {
    */
   public static Logger getClassLogger(final Class<?> c) {
     return loggerFactoryImpl.getClassLogger(c);
+  }
+  
+  /**
+   * @param name
+   * @return new logger
+   */
+  public static Logger getDefaultLogger(String name) {
+    return loggerFactoryImpl.getDefaultLogger(name);
+  }
+  
+  /**
+   * @param name
+   * @return new logger
+   */
+  public static Logger getMockUpLogger(String name) {
+    Logger logger = loggerFactoryImpl.getDefaultLogger("mockup[" + name + "]");
+    logger.setLevel(Level.ALL);
+    for (Handler h : logger.getHandlers()) {
+      h.setLevel(Level.ALL);
+    }
+    return logger;
   }
   
 }
