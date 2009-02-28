@@ -9,6 +9,7 @@
 package umbra.editor;
 
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -42,6 +43,8 @@ import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
+import umbra.verifier.BytecodeVerifier;
+import umbra.verifier.ConsoleResultPresenter;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -163,13 +166,25 @@ public class BytecodeEditor extends TextEditor {
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
     logger.info("doSave(" + a_progress_monitor + ")");
-   
-    logger.fine("getEditorInput: " + getEditorInput());
-    BytecodeDocument bdoc = getDocument();
-    if (bdoc == null) {
-      logger.fine("doc is null!");
-    } else {
-      logger.fine("text: " + bdoc.get());
+    
+    final BytecodeDocument doc = getDocument();
+    doc.updateJavaClass();
+    final JavaClass jc = doc.getJavaClass();
+ 
+    BytecodeVerifier verifier = new BytecodeVerifier(jc);
+    ConsoleResultPresenter presenter = new ConsoleResultPresenter();
+    presenter.presentAll(verifier);
+    
+    if (!verifier.passed()) {
+      Scanner scanner = new Scanner(System.in);
+      int a;
+      do {
+        System.out.println("verification failed. save anyway? 01");
+        a = scanner.nextInt();
+      } while (a != 0 && a != 1);
+      if (a == 0) {
+        return;
+      }
     }
     
     final IDocumentProvider p = getDocumentProvider();
@@ -200,10 +215,7 @@ public class BytecodeEditor extends TextEditor {
     if (a_file_from == null) return;
     final String path3 = a_file_from.getLocation().toOSString();
     try {
-      final BytecodeDocument doc = getDocument();
       doc.updateJavaClass();
-      logger.fine("doc.get(): " + doc.get());
-      final JavaClass jc = doc.getJavaClass();
       jc.dump(path3);
     } catch (IOException e) {
       MessageDialog.openError(shell, GUIMessages.BYTECODE_MESSAGE_TITLE,
