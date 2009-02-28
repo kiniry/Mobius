@@ -37,7 +37,7 @@ public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
     logger.setLevel(Level.ALL);
     
     for (Handler h : logger.getHandlers()) {
-      h.setLevel(Level.INFO);
+      h.setLevel(Level.WARNING);
     }
     
     try {
