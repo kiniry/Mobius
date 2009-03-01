@@ -13,36 +13,40 @@ package umbra.verifier;
  * @version a-01
  *
  */
-interface ResultPresenter {
+public abstract class ResultPresenter {
+  
+  protected BytecodeVerifier verifier;
   
   /**
-   * presents pass1 verification results
-   * @param verifier 
+   * @param verifier
    */
-  public void presentPass1(BytecodeVerifier verifier);
+  public ResultPresenter(BytecodeVerifier verifier) {
+    this.verifier = verifier;
+  }
+  
+  /**
+   * presents pass1 verification results 
+   */
+  public abstract void presentPass1();
   
   /**
    * presents pass2 verification results
-   * @param verifier 
    */
-  public void presentPass2(BytecodeVerifier verifier);
+  public abstract void presentPass2();
   
   /**
    * presents pass3a verification results
-   * @param verifier 
    */
-  public void presentPass3a(BytecodeVerifier verifier);
+  public abstract void presentPass3a();
   
   /**
    * presents pass3b verification results
-   * @param verifier 
    */
-  public void presentPass3b(BytecodeVerifier verifier);
+  public abstract void presentPass3b();
   
   /**
    * presents result of whole verification
-   * @param verifier 
    */
-  public void presentAll(BytecodeVerifier verifier);
+  public abstract void presentAll();
   
 }
