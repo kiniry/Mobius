@@ -18,8 +18,15 @@ import org.apache.bcel.verifier.VerificationResult;
  * @version a-01
  *
  */
-public class ConsoleResultPresenter implements ResultPresenter {
+public class ConsoleResultPresenter extends ResultPresenter {
 
+  /**
+   * @param verifier
+   */
+  public ConsoleResultPresenter(BytecodeVerifier verifier) {
+    super(verifier);
+  }
+  
   private void out(Object o) {
     System.out.println(o.toString());
   }
@@ -44,9 +51,8 @@ public class ConsoleResultPresenter implements ResultPresenter {
   
   
   /**
-   * @param verifier  
    */
-  public void presentPass1(BytecodeVerifier verifier) {
+  public void presentPass1() {
     out("pass1:");
     out(line(40, '-'));
     VerificationResult result = verifier.doPass1();
@@ -55,9 +61,8 @@ public class ConsoleResultPresenter implements ResultPresenter {
   }
 
   /**
-   * @param verifier  
    */
-  public void presentPass2(BytecodeVerifier verifier) {
+  public void presentPass2() {
     out("pass2:");
     out(line(40, '-'));
     VerificationResult result = verifier.doPass2();
@@ -84,11 +89,10 @@ public class ConsoleResultPresenter implements ResultPresenter {
     return sb.toString();
   }
 
-  /**
-   * @param verifier 
+  /** 
    * 
    */
-  public void presentPass3a(BytecodeVerifier verifier) {
+  public void presentPass3a() {
     out("pass3a:");
     out(line(40, '-'));
     JavaClass jc = verifier.getJavaClass();
@@ -100,10 +104,9 @@ public class ConsoleResultPresenter implements ResultPresenter {
     out("");
   }
 
-  /**
-   * @param verifier 
+  /** 
    */
-  public void presentPass3b(BytecodeVerifier verifier) {
+  public void presentPass3b() {
     out("pass3b:");
     out(line(40, '-'));
     JavaClass jc = verifier.getJavaClass();
@@ -116,14 +119,14 @@ public class ConsoleResultPresenter implements ResultPresenter {
   }
 
   /**
-   * @param verifier  
    */
-  public void presentAll(BytecodeVerifier verifier) {
-    presentPass1(verifier);
-    presentPass2(verifier);
-    presentPass3a(verifier);
-    presentPass3b(verifier);
+  public void presentAll() {
+    presentPass1();
+    presentPass2();
+    presentPass3a();
+    presentPass3b();
   }
+
 
 
 }
