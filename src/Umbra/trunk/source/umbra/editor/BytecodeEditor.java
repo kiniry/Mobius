@@ -9,7 +9,6 @@
 package umbra.editor;
 
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.logging.Logger;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -44,7 +43,10 @@ import umbra.lib.HistoryOperations;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
 import umbra.verifier.BytecodeVerifier;
-import umbra.verifier.ConsoleResultPresenter;
+import umbra.verifier.ConsoleVerificationFactory;
+import umbra.verifier.ResultPresenter;
+import umbra.verifier.SaveConfirmer;
+import umbra.verifier.VerificationFactory;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
@@ -75,6 +77,13 @@ import annot.io.ReadAttributeException;
 public class BytecodeEditor extends TextEditor {
 
   private static Logger logger = LoggerFactory.getClassLogger(BytecodeEditor.class);
+  
+  /**
+   * Factory used to create some verification related stuff.
+   * As for now Console version is used.
+   * Later we will instantiate it with other fatory class
+   */
+  private VerificationFactory verificationFactory = new ConsoleVerificationFactory();
   
   /**
    * The Java source code editor that corresponds to the current
@@ -172,19 +181,10 @@ public class BytecodeEditor extends TextEditor {
     final JavaClass jc = doc.getJavaClass();
  
     BytecodeVerifier verifier = new BytecodeVerifier(jc);
-    ConsoleResultPresenter presenter = new ConsoleResultPresenter();
-    presenter.presentAll(verifier);
-    
-    if (!verifier.passed()) {
-      Scanner scanner = new Scanner(System.in);
-      int a;
-      do {
-        System.out.println("verification failed. save anyway? 01");
-        a = scanner.nextInt();
-      } while (a != 0 && a != 1);
-      if (a == 0) {
-        return;
-      }
+    ResultPresenter presenter = verificationFactory.getResultPresenter(verifier);
+    SaveConfirmer confirmer = verificationFactory.getSaveConfirmer(presenter);
+    if (!confirmer.confirm()) {
+      return;
     }
     
     final IDocumentProvider p = getDocumentProvider();
