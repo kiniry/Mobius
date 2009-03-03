@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.escjava2.feature"
-      label="Extended Static Checker for Java"
-      version="2.0.8">
+      label="ESCJava2"
+      version="2.0.8"
+      provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
       This feature contains the ESC/Java2 extended static checker and its subsystems
@@ -744,13 +745,6 @@ limitations under the License.
    </license>
 
    <plugin
-         id="mobius.escjava2"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
@@ -766,11 +760,16 @@ limitations under the License.
          id="mobius.pluginlib"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.simplify.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="mobius.escjava2.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
