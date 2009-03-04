@@ -1,3 +1,4 @@
+ . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
  . Convert the BPLs in the test suite to Boogie 2.
  . Add null-by-default switch to bml2bpl.
  . Move to Boogie 2.
