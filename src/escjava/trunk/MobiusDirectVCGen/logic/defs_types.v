@@ -29,6 +29,12 @@ match val with
 | _ => Int.const 0
 end.
 
+Definition vBool (val: value) : Int.t :=
+match val with 
+| Num (I i) => i
+| _ => Int.const 0
+end.
+
 Coercion Int.const: Z >->Int.t.
 Coercion Int.toZ : Int.t >-> Z.
 Definition classToType (cl: ClassName): type := ReferenceType (ClassType cl).

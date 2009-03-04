@@ -42,7 +42,20 @@ public class PositionHint {
     if (met == null) {
       throw new IllegalArgumentException("The method cannot be null!");
     }
-    fFullMethodName = met.getClassName() + "." + met.getName();
+    fFullMethodName = getFullMethodName(met);
+  }
+
+
+  private static String getFullMethodName(final MethodGen met) {
+    String types = "";
+    for (org.apache.bcel.generic.Type typ: met.getArgumentTypes()) {
+      types += ", " + typ;
+    }
+    if (!types.equals("")) {
+      types = types.substring(2);
+    }
+    return met.getClassName() + "." + met.getName() + 
+                        "(" + types + ")";
   }
   
 
@@ -91,7 +104,7 @@ public class PositionHint {
    * @return the position hint corresponding to the method.
    */
   public static MethodHint getMethodPositionHint(final MethodGen met) {
-    final String fullMethodName = met.getClassName() + "." + met.getName();
+    final String fullMethodName = getFullMethodName(met);
     MethodHint mh = methodHint.get(fullMethodName);
     if (mh == null) {
       mh = new MethodHint(met);
@@ -138,7 +151,7 @@ public class PositionHint {
     public MethodHint(final MethodGen met) {
       super(met);
       fMeth = met;
-      fStrRep = "Method " + fMeth.toString();
+      fStrRep = "Method " + getFullMethodName(met);
     }
 
     /**

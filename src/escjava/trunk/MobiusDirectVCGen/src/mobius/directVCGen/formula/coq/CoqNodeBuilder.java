@@ -338,7 +338,7 @@ public class CoqNodeBuilder extends AHeapNodeBuilder {
       return term;
     }
     else if (from == sortBool) {
-      return new CValue("Num", new CInt("B ", new STerm[] {term}));
+      return new CValue("Num", new CInt("I ", new STerm[] {term}));
     }
     else if (from == sortInt) {
       return new CValue("Num", new CInt("I ", new STerm[] {term}));

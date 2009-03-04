@@ -293,7 +293,11 @@ public final class Lookup {
     
     final org.apache.bcel.generic.Type [] args = rd.getArgumentTypes();
     final List<String> names = fAnnotGen.getArgumentsName(rd);
-    
+    if (names.size() != args.length) {
+      // TODO: change to a logger class
+      System.err.println("There is an inconsistency between the " +
+            "number of names and the number of variables for method " + rd + "!");
+    }
     v.add(Heap.var);
     
     if (!rd.isStatic()) {
@@ -330,7 +334,7 @@ public final class Lookup {
     final QuantVariableRef qvr = Lookup.getInst().getNormalPostcondition(meth).getRVar();
     
     if (!Util.isVoid(meth)) {
-      args.addFirst(Expression.normal(Expression.some(qvr)));
+      args.addFirst(Expression.normal(Expression.some(Heap.sortToValue(qvr))));
     }
     else {
       args.addFirst(Expression.normal(Expression.none()));

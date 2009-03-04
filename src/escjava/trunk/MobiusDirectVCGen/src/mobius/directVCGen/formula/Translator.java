@@ -68,6 +68,8 @@ public final class Translator  {
   /**
    * A visitor to make correspond BCEL methods with routine declarations
    * of ESC/Java2.
+   * 
+   * TODO: should check the consistency of the types
    * @author J. Charles (julien.charles@inria.fr)
    */
   private static final class MethodGetterVisitor extends ABasicVisitor {
@@ -106,7 +108,8 @@ public final class Translator  {
     @Override
     public Object visitConstructorDecl(final /*@non_null*/ ConstructorDecl cd, 
                                        final Object o) {
-      if (fMet.getName().equals("<init>")) {
+      if (fMet.getName().equals("<init>") && 
+          cd.args.size() == fMet.getArgumentTypes().length) {
         return cd;
       }
       return o;
@@ -155,6 +158,13 @@ public final class Translator  {
       }
       fMethodToRoutine.put(mh, rout);
       fRoutineToMethod.put(rout, mh);
+      
+    }
+    if (mh.getMethod().getArgumentNames().length != rout.args.size()) {
+      System.err.println("There is an inconsistency between the " +
+                         "number of names and the number of variables for method " + 
+                         mh.getMethod() + "!");
+      throw new NullPointerException("" + met);
     }
     return rout;
   }

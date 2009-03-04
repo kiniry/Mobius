@@ -89,7 +89,7 @@ public class ExpressionVisitor extends ABasicVisitor {
     int val;
 
     switch (expr.tag) {
-      case TagConstants.BOOLEANLIT:
+      case TagConstants.BOOLEANLIT: // FIXME: should be changed to byte
         // -2^31 <= z < 2^31 
         if ((Boolean)expr.value) {
           val = 1; // Num.value(1); 
