@@ -10,7 +10,7 @@ import mobius.bmlvcgen.util.Visitable;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 
-import annot.attributes.BMLModifiersFlags;
+import annot.bcclass.BMLModifiersFlags;
 import annot.attributes.ClassInvariant;
 import annot.bcclass.BCClass;
 
