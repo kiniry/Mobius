@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -270,10 +271,12 @@ public final class FileNames {
         getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
     final IPath outputloc = jproject.getOutputLocation();
-    final IPath elempath = a_file.getProjectRelativePath().
+    final IPath elempath = a_file.getFullPath().
       removeFileExtension().addFileExtension(JAVA_EXTENSION.substring(1));
+    final IPath nelempath = removeSourcePath(elempath,
+                                             jproject.getRawClasspath());
     final CompilationUnit elem =
-      (CompilationUnit) jproject.findElement(elempath);
+      (CompilationUnit) jproject.findElement(nelempath);
     final IType typ = elem.findPrimaryType();
     final String fqn = typ.getFullyQualifiedName();
     final IPath np = outputloc.append(fqn.replace(Signature.C_DOT,
@@ -283,6 +286,33 @@ public final class FileNames {
     final IFile file = workspace.getRoot().
              getFile(np);
     return file;
+  }
+
+  /**
+   * The method removes the initial segments of the given path which
+   * correspond to the source directory so that only the name of the
+   * file with the path inside the source directory is left (package
+   * name).
+   *
+   * @param an_epath a path to the file to remove the source path from
+   * @param the_clpath the class path which contains the source path
+   * @return the original path with the segments of the source directory
+   *   removed or <code>null</code> in case no source folder matched
+   *   the initial segment of the given path
+   */
+  private static IPath removeSourcePath(final IPath an_epath,
+                                        final IClasspathEntry[] the_clpath) {
+    for (int i = 0; i < the_clpath.length; i++) {
+      final IClasspathEntry entry = the_clpath[i];
+      if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+        final IPath path = entry.getPath();
+        if (path.isPrefixOf(an_epath)) {
+          final int num = an_epath.matchingFirstSegments(path);
+          return an_epath.removeFirstSegments(num);
+        }
+      }
+    }
+    return null;
   }
 
   /**
