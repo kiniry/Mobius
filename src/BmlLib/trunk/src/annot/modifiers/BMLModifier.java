@@ -3,14 +3,12 @@
  */
 package annot.modifiers;
 
-import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.BMLModifierAttribute;
-import annot.attributes.SpecificationCase;
 import annot.bcclass.BCClassRepresentation;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
