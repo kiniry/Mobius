@@ -1,4 +1,0 @@
-latex thesis.tex
-latex thesis.tex
-dvips thesis.dvi -o 
-ps2pdf thesis.ps
