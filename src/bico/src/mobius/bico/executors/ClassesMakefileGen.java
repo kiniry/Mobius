@@ -48,7 +48,13 @@ public class ClassesMakefileGen {
    */
   private void generate(final String pkgDir) {
     final File workingDir = new File(fBaseDir, pkgDir);
-    workingDir.mkdir();
+    if (!workingDir.exists() &&
+         !workingDir.mkdirs()) {
+      System.err.println("Failed to create the working directory " +
+                         workingDir + "!");
+      return;
+    }
+    
     final File mkfile = new File (workingDir, "Makefile");
     
     final File[] subdirs = workingDir.listFiles(new Util.DirectoryFilter());
@@ -62,7 +68,7 @@ public class ClassesMakefileGen {
       out.close();
     } 
     catch (FileNotFoundException e) {
-      System.err.println("Failed to write the Makefile");
+      System.err.println("Failed to write the Makefile " + mkfile.getAbsolutePath());
       e.printStackTrace();
     }
      

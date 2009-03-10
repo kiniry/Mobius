@@ -8,9 +8,9 @@ ARGS::
   Dir:{}:{file}:[between="", /* allowMultiple="false", */ mustExist="true", mustBeDir="true"]
   		/* specify directory in which Bico does its job (there must 
   		   be only one directory, and this argument is mandatory */
-  Clazz:{}:{string-list}:[between="" /*, allowMultiple="true" */]
-        /* generates also the file for this class, bico must be able 
-           to find it in its class path */
+  Clazz:{}:{file-list}:[suffixregexp="([a-zA-Z.]+)\0", canExist="false"]
+        :" generates also the file for this class, bico must be able 
+           to find it in its class path "
            
   Output:{"-o"}:{file}:[between=""/*, allowMultiple="false"*/]
   		/* The output directory. */ 
@@ -27,7 +27,8 @@ ARGS::
 
 FORMAT::
 
-  Help | ((Option | Clazz)* Dir (Option | Clazz)*);  
+  Help  | (Dir (Option | Clazz)*);  
+ 
 
 WHERE::
 

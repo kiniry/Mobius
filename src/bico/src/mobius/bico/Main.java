@@ -63,10 +63,10 @@ public final class Main {
    */
   public static void main(final String[] args) throws IOException {
     System.out.println(WELCOME_MSG);
-    System.setSecurityManager(new SecurityManager() {
-      public void checkPermission(final Permission perm) {
-      }
-    });
+//    System.setSecurityManager(new SecurityManager() {
+//      public void checkPermission(final Permission perm) {
+//      }
+//    });
     Executor exec;
     try {
       exec = init(args);
@@ -116,7 +116,7 @@ public final class Main {
             break;
           case OUTPUT:
             // this keyword introduces the base working class path
-            li.setTargetDir(arg);
+            li.setTargetDir(new File(arg));
             break;
           default:
             break;

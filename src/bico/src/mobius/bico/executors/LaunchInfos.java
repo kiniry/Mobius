@@ -80,8 +80,8 @@ public class LaunchInfos {
    * The directory must already exist
    * @param dir the output directory
    */
-  public void setTargetDir(final String dir) {
-    fTargetDir = new File(dir);
+  public void setTargetDir(final File dir) {
+    fTargetDir = dir;
   }
   
   /**

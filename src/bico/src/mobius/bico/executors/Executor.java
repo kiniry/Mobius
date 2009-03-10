@@ -153,13 +153,24 @@ public class Executor extends ABasicExecutor {
   public void start() throws ClassNotFoundException, IOException {
     Dico.initDico(getDico());
     System.out.println("Using implem: " + getImplemSpecif() + ".");
-    System.out.println("Working path: " + getBaseDir());
+    final File base = getBaseDir();
+    System.out.print("Source directory " + fSourceDir + ":");    
+    if (!checkCreated(fSourceDir)) {
+      return; 
+    }
+    System.out.println(" OK.");
+    System.out.print("Output directory " + base + ":");    
+
+    if (!checkCreated(base)) {
+      return; 
+    }
+    System.out.println(" OK.");
     
     doApplication();
     
     generateClassMakefiles();
-    
-    final File fCoqFileName = new File(getBaseDir(), fNamingData.getBicoClassFileName());
+
+    final File fCoqFileName = new File(base, fNamingData.getBicoClassFileName());
     // creating file for output
     if (fCoqFileName.exists()) {
       fCoqFileName.delete();
@@ -174,6 +185,16 @@ public class Executor extends ABasicExecutor {
     generateMainMakefile();
     getOut().close(); // closing output file
 
+  }
+
+
+  private boolean checkCreated(final File dir) {
+    if (!dir.exists() &&
+        !dir.mkdirs()) {
+      System.err.println(" the directory does not exist and I failed to create it!");
+      return false;
+    }
+    return true;
   }
   
   /**

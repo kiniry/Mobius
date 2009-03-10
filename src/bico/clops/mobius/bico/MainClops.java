@@ -2,6 +2,7 @@ package mobius.bico;
 
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.Permission;
 
@@ -58,10 +59,6 @@ public class MainClops {
    */
   public static void main(final String[] args) throws IOException {
     System.out.println(WELCOME_MSG);
-    System.setSecurityManager(new SecurityManager() {
-      public void checkPermission(final Permission perm) {
-      }
-    });
     Executor exec;
     try {
       exec = init(args);
@@ -115,23 +112,27 @@ public class MainClops {
       throw new IllegalArgumentException("Bad usage!");
     }
     final BicoOptionsInterface opt = parser.getOptionStore();
-    if (opt.getHelp()) {
+    
+    if (opt.isHelpSet()) {
       System.out.println(HELP_MSG);
+      return null;
     }
-    li.setTargetDir(opt.getOutput().toString());
-    if (opt.getList()) {
+    System.out.println("Help is not printed.");
+    li.setTargetDir(opt.getOutput());
+    if (opt.isListSet()) {
       System.err.println(LIST_MSG);
       li.setListImplementation();
     }
     li.setBaseDir(opt.getDir());
+    
     if (opt.getClassPath() != null) {
       li.setClassPath(opt.getClassPath());
     }
     
-    for (String cl: opt.getClazz()) {
-      li.addClassToTreat(cl);
+    for (File cl: opt.getClazz()) {
+      li.addClassToTreat(cl.getPath());
     }
-    if (opt.getLib()) {
+    if (opt.isLibSet()) {
       li.enableLibrariesGeneration();
     }
     li.prepare();
