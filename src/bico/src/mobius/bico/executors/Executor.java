@@ -154,12 +154,12 @@ public class Executor extends ABasicExecutor {
     Dico.initDico(getDico());
     System.out.println("Using implem: " + getImplemSpecif() + ".");
     final File base = getBaseDir();
-    System.out.print("Source directory " + fSourceDir + ":");    
+    System.out.print("Source directory '" + fSourceDir + "':");    
     if (!checkCreated(fSourceDir)) {
       return; 
     }
     System.out.println(" OK.");
-    System.out.print("Output directory " + base + ":");    
+    System.out.print("Output directory '" + base + "':");    
 
     if (!checkCreated(base)) {
       return; 
@@ -174,7 +174,7 @@ public class Executor extends ABasicExecutor {
     // creating file for output
     if (fCoqFileName.exists()) {
       fCoqFileName.delete();
-      System.out.println("previous file is being overwritten...");
+      System.out.println("Previous file is being overwritten...");
     }
     fCoqFileName.createNewFile();
     final FileOutputStream fwr = new FileOutputStream(fCoqFileName);
@@ -184,6 +184,7 @@ public class Executor extends ABasicExecutor {
     doMain();
     generateMainMakefile();
     getOut().close(); // closing output file
+    System.out.println("done.");
 
   }
 

@@ -70,9 +70,7 @@ public class LaunchInfos {
    * @param dir the directory to set.
    */
   public void setBaseDir(final File dir) {
-    if (fBaseDir == null) {
-      fBaseDir = dir;
-    }
+    fBaseDir = dir;
   }
   
   /**

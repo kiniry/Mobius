@@ -118,19 +118,21 @@ public class MainClops {
       return null;
     }
     System.out.println("Help is not printed.");
-    li.setTargetDir(opt.getOutput());
+
     if (opt.isListSet()) {
       System.err.println(LIST_MSG);
       li.setListImplementation();
     }
+    
     li.setBaseDir(opt.getDir());
+    li.setTargetDir(opt.getOutput());
     
     if (opt.getClassPath() != null) {
       li.setClassPath(opt.getClassPath());
     }
     
-    for (File cl: opt.getClazz()) {
-      li.addClassToTreat(cl.getPath());
+    for (String cl: opt.getClazz()) {
+      li.addClassToTreat(cl);
     }
     if (opt.isLibSet()) {
       li.enableLibrariesGeneration();

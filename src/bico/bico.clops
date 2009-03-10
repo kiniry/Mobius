@@ -2,27 +2,28 @@ NAME::
   Bico
 
 ARGS::
-  Help:{"-h", "--help"}
-  		/* Show the help message. */
+  Help: {"-h", "--help"}
+  		: "Show the help message."
   
-  Dir:{}:{file}:[between="", /* allowMultiple="false", */ mustExist="true", mustBeDir="true"]
-  		/* specify directory in which Bico does its job (there must 
-  		   be only one directory, and this argument is mandatory */
-  Clazz:{}:{file-list}:[suffixregexp="([a-zA-Z.]+)\0", canExist="false"]
+  Dir: {}:{file}:[between="", mustExist="true", mustBeDir="true"]
+  		: "Specify directory in which Bico does its job (there must 
+  		   be only one directory, and this argument is mandatory"
+  		   
+  Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z.]+)\0"]
         :" generates also the file for this class, bico must be able 
            to find it in its class path "
            
-  Output:{"-o"}:{file}:[between=""/*, allowMultiple="false"*/]
-  		/* The output directory. */ 
+  Output:{"-o"}:{file}
+  		: "The output directory." 
   Map:{"-m", "--map"} 
-  		/* To have the map implementation. */
+  		: "To have the map implementation."
   List:{"-l", "--list"} 
-  		/* To have the list implementation. */ 
+  		: "To have the list implementation." 
   Lib:{"-lib"}  
-  		/* Enables the java.lang library generation. 
- 		   It implies the generation of most of the JRE. */
-  ClassPath:{"-cp"}:{string}:[between="" /*, allowMultiple="false"*/]
-  		/* The base working class path */
+  		: "Enables the java.lang library generation. 
+ 		   It implies the generation of most of the JRE."
+  ClassPath:{"-cp"}:{string}
+  		: "The base working class path."
   		
 
 FORMAT::
