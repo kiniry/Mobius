@@ -1,24 +1,33 @@
 #BCEL=`find ../ -name bcel-5.2.jar`
 BCEL=./lib/bcel-5.2.jar
+CLOPS_RUNTIME=./lib/clops-runtime.jar
+CLOPS=./lib/clops.jar
 TMP=tmp
+CLASSPATH=.:../${TMP}:../${BCEL}:../${CLOPS_RUNTIME}
 
-# bico packing, needs bcel jar on its path
+# bico packing, needs bcel jar and the clops runtime on its path
 
-bico.jar: java
+dist/bico.jar: java
 	@ echo Packing $@:
+	mkdir -p dist
 	cd ${TMP}; jar cmf  ../bico.mf ../$@ mobius
 	rm -rf ${TMP}
+	cp ${BCEL} ${CLOPS_RUNTIME} dist/
 
 clean:
 	@ echo Cleaning...
-	@ rm -f bico.jar
+	@ rm -rf dist
 	@ rm -rf ${TMP}
 
-java:
+java: prepare
 	@ echo Compiling:
 	mkdir -p tmp
-	cd src; javac -source 1.6 -sourcepath ../src -classpath ../${BCEL} -d ../${TMP} `find ./ -name *.java`
-
+	cd src; javac -source 1.6 -sourcepath ../src -classpath ${CLASSPATH} -d ../${TMP} `find ./ -name *.java`
+	cd clops; javac -source 1.6 -sourcepath ../clops -classpath ${CLASSPATH} -d ../${TMP} `find ./ -name *.java`
+	
+prepare:
+	@ echo Preparing:
+	java -cp lib/ -jar lib/clops.jar -i bico.clops -o clops/mobius/bico/options -p mobius.bico.options 
 
 ## old commands useless	
 jar: clean java
