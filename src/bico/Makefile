@@ -27,7 +27,7 @@ java: prepare
 	
 prepare:
 	@ echo Preparing:
-	java -cp lib/ -jar lib/clops.jar -d a.html -b html -i bico.clops -o clops/mobius/bico/options -p mobius.bico.options 
+	java -cp lib/ -jar lib/clops.jar -d bico.html -b html -i bico.clops -o clops/mobius/bico/options -p mobius.bico.options 
 
 ## old commands useless	
 jar: clean java
