@@ -1,47 +1,37 @@
-/*
-
- To have the map implementation. 
-    MAP("-map"),
-    /** To have the list implementation. 
-    LIST("-list"),
-    /** The base working class path. 
-    CLASSPATH("-cp"),
-    /** The output directory. 
-    OUTPUT("-o"),
-    /** To show the help message. 
-    HELP("-help"),
-    /** 
-     * Enables the java.lang library generation. 
-     * It implies the generation of most of the JRE. 
-     
-    LIB("-lib"), 
-    /** The option if all else fails. 
-  
-*/
-
-
 NAME::
   Bico
 
 ARGS::
-
-  Dir:{}:{file}:[between="", allowMultiple="false", mustExist="true", mustBeDir="true"]
-  Output:{"-o"}:{file}:[between="", allowMultiple="false"]
-  Map:{"-m", "--map"}
-  List:{"-l", "--list"}
-  Lib:{"-lib"}
-  ClassPath:{"-cp"}:{string}:[between="", allowMultiple="false"]
-  Clazz:{}:{string-list}:[between="", allowMultiple="true"]
-  Help:{"--help"}                      /* the default type is "boolean" */
-
+  Help:{"-h", "--help"}
+  		/* Show the help message. */
+  
+  Dir:{}:{file}:[between="", /* allowMultiple="false", */ mustExist="true", mustBeDir="true"]
+  		/* specify directory in which Bico does its job (there must 
+  		   be only one directory, and this argument is mandatory */
+  Clazz:{}:{string-list}:[between="" /*, allowMultiple="true" */]
+        /* generates also the file for this class, bico must be able 
+           to find it in its class path */
+           
+  Output:{"-o"}:{file}:[between=""/*, allowMultiple="false"*/]
+  		/* The output directory. */ 
+  Map:{"-m", "--map"} 
+  		/* To have the map implementation. */
+  List:{"-l", "--list"} 
+  		/* To have the list implementation. */ 
+  Lib:{"-lib"}  
+  		/* Enables the java.lang library generation. 
+ 		   It implies the generation of most of the JRE. */
+  ClassPath:{"-cp"}:{string}:[between="" /*, allowMultiple="false"*/]
+  		/* The base working class path */
+  		
 
 FORMAT::
 
-  (Option | Class)* Dir (Option | Class)*;  // this is a regular expression
+  Help | ((Option | Clazz)* Dir (Option | Clazz)*);  
 
 WHERE::
 
-  Option:   // shorthand to make the FORMAT easier to read
-	Map OR List OR Help OR Output OR ClassPath OR Lib;
+  Option:
+	Map OR List OR Output OR ClassPath OR Lib;
 	
 	
