@@ -2,18 +2,23 @@ package mobius.bico;
 
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
-
-import org.apache.bcel.Repository;
 
 import mobius.bico.executors.Executor;
 import mobius.bico.executors.LaunchInfos;
 import mobius.bico.options.BicoOptionsInterface;
 import mobius.bico.options.BicoParser;
 
-public class MainClops {
+import org.apache.bcel.Repository;
+
+/**
+ * The main class to launch bico!
+ * This version uses UCD's CLOPS.
+ * 
+ * @author J. Charles (julien.charles@inria.fr), P. Czarnik
+ *         (czarnik@mimuw.edu.pl)
+ */
+public final class MainClops {
   /** Bico major version number. */
   public static final int MAJOR_VERSION = 0;
   /** Bico minor version number. */
@@ -60,22 +65,29 @@ public class MainClops {
   public static void main(final String[] args) throws IOException {
     System.out.println(WELCOME_MSG);
     Executor exec;
+    
+    BicoParser parser;
     try {
-      exec = init(args);
-      // set the static  repository instance in class  
-      // org.apache.bcel.Repository to the repository of 
-      // the executor
-      // this is done as seemingly some of the classes use this instance
-      if (exec == null) {
-        return;
-      }
-      Repository.setRepository(exec.getRepository());
+      parser = new BicoParser();
     } 
-    catch (IllegalArgumentException e) {
-      System.err.println(e.getMessage());
-      System.err.println("(try java -jar bico.jar -help)");
+    catch (InvalidOptionPropertyValueException e) {
+      e.printStackTrace();
       return;
-    } 
+    }
+    if (!parser.parse(args)) {
+      System.err.println("Bad usage!");
+      System.err.println("(try java -jar bico.jar -help)");
+    }
+    final BicoOptionsInterface opt = parser.getOptionStore();
+    
+    if (opt.isHelpSet()) {
+      System.out.println(HELP_MSG);
+      return;
+    }
+    exec = init(opt);
+  
+    Repository.setRepository(exec.getRepository());
+    
     try {
       exec.start();
     } 
@@ -90,34 +102,11 @@ public class MainClops {
   /**
    * Init the executor with the arguments from the command line.
    * 
-   * @param args the arguments
-   * @return a newly created executor.
-   * @throws InvalidOptionPropertyValueException 
-   * @throws InvalidOptionPropertyValueException 
+   * @param opt the option store containing the parsed options
+   * @return a newly created executor. 
    */
-  private static Executor init(final String[] args) {
-    // dealing with args
-    // we first sort out arguments from path...
-    /* final List<File> paths = new Vector<File>(); */
+  private static Executor init(final BicoOptionsInterface opt) {
     final LaunchInfos li = new LaunchInfos();
-    BicoParser parser;
-    try {
-      parser = new BicoParser();
-    } 
-    catch (InvalidOptionPropertyValueException e) {
-      e.printStackTrace();
-      return null;
-    }
-    if (!parser.parse(args)) {
-      throw new IllegalArgumentException("Bad usage!");
-    }
-    final BicoOptionsInterface opt = parser.getOptionStore();
-    
-    if (opt.isHelpSet()) {
-      System.out.println(HELP_MSG);
-      return null;
-    }
-    System.out.println("Help is not printed.");
 
     if (opt.isListSet()) {
       System.err.println(LIST_MSG);
@@ -141,6 +130,4 @@ public class MainClops {
 
     return new Executor(li);
   }
-
-
 }
