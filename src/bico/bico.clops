@@ -13,27 +13,30 @@ ARGS::
         :" generates also the file for this class, bico must be able 
            to find it in its class path "
            
-  Output:{"-o"}:{file}
+  Output: {"-o"}:{file}
   		: "The output directory." 
-  Map:{"-m", "--map"} 
+  Map: {"-m", "--map"}
   		: "To have the map implementation."
-  List:{"-l", "--list"} 
+  List: {"-l", "--list"}
   		: "To have the list implementation." 
-  Lib:{"-lib"}  
+  Lib: {"-lib"}
   		: "Enables the java.lang library generation. 
  		   It implies the generation of most of the JRE."
-  ClassPath:{"-cp"}:{string}
+  ClassPath: {"-cp"}:{string}
   		: "The base working class path."
   		
 
 FORMAT::
-
   Help  | (Dir (Option | Clazz)*);  
  
 
 WHERE::
-
   Option:
-	Map OR List OR Output OR ClassPath OR Lib;
+	Output | ClassPath | Lib | Type;
+  Type:
+    Map | List;
 	
+VALIDITY::
+  {$(Map?) && $(List?)} : "Bico cannot generate at the same time for lists and maps!";
+  
 	
