@@ -22,9 +22,7 @@ public class DuplicateSuperclassWarning extends TypeCheckingWarning {
 
   @Override
   public String getMessage() {
-    return String.format(message, className, superClassName);
+    return String.format(message, superClassName, className);
   }
   
-  
-
 }
