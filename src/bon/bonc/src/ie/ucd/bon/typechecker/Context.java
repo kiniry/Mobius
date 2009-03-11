@@ -40,12 +40,14 @@ public final class Context {
   private boolean inFeatureSpecification;
   private FeatureSpecification featureSpec;
   private boolean inSelectiveExport;
+  private ClientRelation clientRelation;
+  private boolean inClientRelation;
   
   //Expressions
   private final Stack<Type> typeStack;
   private Type lastType;
   private final Stack<Map<String,Type>> quantificationStack;
-  
+    
   private static final Context instance = new Context(); 
   
   private Context() {
@@ -341,6 +343,23 @@ public final class Context {
   public void leaveClassEntry() {
     inClassEntry = false;
     this.classEntryName = null;
+  }
+  
+  public void enterClientRelation(ClientRelation cr) {
+    inClientRelation = true;
+    clientRelation = cr;
+  }
+  
+  public void leaveClientRelation() {
+    inClientRelation = false;
+  }
+
+  public ClientRelation getClientRelation() {
+    return clientRelation;
+  }
+
+  public boolean isInClientRelation() {
+    return inClientRelation;
   }
   
 }

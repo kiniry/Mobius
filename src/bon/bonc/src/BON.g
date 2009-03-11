@@ -806,8 +806,17 @@ inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')?
                         )
                       ;
                     
-client_relation  :  c=client 'client' (client_entities)? (type_mark)? 
-                    supplier (semantic_label)? 
+client_relation  :  c=client 'client'
+										{ ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
+										  getContext().enterClientRelation(cr); } 
+                    (client_entities)? 
+                    ( type_mark 
+                      { getContext().getClientRelation().setTypeMark($type_mark.text); }
+                    )? 
+                    supplier 
+                    { getContext().getClientRelation().setSupplier($supplier.text); }
+                    (semantic_label)?
+                    { getTI().addClientRelation(); } 
                   ->
                   ^(
                     CLIENT_RELATION[$c.start]

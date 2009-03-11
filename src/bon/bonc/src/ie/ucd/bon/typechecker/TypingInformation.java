@@ -24,6 +24,7 @@ import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,6 +55,8 @@ public class TypingInformation {
   private final Graph<String,ClusterDefinition> clusterClusterGraph;
   private final Graph<String,ClusterDefinition> reverseClusterClusterGraph;
   
+  private final List<ClientRelation> clientRelations;
+  
   private boolean finallyProcessed;
 
   public TypingInformation() {
@@ -71,6 +74,8 @@ public class TypingInformation {
     reverseClassClusterGraph = new Graph<String,ClassDefinition>();
     clusterClusterGraph = new Graph<String,ClusterDefinition>();
     reverseClusterClusterGraph = new Graph<String,ClusterDefinition>();
+    
+    clientRelations = new LinkedList<ClientRelation>();
     
     finallyProcessed = false;
   }
@@ -450,6 +455,14 @@ public class TypingInformation {
         def.setInterfaced(true);
       }
     }
+  }
+  
+  public void addClientRelation() {
+    clientRelations.add(context.getClientRelation());
+  }
+
+  public List<ClientRelation> getClientRelations() {
+    return clientRelations;
   }
 
 }
