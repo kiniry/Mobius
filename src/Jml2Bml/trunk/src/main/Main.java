@@ -136,6 +136,7 @@ public class Main {
         .getFileForInput(sourceFile)));
     //    final JCCompilationUnit tree = compiler.parseFiles(List.of(fileManager.getFileForInput(sourceFile))).head;
     compiler.enterTrees(files);
+//    compiler.attribute(compiler.todo);
     final JCCompilationUnit tree = files.head;
     //    final JCCompilationUnit tree = compiler
     //        .parse(getJavaFileObject(context, sourceFile));
