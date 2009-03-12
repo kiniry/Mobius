@@ -22,7 +22,7 @@ public final class MainClops {
   /** Bico major version number. */
   public static final int MAJOR_VERSION = 0;
   /** Bico minor version number. */
-  public static final int MINOR_VERSION = 6;
+  public static final int MINOR_VERSION = 7;
   /** Bico revision version number = bug fix.  */
   public static final int REVISION_VERSION = 0;
   /** BICO version. */
@@ -77,6 +77,7 @@ public final class MainClops {
     if (!parser.parse(args)) {
       System.err.println("Bad usage!");
       System.err.println("(try java -jar bico.jar -help)");
+      return;
     }
     final BicoOptionsInterface opt = parser.getOptionStore();
     

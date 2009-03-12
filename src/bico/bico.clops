@@ -7,34 +7,36 @@ ARGS::
   
   Dir: {}:{file}:[between="", mustExist="true", mustBeDir="true"]
   		: "Specify directory in which Bico does its job (there must 
-  		   be only one directory, and this argument is mandatory"
+  		   be only one directory, and this argument is mandatory)."
   		   
   Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z.]+)\0"]
-        :" generates also the file for this class, bico must be able 
-           to find it in its class path "
+        :" Generates also the file for this class, bico must be able 
+           to find it in its class path."
            
   Output: {"-o"}:{file}
-  		: "The output directory." 
+  		: "Used to specify the output directory." 
   Map: {"-m", "--map"}
-  		: "To have the map implementation."
+  		: "Triggers the generation of the map implementation."
   List: {"-l", "--list"}
-  		: "To have the list implementation." 
+  		: "Triggers the generation of the list implementation." 
   Lib: {"-lib"}
   		: "Enables the java.lang library generation. 
  		   It implies the generation of most of the JRE."
   ClassPath: {"-cp"}:{string}
-  		: "The base working class path."
+  		: "Specifies the base working class path."
   		
 
 FORMAT::
-  Help  | (Dir (Option | Clazz)*);  
+  Help  | (Dir (Misc | Type | Clazz)*);  
  
 
 WHERE::
-  Option:
-	Output | ClassPath | Lib | Type;
+  Main:
+    Dir | Clazz;
   Type:
     Map | List;
+  Misc:
+	Output | ClassPath | Lib;
 	
 VALIDITY::
   {$(Map?) && $(List?)} : "Bico cannot generate at the same time for lists and maps!";

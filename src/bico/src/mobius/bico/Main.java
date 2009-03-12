@@ -2,7 +2,6 @@ package mobius.bico;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.Permission;
 
 import mobius.bico.Constants.Option;
 import mobius.bico.executors.Executor;
