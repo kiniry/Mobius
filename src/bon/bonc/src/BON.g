@@ -811,8 +811,10 @@ client_relation  :  c=client 'client'
 										  getContext().enterClientRelation(cr); } 
                     (client_entities)? 
                     ( type_mark 
-                      { getContext().getClientRelation().setTypeMark($type_mark.text); }
-                    )? 
+                      { getTI().typeMark($type_mark.text); }
+                      |
+                      { getTI().typeMark(""); }
+                    )
                     supplier 
                     { getContext().getClientRelation().setSupplier($supplier.text); }
                     (semantic_label)?

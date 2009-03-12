@@ -12,8 +12,7 @@ public class ClientRelation {
   
 //  private List<Object> clientEntities;
   
-  //TODO should be enum type?
-  private String typeMark;
+  private TypeMark typeMark;
   
   public ClientRelation(String client) {
     this.client = client;
@@ -28,7 +27,7 @@ public class ClientRelation {
 //    clientEntities.add(entity);
 //  }
   
-  public void setTypeMark(String typeMark) {
+  public void setTypeMark(TypeMark typeMark) {
     this.typeMark = typeMark;
   }
 
@@ -44,7 +43,7 @@ public class ClientRelation {
     return supplier;
   }
 
-  public String getTypeMark() {
+  public TypeMark getTypeMark() {
     return typeMark;
   }
   

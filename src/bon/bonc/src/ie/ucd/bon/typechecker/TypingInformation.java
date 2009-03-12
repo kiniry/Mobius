@@ -465,5 +465,11 @@ public class TypingInformation {
     return clientRelations;
   }
 
+  public void typeMark(String mark) {
+    if (context.isInClientRelation()) {
+      context.getClientRelation().setTypeMark(TypeMark.make(mark));
+    }
+  }
+  
 }
 

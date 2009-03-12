@@ -179,6 +179,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public void setInterfaced(boolean interfaced) {
+    Main.logDebug("Setting interfaced: " + interfaced);
     this.interfaced = interfaced;
   }
 
