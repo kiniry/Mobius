@@ -6,30 +6,80 @@
   <!-- link type="text/css" rel="stylesheet" href="style.css" -->
   <title>$info.ParserName ($info.PackageName)</title>
   <style type="text/css">
-    body { color: black; background: white; }
-    .id {width:50px; color:blue;}
-    .aliases {font-family:Courier; background-color=grey;}
+    body { margin:80px; color: black; background: white; }
+    td{padding-right:10px;}
+    .id {width:100px; color:blue;}
+    .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    .error{ color:red;}
+    #java{
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:14px; 
+       font-family:Courier; 
+       width:400px;
+    }
+    #options{}
+    #index{float:right; 
+           border:solid 1px;
+           border-color: blue;
+           padding-right:1em;
+           }
+    #contentpart {
+        /*position:absolute;
+        top: 80px;
+        left:90px;
+        right:90px; */
+        text-align: left;
+        padding:3em;
+        font-size:90%;
+        
+    }
   </style>
 </head>
 
 <body>
+<div id="contentpart">
 <h1>$info.ParserName</h1>
+
+<div id="index">
 <p>
-<a href="#options">Options</a><br/>
-<a href="#rules">Rules</a>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#options">Options</a>:<br/>
+    <ul>
+    #foreach($group in $info.getOptionGroupDescriptions())
+      <li><a href="#opt-$group.Identifier">$group.Identifier options</a></li>
+    #end
+    </ul>
+</li>
+<li><a href="#rules">Rules</a>:
+    <ul>
+	#if($info.getValidityRuleDescriptions().size() != 0)
+ 	  <li><a href="#rules-validity">Validity rules</a></li>
+	#end
+	</ul>
+</li>
+</ul>
 </p>
+</div>
+
+
+<h2><a name="description">Description</a></h2>
+<h2><a name="usage">Usage</a></h2>
+<div id="options">
 <h2><a name="options">Options</a></h2>
 
 #foreach($group in $info.getOptionGroupDescriptions())
 <p>
-<h3>$group.Identifier options</h3>
+<h3><a name="opt-$group.Identifier">$group.Identifier options</a></h3>
 <table>
 #foreach($child in $group.getChildren())
  #set($option =  $info.getOptionDescriptionForIdentifier($!child))
  <tr>
- <td><span class="id">$option.Identifier</span></td>
- <td><span class="aliases">
-     #if("$!option.getAliases()" == "[]")
+ <td><div class="id">$option.Identifier</div></td>
+ <td><div class="aliases">
+     #if($option.getAliases().size() == 0)
        #if( $option.getType().getType() != 0 )
            &lt;$option.getType().getTypeDescriptionString()&gt;
        #end
@@ -42,12 +92,14 @@
        #end
        <br/>
      #end
-     </span></td>
+     </div></td>
  <td><span class="description">$!option.Description</span></td>
  </tr>
   #end
 </table>
 #end
+</div>
+
 
 <h2><a name="rules">Rules</a></h2>
  
@@ -62,20 +114,30 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
   Condition: $!rule.getConditionText()
 </p>
 #end
+#if($info.getValidityRuleDescriptions().size() != 0)
+  <h3><a name="rules-validity">Validity rules</a></h3>
+  The following section contains validity rules, rules that generate an error in
+  case the given test is verified.
+  <table>
+  <tr><td></td>
+      <td><b>Test:</b></td>
+	  <td><b>Error triggered if true:</b></td></tr>
 
-#foreach($rule in $info.getValidityRuleDescriptions())
+  <tr>
+  #foreach($rule in $info.getValidityRuleDescriptions())
+    <td>
+      #foreach($assignment in $rule.getAssignments())
+        Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+      #end
+    </td>
+    <td><div id="java">$!rule.getConditionText()</div>
+        </td>
+    <td class="error">$!rule.getExplanation()</td>
+  #end
+  </tr>
+  </table>
+#end
 
-<p>
-#foreach($assignment in $rule.getAssignments())
-Assignment: $!assignment.OptionIdentifier = $!assignment.Value
-#end
-</p>
-<p>Condition: $!rule.getConditionText()
-</p>
-</p>
-<p>Explanation: $!rule.getExplanation()
-</p>
-#end
 
 #foreach($rule in $info.getFlyRuleDescriptions())
 
@@ -88,5 +150,6 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
 </p>
 
 #end
+</div>
 </body>
 </html>

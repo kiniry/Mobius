@@ -10,8 +10,8 @@ ARGS::
   		   be only one directory, and this argument is mandatory)."
   		   
   Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z.]+)\0"]
-        :" Generates also the file for this class, bico must be able 
-           to find it in its class path."
+        : "Generates also the file for the specified classes, bico must be able 
+           to find them in its class path."
            
   Output: {"-o"}:{file}
   		: "Used to specify the output directory." 

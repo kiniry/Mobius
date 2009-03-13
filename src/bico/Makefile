@@ -27,7 +27,7 @@ java: prepare
 	
 prepare:
 	@ echo Preparing:
-	java -cp lib/ -jar lib/clops.jar -d bico.html -b html -c html.vm -i bico.clops -o clops/mobius/bico/options -p mobius.bico.options 
+	java -jar lib/clops.jar bico.clops -d bico.html -c html.vm -o clops/mobius/bico/options -p mobius.bico.options 
 try:
 	java  -jar dist/bico.jar  test -o tmp -cp test A
 

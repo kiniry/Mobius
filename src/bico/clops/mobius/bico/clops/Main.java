@@ -1,4 +1,4 @@
-package mobius.bico;
+package mobius.bico.clops;
 
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 
@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import mobius.bico.executors.Executor;
 import mobius.bico.executors.LaunchInfos;
-import mobius.bico.options.BicoOptionsInterface;
-import mobius.bico.options.BicoParser;
+import mobius.bico.clops.BicoOptionsInterface;
+import mobius.bico.clops.BicoParser;
 
 import org.apache.bcel.Repository;
 
@@ -18,7 +18,7 @@ import org.apache.bcel.Repository;
  * @author J. Charles (julien.charles@inria.fr), P. Czarnik
  *         (czarnik@mimuw.edu.pl)
  */
-public final class MainClops {
+public final class Main {
   /** Bico major version number. */
   public static final int MAJOR_VERSION = 0;
   /** Bico minor version number. */
@@ -52,7 +52,7 @@ public final class MainClops {
     "If you want support for it please file a bug report on the Mobius Trac Server\n" +
     "http://mobius.ucd.ie/\n";
   /** */
-  private MainClops() { }
+  private Main() { }
   
   /**
    * Bico main entry point.
