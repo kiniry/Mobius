@@ -5,7 +5,7 @@ This template generates java classes for the abstract classes.
   This class is generated automatically from abstract_classes.tpl. 
   Do not edit.
  */
-package mobius.logic.lang.coq;
+package mobius.logic.lang.coq.ast;
 
 public abstract class \ClassName extends \BaseName {
   // a more specific return type

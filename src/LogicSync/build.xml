@@ -26,13 +26,15 @@
   </path>
 	
   <property name="astgen-dir" location="spec/astgen" />
-  <property name="fb-ast" location="src/mobius/logic/lang/coq" />
+  <property name="astgen-tpl-dir" location="spec/astgen/tpl" />
+  <property name="coq-ast-target" location="src/mobius/logic/lang/coq/ast" />
 	
   <target name="init">
     <echo message="Creating timestamp"/>
     <tstamp/>
     <mkdir dir="${build}"/>
   	<mkdir dir="${clops-target}"/>
+  	<mkdir dir="${coq-ast-target}"/>
   </target>
 	
 
@@ -67,19 +69,23 @@
     </java>
   </target>
 
-  <target name="ast-gen" depends="init" 
+  <target name="ast-gen-coq" depends="init" 
     description="generates AST">
-    <java fork="yes" dir="${fb-ast}" jar="lib/astgen.jar">
-      <arg value="${astgen-dir}/fb.ag" />
-      <arg value="${astgen-dir}/abstract_classes.tpl" />
-      <arg value="${astgen-dir}/normal_classes.tpl" />
-      <arg value="${astgen-dir}/evaluator.tpl" />
-      <arg value="${astgen-dir}/transformer.tpl" />
-      <arg value="${astgen-dir}/substitutor.tpl" />
-      <arg value="${astgen-dir}/html.tpl" />
-      <arg value="${astgen-dir}/list.tpl" />
+    <java fork="yes" dir="${coq-ast-target}" jar="lib/astgen.jar">
+      <arg value="${astgen-dir}/coq.ag" />
+      <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/evaluator.tpl" />
+      <arg value="${astgen-tpl-dir}/transformer.tpl" />
+      <arg value="${astgen-tpl-dir}/substitutor.tpl" />
+      <arg value="${astgen-tpl-dir}/html.tpl" />
+      <arg value="${astgen-tpl-dir}/list.tpl" />
     </java>
   </target>
+	
+  <target name="ast-gen" depends="ast-gen-coq" 
+	    description="generates ASTs" />
+	
   <target name="gen-files" depends="ast-gen,clops-gen" 
 	    description="generates ASTs, and Java files" />
   	

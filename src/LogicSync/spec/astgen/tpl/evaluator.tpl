@@ -10,7 +10,7 @@ by the return type for each type of node.
 /** 
   This file is generated from evaluator.tpl. Do not edit.
  */
-package mobius.logic.lang.coq;
+package mobius.logic.lang.coq.ast;
 import java.math.BigInteger;
 import java.util.HashMap;
 
@@ -48,7 +48,7 @@ public class Evaluator<R> {
 /**
   This file is generated from evaluator.tpl. Do not edit.
  */
-package mobius.logic.lang.coq;
+package mobius.logic.lang.coq.ast;
 import java.math.BigInteger;
 
 public class AssociativeEvaluator<R> extends Evaluator<R> {

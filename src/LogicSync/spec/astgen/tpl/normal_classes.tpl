@@ -5,7 +5,7 @@ This template generates java classes for the normal classes.
   This class is generated automatically from normal_classes.tpl. 
   Do not edit.
  */
-package mobius.logic.lang.coq;
+package mobius.logic.lang.coq.ast;
 import java.math.BigInteger; // for AtomNum
 
 /** @author rgrig */
