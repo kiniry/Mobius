@@ -3,45 +3,8 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-  <!-- link type="text/css" rel="stylesheet" href="style.css" -->
+  <link type="text/css" rel="stylesheet" href="mobius.css" />
   <title>$info.ParserName ($info.PackageName)</title>
-  <style type="text/css">
-    body { margin:40px; color: black; background: white; }
-    td{padding-right:10px;}
-    .id {width:100px; color:blue;}
-    .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
-    #validity-explanation{width: 300px;
-           color:red;}
-    #validity-cond{
-       background-color:lightgrey; 
-       overflow:auto; 
-       font-size:14px; 
-       font-family:Courier; 
-    }
-    #usage-str{
-       align: center;
-       background-color:lightgrey; 
-       overflow:auto; 
-       font-size:16px; 
-       font-family:Courier; 
-    }
-    #options{}
-    #index{float:right; 
-           border:solid 1px;
-           border-color: blue;
-           padding-right:1em;
-           }
-    #contentpart {
-        /*position:absolute;
-        top: 80px;
-        left:90px;
-        right:90px; */
-        text-align: left;
-        padding:3em;
-        font-size:90%;
-        
-    }
-  </style>
 </head>
 
 <body>
@@ -73,7 +36,9 @@
 
 
 <h2><a name="description">Description</a></h2>
+This tool is part of the DirectVCGen component of the Mobius tool suite.
 <h2><a name="usage">Usage</a></h2>
+The program has to be called from its jar file with arguments having the following form:<br/>
 <span id="usage-str">$info.getFormatString()</span>
 
 <div id="options">
@@ -125,25 +90,16 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
 #end
 #if($info.getValidityRuleDescriptions().size() != 0)
   <h3><a name="rules-validity">Validity rules</a></h3>
-  The following section contains validity rules, rules that generate an error in
-  case the given test is verified.
+  The following section contains validity rules, rules that specify how the
+  arguments should be composed.
   <table>
-  <tr><td><b>Rule:</b></td>
-	  <td></td>
-	  <td><b>Exact check:</b></td></tr>
+  <tr><td><b>Rules:</b></td></tr>
 
   
   #foreach($rule in $info.getValidityRuleDescriptions())
     <tr>
     <td><div id="validity-explanation">$!rule.getExplanation()</div></td>
-    <td>
-      #foreach($assignment in $rule.getAssignments())
-        Assignment: $!assignment.OptionIdentifier = $!assignment.Value
-      #end
-    </td>
-    <td><div id="validity-cond">$!rule.getConditionText()</div>
-        </td>
-	</tr>
+    </tr>
   #end
   </table>
 #end

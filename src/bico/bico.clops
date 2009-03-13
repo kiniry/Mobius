@@ -2,7 +2,7 @@ NAME::
   Bico
 
 ARGS::
-  Help: {"-h", "--help"}
+  Help: {"-h", "-help", "--help"}
   		: "Show the help message."
   
   Dir: {}:{file}:[between="", mustExist="true", mustBeDir="true"]
@@ -15,9 +15,9 @@ ARGS::
            
   Output: {"-o"}:{file}
   		: "Used to specify the output directory." 
-  Map: {"-m", "--map"}
+  Map: {"-m", "-map", "--map"}
   		: "Triggers the generation of the map implementation."
-  List: {"-l", "--list"}
+  List: {"-l", "-list", "--list"}
   		: "Triggers the generation of the list implementation." 
   Lib: {"-lib"}
   		: "Enables the java.lang library generation. 
@@ -32,13 +32,16 @@ FORMAT::
 
 WHERE::
   Main:
-    Dir | Clazz;
+    Help | Dir | Clazz;
   Type:
     Map | List;
   Misc:
 	Output | ClassPath | Lib;
 	
 VALIDITY::
-  {$(Map?) && $(List?)} : "Bico cannot generate at the same time for lists and maps!";
+  {$(Map?) && $(List?)} : "The option '-m' (map implementation generation) and '-l' 
+                           (list implementation generation) cannot be specified at
+                           the same time: 
+                           Bico cannot generate both list and map formalisations.";
   
 	

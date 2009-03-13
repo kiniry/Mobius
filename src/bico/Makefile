@@ -5,30 +5,10 @@ CLOPS=./lib/clops.jar
 TMP=tmp
 CLASSPATH=.:../${TMP}:../${BCEL}:../${CLOPS_RUNTIME}
 
-# bico packing, needs bcel jar and the clops runtime on its path
 
-dist/bico.jar: java
-	@ echo Packing $@:
-	mkdir -p dist
-	cd ${TMP}; jar cmf  ../bico.mf ../$@ mobius
-	rm -rf ${TMP}
-	cp ${BCEL} ${CLOPS_RUNTIME} dist/
-
-clean:
-	@ echo Cleaning...
-	@ rm -rf dist
-	@ rm -rf ${TMP}
-
-java: prepare
-	@ echo Compiling:
-	mkdir -p tmp
-	cd src; javac -source 1.6 -sourcepath ../src -classpath ${CLASSPATH} -d ../${TMP} `find ./ -name *.java`
-	cd clops; javac -source 1.6 -sourcepath ../clops -classpath ${CLASSPATH} -d ../${TMP} `find ./ -name *.java`
 	
-prepare:
-	@ echo Preparing:
-	java -jar lib/clops.jar bico.clops -d bico.html -c html.vm -o clops/mobius/bico/options -p mobius.bico.options 
 try:
+	java  -jar dist/bico.jar  test -map -list
 	java  -jar dist/bico.jar  test -o tmp -cp test A
 
 setup:

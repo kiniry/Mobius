@@ -8,6 +8,8 @@
   <property name="clops-target" location="clops/mobius/bico/clops"/>
   <property name="clops-pkg" value="mobius.bico.clops"/>
   <property name="clops-src" location="clops"/>
+  <property name="clops-html-template" location="mobius.vm"/>
+  <property name="clops-html-output" location="bico.html"/>
   <property name="java-target-version" value="1.6"/>
 
   <path id="clops.path">
@@ -58,9 +60,9 @@
       </assertions>
       <classpath refid="clops.path"/>
       <arg value="-v"/>
-      <arg value="-d=bico.html"/>
+      <arg value="-d=${clops-html-output}"/>
       <arg value="-c"/>
-      <arg value="html.vm"/> 
+      <arg value="${clops-html-template}"/> 
       <arg value="-p"/>
       <arg value="${clops-pkg}"/>
       <arg value="-o"/>
