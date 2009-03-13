@@ -1,3 +1,0 @@
-Main-Class: mobius.directVCGen.Main
-Name: DirectVCGen
-Class-Path: bico.jar bcel-5.2.jar escjava.jar junit.jar Javafe2.0.5.jar

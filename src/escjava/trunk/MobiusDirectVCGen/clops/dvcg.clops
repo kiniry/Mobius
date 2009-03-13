@@ -1,0 +1,20 @@
+NAME::
+  DirectVCGen
+
+ARGS::
+  Help: {"-h", "-help", "--help"}
+  		: "Show the help message."
+  
+  WorkingDir: {}:{file}:[between="", mustBeDir]
+  FormalisationJar: {}:{file}:[between="", mustExist, canBeDir="false"]
+  Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z.]+)\0"]
+  
+  		
+
+FORMAT::
+  Help  | WorkingDir FormalisationJar (Clazz)*;
+ 
+
+WHERE::
+  Main:
+    Help | WorkingDir | FormalisationJar | Clazz;

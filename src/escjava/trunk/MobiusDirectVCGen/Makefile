@@ -40,18 +40,7 @@ prepare:
 	@ echo
 
 
-
-bico+.jar: 
-	@ echo Packing $@:
-	cd ${TMP}; jar cmf  ../bico+.mf ../$@ mobius
 	
-DirectVCGen.jar: 
-	@ echo Packing $@:
-	cd ${TMP}; jar cmf  ../DirectVCGen.mf ../$@ mobius
-	
-jar: clean java DirectVCGen.jar bico+.jar
-	rm -rf ${TMP}
-	mv bico+.jar DirectVCGen.jar ./jar
 
 
 
