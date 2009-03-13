@@ -105,7 +105,24 @@ public class CoqNodeBuilder extends AHeapNodeBuilder {
   @Override
   public SPred buildForAll(final QuantVar[] vars, final SPred body, 
                            final STerm[][] pats, final STerm[] nopats) {
-    return new CForall(this, vars, body);
+    if (body instanceof CForall) {
+      final CForall fall = (CForall) body;
+      final QuantVar[] qvolds = fall.getVars();
+      final QuantVar[] qvdest = new QuantVar[vars.length + qvolds.length];
+      int i = 0;
+      for (QuantVar v: vars) {
+        qvdest[i] = v;
+        i++;
+      }
+      for (QuantVar v: qvolds) {
+        qvdest[i] = v;
+        i++;
+      }
+      return buildForAll(qvdest, (SPred) (fall.getArgs()[0]), pats, nopats);
+    }
+    else {
+      return new CForall(this, vars, body);
+    }
   }
   
 

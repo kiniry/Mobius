@@ -1,189 +1,119 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project default="everything">
-	<property name="escjava_classes" value="../ESCTools/classfiles"/>
-	<property name="jml_dir" value="/home/jcharles/src/JML"/>
-	
-	<property name="jmlc_dest" value="jmlc_classes"/>
-	<property name="mobius_sources" value="src"/>
-	<property name="samples_sources" value="samples"/>
-	<property name="mobius_classes" value="classes"/>
-	<property name="libs_dir" value="libs"/>
-	
-	
-	<path id="class_files">
-	    <fileset dir="${mobius_classes}">
-	      <include name="**/*.class"/>
-	    </fileset>
-	</path>
-	<!-- Pre-built jars necessary for compiling, testing, etc. -->
-	<path id="libraries">
-	    <fileset dir="${libs_dir}">
-	      <include name="*.jar"/>
-	    </fileset>
-	</path>
-	<path id="base_classpath">
-	   <pathelement path="${java.class.path}"/>
-	   <pathelement path="classes"/>
-	</path>
+<project name="DirectVCGen" default="clops-gen" basedir=".">
+  <description>DirectVCGen Build File</description>
 
-	<path id="mobius_classpath">
-	  <path refid="base_classpath"/>
-	  <pathelement path="${escjava_classes}"/>
-	</path>
-	<!-- The jar files on which JML depends (e.g., for run-time checking). -->
-	<path id="jml_jars">
-	  <fileset dir="${jml_dir}">
-       <include name="bin/*.jar"/>
-	  </fileset>
-	</path>
-	
-	<path id="jml_classpath">
-	  <path refid="mobius_classpath"/>
-	  <path refid="jml_jars"/>
-	  <pathelement path="${jmlc_dir}"/>
-	  <pathelement path="${samples_sources}"/>
-	</path>
-	
-	<target name="everything" depends="compile_mobius,
-									   jml, jmlc">
+  <property name="java-target-version" value="1.6"/>
 		
-	</target>
-	<target name="javadoc">
-	<javadoc access="private" 
-		author="true" 
-		classpath="../ESCTools/Utils/ant.jar:../ESCTools/classfiles:../ESCTools/Utils/junit.jar:../ESCTools/Escjava/xmlrpc-1.2-b1-modified.jar:samples" 
-		destdir="javadoc" 
-		nodeprecated="false" 
-		nodeprecatedlist="false" 
-		noindex="false" nonavbar="false" notree="false" 
-		packagenames="mobius.directVCGen.formula.coq,mobius.directVCGen.formula,mobius.directVCGen.vcgen.expression,mobius.directVCGen,mobius.directVCGen.vcgen.stmt,mobius.directVCGen.formula.annotation,mobius.directVCGen.formula.coq.representation,mobius.directVCGen.vcgen,mobius.directVCGen.bicolano,mobius.directVCGen.formula.jmlTranslator,mobius.directVCGen.vcgen.struct" source="1.5" sourcefiles="samples/LightweightAnnotation.java,samples/BlockSample.java,samples/Bill.java,samples/Test2.java,samples/ToyExample.java,samples/HeavyweightAnnotation.java,samples/A.java,samples/Super.java" 
-		sourcepath="src:samples" 
-		splitindex="true" use="false" version="true">
-		<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
-	</javadoc>
-	</target>
+  <property name="dist"  location="dist"/>
+  <property name="lib"  location="lib"/>
+  <property name="src" location="src"/>
+  <property name="build" location="bin"/>
+  <property name="deps-bico" value="clops-runtime.jar bcel-5.2.jar bico.jar"/>
+  <property name="deps-escj" value="javac.jar escjava.jar Javafe2.0.5.jar junit.jar" />
+  <path id="runtime.path">
+	<filelist dir="${lib}" files="clops-runtime.jar"/>
+  	<filelist dir="${lib}" files="bcel-5.2.jar"/>
+  	<filelist dir="${lib}" files="javac.jar"/>
+  	<filelist dir="${lib}" files="escjava.jar"/>
+  	<filelist dir="${lib}" files="Javafe2.0.5.jar"/>
+  	<filelist dir="${lib}" files="junit.jar"/>
+  	<filelist dir="${lib}" files="bico.jar"/>
+  </path>
 	
-	<target name="run" depends="jml_mobius">
-		 <java classname="mobius.directVCGen.Main"
-			          fork="true"  dir="samples"
-			          classpathref="jml_classpath">
-		 	<arg value="../"/>  
-		 	<arg value="../logic/bicolano.jar"/>  
-		 	<arg value="Bill"/>  
-		 </java>
-	</target>
-	
-	
-	
-	  <!-- JML targets. -->
-	<pathconvert pathsep=" " property="source_files">
-	      <path>
-	      	<fileset dir="${mobius_sources}">
-	      		    		      <include name="**/*.java"/>
-	        </fileset>
-	      </path>
-	  </pathconvert>
-	  <!-- JML typechecking -->
-	  <target name="jml" depends="jml_mobius">
-	    <description>
-	      Typecheck all Java code.
-	    </description>
-	  </target>
+  <!-- Clops related stuff -->
+  <property name="clops-file" location="bico.clops"/>
+  <property name="clops-target" location="clops/mobius/bico/clops"/>
+  <property name="clops-pkg" value="mobius.bico.clops"/>
+  <property name="clops-src" location="clops"/>
+  <property name="clops-html-template" location="mobius.vm"/>
+  <property name="clops-html-output" location="bico.html"/>
+  <path id="clops.path">
+	<filelist dir="${lib}" files="clops.jar"/>
+    <file name="stringtemplate-3.2.jar"/>
+	<file name="velocity-1.6.1.jar"/>
+	<file name="velocity-1.6.1-dep.jar"/>
+  </path>
 
-	  <target name="jml_mobius">
-	    <description>
-	      Runs the JML specification checker on the direct vcgen codebase.
-	    </description>
-	    <java classname="org.jmlspecs.checker.Main"
-	          fork="true"
-	          classpathref="jml_classpath">
-	      
-	      <arg value="--recursive"/>
-	      <arg value="--keepGoing"/>
-	      <arg value="--purity"/>
-	      <arg value="--multijava"/>
-	      <arg line="--source '1.5'"/>
-	      <arg value="-G"/>
-	      <arg line="--sourcepath '${mobius_source}'"/>
-	      <arg line="${source_files}"/>
-	    </java>
-	  </target>
 
-	  <!-- JML specification compilation. -->
-	  <target name="jmlc" depends="jmlc_mobius">
-	    <description>
-	      Compile all JML specifications to test code.
-	    </description>
-	  </target>
-
-	  <target name="jmlc_mobius" depends="compile_mobius">
-	    <description>
-	      Compiles JML annotated DirectVCGen files with runtime assertion checks.
-	    </description>
-	    <java classname="org.jmlspecs.jmlrac.Main"
-	          fork="true"
-	          classpathref="jml_classpath">
-	      <jvmarg value="-Xmx128m"/>
-	      <arg line="--destination ${jmlc_dest}"/>
-	      <arg value="--recursive"/>
-	      <arg value="--verbose"/>
-	      <arg value="-G"/>
-	      <arg line="--sourcepath ${mobius_source}"/>
-	      <arg line="${source_files}"/>
-	    </java>
-	  </target>
+  
+  <target name="init">
+    <echo message="Creating timestamp"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
 	
-	  <target name="initialize">
-	    <description>
-	      Prepare directory tree for build.
-	    </description>
-	    <tstamp/>
-	    <mkdir dir="${mobius_classes}"/>
-	  	<mkdir dir="${mobius_sources}"/>
-	    <mkdir dir="${escjava_classes}"/>
-	  	<mkdir dir="${jmlc_dest}"/>
-	  </target>
+  <target name="compile-clops" depends="init,clops-gen" description="Compile the clops related source">
+    <javac srcdir="${clops-src}" 
+           destdir="${build}" 
+           target="${java-target-version}"
+           debug="yes">
+      <compilerarg value="-Xlint:all"/>
+      <classpath refid="runtime.path"/>
+    </javac>
+  </target>
+	
+  <target name="compile-dvcg" depends="init" description="Compile the main source">
+    <javac srcdir="${src}" 
+           destdir="${build}" 
+           target="${java-target-version}"
+           debug="yes">
+      <compilerarg value="-Xlint:all"/>
+      <classpath refid="runtime.path"/>
+    </javac>
+  </target>
+	
+  <target name="compile" depends="compile-dvcg" description="compile the source" />
+  
+  <target name="clops-gen"  description="simple test">
+  	<echo message="Using ${clops-file}"/>
+    <java fork="yes" classname="ie.ucd.clops.dsl.Main">
+      <assertions>
+        <enable/>
+      </assertions>
+      <classpath refid="clops.path"/>
+      <arg value="-v"/>
+      <arg value="-d=${clops-html-output}"/>
+      <arg value="-c"/>
+      <arg value="${clops-html-template}"/> 
+      <arg value="-p"/>
+      <arg value="${clops-pkg}"/>
+      <arg value="-o"/>
+      <arg value="${clops-target}"/>
+      <arg value="${clops-file}"/>
+    </java>
+  </target>
+  <target name="dist-jars" depends="init" description="Generate the distribution">
+    <mkdir dir="${dist}"/>
+    <copy todir="${dist}">
+    	<fileset dir="${lib}/" includes="${deps-bico}"/>
+    	<fileset dir="${lib}/" includes="${deps-escj}"/>
+    </copy>
+  </target>
+	
+  <target name="dist-dvcg" depends="compile,dist-jars" description="Generate the distribution for the DirectVCGen">
+    <jar jarfile="${dist}/DirectVCGen.jar">
+      <fileset dir="${build}" includes="mobius/**"/>
+      <manifest>
+      	<attribute name="Main-Class" value="mobius.directVCGen.Main" />
+        <attribute name="Class-Path" value="${deps-bico} ${deps-escj}" />
+      </manifest>
+    </jar> 	
+  </target>
 
-	<target name="compile_mobius" depends="clean_mobius,
-	                                         initialize">
-	    <description>
-	      Compile all mobius source code.
-	    </description>
-	    <javac srcdir="${mobius_sources}"
-	           destdir="${mobius_classes}"
-	           debug="on"
-	           deprecation="off"
-	           optimize="off"
-	           failonerror="false"
-	           source="1.5"
-	           target="1.5"
-	           classpathref="mobius_classpath">
-	      <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
-	                   compiler="jikes"/>
-	    </javac>
-	  </target>
-	<target name="compile_sample" depends="compile_mobius">
-	    <description>
-	      Compile the samples directory; eclipse should compile it by itself
-	    	like a big girl.
-	    </description>
-	    <javac srcdir="${samples_sources}"
-	           destdir="${samples_sources}"
-	           debug="on"
-	           deprecation="off"
-	           optimize="off"
-	           failonerror="false"
-	           source="1.5"
-	           target="1.5"
-	           classpathref="mobius_classpath">
-	      <compilerarg line="+Pno-modifier-order +Pno-redundant-modifiers"
-	                   compiler="jikes"/>
-	    </javac>
-	  </target>
-	<target name="clean_mobius" if="clean_build_every_time">
-	    <description>
-	      Deletes all classfiles in the mobius envelope.
-	    </description>
-	    <delete dir="${mobius_classes_dir}"/>
-	  </target>
+  <target name="dist-bico+" depends="compile,dist-jars" description="Generate the distribution for the Bico+">
+    <jar jarfile="${dist}/bico+.jar">
+      <fileset dir="${build}" includes="mobius/**"/>
+      <manifest>
+      	<attribute name="Main-Class" value="mobius.directVCGen.bico.Main" />
+        <attribute name="Class-Path" value="${deps-bico} ${deps-escj}" />
+      </manifest>
+    </jar> 	
+  </target>
+
+  <target name="dist" depends="dist-dvcg,dist-bico+" description="Generate the distribution" />
+
+  <target name="clean-build" description="Clean up the build">
+	 <delete dir="${build}"/>
+	 <delete dir="${dist}"/>
+  </target>
+  
 </project>

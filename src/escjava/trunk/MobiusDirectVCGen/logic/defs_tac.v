@@ -384,6 +384,12 @@ Ltac magickal :=
                                          (destruct H as (A, B); split; [clear B | clear A])
     end.
 
-
-
+Axiom smod_prop: forall z, Int.range z -> Int.smod z = z.
+Ltac arith :=
+    repeat rewrite Int.add_prop;
+	repeat rewrite Int.div_prop;
+	repeat rewrite Int.mul_prop;
+	repeat rewrite Int.add_prop;
+	repeat rewrite smod_prop;
+	repeat rewrite Int.const_prop...
 (* Axiom user : forall p: Prop, p. *)

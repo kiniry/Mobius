@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/Javafe2.0.5.jar" sourcepath="/Javafe/Javafe/"/>
 	<classpathentry kind="lib" path="lib/junit.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
+	<classpathentry kind="lib" path="lib/clops-runtime.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

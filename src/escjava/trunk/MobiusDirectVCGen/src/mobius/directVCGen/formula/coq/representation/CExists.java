@@ -69,8 +69,8 @@ public class CExists extends CForall {
    */
   public String toString() {
     String res  = "(exists";
-    res +=  Util.normalize(fVars[0].name) + ":" + fBuilder.buildSort(fVars[0].type);
-    res += ", " + fArgs[0] + ")";
+    res +=  Util.normalize(getVars()[0].name) + ":" + fBuilder.buildSort(getVars()[0].type);
+    res += ", " + getArgs()[0] + ")";
     return res;
   }
 

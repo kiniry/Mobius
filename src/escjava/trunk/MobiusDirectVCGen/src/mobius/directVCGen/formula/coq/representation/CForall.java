@@ -13,7 +13,7 @@ import escjava.sortedProver.NodeBuilder.STerm;
  */
 public class CForall extends CPred {
   /** the array of variables to quantify. */
-  final QuantVar[] fVars;
+  private final QuantVar[] fVars;
   
   /** a builder to help pretty print. */
   private final CoqNodeBuilder fBuilder;
@@ -41,13 +41,17 @@ public class CForall extends CPred {
    */
   public String toString() {
     String res  = "(forall";
+    int i = 0;
     for (QuantVar v: fVars) {
-      // local var memory is not used anymore
-//      if (v.name.startsWith("lv") && v.name.length() <= 3) {
-//        res += " (" + CoqNodeBuilder.normalize(v.name) + ": LocalVar.t)";
-//      }
-//      else 
+      i++;
+      i %= 4;
+      if (i == 0) {
+        res += "\n    "; 
+      }
+      
+      // every 4 variables it goes down the line
       if (v.type.equals(Ref.sort)) {
+        
         // Location$
         res += " (" + Util.normalize(v.name) + ": Location)";
       }
@@ -55,8 +59,15 @@ public class CForall extends CPred {
         res += " (" + Util.normalize(v.name) + ":" + 
                  this.fBuilder.buildSort(v.type) + ")";
       }
+      
+
     }
-    res += ", " + fArgs[0] + ")";
+    res += ",\n  " + getArgs()[0] + ")";
     return res;
+  }
+
+
+  public QuantVar[] getVars() {
+    return fVars;
   }
 }

@@ -10,7 +10,7 @@ import escjava.sortedProver.NodeBuilder.Sort;
 public class CTerm implements STerm {
 
   /** the array containing all the children of the term. */
-  final STerm [] fArgs;
+  private final STerm [] fArgs;
   
   /** the symbol or name associated with the node. */
   private final String fRep;
@@ -76,5 +76,9 @@ public class CTerm implements STerm {
    */
   public boolean isSubSortOf(final Sort s) {
     throw new UnsupportedOperationException("This operation is not used it seems...");
+  }
+
+  public STerm [] getArgs() {
+    return fArgs;
   }
 }
