@@ -6,7 +6,7 @@
   <!-- link type="text/css" rel="stylesheet" href="style.css" -->
   <title>$info.ParserName ($info.PackageName)</title>
   <style type="text/css">
-    body { margin:80px; color: black; background: white; }
+    body { margin:40px; color: black; background: white; }
     td{padding-right:10px;}
     .id {width:100px; color:blue;}
     .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
@@ -17,6 +17,13 @@
        font-size:14px; 
        font-family:Courier; 
        width:400px;
+    }
+    #usage-str{
+       align: center;
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:16px; 
+       font-family:Courier; 
     }
     #options{}
     #index{float:right; 
@@ -67,6 +74,8 @@
 
 <h2><a name="description">Description</a></h2>
 <h2><a name="usage">Usage</a></h2>
+<span id="usage-str">$info.getFormatString()</span>
+
 <div id="options">
 <h2><a name="options">Options</a></h2>
 

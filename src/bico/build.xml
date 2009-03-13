@@ -1,4 +1,4 @@
-<project name="Bico" default="compile" basedir=".">
+<project name="Bico" default="clops-gen" basedir=".">
   <description>Bico Build File</description>
   <property name="dist"  location="dist"/>
   <property name="lib"  location="lib"/>
