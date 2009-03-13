@@ -1,0 +1,84 @@
+// This is the abstract grammar for FreeBoogie used to generate
+// the AST. See also the template (*.tpl) files.
+
+// The program is a (functional) list of (global) declarations
+Declaration :> TypeDecl, ConstDecl, Axiom,
+               Function, VariableDecl, Procedure, Implementation;
+
+TypeDecl =     String! name, Declaration tail;
+ConstDecl=     String! id, Type! type, boolean uniq, Declaration tail;
+
+// These are declarations that may introduce type variables
+Axiom =        Identifiers typeVars, Expr! expr, Declaration tail;
+Function =     Signature! sig, Declaration tail;
+VariableDecl = String! name, Type! type, 
+               Identifiers typeVars, Declaration tail;
+Procedure =    Signature! sig, Specification spec, 
+               Declaration tail;
+Implementation = Signature! sig, Body! body, 
+               Declaration tail;
+
+
+// Types and constants
+Type :> PrimitiveType, UserType, MapType, IndexedType, DepType, TupleType;
+MapType = TupleType! idxType, Type! elemType;
+PrimitiveType = enum(Ptype: BOOL, INT, REF, NAME, ANY, ERROR) ptype;
+IndexedType = Type! param, Type! type;
+DepType = Type! type, Expr! pred;
+UserType = String! name;
+TupleType = Type! type, TupleType tail;
+  // Not constructed during parsing.
+  // In BoogiePL equal(TupleType(t,null), t).
+  // The alternative is to put tails on all types but that looked
+  // much more invasive than this solution which affects only one
+  // place in the typechecker (roughly) in an ugly way.
+  
+
+// Signatures are used to represent uninterpreted functions
+Signature = String! name, Declaration args, Declaration results,
+            Identifiers typeVars;
+
+// Procedures and implementations
+Specification = Identifiers typeVars,
+                enum(SpecType: REQUIRES, MODIFIES, ENSURES) type,
+                Expr! expr, boolean free, Specification tail;
+Body = Declaration vars, Block blocks;
+Block = String! name, Command cmd, Identifiers succ, Block tail;
+  // succ == null means that we return
+
+// Commands
+Command :> AssignmentCmd, AssertAssumeCmd, HavocCmd, CallCmd;
+AssignmentCmd = AtomId! lhs, Expr! rhs;
+AssertAssumeCmd = enum(CmdType: ASSERT, ASSUME) type, 
+                  Identifiers typeVars, Expr! expr;
+HavocCmd = Identifiers! ids;
+CallCmd = String! procedure, TupleType types, Identifiers results, Exprs args;
+
+// Expressions
+Expr :> BinaryOp, UnaryOp, Atom, Exprs;
+BinaryOp = enum(Op: PLUS, MINUS, MUL, DIV, MOD, EQ, NEQ, LT, LE,
+                    GE, GT, SUBTYPE, EQUIV, IMPLIES, AND, OR) op,
+           Expr! left, Expr! right;
+UnaryOp = enum(Op: MINUS, NOT) op, Expr! e;
+Atom :> 
+    AtomLit, AtomNum, AtomId, AtomFun, AtomOld, AtomCast, AtomQuant, 
+    AtomMapSelect, AtomMapUpdate;
+AtomLit = enum(AtomType: FALSE, TRUE, NULL) val;
+AtomNum = BigInteger val;
+AtomId = String! id, TupleType types;
+AtomFun = String! function, TupleType types, Exprs args;
+AtomOld = Expr! e;
+AtomCast = Expr! e, Type! type;
+AtomQuant = enum(QuantType: EXISTS, FORALL) quant,
+            Declaration! vars, Trigger trig, Expr! e;
+AtomMapSelect = Atom! atom, Exprs! idx;
+AtomMapUpdate = Atom! atom, Exprs! idx, Expr! val;
+
+// Some simple lists
+Trigger = String label, Exprs! exprs, Trigger tail;
+Identifiers = AtomId! id, Identifiers tail;
+Exprs = Expr! expr, Exprs tail;
+
+// TODO: the invariants
+Specification: type==Type.MODIFIES ==> \typeof(expr)==AtomId
+
