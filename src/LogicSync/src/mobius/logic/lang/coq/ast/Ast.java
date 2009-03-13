@@ -1,6 +1,5 @@
 package mobius.logic.lang.coq.ast;
 
-import mobius.logic.lang.coq.FileLocation;
 
 /** 
  * Base class for the AST hierarchy. 
