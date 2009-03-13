@@ -20,12 +20,20 @@
   </path>
 	
   <!-- Clops related stuff -->
-  <property name="clops-file" location="clops/dvcg.clops"/>
-  <property name="clops-target" location="clops/mobius/directVCGen/clops"/>
-  <property name="clops-pkg" value="mobius.directVCGen.clops"/>
+  <property name="clops-bico+-file" location="clops/bico+.clops"/>
+  <property name="clops-bico+-target" location="clops/mobius/directVCGen/clops/bico"/>
+  <property name="clops-bico+-pkg" value="mobius.directVCGen.clops.bico"/>
+  <property name="clops-bico+-html-output" location="clops/bico+.html"/>
+
+  <property name="clops-dvcg-file" location="clops/dvcg.clops"/>
+  <property name="clops-dvcg-target" location="clops/mobius/directVCGen/clops/dvcg"/>
+  <property name="clops-dvcg-pkg" value="mobius.directVCGen.clops.dvcg"/>
+  <property name="clops-dvcg-html-output" location="clops/dvcg.html"/>
+	
   <property name="clops-src" location="clops"/>
   <property name="clops-html-template" location="clops/mobius.vm"/>
-  <property name="clops-html-output" location="clops/dvcg.html"/>
+  <property name="clops" location="${lib}/clops.jar" />
+
   <path id="clops.path">
 	<filelist dir="${lib}" files="clops.jar"/>
     <file name="stringtemplate-3.2.jar"/>
@@ -39,7 +47,8 @@
     <echo message="Creating timestamp"/>
     <tstamp/>
     <mkdir dir="${build}"/>
-  	<mkdir dir="${clops-target}"/>
+  	<mkdir dir="${clops-bico+-target}"/>
+  	<mkdir dir="${clops-dvcg-target}"/>
   </target>
 	
   <target name="compile-clops" depends="init,clops-gen" description="Compile the clops related source">
@@ -64,24 +73,48 @@
 	
   <target name="compile" depends="compile-dvcg" description="compile the source" />
   
-  <target name="clops-gen"  depends="init" description="Generates clops files">
-  	<echo message="Using ${clops-file}"/>
-    <java fork="yes" classname="ie.ucd.clops.dsl.Main">
+
+  <target name="clops-gen-bico+"  depends="init" description="Generates clops files">
+  	<echo message="Using ${clops-bico+-file}"/>
+    <java fork="yes" jar="${clops}">
       <assertions>
         <enable/>
       </assertions>
       <classpath refid="clops.path"/>
       <arg value="-v"/>
-      <arg value="-d=${clops-html-output}"/>
+      <arg value="-d"/>
+      <arg value="${clops-bico+-html-output}"/>
       <arg value="-c"/>
       <arg value="${clops-html-template}"/> 
       <arg value="-p"/>
-      <arg value="${clops-pkg}"/>
+      <arg value="${clops-bico+-pkg}"/>
       <arg value="-o"/>
-      <arg value="${clops-target}"/>
-      <arg value="${clops-file}"/>
+      <arg value="${clops-bico+-target}"/>
+      <arg value="${clops-bico+-file}"/>
     </java>
   </target>
+
+  <target name="clops-gen-dvcg"  depends="init" description="Generates clops files">
+  	<echo message="Using ${clops-dvcg-file}"/>
+    <java fork="yes" jar="${clops}">
+      <assertions>
+        <enable/>
+      </assertions>
+      <classpath refid="clops.path"/>
+      <arg value="-v"/>
+      <arg value="-d=${clops-dvcg-html-output}"/>
+      <arg value="-c"/>
+      <arg value="${clops-html-template}"/> 
+      <arg value="-p"/>
+      <arg value="${clops-dvcg-pkg}"/>
+      <arg value="-o"/>
+      <arg value="${clops-dvcg-target}"/>
+      <arg value="${clops-dvcg-file}"/>
+    </java>
+  </target>
+
+  <target name="clops-gen"  depends="clops-gen-dvcg,clops-gen-bico+" description="Generates clops files" />
+	
   <target name="dist-jars" depends="init" description="Generate the distribution">
     <mkdir dir="${dist}"/>
     <copy todir="${dist}">
