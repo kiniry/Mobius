@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import mobius.directVCGen.Main;
+import mobius.directVCGen.clops.dvcg.DirectVCGenOptionsInterface;
+import mobius.directVCGen.clops.dvcg.DirectVCGenParser;
 
 import javafe.util.AssertionFailureException;
 
@@ -15,13 +18,20 @@ import javafe.util.AssertionFailureException;
  * inside the Mobius tool (hopefully).
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class Main {
+public class DirectVCGenMain {
 
   /** the main output stream. */
   protected static PrintStream fOut = System.out;
 
+  public static final String BAD_USAGE_MSG = 
+        "Bad usage!\n" +
+        "(try java -jar DirectVCGen.jar -help)";
+  public static final String HELP_MSG = 
+    "I need at least 2 arguments:\n" +
+    " - the output directory and\n+" +
+    " - the path to the file bicolano.jar";
   /** */
-  private Main() { }
+  private DirectVCGenMain() { }
 
   /**
    * The main entry point.
@@ -40,16 +50,13 @@ public class Main {
       return;
     }
     if (!parser.parse(args)) {
-      System.err.println("Bad usage!");
-      System.err.println("(try java -jar DirectVCGen.jar -help)");
+      System.err.println(BAD_USAGE_MSG);
       return;
     }
     final DirectVCGenOptionsInterface opt = parser.getOptionStore();
     
     if (opt.isHelpSet()) {
-      fOut.println("I need at least 2 arguments:\n" +
-                   " - the output directory and\n+" +
-                   " - the path to the file bicolano.jar");
+      fOut.println(HELP_MSG);
       return;
     }
 
@@ -66,7 +73,7 @@ public class Main {
       
       // Launching the beast
       System.out.println("Launching...");
-      final  mobius.directVCGen.Main m = new mobius.directVCGen.Main(basedir, bicodir, cp);
+      final  Main m = new Main(basedir, bicodir, cp);
       m.start(escargs);
       System.out.println("I'm finished!");
       
