@@ -1,4 +1,4 @@
-<project name="LogicSync" default="clops-gen" basedir=".">
+<project name="LogicSync" default="gen-files" basedir=".">
   <description>LogicSync File</description>
   <property name="java-target-version" value="1.6"/>
 
@@ -35,17 +35,8 @@
   	<mkdir dir="${clops-target}"/>
   </target>
 	
-  <target name="compile-clops" depends="init,clops-gen" description="Compile the clops related source">
-    <javac srcdir="${clops-src}" 
-           destdir="${build}" 
-           target="${java-target-version}"
-           debug="yes">
-      <compilerarg value="-Xlint:all"/>
-      <classpath refid="runtime.path"/>
-    </javac>
-  </target>
-	
-  <target name="compile-logicsync" depends="init" description="Compile the main source">
+
+  <target name="compile-logicsync" depends="gen-files" description="Compile the main source">
     <javac srcdir="${src}" 
            destdir="${build}" 
            target="${java-target-version}"
@@ -89,7 +80,9 @@
       <arg value="${astgen-dir}/list.tpl" />
     </java>
   </target>
-	
+  <target name="gen-files" depends="ast-gen,clops-gen" 
+	    description="generates ASTs, and Java files" />
+  	
   <target name="dist" depends="compile" description="Generate the distribution">
     <mkdir dir="${dist}"/>
     <copy todir="${dist}">
