@@ -52,8 +52,6 @@
   
   <target name="clops-gen"  description="simple test">
   	<echo message="Using ${clops-file}"/>
-    <delete dir="${clops-pkg}"/>
-    <mkdir dir="${clops-pkg}"/>
     <java fork="yes" classname="ie.ucd.clops.dsl.Main">
       <assertions>
         <enable/>
