@@ -1,5 +1,5 @@
 NAME::
-  DirectVCGen
+  BicoPlus
 
 ARGS::
   Help: {"-h", "-help", "--help"}

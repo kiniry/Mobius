@@ -23,6 +23,7 @@
     #end
     </ul>
 </li>
+#if($info.getOverrideRuleDescriptions().size() > 0)
 <li><a href="#rules">Rules</a>:
     <ul>
 	#if($info.getValidityRuleDescriptions().size() != 0)
@@ -30,6 +31,7 @@
 	#end
 	</ul>
 </li>
+#end
 </ul>
 </p>
 </div>
@@ -74,7 +76,7 @@ The program has to be called from its jar file with arguments having the followi
 #end
 </div>
 
-
+#if($info.getOverrideRuleDescriptions().size() > 0)
 <h2><a name="rules">Rules</a></h2>
  
 #foreach($rule in $info.getOverrideRuleDescriptions())
@@ -115,6 +117,7 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
 <p>Condition: $!rule.getConditionText()
 </p>
 
+#end
 #end
 </div>
 </body>
