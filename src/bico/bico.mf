@@ -1,3 +1,0 @@
-Main-Class: mobius.bico.MainClops
-Name: bico
-Class-Path: bcel-5.2.jar clops-runtime.jar
