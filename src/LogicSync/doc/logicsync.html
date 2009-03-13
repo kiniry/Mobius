@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <link type="text/css" rel="stylesheet" href="mobius.css" />
+  <title>Bico (mobius.logic.clops)</title>
+</head>
+
+<body>
+<div id="contentpart">
+<h1>Bico</h1>
+
+<div id="index">
+<p>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#options">Options</a>:<br/>
+    <ul>
+          <li><a href="#opt-Main">Main options</a></li>
+          <li><a href="#opt-Type">Type options</a></li>
+          <li><a href="#opt-Misc">Misc options</a></li>
+        </ul>
+</li>
+</ul>
+</p>
+</div>
+
+
+<h2><a name="description">Description</a></h2>
+This tool is part of the DirectVCGen component of the Mobius tool suite.
+<h2><a name="usage">Usage</a></h2>
+The program has to be called from its jar file with arguments having the following form:<br/>
+<span id="usage-str">Help  | (Dir (Misc | Type | Clazz)*)</span>
+
+<div id="options">
+<h2><a name="options">Options</a></h2>
+
+<p>
+<h3><a name="opt-Main">Main options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">Help</div></td>
+ <td><div class="aliases">
+                 -h
+      
+              <br/>
+            -help
+      
+              <br/>
+            --help
+      
+              <br/>
+          </div></td>
+ <td><span class="description">Show the help message.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">Dir</div></td>
+ <td><div class="aliases">
+                       &lt;file&gt;
+                      </div></td>
+ <td><span class="description">Specify directory in which Bico does its job (there must 
+  		   be only one directory, and this argument is mandatory).</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">Clazz</div></td>
+ <td><div class="aliases">
+                       &lt;string-list&gt;
+                      </div></td>
+ <td><span class="description">Generates also the file for the specified classes, bico must be able 
+           to find them in its class path.</span></td>
+ </tr>
+  </table>
+<p>
+<h3><a name="opt-Type">Type options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">Map</div></td>
+ <td><div class="aliases">
+                 -m
+      
+              <br/>
+            -map
+      
+              <br/>
+            --map
+      
+              <br/>
+          </div></td>
+ <td><span class="description">Triggers the generation of the map implementation.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">List</div></td>
+ <td><div class="aliases">
+                 -l
+      
+              <br/>
+            -list
+      
+              <br/>
+            --list
+      
+              <br/>
+          </div></td>
+ <td><span class="description">Triggers the generation of the list implementation.</span></td>
+ </tr>
+  </table>
+<p>
+<h3><a name="opt-Misc">Misc options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">Output</div></td>
+ <td><div class="aliases">
+                 -o
+      
+                  &lt;file&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Used to specify the output directory.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">ClassPath</div></td>
+ <td><div class="aliases">
+                 -cp
+      
+                  &lt;string&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Specifies the base working class path.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">Lib</div></td>
+ <td><div class="aliases">
+                 -lib
+      
+              <br/>
+          </div></td>
+ <td><span class="description">Enables the java.lang library generation. 
+ 		   It implies the generation of most of the JRE.</span></td>
+ </tr>
+  </table>
+</div>
+
+</div>
+</body>
+</html>
