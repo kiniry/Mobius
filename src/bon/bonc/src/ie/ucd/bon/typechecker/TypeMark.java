@@ -42,7 +42,7 @@ public class TypeMark {
       hasMark = true;
       isAggregate = false;
       isSharedMark = true;
-      multiplicity = Integer.parseInt(mark);
+      multiplicity = Integer.parseInt(mark.substring(1,mark.length()-1));
     }
   }
   
@@ -79,5 +79,6 @@ public class TypeMark {
   public int getMultiplicity() {
     return multiplicity;
   }
+  
   
 }

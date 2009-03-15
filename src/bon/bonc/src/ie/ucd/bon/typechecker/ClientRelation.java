@@ -46,6 +46,11 @@ public class ClientRelation {
   public TypeMark getTypeMark() {
     return typeMark;
   }
+
+  @Override
+  public String toString() {
+    return client + " client " + typeMark + " " + supplier;
+  }
   
   
   
