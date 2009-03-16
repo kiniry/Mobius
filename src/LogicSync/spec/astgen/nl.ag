@@ -1,0 +1,10 @@
+
+
+//Abstract grammar for the natural language of logicsync
+
+// author: fintan
+
+Logics = Logic! logic, Logics tail;
+
+Logic = String! name, Items! items;
+Items = String! id, String! description, Items items;
