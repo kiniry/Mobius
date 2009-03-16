@@ -28,11 +28,6 @@ public class Main {
    *          <code>args[1..]</code> are template files
    */
   public static void main(String[] args) {
-    if (args.length == 0) { 
-      Err.fatal("Syntax: java freeboogie.ast.gen.Main" 
-        + " [-b defaultBaseName] (-Dkey=value)* grammar templates", 1);
-    }
-    
     // Setup logging.
     try {
       Handler logh = new FileHandler("ast_gen.log");
@@ -48,7 +43,7 @@ public class Main {
     int arg_idx = 0;
     Grammar grammar = null;
 
-    if (args[arg_idx].equals("-b")) {
+    if (arg_idx < args.length && args[arg_idx].equals("-b")) {
       if (++arg_idx == args.length)
         Err.fatal("You must give a default base name after '-b'");
       defaultBase = args[arg_idx++];
@@ -56,13 +51,18 @@ public class Main {
 
     HashMap<String, String> userDefs = new HashMap<String, String>(23);
     Pattern dp = Pattern.compile("-D(\\w*)=(.*)");
-    while (true) {
+    while (arg_idx < args.length) {
       Matcher m = dp.matcher(args[arg_idx]);
       if (!m.matches()) break;
       userDefs.put(m.group(1), m.group(2));
       ++arg_idx;
     }
 
+    if (arg_idx == args.length) { 
+      Err.fatal("Syntax: java freeboogie.ast.gen.Main" 
+        + " [-b defaultBaseName] (-Dkey=value)* grammar templates", 1);
+    }
+    
     // read the grammar
     try {
       AgParser agParser = new AgParser();
