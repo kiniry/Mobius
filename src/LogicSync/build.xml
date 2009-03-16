@@ -12,6 +12,10 @@
   	 <filelist dir="${lib}" files="antlr-3.1.1-runtime.jar"/>
   </path>	
   	
+  <path id="antlr.path">
+    <filelist dir="${lib}" files="antlr-3.1.1.jar"/>
+  </path>
+	
   <property name="clops-file" location="spec/logicsync.clops"/>
   <property name="clops-target" location="src/mobius/logic/clops"/>
   <property name="clops-pkg" value="mobius.logic.clops"/>
@@ -25,6 +29,7 @@
 	<file name="velocity-1.6.1-dep.jar"/>
   </path>
 	
+  <property name="antlr-target-coq" location="src/mobius/logic/lang/coq/parser" />
   <property name="astgen-dir" location="spec/astgen" />
   <property name="astgen-tpl-dir" location="spec/astgen/tpl" />
   <property name="coq-ast-target" location="src/mobius/logic/lang/coq/ast" />
@@ -68,7 +73,25 @@
       <arg value="${clops-file}"/>
     </java>
   </target>
+  <target name="checkAntlrBuildUpToDate">
+    <echo message="Checking if the ANTLR generated files are up to date"/>
+    <condition property="antlrBuild.required">
+      <not>
+        <uptodate srcfile="spec/coq.g" targetfile="src/mobius/logic/coq/parser/CoqParser.java"/>
+      </not>
+    </condition>
+  </target>
 
+  <target name="antlr-gen-coq" depends="checkAntlrBuildUpToDate" if="antlrBuild.required">
+    <echo message="Running antlr"/>
+    <java fork="yes" dir="spec" classname="org.antlr.Tool">
+      <classpath refid="antlr.path" />
+      <arg value="-o"/>
+      <arg value="${antlr-target-coq}"/>
+      <arg value="Coq.g"/>
+    </java>
+  </target>
+	
   <target name="ast-gen-coq" depends="init" 
     description="generates AST">
     <java fork="yes" dir="${coq-ast-target}" jar="lib/astgen.jar">
@@ -85,8 +108,9 @@
 	
   <target name="ast-gen" depends="ast-gen-coq" 
 	    description="generates ASTs" />
-	
-  <target name="gen-files" depends="ast-gen,clops-gen" 
+  <target name="antlr-gen" depends="antlr-gen-coq" 
+		description="generates parsers" />
+  <target name="gen-files" depends="ast-gen,clops-gen,antlr-gen" 
 	    description="generates ASTs, and Java files" />
   	
   <target name="dist" depends="compile" description="Generate the distribution">
