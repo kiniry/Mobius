@@ -32,10 +32,13 @@
   <property name="antlr-target-coq" location="src/mobius/logic/lang/coq/parser" />
 	<property name="antlr-target-nl" location="src/mobius/logic/lang/nat/parser" />
   <property name="astgen-dir" location="spec/astgen" />
-  <property name="coq-astgen-tpl-dir" location="spec/astgen/tpl/coq" />
-	<property name="nl-astgen-tpl-dir" location="spec/astgen/tpl/nl" />
+	<property name="astgen-tpl-dir" location="spec/astgen/tpl" />
   <property name="coq-ast-target" location="src/mobius/logic/lang/coq/ast" />
 	<property name="nl-ast-target" location="src/mobius/logic/lang/nat/ast" />
+	<property name="nl-ast-pkg" value="mobius.logic.lang.nat.ast" />
+	<property name="coq-ast-pkg" value="mobius.logic.lang.coq.ast" />
+	<property name="ast-base" value="mobius.logic.lang.ast.Ast" />
+	
 	
   <target name="init">
     <echo message="Creating timestamp"/>
@@ -98,27 +101,33 @@
   <target name="ast-gen-coq" depends="init" 
     description="generates AST">
     <java fork="yes" dir="${coq-ast-target}" jar="lib/astgen.jar">
+    	<arg value="-b"/>
+      <arg value="${ast-base}"/>
+    	<arg value="-Dpkg=${coq-ast-pkg}" />
       <arg value="${astgen-dir}/coq.ag" />
-      <arg value="${coq-astgen-tpl-dir}/abstract_classes.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/normal_classes.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/evaluator.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/transformer.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/substitutor.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/html.tpl" />
-      <arg value="${coq-astgen-tpl-dir}/list.tpl" />
+      <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/evaluator.tpl" />
+      <arg value="${astgen-tpl-dir}/transformer.tpl" />
+      <arg value="${astgen-tpl-dir}/substitutor.tpl" />
+      <arg value="${astgen-tpl-dir}/html.tpl" />
+      <arg value="${astgen-tpl-dir}/list.tpl" />
     </java>
   </target>
 	
 	<target name="ast-gen-nl" depends="init" description="generates AST">
 	  <java fork="yes" dir="${nl-ast-target}" jar="lib/astgen.jar">
+	  	<arg value="-b"/>
+	  	<arg value="${ast-base}"/>
+	  	<arg value="-Dpkg=${nl-ast-pkg}" />
 	    <arg value="${astgen-dir}/nl.ag" />
-	    <arg value="${nl-astgen-tpl-dir}/abstract_classes.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/normal_classes.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/evaluator.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/transformer.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/substitutor.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/html.tpl" />
-	    <arg value="${nl-astgen-tpl-dir}/list.tpl" />
+	    <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
+	    <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+	    <arg value="${astgen-tpl-dir}/evaluator.tpl" />
+	    <arg value="${astgen-tpl-dir}/transformer.tpl" />
+	    <arg value="${astgen-tpl-dir}/substitutor.tpl" />
+	    <arg value="${astgen-tpl-dir}/html.tpl" />
+	    <arg value="${astgen-tpl-dir}/list.tpl" />
 	  </java>
 	</target>
 	

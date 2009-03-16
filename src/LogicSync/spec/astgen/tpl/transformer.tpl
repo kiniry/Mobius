@@ -2,7 +2,7 @@
 /**
   This file was generated from transformer.tpl. Do not edit.
  */
-package mobius.logic.lang.coq.ast;
+package \Userdefine{pkg};
 
 import java.math.BigInteger;
 import java.util.ArrayDeque;

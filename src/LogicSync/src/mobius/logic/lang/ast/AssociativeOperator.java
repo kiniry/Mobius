@@ -1,4 +1,4 @@
-package mobius.logic.lang.coq.ast;
+package mobius.logic.lang.ast;
 
 /**
  * An associative operator has a neutral element (zero) and

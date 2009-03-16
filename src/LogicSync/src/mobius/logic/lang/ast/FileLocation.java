@@ -1,4 +1,4 @@
-package mobius.logic.lang.coq.ast;
+package mobius.logic.lang.ast;
 
 /**
  * Represents a known or unknown file location.

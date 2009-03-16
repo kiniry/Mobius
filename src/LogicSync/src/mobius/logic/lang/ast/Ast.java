@@ -1,4 +1,4 @@
-package mobius.logic.lang.coq.ast;
+package mobius.logic.lang.ast;
 
 
 /** 
@@ -39,7 +39,7 @@ public abstract class Ast implements Cloneable {
    * @param e the evaluator
    * @return the result computed by the evaluator
    */
-  abstract public <R> R eval(Evaluator<R> e);
+  abstract public <R> R eval(IEvaluator<R> e);
 
   /**
    * Returns a clone of this AST.

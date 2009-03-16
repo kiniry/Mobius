@@ -7,4 +7,4 @@
 Logics = Logic! logic, Logics tail;
 
 Logic = String! name, Items! items;
-Items = String! id, String! description, Items items;
+Items = String! id, String! description, Items tail;

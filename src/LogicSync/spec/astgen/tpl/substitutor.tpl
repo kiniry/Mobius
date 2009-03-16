@@ -1,7 +1,7 @@
 
 \file{Substitutor.java}
 /* Generated from substitutor.tpl. Do not edit */
-package mobius.logic.lang.coq.ast;
+package \Userdefine{pkg};
 
 import java.util.Map;
 import java.math.BigInteger;

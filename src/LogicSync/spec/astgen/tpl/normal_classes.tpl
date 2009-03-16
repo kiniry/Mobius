@@ -5,11 +5,14 @@ This template generates java classes for the normal classes.
   This class is generated automatically from normal_classes.tpl. 
   Do not edit.
  */
-package mobius.logic.lang.coq.ast;
+package \Userdefine{pkg};
 import java.math.BigInteger; // for AtomNum
 
+import mobius.logic.lang.ast.FileLocation;
+import mobius.logic.lang.ast.IEvaluator;
+
 /** @author rgrig */
-public final class \ClassName extends \BaseName {
+public final class \ClassName extends \Basename {
 \enums{  public static enum \EnumName {\values[, ]{
     \VALUE_NAME}
   }}
@@ -46,7 +49,7 @@ public final class \ClassName extends \BaseName {
 
   // === The Visitor pattern ===
   @Override
-  public <R> R eval(Evaluator<R> evaluator) { 
+  public <R> R eval(IEvaluator<R> evaluator) { 
     return evaluator.eval(this, \members[,]{\memberName}); 
   }
 
