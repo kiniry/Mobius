@@ -8,6 +8,8 @@
     </fileset>
     <filter name="FilesFromPackage" enabled="true">
         <filter-data value="tests-src"/>
-        <filter-data value="tests-src/tests"/>
+        <filter-data value="tests-src/adhoc"/>
+        <filter-data value="tests-src/data"/>
+        <filter-data value="tests-src/umbra"/>
     </filter>
 </fileset-config>

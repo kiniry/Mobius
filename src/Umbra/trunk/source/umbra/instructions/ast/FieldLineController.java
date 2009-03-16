@@ -42,26 +42,12 @@ public class FieldLineController extends BytecodeLineController {
     while (parser.swallowMnemonic(BytecodeStrings.FIELD_PREFIX) >= 0) {
       parser.swallowWhitespace();
     }
-    res = parseType(res, parser);
+    res = res && parser.swallowArrType();
     res = res && parser.swallowWhitespace();
     res = res && parser.swallowFieldName();
     res = res && parser.swallowWhitespace();
     res = res && parser.swallowDelimiter(';');
     return res;
-  }
-
-
-  /**
-   * @param res
-   * @param parser
-   * @return
-   */
-  private boolean parseType(boolean res, InstructionParser parser) {
-    if (parser.swallowMnemonic(BytecodeStrings.PRIMITIVE_TYPE_NAMES) >= 0) {
-      return true;
-    } else {
-      return parser.swallowClassname();
-    }
   }
 
 

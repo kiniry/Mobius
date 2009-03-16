@@ -71,7 +71,7 @@ public class IincInstruction extends NumInstruction {
     res = res && parser.swallowDelimiter('%'); //
     res = res && parser.swallowNumber(); // number
     res = res && parser.swallowWhitespace();
-    res = res && parser.swallowNumber(); // 2nd number
+    res = res && parser.swallowSignedNumber(); // 2nd number
     res = res && !parser.swallowWhitespace();
     return res;
   }

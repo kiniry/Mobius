@@ -8,6 +8,8 @@
  */
 package umbra.instructions;
 
+import umbra.lib.BytecodeStrings;
+
 /**
  * This class is the part of the byte code instruction parser which contributes
  * the parsing of various type representations.
@@ -17,6 +19,13 @@ package umbra.instructions;
  */
 public class InstructionTypeParser extends InstructionNameParser {
 
+
+  /**
+   * The number of the last parsed mnemonic. The number is an index in the
+   * array given as the parameter to {@link #swallowMnemonic(String[])}.
+   * If no sensible mnemonic have been found the field has the value -1;
+   */
+  protected int my_mnemonicno = -1;
 
   /**
    * This constructor sets the string to be parsed and resets the parser
@@ -142,4 +151,56 @@ public class InstructionTypeParser extends InstructionNameParser {
     return res && swallowDelimiter(';');
   }
 
+  /**
+   * Checks if the line at the current position starts with a mnemonic from
+   * the inventory.
+   *
+   * @param the_inventory the array of the mnemonics to be checked
+   * @return the index to the entry in the inventory which contains the
+   *   mnemonic or -1 in case no mnemonic from the inventory occurs
+   */
+  public int swallowMnemonic(final String[] the_inventory) {
+    final String line = getLine();
+    final int index = getIndex();
+    my_mnemonicno  = -1;
+    for (int i = 0; i < the_inventory.length; i++) {
+      if (line.indexOf(the_inventory[i], index) == index) {
+        if (my_mnemonicno == -1 ||
+            the_inventory[my_mnemonicno].length() >  the_inventory[i].length())
+          my_mnemonicno = i;
+      }
+    }
+    if (my_mnemonicno >= 0) {
+      moveIndex(the_inventory[my_mnemonicno].length());
+    }
+    return my_mnemonicno;
+  }
+
+  /**
+   * This method swallows a type which may be followed by the array type
+   * marker []. This is parsed as the grammar in BML Reference Manual
+   * section Class Member Declarations:
+   *
+   *  arr-type ::= [ ownership-modifiers ] type [ dims ]
+   *
+   * TODO: Ownership modifiers are missing
+   *
+   * @return <code>true</code> when an array type is successfully
+   *   swallowed, <code>false</code> otherwise
+   */
+  public boolean swallowArrType() {
+    boolean res = true;
+    if (swallowMnemonic(BytecodeStrings.PRIMITIVE_TYPE_NAMES) >= 0) {
+      res = true;
+    } else {
+      res = res && swallowClassname();
+    }
+    res = res && swallowWhitespace();
+    if (swallowDelimiter('[')) {
+      res = res && swallowWhitespace();
+      res = res && swallowDelimiter(']');
+      res = res && swallowWhitespace();
+    }
+    return res;
+  }
 }

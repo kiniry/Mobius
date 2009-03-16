@@ -8,6 +8,8 @@
  */
 package umbra.instructions;
 
+import umbra.lib.BytecodeStrings;
+
 /**
  * This class is the part of the byte code instruction parser which contributes
  * the parsing of various identifiers i.e. field names, class names, and method
@@ -215,4 +217,5 @@ public class InstructionNameParser extends InstructionParserGeneric {
     }
     return false;
   }
+
 }

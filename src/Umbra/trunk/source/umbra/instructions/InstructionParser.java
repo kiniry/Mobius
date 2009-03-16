@@ -26,13 +26,6 @@ public class InstructionParser extends InstructionTypeParser {
   private int my_result;
 
   /**
-   * The number of the last parsed mnemonic. The number is an index in the
-   * array given as the parameter to {@link #swallowMnemonic(String[])}.
-   * If no sensible mnemonic have been found the field has the value -1;
-   */
-  private int my_mnemonicno = -1;
-
-  /**
    * This constructor sets the string to be parsed and resets the parser
    * so that it is ready to analyse the content. It relies on the
    * work in the superclass.
@@ -75,31 +68,6 @@ public class InstructionParser extends InstructionTypeParser {
       return false;
     my_result = Integer.parseInt(line.substring(oldindex, index));
     return true;
-  }
-
-  /**
-   * Checks if the line at the current position starts with a mnemonic from
-   * the inventory.
-   *
-   * @param the_inventory the array of the mnemonics to be checked
-   * @return the index to the entry in the inventory which contains the
-   *   mnemonic or -1 in case no mnemonic from the inventory occurs
-   */
-  public int swallowMnemonic(final String[] the_inventory) {
-    final String line = getLine();
-    final int index = getIndex();
-    my_mnemonicno  = -1;
-    for (int i = 0; i < the_inventory.length; i++) {
-      if (line.indexOf(the_inventory[i], index) == index) {
-        if (my_mnemonicno == -1 ||
-            the_inventory[my_mnemonicno].length() >  the_inventory[i].length())
-          my_mnemonicno = i;
-      }
-    }
-    if (my_mnemonicno >= 0) {
-      moveIndex(the_inventory[my_mnemonicno].length());
-    }
-    return my_mnemonicno;
   }
 
   /**
