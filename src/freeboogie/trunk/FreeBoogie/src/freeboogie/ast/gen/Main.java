@@ -72,7 +72,8 @@ public class Main {
       grammar.makeConsistent(defaultBase);
       grammar.userDefs = userDefs;
     } catch (IOException e) {
-      Err.fatal("I can't read the abstract grammar.", 2);
+      Err.fatal("I can't read the abstract grammar from " 
+        + args[arg_idx-1] + ".", 2);
     }
 
     for (; arg_idx < args.length; ++arg_idx) {
