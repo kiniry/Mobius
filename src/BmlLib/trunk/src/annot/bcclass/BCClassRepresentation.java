@@ -10,7 +10,6 @@ package annot.bcclass;
 
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
@@ -28,7 +27,6 @@ import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.bcexpression.BCExpression;
-import annot.bcexpression.FieldRef;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -65,10 +63,9 @@ public abstract class BCClassRepresentation {
   private BCConstantPool cp;
 
   /**
-   * BML invariants. The key is here the access flags and the
-   * value is the invariant for the access flags.
+   * BML invariants.
    */
-  private final Hashtable invariants = new Hashtable();
+  private final Vector invariants = new Vector();
 
   /**
    * BCEL's JavaClass for this class, for bytecode
@@ -178,8 +175,7 @@ public abstract class BCClassRepresentation {
                 pa.toString());
     if (pa instanceof ClassInvariant) {
       final ClassInvariant inv = (ClassInvariant) pa;
-      final Integer access = Integer.valueOf(inv.getAccessFlags());
-      this.invariants.put(access, inv);
+      this.invariants.add(inv);
       return true;
     }
     return false;
@@ -207,13 +203,12 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * Adds class invariant.
+   * Adds class invariant to the class.
    *
    * @param inv - new class invariant.
    */
   public void setInvariant(final ClassInvariant inv) {
-    final Integer af = Integer.valueOf(inv.getAccessFlags());
-    this.invariants.put(af, inv);
+    this.invariants.add(inv);
   }
 
   /**
@@ -456,6 +451,16 @@ public abstract class BCClassRepresentation {
     return attrs;
   }
 
+  /**
+   * This method adds the attributes from the local representation
+   * to the given array of attributes and at the same time it
+   * writes the attribute to the given attribute writer.
+   *
+   * @param aw the writer to write the attributes to
+   * @param attrs the array attributes to add the local attributes to
+   * @return the original array <code>attrs</code> enriched with the
+   *   local invariants
+   */
   private Attribute[] addAndSaveInvariants(final AttributeWriter aw,
                                            final Attribute[] attrs) {
     Attribute[] res = attrs;

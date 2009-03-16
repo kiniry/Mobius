@@ -33,6 +33,9 @@ import annot.textio.Parsing;
  */
 public class BCClass extends BCClassPrinting {
 
+  /**
+   * A logger to debug the current class.
+   */
   private static Logger logger = Logger.getLogger("BCClass");
 
   /**
