@@ -47,16 +47,17 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    * A standard constructor.
    *
    * @param m - BCMethod containing this annotation,
-   * @param ih - instructionHandle of bytecode instruction
+   * @param a_ih - instructionHandle of bytecode instruction
    *     that this annotation should be attached to,
-   * @param minor - minor number of annotation, responsible
+   * @param a_minor - minor number of annotation, responsible
    *     for annotation ordering within single instruction.
    */
-  public InCodeAttribute(final BCMethod m, final InstructionHandle ih,
-                         final int minor) {
+  public InCodeAttribute(final BCMethod m,
+                         final InstructionHandle a_ih,
+                         final int a_minor) {
     this.method = m;
-    this.ih = ih;
-    this.minor = minor;
+    this.ih = a_ih;
+    this.minor = a_minor;
   }
 
   /**

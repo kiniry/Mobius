@@ -34,7 +34,7 @@ public class LoopSpecificationTable extends BCAttributeTable {
 
   @Override
   public String getName() {
-    return DisplayStyle.LOOP_SPECIFICATION_TABLE;
+    return DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR;
   }
 
   @Override

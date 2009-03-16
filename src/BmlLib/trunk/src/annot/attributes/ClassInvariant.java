@@ -174,7 +174,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    */
   @Override
   protected String printCode1(final BMLConfig conf) {
-    final String header = this.isInstance ? DisplayStyle._classInvariant :
+    final String header = this.isInstance ? DisplayStyle.INVARIANT_KWD :
                                             DisplayStyle._staticInvariant;
     final String code = this.invariant.printLine(conf, header);
     return "\n" + Parsing.addComment(code);

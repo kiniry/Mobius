@@ -566,9 +566,13 @@ public class BMLParserTest {
   @Test
   public void testField() {
     String[] paramdecls = { "private int sum;",
+                            "private int[] sum;",
+                            "private  int[] keyIds;",
                             "public java.lang.Object a;"
                             };
     String[] answers = { "private int sum ;",
+                         "private int [ ] sum ;",
+                         "private int [ ] keyIds ;",
                          "public java . lang . Object a ;"
                          };
     System.out.println("testField: -----------------");
@@ -643,7 +647,32 @@ public class BMLParserTest {
    */
   @Test
   public void testObjectfields() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "private int sum;\n",
+                            "private int sum;\n"+
+                            "private int sum1;\n"
+                            };
+    String[] answers = { "private int sum ; \n",
+                         "private int sum ; \n "+
+                         "private int sum1 ; \n"
+                         };
+    System.out.println("testObjectfields: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.objectfields_return ret;
+      try {
+        ret = parser.objectfields();
+        String res =  ret.tree.toStringTree();
+        assertEquals("objectfields: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testObjectfields end");
   }
 
   /**
@@ -730,8 +759,35 @@ public class BMLParserTest {
    * Test method for {@link annot.textio.BMLParser#type_spec()}.
    */
   @Test
-  public void testType_spec() {
-    fail("Not yet implemented");
+  public void testArr_type() {
+    String[] paramdecls = { "int",
+                            "java.lang.Object",
+                            "java.lang.Object[]",
+                            "int[]"
+                            };
+    String[] answers = { "int",
+                         "java . lang . Object",
+                         "java . lang . Object [ ]",
+                         "int [ ]"
+                         };
+    System.out.println("testArr_type: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.arr_type_return ret;
+      try {
+        ret = parser.arr_type();
+        String res =  ret.tree.toStringTree();
+        assertEquals("arr_type: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testArr_type end");
   }
 
   /**
@@ -739,7 +795,34 @@ public class BMLParserTest {
    */
   @Test
   public void testType() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "int",
+                            "java.lang.Object",
+                            "float",
+                            "boolean"
+                            };
+    String[] answers = { "int",
+                         "java . lang . Object",
+                         "float",
+                         "boolean"
+                         };
+    System.out.println("testType: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.type_return ret;
+      try {
+        ret = parser.type();
+        String res =  ret.tree.toStringTree();
+        assertEquals("arr_type: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testType end");
   }
 
   /**
@@ -747,7 +830,28 @@ public class BMLParserTest {
    */
   @Test
   public void testReference_type() {
-    fail("Not yet implemented");
+    String[] paramdecls = { "java.lang.Object"
+                            };
+    String[] answers = { "java . lang . Object"
+                         };
+    System.out.println("testReference_type: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.reference_type_return ret;
+      try {
+        ret = parser.reference_type();
+        String res =  ret.tree.toStringTree();
+        assertEquals("Reference_type: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testReference_type end");
   }
 
   /**
@@ -755,7 +859,44 @@ public class BMLParserTest {
    */
   @Test
   public void testBuilt_in_type() {
-    fail("Not yet implemented");
+    String[] paramdecls = {  "void",
+                             "boolean",
+                             "byte",
+                             "char",
+                             "short",
+                             "int",
+                             "long",
+                             "float",
+                             "double"
+    };
+    String[] answers = { "void",
+                         "boolean",
+                         "byte",
+                         "char",
+                         "short",
+                         "int",
+                         "long",
+                         "float",
+                         "double"
+    };
+    System.out.println("testBuilt_in_type: -----------------");
+    for (int i = 0; i < paramdecls.length; i++) {
+      final CharStream chstr = new ANTLRStringStream(paramdecls[i]);
+      final BMLLexer lex = new BMLLexer(chstr);
+      final CommonTokenStream tokens = new CommonTokenStream(lex);
+      BMLParser parser = new BMLParser(tokens);
+      BMLParser.built_in_type_return ret;
+      try {
+        ret = parser.built_in_type();
+        String res =  ret.tree.toStringTree();
+        assertEquals("Built_in_type: " + i, ret.tree.toStringTree(),
+                     answers[i]);
+      } catch (RecognitionException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+    System.out.println("testBuilt_in_type end");
   }
 
   /**

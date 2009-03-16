@@ -31,7 +31,7 @@ import annot.textio.DisplayStyle;
  * This class represents extended constant pool, that contains
  * all constants from original (BCEL) constant pool and
  * constants from second constant pool. Second constant pool
- * is stored as an class attribute in .class file.
+ * is stored as a class attribute in .class file.
  * Constants stored here are ordinary, BCEL's Constants.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
@@ -181,7 +181,7 @@ public class BCConstantPool extends BCCConstantPrinting {
     cpg.addUtf8(DisplayStyle.INVARIANTS_ATTR);
     cpg.addUtf8(DisplayStyle.METHOD_SPECIFICATION_ATTR);
     cpg.addUtf8(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
-    cpg.addUtf8(DisplayStyle.LOOP_SPECIFICATION_TABLE);
+    cpg.addUtf8(DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR);
     cpg.addUtf8(DisplayStyle.FIELD_MODIFIERS_ATTR);
   }
 

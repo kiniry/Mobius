@@ -136,20 +136,49 @@ public class DisplayStyle {
   /**
    * The String with the name of the LoopSpecificationTable attribute.
    */
-  public static final String LOOP_SPECIFICATION_TABLE = BML_DOMAIN +
+  public static final String LOOP_SPECIFICATION_TABLE_ATTR = BML_DOMAIN +
     "LoopSpecificationTable";
 
   /**
    * The String with the name of the OwnershipTable attribute.
    */
-  public static final String OWNERSHIP_TABLE = BML_DOMAIN +
+  public static final String OWNERSHIP_TABLE_ATTR = BML_DOMAIN +
     "OwnershipTable";
 
   /**
    * The String with the name of the DebugTable attribute.
    */
-  public static final String DEBUG_TABLE = BML_DOMAIN +
+  public static final String DEBUG_TABLE_ATTR = BML_DOMAIN +
     "DebugTable";
+
+  /**
+   * The array with all the BML attribute names.
+   */
+  public static final String[] BML_ATTRIBUTE_NAMES = {
+    VERSION_ATTR,
+    CLASS_MODIFIERS_ATTR,
+    GHOST_FIELDS_ATTR,
+    MODEL_FIELDS_ATTR,
+    MODEL_METHODS_ATTR,
+    INVARIANTS_ATTR,
+    CONSTRAINTS_ATTR,
+    INITIALLY_CLAUSES_ATTR,
+    REPRESENTS_CLAUSES_ATTR,
+    SECOND_CONSTANT_POOL_ATTR,
+    DATA_GROUPS_ATTR,
+    FIELD_MODIFIERS_ATTR,
+    METHOD_SPECIFICATION_ATTR,
+    PARAMETER_TABLE_ATTR,
+    LOCAL_VARIABLE_MODIFIERS_TABLE_ATTR,
+    LOCAL_GHOST_VARIABLE_TABLE_ATTR,
+    ASSERT_TABLE_ATTR,
+    ASSUME_TABLE_ATTR,
+    SET_TABLE_ATTR,
+    UNREACHABLE_TABLE_ATTR,
+    LOOP_SPECIFICATION_TABLE_ATTR,
+    OWNERSHIP_TABLE_ATTR,
+    DEBUG_TABLE_ATTR
+  };
 
   /**
    * Java keyword for package.
@@ -170,7 +199,7 @@ public class DisplayStyle {
    *
    * Be careful to modify BML.g3 as well
    */
-  public static final String _classInvariant = "invariant";
+  public static final String INVARIANT_KWD = "invariant";
 
   /**
    * BML keyword for the constant pool header.
@@ -271,6 +300,72 @@ public class DisplayStyle {
   public static final String _assert = "assert";
 
   /**
+   * BML keyword for "spec_public" modifier.
+   */
+  public static final String SPEC_PUBLIC_KWD = "spec_public";
+
+  /**
+   * BML keyword for "spec_protected" modifier.
+   */
+  public static final String SPEC_PROTECTED_KWD = "spec_protected";
+
+  /**
+   * BML keyword for "non_null" modifier.
+   */
+  public static final String NON_NULL_KWD = "non_null";
+
+
+  /**
+   * BML keyword for "nullable" modifier.
+   */
+  public static final String NULLABLE_KWD = "nullable";
+
+
+  /**
+   * BML keyword for "pure" modifier.
+   */
+  public static final String PURE_KWD = "pure";
+
+
+  /**
+   * BML keyword for "helper" modifier.
+   */
+  public static final String HELPER_KWD = "helper";
+
+
+  /**
+   * BML keyword for "peer" modifier.
+   */
+  public static final String PEER_KWD = "peer";
+
+
+  /**
+   * BML keyword for "rep" modifier.
+   */
+  public static final String REP_KWD = "rep";
+
+
+  /**
+   * BML keyword for "readonly" modifier.
+   */
+  public static final String READONLY_KWD = "readonly";
+
+  /**
+   * Array with all the BML modifiers.
+   */
+  public static final String[] BML_MODIFIERS = {
+    SPEC_PUBLIC_KWD,
+    SPEC_PROTECTED_KWD,
+    NON_NULL_KWD,
+    NULLABLE_KWD,
+    PURE_KWD,
+    HELPER_KWD,
+    PEER_KWD,
+    REP_KWD,
+    READONLY_KWD
+  };
+
+  /**
    * The hash sign to be used in numbers of constants.
    */
   public static final String HASH_SIGN = "#";
@@ -294,9 +389,9 @@ public class DisplayStyle {
    * The . sign to be used in numbers of constants.
    */
   public static final String DOT_SIGN = ".";
-  
+
   /**
-   * The @ sign to be used as BML comment indicator
+   * The @ sign to be used as BML comment indicator.
    */
   public static final String BML_AT_SIGN = "@";
 
@@ -396,5 +491,21 @@ public class DisplayStyle {
    * A private constructor to forbid the creation of instances.
    */
   protected DisplayStyle() {
+  }
+
+  /**
+   * The method checks if the given String is a BML attribute name.
+   *
+   * @param aname the String to check
+   * @return <code>true</code> in case the String is an attribute name,
+   *   <code>false</code> otherwise.
+   */
+  public static boolean isBMLAttributeName(final String aname) {
+    for (int i = 0; i < BML_ATTRIBUTE_NAMES.length; i++) {
+      if (aname.equals(BML_ATTRIBUTE_NAMES[i])) {
+        return true;
+      }
+    }
+    return false;
   }
 }

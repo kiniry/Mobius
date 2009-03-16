@@ -20,6 +20,8 @@ import annot.bcclass.MessageLog;
  */
 public class AttributeWriter {
 
+  private static final int SHORT_INT_LENGTH = 2;
+
   /**
    * BCClass containing attributes to be written.
    */
@@ -71,13 +73,13 @@ public class AttributeWriter {
    * @return Index of Utf8 constant with given String.
    */
   public int findConstant(final String str) {
-    final int pos = this.bcc.getCp().findConstant(str);
-    if (pos == -1) {
+    final int constPos = this.bcc.getCp().findConstant(str);
+    if (constPos == -1) {
       final ConstantUtf8 cu8 = new ConstantUtf8(str);
       this.bcc.getCp().addConstant(cu8);
       return this.bcc.getCp().size() - 1;
     }
-    return pos;
+    return constPos;
   }
 
   /**
@@ -104,7 +106,7 @@ public class AttributeWriter {
   }
 
   /**
-   * Written given attribute (of IBCAttribute interface),
+   * Writes given attribute (of IBCAttribute interface),
    * creating BCEL's Unknown attribute.
    *
    * @param attr - Attribute to be written,
@@ -152,11 +154,14 @@ public class AttributeWriter {
   public void writeInt(final int i) {
     grow(NumberUtils.INTEGER_IN_BYTES);
     this.output[this.pos] =
-      (byte) (i  >>  24 & NumberUtils.LOWEST_BYTE_MASK);
+      (byte) (i  >>  NumberUtils.THREE_BYTES_SIZE &
+              NumberUtils.LOWEST_BYTE_MASK);
     this.output[this.pos + 1] =
-      (byte) (i  >>  16 & NumberUtils.LOWEST_BYTE_MASK);
+      (byte) (i  >>  NumberUtils.TWO_BYTES_SIZE &
+              NumberUtils.LOWEST_BYTE_MASK);
     this.output[this.pos + 2] =
-      (byte) (i  >>  NumberUtils.ONE_BYTE_SIZE & NumberUtils.LOWEST_BYTE_MASK);
+      (byte) (i  >>  NumberUtils.ONE_BYTE_SIZE &
+              NumberUtils.LOWEST_BYTE_MASK);
     this.output[this.pos + 3] =
       (byte) (i & NumberUtils.LOWEST_BYTE_MASK);
     this.pos += NumberUtils.INTEGER_IN_BYTES;
@@ -168,11 +173,11 @@ public class AttributeWriter {
    * @param s - integer to be written (less than 2^15).
    */
   public void writeShort(final int s) {
-    grow(2);
+    grow(SHORT_INT_LENGTH);
     this.output[this.pos] = (byte) (s  >>  NumberUtils.ONE_BYTE_SIZE &
         NumberUtils.LOWEST_BYTE_MASK);
     this.output[this.pos + 1] = (byte) (s & NumberUtils.LOWEST_BYTE_MASK);
-    this.pos += 2;
+    this.pos += SHORT_INT_LENGTH;
   }
 
 }

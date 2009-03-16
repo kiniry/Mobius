@@ -11,27 +11,27 @@ package bmllib.utils;
 public class NumberUtils {
 
   /**
-   * 
+   * The number of bytes for the Integer type representation.
    */
   public static final int INTEGER_IN_BYTES = Integer.SIZE / Byte.SIZE;
 
   /**
-   * 
+   * The number of bits in three bytes.
    */
   public static final int THREE_BYTES_SIZE = Byte.SIZE * 3;
 
   /**
-   * 
+   * The number of bits in two bytes.
    */
   public static final int TWO_BYTES_SIZE = Byte.SIZE * 2;
 
   /**
-   * 
+   * The number of bits in one byte.
    */
   public static final int ONE_BYTE_SIZE = Byte.SIZE;
 
   /**
-   * 
+   * The mask which hides all the bytes except the lowest one.
    */
   public static final int LOWEST_BYTE_MASK = 0xFF;
 

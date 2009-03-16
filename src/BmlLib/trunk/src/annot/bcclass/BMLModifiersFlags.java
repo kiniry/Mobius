@@ -1,7 +1,9 @@
 /**
  *
  */
-package annot.attributes;
+package annot.bcclass;
+
+import annot.modifiers.BMLModifier;
 
 /**
  * Constants encoding the BML modifiers, described in section
@@ -9,8 +11,8 @@ package annot.attributes;
  * flags are in
  * @see org.apache.bcel.Constants
  *
- * @author Aleksy Schubert (alx@mimuw.edu.pl), Jacek Chrzaszcz
- * (chrzaszcz@mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @author Jacek Chrzaszcz (chrzaszcz@mimuw.edu.pl)
  * @version a-01
  */
 public final class BMLModifiersFlags {
@@ -86,6 +88,22 @@ public final class BMLModifiersFlags {
    * elements.
    */
   public static final int BML_ELEM_READONLY = 0x00002000;
+
+  /**
+   * Array of all the modifiers to perform the iterations over the modifiers.
+   */
+  public static final int[] BML_MODIFIERS = {BML_SPEC_PUBLIC,
+                                             BML_SPEC_PROTECTED,
+                                             BML_NON_NULL,
+                                             BML_NULLABLE,
+                                             BML_PURE,
+                                             BML_HELPER,
+                                             BML_PEER,
+                                             BML_REP,
+                                             BML_READONLY,
+                                             BML_ELEM_PEER,
+                                             BML_ELEM_READONLY
+  };
 
   /**
    * An empty private constructor to disallow the creation of instances.

@@ -237,9 +237,9 @@ public class AttributeReader {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.ASSERT_TABLE_ATTR);
       this.method.getAmap().getAtab().load(this);
-    } else if (aname.equals(DisplayStyle.LOOP_SPECIFICATION_TABLE)) {
+    } else if (aname.equals(DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.LOOP_SPECIFICATION_TABLE);
+                  DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR);
       this.method.getAmap().getLstab().load(this);
     } else if (aname.equals(DisplayStyle.FIELD_MODIFIERS_ATTR)) {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +

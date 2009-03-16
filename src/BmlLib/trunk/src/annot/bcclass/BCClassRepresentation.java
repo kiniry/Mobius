@@ -25,7 +25,6 @@ import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.BMLModifiersFlags;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
 import annot.bcexpression.BCExpression;
@@ -83,10 +82,19 @@ public abstract class BCClassRepresentation {
   private BCMethod[] methods;
 
   /**
-   * The BML modifiers for fields in the class.
+   * The BML modifiers for non-BML fields in the class.
    */
   private BMLModifier[] bml_fmodifiers;
 
+  /**
+   * The ghost fields of the class.
+   */
+  private BCField[] ghostFields;
+
+  /**
+   * The model fields of the class.
+   */
+  private BCField[] modelFields;
 
   /**
    * Removes all Attributes used by this library from
@@ -102,16 +110,7 @@ public abstract class BCClassRepresentation {
       if (arr[i] instanceof Unknown) {
         final Unknown ua = (Unknown) arr[i];
         final String aname = ua.getName();
-        if (DisplayStyle.INVARIANTS_ATTR.equals(aname)) {
-          continue;
-        }
-        if (DisplayStyle.METHOD_SPECIFICATION_ATTR.equals(aname)) {
-          continue;
-        }
-        if (DisplayStyle.ASSERT_TABLE_ATTR.equals(aname)) {
-          continue;
-        }
-        if (DisplayStyle.LOOP_SPECIFICATION_TABLE.equals(aname)) {
+        if (DisplayStyle.isBMLAttributeName(aname)) {
           continue;
         }
       }
@@ -279,7 +278,14 @@ public abstract class BCClassRepresentation {
     }
   }
 
-  private BMLModifier getFreshFieldMod(Field field)
+  /**
+   * This method generates a fresh BML modifier object for the given field.
+   *
+   * @param field the field to generate the modifier for
+   * @return a fresh modifiers structure for the field
+   * @throws ReadAttributeException
+   */
+  private BMLModifier getFreshFieldMod(final Field field)
     throws ReadAttributeException {
     return new BMLModifier(field, this);
   }
@@ -433,19 +439,39 @@ public abstract class BCClassRepresentation {
     final AttributeWriter aw = new AttributeWriter(this);
     Attribute[] attrs = removeBMLAttributes(this.jc.getAttributes());
     this.jc.setAttributes(attrs);
-    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "  saving second constant pool");
+    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "   saving second constant pool");
     attrs = this.jc.getAttributes();
-    for (final Enumeration i = this.invariants.elements();
-         i.hasMoreElements();) {
-      final ClassInvariant inv = (ClassInvariant) i.nextElement();
-      attrs = addAttribute(attrs, aw.writeAttribute(inv));
-    }
+    attrs = addAndSaveInvariants(aw, attrs);
+    attrs = addAndSaveNonJavaFields(aw, attrs, getGhostFields());
+    attrs = addAndSaveNonJavaFields(aw, attrs, getModelFields());
     this.jc.setAttributes(attrs);
     updateFieldAttributes();
     this.cp.save(this.jc);
   }
 
+  private Attribute[] addAndSaveNonJavaFields(AttributeWriter aw,
+                                              Attribute[] attrs,
+                                              BCField[] ghostFields2) {
+//  TODO implement this
+    return attrs;
+  }
 
+  private Attribute[] addAndSaveInvariants(final AttributeWriter aw,
+                                           final Attribute[] attrs) {
+    Attribute[] res = attrs;
+    for (final Enumeration i = this.invariants.elements();
+         i.hasMoreElements();) {
+      final ClassInvariant inv = (ClassInvariant) i.nextElement();
+      res = addAttribute(res, aw.writeAttribute(inv));
+    }
+    return res;
+  }
+
+
+  /**
+   * This method updates the BML attributes associated with Java fields
+   * of the current class.
+   */
   private void updateFieldAttributes() {
     final Field[] fields = jc.getFields();
     for (int i = 0; i < fields.length; i++) {
@@ -524,5 +550,33 @@ public abstract class BCClassRepresentation {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "saving to: " + fileName);
     saveJC();
     this.jc.dump(osSpecificFileName);
+  }
+
+  /**
+   * Returns the BML modifiers for the given non-BML field.
+   *
+   * @param a_fieldno the number of the field to extract the modifiers for
+   * @return the modifiers for the given field number
+   */
+  public BMLModifier getModifiersForField(final int a_fieldno) {
+    return bml_fmodifiers[a_fieldno];
+  }
+
+  /**
+   * Returns the ghost fields in the class.
+   *
+   * @return the ghost fields of the class
+   */
+  public BCField[] getGhostFields() {
+    return ghostFields;
+  }
+
+  /**
+   * Returns the model fields in the class.
+   *
+   * @return the model fields of the class
+   */
+  public BCField[] getModelFields() {
+    return modelFields;
   }
 }

@@ -34,7 +34,7 @@ import annot.textio.Parsing;
 public class BCClass extends BCClassPrinting {
 
   private static Logger logger = Logger.getLogger("BCClass");
-  
+
   /**
    * A set of functions for parsing annotations.
    */
@@ -81,7 +81,7 @@ public class BCClass extends BCClassPrinting {
   public BCClass(final String dirName, final String className)
     throws ClassNotFoundException, ReadAttributeException {
     logger.info("ctor(" + dirName + ", " + className + ")");
-    
+
     MLog.putMsg(MessageLog.LEVEL_PINFO, "filename=" + dirName);
     MLog.putMsg(MessageLog.LEVEL_PINFO, "className=" + className);
     final ClassPath acp = new ClassPath(dirName);

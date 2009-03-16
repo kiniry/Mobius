@@ -14,6 +14,7 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.Utility;
 
 import annot.attributes.ClassInvariant;
+import annot.modifiers.BMLModifier;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
@@ -196,26 +197,84 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * flag is <code>true</code> then the static version is generated
    * otherwise the object one.
    *
+   * Moreover, the methods prints out the Java fields first, then the
+   * ghost fields and then the model fields.
+   *
    * @param conf the pretty printing configuration
    * @param code the buffer to print the representation to
    * @param isStatic the flag which indicates which part should be printed out
    */
   private void printFields(final BMLConfig conf, final StringBuffer code,
                            final boolean isStatic) {
+    printJavaFields(conf, code, isStatic);
+    printNonJavaFields(conf, code, isStatic, getGhostFields());
+    printNonJavaFields(conf, code, isStatic, getModelFields());
+  }
+
+  /**
+   * This method prints out the non-Java fields using the grammar mentioned in
+   * {@link #printFields(BMLConfig, StringBuffer, boolean)}.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   * @param fds the array of non-Java fields
+   */
+  private void printNonJavaFields(final BMLConfig conf,
+                                  final StringBuffer code,
+                                  final boolean isStatic,
+                                  final BCField[] fds) {
+    if (fds != null) {
+      final StringBuffer res = new StringBuffer("");
+      for (int i = 0; i < fds.length; i++) {
+        final BCField fd = fds[i];
+        if (fd.isStatic() == isStatic) {
+          final int af = fd.getAccessFlags();
+          res.append(Utility.accessToString(af));
+          if (res.length() != 0) res.append(" ");
+          res.append(BMLModifier.printBMLModifiers(fd.getBMLFlags()));
+          if (res.length() != 0) res.append(" ");
+          res.append(fd.getType().toString());
+          res.append(" ");
+          res.append(fd.getName());
+          res.append(";\n");
+        }
+      }
+      code.append(res);
+    }
+  }
+
+
+  /**
+   * This method prints out the Java fields using the grammar mentioned in
+   * {@link #printFields(BMLConfig, StringBuffer, boolean)}.
+   *
+   * @param conf the pretty printing configuration
+   * @param code the buffer to print the representation to
+   * @param isStatic the flag which indicates which part should be printed out
+   */
+  private void printJavaFields(final BMLConfig conf,
+                               final StringBuffer code,
+                               final boolean isStatic) {
     final Field[] fds = getJC().getFields();
+    final StringBuffer res = new StringBuffer("");
     for (int i = 0; i < fds.length; i++) {
       final Field fd = fds[i];
       if (fd.isStatic() == isStatic) {
         final int af = fd.getModifiers();
-        code.append(Utility.accessToString(af));
-        code.append(" ");
-        code.append(fd.getType().toString());
-        code.append(" ");
-        code.append(fd.getName());
-        code.append(";\n");
+        res.append(Utility.accessToString(af));
+        if (res.length() != 0) res.append(" ");
+        res.append(getModifiersForField(i).toString());
+        if (res.length() != 0) res.append(" ");
+        res.append(fd.getType().toString());
+        res.append(" ");
+        res.append(fd.getName());
+        res.append(";\n");
       }
     }
+    code.append(res);
   }
+
 
   /**
    * The method prints out the representation of the static section of the

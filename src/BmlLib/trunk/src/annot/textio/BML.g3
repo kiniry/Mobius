@@ -317,7 +317,7 @@ staticfield :
   };
 
 field :
-  (nsfieldmodifier)* type ident SEMICOLON
+  (nsfieldmodifier)* arr_type ident SEMICOLON
   {
      syso("field");
   }; 
@@ -331,7 +331,17 @@ nsfieldmodifier  :
    | PRIVATE
    | ABSTRACT
    | FINAL
-   | STRICTFP) {syso("ns field modifier");};
+   | STRICTFP
+   | SPEC_PUBLIC
+   | SPEC_PROTECTED
+   | MODEL
+   | GHOST
+   | NON_NULL
+   | NULLABLE
+   | PEER
+   | REP
+   | READONLY )
+   {syso("ns field modifier");};
 
 staticinvariants : BML_START STATIC INVARIANT BML_END EOL;
 
@@ -347,7 +357,11 @@ objectsection :
      syso("object section");
   };
 
-objectfields : PUBLIC PUBLIC;
+objectfields :
+  (field EOL)* EOL*
+  {
+     syso("object fields");
+  };
 
 objectspec : objectinvariants? objectconstraints?
              objectrepresents? objectinitially?;
@@ -399,7 +413,7 @@ method :
       } else {
         syso("empty method attribute");
       }
-    }) methodmodifiers type_spec? methodheader
+    }) methodmodifiers arr_type? methodheader
         {
           if (clr) {
             syso("clearing method attributes");
@@ -458,8 +472,8 @@ methodmodifier :
    | VOLATILE
    | STRICTFP) {syso("method modifier");};  
 
-type_spec :
-    type (dims)? {syso("type_spec");};
+arr_type :
+    type (dims)? {syso("arr_type");};
 
 type returns [String name] :
     rname=reference_type { $name = $rname.name; }
@@ -515,7 +529,7 @@ param_declaration_list : {syso("started param_declaration_list");}
   | param_declaration_noname (COMMA param_declaration_noname)*;
 
 param_declaration :
-  param_modifier? type_spec (i=IDENT
+  param_modifier? arr_type (i=IDENT
     {
        syso("IDENT=" + $i.getText());
     } | exponent_indicator | float_type_suffix)
@@ -525,7 +539,7 @@ param_declaration :
     };
 
 param_declaration_noname :
-  param_modifier? type_spec 
+  param_modifier? arr_type 
     {
        syso("noname ident");
     } 
@@ -1076,6 +1090,17 @@ CONSTRAINT: 'constraint';
 REPRESENTS: 'represents';
 INITIALLY: 'initially';
 REQUIRES: 'requires';
+SPEC_PUBLIC: 'spec_public';
+SPEC_PROTECTED: 'spec_protected';
+MODEL: 'model';
+GHOST: 'ghost';
+PURE: 'pure';
+HELPER: 'helper';
+NON_NULL: 'non_null';
+NULLABLE: 'nullable';
+PEER: 'peer';
+REP: 'rep';
+READONLY: 'readonly';
 SC_START: '{|';
 SC_END: '|}';
 PRECONDITION: 'precondition';
