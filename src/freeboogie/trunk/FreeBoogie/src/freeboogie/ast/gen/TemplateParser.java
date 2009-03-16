@@ -134,6 +134,8 @@ public class TemplateParser {
       switch (lastToken.type) {
       case FILE:
         processFile(); break;
+      case USER_DEFINE:
+        processUserDefine(); break;
       case CLASSES:
         processClasses(); break;
       case IF_ABSTRACT:
@@ -213,6 +215,29 @@ public class TemplateParser {
       err("Cannot write to file " + fn);
       Err.help("I'm gonna stop producing output.");
       switchOutput(null);
+    }
+  }
+
+  /** Reads { key } and outputs the associated value. */
+  private void processUserDefine() throws IOException {
+    readToken();
+    if (lastToken.type != TemplateToken.Type.LC) {
+      err("Hey, \\user_define should be followed by {");
+      Err.help("I'll act as if <" + lastToken.rep + "> was {.");
+    }
+    readToken();
+    String value = grammar.userDefs.get(lastToken.rep);
+    if (value == null) {
+      err("You should say -D" + lastToken.rep + "=SOMETHING "
+        + "on the command line.");
+      value = "<UNDEFINED " + lastToken.rep + ">";
+    }
+    writeId(value, lastToken.idCase);
+    readToken();
+    if (lastToken.type != TemplateToken.Type.RC) {
+      err("The macro \\user_define should refer to a key that " 
+        + "is a simple identifier.");
+      skipToRc(curlyCnt, true);
     }
   }
   

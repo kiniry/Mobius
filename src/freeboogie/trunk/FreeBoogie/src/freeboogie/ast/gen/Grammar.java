@@ -16,6 +16,8 @@ public class Grammar {
    * A map from class names to {@code AgClass} objects.
    */
   public Map<String, AgClass> classes;
+
+  public HashMap<String, String> userDefs;
   
   /** Creates a new grammar object. */
   public Grammar() {

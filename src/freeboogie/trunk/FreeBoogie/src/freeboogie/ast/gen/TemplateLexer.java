@@ -29,6 +29,11 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
   
   static {
     macros.put("\\file", TemplateToken.Type.FILE);
+    macros.put("\\user_define", TemplateToken.Type.USER_DEFINE);
+    macros.put("\\userDefine", TemplateToken.Type.USER_DEFINE);
+    macros.put("\\UserDefine", TemplateToken.Type.USER_DEFINE);
+    macros.put("\\USER_DEFINE", TemplateToken.Type.USER_DEFINE);
+    macros.put("\\Userdefine", TemplateToken.Type.USER_DEFINE);
     macros.put("\\classes", TemplateToken.Type.CLASSES);
     macros.put("\\if_abstract", TemplateToken.Type.IF_ABSTRACT);
     macros.put("\\abstract_classes", TemplateToken.Type.ABSTRACT_CLASSES);
@@ -76,6 +81,11 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     macros.put("\\invariants", TemplateToken.Type.INVARIANTS);
     macros.put("\\inv_text", TemplateToken.Type.INV);
     
+    idCases.put("\\user_define", TemplateToken.Case.LOWER_CASE);
+    idCases.put("\\userDefine", TemplateToken.Case.CAMEL_CASE);
+    idCases.put("\\UserDefine", TemplateToken.Case.PASCAL_CASE);
+    idCases.put("\\USER_DEFINE", TemplateToken.Case.UPPER_CASE);
+    idCases.put("\\Userdefine", TemplateToken.Case.ORIGINAL_CASE);
     idCases.put("\\class_name", TemplateToken.Case.LOWER_CASE);
     idCases.put("\\className", TemplateToken.Case.CAMEL_CASE);
     idCases.put("\\ClassName", TemplateToken.Case.PASCAL_CASE);
@@ -184,6 +194,7 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
     }
     
     stream.eat();
+    if (idCase == null) idCase = TemplateToken.Case.ORIGINAL_CASE;
     return new TemplateToken(type, sb.toString(), idCase);
   }
   

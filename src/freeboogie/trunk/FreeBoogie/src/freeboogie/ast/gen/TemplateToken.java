@@ -10,6 +10,7 @@ public class TemplateToken extends Token {
   /** Token types */
   public enum Type {
     /** \file */ FILE,
+    /** \\user_define */ USER_DEFINE,
     /** \classes */ CLASSES,
     /** \is_abstract */ IF_ABSTRACT,
     /** \abstract_classes */ ABSTRACT_CLASSES,

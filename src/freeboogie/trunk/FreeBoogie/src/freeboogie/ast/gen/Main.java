@@ -1,13 +1,11 @@
 package freeboogie.ast.gen;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.io.*;
+import java.util.HashMap;
+import java.util.logging.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 import freeboogie.util.Err;
 
@@ -32,7 +30,7 @@ public class Main {
   public static void main(String[] args) {
     if (args.length == 0) { 
       Err.fatal("Syntax: java freeboogie.ast.gen.Main" 
-        + " [-b defaultBaseName] grammar templates", 1);
+        + " [-b defaultBaseName] (-Dkey=value)* grammar templates", 1);
     }
     
     // Setup logging.
@@ -56,6 +54,15 @@ public class Main {
       defaultBase = args[arg_idx++];
     }
 
+    HashMap<String, String> userDefs = new HashMap<String, String>(23);
+    Pattern dp = Pattern.compile("-D(\\w*)=(.*)");
+    while (true) {
+      Matcher m = dp.matcher(args[arg_idx]);
+      if (!m.matches()) break;
+      userDefs.put(m.group(1), m.group(2));
+      ++arg_idx;
+    }
+
     // read the grammar
     try {
       AgParser agParser = new AgParser();
@@ -63,6 +70,7 @@ public class Main {
       agParser.parseAg();
       grammar = agParser.getGrammar();
       grammar.makeConsistent(defaultBase);
+      grammar.userDefs = userDefs;
     } catch (IOException e) {
       Err.fatal("I can't read the abstract grammar.", 2);
     }
