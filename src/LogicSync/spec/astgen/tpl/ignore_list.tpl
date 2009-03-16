@@ -1,0 +1,14 @@
+\file{ignore.list}
+null
+ag.html
+hierarchy.dot
+hierarchy.gif
+Evaluator.java
+AssociativeEvaluator.java
+Transformer.java
+Substitutor.java
+visitor.skeleton
+\classes{\ClassName.java}
+generated.list
+ignore.list
+

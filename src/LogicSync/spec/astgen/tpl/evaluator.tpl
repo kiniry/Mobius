@@ -15,13 +15,12 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import mobius.logic.lang.ast.Ast;
-import mobius.logic.lang.ast.IEvaluator;
 
 /**
   Use as a base class when you want to compute a value of type
   {@code R} for each node. An example is the typechecker.
  */
-public class Evaluator<R> implements IEvaluator<R> {
+public class Evaluator<R> {
   protected HashMap<Ast, R> evalCache = new HashMap<Ast, R>();
   protected R memo(Ast a, R r) { 
     if (r != null) evalCache.put(a, r);
@@ -54,7 +53,6 @@ public class Evaluator<R> implements IEvaluator<R> {
 package \Userdefine{pkg};
 import java.math.BigInteger;
 import mobius.logic.lang.ast.AssociativeOperator;
-import mobius.logic.lang.ast.IEvaluator;
 
 public class AssociativeEvaluator<R> extends Evaluator<R> {
   protected AssociativeOperator<R> assocOp;

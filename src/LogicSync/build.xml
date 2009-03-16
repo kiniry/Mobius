@@ -38,6 +38,8 @@
 	<property name="nl-ast-pkg" value="mobius.logic.lang.nat.ast" />
 	<property name="coq-ast-pkg" value="mobius.logic.lang.coq.ast" />
 	<property name="ast-base" value="mobius.logic.lang.ast.Ast" />
+	<property name="coq-ast-base" value="mobius.logic.lang.coq.ast.CoqAst" />
+	<property name="nl-ast-base" value="mobius.logic.lang.nat.ast.NLAst" />
 	
 	
   <target name="init">
@@ -102,7 +104,7 @@
     description="generates AST">
     <java fork="yes" dir="${coq-ast-target}" jar="lib/astgen.jar">
     	<arg value="-b"/>
-      <arg value="${ast-base}"/>
+      <arg value="${coq-ast-base}"/>
     	<arg value="-Dpkg=${coq-ast-pkg}" />
       <arg value="${astgen-dir}/coq.ag" />
       <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
@@ -112,13 +114,14 @@
       <arg value="${astgen-tpl-dir}/substitutor.tpl" />
       <arg value="${astgen-tpl-dir}/html.tpl" />
       <arg value="${astgen-tpl-dir}/list.tpl" />
+    	<arg value="${astgen-tpl-dir}/ignore_list.tpl" />
     </java>
   </target>
 	
 	<target name="ast-gen-nl" depends="init" description="generates AST">
 	  <java fork="yes" dir="${nl-ast-target}" jar="lib/astgen.jar">
 	  	<arg value="-b"/>
-	  	<arg value="${ast-base}"/>
+	  	<arg value="${nl-ast-base}"/>
 	  	<arg value="-Dpkg=${nl-ast-pkg}" />
 	    <arg value="${astgen-dir}/nl.ag" />
 	    <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
@@ -128,6 +131,7 @@
 	    <arg value="${astgen-tpl-dir}/substitutor.tpl" />
 	    <arg value="${astgen-tpl-dir}/html.tpl" />
 	    <arg value="${astgen-tpl-dir}/list.tpl" />
+	  	<arg value="${astgen-tpl-dir}/ignore_list.tpl" />
 	  </java>
 	</target>
 	
