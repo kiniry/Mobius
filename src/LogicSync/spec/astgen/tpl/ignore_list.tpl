@@ -8,7 +8,8 @@ AssociativeEvaluator.java
 Transformer.java
 Substitutor.java
 visitor.skeleton
-\classes{\ClassName.java}
+\classes{\ClassName.java
+}
 generated.list
 ignore.list
-
+ast_gen.log

@@ -135,6 +135,25 @@
 	  </java>
 	</target>
 	
+	<target name="check-clean-ast">
+		<available file="${nl-ast-target}/ignore.list" property="nl-ast-clean"/>
+		<available file="${coq-ast-target}/ignore.list" property="coq-ast-clean"/>
+	</target>
+	
+	<target name="clean-ast-nl" depends="check-clean-ast" if="nl-ast-clean" description="Delete generated AST classes">
+		<delete>
+	   <fileset dir="${nl-ast-target}" includesfile="${nl-ast-target}/ignore.list"/>
+    </delete>
+  </target>
+	
+	<target name="clean-ast-coq" depends="check-clean-ast" if="coq-ast-clean" description="Delete generated AST classes">
+    <delete>
+      <fileset dir="${coq-ast-target}" includesfile="${coq-ast-target}/ignore.list"/>
+	  </delete>
+	</target>
+	
+	<target name="clean-ast" depends="clean-ast-coq,clean-ast-nl"/>
+	
   <target name="ast-gen" depends="ast-gen-coq,ast-gen-nl" 
 	    description="generates ASTs" />
   <target name="antlr-gen" depends="antlr-gen-coq" 
@@ -162,4 +181,6 @@
 	 <delete dir="${dist}"/>
   </target>
   
+	<target name="clean" depends="clean-ast,clean-build"/> 
+	
 </project>
