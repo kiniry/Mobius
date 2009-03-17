@@ -81,16 +81,13 @@
       <arg value="${clops-file}"/>
     </java>
   </target>
+  
   <target name="checkAntlrBuildUpToDate">
     <echo message="Checking if the ANTLR generated files are up to date"/>
-    <condition property="antlrBuild.required">
-      <not>
-        <uptodate srcfile="spec/coq.g" targetfile="src/mobius/logic/coq/parser/CoqParser.java"/>
-      </not>
-    </condition>
+    <uptodate srcfile="spec/Coq.g" targetfile="src/mobius/logic/lang/coq/parser/CoqParser.java" property="antlrBuild.notRequired"/>
   </target>
 
-  <target name="antlr-gen-coq" depends="checkAntlrBuildUpToDate" if="antlrBuild.required">
+  <target name="antlr-gen-coq" depends="checkAntlrBuildUpToDate" unless="antlrBuild.notRequired">
     <echo message="Running antlr"/>
     <java fork="yes" dir="spec" classname="org.antlr.Tool">
       <classpath refid="antlr.path" />

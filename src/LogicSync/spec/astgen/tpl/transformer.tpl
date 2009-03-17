@@ -19,9 +19,9 @@ import java.util.Deque;
   
   @see freeboogie.ast.Evaluator
  */
-public class Transformer extends Evaluator<Ast> {
-  private final Ast NULL = AtomId.mk("<NULL>",null);
-  private Deque<Ast> result = new ArrayDeque<Ast>();
+public class Transformer extends Evaluator<\Userdefine{defaultBaseName}> {
+  private final \Userdefine{defaultBaseName} NULL = AtomId.mk("<NULL>",null);
+  private Deque<\Userdefine{defaultBaseName}> result = new ArrayDeque<\Userdefine{defaultBaseName}>();
 \normal_classes{
 
   public void see(
@@ -49,7 +49,7 @@ public class Transformer extends Evaluator<Ast> {
   }
   
   @Override
-  public Ast eval(
+  public \Userdefine{defaultBaseName} eval(
     \ClassName \className,
     \members[,]{
       \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} 
@@ -61,7 +61,7 @@ public class Transformer extends Evaluator<Ast> {
     enterNode(\className);
     see(\className,\members[,]{\memberName});
     exitNode(\className);
-    Ast r = result.removeFirst();
+    \Userdefine{defaultBaseName} r = result.removeFirst();
     return r == NULL ? null : r;
   }
 }
