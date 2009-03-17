@@ -43,13 +43,14 @@ public class Main {
     int arg_idx = 0;
     Grammar grammar = null;
 
+    HashMap<String, String> userDefs = new HashMap<String, String>(23);
     if (arg_idx < args.length && args[arg_idx].equals("-b")) {
       if (++arg_idx == args.length)
         Err.fatal("You must give a default base name after '-b'");
       defaultBase = args[arg_idx++];
+      userDefs.put("defaultBaseName", defaultBase);
     }
 
-    HashMap<String, String> userDefs = new HashMap<String, String>(23);
     Pattern dp = Pattern.compile("-D(\\w*)=(.*)");
     while (arg_idx < args.length) {
       Matcher m = dp.matcher(args[arg_idx]);
