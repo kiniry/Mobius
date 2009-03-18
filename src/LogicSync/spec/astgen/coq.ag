@@ -8,7 +8,7 @@ Tactic = String! name;
 Hint = HintType! type, String! list, String! lib;
 
 
-Axiom = String! name;
+Axiom = String! name, Formula! formula;
 Lemma = String! name;
 Definition = String! name;
 Inductive = String! name;
@@ -16,3 +16,13 @@ Inductive = String! name;
 Documentation :> Doc, Comment;
 Doc = String! content;
 Comment = String! content;
+Variable = Variable next, String name, Formula type;
+VariableList = Variable! first, Variable! tail;
+
+Formula :> Application, Term, Forall, Fun, Exists;
+Formula = Formula next;
+Application = Formula! first, Formula! tail;
+Term = String name;
+Forall = VariableList! list, Formula! formula;
+Fun = VariableList! list, Formula! formula;
+Exists = Variable! list, Formula! formula;

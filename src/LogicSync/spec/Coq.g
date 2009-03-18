@@ -75,7 +75,7 @@ open_scope returns [CoqAst ast]:
 
 axiom returns [CoqAst ast]: 
        ax_wrd NAME type_decl DOT
-       {$ast = Axiom.mk($NAME.text);}
+       {$ast = Axiom.mk($NAME.text, $type_decl.ast);}
      ;
 lemma returns [CoqAst ast]: 
        LEMMA NAME COLON formula DOT proof DOT
@@ -120,7 +120,10 @@ inductive_constr: PIPE NAME type_decl;
 proof: PROOF DOT proof_content QED; 
 proof_content: (tac_list DOT)*;
          
-type_decl: COLON formula;
+type_decl returns [Formula ast]: 
+             COLON formula
+             {$ast = $formula.f;}
+           ;
 ax_wrd: VARIABLE | AXIOM;
 
 req_type returns [ReqType t]: 
@@ -178,27 +181,40 @@ tac_match_formula:
     ;
           
 
-expr: LPAR formula RPAR 
-           | NAME expr*
-           | INTEGER;
+expr returns [Formula f]: LPAR formula RPAR expr?  {$f = $formula.f;
+                                                    $f.setNext($e.f);}
+           | NAME e=expr? {$f = Term.mk($e.f, $NAME.text);}
+           | INTEGER e=expr? {$f = Term.mk($e.f, $INTEGER.text);};
            
-formula: expr IMPLIES formula
-    | expr comparison_op formula
-    | expr arit_op formula
-    | expr OR formula
-    | expr AND formula
-    | TILD formula
-    | FORALL var_decl COMMA formula
-    | FUN var_decl '=>' formula
-    | LCURLY var_decl PIPE formula RCURLY
-    | expr
+formula returns [Formula f]:
+    | expr IMPLIES tail=formula {$expr.f.setNext(Term.mk($tail.f, "->"));
+                                 $f = Application.mk(null, $expr.f, $tail.f);}
+    | expr comparison_op tail=formula {$expr.f.setNext(Term.mk($tail.f, $comparison_op.sym));
+                                  $f = Application.mk(null, $expr.f, $tail.f);}
+    | expr arit_op tail=formula {$expr.f.setNext(Term.mk($tail.f, $arit_op.text));
+                            $f = Application.mk(null, $expr.f, $tail.f);}
+    | expr OR tail=formula {$expr.f.setNext(Term.mk($tail.f, "\\/"));
+                       $f = Application.mk(null, $expr.f, $tail.f);}
+    | expr AND tail=formula {$expr.f.setNext(Term.mk( $tail.f, "/\\"));
+                       $f = Application.mk(null, $expr.f, $tail.f);}
+    | TILD tail=formula  {$f = Application.mk(null, Term.mk($tail.f, "~"), $tail.f);}
+    | FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}
+    | FUN var_decl '=>' tail=formula {$f = Fun.mk(null, $var_decl.list, $tail.f);}
+    | LCURLY var_decl PIPE tail=formula RCURLY {$f = Exists.mk(null, $var_decl.list.getFirst(), $tail.f);}
+    | expr {$f = $expr.f;}
     ;
     
 
      
-var_decl: LPAR name_list type_decl RPAR var_decl
-        | name_list type_decl
-        | name_list;
+var_decl returns [VariableList list]: 
+          LPAR name_list type_decl RPAR decl=var_decl
+                    {$list = $decl.list; 
+                     $list.setFirst(Variable.mk($decl.list.getFirst(), $name_list.text, $type_decl.ast));}
+        | name_list type_decl 
+                    {$list = VariableList.mk(Variable.mk(null, $name_list.text, $type_decl.ast), null);
+                     $list.setTail($list.getFirst());}
+        | name_list {$list = VariableList.mk(Variable.mk(null, $name_list.text, null), null);
+                     $list.setTail($list.getFirst());};
 
 name_list returns [String text]: 
         NAME l=name_list 
@@ -208,19 +224,21 @@ name_list returns [String text]:
 
 /**********************************************/
 
-comparison_op  :    '='
-                  | '!='
-                  | '>'
-                  | '<'
-                  | '<='
-                  | '>='
-                  | '<>'
-                  | '?='
+comparison_op returns [String sym]  :
+                    '=' {$sym = "=";}
+                  | '!=' {$sym = "!=";}
+                  | '>' {$sym = ">";}
+                  | '<' {$sym = "<";}
+                  | '<=' {$sym = "<=";}
+                  | '>=' {$sym = ">=";}
+                  | '<>' {$sym = "<>";}
+                  | '?=' {$sym = "?=";}
                ;
-arit_op: '+'
-       | '-'
-       | '/'
-       | '*'
+arit_op returns [String sym]: 
+         '+' {$sym = "+";}
+       | '-' {$sym = "-";}
+       | '/' {$sym = "/";}
+       | '*' {$sym = "*";}
        ;
 
 /**********************************************  
@@ -229,20 +247,23 @@ arit_op: '+'
  ##############################################
  **********************************************/ 
 
-LPAR: '(';
-RPAR: ')';
+WHITESPACE  :  (' '|'\n'|'\r'|'\t')+  {$channel=HIDDEN;} 
+            ;
+
+LPAR: '('  ;
+RPAR: ')' ;
 LCURLY: '{';
 RCURLY: '}';
 
 REQUIRE: 'Require';
-IMPORT: 'Import';
-EXPORT: 'Export';
-OPEN: 'Open';
-SCOPE: 'Scope';
-VARIABLE: 'Variable';
+IMPORT: 'Import' ;
+EXPORT: 'Export' ;
+OPEN: 'Open' ;
+SCOPE: 'Scope' ;
+VARIABLE: 'Variable' ;
 AXIOM: 'Axiom';
-COERCION: 'Coercion';
-SHIFT: '>->';
+COERCION: 'Coercion' ;
+SHIFT: '>->' ;
 DOT: '.';
 COLON: ':';
 DEF: ':=';
@@ -272,10 +293,18 @@ FUN: 'fun';
 QUESTION:'?';
 INDUCTIVE:'Inductive';
 TILD: '~';
-EOF:'<EOF>';
+EOF:'<EOF>' ;
+
 
 STRING_CONSTANT : '"' .* '"';
-COMMENT: '(*' .* '*)' {setText($text.substring(2, $text.length() - 2));};
+
+/* fragment
+WHITECOM:
+ WHITESPACE* COMMENT WHITESPACE* {System.out.println($COMMENT.text);};
+*/
+COMMENT: '(*' .* '*)'{$text.substring(2, $text.length() - 2);};
+
+
 
 /**********************************************/
 
@@ -317,10 +346,3 @@ LOWER  : 'a'..'z'
 fragment 
 UPPER  : 'A'..'Z' 
        ;
-
-/**********************************************  
- ***   Whitespace                           ***
- **********************************************/
- 
-WHITESPACE  :  (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;}
-            ;

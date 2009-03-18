@@ -11,18 +11,20 @@ import java.math.BigInteger; // for AtomNum
 import mobius.logic.lang.ast.FileLocation;
 
 /** @author rgrig */
-public final class \ClassName extends \Basename {
+public class \ClassName extends \Basename {
 \enums{  public static enum \EnumName {\values[, ]{
     \VALUE_NAME}
   }}
 \invariants{  //@ invariant \inv_text;
 }
-\children{  private final \MemberType \memberName;
+\children{  private \MemberType \memberName;
 }
-\primitives{  private final \Membertype \memberName;
+\primitives{  private \Membertype \memberName;
 }
 
+
   // === Constructors and Factories ===
+  protected \ClassName() {}
   private \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
     this.location = FileLocation.unknown();
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
@@ -45,6 +47,8 @@ public final class \ClassName extends \Basename {
   // === Accessors ===
 \members{
   public \if_primitive{\Membertype}{\MemberType} get\MemberName() { return \memberName; }}
+\members{
+  public void set\MemberName(\if_primitive{\Membertype}{\MemberType} \memberName) { this.\memberName = \memberName; }}
 
   // === The Visitor pattern ===
   @Override

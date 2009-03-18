@@ -107,6 +107,7 @@
       <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
       <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
       <arg value="${astgen-tpl-dir}/evaluator.tpl" />
+      <arg value="${astgen-tpl-dir}/abstract_evaluator.tpl" />
       <!-- arg value="${astgen-tpl-dir}/transformer.tpl" / -->
       <!-- arg value="${astgen-tpl-dir}/substitutor.tpl" / -->
       <arg value="${astgen-tpl-dir}/html.tpl" />
