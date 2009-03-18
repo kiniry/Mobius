@@ -86,7 +86,7 @@ public class AgLexer extends PeekStream<AgToken> {
       }
     } else if (Character.isLetter(lastChar)) {
       do readChar();
-      while (Character.isLetter(lastChar));
+      while (isIdCharacter(lastChar));
       if (repBuilder.toString().equals("enum")) 
         type = AgToken.Type.ENUM;
       else type = AgToken.Type.ID;
@@ -109,6 +109,12 @@ public class AgLexer extends PeekStream<AgToken> {
     AgToken r;
     do r = next(); while (r != null && !r.isGood());
     return r;
+  }
+
+  private static boolean isIdCharacter(char c) {
+    return Character.isLetter(c)
+      || c == '<'
+      || c == '>'; // allow generic types
   }
   
   /**
