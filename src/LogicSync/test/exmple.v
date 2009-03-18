@@ -50,7 +50,8 @@ Lemma negb_elim :
 Proof.
 intro b; apply sym_eq; apply negb_intro.
 Qed.
-(*
+
+
 Ltac subst_S_to :=
 repeat match goal with 
 |[ H: S_to_bool ?x = _ |- _] =>
@@ -59,8 +60,10 @@ repeat match goal with
       let v := fresh "X" in (set (v := S_to_bool x) in *; clearbody v; subst v)
 end.
 
+
 Hint Rewrite negb_elim :escj.
 Hint Resolve Zeq_bool_sym Zeq_bool_true Zeq_bool_false.
+
 
 Definition integralGE : Z -> Z -> Prop := fun (x y : Z) => x >= y.
 Definition integralGT : Z -> Z -> Prop := fun (x y : Z) =>  x > y.
@@ -125,7 +128,7 @@ Variable null : S.
 Variable isAllocated: S -> S-> Prop.
 Variable fClosedTime : S -> S.
 
-(* The following are grabbed from Jack's Coq Plugin 
+(* The following are grabbed from Jack's Coq Plugin *)
 Variable refEQ : S -> S-> bool.
 Variable refEQ_refl : forall x, refEQ x x = true. 
 Variable refEQ_eq : forall x y, refEQ x y = true -> x = y. 
@@ -150,7 +153,7 @@ Proof.
  intros x y H. apply not_true_is_false.
  intro. apply H. apply refEQ_eq. assumption.
 Qed.
-(* End of the stolen part 
+(* End of the stolen part *)
 
 
 
@@ -161,7 +164,7 @@ Variable Types : Set.
 Variable subtypes: Types -> Types-> Prop.
 Variable typeof : S -> Types.
 Variable lockLT : S -> S -> Prop.
-(*Variable is : S -> S -> Prop. 
+(*Variable is : S -> S -> Prop. *)
 Variable isField : S -> Prop.
 Variable allocNew_ : S.
 
@@ -172,7 +175,7 @@ Variable asLockSet: S -> Prop.
 
 Variable eClosedTime: S ->S.
 
-(* Array Logic 
+(* Array Logic *)
 Variable arrayFresh : S -> S -> S -> S -> S -> Types -> S -> Prop.
 Variable arrayShapeOne: S -> S.
 Variable arrayShapeMore: S -> S-> S.
@@ -181,11 +184,11 @@ Variable arrayLength: S -> S.
 Axiom arrayLengthAx :
       forall (a : S), (integralLE 0 (S_to_Z (arrayLength a))).
 
-(* array axioms2 
+(* array axioms2 *)
 (* Axiom array_axiom2_1 : 
       forall (a, a0, b0, e, n : S) (T: Types) (v : S):
         arrayFresh(a, a0, b0, e, arrayShapeOne(n), T, v) ->
-        (a0 <= (vAllocTime a)). 
+        (a0 <= (vAllocTime a)). *)
 Axiom array_axiom2_2 : 
       forall (a  a0  b0  e  n: S)  (T: Types)  (v : S),
         (arrayFresh a  a0  b0 e (arrayShapeOne n) T v) ->
@@ -208,7 +211,7 @@ Axiom array_axiom2_6 :
          forall (i : S),
            (select (select e a) i) = v.
 
-(* maybe another day... Hint Resolve array_axiom2_2 array_axiom2_3 array_axiom2_4 array_axiom2_5 array_axiom2_6. 
+(* maybe another day... Hint Resolve array_axiom2_2 array_axiom2_3 array_axiom2_4 array_axiom2_5 array_axiom2_6. *)
 
 Ltac unfoldArrAx_intern R :=
          match goal with
@@ -243,23 +246,22 @@ Hint Immediate distinctAxiom.
 
 
 
-(* Sans elimOr/elimAnd c'est un peu la deche 
+(* Sans elimOr/elimAnd c'est un peu la deche *)
 (**
  ** elimAnd
  elimAnd is used mainly to eliminate and within the hypothesis.
-For the goals the preferred tactic is still split.
+For the goals the preferred tactic is still split. *)
 
 
-
+Inductive Plist : Prop :=
+  | Pnil : Plist
+  | Pcons : Prop -> Plist -> Plist.
 
 Ltac map_hyp Tac :=
   repeat match goal with
     | [ H : _ |- _ ] => try (Tac H);genclear H
     end; intros.
 
-Inductive Plist : Prop :=
-  | Pnil : Plist
-  | Pcons : Prop -> Plist -> Plist.
 
 Ltac build_imp Pl C :=
   match Pl with
@@ -336,15 +338,17 @@ Ltac elimAnd :=
  ** elimNor
 This tactic is used to remove the not in front of a or (in the hypothesis),
 turning [~ (A \/  B) ] into [(~ A) /\ (~ B)].
-
+ *)
 
 
 Definition distr_or : forall A B, ~ (A \/ B) ->  ~ A.
+Proof.
  intros A B a b.
  elim a; trivial.  left; trivial.
 Qed.
 
 Definition distr_or_inv : forall A B, ~ (A \/ B) ->  ~B.
+Proof.
  intros A B a b.
  elim a; trivial.  right; trivial.
 Qed.
@@ -361,7 +365,7 @@ end.
 Ltac elim_or H HT R:=
         match HT with
            | ?A \/ R =>
-                 let h := fresh "H" in assert(h : A \/  R); [apply H; intros; auto | idtac]
+                 let h := fresh "H" in (assert(h : A \/  R); [apply H; intros; auto | idtac])
          | R\/ ?B  =>
                  let h := fresh "H" in assert(h : R \/  B); [apply H; intros; auto |idtac]
            |  ?C -> ?D => elim_or H D R
@@ -407,7 +411,7 @@ Ltac elimOr := simplOr.
 
 (**
  ** Cleansing
-To clean up the mess (sometimes).
+To clean up the mess (sometimes). *)
 
 
 Lemma a_ou_a_donne_a: forall a : Prop, a \/ a -> a.
@@ -417,7 +421,7 @@ Qed.
 
 Ltac cleanUp :=
 repeat match goal with
-| [H1: ?a, H2: ?a |- _] => clear H2
+| [H1: ?a, H2: ?a |- _ ] => clear H2
 | [H1: ?a = ?a |- _ ] => clear H1
 | [ H: ?a \/ ?a |- _] => let H1 := fresh "H" in (assert(H1 := a_ou_a_donne_a a H); clear H)
 | [H1: ?a < ?b, H2: ?a <= ?b |- _] => clear H2
@@ -425,10 +429,10 @@ end.
 
 
 
-Ltac autosc := intros; subst; elimOr; elimAnd; intros; subst;  
+Ltac autosc := intros;
 repeat match goal with
 |[H: _ |- _] => rewrite select_store1 in H
-end;
+end ;
 repeat match goal with
 |[H: _ |- _] => rewrite select_store_int1 in H
 end;
@@ -437,7 +441,7 @@ repeat match goal with
 end; autorewrite with escj; auto.
 
 Ltac startsc := unfold not; unfoldEscArith; autorewrite with escj; autorewrite with escj_select; intros; subst.
-(* unfoldArrAx. 
+(* unfoldArrAx. *)
 
 Definition int := Z.
 Definition Field := S.
@@ -447,4 +451,3 @@ Definition RefType := Types.
 Definition time := S.
 Coercion S_to_Z : S >-> Z.
 Coercion Z_to_S : Z >-> S.
-*)
