@@ -4,6 +4,7 @@ ag.html
 hierarchy.dot
 hierarchy.gif
 Evaluator.java
+AEvaluator.java
 AssociativeEvaluator.java
 Transformer.java
 Substitutor.java

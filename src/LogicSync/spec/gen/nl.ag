@@ -4,7 +4,7 @@
 
 // author: fintan
 
-Logics = Logic! logic, Logics tail;
+Program = List<Logic>! logics;
 
-Logic = String! name, Items! items;
-Items = String! id, String! description, Items tail;
+Logic = String! name, List<Item>! items;
+Item = String! id, String! description;

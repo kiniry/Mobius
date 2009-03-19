@@ -1,45 +1,115 @@
 package mobius.logic.lang.nat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import mobius.logic.lang.ALanguage;
+import mobius.logic.lang.nat.ast.Program;
+import mobius.logic.lang.nat.parser.NLLexer;
+import mobius.logic.lang.nat.parser.NLParser;
+
+import org.antlr.runtime.ANTLRFileStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 
 public class NaturalLanguage extends ALanguage {
 
+  private final List<File> fInput;
+  private final List<File> fGenerate;
+  private final List<File> fMerge;
+
+  private Program tree;
+
+  public NaturalLanguage() {
+    fInput = new ArrayList<File>();
+    fGenerate = new ArrayList<File>();
+    fMerge = new ArrayList<File>();
+  }
+
   @Override
   public void addGenerate(File gen) {
-    // TODO Auto-generated method stub
-    
+    fGenerate.add(gen);
   }
 
   @Override
   public void addInput(File in) {
-    // TODO Auto-generated method stub
-    
+    fInput.add(in);
   }
 
   @Override
   public void addMerge(File merge) {
-    // TODO Auto-generated method stub
-    
+    fMerge.add(merge);
   }
 
   @Override
-  public boolean isLanguageFile(File f) {
-    // TODO Auto-generated method stub
-    return false;
+  public boolean isLanguageFile(final File f) {
+    return f.getName().endsWith(".lnl");
   }
 
   @Override
   public void generate() {
-    // TODO Auto-generated method stub
-    
+    if (tree != null) {
+      if (fGenerate.size() == 1) {
+        System.out.print(this + ": generating '" + fGenerate.get(0).getName() + "'...");
+        try {
+          NLPrettyPrinter pp = new NLPrettyPrinter(new PrintStream(new FileOutputStream(fGenerate.get(0))));
+          tree.eval(pp);
+          pp.closeStream();
+          System.out.println(" done.");  
+        } catch (FileNotFoundException e) {
+          System.out.println(" FAILED!");
+          e.printStackTrace();
+        }
+        
+      } else if (fGenerate.size() > 1) {
+        moreThanOneFileError(fGenerate);
+      }
+    }
   }
+
 
   @Override
   public void prepare() {
-    // TODO Auto-generated method stub
-    
+    if (fInput.size() == 1) {
+      System.out.print(this + ": parsing '" + fInput.get(0).getName() + "'...");
+      tree = parseFile(fInput.get(0));
+      if(tree != null) {
+        System.out.println(" done.");
+      }
+      else {
+        System.out.println(" FAILED!");
+      }
+    } else  if (fInput.size() > 1) {
+      moreThanOneFileError(fInput);
+    }
+  }
+
+  public static Program parseFile(File f) {
+    try {
+      CharStream cs = new ANTLRFileStream(f.getAbsolutePath());
+      NLLexer cl = new NLLexer(cs);
+      NLParser parser = new NLParser(new CommonTokenStream(cl));
+      Program ast = parser.program();
+      return ast;
+    }
+    catch (IOException e) {
+      e.printStackTrace();
+    } 
+    catch (RecognitionException e) {
+      e.printStackTrace();
+    }  
+    return null;
+  }
+
+  @Override
+  public String toString() {
+    return "Natural language handler";
   }
 
 }

@@ -120,7 +120,7 @@
 	
 	<target name="checkNLAntlrBuildUpToDate">
 	  <echo message="Checking if the ANTLR generated files are up to date"/>
-	  <uptodate srcfile="spec/NL.g" targetfile="${antlr-target-nl}NLParser.java" property="NLAntlrBuild.notRequired"/>
+	  <uptodate srcfile="spec/NL.g" targetfile="${antlr-target-nl}/NLParser.java" property="NLAntlrBuild.notRequired"/>
 	</target>
 
 	<target name="antlr-gen-nl" depends="init" unless="NLAntlrBuild.notRequired">
@@ -175,8 +175,7 @@
 	    <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
 	    <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
 	    <arg value="${astgen-tpl-dir}/evaluator.tpl" />
-	    <!-- arg value="${astgen-tpl-dir}/transformer.tpl" / -->
-	    <!-- arg value="${astgen-tpl-dir}/substitutor.tpl" / -->
+	    <arg value="${astgen-tpl-dir}/abstract_evaluator.tpl" />
 	    <arg value="${astgen-tpl-dir}/html.tpl" />
 	    <arg value="${astgen-tpl-dir}/list.tpl" />
 	  	<arg value="${astgen-tpl-dir}/ignore_list.tpl" />
@@ -190,7 +189,7 @@
 	
 	<target name="astgen-nl-clean" depends="astgen-clean-check" if="astgen-nl-clean" description="Delete generated AST classes">
 		<delete>
-	   <fileset dir="${astgen-nl-target}" includesfile="${astgen-nl-target}ignore.list"/>
+	   <fileset dir="${astgen-nl-target}" includesfile="${astgen-nl-target}/ignore.list"/>
     </delete>
   </target>
 	

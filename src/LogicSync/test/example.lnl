@@ -1,0 +1,8 @@
+
+logic SPOOF
+ a: "A"
+end
+
+logic TEST
+ test: "sdfsdkj"
+end

@@ -2,7 +2,7 @@
 grammar NL;
 
 @header {
-  package ie.ucd.clops.dsl.parser; 
+  package mobius.logic.lang.nat.parser; 
   
   import java.util.LinkedList;
   import java.util.List;
@@ -12,7 +12,7 @@ grammar NL;
 }
 
 @lexer::header {
-  package ie.ucd.clops.dsl.parser;
+  package mobius.logic.lang.nat.parser;
 }
 
 @parser::members {
@@ -45,10 +45,11 @@ grammar NL;
  items returns [List<Item> list]:
    { List<Item> items = new LinkedList<Item>(); }
    ( item { items.add($item.v); } )+
+   { $list = items; }
  ;
  
  item returns [Item v]:
-   NAME STRING_CONSTANT
+   NAME ':' STRING_CONSTANT
    { $v = Item.mk($NAME.text, $STRING_CONSTANT.text, tokLoc($NAME)); }
  ;
  
@@ -95,3 +96,6 @@ LOWER  : 'a'..'z'
 fragment 
 UPPER  : 'A'..'Z' 
        ;
+       
+WHITESPACE  :  (' '|'\n'|'\r'|'\t')+ {$channel=HIDDEN;}
+            ;
