@@ -2,6 +2,7 @@ package mobius.logic.lang.coq;
 
 import mobius.logic.lang.coq.ast.AEvaluator;
 import mobius.logic.lang.coq.ast.Constructor;
+import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.ast.Formula;
 import mobius.logic.lang.coq.ast.HintType;
 import mobius.logic.lang.coq.ast.ReqType;
@@ -13,6 +14,18 @@ import java.util.List;
 
 public class StringEvaluator extends AEvaluator<String>{
 
+  
+  public static String toStringList(CoqAst ast) {
+    CoqAst node = ast;
+    String res = "";
+    StringEvaluator evaluator = new StringEvaluator();
+    while (node != null) {
+      res += ",\n " + node.eval(evaluator);
+      node = node.getNext();
+    }
+    return "[" + res.substring(3) + "]";
+  }
+  
   @Override
   public String evalRequire(String  lib, ReqType type) {
     return type + ": " + lib;
