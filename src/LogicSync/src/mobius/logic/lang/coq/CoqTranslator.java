@@ -186,13 +186,13 @@ public class CoqTranslator extends AEvaluator<String> {
 
   @Override
   public String evalForall(Formula next, VariableList list, Formula formula) {
-    String res = "(forall " + list.eval(this) + ", " + formula.eval(this) + ")";
+    final String res = "(forall " + list.eval(this) + ", " + formula.eval(this) + ")";
     return res;
   }
 
-
+  /** {@inheritDoc} */
   @Override
-  public String evalFormula(Formula next) {
+  public String evalFormula(final Formula next) {
     return null;
   }
 

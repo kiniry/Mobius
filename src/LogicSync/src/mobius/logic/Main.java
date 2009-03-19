@@ -20,12 +20,14 @@ public class Main {
      "Bad usage!\n" +
      "(try java -jar logicsync.jar -help)";
   private static final String HELP_MSG =
-  "LSync Version 0.1\n" +
-  "Syntax: java -jar logicync [-h] <files> [-g <file>] [-m <file>]\n" +
-  "-h, -help, --help Show this help message.\n" +
-  "<files>           Input file(s). Determine their type by their extension.\n" +
-  "-g <file>         Generates files. Files will erase the previous version.\n" +
-  "-m <file>         Merge with existing file. If there is no previous version, creates a new file.";
+    "LSync Version 0.1\n" +
+    "Syntax: java -jar logicync [-h] <files> [-g <file>] [-m <file>]\n" +
+    "-h, -help, --help Show this help message.\n" +
+    "<files>           Input file(s). Determine their type by their extension.\n" +
+    "-g <file>         Generates files. Files will erase the previous version.\n" +
+    "-m <file>         Merge with existing file. " +
+    "If there is no previous version, creates a new file.";
+  
   private final List<File> fInput;
   private final List<File> fGenerate;
   private final List<File> fMerge;
@@ -71,38 +73,18 @@ public class Main {
       return;
     }    
     
-    Map<String, ALanguage> list = new HashMap<String, ALanguage>();
+    final Map<String, ALanguage> list = new HashMap<String, ALanguage>();
     list.put("coq", new CoqLanguage());
     list.put("nat", new NaturalLanguage());
     list.put("gen", new GenericLanguage());
         
-    Main main = new Main(opt, list);
+    final Main main = new Main(opt, list);
     main.start();
 
   }
 
   public void start() {
-    for (File in: fInput) {
-      for (ALanguage lang: fLang.values()) {
-        if(lang.isLanguageFile(in)) {
-          lang.addInput(in);
-        }
-      }    
-    }
-    for (File gen: fGenerate) {
-      for (ALanguage lang: fLang.values()) {
-        if(lang.isLanguageFile(gen)) {
-          lang.addGenerate(gen);
-        }
-      }    
-    }
-    for (File merge: fMerge) {
-      for (ALanguage lang: fLang.values()) {
-        if(lang.isLanguageFile(merge)) {
-          lang.addMerge(merge);
-        }
-      }    
-    }
+    initLanguages();
     
     System.out.println("1: Preparation phase");
     for (ALanguage lang: fLang.values()) {
@@ -112,6 +94,30 @@ public class Main {
     System.out.println("2: Generation phase");
     for (ALanguage lang: fLang.values()) {
       lang.generate();
+    }
+  }
+
+  private void initLanguages() {
+    for (File in: fInput) {
+      for (ALanguage lang: fLang.values()) {
+        if (lang.isLanguageFile(in)) {
+          lang.addInput(in);
+        }
+      }    
+    }
+    for (File gen: fGenerate) {
+      for (ALanguage lang: fLang.values()) {
+        if (lang.isLanguageFile(gen)) {
+          lang.addGenerate(gen);
+        }
+      }    
+    }
+    for (File merge: fMerge) {
+      for (ALanguage lang: fLang.values()) {
+        if (lang.isLanguageFile(merge)) {
+          lang.addMerge(merge);
+        }
+      }    
     }
   }
 

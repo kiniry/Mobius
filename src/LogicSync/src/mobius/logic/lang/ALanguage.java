@@ -3,6 +3,11 @@ package mobius.logic.lang;
 import java.io.File;
 import java.util.List;
 
+/**
+ * The main class use to represent a language handler.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public abstract class ALanguage {
   /**
    * Check if a given file is written in this language.
@@ -47,7 +52,7 @@ public abstract class ALanguage {
    * multiple files.
    * @param list the list of files.
    */
-  public void moreThanOneFileError(List<File> list) {
+  public void moreThanOneFileError(final List<File> list) {
     System.err.println("At this moment the " + this + " cannot " +
                        "treat more than one file!\nGot:" + list + 
                        "\nDoing nothing :(");
