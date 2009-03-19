@@ -2,9 +2,9 @@ package mobius.logic.lang.nat;
 
 import java.io.File;
 
-import mobius.logic.lang.ILanguage;
+import mobius.logic.lang.ALanguage;
 
-public class NaturalLanguage implements ILanguage {
+public class NaturalLanguage extends ALanguage {
 
   @Override
   public void addGenerate(File gen) {

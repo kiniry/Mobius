@@ -11,12 +11,12 @@ import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
-import mobius.logic.lang.ILanguage;
+import mobius.logic.lang.ALanguage;
 import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.parser.CoqLexer;
 import mobius.logic.lang.coq.parser.CoqParser;
 
-public class CoqLanguage implements ILanguage {
+public class CoqLanguage extends ALanguage {
 
   private final List<File> fInput = new ArrayList<File>();
   private final List<File> fGenerate = new ArrayList<File>();
@@ -51,17 +51,17 @@ public class CoqLanguage implements ILanguage {
         break;
       case 1: 
         try {
+            System.out.print(this + ": generating '" + fGenerate.get(0).getName() + "'...");
             CoqTranslator.translate(fAst, fGenerate.get(0));
-            System.out.println("The Coq Language handler generated '" + fGenerate.get(0).getName() +
-                               "' from '" + fInput.get(0).getName() + "' succesfully.");
+            System.out.println(" done.");
           } catch (FileNotFoundException e) {
+            System.out.println(" FAILED!");
             e.printStackTrace();
+            
           }
         break;
       default:
-        System.err.println("At this moment the Coq Language cannot " +
-                           "generate more than one file!\nGot: " + fGenerate + 
-                           "\nDoing nothing :(");
+        moreThanOneFileError(fGenerate);
     }
     }
   }
@@ -72,14 +72,17 @@ public class CoqLanguage implements ILanguage {
       case 0:
         break;
       case 1:
+        System.out.print(this + ": parsing '" + fInput.get(0).getName() + "'...");
         fAst = parseFile(fInput.get(0));
-        System.out.println("The Coq Language handler parsed '" + fInput.get(0).getName() +
-                           "' succesfully.");
+        if(fAst != null) {
+          System.out.println(" done.");
+        }
+        else {
+          System.out.println(" FAILED!");
+        }
         break;
       default:
-        System.err.println("At this moment the Coq Language cannot " +
-                           "treat more than one file!\nGot:" + fInput + 
-                           "\nDoing nothing :(");
+          moreThanOneFileError(fInput);
     }
   }
 
@@ -99,5 +102,9 @@ public class CoqLanguage implements ILanguage {
       e.printStackTrace();
     }  
     return null;
+  }
+
+  public String toString() {
+    return "Coq language handler";
   }
 }
