@@ -8,6 +8,7 @@ options{
 package mobius.logic.lang.coq.parser; 
 
 import mobius.logic.lang.coq.ast.*;
+import java.util.LinkedList;
 }
 
 @lexer::header {
@@ -75,56 +76,69 @@ open_scope returns [CoqAst ast]:
 
 axiom returns [CoqAst ast]: 
        ax_wrd NAME type_decl DOT
-       {$ast = Axiom.mk($NAME.text, $type_decl.ast);}
+       {$ast = Axiom.mk($ax_wrd.t, $NAME.text, $type_decl.ast);}
      ;
 lemma returns [CoqAst ast]: 
        LEMMA NAME COLON formula DOT proof DOT
-       {$ast = Lemma.mk($NAME.text);}  
+       {$ast = Lemma.mk($NAME.text, $formula.f, $proof.txt);}  
      ;
 tactic returns [CoqAst ast]: 
        LTAC NAME name_list DEF tac_list DOT
-       {$ast = Tactic.mk($NAME.text);}
+       {$ast = Tactic.mk($NAME.text, $tac_list.tac);}
      ;
 hint returns [CoqAst ast]: 
       HINT IMMEDIATE NAME name_list DOT
-      {$ast = Hint.mk(HintType.Immediate, 
-                      $NAME.getText() + " " + $name_list.text,
+      {$name_list.list.addFirst($NAME.getText());
+       $ast = Hint.mk(HintType.Immediate, 
+                      $name_list.list,
                       "");}
     | HINT RESOLVE NAME name_list DOT
-      {$ast = Hint.mk(HintType.Resolve, 
-                      $NAME.getText() + " " + $name_list.text,
+      {$name_list.list.addFirst($NAME.getText());
+       $ast = Hint.mk(HintType.Resolve, 
+                      $name_list.list,
                       "");}
     | HINT REWRITE n=NAME name_list COLON lib=NAME DOT
-      {$ast = Hint.mk(HintType.Rewrite, 
-                      $n.getText() + " " + $name_list.text,
+      {$name_list.list.addFirst($n.getText());
+       $ast = Hint.mk(HintType.Rewrite, 
+                      $name_list.list,
                       $lib.text);}
     | HINT REWRITE IMPLIES n=NAME name_list COLON lib=NAME DOT
-      {$ast = Hint.mk(HintType.RewriteBk, 
-                      $n.getText() + " " + $name_list.text,
+      {$name_list.list.addFirst($n.getText());
+       $ast = Hint.mk(HintType.RewriteBk, 
+                      $name_list.list,
                       $lib.text);}
     ;
     
 definition returns [CoqAst ast]: 
             DEFINITION NAME type_decl? DEF formula DOT
-            {$ast = Definition.mk($NAME.text);}
+            {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, null);}
           | DEFINITION NAME type_decl DOT proof DOT
-            {$ast = Definition.mk($NAME.text);}
+            {$ast = Definition.mk($NAME.text, $type_decl.ast, null, $proof.txt);}
           ;
    
 inductive returns [CoqAst ast]: 
-            INDUCTIVE NAME type_decl DEF inductive_constr+ DOT
-            {$ast = Inductive.mk($NAME.text);}
+            INDUCTIVE NAME type_decl DEF inductive_constr DOT
+            {$ast = Inductive.mk($NAME.text, $type_decl.ast, $inductive_constr.list);}
           ;
-inductive_constr: PIPE NAME type_decl;
+inductive_constr returns [ConstrList list]: 
+            PIPE NAME type_decl l=inductive_constr 
+             {$list = $l.list; 
+              $list.setFirst(Constructor.mk($list.getFirst(), $NAME.text, $type_decl.ast));
+              if($list.getLast() == null) $list.setLast($list.getFirst());
+              }
+          | {$list = ConstrList.mk(null, null);};
 
-proof: PROOF DOT proof_content QED; 
+proof returns [String txt]: PROOF DOT proof_content QED 
+          {$txt = $text;}; 
 proof_content: (tac_list DOT)*;
          
 type_decl returns [Formula ast]: 
              COLON formula
-             {$ast = $formula.f;}
+             {$ast = $formula.f; }
            ;
-ax_wrd: VARIABLE | AXIOM;
+ax_wrd returns [AxiomType t]: 
+        VARIABLE {$t = AxiomType.Variable;} 
+      | AXIOM {$t = AxiomType.Axiom;};
 
 req_type returns [ReqType t]: 
        IMPORT {$t = ReqType.Import;} 
@@ -145,7 +159,7 @@ tac_expr: LPAR tac_list RPAR
         | NAME expr*
         ;
      
-tac_list: tac_expr (SEMICOLON tac_expr)*;
+tac_list returns [String tac]: tac_expr (SEMICOLON tac_expr)* {$tac = $text;};
       
 tac_let: 'let' NAME DEF (formula | tac_expr | 
                          'fresh' STRING_CONSTANT) 'in' tac_list;
@@ -209,17 +223,37 @@ formula returns [Formula f]:
 var_decl returns [VariableList list]: 
           LPAR name_list type_decl RPAR decl=var_decl
                     {$list = $decl.list; 
-                     $list.setFirst(Variable.mk($decl.list.getFirst(), $name_list.text, $type_decl.ast));}
+                     for (String var: $name_list.list) {
+	                     $list.setFirst(Variable.mk($list.getFirst(), 
+	                                                var, $type_decl.ast));
+	                 }
+	                }
         | name_list type_decl 
-                    {$list = VariableList.mk(Variable.mk(null, $name_list.text, $type_decl.ast), null);
-                     $list.setTail($list.getFirst());}
-        | name_list {$list = VariableList.mk(Variable.mk(null, $name_list.text, null), null);
-                     $list.setTail($list.getFirst());};
+                    {$list = VariableList.mk(null, null, null);
+                     for (String var: $name_list.list) {
+	                     $list.setFirst(Variable.mk($list.getFirst(), 
+	                                                var, $type_decl.ast));
+	                     if ($list.getTail() == null) {
+	                        $list.setTail($list.getFirst());
+	                     }
+	                 }
+	                }
+        | name_list {$list = VariableList.mk(null, null, null);
+                     for (String var: $name_list.list) {
+	                     $list.setFirst(Variable.mk($list.getFirst(), 
+	                                                var, null));
+	                     if ($list.getTail() == null) {
+	                        $list.setTail($list.getFirst());
+	                     }
+	                 }
+	                }
+        ;
 
-name_list returns [String text]: 
+name_list returns [LinkedList<String> list]: 
         NAME l=name_list 
-		{$text = $NAME.text + " " + $l.text;}
-      | {$text = "";};
+		{$l.list.addFirst($NAME.text);
+		 $list = $l.list;}
+      | {$list = new LinkedList();};
 
 
 /**********************************************/
@@ -302,7 +336,7 @@ STRING_CONSTANT : '"' .* '"';
 WHITECOM:
  WHITESPACE* COMMENT WHITESPACE* {System.out.println($COMMENT.text);};
 */
-COMMENT: '(*' .* '*)'{$text.substring(2, $text.length() - 2);};
+COMMENT: '(*' .* '*)'{setText($text.substring(2, $text.length() - 2));};
 
 
 

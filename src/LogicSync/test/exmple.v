@@ -125,7 +125,7 @@ Hint Resolve select_store2 select_store_int2 select_store_bool2.
 Hint Rewrite  -> select_store1 select_store_int1 select_store_bool1: escj_select.
 
 Variable null : S.
-Variable isAllocated: S -> S-> Prop.
+Variable isAllocated: S -> S -> Prop.
 Variable fClosedTime : S -> S.
 
 (* The following are grabbed from Jack's Coq Plugin *)

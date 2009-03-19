@@ -6,13 +6,23 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import mobius.logic.lang.coq.ast.AEvaluator;
+import mobius.logic.lang.coq.ast.ConstrList;
+import mobius.logic.lang.coq.ast.Constructor;
 import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.ast.Formula;
 import mobius.logic.lang.coq.ast.HintType;
+import mobius.logic.lang.coq.ast.AxiomType;
 import mobius.logic.lang.coq.ast.ReqType;
 import mobius.logic.lang.coq.ast.Variable;
 import mobius.logic.lang.coq.ast.VariableList;
+import java.util.List;
 
+
+/**
+ * Basic rule of implementations: All main vernaculars have side effect. 
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class CoqTranslator extends AEvaluator<String> {
 
   private final PrintStream fOutput;
@@ -65,16 +75,18 @@ public class CoqTranslator extends AEvaluator<String> {
   
   
   @Override
-  public String evalHint(HintType type, String names, String lib) {
+  public String evalHint(HintType type, List<String> names, String lib) {
     String translated = "Hint ";
     switch (type) {
       case RewriteBk:
-        translated += "Rewrite -> ";
+        translated += "Rewrite ->";
         break;
       default:
-        translated += type + " ";
+        translated += type ;
     }
-    translated += names.trim();
+    for(String name: names) {
+      translated += " " + name;
+    }
     if (!lib.equals("")) {
       translated += ": " + lib.trim();
     }
@@ -85,33 +97,55 @@ public class CoqTranslator extends AEvaluator<String> {
   
   
   @Override
-  public String evalTactic(String name) {
-    return "Tactic: " + name;
+  public String evalTactic(String name, String content) {
+    String trans = "Ltac " + name + " := " + content + ".";
+    fOutput.println(trans);
+    return trans;
   }    
   
   
-  @Override
-  public String evalDefinition(String name) {
-    return "def " + name;
-  }
+
   
 
   @Override
-  public String evalAxiom(String name, Formula f) {
-    String translated = "Axiom " + name + ": " + f.eval(this) + ".";
+  public String evalAxiom(AxiomType t, String name, Formula f) {
+    String translated = t + " " + name + ": " + f.eval(this) + ".";
     fOutput.println(translated);
     return translated;
   }
   
-
-  @Override
-  public String evalInductive(String name) {
-    return "inductive " + name;
-  }
   
   @Override
-  public String evalLemma(String name) {
-    return "lem " + name;
+  public String evalDefinition(String name, Formula type, Formula def, String proof) {
+    String trans = "Definition " + name;
+    if (type != null) {
+      trans += ": " + type.eval(this);
+    }
+    if (def != null) {
+      trans += " := " + def.eval(this);
+    }
+    if (proof != null) {
+      trans += ".\n" + proof;
+    }
+    trans += ".";
+    
+    fOutput.println(trans);
+    return trans;
+  }
+
+  @Override
+  public String evalInductive(String name, Formula type, ConstrList list) {
+    String res = "Inductive " + name + ": " + type.eval(this) + ":=\n" + list.eval(this) + "\n.";
+    fOutput.println(res);
+    return res;
+  }
+  
+  
+  @Override
+  public String evalLemma(String name, Formula formula, String proof) {
+    String trans = "Lemma " + name + ": " + formula.eval(this) + ".\n" + proof + ".";
+    fOutput.println(trans);
+    return trans;
   }
   
 
@@ -130,57 +164,97 @@ public class CoqTranslator extends AEvaluator<String> {
 
   @Override
   public String evalApplication(Formula next, Formula first, Formula tail) {
-    // TODO Auto-generated method stub
-    return null;
+    StringBuilder builder = new StringBuilder("(" + first.eval(this));
+    Formula current = first.getNext();
+    while(current != null) {
+      builder.append(" ");
+      builder.append(current.eval(this));
+      current = current.getNext();
+    }
+    builder.append(")");
+    String res = builder.toString();
+    return res;
   }
 
 
   @Override
   public String evalExists(Formula next, Variable list, Formula formula) {
-    // TODO Auto-generated method stub
-    return null;
+    String res = "(exists " + list.eval(this) + ", " + formula.eval(this) + ")";
+    return res;
   }
 
 
   @Override
   public String evalForall(Formula next, VariableList list, Formula formula) {
-    // TODO Auto-generated method stub
-    return null;
+    String res = "(forall " + list.eval(this) + ", " + formula.eval(this) + ")";
+    return res;
   }
 
 
   @Override
   public String evalFormula(Formula next) {
-    // TODO Auto-generated method stub
     return null;
   }
 
 
   @Override
   public String evalFun(Formula next, VariableList list, Formula formula) {
-    // TODO Auto-generated method stub
-    return null;
+    String res = "(fun " + list.eval(this) + " => " + formula.eval(this) + ")";
+    return res;
   }
 
 
   @Override
   public String evalTerm(Formula next, String name) {
-    // TODO Auto-generated method stub
-    return null;
+    return name;
   }
 
 
   @Override
   public String evalVariable(Variable next, String name, Formula type) {
-    // TODO Auto-generated method stub
-    return null;
+    String translated;
+    if (type != null) {
+      translated = "(" + name + ": " + type.eval(this) + ")";
+    }
+    else {
+      translated = name; 
+    }
+    return translated;
   }
 
 
   @Override
   public String evalVariableList(Variable first, Variable tail) {
-    // TODO Auto-generated method stub
-    return null;
+    StringBuilder builder = new StringBuilder(first.eval(this));
+    Variable current = first.getNext();
+    while(current != null) {
+      builder.append(" ");
+      builder.append(current.eval(this));
+      current = current.getNext();
+    }
+    String res = builder.toString();
+    return res;
+  }
+
+
+  @Override
+  public String evalConstrList(Constructor first, Constructor last) {
+    StringBuilder builder = new StringBuilder(first.eval(this));
+    Constructor current = first.getNext();
+    while(current != null) {
+      builder.append("\n");
+      builder.append(current.eval(this));
+      current = current.getNext();
+    }
+    String res = builder.toString();
+    return res;
+  }
+
+
+  @Override
+  public String evalConstructor(Constructor next, String name, Formula type) {
+    String res = "| " + name + ": " + type.eval(this);
+    return res;
   }
 
 

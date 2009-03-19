@@ -1,11 +1,15 @@
 package mobius.logic.lang.coq;
 
 import mobius.logic.lang.coq.ast.AEvaluator;
+import mobius.logic.lang.coq.ast.Constructor;
 import mobius.logic.lang.coq.ast.Formula;
 import mobius.logic.lang.coq.ast.HintType;
 import mobius.logic.lang.coq.ast.ReqType;
+import mobius.logic.lang.coq.ast.AxiomType;
 import mobius.logic.lang.coq.ast.Variable;
 import mobius.logic.lang.coq.ast.VariableList;
+import mobius.logic.lang.coq.ast.ConstrList;
+import java.util.List;
 
 public class StringEvaluator extends AEvaluator<String>{
 
@@ -22,35 +26,35 @@ public class StringEvaluator extends AEvaluator<String>{
     return name + ": " + typeFrom + " >-> " + typeTo;
   }
   @Override
-  public String  evalHint(HintType type, String name, String lib) {
-    return "Hint " + name;
+  public String  evalHint(HintType type, List<String> names, String lib) {
+    return "Hint " + names;
   }
   
   @Override
-  public String  evalTactic(String name) {
+  public String  evalTactic(String name, String content) {
     return "Tactic: " + name;
   }    
   
   
   @Override
-  public String evalDefinition(String name) {
+  public String evalDefinition(String name, Formula type, Formula def, String proof ) {
     return "def " + name;
   }
   
 
   @Override
-  public String evalAxiom(String name, Formula form) {
+  public String evalAxiom(AxiomType type, String name, Formula form) {
     return "ax " + name + " " + form.eval(this);
   }
   
 
   @Override
-  public String evalInductive(String name) {
+  public String evalInductive(String name, Formula type, ConstrList list) {
     return "inductive " + name;
   }
   
   @Override
-  public String evalLemma(String name) {
+  public String evalLemma(String name, Formula formula, String proof) {
     return "lem " + name;
   }
   
@@ -99,6 +103,16 @@ public class StringEvaluator extends AEvaluator<String>{
   }
   @Override
   public String evalVariableList(Variable first, Variable tail) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public String evalConstrList(Constructor first, Constructor last) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public String evalConstructor(Constructor next, String name, Formula type) {
     // TODO Auto-generated method stub
     return null;
   }

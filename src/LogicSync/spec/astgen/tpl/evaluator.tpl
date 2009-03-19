@@ -12,7 +12,7 @@ by the return type for each type of node.
  */
 package \Userdefine{pkg};
 import java.math.BigInteger;
-import java.util.HashMap;
+import java.util.*;
 
 import mobius.logic.lang.ast.Ast;
 
@@ -51,7 +51,7 @@ public class Evaluator<R> {
   This file is generated from evaluator.tpl. Do not edit.
  */
 package \Userdefine{pkg};
-import java.math.BigInteger;
+import java.util.*;
 import mobius.logic.lang.ast.AssociativeOperator;
 
 public class AssociativeEvaluator<R> extends Evaluator<R> {

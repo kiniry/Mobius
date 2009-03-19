@@ -12,7 +12,7 @@ by the return type for each type of node.
  */
 package \Userdefine{pkg};
 import java.math.BigInteger;
-import java.util.HashMap;
+import java.util.*;
 
 import mobius.logic.lang.ast.Ast;
 

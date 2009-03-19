@@ -4,14 +4,14 @@ CoqSpecific :> Require, OpenScope, Coercion, Hint, Tactic;
 Require = String! lib, ReqType! type;
 Coercion = String! name, String! typeFrom, String! typeTo;
 OpenScope = String! name;
-Tactic = String! name;
-Hint = HintType! type, String! list, String! lib;
+Tactic = String! name, String! content;
+Hint = HintType! type, List<String>! list, String! lib;
 
 
-Axiom = String! name, Formula! formula;
-Lemma = String! name;
-Definition = String! name;
-Inductive = String! name;
+Axiom = AxiomType! type, String! name, Formula! formula;
+Lemma = String! name, Formula! formula, String proof;
+Definition = String! name, Formula type, Formula def, String proof;
+Inductive = String! name, Formula! type, ConstrList! list;
 
 Documentation :> Doc, Comment;
 Doc = String! content;
@@ -26,3 +26,6 @@ Term = String name;
 Forall = VariableList! list, Formula! formula;
 Fun = VariableList! list, Formula! formula;
 Exists = Variable! list, Formula! formula;
+
+Constructor = Constructor next, String! name, Formula! type;
+ConstrList = Constructor first, Constructor last;

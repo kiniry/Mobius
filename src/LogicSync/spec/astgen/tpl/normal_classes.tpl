@@ -6,7 +6,7 @@ This template generates java classes for the normal classes.
   Do not edit.
  */
 package \Userdefine{pkg};
-import java.math.BigInteger; // for AtomNum
+import java.util.*;
 
 import mobius.logic.lang.ast.FileLocation;
 
