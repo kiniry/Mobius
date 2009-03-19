@@ -27,16 +27,23 @@ public class Main {
      "(try java -jar logicsync.jar -help)";
   private static final String HELP_MSG =
     "LSync Version 0.1\n" +
-    "Syntax: java -jar logicync [-h] <files> [-g <file>] [-m <file>]\n" +
+    "Syntax: java -jar logicsync [-h] <files> [-g <file>] [-m <file>]\n" +
     "-h, -help, --help Show this help message.\n" +
     "<files>           Input file(s). Determine their type by their extension.\n" +
     "-g <file>         Generates files. Files will erase the previous version.\n" +
     "-m <file>         Merge with existing file. " +
     "If there is no previous version, creates a new file.";
   
+  /** the list of input files. */
   private final List<File> fInput;
+  
+  /** the list of files to generate. */
   private final List<File> fGenerate;
+  
+  /** the list of files to merge. */
   private final List<File> fMerge;
+  
+  /** the current list of languages. */
   private final Map<String, ALanguage> fLang;
 
   public Main(LogicSyncOptionsInterface opt, Map<String, ALanguage> list) {

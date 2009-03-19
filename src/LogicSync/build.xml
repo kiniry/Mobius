@@ -6,16 +6,14 @@
   <property name="lib"  location="lib"/>
   <property name="src" location="src"/>
   <property name="build" location="bin"/>
+
   <property name="deps" value="clops-runtime.jar antlr-3.1.1-runtime.jar"/>
   <path id="runtime.path">
 	 <filelist dir="${lib}" files="clops-runtime.jar"/>
   	 <filelist dir="${lib}" files="antlr-3.1.1-runtime.jar"/>
   </path>	
   	
-  <path id="antlr.path">
-    <filelist dir="${lib}" files="antlr-3.1.1.jar"/>
-  </path>
-	
+  <!-- CLOPS -->
   <property name="clops-file" location="spec/logicsync.clops"/>
   <property name="clops-target" location="src/mobius/logic/clops"/>
   <property name="clops-pkg" value="mobius.logic.clops"/>
@@ -29,25 +27,39 @@
 	<file name="velocity-1.6.1-dep.jar"/>
   </path>
 	
-  <property name="antlr-target-coq" location="src/mobius/logic/lang/coq/parser" />
-	<property name="antlr-target-nl" location="src/mobius/logic/lang/nat/parser" />
-  <property name="astgen-dir" location="spec/astgen" />
-	<property name="astgen-tpl-dir" location="spec/astgen/tpl" />
-  <property name="coq-ast-target" location="src/mobius/logic/lang/coq/ast" />
-	<property name="nl-ast-target" location="src/mobius/logic/lang/nat/ast" />
-	<property name="nl-ast-pkg" value="mobius.logic.lang.nat.ast" />
-	<property name="coq-ast-pkg" value="mobius.logic.lang.coq.ast" />
-	<property name="ast-base" value="mobius.logic.lang.ast.Ast" />
-	<property name="coq-ast-base" value="mobius.logic.lang.coq.ast.CoqAst" />
-	<property name="nl-ast-base" value="mobius.logic.lang.nat.ast.NLAst" />
 	
+  <!-- ANTLR -->
+  <path id="antlr.path">
+    <filelist dir="${lib}" files="antlr-3.1.1.jar"/>
+  </path>
+  <property name="antlr-jar" location="lib/antlr-3.1.1.jar" />
+  <property name="antlr-coq-target" location="src/mobius/logic/lang/coq/parser" />
+  <property name="antlr-nl-target" location="src/mobius/logic/lang/nat/parser" />
+  <property name="antlr-coq-grammar" location="spec/gen/Coq.g" />
+	
+  <!-- AST Gen variables -->
+  <property name="astgen-base" value="mobius.logic.lang.ast.Ast" />
+  <property name="astgen-jar" value="lib/astgen.jar"/>
+  <property name="astgen-dir" location="spec/gen" />
+  <property name="astgen-tpl-dir" location="spec/gen/tpl" />
+	
+  <property name="astgen-nl-target" location="src/mobius/logic/lang/nat/ast" />
+  <property name="astgen-nl-pkg" value="mobius.logic.lang.nat.ast" />
+  <property name="astgen-nl-base" value="mobius.logic.lang.nat.ast.NLAst" />
+
+  <property name="astgen-coq-target" location="src/mobius/logic/lang/coq/ast" />
+  <property name="astgen-coq-pkg" value="mobius.logic.lang.coq.ast" />
+  <property name="astgen-coq-base" value="mobius.logic.lang.coq.ast.CoqAst" />
+	
+	
+  <!-- Targets -->
 	
   <target name="init">
     <echo message="Creating timestamp"/>
     <tstamp/>
     <mkdir dir="${build}"/>
   	<mkdir dir="${clops-target}"/>
-  	<mkdir dir="${coq-ast-target}"/>
+  	<mkdir dir="${astgen-coq-target}"/>
   </target>
 	
 
@@ -82,45 +94,42 @@
     </java>
   </target>
   
-  <target name="checkAntlrBuildUpToDate">
+  <target name="antlr-check">
     <echo message="Checking if the ANTLR generated files are up to date"/>
     <uptodate srcfile="spec/Coq.g" targetfile="src/mobius/logic/lang/coq/parser/CoqParser.java" property="antlrBuild.notRequired"/>
   </target>
 
   <target name="antlr-gen-coq" depends="init">
     <echo message="Running antlr"/>
-    <java fork="yes" dir="spec" classname="org.antlr.Tool">
-      <classpath refid="antlr.path" />
+    <java fork="yes" jar="${antlr-jar}">
       <arg value="-o"/>
-      <arg value="${antlr-target-coq}"/>
-      <arg value="Coq.g"/>
+      <arg value="${antlr-coq-target}"/>
+      <arg value="${antlr-coq-grammar}"/>
     </java>
   </target>
 	
-  <target name="ast-gen-coq" depends="init" 
+  <target name="astgen-gen-coq" depends="init" 
     description="generates AST">
-    <java fork="yes" dir="${coq-ast-target}" jar="lib/astgen.jar">
+    <java fork="yes" dir="${astgen-coq-target}" jar="${astgen-jar}">
     	<arg value="-b"/>
-      <arg value="${coq-ast-base}"/>
-    	<arg value="-Dpkg=${coq-ast-pkg}" />
-      <arg value="${astgen-dir}/coq.ag" />
+      <arg value="${astgen-coq-base}"/>
+    	<arg value="-Dpkg=${astgen-coq-pkg}" />
+      <arg value="${astgen-dir}/Coq.ag" />
       <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
       <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
       <arg value="${astgen-tpl-dir}/evaluator.tpl" />
       <arg value="${astgen-tpl-dir}/abstract_evaluator.tpl" />
-      <!-- arg value="${astgen-tpl-dir}/transformer.tpl" / -->
-      <!-- arg value="${astgen-tpl-dir}/substitutor.tpl" / -->
       <arg value="${astgen-tpl-dir}/html.tpl" />
       <arg value="${astgen-tpl-dir}/list.tpl" />
     	<arg value="${astgen-tpl-dir}/ignore_list.tpl" />
     </java>
   </target>
 	
-	<target name="ast-gen-nl" depends="init" description="generates AST">
-	  <java fork="yes" dir="${nl-ast-target}" jar="lib/astgen.jar">
+	<target name="astgen-gen-nl" depends="init" description="generates AST">
+	  <java fork="yes" dir="${astgen-nl-target}" jar="${astgen-jar}">
 	  	<arg value="-b"/>
-	  	<arg value="${nl-ast-base}"/>
-	  	<arg value="-Dpkg=${nl-ast-pkg}" />
+	  	<arg value="${astgen-nl-base}"/>
+	  	<arg value="-Dpkg=${astgen-nl-pkg}" />
 	    <arg value="${astgen-dir}/nl.ag" />
 	    <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
 	    <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
@@ -133,30 +142,32 @@
 	  </java>
 	</target>
 	
-	<target name="check-clean-ast">
-		<available file="${nl-ast-target}/ignore.list" property="nl-ast-clean"/>
-		<available file="${coq-ast-target}/ignore.list" property="coq-ast-clean"/>
+	<target name="astgen-clean-check">
+		<available file="${astgen-nl-target}/ignore.list" property="astgen-nl-clean"/>
+		<available file="${astgen-coq-target}/ignore.list" property="astgen-coq-clean"/>
 	</target>
 	
-	<target name="clean-ast-nl" depends="check-clean-ast" if="nl-ast-clean" description="Delete generated AST classes">
+	<target name="astgen-nl-clean" depends="astgen-clean-check" if="ast-nl-clean" description="Delete generated AST classes">
 		<delete>
-	   <fileset dir="${nl-ast-target}" includesfile="${nl-ast-target}/ignore.list"/>
+	   <fileset dir="${astgen-nl-target}" includesfile="${astgen-nl-target}/ignore.list"/>
     </delete>
   </target>
 	
-	<target name="clean-ast-coq" depends="check-clean-ast" if="coq-ast-clean" description="Delete generated AST classes">
+	<target name="astgen-coq-clean" depends="astgen-clean-check" if="astgen-coq-clean" description="Delete generated AST classes">
     <delete>
-      <fileset dir="${coq-ast-target}" includesfile="${coq-ast-target}/ignore.list"/>
+      <fileset dir="${astgen-coq-target}" includesfile="${astgen-coq-target}/ignore.list"/>
 	  </delete>
 	</target>
 	
-	<target name="clean-ast" depends="clean-ast-coq,clean-ast-nl"/>
+	<target name="astgen-clean" depends="astgen-coq-clean,astgen-nl-clean"/>
 	
-  <target name="ast-gen" depends="ast-gen-coq,ast-gen-nl" 
+  <target name="astgen-gen" depends="astgen-gen-coq,astgen-gen-nl" 
 	    description="generates ASTs" />
+
   <target name="antlr-gen" depends="antlr-gen-coq" 
 		description="generates parsers" />
-  <target name="gen-files" depends="ast-gen,clops-gen,antlr-gen" 
+
+  <target name="gen-files" depends="astgen-gen,clops-gen,antlr-gen" 
 	    description="generates ASTs, and Java files" />
   	
   <target name="dist" depends="compile" description="Generate the distribution">
@@ -174,11 +185,11 @@
     </jar> 	
   </target>
 	
-  <target name="clean-build" description="Clean up the build">
+  <target name="compile-clean" description="Clean up the build">
 	 <delete dir="${build}"/>
 	 <delete dir="${dist}"/>
   </target>
   
-	<target name="clean" depends="clean-ast,clean-build"/> 
+	<target name="clean" depends="astgen-clean,compile-clean"/> 
 	
 </project>

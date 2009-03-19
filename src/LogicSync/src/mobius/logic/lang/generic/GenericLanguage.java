@@ -41,5 +41,9 @@ public class GenericLanguage extends ALanguage {
     // TODO Auto-generated method stub
     
   }
+  
+  public String toString() {
+    return "Generic language handler";
+  }
 
 }
