@@ -244,6 +244,10 @@ public class AttributeReader {
       MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                   DisplayStyle.FIELD_MODIFIERS_ATTR);
       this.modifier.load(this);
+    } else if (aname.equals(DisplayStyle.SECOND_CONSTANT_POOL_ATTR)) {
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
+                  DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
+      MLog.putMsg(MessageLog.LEVEL_PINFO, "    (and ignore it)");
     } else {
       MLog.putMsg(MessageLog.LEVEL_PTODO,
                   "    unrecognized attribute: " + aname);

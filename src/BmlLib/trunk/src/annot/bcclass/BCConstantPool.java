@@ -172,6 +172,11 @@ public class BCConstantPool extends BCCConstantPrinting {
       this.constants.add(c);
     } else {
       this.constants.add(initialSize++, c);
+      final Constant[] consts = new Constant[initialSize];
+      for (int i = 0; i < initialSize; i++) {
+        consts[i] = constants.get(i);
+      }
+      jc.getConstantPool().setConstantPool(consts);
     }
   }
 
