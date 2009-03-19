@@ -14,6 +14,12 @@ import mobius.logic.lang.coq.CoqLanguage;
 import mobius.logic.lang.generic.GenericLanguage;
 import mobius.logic.lang.nat.NaturalLanguage;
 
+/**
+ * The main class file of LogicSync.
+ * It handles the arguments passed by the command line.
+ * 
+ * @author J. Charles (julien.charles@inria.fr)
+ */
 public class Main {
 
   private static final String BAD_USAGE_MSG =     
