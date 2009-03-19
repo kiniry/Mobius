@@ -278,4 +278,52 @@ public abstract class BytecodeLineController {
   public boolean hasMg() {
     return false;
   }
+
+  /**
+   * This method instructs the line controller to remove the BCEL item
+   * associated with it from the BCEL representation of the class. The generic
+   * implementation does nothing.
+   */
+  public void removeFromBCEL() {
+  }
+
+  /**
+   * This method instructs the line controller to add the BCEL item
+   * associated with it to the BCEL representation of the class. The generic
+   * implementation does nothing.
+   *
+   * @throws UmbraException in case the representation does not allow to
+   *   add the content of the line to BML and BCEL representation
+   */
+  public void addToBCEL() throws UmbraException {
+  }
+
+  /**
+   * Checks the equality of the current BytecodeLineController and the
+   * one given in the argument. The equality holds when the controllers
+   * are both of the same class and represent the same string.
+   *
+   * @param an_o an object to check the equality with
+   * @return <code>true</code> in case the object is equal to the current
+   *   line controller, <code>false</code> otherwise
+   */
+  @Override
+  public boolean equals(final Object an_o) {
+    if (an_o.getClass().equals(this.getClass())) {
+      final BytecodeLineController bc = (BytecodeLineController) an_o;
+      return my_line_text.trim().equals(bc.getLineContent().trim());
+    }
+    return false;
+  }
+
+  /**
+   * The hash code for the current line controller.
+   *
+   * @return the value of the hash is just the hash code of the trimmed line
+   *   string
+   */
+  @Override
+  public int hashCode() {
+    return my_line_text.trim().hashCode();
+  }
 }

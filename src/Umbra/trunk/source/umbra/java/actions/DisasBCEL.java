@@ -233,6 +233,7 @@ public class DisasBCEL implements IEditorActionDelegate {
     partitioner.connect(a_doc);
     a_doc.setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING,
                                  partitioner);
+    an_editor.setDocument(a_doc);
     an_editor.renewConfiguration(a_doc);
     an_editor.setRelation(my_editor);
     a_page.bringToTop(an_editor);

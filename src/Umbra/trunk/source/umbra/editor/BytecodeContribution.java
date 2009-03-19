@@ -263,9 +263,10 @@ public class BytecodeContribution extends ControlContribution {
       updateBML(an_event);
       displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
-        displayError(Integer.toString(doc.getModel().getFirstError() + 1));
+        displayError(Integer.toString(doc.getModel().getFirstError() + 1) +
+                     " (Umbra)");
       } else if (!doc.annotCorrect()) {
-        displayError(doc.getAnnotError());
+        displayError(doc.getAnnotError() + " (BMLLib)");
       } else {
         displayCorrect();
       }

@@ -20,6 +20,7 @@ import umbra.instructions.ast.CPHeaderController;
 import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.FieldLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.UnknownLineController;
@@ -81,6 +82,10 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       if (blc instanceof AnnotationLineController) {
         ctxt.setInsideAnnotation(getAnnotationEnd(i));
         ctxt.setMethodNo(blc.getMethodNo());
+        break;
+      }
+      if (blc instanceof FieldLineController) {
+        ctxt.setFieldArea();
         break;
       }
       if (blc instanceof EmptyLineController ||
@@ -269,7 +274,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       removeEditorLines(an_end_rem, a_stop);
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
-    if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea()) {
+    if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
+        !a_ctxt.isInFieldsArea()) {
       mg.getInstructionList().update();
       mg.update();
       mg.getInstructionList().setPositions();
@@ -318,7 +324,10 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         newlc.makeHandleForPosition(a_methgen, pos);
         insertEditorLine(i, newlc);
       } catch (ClassCastException e) { //we crossed the method boundary
-        insertEditorLine(i, (BytecodeLineController)the_lines.get(j));
+        final BytecodeLineController bcl =
+          (BytecodeLineController)the_lines.get(j);
+        insertEditorLine(i, bcl);
+        bcl.addToBCEL();
       }
     }
   }
@@ -353,6 +362,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       final BytecodeLineController oldlc = getLineController(i);
       final BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
+      if (oldlc.equals(newlc)) continue;
       if (newlc.needsMg() && oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
@@ -370,6 +380,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           (InstructionLineController) oldlc;
         iolc.dispose();
       }
+      oldlc.removeFromBCEL();
+      newlc.addToBCEL();
       replaceLineController(i, newlc);
     }
     return j;

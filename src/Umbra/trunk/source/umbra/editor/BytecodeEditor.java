@@ -76,15 +76,17 @@ import annot.io.ReadAttributeException;
 
 public class BytecodeEditor extends TextEditor {
 
-  private static Logger logger = LoggerFactory.getClassLogger(BytecodeEditor.class);
-  
+  private static Logger my_logger =
+    LoggerFactory.getClassLogger(BytecodeEditor.class);
+
   /**
    * Factory used to create some verification related stuff.
    * As for now Console version is used.
    * Later we will instantiate it with other fatory class
    */
-  private VerificationFactory verificationFactory = new ConsoleVerificationFactory();
-  
+  private VerificationFactory my_verificationFactory =
+    new ConsoleVerificationFactory();
+
   /**
    * The Java source code editor that corresponds to the current
    * byte code editor.
@@ -115,9 +117,9 @@ public class BytecodeEditor extends TextEditor {
    */
   public BytecodeEditor() {
     super();
-    
-    logger.info("BytecodeEditor");
-    
+
+    my_logger.info("BytecodeEditor");
+
     my_bconf = new BytecodeConfiguration();
     setSourceViewerConfiguration(my_bconf);
     setDocumentProvider(new BytecodeDocumentProvider());
@@ -128,8 +130,8 @@ public class BytecodeEditor extends TextEditor {
    */
   public final void dispose() {
     super.dispose();
-    
-    logger.info("dispose");
+
+    my_logger.info("dispose");
   }
 
   /**
@@ -152,8 +154,8 @@ public class BytecodeEditor extends TextEditor {
    *   (used in particular during synchronisation)
    */
   public final void setRelation(final CompilationUnitEditor an_editor) {
-    logger.info("setRelation");
-    
+    my_logger.info("setRelation");
+
     my_related_editor = an_editor;
     final BytecodeDocument doc = getDocument();
     ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
@@ -174,26 +176,28 @@ public class BytecodeEditor extends TextEditor {
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
   public final void doSave(final IProgressMonitor a_progress_monitor) {
-    logger.info("doSave(" + a_progress_monitor + ")");
-    
+    my_logger.info("doSave(" + a_progress_monitor + ")");
+
     final BytecodeDocument doc = getDocument();
     doc.updateJavaClass();
     final JavaClass jc = doc.getJavaClass();
- 
-    BytecodeVerifier verifier = new BytecodeVerifier(jc);
-    ResultPresenter presenter = verificationFactory.getResultPresenter(verifier);
-    SaveConfirmer confirmer = verificationFactory.getSaveConfirmer(presenter);
+
+    final BytecodeVerifier verifier = new BytecodeVerifier(jc);
+    final ResultPresenter presenter = my_verificationFactory.
+                                        getResultPresenter(verifier);
+    final SaveConfirmer confirmer = my_verificationFactory.
+                                      getSaveConfirmer(presenter);
     if (!confirmer.confirm()) {
       return;
     }
-    
+
     final IDocumentProvider p = getDocumentProvider();
     final Shell shell = getSite().getShell();
     if (p == null)
       return;
     if (p.isDeleted(getEditorInput())) {
       if (isSaveAsAllowed()) {
-        logger.fine("save as is allowed");
+        my_logger.fine("save as is allowed");
         /*
          * 1GEUSSR: ITPUI:ALL - User should never loose changes made in the
          *                editors.
@@ -233,17 +237,17 @@ public class BytecodeEditor extends TextEditor {
    *   current editor
    */
   private IFile makeSpareCopy() {
-    logger.info("makeSpareCopy");
-    
+    my_logger.info("makeSpareCopy");
+
     final IPath edited_path = ((FileEditorInput)getEditorInput()).getFile().
                                                              getFullPath();
-    
-    logger.fine("edited_path: " + edited_path.toString());
-    
+
+    my_logger.fine("edited_path: " + edited_path.toString());
+
     final String fnameTo = FileNames.getSavedClassFileNameForBTC(edited_path);
-    
-    logger.fine("fnameTo: " + fnameTo);
-    
+
+    my_logger.fine("fnameTo: " + fnameTo);
+
     final Shell sh = getSite().getShell();
     IFile a_file_from;
     try {
@@ -255,7 +259,7 @@ public class BytecodeEditor extends TextEditor {
         GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
       return null;
     }
-    logger.fine("a_file_from: " + a_file_from.getFullPath().toString());
+    my_logger.fine("a_file_from: " + a_file_from.getFullPath().toString());
     final IPath pathTo = new Path(fnameTo);
     final IWorkspace workspace = ResourcesPlugin.getWorkspace();
     final IFile fileTo = workspace.getRoot().getFile(pathTo);
@@ -313,8 +317,8 @@ public class BytecodeEditor extends TextEditor {
                 final String[] the_comments,
                 final String[] the_interline_comments)
     throws ClassNotFoundException, CoreException {
-    logger.info("refreshBytecode");
-    
+    my_logger.info("refreshBytecode");
+
     final SyntheticRepository repository = getCurrentClassRepository();
     final JavaClass jc = loadJavaClass(a_path, repository);
     if (jc == null) return;
@@ -333,7 +337,7 @@ public class BytecodeEditor extends TextEditor {
     } catch (ReadAttributeException e1) {
       MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.DISAS_LOADING_PROBLEMS,
-                               jc.getFileName()));
+                               jc.getFileName()) + " " + e1.getMessage());
     } catch (UmbraRepresentationException e) {
       MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.REPRESENTATION_ERROR_MESSAGE,
@@ -352,8 +356,8 @@ public class BytecodeEditor extends TextEditor {
    */
   private JavaClass loadJavaClass(final IPath a_path,
                                   final SyntheticRepository a_repo) {
-    logger.info("loadJavaClass");
-    
+    my_logger.info("loadJavaClass");
+
     try {
       final IProject project = ((FileEditorInput)my_related_editor.
           getEditorInput()).getFile().getProject();
@@ -397,8 +401,8 @@ public class BytecodeEditor extends TextEditor {
    * @return current number of versions; -1 if limit has been reached
    */
   public final int newHistory() {
-    logger.info("newHistory");
-    
+    my_logger.info("newHistory");
+
     if (my_history_num == HistoryOperations.MAX_HISTORY) return -1;
     my_history_num++;
     return my_history_num;
@@ -409,8 +413,8 @@ public class BytecodeEditor extends TextEditor {
    * when all of them are removed.
    */
   public final void clearHistory() {
-    logger.info("clearHistory");
-    
+    my_logger.info("clearHistory");
+
     my_history_num = -1;
   }
 
@@ -418,8 +422,8 @@ public class BytecodeEditor extends TextEditor {
    * @param a_doc document to associate with the current editor
    */
   public final void setDocument(final BytecodeDocument a_doc) {
-    logger.info("setDocument");
-    
+    my_logger.info("setDocument");
+
     if (FileNames.DEBUG_MODE)
       UmbraPlugin.messagelog("Document in editor: " + a_doc.toString());
     my_current_doc = a_doc;
@@ -437,8 +441,8 @@ public class BytecodeEditor extends TextEditor {
    *   current byte code editor
    */
   public void setRelatedEditor(final CompilationUnitEditor a_related_editor) {
-    logger.info("setRelatedEditor");
-    
+    my_logger.info("setRelatedEditor");
+
     this.my_related_editor = a_related_editor;
   }
 
@@ -453,8 +457,8 @@ public class BytecodeEditor extends TextEditor {
     //my_bconf.disposeColor();  //FIXME!! this instruction caused problems!
                                 //https://mobius.ucd.ie/ticket/603
     super.finalize();
-    
-    logger.info("finalize");
+
+    my_logger.info("finalize");
   }
 
   /**
@@ -468,8 +472,8 @@ public class BytecodeEditor extends TextEditor {
    * @param a_doc the document for which we change the colouring
    */
   public void renewConfiguration(final BytecodeDocument a_doc) {
-    logger.info("renewConfiguration");
-    
+    my_logger.info("renewConfiguration");
+
     my_bconf = new BytecodeConfiguration();
     final SourceViewer sv = ((SourceViewer)getSourceViewer());
     sv.unconfigure();
@@ -488,8 +492,8 @@ public class BytecodeEditor extends TextEditor {
    * @return the number of the first visible line
    */
   public int getVisibleRegion() {
-    logger.info("getVisibleRegion");
-    
+    my_logger.info("getVisibleRegion");
+
     final ISourceViewer isv = getSourceViewer();
     return isv.getTextWidget().getTopIndex();
   }
@@ -501,8 +505,8 @@ public class BytecodeEditor extends TextEditor {
    * @param a_firstvisible the first line to be visible
    */
   public void setVisibleRegion(final int a_firstvisible) {
-    logger.info("setVisibleRegion");
-    
+    my_logger.info("setVisibleRegion");
+
     setFocus(); //to make sure source viewer exists
     final ISourceViewer isv = getSourceViewer();
     isv.getTextWidget().setTopIndex(a_firstvisible);

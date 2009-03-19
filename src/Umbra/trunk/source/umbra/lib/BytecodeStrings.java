@@ -221,7 +221,31 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
                                                             "static",
                                                             "abstract",
                                                             "final",
-                                                            "strictfp"};
+                                                            "strictfp",
+                                                            "ghost",
+                                                            "model",
+                                                            "spec_public",
+                                                            "spec_protected",
+                                                            "non_null",
+                                                            "nullable",
+                                                            "pure",
+                                                            "helper",
+                                                            "peer",
+                                                            "rep",
+                                                            "readonly"};
+
+  /**
+   * This constant contains an index to the first BML field prefix in
+   * {@link #FIELD_PREFIX} array.
+   */
+  public static final int BML_FIELD_PREFIX_START = 7;
+
+  /**
+   * This constant contains an index to the first BML access right in
+   * {@link #FIELD_PREFIX} array.
+   */
+  public static final int BML_ACC_PREFIX_START = 9;
+
 
   /**
    * This constant contains an array with all the possible prefixes of method

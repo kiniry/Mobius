@@ -10,9 +10,19 @@ package umbra.instructions.ast;
 
 import static org.junit.Assert.*;
 
+import org.apache.bcel.Constants;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldGen;
+import org.apache.bcel.generic.Type;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import annot.bcclass.BCClass;
+
+import umbra.lib.BMLParsing;
 
 /**
  * @author alx
@@ -34,8 +44,18 @@ public class FieldLineControllerTest {
   @Before
   public void setUp() throws Exception {
     instructions = new FieldLineController[lines.length];
+    ClassGen cg = new ClassGen("Test", "java.lang.Object", "",
+                               Constants.ACC_PUBLIC,
+                               null);
+    FieldGen fg = new FieldGen(Constants.ACC_PUBLIC,
+                               Type.getType("[I"), "keyIds",
+                               cg.getConstantPool());
+    cg.addField(fg.getField());
+    JavaClass jc = cg.getJavaClass();
+    BCClass bcc = new BCClass(jc);
+    BMLParsing bmlp = new BMLParsing(bcc);
     for (int i = 0; i < lines.length; i++) {
-      instructions[i] = new FieldLineController(lines[i]);
+      instructions[i] = new FieldLineController(lines[i], bmlp);
     }
   }
 

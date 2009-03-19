@@ -139,6 +139,14 @@ public class LineContext {
   }
 
   /**
+   * The method sets the internal state of the object to the state in which
+   * we are about to parse class fields.
+   */
+  public void setFieldArea() {
+    my_state = STATE_FIELDS_TO_BE_READ;
+  }
+
+  /**
    * Returns <code>true</code> when the object is in the state inside a comment.
    *
    * @return <code>true</code> when the object is in the state inside a comment
@@ -306,4 +314,5 @@ public class LineContext {
   public boolean isInsideConstantPool() {
     return my_state == STATE_CONSTANT_POOL;
   }
+
 }

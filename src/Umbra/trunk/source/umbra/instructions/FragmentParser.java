@@ -12,6 +12,7 @@ import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
+import umbra.instructions.ast.FieldLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.UnknownLineController;
@@ -106,6 +107,11 @@ public class FragmentParser extends BytecodeCommentParser {
           a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
           //a_line_no = swallowEmptyLines(my_doc, a_line_no, my_end, a_ctxt);
         }
+      } else if (a_ctxt.isInFieldsArea()) {
+        a_line_no = swallowEmptyLines(my_doc, a_line_no, my_end, a_ctxt);
+        if (a_line_no <= my_end) {
+          a_line_no = swallowFields(a_line_no, my_end, a_ctxt);
+        }
       } else {
         throw new UmbraException();
       }
@@ -116,6 +122,32 @@ public class FragmentParser extends BytecodeCommentParser {
     }
     if (a_line_no > my_end + 1)
       throw new UmbraRuntimeException("Too high line number: " + a_line_no);
+  }
+
+  /**
+   * @param the_current_lno
+   * @param the_last_lno
+   * @param a_ctxt
+   * @return
+   * @throws UmbraLocationException 
+   */
+  private int swallowFields(final int the_current_lno,
+                            final int the_last_lno,
+                            final LineContext a_ctxt)
+    throws UmbraLocationException {
+    int j = the_current_lno;
+    while (j <= the_last_lno) {
+      final String line = getLineFromDoc(my_doc, j, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt,
+                                                           my_doc.getBmlp());
+      if (!(lc instanceof FieldLineController) &&
+          !(lc instanceof EmptyLineController)) {
+        break;
+      }
+      addEditorLine(lc);
+      j++;
+    }
+    return j;
   }
 
   /**
@@ -157,7 +189,7 @@ public class FragmentParser extends BytecodeCommentParser {
     BytecodeLineController lc = null;
     for (; j <= my_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
-      lc = Preparsing.getType(lineName, a_ctxt);
+      lc = Preparsing.getType(lineName, a_ctxt, my_doc.getBmlp());
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (!(lc instanceof CommentLineController) &&
@@ -190,7 +222,8 @@ public class FragmentParser extends BytecodeCommentParser {
     for (; j <= my_end; j++) {
       final String lineName = getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController lc = Preparsing.getType(lineName,
-                                                           a_ctxt);
+                                                           a_ctxt,
+                                                           my_doc.getBmlp());
       addEditorLine(lc);
       lc.setMethodNo(a_ctxt.getMethodNo());
       if (lc.isCommentStart()) { // process comments
@@ -238,7 +271,8 @@ public class FragmentParser extends BytecodeCommentParser {
     clearCurrentComment();
     while (j <= the_last_lno) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
-      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt,
+                                                           my_doc.getBmlp());
       if (!(lc instanceof CommentLineController)) {
         break;
       }

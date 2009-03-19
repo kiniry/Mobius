@@ -23,6 +23,7 @@ import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
 import umbra.instructions.ast.UnknownLineController;
+import umbra.lib.BMLParsing;
 import umbra.lib.BytecodeStrings;
 
 /**
@@ -60,13 +61,17 @@ public final class Preparsing {
    *
    * @param a_line the string contents of inserted or modified line
    * @param a_context information on the previous lines
+   * @param a_bmlp the BMLLib representation of the current
+   *   class
    * @return instance of subclass of a line controller
    *     that contents of the given line satisfies
    *     classification conditions (unknown if it does not for all)
    */
   public static BytecodeLineController getType(final String a_line,
-                                         final LineContext a_context) {
-    final BytecodeLineController initial = getTypeForInsides(a_line, a_context);
+                                         final LineContext a_context,
+                                         final BMLParsing a_bmlp) {
+    final BytecodeLineController initial = getTypeForInsides(a_line,
+                                                             a_context, a_bmlp);
     if (initial != null) return initial;
     final DispatchingAutomaton automaton = Preparsing.getAutomaton();
     BytecodeLineController  blc;
@@ -96,12 +101,15 @@ public final class Preparsing {
    * @param a_line the string representation of the current line in the byte
    *   code
    * @param a_context the context which indicates in what area we are in
+   * @param a_bmlp the BMLLib representation of the current
+   *   class
    * @return a line controller corresponding to the area we are in or
    *   <code>null</code> in case we are not in any of the areas
    */
   private static BytecodeLineController getTypeForInsides(
       final String a_line,
-      final LineContext a_context) {
+      final LineContext a_context,
+      final BMLParsing a_bmlp) {
     BytecodeLineController lc = null;
     if (a_context.isInsideComment()) {
       lc = new CommentLineController(a_line);
@@ -119,7 +127,7 @@ public final class Preparsing {
       }
     } else if (a_context.isInFieldsArea()) {
       if (FieldLineController.isFieldLineStart(a_line)) {
-        return new FieldLineController(a_line);
+        return new FieldLineController(a_line, a_bmlp);
       }
     }
     return lc;

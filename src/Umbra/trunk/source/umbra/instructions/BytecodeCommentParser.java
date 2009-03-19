@@ -241,7 +241,8 @@ public class BytecodeCommentParser extends BytecodeTextParser {
     int j = the_current_lno;
     while (j <= the_last_lno) {
       final String line = getLineFromDoc(a_doc, j, a_ctxt);
-      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt);
+      final BytecodeLineController lc = Preparsing.getType(line, a_ctxt,
+                                                           a_doc.getBmlp());
       if (!(lc instanceof CommentLineController)  &&
           !(lc instanceof EmptyLineController)) {
         break;

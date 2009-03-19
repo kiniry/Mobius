@@ -14,11 +14,8 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.text.IDocument;
@@ -29,14 +26,11 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 
-import annot.bcclass.BCClass;
-import annot.io.ReadAttributeException;
-
 import umbra.editor.parsing.BytecodePartitionScanner;
 import umbra.lib.BMLParsing;
-import umbra.lib.ClassFileOperations;
 import umbra.lib.FileNames;
-import umbra.lib.UmbraRepresentationException;
+import annot.bcclass.BCClass;
+import annot.io.ReadAttributeException;
 
 
 /**

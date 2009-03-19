@@ -8,7 +8,6 @@
  */
 package umbra.instructions;
 
-import umbra.lib.BytecodeStrings;
 
 /**
  * This class is the part of the byte code instruction parser which contributes
