@@ -108,8 +108,22 @@
     </java>
   </target>
 	
-  <target name="astgen-gen-coq" depends="init" 
-    description="generates AST">
+	<target name="checkNLAntlrBuildUpToDate">
+	  <echo message="Checking if the ANTLR generated files are up to date"/>
+	  <uptodate srcfile="spec/NL.g" targetfile="${antlr-target-nl}NLParser.java" property="NLAntlrBuild.notRequired"/>
+	</target>
+
+	<target name="antlr-gen-nl" depends="init" unless="NLAntlrBuild.notRequired">
+	  <echo message="Running antlr"/>
+	  <java fork="yes" dir="spec" classname="org.antlr.Tool">
+	    <classpath refid="antlr.path" />
+	    <arg value="-o"/>
+	    <arg value="${antlr-nl-target}"/>
+	    <arg value="NL.g"/>
+	  </java>
+	</target>
+	
+  <target name="astgen-gen-coq" depends="init" description="generates AST">
     <java fork="yes" dir="${astgen-coq-target}" jar="${astgen-jar}">
     	<arg value="-b"/>
       <arg value="${astgen-coq-base}"/>
@@ -147,9 +161,9 @@
 		<available file="${astgen-coq-target}/ignore.list" property="astgen-coq-clean"/>
 	</target>
 	
-	<target name="astgen-nl-clean" depends="astgen-clean-check" if="ast-nl-clean" description="Delete generated AST classes">
+	<target name="astgen-nl-clean" depends="astgen-clean-check" if="astgen-nl-clean" description="Delete generated AST classes">
 		<delete>
-	   <fileset dir="${astgen-nl-target}" includesfile="${astgen-nl-target}/ignore.list"/>
+	   <fileset dir="${astgen-nl-target}" includesfile="${astgen-nl-target}ignore.list"/>
     </delete>
   </target>
 	
@@ -163,10 +177,8 @@
 	
   <target name="astgen-gen" depends="astgen-gen-coq,astgen-gen-nl" 
 	    description="generates ASTs" />
-
-  <target name="antlr-gen" depends="antlr-gen-coq" 
+  <target name="antlr-gen" depends="antlr-gen-coq,antlr-gen-nl" 
 		description="generates parsers" />
-
   <target name="gen-files" depends="astgen-gen,clops-gen,antlr-gen" 
 	    description="generates ASTs, and Java files" />
   	
