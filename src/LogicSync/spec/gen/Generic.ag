@@ -3,8 +3,8 @@ ClauseList = LinkedList<Clause> list;
 Clause :> Doc, Formula, Predicate, Symbol;
 Doc = String! content;
 Formula = String! id, Term! term;
-Symbol = String id;
-Predicate = String id, int arity;
+Symbol = String! id;
+Predicate = String! id, int arity;
 
 Term :> Application, Atom, Forall;
 Term = Term next;
