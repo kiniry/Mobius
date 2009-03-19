@@ -89,7 +89,7 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
-    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex));
+    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
   }
 
   /**
@@ -213,7 +213,7 @@ public final class ConstantPoolHelper {
     if (index != -1) {
       return index;
     }
-    cp.addConstant(constant);
+    cp.addConstant(constant, true);
     return cp.findConstant(key);
   }
 
@@ -236,7 +236,7 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cl);
+    cp.addConstant(cl, true);
     for (int i = cp.size() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
@@ -270,7 +270,7 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cnt);
+    cp.addConstant(cnt, true);
     for (int i = cp.size() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
@@ -302,7 +302,7 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
-    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex));
+    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
     System.err.println(cp.printCode(new StringBuffer()));
   }
 }
