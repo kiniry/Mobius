@@ -1,0 +1,12 @@
+[Generic language logic]
+eq implies 
+
+
+S
+S_to_Z 
+Z_to_S 
+
+[ Some arithmetic things ]
+S_to_Z : (implies S Z)
+Z_to_S : (implies Z S)
+Z_to_S_elim : (forall x, (eq (S_to_Z (Z_to_S x)) x))

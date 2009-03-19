@@ -25,8 +25,11 @@ clause: DOC
       ;
       
 expr: ATOM
-    | LPAR atom_list RPAR
+    | LPAR expr expr_list RPAR
+    | LPAR FORALL atom_list COMMA expr expr_list RPAR
     ;
+expr_list: expr expr_list
+         |;
 
 atom_list: ATOM atom_list
          | ATOM
@@ -44,22 +47,22 @@ LPAR: '('  ;
 RPAR: ')' ;
 DOC: '[' .* ']'{setText($text.substring(2, $text.length() - 2));};
 COLON: ':';
+FORALL: 'forall';
+COMMA: ',';
 
 COMMENT: '{' .* '}'{$channel=HIDDEN;};
 //Identifier
 ATOM : ( ALPHANUMERIC | UNDERSCORE | DASH | '\'')*;      
+fragment
 UNDERSCORE:  '_' ;
+fragment
 DASH:  '-';
+
 STAR: '*';
 SLASH: '/';
                     
 fragment 
 ALPHANUMERIC :  ALPHA | DIGIT ;
-               
-INTEGER  :  (DIGIT)+ ;
-         
-REAL  :  DIGIT+ '.' DIGIT+ 
-      ;
       
 fragment 
 DIGIT  :  '0'..'9' 

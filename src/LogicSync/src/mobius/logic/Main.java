@@ -22,11 +22,11 @@ import mobius.logic.lang.nat.NaturalLanguage;
  */
 public class Main {
 
+  private static final String WELCOME_MSG = "LSync Version 0.1";
   private static final String BAD_USAGE_MSG =     
      "Bad usage!\n" +
      "(try java -jar logicsync.jar -help)";
   private static final String HELP_MSG =
-    "LSync Version 0.1\n" +
     "Syntax: java -jar logicsync [-h] <files> [-g <file>] [-m <file>]\n" +
     "-h, -help, --help Show this help message.\n" +
     "<files>           Input file(s). Determine their type by their extension.\n" +
@@ -61,6 +61,7 @@ public class Main {
    * @param args
    */
   public static void main(final String[] args) {
+    System.out.println(WELCOME_MSG);
     LogicSyncParser parser;
     try {
       parser = new LogicSyncParser();

@@ -15,9 +15,6 @@ import java.util.LinkedList;
 package mobius.logic.lang.coq.parser; 
 }
 
-@lexer::members {
-  boolean curliesInJavaMode = false;
-}
 
 @members {
  // No members

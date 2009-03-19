@@ -34,9 +34,11 @@
   </path>
   <property name="antlr-jar" location="lib/antlr-3.1.1.jar" />
   <property name="antlr-coq-target" location="src/mobius/logic/lang/coq/parser" />
-  <property name="antlr-nl-target" location="src/mobius/logic/lang/nat/parser" />
   <property name="antlr-coq-grammar" location="spec/gen/Coq.g" />
-	
+  <property name="antlr-gl-target" location="src/mobius/logic/lang/generic/parser" />
+  <property name="antlr-gl-grammar" location="spec/gen/Generic.g" />
+  <property name="antlr-nl-target" location="src/mobius/logic/lang/nat/parser" />
+  	
   <!-- AST Gen variables -->
   <property name="astgen-base" value="mobius.logic.lang.ast.Ast" />
   <property name="astgen-jar" value="lib/astgen.jar"/>
@@ -107,6 +109,14 @@
       <arg value="${antlr-coq-grammar}"/>
     </java>
   </target>
+  <target name="antlr-gen-gl" depends="init">
+    <echo message="Running antlr"/>
+    <java fork="yes" jar="${antlr-jar}">
+      <arg value="-o"/>
+      <arg value="${antlr-gl-target}"/>
+      <arg value="${antlr-gl-grammar}"/>
+    </java>
+  </target>
 	
 	<target name="checkNLAntlrBuildUpToDate">
 	  <echo message="Checking if the ANTLR generated files are up to date"/>
@@ -129,6 +139,23 @@
       <arg value="${astgen-coq-base}"/>
     	<arg value="-Dpkg=${astgen-coq-pkg}" />
       <arg value="${astgen-dir}/Coq.ag" />
+      <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/evaluator.tpl" />
+      <arg value="${astgen-tpl-dir}/abstract_evaluator.tpl" />
+      <arg value="${astgen-tpl-dir}/html.tpl" />
+      <arg value="${astgen-tpl-dir}/list.tpl" />
+    	<arg value="${astgen-tpl-dir}/ignore_list.tpl" />
+    </java>
+  </target>
+	
+	
+  <target name="astgen-gen-gl" depends="init" description="generates AST">
+    <java fork="yes" dir="${astgen-gl-target}" jar="${astgen-jar}">
+    	<arg value="-b"/>
+      <arg value="${astgen-gl-base}"/>
+    	<arg value="-Dpkg=${astgen-gl-pkg}" />
+      <arg value="${astgen-dir}/Generic.ag" />
       <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
       <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
       <arg value="${astgen-tpl-dir}/evaluator.tpl" />
@@ -177,7 +204,7 @@
 	
   <target name="astgen-gen" depends="astgen-gen-coq,astgen-gen-nl" 
 	    description="generates ASTs" />
-  <target name="antlr-gen" depends="antlr-gen-coq,antlr-gen-nl" 
+  <target name="antlr-gen" depends="antlr-gen-coq,antlr-gen-nl,antlr-gen-gl" 
 		description="generates parsers" />
   <target name="gen-files" depends="astgen-gen,clops-gen,antlr-gen" 
 	    description="generates ASTs, and Java files" />
