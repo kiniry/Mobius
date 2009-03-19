@@ -11,6 +11,7 @@ package annot.bcclass;
 import java.util.logging.Logger;
 
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -136,4 +137,5 @@ public class BCClass extends BCClassPrinting {
     return new BCMethod(this, new MethodGen(meth, clname,
       new ConstantPoolGen(cpool)));
   }
+
 }

@@ -162,9 +162,17 @@ public class BCConstantPool extends BCCConstantPrinting {
    * Appends a constant to the second constant pool.
    *
    * @param c - Constant to be added.
+   * @param toSecondCP - <code>true</code> in case the constant should be
+   *   added to the second constant pool, <code>false</code> in case this
+   *   should be added to the first one
    */
-  public void addConstant(final Constant c) {
-    this.constants.add(c);
+  public void addConstant(final Constant c,
+                          final boolean toSecondCP) {
+    if (toSecondCP) {
+      this.constants.add(c);
+    } else {
+      this.constants.add(initialSize++, c);
+    }
   }
 
   /**

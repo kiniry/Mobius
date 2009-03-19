@@ -215,9 +215,8 @@ public class AttributeReader {
    * constructor.
    *
    * @param ua - (BCEL) Unknown attribute to load from.
-   * @throws ReadAttributeException - if given attribute's
-   *     data doesn't represent correct attribute of
-   *     given attribute's name.
+   * @throws ReadAttributeException - if the structure of the attribute
+   *   is not correct
    */
   public void readAttribute(final Unknown ua) throws ReadAttributeException {
     final String aname = ua.getName();

@@ -76,7 +76,7 @@ public class AttributeWriter {
     final int constPos = this.bcc.getCp().findConstant(str);
     if (constPos == -1) {
       final ConstantUtf8 cu8 = new ConstantUtf8(str);
-      this.bcc.getCp().addConstant(cu8);
+      this.bcc.getCp().addConstant(cu8, true);
       return this.bcc.getCp().size() - 1;
     }
     return constPos;

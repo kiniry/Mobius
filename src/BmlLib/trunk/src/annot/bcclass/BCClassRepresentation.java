@@ -21,6 +21,7 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.generic.ClassGen;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
@@ -81,7 +82,7 @@ public abstract class BCClassRepresentation {
   /**
    * The BML modifiers for non-BML fields in the class.
    */
-  private BMLModifier[] bml_fmodifiers;
+  private Vector < BMLModifier > bml_fmodifiers;
 
   /**
    * The ghost fields of the class.
@@ -181,6 +182,26 @@ public abstract class BCClassRepresentation {
     return false;
   }
 
+
+  /**
+   * Adds a Java field to the current class. The field must be
+   * created with the constant pool of the current JavaClass.
+   *
+   * @param f - field to be added
+   * @throws ReadAttributeException - if the structure of the attribute
+   *   is found not to be correct
+   */
+  public void addField(final Field f) throws ReadAttributeException {
+    final Field[] fds = jc.getFields();
+    final Field[] nfds = new Field[fds.length + 1];
+    for (int i = 0; i < fds.length; i++) {
+      nfds[i] = fds[i];
+    }
+    nfds[nfds.length - 1] = f;
+    jc.setFields(nfds);
+    bml_fmodifiers.add(nfds.length - 1, getFreshFieldMod(f));
+  }
+
   /**
    * Returns the invariant for the given access flags specifications.
    * Possible access flags are defined in {@link BMLModifiersFlags}.
@@ -260,9 +281,9 @@ public abstract class BCClassRepresentation {
     }
 
     final Field[] fields = ajc.getFields();
-    this.bml_fmodifiers = new BMLModifier[fields.length];
+    this.bml_fmodifiers = new Vector< BMLModifier >(fields.length);
     for (int i = 0; i  <  fields.length; i++) {
-      this.bml_fmodifiers[i] = getFreshFieldMod(fields[i]);
+      this.bml_fmodifiers.add(i, getFreshFieldMod(fields[i]));
     }
 
     final Method[] mtab = ajc.getMethods();
@@ -278,7 +299,8 @@ public abstract class BCClassRepresentation {
    *
    * @param field the field to generate the modifier for
    * @return a fresh modifiers structure for the field
-   * @throws ReadAttributeException
+   * @throws ReadAttributeException - if the structure of one of the field
+   *   attributes is found not to be correct
    */
   private BMLModifier getFreshFieldMod(final Field field)
     throws ReadAttributeException {
@@ -485,7 +507,7 @@ public abstract class BCClassRepresentation {
       final Attribute[] attrsa = new Attribute[attrs.length + 1];
       System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
       attrsa[attrs.length] =
-        aw.writeAttribute(bml_fmodifiers[i].getAttribute());
+        aw.writeAttribute(bml_fmodifiers.get(i).getAttribute());
       fields[i].setAttributes(attrsa);
     }
   }
@@ -564,7 +586,7 @@ public abstract class BCClassRepresentation {
    * @return the modifiers for the given field number
    */
   public BMLModifier getModifiersForField(final int a_fieldno) {
-    return bml_fmodifiers[a_fieldno];
+    return bml_fmodifiers.get(a_fieldno);
   }
 
   /**

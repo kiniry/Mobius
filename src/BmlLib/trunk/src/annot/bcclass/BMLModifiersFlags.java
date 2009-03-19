@@ -3,7 +3,6 @@
  */
 package annot.bcclass;
 
-import annot.modifiers.BMLModifier;
 
 /**
  * Constants encoding the BML modifiers, described in section

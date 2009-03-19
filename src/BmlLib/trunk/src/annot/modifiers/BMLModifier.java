@@ -25,8 +25,15 @@ public class BMLModifier {
   private boolean isRead;
   private BCClassRepresentation bcc;
 
-  public BMLModifier(Field afield,
-                     BCClassRepresentation classRepresentation)
+  /**
+   * 
+   * @param afield
+   * @param classRepresentation
+   * @throws ReadAttributeException - if the structure of one of field's
+   *   the attributes is found not to be correct
+   */
+  public BMLModifier(final Field afield,
+                     final BCClassRepresentation classRepresentation)
     throws ReadAttributeException {
     bcc = classRepresentation;
     readModifiers(afield.getAttributes());
@@ -34,9 +41,8 @@ public class BMLModifier {
   /**
    *  
    * @param attributes
-   * @throws ReadAttributeException - if given attribute's
-   *     data doesn't represent correct attribute of
-   *     given attribute's name.
+   * @throws ReadAttributeException - if the structure of one of the attributes
+   *   is not correct
    */
   private void readModifiers(Attribute[] attributes)
     throws ReadAttributeException {
