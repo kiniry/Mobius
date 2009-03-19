@@ -1,7 +1,6 @@
 package mobius.logic.lang.generic.ast;
 
 import mobius.logic.lang.ast.Ast;
-import mobius.logic.lang.coq.ast.Evaluator;
 
 public abstract class GenericAst extends Ast {
   private GenericAst next;

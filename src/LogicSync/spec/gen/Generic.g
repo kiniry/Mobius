@@ -5,6 +5,7 @@ grammar Generic;
 package mobius.logic.lang.generic.parser; 
 
 import mobius.logic.lang.generic.ast.*;
+import java.util.LinkedList;
 }
 
 @lexer::header {
@@ -15,24 +16,43 @@ package mobius.logic.lang.generic.parser;
  // No members
 }
 
-prog: clause_list EOF;
+prog returns [ClauseList l]: 
+         clause_list EOF {$l = $clause_list.list;};
 
-clause_list: clause clause_list
-           |;
-clause: DOC
-      | ATOM COLON expr
-      | ATOM
+clause_list returns [ClauseList list]: 
+            clause l=clause_list {$list = $l.list;
+                                  $list.getList().addFirst($clause.c);}
+           |{$list = ClauseList.mk(new LinkedList<Clause>());};
+
+clause returns [Clause c]: 
+        DOC
+        {$c = Doc.mk($DOC.text);} 
+      | ATOM COLON expr // formula
+        {$c = Formula.mk($ATOM.text, $expr.t);}
+      | ATOM LPAR NUMBER RPAR // predicate def
+        {$c = Predicate.mk($ATOM.text, Integer.decode($NUMBER.text));}
+      | ATOM // symbol def
+        {$c = Symbol.mk($ATOM.text);}
       ;
       
-expr: ATOM
-    | LPAR expr expr_list RPAR
-    | LPAR FORALL atom_list COMMA expr expr_list RPAR
+expr returns [Term t]: 
+      ATOM {$t = Atom.mk(null, $ATOM.text);} 
+    | LPAR e=expr expr_list RPAR
+      { $t = $expr_list.a;
+        $e.t.setNext($expr_list.a.getFirst());
+        $expr_list.a.setFirst($e.t);}
+    | LPAR FORALL atom_list COMMA e=expr RPAR
+      {$t = Forall.mk(null, $atom_list.a, $e.t);}
     ;
-expr_list: expr expr_list
-         |;
+expr_list returns [Application a]: 
+           expr list=expr_list {$a = $list.a;
+                                $expr.t.setNext($a.getFirst());
+                                $a.setFirst($expr.t);} 
+         | {$a  = Application.mk((Term)null, (Term) null);};
 
-atom_list: ATOM atom_list
-         | ATOM
+atom_list returns [Atom a]: 
+           ATOM list=atom_list {$a = Atom.mk($list.a, $ATOM.text);} 
+         | ATOM {$a = Atom.mk(null, $ATOM.text);} 
          ;
     
 
@@ -45,13 +65,14 @@ WHITESPACE  :  (' '|'\n'|'\r'|'\t')+  {$channel=HIDDEN;}
 
 LPAR: '('  ;
 RPAR: ')' ;
-DOC: '[' .* ']'{setText($text.substring(2, $text.length() - 2));};
+DOC: '[' .* ']'{setText($text.substring(1, $text.length() - 1));};
 COLON: ':';
 FORALL: 'forall';
 COMMA: ',';
 
 COMMENT: '{' .* '}'{$channel=HIDDEN;};
 //Identifier
+NUMBER: DIGIT*;
 ATOM : ( ALPHANUMERIC | UNDERSCORE | DASH | '\'')*;      
 fragment
 UNDERSCORE:  '_' ;

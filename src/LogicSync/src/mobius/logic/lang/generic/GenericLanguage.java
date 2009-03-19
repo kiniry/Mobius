@@ -1,6 +1,7 @@
 package mobius.logic.lang.generic;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import mobius.logic.lang.ABasicLanguage;
@@ -11,6 +12,7 @@ import mobius.logic.lang.generic.parser.GenericParser;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 
 public class GenericLanguage extends ABasicLanguage {
  
@@ -30,8 +32,14 @@ public class GenericLanguage extends ABasicLanguage {
         case 1: 
           System.out.print(this + ": generating '" + 
                              getGenerate().get(0).getName() + "'...");
-            //CoqTranslator.translate(fAst, fGenerate.get(0));
-          System.out.println(" done.");
+          try {
+            GenericTranslator.translate(fAst, getGenerate().get(0));
+            System.out.println(" done.");
+          } 
+          catch (FileNotFoundException e) {
+            System.out.println(" FAILED!");
+            e.printStackTrace();
+          }
      
           break;
         default:
@@ -66,15 +74,15 @@ public class GenericLanguage extends ABasicLanguage {
       final CharStream cs = new ANTLRFileStream(f.getAbsolutePath());
       final GenericLexer cl = new GenericLexer(cs);
       final GenericParser parser = new GenericParser(new CommonTokenStream(cl));
-      //GenericAst ast = parser.prog();
-      return null;
+      final GenericAst ast = parser.prog();
+      return ast;
     }
     catch (IOException e) {
       e.printStackTrace();
     } 
-//    catch (RecognitionException e) {
-//      e.printStackTrace();
-//    }  
+    catch (RecognitionException e) {
+      e.printStackTrace();
+    }  
     return null;
   }
   

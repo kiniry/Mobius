@@ -52,8 +52,10 @@
   <property name="astgen-coq-target" location="src/mobius/logic/lang/coq/ast" />
   <property name="astgen-coq-pkg" value="mobius.logic.lang.coq.ast" />
   <property name="astgen-coq-base" value="mobius.logic.lang.coq.ast.CoqAst" />
-	
-	
+  <property name="astgen-gl-target" location="src/mobius/logic/lang/generic/ast" />
+  <property name="astgen-gl-pkg" value="mobius.logic.lang.generic.ast" />
+  <property name="astgen-gl-base" value="mobius.logic.lang.generic.ast.GenericAst" />
+
   <!-- Targets -->
 	
   <target name="init">
@@ -201,7 +203,7 @@
 	
 	<target name="astgen-clean" depends="astgen-coq-clean,astgen-nl-clean"/>
 	
-  <target name="astgen-gen" depends="astgen-gen-coq,astgen-gen-nl" 
+  <target name="astgen-gen" depends="astgen-gen-coq,astgen-gen-nl,astgen-gen-gl" 
 	    description="generates ASTs" />
   <target name="antlr-gen" depends="antlr-gen-coq,antlr-gen-nl,antlr-gen-gl" 
 		description="generates parsers" />

@@ -10,6 +10,8 @@
         <filter-data value="src/mobius/logic/clops"/>
         <filter-data value="src/mobius/logic/lang/coq/ast"/>
         <filter-data value="src/mobius/logic/lang/coq/parser"/>
+        <filter-data value="src/mobius/logic/lang/generic/ast"/>
+        <filter-data value="src/mobius/logic/lang/generic/parser"/>
         <filter-data value="src/mobius/logic/lang/nat/ast"/>
         <filter-data value="src/mobius/logic/lang/nat/parser"/>
     </filter>
