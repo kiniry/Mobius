@@ -7,7 +7,7 @@ The rest assumes that you are on Linux.
 Try this:
   source setenv
   ant test
-  fbrun freeboogie.Main --help
+  fbrun freeboogie.Main -help
   fbrun freeboogie.Main -pfg boogie_Bag2.bpl
 
 Enjoy.
