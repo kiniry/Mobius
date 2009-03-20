@@ -163,18 +163,33 @@ public class CoqTranslator extends AEvaluator<String> {
 
 
   @Override
-  public String evalApplication(Formula next, Formula first, Formula tail) {
-    StringBuilder builder = new StringBuilder("(" + first.eval(this));
+  public String evalApplication(final Formula next, final Formula first) {
+    final StringBuilder builder = new StringBuilder("(" + first.eval(this));
     Formula current = first.getNext();
-    while(current != null) {
+    while (current != null) {
       builder.append(" ");
       builder.append(current.eval(this));
       current = current.getNext();
     }
     builder.append(")");
-    String res = builder.toString();
+    final String res = builder.toString();
     return res;
   }
+  
+  @Override
+  public String evalBinaryTerm(final Formula next, final Formula op, final Formula left,
+                               final Formula right) {
+    
+    final StringBuilder blder = new StringBuilder("(");
+    blder.append(left.eval(this));
+    blder.append(" ");
+    blder.append(op.eval(this));
+    blder.append(" ");
+    blder.append(right.eval(this));
+    blder.append(")");
+    return blder.toString();
+  }
+
 
 
   @Override
@@ -256,6 +271,8 @@ public class CoqTranslator extends AEvaluator<String> {
     String res = "| " + name + ": " + type.eval(this);
     return res;
   }
+
+
 
 
   

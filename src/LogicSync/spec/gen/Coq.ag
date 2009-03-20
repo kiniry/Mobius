@@ -19,9 +19,10 @@ Comment = String! content;
 Variable = Variable next, String name, Formula type;
 VariableList = Variable! first, Variable! tail;
 
-Formula :> Application, Term, Forall, Fun, Exists;
+Formula :> Application, Term, Forall, Fun, Exists, BinaryTerm;
 Formula = Formula next;
-Application = Formula! first, Formula! tail;
+Application = Formula! first;
+BinaryTerm = Formula! op, Formula! left, Formula! right;
 Term = String name;
 Forall = VariableList! list, Formula! formula;
 Fun = VariableList! list, Formula! formula;

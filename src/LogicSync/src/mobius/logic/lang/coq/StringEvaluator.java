@@ -100,7 +100,7 @@ public class StringEvaluator extends AEvaluator<String> {
   
   /** {@inheritDoc} */
   @Override
-  public String evalApplication(Formula next, Formula first, Formula tail) {
+  public String evalApplication(final Formula next, final Formula first) {
     // TODO Auto-generated method stub
     return null;
   }
@@ -165,6 +165,13 @@ public class StringEvaluator extends AEvaluator<String> {
   @Override
   public String evalConstructor(final Constructor next, final String name, 
                                 final Formula type) {
+    return null;
+  }
+
+  @Override
+  public String evalBinaryTerm(final Formula next, final Formula op, final Formula left,
+                               final Formula right) {
+    // TODO Auto-generated method stub
     return null;
   }
 

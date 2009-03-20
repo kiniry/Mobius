@@ -1,6 +1,6 @@
 
 grammar Coq;
-options{
+options {
   backtrack=true;
 }
 
@@ -18,6 +18,12 @@ package mobius.logic.lang.coq.parser;
 
 @members {
  // No members
+ private Formula getApplication(Formula t) {
+   if (t.getNext() == null) {
+     return t;
+   } 
+   else return Application.mk(null, t);
+ }
 }
 
 /**********************************************  
@@ -42,7 +48,7 @@ vernacular returns [CoqAst ast]:
            | coercion {$ast = $coercion.ast;}
            | lemma {$ast = $lemma.ast;}
            | axiom {$ast = $axiom.ast;}
-           | tactic {$ast = $tactic.ast;}
+          // | tactic {$ast = $tactic.ast;}
            | hint {$ast = $hint.ast;}
            | definition {$ast = $definition.ast;}
            | inductive {$ast = $inductive.ast;}
@@ -76,13 +82,10 @@ axiom returns [CoqAst ast]:
        {$ast = Axiom.mk($ax_wrd.t, $NAME.text, $type_decl.ast);}
      ;
 lemma returns [CoqAst ast]: 
-       LEMMA NAME COLON formula DOT proof DOT
-       {$ast = Lemma.mk($NAME.text, $formula.f, $proof.txt);}  
+       LEMMA NAME COLON formula DOT //proof DOT
+       {$ast = Lemma.mk($NAME.text, $formula.f, null/*$proof.txt*/);}  
      ;
-tactic returns [CoqAst ast]: 
-       LTAC NAME name_list DEF tac_list DOT
-       {$ast = Tactic.mk($NAME.text, $tac_list.tac);}
-     ;
+
 hint returns [CoqAst ast]: 
       HINT IMMEDIATE NAME name_list DOT
       {$name_list.list.addFirst($NAME.getText());
@@ -107,10 +110,8 @@ hint returns [CoqAst ast]:
     ;
     
 definition returns [CoqAst ast]: 
-            DEFINITION NAME type_decl? DEF formula DOT
-            {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, null);}
-          | DEFINITION NAME type_decl DOT proof DOT
-            {$ast = Definition.mk($NAME.text, $type_decl.ast, null, $proof.txt);}
+            DEFINITION NAME type_decl? (DEF formula)? DOT //(proof DOT)?
+            {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, null /*$proof.txt */);}
           ;
    
 inductive returns [CoqAst ast]: 
@@ -125,9 +126,7 @@ inductive_constr returns [ConstrList list]:
               }
           | {$list = ConstrList.mk(null, null);};
 
-proof returns [String txt]: PROOF DOT proof_content QED 
-          {$txt = $text;}; 
-proof_content: (tac_list DOT)*;
+
          
 type_decl returns [Formula ast]: 
              COLON formula
@@ -141,82 +140,55 @@ req_type returns [ReqType t]:
        IMPORT {$t = ReqType.Import;} 
      | EXPORT {$t = ReqType.Import;};
 
-tac_expr: LPAR tac_list RPAR
-        | '[' tac_list PIPE tac_list ']'
-        | REPEAT tac_expr
-        | 'constr' COLON expr
-        | 'try' tac_expr
-        | tac_assert
-        | tac_match
-        | tac_let
-        | tac_set
-        | 'autorewrite' WITH tac_expr
-        | 'unfold' NAME (',' NAME)* ('in' ('*' | NAME))?
-        | 'rewrite' NAME (',' NAME)* ('in' ('*' | NAME))?
-        | NAME expr*
-        ;
-     
-tac_list returns [String tac]: tac_expr (SEMICOLON tac_expr)* {$tac = $text;};
-      
-tac_let: 'let' NAME DEF (formula | tac_expr | 
-                         'fresh' STRING_CONSTANT) 'in' tac_list;
-tac_set: 'set' LPAR NAME DEF (formula | tac_expr | 
-                         'fresh' STRING_CONSTANT) RPAR 'in' (NAME+ | '*');
-tac_assert: ASSERT LPAR NAME DEF formula RPAR
-          | ASSERT LPAR NAME COLON formula RPAR
-          | ASSERT LPAR formula RPAR
-          | ASSERT NAME;
-tac_match: MATCH ('type' 'of')? NAME WITH tac_match_clause_list END;
-
-tac_match_clause_list: PIPE? tac_match_clause (PIPE tac_match_clause)*;
-
-tac_match_clause: '[' tac_match_goal ']' '=>' tac_list
-                | tac_match_formula '=>' tac_list; 
-                
-tac_match_goal: tac_match_hyp? '|-' tac_match_formula ;
-tac_match_hyp: NAME COLON tac_match_formula (COMMA NAME COLON tac_match_formula)*
-               | UNDERSCORE;
-tac_match_expr:  LPAR tac_match_formula RPAR
-               | QUESTION? (NAME | UNDERSCORE);
- 
-tac_match_formula:        
-    | tac_match_expr IMPLIES tac_match_formula
-    | tac_match_expr comparison_op tac_match_formula
-    | tac_match_expr arit_op tac_match_formula
-    | tac_match_expr OR tac_match_formula
-    | tac_match_expr AND tac_match_formula
-    | TILD tac_match_formula
-    | FUN var_decl '=>' tac_match_formula
-    | LCURLY var_decl PIPE tac_match_formula RCURLY
-    | tac_match_expr tac_match_formula
-    ;
           
 
-expr returns [Formula f]: LPAR formula RPAR expr?  {$f = $formula.f;
-                                                    $f.setNext($e.f);}
-           | NAME e=expr? {$f = Term.mk($e.f, $NAME.text);}
-           | INTEGER e=expr? {$f = Term.mk($e.f, $INTEGER.text);};
+expr returns [Formula f]: 
+             LPAR formula RPAR {$f = Application.mk(null, $formula.f);}
+           | NAME  {$f = Term.mk(null, $NAME.text);}
+           | INTEGER {$f = Term.mk(null, $INTEGER.text);}
+           | TILD tail=expr  {$f = Term.mk($tail.f, "~");}
+           ;
            
+expr_list returns [Formula f]:
+           expr l=expr_list {$f = $expr.f;
+                             $f.setNext($l.f);}
+         | expr {$f = $expr.f;}
+         ;
 formula returns [Formula f]:
-    | expr IMPLIES tail=formula {$expr.f.setNext(Term.mk($tail.f, "->"));
-                                 $f = Application.mk(null, $expr.f, $tail.f);}
-    | expr comparison_op tail=formula {$expr.f.setNext(Term.mk($tail.f, $comparison_op.sym));
-                                  $f = Application.mk(null, $expr.f, $tail.f);}
-    | expr arit_op tail=formula {$expr.f.setNext(Term.mk($tail.f, $arit_op.text));
-                            $f = Application.mk(null, $expr.f, $tail.f);}
-    | expr OR tail=formula {$expr.f.setNext(Term.mk($tail.f, "\\/"));
-                       $f = Application.mk(null, $expr.f, $tail.f);}
-    | expr AND tail=formula {$expr.f.setNext(Term.mk( $tail.f, "/\\"));
-                       $f = Application.mk(null, $expr.f, $tail.f);}
-    | TILD tail=formula  {$f = Application.mk(null, Term.mk($tail.f, "~"), $tail.f);}
-    | FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}
-    | FUN var_decl '=>' tail=formula {$f = Fun.mk(null, $var_decl.list, $tail.f);}
-    | LCURLY var_decl PIPE tail=formula RCURLY {$f = Exists.mk(null, $var_decl.list.getFirst(), $tail.f);}
-    | expr {$f = $expr.f;}
+      binary_formula0 {$f = $binary_formula0.f;}
+    | not_binary {$f = $not_binary.f;}
+    ;
+
+binary_formula0 returns [Formula f]: 
+      first=binary_formula1 {$f = $first.f;} 
+      (o=op tail=not_binary {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
     ;
     
+binary_formula1 returns [Formula f]: 
+      first=expr_list {$f = $first.f;} 
+      (o=op tail=not_binary {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
+    ;
+not_binary returns [Formula f]: 
+     FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}
+    | FUN var_decl '=>' tail=formula {$f = Fun.mk(null, $var_decl.list, $tail.f);}
+    | LCURLY var_decl PIPE tail=formula RCURLY {$f = Exists.mk(null, $var_decl.list.getFirst(), $tail.f);}
+    | expr_list {$f = $expr_list.f;}
+    ;
+    
+op returns [Term t]: logop {$t = $logop.t;}
+                   
+                   ;
 
-     
+aritop returns [Term t]: 
+                     COMP_OP {$t = Term.mk(null, $COMP_OP.text);}
+                   | ARIT_OP{$t = Term.mk(null, $ARIT_OP.text);}
+                   ;
+
+logop returns [Term t]: IMPLIES {$t = Term.mk(null, "->");}
+                   | OR  {$t = Term.mk(null, "\\/");}
+                   | AND {$t = Term.mk(null, "/\\");}
+                   | aritop {$t = $aritop.t;}
+                   ;
 var_decl returns [VariableList list]: 
           LPAR name_list type_decl RPAR decl=var_decl
                     {$list = $decl.list; 
@@ -225,20 +197,11 @@ var_decl returns [VariableList list]:
 	                                                var, $type_decl.ast));
 	                 }
 	                }
-        | name_list type_decl 
+        | name_list type_decl?
                     {$list = VariableList.mk(null, null, null);
                      for (String var: $name_list.list) {
 	                     $list.setFirst(Variable.mk($list.getFirst(), 
 	                                                var, $type_decl.ast));
-	                     if ($list.getTail() == null) {
-	                        $list.setTail($list.getFirst());
-	                     }
-	                 }
-	                }
-        | name_list {$list = VariableList.mk(null, null, null);
-                     for (String var: $name_list.list) {
-	                     $list.setFirst(Variable.mk($list.getFirst(), 
-	                                                var, null));
 	                     if ($list.getTail() == null) {
 	                        $list.setTail($list.getFirst());
 	                     }
@@ -253,24 +216,8 @@ name_list returns [LinkedList<String> list]:
       | {$list = new LinkedList();};
 
 
-/**********************************************/
 
-comparison_op returns [String sym]  :
-                    '=' {$sym = "=";}
-                  | '!=' {$sym = "!=";}
-                  | '>' {$sym = ">";}
-                  | '<' {$sym = "<";}
-                  | '<=' {$sym = "<=";}
-                  | '>=' {$sym = ">=";}
-                  | '<>' {$sym = "<>";}
-                  | '?=' {$sym = "?=";}
-               ;
-arit_op returns [String sym]: 
-         '+' {$sym = "+";}
-       | '-' {$sym = "-";}
-       | '/' {$sym = "/";}
-       | '*' {$sym = "*";}
-       ;
+
 
 /**********************************************  
  ##############################################
@@ -286,6 +233,37 @@ RPAR: ')' ;
 LCURLY: '{';
 RCURLY: '}';
 
+SEMICOLON: ';';
+
+// Operators:
+
+SHIFT: '>->' ;
+COMMA: ',';
+DOT: '.';
+COLON: ':';
+DEF: ':=';
+UNDERSCORE: '_' ;
+
+COMP_OP: '=' 
+       | '!=' 
+       | '>' 
+       | '<' 
+       | '<='
+       | '>='
+       | '<>'
+       | '?='
+       ;
+ARIT_OP: '+'
+       | '-' 
+       | '/' 
+       | '*' 
+       ;
+
+IMPLIES: '->';
+
+LET: 'let';
+SET: 'set';
+IN: 'in';
 REQUIRE: 'Require';
 IMPORT: 'Import' ;
 EXPORT: 'Export' ;
@@ -294,14 +272,9 @@ SCOPE: 'Scope' ;
 VARIABLE: 'Variable' ;
 AXIOM: 'Axiom';
 COERCION: 'Coercion' ;
-SHIFT: '>->' ;
-DOT: '.';
-COLON: ':';
-DEF: ':=';
+
 LTAC: 'Ltac';
-SEMICOLON: ';';
-IMPLIES: '->';
-COMMA: ',';
+
 FORALL: 'forall';
 
 HINT: 'Hint';
@@ -311,6 +284,7 @@ LEMMA: 'Lemma';
 PROOF: 'Proof';
 QED: 'Qed';
 PIPE: '|';
+
 OR: '\\/';
 AND: '/\\';
 ASSERT: 'assert';
@@ -335,22 +309,15 @@ WHITECOM:
 */
 COMMENT: '(*' .* '*)'{setText($text.substring(2, $text.length() - 2));};
 
-
-
-/**********************************************/
-
-//  : DIGIT  ( ALPHANUMERIC | UNDERSCORE | DASH )*
-//                   ;
+                  
 
 //Identifier name
-NAME  : ALPHA ( ALPHANUMERIC | UNDERSCORE | DASH | '\'')*
+NAME  : ALPHA ( ALPHANUMERIC | UNDERSCORE | '-' | '\'')*
       ;
         
-UNDERSCORE  :  '_' 
-            ;
 
-DASH  :  '-'
-      ;
+
+
                     
 fragment 
 ALPHANUMERIC  :  ALPHA | DIGIT 

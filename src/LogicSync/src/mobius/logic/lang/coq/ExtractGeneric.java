@@ -17,8 +17,6 @@ import mobius.logic.lang.generic.ast.Application;
 import mobius.logic.lang.generic.ast.Atom;
 import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.GenericAst;
-import mobius.logic.lang.generic.ast.Predicate;
-import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
 
 public class ExtractGeneric extends AEvaluator<GenericAst> {
@@ -39,31 +37,44 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
 
   @Override
   public GenericAst evalApplication(final Formula next, 
-                                    final Formula first, 
-                                    final Formula tail) {
+                                    final Formula first) {
     Formula f = first;
-    Term current = (Term) f.eval(this);
+    final Term current = (Term) first.eval(this);
     f = f.getNext();
-    final Application a = Application.mk(null, current);
-    while (f != null) {
-      current.setNext((Term)f.eval(this));
-      current = current.getNext();
-      f = f.getNext();
+    Term tnext = null;
+    if (next != null) {
+      tnext = (Term) next.eval(this);
     }
+    final Application a = Application.mk(tnext, current);
     return a;
   }
 
   @Override
+  public GenericAst evalBinaryTerm(Formula next, Formula op, Formula left,
+                                   Formula right) {
+    final Term snd = (Term) left.eval(this);
+    snd.setNext((Term)right.eval(this));
+    final Term fst = (Term) op.eval(this);
+    fst.setNext(snd);
+    Term tnext = null;
+    if (next != null) {
+      tnext = (Term) next.eval(this);
+    }
+    return Application.mk(tnext, fst);
+  }
+  
+  
+  @Override
   public GenericAst evalAxiom(final AxiomType type, 
                               final String name, 
                               final Formula formula) {
-    if (type.equals(AxiomType.Variable)) {
-      final int arity = getDepth(formula);
-      if (arity == 0) {
-        return Symbol.mk(name);
-      }
-      return Predicate.mk(name, arity);
-    }
+//    if (type.equals(AxiomType.Variable)) {
+//      final int arity = getDepth(formula);
+//      if (arity == 0) {
+//        return Symbol.mk(name);
+//      }
+//      return Predicate.mk(name, arity);
+//    }
     return evalLemma(name, formula, null);
   }
 
@@ -81,6 +92,8 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
     return 0;
   }
 
+  
+  
   @Override
   public GenericAst evalConstrList(Constructor first, Constructor last) {
     // TODO Auto-generated method stub
@@ -152,7 +165,11 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
 
   @Override
   public GenericAst evalTerm(final Formula next, final String name) {
-    return Atom.mk(null, name);
+    Term t = null;
+    if (next != null) {
+      t = (Term) next.eval(this);
+    }
+    return Atom.mk(t, name);
   }
 
   @Override
@@ -217,4 +234,6 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
                                  final String typeFrom, final String typeTo) {
     return null;
   }
+
+
 }
