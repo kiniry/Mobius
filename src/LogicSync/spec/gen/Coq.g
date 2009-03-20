@@ -48,7 +48,7 @@ vernacular returns [CoqAst ast]:
            | coercion {$ast = $coercion.ast;}
            | lemma {$ast = $lemma.ast;}
            | axiom {$ast = $axiom.ast;}
-          // | tactic {$ast = $tactic.ast;}
+           | tactic {$ast = $tactic.ast;}
            | hint {$ast = $hint.ast;}
            | definition {$ast = $definition.ast;}
            | inductive {$ast = $inductive.ast;}
@@ -82,7 +82,7 @@ axiom returns [CoqAst ast]:
        {$ast = Axiom.mk($ax_wrd.t, $NAME.text, $type_decl.ast);}
      ;
 lemma returns [CoqAst ast]: 
-       LEMMA NAME COLON formula DOT //proof DOT
+       LEMMA NAME COLON formula DOT proof DOT
        {$ast = Lemma.mk($NAME.text, $formula.f, null/*$proof.txt*/);}  
      ;
 
@@ -110,7 +110,7 @@ hint returns [CoqAst ast]:
     ;
     
 definition returns [CoqAst ast]: 
-            DEFINITION NAME type_decl? (DEF formula)? DOT //(proof DOT)?
+            DEFINITION NAME type_decl? (DEF formula)? DOT (proof DOT)?
             {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, null /*$proof.txt */);}
           ;
    
@@ -216,6 +216,73 @@ name_list returns [LinkedList<String> list]:
       | {$list = new LinkedList();};
 
 
+
+
+tac_expr: tac_expr_smp
+        | 'autorewrite' WITH tac_expr_smp
+        | 'unfold' tac_name_comma_list tac_hyp_list
+        | 'rewrite' tac_name_comma_list tac_hyp_list
+        | tac_let
+        | tac_set
+        ;
+        
+tac_expr_smp: LPAR tac_list RPAR
+        | '[' tac_list PIPE tac_list ']'
+        | REPEAT tac_expr
+        | 'constr' COLON expr
+        | 'try' tac_expr
+        | tac_assert
+        | tac_match
+        | 'autorewrite' WITH tac_expr
+        | 'unfold' tac_name_comma_list tac_hyp_list
+        | 'rewrite' tac_name_comma_list tac_hyp_list
+        | NAME expr*
+        ;
+tac_name_comma_list: NAME COMMA tac_name_comma_list
+                   | NAME;
+tac_hyp_list: IN '*'
+            | IN NAME
+            |;
+tac_list returns [String tac]: tac_expr (SEMICOLON tac_expr)* {$tac = $text;};
+      
+tac_let: LET NAME DEF (formula | tac_expr_smp | 
+                         'fresh' STRING_CONSTANT) IN tac_list;
+tac_set: SET LPAR NAME DEF (formula | tac_expr_smp | 
+                         'fresh' STRING_CONSTANT) RPAR IN (NAME+ | '*');
+tac_assert: ASSERT LPAR NAME DEF formula RPAR
+          | ASSERT LPAR NAME COLON formula RPAR
+          | ASSERT LPAR formula RPAR
+          | ASSERT NAME;
+tac_match: MATCH ('type' 'of')? NAME WITH tac_match_clause_list END;
+
+tac_match_clause_list: PIPE? tac_match_clause (PIPE tac_match_clause)*;
+
+tac_match_clause: '[' tac_match_goal ']' '=>' tac_list
+                | tac_match_formula '=>' tac_list; 
+                
+tac_match_goal: tac_match_hyp? '|-' tac_match_formula ;
+tac_match_hyp: NAME COLON tac_match_formula (COMMA NAME COLON tac_match_formula)*
+               | UNDERSCORE;
+tac_match_expr:  LPAR tac_match_formula RPAR
+               | QUESTION? (NAME | UNDERSCORE);
+ 
+tac_match_formula:        
+    | tac_match_expr op tac_match_formula
+    | TILD tac_match_formula
+    | FUN var_decl '=>' tac_match_formula
+    | LCURLY var_decl PIPE tac_match_formula RCURLY
+    | tac_match_expr tac_match_formula
+    ;
+    
+ tactic returns [CoqAst ast]: 
+       LTAC NAME name_list DEF tac_list DOT
+       {$ast = Tactic.mk($NAME.text, $tac_list.tac);}
+     ;
+     
+     
+proof returns [String txt]: PROOF DOT proof_content QED 
+          {$txt = $text;}; 
+proof_content: (tac_list DOT)*;
 
 
 
