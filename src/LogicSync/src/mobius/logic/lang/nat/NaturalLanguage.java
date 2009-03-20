@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mobius.logic.lang.ALanguage;
+import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.nat.ast.Program;
 import mobius.logic.lang.nat.parser.NLLexer;
 import mobius.logic.lang.nat.parser.NLParser;
@@ -53,7 +54,7 @@ public class NaturalLanguage extends ALanguage {
   }
 
   @Override
-  public void generate() {
+  public void generateFrom(GenericAst ast) {
     if (tree != null) {
       if (fGenerate.size() == 1) {
         System.out.print(this + ": generating '" + fGenerate.get(0).getName() + "'...");
@@ -110,6 +111,18 @@ public class NaturalLanguage extends ALanguage {
   @Override
   public String toString() {
     return "Natural language handler";
+  }
+
+  @Override
+  public GenericAst extractGenericAst() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void mergeWith(GenericAst ast) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

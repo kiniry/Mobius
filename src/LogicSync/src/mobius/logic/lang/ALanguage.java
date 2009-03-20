@@ -3,6 +3,8 @@ package mobius.logic.lang;
 import java.io.File;
 import java.util.List;
 
+import mobius.logic.lang.generic.ast.GenericAst;
+
 /**
  * The main class use to represent a language handler.
  * 
@@ -43,9 +45,23 @@ public abstract class ALanguage {
   public abstract void prepare();
 
   /**
-   * Generate the files and merge the selected files.
+   * Generate the files from the specified AST.
+   * @param ast the ast to generate from
    */
-  public abstract void generate();
+  public abstract void generateFrom(GenericAst ast);
+
+  /**
+   * Merges the files with the specified AST.
+   * @param ast the ast to generate from
+   */
+  public abstract void mergeWith(GenericAst ast);
+  
+  /**
+   * Extract the generic AST. 
+   * It is used to check consistency, and to generate the generic AST.
+   * @return The AST corresponding to the input file of the language
+   */
+  public abstract GenericAst extractGenericAst();
   
   /**
    * Right now the tool is not supposed to handle logics splitted in

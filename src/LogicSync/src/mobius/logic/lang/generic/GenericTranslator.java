@@ -8,7 +8,6 @@ import java.util.LinkedList;
 
 import mobius.logic.lang.generic.ast.AEvaluator;
 import mobius.logic.lang.generic.ast.Atom;
-import mobius.logic.lang.generic.ast.Clause;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.Term;
 
@@ -47,9 +46,9 @@ public class GenericTranslator extends AEvaluator<String> {
   }
 
   @Override
-  public String evalClauseList(final LinkedList<Clause> list) {
+  public String evalClauseList(final LinkedList<GenericAst> list) {
     final StringBuilder res = new StringBuilder();
-    for (Clause c: list) {
+    for (GenericAst c: list) {
       final String eval = c.eval(this); 
       fOut.println(eval);
       res.append(eval);

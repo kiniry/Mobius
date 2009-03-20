@@ -15,8 +15,6 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 public class GenericLanguage extends ABasicLanguage {
- 
-  private GenericAst fAst;
   
   @Override
   public boolean isLanguageFile(final File f) {
@@ -24,51 +22,34 @@ public class GenericLanguage extends ABasicLanguage {
   }
 
   @Override
-  public void generate() {
-    if (fAst != null) {
-      switch (getGenerate().size()) {
-        case 0:
-          break;
-        case 1: 
-          System.out.print(this + ": generating '" + 
-                             getGenerate().get(0).getName() + "'...");
-          try {
-            GenericTranslator.translate(fAst, getGenerate().get(0));
-            System.out.println(" done.");
-          } 
-          catch (FileNotFoundException e) {
-            System.out.println(" FAILED!");
-            e.printStackTrace();
-          }
-     
-          break;
-        default:
-          moreThanOneFileError(getGenerate());
-      }
-    }
-  }
-
-  @Override
-  public void prepare() {
-    switch (getInput().size()) {
+  public void generateFrom(final GenericAst ast) {
+    switch (getGenerate().size()) {
       case 0:
         break;
-      case 1:
-        System.out.print(this + ": parsing '" + getInput().get(0).getName() + "'...");
-        fAst = parseFile(getInput().get(0));
-        if (fAst != null) {
+      case 1: 
+        System.out.print(this + ": generating '" + 
+                           getGenerate().get(0).getName() + "'...");
+        try {
+          GenericTranslator.translate(ast, getGenerate().get(0));
           System.out.println(" done.");
-        }
-        else {
+        } 
+        catch (FileNotFoundException e) {
           System.out.println(" FAILED!");
+          e.printStackTrace();
         }
+   
         break;
       default:
-        moreThanOneFileError(getInput());
+        moreThanOneFileError(getGenerate());
     }
   }
 
-  public static GenericAst parseFile(File f) {
+  /** {@inheritDoc} */
+  @Override
+  public void prepare() { }
+
+  
+  public static GenericAst parseFile(final File f) {
     
     try {
       final CharStream cs = new ANTLRFileStream(f.getAbsolutePath());
@@ -89,6 +70,35 @@ public class GenericLanguage extends ABasicLanguage {
   /** @return "Generic language handler" */
   public String toString() {
     return "Generic language handler";
+  }
+
+  @Override
+  public GenericAst extractGenericAst() {
+    GenericAst ast = null;
+    switch (getInput().size()) {
+      case 0:
+        break;
+      case 1:
+        System.out.print(this + ": parsing '" + getInput().get(0).getName() + "'...");
+        ast = parseFile(getInput().get(0));
+        if (ast != null) {
+          System.out.println(" done.");
+        }
+        else {
+          System.out.println(" FAILED!");
+        }
+        break;
+      default:
+        moreThanOneFileError(getInput());
+    }
+    
+    return ast;
+  }
+
+  @Override
+  public void mergeWith(GenericAst ast) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

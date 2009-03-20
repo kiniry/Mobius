@@ -8,6 +8,7 @@ import mobius.logic.lang.ABasicLanguage;
 import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.parser.CoqLexer;
 import mobius.logic.lang.coq.parser.CoqParser;
+import mobius.logic.lang.generic.ast.GenericAst;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CharStream;
@@ -23,8 +24,10 @@ public class CoqLanguage extends ABasicLanguage {
     return f.getName().endsWith(".v");
   }
 
+  
+  //FIXME
   @Override
-  public void generate() {
+  public void generateFrom(final GenericAst ast) {
     if (fAst != null) {
       switch (getGenerate().size()) {
         case 0:
@@ -88,5 +91,22 @@ public class CoqLanguage extends ABasicLanguage {
   /** @return "Coq language handler" */
   public String toString() {
     return "Coq language handler";
+  }
+
+  @Override
+  public GenericAst extractGenericAst() {
+    System.out.print(this + ": Extracting generic AST...");
+    GenericAst ast;
+    ast = ExtractGeneric.translate(fAst);
+    System.out.println(" done.");
+    return ast;
+    
+  }
+
+
+  @Override
+  public void mergeWith(GenericAst ast) {
+    // TODO Auto-generated method stub
+    
   }
 }
