@@ -71,7 +71,8 @@ public class CoqLanguage extends ABasicLanguage {
     }
   }
 
-  public static CoqAst parseFile(File f) { 
+  
+  public static CoqAst parseFile(final File f) { 
     try {
       final CharStream cs = new ANTLRFileStream(f.getAbsolutePath());
       final CoqLexer cl = new CoqLexer(cs);

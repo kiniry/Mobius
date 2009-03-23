@@ -38,7 +38,8 @@
   <property name="antlr-gl-target" location="src/mobius/logic/lang/generic/parser" />
   <property name="antlr-gl-grammar" location="spec/gen/Generic.g" />
   <property name="antlr-nl-target" location="src/mobius/logic/lang/nat/parser" />
-  	
+  <property name="antlr-nl-grammar" location="spec/gen/NL.g" />
+	 	
   <!-- AST Gen variables -->
   <property name="astgen-base" value="mobius.logic.lang.ast.Ast" />
   <property name="astgen-jar" value="lib/astgen.jar"/>
@@ -103,8 +104,7 @@
     <uptodate srcfile="spec/Coq.g" targetfile="src/mobius/logic/lang/coq/parser/CoqParser.java" property="antlrBuild.notRequired"/>
   </target>
 
-  <target name="antlr-gen-coq" depends="init">
-    <echo message="Running antlr"/>
+  <target name="antlr-gen-coq" depends="init" description="Build Coq parser">
     <java fork="yes" jar="${antlr-jar}">
       <arg value="-o"/>
       <arg value="${antlr-coq-target}"/>
@@ -112,7 +112,6 @@
     </java>
   </target>
   <target name="antlr-gen-gl" depends="init">
-    <echo message="Running antlr"/>
     <java fork="yes" jar="${antlr-jar}">
       <arg value="-o"/>
       <arg value="${antlr-gl-target}"/>
@@ -126,16 +125,16 @@
 	</target>
 
 	<target name="antlr-gen-nl" depends="init" unless="NLAntlrBuild.notRequired">
-	  <echo message="Running antlr"/>
-	  <java fork="yes" dir="spec" classname="org.antlr.Tool">
+      <java fork="yes" jar="${antlr-jar}">
 	    <classpath refid="antlr.path" />
 	    <arg value="-o"/>
 	    <arg value="${antlr-nl-target}"/>
-	    <arg value="NL.g"/>
+	    <arg value="${antlr-nl-grammar}"/>
 	  </java>
 	</target>
 	
   <target name="astgen-gen-coq" depends="init" description="generates AST">
+  	<echo message="Running AST Gen"/>
     <java fork="yes" dir="${astgen-coq-target}" jar="${astgen-jar}">
     	<arg value="-b"/>
       <arg value="${astgen-coq-base}"/>
@@ -153,6 +152,7 @@
 	
 	
   <target name="astgen-gen-gl" depends="init" description="generates AST">
+  	<echo message="Running AST Gen"/>
     <java fork="yes" dir="${astgen-gl-target}" jar="${astgen-jar}">
     	<arg value="-b"/>
       <arg value="${astgen-gl-base}"/>
@@ -169,6 +169,7 @@
   </target>
 	
 	<target name="astgen-gen-nl" depends="init" description="generates AST">
+	  <echo message="Running AST Gen"/>
 	  <java fork="yes" dir="${astgen-nl-target}" jar="${astgen-jar}">
 	  	<arg value="-b"/>
 	  	<arg value="${astgen-nl-base}"/>
@@ -207,7 +208,7 @@
 	    description="generates ASTs" />
   <target name="antlr-gen" depends="antlr-gen-coq,antlr-gen-nl,antlr-gen-gl" 
 		description="generates parsers" />
-  <target name="gen-files" depends="astgen-gen,clops-gen,antlr-gen" 
+  <target name="gen-files" depends="clops-gen,astgen-gen,antlr-gen" 
 	    description="generates ASTs, and Java files" />
   	
   <target name="dist" depends="compile" description="Generate the distribution">

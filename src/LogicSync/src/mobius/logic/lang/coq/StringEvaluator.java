@@ -52,49 +52,53 @@ public class StringEvaluator extends AEvaluator<String> {
   
   /** {@inheritDoc} */
   @Override
-  public String  evalHint(HintType type, List<String> names, String lib) {
+  public String  evalHint(final HintType type, 
+                          final List<String> names, final String lib) {
     return "Hint " + names;
   }
   
   /** {@inheritDoc} */
   @Override
-  public String  evalTactic(String name, String content) {
+  public String  evalTactic(final String name, final String content) {
     return "Tactic: " + name;
   }    
   
   /** {@inheritDoc} */
   @Override
-  public String evalDefinition(String name, Formula type, Formula def, String proof ) {
+  public String evalDefinition(final String name, final Formula type, 
+                               final Formula def, final String proof) {
     return "def " + name;
   }
   
   /** {@inheritDoc} */
   @Override
-  public String evalAxiom(AxiomType type, String name, Formula form) {
+  public String evalAxiom(final AxiomType type, final String name, final Formula form) {
     return "ax " + name + " " + form.eval(this);
   }
   
   /** {@inheritDoc} */
   @Override
-  public String evalInductive(String name, Formula type, ConstrList list) {
+  public String evalInductive(final String name, final Formula type, 
+                              final ConstrList list) {
     return "inductive " + name;
   }
   
   /** {@inheritDoc} */
   @Override
-  public String evalLemma(String name, Formula formula, String proof) {
+  public String evalLemma(final String name, final Formula formula, 
+                          final String proof) {
     return "lem " + name;
   }
   
   /** {@inheritDoc} */
   @Override
-  public String evalDoc(String name) {
+  public String evalDoc(final String name) {
     return "doc: " + name;
   }
   
   /** {@inheritDoc} */
   @Override
-  public String evalComment(String name) {
+  public String evalComment(final String name) {
     return "comment: " + name;
   }
   
@@ -168,6 +172,7 @@ public class StringEvaluator extends AEvaluator<String> {
     return null;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String evalBinaryTerm(final Formula next, final Formula op, final Formula left,
                                final Formula right) {

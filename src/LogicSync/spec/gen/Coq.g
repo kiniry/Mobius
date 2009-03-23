@@ -159,12 +159,9 @@ formula returns [Formula f]:
     | not_binary {$f = $not_binary.f;}
     ;
 
-binary_formula0 returns [Formula f]: 
-      first=binary_formula1 {$f = $first.f;} 
-      (o=op tail=not_binary {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
-    ;
+
     
-binary_formula1 returns [Formula f]: 
+binary_formula0 returns [Formula f]: 
       first=expr_list {$f = $first.f;} 
       (o=op tail=not_binary {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
     ;
@@ -175,19 +172,13 @@ not_binary returns [Formula f]:
     | expr_list {$f = $expr_list.f;}
     ;
     
-op returns [Term t]: logop {$t = $logop.t;}
-                   
-                   ;
 
-aritop returns [Term t]: 
-                     COMP_OP {$t = Term.mk(null, $COMP_OP.text);}
-                   | ARIT_OP{$t = Term.mk(null, $ARIT_OP.text);}
-                   ;
 
-logop returns [Term t]: IMPLIES {$t = Term.mk(null, "->");}
+op returns [Term t]: IMPLIES {$t = Term.mk(null, "->");}
                    | OR  {$t = Term.mk(null, "\\/");}
                    | AND {$t = Term.mk(null, "/\\");}
-                   | aritop {$t = $aritop.t;}
+                   | COMP_OP {$t = Term.mk(null, $COMP_OP.text);}
+                   | ARIT_OP{$t = Term.mk(null, $ARIT_OP.text);}
                    ;
 var_decl returns [VariableList list]: 
           LPAR name_list type_decl RPAR decl=var_decl
