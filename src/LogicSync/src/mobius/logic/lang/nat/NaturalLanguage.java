@@ -10,6 +10,7 @@ import java.util.List;
 
 import mobius.logic.lang.ALanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.nat.ast.NLAst;
 import mobius.logic.lang.nat.ast.Program;
 import mobius.logic.lang.nat.parser.NLLexer;
 import mobius.logic.lang.nat.parser.NLParser;
@@ -55,12 +56,15 @@ public class NaturalLanguage extends ALanguage {
 
   @Override
   public void generateFrom(GenericAst ast) {
-    if (tree != null) {
+    GenericToNLTranslator translator = new GenericToNLTranslator();
+    NLAst translatedAst = translator.translate(ast);
+    
+    if (translatedAst != null) {
       if (fGenerate.size() == 1) {
         System.out.print(this + ": generating '" + fGenerate.get(0).getName() + "'...");
         try {
           NLPrettyPrinter pp = new NLPrettyPrinter(new PrintStream(new FileOutputStream(fGenerate.get(0))));
-          tree.eval(pp);
+          translatedAst.eval(pp);
           pp.closeStream();
           System.out.println(" done.");  
         } catch (FileNotFoundException e) {
@@ -71,6 +75,8 @@ public class NaturalLanguage extends ALanguage {
       } else if (fGenerate.size() > 1) {
         moreThanOneFileError(fGenerate);
       }
+    } else {
+      System.out.println("Unable to translate to NL.");
     }
   }
 
@@ -86,7 +92,7 @@ public class NaturalLanguage extends ALanguage {
       else {
         System.out.println(" FAILED!");
       }
-    } else  if (fInput.size() > 1) {
+    } else if (fInput.size() > 1) {
       moreThanOneFileError(fInput);
     }
   }
@@ -115,8 +121,7 @@ public class NaturalLanguage extends ALanguage {
 
   @Override
   public GenericAst extractGenericAst() {
-    // TODO Auto-generated method stub
-    return null;
+    return new NLToGenericTranslator().evalProgram(tree.getLogics());
   }
 
   @Override
@@ -125,4 +130,6 @@ public class NaturalLanguage extends ALanguage {
     
   }
 
+  
+  
 }

@@ -7,7 +7,7 @@ import mobius.logic.lang.nat.ast.AEvaluator;
 import mobius.logic.lang.nat.ast.Item;
 import mobius.logic.lang.nat.ast.Logic;
 
-public class NLPrettyPrinter extends AEvaluator<Object> {
+public class NLPrettyPrinter extends AEvaluator<String> {
 
   private final PrintStream ps;
   
@@ -20,7 +20,7 @@ public class NLPrettyPrinter extends AEvaluator<Object> {
   }
   
   @Override
-  public Object evalItem(String id, String description) {
+  public String evalItem(String id, String description) {
     ps.print(id);
     ps.print(':');
     ps.print("  ");
@@ -29,7 +29,7 @@ public class NLPrettyPrinter extends AEvaluator<Object> {
   }
 
   @Override
-  public Object evalLogic(String name, List<Item> items) {
+  public String evalLogic(String name, List<Item> items) {
     ps.print("logic ");
     ps.println(name);
     for (Item item : items) {
@@ -42,7 +42,7 @@ public class NLPrettyPrinter extends AEvaluator<Object> {
   }
 
   @Override
-  public Object evalProgram(List<Logic> logics) {
+  public String evalProgram(List<Logic> logics) {
     for (Logic logic : logics) {
       logic.eval(this);
       ps.println();
