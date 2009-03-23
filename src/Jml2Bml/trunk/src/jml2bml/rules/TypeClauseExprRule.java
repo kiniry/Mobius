@@ -67,18 +67,9 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
     if (node.token == JmlToken.INVARIANT) {
       final BCClass clazz = myContext.get(BCClass.class);
       final AbstractFormula formula = TranslationUtil
-          .getFormula(node.expression, symb, myContext);
-
-      ClassInvariant classInvariant =
-        clazz.getInvariant(Constants.ACC_PUBLIC);
-      if (classInvariant == null) {
-        //currently only instance invariants are handled
-        classInvariant = new ClassInvariant(clazz, formula, true);
-      } else {
-        final AbstractFormula newFormula = new Formula(Code.AND, classInvariant
-            .getInvariant(), formula);
-        classInvariant = new ClassInvariant(clazz, newFormula, true);
-      }
+              .getFormula(node.expression, symb, myContext);
+      final ClassInvariant classInvariant =
+        new ClassInvariant(clazz, formula, true);
       clazz.setInvariant(classInvariant);
     } else
       throw new NotTranslatedRuntimeException(
