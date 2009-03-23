@@ -4,7 +4,7 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
-import annot.textio.DisplayStyle;
+import annot.textio.AttributeNames;
 
 /**
  * This class represents "assert table" method attribute.
@@ -34,7 +34,7 @@ public class AssertTable extends BCAttributeTable {
    */
   @Override
   public String getName() {
-    return DisplayStyle.ASSERT_TABLE_ATTR;
+    return AttributeNames.ASSERT_TABLE_ATTR;
   }
 
   /**

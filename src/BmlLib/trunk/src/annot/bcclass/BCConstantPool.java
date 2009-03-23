@@ -8,23 +8,29 @@
  */
 package annot.bcclass;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantCP;
+import org.apache.bcel.classfile.ConstantFieldref;
+import org.apache.bcel.classfile.ConstantMethodref;
+import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
+import annot.attributes.IBCAttribute;
+import annot.io.AttributeReader;
+import annot.io.AttributeWriter;
 import annot.io.ConstantPoolReader;
 import annot.io.ReadAttributeException;
+import annot.textio.AttributeNames;
 import annot.textio.DisplayStyle;
 
 /**
@@ -37,7 +43,7 @@ import annot.textio.DisplayStyle;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BCConstantPool extends BCCConstantPrinting {
+public class BCConstantPool extends BCCConstantPrinting implements IBCAttribute {
 
   /**
    * Constant array.
@@ -57,8 +63,9 @@ public class BCConstantPool extends BCCConstantPrinting {
 
   /**
    * A standard constructor, from JavaClass. It inserts
-   * constants from ordinary constant pool first, and
-   * then from the second constant pool attribute.
+   * constants from ordinary constant pool first, but it does
+   * not read in the second constant pool. This waits until
+   * the class attributes are read.
    *
    * @param ajc - JavaClass to initialize from.
    * @throws ReadAttributeException - if second constant
@@ -73,7 +80,6 @@ public class BCConstantPool extends BCCConstantPrinting {
     final ConstantPool cp = ajc.getConstantPool();
     this.initialSize = cp.getLength();
     readInCP(cp);
-    readInSecondCP(ajc);
   }
 
   /**
@@ -85,76 +91,6 @@ public class BCConstantPool extends BCCConstantPrinting {
   private void readInCP(final ConstantPool cp) {
     for (int i = 0; i  <  this.initialSize; i++) {
       this.constants.add(cp.getConstant(i));
-    }
-  }
-
-  /**
-   * Reads in to the BMLLib constant pool representation the content of the
-   * second constant pool. It finds the appropriate attribute and in case
-   * it is not empty reads in its contents.
-   *
-   * @param ajc the BCEL representation of the class to read second constant
-   *   pool for
-   * @throws ReadAttributeException if the data in the constant pool
-   *   representation is invalid
-   */
-  private void readInSecondCP(final JavaClass ajc)
-    throws ReadAttributeException {
-    final Attribute[] attrs = ajc.getAttributes();
-    final byte[] bytes = findSecondCPAttribute(attrs);
-    if (bytes != null) {
-      readInSecondCPContent(bytes);
-    }
-  }
-
-  /**
-   * Retrieves the content of the attribute which contains the second constant
-   * pool. It examines one by one all the attributes in the given array.
-   * The content of the first attribute the name of which corresponds to
-   * the name of the second constant pool is returned. In case there is no
-   * second constant pool attribute <code>null</code> is returned.
-   *
-   * @param attrs the array of attributes to retrieve the second constant pool
-   *   from
-   * @return the content of the second constant pool, or <code>null</code> in
-   *   case there is no second constant pool
-   */
-  private byte[] findSecondCPAttribute(final Attribute[] attrs) {
-    byte[] bytes = null;
-    for (int i = 0; i  <  attrs.length; i++) {
-      if (attrs[i] instanceof Unknown) {
-        final Unknown ua = (Unknown) attrs[i];
-        if (DisplayStyle.SECOND_CONSTANT_POOL_ATTR.equals(ua.getName())) {
-          bytes = ua.getBytes();
-        }
-      }
-    }
-    return bytes;
-  }
-
-  /**
-   * Reads in the contents of the second constant pool and remembers its
-   * constant in the local representation.
-   *
-   * @param bytes the content (second_cp field of the structure) of the second
-   *   constant pool attribute
-   * @throws ReadAttributeException if the data in the constant pool
-   *   representation is invalid
-   */
-  private void readInSecondCPContent(final byte[] bytes)
-    throws ReadAttributeException {
-    MLog.putMsg(MessageLog.LEVEL_PNOTICE, "second constant pool detected.");
-    final DataInputStream file = new DataInputStream(
-      new ByteArrayInputStream(bytes));
-    try {
-      final int size = file.readUnsignedShort();
-      for (int i = 0; i  <  size; i++) {
-        final Constant c = ConstantPoolReader.readConstant(file);
-        this.constants.add(c);
-      }
-    } catch (final IOException e) {
-      throw new ReadAttributeException("error while reading second " +
-                                       "constant pool");
     }
   }
 
@@ -190,12 +126,12 @@ public class BCConstantPool extends BCCConstantPrinting {
    */
   private void addStandardConstants(final ConstantPoolGen cpg) {
     cpg.addUtf8(DisplayStyle.JT_INT);
-    cpg.addUtf8(DisplayStyle.ASSERT_TABLE_ATTR);
-    cpg.addUtf8(DisplayStyle.INVARIANTS_ATTR);
-    cpg.addUtf8(DisplayStyle.METHOD_SPECIFICATION_ATTR);
-    cpg.addUtf8(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
-    cpg.addUtf8(DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR);
-    cpg.addUtf8(DisplayStyle.FIELD_MODIFIERS_ATTR);
+    cpg.addUtf8(AttributeNames.ASSERT_TABLE_ATTR);
+    cpg.addUtf8(AttributeNames.INVARIANTS_ATTR);
+    cpg.addUtf8(AttributeNames.METHOD_SPECIFICATION_ATTR);
+    cpg.addUtf8(AttributeNames.SECOND_CONSTANT_POOL_ATTR);
+    cpg.addUtf8(AttributeNames.LOOP_SPECIFICATION_TABLE_ATTR);
+    cpg.addUtf8(AttributeNames.FIELD_MODIFIERS_ATTR);
   }
 
   /**
@@ -214,6 +150,30 @@ public class BCConstantPool extends BCCConstantPrinting {
       if (c instanceof ConstantUtf8) {
         final ConstantUtf8 uc8 = (ConstantUtf8) c;
         if (cdata.equals(uc8.getBytes())) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Searches for a NameAndType constant with two indicies which are equal
+   * to the ones given in the arguments.
+   *
+   * @param idx1 - the first index
+   * @param idx2 - the second index
+   * @return index of matching Constant or -1 if no
+   *     Constant could be found.
+   */
+  public int findNATConstant(final int idx1, final int idx2) {
+    final int n = this.constants.size();
+    for (int i = 0; i  <  n; i++) {
+      final Constant c = this.constants.elementAt(i);
+      if (c instanceof ConstantNameAndType) {
+        final ConstantNameAndType cn = (ConstantNameAndType) c;
+        if (idx1 == cn.getNameIndex() &&
+            idx2 == cn.getSignatureIndex()) {
           return i;
         }
       }
@@ -304,7 +264,7 @@ public class BCConstantPool extends BCCConstantPrinting {
       throw new RuntimeException("io error in BCConstantPool.save()");
     }
     final ConstantPool cp = ajc.getConstantPool();
-    final int nameIndex = findConstant(DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
+    final int nameIndex = findConstant(AttributeNames.SECOND_CONSTANT_POOL_ATTR);
     final int length = file.size();
     final byte[] bytes = baos.toByteArray();
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
@@ -349,4 +309,46 @@ public class BCConstantPool extends BCCConstantPrinting {
     return (i >= initialSize);
   }
 
+  /**
+   * Loads all constants from the second constant pool
+   * and inserts them to the current constant pool. It assumes that
+   * the given attribute reader is at the position ready to read
+   * in the number of the constants in the second constant pool i.e.
+   * the field second_cp_count from the structure
+   * SecondConstantPool_attribute {
+   *   u2 attribute_name_index;
+   *   u4 attribute_length;
+   *   u2 second_cp_count;
+   *   cp_info second_cp[second_cp_count];
+   * }
+   * from section SecondConstantPool Attribute of BML Reference Manual.
+   * @param attributeReader - stream to load annotations from.
+   * @throws ReadAttributeException - if data left
+   *     in <code>ar</code> doesn't represent correct
+   *     constant pool
+   */
+  public void load(final AttributeReader attributeReader)
+    throws ReadAttributeException {
+    final int size = attributeReader.readShort();
+    for (int i = 0; i  <  size; i++) {
+      final Constant c = ConstantPoolReader.readConstant(attributeReader);
+      this.constants.add(c);
+    }
+  }
+
+  public int getIndex() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public String getName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+
+  public void save(AttributeWriter aw) {
+    // TODO Auto-generated method stub
+    
+  }
 }

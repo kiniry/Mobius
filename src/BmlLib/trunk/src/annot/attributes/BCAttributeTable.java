@@ -20,7 +20,7 @@ import annot.io.ReadAttributeException;
 public abstract class BCAttributeTable implements IBCAttribute {
 
   /**
-   * The method,
+   * The method in which the attribute resides.
    */
   private final BCMethod method;
 

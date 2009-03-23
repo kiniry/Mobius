@@ -21,19 +21,19 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
-import org.apache.bcel.generic.ClassGen;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
 import annot.attributes.InCodeAttribute;
+import annot.attributes.InvariantTable;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.modifiers.BMLModifier;
-import annot.textio.DisplayStyle;
+import annot.textio.AttributeNames;
 import bmllib.utils.FileUtils;
 
 /**
@@ -66,7 +66,7 @@ public abstract class BCClassRepresentation {
   /**
    * BML invariants.
    */
-  private final Vector invariants = new Vector();
+  private InvariantTable invariants;
 
   /**
    * BCEL's JavaClass for this class, for bytecode
@@ -108,7 +108,7 @@ public abstract class BCClassRepresentation {
       if (arr[i] instanceof Unknown) {
         final Unknown ua = (Unknown) arr[i];
         final String aname = ua.getName();
-        if (DisplayStyle.isBMLAttributeName(aname)) {
+        if (AttributeNames.isBMLAttributeName(aname)) {
           continue;
         }
       }
@@ -174,9 +174,9 @@ public abstract class BCClassRepresentation {
   public boolean addAttribute(final BCPrintableAttribute pa) {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "adding class attribute: " +
                 pa.toString());
-    if (pa instanceof ClassInvariant) {
-      final ClassInvariant inv = (ClassInvariant) pa;
-      this.invariants.add(inv);
+    if (pa instanceof InvariantTable) {
+      final InvariantTable inv = (InvariantTable) pa;
+      this.invariants = inv;
       return true;
     }
     return false;
@@ -202,16 +202,9 @@ public abstract class BCClassRepresentation {
     bml_fmodifiers.add(nfds.length - 1, getFreshFieldMod(f));
   }
 
-  /**
-   * Returns the invariant for the given access flags specifications.
-   * Possible access flags are defined in {@link BMLModifiersFlags}.
-   *
-   * @param accessflags the access flags for which the invariant should
-   *   be retrieved
-   * @return class invariant for the given access flags
-   */
-  public ClassInvariant getInvariant(final int accessflags) {
-    return (ClassInvariant) this.invariants.get(Integer.valueOf(accessflags));
+  public void addGhostField(Field f) {
+    // TODO Auto-generated method stub
+    
   }
 
   /**
@@ -230,6 +223,15 @@ public abstract class BCClassRepresentation {
    */
   public void setInvariant(final ClassInvariant inv) {
     this.invariants.add(inv);
+  }
+
+  /**
+   * Sets the invariants table for this class.
+   *
+   * @param invs - new class invariant.
+   */
+  public void setInvariants(final InvariantTable invs) {
+    this.invariants = invs;
   }
 
   /**
@@ -281,7 +283,7 @@ public abstract class BCClassRepresentation {
     }
 
     final Field[] fields = ajc.getFields();
-    this.bml_fmodifiers = new Vector< BMLModifier >(fields.length);
+    this.bml_fmodifiers = new Vector < BMLModifier > (fields.length);
     for (int i = 0; i  <  fields.length; i++) {
       this.bml_fmodifiers.add(i, getFreshFieldMod(fields[i]));
     }
@@ -394,12 +396,19 @@ public abstract class BCClassRepresentation {
   /**
    * Removes the particular annotation from the class.
    *
-   *  @param accessflags the access flags of the invariant to be removed
+   *  @param classInvariant the invariant to be removed
    */
-  public void remove(final int accessflags) {
-    this.invariants.remove(Integer.valueOf(accessflags));
+  public void remove(final ClassInvariant classInvariant) {
+    this.invariants.remove(classInvariant);
   }
 
+
+  /**
+   * Removes the whole invariant table from the class.
+   */
+  public void removeInvariants() {
+    invariants = null;
+  }
 
   /**
    * Gives all attributes of type matching given bitmask.

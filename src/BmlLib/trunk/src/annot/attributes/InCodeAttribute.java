@@ -151,7 +151,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *     in <code>ar</code> doesn't represent correct
    *     annotation.
    */
-  protected abstract void load(AttributeReader ar)
+  public abstract void load(AttributeReader ar)
     throws ReadAttributeException;
 
   /**

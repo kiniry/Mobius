@@ -89,7 +89,7 @@ public class SingleLoopSpecification extends InCodeAttribute {
   }
 
   @Override
-  protected void load(final AttributeReader ar) throws ReadAttributeException {
+  public void load(final AttributeReader ar) throws ReadAttributeException {
     this.modifies = new ExpressionRoot < ModifyList > (this,
         new ModifyList(ar));
     this.invariant = new ExpressionRoot < BCExpression > (this,

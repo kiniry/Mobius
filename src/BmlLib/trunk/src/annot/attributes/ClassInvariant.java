@@ -10,6 +10,7 @@ import annot.bcexpression.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
+import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 import annot.textio.Parsing;
@@ -125,7 +126,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    *     attribute it represents.
    */
   public int getIndex() {
-    return this.bcc.getCp().findConstant(DisplayStyle.INVARIANTS_ATTR);
+    return this.bcc.getCp().findConstant(AttributeNames.INVARIANTS_ATTR);
   }
 
   /**
@@ -139,7 +140,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * @return Unknown (BCEL) attribute name.
    */
   public String getName() {
-    return DisplayStyle.INVARIANTS_ATTR;
+    return AttributeNames.INVARIANTS_ATTR;
   }
 
   /**
@@ -185,7 +186,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   */
   @Override
   public void remove() {
-    this.bcc.remove(getAccessFlags());
+    this.bcc.remove(this);
   }
 
   /**
@@ -232,5 +233,11 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     } else {
       return "class invariant";
     }
+  }
+
+  @Override
+  public void load(AttributeReader ar) throws ReadAttributeException {
+    // TODO Auto-generated method stub
+    
   }
 }

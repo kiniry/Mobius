@@ -6,10 +6,7 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
-import bmllib.utils.NumberUtils;
-
-import annot.attributes.ClassInvariant;
-import annot.attributes.MethodSpecification;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
@@ -49,7 +46,8 @@ import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.SpecArray;
 import annot.modifiers.BMLModifier;
-import annot.textio.DisplayStyle;
+import annot.textio.AttributeNames;
+import bmllib.utils.NumberUtils;
 
 /**
  * This class is responsible for loading BML attributes from
@@ -112,6 +110,12 @@ public class AttributeReader {
    */
   private int pos;
 
+  /**
+   * An array with objects into which the content of different
+   * BML attributes should currently be read in.
+   */
+  private IBCAttribute[] attributeHandlers =
+    new IBCAttribute[AttributeNames.BML_ATTRIBUTE_NAMES.length];
 
   /**
    * A Constructor used for reading class attributes.
@@ -122,6 +126,8 @@ public class AttributeReader {
   public AttributeReader(final BCClass classRepresentation) {
     this.bcc = classRepresentation;
     this.bvars = new Vector < BoundVar > ();
+    this.attributeHandlers[AttributeNames.SECOND_CONSTANT_POOL_ATTR_POS] =
+      this.bcc.getCp();
   }
 
   /**
@@ -134,6 +140,12 @@ public class AttributeReader {
     this.bcc = bcm.getBcc();
     this.method = bcm;
     this.bvars = new Vector < BoundVar > ();
+    this.attributeHandlers[AttributeNames.METHOD_SPECIFICATION_ATTR_POS] =
+      method.getMspec();
+    this.attributeHandlers[AttributeNames.ASSERT_TABLE_ATTR_POS] =
+      this.method.getAmap().getAtab();
+    this.attributeHandlers[AttributeNames.LOOP_SPECIFICATION_TABLE_ATTR_POS] =
+      this.method.getAmap().getLstab();
   }
 
   /**
@@ -144,6 +156,8 @@ public class AttributeReader {
     this.bcc = null;
     this.modifier = amodifier;
     this.bvars = new Vector < BoundVar > ();
+    this.attributeHandlers[AttributeNames.FIELD_MODIFIERS_ATTR_POS] =
+      this.modifier;
   }
 
   /**
@@ -203,6 +217,12 @@ public class AttributeReader {
     return this.bvars;
   }
 
+  /**
+   * Return the BML constant pool associated with the currently processed
+   * class.
+   *
+   * @return the constant pool
+   */
   public BCConstantPool getConstantPool() {
     return this.bcc.getCp();
   }
@@ -224,35 +244,21 @@ public class AttributeReader {
     this.input = ua.getBytes();
     this.length = ua.getLength();
     this.pos = 0;
-    if (aname.equals(DisplayStyle.METHOD_SPECIFICATION_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.METHOD_SPECIFICATION_ATTR);
-      this.method.setMspec(new MethodSpecification(this.method, this));
-    } else if (aname.equals(DisplayStyle.INVARIANTS_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.INVARIANTS_ATTR);
-      this.bcc.setInvariant(new ClassInvariant(this.bcc, this));
-    } else if (aname.equals(DisplayStyle.ASSERT_TABLE_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.ASSERT_TABLE_ATTR);
-      this.method.getAmap().getAtab().load(this);
-    } else if (aname.equals(DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR);
-      this.method.getAmap().getLstab().load(this);
-    } else if (aname.equals(DisplayStyle.FIELD_MODIFIERS_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.FIELD_MODIFIERS_ATTR);
-      this.modifier.load(this);
-    } else if (aname.equals(DisplayStyle.SECOND_CONSTANT_POOL_ATTR)) {
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
-                  DisplayStyle.SECOND_CONSTANT_POOL_ATTR);
-      MLog.putMsg(MessageLog.LEVEL_PINFO, "    (and ignore it)");
-    } else {
-      MLog.putMsg(MessageLog.LEVEL_PTODO,
-                  "    unrecognized attribute: " + aname);
-      return;
+    for (int i = 0; i < AttributeNames.BML_ATTRIBUTE_NAMES.length; i++) {
+      if (attrName.equals(AttributeNames.BML_ATTRIBUTE_NAMES[i])) {
+        if (attributeHandlers[i] != null) {
+          MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
+                      AttributeNames.BML_ATTRIBUTE_NAMES[i]);
+          attributeHandlers[i].load(this);
+          return;
+        } else {
+          MLog.putMsg(MessageLog.LEVEL_PTODO,
+                      "    unexpected attribute: " + aname);
+        }
+      }
     }
+    MLog.putMsg(MessageLog.LEVEL_PTODO,
+                "    unrecognized attribute: " + aname);
     if (this.pos != this.length) {
       throw new ReadAttributeException(this.length - this.pos + " of " +
                                        this.length + " bytes unread!");
@@ -272,7 +278,8 @@ public class AttributeReader {
   }
 
   /**
-   * Reads a byte from <code>input</code> stream.
+   * Reads a byte from the representation of the
+   * currently processed attribute.
    *
    * @return read byte.
    * @throws ReadAttributeException - if there is not enough
@@ -283,6 +290,25 @@ public class AttributeReader {
     final int b = this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK;
     this.pos++;
     return b;
+  }
+
+
+  /**
+   * Reads a given number of bytes from the representation of the
+   * currently processed attribute.
+   *
+   * @param len the number of bytes to read
+   * @return the bytes which were read
+   * @throws ReadAttributeException - if there is not enough
+   *     bytes in the stream to read the array
+   */
+  public byte[] readBytes(final int len)
+    throws ReadAttributeException {
+    chkRange(len);
+    final byte[] res = new byte[len];
+    System.arraycopy(input, pos, res, 0, len);
+    this.pos += len;
+    return res;
   }
 
   /**
@@ -397,8 +423,8 @@ public class AttributeReader {
   }
 
   /**
-   * Reads an integer (4 bytes) from <code>input</code>
-   * stream.
+   * Reads an integer (4 bytes) from  the representation of the
+   * currently processed attribute.
    *
    * @return read int.
    * @throws ReadAttributeException - if there is not enough
@@ -408,15 +434,32 @@ public class AttributeReader {
     chkRange(NumberUtils.INTEGER_IN_BYTES);
     int i = (this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK)  <<
       NumberUtils.THREE_BYTES_SIZE;
-    i += (this.input[this.pos + 1] & NumberUtils.LOWEST_BYTE_MASK)  <<
-      NumberUtils.TWO_BYTES_SIZE;
-    i += (this.input[this.pos + 2] & NumberUtils.LOWEST_BYTE_MASK)  <<
-      NumberUtils.ONE_BYTE_SIZE;
-    i += this.input[this.pos + 3] & NumberUtils.LOWEST_BYTE_MASK;
+    i += (this.input[this.pos + NumberUtils.FIRST_BYTE] &
+        NumberUtils.LOWEST_BYTE_MASK)  << NumberUtils.TWO_BYTES_SIZE;
+    i += (this.input[this.pos + NumberUtils.SECOND_BYTE] &
+        NumberUtils.LOWEST_BYTE_MASK)  << NumberUtils.ONE_BYTE_SIZE;
+    i += this.input[this.pos + NumberUtils.THIRD_BYTE] &
+        NumberUtils.LOWEST_BYTE_MASK;
     this.pos += NumberUtils.INTEGER_IN_BYTES;
     return i;
   }
 
+
+  /**
+   * Reads a long (8 bytes) from  the representation of the
+   * currently processed attribute.
+   *
+   * @return read int.
+   * @throws ReadAttributeException - if there is not enough
+   *     bytes in the stream to read an int.
+   */
+  public long readLong() throws ReadAttributeException {
+    final int high_bytes = readInt();
+    final int low_bytes = readInt();
+    long res = high_bytes;
+    res = (res << Integer.SIZE) | low_bytes;
+    return res;
+  }
   /**
    * Returns proper instance of ModifyExpression. Use this
    * instead of creating new instances yourself.
@@ -446,20 +489,20 @@ public class AttributeReader {
   }
 
   /**
-   * Reads an short integer (2 bytes) from
-   * <code>input</code> stream.
+   * Reads an short integer (2 bytes) from the representation of the
+   * currently processed attribute.
    *
    * @return read int.
    * @throws ReadAttributeException - if there is not enough
    *     bytes in the stream to read a short integer.
    */
   public int readShort() throws ReadAttributeException {
-    chkRange(2);
+    chkRange(NumberUtils.SHORT_IN_BYTES);
     final int s =
       ((this.input[this.pos] & NumberUtils.LOWEST_BYTE_MASK)  <<
           NumberUtils.ONE_BYTE_SIZE) +
       (this.input[this.pos + 1] & NumberUtils.LOWEST_BYTE_MASK);
-    this.pos += 2;
+    this.pos += NumberUtils.SHORT_IN_BYTES;
     return s;
   }
 
@@ -485,5 +528,26 @@ public class AttributeReader {
         throw new ReadAttributeException("invalid specArray opcode: " + b);
     }
   }
+
+  /**
+   * This method returns the length of the currently processed
+   * attribute.
+   *
+   * @return the length of the current attribute
+   */
+  public int getLength() {
+    return length;
+  }
+
+  /**
+   * Returns the byte representation of the currently processed
+   * attribute.
+   *
+   * @return the byte representation of the currently processed attribute.
+   */
+  public byte[] getInput() {
+    return input;
+  }
+
 
 }

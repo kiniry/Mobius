@@ -128,7 +128,7 @@ public class SingleAssert extends InCodeAttribute {
    *     assertion.
    */
   @Override
-  protected void load(final AttributeReader ar) throws ReadAttributeException {
+  public void load(final AttributeReader ar) throws ReadAttributeException {
     this.formula = new ExpressionRoot < AbstractFormula > (this,
         ar.readFormula());
   }
@@ -141,7 +141,7 @@ public class SingleAssert extends InCodeAttribute {
    */
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return this.formula.printLine(conf, DisplayStyle._assert);
+    return this.formula.printLine(conf, DisplayStyle.ASSERT_KWD);
   }
 
   /**

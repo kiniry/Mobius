@@ -9,6 +9,8 @@
 package annot.bcclass;
 
 import org.apache.bcel.classfile.AccessFlags;
+import org.apache.bcel.generic.Type;
+
 import annot.io.ReadAttributeException;
 
 /**
@@ -107,11 +109,10 @@ public class BCField extends AccessFlags {
   }
 
 
-  public Object getType() {
+  public Type getType() {
     // TODO Auto-generated method stub
     return null;
   }
-
 
   public Object getName() {
     // TODO Auto-generated method stub

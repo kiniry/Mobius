@@ -9,8 +9,8 @@ import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
+import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
-import annot.textio.DisplayStyle;
 import annot.textio.Parsing;
 
 /**
@@ -31,7 +31,7 @@ public class MethodSpecification extends MethodAttribute implements
    * Each of this cases specifies method's behaviour
    * in some conditions (if their's precondition's are true).
    */
-  private final Vector < SpecificationCase >  specCases;
+  private Vector < SpecificationCase >  specCases;
 
   /**
    * Creates an empty method specification,
@@ -59,27 +59,6 @@ public class MethodSpecification extends MethodAttribute implements
   }
 
   /**
-   * A constructor from AttributeReader, used only for
-   * loading method specification from .class file.
-   *
-   * @param m - method this annotation specifies.
-   * @param ar - stream to load from.
-   * @throws ReadAttributeException - if data left
-   *     in <code>ar</code> doesn't represent correct
-   *     method specification.
-   */
-  public MethodSpecification(final BCMethod m, final AttributeReader ar)
-    throws ReadAttributeException {
-    this.method = m;
-    final int length = ar.readAttributesCount();
-    this.specCases = new Vector < SpecificationCase > ();
-    for (int i = 0; i  <  length; i++) {
-      final SpecificationCase sc = new SpecificationCase(m, ar);
-      this.specCases.add(sc);
-    }
-  }
-
-  /**
    * Adds a specificationCase to this specification.
    * Doesn't check semantical correctness
    * of methodSpecification.
@@ -92,10 +71,21 @@ public class MethodSpecification extends MethodAttribute implements
     this.specCases.add(sc);
   }
 
+  /**
+   * Returns all the specification cases in this specification.
+   *
+   * @return method specification cases
+   */
   public Vector < SpecificationCase > getSpecificationCases() {
     return this.specCases;
   }
 
+  /**
+   * A method which returns all the expressions of the method specification.
+   * It is used in the visitor pattern.
+   *
+   * @return the array with all the expressions
+   */
   @Override
   public ExpressionRoot[] getAllExpressions() {
     int n = 1;
@@ -123,14 +113,15 @@ public class MethodSpecification extends MethodAttribute implements
    *     attribute it represents.
    */
   public int getIndex() {
-    return this.method.getBcc().getCp().findConstant(DisplayStyle.METHOD_SPECIFICATION_ATTR);
+    return this.method.getBcc().getCp().
+      findConstant(AttributeNames.METHOD_SPECIFICATION_ATTR);
   }
 
   /**
    * @return Unknown (BCEL) attribute name.
    */
   public String getName() {
-    return DisplayStyle.METHOD_SPECIFICATION_ATTR;
+    return AttributeNames.METHOD_SPECIFICATION_ATTR;
   }
 
   /**
@@ -164,11 +155,20 @@ public class MethodSpecification extends MethodAttribute implements
     return Parsing.addComment(code);
   }
 
+  /**
+   * Removes this specification container from the current method.
+   */
   @Override
   public void remove() {
     this.method.setMspec(null);
   }
 
+  /**
+   * Sets the current specification as the specification in the given
+   * method.
+   *
+   * @param m the method to assign the specification to
+   */
   @Override
   public void replace(final BCMethod m) {
     m.setMspec(this);
@@ -197,6 +197,23 @@ public class MethodSpecification extends MethodAttribute implements
     }
   }
 
+  /**
+   * A method to load specifications from an {@link AttributeReader}.
+   *
+   * @param ar - stream to load from.
+   * @throws ReadAttributeException - if data left
+   *     in <code>ar</code> doesn't represent correct
+   *     method specification.
+   */
+  public void load(final AttributeReader ar)
+    throws ReadAttributeException {
+    final int length = ar.readShort();
+    this.specCases = new Vector < SpecificationCase > ();
+    for (int i = 0; i  <  length; i++) {
+      final SpecificationCase sc = new SpecificationCase(method, ar);
+      this.specCases.add(sc);
+    }
+  }
   /**
    * @return Simple string represenatations of attribute,
    *     for use in debugger only.

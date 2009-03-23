@@ -582,7 +582,7 @@ public abstract class BCExpression {
     String str = printCode(conf);
     final String prefix = conf.getPrettyPrinter().cleanup(aprefix);
     str = conf.getPrettyPrinter().breakLines(str, prefix.length() + 1);
-    if (DisplayStyle.goControlPrint) {
+    if (DisplayStyle.DEBUG_CONTROL_PRINT) {
       str += "\n------------------------------------------\n" + printCode(conf);
       str += "\n" + conf.getPrettyPrinter().cleanup(printCode(conf));
       conf.setGoControlPrint(true);

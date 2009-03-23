@@ -13,6 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import annot.textio.BMLParser.quantifiedFormula_return;
+
 /**
  * @author alx
  *
@@ -1317,7 +1319,7 @@ public class BMLParserTest {
    */
   @Test
   public void testQuantifiedFormula() {
-    String[] paramdecls = { "\\forall int i; true",
+    String[] paramdecls = { "\\forall int i ; true",
                             "\\exists int i; true",
                             "\\forall int i; i == i",
                             "\\forall int i; i != i"
@@ -1334,9 +1336,9 @@ public class BMLParserTest {
       final BMLLexer lex = new BMLLexer(chstr);
       final CommonTokenStream tokens = new CommonTokenStream(lex);
       BMLParser parser = new BMLParser(tokens);
-      BMLParser.expression_return ret;
+      quantifiedFormula_return ret;
       try {
-        ret = parser.expression(); //initialisation of env
+        ret = parser.quantifiedFormula(); //initialisation of env
         assertEquals("quantified formula: " + i, ret.tree.toStringTree(),
                      answers[i]);
       } catch (RecognitionException e) {

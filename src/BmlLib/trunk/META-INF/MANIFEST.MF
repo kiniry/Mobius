@@ -6,7 +6,8 @@ Bundle-Version: 1.1.8
 Bundle-Localization: plugin
 Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.core.runtime,
- mobius.b2bpl
+ FreeBoogie_plugin;bundle-version="1.0.0",
+ BML_BPL_Translator
 Export-Package: annot.attributes;
   uses:="annot.io,
    annot.bcclass,
@@ -71,3 +72,5 @@ Bundle-ClassPath: .,
  lib/antlr-runtime-3.0.jar,
  translation/
 Bundle-Vendor: Mobious & Warsaw University
+Import-Package: b2bpl.bytecode,
+ b2bpl.bytecode.bml.ast

@@ -8,6 +8,8 @@ import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcclass.MessageLog;
 import annot.bcexpression.ExpressionRoot;
+import annot.io.AttributeReader;
+import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
@@ -96,7 +98,7 @@ public abstract class BCPrintableAttribute {
   /**
    * Prints annotation's code using subclass' method
    * and given display environment and context and then
-   * store last result in <code>last_code</code> field.
+   * stores last result in <code>last_code</code> field.
    *
    * @param conf - see {@link BMLConfig}.
    * @return string representation of annotation.
@@ -117,7 +119,9 @@ public abstract class BCPrintableAttribute {
   protected abstract String printCode1(BMLConfig conf);
 
   /**
-   * Removes this annotation.
+   * Removes this annotation from its container (i.e. class in case
+   * the annotation is a class annotation or method in case the annotation
+   * is a class annotation).
    */
   public abstract void remove();
 
@@ -135,5 +139,10 @@ public abstract class BCPrintableAttribute {
    */
   @Override
   public abstract String toString();
+
+  public void load(AttributeReader ar) throws ReadAttributeException {
+    // TODO Auto-generated method stub
+    return;
+  }
 
 }

@@ -235,7 +235,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
           res.append(BMLModifier.printBMLModifiers(fd.getBMLFlags()));
           if (res.length() != 0) res.append(" ");
           res.append(fd.getType().toString());
-          res.append(" ");
+          if (res.length() > 0) res.append(" ");
           res.append(fd.getName());
           res.append(";\n");
         }

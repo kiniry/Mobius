@@ -1,6 +1,8 @@
 package annot.attributes;
 
+import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
+import annot.io.ReadAttributeException;
 
 /**
  * This interface has to be implemented by each attribute
@@ -32,4 +34,12 @@ public interface IBCAttribute {
    */
   void save(AttributeWriter aw);
 
+  /**
+   * Loads this annotation from BCEL's Unknown attribute,
+   * using attributeReader.
+   * @param ar - stream to load from
+   * @throws ReadAttributeException in case the BML
+   *     attribute wasn't correctly parsed by this library.
+   */
+  void load(final AttributeReader ar) throws ReadAttributeException;
 }

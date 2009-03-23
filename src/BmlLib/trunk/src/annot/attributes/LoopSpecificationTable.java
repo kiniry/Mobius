@@ -6,7 +6,7 @@ import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
-import annot.textio.DisplayStyle;
+import annot.textio.AttributeNames;
 
 /**
  * This class represents "loop specification table" method
@@ -34,7 +34,7 @@ public class LoopSpecificationTable extends BCAttributeTable {
 
   @Override
   public String getName() {
-    return DisplayStyle.LOOP_SPECIFICATION_TABLE_ATTR;
+    return AttributeNames.LOOP_SPECIFICATION_TABLE_ATTR;
   }
 
   @Override

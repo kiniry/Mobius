@@ -9,9 +9,11 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.BMLModifierAttribute;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClassRepresentation;
 import annot.bcclass.BMLModifiersFlags;
 import annot.io.AttributeReader;
+import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 import annot.textio.DisplayStyle;
 
@@ -19,7 +21,7 @@ import annot.textio.DisplayStyle;
  * @author alx
  *
  */
-public class BMLModifier {
+public class BMLModifier implements IBCAttribute {
 
   private int modifiers;
   private boolean isRead;
@@ -97,5 +99,21 @@ public class BMLModifier {
       }
     }
     return buf.toString();
+  }
+  
+  
+  public int getIndex() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+  
+  public String getName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
+  public void save(AttributeWriter aw) {
+    // TODO Auto-generated method stub
+    
   }
 }

@@ -8,12 +8,44 @@
  */
 package bmllib.utils;
 
-public class NumberUtils {
+/**
+ * The class with various constants and methods related to binary
+ * representation of number types i.e. short, byte, int etc.
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
+ */
+public final class NumberUtils {
 
   /**
    * The number of bytes for the Integer type representation.
    */
   public static final int INTEGER_IN_BYTES = Integer.SIZE / Byte.SIZE;
+
+  /**
+   * The number of bytes for the Integer type representation.
+   */
+  public static final int SHORT_IN_BYTES = Short.SIZE / Byte.SIZE;
+
+  /**
+   * The number of the first byte.
+   */
+  public static final int FIRST_BYTE = 1;
+
+  /**
+   * The number of the second byte.
+   */
+  public static final int SECOND_BYTE = 2;
+
+  /**
+   * The number of the third byte.
+   */
+  public static final int THIRD_BYTE = 3;
+
+  /**
+   * The number of the fourth byte.
+   */
+  public static final int FOURTH_BYTE = 4;
 
   /**
    * The number of bits in three bytes.
@@ -45,6 +77,12 @@ public class NumberUtils {
    * a number.
    */
   private static final int MAXIMAL_PADDING = 2;
+
+  /**
+   * Private constructor to prevent the creation of instances.
+   */
+  private NumberUtils() {
+  }
 
   /**
    * This method returns the given number with an initial padding which

@@ -4,8 +4,10 @@
 package annot.attributes;
 
 import annot.bcclass.BCClassRepresentation;
+import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
-import annot.textio.DisplayStyle;
+import annot.io.ReadAttributeException;
+import annot.textio.AttributeNames;
 
 /**
  * @author alx
@@ -22,15 +24,20 @@ public class BMLModifierAttribute implements IBCAttribute {
   }
 
   public int getIndex() {
-    return this.bcc.getCp().findConstant(DisplayStyle.FIELD_MODIFIERS_ATTR);
+    return this.bcc.getCp().findConstant(AttributeNames.FIELD_MODIFIERS_ATTR);
   }
 
   public String getName() {
-    return DisplayStyle.FIELD_MODIFIERS_ATTR;
+    return AttributeNames.FIELD_MODIFIERS_ATTR;
   }
 
   public void save(AttributeWriter aw) {
     aw.writeInt(modifiers);
+  }
+
+  public void load(AttributeReader ar) throws ReadAttributeException {
+    // TODO Auto-generated method stub
+    
   }
 
 
