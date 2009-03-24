@@ -12,6 +12,7 @@ package umbra.instructions.ast;
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
@@ -37,10 +38,14 @@ import umbra.lib.UmbraException;
 public class FieldLineController extends BytecodeLineController {
 
   /**
-     * @author alx
-     * @version a-01
-     *
-     */
+   * Special class used as a result of the method which calculates
+   * the access rights of a field in case these are not Java
+   * access rights i.e. either the kind of a field (ghost, model) or
+   * BML access rights (e.g. spec_public, spec_protected etc.)
+   *
+   * @author Aleksy Schubert (alx@mimuw.edu.pl)
+   * @version a-01
+   */
   private static final class ModifException extends Exception {
     int my_modif;
     boolean my_bmlfield;
@@ -273,11 +278,47 @@ public class FieldLineController extends BytecodeLineController {
               e.printStackTrace();
             }
           }
+          break;
         case 1: // Ghost field
+          final Field gf = getGhostFieldForMe();
+          if (gf != null) {
+            my_bcc.addGhostField(gf);
+          }
         case 2: // Model field
         default: // Unrecognized field
       }
     }
+  }
+
+
+  /**
+   * @return
+   * @throws UmbraException 
+   */
+  private Field getGhostFieldForMe() throws UmbraException {
+    if (correct()) {
+      final BCConstantPool bcp = my_bcc.getCp();
+      if (bcp.findConstant(my_name) >= 0) {
+        throw new UmbraException();
+      }
+      bcp.addConstant(new ConstantUtf8(my_name), true);
+      final int name_index = bcp.findConstant(my_name);
+      final Attribute[] attrs = getAttributes();
+      final String sname = Utility.getSignature(my_type);
+      int signature_index = bcp.findConstant(sname);
+      if (signature_index < 0) {
+        bcp.addConstant(new ConstantUtf8(sname), true);
+        signature_index = bcp.findConstant(sname);
+      }
+      final int pos = bcp.findNATConstant(name_index, signature_index);
+      if (pos < 0) {
+        bcp.addConstant(new ConstantNameAndType(name_index, signature_index),
+                        true);
+      }
+      return new Field(my_java_modif, name_index, signature_index,
+                       attrs, my_bcc.getJC().getConstantPool());
+    }
+    return null;
   }
 
 
@@ -291,11 +332,24 @@ public class FieldLineController extends BytecodeLineController {
       if (bcp.findConstant(my_name) >= 0) {
         throw new UmbraException();
       }
+      // TODO: this does not work in case the signatures
+      //       happen to exist in the second constant pool, but
+      //       do not exist in the first one
       bcp.addConstant(new ConstantUtf8(my_name), false);
       final int name_index = bcp.findConstant(my_name);
       final Attribute[] attrs = getAttributes();
-      final int signature_index =
+      int signature_index =
         bcp.findConstant(Utility.getSignature(my_type));
+      if (signature_index < 0) {
+        bcp.addConstant(new ConstantUtf8(Utility.getSignature(my_type)),
+                        false);
+        signature_index = bcp.findConstant(Utility.getSignature(my_type));
+      }
+      final int pos = bcp.findNATConstant(name_index, signature_index);
+      if (pos < 0) {
+        bcp.addConstant(new ConstantNameAndType(name_index, signature_index),
+                        false);
+      }
       return new Field(my_java_modif, name_index, signature_index,
                        attrs, my_bcc.getJC().getConstantPool());
     }
