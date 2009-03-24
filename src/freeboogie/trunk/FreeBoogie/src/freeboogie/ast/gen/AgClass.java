@@ -13,12 +13,14 @@ public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */
   public String name = null;
   
-  /** The base class name of this class. Should be nonnull for a consistent grammar. */
+  /** The base class name of this class. 
+   * Should be nonnull for a consistent grammar. */
   private String base = null;
 
   /** A base class which has has been declared in the grammar.
-   *  If {@code baseClass} is {@code null}, {@code base} can be used to textually
-   *  represent a class outside the grammar's context. */
+   *  If {@code baseClass} is {@code null}, {@code base} can be
+   *  used to textually represent a class outside the grammar's
+   *  context. */
   private AgClass baseClass = null;  
 
   /** The class members. */
@@ -36,7 +38,7 @@ public class AgClass implements Comparable<AgClass> {
   }
 
   /** Returns all the members in this class, including the inherited ones.
-   * @return a concatenation of {@code getInheritedMembers} and {@code getSelfMembers}
+   * @return {@code getInheritedMembers} concat {@code getSelfMembers}
    */
   public List<AgMember> getMembers() {
     List<AgMember> retv = getInheritedMembers();
@@ -48,7 +50,8 @@ public class AgClass implements Comparable<AgClass> {
   /** Returns inherited members.
    * @return a freshly allocated list of members */
   public List<AgMember> getInheritedMembers() {
-    return baseClass==null ? new ArrayList<AgMember>(0) : baseClass.getMembers();
+    return baseClass==null ? 
+      new ArrayList<AgMember>(0) : baseClass.getMembers();
   }
 
 
@@ -58,9 +61,11 @@ public class AgClass implements Comparable<AgClass> {
     return new ArrayList<AgMember>(members);
   }
 
-  /** Set base class name in the case that there is no base class within the grammar,
-   *  i.e. should be called only if {@code getBaseClass()==null}.
-   *  {@link freeboogie.ast.gen.AgClass#setBaseClass(AgClass)} should be used othwise.
+  /** 
+   * Set base class name in the case that there is no base
+   * class within the gramma. That is, it should be called
+   * only if {@code getBaseClass()==null}; otherwise {@code
+   * setBaseClass()} should be used.
    */
   public void setBaseClassName(String name) {
     assert baseClass == null || baseClass.name.equals(name);

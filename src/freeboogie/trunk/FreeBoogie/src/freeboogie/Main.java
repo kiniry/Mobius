@@ -208,7 +208,7 @@ public class Main {
     
     // prepare logging
     log.setLevel(Level.OFF);
-    log.setUseParentHandlers(false); // the 'root' logger sends >=INFO to console
+    log.setUseParentHandlers(false); // the root logger sends >=INFO to console
     try {
       FileHandler logh = new FileHandler("freeboogie.log");
       logh.setFormatter(new OneLineLogFormatter());

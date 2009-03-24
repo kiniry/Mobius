@@ -10,7 +10,7 @@ public class CharLocation extends Location<Character> {
   private boolean eof;
   private boolean newLine;
   
-  /** Initialization */
+  /** Initialization. */
   public CharLocation() {
     line = 0;
     col = -1;

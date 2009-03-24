@@ -9,20 +9,20 @@ public class AgToken extends Token {
 
   /** The tokens in an AG. */
   public enum Type {
-    /** enum */ ENUM,
-    /** = */ EQ,
-    /** : */ COLON,
-    /** ; */ SEMICOLON,
-    /** :> */ SUPERTYPE,
-    /** ! */ BANG,
-    /** ( */ LP,
-    /** ) */ RP,
-    /** , */ COMMA,
-    /** identifier */ ID,
-    /** whitespace */ WS,
-    /** new-line */ NL,
-    /** comment */ COMMENT,
-    /** none of the above */ ERROR
+    ENUM,
+    EQ,
+    COLON,
+    SEMICOLON,
+    SUPERTYPE,
+    BANG,
+    LP,
+    RP,
+    COMMA,
+    ID,
+    WS,
+    NL,
+    COMMENT,
+    ERROR
   }
   
   /** The type of token. */

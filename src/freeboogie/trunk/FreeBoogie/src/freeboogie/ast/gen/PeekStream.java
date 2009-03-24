@@ -38,22 +38,17 @@ public abstract class PeekStream<T> {
    */
 
   private class Node<S> {
-    /** data */  public S data;
-    /** next */ public Node<S> next;
+    public S data;
+    public Node<S> next;
     
     /**
      * {@code next} is set to {@code null}.
-     * @param data the data to put in the node
      */
     public Node(S data) {
       this.data = data;
       this.next = null;
     }
     
-    /**
-     * @param data the data to put in the note
-     * @param next the next node
-     */
     public Node(S data, Node<S> next) {
       this.data = data;
       this.next = next;
@@ -61,17 +56,12 @@ public abstract class PeekStream<T> {
   }
   
   private class ElLocPair {
-    /** Element */
+    /** Element. */
     public T elem;
     
     /** Location of _previous_ element. */
     public Location<T> loc;
     
-    /**
-     * Initialization
-     * @param elem the element
-     * @param loc the location of the previous element
-     */
     public ElLocPair(T elem, Location<T> loc) {
       this.elem = elem; this.loc = loc;
     }

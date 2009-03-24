@@ -122,8 +122,10 @@ public class AgParser {
       } else if (t.type == AgToken.Type.ID)
         mem.type = t.rep;
       else {
-        if (memCnt == 0) 
-          Err.help("You should specify at least one member in a '=' statement.");
+        if (memCnt == 0) { 
+          Err.help(
+            "You should specify at least one member in a '=' statement.");
+        }
         skipStatementBecauseOf(t);
         return;
       }

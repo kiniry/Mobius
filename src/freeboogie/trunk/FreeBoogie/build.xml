@@ -7,6 +7,11 @@
 <project name="FreeBoogie" default="dist" basedir=".">
   <description>infrastructure for handling Boogie code</description>
 
+  <!-- custom tasks -->
+  <taskdef
+    resource="checkstyletask.properties"
+    classpath="/usr/share/java/checkstyle.jar:/usr/share/java/antlr.jar:/usr/share/java/commons-beanutils.jar:/usr/share/java/commons-collections.jar:/usr/share/java/commons-logging.jar" />
+
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
   <property name="src" location="src" />
@@ -174,6 +179,17 @@
   </target>
 
   <target name="test" depends="junit_test,functional_test" description="run all tests"></target>
+
+  <!-- Static analyzes -->
+  <target name="style">
+    <checkstyle config="style.xml">
+      <fileset dir="${src}">
+         <include name="**/*.java"/>
+         <exclude name="**/parser/*"/>
+         <exclude name="**/ast/*"/>
+      </fileset>
+    </checkstyle>
+  </target>
 
   <!-- Cleanup targets -->
   <target name="clean_ast" description="removes AST generated files">

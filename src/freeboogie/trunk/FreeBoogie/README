@@ -1,16 +1,15 @@
-This version is for developers & researchers on program verifiers.
-It is not yet ready for prime-time. FreeBoogie is developed in Java
-so it should work on many platforms. The tests and some other
-development helpers, however, are Linux (or UNIX?) specific.
+This version is for developers & researchers on program
+verifiers. It is not yet ready for prime-time. FreeBoogie is
+developed in Java so it should work on many platforms. The tests
+and some other development helpers, however, are Linux specific.
+
 The rest assumes that you are on Linux.
 
 Try this:
   source setenv
   ant test
   fbrun freeboogie.Main -help
-  fbrun freeboogie.Main -pfg boogie_Bag2.bpl
+  fbrun freeboogie.Main -pfg test/functional/parser/boogie_Bag2.bpl
 
 Enjoy.
-
-Note: Now working on VC generation.
 

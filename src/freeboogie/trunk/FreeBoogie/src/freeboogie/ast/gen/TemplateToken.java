@@ -7,7 +7,7 @@ package freeboogie.ast.gen;
  */
 public class TemplateToken extends Token {
   
-  /** Token types */
+  /** Token types. */
   public enum Type {
     /** \file */ FILE,
     /** \\user_define */ USER_DEFINE,
@@ -42,11 +42,11 @@ public class TemplateToken extends Token {
 
   /** Identifier case styles */
   public enum Case {
-    /** camelCase */ CAMEL_CASE,
-    /** PascalCase */ PASCAL_CASE,
-    /** lower_case */ LOWER_CASE,
-    /** UPPER_CASE */ UPPER_CASE,
-    /** as it appears in the abstract grammar */ ORIGINAL_CASE
+    /* camelCase */ CAMEL_CASE,
+    /* PascalCase */ PASCAL_CASE,
+    /* lower_case */ LOWER_CASE,
+    /* UPPER_CASE */ UPPER_CASE,
+    /* as it appears in the abstract grammar */ ORIGINAL_CASE
   }
 
   /** The type of this token. */

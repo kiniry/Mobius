@@ -20,16 +20,16 @@ import freeboogie.util.Err;
  */
 public class Options {
   
-  static private class Opt<T> {
-    /** Make a structure
+  private static class Opt<T> {
+    /** Make a structure.
      * @param n name
      * @param h help
      * @param d default
      */
     public Opt(String n, String h, T d) { name = n; help = h; def = d; }
-    /** name */ public String name;
-    /** help */ public String help;
-    /** default */ public T def;
+    public String name;
+    public String help;
+    public T def;
   }
   
   // the following two are used to make the help message

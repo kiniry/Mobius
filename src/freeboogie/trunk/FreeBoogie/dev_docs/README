@@ -1,6 +1,4 @@
-This directory contains documents that (at some point of
-the development) have been used as a reference or as a source
-of inspiration.
-
 deline2005btp - reference for BoogiePL 1
-
+Samuel_Willimann_MA_paper.pdf - state of b2bpl at the end of 2007
+smtlib.pdf - the SMT language reference
+wp.pdf - vcgen in the MSR Boogie tool

@@ -1,7 +1,7 @@
 " Vim syntax file
 " Language:	BoogiePL
-" Version: 0.0
-" Last Change:	2008/03/13
+" Version: 0.1
+" Last Change:	2008/12/19
 " Maintainer:  Radu Grigore <radu.grigore@gmail.com>
 
 if exists("b:current_syntax")
@@ -22,7 +22,7 @@ syn keyword boogieplFlow return returns goto
 syn keyword boogieplAttention contained	TODO BUG HACK NOTE
 
 syn match boogieplComment /\/\/.*/ contains=boogieplAttention
-syn match boogieplLabel /^\s*[a-zA-Z0-9_]\+\s*:\s*$/ 
+syn match boogieplLabel /^\s*[a-zA-Z0-9_]\+\s*:\([^=]\|$\)/ 
 
 syn region boogieplBlock start=/{/ end=/}/ contains=ALL
 syn region boogieplBlockComment start=/\/\*/ end=/\*\// contains=boogieplAttention

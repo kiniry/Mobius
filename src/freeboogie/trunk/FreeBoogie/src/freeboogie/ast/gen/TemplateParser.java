@@ -42,8 +42,8 @@ import freeboogie.util.Err;
  * TODO The duplicated code is a bit too much for my taste.
  * 
  * TODO I may want to add macro definitions such as
- *      \def\Type{\if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}}
- *      It gets tedious to write it.
+ *     \def\Type{\if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType}}
+ *     It gets tedious to write it.
  *
  * @author rgrig 
  */
@@ -244,7 +244,8 @@ public class TemplateParser {
   /** Reads the separator that will separate the members of {@code set}, 
    *  which are communicated via {@code stack}. 
    */
-  private <T> void processList(Collection<T> set, Stack<T> stack) throws IOException {
+  private <T> void processList(Collection<T> set, Stack<T> stack)
+  throws IOException {
     readToken();
     String separator = "";
     if (lastToken.type == TemplateToken.Type.LB) {
@@ -487,7 +488,8 @@ public class TemplateParser {
    * This reads the input until either it finishes or the } or ]
    * with the specified nesting level is encountered. 
    */
-  private void skipToR(int curlyStop, int bracketStop, boolean w) throws IOException {
+  private void skipToR(int curlyStop, int bracketStop, boolean w)
+  throws IOException {
     StringBuilder sb = new StringBuilder();
     while (true) {
       readToken();
