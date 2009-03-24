@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+<module name="Checker">
+    <module name="PackageHtml"/>
+    <module name="NewlineAtEndOfFile"/>
+    <module name="StrictDuplicateCode"/>
+
+    <module name="TreeWalker">
+        <module name="JavadocType">
+          <property name="scope" value="public"/>
+        </module>
+        <module name="JavadocStyle">
+          <property name="checkEmptyJavadoc" value="true"/>
+        </module>
+
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+
+        <module name="ExecutableStatementCount"/>
+        <module name="FileLength"/>
+        <module name="LineLength"/>
+        <module name="MethodLength"/>
+        <module name="AnonInnerLength"/>
+        <module name="ParameterNumber"/>
+
+        <!-- I may consider adding more WS checks -->
+        <module name="TabCharacter"/>
+
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+        <module name="RightCurly"/>
+
+        <module name="ArrayTrailingComma"/>
+        <module name="CovariantEquals"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="IllegalInstantiation"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="RedundantThrows"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="UnnecessaryParentheses"/>
+
+        <module name="MutableException"/>
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
+
+        <module name="CyclomaticComplexity">
+          <property name="max" value="20"/>
+        </module>
+
+        <module name="UpperEll"/>
+        <module name="ArrayTypeStyle"/>
+    </module>
+</module>
