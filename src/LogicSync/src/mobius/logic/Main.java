@@ -1,6 +1,8 @@
 package mobius.logic;
 
+import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
+import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -88,9 +90,17 @@ public class Main {
       e.printStackTrace();
       return;
     }
-    if (!parser.parse(args)) {
-      System.err.println(BAD_USAGE_MSG);
-      return;
+    try {
+      if (!parser.parse(args)) {
+        System.err.println(BAD_USAGE_MSG);
+        return;
+      }
+    } catch (AutomatonException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (InvalidOptionValueException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
     
     final LogicSyncOptionsInterface opt = parser.getOptionStore();

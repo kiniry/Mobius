@@ -3,7 +3,7 @@ package mobius.logic.lang.coq.ast;
 import mobius.logic.lang.ast.Ast;
 import mobius.logic.lang.coq.ast.Evaluator;
 
-public abstract class CoqAst extends Ast {
+public class CoqAst extends Ast {
   private CoqAst next;
   private CoqAst last;
   
@@ -19,14 +19,30 @@ public abstract class CoqAst extends Ast {
    * @param e the evaluator
    * @return the result computed by the evaluator
    */
-  abstract public <R> R eval(Evaluator<R> e);
+  public <R> R eval(Evaluator<R> e) {
+    return null;
+  }
   
   public void add(CoqAst next) {
-    last.next = next;
-    last = next;
+    if (next != null) {
+      last.next = next;
+      last = next;
+    }
   }
   public CoqAst getNext() {
     return next;
+  }
+
+  @Override
+  public Ast clone() {
+    CoqAst n = new CoqAst();
+    n.next = next != null? (CoqAst) next.clone() :  null;
+    CoqAst curr = n;
+    while (curr.next != null) {
+      curr = curr.next;
+    }
+    n.last = curr;
+    return null;
   }  
 
 }
