@@ -1,14 +1,34 @@
 package freeboogie.vcgen;
 
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
-import freeboogie.ast.*;
+import freeboogie.ast.AssertAssumeCmd;
+import freeboogie.ast.AssignmentCmd;
+import freeboogie.ast.Ast;
+import freeboogie.ast.AtomId;
+import freeboogie.ast.AtomOld;
+import freeboogie.ast.BinaryOp;
+import freeboogie.ast.Block;
+import freeboogie.ast.Body;
+import freeboogie.ast.Command;
+import freeboogie.ast.Declaration;
+import freeboogie.ast.Expr;
+import freeboogie.ast.Identifiers;
+import freeboogie.ast.Implementation;
+import freeboogie.ast.Signature;
+import freeboogie.ast.Transformer;
+import freeboogie.ast.TupleType;
+import freeboogie.ast.VariableDecl;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.tc.*;
-import freeboogie.util.*;
+import freeboogie.tc.SimpleGraph;
+import freeboogie.tc.TcInterface;
+import freeboogie.tc.TypeUtils;
+import freeboogie.util.Err;
 
 /**
  * Passify option.
@@ -16,17 +36,16 @@ import freeboogie.util.*;
  * Avoiding Exponential Explosion: Generating Compact Verification Conditions
  * C. Flanagan and J. B. Saxe
  * 
+ * TODO: fix the global env stuff
+ * 
  * @author J. Charles (julien.charles@gmail.com)
  */
 public class Passificator extends Transformer {
-  // used mainly for debugging
-  static private final Logger log = Logger.getLogger("freeboogie.vcgen");
-  
+
   /** the current instance of the type checker. */
   private final TcInterface fTypeChecker;
 
-  private final HashMap<VariableDecl, Integer> fGlobalVarsCnt = 
-    new LinkedHashMap<VariableDecl, Integer>();
+  private final Environment fGlobalVarsCnt = new Environment();
 
   
   /**
@@ -156,49 +175,29 @@ public class Passificator extends Transformer {
       fNewResults = newResults(fResults);
       newLocals();
     }
+    
     private void newLocals() {
       for (Entry<VariableDecl, Integer> decl: fLocalVarsCnt.entrySet()) {
         int last = decl.getValue();
         VariableDecl old = decl.getKey();
         for (int i = 1; i <= last; ++i) {
-          newLocals = VariableDecl.mk(
-            old.getName() + "$$" + i,
-            TypeUtils.stripDep(old.getType()).clone(),
-            old.getTypeVars() == null? null :old.getTypeVars().clone(),
-            newLocals);
+          newLocals = mkDecl(old, i, newLocals);
         }
       }
     }
     
     private VariableDecl newResults(VariableDecl old) {
       if (old == null) return null;
-      Integer last = fLocalVarsCnt.get(old);
+      int last = fLocalVarsCnt.get(old);
       fLocalVarsCnt.remove(old);
-      if (last != null) {
-        for (int i = 1; i < last; ++i) {
-          newLocals = VariableDecl.mk(
-            old.getName() + "$$" + i,
-            TypeUtils.stripDep(old.getType()).clone(),
-            old.getTypeVars() == null? null :old.getTypeVars().clone(),
-            newLocals);
-        }
-        newLocals = VariableDecl.mk(
-          old.getName(),
-          TypeUtils.stripDep(old.getType()).clone(),
-          old.getTypeVars() == null? null : old.getTypeVars().clone(),
-          newLocals);
+      for (int i = 0; i < last; ++i) {
+        newLocals = mkDecl(old, i, newLocals);
       }
-      
-      return VariableDecl.mk(
-        old.getName() + (last != null && last > 0? "$$" + last : ""),
-        TypeUtils.stripDep(old.getType()).clone(),
-        old.getTypeVars() == null? null : old.getTypeVars().clone(),
-        newResults((VariableDecl)old.getTail()));
+      return mkDecl(old, last, newResults((VariableDecl)old.getTail()));
     }
   
     @Override
     public Ast eval(final Body body, Declaration vars, Block blocks) {
-      
       // process out parameters
       newLocals = vars;
       Block newBlocks = (Block) blocks.eval(this);
@@ -217,29 +216,28 @@ public class Passificator extends Transformer {
       Set<Block> blist = fFlowGraph.from(block);
       Environment env = merge(blist);
       if (env == null) {
-        env = (Environment) fLocalVarsCnt.clone();
+        env = fLocalVarsCnt.clone();
       }
-      startBlockStatus.put(block, (Environment) env.clone());      
+      startBlockStatus.put(block, env.clone());      
       Command newCmd = cmd == null? null : (Command) cmd.eval(new CommandEvaluator(env));
       endBlockStatus.put(block, env);     
       Block newTail = tail == null? null : (Block) tail.eval(this);
       Identifiers newSucc = succ;
+      
       // now we see if we have to add a command to be more proper :P
       Set<Block> succList = fFlowGraph.to(block);
       if (succList.size() == 1) {
         Block next = succList.iterator().next();
         Environment nextEnv = startBlockStatus.get(next);
         for (Entry<VariableDecl, Integer> entry: nextEnv.entrySet()) {
-          int curr = env.get(entry.getKey());
-          if (entry.getValue() != curr) {
+          VariableDecl decl = entry.getKey();
+          int currIdx = env.get(decl);
+          int oldIdx = entry.getValue();
+          if (oldIdx != currIdx) {
             // we have to add an assume
-            AtomId newVar = AtomId.mk(entry.getKey().getName() + "$$" + entry.getValue(),
-                                      null);
-            AtomId oldVar = AtomId.mk(entry.getKey().getName() + "$$" + curr, null);
-            Command assumeCmd = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, 
-                                                   null,
-                                                   BinaryOp.mk(BinaryOp.Op.EQ,
-                                                     newVar, oldVar));
+            AtomId newVar = mkVar(decl, oldIdx);
+            AtomId oldVar = mkVar(decl, currIdx);
+            Command assumeCmd = mkAssumeEQ(newVar, oldVar);
             String nodeName = name + "$$" + entry.getKey().getName();
             newTail = Block.mk(nodeName, assumeCmd, newSucc, newTail);
             newSucc = Identifiers.mk(AtomId.mk(nodeName, null), null);
@@ -269,16 +267,17 @@ public class Passificator extends Transformer {
       }
       
       for (VariableDecl decl: res.keySet()) {
-        int currIncarnation = res.get(decl);
+        int currInc= res.get(decl);
         for (Block b: blist) {
           Integer incarnation = endBlockStatus.get(b).get(decl);
-          if (currIncarnation != incarnation) {
-            if (incarnation > currIncarnation) {
-              currIncarnation = incarnation;
+          int inc = incarnation == null ? 0 : incarnation;
+          if (currInc!= inc) {
+            if (inc > currInc) {
+              currInc= incarnation;
             }
           }
         }
-        res.put(decl, currIncarnation + 1);
+        res.put(decl, currInc + 1);
       }
       
       return res;
@@ -313,12 +312,14 @@ public class Passificator extends Transformer {
      * @param id the id to check for
      * @return a valid variable declaration
      */
-    private VariableDecl getDeclaration(AtomId id) {
+    VariableDecl getDeclaration(AtomId id) {
       return (VariableDecl) fTypeChecker.getST().ids.def(id);
     }
     
     private class CommandEvaluator extends Transformer {
       Environment env;
+      int belowOld = 0;
+      
       public CommandEvaluator(Environment env) {
          this.env = env;
       }
@@ -335,9 +336,16 @@ public class Passificator extends Transformer {
         int curr = i == null? 0 : i;
         curr++;
         env.put(decl, curr);
-        return AtomId.mk(var.getId()+"$$" + curr, 
-                         var.getTypes(), 
-                         var.loc()); 
+        return mkVar(var, curr);
+      }
+      
+      
+      @Override
+      public Expr eval(AtomOld atomOld, Expr e) {
+        ++belowOld;
+        e = (Expr)e.eval(this);
+        --belowOld;
+        return e;
       }
       
       @Override
@@ -345,9 +353,7 @@ public class Passificator extends Transformer {
                                   final AtomId var, final Expr rhs) {
         AssertAssumeCmd result = null;
         Expr value = (Expr) rhs.eval(this);
-        result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
-            BinaryOp.mk(BinaryOp.Op.EQ,
-                        fresh(var), value));
+        result = mkAssumeEQ(fresh(var), value);
         return result;
       }
 
@@ -358,20 +364,12 @@ public class Passificator extends Transformer {
        * @return an id which was not used before.
        */
       public AtomId get(AtomId var) {
-        
         VariableDecl decl = getDeclaration(var);
-        Integer i = env.get(decl);
-        String name;
-        if (i == null) {//FIXME: should do the old here too
-          name = var.getId();
+        int i = env.get(decl);
+        if (belowOld > 0) {
+          i = 0;
         }
-        else {
-          name = var.getId()+"$$" + i;
-        }
-        
-        return AtomId.mk(name,
-                         var.getTypes(), 
-                         var.loc()); 
+        return mkVar(var, i);
       }
       
       @Override
@@ -381,5 +379,52 @@ public class Passificator extends Transformer {
     }
   }
 
-  private static class Environment extends  LinkedHashMap<VariableDecl, Integer> { }
+  private static class Environment extends  LinkedHashMap<VariableDecl, Integer> { 
+    public Environment() {
+     // nothing 
+    }
+    public int get(VariableDecl key) {
+      Integer i = super.get(key);
+      return i == null? 0 : i;
+    }
+    
+    @Override
+    public Environment clone() {
+      return (Environment) super.clone();
+    }
+  }
+  
+  
+  public static AssertAssumeCmd mkAssumeEQ(Expr left, Expr right) {
+    return AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
+      BinaryOp.mk(BinaryOp.Op.EQ, left, right));
+  }
+  
+  public static AtomId mkVar(VariableDecl decl, int idx) {
+    String name = decl.getName();
+    if (idx != 0) {
+      name += "$$" + idx;
+    }
+    return AtomId.mk(name, null);
+  }
+  
+  public static AtomId mkVar(AtomId id, int idx) {
+    String name = id.getId();
+    if (idx != 0) {
+      name += "$$" + idx;
+    }
+    return  AtomId.mk(name, id.getTypes(), id.loc());
+  }
+  
+  public static VariableDecl mkDecl(VariableDecl old, int idx, Declaration next) {
+    String name = old.getName();
+    if (idx != 0) {
+      name += "$$" + idx;
+    }
+    return VariableDecl.mk(
+      name,
+      TypeUtils.stripDep(old.getType()).clone(),
+      old.getTypeVars() == null? null :old.getTypeVars().clone(),
+      next);
+  }
 }

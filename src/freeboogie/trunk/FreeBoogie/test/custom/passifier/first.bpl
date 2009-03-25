@@ -7,7 +7,7 @@ procedure a(a : [int]int) returns (x: int)
 {
     var i: int;
 	a:
-		x := 1;
+		i := x + 1;
 		goto b, e;
 	b:  x := x + 2;
 	   goto c;
@@ -15,7 +15,7 @@ procedure a(a : [int]int) returns (x: int)
 	   goto d;
 	d: x:= x + 4;
 	   goto f;
-	e: x:= x + 5;
+	e: i := x + 5;
 	   goto f;
 	f: x:= x + 6;
 	   return;
