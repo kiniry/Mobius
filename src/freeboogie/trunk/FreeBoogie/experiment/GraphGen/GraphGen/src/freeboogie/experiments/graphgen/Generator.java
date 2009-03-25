@@ -7,12 +7,17 @@ import java.util.Random;
 public class Generator<T> {
 
   private final Random random;
+  private final double splitProbability;
+  private final double linkProbability; 
   
   private final List<Node<T>> allNodesList;
   
-  public Generator() {
+  public Generator(double splitProbability, double linkProbability) {
     random = new Random();
     allNodesList = new LinkedList<Node<T>>();
+    
+    this.splitProbability = splitProbability;
+    this.linkProbability = linkProbability + splitProbability;
   }
   
   public Graph<T> generate(int depth, int maxDepth, int maxNodes, PayloadCreator<T> creator, Counter counter) {
@@ -31,17 +36,13 @@ public class Generator<T> {
 //    return linkGraph(depth, maxDepth, maxNodes, creator, counter);
   }
   
-  private static final int splitProb = (int)(Integer.MAX_VALUE * 0.15);
-  private static final int linkProb = (int)(Integer.MAX_VALUE * 0.75) + splitProb;
-  
-  
   public Graph<T> randomlyGenerate(int depth, int maxDepth, int maxNodes, PayloadCreator<T> creator, Counter counter) {
     
-    int randomInt = random.nextInt();
+    double randomDouble = random.nextDouble();
     
-    if (randomInt < splitProb) {
+    if (randomDouble < splitProbability) {
       return splitGraph(depth, maxDepth, maxNodes, creator, counter);
-    } else if (randomInt < linkProb) {
+    } else if (randomDouble < linkProbability) {
       return linkGraph(depth, maxDepth, maxNodes, creator, counter);
     } else {
       return singleNodeGraph(creator, counter);

@@ -3,6 +3,7 @@ import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -43,23 +44,41 @@ public class Main {
     
     int maxDepth = opt.getmax_depth();
     int maxNodes = opt.getmax_nodes();
+    double splitProb = opt.getprobability_split();
+    double linkProb = opt.getprobability_link();
+    double readProb = opt.getprobability_read();
+    double writeProb = opt.getprobability_write();
     
     FlowGraphPayloadCreator creator = new FlowGraphPayloadCreator();
     Counter counter = new Counter();
+    //Generate
+    Generator<FlowGraphPayload> generator = new Generator<FlowGraphPayload>(splitProb, linkProb);
+    generator.generate(0, maxDepth, maxNodes, creator, counter);
+    int totalNodes = generator.getAllNodesList().size();
+    System.out.println("Created " + totalNodes);
+    //Decorate
+    FlowGraphDecorator decorator = new FlowGraphDecorator(readProb, writeProb);
+    decorator.decorate(generator.getAllNodesList());
+    int numReads = decorator.getReadCount();
+    int numWrites = decorator.getWriteCount();
+    System.out.println("Decorated " + numReads + " reads and " + numWrites + " writes.");
+    System.out.println("That's " + (numReads * 100 / totalNodes) + "% reads and " + (numWrites * 100 / totalNodes) + "% writes.");
+
+    //Print .dot?
+    if (opt.isdot_output_fileSet()) {
+      File dotOut = opt.getdot_output_file();
+      System.out.println("Printing .dot to " + dotOut);
+      GraphDotPrinter<FlowGraphPayload> printer = new FlowGraphDotPrinter(new PrintStream(new FileOutputStream(dotOut)));
+      printer.printNodes(generator.getAllNodesList());
+      printer.finish();
+    }
     
-    Generator<FlowGraphPayload> generator = new Generator<FlowGraphPayload>();
-    
-    Graph<FlowGraphPayload> graph = generator.generate(0, maxDepth, maxNodes, creator, counter);
-    
-    System.out.println("Created " + generator.getAllNodesList().size());
-    
-    GraphDotPrinter printer = new GraphDotPrinter(new PrintStream(new FileOutputStream("test.dot")), 1);
-    printer.printNodes(generator.getAllNodesList());
-    printer.finish();
-    
-//    printer = new GraphDotPrinter(System.out, 1);
-//    printer.printNodes(generator.getAllNodesList());
-//    printer.finish();
+    //Print boogie?
+    if (opt.isboogie_output_fileSet()) {
+      File boogieOut = opt.getboogie_output_file();
+      System.out.println("Printing boogie to " + boogieOut);
+      GraphBoogiePrinter.printBoogie(new PrintStream(new FileOutputStream(boogieOut)), generator.getAllNodesList());
+    }
   }
 
 }

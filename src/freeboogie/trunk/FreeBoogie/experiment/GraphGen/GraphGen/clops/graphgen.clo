@@ -8,7 +8,24 @@ ARGS::
    
   max-nodes:{"-n","--max-nodes"}:{int}:[minvalue="1", default="100000"]
    : "Maximum number of nodes to produce. Actual number produced will always be somewhat larger."
+  
+  probability-split:{"-ps"}:{float}:[minvalue="0", default="0.3"]
+   : "Probability of splitting for a generative step."
    
+  probability-link:{"-pl"}:{float}:[minvalue="0", default="0.6"]
+   : "Probability of growing a link for a generative step."
+   
+  probability-read:{"-pr"}:{float}:[minvalue="0", default="0.3"]
+   : "Probability of a node being a read."
+  
+  probability-write:{"-pw"}:{float}:[minvalue="0", default="0.3"]
+   : "Probability of a node being a write."
+  
+  dot-output-file:{"-do"}:{file}:[canbedir="false"]
+   : "Output file for .dot representation of the graph." 
+  
+  boogie-output-file:{"-bo"}:{file}:[canbedir="false"]
+   : "Output file for boogie generated code."
   
 FORMAT::
 
@@ -16,7 +33,8 @@ FORMAT::
 
 WHERE::
 
-  option: max-depth OR max-nodes;
+  option:    max-depth OR max-nodes OR dot-output-file OR probability-link OR probability-split 
+          OR probability-read OR probability-write OR boogie-output-file;
 
 FLY::
 

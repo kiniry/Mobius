@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <!-- link type="text/css" rel="stylesheet" href="style.css" -->
+  <title>GraphGen (freeboogie.experiments.graphgen.clops)</title>
+  <style type="text/css">
+    body { margin:40px; color: black; background: white; }
+    td{padding-right:10px;}
+    .id {width:100px; color:blue;}
+    .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #validity-explanation{width: 300px;
+           color:red;}
+    #validity-cond{
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:14px; 
+       font-family:Courier; 
+    }
+    #usage-str{
+       align: center;
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:16px; 
+       font-family:Courier; 
+    }
+    #options{}
+    #index{float:right; 
+           border:solid 1px;
+           border-color: blue;
+           padding-right:1em;
+           }
+    #contentpart {
+        /*position:absolute;
+        top: 80px;
+        left:90px;
+        right:90px; */
+        text-align: left;
+        padding:3em;
+        font-size:90%;
+        
+    }
+  </style>
+</head>
+
+<body>
+<div id="contentpart">
+<h1>GraphGen</h1>
+
+<div id="index">
+<p>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#options">Options</a>:<br/>
+    <ul>
+          <li><a href="#opt-option">option options</a></li>
+        </ul>
+</li>
+<li><a href="#rules">Rules</a>:
+    <ul>
+		</ul>
+</li>
+</ul>
+</p>
+</div>
+
+
+<h2><a name="description">Description</a></h2>
+<h2><a name="usage">Usage</a></h2>
+<span id="usage-str">option*</span>
+
+<div id="options">
+<h2><a name="options">Options</a></h2>
+
+<p>
+<h3><a name="opt-option">option options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">max_depth</div></td>
+ <td><div class="aliases">
+                 -d
+      
+                  &lt;int&gt;
+              <br/>
+            --depth
+      
+                  &lt;int&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Maximum number of generation steps before returning a single node.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">max_nodes</div></td>
+ <td><div class="aliases">
+                 -n
+      
+                  &lt;int&gt;
+              <br/>
+            --max-nodes
+      
+                  &lt;int&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Maximum number of nodes to produce. Actual number produced will always be somewhat larger.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">dot_output_file</div></td>
+ <td><div class="aliases">
+                 -do
+      
+                  &lt;file&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Output file for .dot representation of the graph.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">probability_link</div></td>
+ <td><div class="aliases">
+                 -pl
+      
+                  &lt;float&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Probability of growing a link for a generative step.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">probability_split</div></td>
+ <td><div class="aliases">
+                 -ps
+      
+                  &lt;float&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Probability of splitting for a generative step.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">probability_read</div></td>
+ <td><div class="aliases">
+                 -pr
+      
+                  &lt;float&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Probability of a node being a read.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">probability_write</div></td>
+ <td><div class="aliases">
+                 -pw
+      
+                  &lt;float&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Probability of a node being a write.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">boogie_output_file</div></td>
+ <td><div class="aliases">
+                 -bo
+      
+                  &lt;file&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Output file for boogie generated code.</span></td>
+ </tr>
+  </table>
+</div>
+
+
+<h2><a name="rules">Rules</a></h2>
+ 
+
+
+</div>
+</body>
+</html>

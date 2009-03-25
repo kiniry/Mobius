@@ -20,10 +20,12 @@ public class Node<Payload> {
   
   public void addPredecessor(Node<Payload> node) {
     predecessors.add(node);
+    node.successors.add(this);
   }
   
   public void addSuccessor(Node<Payload> node) {
     successors.add(node);
+    node.predecessors.add(this);
   }
 
   public int getId() {

@@ -2,33 +2,31 @@ package freeboogie.experiments.graphgen;
 import java.io.PrintStream;
 import java.util.List;
 
+public class GraphDotPrinter <T> {
 
+  protected final PrintStream ps;
 
-public class GraphDotPrinter {
-
-  private final PrintStream ps;
-
-  public GraphDotPrinter(PrintStream ps, int numberOfNodes) {
+  public GraphDotPrinter(PrintStream ps) {
     this.ps = ps;
     
     ps.println("digraph {");
     ps.println();
   }
 
-  public void printNode(Node<?> node) {
+  public void printNode(Node<T> node) {
     ps.print('"');
     ps.print(node.getId());
     ps.print('"');
     ps.println(";");
   }
   
-  public void printEdgesForNode(Node<?> node) {
-    for (Node<?> succ : node.getSuccessors()) {
+  public void printEdgesForNode(Node<T> node) {
+    for (Node<T> succ : node.getSuccessors()) {
       printEdge(node, succ);
     }
   }
   
-  public <T> void printNodes(Node<T>[] nodes) {
+  public void printNodes(Node<T>[] nodes) {
     for (Node<T> node : nodes) {
       printNode(node); 
     }
@@ -37,7 +35,7 @@ public class GraphDotPrinter {
     }
   }
   
-  public <T> void printNodes(List<Node<T>> nodes) {
+  public void printNodes(List<Node<T>> nodes) {
     for (Node<T> node : nodes) {
       printNode(node); 
     }
@@ -46,7 +44,7 @@ public class GraphDotPrinter {
     }
   }
   
-  public void printEdge(Node<?> node1, Node<?> node2) {
+  public void printEdge(Node<T> node1, Node<T> node2) {
     ps.print('"');
     ps.print(node1.getId());
     ps.print('"');

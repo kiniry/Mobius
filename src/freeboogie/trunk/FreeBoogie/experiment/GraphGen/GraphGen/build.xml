@@ -15,6 +15,9 @@
   <property name="clops-target" location="src/freeboogie/experiments/graphgen/clops"/>
   <property name="clops-pkg" value="freeboogie.experiments.graphgen.clops"/>
   
+  <path id="compile.path">
+    <filelist dir="${lib}" files="clops-runtime.jar"/>
+  </path>
   
   <path id="clops.path">
     <filelist dir="${lib}" files="clops.jar"/>
