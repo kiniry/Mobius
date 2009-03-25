@@ -24,8 +24,8 @@ public class SimplifyProcess {
   private ArrayList<String[]> labels;
 
   /**
-   * The typical values for {@code cmd} are {@code {"simplify"}}
-   * and {@code {"z3","/si"}}. This starts a process and the
+   * The typical values for {@code cmd} are {@code ["simplify"]}
+   * and {@code ["z3","/si"]}. This starts a process and the
    * arguments select the command line to use to start the prover.
    *
    * @throws ProverException if creating the process fails
