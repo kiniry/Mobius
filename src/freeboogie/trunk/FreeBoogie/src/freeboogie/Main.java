@@ -82,6 +82,7 @@ public class Main {
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
     opt.regBool("-pass", "passivate");
+    opt.regBool("-passify", "passify");
     opt.regBool("-dspec", "desugar specs");
     opt.regBool("-dcall", "desugar calls");
     opt.regBool("-dhavoc", "desugar havoc");
@@ -136,7 +137,11 @@ public class Main {
     Passivator p = new Passivator();
     ast = p.process(ast, tc);
   }
-
+  private void passify() {
+    Passificator p = new Passificator();
+    ast = p.process(ast, tc);
+  }
+  
   private void removeMaps() {
     MapRemover mr = new MapRemover();
     ast = mr.process(ast, tc);
@@ -240,6 +245,7 @@ public class Main {
           if (opt.boolVal("-dhavoc")) desugarHavoc();
           if (opt.boolVal("-dspec")) desugarSpecs();
           if (opt.boolVal("-pass")) passivate();
+          if (opt.boolVal("-passify")) passify();
           if (opt.boolVal("-dmap")) removeMaps();
         } else verify();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);
