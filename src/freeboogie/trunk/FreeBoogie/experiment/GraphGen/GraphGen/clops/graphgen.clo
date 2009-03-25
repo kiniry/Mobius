@@ -1,0 +1,25 @@
+NAME::
+ GraphGen
+ 
+ARGS::
+
+  max-depth:{"-d","--depth"}:{int}:[minvalue="0", default="10"]
+   : "Maximum number of generation steps before returning a single node."
+   
+  max-nodes:{"-n","--max-nodes"}:{int}:[minvalue="1", default="100000"]
+   : "Maximum number of nodes to produce. Actual number produced will always be somewhat larger."
+   
+  
+FORMAT::
+
+  option* ;
+
+WHERE::
+
+  option: max-depth OR max-nodes;
+
+FLY::
+
+OVERRIDES::
+
+VALIDITY::  

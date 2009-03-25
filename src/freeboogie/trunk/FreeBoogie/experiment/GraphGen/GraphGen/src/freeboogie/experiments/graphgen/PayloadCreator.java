@@ -1,4 +1,4 @@
-package feeboogie.experiments;
+package freeboogie.experiments.graphgen;
 
 public interface PayloadCreator<T> {
 

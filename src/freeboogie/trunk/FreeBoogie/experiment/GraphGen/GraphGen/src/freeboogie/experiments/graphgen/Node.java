@@ -1,4 +1,4 @@
-package feeboogie.experiments;
+package freeboogie.experiments.graphgen;
 import java.util.LinkedList;
 import java.util.List;
 

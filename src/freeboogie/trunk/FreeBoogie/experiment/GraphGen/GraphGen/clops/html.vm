@@ -1,0 +1,165 @@
+## html.vm
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <!-- link type="text/css" rel="stylesheet" href="style.css" -->
+  <title>$info.ParserName ($info.PackageName)</title>
+  <style type="text/css">
+    body { margin:40px; color: black; background: white; }
+    td{padding-right:10px;}
+    .id {width:100px; color:blue;}
+    .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #validity-explanation{width: 300px;
+           color:red;}
+    #validity-cond{
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:14px; 
+       font-family:Courier; 
+    }
+    #usage-str{
+       align: center;
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:16px; 
+       font-family:Courier; 
+    }
+    #options{}
+    #index{float:right; 
+           border:solid 1px;
+           border-color: blue;
+           padding-right:1em;
+           }
+    #contentpart {
+        /*position:absolute;
+        top: 80px;
+        left:90px;
+        right:90px; */
+        text-align: left;
+        padding:3em;
+        font-size:90%;
+        
+    }
+  </style>
+</head>
+
+<body>
+<div id="contentpart">
+<h1>$info.ParserName</h1>
+
+<div id="index">
+<p>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#options">Options</a>:<br/>
+    <ul>
+    #foreach($group in $info.getOptionGroupDescriptions())
+      <li><a href="#opt-$group.Identifier">$group.Identifier options</a></li>
+    #end
+    </ul>
+</li>
+<li><a href="#rules">Rules</a>:
+    <ul>
+	#if($info.getValidityRuleDescriptions().size() != 0)
+ 	  <li><a href="#rules-validity">Validity rules</a></li>
+	#end
+	</ul>
+</li>
+</ul>
+</p>
+</div>
+
+
+<h2><a name="description">Description</a></h2>
+<h2><a name="usage">Usage</a></h2>
+<span id="usage-str">$info.getFormatString()</span>
+
+<div id="options">
+<h2><a name="options">Options</a></h2>
+
+#foreach($group in $info.getOptionGroupDescriptions())
+<p>
+<h3><a name="opt-$group.Identifier">$group.Identifier options</a></h3>
+<table>
+#foreach($child in $group.getChildren())
+ #set($option =  $info.getOptionDescriptionForIdentifier($!child))
+ <tr>
+ <td><div class="id">$option.Identifier</div></td>
+ <td><div class="aliases">
+     #if($option.getAliases().size() == 0)
+       #if( $option.getType().getType() != 0 )
+           &lt;$option.getType().getTypeDescriptionString()&gt;
+       #end
+     #end
+     #foreach($alias in $option.getAliases())
+       $alias
+      
+       #if( $option.getType().getType() != 0 )
+           &lt;$option.getType().getTypeDescriptionString()&gt;
+       #end
+       <br/>
+     #end
+     </div></td>
+ <td><span class="description">$!option.Description</span></td>
+ </tr>
+  #end
+</table>
+#end
+</div>
+
+
+<h2><a name="rules">Rules</a></h2>
+ 
+#foreach($rule in $info.getOverrideRuleDescriptions())
+
+<p>
+#foreach($assignment in $rule.getAssignments())
+Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+#end
+</p>
+<p>
+  Condition: $!rule.getConditionDescription()
+</p>
+#end
+#if($info.getValidityRuleDescriptions().size() != 0)
+  <h3><a name="rules-validity">Validity rules</a></h3>
+  The following section contains validity rules, rules that generate an error in
+  case the given test is verified.
+  <table>
+  <tr><td><b>Rule:</b></td>
+	  <td></td>
+	  <td><b>Exact check:</b></td></tr>
+
+  
+  #foreach($rule in $info.getValidityRuleDescriptions())
+    <tr>
+    <td><div id="validity-explanation">$!rule.getExplanation()</div></td>
+    <td>
+      #foreach($assignment in $rule.getAssignments())
+        Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+      #end
+    </td>
+    <td><div id="validity-cond">$!rule.getConditionDescription()</div>
+        </td>
+	</tr>
+  #end
+  </table>
+#end
+
+
+#foreach($rule in $info.getFlyRuleDescriptions())
+
+<p>
+#foreach($assignment in $rule.getAssignments())
+Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+#end
+</p>
+<p>Condition: $!rule.getConditionDescription()
+</p>
+
+#end
+</div>
+</body>
+</html>

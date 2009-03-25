@@ -1,4 +1,4 @@
-package feeboogie.experiments;
+package freeboogie.experiments.graphgen;
 import java.io.PrintStream;
 import java.util.List;
 
