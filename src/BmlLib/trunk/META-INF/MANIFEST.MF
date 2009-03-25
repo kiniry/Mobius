@@ -6,8 +6,8 @@ Bundle-Version: 1.1.8
 Bundle-Localization: plugin
 Require-Bundle: org.apache.bcel_5.1,
  org.eclipse.core.runtime,
- FreeBoogie_plugin;bundle-version="1.0.0",
- BML_BPL_Translator
+ mobius.freeboogie,
+ mobius.b2bpl
 Export-Package: annot.attributes;
   uses:="annot.io,
    annot.bcclass,

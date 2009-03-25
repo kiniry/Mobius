@@ -67,9 +67,12 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     printUpperSection(conf, code, false);
     printConstructors(conf, code);
     printMethods(conf, code);
-    for (final Enumeration i = getInvariantEnum(); i.hasMoreElements();) {
-      final ClassInvariant inv = (ClassInvariant) i.nextElement();
-      code.append(inv.printCode(conf));
+    final Enumeration i = getInvariantEnum();
+    if (i != null) {
+      for (; i.hasMoreElements();) {
+        final ClassInvariant inv = (ClassInvariant) i.nextElement();
+        code.append(inv.printCode(conf));
+      }
     }
     return conf.getPrettyPrinter().afterDisplay(code.toString());
   }
@@ -170,10 +173,12 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
                                final StringBuffer code,
                                final boolean isStatic) {
     final Enumeration e = getInvariantEnum();
-    while (e.hasMoreElements()) {
-      final ClassInvariant inv = (ClassInvariant)e.nextElement();
-      if (isStatic != inv.isInstance()) {
-        code.append(inv.printCode(conf));
+    if (e != null) {
+      while (e.hasMoreElements()) {
+        final ClassInvariant inv = (ClassInvariant)e.nextElement();
+        if (isStatic != inv.isInstance()) {
+          code.append(inv.printCode(conf));
+        }
       }
     }
   }

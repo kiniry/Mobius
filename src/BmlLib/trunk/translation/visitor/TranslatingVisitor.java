@@ -84,24 +84,25 @@ public class TranslatingVisitor {
    * @return
    */
   private BMLInvariant[] translateInvariants(BCClass clazz, JClassType owner) {
-    Vector<BMLInvariant> res = new Vector<BMLInvariant>();
-    Enumeration invariants = clazz.getInvariantEnum();
-    ExpressionTranslator translator = new ExpressionTranslator();
-    while (invariants.hasMoreElements()) {
-      ClassInvariant inv = (ClassInvariant) invariants.nextElement();
+    final Vector < BMLInvariant > res = new Vector < BMLInvariant > ();
+    final Enumeration invariants = clazz.getInvariantEnum();
+    int num = 0;
+    final ExpressionTranslator translator = new ExpressionTranslator();
+    while (invariants != null && invariants.hasMoreElements()) {
+      final ClassInvariant inv = (ClassInvariant) invariants.nextElement();
       if (inv != null) {
-        
-        BMLExpression invariant = translator.visit(inv.getInvariant());
+        final BMLExpression invariant = translator.visit(inv.getInvariant());
         int flags = translateFlags(inv.getAccessFlags());
         if (!inv.isInstance()) {
           flags = flags | IConstants.ACC_STATIC;
         }
-        BMLInvariant i = new BMLInvariant(flags, owner,
+        final BMLInvariant i = new BMLInvariant(flags, owner,
                                           new BMLPredicate(invariant));
         res.add(i);
+        num++;
       }
     }
-    return res.toArray(new BMLInvariant[1]);
+    return res.toArray(new BMLInvariant[num]);
   }
 
   /**
@@ -164,7 +165,7 @@ public class TranslatingVisitor {
     }
     resMethod.setCodeInfo(retInstr, bcm.getMaxStack(), bcm.getMaxLocals(), excHandlers);
     System.out.println("specyfikacje to " + visit(method.getMspec()));
-    System.out.println("A ca³a metoda to " + resMethod);
+    System.out.println("A caï¿½a metoda to " + resMethod);
 
     return resMethod;
   }

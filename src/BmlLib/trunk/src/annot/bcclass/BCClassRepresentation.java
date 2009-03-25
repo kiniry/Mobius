@@ -210,10 +210,15 @@ public abstract class BCClassRepresentation {
   /**
    * Returns the enumerator over all the invariants.
    *
-   * @return class invariant enumerator
+   * @return class invariant enumerator or <code>null</code> in case the
+   *   invariants collection does not exist
    */
   public Enumeration getInvariantEnum() {
-    return this.invariants.elements();
+    if (invariants == null) {
+      return null;
+    } else {
+      return this.invariants.elements();
+    }
   }
 
   /**

@@ -35,6 +35,7 @@ public class InvariantTable extends ClassAttribute {
    */
   public InvariantTable(final BCClass abcc) {
     this.bcc = abcc;
+    invariants = new Vector();
   }
 
   /**
