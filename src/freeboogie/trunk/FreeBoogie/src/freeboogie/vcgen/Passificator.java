@@ -2,6 +2,7 @@ package freeboogie.vcgen;
 
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
@@ -10,72 +11,78 @@ import freeboogie.tc.*;
 import freeboogie.util.*;
 
 /**
- * Gets rid of assignments and "old" expressions by introducing 
- * new variables. We assume that
- *   (1) specs are desugared,
- *   (2) calls are desugared,
- *   (3) havocs are desugared,
- *   (4) the flowgraphs are computed and have no cycles.
- *
- * Each variable X is transformed into a sequence of variables
- * X, X_1, X_2, ... Each command has a read index r and a write
- * index w (for each variable), meaning that reads from X will be
- * replaced by reads from X_r and a write to X is replaced by a
- * write to X_w.
- *
- * We have:
- *   r(n) = max_{m BEFORE n} w(m)
- *   w(n) = 1 + r(n)   if n writes to X
- *   w(n) = r(n)       otherwise
- *
- * Copy operations (assumes) need to be inserted when the value
- * written by a node is not the same as the one read by one of
- * its successors (according the the scheme above).
- *
- * The "old()" is simply stripped.
- *
- * This algorithm minimizes the number of variables (think
- * coloring of comparison graphs) but not the number of copy
- * operations.
- *
- * TODO Introduce new variable declarations
- * TODO Change the out parameters of implementations to refer to the last version
- *
- * @author rgrig
+ * Passify option.
+ * Implements the algorithm found in the paper 
+ * Avoiding Exponential Explosion: Generating Compact Verification Conditions
+ * C. Flanagan and J. B. Saxe
+ * 
+ * @author J. Charles (julien.charles@gmail.com)
  */
 public class Passificator extends Transformer {
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
-
-  private TcInterface tc;
-  private HashMap<VariableDecl, HashMap<Block, Integer>> readIdx;
-  private HashMap<VariableDecl, HashMap<Block, Integer>> writeIdx;
-  private HashMap<VariableDecl, Integer> newVarsCnt;
-  private HashMap<Command, HashSet<VariableDecl>> commandWs;
-  private ReadWriteSetFinder rwsf;
-
-  private VariableDecl currentVar;
-  private HashMap<Block, Integer> currentReadIdxCache;
-  private HashMap<Block, Integer> currentWriteIdxCache;
-  private SimpleGraph<Block> currentFG;
-  private Block currentBlock;
-  private HashSet<VariableDecl> allWritten; // by the current implementation
-  private Declaration newLocals;
-
-  private Deque<Boolean> context; // true = write, false = read
-  private int belowOld;
-
-  // === public interface ===
   
-  public Declaration process(Declaration ast, TcInterface tc) {
-    this.tc = tc;
-    readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
-    writeIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
-    newVarsCnt = new LinkedHashMap<VariableDecl, Integer>();
-    commandWs = new LinkedHashMap<Command, HashSet<VariableDecl>>();
-    rwsf = new ReadWriteSetFinder(tc.getST());
-    ast = (Declaration)ast.eval(this);
-    for (Map.Entry<VariableDecl, Integer> e : newVarsCnt.entrySet()) {
+  /** the current instance of the type checker. */
+  private final TcInterface fTypeChecker;
+
+  private final HashMap<VariableDecl, Integer> fGlobalVarsCnt = 
+    new LinkedHashMap<VariableDecl, Integer>();
+
+  
+  /**
+   * Construct a passificator, relating to the current instance of the type checker.
+   * @param tc the current system type checker
+   */
+  public Passificator(TcInterface tc) {
+    fTypeChecker = tc;
+  }
+
+  
+  public Declaration process(final Declaration ast) {
+    Declaration passifiedAst = (Declaration)ast.eval(this);
+    passifiedAst = addVariableDeclarations(passifiedAst);
+    verifyAst(passifiedAst);
+    return fTypeChecker.getAST();
+  }
+  
+  /**
+   * Treats method by methods.
+   */
+  @Override
+  public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
+    SimpleGraph<Block> currentFG = fTypeChecker.getFlowGraph(implementation);
+    Body body = oldBody;
+    if (currentFG.hasCycle()) {
+      Err.warning("" + implementation.loc() + ": Implementation " + 
+        sig.getName() + " has cycles. I'm not passifying it.");
+    }
+    else {
+
+      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, currentFG, oldBody, (VariableDecl)sig.getResults());
+      sig = Signature.mk(sig.getName(), sig.getArgs(),
+                         bp.getResult(),
+                         sig.getTypeVars(), sig.loc());
+      body = bp.getBody();
+
+    }
+
+    // process the rest of the program
+    if (tail != null) {
+      tail = (Declaration)tail.eval(this);
+    }
+    return Implementation.mk(sig, body, tail);
+  }
+
+  
+  
+  /**
+   * Adds to the AST the variable declarations for the variables
+   * that were added by the algorithm.
+   * @param ast the AST to transform
+   * @return the AST with the added declarations
+   */
+  private Declaration addVariableDeclarations(Declaration ast) {
+    for (Map.Entry<VariableDecl, Integer> e : fGlobalVarsCnt.entrySet()) {
       for (int i = 1; i <= e.getValue(); ++i) {
         Identifiers ntv = e.getKey().getTypeVars();
         if (ntv != null) ntv = ntv.clone();
@@ -86,245 +93,293 @@ public class Passificator extends Transformer {
           ast);
       }
     }
-    if (!tc.process(ast).isEmpty()) {
+    return ast;
+  }
+
+  /**
+   * Verify if the AST typechecks well.
+   * @param ast
+   * @return true if the typechecking works.
+   */
+  private boolean verifyAst(Declaration ast) {
+    if (!fTypeChecker.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
       pw.flush();
-      Err.internal("Passivator produced invalid Boogie.");
+      Err.internal(this + " produced invalid Boogie.");
+      return false;
     }
-    return tc.getAST();
+    return true;
   }
-
-  // === (block) transformers ===
-
-  @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
-    currentFG = tc.getFlowGraph(implementation);
-    if (currentFG.hasCycle()) {
-      Err.warning("" + implementation.loc() + ": Implementation " + 
-        sig.getName() + " has cycles. I'm not passivating it.");
-      if (tail != null) tail = (Declaration)tail.eval(this);
-      return Implementation.mk(sig, body, tail);
-    }
-
-    // collect all variables that are assigned to
-    Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> rwIds = 
-      implementation.eval(rwsf);
-    allWritten = new LinkedHashSet<VariableDecl>();
-    for (VariableDecl vd : rwIds.second) allWritten.add(vd);
-
-    // figure out read and write indexes
-    for (VariableDecl vd : allWritten) {
-      currentVar = vd;
-      currentReadIdxCache = new LinkedHashMap<Block, Integer>();
-      currentWriteIdxCache = new LinkedHashMap<Block, Integer>();
-      readIdx.put(vd, currentReadIdxCache);
-      writeIdx.put(vd, currentWriteIdxCache);
-      currentFG.iterNode(new Closure<Block>() {
-        @Override public void go(Block b) {
-          compReadIdx(b); compWriteIdx(b);
-        }
-      });
-    }
-
-    // transform the body
-    context = new ArrayDeque<Boolean>();
-    context.addFirst(false);
-    currentBlock = null;
-    belowOld = 0;
-    body = (Body)body.eval(this);
-    context = null;
-    currentFG = null;
-
-    // process out parameters
-    newLocals = body.getVars();
-    sig = Signature.mk(
-      sig.getName(), 
-      sig.getArgs(),
-      newResults((VariableDecl)sig.getResults()),
-      sig.getTypeVars(),
-      sig.loc());
-    body = Body.mk(newLocals, body.getBlocks());
-
-    // process the rest of the program
-    if (tail != null) tail = (Declaration)tail.eval(this);
-    return Implementation.mk(sig, body, tail);
-  }
-
-
-  // === workers ===
-
-  private int compReadIdx(Block b) {
-    if (currentReadIdxCache.containsKey(b))
-      return currentReadIdxCache.get(b);
-    int ri = 0;
-    for (Block pre : currentFG.from(b))
-      ri = Math.max(ri, compWriteIdx(pre));
-    currentReadIdxCache.put(b, ri);
-    return ri;
-  }
-
-  private int compWriteIdx(Block b) {
-    if (currentWriteIdxCache.containsKey(b))
-      return currentWriteIdxCache.get(b);
-    int wi = compReadIdx(b);
-    if (b.getCmd() != null) {
-      HashSet<VariableDecl> ws = commandWs.get(b.getCmd());
-      if (ws == null) {
-        ws = new LinkedHashSet<VariableDecl>();
-        for (VariableDecl vd : rwsf.get(b.getCmd()).second) ws.add(vd);
-        commandWs.put(b.getCmd(), ws);
-      }
-      if (ws.contains(currentVar)) ++wi;
-    }
-    currentWriteIdxCache.put(b, wi);
-    int owi = newVarsCnt.containsKey(currentVar) ? newVarsCnt.get(currentVar) : 0;
-    newVarsCnt.put(currentVar, Math.max(owi, wi));
-    return wi;
-  }
-
-
-  // === visitors ===
-  @Override
-  public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
-    // first process the rest
-    Block newTail = tail == null? null : (Block)tail.eval(this);
+  
+  private static class BodyPassifier extends Transformer {
+    /** the list of local variables declarations. */
+    private Declaration newLocals = null;
+    /** the current counter associated with each local variable. */
+    private final Environment fLocalVarsCnt = new Environment();
+    private final Map<Block, Environment> startBlockStatus = 
+      new HashMap<Block, Environment> ();
+    private final Map<Block, Environment> endBlockStatus = 
+      new HashMap<Block, Environment> ();
+    private final VariableDecl fResults;
+    private final TcInterface fTypeChecker;
+    private final SimpleGraph<Block> fFlowGraph;
     
-    currentBlock = block;
-    // change variable occurrences in the command of this block
-    Command newCmd = cmd == null? null : (Command)cmd.eval(this);
+    private Body fBody;
+    private VariableDecl fNewResults;
+    /**
+     * @param typeChecker  
+     * @param flowGraph 
+     * @param results */
+    public BodyPassifier(final TcInterface typeChecker, 
+                         final SimpleGraph<Block> flowGraph, 
+                         final VariableDecl results) {
+      fTypeChecker = typeChecker;
+      fResults = results;
+      fFlowGraph = flowGraph;
+    }
+    
+    public Body getBody() {
+      return fBody;
+    }
 
-    /* Compute the successors, perhaps introducing extra blocks for
-     * copy operations.
-     */
-    Identifiers newSucc = null;
-    for (Block s : currentFG.to(block)) {
-      Block ss = s; // new successor
-      for (VariableDecl v : allWritten) {
-        int ri = readIdx.get(v).get(s);
-        int wi = writeIdx.get(v).get(block);
-        if (ri == wi) continue;
-        // TODO: Perhaps I need to specify some type variables?
-        ss = newTail = Block.mk(
-          Id.get("copy"),
-          AssertAssumeCmd.mk(
-            AssertAssumeCmd.CmdType.ASSUME,
-            null,
-            BinaryOp.mk(
-              BinaryOp.Op.EQ,
-              AtomId.mk(v.getName() + (ri > 0? "$$" + ri : ""), null),
-              AtomId.mk(v.getName() + (wi > 0? "$$" + wi : ""), null))),
-          Identifiers.mk(
-            AtomId.mk(ss.getName(), null),
-            null),
-          newTail,
-          block.loc());
+    public static BodyPassifier passify(TcInterface fTypeChecker, 
+                                        SimpleGraph<Block> flowGraph, 
+                                        Body body, VariableDecl results) {
+      BodyPassifier bp = new BodyPassifier(fTypeChecker, flowGraph, results);
+      body.eval(bp);
+      return bp;
+    }
+
+    private void computeDeclarations() {
+      fNewResults = newResults(fResults);
+      newLocals();
+    }
+    private void newLocals() {
+      for (Entry<VariableDecl, Integer> decl: fLocalVarsCnt.entrySet()) {
+        int last = decl.getValue();
+        VariableDecl old = decl.getKey();
+        for (int i = 1; i <= last; ++i) {
+          newLocals = VariableDecl.mk(
+            old.getName() + "$$" + i,
+            TypeUtils.stripDep(old.getType()).clone(),
+            old.getTypeVars() == null? null :old.getTypeVars().clone(),
+            newLocals);
+        }
       }
-      newSucc = Identifiers.mk(AtomId.mk(ss.getName(), null), newSucc);
     }
-    currentBlock = null;
-
-    if (newCmd != cmd || newTail != tail)
-      block = Block.mk(name, newCmd, newSucc, newTail, block.loc());
-    return block;
-  }
-
-  public AssertAssumeCmd eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
-    Expr newExpr = (Expr)expr.eval(this);
-    if (newExpr != expr)
-      return AssertAssumeCmd.mk(type, typeVars, newExpr);
-    return assertAssumeCmd;
-  }
-
-  @Override
-  public AssertAssumeCmd eval(AssignmentCmd assignmentCmd, AtomId lhs, Expr rhs) {
-    AssertAssumeCmd result = null;
-    Expr value = (Expr)rhs.eval(this);
-    VariableDecl vd = (VariableDecl)tc.getST().ids.def(lhs);
-    result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
-        BinaryOp.mk(BinaryOp.Op.EQ,
-          AtomId.mk(
-            lhs.getId()+"$$"+getIdx(writeIdx, vd), 
-            lhs.getTypes(), 
-            lhs.loc()),
-          value));
-    return result;
-  }
-
-  @Override
-  public Expr eval(AtomOld atomOld, Expr e) {
-    ++belowOld;
-    e = (Expr)e.eval(this);
-    --belowOld;
-    return e;
-  }
-
-  @Override
-  public AtomId eval(AtomId atomId, String id, TupleType types) {
-    if (currentBlock == null) return atomId;
-    Declaration d = tc.getST().ids.def(atomId);
-    if (!(d instanceof VariableDecl)) return atomId;
-    VariableDecl vd = (VariableDecl)d;
-    int idx = context.getFirst() ? getIdx(writeIdx, vd) : getIdx(readIdx, vd);
-    if (idx == 0) return atomId;
-    return AtomId.mk(id + "$$" + idx, types, atomId.loc());
-  }
-
-  @Override
-  public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
-    int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
-    newVarsCnt.remove(variableDecl);
-    Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
-    if (newTail != tail) {
-      variableDecl = VariableDecl.mk(
-        name, 
-        TypeUtils.stripDep(type).clone(), 
-        typeVars == null? null : typeVars.clone(),
-        newTail, 
-        variableDecl.loc());
-    }
-    for (int i = 1; i <= last; ++i) {
-      variableDecl = VariableDecl.mk(
-        name+"$$"+i, 
-        TypeUtils.stripDep(type).clone(), 
-        typeVars == null? null : typeVars.clone(), 
-        variableDecl);
-    }
-    return variableDecl;
-  }
-
-  // === helpers ===
-  private int getIdx(HashMap<VariableDecl, HashMap<Block, Integer> > cache, VariableDecl vd) {
-    Map<Block, Integer> m = cache.get(vd);
-    if (m == null || belowOld > 0 || currentBlock == null) 
-      return 0; // this variable is never written to
-    Integer idx = m.get(currentBlock);
-    return idx == null? 0 : idx;
-  }
-
-  private VariableDecl newResults(VariableDecl old) {
-    if (old == null) return null;
-    Integer last = newVarsCnt.get(old);
-    newVarsCnt.remove(old);
-    if (last != null) {
-      for (int i = 1; i < last; ++i) {
+    
+    private VariableDecl newResults(VariableDecl old) {
+      if (old == null) return null;
+      Integer last = fLocalVarsCnt.get(old);
+      fLocalVarsCnt.remove(old);
+      if (last != null) {
+        for (int i = 1; i < last; ++i) {
+          newLocals = VariableDecl.mk(
+            old.getName() + "$$" + i,
+            TypeUtils.stripDep(old.getType()).clone(),
+            old.getTypeVars() == null? null :old.getTypeVars().clone(),
+            newLocals);
+        }
         newLocals = VariableDecl.mk(
-          old.getName() + "$$" + i,
+          old.getName(),
           TypeUtils.stripDep(old.getType()).clone(),
-          old.getTypeVars() == null? null :old.getTypeVars().clone(),
+          old.getTypeVars() == null? null : old.getTypeVars().clone(),
           newLocals);
       }
-      newLocals = VariableDecl.mk(
-        old.getName(),
+      
+      return VariableDecl.mk(
+        old.getName() + (last != null && last > 0? "$$" + last : ""),
         TypeUtils.stripDep(old.getType()).clone(),
         old.getTypeVars() == null? null : old.getTypeVars().clone(),
-        newLocals);
+        newResults((VariableDecl)old.getTail()));
     }
-    return VariableDecl.mk(
-      old.getName() + (last != null && last > 0? "$$" + last : ""),
-      TypeUtils.stripDep(old.getType()).clone(),
-      old.getTypeVars() == null? null : old.getTypeVars().clone(),
-      newResults((VariableDecl)old.getTail()));
+  
+    @Override
+    public Ast eval(final Body body, Declaration vars, Block blocks) {
+      
+      // process out parameters
+      newLocals = vars;
+      Block newBlocks = (Block) blocks.eval(this);
+      computeDeclarations();
+      Body newBody = Body.mk(newLocals, newBlocks);
+      fBody = newBody;
+      return newBody;
+    }
+    
+
+    
+    @Override
+    public Block eval(Block block, String name, Command cmd, 
+                      Identifiers succ, Block tail) {
+            
+      Set<Block> blist = fFlowGraph.from(block);
+      Environment env = merge(blist);
+      if (env == null) {
+        env = (Environment) fLocalVarsCnt.clone();
+      }
+      startBlockStatus.put(block, (Environment) env.clone());      
+      Command newCmd = cmd == null? null : (Command) cmd.eval(new CommandEvaluator(env));
+      endBlockStatus.put(block, env);     
+      Block newTail = tail == null? null : (Block) tail.eval(this);
+      Identifiers newSucc = succ;
+      // now we see if we have to add a command to be more proper :P
+      Set<Block> succList = fFlowGraph.to(block);
+      if (succList.size() == 1) {
+        Block next = succList.iterator().next();
+        Environment nextEnv = startBlockStatus.get(next);
+        for (Entry<VariableDecl, Integer> entry: nextEnv.entrySet()) {
+          int curr = env.get(entry.getKey());
+          if (entry.getValue() != curr) {
+            // we have to add an assume
+            AtomId newVar = AtomId.mk(entry.getKey().getName() + "$$" + entry.getValue(),
+                                      null);
+            AtomId oldVar = AtomId.mk(entry.getKey().getName() + "$$" + curr, null);
+            Command assumeCmd = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, 
+                                                   null,
+                                                   BinaryOp.mk(BinaryOp.Op.EQ,
+                                                     newVar, oldVar));
+            String nodeName = name + "$$" + entry.getKey().getName();
+            newTail = Block.mk(nodeName, assumeCmd, newSucc, newTail);
+            newSucc = Identifiers.mk(AtomId.mk(nodeName, null), null);
+          }
+        }
+      }
+      
+      updateWith(env); 
+      return Block.mk(name, newCmd, newSucc, newTail, block.loc());
+    }
+
+    /**
+     * Merge a list of environments associated with blocks.
+     * @param blist
+     * @return the merged environment
+     */
+    private Environment merge(Set<Block> blist) {
+      if (blist.size() == 0) {
+        return null;
+      }
+      
+      Environment res = new Environment();
+      res.putAll(endBlockStatus.get(blist.iterator().next()));
+      
+      if (blist.size() == 1) {
+        return res;
+      }
+      
+      for (VariableDecl decl: res.keySet()) {
+        int currIncarnation = res.get(decl);
+        for (Block b: blist) {
+          Integer incarnation = endBlockStatus.get(b).get(decl);
+          if (currIncarnation != incarnation) {
+            if (incarnation > currIncarnation) {
+              currIncarnation = incarnation;
+            }
+          }
+        }
+        res.put(decl, currIncarnation + 1);
+      }
+      
+      return res;
+    }
+    
+    private void updateWith(Environment env) {
+
+      for (VariableDecl decl: env.keySet()) {
+        Integer currInc = fLocalVarsCnt.get(decl);
+        int curr = currInc != null? currInc : 0;
+        Integer incarnation = env.get(decl);
+        if (incarnation > curr) {
+              curr = incarnation;
+              fLocalVarsCnt.put(decl, curr);
+        }
+      }
+    }
+    
+    /**
+     * Returns the new variable representing the result that
+     * has been computed by the algorithm.
+     * @return the corresponding result variable
+     */
+    public VariableDecl getResult() {
+      return fNewResults;
+    }
+
+
+
+    /**
+     * Returns the variable declaration corresponding to the given id.
+     * @param id the id to check for
+     * @return a valid variable declaration
+     */
+    private VariableDecl getDeclaration(AtomId id) {
+      return (VariableDecl) fTypeChecker.getST().ids.def(id);
+    }
+    
+    private class CommandEvaluator extends Transformer {
+      Environment env;
+      public CommandEvaluator(Environment env) {
+         this.env = env;
+      }
+
+      /**
+       * Returns a fresh identifier out of an old one.
+       * @param var the old id
+       * @return an id which was not used before.
+       */
+      public AtomId fresh(AtomId var) {
+        
+        VariableDecl decl = getDeclaration(var);
+        Integer i = env.get(decl);
+        int curr = i == null? 0 : i;
+        curr++;
+        env.put(decl, curr);
+        return AtomId.mk(var.getId()+"$$" + curr, 
+                         var.getTypes(), 
+                         var.loc()); 
+      }
+      
+      @Override
+      public AssertAssumeCmd eval(final AssignmentCmd assignmentCmd, 
+                                  final AtomId var, final Expr rhs) {
+        AssertAssumeCmd result = null;
+        Expr value = (Expr) rhs.eval(this);
+        result = AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
+            BinaryOp.mk(BinaryOp.Op.EQ,
+                        fresh(var), value));
+        return result;
+      }
+
+
+      /**
+       * Returns a fresh identifier out of an old one.
+       * @param var the old id
+       * @return an id which was not used before.
+       */
+      public AtomId get(AtomId var) {
+        
+        VariableDecl decl = getDeclaration(var);
+        Integer i = env.get(decl);
+        String name;
+        if (i == null) {//FIXME: should do the old here too
+          name = var.getId();
+        }
+        else {
+          name = var.getId()+"$$" + i;
+        }
+        
+        return AtomId.mk(name,
+                         var.getTypes(), 
+                         var.loc()); 
+      }
+      
+      @Override
+      public AtomId eval(AtomId atomId, String id, TupleType types) {
+        return get(atomId);
+      }
+    }
   }
+
+  private static class Environment extends  LinkedHashMap<VariableDecl, Integer> { }
 }

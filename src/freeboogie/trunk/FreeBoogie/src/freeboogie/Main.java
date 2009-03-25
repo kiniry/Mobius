@@ -138,8 +138,8 @@ public class Main {
     ast = p.process(ast, tc);
   }
   private void passify() {
-    Passificator p = new Passificator();
-    ast = p.process(ast, tc);
+    Passificator p = new Passificator(tc);
+    ast = p.process(ast);
   }
   
   private void removeMaps() {
