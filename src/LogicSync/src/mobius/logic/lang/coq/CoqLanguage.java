@@ -17,48 +17,55 @@ import org.antlr.runtime.RecognitionException;
 
 public class CoqLanguage extends ABasicLanguage {
 
+  /** the ast extracted from the input file. */
   private CoqAst fAst;
- 
+
+  /**
+   * Test if the file finishes with '.v'.
+   * @param f the file to test
+   * @return true if the extension is '.v'
+   */
   @Override
   public boolean isLanguageFile(final File f) {
     return f.getName().endsWith(".v");
   }
 
-  
-  //FIXME
+  /** {@inheritDoc} */
   @Override
   public void generateFrom(final GenericAst ast) {
-    if (fAst != null) {
-      switch (getGenerate().size()) {
-        case 0:
-          break;
-        case 1: 
-          try {
-            System.out.print(this + ": generating '" + 
-                             getGenerate().get(0).getName() + "'...");
-            CoqTranslator.translate(fAst, getGenerate().get(0));
-            System.out.println(" done.");
-          } 
-          catch (FileNotFoundException e) {
-            System.out.println(" FAILED!");
-            e.printStackTrace();
-              
-          }
-          break;
-        default:
-          moreThanOneFileError(getGenerate());
-      }
+    switch (getGenerate().size()) {
+      case 0:
+        break;
+      case 1: 
+        try {
+          final File out = getGenerate().get(0);
+          System.out.print(this + ": generating '" + 
+                           out.getName() + "'...");
+          final CoqAst res = ExtractToCoq.extract(ast);
+          CoqTranslator.translate(res, out);
+          System.out.println(" done.");
+        } 
+        catch (FileNotFoundException e) {
+          System.out.println(" FAILED!");
+          e.printStackTrace();
+            
+        }
+        break;
+      default:
+        moreThanOneFileError(getGenerate());
     }
   }
 
+  /** {@inheritDoc} */
   @Override
   public void prepare() {
     switch (getInput().size()) {
       case 0:
         break;
       case 1:
-        System.out.print(this + ": parsing '" + getInput().get(0).getName() + "'...");
-        fAst = parseFile(getInput().get(0));
+        final File in = getInput().get(0);
+        System.out.print(this + ": parsing '" + in.getName() + "'...");
+        fAst = parseFile(in);
         if (fAst != null) {
           System.out.println(" done.");
         }
@@ -71,7 +78,7 @@ public class CoqLanguage extends ABasicLanguage {
     }
   }
 
-  
+
   public static CoqAst parseFile(final File f) { 
     try {
       final CharStream cs = new ANTLRFileStream(f.getAbsolutePath());
@@ -94,6 +101,8 @@ public class CoqLanguage extends ABasicLanguage {
     return "Coq language handler";
   }
 
+  
+  /** {@inheritDoc} */
   @Override
   public GenericAst extractGenericAst() {
     System.out.print(this + ": Extracting generic AST...");

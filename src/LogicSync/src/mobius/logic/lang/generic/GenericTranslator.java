@@ -78,10 +78,6 @@ public class GenericTranslator extends AEvaluator<String> {
     return id + ": " + term.eval(this);
   }
 
-  @Override
-  public String evalPredicate(final String id, final int arity) {
-    return id + "(" + arity + ")";
-  }
 
   @Override
   public String evalSymbol(final String id) {

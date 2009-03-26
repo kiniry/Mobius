@@ -88,5 +88,10 @@ public class BinaryTerm extends Formula {
     
     return BinaryTerm.mk(newNext, newOp, newLeft, newRight, location);
   }
+  
+  public String toString() {
+    return "[BinaryTerm " + 
+                  next + " " + op + " " + left + " " + right + "]";
+  }
 }
 

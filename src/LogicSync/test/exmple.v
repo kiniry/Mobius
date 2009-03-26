@@ -67,7 +67,7 @@ Hint Resolve Zeq_bool_sym Zeq_bool_true Zeq_bool_false.
 
 Definition integralGE : Z -> Z -> Prop := fun (x y : Z) => x >= y.
 Definition integralGT : Z -> Z -> Prop := fun (x y : Z) =>  x > y.
-Definition integralLE : Z-> Z -> Prop := fun (x y : Z) => x <= y.
+Definition integralLE : Z -> Z -> Prop := fun (x y : Z) => x <= y.
 Definition integralLT : Z -> Z -> Prop := fun (x y : Z) => x < y.
 
 Definition integralEQ_bool : Z -> Z -> bool := fun (x y : Z) => Zeq_bool x  y.
@@ -129,14 +129,14 @@ Variable isAllocated: S -> S -> Prop.
 Variable fClosedTime : S -> S.
 
 (* The following are grabbed from Jack's Coq Plugin *)
-Variable refEQ : S -> S-> bool.
+Variable refEQ : S -> S -> bool.
 Variable refEQ_refl : forall x, refEQ x x = true. 
 Variable refEQ_eq : forall x y, refEQ x y = true -> x = y. 
-Lemma refEQ_eq_true : forall x y, x = y-> refEQ x y = true.
+Lemma refEQ_eq_true : forall x y, x = y -> refEQ x y = true.
 Proof. 
 intros x y H. rewrite H. apply refEQ_refl.
 Qed.  
-Lemma refEQ_eq_not_false : forall x y, x=y-> refEQ x y <> false.
+Lemma refEQ_eq_not_false : forall x y, x = y -> refEQ x y <> false.
 Proof. 
 intros x y e. rewrite refEQ_eq_true; trivial; discriminate.
 Qed.  
@@ -161,7 +161,7 @@ Qed.
 Hint Rewrite refEQ_refl : escj.
  
 Variable Types : Set.
-Variable subtypes: Types -> Types-> Prop.
+Variable subtypes: Types -> Types -> Prop.
 Variable typeof : S -> Types.
 Variable lockLT : S -> S -> Prop.
 (*Variable is : S -> S -> Prop. *)
@@ -178,7 +178,7 @@ Variable eClosedTime: S ->S.
 (* Array Logic *)
 Variable arrayFresh : S -> S -> S -> S -> S -> Types -> S -> Prop.
 Variable arrayShapeOne: S -> S.
-Variable arrayShapeMore: S -> S-> S.
+Variable arrayShapeMore: S -> S -> S.
 Variable isNewArray: S -> Prop.
 Variable arrayLength: S -> S.
 Axiom arrayLengthAx :
@@ -267,7 +267,7 @@ Ltac build_imp Pl C :=
   match Pl with
   | Pnil => constr:C
   | Pcons ?A ?Pl' =>
-        let C' := constr:(A->C) in
+        let C' := constr:(A -> C) in
         build_imp Pl' C'
   end.
 

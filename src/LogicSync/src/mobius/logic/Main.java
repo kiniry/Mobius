@@ -95,10 +95,12 @@ public class Main {
         System.err.println(BAD_USAGE_MSG);
         return;
       }
-    } catch (AutomatonException e) {
+    } 
+    catch (AutomatonException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
-    } catch (InvalidOptionValueException e) {
+    }
+    catch (InvalidOptionValueException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }

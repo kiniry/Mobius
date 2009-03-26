@@ -29,8 +29,6 @@ clause returns [Clause c]:
         {$c = Doc.mk($DOC.text);} 
       | ATOM COLON expr // formula
         {$c = Formula.mk($ATOM.text, $expr.t);}
-      | ATOM LPAR NUMBER RPAR // predicate def
-        {$c = Predicate.mk($ATOM.text, Integer.decode($NUMBER.text));}
       | ATOM // symbol def
         {$c = Symbol.mk($ATOM.text);}
       ;
@@ -72,15 +70,14 @@ COMMA: ',';
 
 COMMENT: '{' .* '}'{$channel=HIDDEN;};
 //Identifier
-NUMBER: DIGIT*;
-ATOM : ( ALPHANUMERIC | UNDERSCORE | DASH | '\'')*;      
+ATOM : (ALPHANUMERIC | UNDERSCORE | DASH | '\'' | SYMBOL )+;      
 fragment
 UNDERSCORE:  '_' ;
 fragment
 DASH:  '-';
-
-STAR: '*';
-SLASH: '/';
+fragment
+SYMBOL: '~'
+      | '>' | '<' | '=' | '+' | '*' | '/' | '\\';
                     
 fragment 
 ALPHANUMERIC :  ALPHA | DIGIT ;

@@ -3,7 +3,7 @@ package mobius.logic.lang.coq;
 import java.util.LinkedList;
 import java.util.List;
 
-import mobius.logic.lang.coq.ast.AEvaluator;
+import mobius.logic.lang.coq.ast.ACleanEvaluator;
 import mobius.logic.lang.coq.ast.AxiomType;
 import mobius.logic.lang.coq.ast.ConstrList;
 import mobius.logic.lang.coq.ast.Constructor;
@@ -17,9 +17,10 @@ import mobius.logic.lang.generic.ast.Application;
 import mobius.logic.lang.generic.ast.Atom;
 import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
 
-public class ExtractGeneric extends AEvaluator<GenericAst> {
+public class ExtractGeneric extends ACleanEvaluator<GenericAst> {
   
   public static GenericAst translate(CoqAst ast) {
     CoqAst node = ast;
@@ -38,9 +39,7 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
   @Override
   public GenericAst evalApplication(final Formula next, 
                                     final Formula first) {
-    Formula f = first;
     final Term current = (Term) first.eval(this);
-    f = f.getNext();
     Term tnext = null;
     if (next != null) {
       tnext = (Term) next.eval(this);
@@ -68,13 +67,15 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
   public GenericAst evalAxiom(final AxiomType type, 
                               final String name, 
                               final Formula formula) {
-//    if (type.equals(AxiomType.Variable)) {
-//      final int arity = getDepth(formula);
-//      if (arity == 0) {
-//        return Symbol.mk(name);
-//      }
-//      return Predicate.mk(name, arity);
-//    }
+    if (type.equals(AxiomType.Variable)) {
+      if (formula instanceof mobius.logic.lang.coq.ast.Term) {
+        final mobius.logic.lang.coq.ast.Term t = 
+          (mobius.logic.lang.coq.ast.Term) formula;
+        if (t.getName().equals("Set")) {
+          return Symbol.mk(name);
+        }
+      }
+    }
     return evalLemma(name, formula, null);
   }
 
@@ -115,7 +116,7 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
 
   @Override
   public GenericAst evalDoc(final String content) {
-    return mobius.logic.lang.generic.ast.Doc.mk(content);
+    return mobius.logic.lang.generic.ast.Doc.mk(content.replace('[', '(').replace(']', ')'));
   }
 
   @Override
@@ -216,11 +217,6 @@ public class ExtractGeneric extends AEvaluator<GenericAst> {
     return null;
   }
  
-  /** {@inheritDoc} */
-  @Override
-  public GenericAst evalFormula(final Formula next) {
-    return null;
-  }
   
   /** {@inheritDoc} */
   @Override

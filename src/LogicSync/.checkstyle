@@ -15,4 +15,5 @@
         <filter-data value="src/mobius/logic/lang/nat/ast"/>
         <filter-data value="src/mobius/logic/lang/nat/parser"/>
     </filter>
+    <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>

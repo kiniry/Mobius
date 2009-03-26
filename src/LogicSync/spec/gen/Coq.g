@@ -1,7 +1,8 @@
 
 grammar Coq;
+
 options {
-  backtrack=true;
+   backtrack=true;
 }
 
 @header {
@@ -143,42 +144,60 @@ req_type returns [ReqType t]:
           
 
 expr returns [Formula f]: 
-             LPAR formula RPAR {$f = Application.mk(null, $formula.f);}
+             LPAR formula RPAR {$f = $formula.f;}
            | NAME  {$f = Term.mk(null, $NAME.text);}
            | INTEGER {$f = Term.mk(null, $INTEGER.text);}
            | TILD tail=expr  {$f = Term.mk($tail.f, "~");}
            ;
            
-expr_list returns [Formula f]:
-           expr l=expr_list {$f = $expr.f;
-                             $f.setNext($l.f);}
-         | expr {$f = $expr.f;}
-         ;
-formula returns [Formula f]:
-      binary_formula0 {$f = $binary_formula0.f;}
-    | not_binary {$f = $not_binary.f;}
-    ;
-
-
+expr_list returns [Formula f]: first=expr (tail=expr  {$tail.f.setNext($f); $f = $tail.f;})* {$first.f.setNext($f);$f = $first.f; }
+                             ;
+                             
+                             
+formula returns [Formula f]: 
+      formula0 {$f = $formula0.f;} ;
     
-binary_formula0 returns [Formula f]: 
-      first=expr_list {$f = $first.f;} 
-      (o=op tail=not_binary {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
-    ;
-not_binary returns [Formula f]: 
-     FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}
+formula0 returns [Formula f]:  
+      first=formula1 {if ($first.f.getNext() != null) 
+              	            $f = Application.mk(null, $first.f); 
+              	       else
+                           $f = $first.f;} 
+      (o=op1 tail=formula1 {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
+      ;
+      
+      
+formula1 returns [Formula f]:  
+      first=formula2 {if ($first.f.getNext() != null) 
+              	            $f = Application.mk(null, $first.f); 
+              	       else
+                           $f = $first.f;} 
+      (o=op2 tail=formula2 {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})* 
+      ;
+      
+      
+formula2 returns [Formula f]:  
+      first=expr_list {if ($first.f.getNext() != null) 
+              	            $f = Application.mk(null, $first.f); 
+              	       else
+                           $f = $first.f;}
+    | FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}
     | FUN var_decl '=>' tail=formula {$f = Fun.mk(null, $var_decl.list, $tail.f);}
     | LCURLY var_decl PIPE tail=formula RCURLY {$f = Exists.mk(null, $var_decl.list.getFirst(), $tail.f);}
-    | expr_list {$f = $expr_list.f;}
-    ;
     
+      ;
+      
+op: op1 | op2;
 
 
-op returns [Term t]: IMPLIES {$t = Term.mk(null, "->");}
+op1 returns [Term t]:
+                     IMPLIES  {$t = Term.mk(null, "->");}
                    | OR  {$t = Term.mk(null, "\\/");}
-                   | AND {$t = Term.mk(null, "/\\");}
+                   | AND {$t = Term.mk(null, "/\\");} 
+                   ;
+op2 returns [Term t]: STAR {$t = Term.mk(null, "*");}
                    | COMP_OP {$t = Term.mk(null, $COMP_OP.text);}
-                   | ARIT_OP{$t = Term.mk(null, $ARIT_OP.text);}
+                   | ARIT_OP {$t = Term.mk(null, $ARIT_OP.text);}
+
                    ;
 var_decl returns [VariableList list]: 
           LPAR name_list type_decl RPAR decl=var_decl
@@ -204,7 +223,7 @@ name_list returns [LinkedList<String> list]:
         NAME l=name_list 
 		{$l.list.addFirst($NAME.text);
 		 $list = $l.list;}
-      | {$list = new LinkedList();};
+      | {$list = new LinkedList<String>();};
 
 
 
@@ -229,17 +248,20 @@ tac_expr_smp: LPAR tac_list RPAR
         | 'rewrite' tac_name_comma_list tac_hyp_list
         | NAME expr*
         ;
-tac_name_comma_list: NAME COMMA tac_name_comma_list
-                   | NAME;
-tac_hyp_list: IN '*'
+tac_name_comma_list: NAME (COMMA NAME)*;
+
+tac_hyp_list: IN STAR
             | IN NAME
             |;
 tac_list returns [String tac]: tac_expr (SEMICOLON tac_expr)* {$tac = $text;};
       
 tac_let: LET NAME DEF (formula | tac_expr_smp | 
                          'fresh' STRING_CONSTANT) IN tac_list;
+                         
+                         
 tac_set: SET LPAR NAME DEF (formula | tac_expr_smp | 
-                         'fresh' STRING_CONSTANT) RPAR IN (NAME+ | '*');
+                         'fresh' STRING_CONSTANT) RPAR IN (NAME+ | STAR);
+                         
 tac_assert: ASSERT LPAR NAME DEF formula RPAR
           | ASSERT LPAR NAME COLON formula RPAR
           | ASSERT LPAR formula RPAR
@@ -258,11 +280,8 @@ tac_match_expr:  LPAR tac_match_formula RPAR
                | QUESTION? (NAME | UNDERSCORE);
  
 tac_match_formula:        
-    | tac_match_expr op tac_match_formula
+    | tac_match_expr+ (op tac_match_formula)*
     | TILD tac_match_formula
-    | FUN var_decl '=>' tac_match_formula
-    | LCURLY var_decl PIPE tac_match_formula RCURLY
-    | tac_match_expr tac_match_formula
     ;
     
  tactic returns [CoqAst ast]: 
@@ -314,9 +333,8 @@ COMP_OP: '='
 ARIT_OP: '+'
        | '-' 
        | '/' 
-       | '*' 
        ;
-
+STAR: '*';
 IMPLIES: '->';
 
 LET: 'let';
@@ -370,7 +388,7 @@ COMMENT: '(*' .* '*)'{setText($text.substring(2, $text.length() - 2));};
                   
 
 //Identifier name
-NAME  : ALPHA ( ALPHANUMERIC | UNDERSCORE | '-' | '\'')*
+NAME  : ALPHA ( ALPHANUMERIC | UNDERSCORE | ('-' (ALPHANUMERIC | UNDERSCORE)) | '\'')*
       ;
         
 

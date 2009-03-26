@@ -1,5 +1,6 @@
 package mobius.logic.lang.coq;
 
+import mobius.logic.lang.coq.ast.ACleanEvaluator;
 import mobius.logic.lang.coq.ast.AEvaluator;
 import mobius.logic.lang.coq.ast.Constructor;
 import mobius.logic.lang.coq.ast.CoqAst;
@@ -12,7 +13,7 @@ import mobius.logic.lang.coq.ast.VariableList;
 import mobius.logic.lang.coq.ast.ConstrList;
 import java.util.List;
 
-public class StringEvaluator extends AEvaluator<String> {
+public class StringEvaluator extends ACleanEvaluator<String> {
 
   /**
    * Creates a String representation out of the given Coq Ast.
@@ -119,13 +120,6 @@ public class StringEvaluator extends AEvaluator<String> {
   /** {@inheritDoc} */
   @Override
   public String evalForall(Formula next, VariableList list, Formula formula) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-  
-  /** {@inheritDoc} */
-  @Override
-  public String evalFormula(Formula next) {
     // TODO Auto-generated method stub
     return null;
   }

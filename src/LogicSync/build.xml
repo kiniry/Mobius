@@ -1,4 +1,4 @@
-<project name="LogicSync" default="gen-files" basedir=".">
+<project name="LogicSync" default="test-coq" basedir=".">
   <description>LogicSync File</description>
   <property name="java-target-version" value="1.6"/>
 
@@ -12,7 +12,11 @@
 	 <filelist dir="${lib}" files="clops-runtime.jar"/>
   	 <filelist dir="${lib}" files="antlr-3.1.1-runtime.jar"/>
   </path>	
-  	
+  <path id="test.path">
+    <path refid="runtime.path"/>
+    <pathelement location="${build}"/>
+  </path>
+
   <!-- CLOPS -->
   <property name="clops-file" location="spec/logicsync.clops"/>
   <property name="clops-target" location="src/mobius/logic/clops"/>
@@ -230,7 +234,22 @@
 	 <delete dir="${build}"/>
 	 <delete dir="${dist}"/>
   </target>
-  
+  <target name="test-coq" depends="gen-files,compile">
+  	<java fork="yes" dir="test/" classname="mobius.logic.Main">
+        <classpath refid="test.path"/>
+	  	<arg value="exmple.v"/>
+  		<arg value="-g"/>
+	  	<arg value="output.fol"/>
+  	</java>
+  	<java fork="yes" dir="test/" classname="mobius.logic.Main">
+        <classpath refid="test.path"/>
+	  	<arg value="output.fol"/>
+  		<arg value="-g"/>
+	  	<arg value="output.v"/>
+  	</java>
+ </target>
+	
+	
 	<target name="clean" depends="astgen-clean,compile-clean"/> 
 	
 </project>
