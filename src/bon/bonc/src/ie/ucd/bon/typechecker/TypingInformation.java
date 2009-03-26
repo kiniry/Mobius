@@ -5,6 +5,8 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
+import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.source.SourceLocation;
@@ -45,18 +47,18 @@ public class TypingInformation {
 
   private final Map<String,ClusterDefinition> clusters;
   private final Map<String,ClassDefinition> classes;
-  private final Map<String,Type> types;
+  private final Map<String,BONType> types;
 
-  private final Graph<String,Type> classInheritanceGraph;
+  private final Graph<String,BONType> classInheritanceGraph;
   private final Graph<String,String> simpleClassInheritanceGraph; //Non-generic 
 
   private final Graph<String,ClusterDefinition> classClusterGraph;
   private final Graph<String,ClassDefinition> reverseClassClusterGraph;
   private final Graph<String,ClusterDefinition> clusterClusterGraph;
   private final Graph<String,ClusterDefinition> reverseClusterClusterGraph;
-  
+
   private final List<ClientRelation> clientRelations;
-  
+
   private boolean finallyProcessed;
 
   public TypingInformation() {
@@ -65,18 +67,18 @@ public class TypingInformation {
     problems = new Problems();
     clusters = new HashMap<String,ClusterDefinition>();
     classes = new HashMap<String,ClassDefinition>();
-    types = new HashMap<String,Type>();
+    types = new HashMap<String,BONType>();
 
-    classInheritanceGraph = new Graph<String,Type>();
+    classInheritanceGraph = new Graph<String,BONType>();
     simpleClassInheritanceGraph = new Graph<String,String>();
 
     classClusterGraph = new Graph<String,ClusterDefinition>();
     reverseClassClusterGraph = new Graph<String,ClassDefinition>();
     clusterClusterGraph = new Graph<String,ClusterDefinition>();
     reverseClusterClusterGraph = new Graph<String,ClusterDefinition>();
-    
+
     clientRelations = new LinkedList<ClientRelation>();
-    
+
     finallyProcessed = false;
   }
 
@@ -150,14 +152,6 @@ public class TypingInformation {
     } 
   }
 
-  public Type getType(String typeString) {
-    Type type = types.get(typeString);
-    if (type == null) {
-      type = new Type(typeString, types);
-    }
-    return type;
-  }
-
   public void formalGeneric(String name, String typeString, SourceLocation loc) {
     if (context.isInClass()) {
       ClassDefinition def = classes.get(context.getClassName());
@@ -165,41 +159,31 @@ public class TypingInformation {
         //Error, duplicate generic name   
         problems.addProblem(new DuplicateFormalGenericNameError(loc, name));
       } else {
-        Type type = null;
+        BONType type = null;
         if (typeString != null) {
-          type = getType(typeString);
+          type = BONType.mk(typeString);
         }
         def.addFormalGeneric(name, type, loc); 
       }      
     }
   }
-  
-  public void addParent(String parent, SourceLocation loc) {
-    addParent(context.getClassName(), parent, loc);
-  }
-  
-  public void addParent(String child, String parent, SourceLocation loc) {
-    //Handle static refs
-    String[] actualChildParts = child.contains(".") ? child.split("\\.") : new String[] {child};
-    String actualChild = actualChildParts[actualChildParts.length-1];
-    String[] actualParentParts = parent.contains(".") ? parent.split("\\.") : new String[] {parent};
-    String actualParent = actualParentParts[actualParentParts.length-1];
-    
-    Type parentType = getType(actualParent);
-    Type childType = getType(actualChild);
-    
-    if (childType.hasGenerics()) {
-      problems.addProblem(new StaticTypeCannotHaveGenericsHere(loc, childType.getNonGenericType(), " as the child in an inheritance relation."));
-    } else {
 
-      if (parentType.getNonGenericType().equals(actualChild)) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, actualChild));
+  public void addParent(BONType parent, SourceLocation loc) {
+    addParent(BONType.mk(context.getClassName(), null, context.getClassName()), parent, loc);
+  }
+
+  public void addParent(BONType child, BONType parent, SourceLocation loc) {
+    if (child.hasGenerics()) {
+      problems.addProblem(new StaticTypeCannotHaveGenericsHere(loc, child.getNonGenericType(), " as the child in an inheritance relation."));
+    } else {
+      if (parent.getNonGenericType().equals(child.getNonGenericType())) {
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child.getFullString()));
       } else {
-        if (simpleClassInheritanceGraph.hasEdge(actualChild, parentType.getNonGenericType())) {
-          problems.addProblem(new DuplicateSuperclassWarning(loc, actualChild, actualParent));
+        if (simpleClassInheritanceGraph.hasEdge(child.getFullString(), parent.getNonGenericType())) {
+          problems.addProblem(new DuplicateSuperclassWarning(loc, child.getFullString(), parent.getFullString()));
         } else {
-          classInheritanceGraph.addEdge(actualChild, parentType);
-          simpleClassInheritanceGraph.addEdge(actualChild, parentType.getNonGenericType());
+          classInheritanceGraph.addEdge(child.getFullString(), parent);
+          simpleClassInheritanceGraph.addEdge(child.getFullString(), parent.getNonGenericType());
         }
       }
     }
@@ -243,7 +227,7 @@ public class TypingInformation {
         if (sb.length() >= 2) {
           sb.delete(sb.length()-2, sb.length());
         }
-        
+
         problems.addProblem(new DeferredFeatureInNonDeferredClassError(loc, sb.toString(), context.getClassName()));
       }
     }
@@ -292,7 +276,7 @@ public class TypingInformation {
   }
 
   public void featureArg(String names, String type) {
-    Type t = getType(type);
+    Type t = BONType.mk(type);
     if (names != null) {
       String[] parts = names.split(",");
       for (String s : parts) {
@@ -305,7 +289,7 @@ public class TypingInformation {
   }
 
   public void hasType(String typeString) {
-    context.getFeatureSpec().setType(getType(typeString));
+    context.getFeatureSpec().setType(BONType.mk(typeString));
   }
 
   public InformalTypingInformation informal() {
@@ -331,61 +315,61 @@ public class TypingInformation {
     finalProcess(); //Ensure finally processed
     return new FormalTypeChecker(clusters, classes, types, classInheritanceGraph, simpleClassInheritanceGraph, classClusterGraph, clusterClusterGraph);
   }
-  
+
   public void finalProcess() {
     if (!finallyProcessed) {
       expandClusterInheritanceToClasses();
       finallyProcessed = true;
     }
   }
-  
+
   private void expandClusterInheritanceToClasses() {
     Main.logDebug("Expanding cluster inheritance.");
     Main.logDebug("Simple class inherit graph before: \n" + simpleClassInheritanceGraph);
-    Set<Entry<String,Set<Type>>> complexEdges = classInheritanceGraph.getEdges();
-    
-    for (Entry<String,Set<Type>> edge : new ArrayList<Entry<String,Set<Type>>>(complexEdges)) {
+    Set<Entry<String,Set<BONType>>> complexEdges = classInheritanceGraph.getEdges();
+
+    for (Entry<String,Set<BONType>> edge : new ArrayList<Entry<String,Set<BONType>>>(complexEdges)) {
       String childName = edge.getKey();
-      Set<Type> parentTypes = edge.getValue();
-      
+      Set<BONType> parentTypes = edge.getValue();
+
       Main.logDebug("Edge: " + childName + " -> " + parentTypes);
-      
+
       Set<ClassDefinition> childClasses = getClassesForType(childName);
       Main.logDebug("Child classes: " + childClasses);
-      
+
       for (ClassDefinition childDef : childClasses) {
-        for (Type parentType : new ArrayList<Type>(parentTypes)) {
+        for (BONType parentType : new ArrayList<BONType>(parentTypes)) {
           //If parent is class, do nothing...
-          
+
           if (!classes.containsKey(parentType.getNonGenericType()) && clusters.containsKey(parentType.getNonGenericType())) {
             Main.logDebug("It's a cluster.");
             Set<ClassDefinition> parentClasses = getClassesForType(parentType.getNonGenericType());
             Main.logDebug("Actual parents: " + parentClasses);
-            
+
             //First remove original link from child to parent (cluster)
             boolean removedSimpleEdge = simpleClassInheritanceGraph.removeEdge(childName, parentType.getNonGenericType());
             boolean removedComplexEdge = classInheritanceGraph.removeEdge(childName, parentType);
             if (!removedSimpleEdge) { Main.logDebug("No simple edge to remove: " + childName + ", " + parentType.getNonGenericType()); }
             if (!removedComplexEdge) { Main.logDebug("No complex edge to remove: " + childName + ", " + parentType); }
-            
+
             //Then add new links for all the parent classes, simple and full (although all have no generics).  
             for (ClassDefinition parentDef : parentClasses) {
               if (parentDef.equals(childDef)) {
                 problems.addProblem(new ClassCannotHaveSelfAsParentError(childDef.getSourceLocation(), childDef.getClassName()));
               } else {
                 simpleClassInheritanceGraph.addEdge(childDef.getClassName(), parentDef.getClassName());
-                classInheritanceGraph.addEdge(childDef.getClassName(), getType(parentDef.getClassName()));
+                classInheritanceGraph.addEdge(childDef.getClassName(), BONType.mk(parentDef.getClassName()));
               }
             }
           } else {
-            Main.logDebug(parentType.getNonGenericType() + " is not a class.");
+            Main.logDebug(parentType.getNonGenericType() + " is not a cluster.");
           }
         }
       }
     }
     Main.logDebug("Simple class inherit graph after: \n" + simpleClassInheritanceGraph);
   }
-  
+
   private Set<ClassDefinition> getClassesForType(String type) {
     Set<ClassDefinition> theClasses;
     if (classes.containsKey(type)) {
@@ -398,23 +382,23 @@ public class TypingInformation {
     }
     return theClasses;
   }
-  
+
   private Set<ClassDefinition> getClassesInCluster(String clusterName, Set<ClusterDefinition> seen) {
     seen.add(clusters.get(clusterName));
-    
+
     Set<ClassDefinition> classes = reverseClassClusterGraph.getLinkedNodes(clusterName);
     Set<ClusterDefinition> clusters = reverseClusterClusterGraph.getLinkedNodes(clusterName);
-    
+
     for (ClusterDefinition cluster : clusters) {
       if (!seen.contains(cluster)) {
         classes.addAll(getClassesInCluster(cluster.getClusterName(), seen));
       }
     }
-    
+
     return classes;
   }
 
-  public Graph<String, Type> getClassInheritanceGraph() {
+  public Graph<String, BONType> getClassInheritanceGraph() {
     return classInheritanceGraph;
   }
 
@@ -456,7 +440,7 @@ public class TypingInformation {
       }
     }
   }
-  
+
   public void addClientRelation() {
     clientRelations.add(context.getClientRelation());
   }
@@ -470,6 +454,6 @@ public class TypingInformation {
       context.getClientRelation().setTypeMark(TypeMark.make(mark));
     }
   }
-  
+
 }
 

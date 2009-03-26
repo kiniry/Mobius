@@ -27,7 +27,14 @@
   <property name="antlr-pp-src" value="BONSTTreeWalker"/>
   <property name="antlr-tc-src" value="BONTCTreeWalker"/>
   <property name="antlr-tester-src" value="Tester"/>
-	
+  
+  <property name="astgen-dir" location="astgen"/>
+  <property name="astgen-target" location="src/ie/ucd/bon/ast"/>
+  <property name="astgen-base" value="AstNode"/>
+  <property name="astgen-pkg" value="ie.ucd.bon.ast"/>
+  <property name="astgen-tpl-dir" location="astgen/tpl"/>
+  
+  
   <property name="java-target-version" value="1.5"/>
 	
   <property name="release-name" value="bonc"/>
@@ -508,6 +515,18 @@
     <copy todir="${release}" file="${debian}/${release-name}.changes"/>
   </target>
 
+  <target name="astgen" depends="init" description="generates AST">
+    <echo message="Running AST Gen"/>
+    <java fork="yes" dir="${astgen-target}" jar="lib/astgen.jar">
+      <arg value="-b"/>
+      <arg value="${astgen-base}"/>
+      <arg value="-Dpkg=${astgen-pkg}" />
+      <arg value="${astgen-dir}/BON.ag" />
+      <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
+      <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+    </java>
+  </target>
+  
 </project>
 
 

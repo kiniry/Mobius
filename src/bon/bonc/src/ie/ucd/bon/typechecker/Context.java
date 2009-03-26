@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
 
 import java.util.HashMap;
@@ -44,16 +46,16 @@ public final class Context {
   private boolean inClientRelation;
   
   //Expressions
-  private final Stack<Type> typeStack;
-  private Type lastType;
-  private final Stack<Map<String,Type>> quantificationStack;
+  private final Stack<BONType> typeStack;
+  private BONType lastType;
+  private final Stack<Map<String,BONType>> quantificationStack;
     
   private static final Context instance = new Context(); 
   
   private Context() {
     clusterStack = new Stack<String>();
-    typeStack = new Stack<Type>();
-    quantificationStack = new Stack<Map<String,Type>>();
+    typeStack = new Stack<BONType>();
+    quantificationStack = new Stack<Map<String,BONType>>();
     reset(); 
   }
   
@@ -291,7 +293,7 @@ public final class Context {
   }
   
   //Expressions
-  public void addTypeRequirement(Type type) {
+  public void addTypeRequirement(BONType type) {
     typeStack.add(type);
   }
   
@@ -299,15 +301,15 @@ public final class Context {
     typeStack.pop();
   }
   
-  public Type currentTypeRequirement() {
+  public BONType currentTypeRequirement() {
     return typeStack.empty() ? null : typeStack.peek();
   }
   
-  public void setLastCallChainType(Type t) {
+  public void setLastCallChainType(BONType t) {
     lastType = t;
   }
   
-  public Type getLastCallChainType() {
+  public BONType getLastCallChainType() {
     return lastType;
   }
   
@@ -316,14 +318,14 @@ public final class Context {
   }
   
   public void enterQuantification() {
-    quantificationStack.push(new HashMap<String,Type>());
+    quantificationStack.push(new HashMap<String,BONType>());
   }
   
   public void leaveQuantification() {
     quantificationStack.pop();
   }
   
-  public Stack<Map<String,Type>> getQuantificationStack() {
+  public Stack<Map<String,BONType>> getQuantificationStack() {
     return quantificationStack;
   }
 

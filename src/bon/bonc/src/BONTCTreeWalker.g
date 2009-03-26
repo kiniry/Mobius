@@ -16,7 +16,7 @@ options {
   
   import java.util.LinkedList;
   
-  import ie.ucd.bon.typechecker.Type;
+  import ie.ucd.bon.ast.BONType;
 }
 
 /**********************************************  
@@ -824,7 +824,7 @@ assertion_clause  :^(
 boolean_expression  :^(
                        be=BOOLEAN_EXPRESSION 
                        { getFTC().checkType("BOOL", getSLoc($be.token)); }
-                       { getContext().addTypeRequirement(getFTC().getType("BOOL")); } 
+                       { getContext().addTypeRequirement(BONType.mk("BOOL")); } 
                        expression
                        { getContext().removeTypeRequirement(); }
                       )
@@ -902,7 +902,7 @@ call_chain  :^(
             ;
             
 unqualified_call
-@init { Type t = null; }  
+@init { BONType t = null; }  
                   :^(
                      UNQUALIFIED_CALL 
                      i=IDENTIFIER 
@@ -1215,7 +1215,7 @@ expression  :^(
 
 equivalence_expression	:  ^( s='<->'
                               { getFTC().checkType("BOOL",getSLoc($s.token)); }
-                              { getContext().addTypeRequirement(getFTC().getType("BOOL")); } 
+                              { getContext().addTypeRequirement(BONType.mk("BOOL")); } 
                               equivalence_expression 
                               equivalence_expression
                               { getContext().removeTypeRequirement(); } 
@@ -1226,7 +1226,7 @@ equivalence_expression	:  ^( s='<->'
 //Right associative
 implies_expression  :  ^( s='->'
                           { getFTC().checkType("BOOL",getSLoc($s.token)); }
-                          { getContext().addTypeRequirement(getFTC().getType("BOOL")); } 
+                          { getContext().addTypeRequirement(BONType.mk("BOOL")); } 
                           implies_expression 
                           implies_expression
                           { getContext().removeTypeRequirement(); } 
@@ -1236,7 +1236,7 @@ implies_expression  :  ^( s='->'
 
 and_or_xor_expression  :  ^( s=and_or_xor_op
                              { getFTC().checkType("BOOL",getSLoc($s.start.token)); }
-                             { getContext().addTypeRequirement(getFTC().getType("BOOL")); } 
+                             { getContext().addTypeRequirement(BONType.mk("BOOL")); } 
                              and_or_xor_expression 
                              and_or_xor_expression
                              { getContext().removeTypeRequirement(); }
@@ -1246,7 +1246,7 @@ and_or_xor_expression  :  ^( s=and_or_xor_op
 
 comparison_expression  :  ^( n=normal_comparison_op
                              { getFTC().checkType("BOOL",getSLoc($n.start.token)); }
-                             { getContext().addTypeRequirement(getFTC().getType("VALUE")); }
+                             { getContext().addTypeRequirement(BONType.mk("VALUE")); }
                              comparison_expression 
                              comparison_expression
                              { getContext().removeTypeRequirement(); }
@@ -1261,7 +1261,7 @@ comparison_expression  :  ^( n=normal_comparison_op
 
 add_sub_expression  :  ^( a=add_sub_op 
                           { getFTC().checkType("VALUE",getSLoc($a.start.token)); }
-                          { getContext().addTypeRequirement(getFTC().getType("VALUE")); }
+                          { getContext().addTypeRequirement(BONType.mk("VALUE")); }
                           add_sub_expression 
                           add_sub_expression
                           { getContext().removeTypeRequirement(); }
@@ -1271,7 +1271,7 @@ add_sub_expression  :  ^( a=add_sub_op
 
 mul_div_expression  :   ^( m=mul_div_op
                            { getFTC().checkType("VALUE",getSLoc($m.start.token)); }
-                           { getContext().addTypeRequirement(getFTC().getType("VALUE")); } 
+                           { getContext().addTypeRequirement(BONType.mk("VALUE")); } 
                            mul_div_expression 
                            mul_div_expression
                            { getContext().removeTypeRequirement(); }
@@ -1282,7 +1282,7 @@ mul_div_expression  :   ^( m=mul_div_op
 //Right-associative
 mod_pow_expression  :  ^( m=MOD_POW_OP 
                           { getFTC().checkType("VALUE",getSLoc($m.token)); }
-                          { getContext().addTypeRequirement(getFTC().getType("VALUE")); }
+                          { getContext().addTypeRequirement(BONType.mk("VALUE")); }
                           mod_pow_expression 
                           mod_pow_expression
                           { getContext().removeTypeRequirement(); }
@@ -1293,7 +1293,7 @@ mod_pow_expression  :  ^( m=MOD_POW_OP
 lowest_expression  :  constant
                     | a=add_sub_op 
                       { getFTC().checkType("VALUE",getSLoc($a.start.token)); }
-                      { getContext().addTypeRequirement(getFTC().getType("VALUE")); }
+                      { getContext().addTypeRequirement(BONType.mk("VALUE")); }
                       lowest_expression
                       { getContext().removeTypeRequirement(); }
 										|	d=delta
@@ -1303,7 +1303,7 @@ lowest_expression  :  constant
 										| old lowest_expression
 										| n=not 
 										  { getFTC().checkType("BOOL",getSLoc($n.start.token)); }
-                      { getContext().addTypeRequirement(getFTC().getType("BOOL")); }
+                      { getContext().addTypeRequirement(BONType.mk("BOOL")); }
 										  lowest_expression
 										  { getContext().removeTypeRequirement(); }
       					    | '(' 

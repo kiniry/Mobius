@@ -5,6 +5,8 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
+import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.graph.Graph;
@@ -13,8 +15,8 @@ import ie.ucd.bon.typechecker.errors.ClassDoesNotDeclareFeatureError;
 import ie.ucd.bon.typechecker.errors.ClassIsNotGenericError;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.errors.EffectiveClassDoesNotDefineDeferredFeatureError;
-import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
+import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.TypeMismatch;
@@ -41,9 +43,9 @@ public class FormalTypeChecker {
   
   private final Map<String,ClusterDefinition> clusters;
   private final Map<String,ClassDefinition> classes;
-  private final Map<String,Type> types;
+  private final Map<String,BONType> types;
   
-  private final Graph<String,Type> classInheritanceGraph;
+  private final Graph<String,BONType> classInheritanceGraph;
   private final Graph<String,String> simpleClassInheritanceGraph; //Non-generic 
   
   private final Graph<String,ClusterDefinition> classClusterGraph;
@@ -51,8 +53,8 @@ public class FormalTypeChecker {
   
   public FormalTypeChecker(Map<String, ClusterDefinition> clusters,
       Map<String, ClassDefinition> classes, 
-      Map<String, Type> types,
-      Graph<String,Type> classInheritanceGraph,
+      Map<String, BONType> types,
+      Graph<String,BONType> classInheritanceGraph,
       Graph<String,String> simpleClassInheritanceGraph,
       Graph<String,ClusterDefinition> classClusterGraph,
       Graph<String,ClusterDefinition> clusterClusterGraph) {
@@ -178,19 +180,21 @@ public class FormalTypeChecker {
   
   private void performDeferrednessChecks(ClassDefinition classDef) {
     if (!classDef.isEffective()) {
+      Main.logDebug(classDef + " is not effective");
       return;
     }
-    Set<Type> parents = classDef.getParentClasses();
+    Set<BONType> parents = classDef.getParentClasses();
     
-    for (Type t : parents) {
+    for (BONType t : parents) {
       if (!t.hasGenerics()) {
-        ClassDefinition parent = classes.get(t.toString());
+        ClassDefinition parent = classes.get(t.getNonGenericType());
         if (parent != null) {
           if (parent.isDeferred()) {
             performDeferrednessChecks(classDef,parent);
           }
         } else {
           //Do anything?
+          Main.logDebug("Couldnt' fine parent " + t.toString());
         }
       } else {
         //TODO work with generics here...
@@ -293,7 +297,7 @@ public class FormalTypeChecker {
   
   public void checkValidClassType(String className, SourceLocation loc, boolean canContainGenerics) {
     if (canContainGenerics) {
-      Type type = getType(className);
+      BONType type = BONType.mk(className);
       String actualClassPart = type.getNonGenericType();
       ClassDefinition def = classes.get(actualClassPart);
       if (def == null) {
@@ -326,7 +330,7 @@ public class FormalTypeChecker {
   }
   
   public void checkType(String t, SourceLocation loc) {
-    checkType(getType(t), loc);
+    checkType(BONType.mk(t), loc);
   }
   
   public String computeClassInheritanceCycleString(String className) {
@@ -376,13 +380,13 @@ public class FormalTypeChecker {
     return null;
   }
   
-  private ClassDefinition getClassDefinitionForTopLevelOfType(Type t) {
+  private ClassDefinition getClassDefinitionForTopLevelOfType(BONType t) {
     return classes.get(t.getNonGenericType());
   }
   
-  public Type getTypeForCall(String x, SourceLocation loc) {
+  public BONType getTypeForCall(String x, SourceLocation loc) {
     Main.logDebug("Getting type for call. x=" + x + ", loc - " + loc);
-    Type t = context.getLastCallChainType();
+    BONType t = context.getLastCallChainType();
     ClassDefinition classDef = null;
     
     if (t == null) {
@@ -421,14 +425,6 @@ public class FormalTypeChecker {
       problems.addProblem(new ClassDoesNotDeclareFeatureError(loc, className, featureName));
     }
     
-  }
-  
-  public Type getType(String typeString) {
-    Type type = types.get(typeString);
-    if (type == null) {
-      type = new Type(typeString, types);
-    }
-    return type;
   }
 
   public Problems getProblems() {

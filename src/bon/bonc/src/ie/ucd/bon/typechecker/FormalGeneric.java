@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
 
 public class FormalGeneric {

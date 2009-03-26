@@ -1,0 +1,3 @@
+
+Type = String! identifier, List<BONType> actualGenerics, String! fullString;
+

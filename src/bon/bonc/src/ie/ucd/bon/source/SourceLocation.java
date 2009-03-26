@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.source;
 
+import ie.ucd.bon.Main;
+
 import java.io.File;
 
 import org.antlr.runtime.CommonToken;
@@ -54,8 +56,7 @@ public class SourceLocation implements Comparable<SourceLocation> {
 			this.absoluteCharPositionStart = cToken.getStartIndex();
 			//System.out.println("Set absolute start: " + this.absoluteCharPositionStart);
 		} else {
-			//TODO Warn!
-			System.out.println("Not CommonToken. " + start.getClass());
+		  Main.logDebug(("Not CommonToken. " + start.getClass()));
 			this.absoluteCharPositionStart = -1;  
 		}
 
@@ -64,7 +65,7 @@ public class SourceLocation implements Comparable<SourceLocation> {
 			this.absoluteCharPositionEnd = cToken.getStopIndex();
 			//System.out.println("Set absolute end: " + this.absoluteCharPositionEnd);
 		} else {
-			System.out.println("Not CommonToken. " + end.getClass());
+			Main.logDebug("Not CommonToken. " + (end==null? null : end.getClass()));
 			this.absoluteCharPositionEnd = -1;  
 		}
 	}

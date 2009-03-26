@@ -5,6 +5,8 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
+import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 
@@ -50,7 +52,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     interfaced = false;
   }
 
-  public boolean hasParentClass(Type parent) {
+  public boolean hasParentClass(BONType parent) {
     return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getClassName()).contains(parent.getNonGenericType());
   }
   
@@ -111,7 +113,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     return features.values();
   }
 
-  public Set<Type> getParentClasses() {
+  public Set<BONType> getParentClasses() {
     return typingInfo.getClassInheritanceGraph().getLinkedNodes(getClassName());
   }
   

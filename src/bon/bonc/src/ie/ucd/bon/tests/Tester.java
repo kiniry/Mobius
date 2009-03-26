@@ -60,7 +60,7 @@ public class Tester {
         test(args[0], args[1]);
       } catch (Exception e) {
         System.out.println("Error processing test file: " + args[1]);
-        System.out.println(e);
+        e.printStackTrace();
       }
     }
   }

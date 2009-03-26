@@ -4,7 +4,11 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Type;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -16,9 +20,11 @@ public class FeatureSpecification {
   private boolean deferred;
   private boolean effective;
   private boolean redefined;
-  private Type type;
+  private BONType type;
   private Renaming renaming;
   private final Map<String,FeatureArgument> argsMap;
+  private final List<FeatureArgument> argsList;
+  private final List<FeatureArgument> unnamedArgsList;
   private final List<FeatureSpecificationInstance> instances;
   
   private String precondition;
@@ -35,6 +41,8 @@ public class FeatureSpecification {
     
     argsMap = new HashMap<String,FeatureArgument>();
     instances = new Vector<FeatureSpecificationInstance>();
+    argsList = new LinkedList<FeatureArgument>();
+    unnamedArgsList = new LinkedList<FeatureArgument>();
   }
 
   public Feature getFeature() {
@@ -69,7 +77,7 @@ public class FeatureSpecification {
     this.redefined = true;
   }
 
-  public void setType(Type type) {
+  public void setType(BONType type) {
     this.type = type;
   }  
     
@@ -93,7 +101,7 @@ public class FeatureSpecification {
     return feature.getClassName();
   }
 
-  public Type getType() {
+  public BONType getType() {
     return type;
   }
 
@@ -107,8 +115,11 @@ public class FeatureSpecification {
   
   public void addArgument(String name, Type type) {
     FeatureArgument arg = new FeatureArgument(name, type);
+    argsList.add(arg);
     if (name != null) {
       argsMap.put(name, arg);
+    } else {
+      unnamedArgsList.add(arg);
     }
   }
   
@@ -139,4 +150,14 @@ public class FeatureSpecification {
     }
     
   }
+
+  public List<FeatureArgument> getArgsList() {
+    return argsList;
+  }
+
+  public List<FeatureArgument> getUnnamedArgsList() {
+    return unnamedArgsList;
+  }
+  
+  
 }

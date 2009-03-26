@@ -180,6 +180,8 @@ tokens {
   package ie.ucd.bon.parser; 
   
   import ie.ucd.bon.parser.errors.MissingElementParseError;
+  import java.util.LinkedList;
+  import ie.ucd.bon.ast.*;
 }
 
 @lexer::header {
@@ -797,7 +799,7 @@ static_relation  :  ir=inheritance_relation
 
 inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')? 
                          parent (semantic_label)? 
-                         { getTI().addParent(ie.ucd.bon.util.StringUtil.getComponentNameFromStaticRef($c.text),$parent.text,getSLoc($c.start,$parent.stop)); }
+                         { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]
@@ -992,42 +994,52 @@ shared_mark  :  ':' '(' multiplicity ')'
 
 /**********************************************/
 
-child  :  static_ref 
+child returns [BONType type] :
+         s=static_ref
+         { $type = $s.type; } 
         ->
         ^(
           CHILD static_ref
          )
        ;
        
-parent  :  static_ref         
+parent returns [BONType type] :
+         s=static_ref
+         { $type = $s.type; }         
          ->
          ^(
            PARENT static_ref
           )
         ;
         
-client  :  static_ref 
+client returns [BONType type] :
+           s=static_ref
+           { $type = $s.type; } 
          ->
          ^(
            CLIENT static_ref
           )
         ;
         
-supplier  :  static_ref
+supplier returns [BONType type] :
+           s=static_ref
+           { $type = $s.type; }
            ->
            ^(
              SUPPLIER static_ref
             )
           ;
           
-static_ref  :  
+static_ref returns [BONType type] :  
                s=static_component_name
+               { $type = $s.type; }
              ->
              ^(
                STATIC_REF[$s.start] static_component_name
               )
              | 
-               c=cluster_prefix static_component_name 
+               c=cluster_prefix s=static_component_name
+               { $type = $s.type; } 
              ->
              ^(
                STATIC_REF[$c.start] cluster_prefix static_component_name
@@ -1043,7 +1055,9 @@ cluster_prefix  :  c1=cluster_name '.' (cluster_name '.')*
   
 //TODO - class_name and cluster_name are both just IDENTIFIERs.              
 //static_component_name  :  class_name | cluster_name 
-static_component_name  :  i=IDENTIFIER
+static_component_name returns [BONType type] :
+                        i=IDENTIFIER
+                        { $type = BONType.mk($i.text, null, $i.text); }
                         ->
                         ^(
                           STATIC_COMPONENT_NAME[$i] IDENTIFIER
@@ -1091,7 +1105,12 @@ class_invariant  :  'invariant' assertion
                    )                
                  ;
                  
-parent_class_list  :  'inherit' c1=class_type { getTI().addParent($c1.text,getSLoc($c1.start,$c1.stop)); } (';' c=class_type { getTI().addParent($c.text,getSLoc($c.start,$c.stop)); } )* ';'? 
+parent_class_list  :  'inherit' c1=class_type 
+                      { getTI().addParent($c1.type,getSLoc($c1.start,$c1.stop)); } 
+                      (';' c=class_type 
+                       { getTI().addParent($c.type,getSLoc($c.start,$c.stop)); } 
+                      )* 
+                      ';'? 
                     -> 
                     ^(
                       PARENT_CLASS_LIST (class_type)+
@@ -1343,21 +1362,32 @@ formal_generic_name  :  i=IDENTIFIER
                        )
                      ;
                      
-class_type  :  c=class_name (actual_generics)? 
+class_type returns [BONType type] :  
+             c=class_name 
+             ( actual_generics
+                 { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text)); }
+               |
+               { $type = BONType.mk($c.text, null, $c.text); } 
+             ) 
              ->
              ^(
                CLASS_TYPE[$c.start] class_name (actual_generics)? 
               )
             ;
             
-actual_generics  :  '[' type_list ']'
+actual_generics returns [List<BONType> types] :  
+                  '[' type_list ']'
+                  { $types = $type_list.types; }
                   ->
                   ^(
                     ACTUAL_GENERICS type_list
                    ) 
                  ;
                  
-type_list  :  type (',' type)* 
+type_list returns [List<BONType> types]  :
+           t1=type
+           { $types = new LinkedList<BONType>(); $types.add($t1.type); } 
+           (',' t=type)* 
             ->
             ^(
               TYPE_LIST (type)+
@@ -1367,7 +1397,16 @@ type_list  :  type (',' type)*
 //TODO - Conflict - class_type is essentially IDENTIFIER (actual_generics)?
 //And formal_generic_name is IDENTIFIER          
 //type  :  class_type | formal_generic_name 
-type  :  IDENTIFIER (actual_generics)? 
+type returns [BONType type] :  
+       IDENTIFIER 
+       (
+        ( actual_generics 
+          { $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, $IDENTIFIER.text.concat($actual_generics.text)); }
+        ) 
+        |
+        { $type = BONType.mk($IDENTIFIER.text, null, $IDENTIFIER.text); }
+       ) 
+       
        ->
        ^(
          TYPE IDENTIFIER (actual_generics)?
