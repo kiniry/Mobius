@@ -61,5 +61,20 @@ private final SourceLocation location;
     }
     return \ClassName.mk(\members[, ]{new\MemberName}, location);
   }
+  
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("\ClassName ast node: ");
+    \members{
+    sb.append("\memberName = ");
+    sb.append(\memberName);
+    sb.append(", ");
+    }
+    if (sb.length() >= 2) {
+      sb.delete(sb.length()-2,sb.length());
+    }
+    return sb.toString();
+  }
 }
 

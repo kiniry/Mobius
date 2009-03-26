@@ -307,7 +307,9 @@ explanation  :  e='explanation' manifest_textblock
               ^( EXPLANATION[$e] PARSE_ERROR )
              ;
 
-indexing  :  i='indexing' index_list
+indexing returns [Indexing indexing] :  
+           i='indexing' index_list
+           { $indexing = Indexing.mk($index_list.list); getTI().indexing($indexing); }
            ->
            ^(
              INDEXING[$i] index_list
@@ -360,9 +362,14 @@ system_name  :  i=IDENTIFIER
 
 /**********************************************/
 
-index_list  :  i1=index_clause 
-               (  (';' index_clause)
+index_list returns [List<IndexClause> list] :  
+               { $list = new LinkedList<IndexClause>(); }
+               i1=index_clause 
+               { $list.add($i1.clause); }
+               (  (';' i2=index_clause)
+                  { $list.add($i2.clause); }
                 | i=index_clause { addParseProblem(new MissingElementParseError(getSourceLocation($i.start), "semi-colon", "before additional index clause", false)); }
+                  { $list.add($i.clause); }
                )* 
                ';'? //Final semi-colon optional
              -> 
@@ -371,7 +378,9 @@ index_list  :  i1=index_clause
               )
             ;
             
-index_clause  :  i=IDENTIFIER ':' index_term_list 
+index_clause returns [IndexClause clause] :  
+               i=IDENTIFIER ':' index_term_list 
+               { $clause = IndexClause.mk($i.text, $index_term_list.strings); }
                ->
                ^(
                  INDEX_CLAUSE[$i] IDENTIFIER index_term_list
@@ -382,7 +391,13 @@ index_clause  :  i=IDENTIFIER ':' index_term_list
                  ^(INDEX_CLAUSE PARSE_ERROR)
               ;
                 
-index_term_list  :  i1=index_string (',' index_string)* 
+index_term_list returns [List<String> strings] :
+                  { $strings = new LinkedList<String>(); }
+                  i1=index_string 
+                  { $strings.add($i1.text); }
+                  (',' i=index_string
+                  { $strings.add($i.text); }
+                  )* 
                   -> 
                   ^(
                     INDEX_TERM_LIST[$i1.start] index_string+

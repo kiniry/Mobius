@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
@@ -29,6 +30,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   private boolean hasFormalGenerics;
   private final Map<String,FeatureSpecificationInstance> features;
   private Collection<FeatureSpecificationInstance> deferredFeatures;
+  private Indexing indexing;
   
   private final Collection<String> invariants;
   
@@ -189,7 +191,13 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   public Collection<String> getSuperClasses() {
     return getSimpleParentClasses();
   }
-  
-  
+
+  public Indexing getIndexing() {
+    return indexing;
+  }
+
+  public void setIndexing(Indexing indexing) {
+    this.indexing = indexing;
+  }
   
 }

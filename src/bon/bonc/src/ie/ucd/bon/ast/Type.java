@@ -66,5 +66,28 @@ private final SourceLocation location;
     
     return Type.mk(newIdentifier, newActualGenerics, newFullString, location);
   }
+  
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("Type ast node: ");
+    
+    sb.append("identifier = ");
+    sb.append(identifier);
+    sb.append(", ");
+    
+    sb.append("actualGenerics = ");
+    sb.append(actualGenerics);
+    sb.append(", ");
+    
+    sb.append("fullString = ");
+    sb.append(fullString);
+    sb.append(", ");
+    
+    if (sb.length() >= 2) {
+      sb.delete(sb.length()-2,sb.length());
+    }
+    return sb.toString();
+  }
 }
 

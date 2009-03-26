@@ -1,3 +1,5 @@
 
 Type = String! identifier, List<BONType> actualGenerics, String! fullString;
 
+Indexing = List<IndexClause>! indexes;
+IndexClause = String! id, List<String>! indexTerms;

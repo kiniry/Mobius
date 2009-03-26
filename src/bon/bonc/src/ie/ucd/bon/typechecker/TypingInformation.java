@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
@@ -455,5 +456,14 @@ public class TypingInformation {
     }
   }
 
+  public void indexing(Indexing indexing) {
+    if (context.isInClass()) {
+      ClassDefinition def = classes.get(context.getClassName());
+      if (def != null) {
+        def.setIndexing(indexing);
+      }
+    }
+  }
+  
 }
 
