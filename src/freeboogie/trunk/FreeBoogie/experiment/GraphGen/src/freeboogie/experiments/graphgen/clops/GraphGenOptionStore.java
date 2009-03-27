@@ -14,6 +14,7 @@ public class GraphGenOptionStore extends OptionStore implements GraphGenOptionsI
   private final ie.ucd.clops.runtime.options.FloatOption probability_writeOG;
   private final ie.ucd.clops.runtime.options.FileOption dot_output_fileOG;
   private final ie.ucd.clops.runtime.options.FileOption boogie_output_fileOG;
+  private final ie.ucd.clops.runtime.options.IntegerOption seedOG;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
   public GraphGenOptionStore() throws ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException {
@@ -57,6 +58,9 @@ public class GraphGenOptionStore extends OptionStore implements GraphGenOptionsI
     addOption(boogie_output_fileOG);
     boogie_output_fileOG.setProperty("canbedir", "false");
     boogie_output_fileOG.setProperty("description", "Output file for boogie generated code.");
+    seedOG = new ie.ucd.clops.runtime.options.IntegerOption("seed", "(?:-s)|(?:--seed)");
+    addOption(seedOG);
+    seedOG.setProperty("description", "The seed used for random number generation.");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
@@ -73,6 +77,7 @@ public class GraphGenOptionStore extends OptionStore implements GraphGenOptionsI
     optionOG.addOptionOrGroup(probability_readOG);
     optionOG.addOptionOrGroup(probability_writeOG);
     optionOG.addOptionOrGroup(boogie_output_fileOG);
+    optionOG.addOptionOrGroup(seedOG);
   }
   
 // Option max_depth.
@@ -297,6 +302,34 @@ public class GraphGenOptionStore extends OptionStore implements GraphGenOptionsI
   
   public ie.ucd.clops.runtime.options.FileOption getboogie_output_fileOption() {
     return boogie_output_fileOG;
+  }
+  
+// Option seed.
+// Aliases: [-s, --seed]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isseedSet() {
+    return seedOG.hasValue();
+  }
+  
+  /**
+   * {@inheritDoc}
+   */
+  public int getseed() {
+    return seedOG.getValue();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public int getRawseed() {
+    return seedOG.getRawValue();
+  }
+  
+  public ie.ucd.clops.runtime.options.IntegerOption getseedOption() {
+    return seedOG;
   }
   
 }

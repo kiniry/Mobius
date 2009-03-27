@@ -1,19 +1,15 @@
 package freeboogie.experiments.graphgen;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
-
 
 public class Generator<T> {
 
-  private final Random random;
   private final double splitProbability;
   private final double linkProbability; 
   
   private final List<Node<T>> allNodesList;
   
   public Generator(double splitProbability, double linkProbability) {
-    random = new Random();
     allNodesList = new LinkedList<Node<T>>();
     
     this.splitProbability = splitProbability;
@@ -30,7 +26,6 @@ public class Generator<T> {
       return singleNodeGraph(creator, counter);
     }
     
-    //Randomly choose
     return randomlyGenerate(depth, maxDepth, maxNodes, creator, counter);
 //    return splitGraph(depth, maxDepth, maxNodes, creator, counter);
 //    return linkGraph(depth, maxDepth, maxNodes, creator, counter);
@@ -38,7 +33,7 @@ public class Generator<T> {
   
   public Graph<T> randomlyGenerate(int depth, int maxDepth, int maxNodes, PayloadCreator<T> creator, Counter counter) {
     
-    double randomDouble = random.nextDouble();
+    double randomDouble = Main.random.nextDouble();
     
     if (randomDouble < splitProbability) {
       return splitGraph(depth, maxDepth, maxNodes, creator, counter);

@@ -142,4 +142,21 @@ public interface GraphGenOptionsInterface {
    */ 
   java.io.File getboogie_output_file();
   
+
+// Option seed. 
+// Aliases: [-s, --seed]
+
+  /**
+   * @return true if the option seed has been used
+   * in the command line.
+   */
+  boolean isseedSet();
+  
+  /**
+   * Get the value of {@code Option} seed.
+   * @return the value of the option seed if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  int getseed();
+  
 }

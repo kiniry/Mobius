@@ -1,11 +1,9 @@
 package freeboogie.experiments.graphgen;
 
 import java.util.List;
-import java.util.Random;
 
 public class FlowGraphDecorator {
 
-  private final Random random;
   private final double probabilityRead;
   private final double probabilityWrite;
   
@@ -13,8 +11,6 @@ public class FlowGraphDecorator {
   private int writeCount;
   
   public FlowGraphDecorator(double probabilityRead, double probabilityWrite) {
-    random = new Random();
-    
     this.probabilityRead = probabilityRead;
         
     this.probabilityWrite = probabilityWrite;
@@ -24,7 +20,7 @@ public class FlowGraphDecorator {
   }
   
   private boolean randomlySelectBoolean(double probabilityTrue) {
-    return (random.nextDouble() < probabilityTrue);
+    return (Main.random.nextDouble() < probabilityTrue);
   }
   
   public void decorate(Node<FlowGraphPayload> node) {

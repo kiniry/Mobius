@@ -26,6 +26,9 @@ ARGS::
   
   boogie-output-file:{"-bo"}:{file}:[canbedir="false"]
    : "Output file for boogie generated code."
+
+  seed:{"-s","--seed"}:{int}
+   : "The seed used for random number generation."
   
 FORMAT::
 
@@ -34,7 +37,8 @@ FORMAT::
 WHERE::
 
   option:    max-depth OR max-nodes OR dot-output-file OR probability-link OR probability-split 
-          OR probability-read OR probability-write OR boogie-output-file;
+          OR probability-read OR probability-write OR boogie-output-file
+          OR seed;
 
 FLY::
 

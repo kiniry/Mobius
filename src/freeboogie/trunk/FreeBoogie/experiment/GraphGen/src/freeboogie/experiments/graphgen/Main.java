@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.util.Random;
 
 import freeboogie.experiments.graphgen.clops.GraphGenOptionsInterface;
 import freeboogie.experiments.graphgen.clops.GraphGenParser;
@@ -15,31 +16,26 @@ import freeboogie.experiments.graphgen.clops.GraphGenParser;
 
 public class Main {
 
+  /** 
+   * The only random number generator used in this program.
+   * Its seed may be set from the command line. If so, results
+   * are repeatable.
+   */
+  public static Random random;
+
   /**
    * @param args
    * @throws FileNotFoundException 
    */
-  public static void main(String[] args) throws FileNotFoundException {
+  public static void main(String[] args) throws Exception {
     
     GraphGenParser parser;
-    try {
-      parser = new GraphGenParser();
-    } catch (InvalidOptionPropertyValueException e) {
-      e.printStackTrace();
+    parser = new GraphGenParser();
+    if (!parser.parse(args)) {
+      System.err.println("Invalid options.");
       return;
     }
-    
-    try {
-      if (!parser.parse(args)) {
-        System.err.println("Invalid options.");
-        return;
-      }
-    } catch (AutomatonException e) {
-      e.printStackTrace();
-    } catch (InvalidOptionValueException e) {
-      e.printStackTrace();
-    }
-    
+   
     final GraphGenOptionsInterface opt = parser.getOptionStore();
     
     int maxDepth = opt.getmax_depth();
@@ -48,6 +44,7 @@ public class Main {
     double linkProb = opt.getprobability_link();
     double readProb = opt.getprobability_read();
     double writeProb = opt.getprobability_write();
+    random = opt.isseedSet()? new Random(opt.getseed()) : new Random();
     
     FlowGraphPayloadCreator creator = new FlowGraphPayloadCreator();
     Counter counter = new Counter();
