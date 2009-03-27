@@ -1,10 +1,12 @@
 package freeboogie.tc;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import freeboogie.util.Closure;
@@ -88,9 +90,10 @@ public class SimpleGraph<N> {
     return parents.get(to);
   }
 
-  // used for cycle detection
+  // used for cycle detection and topological sorting
   private HashSet<N> seen;
   private HashSet<N> done;
+  private List<N> sortedNodes;
 
   private boolean recHasCycle(N n) {
     if (done.contains(n)) return false;
@@ -112,6 +115,21 @@ public class SimpleGraph<N> {
       if (recHasCycle(n)) return true;
     return false;
   }
+
+  private void recTopologicalSort(N n) {
+    if (seen.contains(n)) return;
+    seen.add(n);
+    for (N m : from(n)) recTopologicalSort(m);
+    sortedNodes.add(n);
+  }
+
+  /** Returns all the nodes of this graph sorted topologically. */
+  public List<N> nodesInTopologicalOrder() {
+    seen = new HashSet<N>();
+    sortedNodes = new ArrayList<N>();
+    for (N n : parents.keySet()) recTopologicalSort(n);
+    return sortedNodes;
+  }
   
   /**
    * Execute {@code f} on all nodes, in a random order.
@@ -120,7 +138,7 @@ public class SimpleGraph<N> {
   public void iterNode(Closure<N> f) {
     for (N n : parents.keySet()) f.go(n);
   }
-  
+
   /**
    * Execute {@code f} on all edges, in a random order.
    * @param f the function to execute on all nodes

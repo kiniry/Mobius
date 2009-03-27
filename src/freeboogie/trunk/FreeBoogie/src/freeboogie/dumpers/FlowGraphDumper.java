@@ -29,27 +29,27 @@ public class FlowGraphDumper extends Transformer {
     ast.eval(this);
   }
 
+  private String cmdToString(Command c) {
+    StringWriter sw = new StringWriter();
+    PrettyPrinter pp = new PrettyPrinter(sw);
+    c.eval(pp);
+    return sw.toString();
+  }
+
   @Override
   public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
     SimpleGraph<Block> fg = tc.getFlowGraph(implementation);
     System.out.println("digraph \"" + implementation.getSig().getName() + "@" + implementation.loc() + "\" {");
     if (body.getBlocks() != null)
       System.out.println("  \"" + body.getBlocks().getName() + "\" [style=bold];");
-    fg.iterNode(new Closure<Block>() {
-      @Override public void go(Block t) {
-        System.out.print("  \"" + t.getName() + "\" ");
-        if (t.getCmd() == null)
-          System.out.print("[shape=circle,label=\"\"]");
-        else
-          System.out.print("[shape=box,label=\""+cmdToString(t.getCmd())+"\"]");
-        System.out.println(";");
-      }
-      private String cmdToString(Command c) {
-        StringWriter sw = new StringWriter();
-        PrettyPrinter pp = new PrettyPrinter(sw);
-        c.eval(pp);
-        return sw.toString();
-      }});
+    for (Block b : fg.nodesInTopologicalOrder()) {
+      System.out.print("  \"" + b.getName() + "\" ");
+      if (b.getCmd() == null)
+        System.out.print("[shape=circle,label=\"\"]");
+      else
+        System.out.print("[shape=box,label=\""+cmdToString(b.getCmd())+"\"]");
+      System.out.println(";");
+    }
     fg.iterEdge(new Closure<Pair<Block,Block>>() {
       @Override public void go(Pair<Block,Block> t) {
         System.out.println("  \"" + t.first.getName() + "\" -> \"" 
