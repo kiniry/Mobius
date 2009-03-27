@@ -35,6 +35,6 @@ public class FlowGraphPayload {
     ps.print(write? "x" : "dummy");
     ps.print(" := ");
     ps.print(read? "x" : "dummy");
-    ps.print(" + " + cnt);
+    ps.print(" + " + cnt + ";");
   }
 }
