@@ -337,7 +337,8 @@ public class BytecodeEditor extends TextEditor {
     } catch (ReadAttributeException e1) {
       MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.DISAS_LOADING_PROBLEMS,
-                               jc.getFileName()) + " " + e1.getMessage());
+                               jc.getFileName()) + " (" + e1.getMessage() +
+                               ")");
     } catch (UmbraRepresentationException e) {
       MessageDialog.openError(parent, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.REPRESENTATION_ERROR_MESSAGE,
