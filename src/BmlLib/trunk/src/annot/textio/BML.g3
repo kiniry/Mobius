@@ -50,6 +50,7 @@ options {
   private int lqfs;             // last (current) quantified formula size
   private HashMap<String, BoundVar> env;  // bound variable map
   private Vector<PosInCode> bml_positions = new Vector(); //postions of BML areas
+  private int invNo;           //the number of the current invariant
   
   //local variables
   private boolean clr = false;
@@ -236,7 +237,10 @@ typeheader :
      class_extends_clause? implements_clause?
    | interfacemodifiers INTERFACE dotedname
      interface_extends_clause? implements_clause?) (EOL)+
-  {syso("type header");};
+  {
+    invNo = 0;
+    syso("type header");
+  };
 
 dotedname :
   IDENT ( DOT IDENT)*;
@@ -377,7 +381,7 @@ objectinvariant :
      {
         if ($f.ast != null) {
           ClassInvariant inv = new ClassInvariant(bcc, $f.ast, true);
-          bcc.setInvariant(inv);
+          bcc.setInvariant(inv, invNo++);
         }
      }
   |  BML_START (EOL)* BML_END EOL

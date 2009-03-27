@@ -143,6 +143,7 @@ public class BCMethod {
    */
   private void readBMLAttributes(final MethodGen m)
     throws ReadAttributeException {
+    this.mspec = new MethodSpecification(this);
     final Attribute[] attrs = m.getAttributes();
     final AttributeReader ar = new AttributeReader(this);
     for (int i = 0; i  <  attrs.length; i++) {
@@ -378,7 +379,7 @@ public class BCMethod {
    */
   public String printCode(final BMLConfig conf) {
     String code = "";
-    if (this.mspec != null) {
+    if (this.mspec.getSpecificationCases().size() > 0) {
       code += this.mspec.printCode(conf);
     } else {
       code += "/*@\n  @\n  @*/\n";
@@ -461,7 +462,7 @@ public class BCMethod {
     final AttributeWriter aw = new AttributeWriter(this);
     Attribute[] attrs = BCClass.removeBMLAttributes(this.bcelMethod
         .getAttributes());
-    if (this.mspec != null) {
+    if (this.mspec.getSpecificationCases().size() > 0) {
       attrs = BCClass.addAttribute(attrs, aw.writeAttribute(this.mspec));
     }
     if (this.amap.getLength()  >  0) {
@@ -485,7 +486,7 @@ public class BCMethod {
    *
    * @param amspec - new method specification.
    */
-  public void setMspec(final MethodSpecification amspec) {
+  public void setMspec(final MethodSpecification /*@ non_null @*/ amspec) {
     this.mspec = amspec;
   }
 

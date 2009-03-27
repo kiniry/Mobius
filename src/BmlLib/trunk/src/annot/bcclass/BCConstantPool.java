@@ -43,7 +43,8 @@ import annot.textio.DisplayStyle;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class BCConstantPool extends BCCConstantPrinting implements IBCAttribute {
+public class BCConstantPool extends BCCConstantPrinting
+                            implements IBCAttribute {
 
   /**
    * Constant array.
@@ -350,5 +351,22 @@ public class BCConstantPool extends BCCConstantPrinting implements IBCAttribute 
   public void save(AttributeWriter aw) {
     // TODO Auto-generated method stub
     
+  }
+
+  /**
+   * Remove the given constant from the constants vector. It takes care of the
+   * case when the constant is from the first constant pool.
+   *
+   * @param apos the number of the constant to remove
+   */
+  public void removeConstant(final int apos) {
+    constants.remove(apos);
+    if (apos < initialSize--) {
+      final Constant[] consts = new Constant[initialSize];
+      for (int i = 0; i < initialSize; i++) {
+        consts[i] = constants.get(i);
+      }
+      jc.getConstantPool().setConstantPool(consts);
+    }
   }
 }

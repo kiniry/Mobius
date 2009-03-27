@@ -68,12 +68,6 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     printConstructors(conf, code);
     printMethods(conf, code);
     final Enumeration i = getInvariantEnum();
-    if (i != null) {
-      for (; i.hasMoreElements();) {
-        final ClassInvariant inv = (ClassInvariant) i.nextElement();
-        code.append(inv.printCode(conf));
-      }
-    }
     return conf.getPrettyPrinter().afterDisplay(code.toString());
   }
 

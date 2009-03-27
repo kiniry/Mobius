@@ -1,5 +1,6 @@
 package annot.io;
 
+import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
@@ -7,6 +8,7 @@ import bmllib.utils.NumberUtils;
 
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClassRepresentation;
+import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcclass.MessageLog;
@@ -20,7 +22,10 @@ import annot.bcclass.MessageLog;
  */
 public class AttributeWriter {
 
-  private static final int SHORT_INT_LENGTH = 2;
+  /**
+   * The binary buffer with attribute content is increased by this factor.
+   */
+  private static final int BUFFER_INCREASE_FACTOR = 2;
 
   /**
    * BCClass containing attributes to be written.
@@ -97,7 +102,7 @@ public class AttributeWriter {
    */
   private void grow(final int n) {
     if (this.pos + n  >  this.output.length) {
-      final byte[] arr = new byte[this.output.length * 2];
+      final byte[] arr = new byte[this.output.length * BUFFER_INCREASE_FACTOR];
       for (int i = 0; i  <  this.output.length; i++) {
         arr[i] = this.output[i];
       }
@@ -107,7 +112,8 @@ public class AttributeWriter {
 
   /**
    * Writes given attribute (of IBCAttribute interface),
-   * creating BCEL's Unknown attribute.
+   * creating BCEL's Unknown attribute. It makes sure the attribute
+   * name is in the constant pool of the class to be written.
    *
    * @param attr - Attribute to be written,
    * @return Uknonwn attribute representing given attribute.
@@ -115,15 +121,24 @@ public class AttributeWriter {
   public Unknown writeAttribute(final IBCAttribute attr) {
     MLog.putMsg(MessageLog.LEVEL_PINFO,
                 "    writing attribute: " + attr.getName());
-    this.output = new byte[4];
+    this.output = new byte[NumberUtils.INTEGER_IN_BYTES];
     this.pos = 0;
     attr.save(this);
     final byte[] bytes = new byte[this.pos];
-    for (int i = 0; i  <  this.pos; i++) {
-      bytes[i] = this.output[i];
+    final BCConstantPool bcp = bcc.getCp();
+    int where = bcp.findConstant(attr.getName());
+    final Constant constnt = new ConstantUtf8(attr.getName());
+    if (where < 0) {
+      bcp.addConstant(constnt, false);
+      where = bcp.findConstant(attr.getName());
     }
-    return new Unknown(attr.getIndex(), this.pos, bytes, this.bcc.getJC()
-        .getConstantPool());
+    if (bcp.isSecondConstantPoolIndex(where)) {
+      bcp.removeConstant(where);
+      bcp.addConstant(constnt, false);
+    }
+    System.arraycopy(output, 0, bytes, 0, this.pos);
+    return new Unknown(attr.getIndex(), this.pos, bytes,
+                       this.bcc.getJC().getConstantPool());
   }
 
   /**
@@ -141,7 +156,7 @@ public class AttributeWriter {
    * @param b - byte to be written.
    */
   public void writeByte(final int b) {
-    grow(1);
+    grow(NumberUtils.BYTE_IN_BYTES);
     this.output[this.pos] = (byte) (b & NumberUtils.LOWEST_BYTE_MASK);
     this.pos++;
   }
@@ -156,13 +171,13 @@ public class AttributeWriter {
     this.output[this.pos] =
       (byte) (i  >>  NumberUtils.THREE_BYTES_SIZE &
               NumberUtils.LOWEST_BYTE_MASK);
-    this.output[this.pos + 1] =
+    this.output[this.pos + NumberUtils.FIRST_BYTE] =
       (byte) (i  >>  NumberUtils.TWO_BYTES_SIZE &
               NumberUtils.LOWEST_BYTE_MASK);
-    this.output[this.pos + 2] =
+    this.output[this.pos + NumberUtils.SECOND_BYTE] =
       (byte) (i  >>  NumberUtils.ONE_BYTE_SIZE &
               NumberUtils.LOWEST_BYTE_MASK);
-    this.output[this.pos + 3] =
+    this.output[this.pos + NumberUtils.THIRD_BYTE] =
       (byte) (i & NumberUtils.LOWEST_BYTE_MASK);
     this.pos += NumberUtils.INTEGER_IN_BYTES;
   }
@@ -173,11 +188,11 @@ public class AttributeWriter {
    * @param s - integer to be written (less than 2^15).
    */
   public void writeShort(final int s) {
-    grow(SHORT_INT_LENGTH);
+    grow(NumberUtils.SHORT_IN_BYTES);
     this.output[this.pos] = (byte) (s  >>  NumberUtils.ONE_BYTE_SIZE &
         NumberUtils.LOWEST_BYTE_MASK);
     this.output[this.pos + 1] = (byte) (s & NumberUtils.LOWEST_BYTE_MASK);
-    this.pos += SHORT_INT_LENGTH;
+    this.pos += NumberUtils.SHORT_IN_BYTES;
   }
 
 }

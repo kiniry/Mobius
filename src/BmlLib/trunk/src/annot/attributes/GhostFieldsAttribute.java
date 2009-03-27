@@ -4,10 +4,20 @@ import org.antlr.runtime.RecognitionException;
 
 import annot.bcclass.BCClass;
 import annot.bcexpression.ExpressionRoot;
+import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
+import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
-public class GhostFields extends ClassAttribute implements IBCAttribute {
+/**
+ * This class represents GhostFields class attribute described in "GhostFields
+ * Attribute" section of "BML Reference Manual".
+ *
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
+ * @version a-01
+ */
+public class GhostFieldsAttribute extends ClassAttribute
+                                  implements IBCAttribute {
 
   @Override
   public void parse(String code) throws RecognitionException {
@@ -65,6 +75,12 @@ public class GhostFields extends ClassAttribute implements IBCAttribute {
 
 
   public void save(AttributeWriter aw) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void load(AttributeReader ar) throws ReadAttributeException {
     // TODO Auto-generated method stub
     
   }

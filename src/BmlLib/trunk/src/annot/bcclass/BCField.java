@@ -39,7 +39,7 @@ public class BCField extends AccessFlags {
   private int nameIndex;
 
   /**
-   * Points to type descriptor the first or second constant pool.
+   * Points to type descriptor in the first or second constant pool.
    */
   private int descriptorIndex;
 
@@ -108,14 +108,19 @@ public class BCField extends AccessFlags {
     return myBMLFlags;
   }
 
-
+  /**
+   * @return the type of the current field
+   */
   public Type getType() {
-    // TODO Auto-generated method stub
     return null;
   }
 
-  public Object getName() {
-    // TODO Auto-generated method stub
-    return null;
+  /**
+   * The name of the field as represented in the constant pool.
+   *
+   * @return the string with the name
+   */
+  public String getName() {
+    return constantPool.getConstant(nameIndex).toString();
   }
 }

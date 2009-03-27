@@ -37,7 +37,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   /**
    * The invariant formula.
    */
-  private final ExpressionRoot < AbstractFormula >  invariant;
+  private ExpressionRoot < AbstractFormula >  invariant;
 
   /**
    * The flag which is <code>true</code> in case the invariant is
@@ -49,14 +49,14 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * A Constructor from BCClass and AbstractFormula.
    *
    * @param abcc - BCClass containing this invariant,
-   * @param invariant - a invariant formula.
+   * @param ainv - a invariant formula.
    * @param instanceflag - <code>true</code> in case the invariant is an
    *   instance invariant
    */
-  public ClassInvariant(final BCClass abcc, final AbstractFormula invariant,
+  public ClassInvariant(final BCClass abcc, final AbstractFormula ainv,
                         final boolean instanceflag) {
     this.bcc = abcc;
-    this.invariant = new ExpressionRoot < AbstractFormula > (this, invariant);
+    this.invariant = new ExpressionRoot < AbstractFormula > (this, ainv);
     this.isInstance = instanceflag;
     commitInstanceFlag();
   }
@@ -76,10 +76,8 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
                         final AttributeReader ar)
     throws ReadAttributeException {
     this.bcc = classRepresentation;
-    this.access_flags = ar.readShort();
     this.isInstance = (this.access_flags & Constants.ACC_STATIC) == 0;
-    this.invariant = new ExpressionRoot < AbstractFormula > (this,
-        ar.readFormula());
+    this.load(ar);
   }
 
   /**
@@ -114,6 +112,12 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     return this.access_flags;
   }
 
+  /**
+   * This method returns an array with all the expressions in it. It is
+   * always one expression in case of an invariant.
+   *
+   * @return an array of expressions
+   */
   @Override
   public ExpressionRoot[] getAllExpressions() {
     final ExpressionRoot[] all = new ExpressionRoot[1];
@@ -212,15 +216,6 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     this.bcc.setInvariant((ClassInvariant) pa);
   }
 
-  /**
-   * Saves this annotation to BCEL's Unknown attribute,
-   * using attributeWriter.
-   * @param aw - stream to save to.
-   */
-  public void save(final AttributeWriter aw) {
-    aw.writeShort(this.access_flags);
-    this.invariant.write(aw);
-  }
 
   /**
    * @return Simple string represenatations of attribute,
@@ -235,9 +230,42 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     }
   }
 
+
+  /**
+   * A single invariant structure is saved using the format:
+   *
+   *     {
+   *        u2 access_flags;
+   *        formula_info invariant;
+   *     }
+   *
+   * described in "Invariants Attribute" section of "BML Reference Manual".
+   *
+   * @param aw the writer to write the attribute to
+   */
+  public void save(final AttributeWriter aw) {
+    aw.writeShort(this.access_flags);
+    this.invariant.write(aw);
+  }
+
+  /**
+   * A single invariant structure is loaded using the format:
+   *
+   *     {
+   *        u2 access_flags;
+   *        formula_info invariant;
+   *     }
+   *
+   * described in "Invariants Attribute" section of "BML Reference Manual".
+   *
+   * @param ar the reader from which the structure is read
+   * @throws ReadAttributeException in case the invariant structure is incorrect
+   */
   @Override
-  public void load(AttributeReader ar) throws ReadAttributeException {
-    // TODO Auto-generated method stub
-    
+  public void load(final AttributeReader ar)
+    throws ReadAttributeException {
+    this.access_flags = ar.readShort();
+    this.invariant = new ExpressionRoot < AbstractFormula > (this,
+        ar.readFormula());
   }
 }

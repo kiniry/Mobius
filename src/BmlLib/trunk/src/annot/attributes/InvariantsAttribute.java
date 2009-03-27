@@ -8,15 +8,20 @@ import org.antlr.runtime.RecognitionException;
 
 import annot.bcclass.BCClass;
 import annot.bcexpression.ExpressionRoot;
+import annot.io.AttributeReader;
+import annot.io.AttributeWriter;
+import annot.io.ReadAttributeException;
+import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
 
 /**
- * This class represents "invariant table" class attribute.
+ * This class represents Invariants class attribute described in "Invariants
+ * Attribute" section of "BML Reference Manual".
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class InvariantTable extends ClassAttribute {
+public class InvariantsAttribute extends ClassAttribute {
 
   /**
    * The class in which the current invariant table is embedded.
@@ -33,7 +38,7 @@ public class InvariantTable extends ClassAttribute {
    *
    * @param abcc the class in which the invariant table lays.
    */
-  public InvariantTable(final BCClass abcc) {
+  public InvariantsAttribute(final BCClass abcc) {
     this.bcc = abcc;
     invariants = new Vector();
   }
@@ -102,7 +107,7 @@ public class InvariantTable extends ClassAttribute {
    */
   @Override
   public void replaceWith(final BCPrintableAttribute pa) {
-    bcc.setInvariants((InvariantTable) pa);
+    bcc.setInvariants((InvariantsAttribute) pa);
     bcc = null;
   }
 
@@ -135,13 +140,25 @@ public class InvariantTable extends ClassAttribute {
   }
 
   /**
+   * @return the number of invariants in this invariant table
+   */
+  public int size() {
+    return invariants.size();
+  }
+
+  /**
    * This method adds the given invariant at the end of the current
    * list of invariants.
    *
    * @param inv the invariant to add
+   * @param pos the position (starting with 0) to add the invariant at
    */
-  public void add(final ClassInvariant inv) {
-    invariants.add(inv);
+  public void add(final ClassInvariant inv, final int pos) {
+    if (pos < invariants.size()) {
+      invariants.set(pos, inv);
+    } else {
+      invariants.add(inv);
+    }
   }
 
   /**
@@ -152,6 +169,84 @@ public class InvariantTable extends ClassAttribute {
    */
   public void remove(final ClassInvariant classInvariant) {
     invariants.remove(classInvariant);
+  }
+
+  /**
+   * @return index to the Utf8 constant with the name  of the invariant
+   *   table attribute
+   */
+  @Override
+  public int getIndex() {
+    return bcc.getCp().findConstant(AttributeNames.INVARIANTS_ATTR);
+  }
+
+  /**
+   * @return the name of the invariant table attribute
+   */
+  @Override
+  public String getName() {
+    return AttributeNames.INVARIANTS_ATTR;
+  }
+
+  /**
+   * The Invariants attribute is saved using the format:
+   *
+   * Invariants_attribute {
+   *   u2 attribute_name_index;
+   *   u4 attribute_length;
+   *   u2 invariants_count;
+   *     {
+   *        u2 access_flags;
+   *        formula_info invariant;
+   *     } invariants[invariants_count];
+   *   }
+   * described in "Invariants Attribute" section of "BML Reference Manual".
+   * Note that the handling of the fields <code>attribute_name_index</code> and
+   * <code>attribute_length</code> is done by the {@link Unknown} BCEL
+   * class.
+   *
+   * @param aw the writer to write the attribute to
+   */
+  @Override
+  public void save(final AttributeWriter aw) {
+    aw.writeShort(invariants.size());
+    for (int i = 0; i < invariants.size(); i++) {
+      final ClassInvariant inv = (ClassInvariant) invariants.get(i);
+      inv.save(aw);
+    }
+  }
+
+  /**
+   * The Invariants attribute is loaded using the format:
+   *
+   * Invariants_attribute {
+   *   u2 attribute_name_index;
+   *   u4 attribute_length;
+   *   u2 invariants_count;
+   *     {
+   *        u2 access_flags;
+   *        formula_info invariant;
+   *     } invariants[invariants_count];
+   *   }
+   * described in "Invariants Attribute" section of "BML Reference Manual".
+   * Note that the fields <code>attribute_name_index</code> and
+   * <code>attribute_length</code> are handled by the {@link Unknown} BCEL
+   * class and are already read by the caller of the method.
+   *
+   * @param ar the reader to read the attribute data from
+   * @throws ReadAttributeException in case the attribute has incorrect
+   *   structure
+   */
+  @Override
+  public void load(final AttributeReader ar)
+    throws ReadAttributeException {
+    final int size = ar.readShort();
+    invariants = new Vector < ClassInvariant > (size);
+    for (int i = 0; i < size; i++) {
+      final ClassInvariant inv = new ClassInvariant(bcc, ar);
+      invariants.add(i, inv);
+    }
+
   }
 
 }

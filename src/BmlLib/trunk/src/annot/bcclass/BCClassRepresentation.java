@@ -25,8 +25,9 @@ import org.apache.bcel.classfile.Unknown;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.ClassInvariant;
+import annot.attributes.IBCAttribute;
 import annot.attributes.InCodeAttribute;
-import annot.attributes.InvariantTable;
+import annot.attributes.InvariantsAttribute;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
@@ -66,7 +67,7 @@ public abstract class BCClassRepresentation {
   /**
    * BML invariants.
    */
-  private InvariantTable invariants;
+  private InvariantsAttribute invariants;
 
   /**
    * BCEL's JavaClass for this class, for bytecode
@@ -174,8 +175,8 @@ public abstract class BCClassRepresentation {
   public boolean addAttribute(final BCPrintableAttribute pa) {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "adding class attribute: " +
                 pa.toString());
-    if (pa instanceof InvariantTable) {
-      final InvariantTable inv = (InvariantTable) pa;
+    if (pa instanceof InvariantsAttribute) {
+      final InvariantsAttribute inv = (InvariantsAttribute) pa;
       this.invariants = inv;
       return true;
     }
@@ -222,12 +223,23 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * Adds class invariant to the class.
+   * Adds class invariant to the class at the given position.
+   *
+   * @param inv - new class invariant.
+   * @param pos - the sequence number at which the invariant should be added
+   */
+  public void setInvariant(final ClassInvariant inv, final int pos) {
+    this.invariants.add(inv, pos);
+  }
+
+
+  /**
+   * Adds class invariant at the final position of the invariant table.
    *
    * @param inv - new class invariant.
    */
   public void setInvariant(final ClassInvariant inv) {
-    this.invariants.add(inv);
+    this.invariants.add(inv, invariants.size());
   }
 
   /**
@@ -235,7 +247,7 @@ public abstract class BCClassRepresentation {
    *
    * @param invs - new class invariant.
    */
-  public void setInvariants(final InvariantTable invs) {
+  public void setInvariants(final InvariantsAttribute invs) {
     this.invariants = invs;
   }
 
@@ -500,11 +512,7 @@ public abstract class BCClassRepresentation {
   private Attribute[] addAndSaveInvariants(final AttributeWriter aw,
                                            final Attribute[] attrs) {
     Attribute[] res = attrs;
-    for (final Enumeration i = this.invariants.elements();
-         i.hasMoreElements();) {
-      final ClassInvariant inv = (ClassInvariant) i.nextElement();
-      res = addAttribute(res, aw.writeAttribute(inv));
-    }
+    res = addAttribute(res, aw.writeAttribute(invariants));
     return res;
   }
 
@@ -619,5 +627,16 @@ public abstract class BCClassRepresentation {
    */
   public BCField[] getModelFields() {
     return modelFields;
+  }
+
+  /**
+   * Returns the table of the invariants.
+   *
+   * @return the table of the invariants.
+   */
+  public IBCAttribute getInvariantTable() {
+    if (invariants == null)
+      invariants = new InvariantsAttribute((BCClass) this);
+    return invariants;
   }
 }

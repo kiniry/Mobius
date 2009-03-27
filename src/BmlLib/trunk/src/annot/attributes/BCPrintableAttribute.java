@@ -22,7 +22,7 @@ import annot.textio.Parsing;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public abstract class BCPrintableAttribute {
+public abstract class BCPrintableAttribute implements IBCAttribute {
 
   /**
    * Result of last printCode1(conf) method call.
@@ -140,9 +140,15 @@ public abstract class BCPrintableAttribute {
   @Override
   public abstract String toString();
 
-  public void load(AttributeReader ar) throws ReadAttributeException {
-    // TODO Auto-generated method stub
-    return;
-  }
+  /**
+   * Loads this annotation from BCEL's Unknown attribute,
+   * using attributeReader. It leaves the implementation to the subclasses.
+   *
+   * @param ar - stream to load from
+   * @throws ReadAttributeException in case the BML
+   *     attribute wasn't correctly parsed by this library.
+   */
+  public abstract void load(final AttributeReader ar)
+    throws ReadAttributeException;
 
 }

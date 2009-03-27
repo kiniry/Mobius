@@ -18,14 +18,19 @@ package bmllib.utils;
 public final class NumberUtils {
 
   /**
-   * The number of bytes for the Integer type representation.
+   * The number of bytes for the int type representation.
    */
   public static final int INTEGER_IN_BYTES = Integer.SIZE / Byte.SIZE;
 
   /**
-   * The number of bytes for the Integer type representation.
+   * The number of bytes for the short type representation.
    */
   public static final int SHORT_IN_BYTES = Short.SIZE / Byte.SIZE;
+
+  /**
+   * The number of bytes for the byte type representation.
+   */
+  public static final int BYTE_IN_BYTES = Byte.SIZE / Byte.SIZE;
 
   /**
    * The number of the first byte.

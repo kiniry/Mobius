@@ -128,6 +128,8 @@ public class AttributeReader {
     this.bvars = new Vector < BoundVar > ();
     this.attributeHandlers[AttributeNames.SECOND_CONSTANT_POOL_ATTR_POS] =
       this.bcc.getCp();
+    this.attributeHandlers[AttributeNames.INVARIANTS_ATTR_POS] =
+      this.bcc.getInvariantTable();
   }
 
   /**

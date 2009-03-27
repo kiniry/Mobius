@@ -39,6 +39,7 @@ public final class AttributeNames {
       "ModelMethods";
   /**
    * The String with the name of the Invariants attribute.
+   * See section "Invariants Attribute" of "BML Reference Manual".
    */
   public static final String INVARIANTS_ATTR = BML_DOMAIN + "Invariants";
   /**

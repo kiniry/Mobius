@@ -20,9 +20,9 @@ package bmllib.utils;
 public class BMLChangeException extends Exception {
 
   /**
-   * The serial ID for the exception.
+   * Serial ID used for serialisation.
    */
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 5725988177663553609L;
 
   /**
    * The constructor with string that explains the reason for the exception.
