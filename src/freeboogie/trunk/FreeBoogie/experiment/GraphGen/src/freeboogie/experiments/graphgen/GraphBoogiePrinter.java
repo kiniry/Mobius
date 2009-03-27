@@ -47,6 +47,7 @@ public class GraphBoogiePrinter {
   private void printNormalNode(Node<FlowGraphPayload> node) {
     ps.print(nodeName(node));
     ps.println(":");
+    node.getPayload().printBoogie(ps);
     ps.print("  goto ");
     if (node.getSuccessors().size() == 1) {
       ps.print(nodeName(node.getSuccessors().get(0)));
