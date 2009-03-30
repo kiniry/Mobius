@@ -47,10 +47,8 @@ public class Passificator extends ABasicPassifier {
 
 
   /** the main global environment. */
-  private final Environment fEnv = new Environment();
+  private Environment fEnv;
 
-  /** Used for debugging output. TODO(rgrig): static is ugly */
-  private static String currentLocation;
 
 
   
@@ -74,10 +72,11 @@ public class Passificator extends ABasicPassifier {
    * @return a valid modified ast
    */
   public Declaration process(final Declaration ast, String fileName) {
+    fEnv = new Environment(fileName);
     Declaration passifiedAst = (Declaration)ast.eval(this);
     
     if (isVerbose()) {
-      System.out.print(fEnv.globalToString(fileName));
+      System.out.print(fEnv.globalToString());
     }
     passifiedAst = addVariableDeclarations(passifiedAst);
     verifyAst(passifiedAst);
@@ -116,9 +115,6 @@ public class Passificator extends ABasicPassifier {
         sig.getName() + " has cycles. I'm not passifying it.");
     }
     else {
-      if (isVerbose()) {
-        currentLocation = sig.loc() + " " + sig.getName();
-      }
       BodyPassifier bp = BodyPassifier.passify(getTypeChecker(), isVerbose(), fEnv, 
                                                oldBody, sig);
       sig = Signature.mk(sig.getName(), sig.getArgs(),
@@ -182,7 +178,7 @@ public class Passificator extends ABasicPassifier {
     /** the list of local variables declarations. */
     private Declaration newLocals = null;
     /** the current counter associated with each local variable. */
-    private final Environment fEnv = new Environment();
+    private final Environment fEnv;
     private final Map<Block, Environment> startBlockStatus = 
       new HashMap<Block, Environment> ();
     private final Map<Block, Environment> endBlockStatus = 
@@ -200,6 +196,7 @@ public class Passificator extends ABasicPassifier {
     public BodyPassifier(final TcInterface typeChecker, boolean bIsVerbose,
                          Environment globalEnv, final Signature sig) {
       super(typeChecker, bIsVerbose);
+      fEnv = new Environment(sig.loc() + " " + sig.getName());
       fResults = (VariableDecl) sig.getResults();
       fEnv.putAll(globalEnv);
       VariableDecl curr = (VariableDecl) sig.getArgs();
@@ -267,7 +264,7 @@ public class Passificator extends ABasicPassifier {
       
       
       if (isVerbose()) {
-        System.out.print(fEnv.localToString(currentLocation));
+        System.out.print(fEnv.localToString());
       }
       computeDeclarations();
       Body newBody = Body.mk(newLocals, newBlocks);
@@ -328,7 +325,7 @@ public class Passificator extends ABasicPassifier {
         return null;
       }
       
-      Environment res = new Environment();
+      Environment res = new Environment(fEnv.getLoc());
       res.putAll(endBlockStatus.get(blist.iterator().next()));
       
       if (blist.size() == 1) {

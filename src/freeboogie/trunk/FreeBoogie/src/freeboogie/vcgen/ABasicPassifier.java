@@ -10,6 +10,7 @@ import freeboogie.ast.AtomId;
 import freeboogie.ast.BinaryOp;
 import freeboogie.ast.Declaration;
 import freeboogie.ast.Expr;
+import freeboogie.ast.FileLocation;
 import freeboogie.ast.Transformer;
 import freeboogie.ast.VariableDecl;
 import freeboogie.tc.TcInterface;
@@ -92,10 +93,12 @@ public abstract class ABasicPassifier extends Transformer {
     /** for efficiency. */
     private final Map<VariableDecl, Integer> all = 
       new LinkedHashMap<VariableDecl, Integer>();
+    private String currentLocation;
    
-    /** */
-    public Environment() {
-     // nothing 
+    /**
+     * @param fileName  */
+    public Environment(String fileName) {
+     this.currentLocation = fileName;
     }
     
     /**
@@ -226,15 +229,15 @@ public abstract class ABasicPassifier extends Transformer {
      * toString method to print the global environment
      * @return the global list of variables
      */
-    public String globalToString(String fileName) {
-      return mapToString(fileName + " GLOBAL", global);
+    public String globalToString() {
+      return mapToString(currentLocation + " GLOBAL", global);
     }
   
     /**
      * toString method to print the local environment
      * @return the local list of variables
      */
-    public String localToString(String currentLocation) {
+    public String localToString() {
       return mapToString(currentLocation + " local", local);
     }
 
@@ -252,6 +255,10 @@ public abstract class ABasicPassifier extends Transformer {
         sb.append("\n");
       }
       return sb.toString();
+    }
+
+    public String getLoc() {
+      return this.currentLocation;
     }
   }
 
