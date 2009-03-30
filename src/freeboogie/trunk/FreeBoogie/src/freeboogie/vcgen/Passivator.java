@@ -53,6 +53,7 @@ public class Passivator extends Transformer {
   private HashMap<VariableDecl, HashMap<Block, Integer>> readIdx;
   private HashMap<VariableDecl, HashMap<Block, Integer>> writeIdx;
   private HashMap<VariableDecl, Integer> newVarsCnt;
+  private HashMap<VariableDecl, Integer> toReport;
   private HashMap<Command, HashSet<VariableDecl>> commandWs;
   private ReadWriteSetFinder rwsf;
 
@@ -85,6 +86,7 @@ public class Passivator extends Transformer {
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
     writeIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
     newVarsCnt = new LinkedHashMap<VariableDecl, Integer>();
+    toReport = new LinkedHashMap<VariableDecl, Integer>();
     commandWs = new LinkedHashMap<Command, HashSet<VariableDecl>>();
     rwsf = new ReadWriteSetFinder(tc.getST());
     ast = (Declaration)ast.eval(this);
@@ -100,8 +102,7 @@ public class Passivator extends Transformer {
       }
     }
     if (isVerbose) {
-      System.out.print(Environment.mapToString(
-          fileName + " GLOBAL", newVarsCnt));
+      System.out.print(Environment.mapToString(toReport));
     }
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
@@ -145,10 +146,7 @@ public class Passivator extends Transformer {
         }
       });
     }
-    if (isVerbose) {
-      System.out.print(Environment.mapToString(
-        sig.loc() + " " + sig.getName() + " local", newVarsCnt));
-    }
+
     // transform the body
     context = new ArrayDeque<Boolean>();
     context.addFirst(false);
@@ -297,6 +295,9 @@ public class Passivator extends Transformer {
   @Override
   public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
+    if (isVerbose) {
+      toReport.put(variableDecl, last);
+    }
     newVarsCnt.remove(variableDecl);
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     if (newTail != tail) {

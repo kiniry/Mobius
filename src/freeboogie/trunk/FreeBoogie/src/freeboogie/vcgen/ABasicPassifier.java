@@ -230,7 +230,7 @@ public abstract class ABasicPassifier extends Transformer {
      * @return the global list of variables
      */
     public String globalToString() {
-      return mapToString(currentLocation + " GLOBAL", global);
+      return mapToString(global);
     }
   
     /**
@@ -238,20 +238,20 @@ public abstract class ABasicPassifier extends Transformer {
      * @return the local list of variables
      */
     public String localToString() {
-      return mapToString(currentLocation + " local", local);
+      return mapToString(local);
     }
 
-    public static String mapToString(
-        String prefix,
-        Map<VariableDecl, Integer> map
-    ) {
+    public static String mapToString(Map<VariableDecl, Integer> map) {
       StringBuilder sb = new StringBuilder();
       for (Entry<VariableDecl, Integer> e : map.entrySet()) {
-        sb.append(prefix);
+        VariableDecl vd = e.getKey();
+        Integer versions = e.getValue();
+        if (versions == 0) continue;
+        sb.append(vd.loc());
         sb.append(" ");
-        sb.append(e.getKey().getName());
+        sb.append(vd.getName());
         sb.append(" ");
-        sb.append(e.getValue());
+        sb.append(versions);
         sb.append("\n");
       }
       return sb.toString();
