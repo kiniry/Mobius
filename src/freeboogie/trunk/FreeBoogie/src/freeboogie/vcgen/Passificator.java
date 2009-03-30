@@ -402,6 +402,10 @@ public class Passificator extends Transformer {
      */
     public AtomId get(AtomId var) {
       VariableDecl decl = getDeclaration(var);
+      if (decl == null) {
+        // Symbol here!
+        return mkVar(var, 0);
+      }
       int i = env.get(decl);
       if (belowOld > 0) {
         i = 0;
@@ -594,10 +598,14 @@ public class Passificator extends Transformer {
     /**
      * Returns the variable declaration corresponding to the given id.
      * @param id the id to check for
-     * @return a valid variable declaration
+     * @return a valid variable declaration or null
      */
     VariableDecl getDeclaration(AtomId id) {
-      return (VariableDecl) getTypeChecker().getST().ids.def(id);
+      Declaration decl = getTypeChecker().getST().ids.def(id);
+      if (decl instanceof VariableDecl) {
+        return (VariableDecl) decl;
+      }
+      return null;
     }
     public TcInterface getTypeChecker() {
       return fTypeChecker;
