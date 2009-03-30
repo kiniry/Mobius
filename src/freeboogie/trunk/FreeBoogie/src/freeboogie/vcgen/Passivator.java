@@ -75,9 +75,6 @@ public class Passivator extends Transformer {
   }
 
   public Declaration process(Declaration ast, TcInterface tc) {
-    if (isVerbose) {
-      System.out.println("Passivation :");
-    }
     this.tc = tc;
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
     writeIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
@@ -97,7 +94,8 @@ public class Passivator extends Transformer {
       }
     }
     if (isVerbose) {
-      System.out.println(Environment.globalToString(newVarsCnt));
+      System.out.print(Environment.mapToString(
+        ast.loc() + " NOPROC global", newVarsCnt));
     }
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
@@ -106,10 +104,6 @@ public class Passivator extends Transformer {
       pw.flush();
       Err.internal("Passivator produced invalid Boogie.");
     }
-    if (isVerbose) {
-      System.out.println("\n");
-    }
-    
     return tc.getAST();
   }
 
@@ -124,10 +118,6 @@ public class Passivator extends Transformer {
         sig.getName() + " has cycles. I'm not passivating it.");
       if (tail != null) tail = (Declaration)tail.eval(this);
       return Implementation.mk(sig, body, tail);
-    }
-    
-    if (isVerbose) {
-      System.out.print(sig.getName() + ": ");
     }
     
     // collect all variables that are assigned to
@@ -150,7 +140,8 @@ public class Passivator extends Transformer {
       });
     }
     if (isVerbose) {
-      System.out.println("{" + Environment.localToString(newVarsCnt) + "}");
+      System.out.print(Environment.mapToString(
+        sig.loc() + " " + sig.getName() + " local", newVarsCnt));
     }
     // transform the body
     context = new ArrayDeque<Boolean>();

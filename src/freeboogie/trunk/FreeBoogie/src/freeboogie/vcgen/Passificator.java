@@ -51,6 +51,9 @@ public class Passificator extends Transformer {
   /** the main global environment. */
   private final Environment fEnv = new Environment();
 
+  /** Used for debugging output. TODO(rgrig): static is ugly */
+  private static String currentLocation;
+
   private boolean isVerbose;
 
   
@@ -69,20 +72,12 @@ public class Passificator extends Transformer {
    * @return a valid modified ast
    */
   public Declaration process(final Declaration ast) {
-    if (isVerbose) {
-      System.out.println("Passification : ");
-    }
-
-    
     Declaration passifiedAst = (Declaration)ast.eval(this);
-    if(isVerbose) {
-      System.out.println(fEnv.globalToString());
+    if (isVerbose) {
+      System.out.print(fEnv.globalToString());
     }
     passifiedAst = addVariableDeclarations(passifiedAst);
     verifyAst(passifiedAst);
-    if (isVerbose) {
-      System.out.println("\n");
-    }
     
     return fTypeChecker.getAST();
   }
@@ -114,7 +109,7 @@ public class Passificator extends Transformer {
     }
     else {
       if (isVerbose) {
-        System.out.print(sig.getName() + ": ");
+        currentLocation = sig.loc() + " " + sig.getName();
       }
       BodyPassifier bp = BodyPassifier.passify(fTypeChecker, isVerbose, currentFG, fEnv, 
                                                oldBody, (VariableDecl)sig.getResults());
@@ -256,7 +251,7 @@ public class Passificator extends Transformer {
       
       
       if (isVerbose()) {
-        System.out.println("{" + fEnv.localToString() + "}");
+        System.out.print(fEnv.localToString());
       }
       computeDeclarations();
       Body newBody = Body.mk(newLocals, newBlocks);
@@ -562,47 +557,27 @@ public class Passificator extends Transformer {
     }
     
     public String globalToString() {
-      return globalToString(global);
-    }
-    
-    public static String globalToString(Map<VariableDecl, Integer> global) {
-      StringBuilder builder = new StringBuilder();
-      String res = "";
-      for (Entry<VariableDecl, Integer> ent: global.entrySet()) {
-        VariableDecl decl = ent.getKey();
-        int idx = ent.getValue();
-        builder.append(", " + toString(decl, idx));
-      }
-      if (builder.length() >1) {
-        res = builder.substring(2).toString();
-      }  
-      return "Global variables: [" + res + "]";
+      return mapToString("ALL global", global);
     }
     
     public String localToString() {
-      return localToString(local);
+      return mapToString(currentLocation + " local", local);
     }
-    
-    public static String localToString(Map<VariableDecl, Integer> local) {
-      StringBuilder builder = new StringBuilder();
-      String res = "";
-      for (Entry<VariableDecl, Integer> ent: local.entrySet()) {
-        VariableDecl decl = ent.getKey();
-        int idx = ent.getValue();
-        builder.append(", " + toString(decl, idx));
+
+    public static String mapToString(
+        String prefix,
+        Map<VariableDecl, Integer> map
+    ) {
+      StringBuilder sb = new StringBuilder();
+      for (Entry<VariableDecl, Integer> e : map.entrySet()) {
+        sb.append(prefix);
+        sb.append(" ");
+        sb.append(e.getKey().getName());
+        sb.append(" ");
+        sb.append(e.getValue());
+        sb.append("\n");
       }
-      if (builder.length() >1) {
-        res = builder.substring(2).toString();
-      }  
-      return "Local variables: [" + res + "]";
-    }
-    
-    
-    public static String toString(VariableDecl decl, Integer idx) {
-      if (idx == 0) {
-        return decl.getName();
-      }
-      return decl.getName() + "(" + idx + ")";
+      return sb.toString();
     }
   }
   
