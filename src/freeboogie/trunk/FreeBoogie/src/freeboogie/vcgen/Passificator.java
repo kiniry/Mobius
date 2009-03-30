@@ -33,6 +33,7 @@ import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
 import freeboogie.util.Err;
+import freeboogie.util.Id;
 
 /**
  * Passify option.
@@ -301,7 +302,7 @@ public class Passificator extends Transformer {
             AtomId newVar = mkVar(decl, oldIdx);
             AtomId oldVar = mkVar(decl, currIdx);
             Command assumeCmd = mkAssumeEQ(newVar, oldVar);
-            String nodeName = name + "$$" + entry.getKey().getName();
+            String nodeName = Id.get(name);
             newTail = Block.mk(nodeName, assumeCmd, newSucc, newTail);
             newSucc = Identifiers.mk(AtomId.mk(nodeName, null), null);
           }
