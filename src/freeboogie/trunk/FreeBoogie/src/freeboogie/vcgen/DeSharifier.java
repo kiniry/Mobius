@@ -9,6 +9,7 @@ import java.util.Set;
 
 import freeboogie.backend.SmtTerm;
 import freeboogie.backend.TermBuilder;
+import freeboogie.util.Id;
 
 /**
  * Remove shared nodes from a dag, making it (almost) a tree.
@@ -145,7 +146,7 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
 
     // put the result in cache so we don't work twice
     final SmtTerm tree = builder.mk(dag.id, newChildren);
-    final SmtTerm var = builder.mk("var_formula", "x");
+    final SmtTerm var = builder.mk("var_formula", Id.get("unshared"));
     dagToVarCache.put(dag, var);
     varToTreeCache.put(var, tree);
 
