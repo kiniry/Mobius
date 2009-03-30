@@ -1,4 +1,4 @@
-<project name="GraphGen" default="clops-gen" basedir=".">
+<project name="GraphGen" default="compile" basedir=".">
   <description>GraphGen File</description>
 
   <property name="java-target-version" value="1.5"/>
