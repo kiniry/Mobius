@@ -155,7 +155,11 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   @Override
   public SimpleGraph<Block> getFlowGraph(Implementation impl) {
-    return flowGraphs.getFlowGraph(impl);
+    return flowGraphs.getFlowGraph(impl.getBody());
+  }
+  @Override
+  public SimpleGraph<Block> getFlowGraph(Body bdy) {
+    return flowGraphs.getFlowGraph(bdy);
   }
   
   @Override

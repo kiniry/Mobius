@@ -33,6 +33,14 @@ public interface TcInterface {
    */
   SimpleGraph<Block> getFlowGraph(Implementation impl);
 
+
+  /**
+   * Returns the flow graph of {@code bdy}.
+   * @param bdy the body whose flow graph is requested
+   * @return the flow graph of {@code bdy}
+   */
+  SimpleGraph<Block> getFlowGraph(Body bdy);
+  
   /**
    * Returns the map of expressions to types.
    * @return the map of expressions to types.

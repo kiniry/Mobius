@@ -132,8 +132,8 @@ public class SPGRecognizer<T> {
         T curr = bucketsTable[i].pop();
         if (d(curr) == i) {
 
-          Map<T, T> oldPred =  (Map<T, T>)pred.clone();
-          Map<T, T> oldSucc =  (Map<T, T>)succ.clone();
+          Map<T, T> oldPred =  new HashMap<T,T>(pred);
+          Map<T, T> oldSucc =  new HashMap<T, T>(succ);
           boolean res = reduction(curr);
           if (!res) {
             return false;
