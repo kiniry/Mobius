@@ -2,7 +2,9 @@ package freeboogie.vcgen;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -248,7 +250,9 @@ public class Passificator extends Transformer {
     public Ast eval(final Body body, Declaration vars, Block blocks) {
       // process out parameters
       newLocals = vars;
-      Block newBlocks = (Block) blocks.eval(this);
+      List<Block> list = fFlowGraph.nodesInTopologicalOrder();
+      Iterator<Block> iter = list.iterator();
+      Block newBlocks = evalBlock(iter.next(), iter);
       
       
       if (isVerbose()) {
@@ -261,11 +265,11 @@ public class Passificator extends Transformer {
     }
     
 
-    
-    @Override
-    public Block eval(Block block, String name, Command cmd, 
-                      Identifiers succ, Block tail) {
-            
+
+    public Block evalBlock(Block block, Iterator<Block> tail) {
+      String name = block.getName();
+      Command cmd = block.getCmd();
+      Identifiers succ = block.getSucc();
       Set<Block> blist = fFlowGraph.from(block);
       Environment env = merge(blist);
       if (env == null) {
@@ -274,7 +278,8 @@ public class Passificator extends Transformer {
       startBlockStatus.put(block, env.clone());      
       Command newCmd = cmd == null? null : (Command) cmd.eval(new CommandEvaluator(getTypeChecker(), env));
       endBlockStatus.put(block, env);     
-      Block newTail = tail == null? null : (Block) tail.eval(this);
+      Block newTail = tail.hasNext()? evalBlock(tail.next(), tail) : null;
+      
       Identifiers newSucc = succ;
       
       // now we see if we have to add a command to be more proper :P
