@@ -31,12 +31,10 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
   private Map<SmtTerm,SmtTerm> varToTreeCache;
 
   
-  @Override
   public void setBuilder(TermBuilder<SmtTerm> termBuilder) {
     this.builder = termBuilder;
   }
 
-  @Override
   public SmtTerm process(SmtTerm t) {
     return dagToTree(t);
   }
@@ -175,7 +173,6 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
     return pluckedDag;
   }
 
-  @Override
   public List<SmtTerm> getAxioms(SmtTerm pluckedDag) {
     //get the used variables and add their definitions
     Set<SmtTerm> usedVariables = getUsedVars(pluckedDag);
