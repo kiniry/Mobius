@@ -16,6 +16,7 @@ import java.util.Stack;
  *
  * @author J. Charles (julien.charles@gmail.com)
  * @author reviewed by TODO
+ * @param <T> the type of the nodes of the inspected graph
  */
 public class SPGRecognizer<T> {
   private final SimpleGraph<T> graph;
@@ -26,10 +27,18 @@ public class SPGRecognizer<T> {
   private int maxDeg;
   private final Map<T, Integer> topologicalNum = new HashMap<T, Integer> ();
   
+  /**
+   * Construct a Series-parallel graph recognizer.
+   * @param graph the graph to inspect
+   */
   public SPGRecognizer(SimpleGraph<T> graph) {
     this.graph = graph;
   }
   
+  /**
+   * Check if the graph is an SPG
+   * @return true if the graph is a series-parallel graph
+   */
   public boolean check() {
     return initialization() && reductionStrategy();
   }

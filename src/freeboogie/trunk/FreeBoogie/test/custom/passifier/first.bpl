@@ -6,6 +6,7 @@ var f' : <int>name;
 procedure a(a : [int]int) returns (x: int)
 {
     var i: int;
+    var t: int;
 	a:
 		i := x + 1;
 		goto b;

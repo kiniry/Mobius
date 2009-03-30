@@ -70,5 +70,6 @@ public interface TcInterface {
    * @return the last processed AST
    */
   Declaration getAST();
+  
 }
 
