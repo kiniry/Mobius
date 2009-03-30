@@ -13,7 +13,7 @@ procedure a(a : [int]int) returns (x: int)
 	b:  x := x + 2;
 	   goto c, d;
 	c: x:= x + 3;
-	   return;
+	   goto d;
 	d: x:= x + 4;
 	   goto e;
 	e: i := x + 5;

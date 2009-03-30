@@ -14,7 +14,6 @@ import freeboogie.ast.AssignmentCmd;
 import freeboogie.ast.Ast;
 import freeboogie.ast.AtomId;
 import freeboogie.ast.AtomOld;
-import freeboogie.ast.BinaryOp;
 import freeboogie.ast.Block;
 import freeboogie.ast.Body;
 import freeboogie.ast.Command;
@@ -32,7 +31,6 @@ import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.SPGRecognizer;
 import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
-import freeboogie.tc.TypeUtils;
 import freeboogie.util.Err;
 import freeboogie.util.Id;
 
@@ -45,10 +43,9 @@ import freeboogie.util.Id;
  * 
  * @author J. Charles (julien.charles@gmail.com)
  */
-public class Passificator extends Transformer {
+public class Passificator extends ABasicPassifier {
 
-  /** the current instance of the type checker. */
-  private final TcInterface fTypeChecker;
+
 
   /** the main global environment. */
   private final Environment fEnv = new Environment();
@@ -56,7 +53,6 @@ public class Passificator extends Transformer {
   /** Used for debugging output. TODO(rgrig): static is ugly */
   private static String currentLocation;
 
-  private boolean isVerbose;
 
   
   /**
@@ -65,8 +61,7 @@ public class Passificator extends Transformer {
    * @param verbose triggers the statistics printing
    */
   public Passificator(TcInterface tc, boolean verbose) {
-    fTypeChecker = tc;
-    isVerbose = verbose;
+    super(tc, verbose);
   }
 
   public Program process(Program program) {
@@ -81,13 +76,14 @@ public class Passificator extends Transformer {
    */
   public Declaration process(final Declaration ast, String fileName) {
     Declaration passifiedAst = (Declaration)ast.eval(this);
-    if (isVerbose) {
+    
+    if (isVerbose()) {
       System.out.print(fEnv.globalToString(fileName));
     }
     passifiedAst = addVariableDeclarations(passifiedAst);
     verifyAst(passifiedAst);
     
-    return fTypeChecker.getAST();
+    return getTypeChecker().getAST();
   }
   
   @Override
@@ -95,16 +91,21 @@ public class Passificator extends Transformer {
                   Type type, Identifiers typeVars, Declaration tail) {
     fEnv.addGlobal(decl);
     Declaration newTail = tail != null?(Declaration)tail.eval(this) : null; 
+
     return VariableDecl.mk(name, type, typeVars, newTail);
   }
   
-  
+  @Override
+  public Ast eval(Signature signature, String name, 
+                  Declaration args, Declaration results, Identifiers typeVars)  {
+    return signature;
+  }
   /**
    * Treats method by methods.
    */
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
-    SimpleGraph<Block> currentFG = fTypeChecker.getFlowGraph(implementation);
+    SimpleGraph<Block> currentFG = getTypeChecker().getFlowGraph(implementation);
     SPGRecognizer<Block> recog = new SPGRecognizer<Block>(currentFG);
     Body body = oldBody;
     if (!recog.check()) {
@@ -116,17 +117,16 @@ public class Passificator extends Transformer {
         sig.getName() + " has cycles. I'm not passifying it.");
     }
     else {
-      if (isVerbose) {
+      if (isVerbose()) {
         currentLocation = sig.loc() + " " + sig.getName();
       }
-      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, isVerbose, fEnv, 
+      BodyPassifier bp = BodyPassifier.passify(getTypeChecker(), isVerbose(), fEnv, 
                                                oldBody, sig);
       sig = Signature.mk(sig.getName(), sig.getArgs(),
                          bp.getResult(),
                          sig.getTypeVars(), sig.loc());
       body = bp.getBody();
       fEnv.updateGlobalWith(bp.getEnvironment());
-
 
     }
 
@@ -160,7 +160,7 @@ public class Passificator extends Transformer {
    * @return true if the typechecking works.
    */
   private boolean verifyAst(Declaration ast) {
-    if (!fTypeChecker.process(ast).isEmpty()) {
+    if (!getTypeChecker().process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
       PrettyPrinter pp = new PrettyPrinter(pw);
       ast.eval(pp);
@@ -613,71 +613,6 @@ public class Passificator extends Transformer {
       }
       return sb.toString();
     }
-  }
-  
-
-  
-  public static abstract class ABasicPassifier extends Transformer {
-
-    private final TcInterface fTypeChecker;
-    private boolean fIsVerbose;
-    public ABasicPassifier (TcInterface tc, boolean bVerbose) {
-      fTypeChecker = tc;
-      fIsVerbose = bVerbose;
-    }
-    /**
-     * Returns the variable declaration corresponding to the given id.
-     * @param id the id to check for
-     * @return a valid variable declaration or null
-     */
-    VariableDecl getDeclaration(AtomId id) {
-      Declaration decl = getTypeChecker().getST().ids.def(id);
-      if (decl instanceof VariableDecl) {
-        return (VariableDecl) decl;
-      }
-      return null;
-    }
-    public TcInterface getTypeChecker() {
-      return fTypeChecker;
-    }  
-    
-    public static AssertAssumeCmd mkAssumeEQ(Expr left, Expr right) {
-      return AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
-        BinaryOp.mk(BinaryOp.Op.EQ, left, right));
-    }
-    
-    public static AtomId mkVar(VariableDecl decl, int idx) {
-      String name = decl.getName();
-      if (idx != 0) {
-        name += "$$" + idx;
-      }
-      return AtomId.mk(name, null);
-    }
-    
-    public static AtomId mkVar(AtomId id, int idx) {
-      String name = id.getId();
-      if (idx != 0) {
-        name += "$$" + idx;
-      }
-      return  AtomId.mk(name, id.getTypes(), id.loc());
-    }
-    
-    public static VariableDecl mkDecl(VariableDecl old, int idx, Declaration next) {
-      String name = old.getName();
-      if (idx != 0) {
-        name += "$$" + idx;
-      }
-      return VariableDecl.mk(
-        name,
-        TypeUtils.stripDep(old.getType()).clone(),
-        old.getTypeVars() == null? null :old.getTypeVars().clone(),
-        next);
-    }
-
-    public boolean isVerbose() {
-      return fIsVerbose;
-    }
-   
   }
 
 }

@@ -50,7 +50,7 @@ public class SPGRecognizer<T> {
    * @return false if the graph is not SP.
    */
   private boolean initialization() {
-    T src = getSource(graph);
+    T src = getSource();
     LinkedList<T> q = new LinkedList<T>();
     q.add(src);
     
@@ -201,10 +201,9 @@ public class SPGRecognizer<T> {
 
   /**
    * Returns the source node of the graph
-   * @param graph
    * @return the first node of the graph
    */
-  private T getSource(SimpleGraph<T> graph) {
+  private T getSource() {
     List<T> list = graph.nodesInTopologicalOrder();
     
     T res = list.get(0);
