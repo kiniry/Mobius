@@ -1,12 +1,17 @@
 package freeboogie.vcgen;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import freeboogie.ast.*;
-import freeboogie.backend.*;
+import freeboogie.ast.Declaration;
+import freeboogie.ast.Implementation;
+import freeboogie.backend.Prover;
+import freeboogie.backend.ProverException;
+import freeboogie.backend.SmtTerm;
+import freeboogie.backend.Term;
+import freeboogie.backend.TermBuilder;
 import freeboogie.tc.TcInterface;
 
 /**
@@ -107,7 +112,9 @@ public class VcGenerator<T extends Term<T>> {
     sp.setFlowGraph(tc.getFlowGraph(implementation));
     T vc = sp.vc();
     if (removeSharing) {
+      log.fine("Original size: " + DeSharifier.getSize((SmtTerm)(Object)vc, new HashMap<SmtTerm,Integer>()));
       vc = processor.process(vc);
+      log.fine("Processed size: " + DeSharifier.getSize(((SmtTerm)(Object)vc), new HashMap<SmtTerm,Integer>()));
     }
     lowLevelAxiomBag.clear();
     vc.collectAxioms(lowLevelAxiomBag);
