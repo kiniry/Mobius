@@ -23,7 +23,6 @@ import freeboogie.ast.Identifiers;
 import freeboogie.ast.Implementation;
 import freeboogie.ast.Program;
 import freeboogie.ast.Signature;
-import freeboogie.ast.Transformer;
 import freeboogie.ast.TupleType;
 import freeboogie.ast.Type;
 import freeboogie.ast.VariableDecl;
@@ -268,7 +267,7 @@ public class Passificator extends ABasicPassifier {
       
       
       if (isVerbose()) {
-        System.out.print(fEnv.localToString());
+        System.out.print(fEnv.localToString(currentLocation));
       }
       computeDeclarations();
       Body newBody = Body.mk(newLocals, newBlocks);
@@ -433,185 +432,6 @@ public class Passificator extends ABasicPassifier {
     @Override
     public AtomId eval(AtomId atomId, String id, TupleType types) {
       return get(atomId);
-    }
-  }
-  /**
-   * 
-   * TODO: description
-   *
-   * @author J. Charles (julien.charles@inria.fr)
-   * @author reviewed by TODO
-   */
-  public static class Environment {
-    /** global variable list. */
-    private final Map<VariableDecl, Integer> global = 
-      new LinkedHashMap<VariableDecl, Integer>() ;
-    /** local variable list. */
-    private final Map<VariableDecl, Integer> local = 
-      new LinkedHashMap<VariableDecl, Integer>();
-    /** for efficiency. */
-    private final Map<VariableDecl, Integer> all = 
-      new LinkedHashMap<VariableDecl, Integer>();
-   
-    /** */
-    public Environment() {
-     // nothing 
-    }
-    
-    /**
-     * Adds a variable to the global variables set.
-     * @param decl the variable to add
-     */
-    public void addGlobal(VariableDecl decl) {
-      global.put(decl, 0);
-      all.put(decl, 0);
-    }
-    
-    /**
-     * Put a variable in the environment with its corresponding index.
-     * @param decl de variable declaration
-     * @param i the index
-     */
-    public void put(VariableDecl decl, int i) {
-      if (global.containsKey(decl)) {
-        global.put(decl, i);
-      }
-      else {
-        local.put(decl, i);
-      }
-      all.put(decl, i);
-    }
-
-    /**
-     * Returns the global set of variables.
-     * @return a set of variables and their indexes
-     */
-    public Set<Entry<VariableDecl, Integer>> getGlobalSet() {
-      return global.entrySet();
-    }
-    
-    /**
-     * Returns the local set of variables.
-     * @return a set of variables and their indexes
-     */
-    public Set<Entry<VariableDecl, Integer>> getLocalSet() {
-      return local.entrySet();
-    }
-    
-    /**
-     * Returns all the collected variables so far.
-     * @return a set of variables and their indexes
-     */
-    public Set<Entry<VariableDecl, Integer>> getAllSet() {
-      return all.entrySet();
-    }
-    
-    /**
-     * Removes a variable from the environment.
-     * @param old the variable to remove
-     */
-    public void remove(VariableDecl old) {
-      global.remove(old);
-      local.remove(old);
-      all.remove(old);
-    }
-
-    /**
-     * Put all the variables contained in the given environment
-     * in the current environment.
-     * @param env
-     */
-    public void putAll(Environment env) {
-      global.putAll(env.global);
-      local.putAll(env.local);
-      all.putAll(env.all);
-    }
-
-    private Environment(Environment env) {
-      putAll(env);
-    }
-
-    /**
-     * Returns the index corresponding to the given variable
-     * @param key the variable to get the index from
-     * @return an index > to 0
-     */
-    public int get(VariableDecl key) {
-      Integer i = all.get(key);
-      return i == null? 0 : i;
-    }
-    
-    
-    @Override
-    public Environment clone() {
-      return new Environment(this);
-    }
-    
-    /**
-     * Update with another environment.
-     * ie. if variable index is greater in the other 
-     * environment, it replaces the current variable index.
-     * @param env the environment to update with.
-     */
-    public void updateWith(Environment env) {
-      update(env.global, global);
-      update(env.local, local);
-      update(env.all, all);
-    }
-    
-    /**
-     * Updates only the global environment with the given values.
-     * @param env the environment to update with
-     */
-    public void updateGlobalWith(Environment env) {
-      update(env.global, global);
-      all.putAll(global);
-    }
-    
-    private static void update(Map<VariableDecl, Integer> src, 
-                               Map<VariableDecl, Integer> target) {
-
-      for (VariableDecl decl: src.keySet()) {
-        Integer currInc = target.get(decl);
-        int curr = currInc != null? currInc : 0;
-        Integer incarnation = src.get(decl);
-        if (incarnation > curr) {
-              curr = incarnation;
-              target.put(decl, curr);
-        }
-      }
-    }
-    
-    /**
-     * toString method to print the global environment
-     * @return the global list of variables
-     */
-    public String globalToString(String fileName) {
-      return mapToString(fileName + " GLOBAL", global);
-    }
-  
-    /**
-     * toString method to print the local environment
-     * @return the local list of variables
-     */
-    public String localToString() {
-      return mapToString(currentLocation + " local", local);
-    }
-
-    public static String mapToString(
-        String prefix,
-        Map<VariableDecl, Integer> map
-    ) {
-      StringBuilder sb = new StringBuilder();
-      for (Entry<VariableDecl, Integer> e : map.entrySet()) {
-        sb.append(prefix);
-        sb.append(" ");
-        sb.append(e.getKey().getName());
-        sb.append(" ");
-        sb.append(e.getValue());
-        sb.append("\n");
-      }
-      return sb.toString();
     }
   }
 

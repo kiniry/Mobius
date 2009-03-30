@@ -8,7 +8,7 @@ import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.*;
 import freeboogie.util.*;
-import freeboogie.vcgen.Passificator.Environment;
+import freeboogie.vcgen.ABasicPassifier.Environment;
 
 /**
  * Gets rid of assignments and "old" expressions by introducing 
