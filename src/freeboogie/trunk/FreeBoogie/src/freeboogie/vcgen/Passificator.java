@@ -60,6 +60,7 @@ public class Passificator extends Transformer {
   /**
    * Construct a passificator, relating to the current instance of the type checker.
    * @param tc the current system type checker
+   * @param verbose triggers the statistics printing
    */
   public Passificator(TcInterface tc, boolean verbose) {
     fTypeChecker = tc;
@@ -97,7 +98,7 @@ public class Passificator extends Transformer {
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
     SimpleGraph<Block> currentFG = fTypeChecker.getFlowGraph(implementation);
-    SPGRecognizer recog = new SPGRecognizer(currentFG);
+    SPGRecognizer<Block> recog = new SPGRecognizer<Block>(currentFG);
     Body body = oldBody;
     if (!recog.check()) {
       Err.warning(this + " " + implementation.loc() + ": Implementation " + 
@@ -111,8 +112,8 @@ public class Passificator extends Transformer {
       if (isVerbose) {
         currentLocation = sig.loc() + " " + sig.getName();
       }
-      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, isVerbose, currentFG, fEnv, 
-                                               oldBody, (VariableDecl)sig.getResults());
+      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, isVerbose, fEnv, 
+                                               oldBody, sig);
       sig = Signature.mk(sig.getName(), sig.getArgs(),
                          bp.getResult(),
                          sig.getTypeVars(), sig.loc());
@@ -181,22 +182,25 @@ public class Passificator extends Transformer {
     private final Map<Block, Environment> endBlockStatus = 
       new HashMap<Block, Environment> ();
     private final VariableDecl fResults;
-    private final SimpleGraph<Block> fFlowGraph;
+    private SimpleGraph<Block> fFlowGraph;
     
     private Body fBody;
     private VariableDecl fNewResults;
     /**
      * @param typeChecker  
-     * @param flowGraph 
+     * @param bIsVerbose
      * @param globalEnv 
-     * @param results */
+     * @param sig */
     public BodyPassifier(final TcInterface typeChecker, boolean bIsVerbose,
-                         final SimpleGraph<Block> flowGraph, 
-                         Environment globalEnv, final VariableDecl results) {
+                         Environment globalEnv, final Signature sig) {
       super(typeChecker, bIsVerbose);
-      fResults = results;
-      fFlowGraph = flowGraph;
+      fResults = (VariableDecl) sig.getResults();
       fEnv.putAll(globalEnv);
+      VariableDecl curr = (VariableDecl) sig.getArgs();
+      while (curr != null) {
+        fEnv.put(curr, 0);
+        curr = (VariableDecl) curr.getTail();
+      }
     }
     
     public Environment getEnvironment() {
@@ -208,10 +212,9 @@ public class Passificator extends Transformer {
     }
 
     public static BodyPassifier passify(TcInterface fTypeChecker, boolean bIsVerbose,
-                                        SimpleGraph<Block> flowGraph, 
                                         Environment globalEnv, 
-                                        Body body, VariableDecl results) {
-      BodyPassifier bp = new BodyPassifier(fTypeChecker, bIsVerbose, flowGraph, globalEnv, results);
+                                        Body body, Signature sig) {
+      BodyPassifier bp = new BodyPassifier(fTypeChecker, bIsVerbose, globalEnv, sig);
       body.eval(bp);
       return bp;
     }
@@ -245,6 +248,13 @@ public class Passificator extends Transformer {
     public Ast eval(final Body body, Declaration vars, Block blocks) {
       // process out parameters
       newLocals = vars;
+      VariableDecl curr = (VariableDecl) vars;
+      while (curr != null) {
+        fEnv.put(curr, 0);
+        curr = (VariableDecl) curr.getTail();
+      }
+      
+      fFlowGraph = getTypeChecker().getFlowGraph(body);
       List<Block> list = fFlowGraph.nodesInTopologicalOrder();
       Iterator<Block> iter = list.iterator();
       Block newBlocks = evalBlock(iter.next(), iter);
@@ -499,6 +509,11 @@ public class Passificator extends Transformer {
       all.remove(old);
     }
 
+    /**
+     * Put all the variables contained in the given environment
+     * in the current environment.
+     * @param env
+     */
     public void putAll(Environment env) {
       global.putAll(env.global);
       local.putAll(env.local);
@@ -560,10 +575,18 @@ public class Passificator extends Transformer {
       }
     }
     
+    /**
+     * toString method to print the global environment
+     * @return the global list of variables
+     */
     public String globalToString() {
       return mapToString("ALL global", global);
     }
-    
+  
+    /**
+     * toString method to print the local environment
+     * @return the local list of variables
+     */
     public String localToString() {
       return mapToString(currentLocation + " local", local);
     }
