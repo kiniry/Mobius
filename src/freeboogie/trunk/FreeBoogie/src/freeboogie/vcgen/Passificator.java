@@ -67,9 +67,21 @@ public class Passificator extends Transformer {
    * @return a valid modified ast
    */
   public Declaration process(final Declaration ast) {
+    if (isVerbose) {
+      System.out.println("Passification : ");
+    }
+
+    
     Declaration passifiedAst = (Declaration)ast.eval(this);
+    if(isVerbose) {
+      System.out.println(fEnv.globalToString());
+    }
     passifiedAst = addVariableDeclarations(passifiedAst);
     verifyAst(passifiedAst);
+    if (isVerbose) {
+      System.out.println("\n");
+    }
+    
     return fTypeChecker.getAST();
   }
   
@@ -89,21 +101,27 @@ public class Passificator extends Transformer {
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
     SimpleGraph<Block> currentFG = fTypeChecker.getFlowGraph(implementation);
     SPGRecognizer recog = new SPGRecognizer(currentFG);
-    System.err.println("......   " + recog.check());
     Body body = oldBody;
-    if (currentFG.hasCycle()) {
-      Err.warning("" + implementation.loc() + ": Implementation " + 
+    if (!recog.check()) {
+      Err.warning(this + " " + implementation.loc() + ": Implementation " + 
+        sig.getName() + " is not a series-parallel graph. I'm not passifying it.");
+    }
+    else if (currentFG.hasCycle()) {
+      Err.warning(this + " " + implementation.loc() + ": Implementation " + 
         sig.getName() + " has cycles. I'm not passifying it.");
     }
     else {
-
-      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, currentFG, fEnv, 
+      if (isVerbose) {
+        System.out.print(sig.getName() + ": ");
+      }
+      BodyPassifier bp = BodyPassifier.passify(fTypeChecker, isVerbose, currentFG, fEnv, 
                                                oldBody, (VariableDecl)sig.getResults());
       sig = Signature.mk(sig.getName(), sig.getArgs(),
                          bp.getResult(),
                          sig.getTypeVars(), sig.loc());
       body = bp.getBody();
       fEnv.updateGlobalWith(bp.getEnvironment());
+
 
     }
 
@@ -175,10 +193,10 @@ public class Passificator extends Transformer {
      * @param flowGraph 
      * @param globalEnv 
      * @param results */
-    public BodyPassifier(final TcInterface typeChecker, 
+    public BodyPassifier(final TcInterface typeChecker, boolean bIsVerbose,
                          final SimpleGraph<Block> flowGraph, 
                          Environment globalEnv, final VariableDecl results) {
-      super(typeChecker);
+      super(typeChecker, bIsVerbose);
       fResults = results;
       fFlowGraph = flowGraph;
       fEnv.putAll(globalEnv);
@@ -192,11 +210,11 @@ public class Passificator extends Transformer {
       return fBody;
     }
 
-    public static BodyPassifier passify(TcInterface fTypeChecker, 
+    public static BodyPassifier passify(TcInterface fTypeChecker, boolean bIsVerbose,
                                         SimpleGraph<Block> flowGraph, 
                                         Environment globalEnv, 
                                         Body body, VariableDecl results) {
-      BodyPassifier bp = new BodyPassifier(fTypeChecker, flowGraph, globalEnv, results);
+      BodyPassifier bp = new BodyPassifier(fTypeChecker, bIsVerbose, flowGraph, globalEnv, results);
       body.eval(bp);
       return bp;
     }
@@ -231,6 +249,11 @@ public class Passificator extends Transformer {
       // process out parameters
       newLocals = vars;
       Block newBlocks = (Block) blocks.eval(this);
+      
+      
+      if (isVerbose()) {
+        System.out.println("{" + fEnv.localToString() + "}");
+      }
       computeDeclarations();
       Body newBody = Body.mk(newLocals, newBlocks);
       fBody = newBody;
@@ -334,7 +357,7 @@ public class Passificator extends Transformer {
     int belowOld = 0;
     
     public CommandEvaluator(TcInterface tc, Environment env) {
-      super (tc);
+      super (tc, false);
       this.env = env;
     }
 
@@ -532,6 +555,50 @@ public class Passificator extends Transformer {
         }
       }
     }
+    
+    public String globalToString() {
+      return globalToString(global);
+    }
+    
+    public static String globalToString(Map<VariableDecl, Integer> global) {
+      StringBuilder builder = new StringBuilder();
+      String res = "";
+      for (Entry<VariableDecl, Integer> ent: global.entrySet()) {
+        VariableDecl decl = ent.getKey();
+        int idx = ent.getValue();
+        builder.append(", " + toString(decl, idx));
+      }
+      if (builder.length() >1) {
+        res = builder.substring(2).toString();
+      }  
+      return "Global variables: [" + res + "]";
+    }
+    
+    public String localToString() {
+      return localToString(local);
+    }
+    
+    public static String localToString(Map<VariableDecl, Integer> local) {
+      StringBuilder builder = new StringBuilder();
+      String res = "";
+      for (Entry<VariableDecl, Integer> ent: local.entrySet()) {
+        VariableDecl decl = ent.getKey();
+        int idx = ent.getValue();
+        builder.append(", " + toString(decl, idx));
+      }
+      if (builder.length() >1) {
+        res = builder.substring(2).toString();
+      }  
+      return "Local variables: [" + res + "]";
+    }
+    
+    
+    public static String toString(VariableDecl decl, Integer idx) {
+      if (idx == 0) {
+        return decl.getName();
+      }
+      return decl.getName() + "(" + idx + ")";
+    }
   }
   
 
@@ -539,8 +606,10 @@ public class Passificator extends Transformer {
   public static abstract class ABasicPassifier extends Transformer {
 
     private final TcInterface fTypeChecker;
-    public ABasicPassifier (TcInterface tc) {
+    private boolean fIsVerbose;
+    public ABasicPassifier (TcInterface tc, boolean bVerbose) {
       fTypeChecker = tc;
+      fIsVerbose = bVerbose;
     }
     /**
      * Returns the variable declaration corresponding to the given id.
@@ -585,6 +654,10 @@ public class Passificator extends Transformer {
         TypeUtils.stripDep(old.getType()).clone(),
         old.getTypeVars() == null? null :old.getTypeVars().clone(),
         next);
+    }
+
+    public boolean isVerbose() {
+      return fIsVerbose;
     }
    
   }

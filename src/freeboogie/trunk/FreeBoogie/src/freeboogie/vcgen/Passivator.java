@@ -8,6 +8,7 @@ import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.*;
 import freeboogie.util.*;
+import freeboogie.vcgen.Passificator.Environment;
 
 /**
  * Gets rid of assignments and "old" expressions by introducing 
@@ -65,9 +66,18 @@ public class Passivator extends Transformer {
   private Deque<Boolean> context; // true = write, false = read
   private int belowOld;
 
+  private boolean isVerbose;
+
   // === public interface ===
   
+  public Passivator(boolean bIsVerbose) {
+    isVerbose = bIsVerbose;
+  }
+
   public Declaration process(Declaration ast, TcInterface tc) {
+    if (isVerbose) {
+      System.out.println("Passivation :");
+    }
     this.tc = tc;
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
     writeIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
@@ -86,6 +96,9 @@ public class Passivator extends Transformer {
           ast);
       }
     }
+    if (isVerbose) {
+      System.out.println(Environment.globalToString(newVarsCnt));
+    }
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
       PrettyPrinter pp = new PrettyPrinter(pw);
@@ -93,6 +106,10 @@ public class Passivator extends Transformer {
       pw.flush();
       Err.internal("Passivator produced invalid Boogie.");
     }
+    if (isVerbose) {
+      System.out.println("\n");
+    }
+    
     return tc.getAST();
   }
 
@@ -100,6 +117,7 @@ public class Passivator extends Transformer {
 
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+    
     currentFG = tc.getFlowGraph(implementation);
     if (currentFG.hasCycle()) {
       Err.warning("" + implementation.loc() + ": Implementation " + 
@@ -107,7 +125,11 @@ public class Passivator extends Transformer {
       if (tail != null) tail = (Declaration)tail.eval(this);
       return Implementation.mk(sig, body, tail);
     }
-
+    
+    if (isVerbose) {
+      System.out.print(sig.getName() + ": ");
+    }
+    
     // collect all variables that are assigned to
     Pair<CSeq<VariableDecl>, CSeq<VariableDecl>> rwIds = 
       implementation.eval(rwsf);
@@ -127,18 +149,22 @@ public class Passivator extends Transformer {
         }
       });
     }
-
+    if (isVerbose) {
+      System.out.println("{" + Environment.localToString(newVarsCnt) + "}");
+    }
     // transform the body
     context = new ArrayDeque<Boolean>();
     context.addFirst(false);
     currentBlock = null;
     belowOld = 0;
+
     body = (Body)body.eval(this);
     context = null;
     currentFG = null;
 
     // process out parameters
     newLocals = body.getVars();
+
     sig = Signature.mk(
       sig.getName(), 
       sig.getArgs(),
@@ -190,7 +216,7 @@ public class Passivator extends Transformer {
   public Block eval(Block block, String name, Command cmd, Identifiers succ, Block tail) {
     // first process the rest
     Block newTail = tail == null? null : (Block)tail.eval(this);
-    
+
     currentBlock = block;
     // change variable occurrences in the command of this block
     Command newCmd = cmd == null? null : (Command)cmd.eval(this);

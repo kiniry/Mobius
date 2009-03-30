@@ -63,7 +63,7 @@ public class VcGenerator<T extends Term<T>> {
     callDesugarer = new CallDesugarer();
     havocDesugarer = new HavocDesugarer(); 
     specDesugarer = new SpecDesugarer();
-    passivator = new Passivator();
+    passivator = new Passivator(false);
     mapRemover = new MapRemover();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender<T>();

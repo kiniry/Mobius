@@ -92,6 +92,7 @@ public class Main {
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-win", "windows mode");
     opt.regBool("-verify", "do everything");
+    opt.regBool("-stats", "Prints some statistics");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
@@ -133,12 +134,12 @@ public class Main {
       }}));
   }
 
-  private void passivate() {
-    Passivator p = new Passivator();
+  private void passivate(boolean isVerbose) {
+    Passivator p = new Passivator(isVerbose);
     ast = p.process(ast, tc);
   }
-  private void passify() {
-    Passificator p = new Passificator(tc, true);
+  private void passify(boolean isVerbose) {
+    Passificator p = new Passificator(tc, isVerbose);
     ast = p.process(ast);
   }
   
@@ -244,8 +245,8 @@ public class Main {
           if (opt.boolVal("-dcall")) desugarCalls();
           if (opt.boolVal("-dhavoc")) desugarHavoc();
           if (opt.boolVal("-dspec")) desugarSpecs();
-          if (opt.boolVal("-pass")) passivate();
-          if (opt.boolVal("-passify")) passify();
+          if (opt.boolVal("-pass")) passivate(opt.boolVal("-stats"));
+          if (opt.boolVal("-passify")) passify(opt.boolVal("-stats"));
           if (opt.boolVal("-dmap")) removeMaps();
         } else verify();
         if (opt.boolVal("-pfg")) fgd.process(ast, tc);

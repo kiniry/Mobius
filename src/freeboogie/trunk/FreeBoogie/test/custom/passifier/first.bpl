@@ -8,11 +8,11 @@ procedure a(a : [int]int) returns (x: int)
     var i: int;
 	a:
 		i := x + 1;
-		goto b, c;
+		goto b;
 	b:  x := x + 2;
 	   goto c, d;
 	c: x:= x + 3;
-	   goto d;
+	   return;
 	d: x:= x + 4;
 	   goto e;
 	e: i := x + 5;
