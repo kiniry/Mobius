@@ -1,11 +1,8 @@
 package freeboogie.backend;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
-
-import freeboogie.ast.Expr;
 
 /**
  * Builds a term tree, which looks like an S-expression.

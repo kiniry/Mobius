@@ -1,7 +1,6 @@
 package freeboogie;
 
 import java.io.*;
-import java.util.List;
 import java.util.logging.*;
 
 import org.antlr.runtime.ANTLRFileStream;
@@ -92,12 +91,13 @@ public class Main {
     opt.regBool("-old", "accept old constructs");
     opt.regBool("-win", "windows mode");
     opt.regBool("-verify", "do everything");
+    opt.regBool("-removesharing", "remove sharing in vc");
     opt.regBool("-stats", "Prints some statistics");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
-    vcgen = new VcGenerator<SmtTerm>();
+    vcgen = new VcGenerator<SmtTerm>(new DeSharifier());
   }
 
   private void printSymbolTable() {
@@ -184,6 +184,8 @@ public class Main {
     }
     ast = vcgen.process(ast, tc);
 
+    boolean removeSharing = opt.boolVal("-removesharing");
+    
     // This is ugly. Perhaps put this in a visitor that also knows
     // how to filter which implementations to check.
     Declaration d = ast;
@@ -198,7 +200,7 @@ public class Main {
         Implementation impl = (Implementation)d;
         System.out.printf(
           "%s: %s (%s)\n",
-          vcgen.verify(impl)? " OK" : "NOK",
+          vcgen.verify(impl, removeSharing)? " OK" : "NOK",
           impl.getSig().getName(),
           impl.getSig().loc());
         d = impl.getTail();

@@ -48,6 +48,7 @@ public class VcGenerator<T extends Term<T>> {
   private MapRemover mapRemover;
   private FunctionRegisterer functionRegisterer;
   private AxiomSender<T> axiomSender;
+  private final FormulaProcessor<T> processor;
 
   private StrongestPostcondition<T> sp;
 
@@ -57,7 +58,7 @@ public class VcGenerator<T extends Term<T>> {
   private Set<T> lowLevelAxiomBag;
 
 
-  public VcGenerator() {
+  public VcGenerator(FormulaProcessor<T> processor) {
     havocMaker = new HavocMaker();
     loopCutter = new LoopCutter();
     callDesugarer = new CallDesugarer();
@@ -69,6 +70,7 @@ public class VcGenerator<T extends Term<T>> {
     axiomSender = new AxiomSender<T>();
     sp = new StrongestPostcondition<T>();
     lowLevelAxiomBag = new HashSet<T>(13);
+    this.processor = processor;
   }
 
   public void setProver(Prover<T> prover) throws ProverException {
@@ -100,12 +102,18 @@ public class VcGenerator<T extends Term<T>> {
    * {@code implementation} must be part the AST last processed.
    * Also, a prover must have been set.
    */
-  public boolean verify(Implementation implementation) throws ProverException {
+  public boolean verify(Implementation implementation, boolean removeSharing) throws ProverException {
     assert prover != null && ast != null;
     sp.setFlowGraph(tc.getFlowGraph(implementation));
     T vc = sp.vc();
+    if (removeSharing) {
+      vc = processor.process(vc);
+    }
     lowLevelAxiomBag.clear();
     vc.collectAxioms(lowLevelAxiomBag);
+    if (removeSharing) {
+      lowLevelAxiomBag.addAll(processor.getAxioms(vc));
+    }
     prover.push();
     for (T t : lowLevelAxiomBag) prover.assume(t);
     boolean result = prover.isValid(vc);
@@ -120,6 +128,7 @@ public class VcGenerator<T extends Term<T>> {
     // prepare fields for verify() to use
     builder = prover.getBuilder();
     sp.setBuilder(builder);
+    processor.setBuilder(builder);
     builder.setTypeChecker(tc);
     functionRegisterer.setBuilder(builder);
     axiomSender.setProver(prover);
