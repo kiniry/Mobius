@@ -22,6 +22,7 @@ import freeboogie.ast.Declaration;
 import freeboogie.ast.Expr;
 import freeboogie.ast.Identifiers;
 import freeboogie.ast.Implementation;
+import freeboogie.ast.Program;
 import freeboogie.ast.Signature;
 import freeboogie.ast.Transformer;
 import freeboogie.ast.TupleType;
@@ -68,15 +69,20 @@ public class Passificator extends Transformer {
     isVerbose = verbose;
   }
 
+  public Program process(Program program) {
+    return new Program(
+        process(program.ast, program.fileName), program.fileName);
+  }
+
   /**
    * Process the AST, and returns the modified version.
    * @param ast the ast to look at.
    * @return a valid modified ast
    */
-  public Declaration process(final Declaration ast) {
+  public Declaration process(final Declaration ast, String fileName) {
     Declaration passifiedAst = (Declaration)ast.eval(this);
     if (isVerbose) {
-      System.out.print(fEnv.globalToString());
+      System.out.print(fEnv.globalToString(fileName));
     }
     passifiedAst = addVariableDeclarations(passifiedAst);
     verifyAst(passifiedAst);
@@ -580,8 +586,8 @@ public class Passificator extends Transformer {
      * toString method to print the global environment
      * @return the global list of variables
      */
-    public String globalToString() {
-      return mapToString("ALL global", global);
+    public String globalToString(String fileName) {
+      return mapToString(fileName + " GLOBAL", global);
     }
   
     /**

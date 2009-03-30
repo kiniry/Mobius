@@ -69,10 +69,12 @@ public class Main {
   private PrettyPrinter pp;
   private FlowGraphDumper fgd;
   private TcInterface tc;
-  private Declaration ast;
+  private Program program; // the program being processed
+    // TODO(rgrig): add a "Program process(Program)" method
 
   private VcGenerator<SmtTerm> vcgen;
   private Prover<SmtTerm> prover;
+
 
   public Main() {
     opt = new Options();
@@ -136,41 +138,41 @@ public class Main {
 
   private void passivate(boolean isVerbose) {
     Passivator p = new Passivator(isVerbose);
-    ast = p.process(ast, tc);
+    program = p.process(program, tc);
   }
   private void passify(boolean isVerbose) {
     Passificator p = new Passificator(tc, isVerbose);
-    ast = p.process(ast);
+    program = p.process(program);
   }
   
   private void removeMaps() {
     MapRemover mr = new MapRemover();
-    ast = mr.process(ast, tc);
+    program = new Program(mr.process(program.ast, tc), program.fileName);
   }
 
   private void desugarSpecs() {
     SpecDesugarer d = new SpecDesugarer();
-    ast = d.process(ast, tc);
+    program = new Program(d.process(program.ast, tc), program.fileName);
   }
 
   private void desugarCalls() {
     CallDesugarer d = new CallDesugarer();
-    ast = d.process(ast, tc);
+    program = new Program(d.process(program.ast, tc), program.fileName);
   }
 
   private void makeHavoc() {
     HavocMaker hm = new HavocMaker();
-    ast = hm.process(ast, tc);
+    program = new Program(hm.process(program.ast, tc), program.fileName);
   }
 
   private void cutLoops() {
     LoopCutter c = new LoopCutter();
-    ast = c.process(ast, tc);
+    program = new Program(c.process(program.ast, tc), program.fileName);
   }
 
   private void desugarHavoc() {
     HavocDesugarer d = new HavocDesugarer();
-    ast = d.process(ast, tc);
+    program = new Program(d.process(program.ast, tc), program.fileName);
   }
 
   private void verify() throws ProverException {
@@ -182,13 +184,13 @@ public class Main {
 //prover = new YesSmtProver();
       vcgen.setProver(prover);
     }
-    ast = vcgen.process(ast, tc);
+    program = new Program(vcgen.process(program.ast, tc), program.fileName);
 
     boolean removeSharing = opt.boolVal("-removesharing");
     
     // This is ugly. Perhaps put this in a visitor that also knows
     // how to filter which implementations to check.
-    Declaration d = ast;
+    Declaration d = program.ast;
     while (d != null) {
       if (d instanceof TypeDecl) d = ((TypeDecl)d).getTail();
       else if (d instanceof ConstDecl) d = ((ConstDecl)d).getTail();
@@ -234,12 +236,13 @@ public class Main {
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FbParser parser = new FbParser(tokens);
         parser.fileName = file;
-        ast = parser.program();
-        if (ast == null) continue; // errors while parsing or empty file
+        program = new Program(parser.program(), file);
+        if (program.ast == null) 
+          continue; // errors while parsing or empty file
         
         // do what we are asked to do with this file
-        if (FbError.reportAll(tc.process(ast))) continue;
-        ast = tc.getAST();
+        if (FbError.reportAll(tc.process(program.ast))) continue;
+        program = new Program(tc.getAST(), program.fileName);
         if (opt.boolVal("-pst")) printSymbolTable();
         if (!opt.boolVal("-verify")) {
           if (opt.boolVal("-dloop")) makeHavoc();
@@ -251,8 +254,8 @@ public class Main {
           if (opt.boolVal("-passify")) passify(opt.boolVal("-stats"));
           if (opt.boolVal("-dmap")) removeMaps();
         } else verify();
-        if (opt.boolVal("-pfg")) fgd.process(ast, tc);
-        if (opt.boolVal("-pp")) ast.eval(pp);
+        if (opt.boolVal("-pfg")) fgd.process(program.ast, tc);
+        if (opt.boolVal("-pp")) program.ast.eval(pp);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (Throwable e) {

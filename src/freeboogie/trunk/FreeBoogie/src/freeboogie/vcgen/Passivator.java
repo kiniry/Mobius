@@ -48,6 +48,7 @@ public class Passivator extends Transformer {
   // used mainly for debugging
   static private final Logger log = Logger.getLogger("freeboogie.vcgen");
 
+  private String fileName;
   private TcInterface tc;
   private HashMap<VariableDecl, HashMap<Block, Integer>> readIdx;
   private HashMap<VariableDecl, HashMap<Block, Integer>> writeIdx;
@@ -74,6 +75,11 @@ public class Passivator extends Transformer {
     isVerbose = bIsVerbose;
   }
 
+  public Program process(Program program, TcInterface tc) {
+    fileName = program.fileName;
+    return new Program(process(program.ast, tc), fileName);
+  }
+
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();
@@ -95,7 +101,7 @@ public class Passivator extends Transformer {
     }
     if (isVerbose) {
       System.out.print(Environment.mapToString(
-        ast.loc() + " NOPROC global", newVarsCnt));
+          fileName + " GLOBAL", newVarsCnt));
     }
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
