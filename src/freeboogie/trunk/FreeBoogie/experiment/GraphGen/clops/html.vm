@@ -46,6 +46,13 @@
 </head>
 
 <body>
+
+
+#set($overrideRules = $info.getOverrideRuleDescriptions())
+#set($validityRules = $info.getValidityRuleDescriptions())
+#set($flyRules = $info.getFlyRuleDescriptions())
+
+
 <div id="contentpart">
 <h1>$info.ParserName</h1>
 
@@ -61,13 +68,24 @@
     #end
     </ul>
 </li>
+#if (($overrideRules.size() != 0) ||
+     ($validityRules.size() != 0) ||
+     ($flyRules.size() != 0))
 <li><a href="#rules">Rules</a>:
     <ul>
-	#if($info.getValidityRuleDescriptions().size() != 0)
+    #if($overrideRules.size() != 0)
+ 	  <li><a href="#rules-override">Override rules</a></li>
+	#end
+	#if($validityRules.size() != 0)
  	  <li><a href="#rules-validity">Validity rules</a></li>
+	#end
+	#if($flyRules.size() != 0)
+ 	  <li><a href="#rules-fly">Fly rules</a></li>
 	#end
 	</ul>
 </li>
+#end
+
 <li><a href="#help">Code of the help message</a></li>
 </ul>
 </p>
@@ -112,30 +130,32 @@
 </div>
 
 
+#if (($overrideRules.size() != 0) ||
+     ($validityRules.size() != 0) ||
+     ($flyRules.size() != 0))
+
 <h2><a name="rules">Rules</a></h2>
  
-#foreach($rule in $info.getOverrideRuleDescriptions())
+#if($overrideRules.size() != 0)
+  <h3><a name="rules-override">Override rules</a></h3>
+  #foreach($rule in $info.getOverrideRuleDescriptions())
+  <p>
+  #foreach($assignment in $rule.getAssignments())
+  Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+  #end</p>
+  <p>Condition: $!rule.getConditionDescription()</p>
+  #end
+#end
 
-<p>
-#foreach($assignment in $rule.getAssignments())
-Assignment: $!assignment.OptionIdentifier = $!assignment.Value
-#end
-</p>
-<p>
-  Condition: $!rule.getConditionDescription()
-</p>
-#end
-#if($info.getValidityRuleDescriptions().size() != 0)
+#if($validityRules.size() != 0)
   <h3><a name="rules-validity">Validity rules</a></h3>
-  The following section contains validity rules, rules that generate an error in
-  case the given test is verified.
+  The following section contains validity rules, rules that specify how the
+  arguments should be composed.
   <table>
   <tr><td><b>Rule:</b></td>
 	  <td></td>
 	  <td><b>Exact check:</b></td></tr>
-
-  
-  #foreach($rule in $info.getValidityRuleDescriptions())
+  #foreach($rule in $validityRules)
     <tr>
     <td><div id="validity-explanation">$!rule.getExplanation()</div></td>
     <td>
@@ -150,18 +170,20 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
   </table>
 #end
 
-
-#foreach($rule in $info.getFlyRuleDescriptions())
-
-<p>
-#foreach($assignment in $rule.getAssignments())
-Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+#if($flyRules.size() != 0)
+  <h3><a name="rules-fly">Fly rules</a></h3>
+  #foreach($rule in $flyRules)
+    <p>
+    #foreach($assignment in $rule.getAssignments())
+      Assignment: $!assignment.OptionIdentifier = $!assignment.Value
+    #end
+    </p>
+    <p>Condition: $!rule.getConditionDescription()
+    </p>
+  #end
 #end
-</p>
-<p>Condition: $!rule.getConditionDescription()
-</p>
-
 #end
+
 
 <h2><a name="help">Code of the help message:</a></h2>
 <div id="code">
