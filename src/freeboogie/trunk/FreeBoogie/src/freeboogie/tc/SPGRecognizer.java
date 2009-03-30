@@ -48,9 +48,7 @@ public class SPGRecognizer<T> {
     
     while (q.size() > 0) {
       T x = q.removeFirst();
-      System.out.println(x);
-    
-      //System.out.println(x);
+
       for (T y: graph.to(x)) {
         if (pred.get(y) == null) {
           pred.put(y, x);
@@ -127,10 +125,6 @@ public class SPGRecognizer<T> {
         // a blue redex
         bucketsTable[d(a)].push(a);
       }
-    }
-    
-    for (int i = 0; i < maxDeg; i++) {
-      System.err.println(bucketsTable[i]);
     }
     
     for (int i = 0; i < bucketsTable.length; i++) {
