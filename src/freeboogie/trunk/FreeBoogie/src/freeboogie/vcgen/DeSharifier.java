@@ -26,11 +26,11 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
 
   private TermBuilder<SmtTerm> builder;
 
-  private Map<SmtTerm,Integer> treeSizeCache;
   private Map<SmtTerm,Integer> parentsCount;
   private Map<SmtTerm,SmtTerm> dagToVarCache;
   private Map<SmtTerm,SmtTerm> varToTreeCache;
-
+  private Map<SmtTerm,Boolean> varToParityMap;
+  private Map<SmtTerm,Boolean> parityMismatchMap;
 
   public void setBuilder(TermBuilder<SmtTerm> termBuilder) {
     this.builder = termBuilder;
@@ -41,9 +41,10 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
   }
 
   private void initialise(SmtTerm topLevelNode) {
-    treeSizeCache = new HashMap<SmtTerm,Integer>();
     dagToVarCache = new HashMap<SmtTerm,SmtTerm>();
     varToTreeCache = new HashMap<SmtTerm,SmtTerm>();
+    varToParityMap = new HashMap<SmtTerm,Boolean>();
+    parityMismatchMap = new HashMap<SmtTerm,Boolean>();
 
     //count the parents...
     parentsCount = new HashMap<SmtTerm,Integer>();
@@ -121,19 +122,27 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
   }
 
   private static final int THRESHOLD = 0;
-  private SmtTerm recDagToTree(final SmtTerm dag, Map<SmtTerm,Integer> treeSizeCache) {
+  private SmtTerm recDagToTree(final SmtTerm dag, Map<SmtTerm,Integer> treeSizeCache, boolean parity) {
     //Assert.notFalse(isOrAnd(dag));
 
     SmtTerm v = dagToVarCache.get(dag);
-    if (v != null) return varToTreeCache.get(v);
+    if (v != null) {
+      setParity(v, parity);
+      return varToTreeCache.get(v);
+    }
 
     final ArrayList<SmtTerm> newChildren = new ArrayList<SmtTerm>(dag.children.size()); // new children vector
-    for (SmtTerm child : dag.children) {
+    for (int i=0; i < dag.children.size(); i++) {
+      SmtTerm child = dag.children.get(i);
       if (!isOrAnd(child)) {
         newChildren.add(child);
       } else {
-        final SmtTerm newChild = recDagToTree(child,treeSizeCache); // new (plucked) child
-        final int newChildSize = getSize(newChild,treeSizeCache); // print size of new child
+        if (i == 0 && dag.id.equals("implies")) {
+          //Flip the parity
+          parity = !parity;
+        } 
+        final SmtTerm newChild = recDagToTree(child, treeSizeCache, parity); // new (plucked) child
+        final int newChildSize = getSize(newChild, treeSizeCache); // print size of new child
         final int numberOfParents = getParentsCount(child); // parents count
         if (newChildSize * (numberOfParents - 1) <= numberOfParents + THRESHOLD) {
           newChildren.add(newChild);
@@ -142,8 +151,6 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
         }
       }
     }
-
-    // put the result in cache so we don't work twice
 
     SmtTerm tree;
     if (dag.data == null) {
@@ -154,29 +161,27 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
     final SmtTerm var = builder.mk("var_formula", Id.get("unshared"));
     dagToVarCache.put(dag, var);
     varToTreeCache.put(var, tree);
-
+    setParity(var, parity);
     return tree;
   }
 
+  private void setParity(SmtTerm var, boolean parity) {
+    Boolean previousParity = varToParityMap.get(var);
+    if (previousParity != null) {
+      if (previousParity != parity) {
+        parityMismatchMap.put(var, true);
+      }
+    }
+    varToParityMap.put(var, parity);
+  }
+  
+  private boolean parityMismatch(SmtTerm var) {
+    return parityMismatchMap.get(var) == null ? false : true;
+  }
+ 
   private SmtTerm dagToTree(SmtTerm dag) {
     initialise(dag);
-
-    // do the plucking
-    SmtTerm pluckedDag = recDagToTree(dag, new HashMap<SmtTerm,Integer>());
-
-    /*
-    // get the used variables and add their definitions
-    Set<SmtTerm> usedVariables = getUsedVars(ne);
-    ArrayList<SmtTerm> exprs = new ArrayList<SmtTerm>(usedVariables.size() + 1);
-    for (SmtTerm v : usedVariables) {
-      SmtTerm def = varToTreeCache.get(v);
-      // implication should be enough because the formulas are monotone
-      exprs.add(builder.mk("iff", v, def)); 
-    }
-    exprs.add(ne);
-    return builder.mk("and", exprs);
-     */
-    return pluckedDag;
+    return recDagToTree(dag, new HashMap<SmtTerm,Integer>(), true);
   }
 
   public List<SmtTerm> getAxioms(SmtTerm pluckedDag) {
@@ -187,8 +192,15 @@ public class DeSharifier implements FormulaProcessor<SmtTerm> {
 
     for (SmtTerm v : usedVariables) {
       SmtTerm def = varToTreeCache.get(v);
-      // implication should be enough because the formulas are monotone
-      axioms.add(builder.mk("iff", v, def)); 
+      if (parityMismatch(v)) {
+        axioms.add(builder.mk("iff", v, def));
+      } else {
+        if (varToParityMap.get(v)) {
+          axioms.add(builder.mk("implies", v, def));
+        } else {
+          axioms.add(builder.mk("implies", def, v));
+        }
+      }
     }
     return axioms;
   }
