@@ -138,7 +138,7 @@ public class Main {
     ast = p.process(ast, tc);
   }
   private void passify() {
-    Passificator p = new Passificator(tc);
+    Passificator p = new Passificator(tc, true);
     ast = p.process(ast);
   }
   

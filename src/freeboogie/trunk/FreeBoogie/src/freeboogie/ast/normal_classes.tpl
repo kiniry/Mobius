@@ -63,5 +63,9 @@ public final class \ClassName extends \BaseName {
     }
     return \ClassName.mk(\members[, ]{new\MemberName}, location);
   }
+  public String toString() {
+    return "[\ClassName " + 
+                  \members[ + " " + ]{\memberName} + "]";
+  }
 }
 

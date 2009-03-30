@@ -26,6 +26,7 @@ import freeboogie.ast.TupleType;
 import freeboogie.ast.Type;
 import freeboogie.ast.VariableDecl;
 import freeboogie.astutil.PrettyPrinter;
+import freeboogie.tc.SPGRecognizer;
 import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
@@ -48,13 +49,16 @@ public class Passificator extends Transformer {
   /** the main global environment. */
   private final Environment fEnv = new Environment();
 
+  private boolean isVerbose;
+
   
   /**
    * Construct a passificator, relating to the current instance of the type checker.
    * @param tc the current system type checker
    */
-  public Passificator(TcInterface tc) {
+  public Passificator(TcInterface tc, boolean verbose) {
     fTypeChecker = tc;
+    isVerbose = verbose;
   }
 
   /**
@@ -84,6 +88,8 @@ public class Passificator extends Transformer {
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
     SimpleGraph<Block> currentFG = fTypeChecker.getFlowGraph(implementation);
+    SPGRecognizer recog = new SPGRecognizer(currentFG);
+    System.err.println("......   " + recog.check());
     Body body = oldBody;
     if (currentFG.hasCycle()) {
       Err.warning("" + implementation.loc() + ": Implementation " + 
