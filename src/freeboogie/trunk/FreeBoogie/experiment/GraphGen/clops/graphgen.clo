@@ -2,6 +2,7 @@ NAME::
  GraphGen
  
 ARGS::
+  help:{"-h", "--help", "-help"}:"Print a help message."
 
   max-depth:{"-d","--depth"}:{int}:[minvalue="0", default="10"]
    : "Maximum number of generation steps before returning a single node."
@@ -32,7 +33,7 @@ ARGS::
   
 FORMAT::
 
-  option* ;
+  help | option* ;
 
 WHERE::
 

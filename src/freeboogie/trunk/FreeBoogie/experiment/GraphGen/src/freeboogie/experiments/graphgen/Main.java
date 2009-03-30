@@ -35,8 +35,33 @@ public class Main {
       System.err.println("Invalid options.");
       return;
     }
-   
+    
     final GraphGenOptionsInterface opt = parser.getOptionStore();
+    
+    if (opt.ishelpSet()) {
+
+      String help = "Help:\n" +
+          "-d <int>, --depth <int>     " +
+          "Maximum number of generation steps before returning a single node.\n" +
+          "-n <int>, --max-nodes <int> " +
+          "Maximum number of nodes to produce. Actual number produced will always be somewhat larger.\n" +
+          "-do <file>                 " +
+          "Output file for .dot representation of the graph.\n" +
+          "-pl <float>                " +
+          "Probability of growing a link for a generative step.\n" +
+          "-ps <float>                " +
+          "Probability of splitting for a generative step.\n" +
+          "-pr <float>                " +
+          "Probability of a node being a read.\n" +
+          "-pw <float>                " +
+          "Probability of a node being a write.\n" +
+          "-bo <file>                 " +
+          "Output file for boogie generated code.\n" +
+          "-s <int>, --seed <int>      " +
+          "The seed used for random number generation.\n";
+      System.out.println(help);
+      return;
+    }
     
     int maxDepth = opt.getmax_depth();
     int maxNodes = opt.getmax_nodes();

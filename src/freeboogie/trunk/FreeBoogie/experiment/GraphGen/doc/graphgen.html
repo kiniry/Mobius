@@ -9,6 +9,7 @@
     td{padding-right:10px;}
     .id {width:100px; color:blue;}
     .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #code {font-family:Courier; font-size:14px; background-color:lightgrey;}
     #validity-explanation{width: 300px;
            color:red;}
     #validity-cond{
@@ -61,6 +62,7 @@
     <ul>
 		</ul>
 </li>
+<li><a href="#help">Code of the help message</a></li>
 </ul>
 </p>
 </div>
@@ -68,7 +70,7 @@
 
 <h2><a name="description">Description</a></h2>
 <h2><a name="usage">Usage</a></h2>
-<span id="usage-str">option*</span>
+<span id="usage-str">help | option*</span>
 
 <div id="options">
 <h2><a name="options">Options</a></h2>
@@ -185,6 +187,126 @@
 <h2><a name="rules">Rules</a></h2>
  
 
+
+
+<h2><a name="help">Code of the help message:</a></h2>
+<div id="code">
+String helpoption = 
+"option options\n" + <br/>
+ &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -d
+      
+                  &lt;int&gt;
+              ,
+                                  
+            --depth
+      
+                  &lt;int&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Maximum number of generation steps before returning a single node.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -n
+      
+                  &lt;int&gt;
+              ,
+                                  
+            --max-nodes
+      
+                  &lt;int&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Maximum number of nodes to produce. Actual number produced will always be somewhat larger.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -do
+      
+                  &lt;file&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Output file for .dot representation of the graph.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -pl
+      
+                  &lt;float&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Probability of growing a link for a generative step.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -ps
+      
+                  &lt;float&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Probability of splitting for a generative step.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -pr
+      
+                  &lt;float&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Probability of a node being a read.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -pw
+      
+                  &lt;float&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Probability of a node being a write.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -bo
+      
+                  &lt;file&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Output file for boogie generated code.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -s
+      
+                  &lt;int&gt;
+              ,
+                                  
+            --seed
+      
+                  &lt;int&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "The seed used for random number generation.\n";<br/>     <br/> 
+  </div>
 
 </div>
 </body>

@@ -10,6 +10,7 @@
     td{padding-right:10px;}
     .id {width:100px; color:blue;}
     .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #code {font-family:Courier; font-size:14px; background-color:lightgrey;}
     #validity-explanation{width: 300px;
            color:red;}
     #validity-cond{
@@ -67,6 +68,7 @@
 	#end
 	</ul>
 </li>
+<li><a href="#help">Code of the help message</a></li>
 </ul>
 </p>
 </div>
@@ -160,6 +162,40 @@ Assignment: $!assignment.OptionIdentifier = $!assignment.Value
 </p>
 
 #end
+
+<h2><a name="help">Code of the help message:</a></h2>
+<div id="code">
+#foreach($group in $info.getOptionGroupDescriptions())
+String help$group.Identifier = 
+"$group.Identifier options\n" + <br/>
+#foreach($child in $group.getChildren())
+ #set($option =  $info.getOptionDescriptionForIdentifier($!child))
+ &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+  #if($option.getAliases().size() == 0)
+       #if( $option.getType().getType() != 0 )
+           &lt;$option.getType().getTypeDescriptionString()&gt;
+       #end
+     #end
+     #foreach($alias in $option.getAliases())
+       $alias
+      
+       #if( $option.getType().getType() != 0 )
+           &lt;$option.getType().getTypeDescriptionString()&gt;
+       #end
+       #if($velocityCount != $option.getAliases().size()),
+                           #else #end
+       
+     #end" +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "$!option.Description\n"#if($velocityCount != $group.getChildren().size()) +
+                           #else;<br/>#end
+     <br/> 
+  #end
+#end
+</div>
+
 </div>
 </body>
 </html>
