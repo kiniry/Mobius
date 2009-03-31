@@ -725,7 +725,7 @@ implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.
     // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
     havoc stack50000o;
     assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.ThreadStart;
-    $Heap[stack50000o, $allocated] := true;
+    $Heap[stack50000o, $allocated] := cast(true, any);
     // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
     assert stack50000o != null;
     call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o);
@@ -734,7 +734,7 @@ implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.
     // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
     havoc stack50000o;
     assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.Thread;
-    $Heap[stack50000o, $allocated] := true;
+    $Heap[stack50000o, $allocated] := cast(true,any);
     // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
     assert stack50000o != null;
     call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o);
@@ -748,7 +748,7 @@ implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.
     // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
     havoc stack50000o;
     assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.ThreadStart;
-    $Heap[stack50000o, $allocated] := true;
+    $Heap[stack50000o, $allocated] := cast(true,any);
     // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
     assert stack50000o != null;
     call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o);
@@ -757,7 +757,7 @@ implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.
     // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
     havoc stack50000o;
     assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.Thread;
-    $Heap[stack50000o, $allocated] := true;
+    $Heap[stack50000o, $allocated] := cast(true,any);
     // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
     assert stack50000o != null;
     call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o);
@@ -972,7 +972,7 @@ implementation Microsoft.Singularity.Applications.ThreadTest..ctor(this: ref)
     assert cast($Heap[this, $writable],bool) == true && System.Object <: cast($Heap[this, $inv],name);
     assert cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Object;
     assert Inv_Microsoft.Singularity.Applications.ThreadTest(this, $Heap);
-    $Heap[this, $inv] := Microsoft.Singularity.Applications.ThreadTest;
+    $Heap[this, $inv] := cast(Microsoft.Singularity.Applications.ThreadTest,any);
     return;
 
 }
