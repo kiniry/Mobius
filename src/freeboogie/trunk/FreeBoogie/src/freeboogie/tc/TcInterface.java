@@ -28,6 +28,7 @@ public interface TcInterface {
 
   /**
    * Returns the flow graph of {@code impl}.
+   *  use {{@link #getFlowGraph(Body)} instead
    * @param impl the implementation whose flow graph is requested
    * @return the flow graph of {@code impl}
    */
