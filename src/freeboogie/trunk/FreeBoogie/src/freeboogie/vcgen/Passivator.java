@@ -330,6 +330,9 @@ public class Passivator extends Transformer {
   private VariableDecl newResults(VariableDecl old) {
     if (old == null) return null;
     Integer last = newVarsCnt.get(old);
+    if (isVerbose) {
+      toReport.put(old, last);
+    }
     newVarsCnt.remove(old);
     if (last != null) {
       for (int i = 1; i < last; ++i) {
