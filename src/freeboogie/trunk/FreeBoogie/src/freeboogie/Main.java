@@ -244,6 +244,9 @@ public class Main {
     
     // process files one by one
     for (String file : opt.otherArgs()) {
+      if (opt.intVal("-v") > 0) {
+        System.out.println("Processing file " + file);
+      }
       try {
         // parse an input file
         FbLexer lexer = new FbLexer(new ANTLRFileStream(file));
