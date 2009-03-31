@@ -267,13 +267,17 @@ public class Main {
         if (opt.boolVal("-pp")) program.ast.eval(pp);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
+      } catch (ProverException e) {
+        e.printStackTrace();
+        Err.error("Bad prover! I'll kill it and make a new one.");
+        prover.terminate();
+        prover = null;
       } catch (Throwable e) {
         Err.error(e.getMessage());
         e.printStackTrace();
         Err.error("Unexpected error while processing " + file);
       } finally {
         pwriter.flush();
-        prover = null;
       }
     }
   }
