@@ -73,7 +73,7 @@ public class VcGenerator<T extends Term<T>> {
     mapRemover = new MapRemover();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender<T>();
-    sp = new StrongestPostcondition<T>();
+    sp = new StrongestPostcondition<T>(tc);
     lowLevelAxiomBag = new HashSet<T>(13);
     this.processor = processor;
   }
@@ -109,7 +109,7 @@ public class VcGenerator<T extends Term<T>> {
    */
   public boolean verify(Implementation implementation, boolean removeSharing) throws ProverException {
     assert prover != null && ast != null;
-    sp.setFlowGraph(tc.getFlowGraph(implementation));
+    sp.setCurrentBody(implementation.getBody());
     T vc = sp.vc();
     if (removeSharing) {
       log.fine("Original size: " + DeSharifier.getSize((SmtTerm)(Object)vc, new HashMap<SmtTerm,Integer>()));
