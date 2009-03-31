@@ -187,7 +187,8 @@ public class SPGRecognizer<T> {
   }
 
   private int d(T a) {
-    return f(succ.get(a)) - f(pred.get(a));
+    int res = f(succ.get(a)) - f(pred.get(a));
+    return Math.abs(res);
   }
 
   /**
