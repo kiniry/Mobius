@@ -96,6 +96,7 @@ public class Main {
     opt.regBool("-removesharing", "remove sharing in vc");
     opt.regBool("-stats", "Prints some statistics");
     opt.regBool("-wp", "weakest precondition");
+    opt.regBool("-wpno", "weakest precondition with no tricks");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
@@ -180,6 +181,10 @@ public class Main {
     ACalculus<SmtTerm> calculus;
     if (opt.boolVal("-wp")) {
       calculus = new WeakestPrecondition<SmtTerm>(tc);
+    }
+    else if (opt.boolVal("-wpno")) {
+      calculus = new WeakestPrecondition<SmtTerm>(tc);
+      ((WeakestPrecondition<SmtTerm>)calculus).setAssertAsAssertAssume(false);
     }
     else {
       calculus = new StrongestPostcondition<SmtTerm>(tc);
