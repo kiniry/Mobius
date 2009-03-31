@@ -57,14 +57,14 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  */
 public class Main {
   private static Logger log = Logger.getLogger("freeboogie"); 
-
+  public static Options opt;
+  
   /**
    * The main entry point of the application.
    * @param args the command line arguments
    */
   public static void main(String[] args) { new Main().run(args); }
 
-  private Options opt;
   private PrintWriter pwriter;
   private PrettyPrinter pp;
   private FlowGraphDumper fgd;

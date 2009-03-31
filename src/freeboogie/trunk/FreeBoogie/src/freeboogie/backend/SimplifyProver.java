@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.*;
 
+import freeboogie.Main;
 import freeboogie.util.Err;
 
 /**
@@ -141,7 +142,13 @@ public class SimplifyProver extends Prover<SmtTerm> {
     strBuilder.setLength(0);
     printTerm(t, strBuilder);
     log.info("simplify: " + strBuilder);
+    long startTime = System.currentTimeMillis();
     boolean r = simplify.isValid(strBuilder.toString());
+    long endTime = System.currentTimeMillis();
+    long time = endTime - startTime;
+    if (Main.opt.boolVal("-stats")) {
+      System.out.println("Provertime " + time);
+    }
     return r;
   }
 
