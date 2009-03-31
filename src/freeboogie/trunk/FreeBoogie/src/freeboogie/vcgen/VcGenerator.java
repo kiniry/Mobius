@@ -83,7 +83,6 @@ public class VcGenerator<T extends Term<T>> {
     this.calculus = calculus;
     this.prover = prover;
     prover.push();
-    preverify();
   }
 
   /**

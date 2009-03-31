@@ -273,6 +273,7 @@ public class Main {
         Err.error("Unexpected error while processing " + file);
       } finally {
         pwriter.flush();
+        prover = null;
       }
     }
   }
