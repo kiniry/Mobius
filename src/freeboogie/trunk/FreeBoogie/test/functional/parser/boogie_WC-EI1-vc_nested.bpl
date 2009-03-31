@@ -898,16 +898,16 @@ implementation RTE.ExecuteInstruction(this: ref)
     // ----- unpack
     assert temp0 != null;
     assert cast($Heap[temp0, $writable],bool) == true && cast($Heap[temp0, $inv],name) == RTE;
-    $Heap[temp0, $inv] := System.Object;
-    $Heap[cast($Heap[temp0, RTE.Instructions],ref), $writable] := true;
+    $Heap[temp0, $inv] := cast(System.Object,any);
+    $Heap[cast($Heap[temp0, RTE.Instructions],ref), $writable] := cast(true,any);
     assume cast($Heap[cast($Heap[temp0, RTE.Instructions],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.Instructions],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.Instructions],ref));
-    $Heap[cast($Heap[temp0, RTE.Program],ref), $writable] := true;
+    $Heap[cast($Heap[temp0, RTE.Program],ref), $writable] := cast(true,any);
     assume cast($Heap[cast($Heap[temp0, RTE.Program],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.Program],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.Program],ref));
-    $Heap[cast($Heap[temp0, RTE.Data],ref), $writable] := true;
+    $Heap[cast($Heap[temp0, RTE.Data],ref), $writable] := cast(true,any);
     assume cast($Heap[cast($Heap[temp0, RTE.Data],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.Data],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.Data],ref));
-    $Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable] := true;
+    $Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable] := cast(true,any);
     assume cast($Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.Scratch],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.Scratch],ref));
-    $Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable] := true;
+    $Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable] := cast(true,any);
     assume cast($Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.CallStack],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.CallStack],ref));
     local4 := null;
     goto block48654;
@@ -1034,12 +1034,12 @@ implementation RTE.ExecuteInstruction(this: ref)
     assert cast($Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.Scratch],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.Scratch],ref));
     assert cast($Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable],bool) == true && cast($Heap[cast($Heap[temp0, RTE.CallStack],ref), $inv],name) == $typeof(cast($Heap[temp0, RTE.CallStack],ref));
     assert Inv_RTE(temp0, $Heap);
-    $Heap[cast($Heap[temp0, RTE.Instructions],ref), $writable] := false;
-    $Heap[cast($Heap[temp0, RTE.Program],ref), $writable] := false;
-    $Heap[cast($Heap[temp0, RTE.Data],ref), $writable] := false;
-    $Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable] := false;
-    $Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable] := false;
-    $Heap[temp0, $inv] := RTE;
+    $Heap[cast($Heap[temp0, RTE.Instructions],ref), $writable] := cast(false,any);
+    $Heap[cast($Heap[temp0, RTE.Program],ref), $writable] := cast(false,any);
+    $Heap[cast($Heap[temp0, RTE.Data],ref), $writable] := cast(false,any);
+    $Heap[cast($Heap[temp0, RTE.Scratch],ref), $writable] := cast(false,any);
+    $Heap[cast($Heap[temp0, RTE.CallStack],ref), $writable] := cast(false,any);
+    $Heap[temp0, $inv] := cast(RTE,any);
     goto block49283;
 
   block49249:
