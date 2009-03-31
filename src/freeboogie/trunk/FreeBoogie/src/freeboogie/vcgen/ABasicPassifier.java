@@ -260,6 +260,17 @@ public abstract class ABasicPassifier extends Transformer {
     public String getLoc() {
       return this.currentLocation;
     }
-  }
 
+
+    public String toString() {
+      StringBuilder blder = new StringBuilder(); 
+      for (Entry<VariableDecl, Integer> ent: all.entrySet()) {
+        if (ent.getValue() != 0)
+          blder.append(", " + ent.getKey().getName() + " " + ent.getValue());
+      }
+      if (blder.length() == 0) 
+        return "";
+      return blder.substring(2);
+    }
+  }
 }

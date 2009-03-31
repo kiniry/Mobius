@@ -180,7 +180,8 @@ public class Passificator extends ABasicPassifier {
     /** the list of local variables declarations. */
     private Declaration newLocals = null;
     /** the current counter associated with each local variable. */
-    private final Environment fEnv;
+    private final Environment freshEnv;
+
     private final Map<Block, Environment> startBlockStatus = 
       new HashMap<Block, Environment> ();
     private final Map<Block, Environment> endBlockStatus = 
@@ -198,18 +199,18 @@ public class Passificator extends ABasicPassifier {
     public BodyPassifier(final TcInterface typeChecker, boolean bIsVerbose,
                          Environment globalEnv, final Signature sig) {
       super(typeChecker, bIsVerbose);
-      fEnv = new Environment(sig.loc() + " " + sig.getName());
+      freshEnv = new Environment(sig.loc() + " " + sig.getName());
       fResults = (VariableDecl) sig.getResults();
-      fEnv.putAll(globalEnv);
+      freshEnv.putAll(globalEnv);
       VariableDecl curr = (VariableDecl) sig.getArgs();
       while (curr != null) {
-        fEnv.put(curr, 0);
+        freshEnv.put(curr, 0);
         curr = (VariableDecl) curr.getTail();
       }
     }
     
     public Environment getEnvironment() {
-      return fEnv;
+      return freshEnv;
     }
 
     public Body getBody() {
@@ -230,7 +231,7 @@ public class Passificator extends ABasicPassifier {
     }
     
     private void newLocals() {
-      for (Entry<VariableDecl, Integer> decl: fEnv.getLocalSet()) {
+      for (Entry<VariableDecl, Integer> decl: freshEnv.getLocalSet()) {
         int last = decl.getValue();
         VariableDecl old = decl.getKey();
         for (int i = 1; i <= last; ++i) {
@@ -241,8 +242,8 @@ public class Passificator extends ABasicPassifier {
     
     private VariableDecl newResults(VariableDecl old) {
       if (old == null) return null;
-      int last = fEnv.get(old);
-      fEnv.remove(old);
+      int last = freshEnv.get(old);
+      freshEnv.remove(old);
       for (int i = 0; i < last; ++i) {
         newLocals = mkDecl(old, i, newLocals);
       }
@@ -255,7 +256,7 @@ public class Passificator extends ABasicPassifier {
       newLocals = vars;
       VariableDecl curr = (VariableDecl) vars;
       while (curr != null) {
-        fEnv.put(curr, 0);
+        freshEnv.put(curr, 0);
         curr = (VariableDecl) curr.getTail();
       }
       
@@ -266,7 +267,7 @@ public class Passificator extends ABasicPassifier {
       
       
       if (isVerbose()) {
-        System.out.print(fEnv.localToString());
+        System.out.print(freshEnv.localToString());
       }
       computeDeclarations();
       Body newBody = Body.mk(newLocals, newBlocks);
@@ -283,11 +284,14 @@ public class Passificator extends ABasicPassifier {
       Set<Block> blist = fFlowGraph.from(block);
       Environment env = merge(blist);
       if (env == null) {
-        env = fEnv.clone();
+        env = freshEnv.clone();
       }
-      startBlockStatus.put(block, env.clone());      
+      
+      startBlockStatus.put(block, env.clone()); 
+      
       Command newCmd = cmd == null? null : (Command) cmd.eval(new CommandEvaluator(getTypeChecker(), env));
-      endBlockStatus.put(block, env);     
+      endBlockStatus.put(block, env);  
+      
       Block newTail = tail.hasNext()? evalBlock(tail.next(), tail) : null;
       
       Identifiers newSucc = succ;
@@ -312,8 +316,8 @@ public class Passificator extends ABasicPassifier {
           }
         }
       }
-      
-      fEnv.updateWith(env); 
+      freshEnv.updateWith(env);    
+
       return Block.mk(name, newCmd, newSucc, newTail, block.loc());
     }
 
@@ -327,7 +331,7 @@ public class Passificator extends ABasicPassifier {
         return null;
       }
       
-      Environment res = new Environment(fEnv.getLoc());
+      Environment res = new Environment(freshEnv.getLoc());
       res.putAll(endBlockStatus.get(blist.iterator().next()));
       
       if (blist.size() == 1) {
@@ -349,10 +353,11 @@ public class Passificator extends ABasicPassifier {
           }
         }
         if (change) {
-          res.put(decl, currInc + 1);
+          int newvar = freshEnv.get(decl) + 1;
+          res.put(decl, newvar);
+          freshEnv.put(decl, newvar);
         }
       }
-      
       return res;
     }
 
@@ -365,73 +370,76 @@ public class Passificator extends ABasicPassifier {
     public VariableDecl getResult() {
       return fNewResults;
     }
-  }
-
-  private static class CommandEvaluator extends ABasicPassifier {
-    Environment env;
-    int belowOld = 0;
     
-    public CommandEvaluator(TcInterface tc, Environment env) {
-      super (tc, false);
-      this.env = env;
-    }
-
-    /**
-     * Returns a fresh identifier out of an old one.
-     * @param var the old id
-     * @return an id which was not used before.
-     */
-    public AtomId fresh(AtomId var) {
+    private class CommandEvaluator extends ABasicPassifier {
+      Environment env;
+      int belowOld = 0;
       
-      VariableDecl decl = getDeclaration(var);
-      Integer i = env.get(decl);
-      int curr = i == null? 0 : i;
-      curr++;
-      env.put(decl, curr);
-      return mkVar(var, curr);
-    }
-    
-    
-    @Override
-    public Expr eval(AtomOld atomOld, Expr e) {
-      ++belowOld;
-      e = (Expr)e.eval(this);
-      --belowOld;
-      return e;
-    }
-    
-    @Override
-    public AssertAssumeCmd eval(final AssignmentCmd assignmentCmd, 
-                                final AtomId var, final Expr rhs) {
-      AssertAssumeCmd result = null;
-      Expr value = (Expr) rhs.eval(this);
-      result = mkAssumeEQ(fresh(var), value);
-      return result;
-    }
+      public CommandEvaluator(TcInterface tc, Environment env) {
+        super (tc, false);
+        this.env = env;
+      }
+
+      /**
+       * Returns a fresh identifier out of an old one.
+       * @param var the old id
+       * @return an id which was not used before.
+       */
+      public AtomId fresh(AtomId var) {
+        
+        VariableDecl decl = getDeclaration(var);
+        Integer i = freshEnv.get(decl);
+        int curr = i == null? 0 : i;
+        curr++;
+        env.put(decl, curr);
+        freshEnv.put(decl, curr);
+        return mkVar(var, curr);
+      }
+      
+      
+      @Override
+      public Expr eval(AtomOld atomOld, Expr e) {
+        ++belowOld;
+        e = (Expr)e.eval(this);
+        --belowOld;
+        return e;
+      }
+      
+      @Override
+      public AssertAssumeCmd eval(final AssignmentCmd assignmentCmd, 
+                                  final AtomId var, final Expr rhs) {
+        AssertAssumeCmd result = null;
+        Expr value = (Expr) rhs.eval(this);
+        result = mkAssumeEQ(fresh(var), value);
+        return result;
+      }
 
 
-    /**
-     * Returns a fresh identifier out of an old one.
-     * @param var the old id
-     * @return an id which was not used before.
-     */
-    public AtomId get(AtomId var) {
-      VariableDecl decl = getDeclaration(var);
-      if (decl == null) {
-        // Symbol here!
-        return mkVar(var, 0);
+      /**
+       * Returns a fresh identifier out of an old one.
+       * @param var the old id
+       * @return an id which was not used before.
+       */
+      public AtomId get(AtomId var) {
+        VariableDecl decl = getDeclaration(var);
+        if (decl == null) {
+          // Symbol here!
+          return mkVar(var, 0);
+        }
+        int i = env.get(decl);
+        if (belowOld > 0) {
+          i = 0;
+        }
+        return mkVar(var, i);
       }
-      int i = env.get(decl);
-      if (belowOld > 0) {
-        i = 0;
+      
+      @Override
+      public AtomId eval(AtomId atomId, String id, TupleType types) {
+        return get(atomId);
       }
-      return mkVar(var, i);
-    }
-    
-    @Override
-    public AtomId eval(AtomId atomId, String id, TupleType types) {
-      return get(atomId);
     }
   }
+
+
 
 }
