@@ -278,13 +278,17 @@ public class Main {
       } catch (ProverException e) {
         e.printStackTrace();
         Err.error("Bad prover! I'll kill it and make a new one.");
-        prover.terminate();
-        prover = null;
+        //Terminate prover
+//        prover.terminate();
+//        prover = null;
       } catch (Throwable e) {
         Err.error(e.getMessage());
         e.printStackTrace();
         Err.error("Unexpected error while processing " + file);
       } finally {
+        //Remove after testing completed.
+        prover.terminate();
+        prover = null;
         pwriter.flush();
       }
     }
