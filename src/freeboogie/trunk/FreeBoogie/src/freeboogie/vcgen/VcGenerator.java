@@ -55,12 +55,13 @@ public class VcGenerator<T extends Term<T>> {
   private AxiomSender<T> axiomSender;
   private final FormulaProcessor<T> processor;
 
-  private StrongestPostcondition<T> sp;
+  private ACalculus<T> calculus;
 
   private Prover<T> prover;
   private TermBuilder<T> builder;
 
   private Set<T> lowLevelAxiomBag;
+
 
 
   public VcGenerator(FormulaProcessor<T> processor) {
@@ -73,12 +74,13 @@ public class VcGenerator<T extends Term<T>> {
     mapRemover = new MapRemover();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender<T>();
-    sp = new StrongestPostcondition<T>(tc);
+
     lowLevelAxiomBag = new HashSet<T>(13);
     this.processor = processor;
   }
 
-  public void setProver(Prover<T> prover) throws ProverException {
+  public void initialize(Prover<T> prover, ACalculus<T> calculus) throws ProverException {
+    this.calculus = calculus;
     this.prover = prover;
     prover.push();
     preverify();
@@ -91,6 +93,7 @@ public class VcGenerator<T extends Term<T>> {
   public Declaration process(Declaration d, TcInterface tc)
   throws ProverException {
     this.tc = tc;
+    
     ast = havocMaker.process(d, tc);
     ast = loopCutter.process(ast, tc);
     ast = callDesugarer.process(ast, tc);
@@ -109,8 +112,8 @@ public class VcGenerator<T extends Term<T>> {
    */
   public boolean verify(Implementation implementation, boolean removeSharing) throws ProverException {
     assert prover != null && ast != null;
-    sp.setCurrentBody(implementation.getBody());
-    T vc = sp.vc();
+    calculus.setCurrentBody(implementation.getBody());
+    T vc = calculus.vc();
     if (removeSharing) {
       log.fine("Original size: " + DeSharifier.getSize((SmtTerm)(Object)vc, new HashMap<SmtTerm,Integer>()));
       vc = processor.process(vc);
@@ -137,7 +140,7 @@ public class VcGenerator<T extends Term<T>> {
 
     // prepare fields for verify() to use
     builder = prover.getBuilder();
-    sp.setBuilder(builder);
+    calculus.setBuilder(builder);
     processor.setBuilder(builder);
     builder.setTypeChecker(tc);
     functionRegisterer.setBuilder(builder);

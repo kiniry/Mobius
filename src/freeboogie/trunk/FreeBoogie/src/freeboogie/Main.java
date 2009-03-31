@@ -95,6 +95,7 @@ public class Main {
     opt.regBool("-verify", "do everything");
     opt.regBool("-removesharing", "remove sharing in vc");
     opt.regBool("-stats", "Prints some statistics");
+    opt.regBool("-wp", "weakest precondition");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
@@ -176,13 +177,21 @@ public class Main {
   }
 
   private void verify() throws ProverException {
+    ACalculus<SmtTerm> calculus;
+    if (opt.boolVal("-wp")) {
+      calculus = new WeakestPrecondition<SmtTerm>(tc);
+    }
+    else {
+      calculus = new StrongestPostcondition<SmtTerm>(tc);
+    }
+    
     if (prover == null) {
       if (opt.boolVal("-win"))
         prover = new SimplifyProver(new String[]{"Z3.exe", "/si"});
       else
         prover = new SimplifyProver(new String[]{"z3", "-si"});
 //prover = new YesSmtProver();
-      vcgen.setProver(prover);
+      vcgen.initialize(prover, calculus);
     }
     program = new Program(vcgen.process(program.ast, tc), program.fileName);
 

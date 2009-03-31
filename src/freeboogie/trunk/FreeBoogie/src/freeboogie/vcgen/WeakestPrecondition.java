@@ -17,7 +17,7 @@ import freeboogie.tc.TcInterface;
  */
 public class WeakestPrecondition<T extends Term<T>> extends StrongestPostcondition<T> {
   
-  private boolean assertAssume;
+  private boolean assertAssume = true;
 
   /**
    * Creates a calculus to compute weakest precondition
@@ -52,8 +52,8 @@ public class WeakestPrecondition<T extends Term<T>> extends StrongestPostconditi
     T r = postCache.get(b);
     if (r != null) return r;
     ArrayList<T> fromAnd = new ArrayList<T>();
-    for (Block p : flow.from(b)) 
-      fromAnd.add(post(p));
+    for (Block p : flow.to(b)) 
+      fromAnd.add(pre(p));
     if (fromAnd.isEmpty())
       r = TRUE;
     else
