@@ -144,7 +144,7 @@ public class SimplifyProver extends Prover<SmtTerm> {
     log.info("simplify: " + strBuilder);
     long startTime = System.currentTimeMillis();
     boolean r = simplify.isValid(strBuilder.toString());
-    long endTime = System.currentTimeMillis();
+    long endTime = System.nanoTime();
     long time = endTime - startTime;
     if (Main.opt.boolVal("-stats")) {
       System.out.println("Provertime " + time);
