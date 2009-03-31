@@ -1,0 +1,3 @@
+#!/bin/bash
+fbrun freeboogie.Main $*
+
