@@ -99,4 +99,8 @@ public abstract class ACalculus<T extends Term<T>> {
   public Body getCurrentBody() {
     return currentBody;
   }
+
+  public TcInterface getTypeChecker() {
+    return tc;
+  }
 }
