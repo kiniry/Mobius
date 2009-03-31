@@ -23,21 +23,40 @@ public class SmtTerms {
       new HashMap<String, SmtTerm>(31);
     public HashMap<SmtTerm, SmtTerm> unshared =
       new HashMap<SmtTerm, SmtTerm>(31);
+    public HashMap<SmtTerm, Position> position = 
+      new HashMap<SmtTerm, Position>(31);
     public HashSet<SmtTerm> seen = new HashSet<SmtTerm>(31);
     public TermBuilder<SmtTerm> term;
+  }
+
+  /** A position in a logical formula counts the parity of the number
+   *  of NOT parents. */
+  private static enum Position {
+    POSITIVE,
+    NEGATIVE,
+    UNKNOWN
   }
 
   public static SmtTerm eliminateSharing(SmtTerm t, TermBuilder<SmtTerm> term) {
     EliminateSharingContext context = new EliminateSharingContext();
     context.term = term;
     countParents(t, context);
-    t = unshare(t, context);
+    t = unshare(t, Position.NEGATIVE, context);
     ArrayList<SmtTerm> defs =
       new ArrayList<SmtTerm>(context.varDefs.size());
     for (Map.Entry<String, SmtTerm> vd : context.varDefs.entrySet()) {
-      defs.add(term.mk("iff",
-        term.mk("var_formula", vd.getKey()),
-        vd.getValue()));
+      SmtTerm v = term.mk("var_formula", vd.getKey());
+      SmtTerm d = vd.getValue();
+      switch (context.position.get(d)) {
+      case POSITIVE:
+        defs.add(term.mk("implies", v, d));
+        break;
+      case NEGATIVE:
+        defs.add(term.mk("implies", d, v));
+        break;
+      default:
+        defs.add(term.mk("iff", v, d));
+      }
     }
     return term.mk("implies", term.mk("and", defs), t);
   }
@@ -62,17 +81,34 @@ public class SmtTerms {
     return result;
   }
 
-  private static SmtTerm unshare(SmtTerm t, EliminateSharingContext context) {
+  private static SmtTerm unshare(
+      SmtTerm t, 
+      Position p,
+      EliminateSharingContext context
+  ) {
     assert t != null;
     SmtTerm result = context.unshared.get(t);
     if (t.data != null) result = t;
     if (!t.sort().isSubsortOf(Sort.FORMULA)) result = t;
     for (SmtTerm c : t.children)
       if (!c.sort().isSubsortOf(Sort.FORMULA)) result = t;
-    if (result != null) return result;
+    if (result != null) {
+      setPosition(context, result, p);
+      return result;
+    }
 
     ArrayList<SmtTerm> children = new ArrayList<SmtTerm>(t.children.size());
-    for (SmtTerm c : t.children) children.add(unshare(c, context));
+    if ("not".equals(t.id))
+      children.add(unshare(t.children.get(0), not(p), context));
+    else if ("and".equals(t.id) || "or".equals(t.id))
+      for (SmtTerm c : t.children) children.add(unshare(c, p, context));
+    else if ("implies".equals(t.id)) {
+      children.add(unshare(t.children.get(0), not(p), context));
+      children.add(unshare(t.children.get(1), p, context));
+    } else {
+      for (SmtTerm c : t.children) 
+        children.add(unshare(c, Position.UNKNOWN, context));
+    }
     result = context.term.mk(t.id, children);
 
     int S = getPrintSize(result, context);
@@ -81,10 +117,31 @@ public class SmtTerms {
     if (S * P - S - P > 2) {
       String id = Id.get("plucked");
       context.varDefs.put(id, result);
+      setPosition(context, result, p);
       result = context.term.mk("var_formula", id);
     }
 
     context.unshared.put(t, result);
     return result;
+  }
+
+  private static void setPosition(
+      EliminateSharingContext context, 
+      SmtTerm t, 
+      Position p
+  ) {
+    Position op = context.position.get(t);
+    if (op == null)
+      context.position.put(t, p);
+    else if (op != p)
+      context.position.put(t, Position.UNKNOWN);
+  }
+
+  private static Position not(Position p) {
+    switch (p) {
+    case POSITIVE: return Position.NEGATIVE;
+    case NEGATIVE: return Position.POSITIVE;
+    default: return Position.UNKNOWN;
+    }
   }
 }

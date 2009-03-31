@@ -119,7 +119,10 @@ public class VcGenerator<T extends Term<T>> {
     lowLevelAxiomBag.clear();
     vc.collectAxioms(lowLevelAxiomBag);
     if (removeSharing) {
-      lowLevelAxiomBag.addAll(processor.getAxioms(vc));
+      for (T t : processor.getAxioms(vc)) {
+        t.collectAxioms(lowLevelAxiomBag);
+        lowLevelAxiomBag.add(t);
+      }
     }
     prover.push();
     for (T t : lowLevelAxiomBag) prover.assume(t);

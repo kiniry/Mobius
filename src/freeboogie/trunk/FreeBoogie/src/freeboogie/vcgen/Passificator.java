@@ -114,6 +114,9 @@ public class Passificator extends ABasicPassifier {
         sig.getName() + " has cycles. I'm not passifying it.");
     }
     else {
+      if (isVerbose()) {
+        System.out.println("process " + sig.getName());
+      }
       BodyPassifier bp = BodyPassifier.passify(getTypeChecker(), isVerbose(), fEnv, 
                                                oldBody, sig);
       sig = Signature.mk(sig.getName(), sig.getArgs(),

@@ -217,7 +217,7 @@ public class Main {
     tc = opt.boolVal("-old") ? new ForgivingTc() : new TypeChecker();
     
     // prepare logging
-    log.setLevel(Level.OFF);
+    log.setLevel(Level.ALL);
     log.setUseParentHandlers(false); // the root logger sends >=INFO to console
     try {
       FileHandler logh = new FileHandler("freeboogie.log");
