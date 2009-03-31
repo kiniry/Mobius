@@ -287,8 +287,10 @@ public class Main {
         Err.error("Unexpected error while processing " + file);
       } finally {
         //Remove after testing completed.
-        prover.terminate();
-        prover = null;
+        if (prover != null) {
+          prover.terminate();
+          prover = null;
+        }
         pwriter.flush();
       }
     }
