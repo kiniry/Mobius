@@ -97,6 +97,7 @@ public class Main {
     opt.regBool("-stats", "Prints some statistics");
     opt.regBool("-wp", "weakest precondition");
     opt.regBool("-wpno", "weakest precondition with no tricks");
+    opt.regBool("-dummyprover", "use the YesSmtProver (everything is valid)");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
@@ -193,9 +194,11 @@ public class Main {
     if (prover == null) {
       if (opt.boolVal("-win"))
         prover = new SimplifyProver(new String[]{"Z3.exe", "/si"});
+      else if (opt.boolVal("-dummyprover"))
+        prover = new YesSmtProver();
       else
         prover = new SimplifyProver(new String[]{"z3", "-si"});
-//prover = new YesSmtProver();
+      
       vcgen.initialize(prover, calculus);
     }
     program = new Program(vcgen.process(program.ast, tc), program.fileName);

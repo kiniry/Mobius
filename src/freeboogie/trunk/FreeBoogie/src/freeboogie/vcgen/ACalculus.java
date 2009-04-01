@@ -3,6 +3,7 @@ package freeboogie.vcgen;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import freeboogie.Main;
 import freeboogie.ast.AssertAssumeCmd;
 import freeboogie.ast.Block;
 import freeboogie.ast.Body;
@@ -60,6 +61,9 @@ public abstract class ACalculus<T extends Term<T>> {
   public void setCurrentBody(Body bdy) {
     log.info("prepare to compute sp on a new flow graph");
     flow = tc.getFlowGraph(bdy);
+    if (Main.opt.boolVal("-stats")) {
+      System.out.println("Flow graph size " + flow.nodesInTopologicalOrder().size());
+    }
     currentBody = bdy;
     assert flow.isFrozen();
     assert !flow.hasCycle(); // please cut loops first
