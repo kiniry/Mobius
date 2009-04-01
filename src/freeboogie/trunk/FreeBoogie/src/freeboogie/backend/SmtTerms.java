@@ -21,6 +21,8 @@ public class SmtTerms {
       new HashMap<SmtTerm, Integer>(31);
     public HashMap<String, SmtTerm> varDefs =
       new HashMap<String, SmtTerm>(31);
+    public HashMap<SmtTerm, SmtTerm> oldToNew =
+      new HashMap<SmtTerm, SmtTerm>(31);
     public HashMap<SmtTerm, SmtTerm> unshared =
       new HashMap<SmtTerm, SmtTerm>(31);
     public HashMap<SmtTerm, Position> position = 
@@ -46,16 +48,17 @@ public class SmtTerms {
       new ArrayList<SmtTerm>(context.varDefs.size());
     for (Map.Entry<String, SmtTerm> vd : context.varDefs.entrySet()) {
       SmtTerm v = term.mk("var_formula", vd.getKey());
-      SmtTerm d = vd.getValue();
-      switch (context.position.get(d)) {
+      SmtTerm od = vd.getValue();
+      SmtTerm nd = context.oldToNew.get(od);
+      switch (context.position.get(od)) {
       case POSITIVE:
-        defs.add(term.mk("implies", v, d));
+        defs.add(term.mk("implies", v, nd));
         break;
       case NEGATIVE:
-        defs.add(term.mk("implies", d, v));
+        defs.add(term.mk("implies", nd, v));
         break;
       default:
-        defs.add(term.mk("iff", v, d));
+        defs.add(term.mk("iff", v, nd));
       }
     }
     return term.mk("implies", term.mk("and", defs), t);
@@ -93,7 +96,7 @@ public class SmtTerms {
     for (SmtTerm c : t.children)
       if (!c.sort().isSubsortOf(Sort.FORMULA)) result = t;
     if (result != null) {
-      setPosition(context, result, p);
+      setPosition(context, t, p);
       return result;
     }
 
@@ -116,8 +119,9 @@ public class SmtTerms {
     if (P == null) P = 0;
     if (S * P - S - P > 2) {
       String id = Id.get("plucked");
-      context.varDefs.put(id, result);
-      setPosition(context, result, p);
+      context.varDefs.put(id, t);
+      context.oldToNew.put(t, result);
+      setPosition(context, t, p);
       result = context.term.mk("var_formula", id);
     }
 
