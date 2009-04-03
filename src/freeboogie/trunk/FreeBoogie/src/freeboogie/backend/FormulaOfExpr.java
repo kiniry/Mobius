@@ -1,7 +1,5 @@
 package freeboogie.backend;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Map;
 
 import freeboogie.ast.*;
@@ -17,6 +15,8 @@ import freeboogie.util.Err;
  * TODO Make this (more) sorted. And test more.
  * TODO The stuff that is mentioned here should be registered by
  *      TermBuilder, not SmtTermBuilder.
+ *
+ * @param <T> the type of terms
  */
 public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
   private TermOfExpr<T> termOfExpr;
@@ -46,7 +46,8 @@ public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
   public T eval(AtomCast atomCast, Expr e, Type type) {
     if (TypeUtils.isBool(type))
       return formulaOfTerm(atomCast.eval(termOfExpr));
-    Err.internal("Typechecking should have failed: non-bool in a bool's place.");
+    Err.internal(
+      "Typechecking should have failed: non-bool in a bool's place.");
     return null;
   }
 

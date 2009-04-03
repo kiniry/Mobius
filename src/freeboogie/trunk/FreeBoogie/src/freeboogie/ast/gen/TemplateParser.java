@@ -17,19 +17,21 @@ import java.util.logging.Logger;
 import freeboogie.util.Err;
 
 /**
- * The template parser. This is where the output is produced.
- * By default the output is set to {@code null} which means that
+ * The template parser. This is where the output is produced. By
+ * default the output is set to {@code null} which means that
  * the beginning of a template can contain arbitrary comments.
  * The <tt>\file</tt> macro switches the output to another
- * destination. (A common trick is to use /dev/stdout as a sink
- * to inform the user about the progress of the template processing.)
- * 
- * Some macros must be nested in others. For example \class_name
- * must be nested in \classes or \normal_classes or \abstract_classes.
- * If the nesting is incorrect a warning is printed on the console
- * and <WRONG_MACRO> goes to the output. If there are nested \classes
- * macros then only the innermost one is considered. (In most
- * applications nested list macros should not be needed.)
+ * destination. (A common trick is to use /dev/stdout as a
+ * sink to inform the user about the progress of the template
+ * processing.)
+ *
+ * Some macros must be nested in others. For example
+ * \class_name must be nested in \classes or \normal_classes or
+ * \abstract_classes. If the nesting is incorrect a warning is
+ * printed on the console and &lt;WRONG_MACRO&gt; goes to the
+ * output. If there are nested \classes macros then only the
+ * innermost one is considered. (In most applications nested list
+ * macros should not be needed.)
  * 
  * TODO: consider adding an optional parameter for macros that indicates
  *       a nesting level such that, for example, the following is legal
@@ -88,6 +90,8 @@ public class TemplateParser {
   private Set<AgClass> normalClasses;
   
   /**
+   * Prepares for parsing a template.
+   *
    * @param fileName the name of the template file
    * @throws FileNotFoundException if the template file is not found
    */

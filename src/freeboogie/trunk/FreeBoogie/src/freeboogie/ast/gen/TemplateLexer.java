@@ -187,7 +187,9 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
       // read in plain text
       type = TemplateToken.Type.OTHER;
       lastChar = stream.next();
-      while (lastChar != null && lastChar != '\\' && !oneCharTokens.containsKey(lastChar)) {
+      while (lastChar != null && lastChar != '\\' 
+        && !oneCharTokens.containsKey(lastChar)
+      ) {
         sb.append(lastChar);
         lastChar = stream.next();
       }

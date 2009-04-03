@@ -20,6 +20,8 @@ public class Main {
   
   private static String defaultBase = "Ast";
 
+  private Main() { /* forbid instantiation */ }
+
   /**
    * Reads in a grammar file and uses that information to expand the macros in a
    * template file.
@@ -83,7 +85,8 @@ public class Main {
         TemplateParser template = new TemplateParser(args[arg_idx]);
         template.process(grammar);
       } catch (FileNotFoundException e) {
-        Err.error("I can't find " + args[arg_idx] + ". I'll skip this template.");
+        Err.error("I can't find " + args[arg_idx] + 
+          ". I'll skip this template.");
       } catch (IOException e) {
         Err.error("I couldn't process (completely) template " + args[arg_idx]);
       }

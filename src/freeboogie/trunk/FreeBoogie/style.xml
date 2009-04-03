@@ -15,7 +15,6 @@
           <property name="checkEmptyJavadoc" value="true"/>
         </module>
 
-        <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="MemberName"/>
         <module name="MethodName"/>

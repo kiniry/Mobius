@@ -1,7 +1,6 @@
 package freeboogie.astutil;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigInteger;
 import java.util.HashMap;
@@ -128,7 +127,12 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
+  public void see(
+    AssertAssumeCmd assertAssumeCmd, 
+    AssertAssumeCmd.CmdType type, 
+    Identifiers typeVars, 
+    Expr expr
+  ) {
     say(cmdRep.get(type));
     if (typeVars != null) {
       say("<");
@@ -157,7 +161,12 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomFun atomFun, String function, TupleType types, Exprs args) {
+  public void see(
+    AtomFun atomFun, 
+    String function, 
+    TupleType types, 
+    Exprs args
+  ) {
     say(function);
     if (types != null) {
       say("<");
@@ -221,7 +230,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public void see(
+    AtomQuant atomQuant, 
+    AtomQuant.QuantType quant, 
+    Declaration vars, 
+    Trigger trig, 
+    Expr e
+  ) {
     ++skipVar;
     say("(");
     say(quantRep.get(quant));
@@ -234,7 +249,12 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(
+    Axiom axiom, 
+    Identifiers typeVars, 
+    Expr expr, 
+    Declaration tail
+  ) {
     say("axiom");
     if (typeVars != null) {
       say("<");
@@ -257,7 +277,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Block block, String name, Command cmd, Identifiers succ, Block tail) {
+  public void see(
+    Block block, 
+    String name, 
+    Command cmd, 
+    Identifiers succ, 
+    Block tail
+  ) {
     say(name);
     say(":");
     if (cmd != null) {
@@ -287,7 +313,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(CallCmd callCmd, String procedure, TupleType types, Identifiers results, Exprs args) {
+  public void see(
+    CallCmd callCmd, 
+    String procedure, 
+    TupleType types, 
+    Identifiers results, 
+    Exprs args
+  ) {
     say("call ");
     if (results != null) {
       results.eval(this);
@@ -308,7 +340,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
+  public void see(
+    ConstDecl constDecl, 
+    String id, 
+    Type type, 
+    boolean uniq, 
+    Declaration tail
+  ) {
     say("const ");
     if (uniq) say("unique ");
     say(id);
@@ -367,7 +405,12 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public void see(
+    Implementation implementation, 
+    Signature sig, 
+    Body body, 
+    Declaration tail
+  ) {
     say("implementation ");
     sig.eval(this);
     body.eval(this);
@@ -381,7 +424,12 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+  public void see(
+    Procedure procedure, 
+    Signature sig, 
+    Specification spec, 
+    Declaration tail
+  ) {
     say("procedure ");
     sig.eval(this);
     say(";");
@@ -395,7 +443,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
+  public void see(
+    Signature signature, 
+    String name, 
+    Declaration args, 
+    Declaration results, 
+    Identifiers typeVars
+  ) {
     ++skipVar;
     say(name);
     if (typeVars != null) {
@@ -415,7 +469,14 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Specification specification, Identifiers tv, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+  public void see(
+    Specification specification, 
+    Identifiers tv, 
+    Specification.SpecType type, 
+    Expr expr, 
+    boolean free, 
+    Specification tail
+  ) {
     if (free) say("free ");
     say(specRep.get(type));
     if (tv != null) {
@@ -458,7 +519,13 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public void see(
+    VariableDecl variableDecl, 
+    String name, 
+    Type type, 
+    Identifiers typeVars, 
+    Declaration tail
+  ) {
     if (skipVar==0) say("var ");
     say(name);
     if (typeVars != null) {

@@ -132,11 +132,12 @@ public class Main {
         @Override public String go(TypeDecl p) {
           return p.getName();
       }}));
-    st.typeVars.iterDef(new Printer<UserType, AtomId>("type variable", st.typeVars,
-      new ClosureR<AtomId, String>() {
-        @Override public String go(AtomId a) {
-          return a.getId();
-      }}));
+    st.typeVars.iterDef(
+      new Printer<UserType, AtomId>("type variable", st.typeVars,
+        new ClosureR<AtomId, String>() {
+          @Override public String go(AtomId a) {
+            return a.getId();
+        }}));
   }
 
   private void passivate(boolean isVerbose) {

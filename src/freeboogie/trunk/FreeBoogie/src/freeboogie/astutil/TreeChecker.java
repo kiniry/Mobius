@@ -1,13 +1,11 @@
 package freeboogie.astutil;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 
 import freeboogie.ast.Ast;
 import freeboogie.ast.Transformer;
 
-// DBG
-import java.io.PrintWriter;
+//DBG import java.io.PrintWriter;
 
 /** Checks if AST is a tree (as opposed to a dag). */
 public class TreeChecker extends Transformer {
