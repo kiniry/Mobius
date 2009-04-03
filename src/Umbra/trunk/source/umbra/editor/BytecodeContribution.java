@@ -201,6 +201,9 @@ public class BytecodeContribution extends ControlContribution {
       final Shell sh = my_editor.getEditorSite().getShell();
       try {
         a_doc.updateFragment(a_start, an_oldend, a_newend);
+        /* TODO (to236111) for constant pool changes it should be only
+         * enabled in case the constant pool is correct
+         */
         my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
                  setEnabled(true);
       } catch (UmbraException e) {
@@ -261,6 +264,7 @@ public class BytecodeContribution extends ControlContribution {
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
       updateBML(an_event);
+      /* FIXME (to236111) doesn't work */
       displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
         displayError(Integer.toString(doc.getModel().getFirstError() + 1) +

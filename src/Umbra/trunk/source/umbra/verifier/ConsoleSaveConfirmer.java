@@ -10,6 +10,8 @@ package umbra.verifier;
 
 import java.util.Scanner;
 
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
@@ -28,10 +30,13 @@ public class ConsoleSaveConfirmer extends SaveConfirmer {
   }
 
   /**
+   * in case there are verification problems asks user if she wants to save anyway
    * 
+   * @param a_shell bytecode editor shell, used by graphical confirmers
+   * @return true if user wants to save, false otherwise
    */
   @Override
-  public boolean confirm() {
+  public boolean confirm(Shell a_shell) {
     if (!verifier.passed()) {
       resultPresenter.presentAll();
       Scanner scanner = new Scanner(System.in);

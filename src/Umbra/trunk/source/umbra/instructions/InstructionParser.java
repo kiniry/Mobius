@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2007-2008 University of Warsaw"
+ * @copyright   "(c) 2007-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -9,9 +9,10 @@
 package umbra.instructions;
 
 /**
- * This class allows to parse the line with instruction. It enables the
- * analysis of the correctness.
+ * This class allows to parse the line with instruction or constant pool
+ * entry. It enables the analysis of the correctness.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -24,6 +25,20 @@ public class InstructionParser extends InstructionTypeParser {
    * is called.
    */
   private int my_result;
+  
+  /**
+   * This field contains the number parsed from the chunk of the digits.
+   * It contains a sensible value right after the {@link #swallowLongNumber()}
+   * is called.
+   */
+  private long my_long_result;
+  
+  /**
+   * This field contains the string representation of parsed floating point
+   * number. It contains a sensible value right after the
+   * {@link #swallowFloatingPointNumber()} is called. 
+   */
+  private String my_fp_result; 
 
   /**
    * This constructor sets the string to be parsed and resets the parser
@@ -60,13 +75,127 @@ public class InstructionParser extends InstructionTypeParser {
     }
     if (oldindex == index) return false; //no digits were read
     if (index < line.length() &&
+        /* TODO (to236111) semicolon added for constant pool handling,
+         * creating separate function may be better
+         */
         !Character.isWhitespace(line.charAt(index)) &&
-        line.charAt(index) != ':' &&
+        line.charAt(index) != ':' && line.charAt(index) != ';' &&
         line.charAt(index) != ')')
       // the line is not finished and the character at index is not whitespace
-      // or :
+      // or : or ;
       return false;
     my_result = Integer.parseInt(line.substring(oldindex, index));
+    return true;
+  }
+  
+  /**
+   * This method swallows all the digits starting from the current
+   * position of the index and the 'l' or 'L' character (if any).
+   * This method may not advance the index in case
+   * the first character to be analysed is not a digit or the analysis is
+   * finished before the method is called. This method assumes that a
+   * number is finished when a whitespace or end of string is met.
+   * In case the whitespace is not met after the string the number is not
+   * considered to be successfully swallowed.
+   *
+   * @return <code>true</code> when a number was successfully swallowed,
+   *   <code>false</code> otherwise
+   */
+  public boolean swallowLongNumber() {
+    boolean res = true;
+    final String line = getLine();
+    int index = getIndex();
+    if (index == line.length()) res = false;
+    final int oldindex = index;
+    while (Character.isDigit(line.charAt(index)) && res) {
+      index = incIndex();
+      if (index == line.length()) break;
+    }
+    if (index < line.length() && res && (
+        line.charAt(index) == 'L' || line.charAt(index) == 'l')) index = incIndex();
+    if (oldindex == index) return false; //no digits were read
+    if (index < line.length() &&
+        !Character.isWhitespace(line.charAt(index)) &&
+        line.charAt(index) != ':' && line.charAt(index) != ';' &&
+        line.charAt(index) != ')')
+      // the line is not finished and the character at index is not whitespace
+      // or : or ;
+      return false;
+    // TODO (to23611) check whether index - 1 > 0
+    if (line.charAt(index - 1) == 'L' || line.charAt(index - 1) == 'l') 
+      my_long_result = Long.parseLong(line.substring(oldindex, index - 1));
+    else my_long_result = Long.parseLong(line.substring(oldindex, index));
+    return true;
+  }
+  
+  /**
+   * This method swallows all the digits starting from the current
+   * position of the index. This method may not advance the index in case
+   * the first character to be analysed is not a digit or the analysis is
+   * finished before the method is called. This method assumes that a
+   * number is finished when a whitespace, dot, colon, semicolon, equals
+   * sign or end of string is met.
+   * Otherwise the number is not considered to be successfully swallowed.
+   * This method is assumed to be used in parsing of constant pool
+   * references in constant pool entries. The number is not successfully
+   * swallowed if it start with 0.
+   *
+   * @return <code>true</code> when a number was successfully swallowed,
+   *   <code>false</code> otherwise
+   */
+  public boolean swallowCPReferenceNumber() {
+    boolean res = true;
+    final String line = getLine();
+    int index = getIndex();
+    if (index == line.length()) {
+      res = false;
+    }
+    final int oldindex = index;
+    if (res && Character.isDigit(line.charAt(index))
+        && line.charAt(index) != '0') index = incIndex();
+    if (index < line.length()) {
+      while (Character.isDigit(line.charAt(index)) && res) {
+        index = incIndex();
+        if (index == line.length()) break;
+      }
+    }
+    if (oldindex == index) {
+      return false; //no digits were read
+    }
+    if (index < line.length() &&
+        !Character.isWhitespace(line.charAt(index)) &&
+        line.charAt(index) != ':' && line.charAt(index) != ';' &&
+        line.charAt(index) != '.' && line.charAt(index) != '=')
+      // the line is not finished and the character at index is not whitespace
+      // or : or . or = or ;
+      return false;
+    my_result = Integer.parseInt(line.substring(oldindex, index));
+    return true;
+  }
+  
+  /**
+   * This method swallows all the characters which are parts of a correct
+   * floating point number. The parsing starts from the current position
+   * of the index. This method assumes that a number is finished when
+   * automaton {@link AN} accepts it (see Umbra/docs/codedocs/automaton.eps
+   * for automaton schema. The automaton will stop processing number
+   * when it read character for which its current state doesn't have an
+   * outgoing edges ot if it will reach end of line. If that current state
+   * is an accepting state the automaton accepts number.
+   * The floating point number is considered correct if it complies to the
+   * format described in "Textual Representation of Specifications" of
+   * "BML Reference Manual".
+   *
+   * @return <code>true</code> when a number was successfully swallowed,
+   *   <code>false</code> otherwise
+   *   
+   */
+  public boolean swallowFPNumber() {
+    final int oldindex = getIndex();
+    final AN automaton = AN.constructAutomaton();
+    if (!automaton.exec(getLine(), getIndex())) return false;
+    moveIndex(automaton.getIndex() - oldindex);
+    my_fp_result = getLine().substring(oldindex, getIndex());
     return true;
   }
 
@@ -75,6 +204,21 @@ public class InstructionParser extends InstructionTypeParser {
    */
   public int getResult() {
     return my_result;
+  }
+  
+  /**
+   * @return the long number which is the result of parsing
+   */
+  public long getLongResult() {
+    return my_long_result;
+  }
+  
+  /**
+   * @return the string representation of the floating
+   * point number which is the result of parsing
+   */
+  public String getFPResult() {
+    return my_fp_result;
   }
 
   /**

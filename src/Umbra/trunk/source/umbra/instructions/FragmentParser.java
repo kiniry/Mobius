@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -25,6 +25,7 @@ import umbra.lib.UmbraRuntimeException;
  * This class is used to parse fragments of byte code textual documents.
  * Currently it handles only fragments included in a single method.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
@@ -96,7 +97,12 @@ public class FragmentParser extends BytecodeCommentParser {
     int a_line_no = my_start;
     try {
       if (a_ctxt.isInsideConstantPool()) {
+        //System.err.println("inside CP");
         a_line_no = swallowCPFragment(a_line_no, a_ctxt);
+        //for (Object o: getEditorLines()) {
+          //if (o instanceof CPLineController)
+            //System.err.println(((CPLineController) o).getEntryType());
+        //}
       } else if (a_ctxt.isInsideAnnotation()) {
         a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
       } else if (a_ctxt.isInsideMethod()) {
@@ -151,11 +157,11 @@ public class FragmentParser extends BytecodeCommentParser {
   }
 
   /**
+   * NOTE (to236111) current method???
    * This method parses a fragment of a constant pool. The fragment is delimited
    * with {@code a_start} and {@code my_end} (inclusively). The line context
    * gives the number of the current method and should be set in the
-   * state that corresponds to parsing of a constant pool. This method
-   * currently does nothing.
+   * state that corresponds to parsing of a constant pool.
    *
    * @param a_start the first parsed line
    * @param a_ctxt the parsing context
@@ -165,6 +171,14 @@ public class FragmentParser extends BytecodeCommentParser {
    */
   private int swallowCPFragment(final int a_start, final LineContext a_ctxt)
     throws UmbraLocationException {
+    int j = a_start;
+    while (j <= my_end) {
+      final String line = this.getLineFromDoc(my_doc, j, a_ctxt);
+      System.err.println("Parsing: " + line);
+      final BytecodeLineController blc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
+      addEditorLine(blc);
+      j++;
+    }
     return my_end;
   }
 

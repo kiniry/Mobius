@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -26,6 +26,7 @@ package umbra.lib;
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -270,7 +271,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * {@link umbra.instructions.ast.CPLineController} class.
    */
   public static final String[] CP_ENTRY_PREFIX = new String[] {"  const #"};
-
+  
   /**
    * This constant contains an array with all the possible prefixes of throw
    * lines in byte code text files. The throw lines are handled by
@@ -296,7 +297,62 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * whitespace characters.
    */
   public static final char[] WHITESPACE_CHARACTERS = {' ', '\t', '\n', '\r' };
+  
+  /**
+   * The constant pool keyword for CONSTANT_Class_info entry. 
+   */
+  public static final String CLASS_CP_ENTRY_KEYWORD = "Class";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Fieldref_info entry. 
+   */
+  public static final String FIELDREF_CP_ENTRY_KEYWORD = "Fieldref";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Methodref_info entry. 
+   */
+  public static final String METHODREF_CP_ENTRY_KEYWORD = "Methodref";
 
+  /**
+   * The constant pool keyword for CONSTANT_InterfaceMethodref_info entry. 
+   */
+  public static final String INTERFACE_METHODREF_CP_ENTRY_KEYWORD = "InterfaceMethodref";
+  
+  /**
+   * The constant pool keyword for CONSTANT_String_info entry. 
+   */
+  public static final String STRING_CP_ENTRY_KEYWORD = "String";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Integer_info entry. 
+   */
+  public static final String INTEGER_CP_ENTRY_KEYWORD = "Integer";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Float_info entry. 
+   */
+  public static final String FLOAT_CP_ENTRY_KEYWORD = "Float";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Long_info entry. 
+   */
+  public static final String LONG_CP_ENTRY_KEYWORD = "Long";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Double_info entry. 
+   */
+  public static final String DOUBLE_CP_ENTRY_KEYWORD = "Double";
+  
+  /**
+   * The constant pool keyword for CONSTANT_NameAndType_info entry. 
+   */
+  public static final String NAME_AND_TYPE_CP_ENTRY_KEYWORD = "NameAndType";
+  
+  /**
+   * The constant pool keyword for CONSTANT_Utf8_info entry. 
+   */
+  public static final String UTF8_CP_ENTRY_KEYWORD = "Utf8";
+  
   /**
    * Private constructor added to prevent the creation of objects of this
    * type.

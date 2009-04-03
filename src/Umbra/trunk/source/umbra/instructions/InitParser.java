@@ -361,6 +361,7 @@ public class InitParser extends BytecodeCommentParser {
       lc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
       if (!(lc instanceof CPLineController)) {
         break;
+      } else {
       }
       addEditorLine(lc);
       num++;

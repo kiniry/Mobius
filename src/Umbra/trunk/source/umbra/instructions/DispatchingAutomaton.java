@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2007-2008 University of Warsaw"
+ * @copyright   "(c) 2007-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -28,6 +28,7 @@ import umbra.instructions.ast.UnknownLineController;
  *   <li>execute the rule for the given string line.</li>
  * </ul>
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -57,6 +58,11 @@ public class DispatchingAutomaton {
    * lines. It is used only when it is set to be non-null.
    */
   private String my_mnemonic;
+  
+  /**
+   * The name of the current node for debugging purposes.
+   */
+  private String my_name;
 
   /**
    * This constructor creates the automaton such that the default rule is
@@ -117,6 +123,7 @@ public class DispatchingAutomaton {
     if (a_string.length() == 0) {
       my_rule = a_rule;
       my_mnemonic = a_mnemonic;
+      my_name = a_mnemonic;
       return this;
     }
     final Character key = Character.valueOf(a_string.charAt(0));
@@ -127,6 +134,7 @@ public class DispatchingAutomaton {
     } else {
       next_auto = new DispatchingAutomaton();
       my_outgoing.put(key, next_auto);
+      next_auto.setName(a_mnemonic + " " + key);
     }
     return next_auto.addMnemonic(rest, a_mnemonic, a_rule);
   }
@@ -256,4 +264,21 @@ public class DispatchingAutomaton {
       throw new CannotCallRuleException(e);
     }
   }
+  
+  /**
+   * Return the name of the node for debugging puropses.
+   * @return the name of the node
+   */
+  public String getName() {
+    return my_name;
+  }
+  
+  /**
+   * Sets the name of the node for debugging purposes.
+   * @param a_name a name of the node to set
+   */
+  public void setName(String a_name) {
+    my_name = a_name;
+  } 
+  
 }

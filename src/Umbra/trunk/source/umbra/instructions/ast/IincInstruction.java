@@ -54,7 +54,7 @@ public class IincInstruction extends NumInstruction {
    * Inc instruction line is correct if it has
    * two simple number parameters (first preceded with %). The precise format
    * is as follows:
-   *    whitespase number : whitespace mnemonic whitespace % number
+   *    whitespace number : whitespace mnemonic whitespace % number
    *    whitespace number whitespace lineend
    *
    * @return <code>true</code> when the syntax of the instruction line is

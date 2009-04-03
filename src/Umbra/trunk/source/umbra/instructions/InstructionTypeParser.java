@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2007-2008 University of Warsaw"
+ * @copyright   "(c) 2007-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -14,6 +14,7 @@ import umbra.lib.BytecodeStrings;
  * This class is the part of the byte code instruction parser which contributes
  * the parsing of various type representations.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -174,6 +175,24 @@ public class InstructionTypeParser extends InstructionNameParser {
       moveIndex(the_inventory[my_mnemonicno].length());
     }
     return my_mnemonicno;
+  }
+  
+  /**
+   * Checks if the line at the current position starts with a given
+   * mnemonic.
+   *
+   * @param a_mnemonic the mnemonics to be checked
+   * @return true if the line starts with the given mnemonic, false
+   * otherwise
+   */
+  public boolean swallowSingleMnemonic(final String a_mnemonic) {
+    final String line = getLine();
+    final int index = getIndex();
+    if (line.indexOf(a_mnemonic, index) == index) {
+      moveIndex(a_mnemonic.length());
+      return true;
+    }
+    return false;
   }
 
   /**

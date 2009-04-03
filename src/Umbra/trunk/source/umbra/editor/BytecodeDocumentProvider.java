@@ -113,7 +113,8 @@ public class BytecodeDocumentProvider extends FileDocumentProvider {
   }
 
   /**
-   * @param a_input 
+   * @param a_input
+   * @return
    */
   private IFileEditorInput createBTCFile(final IFileEditorInput a_input) {
     final IPath apath = a_input.getFile().getFullPath();

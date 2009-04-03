@@ -187,7 +187,7 @@ public class BytecodeEditor extends TextEditor {
                                         getResultPresenter(verifier);
     final SaveConfirmer confirmer = my_verificationFactory.
                                       getSaveConfirmer(presenter);
-    if (!confirmer.confirm()) {
+    if (!confirmer.confirm(getSite().getShell())) {
       return;
     }
 

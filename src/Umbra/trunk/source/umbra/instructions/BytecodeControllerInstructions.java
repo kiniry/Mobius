@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -29,6 +29,7 @@ import umbra.lib.UmbraSyntaxException;
  * This class encapsulates the structure of the instruction lines of the
  * {@link BytecodeController} and gives the external interface to them.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
 
@@ -205,12 +206,23 @@ public class BytecodeControllerInstructions
 
   /**
    * This is a helper method used for debugging purposes. It prints out
-   * all the instructions in the internal Umbra representation of a class
-   * file.
+   * all the instructions and editor lines in the internal Umbra
+   * representation of a class file.
    *
    * @param an_index the number which allows to make different printouts
    */
   protected final void controlPrint(final int an_index) {
+    UmbraPlugin.messagelog("");
+    UmbraPlugin.messagelog("Control print of editor lines ("
+                           + an_index + "):");
+    for (int i = 0; i < getNoOfLines(); i++) {
+      final BytecodeLineController line = getLineController(i);
+      if (line == null) {
+        UmbraPlugin.messagelog("null");
+        return;
+      }
+      UmbraPlugin.messagelog(line.getClass().getName() + ": " + line.getLineContent());
+    }
     UmbraPlugin.messagelog("");
     UmbraPlugin.messagelog("Control print of bytecode modification (" +
                            an_index + "):");

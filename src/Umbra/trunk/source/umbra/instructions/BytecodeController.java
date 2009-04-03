@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -17,6 +17,7 @@ import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CPHeaderController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.ClassHeaderLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
@@ -42,6 +43,7 @@ import umbra.lib.UmbraLocationException;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -91,7 +93,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       if (blc instanceof EmptyLineController ||
           blc instanceof InstructionLineController ||
           blc instanceof CommentLineController ||
-          blc instanceof UnknownLineController) {
+          blc instanceof UnknownLineController ||
+          blc instanceof CPLineController) {
         i--;
       } else {
         break;
@@ -152,10 +155,10 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   public void addAllLines(final BytecodeDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
     throws UmbraException, UmbraLocationException {
-    final int methodno = getMethodForLine(a_start_rem);
+    final int methodno = getMethodForLine(a_start_rem); // NOTE (to236111) rem == -1 for no a method
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
-    final LineContext ctxt = establishCurrentContext(a_start_rem);
+    final LineContext ctxt = establishCurrentContext(a_start_rem); // NOTE (to236111) ctxt for CP
     fgmparser.runParsing(ctxt);
                             // after that I must know all the instructions are
                             //correct
@@ -174,6 +177,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold);
     if (FileNames.DEBUG_MODE) controlPrint(1);
+    
   }
 
   /**
@@ -275,7 +279,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
     if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
-        !a_ctxt.isInFieldsArea()) {
+        !a_ctxt.isInFieldsArea() && !a_ctxt.isInsideConstantPool()) {
       mg.getInstructionList().update();
       mg.update();
       mg.getInstructionList().setPositions();

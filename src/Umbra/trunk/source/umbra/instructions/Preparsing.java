@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -34,6 +34,7 @@ import umbra.lib.BytecodeStrings;
  * document context. In particular, the context recognises situation when
  * the parsing is inside of a multi-line comment or a BML annotation.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -50,6 +51,14 @@ public final class Preparsing {
    */
   private Preparsing() {
   }
+  
+  /**
+   * This constant determines whether the constant pool will be parsed. It
+   * is intended to be used only during development.
+   * 
+   * TODO (to236111) remove
+   */
+  public static final boolean PARSE_CP = true;
 
   /**
    * Chooses one of line types that matches the given line
@@ -122,8 +131,11 @@ public final class Preparsing {
         a_context.revertState();
       }
     } else if (a_context.isInsideConstantPool()) {
-      if (CPLineController.isCPLineStart(a_line)) {
-        return new CPLineController(a_line);
+      /* TODO (to236111) automaton here */
+      if (!PARSE_CP) {
+        if (CPLineController.isCPLineStart(a_line)) {
+          return new umbra.instructions.ast.IncorrectCPLineController(a_line, null);
+        }
       }
     } else if (a_context.isInFieldsArea()) {
       if (FieldLineController.isFieldLineStart(a_line)) {
@@ -133,7 +145,65 @@ public final class Preparsing {
     return lc;
   }
 
-
+  /**
+   * This method initializes the CP node of the automaton.
+   * The current implementation uses the same mechanism for handling
+   * both constant pool entries and instruction lines. Because the
+   * automaton needs a mnemonic to create {@code BytecodeLineController}
+   * for given line the constant pool entry keyword is used as surrogate
+   * mnemonic.
+   * 
+   * TODO (to236111) Create separate automaton for constant pool entries which uses
+   * IncorrectCPLineController instead of UnknownLineController for
+   * incorrect lines to allow generating more specific information about
+   * syntax errors inside constant pool.
+   * 
+   * @param node the CP node of automaton
+   */
+  private static void initCPNode(DispatchingAutomaton node) {
+    addWhitespaceLoop(node);
+    node = node.addSimple("#", UnknownLineController.class);
+    final DispatchingAutomaton digitnode = node.addSimple("0",
+                                                          UnknownLineController.class);
+    for (int i = 1; i < 10; i++) {
+      node.addStarRule(Integer.toString(i), digitnode);
+    }
+    for (int i = 0; i < 10; i++) {
+      node.addStarRule("0" + Integer.toString(i), digitnode);
+    }
+    node = digitnode;
+    addWhitespaceLoop(node);
+    node = node.addSimple("=", UnknownLineController.class);
+    addWhitespaceLoop(node);
+    for (int i = 0; i < CPLineController.CP_CLASS_HIERARCHY.length;
+         i++) {
+      try {
+        final String entry_type = (String)
+            (CPLineController.CP_CLASS_HIERARCHY[i].
+                getMethod("getEntryType").invoke(null));
+        node.addMnemonic(entry_type, entry_type,
+                         CPLineController.CP_CLASS_HIERARCHY[i]);
+      } catch (IllegalArgumentException e) {
+        UmbraPlugin.messagelog("Impossible IllegalArgumentException in" +
+                               " preparsing");
+      } catch (SecurityException e) {
+        UmbraPlugin.messagelog("Impossible SecurityException in" +
+          " preparsing");
+      } catch (IllegalAccessException e) {
+        UmbraPlugin.messagelog("Impossible IllegalAccessException in" +
+          " preparsing");
+      } catch (InvocationTargetException e) {
+        UmbraPlugin.messagelog("Impossible InvocationTargetException in" +
+          " preparsing");
+      } catch (NoSuchMethodException e) {
+        UmbraPlugin.messagelog("Impossible NoSuchMethodException in" +
+          " preparsing");
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+  
   /**
    * This method returns the automaton which handles the preparsing of lines
    * and creates appropriate line controllers. In case the automaton has not
@@ -146,17 +216,21 @@ public final class Preparsing {
    *                are recognised,</li>
    *   <li>COLON - after the colon of the byte code instruction is
    *               swallowed,</li>
+   *   <li>CP - after the "const" of the constant pool entry is
+   *            swallowes,</li>
    *   <li>many MNEMONIC states - to recognise mnemonics,</li>
    *   <li>many THROWS states - to recognise throws lines,</li>
-   *   <li>many HEADER states - to recognise throws lines,</li>
+   *   <li>many HEADER states - to recognise header lines,</li>
+   *   <li>many CPENTRY states - to recognise constant pool entries,</li>
    *   <li>COMMENT - to recognise multi-line comment start,</li>
    *   <li>ANNOT - to recognise BML annotation start.</li>
    * </ul>
    * The INITIAL state contains a loop over whitespace characters and outgoing
-   * edges (paths) to THROWS, HEADER, COMMENT, ANNOT and DIGIT states. The DIGIT
+   * edges (paths) to THROWS, HEADER, COMMENT, CP, ANNOT and DIGIT states. The DIGIT
    * state contains a loop over digits and an outgoing edge to the COLON state.
    * The COLON state contains a loop over whitespace characters and outgoing
    * edges to MNEMONIC states (paths to be precise).
+   * The CP state contains outgoing edges to CPENTRY states (paths to be precise).
    *
    * Note that this automaton is slightly inefficient as MNEMONIC, THROWS etc.
    * states could be made a single one.
@@ -182,6 +256,14 @@ public final class Preparsing {
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS],
         CPHeaderController.class);
+      
+      if (PARSE_CP) {
+        DispatchingAutomaton cpnode = my_preparse_automaton.addSimple(
+        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
+        UnknownLineController.class);
+      
+        initCPNode(cpnode);
+      }
 
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);
