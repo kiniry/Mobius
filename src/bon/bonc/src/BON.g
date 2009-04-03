@@ -1402,7 +1402,9 @@ actual_generics returns [List<BONType> types] :
 type_list returns [List<BONType> types]  :
            t1=type
            { $types = new LinkedList<BONType>(); $types.add($t1.type); } 
-           (',' t=type)* 
+           (',' t=type
+           { $types.add($t.type); }
+           )* 
             ->
             ^(
               TYPE_LIST (type)+
