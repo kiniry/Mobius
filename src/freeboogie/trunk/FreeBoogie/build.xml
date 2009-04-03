@@ -8,6 +8,8 @@
   <description>infrastructure for handling Boogie code</description>
 
   <!-- custom tasks -->
+  <!-- Assuming an Ubuntu distribution with packages checkstyle, antlr,
+    and a few others -->
   <taskdef
     resource="checkstyletask.properties"
     classpath="/usr/share/java/checkstyle.jar:/usr/share/java/antlr.jar:/usr/share/java/commons-beanutils.jar:/usr/share/java/commons-collections.jar:/usr/share/java/commons-logging.jar" />
@@ -25,8 +27,8 @@
   <property name="junit_src" location="test/junit" />
   <property name="junit_reports" location="test/junit/reports"/>
   <path id="classpath">
-  <fileset dir="lib" includes="*.jar" />
-  <pathelement path="${build}"  />
+    <fileset dir="lib" includes="*.jar" />
+    <pathelement path="${build}"  />
   </path>
 
 
@@ -127,10 +129,10 @@
         excludes="freeboogie/ast/gen/**/*">
       <manifest>
         <attribute name="Main-Class" value="freeboogie.Main" />
-        <attribute name="Class-Path" value="lib/antlr-3.0.1.jar" />
+        <attribute name="Class-Path" value="lib/antlr-3.1.1-runtime.jar" />
       </manifest>
     </jar>
-    <copy file="lib/antlr-3.0.1.jar" todir="dist/lib" />
+    <copy file="lib/antlr-3.1.1-runtime.jar" todir="dist/lib" />
   </target>
   
   <target name="dist_astgen" 

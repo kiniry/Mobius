@@ -46,8 +46,6 @@ small.bpl:6:9: Explicit specialization required for x at small.bpl:1:26.
 small.bpl:6:22: Unrelated types: bool and int.
 line 12:0 no viable alternative at input '}'
 line 5:0 no viable alternative at input '{'
-BR.recoverFromMismatchedToken
-line 12:0 mismatched input 'procedure' expecting '}'
+line 12:0 missing '}' at 'procedure'
 line 19:0 no viable alternative at input '}'
-BR.recoverFromMismatchedToken
-line 12:0 mismatched input 'procedure' expecting '}'
+line 12:0 missing '}' at 'procedure'

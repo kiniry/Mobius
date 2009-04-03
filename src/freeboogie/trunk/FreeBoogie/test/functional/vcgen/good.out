@@ -1,6 +1,11 @@
+Processing file empty.bpl
+Processing file indexof.bpl
  OK: indexOf (indexof.bpl:1:11)
+Processing file map.bpl
  OK: M (map.bpl:8:11)
+Processing file sorts.bpl
  OK: M (sorts.bpl:7:11)
+Processing file subst.bpl
 NOK: swap (subst.bpl:6:16)
  OK: swap (subst.bpl:14:16)
  OK: swap (subst.bpl:22:16)
