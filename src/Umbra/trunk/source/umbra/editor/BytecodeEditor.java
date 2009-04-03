@@ -43,7 +43,7 @@ import umbra.lib.HistoryOperations;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
 import umbra.verifier.BytecodeVerifier;
-import umbra.verifier.ConsoleVerificationFactory;
+import umbra.verifier.SWTVerificationFactory;
 import umbra.verifier.ResultPresenter;
 import umbra.verifier.SaveConfirmer;
 import umbra.verifier.VerificationFactory;
@@ -81,11 +81,10 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * Factory used to create some verification related stuff.
-   * As for now Console version is used.
-   * Later we will instantiate it with other fatory class
+   * As for now simple graphical version is used.
    */
   private VerificationFactory my_verificationFactory =
-    new ConsoleVerificationFactory();
+    new SWTVerificationFactory();
 
   /**
    * The Java source code editor that corresponds to the current
