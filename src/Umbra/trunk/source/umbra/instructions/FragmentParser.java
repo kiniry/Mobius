@@ -97,12 +97,7 @@ public class FragmentParser extends BytecodeCommentParser {
     int a_line_no = my_start;
     try {
       if (a_ctxt.isInsideConstantPool()) {
-        //System.err.println("inside CP");
         a_line_no = swallowCPFragment(a_line_no, a_ctxt);
-        //for (Object o: getEditorLines()) {
-          //if (o instanceof CPLineController)
-            //System.err.println(((CPLineController) o).getEntryType());
-        //}
       } else if (a_ctxt.isInsideAnnotation()) {
         a_line_no = swallowAnnotationFragment(a_line_no, a_ctxt);
       } else if (a_ctxt.isInsideMethod()) {
@@ -174,7 +169,6 @@ public class FragmentParser extends BytecodeCommentParser {
     int j = a_start;
     while (j <= my_end) {
       final String line = this.getLineFromDoc(my_doc, j, a_ctxt);
-      System.err.println("Parsing: " + line);
       final BytecodeLineController blc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
       addEditorLine(blc);
       j++;

@@ -20,7 +20,7 @@ import umbra.lib.BytecodeStrings;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public abstract class CPLineController extends BytecodeLineController {
+public class CPLineController extends BytecodeLineController {
 
   /**
    * This array contains the classes which are able to handle constant
