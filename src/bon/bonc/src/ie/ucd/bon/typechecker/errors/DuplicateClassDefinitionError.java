@@ -20,7 +20,7 @@ public class DuplicateClassDefinitionError extends TypeCheckingError {
   
   public DuplicateClassDefinitionError(SourceLocation loc, ClassDefinition other) {
     super(loc);
-    this.className = other.getClassName();
+    this.className = other.getName();
     this.otherClassFile = other.getSourceLocation().getSourceFile();
     this.otherClassLineNumber = other.getSourceLocation().getLineNumber();
   }

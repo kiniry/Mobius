@@ -9,7 +9,6 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
-import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
 import ie.ucd.bon.util.XMLWriter;
 
 import java.io.IOException;
@@ -68,9 +67,9 @@ public class Grapher {
     printInformalClasses(informalTypingInfo, sb);
     printInformalClusters(informalTypingInfo, sb);
 
-    SystemChartDefinition sysDef = informalTypingInfo.getSystem();
+    ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
     if (sysDef != null) {
-      String systemName = sysDef.getSystemName();
+      String systemName = sysDef.getName();
       if (systemName != null) {
         printSystemNode(systemName, sb);
         appendLine("//Cluster-system links", sb);
@@ -132,21 +131,21 @@ public class Grapher {
   }
 
   private static void printCluster(final ClusterChartDefinition cluster, final StringBuilder sb) {
-    String comment = "Cluster: " + cluster.getClusterName();
-    appendLine("\"" + cluster.getClusterName() + "\" [shape=box,comment=\"" + comment + "\"];", sb);
+    String comment = "Cluster: " + cluster.getName();
+    appendLine("\"" + cluster.getName() + "\" [shape=box,comment=\"" + comment + "\"];", sb);
   }
 
   private static void printClass(final ClassChartDefinition classDef, final StringBuilder sb) {
-    String comment = "Class: " + classDef.getClassName();
-    appendLine("\"" + classDef.getClassName() + "\" [shape=octagon,comment=\"" + comment + "\"];", sb);
+    String comment = "Class: " + classDef.getName();
+    appendLine("\"" + classDef.getName() + "\" [shape=octagon,comment=\"" + comment + "\"];", sb);
   }
 
   private static void printClassClusterLink(final String className, final ClusterChartDefinition cluster, final StringBuilder sb) {
-    appendLine("\"" + cluster.getClusterName() + "\" -> \"" + className + "\";", sb);
+    appendLine("\"" + cluster.getName() + "\" -> \"" + className + "\";", sb);
   }
 
   private static void printClusterClusterLink(final String childClusterName, final ClusterChartDefinition parentCluster, final StringBuilder sb) {
-    appendLine("\"" + parentCluster.getClusterName() + "\" -> \"" + childClusterName + "\";", sb);
+    appendLine("\"" + parentCluster.getName() + "\" -> \"" + childClusterName + "\";", sb);
   }
 
   private static void printClusterSystemLink(final String clusterName, final String systemName, final StringBuilder sb) {
@@ -159,11 +158,11 @@ public class Grapher {
 
   private static void printGraphName(InformalTypingInformation iti, StringBuilder sb) {
     String graphName;
-    SystemChartDefinition sysDef = iti.getSystem();
+    ClusterChartDefinition sysDef = iti.getSystem();
     if (sysDef == null) {
       graphName = "System";
     } else {        
-      graphName = "System: " + sysDef.getSystemName();
+      graphName = "System: " + sysDef.getName();
     }
     appendLine("digraph \"" + graphName + "\" {", sb);
     appendLine(sb);
@@ -210,11 +209,11 @@ public class Grapher {
       //Top-level branch/system node
       xw.writeEntity("branch");
 
-      SystemChartDefinition sysDef = informalTypingInfo.getSystem();
+      ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
       if (sysDef == null) {
         printPrefuseAttribute("name", "Unnamed System", xw);
       } else {
-        printPrefuseAttribute("name", sysDef.getSystemName(), xw);
+        printPrefuseAttribute("name", sysDef.getName(), xw);
       }
       printPrefuseAttribute("system", "true", xw);
 

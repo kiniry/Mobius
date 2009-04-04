@@ -139,6 +139,7 @@
       <classpath refid="test.path"/>
       <arg value="../test/test-cases/"/>
       <arg value="../test/test-cases/tests"/>
+      <arg value="../test/test-cases/test-cases.log"/>      
     </java>
   </target>
 

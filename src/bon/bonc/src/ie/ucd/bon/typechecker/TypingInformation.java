@@ -356,10 +356,10 @@ public class TypingInformation {
             //Then add new links for all the parent classes, simple and full (although all have no generics).  
             for (ClassDefinition parentDef : parentClasses) {
               if (parentDef.equals(childDef)) {
-                problems.addProblem(new ClassCannotHaveSelfAsParentError(childDef.getSourceLocation(), childDef.getClassName()));
+                problems.addProblem(new ClassCannotHaveSelfAsParentError(childDef.getSourceLocation(), childDef.getName()));
               } else {
-                simpleClassInheritanceGraph.addEdge(childDef.getClassName(), parentDef.getClassName());
-                classInheritanceGraph.addEdge(childDef.getClassName(), BONType.mk(parentDef.getClassName()));
+                simpleClassInheritanceGraph.addEdge(childDef.getName(), parentDef.getName());
+                classInheritanceGraph.addEdge(childDef.getName(), BONType.mk(parentDef.getName()));
               }
             }
           } else {
@@ -392,7 +392,7 @@ public class TypingInformation {
 
     for (ClusterDefinition cluster : clusters) {
       if (!seen.contains(cluster)) {
-        classes.addAll(getClassesInCluster(cluster.getClusterName(), seen));
+        classes.addAll(getClassesInCluster(cluster.getName(), seen));
       }
     }
 
@@ -462,6 +462,8 @@ public class TypingInformation {
       if (def != null) {
         def.setIndexing(indexing);
       }
+    } else {
+      informal.indexing(indexing);
     }
   }
   

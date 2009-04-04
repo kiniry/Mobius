@@ -9,7 +9,6 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
-import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
 
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +22,7 @@ public class ClassDictionaryGenerator {
     StringBuilder sb = new StringBuilder();
     
     InformalTypingInformation iti = tracker.getInformalTypingInformation();
-    SystemChartDefinition sysDef = iti.getSystem();
+    ClusterChartDefinition sysDef = iti.getSystem();
     Map<String,ClassChartDefinition> classes = iti.getClasses(); 
     Set<String> classNames = new TreeSet<String>(classes.keySet());
     Graph<String,ClusterChartDefinition> classClusterGraph = iti.getClassClusterGraph();
@@ -38,7 +37,7 @@ public class ClassDictionaryGenerator {
     }
 
     sb.append("dictionary ");
-    sb.append(sysDef.getSystemName());
+    sb.append(sysDef.getName());
     sb.append(newLine);
     
     sb.append("  explanation");
@@ -56,7 +55,7 @@ public class ClassDictionaryGenerator {
       } else {
         sb.append("  class " + className + " cluster ");
         for (ClusterChartDefinition clusterDef : inClusters) {
-          sb.append(clusterDef.getClusterName());
+          sb.append(clusterDef.getName());
           sb.append(", ");
         }
         sb.deleteCharAt(sb.length()-1);

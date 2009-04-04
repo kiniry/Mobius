@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal;
 
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.source.SourceLocation;
 
 public class ClusterChartDefinition {
@@ -13,13 +14,18 @@ public class ClusterChartDefinition {
   
   private boolean hasClusterHierarchyCycle;
   
-  public ClusterChartDefinition(String clusterName, SourceLocation loc) {
+  private Indexing indexing;
+  
+  private final boolean isSystem;
+  
+  public ClusterChartDefinition(String clusterName, SourceLocation loc, boolean isSystem) {
     this.clusterName = clusterName;
     this.loc = loc;    
     this.hasClusterHierarchyCycle = false;
+    this.isSystem = isSystem;
   }
 
-  public String getClusterName() {
+  public String getName() {
     return clusterName;
   }
 
@@ -48,5 +54,24 @@ public class ClusterChartDefinition {
   public boolean hasClusterHierarchyCycle() {
     return hasClusterHierarchyCycle;
   }
+
+  public Indexing getIndexing() {
+    return indexing;
+  }
+
+  public void setIndexing(Indexing indexing) {
+    this.indexing = indexing;
+  }
+
+  public boolean isSystem() {
+    return isSystem;
+  }
+
+  @Override
+  public String toString() {
+    return "ClusteChartDefinition: " + clusterName;
+  }
+  
+  
   
 }

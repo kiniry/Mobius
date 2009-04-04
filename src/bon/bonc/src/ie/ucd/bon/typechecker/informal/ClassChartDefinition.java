@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal;
 
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.source.SourceLocation;
 
 import java.util.Collection;
@@ -26,6 +27,8 @@ public class ClassChartDefinition {
     private final Collection<String> commands;
     private final Collection<String> constraints;
     
+    private Indexing indexing;
+    
     public ClassChartDefinition(String className, SourceLocation loc) {
       this.className = className;
       this.loc = loc;
@@ -35,7 +38,7 @@ public class ClassChartDefinition {
       constraints = new LinkedList<String>();
     }
 
-    public String getClassName() {
+    public String getName() {
       return className;
     }
 
@@ -107,6 +110,14 @@ public class ClassChartDefinition {
     
     public Collection<String> getConstraints() {
       return constraints;
+    }
+
+    public Indexing getIndexing() {
+      return indexing;
+    }
+
+    public void setIndexing(Indexing indexing) {
+      this.indexing = indexing;
     }
     
     

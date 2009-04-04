@@ -4,9 +4,11 @@
  */
 package ie.ucd.bon.typechecker.informal;
 
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.typechecker.ClassDefinition;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
@@ -28,7 +30,7 @@ public class InformalTypingInformation {
   
   private final Map<String,ClusterChartDefinition> clusters;
   private final Map<String,ClassChartDefinition> classes;  
-  private SystemChartDefinition system;
+  private ClusterChartDefinition system;
   
   private final Graph<String,ClusterChartDefinition> classClusterGraph;
   private final Graph<String,String> reverseClassClusterGraph;
@@ -62,11 +64,11 @@ public class InformalTypingInformation {
     problems = new Problems();
   }
   
-  public void setSystem(String systemName, SourceLocation loc) {
+  public void setSystem(ClusterChartDefinition newSystem) {
     if (this.system == null) {
-      system = new SystemChartDefinition(systemName, loc);
+      system = newSystem;
     } else {
-      problems.addProblem(new DuplicateSystemDefinitionError(loc, system));
+      problems.addProblem(new DuplicateSystemDefinitionError(newSystem.getSourceLocation(), system));
     }
   }
 
@@ -74,25 +76,26 @@ public class InformalTypingInformation {
    * Adds a cluster name to the typing information.
    * @param clusterName The name of the cluster to add.
    */
-  public void addCluster(String clusterName, SourceLocation loc) {
-    ClassChartDefinition classDef = classes.get(clusterName);
+  public void addCluster(ClusterChartDefinition clusterDef) {
+    ClassChartDefinition classDef = classes.get(clusterDef.getName());
     if (classDef != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster", clusterName, "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
+      problems.addProblem(new NameNotUniqueError(clusterDef.getSourceLocation(), "Cluster", clusterDef.getName(), "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
     }
-    ClusterChartDefinition cluster = clusters.get(clusterName);
+    ClusterChartDefinition cluster = clusters.get(clusterDef.getName());
     if (cluster != null) {
-      problems.addProblem(new DuplicateClusterChartError(loc, cluster));
-      return;
+      problems.addProblem(new DuplicateClusterChartError(clusterDef.getSourceLocation(), cluster));
+    } else {
+      clusters.put(clusterDef.getName(), clusterDef);
     }
-    cluster = new ClusterChartDefinition(clusterName, loc);
-    clusters.put(clusterName, cluster);
   }
   
   /**
    * Adds a class name to the typing information.
    * @param className The name of the class to add.
    */
-  public void addClass(String className, SourceLocation loc) {
+  public void addClass(ClassChartDefinition classX) {
+    String className = classX.getName();
+    SourceLocation loc = classX.getSourceLocation();
     ClusterChartDefinition clusterDef = clusters.get(className);
     if (clusterDef != null) {
       problems.addProblem(new NameNotUniqueError(loc, "Class chart", className, "cluster chart", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
@@ -108,7 +111,7 @@ public class InformalTypingInformation {
   
   public void addQuery(String query) {
     if (context.isInClassChart()) {
-      ClassChartDefinition def = classes.get(context.getClassChartName());
+      ClassChartDefinition def = classes.get(context.getClassChart());
       if (def != null) {
         def.addQuery(query);
       }
@@ -117,7 +120,7 @@ public class InformalTypingInformation {
   
   public void addCommand(String command) {
     if (context.isInClassChart()) {
-      ClassChartDefinition def = classes.get(context.getClassChartName());
+      ClassChartDefinition def = classes.get(context.getClassChart());
       if (def != null) {
         def.addCommand(command);
       }
@@ -126,7 +129,7 @@ public class InformalTypingInformation {
   
   public void addConstraint(String constraint) {
     if (context.isInClassChart()) {
-      ClassChartDefinition def = classes.get(context.getClassChartName());
+      ClassChartDefinition def = classes.get(context.getClassChart());
       if (def != null) {
         def.addConstraint(constraint);
       }
@@ -138,16 +141,16 @@ public class InformalTypingInformation {
     if (context.isInSystemChart()) {
       clustersInSystem.add(clusterName);
     } else if (context.isInClusterChart()) {
-      clusterClusterGraph.addEdge(clusterName, clusters.get(context.getClusterChartName()));
-      reverseClusterClusterGraph.addEdge(context.getClusterChartName(), clusterName);
+      clusterClusterGraph.addEdge(clusterName, context.getClusterChart());
+      reverseClusterClusterGraph.addEdge(context.getClusterChart().getName(), clusterName);
     }
   }
   
   public void addClassEntry(String className) {
     if (context.isInClusterChart()) {
       //Should be, sanity check anyway
-      classClusterGraph.addEdge(className, clusters.get(context.getClusterChartName()));
-      reverseClassClusterGraph.addEdge(context.getClusterChartName(), className);
+      classClusterGraph.addEdge(className, clusters.get(context.getClusterChart()));
+      reverseClassClusterGraph.addEdge(context.getClusterChart().getName(), className);
     }
   }
   
@@ -159,17 +162,17 @@ public class InformalTypingInformation {
   
   public void addParentClass(String className, SourceLocation loc) {
     //System.out.println("Adding informal parent class: " + className);
-    String currentClassName = context.getClassChartName();
-    if (context.getClassChartName().equals(className)) {
-      problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClassName));
+    ClassChartDefinition currentClass= context.getClassChart();
+    if (context.getClassChart().getName().equals(className)) {
+      problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClass.getName()));
     } else {
       
-      if (classInheritanceGraph.hasEdge(currentClassName, className)) {
-        problems.addProblem(new DuplicateSuperclassWarning(loc,context.getClassChartName(),className));
+      if (classInheritanceGraph.hasEdge(currentClass.getName(), className)) {
+        problems.addProblem(new DuplicateSuperclassWarning(loc,context.getClassChart().getName(),className));
       } else {
-        classInheritanceGraph.addEdge(currentClassName, className);
-        reverseClassInheritanceGraph.addEdge(className, currentClassName);
-        ClassChartDefinition classDef = classes.get(currentClassName);
+        classInheritanceGraph.addEdge(currentClass.getName(), className);
+        reverseClassInheritanceGraph.addEdge(className, currentClass.getName());
+        ClassChartDefinition classDef = classes.get(currentClass.getName());
         classDef.addSuperClass(className);
       }
 
@@ -178,12 +181,11 @@ public class InformalTypingInformation {
   
   public void setExplanation(String explanation) {
     if (context.isInClassChart()) {
-      String name = context.getClassChartName();
-      classes.get(name).setExplanation(explanation);
+      context.getClassChart().setExplanation(explanation);
     }
   }
   
-  public SystemChartDefinition getSystem() {
+  public ClusterChartDefinition getSystem() {
     return system;
   }
 
@@ -245,6 +247,16 @@ public class InformalTypingInformation {
   public void setDescription(String description) {
     if (context.isInClassEntry()) {
       alternativeClassDescriptionsGraph.addEdge(context.getClassEntryName(), description);
+    }
+  }
+  
+  public void indexing(Indexing indexing) {
+    if (context.isInSystemChart()) {
+      system.setIndexing(indexing);
+    } else if (context.isInClassChart()) {
+      context.getClassChart().setIndexing(indexing);
+    } else if (context.isInClusterChart()) {
+      context.getClusterChart().setIndexing(indexing);
     }
   }
 

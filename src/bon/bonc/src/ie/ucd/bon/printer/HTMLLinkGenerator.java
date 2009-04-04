@@ -69,7 +69,7 @@ public class HTMLLinkGenerator {
     
     if (iti.getSystem() != null) {
       sb.append("subOptions['system_chart'] = [ '");
-      String systemName = parsingTracker.getInformalTypingInformation().getSystem().getSystemName();
+      String systemName = parsingTracker.getInformalTypingInformation().getSystem().getName();
       sb.append(systemName);
       sb.append("', '");
       sb.append(SYSTEM_CHART + systemName);
@@ -167,7 +167,7 @@ public class HTMLLinkGenerator {
     sb.append("var items = [");
     
     if (iti.getSystem() != null) {
-      appendItem(sb, SYSTEM_CHART + parsingTracker.getInformalTypingInformation().getSystem().getSystemName());
+      appendItem(sb, SYSTEM_CHART + parsingTracker.getInformalTypingInformation().getSystem().getName());
     }
     
     Set<String> classNames = parsingTracker.getInformalTypingInformation().getClasses().keySet();

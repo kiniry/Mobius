@@ -5,8 +5,9 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.ast.BONType;
-import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
+import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +20,9 @@ public final class Context {
   //Informal
   private boolean inSystemChart;
   private boolean inClusterChart;
-  private String clusterChartName;
+  private ClusterChartDefinition clusterChart;
   private boolean inClassChart;
-  private String classChartName;
+  private ClassChartDefinition classChart;
   private boolean inInheritsClause;
   private boolean inEventEntry;
   private boolean inCreationEntry;
@@ -66,9 +67,9 @@ public final class Context {
   public final void reset() {
     inSystemChart = false;
     inClusterChart = false;
-    clusterChartName = null;
+    clusterChart = null;
     inClassChart = false;
-    classChartName = null;
+    classChart = null;
     inInheritsClause = false;
     inEventEntry = false;
     inCreationEntry = false;
@@ -93,7 +94,7 @@ public final class Context {
 
   }
   
-  public void enterSystemChart(String systemName) {
+  public void enterSystemChart(ClusterChartDefinition systemName) {
     enterClusterChart(systemName);
     inSystemChart = true;
   }
@@ -131,36 +132,36 @@ public final class Context {
     return dictionaryEntryStartToken;
   }
 
-  public void enterClusterChart(String clusterName) {
+  public void enterClusterChart(ClusterChartDefinition cluster) {
     inClusterChart = true;
-    this.clusterChartName = clusterName; 
+    this.clusterChart = cluster; 
   }
   
   public void leaveClusterChart() {
     inClusterChart = false;
-    this.clusterChartName = null;
+    this.clusterChart = null;
   }
   
   public boolean isInClusterChart() {
     return inClusterChart;
   }
 
-  public void enterClassChart(String className) {
+  public void enterClassChart(ClassChartDefinition classX) {
     inClassChart = true;
-    this.classChartName = className;
+    this.classChart = classX;
   }
   
   public void leaveClassChart() {
     inClassChart = false;
-    this.classChartName = null;
+    this.classChart= null;
   }
 
-  public String getClusterChartName() {
-    return clusterChartName;
+  public ClusterChartDefinition getClusterChart() {
+    return clusterChart;
   }
 
-  public String getClassChartName() {
-    return classChartName;
+  public ClassChartDefinition getClassChart() {
+    return classChart;
   }
   
   public void enterInheritsClause() {

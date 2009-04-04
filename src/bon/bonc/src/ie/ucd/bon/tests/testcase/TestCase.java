@@ -70,7 +70,7 @@ public class TestCase {
     return valid;
   }
   
-  public boolean runTest() {
+  public boolean runTest(PrintStream out, PrintStream err) {
     StringBuilder runString = new StringBuilder("-tc ");
     for (String arg: progArgs) {
       runString.append(arg);
@@ -93,8 +93,8 @@ public class TestCase {
     PrintStream oldOut = System.out;
     PrintStream oldErr = System.err;
     //TODO It would probably be even faster to have a NullPrintStream here
-    System.setOut(NullOutputStream.getNullPrintStreamInstance());
-    System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    System.setOut(out);
+    System.setErr(err);
     
     Main.main2(runString.toString().trim().split("\\s+"), false);
 
@@ -103,8 +103,8 @@ public class TestCase {
     
     Problems foundProblems = Main.getProblems();  
     Problems desiredProblems = new Problems();
-    for (TestOutput out : outputs) {
-      BONProblem problem = out.getProblem();
+    for (TestOutput output : outputs) {
+      BONProblem problem = output.getProblem();
       if (problem != null) {
         desiredProblems.addProblem(problem);
       } 

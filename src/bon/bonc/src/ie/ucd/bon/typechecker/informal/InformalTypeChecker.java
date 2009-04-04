@@ -29,7 +29,7 @@ public class InformalTypeChecker {
   
   private final Map<String,ClusterChartDefinition> clusters;
   private final Map<String,ClassChartDefinition> classes;  
-  private final SystemChartDefinition system;
+  private final ClusterChartDefinition system;
   
   private final Graph<String,ClusterChartDefinition> classClusterGraph;
   private final Graph<String,ClusterChartDefinition> clusterClusterGraph;
@@ -37,7 +37,7 @@ public class InformalTypeChecker {
   
   private final Graph<String,String> classInheritanceGraph;
   
-  public InformalTypeChecker(SystemChartDefinition system,
+  public InformalTypeChecker(ClusterChartDefinition system,
       Map<String, ClusterChartDefinition> clusters,
       Map<String, ClassChartDefinition> classes,
       Set<String> clustersInSystem,
@@ -83,11 +83,11 @@ public class InformalTypeChecker {
   public void checkClusterContainmentForCycles() {
     Converter<ClusterChartDefinition,String> converter = new Converter<ClusterChartDefinition,String>() {
       public final String convert(final ClusterChartDefinition toConvert) {
-        return toConvert.getClusterName();
+        return toConvert.getName();
       }              
     };
     
-    for (String clusterName : clusters.keySet()) {      
+    for (String clusterName : clusters.keySet()) { 
       Collection<String> cycle = clusterClusterGraph.findCycle(clusterName,converter);
       if (cycle != null) {
         ClusterChartDefinition cluster = clusters.get(clusterName);
@@ -151,8 +151,8 @@ public class InformalTypeChecker {
   }
   
   public void checkSystemName(String systemName, SourceLocation loc) {
-    if (system != null && !system.getSystemName().equals(systemName)) {
-      problems.addProblem(new IncorrectSystemNameError(loc, systemName, system.getSystemName(), 
+    if (system != null && !system.getName().equals(systemName)) {
+      problems.addProblem(new IncorrectSystemNameError(loc, systemName, system.getName(), 
           system.getSourceLocation().getSourceFilePath(), system.getSourceLocation().getLineNumber()));
     }
   }

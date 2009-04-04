@@ -13,7 +13,7 @@ import ie.ucd.bon.printer.ClassDictionaryGenerator;
 import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
-import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
+import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.util.FileUtil;
 
 import java.io.File;
@@ -208,8 +208,8 @@ public final class Printer {
   }
 
   private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    SystemChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
-    String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getSystemName(); 
+    ClusterChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
+    String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName(); 
     return String.format(toFormat, 
         printTime, 
         Main.getVersion(), 

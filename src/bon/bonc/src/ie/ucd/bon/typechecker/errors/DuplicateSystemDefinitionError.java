@@ -6,7 +6,7 @@ package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
-import ie.ucd.bon.typechecker.informal.SystemChartDefinition;
+import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 
 import java.io.File;
 
@@ -18,9 +18,9 @@ public class DuplicateSystemDefinitionError extends TypeCheckingError {
   private final File otherSystemFile;
   private final int otherSystemLineNumber;
   
-  public DuplicateSystemDefinitionError(SourceLocation loc, SystemChartDefinition otherSystem) {
+  public DuplicateSystemDefinitionError(SourceLocation loc, ClusterChartDefinition otherSystem) {
     super(loc);
-    this.systemName = otherSystem.getSystemName();
+    this.systemName = otherSystem.getName();
     this.otherSystemFile = otherSystem.getSourceLocation().getSourceFile();
     this.otherSystemLineNumber = otherSystem.getSourceLocation().getLineNumber();
   }

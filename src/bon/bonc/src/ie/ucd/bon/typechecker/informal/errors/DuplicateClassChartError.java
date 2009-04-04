@@ -20,7 +20,7 @@ public class DuplicateClassChartError extends TypeCheckingError {
   
   public DuplicateClassChartError(SourceLocation loc, ClassChartDefinition other) {
     super(loc);
-    this.className = other.getClassName();
+    this.className = other.getName();
     this.otherChartFile = other.getSourceLocation().getSourceFile();
     this.otherChartLineNumber = other.getSourceLocation().getLineNumber();
   }

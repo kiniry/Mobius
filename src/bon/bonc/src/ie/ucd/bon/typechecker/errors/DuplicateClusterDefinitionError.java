@@ -21,7 +21,7 @@ public class DuplicateClusterDefinitionError extends TypeCheckingError {
   
   public DuplicateClusterDefinitionError(SourceLocation loc, ClusterDefinition other) {
     super(loc);
-    this.clusterName = other.getClusterName();
+    this.clusterName = other.getName();
     this.otherClusterFile = other.getSourceLocation().getSourceFile();
     this.otherClusterLineNumber = other.getSourceLocation().getLineNumber();
   }

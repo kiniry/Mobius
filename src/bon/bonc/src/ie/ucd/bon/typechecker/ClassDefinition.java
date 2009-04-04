@@ -55,7 +55,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public boolean hasParentClass(BONType parent) {
-    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getClassName()).contains(parent.getNonGenericType());
+    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getName()).contains(parent.getNonGenericType());
   }
   
   public void addFormalGeneric(String name, Type type, SourceLocation loc) {
@@ -116,11 +116,11 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public Set<BONType> getParentClasses() {
-    return typingInfo.getClassInheritanceGraph().getLinkedNodes(getClassName());
+    return typingInfo.getClassInheritanceGraph().getLinkedNodes(getName());
   }
   
   public Set<String> getSimpleParentClasses() {
-    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getClassName());
+    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getName());
   }
   
   public Collection<FeatureSpecificationInstance> getDeferredFeatures() {
@@ -137,20 +137,20 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public boolean equals(Object obj) {
-    return obj instanceof ClassDefinition ? getClassName().equals(((ClassDefinition)obj).getClassName()) : false;
+    return obj instanceof ClassDefinition ? getName().equals(((ClassDefinition)obj).getName()) : false;
   }
 
   public int hashCode() {
-    return getClassName().hashCode();
+    return getName().hashCode();
   }
 
   @Override
   public String toString() {
-    return "ClassDefinition:" + getClassName();
+    return "ClassDefinition:" + getName();
   }
 
   public int compareTo(ClassDefinition o) {
-    return this.getClassName().compareTo(o.getClassName());
+    return this.getName().compareTo(o.getName());
   }
 
   public Collection<String> getInvariants() {

@@ -15,7 +15,9 @@ public abstract class Converter<B,A> {
   public SortedSet<A> convert(final Set<B> toConvert) {
     TreeSet<A> result = new TreeSet<A>();
     for (B b : toConvert) {
-      result.add(convert(b));
+      if (b != null) {
+        result.add(convert(b));
+      }
     }
     return result;
   }

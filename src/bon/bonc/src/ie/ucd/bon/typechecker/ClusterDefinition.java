@@ -10,7 +10,7 @@ import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 public class ClusterDefinition extends ClusterChartDefinition {
 
   public ClusterDefinition(String clusterName, SourceLocation loc) {
-    super(clusterName, loc);
+    super(clusterName, loc, false);
   }
 
 }

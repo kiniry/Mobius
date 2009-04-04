@@ -100,7 +100,7 @@ public class FormalTypeChecker {
   public void checkClusterContainmentForCycles() {
     Converter<ClusterDefinition,String> converter = new Converter<ClusterDefinition,String>() {
       public final String convert(final ClusterDefinition toConvert) {
-        return toConvert.getClusterName();
+        return toConvert.getName();
       }
     };
     for (String clusterName : clusters.keySet()) {
@@ -210,8 +210,8 @@ public class FormalTypeChecker {
         problems.addProblem(new EffectiveClassDoesNotDefineDeferredFeatureError(
                                             effectiveChild.getSourceLocation(),
                                             feature.getName(),
-                                            effectiveChild.getClassName(),
-                                            deferredParent.getClassName()
+                                            effectiveChild.getName(),
+                                            deferredParent.getName()
         ));
       }
     }
@@ -304,7 +304,7 @@ public class FormalTypeChecker {
         problems.addProblem(new InvalidFormalClassTypeError(loc, actualClassPart));
       } else {
         if (type.hasGenerics() && !def.hasFormalGenerics()) {
-          problems.addProblem(new ClassIsNotGenericError(loc, def.getClassName()));
+          problems.addProblem(new ClassIsNotGenericError(loc, def.getName()));
         } else {
           //TODO - check appropriate number of generics, appropriate type, etc...
         }
@@ -401,7 +401,7 @@ public class FormalTypeChecker {
       //TODO - inheritance!
       FeatureSpecificationInstance fsi = classDef.getFeatureByName(x);
       if (fsi == null) {
-        problems.addProblem(new ClassDoesNotDeclareFeatureError(loc, classDef.getClassName(), x));
+        problems.addProblem(new ClassDoesNotDeclareFeatureError(loc, classDef.getName(), x));
       } else {
         t = fsi.getFeatureSpec().getType();
         Main.logDebug("Here with type: " + t);

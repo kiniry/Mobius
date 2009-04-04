@@ -182,6 +182,8 @@ tokens {
   import ie.ucd.bon.parser.errors.MissingElementParseError;
   import java.util.LinkedList;
   import ie.ucd.bon.ast.*;
+  import ie.ucd.bon.typechecker.informal.*;
+  import ie.ucd.bon.typechecker.*;
 }
 
 @lexer::header {
@@ -277,8 +279,9 @@ dictionary_entry  :  c='class' class_name
 /**********************************************/
 
 system_chart  :  s='system_chart' system_name 
-                 { getTI().informal().setSystem($system_name.text, getSLoc($s, $system_name.start));
-                   getContext().enterSystemChart($system_name.text); }
+                 { ClusterChartDefinition system = new ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
+                    getTI().informal().setSystem(system);
+                    getContext().enterSystemChart(system); }
                  (indexing)?
                  (explanation)? 
                  (part)? 
@@ -414,8 +417,9 @@ index_string  :  m=MANIFEST_STRING
 /**********************************************/
 
 cluster_chart  :  c='cluster_chart' cluster_name 
-                  { getTI().informal().addCluster($cluster_name.text, getSLoc($c, $cluster_name.start));
-                    getContext().enterClusterChart($cluster_name.text); }
+                  { ClusterChartDefinition cluster = new ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
+                    getTI().informal().addCluster(cluster);
+                    getContext().enterClusterChart(cluster); }
                   (indexing)? 
                   (explanation)? 
                   (part)? 
@@ -460,8 +464,9 @@ cluster_name  :  i=IDENTIFIER
 /**********************************************/
 
 class_chart  :  c='class_chart' class_name 
-                { getTI().informal().addClass($class_name.text, getSLoc($c, $class_name.start));
-                  getContext().enterClassChart($class_name.text); }
+                { ClassChartDefinition classX = new ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
+                  getTI().informal().addClass(classX);
+                  getContext().enterClassChart(classX); }
                 (indexing)? 
                 (explanation)? 
                 (part)? 
@@ -536,7 +541,7 @@ constraint_list  :  m1=manifest_textblock { getTI().informal().addConstraint($m1
                    )
                  ;
 
-class_name_list  :  c1=class_name { getTI().classNameListEntry($c1.text, getSLoc($c1.start)); }
+class_name_list  :  c1=class_name { getTI().classNameListEntry($c1.text, getSLoc($c1.stop)); }
 										(  ( ',' c=class_name { getTI().classNameListEntry($c.text, getSLoc($c.start)); } )
 										 | ( c=class_name 
 										     { getTI().classNameListEntry($c.text, getSLoc($c.start)); 

@@ -20,7 +20,7 @@ public class DuplicateClusterChartError extends TypeCheckingError {
   
   public DuplicateClusterChartError(SourceLocation loc, ClusterChartDefinition other) {
     super(loc);
-    this.clusterName = other.getClusterName();
+    this.clusterName = other.getName();
     this.otherChartFile = other.getSourceLocation().getSourceFile();
     this.otherChartLineNumber = other.getSourceLocation().getLineNumber();
   }
