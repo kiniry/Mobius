@@ -16,7 +16,8 @@ import freeboogie.util.Err;
  * @author rgrig
  */
 public class FbError {
-  static public enum Type {
+  /** Types of errors. */
+  public static enum Type {
     UNDECL_ID("Undeclared identifier %."),
     REQ_SPECIALIZATION("Explicit specialization required for %0 at %1."),
     GEN_TOOMANY("Too many explicit generics."),
@@ -37,9 +38,9 @@ public class FbError {
     Type(String templ) { this.templ = templ; }
   }
 
-  private Type type;
-  private Ast ast;
-  private Object[] data;
+  private final Type type;
+  private final Ast ast;
+  private final Object[] data;
 
   /**
    * Constructs an error of type {@code type} that refers to

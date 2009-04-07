@@ -68,7 +68,7 @@ public class UsageToDefMap<U, D> {
    }
    
    /**
-    * Returns the number of definitions
+    * Returns the number of definitions.
     * @return the number of definitions
     */
    public int defCnt() {

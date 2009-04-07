@@ -13,6 +13,8 @@ import java.util.Set;
  * The class {@code Term} is intended to be subclassed (in
  * conjunction with concrete prover classes).
  *
+ * @param <T> the type of children
+ *
  * @author rgrig 
  */
 public abstract class Term<T> {
@@ -43,6 +45,6 @@ public abstract class Term<T> {
    */
   public abstract void collectAxioms(Set<T> axiomBag);
 
-  /** {@code newAxiom} is needed to read {@code this} */
+  /** {@code newAxiom} is needed to read {@code this}. */
   public abstract void addAxiom(T newAxiom);
 }

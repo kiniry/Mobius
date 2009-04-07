@@ -10,7 +10,9 @@ import freeboogie.util.Id;
 /**
  * Utilities for handling {@code SmtTerm}s.
  */
-public class SmtTerms {
+public final class SmtTerms {
+  private SmtTerms() { /* forbid instantiation */ }
+
   // === Functions for eliminating sharing ===
   
   /** Passed around by functions that eliminate sharing. */

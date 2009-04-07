@@ -2,6 +2,9 @@ package freeboogie.util;
 
 import java.util.logging.*;
 
+/**
+ * Print each message on exactly one line.
+ */
 public class OneLineLogFormatter extends Formatter {
   private StringBuilder sb;
 

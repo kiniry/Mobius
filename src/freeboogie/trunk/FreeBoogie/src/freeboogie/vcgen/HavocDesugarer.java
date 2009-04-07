@@ -1,12 +1,10 @@
 package freeboogie.vcgen;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.astutil.PrettyPrinter;
 import freeboogie.util.*;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;

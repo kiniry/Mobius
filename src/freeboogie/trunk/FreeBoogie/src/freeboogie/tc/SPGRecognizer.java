@@ -36,7 +36,7 @@ public class SPGRecognizer<T> {
   }
   
   /**
-   * Check if the graph is an SPG
+   * Check if the graph is an SPG.
    * @return true if the graph is a series-parallel graph
    */
   public boolean check() {
@@ -44,7 +44,7 @@ public class SPGRecognizer<T> {
   }
   
   /**
-   * Annotates the graph with pred and succ annotations
+   * Annotates the graph with pred and succ annotations.
    * The initialization phase (page 9 of the article)
    * 
    * @return false if the graph is not SP.
@@ -65,16 +65,13 @@ public class SPGRecognizer<T> {
           if (succ.get(x) == null) {
             succ.put(x, y);
           }
-        }
-        else { // pred[y] != bottom
+        } else { // pred[y] != bottom
           if (succ.get(x) == null) {
             succ.put(x, y);
-          }
-          else {
+          } else {
             if (x == pred.get(succ.get(x))) {
               succ.put(x, y);
-            }
-            else {
+            } else {
               // not SP
               return false;
             }
@@ -88,29 +85,26 @@ public class SPGRecognizer<T> {
   
   
   /**
-   * Reduction algorithm that is on the page 10
+   * Reduction algorithm that is on the page 10.
    * @param x the selected redex
    * @return false if the graph is not SP.
    */
   private boolean reduction(T x) {
     T a = pred.get(x);
     T b = succ.get(x);
-    boolean e = (a == pred.get(b) || succ.get(a) == b);
+    boolean e = a == pred.get(b) || succ.get(a) == b;
     if (!e) {
       if (x == pred.get(b)) {
         pred.put(b, a);
-      }
-      else {// x != pred.get(b)
+      } else {// x != pred.get(b)
         if (a == pred.get(succ.get(a))) {
           succ.put(a, b);
-        }
-        else {
+        } else {
           // not SP
           return false;
         }
       }
-    }
-    else {
+    } else {
       if (x == pred.get(b)) {
         // not SP
         return false;
@@ -177,7 +171,7 @@ public class SPGRecognizer<T> {
   }
 
   /**
-   * IsBlue == (a != pred.get(b)) /\ (succ.get(a) = b)
+   * IsBlue == (a != pred.get(b)) /\ (succ.get(a) = b).
    * @param a
    * @return true if (a, b) is blue
    */
@@ -192,7 +186,7 @@ public class SPGRecognizer<T> {
   }
 
   /**
-   * The function that returns the topological numbering
+   * The function that returns the topological numbering.
    * @param t
    * @return an integer >= 0
    */
@@ -201,7 +195,7 @@ public class SPGRecognizer<T> {
   }
 
   /**
-   * Returns the source node of the graph
+   * Returns the source node of the graph.
    * @return the first node of the graph
    */
   private T getSource() {

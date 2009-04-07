@@ -10,25 +10,25 @@ import java.util.*;
  * @author rgrig 
  */
 public final class SmtTerm extends Term<SmtTerm> {
-  static final private ArrayList<SmtTerm> noChild = new ArrayList<SmtTerm>();
+  private static final ArrayList<SmtTerm> noChild = new ArrayList<SmtTerm>();
   
-  static final private HashMap<SmtTerm, SmtTerm> cache =
+  private static final HashMap<SmtTerm, SmtTerm> cache =
     new HashMap<SmtTerm, SmtTerm>(100003);
 
   private int hash;
 
   /** The identifier or this term. */
-  final public String id;
+  public final String id;
   
   /** 
    * If {@code id} says this term is a constant then {@code data}
    * contains the actual value of the constant (and {@code children}
    * is empty).
    */
-  final public Object data;
+  public final Object data;
   
   /** The children of this term, nonnull. */
-  final public ArrayList<SmtTerm> children;
+  public final ArrayList<SmtTerm> children;
 
   private HashSet<SmtTerm> axioms;
   
@@ -56,15 +56,15 @@ public final class SmtTerm extends Term<SmtTerm> {
 //System.out.println("s.mk2> " + id + " " + data);
   }
 
-  static public SmtTerm mk(Sort sort, String id, ArrayList<SmtTerm> children) {
+  public static SmtTerm mk(Sort sort, String id, ArrayList<SmtTerm> children) {
     return hashCons(new SmtTerm(sort, id, children));
   }
 
-  static public SmtTerm mk(Sort sort, String id, Object data) {
+  public static SmtTerm mk(Sort sort, String id, Object data) {
     return hashCons(new SmtTerm(sort, id, data));
   }
 
-  static private SmtTerm hashCons(SmtTerm n) {
+  private static SmtTerm hashCons(SmtTerm n) {
     SmtTerm old = cache.get(n);
     if (old == null)
       cache.put(n, n);

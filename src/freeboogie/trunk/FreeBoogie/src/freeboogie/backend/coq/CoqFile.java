@@ -159,13 +159,10 @@ public class CoqFile {
           
         }
         reader.close();
-       
-      } 
-      catch (IOException e) {
+      } catch (IOException e) {
         e.printStackTrace();
       }
-    }
-    else {
+    } else {
       fOldProof = getDefaultProof() + "\n";
     }
   }

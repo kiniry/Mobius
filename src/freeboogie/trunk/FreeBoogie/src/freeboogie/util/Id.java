@@ -8,18 +8,20 @@ import java.util.Map;
  *
  * @author rgrig
  */
-public class Id {
-  static private Map<String, Integer> counter =
+public final class Id {
+  private Id() { /* forbid instantiation */ }
+
+  private static Map<String, Integer> counter =
     new HashMap<String, Integer>();
-  static private StringBuilder sb = new StringBuilder();
-  static private char[] buf = new char[10];
-  static private final int SZ = 'z' - 'a' + 1;
+  private static StringBuilder sb = new StringBuilder();
+  private static char[] buf = new char[10];
+  private static final int SZ = 'z' - 'a' + 1;
 
   /** 
    * Returns a (hopefully) unique identifier that contains
    * the string {@code categ}.
    */
-  static public String get(String categ) {
+  public static String get(String categ) {
     int i, j, k;
     int y;
     Integer x = counter.get(categ);

@@ -20,7 +20,7 @@ public class WeakestPrecondition<T extends Term<T>> extends StrongestPostconditi
   private boolean assertAssume = true;
 
   /**
-   * Creates a calculus to compute weakest precondition
+   * Creates a calculus to compute weakest precondition.
    * @param tc
    */
   public WeakestPrecondition(final TcInterface tc) {
@@ -35,12 +35,10 @@ public class WeakestPrecondition<T extends Term<T>> extends StrongestPostconditi
     if (isAssert(b)) {
       if (assertAssume) {
        r = term.mk("and", term(b), term.mk("implies", term(b), r));
-      }
-      else {
+      } else {
         r = term.mk("and", term(b), r);
       }
-    }
-    else if (isAssume(b)) {
+    } else if (isAssume(b)) {
       r = term.mk("implies", term(b), r);
     }      
     
@@ -55,7 +53,7 @@ public class WeakestPrecondition<T extends Term<T>> extends StrongestPostconditi
     for (Block p : flow.to(b)) 
       fromAnd.add(pre(p));
     if (fromAnd.isEmpty())
-      r = TRUE;
+      r = trueTerm;
     else
       r = term.mk("and", fromAnd);
     

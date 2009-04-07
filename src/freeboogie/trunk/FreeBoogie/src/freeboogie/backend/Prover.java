@@ -30,6 +30,8 @@ import freeboogie.util.FramedStack;
  * 
  * TODO add properties, like timelimit
  *
+ * @param <T> the type of terms
+ *
  * @author rgrig 
  */
 public abstract class Prover<T extends Term<T>> {

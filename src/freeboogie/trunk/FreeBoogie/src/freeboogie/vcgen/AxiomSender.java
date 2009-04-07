@@ -8,6 +8,7 @@ import freeboogie.backend.*;
 /**
  * Sends global axioms to the prover. These include Boogie axioms
  * and axioms for uniqueness of constants.
+ * @param <T> the type of terms
  */
 public class AxiomSender<T extends Term<T>> extends Transformer {
   private Prover<T> prover;

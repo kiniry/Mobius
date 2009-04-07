@@ -8,15 +8,15 @@ import freeboogie.ast.*;
  * @author rgrig 
  */
 public class SymbolTable {
-  /** User defined types */
+  /** User defined types. */
   public UsageToDefMap<UserType, TypeDecl> types
     = new UsageToDefMap<UserType, TypeDecl>();
   
-  /** Procedures */
+  /** Procedures. */
   public UsageToDefMap<CallCmd, Procedure> procs
     = new UsageToDefMap<CallCmd, Procedure>();
   
-  /** Functions */
+  /** Functions. */
   public UsageToDefMap<AtomFun, Function> funcs
     = new UsageToDefMap<AtomFun, Function>();
   

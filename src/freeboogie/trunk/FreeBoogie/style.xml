@@ -26,10 +26,8 @@
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
 
-        <module name="ExecutableStatementCount"/>
         <module name="FileLength"/>
-        <module name="LineLength"/>
-        <module name="MethodLength"/>
+        <!-- TODO: <module name="LineLength"/> -->
         <module name="AnonInnerLength"/>
         <module name="ParameterNumber"/>
 
@@ -43,7 +41,6 @@
         <module name="LeftCurly"/>
         <module name="RightCurly"/>
 
-        <module name="ArrayTrailingComma"/>
         <module name="CovariantEquals"/>
         <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>

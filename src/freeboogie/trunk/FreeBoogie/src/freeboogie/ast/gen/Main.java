@@ -15,7 +15,7 @@ import freeboogie.util.Err;
  * 
  * @author rgrig
  */
-public class Main {
+public final class Main {
   private static final Logger log = Logger.getLogger("freeboogie.ast.gen");
   
   private static String defaultBase = "Ast";

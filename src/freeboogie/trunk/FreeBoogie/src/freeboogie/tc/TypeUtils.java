@@ -13,7 +13,8 @@ import freeboogie.util.Err;
  *
  * @author rgrig 
  */
-public class TypeUtils {
+public final class TypeUtils {
+  private TypeUtils() { /* forbid instantiation */ }
   
   // TODO: reuse this code for TypeChecker.sub. how?
   
@@ -135,7 +136,7 @@ public class TypeUtils {
   }
 
   /**
-   * Pretty print a type
+   * Pretty print a type.
    * @param t the type to pretty print
    * @return the string representation of {@code t}
    */

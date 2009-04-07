@@ -4,9 +4,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import freeboogie.ast.*;
 
-// for debug
-import java.io.PrintWriter;
-import freeboogie.astutil.*;
+//DBG import java.io.PrintWriter;
+//DBG import freeboogie.astutil.*;
 
 /**
  * Typechecks the AST and modifies it a little if that will

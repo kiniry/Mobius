@@ -46,7 +46,7 @@ import freeboogie.vcgen.ABasicPassifier.Environment;
  */
 public class Passivator extends Transformer {
   // used mainly for debugging
-  static private final Logger log = Logger.getLogger("freeboogie.vcgen");
+  private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
   private String fileName;
   private TcInterface tc;

@@ -20,6 +20,8 @@ import freeboogie.tc.TcInterface;
  * The user can hand over an AST for preprocessing and then ask
  * for individual implementations to be checked. The prover to be
  * used is given by the user.
+ *
+ * @param <T> the type of terms
  */
 public class VcGenerator<T extends Term<T>> {
   /* IMPLEMENTATION
@@ -53,7 +55,6 @@ public class VcGenerator<T extends Term<T>> {
   private MapRemover mapRemover;
   private FunctionRegisterer functionRegisterer;
   private AxiomSender<T> axiomSender;
-  private final FormulaProcessor<T> processor;
 
   private ACalculus<T> calculus;
 
@@ -64,7 +65,7 @@ public class VcGenerator<T extends Term<T>> {
 
 
 
-  public VcGenerator(FormulaProcessor<T> processor) {
+  public VcGenerator() {
     havocMaker = new HavocMaker();
     loopCutter = new LoopCutter();
     callDesugarer = new CallDesugarer();
@@ -76,7 +77,6 @@ public class VcGenerator<T extends Term<T>> {
     axiomSender = new AxiomSender<T>();
 
     lowLevelAxiomBag = new HashSet<T>(13);
-    this.processor = processor;
   }
 
   public void initialize(Prover<T> prover, ACalculus<T> calculus) throws ProverException {
@@ -113,19 +113,8 @@ public class VcGenerator<T extends Term<T>> {
     assert prover != null && ast != null;
     calculus.setCurrentBody(implementation.getBody());
     T vc = calculus.vc();
-    if (removeSharing) {
-      log.fine("Original size: " + DeSharifier.getSize((SmtTerm)(Object)vc, new HashMap<SmtTerm,Integer>()));
-      vc = processor.process(vc);
-      log.fine("Processed size: " + DeSharifier.getSize(((SmtTerm)(Object)vc), new HashMap<SmtTerm,Integer>()));
-    }
     lowLevelAxiomBag.clear();
     vc.collectAxioms(lowLevelAxiomBag);
-    if (removeSharing) {
-      for (T t : processor.getAxioms(vc)) {
-        t.collectAxioms(lowLevelAxiomBag);
-        lowLevelAxiomBag.add(t);
-      }
-    }
     prover.push();
     for (T t : lowLevelAxiomBag) prover.assume(t);
     boolean result = prover.isValid(vc);
@@ -140,7 +129,6 @@ public class VcGenerator<T extends Term<T>> {
     // prepare fields for verify() to use
     builder = prover.getBuilder();
     calculus.setBuilder(builder);
-    processor.setBuilder(builder);
     builder.setTypeChecker(tc);
     functionRegisterer.setBuilder(builder);
     axiomSender.setProver(prover);

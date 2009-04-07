@@ -98,7 +98,7 @@ public class Passificator extends ABasicPassifier {
     return signature;
   }
   /**
-   * Treats method by methods.
+   * Handles one implementation.
    */
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
@@ -108,12 +108,10 @@ public class Passificator extends ABasicPassifier {
     if (!recog.check()) {
       Err.warning(this + " " + implementation.loc() + ": Implementation " + 
         sig.getName() + " is not a series-parallel graph. I'm not passifying it.");
-    }
-    else if (currentFG.hasCycle()) {
+    } else if (currentFG.hasCycle()) {
       Err.warning(this + " " + implementation.loc() + ": Implementation " + 
         sig.getName() + " has cycles. I'm not passifying it.");
-    }
-    else {
+    } else {
       if (isVerbose()) {
         System.out.println("process " + sig.getName());
       }
@@ -171,7 +169,7 @@ public class Passificator extends ABasicPassifier {
   
   /**
    * 
-   * TODO: description
+   * TODO: description.
    *
    * @author J. Charles (julien.charles@inria.fr)
    * @author reviewed by TODO
@@ -192,6 +190,7 @@ public class Passificator extends ABasicPassifier {
     private Body fBody;
     private VariableDecl fNewResults;
     /**
+     * Builds a body passifier.
      * @param typeChecker  
      * @param bIsVerbose
      * @param globalEnv 

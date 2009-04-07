@@ -10,12 +10,14 @@ import freeboogie.ast.AtomId;
 import freeboogie.ast.BinaryOp;
 import freeboogie.ast.Declaration;
 import freeboogie.ast.Expr;
-import freeboogie.ast.FileLocation;
 import freeboogie.ast.Transformer;
 import freeboogie.ast.VariableDecl;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
 
+/**
+ * Base class for {@code Passivator} and {@code Passifier}.
+ */
 public abstract class ABasicPassifier extends Transformer {
 
   private final TcInterface fTypeChecker;
@@ -78,7 +80,7 @@ public abstract class ABasicPassifier extends Transformer {
   }
   /**
    * 
-   * TODO: description
+   * TODO: description.
    *
    * @author J. Charles (julien.charles@inria.fr)
    * @author reviewed by TODO
@@ -96,6 +98,7 @@ public abstract class ABasicPassifier extends Transformer {
     private String currentLocation;
    
     /**
+     * Build an environment.
      * @param fileName  */
     public Environment(String fileName) {
      this.currentLocation = fileName;
@@ -118,8 +121,7 @@ public abstract class ABasicPassifier extends Transformer {
     public void put(VariableDecl decl, int i) {
       if (global.containsKey(decl)) {
         global.put(decl, i);
-      }
-      else {
+      } else {
         local.put(decl, i);
       }
       all.put(decl, i);
@@ -175,7 +177,7 @@ public abstract class ABasicPassifier extends Transformer {
     }
 
     /**
-     * Returns the index corresponding to the given variable
+     * Returns the index corresponding to the given variable.
      * @param key the variable to get the index from
      * @return an index > to 0
      */
@@ -226,7 +228,7 @@ public abstract class ABasicPassifier extends Transformer {
     }
     
     /**
-     * toString method to print the global environment
+     * toString method to print the global environment.
      * @return the global list of variables
      */
     public String globalToString() {
@@ -234,7 +236,7 @@ public abstract class ABasicPassifier extends Transformer {
     }
   
     /**
-     * toString method to print the local environment
+     * toString method to print the local environment.
      * @return the local list of variables
      */
     public String localToString() {

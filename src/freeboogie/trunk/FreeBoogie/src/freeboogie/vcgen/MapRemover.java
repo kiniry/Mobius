@@ -1,16 +1,11 @@
 package freeboogie.vcgen;
 
-import java.io.PrintWriter;
 import java.util.HashSet;
-import java.util.List;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.astutil.PrettyPrinter;
-import freeboogie.tc.FbError;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
-import freeboogie.util.Err;
 
 /**
  * Replaces all map reads and writes by explicit calls to

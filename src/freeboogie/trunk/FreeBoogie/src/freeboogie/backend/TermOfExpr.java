@@ -12,6 +12,8 @@ import freeboogie.util.Err;
  *
  * NOTE that some Boogie expressions should be dealt with
  * earlier, such as the old() built-in.
+ *
+ * @param <T> the type of terms
  */
 public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   private TermBuilder<T> term;

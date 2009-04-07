@@ -102,7 +102,7 @@ public class Main {
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
-    vcgen = new VcGenerator<SmtTerm>(new DeSharifier());
+    vcgen = new VcGenerator<SmtTerm>();
   }
 
   private void printSymbolTable() {

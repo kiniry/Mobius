@@ -1,7 +1,7 @@
 package freeboogie.util;
 
 /**
- * For functions that take {@code P} and return {@code R}
+ * For functions that take {@code P} and return {@code R}.
  *
  * @author rgrig 
  * @param <P> the type of the parameter

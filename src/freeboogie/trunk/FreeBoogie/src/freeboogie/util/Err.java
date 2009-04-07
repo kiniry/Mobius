@@ -9,7 +9,8 @@ package freeboogie.util;
  * 
  * @author rgrig 
  */
-public class Err {
+public final class Err {
+  private Err() { /* forbid instantiation */ }
   
   /**
    * The possible verbosity levels. 

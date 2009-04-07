@@ -61,7 +61,7 @@ public class SpecDesugarer extends Transformer {
     postconditions = new ArrayList<Expr>(23);
   }
 
-  /** Transforms the {@code ast} and updates the typechecker */
+  /** Transforms the {@code ast} and updates the typechecker. */
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc; 
     implProc = tc.getImplProc();

@@ -19,7 +19,8 @@ import freeboogie.util.Err;
  *
  * @author rgrig 
  */
-public class Main {
+public final class Main {
+  private Main() { /* forbid instantiation */ }
 
   /** Test a bit the package.
    * @param args the files to process

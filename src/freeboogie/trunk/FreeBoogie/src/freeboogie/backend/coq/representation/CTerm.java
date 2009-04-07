@@ -25,6 +25,7 @@ public class CTerm extends Term<CTerm> {
 
 
   /**
+   * Constructs a COQ term.
    * @param s sort of the term
    * @param prefix if the symbol of the term should be a fPrefix
    * or not
@@ -46,21 +47,17 @@ public class CTerm extends Term<CTerm> {
     String res = "";
     if (fArgs.length == 0) {
       return fRep;
-    } 
-    else if (fArgs.length == 1) {
+    } else if (fArgs.length == 1) {
       if (fPrefix) {
         res = "(" + fRep + " " + fArgs[0] + ")";
-      }
-      else {
+      } else {
         res = "(" + fArgs[0] + " " + fRep + ")";
       }
-    }
-    else {
+    } else {
       if ((!fPrefix) && (fArgs.length == 2)) {
         
         res = "(" + fArgs[0] + " " + fRep + " " + fArgs[1] + ")";
-      }
-      else {
+      } else {
         res = "(" + fRep;
         for (CTerm t: fArgs) {
           res += " " + t;

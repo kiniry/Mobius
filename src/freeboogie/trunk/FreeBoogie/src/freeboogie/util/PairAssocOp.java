@@ -2,6 +2,11 @@ package freeboogie.util;
 
 import freeboogie.ast.AssociativeOperator;
 
+/**
+ * A pair of associative operators.
+ * @param <U> the type of the first elements in pairs
+ * @param <V> the type of the second element in pairs
+ */
 public class PairAssocOp<U, V> implements AssociativeOperator<Pair<U,V>>{
   private final AssociativeOperator<U> uop;
   private final AssociativeOperator<V> vop;

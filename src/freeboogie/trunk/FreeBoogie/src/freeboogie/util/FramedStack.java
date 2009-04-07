@@ -3,7 +3,10 @@ package freeboogie.util;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-/** A stack of stacks. */
+/** 
+ * A stack of stacks. 
+ * @param <T> the type of elements
+ */
 public class FramedStack<T> {
   private Deque<Deque<T>> data;
 

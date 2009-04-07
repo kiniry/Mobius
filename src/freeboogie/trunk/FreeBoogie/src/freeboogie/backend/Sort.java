@@ -1,6 +1,5 @@
 package freeboogie.backend;
 
-import freeboogie.ast.PrimitiveType;
 import freeboogie.ast.Type;
 import freeboogie.tc.TypeUtils;
 

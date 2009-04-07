@@ -6,8 +6,10 @@ import java.util.HashSet;
 /**
  * Experimental class used to collect statistics about terms.
  */
-public class Statistics {
-  static public int printSize(SmtTerm t) {
+public final class Statistics {
+  private Statistics() { /* forbid instantiation */ }
+
+  public static int printSize(SmtTerm t) {
     Integer result = sizes.get(t);
     if (result != null) return result;
     result = 1;
@@ -16,17 +18,17 @@ public class Statistics {
     return result;
   }
 
-  static private HashMap<SmtTerm, Integer> sizes =
+  private static HashMap<SmtTerm, Integer> sizes =
     new HashMap<SmtTerm, Integer>(100003);
 
-  static public int nodesCount(SmtTerm t) {
+  public static int nodesCount(SmtTerm t) {
     seen.clear();
     return recNodesCount(t);
   }
 
-  static private HashSet<SmtTerm> seen = new HashSet<SmtTerm>(100003);
+  private static HashSet<SmtTerm> seen = new HashSet<SmtTerm>(100003);
 
-  static private int recNodesCount(SmtTerm t) {
+  private static int recNodesCount(SmtTerm t) {
     if (seen.contains(t)) return 0;
     seen.add(t);
     int result = 1;

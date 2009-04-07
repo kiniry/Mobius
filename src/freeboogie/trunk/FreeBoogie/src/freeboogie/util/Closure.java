@@ -8,8 +8,8 @@ package freeboogie.util;
  */
 public abstract class Closure<T> {
   /**
-   * Process {@code t}
+   * Process {@code t}.
    * @param t what to process
    */
-  abstract public void go(T t);
+  public abstract void go(T t);
 }

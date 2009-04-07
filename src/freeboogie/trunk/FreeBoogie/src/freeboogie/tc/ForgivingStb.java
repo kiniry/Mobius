@@ -5,9 +5,8 @@ import java.util.*;
 
 import freeboogie.ast.*;
 
-// for debug
-import java.io.PrintWriter;
-import freeboogie.astutil.PrettyPrinter;
+// DBG import java.io.PrintWriter;
+// DBG import freeboogie.astutil.PrettyPrinter;
 
 /**
  * Builds a symbol table for a given AST, perhaps modifying

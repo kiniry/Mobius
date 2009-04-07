@@ -6,24 +6,25 @@ import java.util.Iterator;
 
 /**
  * A persistent sequence with fast concatenation and iteration.
+ * @param <E> the type of elements
  */
 public class CSeq<E> implements Iterable<E> {
-  static private class Concat<E> extends CSeq<E> { 
+  private static class Concat<E> extends CSeq<E> { 
     private CSeq<E> left, right;
     public Concat(CSeq<E> left, CSeq<E> right) {
       this.left = left;
       this.right = right;
     }
   }
-  static private class One<E> extends CSeq<E> {
+  private static class One<E> extends CSeq<E> {
     private E data;
     public One(E data) { this.data = data; }
   }
-  static private class Empty<E> extends CSeq<E> {}
+  private static class Empty<E> extends CSeq<E> {}
 
-  static public <E> CSeq<E> mk() { return new Empty<E>(); }
-  static public <E> CSeq<E> mk(E e) { return new One<E>(e); }
-  static public <E> CSeq<E> mk(CSeq<E> a, CSeq<E> b) {
+  public static <E> CSeq<E> mk() { return new Empty<E>(); }
+  public static <E> CSeq<E> mk(E e) { return new One<E>(e); }
+  public static <E> CSeq<E> mk(CSeq<E> a, CSeq<E> b) {
     if (a instanceof Empty) return b;
     if (b instanceof Empty) return a;
     return new Concat<E>(a, b);
@@ -49,7 +50,7 @@ public class CSeq<E> implements Iterable<E> {
       return r;
     }
 
-    @Override public void remove() throws UnsupportedOperationException {
+    @Override public void remove() {
       throw new UnsupportedOperationException("CSeq is immutable.");
     }
   }
@@ -67,7 +68,7 @@ public class CSeq<E> implements Iterable<E> {
   }
 
   // === small tests ===
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     CSeq<Integer> empty = CSeq.mk();
     System.out.println("=== empty:");
     for (Integer x : empty) System.out.println(x);

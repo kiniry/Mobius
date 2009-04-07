@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
  * Stores a set of pairs, with fast lookup given any component. 
  * The implementation uses {@code HashMap} so the usual restrictions
  * apply ({@code equals}, {@code hashCode}, and so on).
+ * @param <U> the type of the first element of pairs
+ * @param <V> the type of the second element of pairs
  */
 public class RevMap<U,V> {
   private HashMap<U,V> utov;

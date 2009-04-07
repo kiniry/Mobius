@@ -13,9 +13,14 @@ import freeboogie.backend.TermBuilder;
 import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 
+/**
+ * Base class for weakest precondition and strongest postcondition
+ * implementations.
+ * @param <T> the type of terms
+ */
 public abstract class ACalculus<T extends Term<T>> {
-  /** used mainly for debugging */
-  static protected final Logger log = Logger.getLogger("freeboogie.vcgen");
+  /** Used mainly for debugging. */
+  protected static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
   /** the preconditions of each command. */
   protected final HashMap<Block, T> preCache = new HashMap<Block, T>();
@@ -27,7 +32,7 @@ public abstract class ACalculus<T extends Term<T>> {
   /** builds terms for a specific theorem prover. */
   protected TermBuilder<T> term;
   
-  protected T TRUE;
+  protected T trueTerm;
   
   /** the control flow graph currently being processed. */
   protected SimpleGraph<Block> flow;
@@ -45,7 +50,7 @@ public abstract class ACalculus<T extends Term<T>> {
   
   public void setBuilder(TermBuilder<T> term) { 
     this.term = term; 
-    TRUE = term.mk("literal_formula", Boolean.valueOf(true));
+    trueTerm = term.mk("literal_formula", Boolean.valueOf(true));
   }
   
   public void resetCache() {
@@ -93,9 +98,9 @@ public abstract class ACalculus<T extends Term<T>> {
   }
 
   public T term(Block b) {
-    if (b == null) return TRUE;
+    if (b == null) return trueTerm;
     Command c = b.getCmd();
-    if (!(c instanceof AssertAssumeCmd)) return TRUE;
+    if (!(c instanceof AssertAssumeCmd)) return trueTerm;
     return term.of(((AssertAssumeCmd)c).getExpr());
   }
 

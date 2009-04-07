@@ -1,12 +1,10 @@
 package freeboogie.tc;
 
-import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.astutil.PrettyPrinter;
 import freeboogie.astutil.TreeChecker;
 import freeboogie.util.*;
 
@@ -678,7 +676,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     // check the actual arguments against the formal ones
     Type at = strip(args == null? null : args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
-    check(at, fat, (args == null? callCmd : args));
+    check(at, fat, args == null? callCmd : args);
     
     // check the assignment of the results
     Type lt = strip(results == null? null : results.eval(this));

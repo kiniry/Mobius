@@ -12,7 +12,7 @@ import freeboogie.util.Closure;
  * Implementation}.
  *
  * This class receives a flow graph of blocks ({@code
- * SimpleGraph<Block>}, where each block must contain only
+ * SimpleGraph&lt;Block&gt;}, where each block must contain only
  * {@code AssertAssumeCmd}s) and computes preconditions and
  * postconditions for all nodes, verification conditions for
  * individual assertions, and a verification condition for all
@@ -55,11 +55,13 @@ import freeboogie.util.Closure;
  * VC = AND_{n is assert} (pre(n) IMPLIES term(expr(n)))
  * </pre>
  *
+ * @param <T> the type of terms
+ *
  * @author rgrig
  */
 public class StrongestPostcondition<T extends Term<T>> extends ACalculus<T> {
 
-  /** treat assert _also_ as assumes */
+  /** Treat assert _also_ as assumes. */
   private boolean aaa;
   
 
@@ -92,7 +94,7 @@ public class StrongestPostcondition<T extends Term<T>> extends ACalculus<T> {
     for (Block p : flow.from(b)) 
       toOr.add(post(p));
     if (toOr.isEmpty())
-      r = TRUE;
+      r = trueTerm;
     else
       r = term.mk("or", toOr);
     preCache.put(b, r);
@@ -114,7 +116,7 @@ public class StrongestPostcondition<T extends Term<T>> extends ACalculus<T> {
    * If {@code cmd} is an assume then I return TRUE.
    */
   protected T vc(Block b) {
-    if (!isAssert(b)) return TRUE;
+    if (!isAssert(b)) return trueTerm;
     return term.mk("implies", pre(b), term(b));
   }
 
