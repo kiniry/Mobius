@@ -155,22 +155,19 @@ expr_list returns [Formula f]: first=expr (tail=expr  {$tail.f.setNext($f); $f =
                              
                              
 formula returns [Formula f]: 
-      formula0 {$f = $formula0.f;} ;
+      first=formula0  IMPLIES tail=formula
+           {$f = BinaryTerm.mk(null, Term.mk(null, "->"), $first.f, $tail.f);} 
+                          
+      | formula0 {$f = $formula0.f;} ;
     
 formula0 returns [Formula f]:  
-      first=formula1 {if ($first.f.getNext() != null) 
-              	            $f = Application.mk(null, $first.f); 
-              	       else
-                           $f = $first.f;} 
+      first=formula1 {$f = $first.f;} 
       (o=op1 tail=formula1 {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})*
       ;
       
       
 formula1 returns [Formula f]:  
-      first=formula2 {if ($first.f.getNext() != null) 
-              	            $f = Application.mk(null, $first.f); 
-              	       else
-                           $f = $first.f;} 
+      first=formula2 {$f = $first.f;} 
       (o=op2 tail=formula2 {$f = BinaryTerm.mk(null, $o.t, $f, $tail.f);})* 
       ;
       
@@ -186,12 +183,12 @@ formula2 returns [Formula f]:
     
       ;
       
-op: op1 | op2;
+op: op1 | op2 | IMPLIES;
 
 
 op1 returns [Term t]:
-                     IMPLIES  {$t = Term.mk(null, "->");}
-                   | OR  {$t = Term.mk(null, "\\/");}
+                    
+                    OR  {$t = Term.mk(null, "\\/");}
                    | AND {$t = Term.mk(null, "/\\");} 
                    ;
 op2 returns [Term t]: STAR {$t = Term.mk(null, "*");}
