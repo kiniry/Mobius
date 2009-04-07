@@ -10,6 +10,8 @@ import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.ast.Doc;
 import mobius.logic.lang.coq.ast.Forall;
 import mobius.logic.lang.coq.ast.Formula;
+import mobius.logic.lang.coq.ast.ReqType;
+import mobius.logic.lang.coq.ast.Require;
 import mobius.logic.lang.coq.ast.Variable;
 import mobius.logic.lang.coq.ast.VariableList;
 import mobius.logic.lang.generic.ast.ACleanEvaluator;
@@ -35,6 +37,7 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
   @Override
   public CoqAst evalClauseList(final LinkedList<GenericAst> list) {
     final CoqAst ast = new CoqAst();
+    ast.add(Require.mk("ZArith", ReqType.Import));
     for (GenericAst mem: list) {
       ast.add(mem.eval(this));
     }
@@ -112,7 +115,8 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
 
   private static boolean isBinarySymbol(final String name) {
     return name.equals("->") || 
-           name.equals("=");
+           name.equals("=") || 
+           name.equals("<>");
   }
 
   private Formula evalApplicationMembers(Term first) {
