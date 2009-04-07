@@ -7,7 +7,8 @@
   <property name="src" location="src"/>
   <property name="build" location="bin"/>
 
-  <property name="deps" value="clops-runtime.jar antlr-3.1.1-runtime.jar"/>
+  <property name="deps" 
+    value="clops-runtime.jar antlr-3.1.1-runtime.jar freeboogie-0.1.jar"/>
   <path id="runtime.path">
 	 <filelist dir="${lib}" files="clops-runtime.jar"/>
   	 <filelist dir="${lib}" files="antlr-3.1.1-runtime.jar"/>
@@ -60,6 +61,13 @@
   <property name="astgen-gl-target" location="src/mobius/logic/lang/generic/ast" />
   <property name="astgen-gl-pkg" value="mobius.logic.lang.generic.ast" />
   <property name="astgen-gl-base" value="mobius.logic.lang.generic.ast.GenericAst" />
+
+  <!-- custom tasks -->
+  <!-- Assuming an Ubuntu distribution with packages checkstyle, antlr,
+    and a few others -->
+  <taskdef
+    resource="checkstyletask.properties"
+    classpath="/usr/share/java/checkstyle.jar:/usr/share/java/antlr.jar:/usr/share/java/commons-beanutils.jar:/usr/share/java/commons-collections.jar:/usr/share/java/commons-logging.jar" />
 
   <!-- Targets -->
 	
@@ -234,7 +242,8 @@
 	 <delete dir="${build}"/>
 	 <delete dir="${dist}"/>
   </target>
-  <target name="test-coq" depends="gen-files,compile">
+
+  <target name="test-coq" depends="compile">
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
         <classpath refid="test.path"/>
 	  	<arg value="exmple.v"/>
@@ -247,8 +256,17 @@
   		<arg value="-g"/>
 	  	<arg value="output.v"/>
   	</java>
- </target>
+  </target>
 	
+  <!-- Static analyzes -->
+  <target name="style">
+    <checkstyle config="spec/mobius-checkstyle.xml">
+      <fileset dir="${src}">
+         <include name="mobius/logic/lang/boogie/**/*.java"/>
+         <exclude name="**/parser/*"/>
+      </fileset>
+    </checkstyle>
+  </target>
 	
 	<target name="clean" depends="astgen-clean,compile-clean"/> 
 	
