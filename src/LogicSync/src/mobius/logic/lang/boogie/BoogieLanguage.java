@@ -21,18 +21,18 @@ public class BoogieLanguage extends ABasicLanguage {
 
   /** {@inheritDoc} */
   @Override public void generateFrom(final GenericAst ast) {
-    assert false : "todo";
-  }
-
-  /** {@inheritDoc} */
-  @Override public void mergeWith(final GenericAst ast) {
-    assert false : "todo";
+   assert false : "todo";
   }
 
   /** {@inheritDoc} */
   @Override public GenericAst extractGenericAst() {
     assert false : "todo";
     return null;
+  }
+
+  /** {@inheritDoc} */
+  @Override public void mergeWith(final GenericAst ast) {
+    assert false : "todo";
   }
 }
 

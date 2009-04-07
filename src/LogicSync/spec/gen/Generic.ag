@@ -1,4 +1,4 @@
-ClauseList = LinkedList<GenericAst> list;
+ClauseList = LinkedList<Clause> list;
 
 Clause :> Doc, Formula, Predicate, Symbol;
 Doc = String! content;

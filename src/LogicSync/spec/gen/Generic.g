@@ -22,7 +22,7 @@ prog returns [ClauseList l]:
 clause_list returns [ClauseList list]: 
             clause l=clause_list {$list = $l.list;
                                   $list.getList().addFirst($clause.c);}
-           |{$list = ClauseList.mk(new LinkedList<GenericAst>());};
+           |{$list = ClauseList.mk(new LinkedList<Clause>());};
 
 clause returns [Clause c]: 
         DOC
