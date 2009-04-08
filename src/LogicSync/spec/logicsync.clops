@@ -5,10 +5,12 @@ ARGS::
   Help: {"-h", "-help", "--help"}
   		: "Show the help message."
   
-  Files: {}:{file-list}:[between="", mustExist="true", allowMultiple="true"]
+  Files: {}:{file-list}:[between="", mustExist="true", canBeDir="false", allowMultiple="true"]
   		: "Provide input file(s). Determine their type by their extension."
-  Generate: {"-g"}:{file-list}:"Generates files. Files will erase the previous version."
-  Merge: {"-m"}:{file-list}:"Merge with existing file. If there is no previous version, creates a new file."
+  Generate: {"-g"}:{file-list}:[canBeDir="false"]
+      : "Generates files. Files will erase the previous version."
+  Merge: {"-m"}:{file-list}:[canBeDir="false"]
+      : "Merge with existing file. If there is no previous version, creates a new file."
 
 FORMAT::
   Help  | ((Output)* Files (Files | Output)*);  
