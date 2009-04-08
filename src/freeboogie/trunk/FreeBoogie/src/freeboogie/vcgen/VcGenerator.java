@@ -1,6 +1,5 @@
 package freeboogie.vcgen;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -9,7 +8,6 @@ import freeboogie.ast.Declaration;
 import freeboogie.ast.Implementation;
 import freeboogie.backend.Prover;
 import freeboogie.backend.ProverException;
-import freeboogie.backend.SmtTerm;
 import freeboogie.backend.Term;
 import freeboogie.backend.TermBuilder;
 import freeboogie.tc.TcInterface;

@@ -190,6 +190,7 @@
          <exclude name="**/parser/*"/>
          <exclude name="**/ast/*"/>
       </fileset>
+      <classpath refid="classpath"/>
     </checkstyle>
   </target>
 

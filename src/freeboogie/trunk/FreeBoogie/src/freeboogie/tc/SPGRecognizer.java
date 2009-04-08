@@ -230,8 +230,7 @@ public class SPGRecognizer<T> {
        if (!recog.check()) {
          System.out.println("FAILED.");
          return false;
-       }
-       else {
+       } else {
          System.out.println("SUCCESS.");
          return true;
        }

@@ -37,12 +37,10 @@
         <module name="ModifierOrder"/>
         <module name="RedundantModifier"/>
 
-        <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="RightCurly"/>
 
         <module name="CovariantEquals"/>
-        <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="IllegalInstantiation"/>
         <module name="MissingSwitchDefault"/>

@@ -186,12 +186,10 @@ public class Main {
     ACalculus<SmtTerm> calculus;
     if (opt.boolVal("-wp")) {
       calculus = new WeakestPrecondition<SmtTerm>(tc);
-    }
-    else if (opt.boolVal("-wpno")) {
+    } else if (opt.boolVal("-wpno")) {
       calculus = new WeakestPrecondition<SmtTerm>(tc);
       ((WeakestPrecondition<SmtTerm>)calculus).setAssertAsAssertAssume(false);
-    }
-    else {
+    } else {
       calculus = new StrongestPostcondition<SmtTerm>(tc);
     }
     

@@ -4,9 +4,8 @@ import java.util.*;
 import freeboogie.ast.*;
 import freeboogie.util.StackedHashMap;
 
-// for debug
-import java.io.PrintWriter;
-import freeboogie.astutil.PrettyPrinter;
+//DBG import java.io.PrintWriter;
+//DBG import freeboogie.astutil.PrettyPrinter;
 
 @SuppressWarnings("serial")
 class UnknownSpecialization extends Exception {}

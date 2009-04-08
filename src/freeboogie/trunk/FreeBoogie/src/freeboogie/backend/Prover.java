@@ -68,7 +68,7 @@ public abstract class Prover<T extends Term<T>> {
   /**
    * Actually sends {@code t} to the prover as an assumption.
    */
-  abstract protected void sendAssume(T t) throws ProverException;
+  protected abstract void sendAssume(T t) throws ProverException;
   
   /**
    * Retract the last assumption. This discards all the empty 
@@ -85,7 +85,7 @@ public abstract class Prover<T extends Term<T>> {
   /**
    * Asks the prover to disregard the last assumption.
    */
-  abstract protected void sendRetract() throws ProverException;
+  protected abstract void sendRetract() throws ProverException;
   
   /**
    * Make a new frame of assumptions.
@@ -112,7 +112,7 @@ public abstract class Prover<T extends Term<T>> {
    * @return whether {@code t} is valid 
    * @throws ProverException if something goes wrong
    */
-  abstract public boolean isValid(T t) throws ProverException;
+  public abstract boolean isValid(T t) throws ProverException;
   
   /**
    * If the last call to {@code isValid} returned false then
@@ -121,11 +121,11 @@ public abstract class Prover<T extends Term<T>> {
    * may be empty. The result is empty if the last call to
    * {code isValid} returned true.
    */
-  abstract public String[][] getLabels();
+  public abstract String[][] getLabels();
 
   /**
    * Terminates the prover. This should release memory, free CPU,
    * and so on.
    */
-  abstract public void terminate();
+  public abstract void terminate();
 }

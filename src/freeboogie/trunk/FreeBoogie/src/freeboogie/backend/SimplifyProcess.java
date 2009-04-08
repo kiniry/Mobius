@@ -111,12 +111,12 @@ public class SimplifyProcess {
     MATCH
   };
 
-  private final static String INVALID_S = "invalid";
-  private final static String VALID_S = "valid";
-  private final static String LABELS_S = "labels";
-  private final static String BAD_S = "bad input";
+  private static final String INVALID_S = "invalid";
+  private static final String VALID_S = "valid";
+  private static final String LABELS_S = "labels";
+  private static final String BAD_S = "bad input";
 
-  /** Signals that something went really wrong while parsing */
+  /** Signals that something went really wrong while parsing. */
   private static class ParseError extends Exception {
     public ParseError(String m) {
       super(m);
@@ -186,6 +186,8 @@ loop:
         sb.setLength(0);
         ps = ParseState.OUTSIDE;
         break;
+      default:
+        assert false : "Huh?";
       }
     }
     labels.add(counterexample.toArray(new String[0]));
@@ -268,6 +270,8 @@ loop:
             } else ps = ParseState.INSIDE;
           }
           break;
+        default:
+          assert false: "Huh?";
         }
       }
     } catch (ParseError e) {

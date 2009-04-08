@@ -1,10 +1,6 @@
 package freeboogie.backend;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.*;
 
