@@ -83,7 +83,7 @@ public class Main {
     opt.regBool("-pst", "print symbol table");
     opt.regBool("-pfg", "print flow graphs");
     opt.regBool("-pass", "passivate");
-    opt.regBool("-passify", "passify");
+    opt.regBool("-passify", "passify (Flanagan/Saxe algorithm)");
     opt.regBool("-dspec", "desugar specs");
     opt.regBool("-dcall", "desugar calls");
     opt.regBool("-dhavoc", "desugar havoc");
@@ -97,6 +97,7 @@ public class Main {
     opt.regBool("-stats", "Prints some statistics");
     opt.regBool("-wp", "weakest precondition");
     opt.regBool("-wpno", "weakest precondition with no tricks");
+    opt.regBool("-spg", "checks if the control flow graph of the program is a Series Parallel Graph");
     opt.regBool("-dummyprover", "use the YesSmtProver (everything is valid)");
     opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
@@ -139,7 +140,9 @@ public class Main {
             return a.getId();
         }}));
   }
-
+  private void spgCheck() {
+    SPGRecognizer.check(program, tc);
+  }
   private void passivate(boolean isVerbose) {
     Passivator p = new Passivator(isVerbose);
     program = p.process(program, tc);
@@ -271,6 +274,7 @@ public class Main {
           if (opt.boolVal("-dcall")) desugarCalls();
           if (opt.boolVal("-dhavoc")) desugarHavoc();
           if (opt.boolVal("-dspec")) desugarSpecs();
+          if (opt.boolVal("-spg")) spgCheck();
           if (opt.boolVal("-pass")) passivate(opt.boolVal("-stats"));
           if (opt.boolVal("-passify")) passify(opt.boolVal("-stats"));
           if (opt.boolVal("-dmap")) removeMaps();

@@ -7,6 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import freeboogie.ast.Block;
+import freeboogie.ast.Body;
+import freeboogie.ast.Declaration;
+import freeboogie.ast.Evaluator;
+import freeboogie.ast.Implementation;
+import freeboogie.ast.Program;
+import freeboogie.ast.Signature;
+
 /**
  * An implementation of an algorithm to recognize 
  * Series Parallel Graphs. It uses the algorithm
@@ -209,6 +217,28 @@ public class SPGRecognizer<T> {
     }
     return res;
   }
+
+  public static void check(final Program program, final TcInterface tc) {
+    program.ast.eval(new  Evaluator<Boolean>() {
+      @Override
+      public Boolean eval(Implementation impl, Signature sig, 
+                          Body body, Declaration tail) {
+        System.out.print(this + " " + impl.loc() + ": Implementation " + 
+          sig.getName() + " SPG check...");
+       SimpleGraph<Block> currentFG = tc.getFlowGraph(impl);
+       SPGRecognizer<Block> recog = new SPGRecognizer<Block>(currentFG);
+       if (!recog.check()) {
+         System.out.println("FAILED.");
+         return false;
+       }
+       else {
+         System.out.println("SUCCESS.");
+         return true;
+       }
+      }
+    });
+
+   }
   
   
 
