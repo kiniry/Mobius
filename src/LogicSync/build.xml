@@ -23,7 +23,6 @@
   <property name="clops-target" location="src/mobius/logic/clops"/>
   <property name="clops-pkg" value="mobius.logic.clops"/>
   <property name="clops-src" location="clops"/>
-  <property name="clops-html-template" location="spec/mobius.vm"/>
   <property name="clops-html-output" location="doc/logicsync.html"/>
   <path id="clops.path">
 	<filelist dir="${lib}" files="clops.jar"/>
@@ -35,9 +34,9 @@
 	
   <!-- ANTLR -->
   <path id="antlr.path">
-    <filelist dir="${lib}" files="antlr-3.1.1.jar"/>
+    <filelist dir="${lib}" files="antlr-3.1.3.jar"/>
   </path>
-  <property name="antlr-jar" location="lib/antlr-3.1.1.jar" />
+  <property name="antlr-jar" location="lib/antlr-3.1.3.jar" />
   <property name="antlr-coq-target" location="src/mobius/logic/lang/coq/parser" />
   <property name="antlr-coq-grammar" location="spec/gen/Coq.g" />
   <property name="antlr-gl-target" location="src/mobius/logic/lang/generic/parser" />
@@ -100,9 +99,9 @@
       </assertions>
       <classpath refid="clops.path"/>
       <arg value="-v"/>
-      <arg value="-d=${clops-html-output}"/>
-      <arg value="-c"/>
-      <arg value="${clops-html-template}"/> 
+      <arg value="-d"/>
+      <arg value="-t"/>
+      <arg value="${clops-html-output}"/> 
       <arg value="-p"/>
       <arg value="${clops-pkg}"/>
       <arg value="-o"/>

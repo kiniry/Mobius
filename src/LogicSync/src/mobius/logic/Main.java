@@ -6,7 +6,6 @@ import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,10 +16,8 @@ import java.util.Set;
 import mobius.logic.clops.LogicSyncOptionsInterface;
 import mobius.logic.clops.LogicSyncParser;
 import mobius.logic.lang.ALanguage;
-import mobius.logic.lang.coq.CoqLanguage;
 import mobius.logic.lang.generic.GenericLanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
-import mobius.logic.lang.nat.NaturalLanguage;
 import mobius.util.ClassUtils;
 
 /**
@@ -82,12 +79,9 @@ public class Main {
   }
 
   /**
-   * @param args
-   * @throws IOException 
-   * @throws ClassNotFoundException 
+   * @param args The program arguments
    */
-  public static void main(final String[] args) 
-    throws ClassNotFoundException, IOException {
+  public static void main(final String[] args) {
     System.out.println(WELCOME_MSG);
     LogicSyncParser parser;
     try {
@@ -104,11 +98,9 @@ public class Main {
       }
     } 
     catch (AutomatonException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     catch (InvalidOptionValueException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     
@@ -125,9 +117,18 @@ public class Main {
     }    
     
     final Map<ALanguage, String> list = new HashMap<ALanguage, String>();
-    List<Class<?>> l = ClassUtils.getClasses("mobius.logic.lang", ALanguage.class);
-    l = filter(l);
-    instanciate(list, l);
+    
+    try {
+      final List<Class< ? >> l = 
+        ClassUtils.getClasses("mobius.logic.lang", ALanguage.class);
+      instanciate(list, l);
+    } 
+    catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
     final ALanguage gen = new GenericLanguage(); 
     list.put(gen, gen.getName());
     System.out.print("Using languages:");
@@ -140,18 +141,27 @@ public class Main {
 
   }
 
-  private static void instanciate(Map<ALanguage, String> list, 
-                                  List<Class<?>> l) {
-    for (Class<?> c: l) {
+  /**
+   * Instanciate the classes of the list, and put the result
+   * into a map.
+   * @param map the result of the instanciation
+   * @param l the list of classes to instanciate
+   */
+  private static void instanciate(final Map<ALanguage, String> map, 
+                                  final List<Class< ? >> l) {
+    final List<Class< ? >> filtered = filter(l);
+    for (Class< ? > c: filtered) {
       try {
-        ALanguage al = (ALanguage)c.newInstance();
-        list.put(al, al.getName());
-      } catch (InstantiationException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      } catch (IllegalAccessException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        final ALanguage al = (ALanguage)c.newInstance();
+        map.put(al, al.getName());
+      } 
+      catch (InstantiationException e) {
+        System.err.println("The language " + c.getName() + " cannot be " +
+                           "instanciated... Maybe it is abstract?");
+      } 
+      catch (IllegalAccessException e) {
+        System.err.println("The language " + c.getName() + " doesn't have " +
+                           "a public constructor which is strange.");
       }
 
     }
@@ -160,15 +170,15 @@ public class Main {
   /**
    * What we don't want: mobius.logic.lang.* classes
    * And the generic language.
-   * @param l
-   * @return
+   * @param l the list to purge
+   * @return the list without the offuscing classes
    */
-  private static List<Class<?>> filter(List<Class<?>> l) {
-    final List<Class<?>> res = new ArrayList<Class<?>>();
-    for (Class<?> c: l) {
-      String pkg = c.getPackage().getName(); 
-      if(!pkg.equals("mobius.logic.lang") &&
-         !pkg.equals("mobius.logic.lang.generic")) {
+  private static List<Class< ? >> filter(final List<Class< ? >> l) {
+    final List<Class< ? >> res = new ArrayList<Class< ? >>();
+    for (Class< ? > c: l) {
+      final String pkg = c.getPackage().getName(); 
+      if (!pkg.equals("mobius.logic.lang") &&
+          !pkg.equals("mobius.logic.lang.generic")) {
         res.add(c);
       }
     }
