@@ -8,10 +8,11 @@
   <property name="build" location="bin"/>
 
   <property name="deps" 
-    value="clops-runtime.jar antlr-3.1.1-runtime.jar freeboogie-0.1.jar"/>
+    value="clops-runtime.jar antlr-runtime-3.1.3.jar freeboogie-0.1.jar"/>
   <path id="runtime.path">
-	 <filelist dir="${lib}" files="clops-runtime.jar"/>
-  	 <filelist dir="${lib}" files="antlr-3.1.1-runtime.jar"/>
+	  <filelist dir="${lib}" files="clops-runtime.jar"/>
+    <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar"/>
+    <filelist dir="${lib}" files="freeboogie-0.1.jar"/>
   </path>	
   <path id="test.path">
     <path refid="runtime.path"/>

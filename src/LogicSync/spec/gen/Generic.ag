@@ -1,6 +1,6 @@
 ClauseList = LinkedList<GenericAst> list;
 
-Clause :> Doc, Formula, Predicate, Symbol;
+Clause :> Doc, Formula, Symbol;
 Doc = String! content;
 Formula = String! id, Term! term;
 Symbol = String! id;

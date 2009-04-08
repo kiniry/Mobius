@@ -70,17 +70,6 @@ public class GenericToNLTranslator extends AEvaluator<NLAst> {
     return null;
   }
   
-// FIXME jgc: need review - Predicate type has been removed from the generic lang.  
-//
-//  @Override
-//  public NLAst evalPredicate(String id, int arity) {
-//    if (lastClauseWasADoc) {
-//      items.add(Item.mk(id, lastDoc));
-//    }
-//    lastClauseWasADoc = false;
-//    return null;
-//  }
-
   @Override
   public NLAst evalSymbol(String id) {
     if (lastClauseWasADoc) {

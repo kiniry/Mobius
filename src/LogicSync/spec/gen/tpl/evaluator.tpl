@@ -76,3 +76,16 @@ public class AssociativeEvaluator<R> extends Evaluator<R> {
   }
 }
 }
+
+\file{visitor.skeleton}
+// You can copy and paste the text below when you define a visitor that
+// needs to override most functions on the base class.
+
+\normal_classes{  /** {@inheritDoc} */
+  @Override
+  public \ClassName eval\ClassName(\members[, ]{final \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName}) {
+    assert false : "not implemented";
+    return null;
+  }
+
+}
