@@ -10,6 +10,7 @@ package mobius.logic.lang.coq.parser;
 
 import mobius.logic.lang.coq.ast.*;
 import java.util.LinkedList;
+import java.util.Iterator;
 }
 
 @lexer::header {
@@ -25,6 +26,23 @@ package mobius.logic.lang.coq.parser;
    } 
    else return Application.mk(null, t);
  }
+   // really no
+     private Formula reverse(Formula first) {
+       LinkedList<Formula> l = new LinkedList<Formula>();
+       while (first != null) {
+         l.addFirst(first);
+         first = first.getNext();
+       }
+       Iterator<Formula> iter = l.iterator();
+       Formula f = iter.next();
+       first =f;
+       while (iter.hasNext()) {
+         f.setNext(iter.next());
+         f = f.getNext();
+       }
+       f.setNext(null);
+       return first;
+     }
 }
 
 /**********************************************  
@@ -150,7 +168,9 @@ expr returns [Formula f]:
            | TILD tail=expr  {$f = Term.mk($tail.f, "~");}
            ;
            
-expr_list returns [Formula f]: first=expr (tail=expr  {$tail.f.setNext($f); $f = $tail.f;})* {$first.f.setNext($f);$f = $first.f; }
+expr_list returns [Formula f]: ( tail=expr 
+                                   {$tail.f.setNext($f); $f = $tail.f;}
+                                )+ 
                              ;
                              
                              
@@ -173,8 +193,10 @@ formula1 returns [Formula f]:
       
       
 formula2 returns [Formula f]:  
-      first=expr_list {if ($first.f.getNext() != null) 
-              	            $f = Application.mk(null, $first.f); 
+      first=expr_list {if ($first.f.getNext() != null) {
+                            
+              	            $f = Application.mk(null, reverse($first.f)); 
+              	       }
               	       else
                            $f = $first.f;}
     | FORALL var_decl COMMA tail=formula {$f = Forall.mk(null, $var_decl.list, $tail.f);}

@@ -1,4 +1,4 @@
-ClauseList = LinkedList<Clause> list;
+ClauseList = LinkedList<GenericAst> list;
 
 Clause :> Doc, Formula, Predicate, Symbol;
 Doc = String! content;
@@ -10,3 +10,4 @@ Term = Term next;
 Application = Term first;
 Atom = String! id;
 Forall = Atom vars, Term term;
+

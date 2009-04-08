@@ -37,7 +37,6 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
   @Override
   public CoqAst evalClauseList(final LinkedList<GenericAst> list) {
     final CoqAst ast = new CoqAst();
-    ast.add(Require.mk("ZArith", ReqType.Import));
     for (GenericAst mem: list) {
       ast.add(mem.eval(this));
     }
@@ -53,7 +52,7 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
   
   
   @Override
-  public CoqAst evalFormula(String id, Term term) {
+  public CoqAst evalFormula(final String id, final Term term) {
     return mkVariable(id, (Formula) term.eval(this));
   }
 
@@ -83,7 +82,9 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
    */
   public static CoqAst extract(final GenericAst ast) {
     final ExtractToCoq e = new ExtractToCoq();
-    return ast.eval(e);
+    final CoqAst cast = ast.eval(e);
+    cast.addFirst(Require.mk("ZArith", ReqType.Import));
+    return cast;
   }
 
   @Override
@@ -101,7 +102,7 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
   }
   
   @Override
-  public CoqAst evalApplication(Term next, Term first) {
+  public CoqAst evalApplication(final Term next, final Term first) {
     final Formula f = evalApplicationMembers(first);
     if (f instanceof mobius.logic.lang.coq.ast.Term) {
       final mobius.logic.lang.coq.ast.Term t = 
@@ -115,11 +116,11 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
 
   private static boolean isBinarySymbol(final String name) {
     return name.equals("->") || 
-           name.equals("=") || 
-           name.equals("<>");
+           name.equals("<>") ||
+           name.equals("=");
   }
 
-  private Formula evalApplicationMembers(Term first) {
+  private Formula evalApplicationMembers(final Term first) {
     Term t = first.getNext();
     final Formula res = (Formula) first.eval(this);
     Formula f = res;

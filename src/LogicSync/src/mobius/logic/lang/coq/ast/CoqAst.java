@@ -22,7 +22,13 @@ public class CoqAst extends Ast {
   public <R> R eval(Evaluator<R> e) {
     return null;
   }
-  
+  public void addFirst(CoqAst n) {
+    n.next = next;
+    next = n;
+    if (last == null) {      
+      last = next;
+    }
+  }
   public void add(CoqAst next) {
     if (next != null) {
       last.next = next;
