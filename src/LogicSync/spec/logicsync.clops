@@ -11,9 +11,8 @@ ARGS::
   Merge: {"-m"}:{file-list}:"Merge with existing file. If there is no previous version, creates a new file."
 
 FORMAT::
-  Help  | ((Files | Output)* Files (Files | Output)*);  
+  Help  | ((Output)* Files (Files | Output)*);  
  
-
 WHERE::
   Main:
     Help | Files;
