@@ -130,6 +130,10 @@ public class NaturalLanguage extends ALanguage {
     
   }
 
-  
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return "Natural";
+  }
   
 }

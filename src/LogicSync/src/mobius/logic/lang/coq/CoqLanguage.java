@@ -112,7 +112,11 @@ public class CoqLanguage extends ABasicLanguage {
     return ast;
     
   }
-
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return "Coq";
+  }
 
   @Override
   public void mergeWith(GenericAst ast) {

@@ -34,5 +34,11 @@ public class BoogieLanguage extends ABasicLanguage {
   @Override public void mergeWith(final GenericAst ast) {
     assert false : "todo";
   }
+  
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return "Boogie";
+  }
 }
 

@@ -101,4 +101,10 @@ public class GenericLanguage extends ABasicLanguage {
     
   }
 
+  /** {@inheritDoc} */
+  @Override
+  public String getName() {
+    return "Generic";
+  }
+
 }

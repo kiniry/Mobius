@@ -5,6 +5,9 @@ import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +21,13 @@ import mobius.logic.lang.coq.CoqLanguage;
 import mobius.logic.lang.generic.GenericLanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.nat.NaturalLanguage;
+import mobius.util.ClassUtils;
 
 /**
  * The main class file of LogicSync.
  * It handles the arguments passed by the command line.
  * 
- * @author J. Charles (julien.charles@inria.fr)
+ * @author J. Charles (julien.charles@gmail.com)
  */
 public class Main {
 
@@ -79,8 +83,11 @@ public class Main {
 
   /**
    * @param args
+   * @throws IOException 
+   * @throws ClassNotFoundException 
    */
-  public static void main(final String[] args) {
+  public static void main(final String[] args) 
+    throws ClassNotFoundException, IOException {
     System.out.println(WELCOME_MSG);
     LogicSyncParser parser;
     try {
@@ -118,13 +125,54 @@ public class Main {
     }    
     
     final Map<ALanguage, String> list = new HashMap<ALanguage, String>();
-    list.put(new CoqLanguage(), "Coq");
-    list.put(new NaturalLanguage(), "Natural");
-    list.put(new GenericLanguage(), "Generic");
-        
+    List<Class<?>> l = ClassUtils.getClasses("mobius.logic.lang", ALanguage.class);
+    l = filter(l);
+    instanciate(list, l);
+    final ALanguage gen = new GenericLanguage(); 
+    list.put(gen, gen.getName());
+    System.out.print("Using languages:");
+    for (String name: list.values()) {
+      System.out.print(" " + name);
+    }
+    System.out.println(".\n");
     final Main main = new Main(opt, list);
     main.start();
 
+  }
+
+  private static void instanciate(Map<ALanguage, String> list, 
+                                  List<Class<?>> l) {
+    for (Class<?> c: l) {
+      try {
+        ALanguage al = (ALanguage)c.newInstance();
+        list.put(al, al.getName());
+      } catch (InstantiationException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+
+    }
+  }
+
+  /**
+   * What we don't want: mobius.logic.lang.* classes
+   * And the generic language.
+   * @param l
+   * @return
+   */
+  private static List<Class<?>> filter(List<Class<?>> l) {
+    final List<Class<?>> res = new ArrayList<Class<?>>();
+    for (Class<?> c: l) {
+      String pkg = c.getPackage().getName(); 
+      if(!pkg.equals("mobius.logic.lang") &&
+         !pkg.equals("mobius.logic.lang.generic")) {
+        res.add(c);
+      }
+    }
+    return res;
   }
 
   public void start() {

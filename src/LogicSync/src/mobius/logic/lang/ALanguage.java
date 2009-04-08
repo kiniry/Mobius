@@ -64,6 +64,11 @@ public abstract class ALanguage {
   public abstract GenericAst extractGenericAst();
   
   /**
+   * Returns the name of the language.
+   * @return A single word representing the language; Coq for instance
+   */
+  public abstract String getName();
+  /**
    * Right now the tool is not supposed to handle logics splitted in
    * multiple files.
    * @param list the list of files.
