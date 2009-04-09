@@ -102,7 +102,7 @@ axiom returns [CoqAst ast]:
      ;
 lemma returns [CoqAst ast]: 
        LEMMA NAME COLON formula DOT proof DOT
-       {$ast = Lemma.mk($NAME.text, $formula.f, null/*$proof.txt*/);}  
+       {$ast = Lemma.mk($NAME.text, $formula.f, $proof.txt);}  
      ;
 
 hint returns [CoqAst ast]: 
@@ -130,7 +130,7 @@ hint returns [CoqAst ast]:
     
 definition returns [CoqAst ast]: 
             DEFINITION NAME type_decl? (DEF formula)? DOT (proof DOT)?
-            {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, null /*$proof.txt */);}
+            {$ast = Definition.mk($NAME.text, $type_decl.ast, $formula.f, $proof.text);}
           ;
    
 inductive returns [CoqAst ast]: 
@@ -165,7 +165,7 @@ expr returns [Formula f]:
              LPAR formula RPAR {$f = $formula.f;}
            | NAME  {$f = Term.mk(null, $NAME.text);}
            | INTEGER {$f = Term.mk(null, $INTEGER.text);}
-           | TILD tail=expr  {$f = Term.mk($tail.f, "~");}
+           | TILD tail=expr  {$f = Application.mk(null, Term.mk($tail.f, "~"));}
            ;
            
 expr_list returns [Formula f]: ( tail=expr 
@@ -305,7 +305,7 @@ tac_match_formula:
     
  tactic returns [CoqAst ast]: 
        LTAC NAME name_list DEF tac_list DOT
-       {$ast = Tactic.mk($NAME.text, $tac_list.tac);}
+       {$ast = Tactic.mk($NAME.text, $name_list.text, $tac_list.tac);}
      ;
      
      

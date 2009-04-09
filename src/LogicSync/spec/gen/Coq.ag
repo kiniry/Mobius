@@ -4,7 +4,7 @@ CoqSpecific :> Require, OpenScope, Coercion, Hint, Tactic;
 Require = String! lib, ReqType! type;
 Coercion = String! name, String! typeFrom, String! typeTo;
 OpenScope = String! name;
-Tactic = String! name, String! content;
+Tactic = String! name, String namelist, String! content;
 Hint = HintType! type, List<String>! list, String! lib;
 
 

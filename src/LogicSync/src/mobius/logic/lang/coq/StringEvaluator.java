@@ -60,7 +60,7 @@ public class StringEvaluator extends ACleanEvaluator<String> {
   
   /** {@inheritDoc} */
   @Override
-  public String  evalTactic(final String name, final String content) {
+  public String  evalTactic(final String name, final String namelist, final String content) {
     return "Tactic: " + name;
   }    
   

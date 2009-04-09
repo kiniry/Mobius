@@ -99,8 +99,8 @@ public final class CoqTranslator extends ACleanEvaluator<String> {
   
   
   @Override
-  public String evalTactic(String name, String content) {
-    String trans = "Ltac " + name + " := " + content + ".";
+  public String evalTactic(String name, String name_list, String content) {
+    String trans = "Ltac " + name + " " + name_list +" := " + content + ".";
     fOutput.println(trans);
     return trans;
   }    
@@ -203,7 +203,7 @@ public final class CoqTranslator extends ACleanEvaluator<String> {
 
   @Override
   public String evalExists(Formula next, Variable list, Formula formula) {
-    final String res = "(exists " + list.eval(this) + ", " + formula.eval(this) + ")";
+    final String res = "(exists " + list.getName() + ", " + formula.eval(this) + ")";
     return res;
   }
 

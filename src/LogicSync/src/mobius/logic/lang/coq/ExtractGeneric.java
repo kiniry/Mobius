@@ -205,7 +205,8 @@ public class ExtractGeneric extends ACleanEvaluator<GenericAst> {
   
   /** {@inheritDoc} */
   @Override
-  public GenericAst evalTactic(final String name, final String content) {
+  public GenericAst evalTactic(final String name, final String namelist,
+                               final String content) {
     return null;
   }
   

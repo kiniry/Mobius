@@ -273,7 +273,13 @@
   		<arg value="-g"/>
 	  	<arg value="output.v"/>
   	</java>
-    <diff tofile="test/exmple.v"
+  	<java fork="yes" dir="test/" classname="mobius.logic.Main">
+        <classpath refid="test.path"/>
+	  	<arg value="exmple.v"/>
+  		<arg value="-m"/>
+	  	<arg value="exmple.v"/>
+  	</java>
+    <diff tofile="test/exmple.v.merged"
           fromfile="test/exmple.v"
           difffile="test/exmple.diff" />
 

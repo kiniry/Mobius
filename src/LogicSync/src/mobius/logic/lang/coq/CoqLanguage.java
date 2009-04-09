@@ -3,6 +3,7 @@ package mobius.logic.lang.coq;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import mobius.logic.lang.ABasicLanguage;
 import mobius.logic.lang.coq.ast.CoqAst;
@@ -120,7 +121,21 @@ public class CoqLanguage extends ABasicLanguage {
 
   @Override
   public void mergeWith(GenericAst ast) {
-    // TODO Auto-generated method stub
-    
+    System.out.print(this + ": Preparing merging...");
+    final File in = getMerge().get(0);
+    final File out = new File(in.getParent(), in.getName() + ".merged");
+    CoqAst cast = parseFile(in);
+    System.out.println(" done.");
+
+    System.out.print(this + ": Merging...");
+    try {
+      CoqTranslator.translate(cast, out);
+      System.out.println(" done.");
+    } 
+    catch (FileNotFoundException e) {
+      System.out.println(" FAILED.");
+   
+      e.printStackTrace();
+    }    
   }
 }
