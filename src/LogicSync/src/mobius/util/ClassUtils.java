@@ -62,9 +62,14 @@ public class ClassUtils {
       else if (file.getName().endsWith(".class")) {
         String name = file.getName();
         name = name.substring(0, name.length() - ".class".length());
-        Class<?> c = Class.forName(packageName + '.' + name);
-        if (filter.isAssignableFrom(c)) {
-          classes.add(c);
+        try {
+          Class<?> c = Class.forName(packageName + '.' + name);
+          if (filter.isAssignableFrom(c)) {
+            classes.add(c);
+          }
+        }
+        catch (ClassNotFoundException e) {
+          // it can happen and we don't care.
         }
       }
     }

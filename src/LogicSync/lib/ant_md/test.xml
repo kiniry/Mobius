@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+
+<!--
+  =======================================================================
+   Apache Ant Merge/Diff test file
+
+   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+   reserved.
+
+  =======================================================================
+-->
+
+<project name="test_merge_script" default="main" basedir=".">
+
+
+  <!-- =================================================================== -->
+  <!--     Main...                                                         -->
+  <!-- =================================================================== -->
+  <target name="main">
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!--   Test...                                                           -->
+  <!-- =================================================================== -->
+  <target name="test">
+
+   <!-- set the classpaths for later references -->
+   <path id="base.classpath">
+    <fileset dir="${jar.dir}">
+     <include name="*.jar"/>
+    </fileset>
+    <fileset dir="${lib.dir}" >
+     <include  name="**/*.jar"/>
+    </fileset>
+    <pathelement path="${classpath}"/>
+   </path>
+
+   <path id="merge.path" refid="base.classpath" />
+   <path id="diff.path" refid="base.classpath" />
+
+   <taskdef classname="org.apache.tools.ant.taskdefs.Merge"
+            classpathref="merge.path"
+            name="merge"/>         
+
+   <taskdef classname="org.apache.tools.ant.taskdefs.Diff"
+            classpathref="diff.path"
+            name="diff"/>         
+
+
+   <delete dir="test/foo" />
+   <delete dir="test/bar" />
+   <delete dir="test/diff" />
+   <delete dir="test/altdiff" />
+
+   <mkdir dir="test/foo" />
+   <mkdir dir="test/bar" />
+   <mkdir dir="test/diff" />
+   <mkdir dir="test/altdiff" />
+   <mkdir dir="test/bar/baz" />
+   <mkdir dir="test/bar/baz/mango" />
+
+   <echo message="test mongo"   file="test/foo/A.1" />
+   <echo message=""             file="test/foo/B.1" />
+   <echo message="1 2 3 4 5"    file="test/foo/C.1" />
+   <echo message="1\n2\n\n3\n"  file="test/foo/D.1" />
+   <echo message="same"         file="test/foo/F.1" />
+   <sleep seconds="3"/>
+
+   <echo message="test mongO"   file="test/bar/A.1" />
+   <echo message="1233 mongO"   file="test/bar/B.1" />
+   <echo message=""             file="test/bar/C.1" />
+   <echo message="1\n2\n3\n"    file="test/bar/D.1" />
+   <echo message="1\n2\n3"      file="test/bar/baz/mango/E.1" />
+   <echo message="same"         file="test/bar/F.1" />
+   <sleep seconds="3"/>
+
+
+   <diff tofile="test/foo/A.1"
+         fromfile="test/bar/A.1"
+         difffile="test/altdiff/A.1.diff" />
+
+   <diff tofile="test/foo/C.1"
+         fromFile="test/bar/C.1"
+         difffile="test/altdiff/C.1.diff" />
+
+   <diff tofile="test/foo/F.1"
+         fromfile="test/bar/F.1"
+         difffile="test/altdiff/F.1.diff" />
+
+   <merge tofile="test/foo/D.1"
+          fromfile="test/bar/D.1"
+          diffdir="test/diff"
+          forcediff="true"
+          ignorewhitespace="false" >
+   </merge>
+
+   <merge todir="test/foo"
+          diffdir="test/diff"
+          forcediff="true"
+          ignorewhitespace="false" >
+    <fileset dir="test/bar">
+     <include  name="**/*"/>
+    </fileset>
+   </merge>
+
+  </target>
+
+</project>

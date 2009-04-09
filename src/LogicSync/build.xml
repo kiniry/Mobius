@@ -18,16 +18,29 @@
     <path refid="runtime.path"/>
     <pathelement location="${build}"/>
   </path>
+	
+  <path id="diff.path">
+	<fileset dir="${lib}" >
+	 <include  name="**/*.jar"/>
+    </fileset>
+	<pathelement path="${classpath}"/>
+  </path>
+	
+  <!-- diff task -->
+  <taskdef classname="org.apache.tools.ant.taskdefs.Diff"
+		classpathref="diff.path"
+		name="diff"/>   	
+
+	
 
   <!-- CLOPS -->
   <property name="clops-file" location="spec/logicsync.clops"/>
   <property name="clops-target" location="src/mobius/logic/clops"/>
   <property name="clops-pkg" value="mobius.logic.clops"/>
   <property name="clops-src" location="clops"/>
-  <property name="clops-html-output" location="doc/logicsync.html"/>
+  <property name="clops-html-output" location="doc/"/>
   <path id="clops.path">
 	<filelist dir="${lib}" files="clops.jar"/>
-    <file name="stringtemplate-3.2.jar"/>
 	<file name="velocity-1.6.1.jar"/>
 	<file name="velocity-1.6.1-dep.jar"/>
   </path>
@@ -101,6 +114,8 @@
       <classpath refid="clops.path"/>
       <arg value="-v"/>
       <arg value="-d"/>
+      <arg value="-b"/>
+      <arg value="htmldev"/>
       <arg value="-t"/>
       <arg value="${clops-html-output}"/> 
       <arg value="-p"/>
@@ -242,6 +257,8 @@
 	 <delete dir="${build}"/>
 	 <delete dir="${dist}"/>
   </target>
+	
+
 
   <target name="test-coq" depends="compile">
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
@@ -256,6 +273,10 @@
   		<arg value="-g"/>
 	  	<arg value="output.v"/>
   	</java>
+    <diff tofile="test/exmple.v"
+          fromfile="test/exmple.v"
+          difffile="test/exmple.diff" />
+
   </target>
 	
   <!-- Static analyzes -->

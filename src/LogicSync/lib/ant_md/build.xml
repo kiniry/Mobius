@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<!--
+  =======================================================================
+   Apache Ant Merge/Diff build file
+
+   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+   reserved.
+
+  =======================================================================
+-->
+
+<project name="build_merge_script" default="main" basedir=".">
+
+  <!-- =================================================================== -->
+  <!--   Set the properties related to the source tree                     -->
+  <!-- =================================================================== -->
+  <property name="src.dir"           value="${basedir}/src" />
+  <property name="lib.dir"           value="${basedir}/lib" />
+  <property name="build.dir"         value="${basedir}/build" />
+  <property name="build.classes.dir" value="${build.dir}/classes" />
+  <property name="jar.dir"           value="${basedir}/jar" />
+
+  <!-- =================================================================== -->
+  <!--   Cleanup...                                                        -->
+  <!-- =================================================================== -->
+  <target name="clean">
+   <delete dir="build" failonerror="false" />
+   <delete failonerror="false" >
+    <fileset dir="${basedir}" includes="**/*.*~"/>
+   </delete>
+  </target>
+
+  <!-- =================================================================== -->
+  <!--   Main...                                                           -->
+  <!-- =================================================================== -->
+  <target name="main" depends="compile">
+  </target>
+
+
+  <!-- =================================================================== -->
+  <!--   Setup...                                                          -->
+  <!-- =================================================================== -->
+  <target name="init">
+   <mkdir dir="${build.dir}"/>
+   <mkdir dir="${build.classes.dir}"/>
+   <mkdir dir="${jar.dir}"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!--   Compile Tasks...                                                  -->
+  <!-- =================================================================== -->
+  <target name="compile" depends="init">
+   <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="true">
+    <classpath>
+     <pathelement path="${classpath}"/>
+     <fileset dir="${lib.dir}" >
+      <include  name="**/*.java"/>
+     </fileset>
+    </classpath>
+   </javac>
+  </target>
+
+  <!-- =================================================================== -->
+  <!--   Make Jar...                                                       -->
+  <!-- =================================================================== -->
+  <target name="jar" depends="compile">
+   <mkdir dir="${jar.dir}"/>
+   <jar destfile="${jar.dir}/ant_merge.jar" basedir="${build.classes.dir}">
+    <fileset file="README.TXT" />
+    <fileset dir="${build.classes.dir}" />
+    <fileset dir="${build.classes.dir}" />
+    <manifest>
+     <attribute name="Main-Class" value="org.apache.tools.ant.taskdefs.Merge"/>
+     <attribute name="Built-By" value="${user.name}"/>
+     <section name="common">
+      <attribute name="Specification-Title"    value="Merge/Diff Ant Tasks"/>
+      <attribute name="Implementation-Title"   value="Ant Tasks"/>
+      <attribute name="Java-Version"           value="${java.version}" />
+      <attribute name="Java-Vendor"            value="${java.vm.vendor}" />
+     </section>
+    </manifest>
+   </jar>
+  </target>
+
+  <!-- =================================================================== -->
+  <!--   Test Jar...                                                       -->
+  <!-- =================================================================== -->
+  <target name="test">
+   <ant antfile="test.xml" target="test" inheritAll="true" inheritRefs="true"/>
+  </target>
+
+</project>
