@@ -4,6 +4,15 @@
 	<property name="src"   location="src"/>
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
+	<property name="libs"  location="libs"/>
+
+	<path id="compile.path">
+		<filelist dir="${libs}">
+			<file name="junit-4.5.jar"/>
+			<file name="servlet.jar"/>
+		</filelist>
+	</path>
+
 
 	<target name="init">
 		<tstamp/>
@@ -12,7 +21,9 @@
 	</target>
 
 	<target name="compile" depends="init" description="Compile the framework">
-		<javac srcdir="${src}" destdir="${build}"/>
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="compile.path"/>
+		</javac>
 	</target>
 
 	<target name="dist" depends="compile" description="Generate distribution">
