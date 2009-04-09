@@ -129,10 +129,10 @@
         excludes="freeboogie/ast/gen/**/*">
       <manifest>
         <attribute name="Main-Class" value="freeboogie.Main" />
-        <attribute name="Class-Path" value="lib/antlr-3.1.1-runtime.jar" />
+        <attribute name="Class-Path" value="lib/antlr-3.1.3-runtime.jar" />
       </manifest>
     </jar>
-    <copy file="lib/antlr-3.1.1-runtime.jar" todir="dist/lib" />
+    <copy file="lib/antlr-runtime-3.1.3.jar" todir="dist/lib" />
   </target>
   
   <target name="dist_astgen" 
