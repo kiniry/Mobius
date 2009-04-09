@@ -21,9 +21,6 @@ import mobius.logic.lang.generic.ast.Term;
 
 public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
 
-
-
-
   /** 
    * @param next ignored
    * @param id the name of the term

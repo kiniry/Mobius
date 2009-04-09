@@ -1,17 +1,17 @@
 package mobius.logic.lang.coq;
 
+import java.util.List;
+
 import mobius.logic.lang.coq.ast.ACleanEvaluator;
-import mobius.logic.lang.coq.ast.AEvaluator;
+import mobius.logic.lang.coq.ast.AxiomType;
+import mobius.logic.lang.coq.ast.ConstrList;
 import mobius.logic.lang.coq.ast.Constructor;
 import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.ast.Formula;
 import mobius.logic.lang.coq.ast.HintType;
 import mobius.logic.lang.coq.ast.ReqType;
-import mobius.logic.lang.coq.ast.AxiomType;
 import mobius.logic.lang.coq.ast.Variable;
 import mobius.logic.lang.coq.ast.VariableList;
-import mobius.logic.lang.coq.ast.ConstrList;
-import java.util.List;
 
 public class StringEvaluator extends ACleanEvaluator<String> {
 
