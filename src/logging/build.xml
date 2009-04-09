@@ -1,0 +1,27 @@
+<project name="mobius.logging" default="dist" basedir=".">
+	<description>Mobius Logging Build File</description>
+
+	<property name="src"   location="src"/>
+	<property name="build" location="build"/>
+	<property name="dist"  location="dist"/>
+
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+
+	<target name="compile" depends="init" description="Compile the framework">
+		<javac srcdir="${src}" destdir="${build}"/>
+	</target>
+
+	<target name="dist" depends="compile" description="Generate distribution">
+		<mkdir dir="${dist}"/>
+		<jar jarfile="${dist}/logging-${DSTAMP}.jar" basedir="${build}"/>
+	</target>
+
+	<target name="clean" description="Clean up the project">
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+	</target>
+</project>
