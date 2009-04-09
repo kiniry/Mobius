@@ -30,8 +30,24 @@ CreationEntry = String! name, List<String>! types;
 StaticDiagram = List<StaticComponent>! components, String extendedID, String comment;
 
 StaticComponent :> Cluster, Clazz, StaticRelation;
-
 Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
+//Can root, deferred, effective be an enum? Similarly reused, persistent, interfaced?
+Clazz = Boolean! root, Boolean! deferred, Boolean! effective, Boolean! reused, Boolean! persistent, Boolean! interfaced, ClassInterface interface, FormalGenerics generics, String comment;
+StaticRelation :> InheritanceRelation, ClientRelation;
+
+InheritanceRelation = StaticRef! child, StaticRef! parent, Multiplicity multiplicity, SemanticLabel label;
+ClientRelation = StaticRef! client, StaticRef! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, SemanticLabel semanticLabel;
+ClientEntityExpression :> ClientEntityList, Multiplicity multiplicity;
+ClientEntityList = List<ClientEntity>! entities;
+
+ClientEntity :> Infix, Prefix, SupplierIndirection, ParentIndirection;
+SupplierIndirection = IndirectionFeaturePart indirectionFeaturePart, GenericIndirection! genericIndirection;
+IndirectionFeaturePart :> FeatureName, IndirectionFeatureList;
+IndirectionFeatureList = List<FeatureName> featureNames;
+ParentIndirection = GenericIndirection! genericIndirection;
+GenericIndirection = String! indirectionElement;
+
+//NamedIndirection = 
 
 Type = String! identifier, List<BONType> actualGenerics, String! fullString;
 
