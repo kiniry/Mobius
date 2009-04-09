@@ -1,5 +1,38 @@
 
-Type = String! identifier, List<BONType> actualGenerics, String! fullString;
+BONSourceFile = List<SpecificationElement>! bonSpecification, Indexing indexing;
+SpecificationElement :> InformalChart, ClassDictionary, StaticDiagram, DynamicDiagram, NotationalTuning;
 
 Indexing = List<IndexClause>! indexes;
 IndexClause = String! id, List<String>! indexTerms;
+
+InformalChart :> SystemChart, ClassChart, EventChart, ScenarioChart, CreationChart;
+
+ClassDictionary = String! systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part; 
+DictionaryEntry = String! name, List<String>! clusters, String! description;
+
+SystemChart = String! name, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
+ClusterChart = String! name, List<ClassEntry>! classes, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
+ClassChart = String! name, List<String>! inherits, List<String>! queries, List<String>! commands, List<String>! constraints, Indexing indexing, String explanation, String part;
+
+ClusterEntry = String! name, String! description;
+ClassEntry = String! name, String! description;
+ 
+
+EventChart = String! systemName, Boolean! incoming, Boolean! outgoing, List<EventEntry>! entries, Indexing indexing, String explanation, String part; 
+EventEntry = String! name, List<String>! involved;
+
+ScenarioChart = String! systemName, List<ScenarioEntry>! entries, Indexing indexing, String explanation, String part;
+ScenarioEntry = String! name, String! description;
+
+CreationChart = String! name, List<CreationEntry>! entries, Indexing indexing, String explanation, String part;
+CreationEntry = String! name, List<String>! types;
+
+StaticDiagram = List<StaticComponent>! components, String extendedID, String comment;
+
+StaticComponent :> Cluster, Clazz, StaticRelation;
+
+Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
+
+Type = String! identifier, List<BONType> actualGenerics, String! fullString;
+
+
