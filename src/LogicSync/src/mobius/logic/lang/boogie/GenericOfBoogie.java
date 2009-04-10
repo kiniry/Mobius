@@ -2,6 +2,7 @@ package mobius.logic.lang.boogie;
 
 //{{{ imports
 import java.math.BigInteger;
+import java.util.LinkedList;
 
 import freeboogie.ast.Atom;
 import freeboogie.ast.AtomCast;
@@ -10,7 +11,6 @@ import freeboogie.ast.AtomId;
 import freeboogie.ast.AtomLit;
 import freeboogie.ast.AtomMapSelect;
 import freeboogie.ast.AtomNum;
-import freeboogie.ast.AtomOld;
 import freeboogie.ast.AtomQuant;
 import freeboogie.ast.Axiom;
 import freeboogie.ast.BinaryOp;
@@ -40,10 +40,85 @@ import mobius.logic.lang.generic.ast.GenericAst;
 
 
 /**
- * Transforms Boogie into FOL.
+ * Transforms Boogie into FOL. 
  * @author rgrig@
  */
 public class GenericOfBoogie extends Evaluator<GenericAst> {
+  /** 
+   * If I could make checkstyle shut-up about the "complexity"
+   * of simpler alternatives to this mess, I would use them. In
+   * particular, notice how removing the "Wtf" comment makes
+   * checkstyle terribly unhappy.
+   */
+  private static enum IdOfOp { /** Wtf? */
+    /** Plus. */ PLUS(BinaryOp.Op.PLUS, "+"),
+    /** Minus. */ MINUS(BinaryOp.Op.MINUS, "-"),
+    /** Mul. */ MUL(BinaryOp.Op.MUL, "*"),
+    /** Div. */ DIV(BinaryOp.Op.DIV, "/"),
+    /** Mod. */ MOD(BinaryOp.Op.MOD, "%"),
+    /** Eq. */ EQ(BinaryOp.Op.EQ, "="),
+    /** Neq. */ NEQ(BinaryOp.Op.NEQ, "!="),
+    /** Lt. */ LT(BinaryOp.Op.LT, "<"),
+    /** Le. */ LE(BinaryOp.Op.LE, "<="),
+    /** Ge. */ GE(BinaryOp.Op.GE, ">="),
+    /** Gt. */ GT(BinaryOp.Op.GT, ">"),
+    /** Subtype. */ SUBTYPE(BinaryOp.Op.SUBTYPE, "<:"),
+    /** Equiv. */ EQUIV(BinaryOp.Op.EQUIV, "<->"),
+    /** Implies. */ IMPLIES(BinaryOp.Op.IMPLIES, "->"),
+    /** And. */ AND(BinaryOp.Op.AND, "and"),
+    /** Or. */ OR(BinaryOp.Op.OR, "or");
+
+    /** Operator. */
+    private final BinaryOp.Op fOp;
+
+    /** String representation. */
+    private final String fVal;
+
+    /** 
+     * Construct an association from Boogie operators to their String rep. 
+     * @param op the binary operator
+     * @param val the string representation
+     */
+    IdOfOp(final BinaryOp.Op op, final String val) {
+      fOp = op;
+      fVal = val;
+    }
+
+    /**
+     * @param op a boogie operator 
+     * @return the FOL representation
+     */
+    public static String get(final BinaryOp.Op op) {
+      for (IdOfOp v : values()) {
+        if (op == v.fOp) { return v.fVal; }
+      }
+      return null;
+    }
+  }
+
+  /** The result. This idiotic comment is forced by checkstyle. */
+  private LinkedList<GenericAst> fResult;
+
+  /** An axiom counter. This other idiotic comment is forced by, guess who. */
+  private int fAxiomCnt;
+
+
+  /**
+   * @param boogie boogie
+   * @return FOL
+   */
+  public LinkedList<GenericAst> process(final Declaration boogie) {
+    fAxiomCnt = 0;
+    fResult = new LinkedList<GenericAst>();
+    if (boogie != null) { boogie.eval(this); }
+    return fResult;
+  }
+
+  /** @return a fresh axiom name */
+  private String freshAxiomName() {
+    return "axiom" + fAxiomCnt++;
+  }
+
   /** {@inheritDoc} */
   @Override
   public GenericAst eval(
@@ -51,59 +126,70 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Expr e, 
     final Type type
   ) {
-    assert false : "not implemented";
-    return null;
+    return e.eval(this);
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(
+  public mobius.logic.lang.generic.ast.Application eval(
     final AtomFun atomFun, 
     final String function, 
     final TupleType types, 
     final Exprs args
   ) {
-    assert false : "not implemented";
-    return null;
+    return mobius.logic.lang.generic.ast.Application.mk(
+      args == null? null : (mobius.logic.lang.generic.ast.Term)args.eval(this),
+      mobius.logic.lang.generic.ast.Atom.mk(null, function));
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(
+  public mobius.logic.lang.generic.ast.Atom eval(
     final AtomId atomId, 
     final String id, 
     final TupleType types
   ) {
-    assert false : "not implemented";
-    return null;
+    return mobius.logic.lang.generic.ast.Atom.mk(null, id);
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(final AtomLit atomLit, final AtomLit.AtomType val) {
-    assert false : "not implemented";
-    return null;
+  public mobius.logic.lang.generic.ast.Atom eval(
+    final AtomLit atomLit, 
+    final AtomLit.AtomType val
+  ) {
+    String id;
+    switch (val) {
+      case TRUE: 
+        id = "true"; break;
+      case FALSE: 
+        id = "false"; break;
+      default: 
+        id = null;
+        assert false : "Huh?";
+    }
+    return mobius.logic.lang.generic.ast.Atom.mk(null, id);
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(final AtomMapSelect atomMapSelect, final Atom atom, final Exprs idx) {
-    assert false : "not implemented";
-    return null;
+  public mobius.logic.lang.generic.ast.Application eval(
+    final AtomMapSelect atomMapSelect, 
+    final Atom atom, 
+    final Exprs idx
+  ) {
+    return mobius.logic.lang.generic.ast.Application.mk(
+      (mobius.logic.lang.generic.ast.Term)atom.eval(this),
+      idx == null? null : (mobius.logic.lang.generic.ast.Term)idx.eval(this));
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(final AtomNum atomNum, final BigInteger val) {
-    assert false : "not implemented";
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public GenericAst eval(final AtomOld atomOld, final Expr e) {
-    assert false : "not implemented";
-    return null;
+  public mobius.logic.lang.generic.ast.Atom eval(
+    final AtomNum atomNum, 
+    final BigInteger val
+  ) {
+    return mobius.logic.lang.generic.ast.Atom.mk(null, val.toString());
   }
 
   /** {@inheritDoc} */
@@ -115,7 +201,20 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Trigger trig, 
     final Expr e
   ) {
-    assert false : "not implemented";
+    switch (quant) {
+      case FORALL:
+        return mobius.logic.lang.generic.ast.Forall.mk(
+          null, 
+          vars == null? 
+            null : 
+            (mobius.logic.lang.generic.ast.Atom)vars.eval(this),
+          (mobius.logic.lang.generic.ast.Term)e.eval(this));
+      case EXISTS:
+        assert false : "not implemented";
+        break;
+      default:
+        assert false : "Huh?";
+    }
     return null;
   }
 
@@ -127,20 +226,27 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Expr expr, 
     final Declaration tail
   ) {
-    assert false : "not implemented";
+    fResult.add(mobius.logic.lang.generic.ast.Formula.mk(
+      freshAxiomName(),
+      (mobius.logic.lang.generic.ast.Term)expr.eval(this)));
+    if (tail != null) { tail.eval(this); }
     return null;
   }
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(
+  public mobius.logic.lang.generic.ast.Application eval(
     final BinaryOp binaryOp, 
     final BinaryOp.Op op, 
     final Expr left, 
     final Expr right
   ) {
-    assert false : "not implemented";
-    return null;
+    final mobius.logic.lang.generic.ast.Term arg = 
+      (mobius.logic.lang.generic.ast.Term)left.eval(this);
+    arg.setNext((mobius.logic.lang.generic.ast.Term)right.eval(this));
+    return mobius.logic.lang.generic.ast.Application.mk(
+      mobius.logic.lang.generic.ast.Atom.mk(null, IdOfOp.get(op)),
+      arg);
   }
 
   /** {@inheritDoc} */
@@ -152,7 +258,10 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final boolean uniq, 
     final Declaration tail
   ) {
-    assert false : "not implemented";
+    fResult.add(mobius.logic.lang.generic.ast.Formula.mk(
+      id,
+      (mobius.logic.lang.generic.ast.Term)type.eval(this)));
+    if (tail != null) { tail.eval(this); }
     return null;
   }
 
@@ -165,9 +274,17 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(final Exprs exprs, final Expr expr, final Exprs tail) {
-    assert false : "not implemented";
-    return null;
+  public mobius.logic.lang.generic.ast.Term eval(
+    final Exprs exprs, 
+    final Expr expr, 
+    final Exprs tail
+  ) {
+    final mobius.logic.lang.generic.ast.Term r = 
+      (mobius.logic.lang.generic.ast.Term)expr.eval(this);
+    if (tail != null) { 
+      r.setNext((mobius.logic.lang.generic.ast.Term)tail.eval(this));
+    }
+    return r;
   }
 
   /** {@inheritDoc} */
@@ -183,13 +300,17 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
 
   /** {@inheritDoc} */
   @Override
-  public GenericAst eval(
+  public mobius.logic.lang.generic.ast.Atom eval(
     final Identifiers identifiers, 
     final AtomId id, 
     final Identifiers tail
   ) {
-    assert false : "not implemented";
-    return null;
+    final mobius.logic.lang.generic.ast.Atom r = 
+      (mobius.logic.lang.generic.ast.Atom)id.eval(this);
+    if (tail != null) { 
+      r.setNext((mobius.logic.lang.generic.ast.Term)tail.eval(this)); 
+    }
+    return r;
   }
 
   /** {@inheritDoc} */

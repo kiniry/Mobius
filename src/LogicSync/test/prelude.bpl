@@ -1,3 +1,5 @@
+// This Boogie prelude is taken from the Boogie benchmark
+
 type real;
 type elements;
 type struct;

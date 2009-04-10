@@ -1,1 +1,5 @@
- . update FreeBoogie to use antl runtime 3.1.3
+ . reorganize generic.ag: better application, node for parentheses,
+   prefix classes with Generic (in template?)
+ . how do we represent true/false?
+ . how do we represent map select?
+
