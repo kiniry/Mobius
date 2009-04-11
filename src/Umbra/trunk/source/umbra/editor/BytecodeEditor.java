@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -178,7 +178,12 @@ public class BytecodeEditor extends TextEditor {
     my_logger.info("doSave(" + a_progress_monitor + ")");
 
     final BytecodeDocument doc = getDocument();
+    if (FileNames.CP_DEBUG_MODE) System.err.println("update bml");
+    doc.updateBML();
+    if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
     doc.updateJavaClass();
+    if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
+
     final JavaClass jc = doc.getJavaClass();
 
     final BytecodeVerifier verifier = new BytecodeVerifier(jc);

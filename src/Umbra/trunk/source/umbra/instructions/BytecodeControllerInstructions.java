@@ -13,10 +13,13 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.bcclass.BCConstantPool;
+
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.InstructionLineController;
@@ -94,8 +97,42 @@ public class BytecodeControllerInstructions
                   getMethodNo() + 1;
     }
     fillModTable(a_methodnum);
+    //markSecondCP(a_doc);
     if (FileNames.DEBUG_MODE) controlPrint(0);
+    if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
     return res;
+  }
+  
+  /**
+   * Marks editor lines representing second constant pool entries.
+   * 
+   * TODO (to236111) remove
+   * @param a_doc a document containing lines to be marked
+   */
+  /*private void markSecondCP(BytecodeDocument a_doc) {
+    BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
+    for (int i = 0; i < getNoOfLines(); i++) {
+      if (getLineController(i) instanceof CPLineController) {
+        CPLineController cplc = (CPLineController) getLineController(i);
+        if (cplc.getConstantNumber() >= bcp.getInitialSize()) cplc.mark();
+      }
+    }
+  }*/
+  
+  /**
+   * Prints BML constant pool representation of a constant pool in a given
+   * bytecode document.
+   * 
+   * @param a_doc a bytecode document contating constant pool which BML
+   * representation is to be printed
+   */
+  public void controlPrintCP(BytecodeDocument a_doc) {
+    BCConstantPool a_pool = a_doc.getBmlp().getBcc().getCp();
+    System.err.println();
+    System.err.println("Pool:");
+    for (int i = 0; i < a_pool.size(); i++) {
+      System.err.println(i + ": " + a_pool.getConstant(i));
+    }
   }
 
   /**
@@ -221,7 +258,16 @@ public class BytecodeControllerInstructions
         UmbraPlugin.messagelog("null");
         return;
       }
-      UmbraPlugin.messagelog(line.getClass().getName() + ": " + line.getLineContent());
+      if (line instanceof CPLineController && Preparsing.PARSE_CP) {
+        CPLineController cplc = (CPLineController) line;
+        UmbraPlugin.messagelog(line.getClass().getName() + ": " +
+                               line.getLineContent() + ", BCEL entry: " +
+                               cplc.getConstant().getClass().getName() +
+                               (cplc.isInSecondCP() ? ", second CP" : ""));
+      } else {
+        UmbraPlugin.messagelog(line.getClass().getName() + ": " + line.getLineContent());
+        if (!line.correct()) UmbraPlugin.messagelog("ABOVE INCORRECT");
+      }
     }
     UmbraPlugin.messagelog("");
     UmbraPlugin.messagelog("Control print of bytecode modification (" +

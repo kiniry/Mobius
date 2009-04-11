@@ -12,6 +12,7 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.apache.bcel.classfile.ConstantClass;
 
 /**
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
@@ -26,6 +27,8 @@ public class ClassCPLineControllerTest extends TestCase {
     "const #5 = Class #21          ;",
     "   const    #5 =  Class       #21;  "
   };
+  
+  private int references[] = { 21, 21, 21, 21, 21 };
   
   private String lines_incorrect[] = {
     "   const    5 =          Class #21;",
@@ -87,6 +90,18 @@ public class ClassCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("class, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("class, params, ins number " + i,
+                 ((ConstantClass) instructions[i].getConstant()).getNameIndex() ==
+                   references[i]);
     }
   }
 

@@ -59,6 +59,14 @@ public final class Preparsing {
    * TODO (to236111) remove
    */
   public static final boolean PARSE_CP = true;
+  
+  /**
+   * This constant determines whether the change in textual representation of
+   * a constant pool will be propagated into its BML representation.
+   * 
+   * TODO (to236111) remove
+   */
+  public static final boolean UPDATE_CP = false;
 
   /**
    * Chooses one of line types that matches the given line
@@ -138,9 +146,11 @@ public final class Preparsing {
         }
       }
     } else if (a_context.isInFieldsArea()) {
-      if (FieldLineController.isFieldLineStart(a_line)) {
+      // NOTE (to236111) if the field area is empty methods are next and they
+      // can start with the same words as fields ('public' etc.)
+      /* if (FieldLineController.isFieldLineStart(a_line)) {
         return new FieldLineController(a_line, a_bmlp);
-      }
+      } */
     }
     return lc;
   }

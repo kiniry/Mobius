@@ -8,6 +8,12 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantLong;
+
+import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
 
@@ -86,6 +92,38 @@ public class LongCPLineController extends CPLineController {
     my_parser.swallowWhitespace();
     my_parser.swallowLongNumber();
     return my_parser.getLongResult();
+  }
+  
+  /**
+   * Returns the link to the BCEL long constant represented by the current
+   * line. If there is no such constant it creates the constant before
+   * returning. Newly created constant should then be associated with BML
+   * constant pool representation. <br> <br>
+   *  
+   * @return a BCEL constant represented by the current line
+   */
+  public Constant getConstant() {
+    if (my_constant != null) return my_constant;
+    my_constant = new ConstantLong(getParam());
+    return my_constant;
+  }
+  
+  /**
+   * This method changes references to constant pool entries from "dirty" numbers
+   * to "clean" ones. <br>
+   * The change has effect only in BCEL representation of constant pool and does
+   * not affect internal Umbra representation. <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
+   * "dirty" and "clean" numbers concepts. <br> <br>
+   * 
+   * This method does nothing as long constant pool entries don't have any
+   * references. 
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   */
+  public void updateReferences(HashMap f) {
+    
   }
  
 }

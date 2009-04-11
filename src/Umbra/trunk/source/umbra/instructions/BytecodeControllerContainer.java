@@ -1,28 +1,34 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
 package umbra.instructions;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import umbra.UmbraPlugin;
+import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
+import umbra.lib.Counter;
+import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 
 /**
  * This class encapsulates the structure of the subsequent editor lines of the
  * {@link BytecodeController} and gives the external interface to them.
  *
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -299,26 +305,42 @@ public abstract class BytecodeControllerContainer extends
    * from {@code a_start} to {@code a_stop} inclusively. This method
    * also removes the connection between the removed lines and the BCEL
    * representation of the byte code.
+   * 
+   * NOTE (to236111) it uses index to remove lines from my_editor_lines because
+   * equals for EmptyLineController always returns true
    *
    * @param a_start the first line to be removed
    * @param a_stop the last line to be removed
+   * @param entry_no counter which counts correct constant pool entries 
+   * @param a_ctxt a line context for the updated region
+   * @param a_doc a byte code document in which the modification has been made
    * @throws UmbraException in case the structure of the editor lines is
    *   malformed
    */
   protected void removeEditorLines(final int a_start,
                                    final int a_stop)
     throws UmbraException {
+    if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: REMOVE ::]]");
+    ArrayList<Integer> delete_list = new ArrayList<Integer>();
     for (int i = a_stop + 1; i <= a_start; i++) {
       try {
-        final BytecodeLineController oldlc = getLineController(i);
+        BytecodeLineController oldlc = getLineController(i);
         if (oldlc instanceof InstructionLineController) {
           ((InstructionLineController)oldlc).dispose();
         }
+        if (FileNames.CP_DEBUG_MODE)
+          System.err.println("<" + oldlc.getLineContent() + ">");
+        delete_list.add(i);
       } catch (ClassCastException e) { // malformed internal structure
         UmbraPlugin.messagelog("IMPOSSIBLE: malformed structure of the " +
                                "editor lines");
         throw new UmbraException();
       }
+    }
+    int deleted = 0;
+    for (Integer j: delete_list) {
+      my_editor_lines.remove(j.intValue() - deleted);
+      deleted++;
     }
   }
 

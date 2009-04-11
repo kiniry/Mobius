@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantDouble;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +31,14 @@ public class DoubleCPLineControllerTest extends TestCase {
     "   const    #5 =          Double .23;    ",
     "   const    #5 =          Double 3.;",
     "   const    #5 =          Double +.34E-2  ;   ",
-    "   const    #5 =          Double -0.324e4546   ;",
+    "   const    #5 =          Double -0.324e4   ;",
     "   const    #5 =          Double 00.3424;",
     "   const    #5 =          Double -2.e3D;  ",
     "   const    #5 =          Double 4d;"
+  };
+  
+  private double references[] = {
+    2.1, 2.1, 2.1, 2.1, 200000.0, 0.23, 3.0, 0.0034, -3240.0, 0.3424, -2000.0, 4.0
   };
   
   private String lines_incorrect[] = {
@@ -107,6 +113,18 @@ public class DoubleCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("double, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("double, params, ins number " + i,
+                 ((ConstantDouble) instructions[i].getConstant()).getBytes() ==
+                   references[i]);
     }
   }
 

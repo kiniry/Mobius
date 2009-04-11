@@ -8,12 +8,20 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
 import umbra.lib.BytecodeStrings;
 import umbra.instructions.InstructionParser;
+import umbra.instructions.BytecodeController;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantClass;
 
 /**
  * This is a class that represents CONSTANT_Class_info constant
  * pool entry line controller.
+ * 
+ * TODO (to236111) javadoc: use better English
+ * 
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @version a-01
  *
@@ -72,14 +80,15 @@ public class ClassCPLineController extends CPLineController {
   }
   
   /**
-  * This method retrieves the reference to the class from the
-  * CONSTANT_Class_info constant pool entry in
-  * {@link BytecodeLineController#getMy_line_text()}. This parameter
+  * This method retrieves the reference to the utf8 CP entry
+  * containg name of the class represented by the class constant
+  * pool entry in {@link BytecodeLineController#getMy_line_text()}. This parameter
   * is located after the entry type keyword. 
   * The method assumes {@link BytecodeLineController#getMy_line_text()}
   * is correct.
   * 
-  * @return reference to the class described by constant pool entry
+  * @return reference to the utf8 constant pool entry referenced by class constant
+  * pool entry
   */
   private int getClassReference() {
     parseTillEntryType();
@@ -90,6 +99,41 @@ public class ClassCPLineController extends CPLineController {
     my_parser.swallowDelimiter('#');
     my_parser.swallowCPReferenceNumber();
     return my_parser.getResult();
+  }
+  
+  /**
+   * Returns the link to the BCEL class constant represented by the current
+   * line. If there is no such constant it creates the constant before
+   * returning. Newly created constant should then be associated with BML
+   * constant pool representation. <br> <br>
+   * 
+   * The constant reference number set for the newly created constant is
+   * the "dirty" number. It should be changed to "clean" number in
+   * {@link BytecodeController#recalculateCPNumbers()}. <br> <br>
+   * 
+   * For explantation of "dirty" and "clean" number concepts see
+   * {@link BytecodeController#recalculateCPNumbers()}.
+   * 
+   * @return a BCEL constant represented by the current line
+   */
+  public Constant getConstant() {
+    if (my_constant != null) return my_constant;
+    my_constant = new ConstantClass(getClassReference());
+    return my_constant;
+  }
+  
+  /**
+   * This method changes reference to the utf8 CP entry referenced by this class
+   * CP entry from a "dirty" number to a "clean" one in BCEL representation
+   * of this CP entry. <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
+   * "dirty" and "clean" numbers concepts. <br> <br>
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   */
+  public void updateReferences(HashMap f) {
+    ((ConstantClass) my_constant).setNameIndex((Integer) f.get(getClassReference()));
   }
   
 }

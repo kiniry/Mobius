@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantFieldref;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,9 @@ public class FieldrefCPLineControllerTest extends TestCase {
     "const #5 = Fieldref #21.#22;          ",
     "   const    #5 =  Fieldref       #21.#22  ;  "
   };
+  
+  private int references[] = { 21, 21, 21, 21 };
+  private int names[] = { 22, 22, 22, 22 };
   
   private String lines_incorrect[] = {
     "   const    5 =          Fieldref #21.#22;",
@@ -90,6 +95,20 @@ public class FieldrefCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("fieldref, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("fieldref, params, ins number " + i,
+                 ((ConstantFieldref) instructions[i].getConstant()).getClassIndex() ==
+                   references[i] &&
+                   ((ConstantFieldref) instructions[i].getConstant()).
+                   getNameAndTypeIndex() == names[i]);
     }
   }
 

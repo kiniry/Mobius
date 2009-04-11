@@ -34,6 +34,7 @@ public class ANTest {
     "2.d",
     "-3D",
     "4d",
+    "-0.324e0"
   };
   
   private String lines_incorrect[] = {
@@ -65,7 +66,11 @@ public class ANTest {
   
   /**
    * Test method for {@link umbra.instructions.ast.FloatCPLineController#correct()}.
-   * Note that automaton recognizes the number "3.-4" as 3. (correct).
+   * Note that automaton parses till the first character that does not have outgoing
+   * edge from current node, and if that node happens to be accepting, it will accept.
+   * So the automaton recognizes the numbers "3.-4" and "3.2e2.1 as 3. and 3.2e2
+   * (correct). However we hope that the external parser which uses AN for parsing
+   * will recognize the error.
    */
   @Test
   public void testCorrect() {

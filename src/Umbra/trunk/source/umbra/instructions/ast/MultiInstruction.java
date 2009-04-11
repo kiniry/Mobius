@@ -1,21 +1,30 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) ${date} University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
+import org.apache.bcel.generic.MethodGen;
+
+import b2bpl.bytecode.instructions.Instruction;
+
 import umbra.UmbraPlugin;
+import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
+import umbra.lib.UmbraException;
 
 /**
  * This is abstract class for all instructions with at least one
  * parameter.
  *
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
@@ -33,7 +42,19 @@ public class MultiInstruction extends InstructionLineController {
    */
   public MultiInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
+    use_stored_ind = false;
   }
+  
+  /**
+   * Stores parameter of current instruction.
+   */
+  protected int my_ind;
+  
+  /**
+   * Has value true if my_ind should be used instead of parsing parameter
+   * from textual representation of this line.
+   */
+  protected boolean use_stored_ind;
 
   /**
    * This method checks if the last parenthesis in the given string
@@ -81,6 +102,7 @@ public class MultiInstruction extends InstructionLineController {
    * @return the parsed number or 0 in case the number cannot be parsed
    */
   protected int getInd() {
+    if (use_stored_ind) return my_ind;
     final String my_line_text = getMy_line_text();
     if (my_line_text.lastIndexOf("(") >= my_line_text.lastIndexOf(")")) {
       UmbraPlugin.messagelog("A line is incorrect\n" +
@@ -112,4 +134,45 @@ public class MultiInstruction extends InstructionLineController {
     res = res && a_parser.swallowDelimiter(')'); // )
     return res;
   }
+  
+  /**
+   * This method changes all references to constant pool
+   * from a "dirty" numbers to a "clean" ones in BCEL representation
+   * of this instruction. <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for explantation of
+   * "dirty" and "clean" numbers concepts. <br> <br>
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   * @param a_pos position in method
+   * @throws UmbraException 
+   */
+  public void updateReferences(HashMap f, int a_pos) throws UmbraException {
+    my_ind = (Integer) f.get(getInd());
+    use_stored_ind = true;
+    //int a_pos = this.getList().
+    a_pos = getNoInMethod();
+    
+    //bcelDump();
+    
+    dispose();
+    makeHandleForPosition(getMethod(), a_pos);
+    
+    //bcelDump();
+    
+    use_stored_ind = false;
+  }
+  
+  /**
+   * Prints BCEL instruction representation.
+   * For debug use only.
+   */
+  private void bcelDump() {
+    MethodGen mg = this.getMethod();
+    for (int i = 0; i < mg.getInstructionList().size(); i++) {
+      org.apache.bcel.generic.Instruction in = mg.getInstructionList().getInstructions()[i];
+      System.err.println(in.toString());
+    }
+  }
+  
 }

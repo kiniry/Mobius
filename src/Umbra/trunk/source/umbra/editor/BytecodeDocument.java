@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -10,11 +10,13 @@ package umbra.editor;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.text.Document;
 
 import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
+import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
@@ -218,6 +220,33 @@ public class BytecodeDocument extends Document {
     //obtaining JavaClass from my_bmlp field
     final BCClass bcc = getBmlp().getBcc();
     bcc.saveJC();
+  }
+  
+  /**
+   * Updates BML representation of constant pool by changing
+   * "dirty" numbers to "clean" ones. <br>
+   * It also propagates the change into methodgens (BCEL constant
+   * pool is automatically updated by BML, but the local pools of
+   * methodgens must be updated manually). <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for
+   * explantation of "dirty" and "clean" numbers. <br> <br>
+   * 
+   * TODO (to236111) merge with updateJavaClass()? and move to some more
+   * proper object (BCClass?, BytecodeController?)
+   * 
+   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
+   */
+  public void updateBML() {
+    if (!umbra.instructions.Preparsing.PARSE_CP ||
+        !umbra.instructions.Preparsing.UPDATE_CP) return;
+    my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
+    BCClass bc = my_bmlp.getBcc();
+    for (int i = 0; i < bc.getMethodCount(); i++) {
+      ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().getConstantPool());
+      bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
+    }
+    if (FileNames.CP_DEBUG_MODE) my_bcc.controlPrintCP(this);
   }
 
   /**

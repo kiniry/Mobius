@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantFloat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +31,15 @@ public class FloatCPLineControllerTest extends TestCase {
     "   const    #5 =          Float .23;",
     "   const    #5 =          Float 3.;",
     "   const    #5 =          Float +.34E-2;",
-    "   const    #5 =          Float -0.324e4546;",
+    "   const    #5 =          Float -0.324e4;",
     "   const    #5 =          Float 00.3424;",
     "   const    #5 =          Float -2.e3f;",
     "   const    #5 =          Float 4F;"
+  };
+  
+  private float references[] = {
+    2.1f, 2.1f, 2.1f, 2.1f, 200000.0f, 0.23f,
+    3.0f, 0.0034f, -3240.0f, 0.3424f, -2000.0f, 4.0f
   };
   
   private String lines_incorrect[] = {
@@ -107,6 +114,18 @@ public class FloatCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("float, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("float, params, ins number " + i,
+                 ((ConstantFloat) instructions[i].getConstant()).getBytes() ==
+                   references[i]);
     }
   }
 

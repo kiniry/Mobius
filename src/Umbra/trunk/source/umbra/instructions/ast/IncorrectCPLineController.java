@@ -28,6 +28,7 @@ public class IncorrectCPLineController extends CPLineController {
    * @param a_line_text the string representation of the line text
    * @param an_entry_type the string "", ignored parameter
    * for compatibility with
+   * {@link umbra.instructions.DispatchingAutomaton#callConstructor}
    * @see BytecodeLineController#BytecodeLineController(String)
    */
   public IncorrectCPLineController(final String a_line_text, final String an_entry_type) {

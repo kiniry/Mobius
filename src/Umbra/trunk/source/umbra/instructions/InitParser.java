@@ -1,7 +1,7 @@
 /*
  * @title       "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2008 University of Warsaw"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
  * @license     "All rights reserved. This program and the accompanying
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
@@ -41,6 +41,7 @@ import umbra.lib.UmbraSyntaxException;
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
  * @author Tomek Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @author Jarosław Paszek (jp209217@students.mimuw.edu.pl)
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  *
@@ -208,6 +209,7 @@ public class InitParser extends BytecodeCommentParser {
                                   final LineContext a_ctxt,
                                   final boolean a_isstatic)
     throws UmbraLocationException {
+
     a_ctxt.setFieldsToBeRead();
     return swallowFields(a_line_no, a_ctxt, a_isstatic); //no specs currently
   }
@@ -225,6 +227,7 @@ public class InitParser extends BytecodeCommentParser {
                             final LineContext a_ctxt,
                             final boolean a_isstatic)
     throws UmbraLocationException {
+
     int res = a_line_no;
     while (res < my_doc.getNumberOfLines()) {
       final String a_linename = getLineFromDoc(my_doc, res, a_ctxt);
@@ -269,6 +272,7 @@ public class InitParser extends BytecodeCommentParser {
   private int swallowClassHeader(final int the_current_line,
                                  final LineContext a_ctxt)
     throws UmbraLocationException, UmbraSyntaxException {
+
     int j = the_current_line;
     String line = getLineFromDoc(my_doc, j, a_ctxt); //packageinfo
     a_ctxt.setInitial();
@@ -311,6 +315,7 @@ public class InitParser extends BytecodeCommentParser {
   private int swallowConstantPools(final int the_current_lno,
                                    final LineContext a_ctxt)
     throws UmbraLocationException, UmbraSyntaxException {
+
     final String line = getLineFromDoc(my_doc, the_current_lno, a_ctxt);
     final BytecodeLineController lc = Preparsing.getType(line, a_ctxt,
                                                          my_doc.getBmlp());
@@ -353,6 +358,7 @@ public class InitParser extends BytecodeCommentParser {
    */
   private int swallowCPContent(final LineContext a_ctxt, final int a_lineno)
     throws UmbraLocationException {
+
     String line;
     int num = a_lineno;
     BytecodeLineController lc;
@@ -361,8 +367,14 @@ public class InitParser extends BytecodeCommentParser {
       lc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
       if (!(lc instanceof CPLineController)) {
         /* NOTE (to236111) it only works if all contant pool lines are
-         * correct (which should be true when loaded from .class file) */
+         * correct and not separated by empty lines (which should be true 
+         * when loaded from .class file) */
         break;
+      }
+      if (Preparsing.PARSE_CP) {
+        CPLineController cplc = (CPLineController) lc;
+        int const_no = cplc.getConstantNumber();
+        cplc.setConstant(my_doc.getBmlp().getBcc().getCp().getConstant(const_no));
       }
       addEditorLine(lc);
       num++;
@@ -397,6 +409,7 @@ public class InitParser extends BytecodeCommentParser {
                             final int a_method_no,
                             final LineContext a_ctxt)
     throws UmbraLocationException, UmbraMethodException {
+
     int j = swallowEmptyLines(my_doc, the_line_no,
                               my_doc.getNumberOfLines() - 1, a_ctxt);
     final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
@@ -450,6 +463,7 @@ public class InitParser extends BytecodeCommentParser {
                                   final int a_lineno,
                                   final MethodGen a_methodgen)
     throws UmbraLocationException {
+
     int res = a_lineno;
     String a_linename = getLineFromDoc(my_doc, res, a_ctxt);
     BytecodeLineController lc = Preparsing.getType(a_linename, a_ctxt,
@@ -497,6 +511,7 @@ public class InitParser extends BytecodeCommentParser {
                                        final MethodGen a_methgen,
                                        final InstructionList an_ilist,
                                        final Iterator an_iter) {
+
     InstructionHandle ih = null;
     if (an_iter.hasNext())
       ih = (InstructionHandle)(an_iter.next());
@@ -504,5 +519,6 @@ public class InitParser extends BytecodeCommentParser {
     final int ino = addInstruction(a_lctrl);
     handleComments(a_lctrl, ino);
     incInstructionNo();
+
   }
 }

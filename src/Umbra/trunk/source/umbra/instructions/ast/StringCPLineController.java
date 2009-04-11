@@ -8,6 +8,12 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantString;
+
+import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
 
@@ -89,6 +95,43 @@ public class StringCPLineController extends CPLineController {
     my_parser.swallowDelimiter('#');
     my_parser.swallowCPReferenceNumber();
     return my_parser.getResult();
+  }
+  
+  /**
+   * Returns the link to the BCEL string constant represented by the current
+   * line. If there is no such constant it creates the constant before
+   * returning. Newly created constant should then be associated with BML
+   * constant pool representation. <br> <br>
+   * 
+   * The constant reference number set for the newly created constant is
+   * the "dirty" number. It should be changed to "clean" number in
+   * {@link BytecodeController#recalculateCPNumbers()}. <br> <br>
+   * 
+   * For explantation of "dirty" and "clean" number concepts see
+   * {@link BytecodeController#recalculateCPNumbers()}.
+   * 
+   * @return a BCEL constant represented by the current line
+   */
+  public Constant getConstant() {
+    if (my_constant != null) return my_constant;
+    my_constant = new ConstantString(getStringReference());
+    return my_constant;
+  }
+  
+  /**
+   * This method changes reference to the utf8 CP entry containing string
+   * referenced from this CP entry. <br>
+   * The change has effect only in BCEL representation of constant pool and does
+   * not affect internal Umbra representation. <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
+   * "dirty" and "clean" numbers concepts. <br> <br>
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   */
+  public void updateReferences(HashMap f) {
+    ((ConstantString) my_constant).
+    setStringIndex((Integer) f.get(getStringReference()));
   }
   
 }

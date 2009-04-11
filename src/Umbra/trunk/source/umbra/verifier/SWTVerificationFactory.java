@@ -20,7 +20,7 @@ public class SWTVerificationFactory extends VerificationFactory {
   /**
    * Creates new result presenter for given verifier.
    * 
-   * FIXME (to236111): change to graphical presenter
+   * TODO (to236111): change to graphical presenter
    * 
    * @return presenter for results of verification
    * @param  verifier

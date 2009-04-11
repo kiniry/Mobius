@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantInteger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +29,16 @@ public class IntegerCPLineControllerTest extends TestCase {
     "   const    #5 =  Integer       21;"
   };
   
+  private int references[] = { 21, 21, 21, 21 };
+  
   private String lines_incorrect[] = {
     "   const    5 =          Integer 21;",
     "   const    #5 ==          Integer 21;",
     "   const    #5 =          Intijer 21;",
     "   const    #5 =          Integer 2 1;",
     "   const    #5 =          Integer ;",
-    "   const    #5 =          Integer 21"
+    "   const    #5 =          Integer 21",
+    "   const    #5 =          Integer 21l;",
   };
   
   private IntegerCPLineController[] instructions;
@@ -87,6 +92,18 @@ public class IntegerCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("integer, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("integer, params, ins number " + i,
+                 ((ConstantInteger) instructions[i].getConstant()).getBytes() ==
+                   references[i]);
     }
   }
 

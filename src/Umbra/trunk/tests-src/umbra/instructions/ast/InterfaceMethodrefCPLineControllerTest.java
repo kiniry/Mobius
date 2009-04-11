@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantInterfaceMethodref;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,9 @@ public class InterfaceMethodrefCPLineControllerTest extends TestCase {
     "const #5 = InterfaceMethodref #21.#22     ;     ",
     "   const    #5 =  InterfaceMethodref       #21.#22;"
   };
+  
+  private int references[] = { 21, 21, 21, 21 };
+  private int names[] = { 22, 22, 22, 22 };
   
   private String lines_incorrect[] = {
     "   const    5 =          InterfaceMethodref #21.#22;",
@@ -90,6 +95,20 @@ public class InterfaceMethodrefCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("interface, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("interface, params, ins number " + i,
+                 ((ConstantInterfaceMethodref) instructions[i].getConstant()).
+                 getClassIndex() == references[i] &&
+                   ((ConstantInterfaceMethodref) instructions[i].getConstant()).
+                   getNameAndTypeIndex() == names[i]);
     }
   }
 

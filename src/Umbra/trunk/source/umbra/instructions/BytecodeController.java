@@ -8,9 +8,13 @@
  */
 package umbra.instructions;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.MethodGen;
+import annot.bcclass.BCConstantPool;
 
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
@@ -24,6 +28,7 @@ import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.FieldLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
+import umbra.instructions.ast.MultiInstruction;
 import umbra.instructions.ast.UnknownLineController;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
@@ -90,6 +95,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         ctxt.setFieldArea();
         break;
       }
+      /* NOTE (to236111) CPLineController added */
       if (blc instanceof EmptyLineController ||
           blc instanceof InstructionLineController ||
           blc instanceof CommentLineController ||
@@ -175,14 +181,36 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
-                      fgmparser.getEditorLines(), ctxtold);
+                      fgmparser.getEditorLines(), ctxtold, a_doc);
+    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP) updateBMLCPRepresentation(a_doc);
     if (FileNames.DEBUG_MODE) controlPrint(1);
-    
+    if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
   }
-
+  
+  /**
+   * Propagates the change in textual representation of constant pool into
+   * its BML representation.
+   * 
+   * TODO (to236111) incremental change
+   * 
+   * @param a_doc a document in which change happened
+   */
+  private void updateBMLCPRepresentation(BytecodeDocument a_doc) {
+    BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
+    bcp.clearConstantPool();
+    for (int i = 0; i < a_doc.getNumberOfLines(); i++) {
+      if (getLineController(i) instanceof CPLineController) {
+        CPLineController cplc = (CPLineController) getLineController(i);
+        bcp.addConstant(cplc.getConstant(), false);
+      }
+    }
+  }
+  
   /**
    * The method performs the special handling for areas which contain constant
    * pools. Currently, it does nothing.
+   * 
+   * NOTE (to236111) unnecessary because of updateBMLCPRepresentation()?
    */
   private void doSpecialHandlingForCP() {
   }
@@ -257,6 +285,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * @param a_stop the last line in the new structure
    * @param the_lines the list with the lines to incorporate
    * @param a_ctxt a line context for the updated region
+   * @param a_doc a byte code document in which the modification has been made
    * @throws UmbraException in case the BCEL structure that represents
    *   the current method cannot be retrieved or the association between
    *   the BCEL structures and editor lines cannot be removed or the
@@ -266,7 +295,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                                  final int an_end_rem,
                                  final int a_stop,
                                  final LinkedList the_lines,
-                                 final LineContext a_ctxt)
+                                 final LineContext a_ctxt,
+                                 final BytecodeDocument a_doc)
     throws UmbraException {
     if (the_lines.isEmpty()) return; //in case edit should not change anything
     final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
@@ -278,6 +308,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       removeEditorLines(an_end_rem, a_stop);
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
+    /* NOTE (to236111) isInsideConstantPool() added */
     if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
         !a_ctxt.isInFieldsArea() && !a_ctxt.isInsideConstantPool()) {
       mg.getInstructionList().update();
@@ -313,6 +344,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                               final LinkedList the_lines,
                               final int an_index,
                               final MethodGen a_methgen) throws UmbraException {
+    if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: ADD ::]]");
     int j = an_index;
     int pos = 0;
     if (a_methgen != null) {
@@ -324,12 +356,16 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       try {
         final InstructionLineController newlc =
           (InstructionLineController)the_lines.get(j);
+        if (FileNames.CP_DEBUG_MODE)
+          System.err.println("<" + newlc.getLineContent() + ">");
         if (a_methgen == null) throw new ClassCastException();
         newlc.makeHandleForPosition(a_methgen, pos);
         insertEditorLine(i, newlc);
       } catch (ClassCastException e) { //we crossed the method boundary
         final BytecodeLineController bcl =
           (BytecodeLineController)the_lines.get(j);
+        if (FileNames.CP_DEBUG_MODE)
+          System.err.println("<" + bcl.getLineContent() + ">");
         insertEditorLine(i, bcl);
         bcl.addToBCEL();
       }
@@ -349,6 +385,9 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * @param a_stop another possible end of the area
    * @param the_lines the collection of the new lines to replace with the old
    *   ones
+   * @param entry_no counter which counts correct constant pool entries 
+   * @param a_ctxt a line context for the updated region
+   * @param a_doc a byte code document in which the modification has been made
    * @return the number of the first line in {@code the_lines} that was not
    *   replaced
    * @throws UmbraException in case it is impossible to remove the association
@@ -360,13 +399,22 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                                  final int a_stop,
                                  final LinkedList the_lines)
     throws UmbraException {
+    if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: REPLACE ::]]");
     int j = 0;
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
       final BytecodeLineController oldlc = getLineController(i);
-      final BytecodeLineController newlc =
+      BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
+      if (FileNames.CP_DEBUG_MODE)
+        System.err.print("<" + oldlc.getLineContent() + "> with ");
+      if (FileNames.CP_DEBUG_MODE)
+        System.err.println("<" + newlc.getLineContent() + ">");
       if (oldlc.equals(newlc)) continue;
+      /* NOTE (to236111) following ifs essentially means:
+       * if (newlc insatnceof InstructionLineController and it may be
+       * better for readability of code to point it explicitely.
+       */
       if (newlc.needsMg() && oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
@@ -473,4 +521,121 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     return ok;
   }
+  
+  /**
+   * This method changes the "dirty" numbers in BCEL constant pool entries
+   * into "clean" ones. The change will be reflected only in BCEL, not in
+   * internal Umbra representation. <br> 
+   * It changes class name index, super class name index and attribute name index
+   * of BCEL JavaClass accordingly. <br> <br>
+   * 
+   * "Clean" and "dirty" numbers are the constant pool entry numbers and
+   * references to other constant pool entries normally represented as #{num}.
+   * <br> <br>
+   * "Clean" numbers are the numbers of a consistent, correct bytecode file,
+   * i.e. the file just loaded from class file. <br>
+   * When numbers are "clean", constant
+   * pool entries are numbered with consecutive natural numbers, starting from 1, i.e.:
+   * <br> <br>
+   * 
+   * <code>
+   * const #1 = Class ... <br>
+   * const #2 = Utf8 ... <br>
+   * const #3 = String ... <br>
+   * const #4 = Utf8 ... <br>
+   * </code> <br>
+   * 
+   * and so on. <br> <br>
+   * 
+   * "Dirty" numbers are numbers entered by user during editing. If for example
+   * user wants to enter new entry between entries #2 and #3, it can be numbered
+   * with some other number, providing there is no another constant pool entry
+   * with such number, i.e.: <br> <br>
+   * 
+   * <code>
+   * const #1 = Class ... <br>
+   * const #2 = Utf8 ... <br>
+   * const #75 = Utf8 ... <br>
+   * const #3 = String ... <br>
+   * const #4 = Utf8 ... <br>
+   * </code> <br>
+   *
+   * In both situations ("clean" and "dirty") references reference to the
+   * constant pool entry with a given number, i.e. in "dirty" situation:
+   * <br> <br> 
+   * 
+   * <code>
+   * const #1 = Class #3 <br>
+   * const #2 = Utf8 "something" <br>
+   * const #75 = Utf8 "something other" <br>
+   * const #3 = String #4 <br>
+   * const #4 = Utf8 "a string" <br>
+   * </code> <br>
+   * 
+   * first entry refers to the const #3, not to the third constant (numbered with
+   * #75) and entry const #3 refers to the const #4, no to itself (which is in
+   * fourth position). <br> <br>
+   * 
+   * After calling this method all constan pool entries are renumbered starting
+   * from 1, and references change accordingly: <br> <br>
+   * 
+   * <code>
+   * const #1 = Class #4 <br>
+   * const #2 = Utf8 "something" <br>
+   * const #3 = Utf8 "something other" <br>
+   * const #4 = String #5 <br>
+   * const #5 = Utf8 "a string" <br>
+   * </code> <br> <br>
+   * 
+   * @param a_jc BCEL representation of java class
+   */
+  public void recalculateCPNumbers(JavaClass a_jc) {
+    if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
+    HashMap f = new HashMap();
+    /*
+     * NOTE (to236111) changing number of those two constants forbidden
+     * it's not a bug
+     */
+    int class_name_index = a_jc.getClassNameIndex();
+    int super_class_name_index = a_jc.getSuperclassNameIndex();
+    int entry_no = 1;
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updating pool entries");
+    for (int i = 0; i < getNoOfLines(); i++) {
+      BytecodeLineController lc = getLineController(i);
+      if (lc instanceof CPLineController) {
+        CPLineController cplc = (CPLineController) lc;
+        f.put(cplc.getConstantNumber(), entry_no);
+        entry_no++;
+      }
+    }
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updating instructions");
+    for (int i = 0; i < getNoOfLines(); i++) {
+      BytecodeLineController lc = getLineController(i);
+      if (lc instanceof CPLineController) {
+        CPLineController cplc = (CPLineController) lc;
+        cplc.updateReferences(f);
+      } else if (lc instanceof MultiInstruction) {
+        MultiInstruction mi = (MultiInstruction) lc;
+        try {
+          int pos = getCurrentPositionInMethod(i);
+          if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
+            throw new UmbraException();
+          mi.updateReferences(f, pos);
+        } catch (UmbraException e) {
+          // TODO (to236111) exception handling
+          e.printStackTrace();
+        }
+      }
+    }
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
+    for (int i = 0; i < a_jc.getAttributes().length; i++) {
+      a_jc.getAttributes()[i].
+      setNameIndex((Integer) f.get(a_jc.getAttributes()[i].getNameIndex()));
+    }
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updating class names");
+    a_jc.setClassNameIndex((Integer) f.get(class_name_index));
+    a_jc.setSuperclassNameIndex((Integer) f.get(super_class_name_index));
+    if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
+  }
+  
 }

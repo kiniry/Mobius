@@ -103,7 +103,13 @@ public class AN {
 	 * If there is no such edge false is returned if we aren't in 
 	 * accepting node and true otherwise. If the whole string
 	 * <code>line</code> has been read true is returned if we are in
-	 * accepting node and false otherwise.
+	 * accepting node and false otherwise. <br> <br>
+   * 
+   * Note that automaton parses till the first character that does not have outgoing
+   * edge from current node, and if that node happens to be accepting, it will accept.
+   * So the automaton recognizes the numbers "3.-4" and "3.2e2.1 as 3. and 3.2e2
+   * (correct) + "-4" and ".1" as the rest of string passed to parser that uses AN.
+   * However we hope that parser will recognize the error.
 	 * 
 	 * @param line a string which the automaton processes
 	 * @param index current position in <code>line</code>

@@ -8,6 +8,12 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantDouble;
+
+import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
 
@@ -79,22 +85,53 @@ public class DoubleCPLineController extends CPLineController {
   /**
    * This method parses the parameter of the current constant pool entry.
    *
-   * This method retrieves the string representation of the parameter of the
+   * This method retrieves the double precision floating point parameter of the
    * constant pool entry in {@link BytecodeLineController#getMy_line_text()}.
    * This parameter is located after the constant pool entry keyword. The
    * method assumes {@link BytecodeLineController#getMy_line_text()} is correct.
    *
-   * @return the string representation of the floating point parameter of the
-   * constant pool entry
+   * @return the floating point parameter of the constant pool entry
    */
-  private String getParam() {
+  private double getParam() {
     parseTillEntryType();
     InstructionParser my_parser = getParser();
     my_parser.swallowWhitespace();
     my_parser.swallowSingleMnemonic(BytecodeStrings.DOUBLE_CP_ENTRY_KEYWORD);
     my_parser.swallowWhitespace();
     my_parser.swallowFPNumber();
-    return my_parser.getFPResult();
+    return Double.parseDouble(my_parser.getFPResult());
+  }
+  
+  /**
+   * Returns the link to the BCEL double constant represented by the current
+   * line. If there is no such constant it creates the constant before
+   * returning. Newly created constant should then be associated with BML
+   * constant pool representation. <br> <br>
+   *  
+   * @return a BCEL constant represented by the current line
+   */
+  public Constant getConstant() {
+    if (my_constant != null) return my_constant;
+    my_constant = new ConstantDouble(getParam());
+    return my_constant;
+  }
+  
+  /**
+   * This method changes references to constant pool entries from "dirty" numbers
+   * to "clean" ones. <br>
+   * The change has effect only in BCEL representation of constant pool and does
+   * not affect internal Umbra representation. <br> <br>
+   * 
+   * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
+   * "dirty" and "clean" numbers concepts. <br> <br>
+   * 
+   * This method does nothing as double constant pool entries don't have any
+   * references. 
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   */
+  public void updateReferences(HashMap f) {
+    
   }
 
 }

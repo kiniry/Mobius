@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
@@ -15,6 +17,7 @@ import org.apache.bcel.generic.LDC_W;
 
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraException;
 
 
 /**
@@ -74,8 +77,10 @@ public class LdcInstruction extends OtherInstruction {
   public final Instruction getInstruction() {
     int index;
 
-    if (!correct())
+    if (!correct()) {
+      System.err.println("incorrect: " + getLineContent());
       return null;
+    }  
     Instruction res = null;
     index = getInd();
     if (getName().compareTo("ldc") == 0) {
@@ -116,7 +121,11 @@ public class LdcInstruction extends OtherInstruction {
     if (parser.getLine().charAt(parser.getIndex()) == '\"') {
       res = res && stringWithDelimiters(parser);
     } else {
-      res = res && parser.swallowNumber();
+      /* TODO (to236111) check whether it is the proper format
+       * FIXME (to236111) check whether other classes may need change from
+       * swallowNumber() to swallowFPNumber()
+       */
+      res = res && parser.swallowFPNumber();
     }
     res = res && parser.swallowWhitespace();
     res = res && numberWithDelimiters(parser);
@@ -140,4 +149,5 @@ public class LdcInstruction extends OtherInstruction {
     res = res && a_parser.swallowWhitespace();
     return res;
   }
+  
 }

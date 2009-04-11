@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantUtf8;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,9 +24,14 @@ public class Utf8CPLineControllerTest extends TestCase {
   
   private String lines[] = {
     "   const    #5 =          Utf8 \"napis\"  ;",
-    "const#5=Utf8 \"inny napis\";",
-    "const #5 = Utf8 \"jeszcze inny napis\";          ",
-    "   const    #5 =  Utf8 \"no i jeszcze jeden napis (53)\"   ;   "
+    "const#5=Utf8 \"   inny napis  \";",
+    "const #5 = Utf8 \"jeszcze inny napis  \";          ",
+    "   const    #5 =  Utf8 \"  no i jeszcze jeden napis (53)\"   ;   "
+  };
+  
+  private String strings[] = {
+    "napis", "   inny napis  ", "jeszcze inny napis  ",
+    "  no i jeszcze jeden napis (53)"                          
   };
   
   private String lines_incorrect[] = {
@@ -89,6 +96,18 @@ public class Utf8CPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("utf8, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("utf8, params, ins number " + i,
+                 ((ConstantUtf8) instructions[i].getConstant()).
+                 getBytes().equals(strings[i]));
     }
   }
 

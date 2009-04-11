@@ -15,9 +15,6 @@ import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantCP;
-import org.apache.bcel.classfile.ConstantFieldref;
-import org.apache.bcel.classfile.ConstantMethodref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
@@ -115,6 +112,16 @@ public class BCConstantPool extends BCCConstantPrinting
       }
       jc.getConstantPool().setConstantPool(consts);
     }
+  }
+  
+  /**
+   * Removes all entries from constant pool.
+   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl) 
+   */
+  public void clearConstantPool() {
+    constants.clear();
+    initialSize = 0;
+    addConstant(null, false);
   }
 
   /**
@@ -346,6 +353,22 @@ public class BCConstantPool extends BCCConstantPrinting
     // TODO Auto-generated method stub
     return null;
   }
+  
+  /**
+   * Returns the number of constants in first constant pool.
+   * @return the number of constants in first constant pool
+   */
+  public int getInitialSize() {
+    return initialSize;
+  }
+  
+  /**
+   * Returns the number of all constants.
+   * @return the number of all constants
+   */
+  public int getSize() {
+    return constants.size();
+  }
 
 
   public void save(AttributeWriter aw) {
@@ -369,4 +392,5 @@ public class BCConstantPool extends BCCConstantPrinting
       jc.getConstantPool().setConstantPool(consts);
     }
   }
+  
 }

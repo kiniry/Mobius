@@ -10,6 +10,7 @@ package umbra.instructions;
 
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.CommentLineController;
 import umbra.instructions.ast.EmptyLineController;
 import umbra.instructions.ast.FieldLineController;
@@ -170,6 +171,11 @@ public class FragmentParser extends BytecodeCommentParser {
     while (j <= my_end) {
       final String line = this.getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController blc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
+      /*if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP && blc instanceof CPLineController) {
+        CPLineController cplc = (CPLineController) blc;
+        int const_no = cplc.getConstantNumber();
+        my_doc.getBmlp().getBcc().getCp().getConstant(const_no);
+      }*/
       addEditorLine(blc);
       j++;
     }

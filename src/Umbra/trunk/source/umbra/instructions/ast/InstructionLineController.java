@@ -397,10 +397,13 @@ public abstract class InstructionLineController extends BytecodeLineController {
   public int getNoInMethod() {
     final InstructionHandle[] ihs = getMethod().getInstructionList().
                               getInstructionHandles();
+    int res = -1;
     for (int i = 0; i < ihs.length; i++) {
-      if (ihs[i] == getHandle()) return i;
+      if (ihs[i] == getHandle()) {
+        res = i;
+      }
     }
-    return -1;
+    return res;
   }
 
   /**

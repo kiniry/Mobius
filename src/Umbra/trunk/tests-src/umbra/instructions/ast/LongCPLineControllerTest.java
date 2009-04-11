@@ -9,6 +9,8 @@
 package umbra.instructions.ast;
 
 import junit.framework.TestCase;
+
+import org.apache.bcel.classfile.ConstantLong;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +30,8 @@ public class LongCPLineControllerTest extends TestCase {
     "   const    #5 =  Long       21l;",
     "   const    #5 =  Long       21L;"
   };
+  
+  private long references[] = { 21, 21, 21, 21, 21, 21 };
   
   private String lines_incorrect[] = {
     "   const    5 =          Long 21;",
@@ -90,6 +94,18 @@ public class LongCPLineControllerTest extends TestCase {
     for (int i = 0; i < lines_incorrect.length; i++) {
       assertTrue("long, incorrect lines, ins number "
                  + i, !instructions_incorrect[i].correct());
+    }
+  }
+  
+  /**
+   * Test method for parameter parsing.
+   */
+  @Test
+  public void testParams() {
+    for (int i = 0; i < lines.length; i++) {
+      assertTrue("long, params, ins number " + i,
+                 ((ConstantLong) instructions[i].getConstant()).getBytes() ==
+                   references[i]);
     }
   }
 
