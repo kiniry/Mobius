@@ -1,4 +1,4 @@
-package ie.ucd.bon.interface;
+package ie.ucd.bon.clinterface;
 
 import ie.ucd.clops.runtime.options.CLOPSErrorOption;
 import ie.ucd.clops.runtime.options.OptionGroup;
@@ -103,13 +103,13 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogoption.addOptionOrGroup(ogno_check_consistency);
     ogoption.addOptionOrGroup(ogdebug);
     ogoption.addOptionOrGroup(ogprint);
-    ogoption.addOptionOrGroup(ogtime);
     ogoption.addOptionOrGroup(ogformal);
+    ogoption.addOptionOrGroup(ogtime);
     ogoption.addOptionOrGroup(oggraph);
     ogoption.addOptionOrGroup(ogpretty_print);
-    ogoption.addOptionOrGroup(oggen_class_dic);
     ogoption.addOptionOrGroup(oginformal);
     ogoption.addOptionOrGroup(ogno_gen_class_dic);
+    ogoption.addOptionOrGroup(oggen_class_dic);
     ogoption.addOptionOrGroup(ogcheck_formal);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogtypecheck);

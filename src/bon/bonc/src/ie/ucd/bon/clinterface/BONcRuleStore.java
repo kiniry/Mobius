@@ -1,4 +1,4 @@
-package ie.ucd.bon.interface;
+package ie.ucd.bon.clinterface;
 
 import ie.ucd.clops.runtime.options.OptionStore;
 import ie.ucd.clops.runtime.rules.Action;

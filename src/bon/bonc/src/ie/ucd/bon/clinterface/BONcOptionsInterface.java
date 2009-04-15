@@ -1,4 +1,4 @@
-package ie.ucd.bon.interface;
+package ie.ucd.bon.clinterface;
 
 import java.util.List;
 import java.io.File;

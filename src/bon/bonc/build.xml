@@ -531,8 +531,8 @@
   
 	<!-- CLOPS -->
 	<property name="clops-file" location="bonc.clo"/>
-	<property name="clops-target" location="${src}/ie/ucd/bon/interface"/>
-	<property name="clops-pkg" value="ie.ucd.bon.interface"/>
+	<property name="clops-target" location="${src}/ie/ucd/bon/clinterface"/>
+	<property name="clops-pkg" value="ie.ucd.bon.clinterface"/>
 	<property name="clops-src" location="clops"/>
 	<property name="clops-html-output" location="bonc.html"/>
 	<path id="clops.path">
