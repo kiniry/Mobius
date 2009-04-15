@@ -55,6 +55,12 @@ public class MultiInstruction extends InstructionLineController {
    * from textual representation of this line.
    */
   protected boolean use_stored_ind;
+  
+  /**
+   * If there is no parameter has value false, true otherwise. The getInd()
+   * should be called before for has_ind to have meaningfull value.
+   */
+  protected boolean has_ind;
 
   /**
    * This method checks if the last parenthesis in the given string
@@ -112,9 +118,11 @@ public class MultiInstruction extends InstructionLineController {
                              my_line_text.lastIndexOf(")"));
     } else {
       if (MultiInstruction.onlyDigitsInParen(my_line_text)) {
+        has_ind = true;
         return MultiInstruction.getNumInParen(my_line_text);
       }
     }
+    has_ind = false;
     return 0;
   }
 
@@ -148,6 +156,9 @@ public class MultiInstruction extends InstructionLineController {
    * @throws UmbraException 
    */
   public void updateReferences(HashMap f, int a_pos) throws UmbraException {
+    getInd();
+    if (!has_ind) return;
+    //System.err.println(has_ind + " " + getInd());
     my_ind = (Integer) f.get(getInd());
     use_stored_ind = true;
     //int a_pos = this.getList().

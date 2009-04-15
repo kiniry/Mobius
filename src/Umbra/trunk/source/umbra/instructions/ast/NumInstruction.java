@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
 import umbra.instructions.InstructionParser;
 
 
@@ -107,4 +109,20 @@ public class NumInstruction extends MultiInstruction {
       parnum = -1;
     return parnum;
   }
+  
+  /**
+   * This method changes all references to constant pool
+   * from a "dirty" numbers to a "clean" ones in BCEL representation
+   * of this instruction. <br> <br>
+   * 
+   * This method does nothing, because this class represents instructions
+   * that do not have any reference to constant pool entries.
+   * 
+   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   * @param a_pos position in method
+   */
+  public void updateReferences(HashMap f, int a_pos) {
+    
+  }
+  
 }
