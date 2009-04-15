@@ -29,6 +29,7 @@ import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.NoViableAltException;
 import org.antlr.runtime.Parser;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenStream;
 
@@ -44,8 +45,8 @@ public abstract class AbstractBONParser extends Parser {
   private TypingInformation typingInformation;
   private Problems problems;
 
-  public AbstractBONParser(TokenStream input) {
-    super(null);
+  public AbstractBONParser(TokenStream input, RecognizerSharedState state) {
+    super(null, state);
     this.context = Context.getContext();
   }
 
@@ -74,12 +75,18 @@ public abstract class AbstractBONParser extends Parser {
     }
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  protected void mismatch(IntStream input, int ttype, BitSet follow) throws RecognitionException {
-    Main.logDebug("Mismatch");
-    super.mismatch(input, ttype, follow);
+  
+  
+  @Override
+  public boolean mismatchIsMissingToken(IntStream input, BitSet follow) {
+    Main.logDebug("Mismatch (missing token).");
+    return super.mismatchIsMissingToken(input, follow);
+  }
+
+  @Override
+  public boolean mismatchIsUnwantedToken(IntStream input, int ttype) {
+    Main.logDebug("Mismatch (unwanted token).");
+    return super.mismatchIsUnwantedToken(input, ttype);
   }
 
   /**
@@ -220,32 +227,35 @@ public abstract class AbstractBONParser extends Parser {
     //TODO adjust severity here according to if we recovered ok or not...
     problems.addProblem(problem);
   }
-    
-/*  **
-   * Emits an error message. Will use the specified error stream or, if none
-   * was specified, will use {@link System#out}.
-   *//*
-  public void emitErrorMessage(String msg) {
-    errorStream.println(msg);
-  }*/
-  
+
   @Override
-  public void recoverFromMismatchedToken(IntStream input, RecognitionException e, int ttype, BitSet follow)
-      throws RecognitionException {
-    //Suppress System.err output from BaseRecognizer implementation
-    Main.logDebug("Recovering from mismatch..." + e);
+  public void recover(IntStream input, RecognitionException re) {
+    Main.logDebug("Recovering..." + re);
     PrintStream oldErr = System.err;
     System.setErr(NullOutputStream.getNullPrintStreamInstance());
-    super.recoverFromMismatchedToken(input, e, ttype, follow);
+    super.recover(input, re);
     System.setErr(oldErr);
   }
 
   @Override
-  protected boolean recoverFromMismatchedElement(IntStream input,
-      RecognitionException e, BitSet follow) {
-    boolean success = super.recoverFromMismatchedElement(input, e, follow);
-    Main.logDebug("Recovered from mismatched element: " + success);
-    return success;
+  public Object recoverFromMismatchedSet(IntStream input,
+      RecognitionException e, BitSet follow) throws RecognitionException {
+    Main.logDebug("Recovering from mismatched set..." + e);
+    PrintStream oldErr = System.err;
+    System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    Object result = super.recoverFromMismatchedSet(input, e, follow);
+    System.setErr(oldErr);
+    return result;
+  }
+
+  @Override
+  protected Object recoverFromMismatchedToken(IntStream arg0, int arg1, BitSet arg2) throws RecognitionException {
+    Main.logDebug("Recovering from mismatched token...");
+    PrintStream oldErr = System.err;
+    System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    Object result = super.recoverFromMismatchedToken(arg0, arg1, arg2);
+    System.setErr(oldErr);
+    return result;
   }
 
   public final SourceLocation getSourceLocation(Token t) {

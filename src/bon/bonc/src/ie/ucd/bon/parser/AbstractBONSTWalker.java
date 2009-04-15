@@ -8,6 +8,7 @@ import ie.ucd.bon.Printer.PrintingOption;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.util.StringUtil;
 
+import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
 import org.antlr.stringtemplate.StringTemplateGroup;
@@ -17,8 +18,8 @@ public abstract class AbstractBONSTWalker extends TreeParser {
   private PrintingTracker printingTracker;
   private PrintingOption printingOption;
   
-  public AbstractBONSTWalker(TreeNodeStream input) {
-    super(input);
+  public AbstractBONSTWalker(TreeNodeStream input, RecognizerSharedState state) {
+    super(input, state);
   }
 
   public void initialise(TreeNodeStream input, StringTemplateGroup templateLib, PrintingTracker printingTracker, PrintingOption printingOption) {

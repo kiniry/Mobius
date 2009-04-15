@@ -21,6 +21,7 @@ import org.antlr.runtime.MismatchedSetException;
 import org.antlr.runtime.MismatchedTokenException;
 import org.antlr.runtime.NoViableAltException;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 
 public abstract class AbstractBONLexer extends Lexer {
 
@@ -30,8 +31,8 @@ public abstract class AbstractBONLexer extends Lexer {
   public AbstractBONLexer() {
   }
 
-  public AbstractBONLexer(CharStream input) {
-    super(null);
+  public AbstractBONLexer(CharStream input, RecognizerSharedState state) {
+    super(null, state);
   }
 
   public void initialise(CharStream input, File sourceFile) {

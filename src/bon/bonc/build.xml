@@ -52,19 +52,20 @@
     </filelist>
   </path>
 	
-  <path id="antlr-mod.path">
-    <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-3.0.1-mod.jar"/>
-  </path>
-	
   <path id="antlr.path">
   	<path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-3.0.1.jar"/>
+    <filelist dir="${lib}" files="antlr-3.1.3.jar"/>
+  </path>
+	
+	<path id="antlr-mod.path">
+    <path refid="base.path"/>
+    <filelist dir="${lib}" files="antlr-3.1.3-mod.jar"/>
+		<filelist dir="${lib}" files="antlr-3.1.3.jar"/>
   </path>
 	
   <path id="test.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-runtime-3.0.1.jar"/>
+    <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar"/>
     <pathelement location="${build}"/>
   </path>
 	
@@ -164,7 +165,7 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-    	<fileset dir="${lib}/" includes="antlr-runtime-3.0.1.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar,prefuse.jar"/>
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar,prefuse.jar"/>
     </copy>
   	
     <chmod perm="a+x">
@@ -528,6 +529,32 @@
     </java>
   </target>
   
+	<!-- CLOPS -->
+	<property name="clops-file" location="bonc.clo"/>
+	<property name="clops-target" location="${src}/ie/ucd/bon/interface"/>
+	<property name="clops-pkg" value="ie.ucd.bon.interface"/>
+	<property name="clops-src" location="clops"/>
+	<property name="clops-html-output" location="bonc.html"/>
+	<path id="clops.path">
+	  <filelist dir="${lib}" files="clops.jar"/>
+		<file name="velocity-1.6.2.jar"/>
+		<file name="velocity-1.6.2-dep.jar"/>
+	</path>
+	
+	<target name="clops-gen" depends="init" description="Clops generations">
+	  <echo message="Using ${clops-file}"/>
+	  <java fork="yes" jar="lib/clops.jar">
+	    <assertions><enable/></assertions>
+	    <classpath refid="clops.path"/>
+	    <arg value="-v"/>
+	    <arg value="-d"/>
+	    <arg value="-t"/>
+	    <arg value="${clops-html-output}"/> 
+	    <arg value="-p"/>
+	    <arg value="${clops-pkg}"/>
+	    <arg value="-o"/>
+	    <arg value="${clops-target}"/>
+	    <arg value="${clops-file}"/>
+	  </java>
+	  </target>
 </project>
-
-

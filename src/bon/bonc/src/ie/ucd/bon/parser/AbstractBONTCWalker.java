@@ -17,6 +17,7 @@ import java.io.PrintStream;
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.IntStream;
 import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.TreeNodeStream;
 import org.antlr.runtime.tree.TreeParser;
@@ -28,8 +29,8 @@ public class AbstractBONTCWalker extends TreeParser {
   private InformalTypeChecker itc;
   private FormalTypeChecker ftc;
   
-  public AbstractBONTCWalker(TreeNodeStream input) {
-    super(input);
+  public AbstractBONTCWalker(TreeNodeStream input, RecognizerSharedState state) {
+    super(input, state);
     this.context = Context.getContext();
   }
   
@@ -83,13 +84,33 @@ public class AbstractBONTCWalker extends TreeParser {
   }
   
   @Override
-  public void recoverFromMismatchedToken(IntStream input, RecognitionException e, int ttype, BitSet follow)
-      throws RecognitionException {
-    //Suppress System.err output from BaseRecognizer implementation 
+  public void recover(IntStream input, RecognitionException re) {
+    Main.logDebug("Recovering..." + re);
     PrintStream oldErr = System.err;
     System.setErr(NullOutputStream.getNullPrintStreamInstance());
-    super.recoverFromMismatchedToken(input, e, ttype, follow);
+    super.recover(input, re);
     System.setErr(oldErr);
+  }
+
+  @Override
+  public Object recoverFromMismatchedSet(IntStream input,
+      RecognitionException e, BitSet follow) throws RecognitionException {
+    Main.logDebug("Recovering from mismatched set..." + e);
+    PrintStream oldErr = System.err;
+    System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    Object result = super.recoverFromMismatchedSet(input, e, follow);
+    System.setErr(oldErr);
+    return result;
+  }
+
+  @Override
+  protected Object recoverFromMismatchedToken(IntStream arg0, int arg1, BitSet arg2) throws RecognitionException {
+    Main.logDebug("Recovering from mismatched token...");
+    PrintStream oldErr = System.err;
+    System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    Object result = super.recoverFromMismatchedToken(arg0, arg1, arg2);
+    System.setErr(oldErr);
+    return result;
   }
   
 }

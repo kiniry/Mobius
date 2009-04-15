@@ -753,13 +753,13 @@ semantic_label  :^(
 
 class_interface  :^(
                     CLASS_INTERFACE
-                    (o+=indexing)?
-                    (o+=parent_class_list)?
+                    (i+=indexing)?
+                    (pcl+=parent_class_list)?
                     features
                     (inv+=class_invariant)?
                    )
                   ->
-                    classInterface(other={$o},features={$features.st},inv={$inv})
+                    classInterface(indexing={$i},pcl={$pcl},features={$features.st},inv={$inv})
                  ;
                     
 class_invariant  :^(
@@ -808,14 +808,15 @@ feature_specifications  :^(
 feature_specification  :^(
                           FEATURE_SPECIFICATION
                           (key+='deferred')? (key+='effective')? (key+='redefined')?
-                          feature_name_list (a+=has_type)?
-                          (a+=rename_clause)?
+                          feature_name_list 
+                          (ah+=has_type)?
+                          (ar+=rename_clause)?
                           (COMMENT)?
-                          (o+=feature_arguments)?
-                          (o+=contract_clause)? 
+                          (fa+=feature_arguments)?
+                          (cc+=contract_clause)? 
                          )
                         ->
-                          featureSpecification(key={$key},fnl={$feature_name_list.st},aft={$a},other={$o})
+                          featureSpecification(key={$key},fnl={$feature_name_list.st},afth={$ah},aftr={$ar},fa={$fa},cc={$cc})
                        ;
 
 has_type  : ^(HAS_TYPE type_mark type)
@@ -833,10 +834,10 @@ contract_clause  :^(
                  ;
              
 contracting_conditions  :^(
-                           CONTRACTING_CONDITIONS (cc+=precondition)? (cc+=postcondition)?
+                           CONTRACTING_CONDITIONS (pre+=precondition)? (post+=postcondition)?
                           )
                          -> 
-                           contractingConditions(cc={$cc})
+                           contractingConditions(pre={$pre},post={$post})
                         ;
         
 precondition  :^(

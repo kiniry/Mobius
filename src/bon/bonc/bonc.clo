@@ -1,0 +1,82 @@
+
+NAME::
+ BONc
+
+ARGS::
+
+typecheck:{"-tc","--typecheck"}:[default="true"]
+no_typecheck:{"-ntc","--no-typecheck"}:[default="false"]
+
+//TODO - must prevent identifier names containing dashes!
+
+//Print would be better as a StringEnum
+print:{"-p","--print"}:{enum}:[choices="txt,html,xhtml,dic",casesensitive="false"]
+print_output:{"-po","--print-output"}:{file}:[canbedir="false"]
+pretty_print:{"-pp","--pretty-print"}
+
+help:{"-h","--help"}
+hidden_help:{"-hh","--hidden-help"}
+
+time:{"-t","--time"}
+informal:{"-i","--informal"}
+formal:{"-f","--formal"}
+check_informal:{"-ci","--check-informal"}
+check_formal:{"-cf","--check-formal"}
+check_consistency:{"-cc","--check-consistency"}
+no_check_consistency:{"-ncc","--no-check-consistency"}
+
+debug:{"-d","--debug"}
+
+//Currently can't have dash as an alias. Fix!
+//readstdin:{"-"}
+
+gen_class_dic:{"-gcd","--gen-class-dic"}
+no_gen_class_dic:{"-ngcd","--no-gen-class-dic"}
+
+graph:{"-g","--graph"}:{enum}:[choices="icg,iig",casesensitive="false"]
+
+//Old CLO library
+//print_man
+//print_readme
+//print_bash_completion
+
+version:{"-v","--version"}
+
+SourceFiles:{}:{file-list}:[canbedir="false",mustexist="true"]
+
+
+FORMAT::
+
+  ( option* ) 
+| ( version )
+| ( help )
+| ( hidden_help ) ;
+
+
+WHERE::
+
+option :     print 
+          OR print_output 
+          OR pretty_print 
+          OR time 
+          OR informal 
+          OR formal 
+          OR check_formal 
+          OR check_consistency
+          OR no_check_consistency
+          OR debug
+          OR gen_class_dic
+          OR no_gen_class_dic
+          OR graph
+       ;
+
+FLY::
+
+//TODO, all rhs should be text (due to required parsing, etc.)
+//pretty_print -> print:="txt";
+
+OVERRIDES::
+
+VALIDITY::
+
+// print_output != ? => print != ?;

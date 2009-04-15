@@ -602,9 +602,12 @@ semanticLabel(l) ::= <<
 <l>
 >>
 
-classInterface(other,features,inv) ::= <<
-<if(first(other))>
-<other; separator="\n\n">
+classInterface(indexing,pcl,features,inv) ::= <<
+<if(first(indexing))>
+<indexing; separator="\n\n">
+
+<endif><if(first(pcl))>
+<pcl; separator="\n\n">
 
 <endif>
 <features>
@@ -639,10 +642,13 @@ featureSpecifications(fcl) ::= <<
 <fcl; separator="\n">
 >>
 
-featureSpecification(key,fnl,hastype,aft,other) ::= <<
-<if(first(key))><key> <endif><fnl><if(first(aft))><aft><endif><if(first(other))>
+featureSpecification(key,fnl,hastype,afth,aftr,fa,cc) ::= <<
+<if(first(key))><key> <endif><fnl><if(first(afth))><afth><endif><if(first(aftr))><aftr><endif><if(first(fa))>
 
-  <other; separator="\n">
+  <fa; separator="\n">
+<endif><if(first(cc))>
+
+  <cc; separator="\n">
 <endif>
 >>
 
@@ -654,8 +660,9 @@ contractClause(cc) ::= <<
 <cc>
 >>
 
-contractingConditions(cc) ::= <<
-<cc; separator="\n">
+contractingConditions(pre,post) ::= <<
+<pre; separator="\n">
+<post; separator="\n">
 end
 >>
 
