@@ -100,7 +100,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           blc instanceof InstructionLineController ||
           blc instanceof CommentLineController ||
           blc instanceof UnknownLineController ||
-          blc instanceof CPLineController) {
+         (Preparsing.PARSE_CP && blc instanceof CPLineController)) {
         i--;
       } else {
         break;
@@ -310,7 +310,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     //my_editor_lines.addAll(a_start_rem, the_lines);
     /* NOTE (to236111) isInsideConstantPool() added */
     if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
-        !a_ctxt.isInFieldsArea() && !a_ctxt.isInsideConstantPool()) {
+        !a_ctxt.isInFieldsArea() &&
+        (Preparsing.PARSE_CP ? !a_ctxt.isInsideConstantPool() : true)) {
       mg.getInstructionList().update();
       mg.update();
       mg.getInstructionList().setPositions();
@@ -526,8 +527,9 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * This method changes the "dirty" numbers in BCEL constant pool entries
    * into "clean" ones. The change will be reflected only in BCEL, not in
    * internal Umbra representation. <br> 
-   * It changes class name index, super class name index and attribute name index
-   * of BCEL JavaClass accordingly. <br> <br>
+   * It changes class name index, super class name index, attribute name index,
+   * field name index and field signature index of BCEL JavaClass accordingly.
+   * <br> <br>
    * 
    * "Clean" and "dirty" numbers are the constant pool entry numbers and
    * references to other constant pool entries normally represented as #{num}.
@@ -613,9 +615,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       BytecodeLineController lc = getLineController(i);
       if (lc instanceof CPLineController) {
         CPLineController cplc = (CPLineController) lc;
+        if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
         cplc.updateReferences(f);
       } else if (lc instanceof MultiInstruction) {
         MultiInstruction mi = (MultiInstruction) lc;
+        if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
         try {
           int pos = getCurrentPositionInMethod(i);
           if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
@@ -631,6 +635,13 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     for (int i = 0; i < a_jc.getAttributes().length; i++) {
       a_jc.getAttributes()[i].
       setNameIndex((Integer) f.get(a_jc.getAttributes()[i].getNameIndex()));
+    }
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
+    for (int i = 0; i < a_jc.getFields().length; i++) {
+      a_jc.getFields()[i].
+      setNameIndex((Integer) f.get(a_jc.getFields()[i].getNameIndex()));
+      a_jc.getFields()[i].
+      setSignatureIndex((Integer) f.get(a_jc.getFields()[i].getSignatureIndex()));
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating class names");
     a_jc.setClassNameIndex((Integer) f.get(class_name_index));

@@ -227,7 +227,7 @@ public class BytecodeDocument extends Document {
    * "dirty" numbers to "clean" ones. <br>
    * It also propagates the change into methodgens (BCEL constant
    * pool is automatically updated by BML, but the local pools of
-   * methodgens must be updated manually). <br> <br>
+   * methodgens must be updated manually) and BCEL fields. <br> <br>
    * 
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for
    * explantation of "dirty" and "clean" numbers. <br> <br>
@@ -240,13 +240,19 @@ public class BytecodeDocument extends Document {
   public void updateBML() {
     if (!umbra.instructions.Preparsing.PARSE_CP ||
         !umbra.instructions.Preparsing.UPDATE_CP) return;
+    if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
     BCClass bc = my_bmlp.getBcc();
     for (int i = 0; i < bc.getMethodCount(); i++) {
       ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().getConstantPool());
       bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
     }
-    if (FileNames.CP_DEBUG_MODE) my_bcc.controlPrintCP(this);
+    for (int i = 0; i < bc.getJC().getFields().length; i++) {
+      bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());
+    }
+    if (FileNames.CP_DEBUG_MODE) {
+      my_bcc.controlPrintCP(this);
+    }
   }
 
   /**

@@ -66,7 +66,7 @@ public final class Preparsing {
    * 
    * TODO (to236111) remove
    */
-  public static final boolean UPDATE_CP = false;
+  public static final boolean UPDATE_CP = true;
 
   /**
    * Chooses one of line types that matches the given line
@@ -142,15 +142,22 @@ public final class Preparsing {
       /* TODO (to236111) automaton here */
       if (!PARSE_CP) {
         if (CPLineController.isCPLineStart(a_line)) {
-          return new umbra.instructions.ast.IncorrectCPLineController(a_line, null);
+          return new CPLineController(a_line, null);
         }
       }
     } else if (a_context.isInFieldsArea()) {
       // NOTE (to236111) if the field area is empty methods are next and they
-      // can start with the same words as fields ('public' etc.)
-      /* if (FieldLineController.isFieldLineStart(a_line)) {
-        return new FieldLineController(a_line, a_bmlp);
-      } */
+      // can start with the same words as fields ('public' etc.);
+      // it's a rather dirty way to avoid that
+      if (!PARSE_CP) {
+        if (FieldLineController.isFieldLineStart(a_line)) {
+          return new FieldLineController(a_line, a_bmlp);
+        }
+      } else {
+        if (FieldLineController.isFieldLineStart(a_line) && !a_line.contains("(")) {
+          return new FieldLineController(a_line, a_bmlp);
+        }
+      }
     }
     return lc;
   }
