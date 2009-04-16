@@ -263,19 +263,22 @@
   <target name="test-coq" depends="compile">
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
         <classpath refid="test.path"/>
-	  	<arg value="exmple.v"/>
+  		<arg value="-tc"/>
+  		<arg value="exmple.v"/>
   		<arg value="-g"/>
 	  	<arg value="output.fol"/>
   	</java>
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
         <classpath refid="test.path"/>
-	  	<arg value="output.fol"/>
+  		<arg value="-tc"/>
+  		<arg value="output.fol"/>
   		<arg value="-g"/>
 	  	<arg value="output.v"/>
   	</java>
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
         <classpath refid="test.path"/>
-	  	<arg value="exmple.v"/>
+  		<arg value="-tc"/>
+  		<arg value="exmple.v"/>
   		<arg value="-m"/>
 	  	<arg value="exmple.v"/>
   	</java>

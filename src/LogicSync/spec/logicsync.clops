@@ -4,7 +4,7 @@ NAME::
 ARGS::
   Help: {"-h", "-help", "--help"}
   		: "Show the help message."
-  
+  TypeCheck: {"-tc"} : "Runs the typechecking algorithm."  
   Files: {}:{file-list}:[between="", mustExist="true", canBeDir="false", allowMultiple="true"]
   		: "Provide input file(s). Determine their type by their extension."
   Generate: {"-g"}:{file-list}:[canBeDir="false"]
@@ -13,7 +13,7 @@ ARGS::
       : "Merge with existing file. If there is no previous version, creates a new file."
 
 FORMAT::
-  Help  | ((Output)* Files (Files | Output)*);  
+  Help  | ((Output)* TypeCheck? Files (Files | Output)*);  
  
 WHERE::
   Main:

@@ -17,6 +17,7 @@ import mobius.logic.clops.LogicSyncOptionsInterface;
 import mobius.logic.clops.LogicSyncParser;
 import mobius.logic.lang.ALanguage;
 import mobius.logic.lang.generic.GenericLanguage;
+import mobius.logic.lang.generic.TypeChecker;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.util.ClassUtils;
 
@@ -65,13 +66,16 @@ public class Main {
   
   /** the list of the language that will have to merge to an output. */
   private Set<ALanguage> fMergeLanguages = new HashSet<ALanguage>();
+
+  private boolean fTypeCheck;
   
   
   public Main(LogicSyncOptionsInterface opt, Map<ALanguage, String> list) {
-    this(list, opt.getFiles(), opt.getGenerate(), opt.getMerge());
+    this(list, opt.isTypeCheckSet(), opt.getFiles(), opt.getGenerate(), opt.getMerge());
   }
 
-  public Main(Map<ALanguage, String> list, List<File> file, List<File> generate, List<File> merge) {
+  public Main(Map<ALanguage, String> list, boolean typeCheck, List<File> file, List<File> generate, List<File> merge) {
+    fTypeCheck = typeCheck;
     fInput = file;
     fGenerate = generate;
     fMerge = merge;
@@ -206,6 +210,18 @@ public class Main {
     }
     
     final GenericAst ast = fInputLanguages.iterator().next().extractGenericAst();
+    if (fTypeCheck) {
+      final TypeChecker tc = new TypeChecker();
+
+      System.out.print("TypeChecking...");
+      if (ast.eval(tc)) {
+        System.out.println(" done.");
+      }
+      else {
+        System.out.println(" FAILED miserably!");
+      }
+      tc.printDetailedResults();
+    }
     
     System.out.println("\n3: Generation phase");
     for (ALanguage lang: fGenerateLanguages) {
