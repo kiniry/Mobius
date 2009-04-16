@@ -1,7 +1,10 @@
 package mobius.logic.lang.generic;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import mobius.logic.lang.generic.ast.ACleanEvaluator;
@@ -13,7 +16,9 @@ public class TypeChecker extends ACleanEvaluator<Boolean> {
   private final Set<String> t = new HashSet<String>();
   private final Set<String> u = new HashSet<String>();
   private final Set<String> f = new HashSet<String>();
-  
+  private final GType Type = new GType("[T]");
+  private final GType Unknown = new GType("[?]");
+  private final HashMap<String, GType> types = new HashMap<String, GType>();
   @Override
   public Boolean evalApplication(Term next, Term first) {
     
@@ -83,6 +88,7 @@ public class TypeChecker extends ACleanEvaluator<Boolean> {
       return false;
     }
     t.add(id);
+    types.put(id, Type);
     return true;
   }
 
@@ -95,8 +101,27 @@ public class TypeChecker extends ACleanEvaluator<Boolean> {
     System.out.println("Declared first order types: " + t);
     System.out.println("Undeclared first order types: " + u);
     System.out.println("Collected formulas: " + f);
-    
+    System.out.println("Types: " + types);
   }
-
+  public static class GType {
+    private List<String> type = new ArrayList<String>(); 
+    public String toString() {
+      StringBuilder blder = new StringBuilder();
+      for (String t: type) {
+        blder.append(" -> ");
+        blder.append(t);
+      }
+      return blder.substring(" -> ".length());
+    }
+    public GType(String ...a) {
+      for (String t: a) {
+        type.add(t);
+      }
+    }
+    
+    public void add(String s) {
+      type.add(s);
+    }
+  }
   
 }
