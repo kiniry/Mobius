@@ -51,13 +51,7 @@ private final SourceLocation location;
   // === Others ===
   @Override
   public \ClassName clone() {
-    \members{
-      \if_primitive{
-        \Membertype new\MemberName = \memberName;
-      }{
-        \MemberType new\MemberName = \memberName == null? 
-          null : \memberName.clone();
-      }
+    \members{\if_primitive{\Membertype new\MemberName = \memberName;}{\MemberType new\MemberName = \memberName == null ? null : \memberName.clone();}
     }
     return \ClassName.mk(\members[, ]{new\MemberName}, location);
   }

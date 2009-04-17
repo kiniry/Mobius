@@ -1179,7 +1179,7 @@ feature_specification  :  ( ( 'deferred'  { getContext().enterFeatureSpecificati
                           | ( { getContext().enterFeatureSpecification(); } feature_name_list                                                 )
                           )
                           (has_type)?
-                          (rename_clause {  } )?
+                          (rename_clause)?
                           (COMMENT)?
                           (feature_arguments)?
                           (contract_clause)? 
