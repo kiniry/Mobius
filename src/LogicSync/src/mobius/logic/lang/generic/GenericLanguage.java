@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import mobius.logic.lang.ABasicLanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 import mobius.logic.lang.generic.parser.GenericLexer;
 import mobius.logic.lang.generic.parser.GenericParser;
 
@@ -22,7 +23,7 @@ public class GenericLanguage extends ABasicLanguage {
   }
 
   @Override
-  public void generateFrom(final GenericAst ast) {
+  public void generateFrom(final TypeCheckedAst ast) {
     switch (getGenerate().size()) {
       case 0:
         break;

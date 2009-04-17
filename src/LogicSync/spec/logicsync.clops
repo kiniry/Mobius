@@ -4,7 +4,7 @@ NAME::
 ARGS::
   Help: {"-h", "-help", "--help"}
   		: "Show the help message."
-  TypeCheck: {"-tc"} : "Runs the typechecking algorithm."  
+  TypeCheck: {"-tc"} : "Properly prints the typechecking result."  
   Files: {}:{file-list}:[between="", mustExist="true", canBeDir="false", allowMultiple="true"]
   		: "Provide input file(s). Determine their type by their extension."
   Generate: {"-g"}:{file-list}:[canBeDir="false"]

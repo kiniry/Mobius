@@ -19,6 +19,7 @@ import mobius.logic.lang.ALanguage;
 import mobius.logic.lang.generic.GenericLanguage;
 import mobius.logic.lang.generic.TypeChecker;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 import mobius.util.ClassUtils;
 
 /**
@@ -210,22 +211,25 @@ public class Main {
     }
     
     final GenericAst ast = fInputLanguages.iterator().next().extractGenericAst();
-    if (fTypeCheck) {
-      final TypeChecker tc = new TypeChecker();
 
-      System.out.print("TypeChecking...");
-      if (ast.eval(tc)) {
-        System.out.println(" done.");
-      }
-      else {
-        System.out.println(" FAILED miserably!");
-      }
+    final TypeChecker tc = new TypeChecker();
+
+    System.out.print("TypeChecking...");
+    if (ast.eval(tc)) {
+      System.out.println(" done.");
+    }
+    else {
+      System.out.println(" FAILED miserably!");
+    }
+    if (fTypeCheck) {
       tc.printDetailedResults();
     }
+    final TypeCheckedAst tcAst = new TypeCheckedAst(tc, ast);
+    
     
     System.out.println("\n3: Generation phase");
     for (ALanguage lang: fGenerateLanguages) {
-      lang.generateFrom(ast);
+      lang.generateFrom(tcAst);
     }
     for (ALanguage lang: fMergeLanguages) {
       lang.mergeWith(ast);

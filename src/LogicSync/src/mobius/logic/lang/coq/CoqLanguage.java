@@ -10,6 +10,7 @@ import mobius.logic.lang.coq.ast.CoqAst;
 import mobius.logic.lang.coq.parser.CoqLexer;
 import mobius.logic.lang.coq.parser.CoqParser;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CharStream;
@@ -33,7 +34,7 @@ public class CoqLanguage extends ABasicLanguage {
 
   /** {@inheritDoc} */
   @Override
-  public void generateFrom(final GenericAst ast) {
+  public void generateFrom(final TypeCheckedAst ast) {
     switch (getGenerate().size()) {
       case 0:
         break;
@@ -42,7 +43,7 @@ public class CoqLanguage extends ABasicLanguage {
           final File out = getGenerate().get(0);
           System.out.print(this + ": generating '" + 
                            out.getName() + "'...");
-          final CoqAst res = ExtractToCoq.extract(ast);
+          final CoqAst res = ExtractToCoq.extract(ast.getAst());
           CoqTranslator.translate(res, out);
           System.out.println(" done.");
         } 

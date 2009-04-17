@@ -10,17 +10,20 @@ import mobius.logic.lang.generic.ast.AEvaluator;
 import mobius.logic.lang.generic.ast.Atom;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.Term;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 
 public class GenericTranslator extends AEvaluator<String> {
  
   private final PrintStream fOut;
+  private final TypeChecker tc;
   
-  public GenericTranslator(PrintStream out) {
+  public GenericTranslator( TypeChecker tc, PrintStream out) {
     fOut = out;
+    this.tc = tc;
   }
   
-  public static void translate(GenericAst ast, File output) throws FileNotFoundException {
-    final GenericTranslator trans = new GenericTranslator(
+  public static void translate(TypeCheckedAst ast, File output) throws FileNotFoundException {
+    final GenericTranslator trans = new GenericTranslator(ast.getTypeChecker(),
                                        new PrintStream(
                                           new FileOutputStream(output)));
     ast.eval(trans);
@@ -35,6 +38,7 @@ public class GenericTranslator extends AEvaluator<String> {
     while (t != null) {
       res.append(" ");
       res.append(t.eval(this));
+      res.append(" " + tc.getType(t));
       t = t.getNext();
     }
     return "(" + res.substring(1) + ")";

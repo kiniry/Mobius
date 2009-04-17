@@ -12,6 +12,7 @@ import org.antlr.runtime.RecognitionException;
 
 import mobius.logic.lang.ABasicLanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 
 /** 
  * Support for Boogie. 
@@ -28,7 +29,7 @@ public class BoogieLanguage extends ABasicLanguage {
   @Override public void prepare() { }
 
   /** {@inheritDoc} */
-  @Override public void generateFrom(final GenericAst ast) {
+  @Override public void generateFrom(final TypeCheckedAst ast) {
     assert false : "todo";
   }
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 
 /**
  * The main class use to represent a language handler.
@@ -48,7 +49,7 @@ public abstract class ALanguage {
    * Generate the files from the specified AST.
    * @param ast the ast to generate from
    */
-  public abstract void generateFrom(GenericAst ast);
+  public abstract void generateFrom(TypeCheckedAst ast);
 
   /**
    * Merges the files with the specified AST.

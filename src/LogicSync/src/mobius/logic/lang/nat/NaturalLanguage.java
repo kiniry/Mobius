@@ -15,6 +15,7 @@ import mobius.logic.lang.nat.ast.Program;
 import mobius.logic.lang.nat.parser.NLLexer;
 import mobius.logic.lang.nat.parser.NLParser;
 
+import mobius.logic.lang.generic.ast.TypeCheckedAst;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CharStream;
 import org.antlr.runtime.CommonTokenStream;
@@ -55,9 +56,9 @@ public class NaturalLanguage extends ALanguage {
   }
 
   @Override
-  public void generateFrom(GenericAst ast) {
+  public void generateFrom(TypeCheckedAst ast) {
     GenericToNLTranslator translator = new GenericToNLTranslator();
-    NLAst translatedAst = translator.translate(ast);
+    NLAst translatedAst = translator.translate(ast.getAst());
     
     if (translatedAst != null) {
       if (fGenerate.size() == 1) {
