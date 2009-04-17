@@ -86,7 +86,6 @@
 	<!-- Build targets -->
 
   <target name="compile" depends="all-src" description="compile the source">
-    <!-- Compile the java code from ${src} into ${build} -->
     <javac srcdir="${src}" destdir="${build}" target="${java-target-version}">
       <classpath refid="compile.path"/>
     </javac>
@@ -108,7 +107,6 @@
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.PrettyPrinterTester">
       <classpath refid="test.path"/>
     	<arg value="timing=true"/>
-    	<!-- TODO - use arg to build script for this? -->
     </java>
   </target>
 	
@@ -116,7 +114,6 @@
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.DotGeneratorTester">
       <classpath refid="test.path"/>
   	<arg value="timing=true"/>
-  	<!-- TODO - use arg to build script for this? -->
     </java>
   </target>
 
@@ -145,10 +142,8 @@
 
 
   <target name="dist" depends="compile" description="Generate the distribution">
-    <!-- Create the distribution directory -->
     <mkdir dir="${dist}/lib"/>
   	
-    <!-- Copy required files -->
     <mkdir dir="${build}/templates"/>
     <copy todir="${build}/templates">
       <fileset dir="templates/" includes="*"/> 
@@ -168,11 +163,7 @@
     </copy>
   	
     <chmod perm="a+x">
-      <fileset dir="${dist}">
-      <include name="bonc"/>
-      <include name="my-bonc.example"/>
-      <include name="update"/>
-      </fileset>
+    	<filelist dir="${dist}" files="bonc my-bonc.example update"/>
     </chmod>
 
     <echo message="${release-name}-${release-version}" file="${dist}/version"/>
