@@ -4,9 +4,9 @@
  */
 package ie.ucd.bon.parser;
 
-import ie.ucd.bon.Printer.PrintingOption;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.util.StringUtil;
+import static ie.ucd.bon.clinterface.BONcOptionsInterface.Print;
 
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.tree.TreeNodeStream;
@@ -16,13 +16,13 @@ import org.antlr.stringtemplate.StringTemplateGroup;
 public abstract class AbstractBONSTWalker extends TreeParser {
  
   private PrintingTracker printingTracker;
-  private PrintingOption printingOption;
+  private Print printingOption;
   
   public AbstractBONSTWalker(TreeNodeStream input, RecognizerSharedState state) {
     super(input, state);
   }
 
-  public void initialise(TreeNodeStream input, StringTemplateGroup templateLib, PrintingTracker printingTracker, PrintingOption printingOption) {
+  public void initialise(TreeNodeStream input, StringTemplateGroup templateLib, PrintingTracker printingTracker, Print printingOption) {
     this.reset();
     this.setTreeNodeStream(input);
     this.setTemplateLib(templateLib);

@@ -48,6 +48,6 @@ public class BONcParser extends AbstractSpecificCLParser {
    * @return the format string.
    */
   public String getFormatString() {
-    return "( option* )  | ( version ) | ( help ) | ( hidden_help )"; 
+    return "( Option*  SourceFiles*)  | AloneOption"; 
   }
 }

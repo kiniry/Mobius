@@ -44,6 +44,10 @@ options {
 package ie.ucd.bon.tests;
 }
 
+@lexer::members {
+  boolean curliesMode = false;
+}
+
 testGrammar : testLocation
               ( test )+
             ;
@@ -53,9 +57,8 @@ testLocation : '@Test-Location:' directory { testLocation = $directory.text; }
             
 test : { currentTestCase = new TestCase(testNumber++); }
        ('@Test-name:' TESTNAME { currentTestCase.setTestName($TESTNAME.text); } )?
-       ('@Prog-args:' a1=progArg { currentTestCase.addProgramArgument($a1.text); } 
-                      (',' a=progArg { currentTestCase.addProgramArgument($a.text); } )* )?
-       '@Location'			 
+       (PROG_ARGS b=UNCHECKED_CODE_BLOCK { currentTestCase.setProgramArguments($b.text); } )?
+       LOCATION			 
        '{' directory '}'
        { currentTestCase.setLocation(testsDir + testLocation + $directory.text); }
        '@Input'  
@@ -115,7 +118,7 @@ javastring  : string ('.' string)*
 string  : ALPHANUMERIC+
         ;
         
-progArg  :  '-' filestring
+progArg  :  '-' '-'? filestring
          ;
 
 filestring  :   ALPHANUMERIC ( ALPHANUMERIC | '-' | '_' | '.' )*
@@ -125,6 +128,23 @@ filestring  :   ALPHANUMERIC ( ALPHANUMERIC | '-' | '_' | '.' )*
 
 integer  : DIGIT+
          ;
+
+PROG_ARGS  : '@Prog-args:' { curliesMode = true; } ;
+LOCATION  : '@Location' { curliesMode = false; } ;
+UNCHECKED_CODE_BLOCK  :
+{curliesMode}?=>
+  UNCHECKED_CODE { setText($text.substring(1, $text.length()-1).trim()); }
+;
+   
+fragment                  
+UNCHECKED_CODE :
+  '{' 
+  ( options {greedy=false; k=2;}
+  : UNCHECKED_CODE
+  | .
+  )*
+  '}'
+;
 
 ALPHANUMERIC  : ALPHA | DIGIT
               ;
@@ -145,7 +165,7 @@ LINE_COMMENT  :  COMMENT_START (options {greedy=false;} : .)* NEWLINE
               ;
 
 fragment
-COMMENT_START  : '--'
+COMMENT_START  : '//'
                ;
 
 fragment

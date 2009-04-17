@@ -63,7 +63,7 @@ public class Tester {
   
   public static void main(String[] args) {
     if (args.length != 2 && args.length != 3) {
-      System.out.println("Invalid arguments for running tests. Usage: java ie.ucd.ebon.test.Tester <test-dir> <test-file> [<log-file>]");
+      System.out.println("Invalid arguments for running tests. Usage: java ie.ucd.ebon.test.Tester <test-dir> <test-file> [<log-file> <clops-log-file>]");
     } else {
       try {
         if (args.length == 2) {

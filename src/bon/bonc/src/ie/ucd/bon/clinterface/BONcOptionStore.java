@@ -7,589 +7,659 @@ import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import java.util.List;
 import java.io.File;
 import ie.ucd.clops.runtime.options.EnumOption;
-import ie.ucd.clops.runtime.options.FileOption;
 import ie.ucd.clops.runtime.options.BooleanOption;
+import ie.ucd.clops.runtime.options.FileOption;
 import ie.ucd.clops.runtime.options.FileListOption;
 
 public class BONcOptionStore extends OptionStore implements BONcOptionsInterface {
 
-  private final BooleanOption ogtypecheck;
-  private final BooleanOption ogno_typecheck;
-  private final EnumOption ogprint;
-  private final FileOption ogprint_output;
-  private final BooleanOption ogpretty_print;
-  private final BooleanOption oghelp;
-  private final BooleanOption oghidden_help;
-  private final BooleanOption ogtime;
-  private final BooleanOption oginformal;
-  private final BooleanOption ogformal;
-  private final BooleanOption ogcheck_informal;
-  private final BooleanOption ogcheck_formal;
-  private final BooleanOption ogcheck_consistency;
-  private final BooleanOption ogno_check_consistency;
-  private final BooleanOption ogdebug;
-  private final BooleanOption oggen_class_dic;
-  private final BooleanOption ogno_gen_class_dic;
-  private final EnumOption oggraph;
-  private final BooleanOption ogversion;
+  private final EnumOption ogPrint;
+  private final FileOption ogPrintOutput;
+  private final BooleanOption ogPrettyPrint;
+  private final BooleanOption ogPrintMan;
+  private final BooleanOption ogPrintReadme;
+  private final BooleanOption ogPrintBashCompletion;
+  private final BooleanOption ogHelp;
+  private final BooleanOption ogHiddenHelp;
+  private final BooleanOption ogTime;
+  private final BooleanOption ogTypecheck;
+  private final BooleanOption ogInformal;
+  private final BooleanOption ogFormal;
+  private final BooleanOption ogCheckInformal;
+  private final BooleanOption ogCheckFormal;
+  private final BooleanOption ogCheckConsistency;
+  private final BooleanOption ogDebug;
+  private final BooleanOption ogReadFromStdin;
+  private final BooleanOption ogGenClassDic;
+  private final EnumOption ogGraph;
+  private final BooleanOption ogVersion;
   private final FileListOption ogSourceFiles;
   private final CLOPSErrorOption CLOPSERROROPTION;
 
   public BONcOptionStore() throws InvalidOptionPropertyValueException {
 
     //Options
-    ogtypecheck = new BooleanOption("typecheck", "(?:-tc)|(?:--typecheck)");
-    addOption(ogtypecheck);
-    ogtypecheck.setProperty("default", "true");
-    ogno_typecheck = new BooleanOption("no_typecheck", "(?:-ntc)|(?:--no-typecheck)");
-    addOption(ogno_typecheck);
-    ogno_typecheck.setProperty("default", "false");
-    ogprint = new EnumOption("print", "(?:-p)|(?:--print)");
-    addOption(ogprint);
-    ogprint.setProperty("choices", "txt,html,xhtml,dic");
-    ogprint.setProperty("casesensitive", "false");
-    ogprint_output = new FileOption("print_output", "(?:-po)|(?:--print-output)");
-    addOption(ogprint_output);
-    ogprint_output.setProperty("canbedir", "false");
-    ogpretty_print = new BooleanOption("pretty_print", "(?:-pp)|(?:--pretty-print)");
-    addOption(ogpretty_print);
-    oghelp = new BooleanOption("help", "(?:-h)|(?:--help)");
-    addOption(oghelp);
-    oghidden_help = new BooleanOption("hidden_help", "(?:-hh)|(?:--hidden-help)");
-    addOption(oghidden_help);
-    ogtime = new BooleanOption("time", "(?:-t)|(?:--time)");
-    addOption(ogtime);
-    oginformal = new BooleanOption("informal", "(?:-i)|(?:--informal)");
-    addOption(oginformal);
-    ogformal = new BooleanOption("formal", "(?:-f)|(?:--formal)");
-    addOption(ogformal);
-    ogcheck_informal = new BooleanOption("check_informal", "(?:-ci)|(?:--check-informal)");
-    addOption(ogcheck_informal);
-    ogcheck_formal = new BooleanOption("check_formal", "(?:-cf)|(?:--check-formal)");
-    addOption(ogcheck_formal);
-    ogcheck_consistency = new BooleanOption("check_consistency", "(?:-cc)|(?:--check-consistency)");
-    addOption(ogcheck_consistency);
-    ogno_check_consistency = new BooleanOption("no_check_consistency", "(?:-ncc)|(?:--no-check-consistency)");
-    addOption(ogno_check_consistency);
-    ogdebug = new BooleanOption("debug", "(?:-d)|(?:--debug)");
-    addOption(ogdebug);
-    oggen_class_dic = new BooleanOption("gen_class_dic", "(?:-gcd)|(?:--gen-class-dic)");
-    addOption(oggen_class_dic);
-    ogno_gen_class_dic = new BooleanOption("no_gen_class_dic", "(?:-ngcd)|(?:--no-gen-class-dic)");
-    addOption(ogno_gen_class_dic);
-    oggraph = new EnumOption("graph", "(?:-g)|(?:--graph)");
-    addOption(oggraph);
-    oggraph.setProperty("choices", "icg,iig");
-    oggraph.setProperty("casesensitive", "false");
-    ogversion = new BooleanOption("version", "(?:-v)|(?:--version)");
-    addOption(ogversion);
+    ogPrint = new EnumOption("Print", "(?:-p)|(?:--print)");
+    addOption(ogPrint);
+    ogPrint.setProperty("choices", "SYSO,TXT,DOT,HTML,DIC,IIG,ICG,CL,PICG,PIIG");
+    ogPrint.setProperty("casesensitive", "false");
+    ogPrint.setProperty("description", "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
+    ogPrintOutput = new FileOption("PrintOutput", "(?:-po)|(?:--print-output)");
+    addOption(ogPrintOutput);
+    ogPrintOutput.setProperty("canbedir", "false");
+    ogPrintOutput.setProperty("description", "Print output to the given file instead of to stdout.");
+    ogPrettyPrint = new BooleanOption("PrettyPrint", "(?:-pp)|(?:--pretty-print)");
+    addOption(ogPrettyPrint);
+    ogPrettyPrint.setProperty("description", "Pretty-print the parsed input. This is equivalent to -p=TXT.");
+    ogPrintMan = new BooleanOption("PrintMan", "(?:--print-man)");
+    addOption(ogPrintMan);
+    ogPrintMan.setProperty("default", "false");
+    ogPrintMan.setProperty("description", "Print available options in man-page format.");
+    ogPrintReadme = new BooleanOption("PrintReadme", "(?:--print-readme)");
+    addOption(ogPrintReadme);
+    ogPrintReadme.setProperty("default", "false");
+    ogPrintReadme.setProperty("description", "Print available options in readme format.");
+    ogPrintBashCompletion = new BooleanOption("PrintBashCompletion", "(?:--print-bash-completion)");
+    addOption(ogPrintBashCompletion);
+    ogPrintBashCompletion.setProperty("default", "false");
+    ogPrintBashCompletion.setProperty("description", "Print bash completion script for available options.");
+    ogHelp = new BooleanOption("Help", "(?:-h)|(?:--help)");
+    addOption(ogHelp);
+    ogHelp.setProperty("default", "false");
+    ogHelp.setProperty("description", "Print this help message.");
+    ogHiddenHelp = new BooleanOption("HiddenHelp", "(?:-hh)|(?:--hidden-help)");
+    addOption(ogHiddenHelp);
+    ogHiddenHelp.setProperty("default", "false");
+    ogHiddenHelp.setProperty("description", "Print help with hidden options shown");
+    ogTime = new BooleanOption("Time", "(?:-t)|(?:--time)");
+    addOption(ogTime);
+    ogTime.setProperty("default", "false");
+    ogTime.setProperty("description", "Print timing information.");
+    ogTypecheck = new BooleanOption("Typecheck", "(?:-tc)|(?:--typecheck)");
+    addOption(ogTypecheck);
+    ogTypecheck.setProperty("default", "true");
+    ogTypecheck.setProperty("description", "Typecheck the input");
+    ogInformal = new BooleanOption("Informal", "(?:-i)|(?:--informal)");
+    addOption(ogInformal);
+    ogInformal.setProperty("description", "Only check informal charts.");
+    ogFormal = new BooleanOption("Formal", "(?:-f)|(?:--formal)");
+    addOption(ogFormal);
+    ogFormal.setProperty("description", "Only check formal charts.");
+    ogCheckInformal = new BooleanOption("CheckInformal", "(?:-ci)|(?:--check-informal)");
+    addOption(ogCheckInformal);
+    ogCheckInformal.setProperty("default", "true");
+    ogCheckInformal.setProperty("description", "Check informal charts.");
+    ogCheckFormal = new BooleanOption("CheckFormal", "(?:-cf)|(?:--check-formal)");
+    addOption(ogCheckFormal);
+    ogCheckFormal.setProperty("default", "true");
+    ogCheckFormal.setProperty("description", "Check formal diagrams.");
+    ogCheckConsistency = new BooleanOption("CheckConsistency", "(?:-cc)|(?:--check-consistency)");
+    addOption(ogCheckConsistency);
+    ogCheckConsistency.setProperty("default", "true");
+    ogCheckConsistency.setProperty("description", "Check consistency between levels.");
+    ogDebug = new BooleanOption("Debug", "(?:-d)|(?:--debug)");
+    addOption(ogDebug);
+    ogDebug.setProperty("default", "false");
+    ogDebug.setProperty("description", "Print debugging output.");
+    ogReadFromStdin = new BooleanOption("ReadFromStdin", "(?:-)");
+    addOption(ogReadFromStdin);
+    ogReadFromStdin.setProperty("default", "false");
+    ogReadFromStdin.setProperty("description", "Read input from stdin.");
+    ogGenClassDic = new BooleanOption("GenClassDic", "(?:-gcd)|(?:--gen-class-dic)");
+    addOption(ogGenClassDic);
+    ogGenClassDic.setProperty("description", "Generate the class dictionary when printing.");
+    ogGraph = new EnumOption("Graph", "(?:-g)|(?:--graph)");
+    addOption(ogGraph);
+    ogGraph.setProperty("choices", "ICG,IIG");
+    ogGraph.setProperty("casesensitive", "false");
+    ogGraph.setProperty("description", "Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph.");
+    ogVersion = new BooleanOption("Version", "(?:-v)|(?:--version)");
+    addOption(ogVersion);
+    ogVersion.setProperty("default", "false");
+    ogVersion.setProperty("description", "Print BONc version and exit.");
     ogSourceFiles = new FileListOption("SourceFiles", "");
     addOption(ogSourceFiles);
+    ogSourceFiles.setProperty("between", "");
     ogSourceFiles.setProperty("canbedir", "false");
     ogSourceFiles.setProperty("mustexist", "true");
+    ogSourceFiles.setProperty("description", "Source files to process.");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
     addOption(CLOPSERROROPTION);
   
     //Option groups
-    final OptionGroup ogoption = new OptionGroup("option");
-    addOptionGroup(ogoption);
+    final OptionGroup ogOption = new OptionGroup("Option");
+    addOptionGroup(ogOption);
+    final OptionGroup ogAloneOption = new OptionGroup("AloneOption");
+    addOptionGroup(ogAloneOption);
     final OptionGroup ogAllOptions = new OptionGroup("AllOptions");
     addOptionGroup(ogAllOptions);
     
     //Setup groupings
-    ogoption.addOptionOrGroup(ogprint_output);
-    ogoption.addOptionOrGroup(ogcheck_consistency);
-    ogoption.addOptionOrGroup(ogno_check_consistency);
-    ogoption.addOptionOrGroup(ogdebug);
-    ogoption.addOptionOrGroup(ogprint);
-    ogoption.addOptionOrGroup(ogformal);
-    ogoption.addOptionOrGroup(ogtime);
-    ogoption.addOptionOrGroup(oggraph);
-    ogoption.addOptionOrGroup(ogpretty_print);
-    ogoption.addOptionOrGroup(oginformal);
-    ogoption.addOptionOrGroup(ogno_gen_class_dic);
-    ogoption.addOptionOrGroup(oggen_class_dic);
-    ogoption.addOptionOrGroup(ogcheck_formal);
+    ogOption.addOptionOrGroup(ogCheckFormal);
+    ogOption.addOptionOrGroup(ogCheckConsistency);
+    ogOption.addOptionOrGroup(ogPrettyPrint);
+    ogOption.addOptionOrGroup(ogReadFromStdin);
+    ogOption.addOptionOrGroup(ogDebug);
+    ogOption.addOptionOrGroup(ogPrint);
+    ogOption.addOptionOrGroup(ogPrintOutput);
+    ogOption.addOptionOrGroup(ogTime);
+    ogOption.addOptionOrGroup(ogInformal);
+    ogOption.addOptionOrGroup(ogGenClassDic);
+    ogOption.addOptionOrGroup(ogGraph);
+    ogOption.addOptionOrGroup(ogTypecheck);
+    ogOption.addOptionOrGroup(ogCheckInformal);
+    ogOption.addOptionOrGroup(ogFormal);
+    ogAloneOption.addOptionOrGroup(ogHelp);
+    ogAloneOption.addOptionOrGroup(ogPrintMan);
+    ogAloneOption.addOptionOrGroup(ogPrintReadme);
+    ogAloneOption.addOptionOrGroup(ogVersion);
+    ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
+    ogAloneOption.addOptionOrGroup(ogHiddenHelp);
     //AllOptions group
-    ogAllOptions.addOptionOrGroup(ogtypecheck);
-    ogAllOptions.addOptionOrGroup(ogno_typecheck);
-    ogAllOptions.addOptionOrGroup(ogprint);
-    ogAllOptions.addOptionOrGroup(ogprint_output);
-    ogAllOptions.addOptionOrGroup(ogpretty_print);
-    ogAllOptions.addOptionOrGroup(oghelp);
-    ogAllOptions.addOptionOrGroup(oghidden_help);
-    ogAllOptions.addOptionOrGroup(ogtime);
-    ogAllOptions.addOptionOrGroup(oginformal);
-    ogAllOptions.addOptionOrGroup(ogformal);
-    ogAllOptions.addOptionOrGroup(ogcheck_informal);
-    ogAllOptions.addOptionOrGroup(ogcheck_formal);
-    ogAllOptions.addOptionOrGroup(ogcheck_consistency);
-    ogAllOptions.addOptionOrGroup(ogno_check_consistency);
-    ogAllOptions.addOptionOrGroup(ogdebug);
-    ogAllOptions.addOptionOrGroup(oggen_class_dic);
-    ogAllOptions.addOptionOrGroup(ogno_gen_class_dic);
-    ogAllOptions.addOptionOrGroup(oggraph);
-    ogAllOptions.addOptionOrGroup(ogversion);
+    ogAllOptions.addOptionOrGroup(ogPrint);
+    ogAllOptions.addOptionOrGroup(ogPrintOutput);
+    ogAllOptions.addOptionOrGroup(ogPrettyPrint);
+    ogAllOptions.addOptionOrGroup(ogPrintMan);
+    ogAllOptions.addOptionOrGroup(ogPrintReadme);
+    ogAllOptions.addOptionOrGroup(ogPrintBashCompletion);
+    ogAllOptions.addOptionOrGroup(ogHelp);
+    ogAllOptions.addOptionOrGroup(ogHiddenHelp);
+    ogAllOptions.addOptionOrGroup(ogTime);
+    ogAllOptions.addOptionOrGroup(ogTypecheck);
+    ogAllOptions.addOptionOrGroup(ogInformal);
+    ogAllOptions.addOptionOrGroup(ogFormal);
+    ogAllOptions.addOptionOrGroup(ogCheckInformal);
+    ogAllOptions.addOptionOrGroup(ogCheckFormal);
+    ogAllOptions.addOptionOrGroup(ogCheckConsistency);
+    ogAllOptions.addOptionOrGroup(ogDebug);
+    ogAllOptions.addOptionOrGroup(ogReadFromStdin);
+    ogAllOptions.addOptionOrGroup(ogGenClassDic);
+    ogAllOptions.addOptionOrGroup(ogGraph);
+    ogAllOptions.addOptionOrGroup(ogVersion);
     ogAllOptions.addOptionOrGroup(ogSourceFiles);
   }
   
-// Option typecheck.
-// Aliases: [-tc, --typecheck]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean istypecheckSet() {
-    return ogtypecheck.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public boolean gettypecheck() {
-    return ogtypecheck.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public boolean getRawtypecheck() {
-    return ogtypecheck.getRawValue();
-  }
-  
-  public BooleanOption gettypecheckOption() {
-    return ogtypecheck;
-  }
-  
-// Option no_typecheck.
-// Aliases: [-ntc, --no-typecheck]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isno_typecheckSet() {
-    return ogno_typecheck.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public boolean getno_typecheck() {
-    return ogno_typecheck.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public boolean getRawno_typecheck() {
-    return ogno_typecheck.getRawValue();
-  }
-  
-  public BooleanOption getno_typecheckOption() {
-    return ogno_typecheck;
-  }
-  
-// Option print.
+// Option Print.
 // Aliases: [-p, --print]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isprintSet() {
-    return ogprint.hasValue();
+  public boolean isPrintSet() {
+    return ogPrint.hasValue();
   }
   
 
   /** {@inheritDoc} */
-  public print getprint() {
-    return print.get(ogprint.getValue());
+  public Print getPrint() {
+    return Print.get(ogPrint.getValue());
   }
 
   /** {@inheritDoc} */
-  public String getRawprint() {
-    return ogprint.getRawValue();
+  public String getRawPrint() {
+    return ogPrint.getRawValue();
   }
   
-  public EnumOption getprintOption() {
-    return ogprint;
+  public EnumOption getPrintOption() {
+    return ogPrint;
   }
   
-// Option print_output.
+// Option PrintOutput.
 // Aliases: [-po, --print-output]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isprint_outputSet() {
-    return ogprint_output.hasValue();
+  public boolean isPrintOutputSet() {
+    return ogPrintOutput.hasValue();
   }
   
   /** {@inheritDoc} */
-  public File getprint_output() {
-    return ogprint_output.getValue();
+  public File getPrintOutput() {
+    return ogPrintOutput.getValue();
   }
 
   /** {@inheritDoc} */
-  public File getRawprint_output() {
-    return ogprint_output.getRawValue();
+  public File getRawPrintOutput() {
+    return ogPrintOutput.getRawValue();
   }
   
-  public FileOption getprint_outputOption() {
-    return ogprint_output;
+  public FileOption getPrintOutputOption() {
+    return ogPrintOutput;
   }
   
-// Option pretty_print.
+// Option PrettyPrint.
 // Aliases: [-pp, --pretty-print]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ispretty_printSet() {
-    return ogpretty_print.hasValue();
+  public boolean isPrettyPrintSet() {
+    return ogPrettyPrint.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getpretty_print() {
-    return ogpretty_print.getValue();
+  public boolean getPrettyPrint() {
+    return ogPrettyPrint.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawpretty_print() {
-    return ogpretty_print.getRawValue();
+  public boolean getRawPrettyPrint() {
+    return ogPrettyPrint.getRawValue();
   }
   
-  public BooleanOption getpretty_printOption() {
-    return ogpretty_print;
+  public BooleanOption getPrettyPrintOption() {
+    return ogPrettyPrint;
   }
   
-// Option help.
+// Option PrintMan.
+// Aliases: [--print-man]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isPrintManSet() {
+    return ogPrintMan.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getPrintMan() {
+    return ogPrintMan.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawPrintMan() {
+    return ogPrintMan.getRawValue();
+  }
+  
+  public BooleanOption getPrintManOption() {
+    return ogPrintMan;
+  }
+  
+// Option PrintReadme.
+// Aliases: [--print-readme]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isPrintReadmeSet() {
+    return ogPrintReadme.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getPrintReadme() {
+    return ogPrintReadme.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawPrintReadme() {
+    return ogPrintReadme.getRawValue();
+  }
+  
+  public BooleanOption getPrintReadmeOption() {
+    return ogPrintReadme;
+  }
+  
+// Option PrintBashCompletion.
+// Aliases: [--print-bash-completion]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isPrintBashCompletionSet() {
+    return ogPrintBashCompletion.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getPrintBashCompletion() {
+    return ogPrintBashCompletion.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawPrintBashCompletion() {
+    return ogPrintBashCompletion.getRawValue();
+  }
+  
+  public BooleanOption getPrintBashCompletionOption() {
+    return ogPrintBashCompletion;
+  }
+  
+// Option Help.
 // Aliases: [-h, --help]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ishelpSet() {
-    return oghelp.hasValue();
+  public boolean isHelpSet() {
+    return ogHelp.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean gethelp() {
-    return oghelp.getValue();
+  public boolean getHelp() {
+    return ogHelp.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawhelp() {
-    return oghelp.getRawValue();
+  public boolean getRawHelp() {
+    return ogHelp.getRawValue();
   }
   
-  public BooleanOption gethelpOption() {
-    return oghelp;
+  public BooleanOption getHelpOption() {
+    return ogHelp;
   }
   
-// Option hidden_help.
+// Option HiddenHelp.
 // Aliases: [-hh, --hidden-help]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ishidden_helpSet() {
-    return oghidden_help.hasValue();
+  public boolean isHiddenHelpSet() {
+    return ogHiddenHelp.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean gethidden_help() {
-    return oghidden_help.getValue();
+  public boolean getHiddenHelp() {
+    return ogHiddenHelp.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawhidden_help() {
-    return oghidden_help.getRawValue();
+  public boolean getRawHiddenHelp() {
+    return ogHiddenHelp.getRawValue();
   }
   
-  public BooleanOption gethidden_helpOption() {
-    return oghidden_help;
+  public BooleanOption getHiddenHelpOption() {
+    return ogHiddenHelp;
   }
   
-// Option time.
+// Option Time.
 // Aliases: [-t, --time]
   
   /**
    * {@inheritDoc}
    */
-  public boolean istimeSet() {
-    return ogtime.hasValue();
+  public boolean isTimeSet() {
+    return ogTime.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean gettime() {
-    return ogtime.getValue();
+  public boolean getTime() {
+    return ogTime.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawtime() {
-    return ogtime.getRawValue();
+  public boolean getRawTime() {
+    return ogTime.getRawValue();
   }
   
-  public BooleanOption gettimeOption() {
-    return ogtime;
+  public BooleanOption getTimeOption() {
+    return ogTime;
   }
   
-// Option informal.
+// Option Typecheck.
+// Aliases: [-tc, --typecheck]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isTypecheckSet() {
+    return ogTypecheck.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getTypecheck() {
+    return ogTypecheck.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawTypecheck() {
+    return ogTypecheck.getRawValue();
+  }
+  
+  public BooleanOption getTypecheckOption() {
+    return ogTypecheck;
+  }
+  
+// Option Informal.
 // Aliases: [-i, --informal]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isinformalSet() {
-    return oginformal.hasValue();
+  public boolean isInformalSet() {
+    return ogInformal.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getinformal() {
-    return oginformal.getValue();
+  public boolean getInformal() {
+    return ogInformal.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawinformal() {
-    return oginformal.getRawValue();
+  public boolean getRawInformal() {
+    return ogInformal.getRawValue();
   }
   
-  public BooleanOption getinformalOption() {
-    return oginformal;
+  public BooleanOption getInformalOption() {
+    return ogInformal;
   }
   
-// Option formal.
+// Option Formal.
 // Aliases: [-f, --formal]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isformalSet() {
-    return ogformal.hasValue();
+  public boolean isFormalSet() {
+    return ogFormal.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getformal() {
-    return ogformal.getValue();
+  public boolean getFormal() {
+    return ogFormal.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawformal() {
-    return ogformal.getRawValue();
+  public boolean getRawFormal() {
+    return ogFormal.getRawValue();
   }
   
-  public BooleanOption getformalOption() {
-    return ogformal;
+  public BooleanOption getFormalOption() {
+    return ogFormal;
   }
   
-// Option check_informal.
+// Option CheckInformal.
 // Aliases: [-ci, --check-informal]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ischeck_informalSet() {
-    return ogcheck_informal.hasValue();
+  public boolean isCheckInformalSet() {
+    return ogCheckInformal.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getcheck_informal() {
-    return ogcheck_informal.getValue();
+  public boolean getCheckInformal() {
+    return ogCheckInformal.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawcheck_informal() {
-    return ogcheck_informal.getRawValue();
+  public boolean getRawCheckInformal() {
+    return ogCheckInformal.getRawValue();
   }
   
-  public BooleanOption getcheck_informalOption() {
-    return ogcheck_informal;
+  public BooleanOption getCheckInformalOption() {
+    return ogCheckInformal;
   }
   
-// Option check_formal.
+// Option CheckFormal.
 // Aliases: [-cf, --check-formal]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ischeck_formalSet() {
-    return ogcheck_formal.hasValue();
+  public boolean isCheckFormalSet() {
+    return ogCheckFormal.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getcheck_formal() {
-    return ogcheck_formal.getValue();
+  public boolean getCheckFormal() {
+    return ogCheckFormal.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawcheck_formal() {
-    return ogcheck_formal.getRawValue();
+  public boolean getRawCheckFormal() {
+    return ogCheckFormal.getRawValue();
   }
   
-  public BooleanOption getcheck_formalOption() {
-    return ogcheck_formal;
+  public BooleanOption getCheckFormalOption() {
+    return ogCheckFormal;
   }
   
-// Option check_consistency.
+// Option CheckConsistency.
 // Aliases: [-cc, --check-consistency]
   
   /**
    * {@inheritDoc}
    */
-  public boolean ischeck_consistencySet() {
-    return ogcheck_consistency.hasValue();
+  public boolean isCheckConsistencySet() {
+    return ogCheckConsistency.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getcheck_consistency() {
-    return ogcheck_consistency.getValue();
+  public boolean getCheckConsistency() {
+    return ogCheckConsistency.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawcheck_consistency() {
-    return ogcheck_consistency.getRawValue();
+  public boolean getRawCheckConsistency() {
+    return ogCheckConsistency.getRawValue();
   }
   
-  public BooleanOption getcheck_consistencyOption() {
-    return ogcheck_consistency;
+  public BooleanOption getCheckConsistencyOption() {
+    return ogCheckConsistency;
   }
   
-// Option no_check_consistency.
-// Aliases: [-ncc, --no-check-consistency]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isno_check_consistencySet() {
-    return ogno_check_consistency.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public boolean getno_check_consistency() {
-    return ogno_check_consistency.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public boolean getRawno_check_consistency() {
-    return ogno_check_consistency.getRawValue();
-  }
-  
-  public BooleanOption getno_check_consistencyOption() {
-    return ogno_check_consistency;
-  }
-  
-// Option debug.
+// Option Debug.
 // Aliases: [-d, --debug]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isdebugSet() {
-    return ogdebug.hasValue();
+  public boolean isDebugSet() {
+    return ogDebug.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getdebug() {
-    return ogdebug.getValue();
+  public boolean getDebug() {
+    return ogDebug.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawdebug() {
-    return ogdebug.getRawValue();
+  public boolean getRawDebug() {
+    return ogDebug.getRawValue();
   }
   
-  public BooleanOption getdebugOption() {
-    return ogdebug;
+  public BooleanOption getDebugOption() {
+    return ogDebug;
   }
   
-// Option gen_class_dic.
+// Option ReadFromStdin.
+// Aliases: [-]
+  
+  /**
+   * {@inheritDoc}
+   */
+  public boolean isReadFromStdinSet() {
+    return ogReadFromStdin.hasValue();
+  }
+  
+  /** {@inheritDoc} */
+  public boolean getReadFromStdin() {
+    return ogReadFromStdin.getValue();
+  }
+
+  /** {@inheritDoc} */
+  public boolean getRawReadFromStdin() {
+    return ogReadFromStdin.getRawValue();
+  }
+  
+  public BooleanOption getReadFromStdinOption() {
+    return ogReadFromStdin;
+  }
+  
+// Option GenClassDic.
 // Aliases: [-gcd, --gen-class-dic]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isgen_class_dicSet() {
-    return oggen_class_dic.hasValue();
+  public boolean isGenClassDicSet() {
+    return ogGenClassDic.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getgen_class_dic() {
-    return oggen_class_dic.getValue();
+  public boolean getGenClassDic() {
+    return ogGenClassDic.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawgen_class_dic() {
-    return oggen_class_dic.getRawValue();
+  public boolean getRawGenClassDic() {
+    return ogGenClassDic.getRawValue();
   }
   
-  public BooleanOption getgen_class_dicOption() {
-    return oggen_class_dic;
+  public BooleanOption getGenClassDicOption() {
+    return ogGenClassDic;
   }
   
-// Option no_gen_class_dic.
-// Aliases: [-ngcd, --no-gen-class-dic]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isno_gen_class_dicSet() {
-    return ogno_gen_class_dic.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public boolean getno_gen_class_dic() {
-    return ogno_gen_class_dic.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public boolean getRawno_gen_class_dic() {
-    return ogno_gen_class_dic.getRawValue();
-  }
-  
-  public BooleanOption getno_gen_class_dicOption() {
-    return ogno_gen_class_dic;
-  }
-  
-// Option graph.
+// Option Graph.
 // Aliases: [-g, --graph]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isgraphSet() {
-    return oggraph.hasValue();
+  public boolean isGraphSet() {
+    return ogGraph.hasValue();
   }
   
 
   /** {@inheritDoc} */
-  public graph getgraph() {
-    return graph.get(oggraph.getValue());
+  public Graph getGraph() {
+    return Graph.get(ogGraph.getValue());
   }
 
   /** {@inheritDoc} */
-  public String getRawgraph() {
-    return oggraph.getRawValue();
+  public String getRawGraph() {
+    return ogGraph.getRawValue();
   }
   
-  public EnumOption getgraphOption() {
-    return oggraph;
+  public EnumOption getGraphOption() {
+    return ogGraph;
   }
   
-// Option version.
+// Option Version.
 // Aliases: [-v, --version]
   
   /**
    * {@inheritDoc}
    */
-  public boolean isversionSet() {
-    return ogversion.hasValue();
+  public boolean isVersionSet() {
+    return ogVersion.hasValue();
   }
   
   /** {@inheritDoc} */
-  public boolean getversion() {
-    return ogversion.getValue();
+  public boolean getVersion() {
+    return ogVersion.getValue();
   }
 
   /** {@inheritDoc} */
-  public boolean getRawversion() {
-    return ogversion.getRawValue();
+  public boolean getRawVersion() {
+    return ogVersion.getRawValue();
   }
   
-  public BooleanOption getversionOption() {
-    return ogversion;
+  public BooleanOption getVersionOption() {
+    return ogVersion;
   }
   
 // Option SourceFiles.

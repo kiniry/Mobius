@@ -136,7 +136,7 @@
       <classpath refid="test.path"/>
       <arg value="../test/test-cases/"/>
       <arg value="../test/test-cases/tests"/>
-      <arg value="../test/test-cases/test-cases.log"/>      
+      <arg value="../test/test-cases/test-cases.log"/>
     </java>
   </target>
 
@@ -159,7 +159,7 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-    	<fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,CommandlineParser.jar,stringtemplate.jar,prefuse.jar"/>
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,clops-runtime.jar,stringtemplate.jar,prefuse.jar"/>
     </copy>
   	
     <chmod perm="a+x">

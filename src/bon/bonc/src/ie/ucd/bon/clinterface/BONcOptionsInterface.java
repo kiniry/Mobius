@@ -10,56 +10,22 @@ import java.io.File;
 public interface BONcOptionsInterface {
 
 
-// Option typecheck. 
-// Aliases: [-tc, --typecheck]
-
-  /**
-   * @return true if the option typecheck has been used
-   * in the command line.
-   */
-  boolean istypecheckSet();
-
-  /**
-   * Get the value of {@code Option} typecheck.
-   * @return the value of the option typecheck if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  boolean gettypecheck();
-  
-
-// Option no_typecheck. 
-// Aliases: [-ntc, --no-typecheck]
-
-  /**
-   * @return true if the option no_typecheck has been used
-   * in the command line.
-   */
-  boolean isno_typecheckSet();
-
-  /**
-   * Get the value of {@code Option} no_typecheck.
-   * @return the value of the option no_typecheck if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  boolean getno_typecheck();
-  
-
-// Option print. 
+// Option Print. 
 // Aliases: [-p, --print]
 
   /**
-   * @return true if the option print has been used
+   * @return true if the option Print has been used
    * in the command line.
    */
-  boolean isprintSet();
+  boolean isPrintSet();
 
   /**
    * The enumeration type used to represent the string enum option.
    */
-  enum  print {
-    xhtml("xhtml"),    dic("dic"),    html("html"),    txt("txt");
+  enum  Print {
+    SYSO("SYSO"),    IIG("IIG"),    HTML("HTML"),    PICG("PICG"),    DOT("DOT"),    DIC("DIC"),    TXT("TXT"),    PIIG("PIIG"),    CL("CL"),    ICG("ICG");
     private final String[] matchStrings;
-    private print(final String... s) {
+    private Print(final String... s) {
       matchStrings = s;
     }
     public String toString() {
@@ -67,11 +33,11 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [{xhtml="xhtml", dic="dic", html="html", txt="txt"}]
-     * @return a valid print member.
+     * @param s one of the following strings: [{SYSO="SYSO", IIG="IIG", HTML="HTML", PICG="PICG", DOT="DOT", DIC="DIC", TXT="TXT", PIIG="PIIG", CL="CL", ICG="ICG"}]
+     * @return a valid Print member.
      */
-    public static print get(final String s) {
-      for (print value : print.values()) {
+    public static Print get(final String s) {
+      for (Print value : Print.values()) {
         for (String m : value.matchStrings) {
           if (m.equalsIgnoreCase(s)) return value;
         }
@@ -82,267 +48,318 @@ public interface BONcOptionsInterface {
   }
 
   /**
-   * Get the value of {@code Option} print.
-   * @return the value of the option print if it has been set
+   * Get the value of {@code Option} Print.
+   * @return the value of the option Print if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  print getprint();
+  Print getPrint();
   
 
-// Option print_output. 
+// Option PrintOutput. 
 // Aliases: [-po, --print-output]
 
   /**
-   * @return true if the option print_output has been used
+   * @return true if the option PrintOutput has been used
    * in the command line.
    */
-  boolean isprint_outputSet();
+  boolean isPrintOutputSet();
 
   /**
-   * Get the value of {@code Option} print_output.
-   * @return the value of the option print_output if it has been set
+   * Get the value of {@code Option} PrintOutput.
+   * @return the value of the option PrintOutput if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  File getprint_output();
+  File getPrintOutput();
   
 
-// Option pretty_print. 
+// Option PrettyPrint. 
 // Aliases: [-pp, --pretty-print]
 
   /**
-   * @return true if the option pretty_print has been used
+   * @return true if the option PrettyPrint has been used
    * in the command line.
    */
-  boolean ispretty_printSet();
+  boolean isPrettyPrintSet();
 
   /**
-   * Get the value of {@code Option} pretty_print.
-   * @return the value of the option pretty_print if it has been set
+   * Get the value of {@code Option} PrettyPrint.
+   * @return the value of the option PrettyPrint if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getpretty_print();
+  boolean getPrettyPrint();
   
 
-// Option help. 
+// Option PrintMan. 
+// Aliases: [--print-man]
+
+  /**
+   * @return true if the option PrintMan has been used
+   * in the command line.
+   */
+  boolean isPrintManSet();
+
+  /**
+   * Get the value of {@code Option} PrintMan.
+   * @return the value of the option PrintMan if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getPrintMan();
+  
+
+// Option PrintReadme. 
+// Aliases: [--print-readme]
+
+  /**
+   * @return true if the option PrintReadme has been used
+   * in the command line.
+   */
+  boolean isPrintReadmeSet();
+
+  /**
+   * Get the value of {@code Option} PrintReadme.
+   * @return the value of the option PrintReadme if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getPrintReadme();
+  
+
+// Option PrintBashCompletion. 
+// Aliases: [--print-bash-completion]
+
+  /**
+   * @return true if the option PrintBashCompletion has been used
+   * in the command line.
+   */
+  boolean isPrintBashCompletionSet();
+
+  /**
+   * Get the value of {@code Option} PrintBashCompletion.
+   * @return the value of the option PrintBashCompletion if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getPrintBashCompletion();
+  
+
+// Option Help. 
 // Aliases: [-h, --help]
 
   /**
-   * @return true if the option help has been used
+   * @return true if the option Help has been used
    * in the command line.
    */
-  boolean ishelpSet();
+  boolean isHelpSet();
 
   /**
-   * Get the value of {@code Option} help.
-   * @return the value of the option help if it has been set
+   * Get the value of {@code Option} Help.
+   * @return the value of the option Help if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean gethelp();
+  boolean getHelp();
   
 
-// Option hidden_help. 
+// Option HiddenHelp. 
 // Aliases: [-hh, --hidden-help]
 
   /**
-   * @return true if the option hidden_help has been used
+   * @return true if the option HiddenHelp has been used
    * in the command line.
    */
-  boolean ishidden_helpSet();
+  boolean isHiddenHelpSet();
 
   /**
-   * Get the value of {@code Option} hidden_help.
-   * @return the value of the option hidden_help if it has been set
+   * Get the value of {@code Option} HiddenHelp.
+   * @return the value of the option HiddenHelp if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean gethidden_help();
+  boolean getHiddenHelp();
   
 
-// Option time. 
+// Option Time. 
 // Aliases: [-t, --time]
 
   /**
-   * @return true if the option time has been used
+   * @return true if the option Time has been used
    * in the command line.
    */
-  boolean istimeSet();
+  boolean isTimeSet();
 
   /**
-   * Get the value of {@code Option} time.
-   * @return the value of the option time if it has been set
+   * Get the value of {@code Option} Time.
+   * @return the value of the option Time if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean gettime();
+  boolean getTime();
   
 
-// Option informal. 
+// Option Typecheck. 
+// Aliases: [-tc, --typecheck]
+
+  /**
+   * @return true if the option Typecheck has been used
+   * in the command line.
+   */
+  boolean isTypecheckSet();
+
+  /**
+   * Get the value of {@code Option} Typecheck.
+   * @return the value of the option Typecheck if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getTypecheck();
+  
+
+// Option Informal. 
 // Aliases: [-i, --informal]
 
   /**
-   * @return true if the option informal has been used
+   * @return true if the option Informal has been used
    * in the command line.
    */
-  boolean isinformalSet();
+  boolean isInformalSet();
 
   /**
-   * Get the value of {@code Option} informal.
-   * @return the value of the option informal if it has been set
+   * Get the value of {@code Option} Informal.
+   * @return the value of the option Informal if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getinformal();
+  boolean getInformal();
   
 
-// Option formal. 
+// Option Formal. 
 // Aliases: [-f, --formal]
 
   /**
-   * @return true if the option formal has been used
+   * @return true if the option Formal has been used
    * in the command line.
    */
-  boolean isformalSet();
+  boolean isFormalSet();
 
   /**
-   * Get the value of {@code Option} formal.
-   * @return the value of the option formal if it has been set
+   * Get the value of {@code Option} Formal.
+   * @return the value of the option Formal if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getformal();
+  boolean getFormal();
   
 
-// Option check_informal. 
+// Option CheckInformal. 
 // Aliases: [-ci, --check-informal]
 
   /**
-   * @return true if the option check_informal has been used
+   * @return true if the option CheckInformal has been used
    * in the command line.
    */
-  boolean ischeck_informalSet();
+  boolean isCheckInformalSet();
 
   /**
-   * Get the value of {@code Option} check_informal.
-   * @return the value of the option check_informal if it has been set
+   * Get the value of {@code Option} CheckInformal.
+   * @return the value of the option CheckInformal if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getcheck_informal();
+  boolean getCheckInformal();
   
 
-// Option check_formal. 
+// Option CheckFormal. 
 // Aliases: [-cf, --check-formal]
 
   /**
-   * @return true if the option check_formal has been used
+   * @return true if the option CheckFormal has been used
    * in the command line.
    */
-  boolean ischeck_formalSet();
+  boolean isCheckFormalSet();
 
   /**
-   * Get the value of {@code Option} check_formal.
-   * @return the value of the option check_formal if it has been set
+   * Get the value of {@code Option} CheckFormal.
+   * @return the value of the option CheckFormal if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getcheck_formal();
+  boolean getCheckFormal();
   
 
-// Option check_consistency. 
+// Option CheckConsistency. 
 // Aliases: [-cc, --check-consistency]
 
   /**
-   * @return true if the option check_consistency has been used
+   * @return true if the option CheckConsistency has been used
    * in the command line.
    */
-  boolean ischeck_consistencySet();
+  boolean isCheckConsistencySet();
 
   /**
-   * Get the value of {@code Option} check_consistency.
-   * @return the value of the option check_consistency if it has been set
+   * Get the value of {@code Option} CheckConsistency.
+   * @return the value of the option CheckConsistency if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getcheck_consistency();
+  boolean getCheckConsistency();
   
 
-// Option no_check_consistency. 
-// Aliases: [-ncc, --no-check-consistency]
-
-  /**
-   * @return true if the option no_check_consistency has been used
-   * in the command line.
-   */
-  boolean isno_check_consistencySet();
-
-  /**
-   * Get the value of {@code Option} no_check_consistency.
-   * @return the value of the option no_check_consistency if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  boolean getno_check_consistency();
-  
-
-// Option debug. 
+// Option Debug. 
 // Aliases: [-d, --debug]
 
   /**
-   * @return true if the option debug has been used
+   * @return true if the option Debug has been used
    * in the command line.
    */
-  boolean isdebugSet();
+  boolean isDebugSet();
 
   /**
-   * Get the value of {@code Option} debug.
-   * @return the value of the option debug if it has been set
+   * Get the value of {@code Option} Debug.
+   * @return the value of the option Debug if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getdebug();
+  boolean getDebug();
   
 
-// Option gen_class_dic. 
+// Option ReadFromStdin. 
+// Aliases: [-]
+
+  /**
+   * @return true if the option ReadFromStdin has been used
+   * in the command line.
+   */
+  boolean isReadFromStdinSet();
+
+  /**
+   * Get the value of {@code Option} ReadFromStdin.
+   * @return the value of the option ReadFromStdin if it has been set
+   * using the arguments. Throws an {@code IllegalStateException} otherwise.
+   */ 
+  boolean getReadFromStdin();
+  
+
+// Option GenClassDic. 
 // Aliases: [-gcd, --gen-class-dic]
 
   /**
-   * @return true if the option gen_class_dic has been used
+   * @return true if the option GenClassDic has been used
    * in the command line.
    */
-  boolean isgen_class_dicSet();
+  boolean isGenClassDicSet();
 
   /**
-   * Get the value of {@code Option} gen_class_dic.
-   * @return the value of the option gen_class_dic if it has been set
+   * Get the value of {@code Option} GenClassDic.
+   * @return the value of the option GenClassDic if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getgen_class_dic();
+  boolean getGenClassDic();
   
 
-// Option no_gen_class_dic. 
-// Aliases: [-ngcd, --no-gen-class-dic]
-
-  /**
-   * @return true if the option no_gen_class_dic has been used
-   * in the command line.
-   */
-  boolean isno_gen_class_dicSet();
-
-  /**
-   * Get the value of {@code Option} no_gen_class_dic.
-   * @return the value of the option no_gen_class_dic if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  boolean getno_gen_class_dic();
-  
-
-// Option graph. 
+// Option Graph. 
 // Aliases: [-g, --graph]
 
   /**
-   * @return true if the option graph has been used
+   * @return true if the option Graph has been used
    * in the command line.
    */
-  boolean isgraphSet();
+  boolean isGraphSet();
 
   /**
    * The enumeration type used to represent the string enum option.
    */
-  enum  graph {
-    icg("icg"),    iig("iig");
+  enum  Graph {
+    IIG("IIG"),    ICG("ICG");
     private final String[] matchStrings;
-    private graph(final String... s) {
+    private Graph(final String... s) {
       matchStrings = s;
     }
     public String toString() {
@@ -350,11 +367,11 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [{icg="icg", iig="iig"}]
-     * @return a valid graph member.
+     * @param s one of the following strings: [{IIG="IIG", ICG="ICG"}]
+     * @return a valid Graph member.
      */
-    public static graph get(final String s) {
-      for (graph value : graph.values()) {
+    public static Graph get(final String s) {
+      for (Graph value : Graph.values()) {
         for (String m : value.matchStrings) {
           if (m.equalsIgnoreCase(s)) return value;
         }
@@ -365,28 +382,28 @@ public interface BONcOptionsInterface {
   }
 
   /**
-   * Get the value of {@code Option} graph.
-   * @return the value of the option graph if it has been set
+   * Get the value of {@code Option} Graph.
+   * @return the value of the option Graph if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  graph getgraph();
+  Graph getGraph();
   
 
-// Option version. 
+// Option Version. 
 // Aliases: [-v, --version]
 
   /**
-   * @return true if the option version has been used
+   * @return true if the option Version has been used
    * in the command line.
    */
-  boolean isversionSet();
+  boolean isVersionSet();
 
   /**
-   * Get the value of {@code Option} version.
-   * @return the value of the option version if it has been set
+   * Get the value of {@code Option} Version.
+   * @return the value of the option Version if it has been set
    * using the arguments. Throws an {@code IllegalStateException} otherwise.
    */ 
-  boolean getversion();
+  boolean getVersion();
   
 
 // Option SourceFiles. 

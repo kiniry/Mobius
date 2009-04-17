@@ -7,12 +7,14 @@ package ie.ucd.bon.tests.testcase;
 import ie.ucd.bon.Main;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
-import ie.ucd.bon.util.NullOutputStream;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TestCase {
   
@@ -20,13 +22,13 @@ public class TestCase {
   private String testName;
   private final Collection<String> inputFiles;
   private final Collection<TestOutput> outputs;
-  private final Collection<String> progArgs;
+  private List<String> progArgs;
   private final int testNumber;
     
   public TestCase(final int testNumber) {
     inputFiles = new ArrayList<String>();
     outputs = new ArrayList<TestOutput>();
-    progArgs = new ArrayList<String>();
+    progArgs = new LinkedList<String>();
     this.testNumber = testNumber;
     location = null;
     testName = null;
@@ -48,8 +50,9 @@ public class TestCase {
     outputs.add(to);    
   }
   
-  public void addProgramArgument(String argument) {
-    progArgs.add(argument);
+  public void setProgramArguments(String arguments) {
+    String[] args = arguments.split("\\s+");
+    progArgs = Arrays.asList(args);
   }
   
   public boolean checkValid() {
@@ -71,7 +74,7 @@ public class TestCase {
   }
   
   public boolean runTest(PrintStream out, PrintStream err) {
-    StringBuilder runString = new StringBuilder("-tc ");
+    StringBuilder runString = new StringBuilder();
     for (String arg: progArgs) {
       runString.append(arg);
       runString.append(' ');
@@ -87,7 +90,7 @@ public class TestCase {
       System.out.print(" (" + testName + ")");
     }
     System.out.println();
-    //System.out.println("Runstring: *" + runString + "*");
+//    System.out.println("Runstring: *" + runString + "*");
     
     //We don't want to print any output from the test run
     PrintStream oldOut = System.out;
@@ -95,8 +98,13 @@ public class TestCase {
     //TODO It would probably be even faster to have a NullPrintStream here
     System.setOut(out);
     System.setErr(err);
-    
-    Main.main2(runString.toString().trim().split("\\s+"), false);
+
+    String runStringS = runString.toString().trim();
+    if (runStringS.equals("")) {
+      Main.main2(new String[0], false);
+    } else {
+      Main.main2(runStringS.split("\\s+"), false);
+    }
 
     System.setOut(oldOut);
     System.setErr(oldErr);
@@ -127,4 +135,11 @@ public class TestCase {
     
     return passed;
   }
+
+  @Override
+  public String toString() {
+    return testName + ", " + testNumber + ", " + progArgs + ", " + outputs;
+  }
+  
+  
 }

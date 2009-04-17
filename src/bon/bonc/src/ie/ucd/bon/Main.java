@@ -4,7 +4,8 @@
  */
 package ie.ucd.bon;
 
-import ie.ucd.bon.Printer.PrintingOption;
+import ie.ucd.bon.clinterface.BONcOptionsInterface;
+import ie.ucd.bon.clinterface.BONcParser;
 import ie.ucd.bon.errorreporting.FileNotFoundError;
 import ie.ucd.bon.errorreporting.NoFilesError;
 import ie.ucd.bon.errorreporting.Problems;
@@ -14,9 +15,6 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
-import ie.ucd.commandline.options.InvalidOptionsSetException;
-import ie.ucd.commandline.options.Options;
-import ie.ucd.commandline.parser.CommandlineParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,8 +23,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.List;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -87,49 +86,53 @@ public final class Main {
 
   public static boolean main2(final String[] args, final boolean exitOnFailure) {
     try {
-      CommandlineParser cp = processArguments(args);
+//      CLOLogger.setLogLevel(Level.FINE);
+      BONcParser clParser = new BONcParser();
+      
+      if (clParser.parse(args)) {
+        BONcOptionsInterface options = clParser.getOptionStore();
 
-      if (cp.isValidParse()) {
-        Options so = cp.getSelectedOptions();
+        debug = options.isDebugSet() && options.getDebug(); 
 
-        debug = so.isBooleanOptionByNameSelected("-d");
-
-        if (so.isBooleanOptionByNameSelected("--print-man")) {
-          cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
+        if (options.getPrintMan()) {
+          //cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
           return true;
-        } else if (so.isBooleanOptionByNameSelected("--print-readme")) {
-          cp.printOptionsInReadmeFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false, 80, 2);
+        } else if (options.getPrintReadme()) {
+          //cp.printOptionsInReadmeFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false, 80, 2);
           return true;
-        } else if (so.isBooleanOptionByNameSelected("--print-bash-completion")) {
-          cp.printBashCompletionOptionsScript(System.out, false);
+        } else if (options.getPrintBashCompletion()) {
+          //cp.printBashCompletionOptionsScript(System.out, false);
           return true;
-        } else if (so.isBooleanOptionByNameSelected("-hh")) {
-          cp.printOptions(System.out, true);
+        } else if (options.getHiddenHelp()) {
+          //cp.printOptions(System.out, true);
           return true;
-        } else if (so.isBooleanOptionByNameSelected("--help")) {
-          cp.printOptions(System.out, false);
+        } else if (options.getHelp()) {
+          //cp.printOptions(System.out, false);
           return true;
-        } else if (so.isBooleanOptionByNameSelected("--version")) {
+        } else if (options.getVersion()) {
           System.out.println(getVersion());
           return true;
         } else {
-          Collection<String> files = cp.getActualArgs();
+          List<File> files = options.getSourceFiles();
           Main.logDebug(files.size() + " files:");
-          for (String file : files) {
-            Main.logDebug("\t" + file);
+          for (File file : files) {
+            Main.logDebug("\t" + file.getPath());
           }
-          boolean success = run(cp.getActualArgs(), so);
+          boolean success = run(files, options);
           if (!success && exitOnFailure) {
             System.exit(1);
           } else {
             return success;
           }
         }
-      }
+      } 
+      //TODO print usage  
+      System.out.println("Invalid arguments.");
       return false;
-    } catch (InvalidOptionsSetException iose) {
-      //This shouldn't happen, if the options are set up correctly!
-      //System.out.println("Error: ");
+
+    } catch (Exception e) {
+      System.out.println("Something went wrong.");
+      e.printStackTrace();
       if (exitOnFailure) {
         System.exit(1);
       }
@@ -137,27 +140,17 @@ public final class Main {
     }
   }
 
-  private static Collection<File> getValidFiles(final Collection<String> fileNames, final ParsingTracker tracker, final Options so) {
+  private static List<File> getValidFiles(final List<File> fileNames, final ParsingTracker tracker, final BONcOptionsInterface so) {
     //Check valid files
-    Collection<File> validFiles = new Vector<File>();
+    List<File> validFiles = new ArrayList<File>(fileNames.size());
 
-    boolean readingFromStdIn = false;
-    if (so.isBooleanOptionByNameSelected("-")) {
+    if (so.getReadFromStdin()) {
       Main.logDebug("Reading from stdin");
       validFiles.add(null);
-      readingFromStdIn = true;
     }
 
-    for (String fileName : fileNames) {
-      if ("-".equals(fileName)) {
-        if (!readingFromStdIn) {
-          Main.logDebug("Reading from stdin");
-          validFiles.add(null);
-          readingFromStdIn = true;
-        }
-        continue;
-      }
-      File file = new File(fileName);
+    //TODO clops now handles this.
+    for (File file : fileNames) {
       if (file.exists() && !file.isDirectory()) {
         validFiles.add(file);
       } else {
@@ -207,12 +200,12 @@ public final class Main {
     }
   }
 
-  private static void typeCheck(final ParsingTracker tracker, final Options so, final boolean timing) {
-    if (so.isBooleanOptionByNameSelected("-tc")) {
+  private static void typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
+    if (so.getTypecheck()) {
 
-      boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
-      boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
-      boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
+      boolean checkInformal = so.getCheckInformal();
+      boolean checkFormal = so.getCheckFormal();
+      boolean checkConsistency = so.getCheckConsistency();
       Main.logDebug("checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
 
       if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
@@ -239,20 +232,15 @@ public final class Main {
     }
   }
 
-  private static void print(final Collection<File> files, final ParsingTracker tracker, final Options so, final boolean timing) {
+  private static void print(final Collection<File> files, final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
 
-    if (!so.isStringOptionByNameSelected("-p")) {
+    if (!so.isPrintSet()) {
       return;
     }
 
-    String printType = so.getStringOptionByNameArgument("-p");
-    PrintingOption printingOption = Printer.getPrintingOption(printType);
-    if (printingOption == Printer.PrintingOption.NONE) {
-      System.out.println("Unknown print type \"" + printType + "\"");
-      return;
-    }
+    BONcOptionsInterface.Print printType = so.getPrint();
 
-    if (so.isBooleanOptionByNameSelected("-gcd") && printingOption != Printer.PrintingOption.DIC) {
+    if (so.getGenClassDic() && printType != BONcOptionsInterface.Print.DIC) {
       try {
         String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
         File classDicAutoFile = new File("class-dic-auto");
@@ -266,13 +254,12 @@ public final class Main {
       }
     }
 
-    boolean printToFile = so.isStringOptionByNameSelected("-po");
+    boolean printToFile = so.isPrintOutputSet();
 
     PrintStream outputStream;
     String outputFilePath = null;
     if (printToFile) {
-      outputFilePath = so.getStringOptionByNameArgument("-po");
-      File outputFile = new File(outputFilePath);
+      File outputFile = so.getPrintOutput();
 
       try {
         FileOutputStream outputFileStream = new FileOutputStream(outputFile);
@@ -289,7 +276,7 @@ public final class Main {
     }  
 
 
-    Printer.printToStream(files, tracker, outputStream, printingOption, printToFile, timing);
+    Printer.printToStream(files, tracker, outputStream, printType, printToFile, timing);
 
     if (printToFile) {
       outputStream.close();
@@ -297,12 +284,13 @@ public final class Main {
     }
   }
 
-  public static boolean run(final Collection<String> fileNames, final Options so) {
+  public static boolean run(final List<File> fileNames, final BONcOptionsInterface so) {
+    problems = null;
     //Timing info?
-    boolean timing = so.isBooleanOptionByNameSelected("-time");
+    boolean timing = so.getTime();
 
     ParsingTracker tracker = new ParsingTracker();
-    Collection<File> validFiles = getValidFiles(fileNames, tracker, so);
+    List<File> validFiles = getValidFiles(fileNames, tracker, so);
 
     //Is there at least one valid file?
     if (validFiles.size() < 1) {
@@ -314,9 +302,9 @@ public final class Main {
     parse(validFiles, tracker, timing);
     typeCheck(tracker, so, timing);
 
-    boolean checkInformal = so.isBooleanOptionByNameSelected("-ci");
-    boolean checkFormal = so.isBooleanOptionByNameSelected("-cf");
-    boolean checkConsistency = so.isBooleanOptionByNameSelected("-cc");
+    boolean checkInformal = so.getCheckInformal();
+    boolean checkFormal = so.getCheckFormal();
+    boolean checkConsistency = so.getCheckConsistency();
     printResults(tracker, checkInformal, checkFormal, checkConsistency);    
 
     print(validFiles, tracker, so, timing);
@@ -334,22 +322,12 @@ public final class Main {
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
   }
-  
-  private static void displayGraphs(final ParsingTracker tracker, final Options so) {
-    if (so.isStringOptionByNameSelected("-g")) {
+
+  private static void displayGraphs(final ParsingTracker tracker, final BONcOptionsInterface so) {
+    if (so.isGraphSet()) {
       System.out.println("Graphing...");
-      PrefuseGraphDisplay.displayGraph(so.getStringOptionByNameArgument("-g"), tracker);
+      PrefuseGraphDisplay.displayGraph(so.getGraph(), tracker);
     }
-  }
-
-  private static CommandlineParser processArguments(final String[] args) throws InvalidOptionsSetException {
-    CommandlineParser clp = CLP.commandlineParser();
-
-    clp.parseOptions(System.out, args);
-    clp.checkConstraints(System.out);
-    clp.triggerActions();
-
-    return clp;
   }
 
   public static String timeString(final long timeInNano) {
@@ -366,5 +344,5 @@ public final class Main {
     }
     return typingInfo;
   }
-  
+
 }

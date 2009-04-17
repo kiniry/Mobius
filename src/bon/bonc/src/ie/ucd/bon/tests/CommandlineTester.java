@@ -5,11 +5,10 @@
 package ie.ucd.bon.tests;
 
 import ie.ucd.bon.Main;
-import ie.ucd.commandline.options.InvalidOptionsSetException;
 
 public class CommandlineTester {
 
-  public static void main(String[] args) throws InvalidOptionsSetException {
+  public static void main(String[] args) {
     
     
     String[] tests = { 

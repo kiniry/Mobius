@@ -1,28 +1,28 @@
 
 @Test-Location: ./
 
---Parsing tests
+//Parsing tests
 
 @Test-name: "Parsing error 1"
 @Location { test1/ }
 @Input { parseerror }
 @Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa, true> }
 
---File problem tests
+//File problem tests
 
 @Test-name: "No files error"
 @Location { doesnotmatter/ }
-@Input { }                    --No input files!
+@Input { }                    //No input files!
 @Output { < NoFilesError > }
 
-@Test-name: "FileNotFoundError and NoFilesError"
-@Location { test3/ }
-@Input { invalidfile }
-@Output { < FileNotFoundError, #File:invalidfile >,  
-         < NoFilesError >
-       }
+//@Test-name: "FileNotFoundError and NoFilesError"
+//@Location { test3/ }
+//@Input { invalidfile }
+//@Output { < FileNotFoundError, #File:invalidfile >,  
+//         < NoFilesError >
+//       }
 
---Missing a test for FileReadError, but it's difficult to fake this!
+//Missing a test for FileReadError, but it's difficult to fake this!
 
 @Test-name: "System not defined."
 @Location { test2/ }
@@ -96,7 +96,7 @@
 @Output { < DuplicateSuperclassWarning, #File:dup_super, 15, 10, B, Z > }
 
 @Test-name: "Cluster containment cycle."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { test18/ }
 @Input { clus_hier_cycle }
 @Output { < CycleInRelationsError, #File:clus_hier_cycle, 5, 0, Cluster, B, "B->D->C->B", "clustering hierarchy" >,
@@ -104,7 +104,7 @@
           < CycleInRelationsError, #File:clus_hier_cycle, 13, 0, Cluster, D, "D->C->B->D", "clustering hierarchy" > }
 
 @Test-name: "Informal class hierarchy cycle."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { test20/ }
 @Input { class_hier_cycle }
 @Output { < CycleInRelationsError, #File:class_hier_cycle, 12, 0, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
@@ -113,51 +113,51 @@
           < CycleInRelationsError, #File:class_hier_cycle, 27, 0, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
 
 @Test-name: "Class not in any cluster."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { test19/ }
 @Input { class_not_in_cluster }
 @Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster, 4, 0, X > }
 
 @Test-name: "Cluster not in any cluster or system."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { test21/ }
 @Input { clus_not_in_clus_or_sys }
 @Output { < ClusterNotInAnyClusterOrSystemError, #File:clus_not_in_clus_or_sys, 12, 0, Z > }
 
 @Test-name: "Class has self as parent (informal)."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { test22/ }
 @Input { self_as_super1 }
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 10, 10, C > }
 
 @Test-name: "Class has self as parent (formal)."
-@Prog-args: -formal
+@Prog-args: {--formal}
 @Location { test22/ }
 @Input { self_as_super2 }
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 8, 6, X > }
 
 @Test-name: "Connector system."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { connector/ }
 @Input { connector.bon }
 
 @Test-name: "Monitoring system."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { monitoring/ }
 @Input { monitoring.bon }
 
 @Test-name: "Class chart mini-system from book."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { classchart/ }
 @Input { classchart.bon }
 
 @Test-name: "Clock example."
-@Prog-args: -ntc
+@Prog-args: {-tc false}
 @Location { clock/ }
 @Input { Alarm.bon, AlarmClock.bon, AlarmClockInformal.bon, AlarmInformal.bon, Clock.bon, ClockInformal.bon, ClockSystemAndClusterCharts.bon, LogicalClock.bon, LogicalClockInformal.bon }
 
 @Test-name: "Sports Clustering Example."
-@Prog-args: -informal
+@Prog-args: {--informal}
 @Location { ./ }
 @Input { ClusteringSportsExample.bon }
 
@@ -188,7 +188,7 @@
           < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29 > }
 
 @Test-name: "Deferred feature in non-deferred class"
-@Prog-args: -formal
+@Prog-args: {--formal}
 @Location { test25/ }
 @Input { deferred_feature_in_non_deferred_class.bon }
 @Output { < DeferredFeatureInNonDeferredClassError, #File:deferred_feature_in_non_deferred_class.bon, 7, 15, "X, Y", A > }

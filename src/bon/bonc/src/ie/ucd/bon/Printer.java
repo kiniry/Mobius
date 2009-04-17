@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.clinterface.BONcOptionsInterface.Print;
 import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.BONSTTreeWalker;
@@ -42,39 +43,11 @@ public final class Printer {
   /** Prevent instantiation of Printer. */
   private Printer() { }
 
-  public enum PrintingOption { SYSO, PLAIN_TEXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, PIIG, NONE };
-
   private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
-  public static PrintingOption getPrintingOption(final String optionString) {   
-    if (optionString.equalsIgnoreCase("syso") || optionString.equalsIgnoreCase("stdo")) {
-      return PrintingOption.SYSO;
-    } else if (optionString.equalsIgnoreCase("txt")) {
-      return PrintingOption.PLAIN_TEXT;
-    } else if (optionString.equalsIgnoreCase("html") || optionString.equalsIgnoreCase("xhtml")) {
-      return PrintingOption.HTML;
-    } else if (optionString.equalsIgnoreCase("dot")) {
-      return PrintingOption.DOT;
-    } else if (optionString.equalsIgnoreCase("dic")) {
-      return PrintingOption.DIC;
-    } else if (optionString.equalsIgnoreCase("icg")) {
-      return PrintingOption.ICG;
-    } else if (optionString.equalsIgnoreCase("iig")) {
-      return PrintingOption.IIG;
-    } else if (optionString.equalsIgnoreCase("cl")) {
-      return PrintingOption.CL;
-    } else if (optionString.equalsIgnoreCase("picg")) {
-      return PrintingOption.PICG;
-    } else if (optionString.equalsIgnoreCase("piig")) {
-      return PrintingOption.PIIG;
-    } else {
-      return PrintingOption.NONE;
-    }    
-  }
-
-  public static String getPrintingOptionName(final PrintingOption po) {
-    switch(po) {
-    case PLAIN_TEXT:
+  public static String getPrintingOptionName(final Print p) {
+    switch(p) {
+    case TXT:
       return "plain-text";
     case HTML:
       return "web-page format";
@@ -97,10 +70,10 @@ public final class Printer {
     }
   }
 
-  public static String getPrintingOptionStartString(final PrintingOption po) {
+  public static String getPrintingOptionStartString(final Print p) {
     try {
-      switch(po) {
-      case PLAIN_TEXT:
+      switch(p) {
+      case TXT:
         return FileUtil.readToString("templates/PlainTextStart.txt");
       case HTML:
         return FileUtil.readToString("templates/XHTMLStart.txt"); 
@@ -113,10 +86,10 @@ public final class Printer {
     }
   }
 
-  public static String getPrintingOptionEndString(final PrintingOption po) {
+  public static String getPrintingOptionEndString(final Print p) {
     try {
-      switch(po) {
-      case PLAIN_TEXT:
+      switch(p) {
+      case TXT:
         return FileUtil.readToString("templates/PlainTextEnd.txt");
       case HTML:
         return FileUtil.readToString("templates/XHTMLEnd.txt"); 
@@ -129,9 +102,9 @@ public final class Printer {
     }
   }
 
-  public static Reader getPrintingOptionTemplateFileReader(final PrintingOption po) {
-    switch(po) {
-    case PLAIN_TEXT:
+  public static Reader getPrintingOptionTemplateFileReader(final Print p) {
+    switch(p) {
+    case TXT:
       return FileUtil.getResourceReader("templates/BONPlainText.stg");
     case HTML:
       return FileUtil.getResourceReader("templates/BONXHTML.stg"); 
@@ -140,8 +113,8 @@ public final class Printer {
     }
   }
 
-  public static String getExtraPartsForPrintingOption(final PrintingOption po, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
-    switch(po) {
+  public static String getExtraPartsForPrintingOption(final Print p, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
+    switch(p) {
     case HTML:
       return HTMLLinkGenerator.generateLinks(printingTracker, parsingTracker);
     default:
@@ -149,8 +122,8 @@ public final class Printer {
     }
   }
 
-  public static boolean isFileIndependentPrintingOption(final PrintingOption po) {
-    switch(po) {
+  public static boolean isFileIndependentPrintingOption(final Print p) {
+    switch(p) {
     case DIC:
     case ICG:
     case IIG:
@@ -163,7 +136,7 @@ public final class Printer {
     }
   }
 
-  private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final PrintingOption printingOption, final PrintingTracker printingTracker) throws RecognitionException {
+  private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final Print printingOption, final PrintingTracker printingTracker) throws RecognitionException {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
@@ -199,11 +172,11 @@ public final class Printer {
     return st.toString();
   }
 
-  private static String printStartToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
+  private static String printStartToString(final Print printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionStartString(printOption), printTime, extraParts, parsingTracker);
   }
 
-  private static String printEndToString(final PrintingOption printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
+  private static String printEndToString(final Print printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
     return formatString(getPrintingOptionEndString(printOption), printTime, extraParts, parsingTracker);
   }
 
@@ -219,15 +192,15 @@ public final class Printer {
   }
 
 
-  public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final PrintingOption printingOption, final boolean printToFile, final boolean timing) {
+  public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final Print printingType, final boolean printToFile, final boolean timing) {
     Main.logDebug("Printing to stream.");
     Calendar printTime = new GregorianCalendar();
     PrintingTracker printTracker = new PrintingTracker();
     StringBuilder main = new StringBuilder();
 
 
-    if (isFileIndependentPrintingOption(printingOption)) {
-      main.append(printFileIndependentPrintingOptionToString(printingOption, parsingTracker));
+    if (isFileIndependentPrintingOption(printingType)) {
+      main.append(printFileIndependentPrintingOptionToString(printingType, parsingTracker));
     } else {
 
       for (File file : files) {
@@ -245,11 +218,11 @@ public final class Printer {
             String printed;
             if (timing) {
               long startTime = System.nanoTime();
-              printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
+              printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
               long endTime = System.nanoTime();
-              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingOption) + " took: " + Main.timeString(endTime - startTime));
+              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingType) + " took: " + Main.timeString(endTime - startTime));
             } else {
-              printed = Printer.printToString(parse, printingOption, printTracker, parsingTracker);
+              printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
             }
             if (printed != null) {
               main.append(printed);
@@ -266,10 +239,10 @@ public final class Printer {
 
     }
 
-    String extraParts = getExtraPartsForPrintingOption(printingOption, printTracker, parsingTracker);
-    outputStream.print(printStartToString(printingOption, printTime, extraParts, parsingTracker));
+    String extraParts = getExtraPartsForPrintingOption(printingType, printTracker, parsingTracker);
+    outputStream.print(printStartToString(printingType, printTime, extraParts, parsingTracker));
     outputStream.print(main.toString());
-    outputStream.print(printEndToString(printingOption, printTime, extraParts, parsingTracker));
+    outputStream.print(printEndToString(printingType, printTime, extraParts, parsingTracker));
   }
 
   /*private static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintingTracker printingTracker, ParsingTracker parsingTracker, PrintStream outputStream) 
@@ -282,7 +255,7 @@ public final class Printer {
   }*/
 
 
-  private static String printFileIndependentPrintingOptionToString(final PrintingOption printingOption, final ParsingTracker parsingTracker) {
+  private static String printFileIndependentPrintingOptionToString(final Print printingOption, final ParsingTracker parsingTracker) {
     switch (printingOption) {
     case DIC:
       return printGeneratedClassDictionaryToString(parsingTracker);
@@ -301,10 +274,10 @@ public final class Printer {
     }
   }
 
-  public static String printToString(final ParseResult parseResult, final PrintingOption printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
+  public static String printToString(final ParseResult parseResult, final Print printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
     //System.out.println("Printing to string...");
 
-    if (printingOption == PrintingOption.DOT) {
+    if (printingOption == Print.DOT) {
       return printDotToString(parseResult);
     }
 

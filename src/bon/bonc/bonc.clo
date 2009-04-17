@@ -4,79 +4,81 @@ NAME::
 
 ARGS::
 
-typecheck:{"-tc","--typecheck"}:[default="true"]
-no_typecheck:{"-ntc","--no-typecheck"}:[default="false"]
+Print:{"-p","--print"}:{enum}:[choices="SYSO,TXT,DOT,HTML,DIC,IIG,ICG,CL,PICG,PIIG",casesensitive="false"]
+ : "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options."
+PrintOutput:{"-po","--print-output"}:{file}:[canbedir="false"]
+ : "Print output to the given file instead of to stdout."
+PrettyPrint:{"-pp","--pretty-print"}
+ : "Pretty-print the parsed input. This is equivalent to -p=TXT."
 
-//TODO - must prevent identifier names containing dashes!
+PrintMan:{"--print-man"}:[default="false"]
+ : "Print available options in man-page format."
+PrintReadme:{"--print-readme"}:[default="false"]
+ : "Print available options in readme format."
+PrintBashCompletion:{"--print-bash-completion"}:[default="false"]
+ : "Print bash completion script for available options."
 
-//Print would be better as a StringEnum
-print:{"-p","--print"}:{enum}:[choices="txt,html,xhtml,dic",casesensitive="false"]
-print_output:{"-po","--print-output"}:{file}:[canbedir="false"]
-pretty_print:{"-pp","--pretty-print"}
+Help:{"-h","--help"}:[default="false"]
+ : "Print this help message."
+HiddenHelp:{"-hh","--hidden-help"}:[default="false"] //TODO do we still need this?
+ : "Print help with hidden options shown"
 
-help:{"-h","--help"}
-hidden_help:{"-hh","--hidden-help"}
+Time:{"-t","--time"}:[default="false"]
+ : "Print timing information."
+Typecheck:{"-tc","--typecheck"}:[default="true"]
+ : "Typecheck the input"
+Informal:{"-i","--informal"}
+ : "Only check informal charts."
+Formal:{"-f","--formal"}
+ : "Only check formal charts."
+CheckInformal:{"-ci","--check-informal"}:[default="true"]
+ : "Check informal charts."
+CheckFormal:{"-cf","--check-formal"}:[default="true"]
+ : "Check formal diagrams."
+CheckConsistency:{"-cc","--check-consistency"}:[default="true"]
+ : "Check consistency between levels."
 
-time:{"-t","--time"}
-informal:{"-i","--informal"}
-formal:{"-f","--formal"}
-check_informal:{"-ci","--check-informal"}
-check_formal:{"-cf","--check-formal"}
-check_consistency:{"-cc","--check-consistency"}
-no_check_consistency:{"-ncc","--no-check-consistency"}
+Debug:{"-d","--debug"}:[default="false"]
+ : "Print debugging output."
 
-debug:{"-d","--debug"}
+ReadFromStdin:{"-"}:[default="false"]
+ : "Read input from stdin."
 
-//Currently can't have dash as an alias. Fix!
-//readstdin:{"-"}
+GenClassDic:{"-gcd","--gen-class-dic"}
+ : "Generate the class dictionary when printing."
 
-gen_class_dic:{"-gcd","--gen-class-dic"}
-no_gen_class_dic:{"-ngcd","--no-gen-class-dic"}
+Graph:{"-g","--graph"}:{enum}:[choices="ICG,IIG",casesensitive="false"]
+ : "Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph."
 
-graph:{"-g","--graph"}:{enum}:[choices="icg,iig",casesensitive="false"]
+Version:{"-v","--version"}:[default="false"]
+ : "Print BONc version and exit."
 
-//Old CLO library
-//print_man
-//print_readme
-//print_bash_completion
-
-version:{"-v","--version"}
-
-SourceFiles:{}:{file-list}:[canbedir="false",mustexist="true"]
+SourceFiles:{}:{file-list}:[between="",canbedir="false",mustexist="true"]
+ : "Source files to process."
 
 
 FORMAT::
 
-  ( option* ) 
-| ( version )
-| ( help )
-| ( hidden_help ) ;
+  ( Option*  SourceFiles*) 
+| AloneOption;
 
 
 WHERE::
 
-option :     print 
-          OR print_output 
-          OR pretty_print 
-          OR time 
-          OR informal 
-          OR formal 
-          OR check_formal 
-          OR check_consistency
-          OR no_check_consistency
-          OR debug
-          OR gen_class_dic
-          OR no_gen_class_dic
-          OR graph
-       ;
+Option : AllOptions -AloneOption -SourceFiles;
+       
+AloneOption : Version OR Help OR HiddenHelp OR PrintMan OR PrintReadme OR PrintBashCompletion;
 
 FLY::
 
-//TODO, all rhs should be text (due to required parsing, etc.)
-//pretty_print -> print:="txt";
+//Need fly rules for typechecking options
+
+Formal {$(Formal)} -> CheckInformal := {false}, CheckConsistency := {false};
+Informal {$(Informal)} -> CheckFormal := {false}, CheckConsistency := {false};
+PrettyPrint {$(PrettyPrint)} -> Print := {"TXT"};
 
 OVERRIDES::
 
 VALIDITY::
 
-// print_output != ? => print != ?;
+{$(Print?) && !$(PrintOutput?)} : "Output file (-po) for printing must be provided." ; 
