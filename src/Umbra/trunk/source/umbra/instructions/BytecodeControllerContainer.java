@@ -13,14 +13,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import umbra.UmbraPlugin;
-import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
-import umbra.instructions.ast.CPLineController;
 import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
-import umbra.lib.Counter;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraException;
 

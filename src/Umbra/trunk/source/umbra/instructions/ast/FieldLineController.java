@@ -11,26 +11,25 @@ package umbra.instructions.ast;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
-import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Utility;
 
+import umbra.instructions.InstructionParser;
+import umbra.lib.BMLParsing;
+import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraException;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 import annot.bcclass.BMLModifiersFlags;
 import annot.io.ReadAttributeException;
 
-import umbra.instructions.InstructionParser;
-import umbra.lib.BMLParsing;
-import umbra.lib.BytecodeStrings;
-import umbra.lib.UmbraException;
-
 /**
- * This is a class for lines in bytecode files with the field declaration.
+ * This is a class for lines in bytecode files with a field declaration.
+ *
+ * TODO: this should be handled by BMLLib
  *
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
@@ -68,7 +67,7 @@ public class FieldLineController extends BytecodeLineController {
   private BCClass my_bcc;
   private String my_type;
   private String my_name;
-  
+
   private int my_java_modif;
   private int my_bml_modif;
   private int my_field_kind;
@@ -242,6 +241,8 @@ public class FieldLineController extends BytecodeLineController {
    * the consistency of the class.
    */
   public void removeFromBCEL() {
+    //moved to BMLLib
+    /*
     if (my_name == null) return;
     final JavaClass jc = my_bcc.getJC();
     final Field[] fds = jc.getFields();
@@ -255,6 +256,7 @@ public class FieldLineController extends BytecodeLineController {
       }
     }
     jc.setFields(nfds);
+    */
   }
 
   /**
@@ -266,6 +268,8 @@ public class FieldLineController extends BytecodeLineController {
    *   add the content of the line to BML and BCEL representation
    */
   public void addToBCEL() throws UmbraException {
+    //moved to BMLLib
+    /*
     if (correct()) {
       switch (my_field_kind) {
         case 0: // Java field
@@ -288,6 +292,7 @@ public class FieldLineController extends BytecodeLineController {
         default: // Unrecognized field
       }
     }
+    */
   }
 
 
