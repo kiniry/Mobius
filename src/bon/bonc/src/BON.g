@@ -2027,7 +2027,7 @@ mul_div_expression  :  mod_pow_expression (mul_div_op^ mod_pow_expression)*
                     ;
 
 //Right-associative
-mod_pow_expression  :  lowest_expression (MOD_POW_OP^ mod_pow_expression)? 
+mod_pow_expression  :  lowest_expression (mod_pow_op^ mod_pow_expression)? 
                     ;
 
 lowest_expression  :  (constant)=> constant
@@ -2139,7 +2139,7 @@ not : 'not'
     ;
                
 binary  :   add_sub_op | mul_div_op | comparison_op 
-          | MOD_POW_OP | and_or_xor_op 
+          | mod_pow_op | and_or_xor_op 
           | '->' | '<->' ;
 
 comparison_op  :    '<'
@@ -2159,9 +2159,10 @@ comparison_op  :    '<'
 mul_div_op  :    '*'
              | '/'
              | '\\' 
+             | '//'
             ;
                
-MOD_POW_OP  :  '\\\\' 
+mod_pow_op  :  '\\\\' 
              | '^' 
              ;
 

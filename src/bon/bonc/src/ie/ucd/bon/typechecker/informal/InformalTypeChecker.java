@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal;
 
+import ie.ucd.bon.Main;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.graph.Graph;
@@ -81,6 +82,7 @@ public class InformalTypeChecker {
   }
   
   public void checkClusterContainmentForCycles() {
+    Main.logDebug("Checking informal clusters for cycles");
     Converter<ClusterChartDefinition,String> converter = new Converter<ClusterChartDefinition,String>() {
       public final String convert(final ClusterChartDefinition toConvert) {
         return toConvert.getName();
@@ -98,6 +100,7 @@ public class InformalTypeChecker {
   }
   
   public void checkClassInheritanceForCycles() {
+    Main.logDebug("Check informal class inheritance for cycles");
     for (String className : classes.keySet()) {
       Collection<String> cycle = classInheritanceGraph.findCycle(className, Converter.stringIdentityConverter);
       if (cycle != null) {

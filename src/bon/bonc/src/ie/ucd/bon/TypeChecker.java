@@ -22,7 +22,7 @@ public final class TypeChecker {
   
   private static final BONTCTreeWalker walker = new BONTCTreeWalker(null);
   
-  public static void typeCheck(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) throws RecognitionException {
+  public static void typeCheck(final ParsingTracker tracker, final boolean typeCheck, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) throws RecognitionException {
     InformalTypeChecker itc = tracker.getInformalTypeChecker();
     FormalTypeChecker ftc = tracker.getFormalTypeChecker();
     
@@ -42,8 +42,12 @@ public final class TypeChecker {
       ftc.performLevelConsistencyChecks(tracker.getTypingInformation().informal());
     }
     
-    for (ParseResult parse : tracker.getParses()) {
-      typeCheck(parse, itc, ftc);
+    if (typeCheck) {
+      for (ParseResult parse : tracker.getParses()) {
+        typeCheck(parse, itc, ftc);
+      }
+    } else {
+      Main.logDebug("Not typechecking");
     }
   }
   

@@ -15,6 +15,7 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
+import ie.ucd.clops.logging.CLOLogger;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -26,6 +27,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -86,9 +88,9 @@ public final class Main {
 
   public static boolean main2(final String[] args, final boolean exitOnFailure) {
     try {
-//      CLOLogger.setLogLevel(Level.FINE);
+      CLOLogger.setLogLevel(Level.FINE);
       BONcParser clParser = new BONcParser();
-      
+
       if (clParser.parse(args)) {
         BONcOptionsInterface options = clParser.getOptionStore();
 
@@ -201,34 +203,30 @@ public final class Main {
   }
 
   private static void typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
-    if (so.getTypecheck()) {
+    boolean checkInformal = so.getCheckInformal();
+    boolean checkFormal = so.getCheckFormal();
+    boolean checkConsistency = so.getCheckConsistency();
+    boolean typeCheck = so.getTypecheck();
+    Main.logDebug("typeCheck: " + typeCheck + ", checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
 
-      boolean checkInformal = so.getCheckInformal();
-      boolean checkFormal = so.getCheckFormal();
-      boolean checkConsistency = so.getCheckConsistency();
-      Main.logDebug("checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
-
-      if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
-        try {
-          if (timing) {
-            long startTime = System.nanoTime();
-            TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
-            long endTime = System.nanoTime();
-            System.out.println("Typechecking took: " + timeString(endTime - startTime));
-          } else {
-            TypeChecker.typeCheck(tracker, checkInformal, checkFormal, checkConsistency);
-          }
-
-        } catch (RecognitionException re) {
-          //Nothing - won't actually happen?
-          System.out.println("ERROR, something went wrong...");
+    if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
+      try {
+        if (timing) {
+          long startTime = System.nanoTime();
+          TypeChecker.typeCheck(tracker, typeCheck, checkInformal, checkFormal, checkConsistency);
+          long endTime = System.nanoTime();
+          System.out.println("Typechecking took: " + timeString(endTime - startTime));
+        } else {
+          TypeChecker.typeCheck(tracker, typeCheck, checkInformal, checkFormal, checkConsistency);
         }
 
-      } else {
-        tracker.setFinalMessage("Not typechecking due to parse errors.");
+      } catch (RecognitionException re) {
+        //Nothing - won't actually happen?
+        System.out.println("ERROR, something went wrong...");
       }
+
     } else {
-      System.out.println("Not typechecking.");
+      tracker.setFinalMessage("Not typechecking due to parse errors.");
     }
   }
 
