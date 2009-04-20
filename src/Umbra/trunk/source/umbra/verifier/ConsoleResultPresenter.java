@@ -31,26 +31,8 @@ public class ConsoleResultPresenter extends ResultPresenter {
     System.out.println(o.toString());
   }
   
-  private String getInfo(VerificationResult result) {
-    if (result.getStatus() == VerificationResult.VERIFIED_OK) {
-      return "OK";
-    } else if (result.getStatus() == VerificationResult.VERIFIED_REJECTED) {
-      return result.getMessage();
-    } else {
-      return "?";
-    }
-  }
-  
-  private String line(int n, char c) {
-    StringBuilder sb = new StringBuilder();
-    for (int i=0; i < n; i++) {
-      sb.append(c);
-    }
-    return sb.toString();
-  }
-  
-  
-  /**
+  /* (non-Javadoc)
+   * @see umbra.verifier.ResultPresenter#presentPass1()
    */
   public void presentPass1() {
     out("pass1:");
@@ -70,24 +52,7 @@ public class ConsoleResultPresenter extends ResultPresenter {
     out("");
   }
   
-  private String presentMethod(Method m) {
-    Type ret = m.getReturnType();
-    String name = m.getName();
-    Type[] args = m.getArgumentTypes();
-    StringBuilder sb = new StringBuilder();
-    sb.append(ret.toString());
-    sb.append(" ");
-    sb.append(name);
-    sb.append("(");
-    for (int i = 0; i < args.length; i++) {
-      sb.append(args[i].toString());
-      if (i < args.length - 1) {
-        sb.append(", ");
-      }
-    }
-    sb.append(")");
-    return sb.toString();
-  }
+  
 
   /** 
    * 
