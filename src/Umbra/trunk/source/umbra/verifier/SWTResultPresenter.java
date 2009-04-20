@@ -8,6 +8,9 @@
  */
 package umbra.verifier;
 
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.verifier.VerificationResult;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -20,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 public class SWTResultPresenter extends ResultPresenter {
 
   private Shell a_shell;
+  private MessageBox msgBox; 
   
   /**
    * @param verifier
@@ -27,6 +31,7 @@ public class SWTResultPresenter extends ResultPresenter {
   public SWTResultPresenter(BytecodeVerifier verifier, Shell a_shell) {
     super(verifier);
     this.a_shell = a_shell;
+    msgBox = new MessageBox(a_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
   }
   
   /* (non-Javadoc)
@@ -35,8 +40,13 @@ public class SWTResultPresenter extends ResultPresenter {
   @Override
   public void presentAll() {
     // TODO Auto-generated method stub
-    MessageBox msgBox = new MessageBox(a_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-    
+     
+    msgBox.setMessage("");
+    presentPass1();
+    presentPass2();
+    presentPass3a();
+    presentPass3b();
+    msgBox.open();
   }
 
   /* (non-Javadoc)
@@ -45,7 +55,13 @@ public class SWTResultPresenter extends ResultPresenter {
   @Override
   public void presentPass1() {
     // TODO Auto-generated method stub
+    VerificationResult result = verifier.doPass1();
     
+    String s = msgBox.getMessage();
+    s += "pass1" + "\n";
+    s += line(40, '-') + "\n";
+    s += getInfo(result) + "\n";
+    msgBox.setMessage(s);
   }
 
   /* (non-Javadoc)
@@ -54,7 +70,13 @@ public class SWTResultPresenter extends ResultPresenter {
   @Override
   public void presentPass2() {
     // TODO Auto-generated method stub
+    VerificationResult result = verifier.doPass2();
     
+    String s = msgBox.getMessage();
+    s += "pass2" + "\n";
+    s += line(40, '-') + "\n";
+    s += getInfo(result) + "\n";
+    msgBox.setMessage(s);
   }
 
   /* (non-Javadoc)
@@ -62,8 +84,16 @@ public class SWTResultPresenter extends ResultPresenter {
    */
   @Override
   public void presentPass3a() {
-    // TODO Auto-generated method stub
-    
+    String s = msgBox.getMessage();
+    s += "pass3a" + "\n";
+    s += line(40, '-') + "\n";
+    JavaClass jc = verifier.getJavaClass();
+    Method[] methods = jc.getMethods();
+    for (int i=0; i < methods.length; i++) {
+      VerificationResult result = verifier.doPass3a(i);
+      s += presentMethod(methods[i]) + " " + getInfo(result) + "\n";
+    }
+    msgBox.setMessage(s);
   }
 
   /* (non-Javadoc)
@@ -71,8 +101,16 @@ public class SWTResultPresenter extends ResultPresenter {
    */
   @Override
   public void presentPass3b() {
-    // TODO Auto-generated method stub
-    
+    String s = msgBox.getMessage();
+    s += "pass3b" + "\n";
+    s += line(40, '-') + "\n";
+    JavaClass jc = verifier.getJavaClass();
+    Method[] methods = jc.getMethods();
+    for (int i=0; i < methods.length; i++) {
+      VerificationResult result = verifier.doPass3b(i);
+      s += presentMethod(methods[i]) + " " + getInfo(result) + "\n";
+    }
+    msgBox.setMessage(s);
   }
 
 }
