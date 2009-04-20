@@ -8,6 +8,10 @@
  */
 package umbra.verifier;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 /**
  * @author Szymon Wrzyszcz
  * @version a-01
@@ -15,11 +19,14 @@ package umbra.verifier;
  */
 public class SWTResultPresenter extends ResultPresenter {
 
+  private Shell a_shell;
+  
   /**
    * @param verifier
    */
-  public SWTResultPresenter(BytecodeVerifier verifier) {
+  public SWTResultPresenter(BytecodeVerifier verifier, Shell a_shell) {
     super(verifier);
+    this.a_shell = a_shell;
   }
   
   /* (non-Javadoc)
@@ -28,6 +35,7 @@ public class SWTResultPresenter extends ResultPresenter {
   @Override
   public void presentAll() {
     // TODO Auto-generated method stub
+    MessageBox msgBox = new MessageBox(a_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
     
   }
 
