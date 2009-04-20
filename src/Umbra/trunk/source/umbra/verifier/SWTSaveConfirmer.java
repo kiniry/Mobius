@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 public class SWTSaveConfirmer extends SaveConfirmer {
   
   private BytecodeVerifier verifier;
+  private Shell a_shell;
   
   /**
    * Creates graphical save confirmer used during saving a bytecode
@@ -34,9 +35,10 @@ public class SWTSaveConfirmer extends SaveConfirmer {
    * 
    * @param resultPresenter presenter with verification output
    */
-  public SWTSaveConfirmer(ResultPresenter resultPresenter) {
+  public SWTSaveConfirmer(ResultPresenter resultPresenter, Shell a_shell) {
     super(resultPresenter);
     verifier = resultPresenter.verifier;
+    this.a_shell = a_shell;
   }
  
   /**
@@ -52,7 +54,7 @@ public class SWTSaveConfirmer extends SaveConfirmer {
    * errors, user decision otheriwse
    */
   @Override
-  public boolean confirm(Shell a_shell) {
+  public boolean confirm() {
     if (!verifier.passed()) {
       resultPresenter.presentAll();
       MessageBox msgBox = new MessageBox(a_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
