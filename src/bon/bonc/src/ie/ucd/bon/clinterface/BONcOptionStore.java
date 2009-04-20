@@ -152,8 +152,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogVersion);
+    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     ogAloneOption.addOptionOrGroup(ogHiddenHelp);
     //AllOptions group

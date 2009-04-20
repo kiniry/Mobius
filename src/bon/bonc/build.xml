@@ -531,7 +531,7 @@
 		<file name="velocity-1.6.2-dep.jar"/>
 	</path>
 	
-	<target name="clops-gen" depends="init" description="Clops generations">
+	<target name="update-interface" depends="init" description="Clops generations">
 	  <echo message="Using ${clops-file}"/>
 	  <java fork="yes" jar="lib/clops.jar">
 	    <assertions><enable/></assertions>

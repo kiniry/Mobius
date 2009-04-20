@@ -25,6 +25,7 @@ HiddenHelp:{"-hh","--hidden-help"}:[default="false"] //TODO do we still need thi
 
 Time:{"-t","--time"}:[default="false"]
  : "Print timing information."
+ 
 Typecheck:{"-tc","--typecheck"}:[default="true"]
  : "Typecheck the input"
 Informal:{"-i","--informal"}
@@ -73,9 +74,11 @@ FLY::
 
 //Need fly rules for typechecking options
 
-Formal {$(Formal)} -> CheckInformal := {false}, CheckConsistency := {false};
-Informal {$(Informal)} -> CheckFormal := {false}, CheckConsistency := {false};
+Formal {$(Formal)} -> CheckFormal := {true}, CheckInformal := {false}, CheckConsistency := {false};
+Informal {$(Informal)} -> CheckInformal := {true}, CheckFormal := {false}, CheckConsistency := {false}, Typecheck := {false};
 PrettyPrint {$(PrettyPrint)} -> Print := {"TXT"};
+
+CheckFormal {!$(CheckFormal?)} -> Typecheck := {false}; 
 
 OVERRIDES::
 
