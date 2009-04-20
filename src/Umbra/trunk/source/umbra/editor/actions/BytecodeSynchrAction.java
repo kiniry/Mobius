@@ -94,13 +94,11 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
    *   operations
    */
   private DocumentSynchroniser getDocSynch() {
-    if (my_synchroniser == null) {
-      final CompilationUnitEditor jsceditor =
-                              getEditor().getRelatedEditor();
-      my_synchroniser = new DocumentSynchroniser(getEditor().getDocument(),
-                              jsceditor.getDocumentProvider().
-                              getDocument(jsceditor.getEditorInput()));
-    }
+    final CompilationUnitEditor jsceditor =
+                            getEditor().getRelatedEditor();
+    my_synchroniser = new DocumentSynchroniser(getEditor().getDocument(),
+                            jsceditor.getDocumentProvider().
+                            getDocument(jsceditor.getEditorInput()));
     return my_synchroniser;
   }
 
