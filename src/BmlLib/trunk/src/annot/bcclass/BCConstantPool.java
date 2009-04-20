@@ -13,10 +13,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantCP;
+import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
@@ -169,8 +173,8 @@ public class BCConstantPool extends BCCConstantPrinting
    * Searches for a NameAndType constant with two indicies which are equal
    * to the ones given in the arguments.
    *
-   * @param idx1 - the first index
-   * @param idx2 - the second index
+   * @param idx1 - the first (name) index
+   * @param idx2 - the second (type) index
    * @return index of matching Constant or -1 if no
    *     Constant could be found.
    */
@@ -272,7 +276,8 @@ public class BCConstantPool extends BCCConstantPrinting
       throw new RuntimeException("io error in BCConstantPool.save()");
     }
     final ConstantPool cp = ajc.getConstantPool();
-    final int nameIndex = findConstant(AttributeNames.SECOND_CONSTANT_POOL_ATTR);
+    final int nameIndex =
+      findConstant(AttributeNames.SECOND_CONSTANT_POOL_ATTR);
     final int length = file.size();
     final byte[] bytes = baos.toByteArray();
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
@@ -373,7 +378,6 @@ public class BCConstantPool extends BCCConstantPrinting
 
   public void save(AttributeWriter aw) {
     // TODO Auto-generated method stub
-    
   }
 
   /**
@@ -384,13 +388,57 @@ public class BCConstantPool extends BCCConstantPrinting
    */
   public void removeConstant(final int apos) {
     constants.remove(apos);
-    if (apos < initialSize--) {
+    if (apos < initialSize) {
+      initialSize--;
       final Constant[] consts = new Constant[initialSize];
       for (int i = 0; i < initialSize; i++) {
-        consts[i] = constants.get(i);
+        final Constant mconst = constants.get(i);
+        consts[i] = mconst;
+        if (mconst != null) {
+          switch (constants.get(i).getTag()) { //recalculation of indexes
+            case Constants.CONSTANT_Class:
+              final ConstantClass cconst = (ConstantClass)mconst;
+              if (cconst.getNameIndex() > apos)
+                cconst.setNameIndex(cconst.getNameIndex() - 1);
+              break;
+            case Constants.CONSTANT_Fieldref:
+            case Constants.CONSTANT_InterfaceMethodref:
+            case Constants.CONSTANT_Methodref:
+              final ConstantCP frconst = (ConstantCP)mconst;
+              if (frconst.getClassIndex() > apos)
+                frconst.setClassIndex(frconst.getClassIndex() - 1);
+              if (frconst.getNameAndTypeIndex() > apos)
+                frconst.setNameAndTypeIndex(frconst.getNameAndTypeIndex() - 1);
+              break;
+            case Constants.CONSTANT_NameAndType:
+              final ConstantNameAndType natconst = (ConstantNameAndType)mconst;
+              if (natconst.getNameIndex() > apos)
+                natconst.setNameIndex(natconst.getNameIndex() - 1);
+              if (natconst.getSignatureIndex() > apos)
+                natconst.setSignatureIndex(natconst.getSignatureIndex() - 1);
+              break;
+            case Constants.CONSTANT_String:
+              final ConstantString strconst = (ConstantString)mconst;
+              if (strconst.getStringIndex() > apos)
+                strconst.setStringIndex(strconst.getStringIndex() - 1);
+              break;
+            default: //do nothing
+          }
+        }
       }
       jc.getConstantPool().setConstantPool(consts);
     }
   }
-  
+
+
+  public ConstantPool createCombinedCP() {
+    final Vector vec = new Vector();
+    final Constant[] cnst = jc.getConstantPool().getConstantPool();
+    vec.ensureCapacity(cnst.length);
+    vec.copyInto(cnst);
+    vec.addAll(constants);
+    final Constant [] cnst1 = (Constant[]) vec.toArray();
+    final ConstantPoolGen cpg = new ConstantPoolGen(cnst1);
+    return cpg.getFinalConstantPool();
+  }
 }

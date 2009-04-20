@@ -17,6 +17,8 @@ Export-Package: annot.attributes;
    org.apache.bcel.generic,
    annot.bcexpression,
    annot.bcexpression.formula",
+ annot.attributes.clazz,
+ annot.attributes.method,
  annot.bcclass;
   uses:="annot.bcexpression.util,
    annot.textio,

@@ -1,9 +1,20 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.clazz;
 
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.Constants;
 
+import annot.attributes.BCPrintableAttribute;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
+import annot.bcclass.BCClassRepresentation;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
@@ -21,7 +32,8 @@ import annot.textio.Parsing;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class ClassInvariant extends ClassAttribute implements IBCAttribute {
+public class ClassInvariant extends BCPrintableAttribute
+                            implements IBCAttribute, ClassAttribute {
 
   /**
    * The flag which contains the access flags for the current class
@@ -30,7 +42,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   private int access_flags;
 
   /**
-   * BCClass contaning this attribute.
+   * BCClass containing this attribute.
    */
   private final BCClass bcc;
 
@@ -46,7 +58,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   private boolean isInstance;
 
   /**
-   * A Constructor from BCClass and AbstractFormula.
+   * A constructor from BCClass and AbstractFormula.
    *
    * @param abcc - BCClass containing this invariant,
    * @param ainv - a invariant formula.
@@ -65,17 +77,17 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * A constructor from attributeReader, for use in class
    * loading only.
    *
-   * @param classRepresentation - BCClass containing this invariant,
+   * @param bcc2 - BCClass containing this invariant,
    * @param ar - {@link AttributeReader} to load invariant from, it is
    *   in a position right after the length field of the attribute
    * @throws ReadAttributeException - if data left
    *     in <code>ar</code> doesn't represent correct
    *     class invariant.
    */
-  public ClassInvariant(final BCClass classRepresentation,
+  public ClassInvariant(final BCClassRepresentation bcc2,
                         final AttributeReader ar)
     throws ReadAttributeException {
-    this.bcc = classRepresentation;
+    this.bcc = (BCClass) bcc2;
     this.isInstance = (this.access_flags & Constants.ACC_STATIC) == 0;
     this.load(ar);
   }
@@ -126,8 +138,8 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
   }
 
   /**
-   * @return nameIndex of BCEL's Unknown
-   *     attribute it represents.
+   * @return the index in the constant pool of the attribute name or -1
+   *   in case the name is not in the constant pool
    */
   public int getIndex() {
     return this.bcc.getCp().findConstant(AttributeNames.INVARIANTS_ATTR);
@@ -178,7 +190,7 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
    * @return String representation of this invariant.
    */
   @Override
-  protected String printCode1(final BMLConfig conf) {
+  public String printCode1(final BMLConfig conf) {
     final String header = this.isInstance ? DisplayStyle.INVARIANT_KWD :
                                             DisplayStyle._staticInvariant;
     final String code = this.invariant.printLine(conf, header);
@@ -207,12 +219,11 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
 
   /**
    * Replaces this annotation with a given one, updating
-   * nessesery references in BCClass.
+   * necsessary references in BCClass.
    *
    * @param pa - annotation to replace with.
    */
-  @Override
-  public void replaceWith(final BCPrintableAttribute pa) {
+  public void replaceWith(final ClassAttribute pa) {
     this.bcc.setInvariant((ClassInvariant) pa);
   }
 
@@ -268,4 +279,6 @@ public class ClassInvariant extends ClassAttribute implements IBCAttribute {
     this.invariant = new ExpressionRoot < AbstractFormula > (this,
         ar.readFormula());
   }
+
+
 }

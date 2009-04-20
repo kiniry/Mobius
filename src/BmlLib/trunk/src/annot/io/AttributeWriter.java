@@ -195,4 +195,14 @@ public class AttributeWriter {
     this.pos += NumberUtils.SHORT_IN_BYTES;
   }
 
+  /**
+   * Writes an array of bytes.
+   *
+   * @param byteArray the bytes to write to
+   */
+  public void writeBytes(final byte[] byteArray) {
+    grow(byteArray.length);
+    System.arraycopy(byteArray, 0, output, pos, byteArray.length);
+  }
+
 }

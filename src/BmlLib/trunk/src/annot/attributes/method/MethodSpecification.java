@@ -1,9 +1,21 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 
+import annot.attributes.BCPrintableAttribute;
+import annot.attributes.IBCAttribute;
+import annot.attributes.clazz.ClassAttribute;
+import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
@@ -20,7 +32,7 @@ import annot.textio.Parsing;
  * @version a-01
  */
 public class MethodSpecification extends MethodAttribute implements
-    IBCAttribute {
+    ClassAttribute, IBCAttribute {
 
   /**
    * Method this annotation specifies.
@@ -181,7 +193,7 @@ public class MethodSpecification extends MethodAttribute implements
    * @param pa - annotation to replace with.
    */
   @Override
-  public void replaceWith(final BCPrintableAttribute pa) {
+  public void replaceWith(final ClassAttribute pa) {
     this.method.setMspec((MethodSpecification) pa);
   }
 
@@ -221,6 +233,12 @@ public class MethodSpecification extends MethodAttribute implements
   @Override
   public String toString() {
     return "method specification of " + this.method.toString();
+  }
+
+  @Override
+  public void replace(BCClass bcc) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

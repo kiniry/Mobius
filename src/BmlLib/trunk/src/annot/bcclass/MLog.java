@@ -25,12 +25,12 @@ public final class MLog extends MessageLog {
    * Message type filter. It's not final, so it can be
    * changed eg. by automated tests.
    */
-  private static int LOG_MASK = MASK_PALL;
+  private static int myLogMask = MASK_PALL;
 
   /**
    * The standard logging facility is the standard output.
    */
-  private static PrintStream LOG_STREAM = System.out;
+  private static PrintStream myLogStream = System.out;
 
   /**
    * An empty private constructor to disallow the creation of instances.
@@ -46,8 +46,8 @@ public final class MLog extends MessageLog {
    * @param msg - message text.
    */
   public static void putMsg(final int priority, final String msg) {
-    if ((priority & LOG_MASK)  >  0) {
-      LOG_STREAM.println(msg);
+    if ((priority & myLogMask)  >  0) {
+      myLogStream.println(msg);
     }
   }
 
@@ -59,8 +59,8 @@ public final class MLog extends MessageLog {
    * @param msg - message text.
    */
   public static void putBitOfMsg(final int priority, final String msg) {
-    if ((priority & LOG_MASK)  >  0) {
-      LOG_STREAM.print(msg);
+    if ((priority & myLogMask)  >  0) {
+      myLogStream.print(msg);
     }
   }
 
@@ -70,7 +70,7 @@ public final class MLog extends MessageLog {
    * @return the current value of the logging level mask
    */
   public static int getLogMask() {
-    return LOG_MASK;
+    return myLogMask;
   }
 
   /**
@@ -79,6 +79,6 @@ public final class MLog extends MessageLog {
    * @param amask the new value of the logging level mask
    */
   public static void setLogMask(final int amask) {
-    LOG_MASK = amask;
+    myLogMask = amask;
   }
 }

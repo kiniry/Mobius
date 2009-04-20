@@ -1,8 +1,19 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package annot.attributes;
 
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.clazz.ClassAttribute;
+import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.MethodSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
@@ -60,7 +71,7 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
   protected void parse(final BCClass bcc, final BCMethod m,
                        final InstructionHandle ih, final int minor,
                        final String code) throws RecognitionException {
-    final BCPrintableAttribute pa = bcc.getParser().parseAttribute(m, ih,
+    final ClassAttribute pa = bcc.getParser().parseAttribute(m, ih,
                                                                    minor, code);
     if (pa.getClass() == this.getClass()) {
       replaceWith(pa);
@@ -83,6 +94,16 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
       }
     }
   }
+
+
+  /**
+   * Replaces the current annotation with a given one in the class
+   * ({@link BCClass}) in which the current annotation resides. The method
+   * updates necessary references in the {@link BCClass}.
+   *
+   * @param pa - annotation to replace with.
+   */
+  public abstract void replaceWith(ClassAttribute pa);
 
   /**
    * Replaces this annotation with the one parsed from
@@ -124,14 +145,6 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
    * is a class annotation).
    */
   public abstract void remove();
-
-  /**
-   * Replaces this annotation with a given one, updating
-   * nessesery references in BCClass or BCMethod.
-   *
-   * @param pa - annotation to replace with.
-   */
-  public abstract void replaceWith(BCPrintableAttribute pa);
 
   /**
    * @return Simple string represenatations of attribute,

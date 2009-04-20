@@ -10,7 +10,10 @@ package annot.bcclass;
 
 import java.util.logging.Logger;
 
+import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -18,6 +21,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
+import annot.attributes.clazz.GhostFieldsAttribute;
+import annot.attributes.field.BMLModifierAttribute;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
 import annot.textio.Parsing;
@@ -137,5 +142,177 @@ public class BCClass extends BCClassPrinting {
       new ConstantPoolGen(cpool)));
   }
 
+  /**
+   * This method generates a fresh BML modifier object for the given field.
+   *
+   * @param field the field to generate the modifier for
+   * @return a fresh modifiers structure for the field
+   * @throws ReadAttributeException - if the structure of one of the field
+   *   attributes is found not to be correct
+   */
+  protected BMLModifierAttribute getFreshFieldMod(final Field field)
+    throws ReadAttributeException {
+    return new BMLModifierAttribute(field, this);
+  }
+
+  /**
+   * This method updates the BMLLib class inventory with the given field.
+   * First it checks if the field is normal Java field or ghost or model
+   * field. Then the handling is dispatched to different branches based
+   * upon this choice.
+   *
+   * @param afield the field to update the class with
+   */
+  public void updateFields(final BCField afield) {
+    switch (afield.getBMLKind()) {
+      case BCField.JAVA_FIELD:
+        updateJavaField(afield);
+        break;
+      case BCField.GHOST_FIELD:
+        updateGhostField(afield);
+        break;
+      case BCField.MODEL_FIELD:
+        updateModelField(afield);
+        break;
+      default:
+        //nothing happens if unknown field kind
+        break;
+    }
+  }
+
+  private void updateModelField(BCField afield) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /**
+   * Updates the fields of the current class with a ghost BML field. It
+   * looks for a ghost field of the same name first and in case of success
+   * it updates the field with new information. In case of failure it adds
+   * a new {@link BCField} to the ghost fields of the current class.
+   *
+   * @param afield to update the class representation with
+   */
+  private void updateGhostField(final BCField afield) {
+    final GhostFieldsAttribute fds = getGhostFields();
+    boolean found = false;
+    for (int i = 0; i < fds.size(); i++) {
+      final BCField fd = fds.get(i);
+      if (fd != null && afield.getNameIndex() == fd.getNameIndex()) {
+        fd.setAccessFlags(afield.getAccessFlags());
+        final int idx = afield.getDescriptorIndex();
+        fd.setDescriptorIndex(idx);
+        getBMLModifierForField(i).setModifiers(afield.getBMLFlags());
+        found = true;
+      }
+    }
+    if (!found) {
+      //remove normal field
+      removeField(afield, true);
+      //remove model
+      getModelFields().removeBMLField(afield);
+      addGhostField(afield);
+    }
+  }
+
+  /**
+   * Removes a normal Java field of the same name as the given one. This method
+   * moves the field descriptors from the first constant pool to the second
+   * one if instructed to do so. It moves the name of the field, and its
+   * NameAndType descriptor. Additionally these values change in the
+   * <code>afield</code> paramerer.
+   *
+   * @param afield the field to remove from the class
+   * @param b <code>true</code> in case the constant pool entries should be
+   *   moved to the second constant pool
+   */
+  private void removeField(final BCField afield, final boolean b) {
+    final Field[] fds = getJC().getFields();
+    int idx = 0;
+    final int anidx = afield.getNameIndex();
+    for (; idx < fds.length; idx++) {
+      final int nidx = fds[idx].getNameIndex();
+      if (anidx == nidx) break;
+    }
+    if (idx < fds.length) { //the field exists
+      final Field[] nfds = new Field[fds.length - 1];
+      System.arraycopy(fds, 0, nfds, 0, idx);
+      System.arraycopy(fds, idx + 1, nfds, idx, nfds.length - idx);
+      getJC().setFields(nfds);
+      if (b) {
+        final Field fd = fds[idx];
+        updateConstantPoolForFields(afield, fd);
+      }
+    }
+  }
+
+  private void updateConstantPoolForFields(final BCField afield,
+                                           final Field fd) {
+    final BCConstantPool bcp = getCp();
+    final int nidx = bcp.findConstant(fd.getName());
+    final ConstantUtf8 cnst = (ConstantUtf8) bcp.getConstant(nidx);
+    final int signidx =  fd.getSignatureIndex();
+    final int natidx = bcp.findNATConstant(nidx, signidx);
+    final ConstantNameAndType natcnst =
+      (ConstantNameAndType) bcp.getConstant(natidx);
+    bcp.removeConstant(nidx);
+    bcp.addConstant(cnst, true);
+    afield.setName(cnst.getBytes());
+    natcnst.setNameIndex(afield.getNameIndex() - 1); //we remove one position
+    //nidx = bcp.findConstant(fd.getName());
+    if (natidx > nidx) //previous remove may change the position
+      bcp.removeConstant(natidx - 1);
+    else
+      bcp.removeConstant(natidx);
+    bcp.addConstant(natcnst, true);
+  }
+
+  /**
+   * Updates the fields of the current class with a normal Java field. It
+   * looks for a normal field of the same name first and in case of success
+   * it updates the field with new information. In case of failure it adds
+   * a new {@link Field} to the fields of the current class.
+   *
+   * @param afield a field to update the class with
+   */
+  private void updateJavaField(final BCField afield) {
+    final Field[] fds = getJC().getFields();
+    boolean found = false;
+    for (int i = 0; i < fds.length; i++) {
+      if (afield.getNameIndex() == fds[i].getNameIndex()) {
+        fds[i].setAccessFlags(afield.getAccessFlags());
+        int idx = afield.getDescriptorIndex();
+        if (getCp().isSecondConstantPoolIndex(idx)) {
+          final ConstantUtf8 cnst = (ConstantUtf8)(getCp().getConstant(idx));
+          final String val = cnst.getBytes();
+          getCp().removeConstant(idx);
+          getCp().addConstant(cnst, false);
+          idx = getCp().findConstant(val);
+        }
+        fds[i].setSignatureIndex(idx);
+        getBMLModifierForField(i).setModifiers(afield.getBMLFlags());
+        found = true;
+      }
+    }
+    if (!found) {
+      //remove ghost
+      getGhostFields().removeBMLField(afield);
+      //remove model
+      getModelFields().removeBMLField(afield);
+      final Field fd = new Field(afield.getAccessFlags(),
+                                 afield.getNameIndex(),
+                                 afield.getDescriptorIndex(), null,
+                                 getJC().getConstantPool());
+      try {
+        addField(fd);
+      } catch (ReadAttributeException e) {
+        logger.warning("Impossible error in reading of a field attribute");
+      }
+    }
+  }
+
+  protected GhostFieldsAttribute getFreshGhostFields() {
+    return new GhostFieldsAttribute(this);
+  }
 
 }

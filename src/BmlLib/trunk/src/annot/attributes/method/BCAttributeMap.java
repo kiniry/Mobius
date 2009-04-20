@@ -1,4 +1,12 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,14 +15,14 @@ import java.util.LinkedList;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.AType;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcclass.MessageLog;
 
 /**
  * This class represents collection of all annotations inside
- * <code>method</code>'s body.
- * (one BCAttributeMap for each method)
+ * <code>method</code>'s body (one BCAttributeMap for each method).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
@@ -181,6 +189,13 @@ public class BCAttributeMap {
     return this.atab;
   }
 
+  /**
+   * Gives the number of the attributes with a particular type. The types
+   * are described in {@link AType}.
+   *
+   * @param types the type of attributes to calculate the number for
+   * @return the number of the attributes that match the given type
+   */
   public int getAttributeCount(final int types) {
     int cnt = 0;
     final Iterator < SingleList >  iter1 = this.map.values().iterator();
@@ -204,6 +219,11 @@ public class BCAttributeMap {
     return l;
   }
 
+  /**
+   * Returns the current loop specification table.
+   *
+   * @return the current loop specification table
+   */
   public LoopSpecificationTable getLstab() {
     return this.lstab;
   }

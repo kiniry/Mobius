@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package annot.textio;
 
@@ -14,6 +14,14 @@ package annot.textio;
  */
 public class CodeFragmentHelper {
 
+
+  /**
+   * A protected constructor to prevent constructing instances by non
+   * sublcasses.
+   */
+  protected CodeFragmentHelper() {
+  }
+
   /**
    * Translates line number of a String to character number
    * (offset).
@@ -23,7 +31,7 @@ public class CodeFragmentHelper {
    * @return Offset of first character of <code>lnr</code>'s
    *     line in <code>code</code>.
    */
-  private static int getLineOffset(final String code, final int lnr) {
+  public static int getLineOffset(final String code, final int lnr) {
     final String[] lines = code.split("\n");
     int pos = 0;
     for (int i = 0; i < lnr; i++) {

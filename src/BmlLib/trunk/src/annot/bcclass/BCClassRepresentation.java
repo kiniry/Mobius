@@ -24,16 +24,18 @@ import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.ClassInvariant;
 import annot.attributes.IBCAttribute;
-import annot.attributes.InCodeAttribute;
-import annot.attributes.InvariantsAttribute;
+import annot.attributes.clazz.ClassAttribute;
+import annot.attributes.clazz.ClassInvariant;
+import annot.attributes.clazz.GhostFieldsAttribute;
+import annot.attributes.clazz.InvariantsAttribute;
+import annot.attributes.field.BMLModifierAttribute;
+import annot.attributes.method.InCodeAttribute;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.modifiers.BMLModifier;
 import annot.textio.AttributeNames;
 import bmllib.utils.FileUtils;
 
@@ -83,17 +85,17 @@ public abstract class BCClassRepresentation {
   /**
    * The BML modifiers for non-BML fields in the class.
    */
-  private Vector < BMLModifier > bml_fmodifiers;
+  private Vector < BMLModifierAttribute > bml_fmodifiers;
 
   /**
    * The ghost fields of the class.
    */
-  private BCField[] ghostFields;
+  private GhostFieldsAttribute ghostFields;
 
   /**
    * The model fields of the class.
    */
-  private BCField[] modelFields;
+  private GhostFieldsAttribute modelFields;
 
   /**
    * Removes all Attributes used by this library from
@@ -172,7 +174,7 @@ public abstract class BCClassRepresentation {
    * @param pa - annotation to be added.
    * @return if <code>pa</code> is an BML class attribute.
    */
-  public boolean addAttribute(final BCPrintableAttribute pa) {
+  public boolean addAttribute(final ClassAttribute pa) {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "adding class attribute: " +
                 pa.toString());
     if (pa instanceof InvariantsAttribute) {
@@ -195,17 +197,21 @@ public abstract class BCClassRepresentation {
   public void addField(final Field f) throws ReadAttributeException {
     final Field[] fds = jc.getFields();
     final Field[] nfds = new Field[fds.length + 1];
-    for (int i = 0; i < fds.length; i++) {
-      nfds[i] = fds[i];
-    }
+    System.arraycopy(fds, 0, nfds, 0, fds.length);
     nfds[nfds.length - 1] = f;
     jc.setFields(nfds);
     bml_fmodifiers.add(nfds.length - 1, getFreshFieldMod(f));
   }
 
-  public void addGhostField(Field f) {
-    // TODO Auto-generated method stub
-    
+  /**
+   * The method adds to the class representation a ghost field. It assumes
+   * that the current constant pool contains the information necessary
+   * for the field to consistently exist within the class.
+   *
+   * @param afield the field to add to the class
+   */
+  public void addGhostField(BCField afield) {
+    ghostFields.add(afield);
   }
 
   /**
@@ -300,7 +306,7 @@ public abstract class BCClassRepresentation {
     }
 
     final Field[] fields = ajc.getFields();
-    this.bml_fmodifiers = new Vector < BMLModifier > (fields.length);
+    this.bml_fmodifiers = new Vector < BMLModifierAttribute > (fields.length);
     for (int i = 0; i  <  fields.length; i++) {
       this.bml_fmodifiers.add(i, getFreshFieldMod(fields[i]));
     }
@@ -321,10 +327,8 @@ public abstract class BCClassRepresentation {
    * @throws ReadAttributeException - if the structure of one of the field
    *   attributes is found not to be correct
    */
-  private BMLModifier getFreshFieldMod(final Field field)
-    throws ReadAttributeException {
-    return new BMLModifier(field, this);
-  }
+  protected abstract BMLModifierAttribute getFreshFieldMod(final Field field)
+    throws ReadAttributeException;
 
   /**
    * Creates the BMLLib representation of the given method in the class of the
@@ -419,7 +423,6 @@ public abstract class BCClassRepresentation {
     this.invariants.remove(classInvariant);
   }
 
-
   /**
    * Removes the whole invariant table from the class.
    */
@@ -493,8 +496,8 @@ public abstract class BCClassRepresentation {
   }
 
   private Attribute[] addAndSaveNonJavaFields(AttributeWriter aw,
-                                              Attribute[] attrs,
-                                              BCField[] ghostFields2) {
+                                         Attribute[] attrs,
+                                         GhostFieldsAttribute ghstFldsAttr) {
 //  TODO implement this
     return attrs;
   }
@@ -529,7 +532,7 @@ public abstract class BCClassRepresentation {
       final Attribute[] attrsa = new Attribute[attrs.length + 1];
       System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
       attrsa[attrs.length] =
-        aw.writeAttribute(bml_fmodifiers.get(i).getAttribute());
+        aw.writeAttribute(bml_fmodifiers.get(i));
       fields[i].setAttributes(attrsa);
     }
   }
@@ -607,7 +610,7 @@ public abstract class BCClassRepresentation {
    * @param a_fieldno the number of the field to extract the modifiers for
    * @return the modifiers for the given field number
    */
-  public BMLModifier getModifiersForField(final int a_fieldno) {
+  public BMLModifierAttribute getModifiersForField(final int a_fieldno) {
     return bml_fmodifiers.get(a_fieldno);
   }
 
@@ -616,16 +619,28 @@ public abstract class BCClassRepresentation {
    *
    * @return the ghost fields of the class
    */
-  public BCField[] getGhostFields() {
+  public GhostFieldsAttribute getGhostFields() {
+    if (ghostFields == null) {
+      ghostFields = getFreshGhostFields();
+    }
     return ghostFields;
   }
+
+  /**
+   * 
+   * @return
+   */
+  protected abstract GhostFieldsAttribute getFreshGhostFields();
 
   /**
    * Returns the model fields in the class.
    *
    * @return the model fields of the class
    */
-  public BCField[] getModelFields() {
+  public GhostFieldsAttribute getModelFields() {
+    if (modelFields == null) {
+      modelFields = getFreshGhostFields();
+    }
     return modelFields;
   }
 
@@ -638,5 +653,43 @@ public abstract class BCClassRepresentation {
     if (invariants == null)
       invariants = new InvariantsAttribute((BCClass) this);
     return invariants;
+  }
+
+  /**
+   * Returns the BML modifier for the field of the given number.
+   *
+   * @param i the number of the field (as in the fields array in the
+   *   local representation
+   * @return the modifier for the given field
+   */
+  public BMLModifierAttribute getBMLModifierForField(final int i) {
+    return bml_fmodifiers.get(i);
+  }
+
+
+  /**
+   * Removes all the ghost fields from the class. It updates the constant
+   * pool.
+   */
+  public void removeGhostFields() {
+    final int size = this.ghostFields.size();
+    for (int i = 0; i < size; i++) {
+      final BCField bcf = ghostFields.get(i);
+      final int nat = getCp().findNATConstant(bcf.getNameIndex(),
+                                              bcf.getDescriptorIndex());
+      getCp().removeConstant(nat);
+      getCp().removeConstant(bcf.getNameIndex());
+    }
+    this.ghostFields = getFreshGhostFields();
+  }
+
+  /**
+   * Sets the ghost fields to the object given as the argument. It assumes the
+   * constant pool is up to date.
+   *
+   * @param gfa the attribute with the ghost fields
+   */
+  public void setGhostFields(final GhostFieldsAttribute gfa) {
+    ghostFields = gfa;
   }
 }

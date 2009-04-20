@@ -17,6 +17,11 @@ public class DisplayStyle {
   public static final String PACKAGE_KWD = "package";
 
   /**
+   * Java keyword for static.
+   */
+  public static final String STATIC_KWD = "static";
+
+  /**
    * BML keyword for default package name.
    */
   public static final String DEFAULT_PACKAGE_NAME_KWD = "[default]";

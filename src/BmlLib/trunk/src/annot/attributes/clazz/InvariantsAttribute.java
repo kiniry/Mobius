@@ -1,4 +1,12 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.clazz;
 
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -6,6 +14,7 @@ import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 
+import annot.attributes.BCPrintableAttribute;
 import annot.bcclass.BCClass;
 import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
@@ -21,7 +30,8 @@ import annot.textio.BMLConfig;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class InvariantsAttribute extends ClassAttribute {
+public class InvariantsAttribute extends BCPrintableAttribute
+                                 implements ClassAttribute {
 
   /**
    * The class in which the current invariant table is embedded.
@@ -66,7 +76,7 @@ public class InvariantsAttribute extends ClassAttribute {
    * @return string representation of annotation.
    */
   @Override
-  protected String printCode1(final BMLConfig conf) {
+  public String printCode1(final BMLConfig conf) {
     final StringBuffer buf = new StringBuffer();
     for (final Iterator i = invariants.iterator(); i.hasNext();) {
       final ClassInvariant inv = (ClassInvariant) i.next();
@@ -106,7 +116,7 @@ public class InvariantsAttribute extends ClassAttribute {
    * @param pa - annotation to replace with.
    */
   @Override
-  public void replaceWith(final BCPrintableAttribute pa) {
+  public void replaceWith(final ClassAttribute pa) {
     bcc.setInvariants((InvariantsAttribute) pa);
     bcc = null;
   }

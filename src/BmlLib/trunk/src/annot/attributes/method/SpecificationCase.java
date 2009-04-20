@@ -1,4 +1,12 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -73,23 +81,24 @@ public class SpecificationCase {
    * A standard constructor.
    *
    * @param m - a method this specificationCase specifies.
-   * @param precondition - specification case's precondition,
-   * @param apostcondition - specification case's
-   *     postcondition.
+   * @param aprecondition - a precondition of the specification case
+   * @param amodifies - a modifies clause for the specification case
+   * @param apostcondition - a postcondition for the specification case
+   * @param anexsures - exceptional ensures for the specification case
    */
   public SpecificationCase(final BCMethod m,
-                           final AbstractFormula precondition,
+                           final AbstractFormula aprecondition,
                            final ModifyList amodifies,
                            final AbstractFormula apostcondition,
                            final Vector < Exsure >  anexsures) {
     this.method = m;
-    if (precondition == null) {
-      this.precondition = 
+    if (aprecondition == null) {
+      this.precondition =
       new ExpressionRoot < AbstractFormula > (this,
           new Predicate0Ar(true));
     } else {
       this.precondition =
-        new ExpressionRoot < AbstractFormula > (this, precondition);
+        new ExpressionRoot < AbstractFormula > (this, aprecondition);
     }
     final ModifyList mmodifies = (amodifies == null) ?
                                 new ModifyList() : amodifies;

@@ -7,6 +7,7 @@ import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.IBCAttribute;
+import annot.attributes.field.BMLModifierAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
@@ -45,7 +46,6 @@ import annot.bcexpression.modifies.ModifiesSingleIndex;
 import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.SpecArray;
-import annot.modifiers.BMLModifier;
 import annot.textio.AttributeNames;
 import bmllib.utils.NumberUtils;
 
@@ -101,7 +101,7 @@ public class AttributeReader {
   /**
    * Field containing currently read attribute, if any.
    */
-  private BMLModifier modifier;
+  private BMLModifierAttribute modifier;
 
   // environment:
 
@@ -154,7 +154,7 @@ public class AttributeReader {
    *
    * @param amodifier
    */
-  public AttributeReader(final BMLModifier amodifier) {
+  public AttributeReader(final BMLModifierAttribute amodifier) {
     this.bcc = null;
     this.modifier = amodifier;
     this.bvars = new Vector < BoundVar > ();

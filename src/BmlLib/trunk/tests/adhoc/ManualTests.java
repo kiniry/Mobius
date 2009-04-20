@@ -10,11 +10,11 @@ import bmllib.utils.BMLChangeException;
 
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.ClassInvariant;
-import annot.attributes.MethodSpecification;
-import annot.attributes.SingleAssert;
-import annot.attributes.SingleLoopSpecification;
-import annot.attributes.SpecificationCase;
+import annot.attributes.clazz.ClassInvariant;
+import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.SingleAssert;
+import annot.attributes.method.SingleLoopSpecification;
+import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;

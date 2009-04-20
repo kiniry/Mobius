@@ -9,12 +9,13 @@
 package annot.bcclass;
 
 import java.util.Enumeration;
-
+import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.Utility;
 
-import annot.attributes.ClassInvariant;
-import annot.modifiers.BMLModifier;
+import annot.attributes.clazz.ClassInvariant;
+import annot.attributes.clazz.GhostFieldsAttribute;
+import annot.attributes.field.BMLModifierAttribute;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
@@ -67,7 +68,6 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     printUpperSection(conf, code, false);
     printConstructors(conf, code);
     printMethods(conf, code);
-    final Enumeration i = getInvariantEnum();
     return conf.getPrettyPrinter().afterDisplay(code.toString());
   }
 
@@ -217,21 +217,21 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * @param conf the pretty printing configuration
    * @param code the buffer to print the representation to
    * @param isStatic the flag which indicates which part should be printed out
-   * @param fds the array of non-Java fields
+   * @param ghstFldsAttr the array of non-Java fields
    */
   private void printNonJavaFields(final BMLConfig conf,
                                   final StringBuffer code,
                                   final boolean isStatic,
-                                  final BCField[] fds) {
-    if (fds != null) {
+                                  final GhostFieldsAttribute ghstFldsAttr) {
+    if (ghstFldsAttr != null) {
       final StringBuffer res = new StringBuffer("");
-      for (int i = 0; i < fds.length; i++) {
-        final BCField fd = fds[i];
+      for (int i = 0; i < ghstFldsAttr.size(); i++) {
+        final BCField fd = ghstFldsAttr.get(i);
         if (fd.isStatic() == isStatic) {
           final int af = fd.getAccessFlags();
           res.append(Utility.accessToString(af));
           if (res.length() != 0) res.append(" ");
-          res.append(BMLModifier.printBMLModifiers(fd.getBMLFlags()));
+          res.append(BMLModifierAttribute.printBMLModifiers(fd.getBMLFlags()));
           if (res.length() != 0) res.append(" ");
           res.append(fd.getType().toString());
           if (res.length() > 0) res.append(" ");
@@ -260,11 +260,15 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     for (int i = 0; i < fds.length; i++) {
       final Field fd = fds[i];
       if (fd.isStatic() == isStatic) {
-        final int af = fd.getModifiers();
+        final int af = fd.getModifiers() & (~Constants.ACC_STATIC);
+        int len = res.length();
+        if (fd.isStatic()) res.append(DisplayStyle.STATIC_KWD);
+        if (res.length() > len) res.append(" ");
         res.append(Utility.accessToString(af));
-        if (res.length() != 0) res.append(" ");
+        if (res.length() > len) res.append(" ");
+        len = res.length();
         res.append(getModifiersForField(i).toString());
-        if (res.length() != 0) res.append(" ");
+        if (res.length() > len) res.append(" ");
         res.append(fd.getType().toString());
         res.append(" ");
         res.append(fd.getName());

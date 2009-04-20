@@ -8,7 +8,7 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
-import annot.attributes.BCPrintableAttribute;
+import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
@@ -23,6 +23,11 @@ import annot.bcclass.MLog;
  * @version a-01
  */
 public class Parsing {
+
+  /**
+   * The number of tokens to show in case {@link #GO_SHOW_TOKENS} is true.
+   */
+  private static final int TOKENS_TO_SHOW = 100;
 
   /**
    * Shows token list (from lexer) before parsing each
@@ -194,11 +199,11 @@ public class Parsing {
    * @return true iff <code>str</code> is correct, false
    *     otherwise.
    */
-  public BCPrintableAttribute checkSyntax(final BCMethod m,
+  public ClassAttribute checkSyntax(final BCMethod m,
                                           final InstructionHandle ih,
                                           final int minor, final String str) {
     try {
-      final BCPrintableAttribute newattr = parseAttribute(m, ih, minor, str);
+      final ClassAttribute newattr = parseAttribute(m, ih, minor, str);
       return newattr;
     } catch (final RecognitionException e) {
       return null;
@@ -216,7 +221,7 @@ public class Parsing {
 
   /**
    * Parse an BML annotation using parser generated from
-   * <code>BML.g3</code> grammatic.
+   * <code>BML.g3</code> grammar.
    *
    * @param m - parsing annotation's method (or null for
    *     class annotations),
@@ -230,7 +235,7 @@ public class Parsing {
    * @throws RecognitionException - if <code>str</code>
    *     isn't correct BML annotation.
    */
-  public BCPrintableAttribute parseAttribute(final BCMethod m,
+  public ClassAttribute parseAttribute(final BCMethod m,
                                              final InstructionHandle ih,
                                              final int minor, final String str)
     throws RecognitionException {
@@ -239,14 +244,14 @@ public class Parsing {
     final CommonTokenStream tokens = new CommonTokenStream(lex);
     if (GO_SHOW_TOKENS) {
       MLog.putMsg(MLog.LEVEL_PINFO, "tokens:");
-      for (int i = 0; i  <  100; i++) {
+      for (int i = 0; i  <  TOKENS_TO_SHOW; i++) {
         MLog.putBitOfMsg(MLog.LEVEL_PINFO, " " + tokens.toString(i, i));
       }
       MLog.putMsg(MLog.LEVEL_PINFO, "");
     }
     final BMLParser parser = new BMLParser(tokens);
     parser.init(this.bcc, m, this.bcc.getCp(), ih, minor);
-    final BCPrintableAttribute result = parser.printableAttribute().ast;
+    final ClassAttribute result = parser.printableAttribute().ast;
     if (lex.lastE != null) {
       throw lex.lastE;
     }

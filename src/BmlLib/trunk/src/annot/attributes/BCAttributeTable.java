@@ -1,5 +1,15 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package annot.attributes;
 
+import annot.attributes.method.BCAttributeMap;
+import annot.attributes.method.InCodeAttribute;
 import annot.bcclass.BCMethod;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -35,11 +45,11 @@ public abstract class BCAttributeTable implements IBCAttribute {
    * annotations, it don't store any annotations itself.
    *
    * @param m - the method,
-   * @param parent - it's annotation's collection.
+   * @param aparent - it's annotation's collection.
    */
-  public BCAttributeTable(final BCMethod m, final BCAttributeMap parent) {
+  public BCAttributeTable(final BCMethod m, final BCAttributeMap aparent) {
     this.method = m;
-    this.parent = parent;
+    this.parent = aparent;
   }
 
   /**
@@ -86,10 +96,14 @@ public abstract class BCAttributeTable implements IBCAttribute {
   }
 
   /**
-   * Loads single annotation from file.
+   * Loads a single annotation from file in case many annotations of a
+   * particular kind can reside in a table or array.
    *
    * @param m - method containing this attribute,
    * @param ar - stream to load from.
+   * @return a single attribute loaded from the given attribute reader
+   * @throws ReadAttributeException if data left in <code>ar</code> does not
+   *   represent a correct attribute
    */
   protected abstract InCodeAttribute loadSingle(BCMethod m, AttributeReader ar)
     throws ReadAttributeException;

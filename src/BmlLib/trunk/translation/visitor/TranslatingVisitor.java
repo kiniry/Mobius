@@ -14,10 +14,10 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
-import annot.attributes.BCAttributeMap;
-import annot.attributes.ClassInvariant;
-import annot.attributes.InCodeAttribute;
-import annot.attributes.SingleList;
+import annot.attributes.clazz.ClassInvariant;
+import annot.attributes.method.BCAttributeMap;
+import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.SingleList;
 import annot.bcclass.BCClass;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
@@ -180,13 +180,13 @@ public class TranslatingVisitor {
   }
 
   public b2bpl.bytecode.bml.ast.BMLMethodSpecification visit(
-                                                             annot.attributes.MethodSpecification spec) {
+                                                             annot.attributes.method.MethodSpecification spec) {
     if (spec == null)
       return null;
-    Vector<annot.attributes.SpecificationCase> cases = spec
+    Vector<annot.attributes.method.SpecificationCase> cases = spec
         .getSpecificationCases();
     Vector<BMLSpecificationCase> translatedCases = new Vector<BMLSpecificationCase>();
-    for (annot.attributes.SpecificationCase specCase : cases) {
+    for (annot.attributes.method.SpecificationCase specCase : cases) {
       ExpressionRoot<AbstractFormula> prec = specCase.getPrecondition();
       ExpressionRoot<AbstractFormula> post = specCase.getPostcondition();
       ExpressionRoot<ModifyList> modifies = specCase.getModifies();

@@ -1,4 +1,12 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -14,7 +22,7 @@ import annot.textio.Parsing;
 
 /**
  * This class represents list of annotations attached
- * to single bytecode instruction handle.
+ * to a single bytecode instruction handle.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01

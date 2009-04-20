@@ -1,7 +1,17 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.AType;
+import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.formula.AbstractFormula;
@@ -150,7 +160,7 @@ public class SingleAssert extends InCodeAttribute {
    * @param aw - stream to save to.
    */
   @Override
-  protected void saveSingle(final AttributeWriter aw) {
+  public void saveSingle(final AttributeWriter aw) {
     this.formula.write(aw);
   }
 
@@ -178,6 +188,12 @@ public class SingleAssert extends InCodeAttribute {
 
   @Override
   public void save(AttributeWriter aw) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void replace(BCClass bcc) {
     // TODO Auto-generated method stub
     
   }

@@ -1,8 +1,18 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.BCPrintableAttribute;
+import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCMethod;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -18,7 +28,7 @@ import annot.textio.BMLConfig;
  * @version a-01
  */
 public abstract class InCodeAttribute extends BCPrintableAttribute implements
-    Comparable < InCodeAttribute >  {
+    ClassAttribute, Comparable < InCodeAttribute >  {
 
   /**
    * InstructionHandle of bytecode instruction that this
@@ -69,12 +79,12 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *     this annotation should be attached to. You should
    *     be sure that instruction of that pc really
    *     exists in given method.
-   * @param minor - minor number of annotation, responsible
+   * @param mnr - minor number of annotation, responsible
    *     for annotation ordering within single instruction.
    */
   @Deprecated
-  public InCodeAttribute(final BCMethod m, final int pc, final int minor) {
-    this(m, m.findAtPC(pc), minor);
+  public InCodeAttribute(final BCMethod m, final int pc, final int mnr) {
+    this(m, m.findAtPC(pc), mnr);
   }
 
   /**
@@ -192,7 +202,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    * @param pa - annotation to replace with.
    */
   @Override
-  public void replaceWith(final BCPrintableAttribute pa) {
+  public void replaceWith(final ClassAttribute pa) {
     final InCodeAttribute ica = (InCodeAttribute) pa;
     if (ica.ih == null) {
       ica.ih = this.ih;
@@ -206,24 +216,24 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *
    * @param aw - stream to save to.
    */
-  protected abstract void saveSingle(AttributeWriter aw);
+  public abstract void saveSingle(AttributeWriter aw);
 
   /**
    * Sets instructionHandle parameter.
    *
-   * @param ih - new instruction handle.
+   * @param anih - new instruction handle.
    */
-  public void setIh(final InstructionHandle ih) {
-    this.ih = ih;
+  public void setIh(final InstructionHandle anih) {
+    this.ih = anih;
   }
 
   /**
    * Sets minor number.
    *
-   * @param minor - new minor number value to set.
+   * @param mnr - new minor number value to set.
    */
-  protected void setMinor(final int minor) {
-    this.minor = minor;
+  protected void setMinor(final int mnr) {
+    this.minor = mnr;
   }
 
 }

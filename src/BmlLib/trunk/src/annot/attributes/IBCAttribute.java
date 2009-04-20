@@ -1,3 +1,11 @@
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
 package annot.attributes;
 
 import annot.io.AttributeReader;
@@ -17,8 +25,8 @@ import annot.io.ReadAttributeException;
 public interface IBCAttribute {
 
   /**
-   * @return nameIndex of BCEL's Unknown
-   *     attribute it represents.
+   * @return the index in the constant pool of the attribute name or -1
+   *   in case the name is not in the constant pool
    */
   int getIndex();
 

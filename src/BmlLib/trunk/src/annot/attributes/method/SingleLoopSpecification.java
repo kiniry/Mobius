@@ -1,7 +1,17 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.AType;
+import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
@@ -113,7 +123,7 @@ public class SingleLoopSpecification extends InCodeAttribute {
   }
 
   @Override
-  protected void saveSingle(final AttributeWriter aw) {
+  public void saveSingle(final AttributeWriter aw) {
     this.modifies.write(aw);
     this.invariant.write(aw);
     this.decreases.write(aw);
@@ -139,6 +149,12 @@ public class SingleLoopSpecification extends InCodeAttribute {
 
   @Override
   public void save(AttributeWriter aw) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void replace(BCClass bcc) {
     // TODO Auto-generated method stub
     
   }

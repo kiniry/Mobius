@@ -19,6 +19,9 @@ options {
 
   import annot.bcclass.*;
   import annot.attributes.*;
+  import annot.attributes.clazz.*;
+  import annot.attributes.field.*;
+  import annot.attributes.method.*;
   import annot.bcexpression.*;
   import annot.bcexpression.javatype.*;
   import annot.bcexpression.modifies.*;
@@ -26,9 +29,13 @@ options {
   import annot.io.Code;
   import annot.io.ReadAttributeException;
 
+  import org.apache.bcel.Constants;
   import org.apache.bcel.generic.MethodGen;
   import org.apache.bcel.generic.InstructionHandle;
   import org.apache.bcel.generic.InstructionList;
+  import org.apache.bcel.generic.Type;
+  import org.apache.bcel.classfile.ClassFormatException;
+  import org.apache.bcel.classfile.Field;
   import java.util.Vector;
 }
 
@@ -60,6 +67,8 @@ options {
   private Vector<Exsure> exc;
   private AbstractFormula inv;
   private AbstractIntExpression dec;
+  private BCField afield;
+  private String fsig; // a signature of field's type
 
   // set whether to affect parsed BCClass, or only check syntax
   public void initClass(BCClass bcc, boolean affectBcc) {
@@ -315,37 +324,69 @@ staticfields :
   };
 
 staticfield :
+  {
+    afield = new BCField(bcc);
+    afield.setAccessFlags(Constants.ACC_STATIC);
+  }
   STATIC field
   {
-     syso("static field");
+    if (afield.getNameIndex() >= 0) {
+      bcc.updateFields(afield);
+    }
+    syso("static field");
   };
 
-field :
-  (nsfieldmodifier)* arr_type ident SEMICOLON
+field returns [BCField bcf]:
+  (nsfieldmodifier[afield])* typ=arr_type nm=ident SEMICOLON
   {
-     syso("field");
+     if ($nm.name != null && $typ.typ != null) {
+               //may be null in case of syntax error
+     	afield.setName($nm.name);
+     	afield.setType($typ.typ);
+     }
+     syso("field = " + afield.toString());
+     $bcf = afield;
   }; 
 
 staticspec : staticinvariants? staticconstraints?
              staticrepresents? staticinitially? EOL*;
 
-nsfieldmodifier  :
-  (  PUBLIC
-   | PROTECTED
-   | PRIVATE
-   | ABSTRACT
-   | FINAL
-   | STRICTFP
-   | SPEC_PUBLIC
-   | SPEC_PROTECTED
-   | MODEL
-   | GHOST
-   | NON_NULL
-   | NULLABLE
-   | PEER
-   | REP
-   | READONLY )
-   {syso("ns field modifier");};
+nsfieldmodifier [BCField bcf]:
+     modif=nsjavafieldmodifier
+     {
+        $bcf.setAccessFlags($bcf.getAccessFlags() | $modif.modif);
+     }
+   | bmodif=nsbmljavafieldmodifier
+     {
+         $bcf.setBMLFlags($bcf.getBMLFlags() | $bmodif.modif);
+     }
+   | kmodif=nsbmlkindmodifier
+     {
+         $bcf.setBMLKind($bcf.getBMLKind() | $kmodif.modif);
+     };
+   
+nsjavafieldmodifier returns [int modif]:
+  (  PUBLIC { $modif = Constants.ACC_PUBLIC; }
+   | PROTECTED { $modif = Constants.ACC_PROTECTED; }
+   | PRIVATE { $modif = Constants.ACC_PRIVATE; }
+   | ABSTRACT { $modif = Constants.ACC_ABSTRACT; }
+   | FINAL { $modif = Constants.ACC_FINAL; }
+   | STRICTFP { $modif = Constants.ACC_STRICT; } ) ;
+
+nsbmljavafieldmodifier returns [int modif]:
+  (  SPEC_PUBLIC { $modif = BMLModifiersFlags.BML_SPEC_PUBLIC; }
+   | SPEC_PROTECTED { $modif = BMLModifiersFlags.BML_SPEC_PROTECTED; }
+   | NON_NULL { $modif = BMLModifiersFlags.BML_NON_NULL; }
+   | NULLABLE { $modif = BMLModifiersFlags.BML_NULLABLE; }
+   | PEER { $modif = BMLModifiersFlags.BML_PEER; }
+   | REP { $modif = BMLModifiersFlags.BML_REP; }
+   | READONLY { $modif = BMLModifiersFlags.BML_READONLY; }
+  );
+
+nsbmlkindmodifier returns [int modif]:
+  (  MODEL { $modif = BCField.MODEL_FIELD; }
+   | GHOST { $modif = BCField.GHOST_FIELD; }
+  );
 
 staticinvariants : BML_START STATIC INVARIANT BML_END EOL;
 
@@ -362,7 +403,17 @@ objectsection :
   };
 
 objectfields :
-  (field EOL)* EOL*
+  (
+    {
+      afield = new BCField(bcc);
+    }
+  field EOL
+    {
+       if (afield.getNameIndex() >= 0) {
+         bcc.updateFields(afield);
+       }
+    }
+  )* EOL*
   {
      syso("object fields");
   };
@@ -476,8 +527,22 @@ methodmodifier :
    | VOLATILE
    | STRICTFP) {syso("method modifier");};  
 
-arr_type :
-    type (dims)? {syso("arr_type");};
+arr_type returns [Type typ]:
+    {
+      fsig = "";
+    }
+    nm=type (dims)? 
+    {
+      if ($nm.name != null) {
+        try {
+          $typ = Type.getType(fsig);
+        } catch (ClassFormatException e) {
+          //not signature type
+          $typ = Type.getType("V"); //TODO stupid default
+        }
+      }
+      syso("arr_type");
+    };
 
 type returns [String name] :
     rname=reference_type { $name = $rname.name; }
@@ -488,18 +553,46 @@ reference_type returns [String name] :
   {
     syso("reference type: " + $rname.name);
     $name = $rname.name;
+    fsig = $rname.name;
   };
 
 built_in_type returns [String name] :
-  (  VOID { $name = "void"; }
-   | BOOLEAN { $name = "boolean"; }
-   | BYTE { $name = "byte"; }
-   | CHAR { $name = "char"; }
-   | SHORT { $name = "short"; }
-   | INT { $name = "int"; }
-   | LONG { $name = "long"; }
-   | FLOAT { $name = "float"; }
-   | DOUBLE { $name = "double"; }
+  (  VOID {
+       $name = "void";
+       fsig = "V";
+     }
+   | BOOLEAN {
+       $name = "boolean";
+       fsig = "Z";
+     }
+   | BYTE {
+       $name = "byte";
+       fsig = "B";
+     }
+   | CHAR {
+        $name = "char";
+        fsig = "C";
+     }
+   | SHORT {
+        $name = "short";
+        fsig = "S";
+       }
+   | INT {
+        $name = "int";
+        fsig = "I";
+      }
+   | LONG {
+        $name = "long";
+        fsig = "L";
+      }
+   | FLOAT {
+        $name = "float";
+        fsig = "F";
+      }
+   | DOUBLE {
+        $name = "double";
+        fsig = "D";
+      }
   ) {syso("built in type");};
 
 
@@ -556,7 +649,10 @@ param_modifier :
   'final' | 'nullable' | 'non_null';
 
 dims :
-  (BR_LEFT BR_RIGHT)+
+  (BR_LEFT BR_RIGHT 
+    {
+       fsig = '[' + fsig;
+    } )+
   {syso("dims");};
   
 throws_clause :
@@ -625,7 +721,7 @@ instruction_line returns [InstructionHandle ih] :
 
 // bml level
 
-printableAttribute returns [BCPrintableAttribute ast] :
+printableAttribute returns [ClassAttribute ast] :
   (c=classAttribute {$ast = $c.ast;}
   | met=methodAttribute {$ast = $met.ast;}
   | i=inCodeAttribute {$ast = $i.ast;})

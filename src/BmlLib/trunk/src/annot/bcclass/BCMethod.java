@@ -23,9 +23,9 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
-import annot.attributes.BCAttributeMap;
-import annot.attributes.InCodeAttribute;
-import annot.attributes.MethodSpecification;
+import annot.attributes.method.BCAttributeMap;
+import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.MethodSpecification;
 import annot.bcexpression.LocalVariable;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -99,8 +99,8 @@ public class BCMethod {
    */
   public BCMethod(final BCClass abcc, final MethodGen m)
     throws ReadAttributeException {
-    MLog.putMsg(MessageLog.LEVEL_PINFO,
-                "  initializing method: " + m.getName());
+    MLog.putMsg(MessageLog.LEVEL_PINFO, "  initializing method: " +
+                m.getName());
     this.bcc = abcc;
     this.bcelMethod = m;
     this.amap = new BCAttributeMap(this);

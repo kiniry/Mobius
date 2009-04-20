@@ -1,5 +1,15 @@
-package annot.attributes;
+/*
+ * @title       "Umbra"
+ * @description "An editor for the Java bytecode and BML specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+package annot.attributes.method;
 
+import annot.attributes.AType;
+import annot.attributes.BCAttributeTable;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.io.AttributeReader;
@@ -30,7 +40,9 @@ public class AssertTable extends BCAttributeTable {
   }
 
   /**
-   * @return Unknown (BCEL) attribute name. TODO unknown dla kogo
+   * @return the name of the current attribute to be used by the
+   *   BCEL attribute representation ({@link org.apache.bcel.classfile.Unknown}
+   *   class).
    */
   @Override
   public String getName() {
@@ -38,10 +50,11 @@ public class AssertTable extends BCAttributeTable {
   }
 
   /**
-   * Loads single assert from a file.
+   * Loads single assert from an {@link AttributeReader}.
    *
    * @param m - a method containing this attribute,
    * @param ar - a stream to load the assert from.
+   * @return the single assert loaded from the given attribute reader
    * @throws ReadAttributeException - if data left
    *     in <code>ar</code> doesn't represent a correct
    *     assert.
