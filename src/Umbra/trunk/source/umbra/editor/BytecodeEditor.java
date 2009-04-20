@@ -83,8 +83,7 @@ public class BytecodeEditor extends TextEditor {
    * Factory used to create some verification related stuff.
    * As for now simple graphical version is used.
    */
-  private VerificationFactory my_verificationFactory =
-    new SWTVerificationFactory();
+  private VerificationFactory my_verification_factory = null;
 
   /**
    * The Java source code editor that corresponds to the current
@@ -186,12 +185,16 @@ public class BytecodeEditor extends TextEditor {
 
     final JavaClass jc = doc.getJavaClass();
 
+    if (my_verification_factory == null) {
+      my_verification_factory = new SWTVerificationFactory(getSite().getShell());
+    }
+    
     final BytecodeVerifier verifier = new BytecodeVerifier(jc);
-    final ResultPresenter presenter = my_verificationFactory.
+    final ResultPresenter presenter = my_verification_factory.
                                         getResultPresenter(verifier);
-    final SaveConfirmer confirmer = my_verificationFactory.
+    final SaveConfirmer confirmer = my_verification_factory.
                                       getSaveConfirmer(presenter);
-    if (!confirmer.confirm(getSite().getShell())) {
+    if (!confirmer.confirm()) {
       return;
     }
 
