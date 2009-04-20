@@ -36,7 +36,7 @@ public class ConsoleSaveConfirmer extends SaveConfirmer {
    * @return true if user wants to save, false otherwise
    */
   @Override
-  public boolean confirm(Shell a_shell) {
+  public boolean confirm() {
     if (!verifier.passed()) {
       resultPresenter.presentAll();
       Scanner scanner = new Scanner(System.in);
