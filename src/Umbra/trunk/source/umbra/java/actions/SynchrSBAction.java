@@ -73,6 +73,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
    * @param an_action the action that triggered the operation
    */
   public final void run(final IAction an_action) {
+    System.out.println("synchrSBAction on " + this);
     final ITextSelection selection = (ITextSelection) my_editor.
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
@@ -82,6 +83,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
     final int lind = active.toPortableString().
                             lastIndexOf(FileNames.JAVA_EXTENSION);
     if (lind == -1) {
+      System.out.println("lind == -1");
       MessageDialog.openError(my_editor.getSite().getShell(),
         GUIMessages.SYNCH_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.INVALID_EXTENSION,
@@ -90,12 +92,14 @@ public class SynchrSBAction implements IEditorActionDelegate {
     }
 
     final IFile file = FileNames.getBTCFileName(activef);
+    System.out.println("BTC file = " + file);
     final FileEditorInput input = new FileEditorInput(file);
     try {
       final BytecodeEditor bcEditor = (BytecodeEditor)my_editor.getSite().
                            getPage().openEditor(input,
                             EclipseIdentifiers.BYTECODE_EDITOR_CLASS,
                             true);
+      System.out.println("bcEditor = " + bcEditor);
       if (bcEditor.isSaveOnCloseNeeded()) {
         MessageDialog.openWarning(my_editor.getSite().getShell(),
           GUIMessages.SYNCH_MESSAGE_TITLE, GUIMessages.REFRESH_REQUIRED);
@@ -106,6 +110,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
                         getDocument(input));
       synchronizeWithMessages(off, bDoc);
     } catch (PartInitException e) {
+      e.printStackTrace();
       MessageDialog.openError(my_editor.getSite().getShell(),
         GUIMessages.SYNCH_MESSAGE_TITLE, GUIMessages.DISAS_EDITOR_PROBLEMS);
     }
@@ -123,16 +128,20 @@ public class SynchrSBAction implements IEditorActionDelegate {
    */
   private void synchronizeWithMessages(final int an_offset,
                                        final BytecodeDocument a_bcode_doc) {
+    System.out.println("synchronizeWithMessages("+an_offset+","+a_bcode_doc+")");
     final Shell parent = my_editor.getSite().getShell();
     try {
       getDocSynch(a_bcode_doc).synchronizeSB(an_offset, my_editor);
     } catch (UmbraLocationException e) {
+      e.printStackTrace();
       GUIMessages.messageWrongLocation(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
                                        e);
     } catch (UmbraSynchronisationException e) {
+      e.printStackTrace();
       MessageDialog.openError(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
                               GUIMessages.WRONG_SYNCHRONISATION_MSG);
     } catch (JavaModelException e) {
+      e.printStackTrace();
       MessageDialog.openError(parent, GUIMessages.SYNCH_MESSAGE_TITLE,
                               GUIMessages.WRONG_JAVAACCESS_MSG);
     }
@@ -162,12 +171,10 @@ public class SynchrSBAction implements IEditorActionDelegate {
    *   operations
    */
   private DocumentSynchroniser getDocSynch(final BytecodeDocument a_doc) {
-    if (my_synchroniser == null) {
-      final CompilationUnitEditor jsceditor = my_editor;
-      my_synchroniser = new DocumentSynchroniser(a_doc,
-                              jsceditor.getDocumentProvider().
-                              getDocument(jsceditor.getEditorInput()));
-    }
+    final CompilationUnitEditor jsceditor = my_editor;
+    my_synchroniser = new DocumentSynchroniser(a_doc,
+                            jsceditor.getDocumentProvider().
+                            getDocument(jsceditor.getEditorInput()));
     return my_synchroniser;
   }
 }
