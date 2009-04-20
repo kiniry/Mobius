@@ -32,6 +32,6 @@ public abstract class SaveConfirmer {
    * @param a_shell bytecode editor shell, used by graphical confirmers
    * @return true if user wants to save, false otherwise
    */
-  public abstract boolean confirm(Shell a_shell);
+  public abstract boolean confirm();
   
 }
