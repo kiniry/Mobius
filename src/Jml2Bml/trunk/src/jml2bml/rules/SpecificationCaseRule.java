@@ -25,9 +25,9 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
-import annot.attributes.Exsure;
-import annot.attributes.MethodSpecification;
-import annot.attributes.SpecificationCase;
+import annot.attributes.method.Exsure;
+import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;

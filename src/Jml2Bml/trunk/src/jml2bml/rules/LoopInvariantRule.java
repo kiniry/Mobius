@@ -28,9 +28,9 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
 import org.jmlspecs.openjml.JmlTree.JmlWhileLoop;
 
-import annot.attributes.InCodeAttribute;
-import annot.attributes.SingleList;
-import annot.attributes.SingleLoopSpecification;
+import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.SingleList;
+import annot.attributes.method.SingleLoopSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;

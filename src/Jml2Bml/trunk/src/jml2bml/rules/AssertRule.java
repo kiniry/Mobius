@@ -18,7 +18,7 @@ import org.jmlspecs.openjml.JmlTree.JmlAbstractStatement;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementExpr;
 
-import annot.attributes.SingleAssert;
+import annot.attributes.method.SingleAssert;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
