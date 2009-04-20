@@ -18,11 +18,11 @@ import mobius.logic.lang.generic.ast.Term;
 
 public class TypeChecker extends Evaluator<Boolean> {
   private final Set<String> t = new HashSet<String>();
-  private final Set<String> u = new HashSet<String>();
+  private final Set<String> undeclared = new HashSet<String>();
   private final Set<String> f = new HashSet<String>();
   private final GType Type = new GType("[T]");
   private final HashMap<String, GType> symTypes = new HashMap<String, GType>();
-  private final HashMap<String, GType> termTypes = new HashMap<String, GType>();
+  private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
   private final Set<Term> forallVars = new HashSet<Term>();
   private final Stack<String> vars = new Stack<String>();
   
@@ -43,11 +43,12 @@ public class TypeChecker extends Evaluator<Boolean> {
     int i = 0;
     while (curr != null) {
       curr.eval(this);
+      System.out.println(curr);
       type = type.unify(i, termTypes.get(curr));
       curr = curr.getNext();
       i++;
     }
-    
+    termTypes.put(app, type.getReturn());
     
     return false;
   }
@@ -81,7 +82,7 @@ public class TypeChecker extends Evaluator<Boolean> {
     if (type == null || rest == null) {
       return null;
     }
-    type.add(rest);
+    type.addAll(rest);
     return type;
   }
 
@@ -108,16 +109,20 @@ public class TypeChecker extends Evaluator<Boolean> {
   @Override
   public Boolean eval(Atom at, Term next, String id) {
     if (f.contains(id)) {
+      System.err.println(id + " is being used strange...");
       return false;
     }
     else {
       if (t.contains(id)) {
+        termTypes.put(at, symTypes.get(id));
         return true;
       }
       symTypes.put(id, GType.getUnknown());
-      u.add(id);
+      termTypes.put(at, symTypes.get(id));
+      undeclared.add(id);
       return true;
     }
+    
   }
 
   @Override
@@ -152,6 +157,7 @@ public class TypeChecker extends Evaluator<Boolean> {
       vars.pop();
       i--;
     }
+    termTypes.put(fall, GType.getUnknown());
     return false;
   }
 
@@ -187,7 +193,7 @@ public class TypeChecker extends Evaluator<Boolean> {
 
   public void printDetailedResults() {
     System.out.println("Declared first order types: " + t);
-    System.out.println("Undeclared first order types: " + u);
+    System.out.println("Undeclared first order types: " + undeclared);
     System.out.println("Collected formulas: " + f);
     System.out.println("Types: " + symTypes);
   }

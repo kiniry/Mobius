@@ -3,66 +3,133 @@
  */
 package mobius.logic.lang.generic;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class GType {
 
   private final static String Unknown = "[?]";
-  private List<String> type = new ArrayList<String>(); 
+  private String name; 
+  private GType next;
+  private GType last;
+  
+  
   public String toString() {
     StringBuilder blder = new StringBuilder();
-    for (String t: type) {
+    blder.append(name);
+    GType curr = next;
+    while (curr != null) {
       blder.append(" -> ");
-      blder.append(t);
+      blder.append(curr.name);
+      curr = curr.next;
     }
-    return blder.substring(" -> ".length());
+    return blder.toString();
   }
   public boolean isUnknown() {
-    return type.size() == 1 && type.get(0).equals(Unknown);
+    return getArity() == 1 && name.equals(Unknown);
   }
   
   public GType unify(int idx, GType t) {
-    if (t.type.size() == 1) {
-      if (type.size() == 1) {
-        
+    if (t.getArity() == 1) {
+      if (idx > getArity()) {
         return null;
       }
-      
-      if (type.get(0).equals(t.type.get(0))) {
-        GType clone = new GType(this);
-        clone.type.remove(0);
-        return clone;
+      final String target = t.get(0);
+      if (get(idx).equals(target)) {
+        return this;
+      }
+      else if (get(idx).equals(Unknown)) {
+        set(idx, target);
+        return this;
+      }
+      else if (target.equals(Unknown)) {
+        t.set(0, get(idx));
+        return this;
       }
     }
     return null;
   }
+  private int getArity() {
+    GType curr = this;
+    int i = 0;
+    while (curr != null) {
+      i++;
+      curr = curr.next;
+    }
+    return i;
+  }
+  private void set(int idx, String target) {
+    if (idx == 0) {
+      name = target;
+    }
+  }
+  private String get(int idx) {
+    int i = idx;
+    GType curr = this;
+    while (curr != null && i != 0) {
+      i--;
+      curr = curr.next;
+    }
+    return curr.name;
+  }
+  
+  
   public GType(String ...a) {
-    for (String t: a) {
-      type.add(t);
+    last = this;
+    assert (a.length > 1);
+    name = a[0];
+    for (int i = 1; i < a.length; i++) {
+      add(a[i]);
     }
   }
 
   public GType(GType t) {
-    this(t.type.toArray(new String[t.type.size()]));
+    this(t.name);
+    addAll(t.next);
   }
+  
+  
   public void add(String s) {
-    type.add(s);
+    add(new GType(s));
   }
-  public void add(GType typ) {
-    for (String s: typ.type) {
-      type.add(s);
+  private void add(GType typ) {
+    last = typ.last;
+    if (next == null) {
+      next = new GType(typ);
+    }
+    else {
+      next.add(typ);
     }
   }
+  
+  /**
+   * Do a deep copy while adding.
+   * @param typ
+   */
+  public void addAll(GType typ) {
+
+    if (typ != null) {
+      final GType newTyp = new GType(typ);
+      last.add(newTyp);
+    }
+  }
+  
+
   public static GType getUnknown() {
     return new GType(Unknown);
   }
   
-  
-  public void setArity(int arity) {
+  /**
+   * Sets a specific arity for an Unknown type.
+   * @param arity the desired arity
+   */
+  public void setArity(final int arity) {
     assert (isUnknown());
     for (int i = 1; i < arity; i++) {
-      type.add(Unknown);
+      add(Unknown);
     }
+  }
+  
+  
+  public GType getReturn() {
+    return last;
   }
 }
