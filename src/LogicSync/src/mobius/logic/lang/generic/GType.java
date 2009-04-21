@@ -47,7 +47,7 @@ public class GType {
     }
     return null;
   }
-  private int getArity() {
+  public int getArity() {
     GType curr = this;
     int i = 0;
     while (curr != null) {
@@ -131,5 +131,14 @@ public class GType {
   
   public GType getReturn() {
     return last;
+  }
+  public boolean hasUnknown() {
+    if (isUnknown()) {
+      return true;
+    }
+    if (next != null) {
+      return next.hasUnknown();
+    }
+    return false;
   }
 }

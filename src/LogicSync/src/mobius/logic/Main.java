@@ -21,6 +21,7 @@ import mobius.logic.lang.generic.TypeChecker;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.TypeCheckedAst;
 import mobius.util.ClassUtils;
+import mobius.util.Logger;
 
 /**
  * The main class file of LogicSync.
@@ -87,7 +88,7 @@ public class Main {
    * @param args The program arguments
    */
   public static void main(final String[] args) {
-    System.out.println(WELCOME_MSG);
+    Logger.out.println(WELCOME_MSG);
     LogicSyncParser parser;
     try {
       parser = new LogicSyncParser();
@@ -98,7 +99,7 @@ public class Main {
     }
     try {
       if (!parser.parse(args)) {
-        System.err.println(BAD_USAGE_MSG);
+        Logger.err.println(BAD_USAGE_MSG);
         return;
       }
     } 
@@ -111,13 +112,13 @@ public class Main {
     
     final LogicSyncOptionsInterface opt = parser.getOptionStore();
     if (opt.isHelpSet()) {
-      System.err.println(HELP_MSG);
+      Logger.err.println(HELP_MSG);
       return;
     }
     
     if (!opt.isFilesSet()) {
-      System.err.println("I need at least one input file!");
-      System.err.println(BAD_USAGE_MSG);
+      Logger.err.println("I need at least one input file!");
+      Logger.err.println(BAD_USAGE_MSG);
       return;
     }    
     
@@ -136,11 +137,11 @@ public class Main {
     }
     final ALanguage gen = new GenericLanguage(); 
     list.put(gen, gen.getName());
-    System.out.print("Using languages:");
+    Logger.out.print("Using languages:");
     for (String name: list.values()) {
-      System.out.print(" " + name);
+      Logger.out.print(" " + name);
     }
-    System.out.println(".\n");
+    Logger.out.println(".\n");
     final Main main = new Main(opt, list);
     main.start();
 
@@ -161,11 +162,11 @@ public class Main {
         map.put(al, al.getName());
       } 
       catch (InstantiationException e) {
-        System.err.println("The language " + c.getName() + " cannot be " +
+        Logger.err.println("The language " + c.getName() + " cannot be " +
                            "instanciated... Maybe it is abstract?");
       } 
       catch (IllegalAccessException e) {
-        System.err.println("The language " + c.getName() + " doesn't have " +
+        Logger.err.println("The language " + c.getName() + " doesn't have " +
                            "a public constructor which is strange.");
       }
 
@@ -193,19 +194,19 @@ public class Main {
   public void start() {
     initLanguages();
     
-    System.out.println("\n1: Preparation phase");
+    Logger.out.println("\n1: Preparation phase");
     for (ALanguage lang: fLang.keySet()) {
       lang.prepare();
     }
     
-    System.out.println("\n2: Consistency check phase");
+    Logger.out.println("\n2: Consistency check phase");
     /* if there is more that 1 language input we do the check */
     if (fInputLanguages.size() > 1) {
       // right now triggers an error
-      System.out.println("Couldn't check consistency between these languages: " + 
+      Logger.out.println("Couldn't check consistency between these languages: " + 
                          fLang.values() + 
                          "\nNo consistency check :( sorry.");
-      System.out.println("I am unhappy about that but I am extracting from " +
+      Logger.out.println("I am unhappy about that but I am extracting from " +
                          "the first language I find :P\n" +
                          "Namely: " + fInputLanguages.iterator().next() + ".");
     }
@@ -214,12 +215,12 @@ public class Main {
 
     final TypeChecker tc = new TypeChecker();
 
-    System.out.print("TypeChecking...");
+    Logger.out.print("TypeChecking...");
     if (ast.eval(tc)) {
-      System.out.println(" done.");
+      Logger.out.println(" done.");
     }
     else {
-      System.out.println(" FAILED miserably!");
+      Logger.out.println(" FAILED miserably!");
     }
     if (fTypeCheck) {
       tc.printDetailedResults();
@@ -227,7 +228,7 @@ public class Main {
     final TypeCheckedAst tcAst = new TypeCheckedAst(tc, ast);
     
     
-    System.out.println("\n3: Generation phase");
+    Logger.out.println("\n3: Generation phase");
     for (ALanguage lang: fGenerateLanguages) {
       lang.generateFrom(tcAst);
     }

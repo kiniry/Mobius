@@ -9,6 +9,7 @@ import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.TypeCheckedAst;
 import mobius.logic.lang.generic.parser.GenericLexer;
 import mobius.logic.lang.generic.parser.GenericParser;
+import mobius.util.Logger;
 
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CharStream;
@@ -28,14 +29,14 @@ public class GenericLanguage extends ABasicLanguage {
       case 0:
         break;
       case 1: 
-        System.out.print(this + ": generating '" + 
+        Logger.out.print(this + ": generating '" + 
                            getGenerate().get(0).getName() + "'...");
         try {
           GenericTranslator.translate(ast, getGenerate().get(0));
-          System.out.println(" done.");
+          Logger.out.println(" done.");
         } 
         catch (FileNotFoundException e) {
-          System.out.println(" FAILED!");
+          Logger.out.println(" FAILED!");
           e.printStackTrace();
         }
    
@@ -80,13 +81,13 @@ public class GenericLanguage extends ABasicLanguage {
       case 0:
         break;
       case 1:
-        System.out.print(this + ": parsing '" + getInput().get(0).getName() + "'...");
+        Logger.out.print(this + ": parsing '" + getInput().get(0).getName() + "'...");
         ast = parseFile(getInput().get(0));
         if (ast != null) {
-          System.out.println(" done.");
+          Logger.out.println(" done.");
         }
         else {
-          System.out.println(" FAILED!");
+          Logger.out.println(" FAILED!");
         }
         break;
       default:

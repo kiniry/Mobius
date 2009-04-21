@@ -1,10 +1,13 @@
 package mobius.logic.lang.generic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map.Entry;
 
 import mobius.logic.lang.generic.ast.Application;
 import mobius.logic.lang.generic.ast.Atom;
@@ -15,6 +18,7 @@ import mobius.logic.lang.generic.ast.Formula;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
+import mobius.util.Logger;
 
 public class TypeChecker extends Evaluator<Boolean> {
   private final Set<String> t = new HashSet<String>();
@@ -28,11 +32,9 @@ public class TypeChecker extends Evaluator<Boolean> {
   
   @Override
   public Boolean eval(Application app, Term next, Term first) {
-    
-
     first.eval(this);
     if (!(first instanceof Atom)) {
-      System.err.println("I am suspicious about: " + first);
+      Logger.err.println("I am suspicious about: " + first);
    
     }
     GType type = termTypes.get(first);
@@ -43,7 +45,6 @@ public class TypeChecker extends Evaluator<Boolean> {
     int i = 0;
     while (curr != null) {
       curr.eval(this);
-      System.out.println(curr);
       type = type.unify(i, termTypes.get(curr));
       curr = curr.getNext();
       i++;
@@ -109,7 +110,7 @@ public class TypeChecker extends Evaluator<Boolean> {
   @Override
   public Boolean eval(Atom at, Term next, String id) {
     if (f.contains(id)) {
-      System.err.println(id + " is being used strange...");
+      Logger.err.println(id + " is being used strange...");
       return false;
     }
     else {
@@ -138,7 +139,20 @@ public class TypeChecker extends Evaluator<Boolean> {
         // failed to typecheck
       }
     }
-    return true;
+    List<Entry<String, GType>> l = new ArrayList<Entry<String, GType>> ();
+    // now we check that we don't have question mark type
+    for (Entry<String, GType> e: symTypes.entrySet()) {
+      if (e.getKey().equals("->") || e.getValue().getArity() == 1) {
+        continue;
+      }
+      if (e.getValue().hasUnknown()) {
+        
+        l.add(e);
+      }
+    }
+    Logger.out.println(l);
+
+    return l.size() == 0;
   }
 
 
@@ -178,7 +192,7 @@ public class TypeChecker extends Evaluator<Boolean> {
   @Override
   public Boolean eval(Symbol s, final String id) {
     if (t.contains(id)) {
-      System.err.println(id + " is already defined!");
+      Logger.err.println(id + " is already defined!");
       return false;
     }
     t.add(id);
@@ -192,11 +206,13 @@ public class TypeChecker extends Evaluator<Boolean> {
   }
 
   public void printDetailedResults() {
-    System.out.println("Declared first order types: " + t);
-    System.out.println("Undeclared first order types: " + undeclared);
-    System.out.println("Collected formulas: " + f);
-    System.out.println("Types: " + symTypes);
+    Logger.out.println("Declared first order types: " + t);
+    Logger.out.println("Undeclared first order types: " + undeclared);
+    Logger.out.println("Collected formulas: " + f);
+    Logger.out.println("Types: " + symTypes);
   }
+  
+  
   public String getType(Term term) {
     if (term instanceof Atom) {
       String id = ((Atom) term).getId();

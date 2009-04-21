@@ -5,6 +5,7 @@ import java.util.List;
 
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.TypeCheckedAst;
+import mobius.util.Logger;
 
 /**
  * The main class use to represent a language handler.
@@ -75,7 +76,7 @@ public abstract class ALanguage {
    * @param list the list of files.
    */
   public void moreThanOneFileError(final List<File> list) {
-    System.err.println("At this moment the " + this + " cannot " +
+    Logger.err.println("At this moment the " + this + " cannot " +
                        "treat more than one file!\nGot:" + list + 
                        "\nDoing nothing :(");
   }
