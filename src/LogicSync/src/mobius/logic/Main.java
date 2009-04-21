@@ -221,6 +221,8 @@ public class Main {
     }
     else {
       Logger.out.println(" FAILED miserably!");
+      tc.printDetailedResults();
+      return;
     }
     if (fTypeCheck) {
       tc.printDetailedResults();

@@ -1,19 +1,24 @@
-/**
- * 
- */
 package mobius.logic.lang.generic;
 
-
+/**
+ * Class to represent Generic Types.
+ * @author J. Charles (julien.charles@gmail.com)
+ */
 public class GType {
-
-  private final static String Unknown = "[?]";
-  private String name; 
+  /** the symbol representing the unknown type. */
+  private static final String Unknown = "[?]";
+  
+  /** the current name of this type. */
+  private String name;
+  /** the next type element. */
   private GType next;
+  /** the last element of this type. */
   private GType last;
   
   
+  /** {@inheritDoc} */
   public String toString() {
-    StringBuilder blder = new StringBuilder();
+    final StringBuilder blder = new StringBuilder();
     blder.append(name);
     GType curr = next;
     while (curr != null) {
@@ -23,8 +28,18 @@ public class GType {
     }
     return blder.toString();
   }
+  
+  
   public boolean isUnknown() {
     return getArity() == 1 && name.equals(Unknown);
+  }
+  
+  public boolean isElemUnknown() {
+    return name.equals(Unknown);
+  }
+  
+  public boolean isUnknown(int idx) {
+    return get(idx).equals(Unknown);
   }
   
   public GType unify(int idx, GType t) {
@@ -47,6 +62,8 @@ public class GType {
     }
     return null;
   }
+  
+  
   public int getArity() {
     GType curr = this;
     int i = 0;
@@ -56,11 +73,15 @@ public class GType {
     }
     return i;
   }
+  
+  
   private void set(int idx, String target) {
     if (idx == 0) {
       name = target;
     }
   }
+  
+  
   private String get(int idx) {
     int i = idx;
     GType curr = this;
@@ -104,7 +125,7 @@ public class GType {
    * Do a deep copy while adding.
    * @param typ
    */
-  public void addAll(GType typ) {
+  public void addAll(final GType typ) {
 
     if (typ != null) {
       final GType newTyp = new GType(typ);
@@ -132,8 +153,13 @@ public class GType {
   public GType getReturn() {
     return last;
   }
+  
+  /**
+   * True if this type has an unknown type in it hierarchy.
+   * @return true if contains [?]
+   */
   public boolean hasUnknown() {
-    if (isUnknown()) {
+    if (isElemUnknown()) {
       return true;
     }
     if (next != null) {

@@ -29,6 +29,8 @@ public class TypeChecker extends Evaluator<Boolean> {
   private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
   private final Set<Term> forallVars = new HashSet<Term>();
   private final Stack<String> vars = new Stack<String>();
+  private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
+  
   
   @Override
   public Boolean eval(Application app, Term next, Term first) {
@@ -139,7 +141,7 @@ public class TypeChecker extends Evaluator<Boolean> {
         // failed to typecheck
       }
     }
-    List<Entry<String, GType>> l = new ArrayList<Entry<String, GType>> ();
+    
     // now we check that we don't have question mark type
     for (Entry<String, GType> e: symTypes.entrySet()) {
       if (e.getKey().equals("->") || e.getValue().getArity() == 1) {
@@ -147,12 +149,10 @@ public class TypeChecker extends Evaluator<Boolean> {
       }
       if (e.getValue().hasUnknown()) {
         
-        l.add(e);
+        unknownTypes.add(e);
       }
     }
-    Logger.out.println(l);
-
-    return l.size() == 0;
+    return unknownTypes.size() == 0;
   }
 
 
@@ -200,12 +200,18 @@ public class TypeChecker extends Evaluator<Boolean> {
     return true;
   }
 
-  public static boolean check(GenericAst ast) {
+  public static List<Entry<String, GType>> check(GenericAst ast) {
     final TypeChecker tc = new TypeChecker();
-    return ast.eval(tc);
+    ast.eval(tc);
+    return tc.unknownTypes;
   }
 
   public void printDetailedResults() {
+    if (unknownTypes.size() > 0) {
+      Logger.err.println("\nType Checking failed because of the following not properly" +
+                         " defined types.\n" + unknownTypes);
+      Logger.err.flush();
+    }
     Logger.out.println("Declared first order types: " + t);
     Logger.out.println("Undeclared first order types: " + undeclared);
     Logger.out.println("Collected formulas: " + f);
@@ -215,11 +221,11 @@ public class TypeChecker extends Evaluator<Boolean> {
   
   public String getType(Term term) {
     if (term instanceof Atom) {
-      String id = ((Atom) term).getId();
+      final String id = ((Atom) term).getId();
       if (id.equals("->")) {
         return "";
       }
-      GType type = symTypes.get(id);
+      final GType type = symTypes.get(id);
       if (type != null) {
         return "{" + type + "}";
       }
