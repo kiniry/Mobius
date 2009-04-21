@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jml2Bml
 Bundle-SymbolicName: mobius.jml2bml
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlruntime.jar,
  lib/jmlspecs.jar,
