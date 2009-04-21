@@ -19,10 +19,10 @@ public class ClassUtils {
    * @throws ClassNotFoundException
    * @throws IOException
    */
-  public static List<Class<?>> getClasses(String packageName, Class<?> cl)
+  public static <C> List<Class<C>> getClasses(String packageName, Class<C> cl)
           throws ClassNotFoundException, IOException {
    
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     assert classLoader != null;
     final String path = packageName.replace('.', File.separatorChar);
     final Enumeration<URL> resources = classLoader.getResources(path);
@@ -31,7 +31,7 @@ public class ClassUtils {
       final URL resource = resources.nextElement();
       dirs.add(new File(resource.getFile()));
     }
-    final ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+    final List<Class<C>> classes = new ArrayList<Class<C>>();
     for (File directory : dirs) {
       classes.addAll(findClasses(cl, directory, packageName));
     }
@@ -47,9 +47,12 @@ public class ClassUtils {
    * @return The classes
    * @throws ClassNotFoundException
    */
-  private static List<Class<?>> findClasses(Class<?> filter, File directory, String packageName)
+  @SuppressWarnings("unchecked")
+  private static <C> List<Class<C>> findClasses(final Class<C> filter, 
+                                                final File directory, 
+                                                final String packageName)
     throws ClassNotFoundException {
-    final List<Class< ? >> classes = new ArrayList<Class< ? >>();
+    final List<Class<C>> classes = new ArrayList<Class<C>>();
     if (!directory.exists()) {
       return classes;
     }
@@ -63,7 +66,7 @@ public class ClassUtils {
         String name = file.getName();
         name = name.substring(0, name.length() - ".class".length());
         try {
-          Class<?> c = Class.forName(packageName + '.' + name);
+          final Class<C> c = (Class<C>) Class.forName(packageName + '.' + name);
           if (filter.isAssignableFrom(c)) {
             classes.add(c);
           }

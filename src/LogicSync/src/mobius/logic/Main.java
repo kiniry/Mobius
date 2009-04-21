@@ -125,7 +125,7 @@ public class Main {
     final Map<ALanguage, String> list = new HashMap<ALanguage, String>();
     
     try {
-      final List<Class< ? >> l = 
+      final List<Class<ALanguage>> l = 
         ClassUtils.getClasses("mobius.logic.lang", ALanguage.class);
       instanciate(list, l);
     } 
@@ -154,8 +154,8 @@ public class Main {
    * @param l the list of classes to instanciate
    */
   private static void instanciate(final Map<ALanguage, String> map, 
-                                  final List<Class< ? >> l) {
-    final List<Class< ? >> filtered = filter(l);
+                                  final List<Class<ALanguage>> l) {
+    final List<Class<ALanguage>> filtered = filter(l);
     for (Class< ? > c: filtered) {
       try {
         final ALanguage al = (ALanguage)c.newInstance();
@@ -179,9 +179,9 @@ public class Main {
    * @param l the list to purge
    * @return the list without the offuscing classes
    */
-  private static List<Class< ? >> filter(final List<Class< ? >> l) {
-    final List<Class< ? >> res = new ArrayList<Class< ? >>();
-    for (Class< ? > c: l) {
+  private static <C> List<Class<C>> filter(final List<Class<C>> l) {
+    final List<Class<C>> res = new ArrayList<Class<C>>();
+    for (Class<C> c: l) {
       final String pkg = c.getPackage().getName(); 
       if (!pkg.equals("mobius.logic.lang") &&
           !pkg.equals("mobius.logic.lang.generic")) {
