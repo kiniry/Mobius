@@ -289,8 +289,8 @@ public class TypingInformation {
     }
   }
 
-  public void hasType(String typeString) {
-    context.getFeatureSpec().setType(BONType.mk(typeString));
+  public void hasType(String typeMarkString, String typeString) {
+    context.getFeatureSpec().setType(TypeMark.make(typeMarkString), BONType.mk(typeString));
   }
 
   public InformalTypingInformation informal() {

@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon;
 
+import static ie.ucd.clops.util.OptionUtil.SortingOption.ALPHABETICAL_BY_FIRST_ALIAS;
+import ie.ucd.bon.clinterface.BONcOptionStore;
 import ie.ucd.bon.clinterface.BONcOptionsInterface;
 import ie.ucd.bon.clinterface.BONcParser;
 import ie.ucd.bon.errorreporting.FileNotFoundError;
@@ -16,6 +18,7 @@ import ie.ucd.bon.source.SourceReader;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.clops.logging.CLOLogger;
+import ie.ucd.clops.util.OptionUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -88,28 +91,27 @@ public final class Main {
 
   public static boolean main2(final String[] args, final boolean exitOnFailure) {
     try {
-      CLOLogger.setLogLevel(Level.FINE);
+      //CLOLogger.setLogLevel(Level.FINE);
       BONcParser clParser = new BONcParser();
 
       if (clParser.parse(args)) {
-        BONcOptionsInterface options = clParser.getOptionStore();
+        BONcOptionStore options = clParser.getOptionStore();
 
         debug = options.isDebugSet() && options.getDebug(); 
 
         if (options.getPrintMan()) {
-          //cp.printOptionsInManFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false);
+          OptionUtil.printOptionsInManFormat(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS));
           return true;
         } else if (options.getPrintReadme()) {
-          //cp.printOptionsInReadmeFormat(System.out, CommandlineParser.SortingOption.ALPHABETICAL_OPTION, false, 80, 2);
+          OptionUtil.printOptions(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS), 80, 2);
           return true;
         } else if (options.getPrintBashCompletion()) {
-          //cp.printBashCompletionOptionsScript(System.out, false);
-          return true;
-        } else if (options.getHiddenHelp()) {
-          //cp.printOptions(System.out, true);
+          OptionUtil.printBashCompletionOptionsScript(System.out, options.getOptions(), "bonc");
           return true;
         } else if (options.getHelp()) {
-          //cp.printOptions(System.out, false);
+          System.out.println(getVersion());
+          System.out.println("Options:");
+          OptionUtil.printOptions(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS), 80, 2);
           return true;
         } else if (options.getVersion()) {
           System.out.println(getVersion());

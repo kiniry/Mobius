@@ -1196,7 +1196,7 @@ feature_specification  :  ( ( 'deferred'  { getContext().enterFeatureSpecificati
                          )
                        ;
                        
-has_type  :  type_mark type { getTI().hasType($type.text); }
+has_type  :  type_mark type { getTI().hasType($type_mark.text, $type.text); }
            ->
            ^(HAS_TYPE type_mark type)
           ;

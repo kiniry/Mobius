@@ -157,23 +157,6 @@ public interface BONcOptionsInterface {
   boolean getHelp();
   
 
-// Option HiddenHelp. 
-// Aliases: [-hh, --hidden-help]
-
-  /**
-   * @return true if the option HiddenHelp has been used
-   * in the command line.
-   */
-  boolean isHiddenHelpSet();
-
-  /**
-   * Get the value of {@code Option} HiddenHelp.
-   * @return the value of the option HiddenHelp if it has been set
-   * using the arguments. Throws an {@code IllegalStateException} otherwise.
-   */ 
-  boolean getHiddenHelp();
-  
-
 // Option Time. 
 // Aliases: [-t, --time]
 

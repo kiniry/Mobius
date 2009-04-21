@@ -24,32 +24,23 @@ public class BONcRuleStore extends RuleStore {
     FlyRule rule1 = new FlyRule("Formal",rule1Condition);
     addFlyRule("Formal", rule1);
     rule1.addAction(new Action<Boolean>("CheckFormal", new Rule1Expression1()));
-    
     rule1.addAction(new Action<Boolean>("CheckInformal", new Rule1Expression2()));
-    
     rule1.addAction(new Action<Boolean>("CheckConsistency", new Rule1Expression3()));
-    
     Expression<Boolean> rule2Condition = new Rule2Condition();
     FlyRule rule2 = new FlyRule("Informal",rule2Condition);
     addFlyRule("Informal", rule2);
     rule2.addAction(new Action<Boolean>("CheckInformal", new Rule2Expression4()));
-    
     rule2.addAction(new Action<Boolean>("CheckFormal", new Rule2Expression5()));
-    
     rule2.addAction(new Action<Boolean>("CheckConsistency", new Rule2Expression6()));
-    
     rule2.addAction(new Action<Boolean>("Typecheck", new Rule2Expression7()));
-    
     Expression<Boolean> rule3Condition = new Rule3Condition();
     FlyRule rule3 = new FlyRule("PrettyPrint",rule3Condition);
     addFlyRule("PrettyPrint", rule3);
     rule3.addAction(new Action<String>("Print", new Rule3Expression8()));
-    
     Expression<Boolean> rule4Condition = new Rule4Condition();
     FlyRule rule4 = new FlyRule("CheckFormal",rule4Condition);
     addFlyRule("CheckFormal", rule4);
     rule4.addAction(new Action<Boolean>("Typecheck", new Rule4Expression9()));
-    
     Expression<Boolean> rule5Condition = new Rule5Condition();
     ValidityRule rule5 = new ValidityRule(rule5Condition);
     rule5.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule5Expression()));

@@ -20,8 +20,6 @@ PrintBashCompletion:{"--print-bash-completion"}:[default="false"]
 
 Help:{"-h","--help"}:[default="false"]
  : "Print this help message."
-HiddenHelp:{"-hh","--hidden-help"}:[default="false"] //TODO do we still need this?
- : "Print help with hidden options shown"
 
 Time:{"-t","--time"}:[default="false"]
  : "Print timing information."
@@ -68,7 +66,7 @@ WHERE::
 
 Option : AllOptions -AloneOption -SourceFiles;
        
-AloneOption : Version OR Help OR HiddenHelp OR PrintMan OR PrintReadme OR PrintBashCompletion;
+AloneOption : Version OR Help OR PrintMan OR PrintReadme OR PrintBashCompletion;
 
 FLY::
 

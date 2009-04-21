@@ -21,6 +21,7 @@ public class FeatureSpecification {
   private boolean effective;
   private boolean redefined;
   private BONType type;
+  private TypeMark typeMark;
   private Renaming renaming;
   private final Map<String,FeatureArgument> argsMap;
   private final List<FeatureArgument> argsList;
@@ -77,7 +78,8 @@ public class FeatureSpecification {
     this.redefined = true;
   }
 
-  public void setType(BONType type) {
+  public void setType(TypeMark typeMark, BONType type) {
+    this.typeMark = typeMark;
     this.type = type;
   }  
     
@@ -103,6 +105,10 @@ public class FeatureSpecification {
 
   public BONType getType() {
     return type;
+  }
+
+  public TypeMark getTypeMark() {
+    return typeMark;
   }
 
   public Map<String,FeatureArgument> getArgs() {

@@ -20,7 +20,6 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
   private final BooleanOption ogPrintReadme;
   private final BooleanOption ogPrintBashCompletion;
   private final BooleanOption ogHelp;
-  private final BooleanOption ogHiddenHelp;
   private final BooleanOption ogTime;
   private final BooleanOption ogTypecheck;
   private final BooleanOption ogInformal;
@@ -43,85 +42,101 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     addOption(ogPrint);
     ogPrint.setProperty("choices", "SYSO,TXT,DOT,HTML,DIC,IIG,ICG,CL,PICG,PIIG");
     ogPrint.setProperty("casesensitive", "false");
+    ogPrint.setProperty("aliases", "-p,--print");
     ogPrint.setProperty("description", "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
     ogPrintOutput = new FileOption("PrintOutput", "(?:-po)|(?:--print-output)");
     addOption(ogPrintOutput);
     ogPrintOutput.setProperty("canbedir", "false");
+    ogPrintOutput.setProperty("aliases", "-po,--print-output");
     ogPrintOutput.setProperty("description", "Print output to the given file instead of to stdout.");
     ogPrettyPrint = new BooleanOption("PrettyPrint", "(?:-pp)|(?:--pretty-print)");
     addOption(ogPrettyPrint);
+    ogPrettyPrint.setProperty("aliases", "-pp,--pretty-print");
     ogPrettyPrint.setProperty("description", "Pretty-print the parsed input. This is equivalent to -p=TXT.");
     ogPrintMan = new BooleanOption("PrintMan", "(?:--print-man)");
     addOption(ogPrintMan);
     ogPrintMan.setProperty("default", "false");
+    ogPrintMan.setProperty("aliases", "--print-man");
     ogPrintMan.setProperty("description", "Print available options in man-page format.");
     ogPrintReadme = new BooleanOption("PrintReadme", "(?:--print-readme)");
     addOption(ogPrintReadme);
     ogPrintReadme.setProperty("default", "false");
+    ogPrintReadme.setProperty("aliases", "--print-readme");
     ogPrintReadme.setProperty("description", "Print available options in readme format.");
     ogPrintBashCompletion = new BooleanOption("PrintBashCompletion", "(?:--print-bash-completion)");
     addOption(ogPrintBashCompletion);
     ogPrintBashCompletion.setProperty("default", "false");
+    ogPrintBashCompletion.setProperty("aliases", "--print-bash-completion");
     ogPrintBashCompletion.setProperty("description", "Print bash completion script for available options.");
     ogHelp = new BooleanOption("Help", "(?:-h)|(?:--help)");
     addOption(ogHelp);
     ogHelp.setProperty("default", "false");
+    ogHelp.setProperty("aliases", "-h,--help");
     ogHelp.setProperty("description", "Print this help message.");
-    ogHiddenHelp = new BooleanOption("HiddenHelp", "(?:-hh)|(?:--hidden-help)");
-    addOption(ogHiddenHelp);
-    ogHiddenHelp.setProperty("default", "false");
-    ogHiddenHelp.setProperty("description", "Print help with hidden options shown");
     ogTime = new BooleanOption("Time", "(?:-t)|(?:--time)");
     addOption(ogTime);
     ogTime.setProperty("default", "false");
+    ogTime.setProperty("aliases", "-t,--time");
     ogTime.setProperty("description", "Print timing information.");
     ogTypecheck = new BooleanOption("Typecheck", "(?:-tc)|(?:--typecheck)");
     addOption(ogTypecheck);
     ogTypecheck.setProperty("default", "true");
+    ogTypecheck.setProperty("aliases", "-tc,--typecheck");
     ogTypecheck.setProperty("description", "Typecheck the input");
     ogInformal = new BooleanOption("Informal", "(?:-i)|(?:--informal)");
     addOption(ogInformal);
+    ogInformal.setProperty("aliases", "-i,--informal");
     ogInformal.setProperty("description", "Only check informal charts.");
     ogFormal = new BooleanOption("Formal", "(?:-f)|(?:--formal)");
     addOption(ogFormal);
+    ogFormal.setProperty("aliases", "-f,--formal");
     ogFormal.setProperty("description", "Only check formal charts.");
     ogCheckInformal = new BooleanOption("CheckInformal", "(?:-ci)|(?:--check-informal)");
     addOption(ogCheckInformal);
     ogCheckInformal.setProperty("default", "true");
+    ogCheckInformal.setProperty("aliases", "-ci,--check-informal");
     ogCheckInformal.setProperty("description", "Check informal charts.");
     ogCheckFormal = new BooleanOption("CheckFormal", "(?:-cf)|(?:--check-formal)");
     addOption(ogCheckFormal);
     ogCheckFormal.setProperty("default", "true");
+    ogCheckFormal.setProperty("aliases", "-cf,--check-formal");
     ogCheckFormal.setProperty("description", "Check formal diagrams.");
     ogCheckConsistency = new BooleanOption("CheckConsistency", "(?:-cc)|(?:--check-consistency)");
     addOption(ogCheckConsistency);
     ogCheckConsistency.setProperty("default", "true");
+    ogCheckConsistency.setProperty("aliases", "-cc,--check-consistency");
     ogCheckConsistency.setProperty("description", "Check consistency between levels.");
     ogDebug = new BooleanOption("Debug", "(?:-d)|(?:--debug)");
     addOption(ogDebug);
     ogDebug.setProperty("default", "false");
+    ogDebug.setProperty("aliases", "-d,--debug");
     ogDebug.setProperty("description", "Print debugging output.");
     ogReadFromStdin = new BooleanOption("ReadFromStdin", "(?:-)");
     addOption(ogReadFromStdin);
     ogReadFromStdin.setProperty("default", "false");
+    ogReadFromStdin.setProperty("aliases", "-");
     ogReadFromStdin.setProperty("description", "Read input from stdin.");
     ogGenClassDic = new BooleanOption("GenClassDic", "(?:-gcd)|(?:--gen-class-dic)");
     addOption(ogGenClassDic);
+    ogGenClassDic.setProperty("aliases", "-gcd,--gen-class-dic");
     ogGenClassDic.setProperty("description", "Generate the class dictionary when printing.");
     ogGraph = new EnumOption("Graph", "(?:-g)|(?:--graph)");
     addOption(ogGraph);
     ogGraph.setProperty("choices", "ICG,IIG");
     ogGraph.setProperty("casesensitive", "false");
+    ogGraph.setProperty("aliases", "-g,--graph");
     ogGraph.setProperty("description", "Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph.");
     ogVersion = new BooleanOption("Version", "(?:-v)|(?:--version)");
     addOption(ogVersion);
     ogVersion.setProperty("default", "false");
+    ogVersion.setProperty("aliases", "-v,--version");
     ogVersion.setProperty("description", "Print BONc version and exit.");
     ogSourceFiles = new FileListOption("SourceFiles", "");
     addOption(ogSourceFiles);
     ogSourceFiles.setProperty("between", "");
     ogSourceFiles.setProperty("canbedir", "false");
     ogSourceFiles.setProperty("mustexist", "true");
+    ogSourceFiles.setProperty("aliases", "");
     ogSourceFiles.setProperty("description", "Source files to process.");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
@@ -155,7 +170,6 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogAloneOption.addOptionOrGroup(ogVersion);
     ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
-    ogAloneOption.addOptionOrGroup(ogHiddenHelp);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);
     ogAllOptions.addOptionOrGroup(ogPrintOutput);
@@ -164,7 +178,6 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogAllOptions.addOptionOrGroup(ogPrintReadme);
     ogAllOptions.addOptionOrGroup(ogPrintBashCompletion);
     ogAllOptions.addOptionOrGroup(ogHelp);
-    ogAllOptions.addOptionOrGroup(ogHiddenHelp);
     ogAllOptions.addOptionOrGroup(ogTime);
     ogAllOptions.addOptionOrGroup(ogTypecheck);
     ogAllOptions.addOptionOrGroup(ogInformal);
@@ -347,30 +360,6 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
   
   public BooleanOption getHelpOption() {
     return ogHelp;
-  }
-  
-// Option HiddenHelp.
-// Aliases: [-hh, --hidden-help]
-  
-  /**
-   * {@inheritDoc}
-   */
-  public boolean isHiddenHelpSet() {
-    return ogHiddenHelp.hasValue();
-  }
-  
-  /** {@inheritDoc} */
-  public boolean getHiddenHelp() {
-    return ogHiddenHelp.getValue();
-  }
-
-  /** {@inheritDoc} */
-  public boolean getRawHiddenHelp() {
-    return ogHiddenHelp.getRawValue();
-  }
-  
-  public BooleanOption getHiddenHelpOption() {
-    return ogHiddenHelp;
   }
   
 // Option Time.
