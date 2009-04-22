@@ -43,6 +43,14 @@ public abstract class MarkerCollector {
     return markersMap.get(type);
   }
   
+  public List<IMarker> getAllMarkers() {
+    List<IMarker> total = new LinkedList<IMarker>();
+    for (List<IMarker> list : markersMap.values()) {
+      total.addAll(list);
+    }
+    return total;
+  }
+  
   public abstract Collection<String> getTypes();
   
   public void addMarkers(IProject project) throws CoreException {
@@ -55,6 +63,42 @@ public abstract class MarkerCollector {
     for (String type : getTypes()) {
       clearMarkers(type);
     }
+  }
+  
+  public List<IMarker> getAllWarningMarkers() {
+    return getWarnings(getAllMarkers());
+  }
+  
+  public List<IMarker> getAllErrorMarkers() {
+    return getErrors(getAllMarkers());
+  }
+  
+  public List<IMarker> getAllInfoMarkers() {
+    return getInfos(getAllMarkers());
+  }  
+  
+  private static final int DEFAULT_SEVERITY = IMarker.SEVERITY_ERROR;
+  
+  public static List<IMarker> getWarnings(List<IMarker> markers) {
+    return filterByAttribute(markers, IMarker.SEVERITY, IMarker.SEVERITY_WARNING, DEFAULT_SEVERITY);    
+  }
+  
+  public static List<IMarker> getErrors(List<IMarker> markers) {
+    return filterByAttribute(markers, IMarker.SEVERITY, IMarker.SEVERITY_ERROR, DEFAULT_SEVERITY);    
+  }
+  
+  public static List<IMarker> getInfos(List<IMarker> markers) {
+    return filterByAttribute(markers, IMarker.SEVERITY, IMarker.SEVERITY_INFO, DEFAULT_SEVERITY);    
+  }
+  
+  private static List<IMarker> filterByAttribute(List<IMarker> markers, String attribute, int filterValue, int defaultValue) {
+    List<IMarker> filteredList = new LinkedList<IMarker>();
+    for (IMarker marker : markers) {
+      if (marker.getAttribute(attribute, defaultValue) == filterValue) {
+        filteredList.add(marker);
+      }
+    }
+    return filteredList;
   }
   
 }

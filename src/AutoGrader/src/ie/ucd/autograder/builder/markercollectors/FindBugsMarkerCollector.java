@@ -17,10 +17,11 @@ public class FindBugsMarkerCollector extends MarkerCollector {
   private static final List<String> types = new ArrayList<String>(5);
   static {
     types.add(NAME);
-    types.add(NAME_HIGH);
-    types.add(NAME_NORMAL);
-    types.add(NAME_LOW);
-    types.add(NAME_EXPERIMENTAL);
+    //findbugsMarker is the super type of the below, so we can just use it unless we want to ignore some...
+//    types.add(NAME_HIGH);
+//    types.add(NAME_NORMAL);
+//    types.add(NAME_LOW);
+//    types.add(NAME_EXPERIMENTAL);
   }
   
   @Override

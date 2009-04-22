@@ -32,50 +32,52 @@
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
-            id="MarkerAccessor.contribution1">
+            id="AutoGrader.addNaturePopupMenu">
+         <visibility>
+            <not>
+               <objectState
+                     name="nature"
+                     value="AutoGrader.nature">
+               </objectState>
+            </not>
+         </visibility>
          <action
-               label="Add/Remove Auto-Grader Nature"
-               class="ie.ucd.autograder.builder.ToggleNatureAction"
+               label="Add Auto-Grader Nature"
+               class="ie.ucd.autograder.builder.AddNatureAction"
                menubarPath="additions"
                enablesFor="+"
-               id="MarkerAccessor.addRemoveNatureAction">
+               id="AutoGrader.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="AutoGrader.removeNaturePopupMenu"
+            objectClass="org.eclipse.core.resources.IProject">
+         <visibility>
+            <objectState
+                  name="nature"
+                  value="AutoGrader.nature">
+            </objectState>
+         </visibility>
+         <action
+               class="ie.ucd.autograder.builder.RemoveNatureAction"
+               enablesFor="+"
+               id="AutoGrader.removeRemoveNatureAction"
+               label="Remove Auto-Grader Nature"
+               menubarPath="additions">
          </action>
       </objectContribution>
    </extension>
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            name="Auto-Grader Preferences"
-            class="ie.ucd.autograder.preferences.AutoGraderPreferencePage"
-            id="markeraccessor.preferences.AutoGraderPreferencePage">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="ie.ucd.autograder.preferences.PreferenceInitializer">
-      </initializer>
-   </extension>
-   <extension
-         point="org.eclipse.ui.propertyPages">
-      <page
-            objectClass="org.eclipse.core.resources.IFile"
-            name="Sample Page"
-            nameFilter="*.*"
-            class="ie.ucd.autograder.properties.SamplePropertyPage"
-            id="markeraccessor.properties.samplePropertyPage">
-      </page>
-   </extension>
-   <extension
          point="org.eclipse.ui.views">
       <category
-            name="Sample Category"
-            id="MarkerAccessor">
+            name="AutoGrader Category"
+            id="AutoGrader">
       </category>
       <view
             name="Auto-Grader View"
             icon="icons/sample.gif"
-            category="MarkerAccessor"
+            category="AutoGrader"
             class="ie.ucd.autograder.views.AutoGraderView"
             id="markeraccessor.views.AutoGraderView">
       </view>

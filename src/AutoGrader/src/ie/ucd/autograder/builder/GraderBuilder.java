@@ -1,7 +1,10 @@
 package ie.ucd.autograder.builder;
 
+import ie.ucd.autograder.builder.markercollectors.CheckstyleMarkerCollector;
+import ie.ucd.autograder.builder.markercollectors.ESCJava2MarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.FindBugsMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.MarkerCollector;
+import ie.ucd.autograder.builder.markercollectors.PMDMarkerCollector;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,13 +20,22 @@ public class GraderBuilder extends IncrementalProjectBuilder {
   public static final String BUILDER_ID = "AutoGrader.builder";
 
   private final FindBugsMarkerCollector findBugsCollector;
+  private final PMDMarkerCollector pmdMarkerCollector;
+  private final CheckstyleMarkerCollector checkstyleMarkerCollector;
+  private final ESCJava2MarkerCollector escMarkerCollector;
   private final List<MarkerCollector> collectors;
   
   public GraderBuilder() {
     findBugsCollector = new FindBugsMarkerCollector();
+    pmdMarkerCollector = new PMDMarkerCollector();
+    checkstyleMarkerCollector = new CheckstyleMarkerCollector();
+    escMarkerCollector = new ESCJava2MarkerCollector();
     
     collectors = new LinkedList<MarkerCollector>();
     collectors.add(findBugsCollector);
+    collectors.add(pmdMarkerCollector);
+    collectors.add(checkstyleMarkerCollector);
+    collectors.add(escMarkerCollector);
   }
   
 	/*
@@ -32,9 +44,12 @@ public class GraderBuilder extends IncrementalProjectBuilder {
 	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
 	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	@SuppressWarnings("unchecked")
+  protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		
+	  System.out.println("Running builder");
+	  
 	  IProject project = getProject();
 	  for (MarkerCollector collector : collectors) {
 	    collector.clearAllMarkers();
