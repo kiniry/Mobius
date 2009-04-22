@@ -75,7 +75,7 @@ vernacular returns [CoqAst ast]:
            ;
 
 coqdoc returns [CoqAst ast]:
-        c=COMMENT {if ($c.getText().charAt(0) == '*') 
+        c=DOC {if ($c.getText().charAt(0) == '*') 
                       $ast = Doc.mk($c.getText().substring(1));
                    else $ast = Comment.mk($c.getText());
         };
@@ -398,12 +398,8 @@ EOF:'<EOF>' ;
 
 STRING_CONSTANT : '"' .* '"';
 
-/* fragment
-WHITECOM:
- WHITESPACE* COMMENT WHITESPACE* {System.out.println($COMMENT.text);};
-*/
-COMMENT: '(*' .* '*)'{setText($text.substring(2, $text.length() - 2));};
-
+DOC: '(**' .* '*)'{setText($text.substring(3, $text.length() - 2));};
+COMMENT: '(*' .* '*)' {$channel=HIDDEN;};
                   
 
 //Identifier name

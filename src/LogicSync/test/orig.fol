@@ -1,0 +1,81 @@
+S
+S_to_Z: (->  S {[T]} Z {[?]})
+Z_to_S: (->  Z {[?]} S {[T]})
+Zeq_bool: (-> Z (-> Z bool))
+= : (-> S (-> S Prop))
+negb: (-> bool bool)
+integralLE: (-> Z (-> Z Prop)) 
+\/: (-> Prop (-> Prop Prop))
+<>: (-> S (-> S Prop))
+Z_to_S_elim: (forall x, (= {S -> [?] -> [?]} (S_to_Z {S -> Z} (Z_to_S {Z -> S} x {S}) )  x {S}))
+[ S_to_bool: (->  S {[T]} bool {[?]})
+S_to_Z_det: (forall x, (= {S -> [?] -> [?]} (S_to_Z {S -> Z} x {S})  (S_to_Z {S -> Z} x {S}) ))
+S_to_bool_det: (forall y x, (->  (= {S -> [?] -> [?]} x {S} y {S})  (= {S -> [?] -> [?]} (S_to_bool {S -> bool} x {S})  (S_to_bool {S -> bool} y {S}) ) ))
+Zeq_bool_sym: (forall x, (= {S -> [?] -> [?]} (Zeq_bool {[?] -> [?] -> [?]} x {S} x {S})  true {[?]}))
+Zeq_bool_true: (forall y x, (->  (= {S -> [?] -> [?]} x {S} y {S})  (= {S -> [?] -> [?]} (Zeq_bool {[?] -> [?] -> [?]} x {S} y {S})  true {[?]}) ))
+Zeq_bool_false: (forall y x, (->  (<> {S -> [?] -> [?]} x {S} y {S})  (= {S -> [?] -> [?]} (Zeq_bool {[?] -> [?] -> [?]} x {S} y {S})  false {[?]}) ))
+negb_elim: (forall b, (= {S -> [?] -> [?]} (negb {[?] -> [?]} (negb {[?] -> [?]} b {[?]}) )  b {[?]}))
+select: (->  S {[T]} (->  S {[T]} S {[T]}) )
+store: (->  S {[T]} (->  S {[T]} (->  S {[T]} S {[T]}) ) )
+arr_store: (->  S {[T]} (->  Z {[?]} (->  S {[T]} S {[T]}) ) )
+select_store1: (forall obj val var, (= {S -> [?] -> [?]} (select {S -> S -> S} (store {S -> S -> S -> S} var {S} obj {S} val {bool})  obj {S})  val {bool}))
+select_store2: (forall obj2 obj1 val var, (->  (<> {S -> [?] -> [?]} obj1 {S} obj2 {S})  (= {S -> [?] -> [?]} (select {S -> S -> S} (store {S -> S -> S -> S} var {S} obj1 {S} val {bool})  obj2 {S})  (select {S -> S -> S} var {S} obj2 {S}) ) ))
+store_int: (->  S {[T]} (->  S {[T]} (->  Z {[?]} S {[T]}) ) )
+arr_store_int: (->  S {[T]} (->  Z {[?]} (->  Z {[?]} S {[T]}) ) )
+select_store_int1: (forall var val obj, (= {S -> [?] -> [?]} (S_to_Z {S -> Z} (select {S -> S -> S} (store_int {S -> S -> Z -> S} var {S} obj {S} val {bool})  obj {S}) )  val {bool}))
+select_store_int2: (forall var val obj2 obj1, (->  (<> {S -> [?] -> [?]} obj1 {S} obj2 {S})  (= {S -> [?] -> [?]} (select {S -> S -> S} (store_int {S -> S -> Z -> S} var {S} obj1 {S} val {bool})  obj2 {S})  (select {S -> S -> S} var {S} obj2 {S}) ) ))
+store_bool: (->  S {[T]} (->  S {[T]} (->  bool {[?]} S {[T]}) ) )
+arr_store_bool: (->  S {[T]} (->  Z {[?]} (->  bool {[?]} S {[T]}) ) )
+arr_select_store_bool: (forall var val i j, (->  (= {S -> [?] -> [?]} i {S} (S_to_Z {S -> Z} j {S}) )  (= {S -> [?] -> [?]} (S_to_bool {S -> bool} (select {S -> S -> S} (arr_store_bool {S -> Z -> bool -> S} var {S} i {S} val {bool})  j {S}) )  val {bool}) ))
+select_store_bool1: (forall var val obj, (= {S -> [?] -> [?]} (S_to_bool {S -> bool} (select {S -> S -> S} (store_bool {S -> S -> bool -> S} var {S} obj {S} val {bool})  obj {S}) )  val {bool}))
+select_store_bool2: (forall var val obj2 obj1, (->  (<> {S -> [?] -> [?]} obj1 {S} obj2 {S})  (= {S -> [?] -> [?]} (S_to_bool {S -> bool} (select {S -> S -> S} (store_bool {S -> S -> bool -> S} var {S} obj1 {S} val {bool})  obj2 {S}) )  (S_to_bool {S -> bool} (select {S -> S -> S} var {S} obj2 {S}) ) ) ))
+null: S
+isAllocated: (->  S {[T]} (->  S {[T]} Prop {[?]}) )
+fClosedTime: (->  S {[T]} S {[T]})
+refEQ: (->  S {[T]} (->  S {[T]} bool {[?]}) )
+refEQ_refl: (forall x, (= {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} x {S})  true {[?]}))
+refEQ_eq: (forall y x, (->  (= {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} y {S})  true {[?]})  (= {S -> [?] -> [?]} x {S} y {S}) ))
+refEQ_eq_true: (forall y x, (->  (= {S -> [?] -> [?]} x {S} y {S})  (= {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} y {S})  true {[?]}) ))
+refEQ_eq_not_false: (forall y x, (->  (= {S -> [?] -> [?]} x {S} y {S})  (<> {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} y {S})  false {[?]}) ))
+refEQ_false_not_eq: (forall y x, (->  (= {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} y {S})  false {[?]})  (<> {S -> [?] -> [?]} x {S} y {S}) ))
+not_eq_false_refEQ: (forall y x, (->  (<> {S -> [?] -> [?]} x {S} y {S})  (= {S -> [?] -> [?]} (refEQ {S -> S -> bool} x {S} y {S})  false {[?]}) ))
+Types
+subtypes: (->  Types {[T]} (->  Types {[T]} Prop {[?]}) )
+typeof: (->  S {[T]} Types {[T]})
+lockLT: (->  S {[T]} (->  S {[T]} Prop {[?]}) )
+isField: (->  S {[T]} Prop {[?]})
+allocNew_: S
+asField: (->  S {[T]} (->  Types {[T]} Prop {[?]}) )
+asElems: (->  S {[T]} Prop {[?]})
+asLockSet: (->  S {[T]} Prop {[?]})
+eClosedTime: (->  S {[T]} S {[T]})
+arrayFresh: (->  S {[T]} (->  S {[T]} (->  S {[T]} (->  S {[T]} (->  S {[T]} (->  Types {[T]} (->  S {[T]} Prop {[?]}) ) ) ) ) ) )
+arrayShapeOne: (->  S {[T]} S {[T]})
+arrayShapeMore: (->  S {[T]} (->  S {[T]} S {[T]}) )
+isNewArray: (->  S {[T]} Prop {[?]})
+arrayLength: (->  S {[T]} S {[T]})
+arrayLengthAx: (forall a, (integralLE {[?] -> [?] -> [?]} 0 {[?]} (S_to_Z {S -> Z} (arrayLength {S -> S} a {[?]}) ) ))
+array_axiom2_2: (forall n e b0 a0 a T v, (->  (arrayFresh {S -> S -> S -> S -> S -> Types -> S -> Prop} a {[?]} a0 {S} b0 {S} e {S} (arrayShapeOne {S -> S} n {S})  T {Types} v {[?]})  (isAllocated {S -> S -> Prop} a {[?]} b0 {S}) ))
+array_axiom2_3: (forall n e b0 a0 a T v, (->  (arrayFresh {S -> S -> S -> S -> S -> Types -> S -> Prop} a {[?]} a0 {S} b0 {S} e {S} (arrayShapeOne {S -> S} n {S})  T {Types} v {[?]})  (<> {S -> [?] -> [?]} a {[?]} null {S}) ))
+array_axiom2_4: (forall n e b0 a0 a T v, (->  (arrayFresh {S -> S -> S -> S -> S -> Types -> S -> Prop} a {[?]} a0 {S} b0 {S} e {S} (arrayShapeOne {S -> S} n {S})  T {Types} v {[?]})  (= {S -> [?] -> [?]} (typeof {S -> Types} a {[?]})  T {Types}) ))
+array_axiom2_5: (forall n e b0 a0 a T v, (->  (arrayFresh {S -> S -> S -> S -> S -> Types -> S -> Prop} a {[?]} a0 {S} b0 {S} e {S} (arrayShapeOne {S -> S} n {S})  T {Types} v {[?]})  (= {S -> [?] -> [?]} (arrayLength {S -> S} a {[?]})  n {S}) ))
+array_axiom2_6: (forall n e b0 a0 a T v, (->  (arrayFresh {S -> S -> S -> S -> S -> Types -> S -> Prop} a {[?]} a0 {S} b0 {S} e {S} (arrayShapeOne {S -> S} n {S})  T {Types} v {[?]})  (forall i, (= {S -> [?] -> [?]} (select {S -> S -> S} (select {S -> S -> S} e {S} a {[?]})  i {S})  v {[?]})) ))
+ecReturn: S
+ecThrow: S
+distinctAxiom: (<> {S -> [?] -> [?]} ecReturn {S} ecThrow {S})
+]
+[
+ ** elimAnd
+ elimAnd is used mainly to eliminate and within the hypothesis.
+For the goals the preferred tactic is still split. ]
+
+[
+ ** elimNor
+This tactic is used to remove the not in front of a or (in the hypothesis),
+turning (~ (A \/  B) ) into ((~ A) /\ (~ B)).
+ ]
+
+[
+ ** Cleansing
+To clean up the mess (sometimes). ]
+a_ou_a_donne_a: (forall a, (->  (\/ {[?] -> [?] -> [?]} a {[?]} a {[?]})  a {[?]}))

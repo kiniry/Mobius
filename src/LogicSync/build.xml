@@ -1,4 +1,4 @@
-<project name="LogicSync" default="test-coq" basedir=".">
+<project name="LogicSync" default="test-gen" basedir=".">
   <description>LogicSync File</description>
   <property name="java-target-version" value="1.6"/>
 
@@ -258,8 +258,16 @@
 	 <delete dir="${dist}"/>
   </target>
 	
-
-
+ <target name="test-gen" depends="compile">
+  	<java fork="yes" dir="test/" classname="mobius.logic.Main">
+        <classpath refid="test.path"/>
+  		<arg value="-tc"/>
+  		<arg value="output.fol"/>
+  		<arg value="-g"/>
+	  	<arg value="a.fol"/>
+  	</java>
+  </target>
+	
   <target name="test-coq" depends="compile">
   	<java fork="yes" dir="test/" classname="mobius.logic.Main">
         <classpath refid="test.path"/>

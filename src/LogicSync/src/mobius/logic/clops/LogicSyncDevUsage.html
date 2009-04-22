@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <!-- link type="text/css" rel="stylesheet" href="style.css" -->
+  <title>LogicSync (mobius.logic.clops)</title>
+  <style type="text/css">
+    body { margin:40px; color: black; background: white; }
+    td{padding-right:10px;}
+    .id {width:100px; color:blue;}
+    .aliases {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #code {font-family:Courier; font-size:14px; background-color:lightgrey;}
+    #validity-explanation{width: 300px;
+           color:red;}
+    #validity-cond{
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:14px; 
+       font-family:Courier; 
+    }
+    #usage-str{
+       align: center;
+       background-color:lightgrey; 
+       overflow:auto; 
+       font-size:16px; 
+       font-family:Courier; 
+    }
+    #options{}
+    #index{float:right; 
+           border:solid 1px;
+           border-color: blue;
+           padding-right:1em;
+           }
+    #contentpart {
+        /*position:absolute;
+        top: 80px;
+        left:90px;
+        right:90px; */
+        text-align: left;
+        padding:3em;
+        font-size:90%;
+        
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+
+<div id="contentpart">
+<h1>LogicSync</h1>
+
+<div id="index">
+<p>
+<ul>
+<li><a href="#description">Description</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#options">Options</a>:<br/>
+    <ul>
+          <li><a href="#opt-Main">Main options</a></li>
+          <li><a href="#opt-Output">Output options</a></li>
+        </ul>
+</li>
+
+<li><a href="#help">Code of the help message</a></li>
+</ul>
+</p>
+</div>
+
+
+<h2><a name="description">Description</a></h2>
+
+<h2><a name="usage">Usage</a></h2>
+<span id="usage-str">Help  | ((Output)* TypeCheck? Files (Files | Output)*)</span><br/>
+
+<div id="options">
+<h2><a name="options">Options</a></h2>
+
+<p>
+<h3><a name="opt-Main">Main options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">Help</div></td>
+ <td><div class="aliases">
+                 -h
+      
+              <br/>
+            -help
+      
+              <br/>
+            --help
+      
+              <br/>
+          </div></td>
+ <td><span class="description">Show this help message.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">Files</div></td>
+ <td><div class="aliases">
+                       &lt;file-list&gt;
+                      </div></td>
+ <td><span class="description">Provide input file(s). Determine their type by their extension.</span></td>
+ </tr>
+  </table>
+<p>
+<h3><a name="opt-Output">Output options</a></h3>
+<table>
+ <tr>
+ <td><div class="id">Merge</div></td>
+ <td><div class="aliases">
+                 -m
+      
+                  &lt;file-list&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Merge with existing file. If there is no previous version, creates a new file.</span></td>
+ </tr>
+   <tr>
+ <td><div class="id">Generate</div></td>
+ <td><div class="aliases">
+                 -g
+      
+                  &lt;file-list&gt;
+              <br/>
+          </div></td>
+ <td><span class="description">Generates files. Files will erase the previous version.</span></td>
+ </tr>
+  </table>
+</div>
+
+
+
+
+<h2><a name="help">Code of the help message:</a></h2>
+<div id="code">
+String helpMain = 
+"Main options\n" + <br/>
+ &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -h
+      
+              ,
+                                  
+            -help
+      
+              ,
+                                  
+            --help
+      
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Show this help message.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+                    &lt;file-list&gt;
+                 " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Provide input file(s). Determine their type by their extension.\n";<br/>     <br/> 
+  String helpOutput = 
+"Output options\n" + <br/>
+ &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -m
+      
+                  &lt;file-list&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Merge with existing file. If there is no previous version, creates a new file.\n" +
+                                <br/> 
+   &nbsp; &nbsp; &nbsp; &nbsp;
+ "
+              -g
+      
+                  &lt;file-list&gt;
+                      
+     " +
+     <br/>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+     "Generates files. Files will erase the previous version.\n";<br/>     <br/> 
+  </div>
+
+</div>
+</body>
+</html>

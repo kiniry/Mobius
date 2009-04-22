@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.Map.Entry;
 
 import mobius.logic.lang.generic.ast.Application;
@@ -27,8 +26,7 @@ public class TypeChecker extends Evaluator<Boolean> {
   private final GType Type = new GType("[T]");
   private final HashMap<String, GType> symTypes = new HashMap<String, GType>();
   private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
-  private final Set<Term> forallVars = new HashSet<Term>();
-  private final Stack<String> vars = new Stack<String>();
+  private final LinkedList<Atom> forallVars = new LinkedList<Atom>();
   private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
   
   
@@ -40,6 +38,7 @@ public class TypeChecker extends Evaluator<Boolean> {
    
     }
     GType type = termTypes.get(first);
+    
     if (type.isUnknown()) {
       type.setArity(getArity(app));
     }
@@ -47,10 +46,19 @@ public class TypeChecker extends Evaluator<Boolean> {
     int i = 0;
     while (curr != null) {
       curr.eval(this);
-      type = type.unify(i, termTypes.get(curr));
+      //System.out.println(curr);
+      if (!type.unify(i, termTypes.get(curr))) {
+        System.out.println("Failed to unify " + first + "(" + i +"): " + type + 
+                           curr + ": " + termTypes.get(curr));
+        return false;
+      }
       curr = curr.getNext();
       i++;
     }
+//    if (i != type.getArity()) {
+//      System.out.println("Bad arity");
+//      return false;
+//    }
     termTypes.put(app, type.getReturn());
     
     return false;
@@ -116,6 +124,12 @@ public class TypeChecker extends Evaluator<Boolean> {
       return false;
     }
     else {
+      Term orig = getForallFirst(id);
+      if (orig != null) {
+        
+        termTypes.put(at, termTypes.get(orig));
+        return true;
+      }
       if (t.contains(id)) {
         termTypes.put(at, symTypes.get(id));
         return true;
@@ -126,6 +140,15 @@ public class TypeChecker extends Evaluator<Boolean> {
       return true;
     }
     
+  }
+
+  private Term getForallFirst(String id) {
+    for (Atom at: forallVars) {
+      if (at.getId().equals(id)) {
+        return at;
+      }
+    }
+    return null;
   }
 
   @Override
@@ -163,12 +186,13 @@ public class TypeChecker extends Evaluator<Boolean> {
     int i = 0;
     while (curr != null) {
       i++;
-      vars.push(curr.getId());
+      forallVars.addFirst(curr);
+      termTypes.put(curr, GType.getUnknown());
       curr = (Atom) curr.getNext();
     }
     term.eval(this);
     while (i != 0) {
-      vars.pop();
+      forallVars.removeFirst();
       i--;
     }
     termTypes.put(fall, GType.getUnknown());
@@ -225,10 +249,11 @@ public class TypeChecker extends Evaluator<Boolean> {
       if (id.equals("->")) {
         return "";
       }
-      final GType type = symTypes.get(id);
-      if (type != null) {
-        return "{" + type + "}";
-      }
+
+    }
+    final GType type = termTypes.get(term);
+    if (type != null) {
+      return "{" + type + "}";
     }
     return "";
   }

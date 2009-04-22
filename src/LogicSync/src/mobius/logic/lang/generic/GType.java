@@ -42,25 +42,25 @@ public class GType {
     return get(idx).equals(Unknown);
   }
   
-  public GType unify(int idx, GType t) {
+  public boolean unify(int idx, GType t) {
     if (t.getArity() == 1) {
       if (idx > getArity()) {
-        return null;
+        return false;
       }
       final String target = t.get(0);
       if (get(idx).equals(target)) {
-        return this;
+        return true;
       }
       else if (get(idx).equals(Unknown)) {
         set(idx, target);
-        return this;
+        return true;
       }
       else if (target.equals(Unknown)) {
         t.set(0, get(idx));
-        return this;
+        return true;
       }
     }
-    return null;
+    return false;
   }
   
   

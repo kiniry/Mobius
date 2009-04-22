@@ -72,6 +72,7 @@ public class GenericTranslator extends AEvaluator<String> {
     while (var != null) {
       strVars.append(" ");
       strVars.append(var.eval(this));
+      strVars.append(" " + tc.getType(var));
       var = var.getNext();
     }
     return "(forall" + strVars + ", " + term.eval(this) + ")";
