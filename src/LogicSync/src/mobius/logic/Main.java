@@ -3,6 +3,7 @@ package mobius.logic;
 import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
+import ie.ucd.clops.util.OptionUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,13 +41,8 @@ public class Main {
      "(try java -jar logicsync.jar -help)";
   
   /** the help message used when the argument help is specified. */
-  private static final String HELP_MSG =
-    "Syntax: java -jar logicsync [-h] <files> [-g <file>] [-m <file>]\n" +
-    "-h, -help, --help Show this help message.\n" +
-    "<files>           Input file(s). Determine their type by their extension.\n" +
-    "-g <file>         Generates files. Files will erase the previous version.\n" +
-    "-m <file>         Merge with existing file. " +
-    "If there is no previous version, creates a new file.";
+  private static final String HELP_MSG_START =
+    "Syntax: java -jar logicsync [-h] <files> [-g <file>] [-m <file>]\n";
   
   /** the list of input files. */
   private final List<File> fInput;
@@ -112,7 +108,8 @@ public class Main {
     
     final LogicSyncOptionsInterface opt = parser.getOptionStore();
     if (opt.isHelpSet()) {
-      Logger.err.println(HELP_MSG);
+      Logger.out.println(HELP_MSG_START);
+      OptionUtil.printOptions(Logger.out, parser.getOptionStore().getOptionsWithoutErrorOption(), 80, 2);
       return;
     }
     
@@ -267,3 +264,4 @@ public class Main {
   }
 
 }
+
