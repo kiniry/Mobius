@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="AutoGrader.builder"
+         name="Auto-Grader Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="ie.ucd.autograder.builder.GraderBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="AutoGrader.nature"
+         name="Auto-Grader Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="ie.ucd.autograder.builder.GraderNature">
+         </run>
+      </runtime>
+      <builder
+            id="AutoGrader.builder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject"
+            nameFilter="*"
+            id="MarkerAccessor.contribution1">
+         <action
+               label="Add/Remove Auto-Grader Nature"
+               class="ie.ucd.autograder.builder.ToggleNatureAction"
+               menubarPath="additions"
+               enablesFor="+"
+               id="MarkerAccessor.addRemoveNatureAction">
+         </action>
+      </objectContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="Auto-Grader Preferences"
+            class="ie.ucd.autograder.preferences.AutoGraderPreferencePage"
+            id="markeraccessor.preferences.AutoGraderPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="ie.ucd.autograder.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            objectClass="org.eclipse.core.resources.IFile"
+            name="Sample Page"
+            nameFilter="*.*"
+            class="ie.ucd.autograder.properties.SamplePropertyPage"
+            id="markeraccessor.properties.samplePropertyPage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Sample Category"
+            id="MarkerAccessor">
+      </category>
+      <view
+            name="Auto-Grader View"
+            icon="icons/sample.gif"
+            category="MarkerAccessor"
+            class="ie.ucd.autograder.views.AutoGraderView"
+            id="markeraccessor.views.AutoGraderView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.TaskList"
+               relationship="right"
+               id="markeraccessor.views.AutoGraderView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+
+</plugin>
