@@ -55,10 +55,10 @@ public class TypeChecker extends Evaluator<Boolean> {
       curr = curr.getNext();
       i++;
     }
-//    if (i != type.getArity()) {
-//      System.out.println("Bad arity");
-//      return false;
-//    }
+    if (i + 1 != type.getArity()) {
+      System.out.println("Bad arity");
+      return false;
+    }
     termTypes.put(app, type.getReturn());
     
     return false;
