@@ -1,0 +1,60 @@
+S
+negb: (-> bool bool)
+integralLE: (-> Z (-> Z bool))
+Zeq_bool: (-> Z (-> Z bool))
+\/: (-> Prop (-> Prop Prop))
+<>: (-> S (-> S Prop))
+=: (-> Z (-> Z Prop))
+
+S_to_Z: (-> S Z)
+Z_to_S: (-> Z S)
+Z_to_S_elim: (forall x, (= (S_to_Z (Z_to_S x)) x))
+S_to_bool: (-> S bool)
+select: (-> S (-> S S))
+store: (-> S (-> S (-> S S)))
+arr_store: (-> S (-> Z (-> S S)))
+store_int: (-> S (-> S (-> Z S)))
+arr_store_int: (-> S (-> Z (-> Z S)))
+
+store_bool: (-> S (-> S (-> bool S)))
+arr_store_bool: (-> S (-> Z (-> bool S)))
+null: S
+isAllocated: (-> S (-> S Prop))
+fClosedTime: (-> S S)
+refEQ: (-> S (-> S bool))
+Types
+subtypes: (-> Types (-> Types Prop))
+typeof: (-> S Types)
+lockLT: (-> S (-> S Prop))
+isField: (-> S Prop)
+allocNew_: S
+asField: (-> S (-> Types Prop))
+asElems: (-> S Prop)
+asLockSet: (-> S Prop)
+eClosedTime: (-> S S)
+arrayFresh: (-> S (-> S (-> S (-> S (-> S (-> Types (-> S Prop)))))))
+arrayShapeOne: (-> S S)
+arrayShapeMore: (-> S (-> S S))
+isNewArray: (-> S Prop)
+arrayLength: (-> S S)
+arrayLengthAx: (forall a, (integralLE 0 (S_to_Z (arrayLength a))))
+array_axiom2_2: (forall n e b0 a0 a T v, (-> (arrayFresh a a0 b0 e (arrayShapeOne n) T v) (isAllocated a b0)))
+array_axiom2_3: (forall n e b0 a0 a T v, (-> (arrayFresh a a0 b0 e (arrayShapeOne n) T v) (<> a null)))
+ecReturn: S
+ecThrow: S
+distinctAxiom: (<> ecReturn ecThrow)
+[
+ ** elimAnd
+ elimAnd is used mainly to eliminate and within the hypothesis.
+For the goals the preferred tactic is still split. ]
+
+[
+ ** elimNor
+This tactic is used to remove the not in front of a or (in the hypothesis),
+turning (~ (A \/  B) ) into ((~ A) /\ (~ B)).
+ ]
+
+[
+ ** Cleansing
+To clean up the mess (sometimes). ]
+a_ou_a_donne_a: (forall a, (-> (\/ a a) a))
