@@ -1,12 +1,15 @@
 package mobius.logic.lang.generic;
 
+import java.util.Iterator;
+
 /**
  * Class to represent Generic Types.
  * @author J. Charles (julien.charles@gmail.com)
  */
-public class GType {
+public class GType implements Iterable<GType> {
   /** the symbol representing the unknown type. */
   public static final String Unknown = "[?]";
+  /** the symbol representing the top type. */
   public static final String TopType = "[T]";
   /** the current name of this type. */
   private String name;
@@ -15,18 +18,27 @@ public class GType {
   /** the last element of this type. */
   private GType last;
   
+  public GType(String ...a) {
+    last = this;
+    assert (a.length > 1);
+    name = a[0];
+  }
+
+  public GType(GType t) {
+    this(t.name);
+    addAll(t.next);
+  }
   
   /** {@inheritDoc} */
   public String toString() {
     final StringBuilder blder = new StringBuilder();
-    blder.append(name);
-    GType curr = next;
-    while (curr != null) {
-      blder.append(" -> ");
-      blder.append(curr.name);
-      curr = curr.next;
+    if (next != null) {
+      for (GType curr: next) {
+        blder.append(" -> ");
+        blder.append(curr.name);
+      }
     }
-    return blder.toString();
+    return name + blder.toString();
   }
   
   
@@ -38,25 +50,30 @@ public class GType {
     return name.equals(Unknown);
   }
   
-  public boolean isUnknown(int idx) {
-    return get(idx).equals(Unknown);
-  }
-  
+
   public boolean unify(int idx, GType t) {
     if (t.getArity() == 1) {
       if (idx > getArity()) {
         return false;
       }
-      final String target = t.get(0);
-      if (get(idx).equals(target)) {
+      return get(idx).unifyElem(t);
+    }
+    return false;
+  }
+  
+  
+  public boolean unifyElem(GType t) {
+    if (t.getArity() == 1) {
+      final String target = t.getName();
+      if (name.equals(target)) {
         return true;
       }
-      else if (get(idx).equals(Unknown)) {
-        set(idx, target);
+      else if (name.equals(Unknown)) {
+        set(target);
         return true;
       }
       else if (target.equals(Unknown)) {
-        t.set(0, get(idx));
+        t.set(name);
         return true;
       }
     }
@@ -86,43 +103,29 @@ public class GType {
     return this == last;
   }
   
-  
-  private void set(int idx, String target) {
-    if (idx == 0) {
-      name = target;
-    }
+  private void set(String target) {
+    name = target;
   }
-  
-  
-  private String get(int idx) {
+    
+
+
+  private GType get(int idx) {
     int i = idx;
     GType curr = this;
     while (curr != null && i != 0) {
       i--;
       curr = curr.next;
     }
-    return curr.name;
+    return curr;
   }
   
   public boolean isTopType() {
-    return isTopTypeName() && (next == null);
+    return isElemTopType() && (next == null);
   }
-  public boolean isTopTypeName() {
+  public boolean isElemTopType() {
     return name.equals(TopType);
   }
-  public GType(String ...a) {
-    last = this;
-    assert (a.length > 1);
-    name = a[0];
-    for (int i = 1; i < a.length; i++) {
-      add(a[i]);
-    }
-  }
 
-  public GType(GType t) {
-    this(t.name);
-    addAll(t.next);
-  }
   
   
   public void add(String s) {
@@ -176,11 +179,10 @@ public class GType {
    * @return true if contains [?]
    */
   public boolean hasUnknown() {
-    if (isElemUnknown()) {
-      return true;
-    }
-    if (next != null) {
-      return next.hasUnknown();
+    for (GType t: this) {
+      if (t.isElemUnknown()) {
+        return true;
+      }
     }
     return false;
   }
@@ -188,5 +190,31 @@ public class GType {
 
   public static GType getTopType() {
     return new GType(TopType);
+  }
+
+
+  @Override
+  public Iterator<GType> iterator() {
+    
+    return new Iterator<GType>() {
+      private GType n = GType.this;
+      @Override
+      public boolean hasNext() {
+        return n != null;
+      }
+
+      @Override
+      public GType next() {
+        final GType res = n;
+        n = n.next;
+        return res;
+      }
+
+      @Override
+      public void remove() {
+        n = n.getNext();
+      }
+      
+    };
   }
 }
