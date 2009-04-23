@@ -46,21 +46,35 @@ public enum Grade {
     return percentageLookup;
   }
   
-  public static Grade average(Grade... grades) {
-    return average(Arrays.asList(grades));
+  public static Grade mean(Grade... grades) {
+    return mean(Arrays.asList(grades));
   }
   
-  public static Grade average(Collection<Grade> grades) {
-    return getPercentageLookup().toGrade(averageAsDouble(grades));
+  public static Grade mean(Collection<Grade> grades) {
+    return getPercentageLookup().toGrade(meanAsDouble(grades));
   }
   
-  public static double averageAsDouble(Collection<Grade> grades) {
+  public static double meanAsDouble(Collection<Grade> grades) {
     double denom = grades.size();
     double num = 0;
     for (Grade grade : grades) {
       num += grade.getMark();
     }
     return num / denom;
+  }
+  
+  public static Grade weightedMean(Collection<Pair<Grade,Double>> grades) {
+    return getPercentageLookup().toGrade(weightedMeanAsDouble(grades));
+  }
+  
+  public static double weightedMeanAsDouble(Collection<Pair<Grade,Double>> grades) {
+    double totalWeight = 0;
+    double total = 0;
+    for (Pair<Grade,Double> grade : grades) {
+      totalWeight += grade.getSecond();
+      total += grade.getFirst().getMark() * grade.getSecond();
+    }
+    return total / totalWeight;
   }
 }
 
