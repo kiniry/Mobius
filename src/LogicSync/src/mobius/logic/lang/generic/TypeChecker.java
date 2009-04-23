@@ -188,7 +188,7 @@ public class TypeChecker{
     if (!(term instanceof Application)) {
       if (term instanceof Atom) {
         final Atom at = (Atom) term;
-        if (at.eval(evaluator )) {
+        if (at.eval(evaluator)) {
           return new GType(at.getId());
         }
       }
@@ -217,7 +217,7 @@ public class TypeChecker{
     return type;
   }
 
-  private boolean isImplies(Term first) {
+  private static boolean isImplies(Term first) {
     if (!(first instanceof Atom)) {
       return false;
     }
@@ -269,7 +269,6 @@ public class TypeChecker{
       if (id.equals("->")) {
         return "";
       }
-
     }
     final GType type = termTypes.get(term);
     if (type != null) {
