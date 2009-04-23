@@ -28,6 +28,7 @@ public class TypeChecker extends Evaluator<Boolean> {
   private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
   private final LinkedList<Atom> forallVars = new LinkedList<Atom>();
   private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
+  private HashMap<Term, GType> types = new HashMap<Term, GType>();
   
   
   @Override
@@ -63,8 +64,13 @@ public class TypeChecker extends Evaluator<Boolean> {
     
     return false;
   }
-
-  private GType checkType(final Term term) {
+  public GType checkType(final Term term) {
+    if (!types.containsKey(term)) {
+      types.put(term, checkTypeIntern(term));
+    }
+    return types.get(term);
+  }
+  private GType checkTypeIntern(final Term term) {
     if (!(term instanceof Application)) {
       if (term instanceof Atom) {
         final Atom at = (Atom) term;
