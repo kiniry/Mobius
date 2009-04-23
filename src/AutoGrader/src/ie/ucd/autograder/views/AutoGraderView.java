@@ -2,6 +2,8 @@ package ie.ucd.autograder.views;
 
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -35,6 +37,13 @@ public class AutoGraderView extends ViewPart {
 	private Action action1;
 	private Action action2;
 	private Action doubleClickAction;
+	private int columnNumber;
+	private TableColumn toolNameColumn;
+	private TableColumn ncssColumn;
+	private TableColumn errorColumn;
+	private TableColumn warningsColumn;
+	private TableColumn gradeColumn;
+	private TableColumn iconColumn;
 
 	/*
 	 * The content provider class is responsible for
@@ -52,7 +61,7 @@ public class AutoGraderView extends ViewPart {
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
+			return new String[] { "CheckStyle", "ESCJava2", "FindBugs", "PMD","Eclipse","Average Object","Average Method","Program Total" };
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -86,6 +95,8 @@ public class AutoGraderView extends ViewPart {
 		viewer.setLabelProvider(new ViewLabelProvider());
 		viewer.setSorter(new NameSorter());
 		viewer.setInput(getViewSite());
+		
+		customizeTableColumns(); // MOBIUS specific metrics and grades
 
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "MarkerAccessor.viewer");
@@ -93,6 +104,35 @@ public class AutoGraderView extends ViewPart {
 		hookContextMenu();
 		hookDoubleClickAction();
 		contributeToActionBars();
+	}
+
+	/**
+	 * MOBIUS specific metrics and grades
+	 * 
+	 * @author Dermot Cochran
+	 */
+	protected void customizeTableColumns() {
+		Table table = viewer.getTable();
+	    table.setHeaderVisible(true);
+	    table.setLinesVisible(true);
+	    
+	    toolNameColumn = addColumn("",table,0);
+		ncssColumn = addColumn("NCSS",table,1);
+		errorColumn = addColumn("Errors per 1000 NCSS",table,2);
+		warningsColumn = addColumn("Warnings per 1000 NCSS",table,3);
+		gradeColumn = addColumn("Grade",table,4);
+		iconColumn = addColumn("",table,5);
+	}
+
+	/**
+	 * @param columnName
+	 * @param table 
+	 */
+	protected TableColumn addColumn(String columnName, Table table, int index) {
+		TableColumn column = new TableColumn(table, SWT.ALPHA | SWT.CENTER | SWT.COLOR_TITLE_FOREGROUND | SWT.FULL_SELECTION, index);	       
+		column.setText(columnName);
+	    column.pack();
+	    return column;
 	}
 
 	private void hookContextMenu() {
