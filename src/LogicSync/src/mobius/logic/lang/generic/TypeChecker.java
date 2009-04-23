@@ -20,8 +20,11 @@ import mobius.logic.lang.generic.ast.Term;
 import mobius.util.Logger;
 
 public class TypeChecker{
+  /** types id. */
   private final Set<String> t = new HashSet<String>();
+  /** undeclared symbols. */
   private final Set<String> undeclared = new HashSet<String>();
+  /** formulas. */
   private final Set<String> f = new HashSet<String>();
 
   private final HashMap<String, GType> symTypes = new HashMap<String, GType>();
