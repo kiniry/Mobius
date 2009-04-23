@@ -10,12 +10,13 @@ import java.util.List;
 
 public enum Grade {
 
-  A_PLUS("A+", 90), A("A", 85), A_MINUS("A-", 80),
-  B_PLUS("B+", 75), B("B", 70), B_MINUS("B-", 65),
-  C_PLUS("C+", 60), C("C", 55), C_MINUS("C-", 50),
-  D_PLUS("D+", 45), D("D", 40), D_MINUS("D-", 35),
-  E_PLUS("E+", 30), E("E", 25), E_MINUS("E-", 20),
-  F("F", 10), NG("NG", 0);
+  A_PLUS("A+", 78.33), A("A", 75), A_MINUS("A-", 71.66),
+  B_PLUS("B+", 68.33), B("B", 65), B_MINUS("B-", 61.66),
+  C_PLUS("C+", 58.33), C("C", 55), C_MINUS("C-", 51.66),
+  D_PLUS("D+", 48.33), D("D", 45), D_MINUS("D-", 41.66),
+  E_PLUS("E+", 38.33), E("E", 35), E_MINUS("E-", 31.66),
+  F_PLUS("F+", 28.33), F("F", 25), F_MINUS("F-", 21.66),
+  G("G", 0.03), NG("NG", 0);
   
   private final String grade;
   private final double mark;
