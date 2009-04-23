@@ -7,7 +7,7 @@ package mobius.logic.lang.generic;
 public class GType {
   /** the symbol representing the unknown type. */
   private static final String Unknown = "[?]";
-  
+  public static final GType Type = new GType("[T]");
   /** the current name of this type. */
   private String name;
   /** the next type element. */

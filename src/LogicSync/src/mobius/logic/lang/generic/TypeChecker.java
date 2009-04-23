@@ -19,50 +19,164 @@ import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
 import mobius.util.Logger;
 
-public class TypeChecker extends Evaluator<Boolean> {
+public class TypeChecker{
   private final Set<String> t = new HashSet<String>();
   private final Set<String> undeclared = new HashSet<String>();
   private final Set<String> f = new HashSet<String>();
-  private final GType Type = new GType("[T]");
+
   private final HashMap<String, GType> symTypes = new HashMap<String, GType>();
   private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
-  private final LinkedList<Atom> forallVars = new LinkedList<Atom>();
+
   private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
   private HashMap<Term, GType> types = new HashMap<Term, GType>();
+  private MyEvaluator evaluator = new MyEvaluator();
+  private GenericAst ast;
   
-  
-  @Override
-  public Boolean eval(Application app, Term next, Term first) {
-    first.eval(this);
-    if (!(first instanceof Atom)) {
-      Logger.err.println("I am suspicious about: " + first);
-   
-    }
-    GType type = termTypes.get(first);
+  private class MyEvaluator extends Evaluator<Boolean> { 
     
-    if (type.isUnknown()) {
-      type.setArity(getArity(app));
+    private final LinkedList<Atom> forallVars = new LinkedList<Atom>();
+    private Term getForallFirst(String id) {
+      for (Atom at: forallVars) {
+        if (at.getId().equals(id)) {
+          return at;
+        }
+      }
+      return null;
     }
-    Term curr = first.getNext();
-    int i = 0;
-    while (curr != null) {
-      curr.eval(this);
-      //System.out.println(curr);
-      if (!type.unify(i, termTypes.get(curr))) {
-        System.out.println("Failed to unify " + first + "(" + i +"): " + type + 
-                           curr + ": " + termTypes.get(curr));
+    
+    @Override
+    public Boolean eval(Application app, Term next, Term first) {
+      first.eval(this);
+      if (!(first instanceof Atom)) {
+        Logger.err.println("I am suspicious about: " + first);
+     
+      }
+      GType type = termTypes.get(first);
+      
+      if (type.isUnknown()) {
+        type.setArity(getArity(app));
+      }
+      Term curr = first.getNext();
+      int i = 0;
+      while (curr != null) {
+        curr.eval(this);
+        //System.out.println(curr);
+        if (!type.unify(i, termTypes.get(curr))) {
+          System.out.println("Failed to unify " + first + "(" + i +"): " + type + 
+                             curr + ": " + termTypes.get(curr));
+          return false;
+        }
+        curr = curr.getNext();
+        i++;
+      }
+      if (i + 1 != type.getArity()) {
+        System.out.println("Bad arity");
         return false;
       }
-      curr = curr.getNext();
-      i++;
-    }
-    if (i + 1 != type.getArity()) {
-      System.out.println("Bad arity");
+      termTypes.put(app, type.getReturn());
+      
       return false;
     }
-    termTypes.put(app, type.getReturn());
-    
-    return false;
+    @Override
+    public Boolean eval(Atom at, Term next, String id) {
+      if (f.contains(id)) {
+        Logger.err.println(id + " is being used strange...");
+        return false;
+      }
+      else {
+        Term orig = getForallFirst(id);
+        if (orig != null) {
+          
+          termTypes.put(at, termTypes.get(orig));
+          return true;
+        }
+        if (t.contains(id)) {
+          termTypes.put(at, symTypes.get(id));
+          return true;
+        }
+        symTypes.put(id, GType.getUnknown());
+        termTypes.put(at, symTypes.get(id));
+        undeclared.add(id);
+        return true;
+      }
+      
+    }
+    @Override
+    public Boolean eval(ClauseList cl, final LinkedList<GenericAst> list) {
+      for (GenericAst c: list) {
+        
+        final Boolean res = c.eval(this);
+        if (res == null) {
+          continue;
+        }
+        if (!res) {
+          return false;
+          // failed to typecheck
+        }
+      }
+      
+      // now we check that we don't have question mark type
+      for (Entry<String, GType> e: symTypes.entrySet()) {
+        if (e.getKey().equals("->") || e.getValue().getArity() == 1) {
+          continue;
+        }
+        if (e.getValue().hasUnknown()) {
+          
+          unknownTypes.add(e);
+        }
+      }
+      return unknownTypes.size() == 0;
+    }
+
+
+    @Override
+    public Boolean eval(Forall fall, Term next, 
+                        Atom varlist, Term term) {
+      Atom curr = varlist;
+      int i = 0;
+      while (curr != null) {
+        i++;
+        forallVars.addFirst(curr);
+        termTypes.put(curr, GType.getUnknown());
+        curr = (Atom) curr.getNext();
+      }
+      term.eval(this);
+      while (i != 0) {
+        forallVars.removeFirst();
+        i--;
+      }
+      termTypes.put(fall, GType.getUnknown());
+      return false;
+    }
+
+    @Override
+    public Boolean eval(Formula formula, String id, Term term) {
+      final GType typ = checkType(term);
+      if (typ != null) {
+        t.add(id);
+        symTypes.put(id, typ);
+      }
+      else {
+        f.add(id);
+      }
+      term.eval(this);
+      return true;
+    }
+
+    @Override
+    public Boolean eval(Symbol s, final String id) {
+      if (t.contains(id)) {
+        Logger.err.println(id + " is already defined!");
+        return false;
+      }
+      t.add(id);
+      symTypes.put(id, GType.Type);
+      return true;
+    }
+
+  }
+  public TypeChecker(GenericAst ast) {
+    this.ast = ast;
   }
   public GType checkType(final Term term) {
     if (!types.containsKey(term)) {
@@ -74,7 +188,7 @@ public class TypeChecker extends Evaluator<Boolean> {
     if (!(term instanceof Application)) {
       if (term instanceof Atom) {
         final Atom at = (Atom) term;
-        if (at.eval(this)) {
+        if (at.eval(evaluator )) {
           return new GType(at.getId());
         }
       }
@@ -111,10 +225,10 @@ public class TypeChecker extends Evaluator<Boolean> {
     return imp.getId().equals("->");
   }
 
-  private boolean checkArity(Application app, int arity) {
+  private static boolean checkArity(Application app, int arity) {
     return getArity(app) == arity;
   }
-  private int getArity(Application app) {
+  private static int getArity(Application app) {
     Term curr = app.getFirst();
     int cnt = 0;
     while (curr != null) {
@@ -123,117 +237,13 @@ public class TypeChecker extends Evaluator<Boolean> {
     }
     return cnt;
   }
-  @Override
-  public Boolean eval(Atom at, Term next, String id) {
-    if (f.contains(id)) {
-      Logger.err.println(id + " is being used strange...");
-      return false;
-    }
-    else {
-      Term orig = getForallFirst(id);
-      if (orig != null) {
-        
-        termTypes.put(at, termTypes.get(orig));
-        return true;
-      }
-      if (t.contains(id)) {
-        termTypes.put(at, symTypes.get(id));
-        return true;
-      }
-      symTypes.put(id, GType.getUnknown());
-      termTypes.put(at, symTypes.get(id));
-      undeclared.add(id);
-      return true;
-    }
-    
-  }
-
-  private Term getForallFirst(String id) {
-    for (Atom at: forallVars) {
-      if (at.getId().equals(id)) {
-        return at;
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public Boolean eval(ClauseList cl, final LinkedList<GenericAst> list) {
-    for (GenericAst c: list) {
-      
-      final Boolean res = c.eval(this);
-      if (res == null) {
-        continue;
-      }
-      if (!res) {
-        return false;
-        // failed to typecheck
-      }
-    }
-    
-    // now we check that we don't have question mark type
-    for (Entry<String, GType> e: symTypes.entrySet()) {
-      if (e.getKey().equals("->") || e.getValue().getArity() == 1) {
-        continue;
-      }
-      if (e.getValue().hasUnknown()) {
-        
-        unknownTypes.add(e);
-      }
-    }
-    return unknownTypes.size() == 0;
-  }
+ 
 
 
-  @Override
-  public Boolean eval(Forall fall, Term next, 
-                      Atom varlist, Term term) {
-    Atom curr = varlist;
-    int i = 0;
-    while (curr != null) {
-      i++;
-      forallVars.addFirst(curr);
-      termTypes.put(curr, GType.getUnknown());
-      curr = (Atom) curr.getNext();
-    }
-    term.eval(this);
-    while (i != 0) {
-      forallVars.removeFirst();
-      i--;
-    }
-    termTypes.put(fall, GType.getUnknown());
-    return false;
-  }
 
-  @Override
-  public Boolean eval(Formula formula, String id, Term term) {
-    final GType typ = checkType(term);
-    if (typ != null) {
-      t.add(id);
-      symTypes.put(id, typ);
-    }
-    else {
-      f.add(id);
-    }
-    term.eval(this);
-    return true;
-  }
-
-  @Override
-  public Boolean eval(Symbol s, final String id) {
-    if (t.contains(id)) {
-      Logger.err.println(id + " is already defined!");
-      return false;
-    }
-    t.add(id);
-    symTypes.put(id, Type);
-    return true;
-  }
-
-  public static List<Entry<String, GType>> check(GenericAst ast) {
-    final TypeChecker tc = new TypeChecker();
-    ast.eval(tc);
-    return tc.unknownTypes;
+ 
+  public boolean check() {
+    return ast.eval(evaluator);
   }
 
   public void printDetailedResults() {
@@ -248,7 +258,11 @@ public class TypeChecker extends Evaluator<Boolean> {
     Logger.out.println("Types: " + symTypes);
   }
   
-  
+  /**
+   * Returns a string representing the given type.
+   * @param term
+   * @return
+   */
   public String getType(Term term) {
     if (term instanceof Atom) {
       final String id = ((Atom) term).getId();
@@ -263,5 +277,7 @@ public class TypeChecker extends Evaluator<Boolean> {
     }
     return "";
   }
+  
+  
   
 }

@@ -210,10 +210,10 @@ public class Main {
     
     final GenericAst ast = fInputLanguages.iterator().next().extractGenericAst();
 
-    final TypeChecker tc = new TypeChecker();
+    final TypeChecker tc = new TypeChecker(ast);
 
     Logger.out.print("TypeChecking...");
-    if (ast.eval(tc)) {
+    if (tc.check()) {
       Logger.out.println(" done.");
     }
     else {
