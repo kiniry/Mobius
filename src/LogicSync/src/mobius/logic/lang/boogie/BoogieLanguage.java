@@ -20,16 +20,21 @@ import mobius.logic.lang.generic.ast.TypeCheckedAst;
  * @author rgrig@
  */
 public class BoogieLanguage extends ABasicLanguage {
+  private BoogieOfGeneric boogie;
+
   /** {@inheritDoc} */
   @Override public boolean isLanguageFile(final File f) {
     return f.getName().endsWith(".bpl");
   }
 
-  /** Does nothing. */
-  @Override public void prepare() { }
+  /** Initialize. */
+  @Override public void prepare() {
+    boogie = new BoogieOfGeneric();
+  }
 
   /** {@inheritDoc} */
   @Override public void generateFrom(final TypeCheckedAst ast) {
+    Declaration boogieAst = boogie.getFrom(ast);
     assert false : "todo";
   }
 

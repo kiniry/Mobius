@@ -73,6 +73,18 @@ public class GType {
     }
     return i;
   }
+
+  public GType getNext() {
+    return next;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public boolean isLast() {
+    return this == last;
+  }
   
   
   private void set(int idx, String target) {
@@ -92,7 +104,12 @@ public class GType {
     return curr.name;
   }
   
-  
+  public boolean isTopType() {
+    return isTopTypeName() && (next == null);
+  }
+  public boolean isTopTypeName() {
+    return name.equals(TopType);
+  }
   public GType(String ...a) {
     last = this;
     assert (a.length > 1);

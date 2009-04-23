@@ -1,8 +1,8 @@
 /*
  negb <-> !
- integralLE <-> <
+ integralLE <--> <
  Zeq_bool -> ==
- = -> ==
+ = --> ==
  \/ -> ||   (*)
  bor -> ||
 
