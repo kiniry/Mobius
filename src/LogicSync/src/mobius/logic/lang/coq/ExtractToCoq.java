@@ -49,19 +49,10 @@ public class ExtractToCoq extends ACleanEvaluator<CoqAst> {
   
   
   @Override
-  public CoqAst evalFormula(final String id, final Term term) {
+  public CoqAst evalClause(final String id, final Term term) {
     return mkVariable(id, (Formula) term.eval(this));
   }
 
-  /**
-   * Creates a Variable of type Set with the name id.
-   * @param id the name of the variable
-   * @return a variable
-   */
-  @Override
-  public CoqAst evalSymbol(final String id) {
-    return mkVariable(id, mkCTerm("Set"));
-  }
 
   private static CoqAst mkVariable(final String id, final Formula type) {
     return Axiom.mk(AxiomType.Variable, id, type); 

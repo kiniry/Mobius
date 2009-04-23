@@ -6,8 +6,8 @@ package mobius.logic.lang.generic;
  */
 public class GType {
   /** the symbol representing the unknown type. */
-  private static final String Unknown = "[?]";
-  public static final GType Type = new GType("[T]");
+  public static final String Unknown = "[?]";
+  public static final String TopType = "[T]";
   /** the current name of this type. */
   private String name;
   /** the next type element. */
@@ -166,5 +166,10 @@ public class GType {
       return next.hasUnknown();
     }
     return false;
+  }
+
+
+  public static GType getTopType() {
+    return new GType(TopType);
   }
 }

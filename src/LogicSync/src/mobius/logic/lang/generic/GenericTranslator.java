@@ -79,15 +79,11 @@ public class GenericTranslator extends AEvaluator<String> {
   }
 
   @Override
-  public String evalFormula(final String id, final Term term) {
+  public String evalClause(final String id, final Term term) {
     return id + ": " + term.eval(this);
   }
 
 
-  @Override
-  public String evalSymbol(final String id) {
-    return id;
-  }
 
   /** {@inheritDoc} */
   @Override

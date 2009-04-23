@@ -5,6 +5,7 @@ grammar Generic;
 package mobius.logic.lang.generic.parser; 
 
 import mobius.logic.lang.generic.ast.*;
+import mobius.logic.lang.generic.*;
 import java.util.LinkedList;
 }
 
@@ -24,13 +25,13 @@ clause_list returns [ClauseList list]:
                                   $list.getList().addFirst($clause.c);}
            |{$list = ClauseList.mk(new LinkedList<GenericAst>());};
 
-clause returns [Clause c]: 
+clause returns [GenericAst c]: 
         DOC
         {$c = Doc.mk($DOC.text);} 
       | ATOM COLON expr // formula
-        {$c = Formula.mk($ATOM.text, $expr.t);}
+        {$c = Clause.mk($ATOM.text, $expr.t);}
       | ATOM // symbol def
-        {$c = Symbol.mk($ATOM.text);}
+        {$c = Clause.mk($ATOM.text, Atom.mk(null, GType.TopType));}
       ;
       
 expr returns [Term t]: 

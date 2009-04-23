@@ -62,16 +62,7 @@ public class GenericToNLTranslator extends AEvaluator<NLAst> {
   }
 
   @Override
-  public NLAst evalFormula(String id, Term term) {
-    if (lastClauseWasADoc) {
-      items.add(Item.mk(id, lastDoc));
-    }
-    lastClauseWasADoc = false;
-    return null;
-  }
-  
-  @Override
-  public NLAst evalSymbol(String id) {
+  public NLAst evalClause(String id, Term term) {
     if (lastClauseWasADoc) {
       items.add(Item.mk(id, lastDoc));
     }

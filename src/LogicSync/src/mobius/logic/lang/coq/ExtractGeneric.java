@@ -13,11 +13,12 @@ import mobius.logic.lang.coq.ast.HintType;
 import mobius.logic.lang.coq.ast.ReqType;
 import mobius.logic.lang.coq.ast.Variable;
 import mobius.logic.lang.coq.ast.VariableList;
+import mobius.logic.lang.generic.GType;
 import mobius.logic.lang.generic.ast.Application;
 import mobius.logic.lang.generic.ast.Atom;
+import mobius.logic.lang.generic.ast.Clause;
 import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.GenericAst;
-import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
 
 public class ExtractGeneric extends ACleanEvaluator<GenericAst> {
@@ -72,7 +73,7 @@ public class ExtractGeneric extends ACleanEvaluator<GenericAst> {
         final mobius.logic.lang.coq.ast.Term t = 
           (mobius.logic.lang.coq.ast.Term) formula;
         if (t.getName().equals("Set")) {
-          return Symbol.mk(name);
+          return Clause.mk(name, Atom.mk(null, GType.TopType));
         }
       }
     }
@@ -158,8 +159,7 @@ public class ExtractGeneric extends ACleanEvaluator<GenericAst> {
                               final Formula formula, 
                               final String proof) {
     final Term t = (Term) formula.eval(this);
-    final mobius.logic.lang.generic.ast.Formula f = 
-      mobius.logic.lang.generic.ast.Formula.mk(name, t);
+    final Clause f = Clause.mk(name, t);
     return f;
   }
 

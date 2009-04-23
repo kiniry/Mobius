@@ -35,6 +35,7 @@ import freeboogie.ast.TypeDecl;
 import freeboogie.ast.UnaryOp;
 import freeboogie.ast.UserType;
 import freeboogie.ast.VariableDecl;
+import mobius.logic.lang.generic.ast.Clause;
 import mobius.logic.lang.generic.ast.GenericAst;
 //}}}
 
@@ -226,7 +227,7 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Expr expr, 
     final Declaration tail
   ) {
-    fResult.add(mobius.logic.lang.generic.ast.Formula.mk(
+    fResult.add(Clause.mk(
       freshAxiomName(),
       (mobius.logic.lang.generic.ast.Term)expr.eval(this)));
     if (tail != null) { tail.eval(this); }
@@ -258,7 +259,7 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final boolean uniq, 
     final Declaration tail
   ) {
-    fResult.add(mobius.logic.lang.generic.ast.Formula.mk(
+    fResult.add(Clause.mk(
       id,
       (mobius.logic.lang.generic.ast.Term)type.eval(this)));
     if (tail != null) { tail.eval(this); }

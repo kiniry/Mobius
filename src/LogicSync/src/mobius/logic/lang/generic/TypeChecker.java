@@ -10,12 +10,11 @@ import java.util.Map.Entry;
 
 import mobius.logic.lang.generic.ast.Application;
 import mobius.logic.lang.generic.ast.Atom;
+import mobius.logic.lang.generic.ast.Clause;
 import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.Evaluator;
 import mobius.logic.lang.generic.ast.Forall;
-import mobius.logic.lang.generic.ast.Formula;
 import mobius.logic.lang.generic.ast.GenericAst;
-import mobius.logic.lang.generic.ast.Symbol;
 import mobius.logic.lang.generic.ast.Term;
 import mobius.util.Logger;
 
@@ -32,8 +31,8 @@ public class TypeChecker{
 
   private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
   private HashMap<Term, GType> types = new HashMap<Term, GType>();
-  private MyEvaluator evaluator = new MyEvaluator();
-  private GenericAst ast;
+  private final MyEvaluator evaluator = new MyEvaluator();
+  private final GenericAst ast;
   
   private class MyEvaluator extends Evaluator<Boolean> { 
     
@@ -153,7 +152,7 @@ public class TypeChecker{
     }
 
     @Override
-    public Boolean eval(Formula formula, String id, Term term) {
+    public Boolean eval(Clause formula, String id, Term term) {
       final GType typ = checkType(term);
       if (typ != null) {
         t.add(id);
@@ -165,20 +164,9 @@ public class TypeChecker{
       term.eval(this);
       return true;
     }
-
-    @Override
-    public Boolean eval(Symbol s, final String id) {
-      if (t.contains(id)) {
-        Logger.err.println(id + " is already defined!");
-        return false;
-      }
-      t.add(id);
-      symTypes.put(id, GType.Type);
-      return true;
-    }
-
   }
-  public TypeChecker(GenericAst ast) {
+  
+  public TypeChecker(final GenericAst ast) {
     this.ast = ast;
   }
   public GType checkType(final Term term) {
@@ -279,7 +267,5 @@ public class TypeChecker{
     }
     return "";
   }
-  
-  
   
 }

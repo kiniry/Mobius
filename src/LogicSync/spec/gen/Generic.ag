@@ -1,9 +1,7 @@
 ClauseList = LinkedList<GenericAst> list;
 
-Clause :> Doc, Formula, Symbol;
 Doc = String! content;
-Formula = String! id, Term! term;
-Symbol = String! id;
+Clause = String! id, Term! term;
 
 Term :> Application, Atom, Forall;
 Term = Term next;

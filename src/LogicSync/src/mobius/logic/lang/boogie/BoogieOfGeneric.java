@@ -92,18 +92,11 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
 
   /** {@inheritDoc} */
   @Override
-  public Ast evalFormula(final String id, final Term term) {
+  public Ast evalClause(final String id, final Term term) {
     // if special, don't process
     // ask typechecker if it's a function
       // translate to function
       // translate to axiom
-    assert false : "not implemented";
-    return null;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Ast evalSymbol(final String id) {
     assert false : "not implemented";
     return null;
   }
