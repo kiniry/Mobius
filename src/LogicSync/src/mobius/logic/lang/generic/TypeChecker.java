@@ -56,7 +56,7 @@ public class TypeChecker{
       GType type = termTypes.get(first);
       
       if (type.isUnknown()) {
-        type.setArity(getArity(app));
+        type.setArity(GenericUtil.getArity(app));
       }
       Term curr = first.getNext();
       int i = 0;
@@ -164,73 +164,54 @@ public class TypeChecker{
       term.eval(this);
       return true;
     }
+    private GType checkType(final Term term) {
+      if (!types.containsKey(term)) {
+        types.put(term, checkTypeIntern(term));
+      }
+      return types.get(term);
+    }
+    private GType checkTypeIntern(final Term term) {
+      if (!(term instanceof Application)) {
+        if (term instanceof Atom) {
+          final Atom at = (Atom) term;
+          if (at.eval(evaluator)) {
+            return new GType(at.getId());
+          }
+        }
+        return null;
+      }
+      final Application app = (Application) term;
+      if (!GenericUtil.checkArity(app, 3)) {
+        return null;
+      }
+      final Term first = app.getFirst();
+      final Term snd = first.getNext();
+      final Term thrd = snd.getNext();
+      if (!(GenericUtil.isImplies(first)) ||
+          !(snd instanceof Atom) ||
+          !((thrd instanceof Application) ||
+              (thrd instanceof Atom))) {
+        return null;
+      }
+
+      final GType type = checkType(snd);
+      final GType rest = checkType(thrd);
+      if (type == null || rest == null) {
+        return null;
+      }
+      type.addAll(rest);
+      return type;
+    }
   }
   
   public TypeChecker(final GenericAst ast) {
     this.ast = ast;
   }
-  public GType checkType(final Term term) {
-    if (!types.containsKey(term)) {
-      types.put(term, checkTypeIntern(term));
-    }
-    return types.get(term);
-  }
-  private GType checkTypeIntern(final Term term) {
-    if (!(term instanceof Application)) {
-      if (term instanceof Atom) {
-        final Atom at = (Atom) term;
-        if (at.eval(evaluator)) {
-          return new GType(at.getId());
-        }
-      }
-      return null;
-    }
-    final Application app = (Application) term;
-    if (!checkArity(app, 3)) {
-      return null;
-    }
-    final Term first = app.getFirst();
-    final Term snd = first.getNext();
-    final Term thrd = snd.getNext();
-    if (!(isImplies(first)) ||
-        !(snd instanceof Atom) ||
-        !((thrd instanceof Application) ||
-            (thrd instanceof Atom))) {
-      return null;
-    }
-
-    final GType type = checkType(snd);
-    final GType rest = checkType(thrd);
-    if (type == null || rest == null) {
-      return null;
-    }
-    type.addAll(rest);
-    return type;
-  }
-
-  private static boolean isImplies(Term first) {
-    if (!(first instanceof Atom)) {
-      return false;
-    }
-    final Atom imp = (Atom) first;
-    return imp.getId().equals("->");
-  }
-
-  private static boolean checkArity(Application app, int arity) {
-    return getArity(app) == arity;
-  }
-  private static int getArity(Application app) {
-    Term curr = app.getFirst();
-    int cnt = 0;
-    while (curr != null) {
-      cnt++;
-      curr = curr.getNext();
-    }
-    return cnt;
+  
+  public GType getType(String id) {
+    return symTypes.get(id);
   }
  
-
-
 
  
   public boolean check() {
