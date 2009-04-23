@@ -1,17 +1,44 @@
 package ie.ucd.autograder.views;
 
 
+import ie.ucd.autograder.grading.GradeStore;
+import ie.ucd.autograder.grading.InputData;
+
+import java.util.List;
+
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.SWT;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.ViewPart;
 
 
 /**
@@ -72,8 +99,7 @@ public class AutoGraderView extends ViewPart {
 			return getImage(obj);
 		}
 		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().
-					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
 		}
 	}
 	class NameSorter extends ViewerSorter {
@@ -83,11 +109,47 @@ public class AutoGraderView extends ViewPart {
 	 * The constructor.
 	 */
 	public AutoGraderView() {
+	  //Register this view to receive selection changes.
+	  ISelectionService service = getSite().getWorkbenchWindow().getSelectionService();
+	  service.addSelectionListener(new ISelectionListener() {
+      public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+        updateView(selection);
+      }
+	  });
+	}
+	
+	private void updateView(ISelection selection) {
+	  Object actual = selection;
+	  //Get the first element if more than one are selected.
+	  if (selection instanceof IStructuredSelection) {
+	    actual = ((IStructuredSelection)selection).getFirstElement();
+	  }
+	  
+	  if (actual instanceof IResource) {
+	    updateSelectedProject(((IResource)selection).getProject());
+	  }
+	}
+	
+	private void updateSelectedProject(IProject project) {
+	  List<InputData> projectData = GradeStore.getInstance().getDataForProject(project);
+	  if (projectData == null) {
+	    displayNoProjectData(project.getName());
+	  } else {
+	    displayData(project.getName(), projectData);
+	  }
+	}
+	
+	private void displayNoProjectData(String name) {
+    // TODO Clear all data, and display "No Auto-Grader data for project " + name, or similar.
+  }
+
+  private void displayData(String projectName, List<InputData> projectData) {
+	  // TODO display items.
 	}
 
 	/**
 	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
+	 * to create the viewer and initialise it.
 	 */
 	public void createPartControl(Composite parent) {
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -180,8 +242,7 @@ public class AutoGraderView extends ViewPart {
 		};
 		action1.setText("Action 1");
 		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		
 		action2 = new Action() {
 			public void run() {
@@ -190,8 +251,7 @@ public class AutoGraderView extends ViewPart {
 		};
 		action2.setText("Action 2");
 		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
@@ -209,10 +269,7 @@ public class AutoGraderView extends ViewPart {
 		});
 	}
 	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"Auto-Grader View",
-			message);
+		MessageDialog.openInformation(viewer.getControl().getShell(),"Auto-Grader View",message);
 	}
 
 	/**

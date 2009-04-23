@@ -1,12 +1,12 @@
 package ie.ucd.autograder.grading;
 
-import ie.ucd.autograder.util.Pair;
+import ie.ucd.autograder.util.Pair.GradeWeightPair;
+import ie.ucd.autograder.util.Pair.MarkGradePair;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
 
 public enum Grade {
 
@@ -36,11 +36,11 @@ public enum Grade {
   
   //Lookup for converting a percentage back to a grade
   private static GradeLookupTable percentageLookup = null;
-  private static GradeLookupTable getPercentageLookup() {
+  public static GradeLookupTable getPercentageLookup() {
     if (percentageLookup == null) {
-      List<Pair<Double,Grade>> list = new ArrayList<Pair<Double,Grade>>(values().length);
+      List<MarkGradePair> list = new ArrayList<MarkGradePair>(values().length);
       for (Grade grade : values()) {
-        list.add(new Pair<Double,Grade>(grade.getMark(), grade));
+        list.add(new MarkGradePair(grade.getMark(), grade));
       }
     }
     return percentageLookup;
@@ -63,14 +63,18 @@ public enum Grade {
     return num / denom;
   }
   
-  public static Grade weightedMean(Collection<Pair<Grade,Double>> grades) {
+  public static Grade weightedMean(GradeWeightPair... grades) {
+    return weightedMean(Arrays.asList(grades));
+  }
+  
+  public static Grade weightedMean(Collection<GradeWeightPair> grades) {
     return getPercentageLookup().toGrade(weightedMeanAsDouble(grades));
   }
   
-  public static double weightedMeanAsDouble(Collection<Pair<Grade,Double>> grades) {
+  public static double weightedMeanAsDouble(Collection<GradeWeightPair> grades) {
     double totalWeight = 0;
     double total = 0;
-    for (Pair<Grade,Double> grade : grades) {
+    for (GradeWeightPair grade : grades) {
       totalWeight += grade.getSecond();
       total += grade.getFirst().getMark() * grade.getSecond();
     }
