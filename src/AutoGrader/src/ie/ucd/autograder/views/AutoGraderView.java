@@ -64,13 +64,13 @@ public class AutoGraderView extends ViewPart {
 	private Action action1;
 	private Action action2;
 	private Action doubleClickAction;
-	private int columnNumber;
-	private TableColumn toolNameColumn;
-	private TableColumn ncssColumn;
-	private TableColumn errorColumn;
-	private TableColumn warningsColumn;
+	
+	// Columns used for MOBIUS grading
+	private TableColumn metricTypeColumn;
+	private TableColumn metricValueColumn;
+	private TableColumn visualColumn;
+	private TableColumn visualMarkerColumn;
 	private TableColumn gradeColumn;
-	private TableColumn iconColumn;
 
 	/*
 	 * The content provider class is responsible for
@@ -88,7 +88,11 @@ public class AutoGraderView extends ViewPart {
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return new String[] { "CheckStyle", "ESCJava2", "FindBugs", "PMD","Eclipse","Average Object","Average Method","Program Total" };
+			// MOBIUS Grading Metrics
+			return new String[] { "Average Object NCSS", "Average Object Functions", "Average Object Inner Classes", 
+					"Average Object Javadoc Comments","Program NCSS","Average Function NCSS","Average Function CCN",
+					"Average Function JVDC","FindBugs Warnings per 1000 NCSS","PMD errors pers 1000 NCSS",
+					"PMD warnings per 1000 NCSS"};
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -178,12 +182,10 @@ public class AutoGraderView extends ViewPart {
 	    table.setHeaderVisible(true);
 	    table.setLinesVisible(true);
 	    
-	    toolNameColumn = addColumn("",table,0);
-		ncssColumn = addColumn("NCSS",table,1);
-		errorColumn = addColumn("Errors per 1000 NCSS",table,2);
-		warningsColumn = addColumn("Warnings per 1000 NCSS",table,3);
-		gradeColumn = addColumn("Grade",table,4);
-		iconColumn = addColumn("",table,5);
+	    metricTypeColumn = addColumn("Metric",table,0);
+		metricValueColumn = addColumn("Value",table,1);
+		gradeColumn = addColumn("Grade",table,2);
+		visualMarkerColumn = addColumn("",table,3);
 	}
 
 	/**
