@@ -1,0 +1,170 @@
+<extension
+         id="coremetrics"
+         name="Core Metrics"
+         point="net.sourceforge.metrics.metrics">
+         <!--
+      <metric
+            name="Lines of Code"
+            id="LOC"
+            level="method">
+         <range
+               max="50"
+               hint="use Extract-method to split the method up">
+         </range>
+      </metric>
+      -->
+      <metric
+            propagateSum="false"
+            name="McCabe Cyclomatic Complexity"
+            id="VG"
+            level="method">
+         <range
+               max="10"
+               hint="use Extract-method to split the method up">
+         </range>
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Number of Parameters"
+            id="PAR"
+            level="method">
+         <range
+               max="5"
+               hint="Move invoked method or pass an object">
+         </range>
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Nested Block Depth"
+            id="NBD"
+            level="method">
+         <range
+               max="5"
+               hint="use Extract-method to split the method up">
+         </range>
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Afferent Coupling"
+            id="CA"
+            level="packageFragment">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Efferent Coupling"
+            id="CE"
+            level="packageFragment">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Instability"
+            requires="CE,CA"
+            id="RMI"
+            level="packageFragment">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Abstractness"
+            id="RMA"
+            level="packageFragment">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Normalized Distance"
+            requires="RMA,RMI"
+            id="RMD"
+            level="packageFragment">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Depth of Inheritance Tree"
+            id="DIT"
+            level="type">
+      </metric>
+      <!--
+      <metric
+            sumOf="LOC"
+            name="Lines of Code"
+            requires="LOC"
+            id="LOCC"
+            level="type">
+         <range
+               max="750"
+               hint="Split up the class and use delegation">
+         </range>
+      </metric>
+      -->
+      <metric
+            sumOf="VG"
+            name="Weighted methods per Class"
+            requires="VG"
+            id="WMC"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Children"
+            id="NSC"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Overridden Methods"
+            id="NORM"
+            level="type">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Lack of Cohesion of Methods"
+            id="LCOM"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Attributes"
+            id="NOF"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Static Attributes"
+            id="NSF"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Methods"
+            id="NOM"
+            level="type">
+      </metric>
+      <metric
+            name="Number of Static Methods"
+            id="NSM"
+            level="type">
+      </metric>
+      <metric
+            propagateSum="false"
+            name="Specialization Index"
+            requires="NOM,NORM,DIT"
+            id="SIX"
+            level="type">
+      </metric>
+      <metric
+            allowDisable="false"
+            name="Number of Classes"
+            propagateAvg="false"
+            newAvgMaxAt="packageFragmentRoot"
+            propagateMax="false"
+            id="NOC"
+            level="compilationUnit">
+      </metric>
+      <metric
+            allowDisable="false"
+            name="Number of Interfaces"
+            propagateAvg="false"
+            newAvgMaxAt="packageFragmentRoot"
+            propagateMax="false"
+            id="NOI"
+            level="compilationUnit">
+      </metric>
+      <metric
+            allowDisable="false"
+            name="Number of Packages"
+            id="NOP"
+            level="packageFragmentRoot">
+      </metric>

@@ -17,8 +17,7 @@ public class ESCJava2MarkerCollector extends MarkerCollector {
   
   @Override
   public Collection<String> getTypes() {
-    // TODO Auto-generated method stub
-    return null;
+    return types;
   }
 
 }
