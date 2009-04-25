@@ -106,7 +106,6 @@ public abstract class MarkerCollector {
   }
   
   public AggregateData getAggregateData(double kloc) {
-    
     AggregateData data = new AggregateData(getDataName());
     
     InputDataDivKLOC errorData = new InputDataDivKLOC("Errors per KLOC", getErrorsLookup());

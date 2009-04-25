@@ -102,6 +102,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     projectData.add(metrics);
     
     double tloc = metrics.getTLOC();
+    tloc = tloc == 0 ? 1 : tloc;
     double kloc = tloc / 1000d;
     for (MarkerCollector collector : collectors) {
       projectData.add(collector.getAggregateData(kloc));
