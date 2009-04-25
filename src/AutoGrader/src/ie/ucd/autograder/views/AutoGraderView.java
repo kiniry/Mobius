@@ -64,7 +64,7 @@ public class AutoGraderView extends ViewPart {
   }
 
   private void updateSelectedProject(IProject project) {
-    List<AggregateData> projectData = DataStore.getInstance(project).getDataForProject(project);
+    List<AggregateData> projectData = DataStore.getInstance(project, true).getDataForProject(project);
     if (projectData == null) {
       displayNoProjectData(project.getName());
     } else {

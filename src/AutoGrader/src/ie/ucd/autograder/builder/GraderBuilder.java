@@ -13,7 +13,6 @@ import ie.ucd.autograder.metrics.MetricsConstants.IdName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,24 +33,19 @@ import org.eclipse.jdt.core.JavaCore;
 public class GraderBuilder extends IncrementalProjectBuilder {
 
   public static final String BUILDER_ID = "AutoGrader.builder";
-
-  private final FindBugsMarkerCollector findBugsCollector;
-  private final PMDMarkerCollector pmdMarkerCollector;
-  private final CheckstyleMarkerCollector checkstyleMarkerCollector;
-  private final ESCJava2MarkerCollector escMarkerCollector;
   private final List<MarkerCollector> collectors;
 
   public GraderBuilder() {
-    findBugsCollector = new FindBugsMarkerCollector();
-    pmdMarkerCollector = new PMDMarkerCollector();
-    checkstyleMarkerCollector = new CheckstyleMarkerCollector();
-    escMarkerCollector = new ESCJava2MarkerCollector();
-
-    collectors = new LinkedList<MarkerCollector>();
-    collectors.add(findBugsCollector);
-    collectors.add(pmdMarkerCollector);
-    collectors.add(checkstyleMarkerCollector);
-    collectors.add(escMarkerCollector);
+    collectors = createCollectors();
+  }
+  
+  public static List<MarkerCollector> createCollectors() {
+    List<MarkerCollector> collectors = new ArrayList<MarkerCollector>(4);
+    collectors.add(new FindBugsMarkerCollector());
+    collectors.add(new PMDMarkerCollector());
+    collectors.add(new CheckstyleMarkerCollector());
+    collectors.add(new ESCJava2MarkerCollector());
+    return collectors;
   }
 
   /*
@@ -66,8 +60,15 @@ public class GraderBuilder extends IncrementalProjectBuilder {
 
     System.out.println("Running builder");
     IProject project = getProject();
-
-    IJavaProject javaProject = JavaCore.create(getProject());
+    List<AggregateData> projectData = collectProjectData(project, collectors);
+    
+    DataStore.getInstance(project, false).setDataForProject(project, projectData);
+    //update view(s)
+    return null;
+  }
+  
+  public static List<AggregateData> collectProjectData(IProject project, List<MarkerCollector> collectors) throws CoreException {
+    IJavaProject javaProject = JavaCore.create(project);
     //Only operate on Java projects.
     if (javaProject != null) {
       for (MarkerCollector collector : collectors) {
@@ -76,22 +77,18 @@ public class GraderBuilder extends IncrementalProjectBuilder {
       }
       Map<String,MetricHolder> metricMap = metricsBuild(javaProject);
       
-      storeProjectData(project, metricMap, collectors);
+      return createProjectData(project, metricMap, collectors);
       
     } else {
       System.out.println("Not a java project");
       System.out.println(project.getClass());
+      return null;
     }
-    //TODO extract information from collectors, update view(s)
-
-    return null;
   }
 
-
-  private void storeProjectData(IProject project, Map<String,MetricHolder> metricMap, List<MarkerCollector> collectors) {
-    
+  private static List<AggregateData> createProjectData(IProject project, Map<String,MetricHolder> metricMap, List<MarkerCollector> collectors) {
     List<AggregateData> projectData = new ArrayList<AggregateData>(1 + collectors.size());
-    
+  
     MetricsData metrics = new MetricsData(metricMap);
     projectData.add(metrics);
     
@@ -100,17 +97,11 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     for (MarkerCollector collector : collectors) {
       projectData.add(collector.getAggregateData(kloc));
     }    
-    
-    DataStore.getInstance(project).setDataForProject(project, projectData);
-//    System.out.println("Data for project " + project);
-//    System.out.println("Size: " + projectData.size());
-//    for (AggregateData d : projectData) {
-//      System.out.println(d);
-//    }
+    return projectData;
   }
   
 
-  private Map<String,MetricHolder> metricsBuild(IJavaProject project) {
+  private static Map<String,MetricHolder> metricsBuild(IJavaProject project) {
     Cache cache = Cache.singleton;
 
     Map<String,MetricHolder> metricMap = new HashMap<String,MetricHolder>();

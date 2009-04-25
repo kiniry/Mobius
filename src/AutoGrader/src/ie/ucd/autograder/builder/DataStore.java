@@ -7,15 +7,31 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 
 public class DataStore {
 
   private static DataStore instance;
-  public static DataStore getInstance(IProject aProject) {
+  public static DataStore getInstance(IProject aProject, boolean includeThisProject) {
     if (instance == null) {
-      aProject.getWorkspace().getRoot().getProjects();
-      //TODO process these projects...
       instance = new DataStore();
+      
+      //As a slightly ugly way of 
+      IProject[] projects = aProject.getWorkspace().getRoot().getProjects();
+      for (IProject project : projects) {
+        if (includeThisProject || project != aProject) {
+          try {
+            if (project.hasNature(GraderNature.NATURE_ID)) {
+              List<AggregateData> projectData = GraderBuilder.collectProjectData(project, GraderBuilder.createCollectors());
+              if (projectData != null) {
+                instance.setDataForProject(project, projectData);
+              }
+            }
+          } catch (CoreException e) {
+            //Do nothing
+          }
+        }
+      }      
     }
     return instance;
   }
