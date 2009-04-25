@@ -16,7 +16,7 @@ public enum Grade {
   D_PLUS("D+", 48.33), D("D", 45), D_MINUS("D-", 41.66),
   E_PLUS("E+", 38.33), E("E", 35), E_MINUS("E-", 31.66),
   F_PLUS("F+", 28.33), F("F", 25), F_MINUS("F-", 21.66),
-  G("G", 0.03), NG("NG", 0);
+  G("G", 0.03), NG("NG", 0), NA("N/A", -1);
   
   private final String grade;
   private final double mark;
@@ -42,8 +42,20 @@ public enum Grade {
       for (Grade grade : values()) {
         list.add(new MarkGradePair(grade.getMark(), grade));
       }
+      percentageLookup = new GradeLookupTable(list);
     }
     return percentageLookup;
+  }
+  
+  //Lookup for converting a percentage back to a grade
+  private static GradeLookupTable NALookup = null;
+  public static GradeLookupTable getNALookup() {
+    if (NALookup == null) {
+      List<MarkGradePair> list = new ArrayList<MarkGradePair>(1);
+      list.add(new MarkGradePair(NA.mark, NA));
+      NALookup = new GradeLookupTable(list);
+    }
+    return NALookup;
   }
   
   public static Grade mean(Grade... grades) {
@@ -78,6 +90,10 @@ public enum Grade {
       totalWeight += grade.getSecond();
       total += grade.getFirst().getMark() * grade.getSecond();
     }
+//    System.out.println("Doing weighted mean");
+//    System.out.println("Grades: " + grades);
+//    System.out.println("total:" + total);
+//    System.out.println("totalWeight:" + totalWeight);
     return total / totalWeight;
   }
 }

@@ -1,5 +1,9 @@
 package ie.ucd.autograder.builder.markercollectors;
 
+import ie.ucd.autograder.grading.AggregateData;
+import ie.ucd.autograder.grading.GradeLookupTable;
+import ie.ucd.autograder.grading.InputDataDivKLOC;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -101,4 +105,26 @@ public abstract class MarkerCollector {
     return filteredList;
   }
   
+  public AggregateData getAggregateData(double kloc) {
+    
+    AggregateData data = new AggregateData(getDataName());
+    
+    InputDataDivKLOC errorData = new InputDataDivKLOC("Errors per KLOC", getErrorsLookup());
+    errorData.setKLOC(kloc);
+    errorData.setMeasure(getAllErrorMarkers().size());
+    data.addInputData(errorData, getErrorsWeight());
+    
+    InputDataDivKLOC warningData = new InputDataDivKLOC("Warnings per KLOC", getWarningsLookup());
+    warningData.setKLOC(kloc);
+    warningData.setMeasure(getAllWarningMarkers().size());
+    data.addInputData(warningData, getWarningsWeight());
+        
+    return data; 
+  }
+  
+  public abstract String getDataName();
+  public abstract GradeLookupTable getWarningsLookup();
+  public abstract double getWarningsWeight();
+  public abstract GradeLookupTable getErrorsLookup();
+  public abstract double getErrorsWeight();
 }

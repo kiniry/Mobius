@@ -1,5 +1,8 @@
 package ie.ucd.autograder.builder.markercollectors;
 
+import ie.ucd.autograder.grading.ErrorWarningWeights;
+import ie.ucd.autograder.grading.GradeLookupTable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,4 +32,29 @@ public class FindBugsMarkerCollector extends MarkerCollector {
     return types;
   }
 
+  @Override
+  public String getDataName() {
+    return "FindBugs";
+  }
+
+  @Override
+  public GradeLookupTable getErrorsLookup() {
+    return GradeLookupTable.FINDBUGS_ERROR_LOOKUP;
+  }
+
+  @Override
+  public double getErrorsWeight() {
+    return ErrorWarningWeights.FINDBUGS_WEIGHTS.getErrorWeight();
+  }
+
+  @Override
+  public GradeLookupTable getWarningsLookup() {
+    return GradeLookupTable.FINDBUGS_WARNING_LOOKUP;
+  }
+
+  @Override
+  public double getWarningsWeight() {
+    return ErrorWarningWeights.FINDBUGS_WEIGHTS.getWarningWeight();
+  }
+  
 }

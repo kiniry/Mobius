@@ -43,5 +43,5 @@ public class MetricsConstants {
   public static final IdName WeightedMethodsPerClass = new IdName("WMC", "Weighted methods per Class");
   public static final IdName NumberOfStaticAttributes = new IdName("NSF", "Number of Static Attributes");
   
-  public static IdName[] METRICS = { TotalLinesOfCode };
+  public static IdName[] METRICS = { TotalLinesOfCode, McCabeCyclomaticComplexity, MethodLinesOfCode };
 }

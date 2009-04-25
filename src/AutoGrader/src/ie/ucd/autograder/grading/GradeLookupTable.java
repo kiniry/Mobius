@@ -21,10 +21,12 @@ public class GradeLookupTable {
   public Grade toGrade(double mark) {
 
     for (MarkGradePair boundary : gradeBoundaries) {
-      if (mark > boundary.getFirst()) {
+      if (mark >= boundary.getFirst()) {
+//        System.out.println("Found, mark: " + mark + ", grade: " + boundary.getSecond());
         return boundary.getSecond();
       }
     }
+    System.out.println("No grade found!");
     assert false; //Final boundary should always have a mark of zero!
     return null;
   }
@@ -108,5 +110,26 @@ public class GradeLookupTable {
       new MarkGradePair(25.0,Grade.B),
       new MarkGradePair(0.0,Grade.A),
     } );
+  
+  //0-1 (poor), 2-5 (good), 5-10 (ok), 10-15 (poor), 15- (very poor)
+  public static final GradeLookupTable METRICS_METHOD_LOC_LOOKUP
+  = new GradeLookupTable( new MarkGradePair[] 
+     { new MarkGradePair(15.0,Grade.D),
+       new MarkGradePair(10.0,Grade.C),
+       new MarkGradePair(5.0,Grade.B),
+       new MarkGradePair(2.0,Grade.A),
+       new MarkGradePair(1.0,Grade.B),
+       new MarkGradePair(0.0,Grade.C),
+     } );
+  
+  // 0-0.5 (very good), 0.5-1.5 (good), 1.5-2.0 (ok), 2.0-3.0 (poor), 3.0- (very poor)
+  public static final GradeLookupTable METRICS_METHOD_CC_LOOKUP
+  = new GradeLookupTable( new MarkGradePair[] 
+     { new MarkGradePair(3.0,Grade.D),
+       new MarkGradePair(2.0,Grade.C),
+       new MarkGradePair(1.5,Grade.B),
+       new MarkGradePair(0.5,Grade.A),
+       new MarkGradePair(0.0,Grade.A_PLUS),
+     } );
   
 }

@@ -1,5 +1,8 @@
 package ie.ucd.autograder.builder.markercollectors;
 
+import ie.ucd.autograder.grading.ErrorWarningWeights;
+import ie.ucd.autograder.grading.GradeLookupTable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,4 +28,31 @@ public class PMDMarkerCollector extends MarkerCollector {
     return types;
   }
 
+  @Override
+  public String getDataName() {
+    return "PMD";
+  }
+
+  @Override
+  public GradeLookupTable getErrorsLookup() {
+    return GradeLookupTable.PMD_ERROR_LOOKUP;
+  }
+
+  @Override
+  public double getErrorsWeight() {
+    return ErrorWarningWeights.PMD_WEIGHTS.getErrorWeight();
+  }
+
+  @Override
+  public GradeLookupTable getWarningsLookup() {
+    return GradeLookupTable.PMD_WARNING_LOOKUP;
+  }
+
+  @Override
+  public double getWarningsWeight() {
+    return ErrorWarningWeights.PMD_WEIGHTS.getWarningWeight();
+  }
+
+  
+  
 }

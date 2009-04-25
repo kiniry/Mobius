@@ -1,5 +1,8 @@
 package ie.ucd.autograder.builder.markercollectors;
 
+import ie.ucd.autograder.grading.ErrorWarningWeights;
+import ie.ucd.autograder.grading.GradeLookupTable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,4 +23,29 @@ public class CheckstyleMarkerCollector extends MarkerCollector {
     return types;
   }
 
+  @Override
+  public String getDataName() {
+    return "Checkstyle";
+  }
+
+  @Override
+  public GradeLookupTable getErrorsLookup() {
+    return GradeLookupTable.CHECKSTYLE_ERROR_LOOKUP;
+  }
+
+  @Override
+  public double getErrorsWeight() {
+    return ErrorWarningWeights.CHECKSTYLE_WEIGHTS.getErrorWeight();
+  }
+
+  @Override
+  public GradeLookupTable getWarningsLookup() {
+    return GradeLookupTable.CHECKSTYLE_WARNING_LOOKUP;
+  }
+
+  @Override
+  public double getWarningsWeight() {
+    return ErrorWarningWeights.CHECKSTYLE_WEIGHTS.getWarningWeight();
+  }
+  
 }

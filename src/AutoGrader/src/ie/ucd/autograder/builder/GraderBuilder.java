@@ -5,9 +5,14 @@ import ie.ucd.autograder.builder.markercollectors.ESCJava2MarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.FindBugsMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.MarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.PMDMarkerCollector;
+import ie.ucd.autograder.grading.AggregateData;
+import ie.ucd.autograder.metrics.MetricHolder;
 import ie.ucd.autograder.metrics.MetricsConstants;
+import ie.ucd.autograder.metrics.MetricsData;
 import ie.ucd.autograder.metrics.MetricsConstants.IdName;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +74,10 @@ public class GraderBuilder extends IncrementalProjectBuilder {
         collector.clearAllMarkers();
         collector.addMarkers(project);
       }
-      metricsBuild(javaProject);
+      Map<String,MetricHolder> metricMap = metricsBuild(javaProject);
+      
+      storeProjectData(project, metricMap, collectors);
+      
     } else {
       System.out.println("Not a java project");
       System.out.println(project.getClass());
@@ -80,52 +88,54 @@ public class GraderBuilder extends IncrementalProjectBuilder {
   }
 
 
+  private void storeProjectData(IProject project, Map<String,MetricHolder> metricMap, List<MarkerCollector> collectors) {
+    
+    List<AggregateData> projectData = new ArrayList<AggregateData>(1 + collectors.size());
+    
+    MetricsData metrics = new MetricsData(metricMap);
+    projectData.add(metrics);
+    
+    double tloc = metrics.getTLOC();
+    double kloc = tloc / 1000d;
+    for (MarkerCollector collector : collectors) {
+      projectData.add(collector.getAggregateData(kloc));
+    }    
+    
+    DataStore.getInstance(project).setDataForProject(project, projectData);
+//    System.out.println("Data for project " + project);
+//    System.out.println("Size: " + projectData.size());
+//    for (AggregateData d : projectData) {
+//      System.out.println(d);
+//    }
+  }
+  
 
-  private void metricsBuild(IJavaProject project) {
-    System.out.println("Here...");
+  private Map<String,MetricHolder> metricsBuild(IJavaProject project) {
     Cache cache = Cache.singleton;
 
-    //    MetricsPlugin plugin = MetricsPlugin.getDefault();
-    //    String[] names = plugin.getMetricIds();
-    //    String[] descriptions = plugin.getMetricDescriptions();
-    //    System.out.println("Names: " + Arrays.asList(names));
-    //    System.out.println("Descriptions: " + Arrays.asList(descriptions));
+    Map<String,MetricHolder> metricMap = new HashMap<String,MetricHolder>();
+//        MetricsPlugin plugin = MetricsPlugin.getDefault();
+//        String[] names = plugin.getMetricIds();
+//        String[] descriptions = plugin.getMetricDescriptions();
+//        System.out.println("Names: " + Arrays.asList(names));
+//        System.out.println("Descriptions: " + Arrays.asList(descriptions));
 
     AbstractMetricSource ms = cache.get(project);
     for (IdName idName : MetricsConstants.METRICS) {
-
       String name = idName.id;
-      String description = idName.name;
       Metric metric = ms.getValue(name);
 
-      if (metric != null) {
-        double value = metric.getValue();
-        
-        System.out.println(name + ", " + description + "= " + value);
-        
-        /*
-        Avg averagePerPackage = ms.getAverage(name, Constants.PER_PACKAGE);
-        
-        double averagePerPackageValue = averagePerPackage.doubleValue();
-        double averagePerPackageStdDev = averagePerPackage.getStandardDeviation();
-        Max maxPerPackage = ms.getMaximum(name, Constants.PER_PACKAGE);
-        double maxPerPackageValue = maxPerPackage.doubleValue();
-
-        Avg averagePerClass = ms.getAverage(name, Constants.PER_CLASS);
-        double averagePerClassValue = averagePerClass.doubleValue();
-        double averagePerClassStdDev = averagePerClass.getStandardDeviation();
-        Max maxPerClass = ms.getMaximum(name, Constants.PER_CLASS);
-        double maxPerClassValue = maxPerClass.doubleValue();
-
-        Avg averagePerMethod = ms.getAverage(name, Constants.PER_METHOD);
-        double averagePerMethodValue = averagePerMethod.doubleValue();
-        double averagePerMethodStdDev = averagePerMethod.getStandardDeviation();
-        Max maxPerMethod = ms.getMaximum(name, Constants.PER_METHOD);
-        double maxPerMethodValue = maxPerMethod.doubleValue();
-        */      
-        }
+      Avg averagePerPackage = ms.getAverage(name, Constants.PER_PACKAGE);        
+      Max maxPerPackage = ms.getMaximum(name, Constants.PER_PACKAGE);
+      Avg averagePerClass = ms.getAverage(name, Constants.PER_CLASS);
+      Max maxPerClass = ms.getMaximum(name, Constants.PER_CLASS);
+      Avg averagePerMethod = ms.getAverage(name, Constants.PER_METHOD);
+      Max maxPerMethod = ms.getMaximum(name, Constants.PER_METHOD);
+      MetricHolder holder = new MetricHolder(idName, metric, averagePerPackage, maxPerPackage, averagePerClass, maxPerClass, averagePerMethod, maxPerMethod);
+      metricMap.put(name, holder);
 
     }
+    return metricMap;
   }
 
 
