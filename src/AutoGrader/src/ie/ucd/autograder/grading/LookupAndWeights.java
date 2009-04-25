@@ -1,9 +1,9 @@
 package ie.ucd.autograder.grading;
 
-import static ie.ucd.autograder.grading.ErrorWarningWeights.CHECKSTYLE_WEIGHTS;
-import static ie.ucd.autograder.grading.ErrorWarningWeights.ESCJAVA2_WEIGHTS;
-import static ie.ucd.autograder.grading.ErrorWarningWeights.FINDBUGS_WEIGHTS;
-import static ie.ucd.autograder.grading.ErrorWarningWeights.PMD_WEIGHTS;
+import static ie.ucd.autograder.grading.Weights.CHECKSTYLE_WEIGHTS;
+import static ie.ucd.autograder.grading.Weights.ESCJAVA2_WEIGHTS;
+import static ie.ucd.autograder.grading.Weights.FINDBUGS_WEIGHTS;
+import static ie.ucd.autograder.grading.Weights.PMD_WEIGHTS;
 import static ie.ucd.autograder.grading.GradeLookupTable.CHECKSTYLE_ERROR_LOOKUP;
 import static ie.ucd.autograder.grading.GradeLookupTable.CHECKSTYLE_WARNING_LOOKUP;
 import static ie.ucd.autograder.grading.GradeLookupTable.ESCJAVA2_ERROR_LOOKUP;
@@ -16,18 +16,18 @@ import ie.ucd.autograder.util.Pair.GradeWeightPair;
 
 public class LookupAndWeights {
 
-  private final ErrorWarningWeights weights;
+  private final Weights weights;
   private final GradeLookupTable errorLookup;
   private final GradeLookupTable warningLookup;
   
-  public LookupAndWeights(GradeLookupTable errorLookup, GradeLookupTable warningLookup, ErrorWarningWeights weights) {
+  public LookupAndWeights(GradeLookupTable errorLookup, GradeLookupTable warningLookup, Weights weights) {
     super();
     this.errorLookup = errorLookup;
     this.warningLookup = warningLookup;
     this.weights = weights;
   }
   
-  public ErrorWarningWeights getWeights() {
+  public Weights getWeights() {
     return weights;
   }
   

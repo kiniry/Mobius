@@ -11,6 +11,8 @@ public class MetricsData extends AggregateData {
 
   public static final String NAME = "Metrics";
   
+  public static final double METRICS_OVERALL_WEIGHT = 1;
+  
   public static final double TLOC_WEIGHT = 0;
   public static final double METHOD_AVG_LOC_WEIGHT = 1;
   public static final double METHOD_AVG_CC_WEIGHT = 1;

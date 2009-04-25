@@ -8,8 +8,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.swt.graphics.Color;
+
 public enum Grade {
 
+  
+  
   A_PLUS("A+", 78.33), A("A", 75), A_MINUS("A-", 71.66),
   B_PLUS("B+", 68.33), B("B", 65), B_MINUS("B-", 61.66),
   C_PLUS("C+", 58.33), C("C", 55), C_MINUS("C-", 51.66),
@@ -17,23 +21,23 @@ public enum Grade {
   E_PLUS("E+", 38.33), E("E", 35), E_MINUS("E-", 31.66),
   F_PLUS("F+", 28.33), F("F", 25), F_MINUS("F-", 21.66),
   G("G", 0.03), NG("NG", 0), NA("N/A", -1);
-  
+
   private final String grade;
   private final double mark;
   private Grade(String grade, double mark) {
     this.grade = grade;
     this.mark = mark;
   }
-  
+
   @Override
   public String toString() {
     return grade;
   }
-  
+
   public double getMark() {
     return mark;
   }
-  
+
   //Lookup for converting a percentage back to a grade
   private static GradeLookupTable percentageLookup = null;
   public static GradeLookupTable getPercentageLookup() {
@@ -46,7 +50,7 @@ public enum Grade {
     }
     return percentageLookup;
   }
-  
+
   //Lookup for converting a percentage back to a grade
   private static GradeLookupTable NALookup = null;
   public static GradeLookupTable getNALookup() {
@@ -57,15 +61,15 @@ public enum Grade {
     }
     return NALookup;
   }
-  
+
   public static Grade mean(Grade... grades) {
     return mean(Arrays.asList(grades));
   }
-  
+
   public static Grade mean(Collection<Grade> grades) {
     return getPercentageLookup().toGrade(meanAsDouble(grades));
   }
-  
+
   public static double meanAsDouble(Collection<Grade> grades) {
     double denom = grades.size();
     double num = 0;
@@ -74,15 +78,15 @@ public enum Grade {
     }
     return num / denom;
   }
-  
+
   public static Grade weightedMean(GradeWeightPair... grades) {
     return weightedMean(Arrays.asList(grades));
   }
-  
+
   public static Grade weightedMean(Collection<GradeWeightPair> grades) {
     return getPercentageLookup().toGrade(weightedMeanAsDouble(grades));
   }
-  
+
   public static double weightedMeanAsDouble(Collection<GradeWeightPair> grades) {
     double totalWeight = 0;
     double total = 0;
@@ -90,10 +94,10 @@ public enum Grade {
       totalWeight += grade.getSecond();
       total += grade.getFirst().getMark() * grade.getSecond();
     }
-//    System.out.println("Doing weighted mean");
-//    System.out.println("Grades: " + grades);
-//    System.out.println("total:" + total);
-//    System.out.println("totalWeight:" + totalWeight);
+    //    System.out.println("Doing weighted mean");
+    //    System.out.println("Grades: " + grades);
+    //    System.out.println("total:" + total);
+    //    System.out.println("totalWeight:" + totalWeight);
     return total / totalWeight;
   }
 }

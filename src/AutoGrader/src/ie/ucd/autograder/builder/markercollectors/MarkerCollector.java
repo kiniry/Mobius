@@ -35,7 +35,7 @@ public abstract class MarkerCollector {
   
   public void addMarkers(IProject project, String type) throws CoreException {
     IMarker[] markers = project.findMarkers(type, true, IResource.DEPTH_INFINITE);
-    System.out.println("Found " + markers.length + " markers of type " + type);
+    //System.out.println("Found " + markers.length + " markers of type " + type);
     addMarkers(type, markers);
   }
   
@@ -127,4 +127,5 @@ public abstract class MarkerCollector {
   public abstract double getWarningsWeight();
   public abstract GradeLookupTable getErrorsLookup();
   public abstract double getErrorsWeight();
+  public abstract double getOverallWeight();
 }

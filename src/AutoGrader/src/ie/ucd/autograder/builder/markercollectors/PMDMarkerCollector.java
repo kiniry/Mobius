@@ -1,6 +1,6 @@
 package ie.ucd.autograder.builder.markercollectors;
 
-import ie.ucd.autograder.grading.ErrorWarningWeights;
+import ie.ucd.autograder.grading.Weights;
 import ie.ucd.autograder.grading.GradeLookupTable;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class PMDMarkerCollector extends MarkerCollector {
 
   @Override
   public double getErrorsWeight() {
-    return ErrorWarningWeights.PMD_WEIGHTS.getErrorWeight();
+    return Weights.PMD_WEIGHTS.getErrorWeight();
   }
 
   @Override
@@ -50,9 +50,12 @@ public class PMDMarkerCollector extends MarkerCollector {
 
   @Override
   public double getWarningsWeight() {
-    return ErrorWarningWeights.PMD_WEIGHTS.getWarningWeight();
+    return Weights.PMD_WEIGHTS.getWarningWeight();
   }
 
-  
+  @Override
+  public double getOverallWeight() {
+    return Weights.PMD_WEIGHTS.getOverallWeight();
+  }
   
 }

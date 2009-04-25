@@ -10,6 +10,7 @@ import ie.ucd.autograder.metrics.MetricHolder;
 import ie.ucd.autograder.metrics.MetricsConstants;
 import ie.ucd.autograder.metrics.MetricsData;
 import ie.ucd.autograder.metrics.MetricsConstants.IdName;
+import ie.ucd.autograder.views.AutoGraderView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,8 +62,14 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     System.out.println("Running builder");
     IProject project = getProject();
     List<AggregateData> projectData = collectProjectData(project, collectors);
-    
-    DataStore.getInstance(project, false).setDataForProject(project, projectData);
+    if (projectData != null) {
+      DataStore.getInstance(project, false).setDataForProject(project, projectData);
+      AutoGraderView view = AutoGraderView.getInstance();
+      if (view != null) {
+        System.out.println("Forcing update");
+        view.update();
+      }
+    }
     //update view(s)
     return null;
   }
@@ -86,8 +93,10 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     }
   }
 
+  public static final String TOTAL_NAME = "Total";
+  
   private static List<AggregateData> createProjectData(IProject project, Map<String,MetricHolder> metricMap, List<MarkerCollector> collectors) {
-    List<AggregateData> projectData = new ArrayList<AggregateData>(1 + collectors.size());
+    List<AggregateData> projectData = new ArrayList<AggregateData>(2 + collectors.size());
   
     MetricsData metrics = new MetricsData(metricMap);
     projectData.add(metrics);
@@ -96,7 +105,15 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     double kloc = tloc / 1000d;
     for (MarkerCollector collector : collectors) {
       projectData.add(collector.getAggregateData(kloc));
+    }
+    
+    AggregateData total = new AggregateData(TOTAL_NAME);
+    total.addInputData(projectData.get(0), MetricsData.METRICS_OVERALL_WEIGHT);
+    for (int i=0; i < collectors.size(); i++) {
+      total.addInputData(projectData.get(i+1), collectors.get(i).getOverallWeight());
     }    
+    projectData.add(total);
+    
     return projectData;
   }
   
