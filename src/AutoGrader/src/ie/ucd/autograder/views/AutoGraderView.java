@@ -1,10 +1,11 @@
 package ie.ucd.autograder.views;
 
 
-import ie.ucd.autograder.grading.Grade;
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.DefaultBodyConfig;
 import net.sourceforge.nattable.config.DefaultColumnHeaderConfig;
+import net.sourceforge.nattable.config.SizeConfig;
+import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.model.DefaultNatTableModel;
 
 import org.eclipse.core.resources.IProject;
@@ -30,8 +31,9 @@ public class AutoGraderView extends ViewPart {
   public static final Color SUB_GRADE_COLOR = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
   public static final Color GRADE_COLOR = display.getSystemColor(SWT.COLOR_GREEN);
   public static final Color EMPTY_COLOR = display.getSystemColor(SWT.COLOR_WHITE);
-  public static final Color TOTAL_GRADE_COLOR = display.getSystemColor(SWT.COLOR_WHITE);
-
+  public static final Color MEASURE_COLOR = new Color(display, new RGB(255,240,245)); //pale lavender
+  
+  
   public static final Color GRADE_ERROR = display.getSystemColor(SWT.COLOR_RED);
   public static final Color GRADE_WARNING = new Color(display, new RGB(255,165,0)); //Orange
   public static final Color GRADE_OK = new Color(display, new RGB(124,252,0)); //Green
@@ -74,7 +76,11 @@ public class AutoGraderView extends ViewPart {
 
   public void update() {
     AutoGraderDataProvider.getInstance().updateData();
-    table.updateResize();
+    display.asyncExec(new Runnable() {
+      public void run() {
+        table.updateResize();
+      }
+    });
   }
 
   private void updateSelectedProject(IProject project) {
@@ -88,7 +94,8 @@ public class AutoGraderView extends ViewPart {
    */
   public void createPartControl(Composite parent) {
     model = new DefaultNatTableModel();
-    bodyConfig = new DefaultBodyConfig(AutoGraderDataProvider.getInstance());
+    bodyConfig = new AutoGraderBodyConfig(AutoGraderDataProvider.getInstance());
+    bodyConfig.setCellRenderer(new AutoGraderCellRenderer(AutoGraderDataProvider.getInstance()));
     model.setBodyConfig(bodyConfig);
     model.setColumnHeaderConfig(new AutoGraderColumnHeaderConfig());
     table = new NatTable(parent, SWT.H_SCROLL | SWT.V_SCROLL, model);
@@ -101,6 +108,8 @@ public class AutoGraderView extends ViewPart {
         updateView(selection);
       }
     });
+    
+    
   }
 
   /**
@@ -110,43 +119,38 @@ public class AutoGraderView extends ViewPart {
     table.setFocus();
   }
 
-  public static Color gradeToColour(Grade grade) {
-    switch (grade) {
-    case A_PLUS: 
-    case A:
-    case A_MINUS:
-    case B_PLUS:
-    case B:
-      return GRADE_OK;
-    case B_MINUS:
-    case C_PLUS:
-    case C:
-    case C_MINUS:
-      return GRADE_WARNING;
-    case D_PLUS:
-    case D:
-    case D_MINUS:
-    case E_PLUS:
-    case E:
-    case E_MINUS:
-    case F_PLUS:
-    case F:
-    case F_MINUS:
-    case G:
-    case NG:
-    case NA:
-    default:
-      return GRADE_ERROR;
-    }
-  }
-
   private static final class AutoGraderColumnHeaderConfig extends DefaultColumnHeaderConfig {
+    private final SizeConfig sizeConfig;
     public AutoGraderColumnHeaderConfig() {
       super(AutoGraderDataProvider.getInstance());
+      this.sizeConfig = new SizeConfig(28);
     }
     @Override
     public int getColumnHeaderRowCount() {
       return AutoGraderDataProvider.getInstance().shouldShowColumnHeader() ? 1 : 0;
     }
+    @Override
+    public SizeConfig getColumnHeaderRowHeightConfig() {
+      return sizeConfig;
+    }    
+  }
+  private static final class AutoGraderBodyConfig extends DefaultBodyConfig {
+    private final SizeConfig width;
+    private final SizeConfig height;
+    public AutoGraderBodyConfig(IDataProvider dataProvider) {
+      super(dataProvider);
+      this.width = new SizeConfig(150);
+      this.height = new SizeConfig(28);
+    }
+    @Override
+    public SizeConfig getColumnWidthConfig() {
+      return width;
+    }
+    @Override
+    public SizeConfig getRowHeightConfig() {
+      return height;
+    }
+    
+    
   }
 }

@@ -6,6 +6,7 @@ package ie.ucd.autograder.views;
 import ie.ucd.autograder.builder.DataStore;
 import ie.ucd.autograder.builder.GraderBuilder;
 import ie.ucd.autograder.grading.AggregateData;
+import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.grading.InputData;
 import ie.ucd.autograder.util.Pair;
 
@@ -36,8 +37,6 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
 
   public void updateData() {
     projectData = selectedProject == null ? null : DataStore.getInstance(selectedProject, true).getDataForProject(selectedProject);
-    System.out.println("Data updated to");
-    System.out.println(projectData);
   }
 
   public int getColumnCount() {
@@ -58,8 +57,10 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
 
       int numRows = 0;
       for (AggregateData data : projectData) {
+        if (data.getName().equals(GraderBuilder.TOTAL_NAME)) continue;
         int size = data.getData().size();
-        size *= data.getName().equals(GraderBuilder.TOTAL_NAME) ? 2 : 3;
+//        size *= data.getName().equals(GraderBuilder.TOTAL_NAME) ? 2 : 3;
+        size *= 3;
         if (size > numRows) {
           numRows = size;
         }
@@ -70,6 +71,7 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
     }
   }
 
+  //TODO cache results, clear cache after change in data...
   public Object getValue(int row, int col) {
     if (selectedProject != null) {
       if (projectData != null) {
@@ -79,24 +81,29 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
         if (data != null) {
           if (row == numberOfRows - 1) {
             //Summary row
-            return "Grade: " + data.getGrade();
+            if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
+              return new OverallGrade(data.getGrade());
+            } else {
+              return new ItemGrade(data.getGrade());
+            }
           } else {
             List<Pair<InputData,Double>> subData = data.getData();
             //If totals
             if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
-              if ((subData.size()*2) <= row) {
-                return "";
-              } else {
-                int itemIndex = row/2;
-                InputData iData = subData.get(itemIndex).getFirst();
-                if (row % 2 == 0) {
-                  //Input name
-                  return iData.getName() + ":";
-                } else {
-                  //Grade
-                  return "Grade: " + iData.getGrade();
-                }
-              }
+//              if ((subData.size()*2) <= row) {
+//                return "";
+//              } else {
+//                int itemIndex = row/2;
+//                InputData iData = subData.get(itemIndex).getFirst();
+//                if (row % 2 == 0) {
+//                  //Input name
+//                  return new TitleString(iData.getName());
+//                } else {
+//                  //Grade
+//                  return new SubGrade(iData.getGrade());
+//                }
+//              }
+              return "";
             } else {
               //Normal column
               if ((subData.size()*3) <= row) {
@@ -106,13 +113,13 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
                 InputData iData = subData.get(itemIndex).getFirst();
                 if (row % 3 == 0) {
                   //Measure name
-                  return iData.getName() + ":";
+                  return new TitleString(iData.getName());
                 } else if (row % 3 == 1){
                   //Measure
-                  return iData.getMeasureAsString();
+                  return new MeasureString(iData.getMeasureAsString());
                 } else {
                   //Grade
-                  return "Grade: " + iData.getGrade();
+                  return new SubGrade(iData.getGrade());
                 }
               }
             }       
@@ -122,7 +129,7 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
         }
 
       } else {
-        return "No data for project " + selectedProject.getName();
+        return "No data for " + selectedProject.getName();
       }
     } else {
       return "No data for selection.";
@@ -139,5 +146,35 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
   
   public boolean shouldShowColumnHeader() {
     return selectedProject != null && projectData != null;
+  }
+ 
+  private static class StringHolder {
+    public final String string;
+    public StringHolder(String string) { this.string = string; }
+  }
+  
+  public static class TitleString extends StringHolder {
+    public TitleString(String string) { super(string); }
+  }
+  
+  public static class MeasureString extends StringHolder {
+    public MeasureString(String string) { super(string); }
+  }
+  
+  public static class GradeHolder {
+    public final Grade grade;
+    public GradeHolder(Grade g) { grade = g; }
+  }
+  
+  public static class ItemGrade extends GradeHolder {
+    public ItemGrade(Grade g) { super(g); }
+  }
+  
+  public static class OverallGrade extends GradeHolder {
+    public OverallGrade(Grade g) { super(g); }
+  }
+  
+  public static class SubGrade extends GradeHolder {
+    public SubGrade(Grade g) { super(g); }
   }
 }

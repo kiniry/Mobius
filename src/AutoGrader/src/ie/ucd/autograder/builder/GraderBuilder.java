@@ -58,19 +58,15 @@ public class GraderBuilder extends IncrementalProjectBuilder {
   @SuppressWarnings("unchecked")
   protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
   throws CoreException {
-
-    System.out.println("Running builder");
     IProject project = getProject();
     List<AggregateData> projectData = collectProjectData(project, collectors);
     if (projectData != null) {
       DataStore.getInstance(project, false).setDataForProject(project, projectData);
       AutoGraderView view = AutoGraderView.getInstance();
       if (view != null) {
-        System.out.println("Forcing update");
         view.update();
       }
     }
-    //update view(s)
     return null;
   }
   
