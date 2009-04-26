@@ -1,4 +1,4 @@
-package main;
+package jml2bml;
 
 public class List {
   public int i;

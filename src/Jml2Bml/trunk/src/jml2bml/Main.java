@@ -1,10 +1,12 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-06 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
- * licence see LICENCE.txt file"
+ * @title       "Jml2Bml" 
+ * @description "JML to BML Compiler"
+ * @copyright   "(c)2008-01-06 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying 
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
  */
-package main;
+package jml2bml;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import jml2bml.utils.Logger;
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Method;
 import org.jmlspecs.openjml.JmlCompiler;
+import org.jmlspecs.openjml.JmlOptionName;
 import org.jmlspecs.openjml.JmlPretty;
 import org.jmlspecs.openjml.JmlSpecs;
 import org.jmlspecs.openjml.JmlTree;
@@ -101,13 +104,14 @@ public class Main {
       NotTranslatedException {
     new Main().doMain(args);
   }
-
+  
   /**
    * Main method of the Jml2Bml compiler. Compiles JML annotations from
    * sourceFile and inserts appropriate BML annotations into classFile
    * @param sourceFile -
    *            source containing compiled JML
    * @param classLoc class file location (directory and filename)
+   * @param context 
    * corresponding to the source file
    * @throws ClassNotFoundException if the classfile for the
    *   given class file location could not be found
@@ -200,6 +204,11 @@ public class Main {
     JmlFlow.preRegister(context);
     JmlAttr.preRegister(context); // registering a JML-aware type checker
     JmlPretty.preRegister(context);
+    
+    JmlOptionName.putOption(context, JmlOptionName.JMLVERBOSE);
+    JmlOptionName.putOption(context, JmlOptionName.JMLDEBUG);
+//    JmlOptionName.putOption(context, JmlOptionName.NOINTERNALSPECS);
+//    JmlOptionName.putOption(context, JmlOptionName.NOCHECKSPECSPATH);
 
     //    
     //    JmlSpecs.preRegister(context);
@@ -215,7 +224,7 @@ public class Main {
     final Options opts = Options.instance(context);
     //
     opts.put(OptionName.XJCOV.optionName, "true");
-
+    
     JmlSpecs.instance(context).initializeSpecsPath();
     return context;
   }
