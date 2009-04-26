@@ -8,5 +8,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/jmlspecs.jar" sourcepath="Jml2Bmlsrc.zip"/>
 	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJML"/>
 	<classpathentry exported="true" kind="lib" path="lib/args4j-2.0.1.jar" sourcepath="Jml2Bmlsrc.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BCEL5.1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

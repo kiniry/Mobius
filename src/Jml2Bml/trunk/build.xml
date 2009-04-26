@@ -1,17 +1,239 @@
-<project name="Jml2Bml" default="classes" basedir=".">
-	<property name="src" location="src/toCompile"/>
-	<property name="classes" location="classes"/>
-	<path id="classpath"><fileset dir="lib" includes="*.jar" /></path>
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mobius.jml2bml" default="build.jars" basedir=".">
 
-  	<target name="classes" depends="clean">
-    	<mkdir dir="${classes}" />
-    	<javac srcdir="${src}" destdir="${classes}" debug="yes" debuglevel="vars">
-      		<classpath refid="classpath" /> 
-    	</javac>
-  	</target>
-  
-  	<target name="clean">
-    	<delete dir="${classes}" />
-  	</target>
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="mobius.jml2bml"/>
+	<property name="bundleVersion" value="1.0.0"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${dir_bootclasspath}">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+<condition property="pluginTemp" value="${buildTempFolder}/plugins"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+<condition property="build.result.folder" value="${pluginTemp}/mobius.jml2bml_1.0.0"		>
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: mobius.jml2bml for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/mobius.jml2bml_1.0.0.jar" basedir="${temp.folder}/mobius.jml2bml_1.0.0" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="Jml2Bml.jar" depends="init" unless="Jml2Bml.jar" description="Create jar: mobius.jml2bml Jml2Bml.jar.">
+		<delete dir="${temp.folder}/Jml2Bml.jar.bin"/>
+		<mkdir dir="${temp.folder}/Jml2Bml.jar.bin"/>
+		<path id="Jml2Bml.jar.classpath">
+			<pathelement path="../BmlLib/bin/"/>
+			<pathelement path="../BmlLib/@dot"/>
+			<pathelement path="../BmlLib/bin"/>
+			<pathelement path="../BmlLib/lib/antlr-3.0.1.jar"/>
+			<pathelement path="../BmlLib/lib/antlr-runtime-3.0.jar"/>
+			<pathelement path="../BmlLib/translation/"/>
+			<pathelement path="../BCEL5.1/bcel-5.1.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime_3.4.0.v20080512.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.osgi_3.4.2.R34x_v20080826-1230.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.jobs_3.4.0.v20080512.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/runtime_registry_compatibility.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.registry_3.4.0.v20080516-0950.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.preferences_3.2.201.R34x_v20080709.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20080610/@dot"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.contenttype_3.3.0.v20080604-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20070502.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.app_1.1.0.v20080421-2006.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.osgi.services_3.1.200.v20071203.jar"/>
+			<pathelement path="../../eclipse/plugins/javax.servlet_2.4.0.v200806031604.jar"/>
+			<pathelement path="../BML_BPL_Translator/bin"/>
+			<pathelement path="../BML_BPL_Translator/lib/asm-3.1.jar"/>
+			<pathelement path="../BML_BPL_Translator/lib/asm-analysis-3.1.jar"/>
+			<pathelement path="../BML_BPL_Translator/lib/asm-commons-3.1.jar"/>
+			<pathelement path="../BML_BPL_Translator/lib/asm-tree-3.1.jar"/>
+			<pathelement path="../BML_BPL_Translator/lib/asm-util-3.1.jar"/>
+			<pathelement path="../BML_BPL_Translator/@dot"/>
+			<pathelement path="../../eclipse/plugins/org.junit_3.8.2.v20080602-1318/junit.jar"/>
+			<pathelement path="../../eclipse/plugins/org.junit4_4.3.1/junit.jar"/>
+			<pathelement path="lib/jmlruntime.jar"/>
+			<pathelement path="${build.result.folder}/../mobius.jml2bml_1.0.0/lib/jmlruntime.jar"/>
+			<pathelement path="lib/jmlspecs.jar"/>
+			<pathelement path="${build.result.folder}/../mobius.jml2bml_1.0.0/lib/jmlspecs.jar"/>
+			<pathelement path="lib/openjml.jar"/>
+			<pathelement path="${build.result.folder}/../mobius.jml2bml_1.0.0/lib/openjml.jar"/>
+			<pathelement path="lib/args4j-2.0.1.jar"/>
+			<pathelement path="${build.result.folder}/../mobius.jml2bml_1.0.0/lib/args4j-2.0.1.jar"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/Jml2Bml.jar.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="Jml2Bml.jar.classpath" />
+			<src path="src/"			/>
+			<compilerarg value="@${basedir}/javaCompiler.Jml2Bml.jar.args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+			<compilerarg line="-log '${temp.folder}/Jml2Bml.jar.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/Jml2Bml.jar.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/Jml2Bml.jar" basedir="${temp.folder}/Jml2Bml.jar.bin"/>
+		<delete dir="${temp.folder}/Jml2Bml.jar.bin"/>
+	</target>
+
+	<target name="Jml2Bmlsrc.zip" depends="init" unless="Jml2Bmlsrc.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<antcall target="zip.Jml2Bmlsrc.zip"/>
+	</target>
+	<target name="zip.Jml2Bmlsrc.zip">
+		<zip destfile="${build.result.folder}/Jml2Bmlsrc.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="copy.Jml2Bmlsrc.zip">
+		<copy todir="${source.destination.folder}/Jml2Bmlsrc" failonerror="true" overwrite="true">
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: mobius.jml2bml.">
+		<available property="Jml2Bml.jar" file="${build.result.folder}/Jml2Bml.jar"/>
+		<antcall target="Jml2Bml.jar"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="Jml2Bmlsrc.zip" file="${build.result.folder}/Jml2Bmlsrc.zip"/>
+		<antcall target="Jml2Bmlsrc.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/mobius.jml2bml_1.0.0"/>
+		<copy todir="${destination.temp.folder}/mobius.jml2bml_1.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}">
+				<include name="Jml2Bml.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="${destination.temp.folder}/mobius.jml2bml_1.0.0" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}">
+				<include name="META-INF/"/>
+				<include name="lib/jmlruntime.jar"/>
+				<include name="lib/jmlspecs.jar"/>
+				<include name="lib/openjml.jar"/>
+				<include name="Jml2Bml.jar"/>
+				<include name="lib/args4j-2.0.1.jar"/>
+				<include name=".classpath"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/mobius.jml2bml_1.0.0"/>
+		<copy file="${build.result.folder}/Jml2Bmlsrc.zip" todir="${destination.temp.folder}/mobius.jml2bml_1.0.0" failonerror="false" overwrite="false"/>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}/mobius.jml2bml_1.0.0"/>
+		</antcall>
+	</target>
+
+	<target name="gather.individual.sources" depends="init">
+		<antcall target="copy.Jml2Bmlsrc.zip">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+		<antcall target="copy.src.includes">
+			<param name="source.destination.folder" value="${destination.temp.folder}"/>
+		</antcall>
+	</target>
+
+	<target name="copy.src.includes" depends="init">
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/mobius.jml2bml_1.0.0"/>
+		<copy todir="${destination.temp.folder}/mobius.jml2bml_1.0.0" failonerror="false" overwrite="false">
+			<fileset dir="${temp.folder}">
+				<include name="Jml2Bml.jar.bin${logExtension}"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: mobius.jml2bml of all the zips, jars and logs created.">
+		<delete file="${build.result.folder}/Jml2Bml.jar"/>
+		<delete file="${build.result.folder}/Jml2Bmlsrc.zip"/>
+		<delete file="${plugin.destination}/mobius.jml2bml_1.0.0.jar"/>
+		<delete file="${plugin.destination}/mobius.jml2bml_1.0.0.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="C:/java/workspace/Jml2Bml" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: mobius.jml2bml.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
+		</delete>
+		<zip destfile="${plugin.destination}/mobius.jml2bml_1.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
 </project>
-

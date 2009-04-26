@@ -1,16 +1,26 @@
 Manifest-Version: 1.0
+Class-Path: Jml2Bml.jar,
+ lib/jmlruntime.jar,
+ lib/jmlspecs.jar,
+ lib/openjml.jar,
+ lib/args4j-2.0.1.jar
 Bundle-ManifestVersion: 2
 Bundle-Name: Jml2Bml
-Bundle-SymbolicName: mobius.jml2bml
+Bundle-SymbolicName: mobius.jml2bml;singleton:=true
 Bundle-Version: 1.0.1
 Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlruntime.jar,
  lib/jmlspecs.jar,
  lib/openjml.jar,
  lib/args4j-2.0.1.jar
-Export-Package: api
+Export-Package: jml2bml.plugin
 Require-Bundle: mobius.bmllib,
  org.apache.bcel_5.1,
  org.junit,
- org.junit4;bundle-version="4.3.1"
+ org.junit4;bundle-version="4.3.1",
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources
 Bundle-Vendor: Mobius & Warsaw University
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: jml2bml.plugin.Jml2BmlPlugin
+

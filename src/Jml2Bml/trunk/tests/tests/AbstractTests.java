@@ -7,13 +7,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import main.Main;
 
 import org.junit.Before;
 import org.kohsuke.args4j.CmdLineException;
 
 import annot.io.ReadAttributeException;
 
+import jml2bml.Main;
 import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.exceptions.NotTranslatedException;
 
