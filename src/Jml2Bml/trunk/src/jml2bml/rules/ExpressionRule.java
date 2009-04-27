@@ -158,9 +158,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       final org.jmlspecs.openjml.JmlTree.JmlStoreRefKeyword node,
       final Symbols p) {
     if (node.token == JmlToken.BSNOTHING)
-      return ModifyExpression.Nothing;
+      return ModifyExpression.NOTHING_MODIF;
     if (node.token == JmlToken.BSEVERYTHING)
-      return ModifyExpression.Everything;
+      return ModifyExpression.EVERYTHING_MODIF;
     return null;
   };
 
