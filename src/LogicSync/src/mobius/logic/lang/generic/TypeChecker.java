@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
@@ -26,16 +27,23 @@ public class TypeChecker {
   private final Set<String> undeclared = new HashSet<String>();
   /** formulas. */
   private final Set<String> f = new HashSet<String>();
+  /** types of the symbols. */
+  private final Map<String, GType> symTypes = new HashMap<String, GType>();
+  /** types of every single term of the ast. */
+  private final Map<Term, GType> termTypes = new HashMap<Term, GType>();
 
-  private final HashMap<String, GType> symTypes = new HashMap<String, GType>();
-  private final HashMap<Term, GType> termTypes = new HashMap<Term, GType>();
-
-  private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();
-
+  /** the visitor which type checks the ast. */
   private final MyEvaluator evaluator = new MyEvaluator();
+  
+  /** the ast which is being treated. */
   private final GenericAst ast;
+  
+  /** the list of errors detected during the typechecking. */
   private List<TypingError> errorList = new ArrayList<TypingError>();
   
+  /** the types containing an unknown type sign. */
+  private List<Entry<String, GType>> unknownTypes = new ArrayList<Entry<String, GType>> ();  
+
   public TypeChecker(final GenericAst ast) {
     this.ast = ast;
   }
@@ -45,15 +53,32 @@ public class TypeChecker {
   }
  
 
- 
+  /**
+   * Typecheck the AST.
+   * @return true if the typechecking succeeded
+   */
   public boolean check() {
     return ast.eval(evaluator);
   }
 
+  /**
+   * Prints a verbose version of the result of the algorithm 
+   * (better than yes or no).
+   */
   public void printDetailedResults() {
     if (unknownTypes.size() > 0) {
       Logger.err.println("\nType Checking failed because of the following not properly" +
                          " defined types.\n" + unknownTypes);
+      Logger.err.flush();
+    }
+    if (errorList.size() > 0) {
+      final StringBuilder msg = new StringBuilder();
+      msg.append("\nType Checking failed because of the following error(s):\n");
+      for (TypingError err: errorList) {
+        msg.append(err);
+        msg.append("\n");
+      }
+      Logger.err.println(msg);
       Logger.err.flush();
     }
     Logger.out.println("Declared first order types: " + t);
@@ -64,10 +89,12 @@ public class TypeChecker {
   
   /**
    * Returns a string representing the given type.
-   * @param term
-   * @return
+   * The returned string is of the form { T } where T is the type
+   * of the term. It returns an empty string in case of an implies.
+   * @param term the term to get the type of, should not be null
+   * @return a generic lang. commentary containing the type.
    */
-  public String getType(Term term) {
+  public String getType(final Term term) {
     if (term instanceof Atom) {
       final String id = ((Atom) term).getId();
       if (id.equals("->")) {
@@ -80,13 +107,22 @@ public class TypeChecker {
     }
     return "";
   }
+  
+  
   private class MyEvaluator extends Evaluator<Boolean> { 
-    
+    /** the list of variables declared by a forall. It is used like a Stack. */
     private final LinkedList<Atom> forallVars = new LinkedList<Atom>();
     /** the current Id which is being inspected. */
     private String currClauseId;
     
-    private Term getForallFirst(String id) {
+    /**
+     * Returns the first variable which was declared in a forall having the
+     * specified id.
+     * @param id the name of a variable
+     * @return the term declaration corresponding to the variable name,
+     * otherwise null
+     */
+    private Term getForallFirst(final String id) {
       for (Atom at: forallVars) {
         if (at.getId().equals(id)) {
           return at;
@@ -99,7 +135,11 @@ public class TypeChecker {
     public Boolean eval(final Application app, final Term next, final Term first) {
       first.eval(this);
       if (!(first instanceof Atom)) {
-        errorList.add(new TypingError(currClauseId));
+        errorList.add(
+          new TypingError(currClauseId, 
+                          "The first member of an application should be an Atom! " +
+                          "Found: " +
+                          first + "."));
         return false;
       }
       final GType type = termTypes.get(first);
@@ -114,18 +154,20 @@ public class TypeChecker {
         if (!curr.eval(this)) {
           return false;
         }
-        System.out.println(curr);
+        //System.out.println(curr);
         final GType gt = titer.next();
         if (!gt.unifyElem(termTypes.get(curr))) {
-          System.out.println("Failed to unify " + first + "(" + i + "): " + type + 
-                             curr + ": " + termTypes.get(curr));
+          errorList.add(
+              new UnifyingError(currClauseId, 
+                              first, type, i, curr, termTypes.get(curr)));
           return false;
         }
         curr = curr.getNext();
         i++;
       }
       if (curr != null) {
-        System.out.println("Bad arity");
+        errorList.add(
+             new TypingError(currClauseId, "Bad arity"));
         return false;
       }
       termTypes.put(app, type.getReturn());
@@ -144,17 +186,19 @@ public class TypeChecker {
       return !isFormula(at);
       
     }
+    
+    
     @Override
     public Boolean eval(final ClauseList cl, final LinkedList<GenericAst> list) {
       for (GenericAst c: list) {
-        
         final Boolean res = c.eval(this);
         if (res == null) {
           continue;
         }
         if (!res) {
-          return false;
-          // failed to typecheck
+          // oh yeah theres something rotten in the kingdom of Danemark
+          // but we continue //failed to typecheck
+          continue;
         }
       }
       
@@ -163,12 +207,11 @@ public class TypeChecker {
         if (e.getKey().equals("->") || e.getValue().getArity() == 1) {
           continue;
         }
-        if (e.getValue().hasUnknown()) {
-          
+        if (e.getValue().hasUnknown()) {       
           unknownTypes.add(e);
         }
       }
-      return unknownTypes.size() == 0;
+      return unknownTypes.size() == 0  && errorList.size() == 0;
     }
 
 
@@ -213,7 +256,12 @@ public class TypeChecker {
     
     
     
-    
+    /**
+     * Computes the type described by this term and returns
+     * it if it is a valid type.
+     * @param term the term to check
+     * @return a valid type or null
+     */
     private GType checkType(final Term term) {
       if (!(term instanceof Application)) {
         if (term instanceof Atom) {
@@ -265,13 +313,31 @@ public class TypeChecker {
       return false;
     }
   }
-  public class TypingError {
+  
+  
+  public static class TypingError {
     
-    private String id;
+    private final String id;
+    private final String msg;
 
-    public TypingError(String id) {
+    public TypingError(String id, String msg) {
       this.id = id;
+      this.msg = msg;
     }
+    
+    @Override
+    public String toString() {
+      return id + ": " + msg;
+    }
+  }
+  public static class UnifyingError extends TypingError {
+
+    public UnifyingError(String id, Term first, GType typeFirst, int mem, 
+                         Term curr, GType typeCurr) {
+      super(id, "Failed to unify the member " + mem + " of "  + first + ": " + typeFirst + 
+                           " with " + curr + ": " + typeCurr);
+    }
+    
   }
   
 }
