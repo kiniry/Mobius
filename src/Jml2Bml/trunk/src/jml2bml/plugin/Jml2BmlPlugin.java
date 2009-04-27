@@ -15,12 +15,13 @@ import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.osgi.baseadaptor.loader.ClasspathEntry;
-import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
-import org.osgi.framework.Bundle;
+import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 
 import annot.io.ReadAttributeException;
 
@@ -85,20 +86,29 @@ public class Jml2BmlPlugin extends Plugin {
   public static void messagelog(final String a_string) {
     LOG.println(a_string);
   }
+  
+  private String getPluginClasspath() throws BundleException, IOException{
+    String pluginLocation = FileLocator.toFileURL(getBundle().getEntry("/")).getPath();
+    
+    String requires = (String) getBundle().getHeaders().get(Constants.BUNDLE_CLASSPATH);
+    StringBuffer result = new StringBuffer();
+    for(ManifestElement element: ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires)){
+      result.append(java.io.File.pathSeparator+pluginLocation+element.getValue());
+    }
+    return result.toString();
+  }
 
   public void compile(final IFile a_jfile, final IFile a_bfile)
       throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException{
-    ClassLoader applicationClassLoader = this.getClass().getClassLoader();
-    if (applicationClassLoader == null) {
-      applicationClassLoader = ClassLoader.getSystemClassLoader();
+
+    String bundleClassPath;
+    try {
+      bundleClassPath = getPluginClasspath();
+    } catch (BundleException e) {
+      e.printStackTrace();
+      bundleClassPath = "";
     }
-    ClasspathEntry[] cp = ((DefaultClassLoader) applicationClassLoader)
-        .getClasspathManager().getHostClasspathEntries();
-    String bundleClassPath = "";
-    for (ClasspathEntry i : cp) {
-      bundleClassPath += java.io.File.pathSeparator +
-                         i.getBundleFile().toString();
-    }
+    
     System.out.println(bundleClassPath);
 
     String bname = a_bfile.getName();
