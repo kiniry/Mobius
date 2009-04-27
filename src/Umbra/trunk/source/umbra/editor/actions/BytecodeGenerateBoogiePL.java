@@ -22,6 +22,8 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.FileEditorInput;
 
+import freeboogie.Main;
+
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.EclipseIdentifiers;
@@ -122,7 +124,7 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     args[0] = "-pfg";
     args[1] = a_dirname + "/" + a_bplname;
     my_console_stream.println("++++ FreeBoogie start ++++");
-    freeboogie.Main.main(args);
+    Main.main(args);
   }
 
   /**
