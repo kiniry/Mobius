@@ -76,11 +76,13 @@ public class AutoGraderView extends ViewPart {
 
   public void update() {
     AutoGraderDataProvider.getInstance().updateData();
-    display.asyncExec(new Runnable() {
-      public void run() {
-        table.updateResize();
-      }
-    });
+    if (!table.isDisposed()) {
+      display.asyncExec(new Runnable() {
+        public void run() {
+          table.updateResize();
+        }
+      });
+    }
   }
 
   private void updateSelectedProject(IProject project) {
@@ -123,7 +125,7 @@ public class AutoGraderView extends ViewPart {
     private final SizeConfig sizeConfig;
     public AutoGraderColumnHeaderConfig() {
       super(AutoGraderDataProvider.getInstance());
-      this.sizeConfig = new SizeConfig(28);
+      this.sizeConfig = new SizeConfig(20);
     }
     @Override
     public int getColumnHeaderRowCount() {
@@ -140,7 +142,7 @@ public class AutoGraderView extends ViewPart {
     public AutoGraderBodyConfig(IDataProvider dataProvider) {
       super(dataProvider);
       this.width = new SizeConfig(150);
-      this.height = new SizeConfig(28);
+      this.height = new SizeConfig(20);
     }
     @Override
     public SizeConfig getColumnWidthConfig() {

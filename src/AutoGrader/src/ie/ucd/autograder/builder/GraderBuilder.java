@@ -1,5 +1,6 @@
 package ie.ucd.autograder.builder;
 
+import ie.ucd.autograder.builder.markercollectors.BONcMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.CheckstyleMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.ESCJava2MarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.FindBugsMarkerCollector;
@@ -42,6 +43,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
   
   public static List<MarkerCollector> createCollectors() {
     List<MarkerCollector> collectors = new ArrayList<MarkerCollector>(4);
+    collectors.add(new BONcMarkerCollector());
     collectors.add(new FindBugsMarkerCollector());
     collectors.add(new PMDMarkerCollector());
     collectors.add(new CheckstyleMarkerCollector());

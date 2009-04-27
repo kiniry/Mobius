@@ -65,7 +65,7 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
           numRows = size;
         }
       }
-      return numRows + 1; //Plus summary
+      return numRows + 2; //Plus summary
     } else {
       return 1;
     }
@@ -79,7 +79,13 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
         //Get col data
         AggregateData data = col < projectData.size() ? projectData.get(col) : null;
         if (data != null) {
-          if (row == numberOfRows - 1) {
+          if (row == numberOfRows - 2) {
+            if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
+              return new TitleString("Overall");
+            } else {
+              return new TitleString("Total");
+            }
+          } else if (row == numberOfRows - 1) {
             //Summary row
             if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
               return new OverallGrade(data.getGrade());

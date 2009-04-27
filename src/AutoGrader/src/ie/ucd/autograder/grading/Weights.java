@@ -26,6 +26,7 @@ public class Weights {
   }
 
   public static final Weights CHECKSTYLE_WEIGHTS = new Weights(1,1,1);
+  public static final Weights BONC_WEIGHTS = new Weights(1,1,1);
   public static final Weights PMD_WEIGHTS = new Weights(1,1,1);
   public static final Weights ESCJAVA2_WEIGHTS = new Weights(1,1,1);
   public static final Weights FINDBUGS_WEIGHTS = new Weights(1,1,1);

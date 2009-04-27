@@ -111,6 +111,26 @@ public class GradeLookupTable {
       new MarkGradePair(0.0,Grade.A),
     } );
   
+//??
+  public static final GradeLookupTable BONC_WARNING_LOOKUP 
+  = new GradeLookupTable( new MarkGradePair[] 
+     { new MarkGradePair(25.0,Grade.F),
+       new MarkGradePair(10.0,Grade.D),
+       new MarkGradePair(4.0,Grade.C),
+       new MarkGradePair(1.0,Grade.B),
+       new MarkGradePair(0.0,Grade.A),
+     } );
+
+  //??
+  public static final GradeLookupTable BONC_ERROR_LOOKUP 
+  = new GradeLookupTable( new MarkGradePair[]
+  { new MarkGradePair(25.0,Grade.F),
+    new MarkGradePair(10.0,Grade.D),
+    new MarkGradePair(4.0,Grade.C),
+    new MarkGradePair(1.0,Grade.B),
+    new MarkGradePair(0.0,Grade.A),
+  } );
+  
   //0-1 (poor), 2-5 (good), 5-10 (ok), 10-15 (poor), 15- (very poor)
   public static final GradeLookupTable METRICS_METHOD_LOC_LOOKUP
   = new GradeLookupTable( new MarkGradePair[] 

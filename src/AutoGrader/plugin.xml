@@ -71,11 +71,11 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="AutoGrader Category"
+            name="AutoGrader"
             id="AutoGrader">
       </category>
       <view
-            name="Auto-Grader View"
+            name="Auto-Grader"
             icon="icons/sample.gif"
             category="AutoGrader"
             class="ie.ucd.autograder.views.AutoGraderView"
