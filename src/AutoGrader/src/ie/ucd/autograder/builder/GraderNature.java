@@ -37,6 +37,7 @@ public class GraderNature implements IProjectNature {
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 		project.setDescription(desc, null);
+		GraderBuilder.collectProjectData(project, GraderBuilder.createCollectors());
 	}
 
 	/*
@@ -57,6 +58,7 @@ public class GraderNature implements IProjectNature {
 				return;
 			}
 		}
+		//TODO remove project data from DataStore
 	}
 
 	/*
