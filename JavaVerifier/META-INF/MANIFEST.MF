@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JavaVerifier
+Bundle-SymbolicName: JavaVerifier
+Bundle-Version: 0.0.1
+Require-Bundle: bcel.plugin;bundle-version="5.2.0"
