@@ -67,7 +67,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
         view.update();
       }
     }
-    return null;
+    return new IProject[0];
   }
   
   public static List<AggregateData> collectProjectData(IProject project, List<MarkerCollector> collectors) throws CoreException {

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MarkerAccessor Plug-in
+Bundle-Name: AutoGrader Plug-in
 Bundle-SymbolicName: AutoGrader;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Activator: ie.ucd.autograder.AutoGraderPlugin

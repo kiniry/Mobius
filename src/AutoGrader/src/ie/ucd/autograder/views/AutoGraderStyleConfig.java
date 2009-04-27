@@ -3,7 +3,6 @@ package ie.ucd.autograder.views;
 import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.views.AutoGraderDataProvider.GradeHolder;
 import ie.ucd.autograder.views.AutoGraderDataProvider.MeasureString;
-import ie.ucd.autograder.views.AutoGraderDataProvider.OverallGrade;
 import ie.ucd.autograder.views.AutoGraderDataProvider.TitleString;
 import net.sourceforge.nattable.typeconfig.style.DefaultStyleConfig;
 
@@ -75,7 +74,9 @@ public class AutoGraderStyleConfig extends DefaultStyleConfig {
     case F_MINUS:
     case G:
     case NG:
+      return AutoGraderView.GRADE_ERROR;
     case NA:
+      return AutoGraderView.EMPTY_COLOR;
     default:
       return AutoGraderView.GRADE_ERROR;
     }

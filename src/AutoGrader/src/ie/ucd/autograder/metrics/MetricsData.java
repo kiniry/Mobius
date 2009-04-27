@@ -24,7 +24,7 @@ public class MetricsData extends AggregateData {
     setData(metricsMap);
   }
   
-  public void setData(Map<String,MetricHolder> metricsMap) {
+  public final void setData(Map<String,MetricHolder> metricsMap) {
     clearInputData();
     // TLOC
     MetricHolder tlocMetric = metricsMap.get(MetricsConstants.TotalLinesOfCode.id);
