@@ -376,7 +376,7 @@ public class BCConstantPool extends BCCConstantPrinting
   }
 
 
-  public void save(AttributeWriter aw) {
+  public void save(final AttributeWriter aw) {
     // TODO Auto-generated method stub
   }
 

@@ -23,12 +23,12 @@ public class Predicate0Ar extends AbstractFormula {
   /**
    * A standard constructor.
    *
-   * @param value - whether constructed object should be
+   * @param avalue - whether constructed object should be
    *     a 'true' predicate.
    */
-  public Predicate0Ar(final boolean value) {
-    super(value ? Code.TRUE : Code.FALSE);
-    this.value = value;
+  public Predicate0Ar(final boolean avalue) {
+    super(avalue ? Code.TRUE : Code.FALSE);
+    this.value = avalue;
   }
 
   /**

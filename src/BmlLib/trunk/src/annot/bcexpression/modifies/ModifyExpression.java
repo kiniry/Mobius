@@ -20,13 +20,15 @@ public abstract class ModifyExpression extends BCExpression {
    * (or that we have no information about what can
    * be affected by described code).
    */
-  public static final ModifiesEverything Everything = new ModifiesEverything();
+  public static final ModifiesEverything EVERYTHING_MODIF =
+    new ModifiesEverything();
 
   /**
    * This says that described code won't affect
    * any variables.
    */
-  public static final ModifiesNothing Nothing = new ModifiesNothing();
+  public static final ModifiesNothing NOTHING_MODIF =
+    new ModifiesNothing();
 
   /**
    * A constructor from AttributeReader. It assumes that
@@ -84,17 +86,18 @@ public abstract class ModifyExpression extends BCExpression {
    * I will return here sth if I will need JavaType
    * of modify expression.
    *
-   * @throws RuntimeException - always.
+   * @return always {@link RuntimeException} is thrown
    */
-  @Override
   protected JavaType checkType1() {
     throw new RuntimeException("What type should it return?");
   }
 
   /**
    * Modify expression is assumed to be displayed at the
-   * root of the BCExpression only, so it has the lowest
+   * root of the BCExpression only, so it has the highest
    * priority.
+   *
+   * @return maximal priority of expressions (from {@link Priorities}).
    */
   @Override
   protected int getPriority() {
@@ -106,7 +109,7 @@ public abstract class ModifyExpression extends BCExpression {
    * I will return here sth if I will need JavaType
    * of modify expression.
    *
-   * @throws RuntimeException - always.
+   * @return always {@link RuntimeException} is thrown
    */
   @Override
   public JavaType getType1() {

@@ -14,6 +14,11 @@ package annot.io;
 public class ReadAttributeException extends Exception {
 
   /**
+   * Serial ID used for serialisation.
+   */
+  private static final long serialVersionUID = -3561967227749458269L;
+
+  /**
    * A standard constructor, with single string messages
    * describing error details.
    *

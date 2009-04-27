@@ -12,7 +12,6 @@ import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 
-import annot.attributes.BCPrintableAttribute;
 import annot.attributes.IBCAttribute;
 import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCClass;
@@ -235,8 +234,7 @@ public class MethodSpecification extends MethodAttribute implements
     return "method specification of " + this.method.toString();
   }
 
-  @Override
-  public void replace(BCClass bcc) {
+  public void replace(final BCClass bcc) {
     // TODO Auto-generated method stub
     
   }

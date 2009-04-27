@@ -53,17 +53,17 @@ public class BoundVar extends BCExpression {
    * {@link #getBoundVar(AttributeReader)} instead.
    *
    * @param jt - declared type of variable,
-   * @param index - variable id,
-   * @param qf - quantifier, where it is declared,
-   * @param vname - variable name (can be null).
+   * @param anindex - variable id,
+   * @param aqf - quantifier, where it is declared,
+   * @param avname - variable name (can be null).
    */
-  public BoundVar(final JavaBasicType jt, final int index,
-                  final QuantifiedFormula qf, final String vname) {
+  public BoundVar(final JavaBasicType jt, final int anindex,
+                  final QuantifiedFormula aqf, final String avname) {
     super(Code.BOUND_VAR);
     this.type = jt;
-    this.index = index;
-    this.qf = qf;
-    setVname(vname);
+    this.index = anindex;
+    this.qf = aqf;
+    setVname(avname);
   }
 
   /**
@@ -138,10 +138,10 @@ public class BoundVar extends BCExpression {
   /**
    * Sets a variable name.
    *
-   * @param vname - variable name to be set.
+   * @param avname - variable name to be set.
    */
-  public void setVname(final String vname) {
-    this.vname = vname;
+  public void setVname(final String avname) {
+    this.vname = avname;
   }
 
   /**

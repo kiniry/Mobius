@@ -24,7 +24,7 @@ import annot.textio.DisplayStyle;
 
 /**
  * This class represents single assert annotation
- * (on or more InCodeAttribute per one bytecode instruction)
+ * (on or more InCodeAttribute per one bytecode instruction).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
@@ -60,11 +60,13 @@ public class SingleAssert extends InCodeAttribute {
    *     that this annotation should be attached to,
    * @param minor - minor number of annotation, responsible
    *     for annotation ordering within single instruction.
+   * @param aformula the formula inside the assert
    */
   public SingleAssert(final BCMethod m, final InstructionHandle ih,
-                      final int minor, final AbstractFormula formula) {
+                      final int minor,
+                      final AbstractFormula aformula) {
     super(m, ih, minor);
-    this.formula = new ExpressionRoot < AbstractFormula > (this, formula);
+    this.formula = new ExpressionRoot < AbstractFormula > (this, aformula);
   }
 
   /**
@@ -174,26 +176,26 @@ public class SingleAssert extends InCodeAttribute {
       (getMinor() == -1 ? "any" : "" + getMinor()) + ")";
   }
 
-  @Override
+
   public int getIndex() {
     // TODO Auto-generated method stub
     return 0;
   }
 
-  @Override
+
   public String getName() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public void save(AttributeWriter aw) {
+
+  public void save(final AttributeWriter aw) {
     // TODO Auto-generated method stub
     
   }
 
-  @Override
-  public void replace(BCClass bcc) {
+
+  public void replace(final BCClass bcc) {
     // TODO Auto-generated method stub
     
   }

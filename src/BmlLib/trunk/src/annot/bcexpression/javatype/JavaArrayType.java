@@ -32,12 +32,12 @@ public class JavaArrayType extends JavaType {
   /**
    * A standard constructor.
    *
-   * @param signature - a BCEL's type signature. Can be
+   * @param asignature - a BCEL's type signature. Can be
    *     obtained using {@link Type#getSignature()} method.
    */
-  public JavaArrayType(final String signature) {
-    this.signature = signature;
-    this.bcelType = Type.getType(signature);
+  public JavaArrayType(final String asignature) {
+    this.signature = asignature;
+    this.bcelType = Type.getType(asignature);
     if (this.bcelType instanceof ArrayType) {
       final ArrayType at = (ArrayType) this.bcelType;
       final Type et = at.getElementType();
@@ -47,12 +47,12 @@ public class JavaArrayType extends JavaType {
   }
 
   @Override
-  public int compareTypes(final JavaType type) {
-    if (type == JavaReferenceType.ANY) {
+  public int compareTypes(final JavaType atype) {
+    if (atype == JavaReferenceType.ANY) {
       return TYPES_EQUAL;
     }
-    if (type instanceof JavaArrayType) {
-      final JavaArrayType rt = (JavaArrayType) type;
+    if (atype instanceof JavaArrayType) {
+      final JavaArrayType rt = (JavaArrayType) atype;
       if (this.signature.equals(rt.getSignature())) {
         return TYPES_EQUAL;
       }

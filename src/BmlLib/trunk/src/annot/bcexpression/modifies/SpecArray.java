@@ -65,14 +65,15 @@ public abstract class SpecArray extends BCExpression {
    * I will return here sth if I will need JavaType
    * of this expression.
    *
-   * @throws RuntimeException - always.
+   * @return always {@link RuntimeException} is thrown
    */
-  @Override
   protected JavaType checkType1() {
     throw new RuntimeException("What type should it return?");
   }
 
-  @Override
+  /**
+   * @return maximal priority of expressions (from {@link Priorities}).
+   */
   protected int getPriority() {
     return Priorities.MAX_PRI;
   }
@@ -82,9 +83,8 @@ public abstract class SpecArray extends BCExpression {
    * I will return here sth if I will need JavaType
    * of this expression.
    *
-   * @throws RuntimeException - always.
+   * @return always {@link RuntimeException} is thrown
    */
-  @Override
   public JavaType getType1() {
     throw new RuntimeException("What type should it return?");
   }

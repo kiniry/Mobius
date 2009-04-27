@@ -180,9 +180,8 @@ public class BCClass extends BCClassPrinting {
     }
   }
 
-  private void updateModelField(BCField afield) {
+  private void updateModelField(final BCField afield) {
     // TODO Auto-generated method stub
-    
   }
 
   /**

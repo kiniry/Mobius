@@ -50,7 +50,7 @@ public class LocalVariable extends OldExpression {
    * use {@link #getLocalVariable(BCMethod, AttributeReader)}
    * intead.
    *
-   * @param isOlt - tag marking the variable as old
+   * @param isOld - tag marking the variable as old
    * @param meth - initializing method,
    * @param id - number (index) of this local variable
    *     in method <code>m</code>,

@@ -28,10 +28,10 @@ public class JavaReferenceType extends JavaType {
   /**
    * A standard constructor.
    *
-   * @param signature - type's signature.
+   * @param asignature - type's signature.
    */
-  public JavaReferenceType(final String signature) {
-    this.signature = signature;
+  public JavaReferenceType(final String asignature) {
+    this.signature = asignature;
   }
 
   @Override

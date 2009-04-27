@@ -210,7 +210,7 @@ public abstract class BCClassRepresentation {
    *
    * @param afield the field to add to the class
    */
-  public void addGhostField(BCField afield) {
+  public void addGhostField(final BCField afield) {
     ghostFields.add(afield);
   }
 
@@ -495,9 +495,9 @@ public abstract class BCClassRepresentation {
     this.cp.save(this.jc);
   }
 
-  private Attribute[] addAndSaveNonJavaFields(AttributeWriter aw,
-                                         Attribute[] attrs,
-                                         GhostFieldsAttribute ghstFldsAttr) {
+  private Attribute[] addAndSaveNonJavaFields(final AttributeWriter aw,
+                                     final Attribute[] attrs,
+                                     final GhostFieldsAttribute ghstFldsAttr) {
 //  TODO implement this
     return attrs;
   }

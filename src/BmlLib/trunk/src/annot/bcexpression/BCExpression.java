@@ -123,13 +123,13 @@ public abstract class BCExpression {
    *
    * @param aconnector - type of expression
    *     (from annot.io.Code interface),
-   * @param subExpr - subexpression.
+   * @param asubExpr - subexpression.
    */
-  protected BCExpression(final int aconnector, final BCExpression subExpr) {
+  protected BCExpression(final int aconnector, final BCExpression asubExpr) {
     this.connector = aconnector;
     this.priority = getPriority();
     this.subExpr = new BCExpression[1];
-    this.subExpr[0] = subExpr;
+    this.subExpr[0] = asubExpr;
     init();
   }
 
@@ -210,13 +210,13 @@ public abstract class BCExpression {
   /**
    * Computes parent node and subtree size for whole subtree.
    *
-   * @param parent - this expression's parent,
+   * @param aparent - this expression's parent,
    * @param chn - position (subexpression numer) of this
    *     expression in <code>parent</code>.
    * @return size of expression tree.
    */
-  private int computeSize(final BCExpression parent, final int chn) {
-    this.parent = parent; //XXX doesn't work!
+  private int computeSize(final BCExpression aparent, final int chn) {
+    this.parent = aparent; //XXX doesn't work!
     this.childNo = chn; //XXX doesn;t work!
     this.treeSize = 0;
     for (int i = 0; i  <  this.subExpr.length; i++) {
@@ -652,11 +652,11 @@ public abstract class BCExpression {
    * Sets given subexpression.
    *
    * @param index - index of the subexpression to be set.
-   * @param subExpr - new subexpression to be set at
+   * @param asubExpr - new subexpression to be set at
    *     <code>index</code> position.
    */
-  public void setSubExpr(final int index, final BCExpression subExpr) {
-    this.subExpr[index] = subExpr;
+  public void setSubExpr(final int index, final BCExpression asubExpr) {
+    this.subExpr[index] = asubExpr;
   }
 
   /**

@@ -43,10 +43,10 @@ public final class JavaBasicType extends JavaType {
   /**
    * A private constructor.
    *
-   * @param name - string representation of JavaType.
+   * @param aname - string representation of JavaType.
    */
-  private JavaBasicType(final String name) {
-    this.name = name;
+  private JavaBasicType(final String aname) {
+    this.name = aname;
   }
 
   @Override

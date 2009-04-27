@@ -135,26 +135,25 @@ public class SingleLoopSpecification extends InCodeAttribute {
       (getMinor() == -1 ? "any" : getMinor() + "") + ")";
   }
 
-  @Override
   public int getIndex() {
     // TODO Auto-generated method stub
     return 0;
   }
 
-  @Override
+
   public String getName() {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
-  public void save(AttributeWriter aw) {
+
+  public void save(final AttributeWriter aw) {
     // TODO Auto-generated method stub
     
   }
 
-  @Override
-  public void replace(BCClass bcc) {
+
+  public void replace(final BCClass bcc) {
     // TODO Auto-generated method stub
     
   }

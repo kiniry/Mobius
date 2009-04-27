@@ -192,8 +192,8 @@ public abstract class OldExpression extends BCExpression {
     return this.old;
   }
 
-  public void setOld(final boolean old) {
-    this.old = old;
+  public void setOld(final boolean anold) {
+    this.old = anold;
   }
 
 }

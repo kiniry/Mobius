@@ -51,13 +51,13 @@ public class SingleList implements Comparable < SingleList >  {
    * This list will contain all annotations attached
    * to given <code>instruction</code>.
    *
-   * @param method - method of an bytecode instruction
+   * @param amethod - method of an bytecode instruction
    *     for this list.
-   * @param ih - bytecode instruction for this list.
+   * @param anih - bytecode instruction for this list.
    */
-  public SingleList(final BCMethod method, final InstructionHandle ih) {
-    this.method = method;
-    this.ih = ih;
+  public SingleList(final BCMethod amethod, final InstructionHandle anih) {
+    this.method = amethod;
+    this.ih = anih;
     this.attributes = new LinkedList < InCodeAttribute > ();
   }
 
@@ -84,7 +84,7 @@ public class SingleList implements Comparable < SingleList >  {
       }
     }
     final int m = ica.getMinor();
-    Iterator < InCodeAttribute >  iter = this.attributes.iterator();
+    final Iterator < InCodeAttribute >  iter = this.attributes.iterator();
     InCodeAttribute prev = null;
     while (iter.hasNext()) {
       final InCodeAttribute a = iter.next();
@@ -97,6 +97,15 @@ public class SingleList implements Comparable < SingleList >  {
     } else {
       this.attributes.add(this.attributes.indexOf(prev), ica); // ?
     }
+    setAttributesSequenceNumbers();
+  }
+
+  /**
+   * Adds the sequence numbers to the attributes to enable their ordering
+   * after the load.
+   */
+  private void setAttributesSequenceNumbers() {
+    Iterator < InCodeAttribute > iter;
     iter = this.attributes.iterator();
     int minor = -1;
     int inc = 0;

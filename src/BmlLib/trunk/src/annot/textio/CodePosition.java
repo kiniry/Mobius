@@ -2,9 +2,9 @@ package annot.textio;
 
 /**
  * This class represents a position in bytecode
- * (in it's logical representation only).
+ * (in its logical representation only).
  * It only stores a couple of values, it doesn't compute
- * anything itself. Contains mainly accessors for this values.
+ * anything itself. Contains mainly accessors for these values.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
@@ -13,6 +13,28 @@ public class CodePosition {
   //XXX shouldn't I change fields visibility to public instead of creating
   //    accessors here?
   //XXX shouldn't I at least remove comments from accessors?
+
+  /**
+   * The string hash is calculated modulo this number.
+   */
+  private static final int STRING_HASH_MODULO = 1000000;
+
+  /**
+   * The hash is calculated modulo this number.
+   */
+  private static final int HASH_MODULO = 1000;
+
+  /**
+   * The value of the hash for positions inside a method are modified using
+   * this number.
+   */
+  private static final int INMETHOD_HASH_MODIFIER = 17;
+
+  /**
+   * The value of the hash for positions inside a class, but before method,
+   * are modified using this number.
+   */
+  private static final int INCLASS_HASH_MODIFIER = 11;
 
   /**
    * Number of annotations in current comment.
@@ -74,19 +96,19 @@ public class CodePosition {
 
 
   /**
-   * Computes sum of character in str (+ 1) modulo 1000000.
+   * Computes sum of character in str (+ 1) modulo
+   * {@link CodePosition#STRING_HASH_MODULO}.
    *
    * @param str - any String
-   * @return Hash code of this String (the same value for
-   *     .equal() Strings).
+   * @return the hash code of this String (the same value for .equal() Strings).
    */
-  public static int StrHash(final String str) {
+  public static int strHash(final String str) {
     if (str == null) {
       return 0;
     }
     int h = 1;
     for (int i = 0; i  <  str.length(); i++) {
-      h = (h + i * str.charAt(i)) % 1000000;
+      h = (h + i * str.charAt(i)) % STRING_HASH_MODULO;
     }
     return h;
   }
@@ -163,13 +185,13 @@ public class CodePosition {
     h += this.annot_nr;
     h += this.pc;
     if (this.inClassAttribute) {
-      h += 11;
+      h += INCLASS_HASH_MODIFIER;
     }
     if (this.inMethodSpec) {
-      h += 17;
+      h += INMETHOD_HASH_MODIFIER;
     }
-    h += StrHash(this.keyword);
-    return h % 1000;
+    h += strHash(this.keyword);
+    return h % HASH_MODULO;
   }
 
   /**

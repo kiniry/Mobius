@@ -474,9 +474,9 @@ public class AttributeReader {
     final int b = readByte();
     switch (b) {
       case Code.MODIFIES_NOTHING:
-        return ModifyExpression.Nothing;
+        return ModifyExpression.NOTHING_MODIF;
       case Code.MODIFIES_EVERYTHING:
-        return ModifyExpression.Everything;
+        return ModifyExpression.EVERYTHING_MODIF;
       case Code.MODIFIES_IDENT:
         return new ModifiesIdent(this, b);
       case Code.MODIFIES_DOT:

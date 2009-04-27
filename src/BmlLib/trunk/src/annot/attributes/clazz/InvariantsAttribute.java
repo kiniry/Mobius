@@ -102,7 +102,7 @@ public class InvariantsAttribute extends BCPrintableAttribute
    * @param abcc - BCClass to place this attribute as it's
    *     class attribute.
    */
-  @Override
+
   public void replace(final BCClass abcc) {
     this.bcc = abcc;
     bcc.removeInvariants();
@@ -185,7 +185,6 @@ public class InvariantsAttribute extends BCPrintableAttribute
    * @return index to the Utf8 constant with the name  of the invariant
    *   table attribute
    */
-  @Override
   public int getIndex() {
     return bcc.getCp().findConstant(AttributeNames.INVARIANTS_ATTR);
   }
@@ -193,7 +192,6 @@ public class InvariantsAttribute extends BCPrintableAttribute
   /**
    * @return the name of the invariant table attribute
    */
-  @Override
   public String getName() {
     return AttributeNames.INVARIANTS_ATTR;
   }
@@ -217,7 +215,6 @@ public class InvariantsAttribute extends BCPrintableAttribute
    *
    * @param aw the writer to write the attribute to
    */
-  @Override
   public void save(final AttributeWriter aw) {
     aw.writeShort(invariants.size());
     for (int i = 0; i < invariants.size(); i++) {

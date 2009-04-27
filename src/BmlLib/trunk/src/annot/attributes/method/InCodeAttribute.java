@@ -48,7 +48,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    * This number is responsible for annotation ordering
    * within single bytecode instruction.
    * Multiple annotations can be attached to one instruction.
-   * They are sorted by thier minor number and displayed
+   * They are sorted by their minor number and displayed
    * in this order.
    */
   private int minor;

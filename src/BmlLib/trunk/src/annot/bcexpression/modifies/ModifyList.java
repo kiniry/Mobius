@@ -114,7 +114,7 @@ public class ModifyList extends BCExpression {
   @Override
   public void write(final AttributeWriter aw) {
     if (getSubExprCount() == 0) {
-      addModify(ModifyExpression.Everything);
+      addModify(ModifyExpression.EVERYTHING_MODIF);
     }
     aw.writeAttributeCount(getSubExprCount());
     writeSubExpressions(aw);

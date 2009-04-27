@@ -855,12 +855,12 @@ modifyExpression returns [ModifyExpression ast] :
   {initExpression();}
   (   NOTHING
       {
-         $ast = ModifyExpression.Nothing;
+         $ast = ModifyExpression.NOTHING_MODIF;
       }
     | EVERYTHING
       {
          //syso("\\everything parsed");
-         $ast = ModifyExpression.Everything;
+         $ast = ModifyExpression.EVERYTHING_MODIF;
       }
     | l=localVar
       {

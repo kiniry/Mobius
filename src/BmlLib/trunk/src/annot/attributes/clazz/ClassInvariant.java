@@ -212,7 +212,6 @@ public class ClassInvariant extends BCPrintableAttribute
    * @param abcc - BCClass to place this attribute as it's
    *     class invariant.
    */
-  @Override
   public void replace(final BCClass abcc) {
     abcc.setInvariant(this);
   }

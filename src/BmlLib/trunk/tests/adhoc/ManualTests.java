@@ -198,7 +198,7 @@ public final class ManualTests {
       ReadAttributeException {
     bcc = createSampleClass2();
     code = bcc.printCode();
-    final int noChange = CodePosition.StrHash(code) % 1000;
+    final int noChange = CodePosition.strHash(code) % 1000;
     System.out.println(code);
     System.out.println(xxx);
     System.out.println("length: " + code.length());
@@ -689,7 +689,7 @@ public final class ManualTests {
     final int ac = bcc.getAllAttributes().length;
     System.out.println("attribute count: " + ac);
     final String code1 = bcc.printCode();
-    final int h = CodePosition.StrHash(code1) % 1000;
+    final int h = CodePosition.strHash(code1) % 1000;
     if (h != hash2) {
       bcc = createSampleClass2();
       code = bcc.printCode();
