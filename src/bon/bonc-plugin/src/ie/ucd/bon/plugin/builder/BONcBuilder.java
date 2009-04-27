@@ -89,6 +89,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
     List<String> boncArgs = new ArrayList<String>();
     boncArgs.add("-i");
+    boncArgs.add("-d");
     for (IResource bonResource : bonResources) {
       File file = bonResource.getLocation().toFile();
       String path = file.getAbsolutePath();
@@ -110,8 +111,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     }
     Problems problems = Main.getProblems();
     SortedSet<BONProblem> actualProblems = problems.getProblems();
-
-    //System.out.println("Number of problems: " + actualProblems.size());
+    
 
     try {
       for (BONProblem bonProblem : actualProblems) {
