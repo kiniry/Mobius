@@ -749,7 +749,9 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    */
   public R visitJmlClassDecl(final JmlClassDecl node, final P p) {
     final P tmpP = preVisit(node, p);
-    return super.visitClass(node, tmpP);
+    final R r = super.visitClass(node, tmpP);
+    final R tmpR = scan(node.typeSpecs.clauses, tmpP);
+    return reduce(r, tmpR);
   }
 
   /**
@@ -774,7 +776,6 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
     final R r = scan(node.loopSpecs, tmpP);
     final R tmpR = super.visitDoWhileLoop(node, tmpP);
     return reduce(r, tmpR);
-
   }
 
   /**
