@@ -99,7 +99,7 @@ public class VerificationResult {
      * Returns a String representation of the VerificationResult.
      */
     public String toString() {
-        String ret = "";
+        String ret = "new new new --- ";
         if (numeric == VERIFIED_NOTYET) {
             ret = "VERIFIED_NOTYET";
         }
