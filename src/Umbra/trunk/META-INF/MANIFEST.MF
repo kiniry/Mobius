@@ -26,4 +26,5 @@ Bundle-Vendor: Mobius
 Import-Package: org.apache.bcel,
  org.apache.bcel.classfile,
  org.apache.bcel.generic,
- org.apache.bcel.util
+ org.apache.bcel.util,
+ org.apache.bcel.verifier
