@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.plugin"
       label="BONc Feature"
-      version="0.1.0"
+      version="0.2.0"
       provider-name="Fintan Fairmichael, University College Dublin">
 
    <description url="http://kind.ucd.ie/products/opensource/BONc/">
@@ -27,10 +27,19 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA
       <update label="BONc Update Site" url="http://kind.ucd.ie/products/opensource/BONc/updates"/>
    </url>
 
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.editors" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.jface.text" version="3.4.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="ie.ucd.bon.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.2.0"
+         unpack="false"/>
 
 </feature>
