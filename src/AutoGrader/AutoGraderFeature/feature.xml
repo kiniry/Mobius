@@ -2,7 +2,7 @@
 <feature
       id="AutoGrader"
       label="AutoGrader"
-      version="1.0.0">
+      version="0.1">
 
    <description url="http://www.example.com/description">
       AutoGrader.
