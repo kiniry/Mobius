@@ -9,8 +9,6 @@ package jml2bml.plugin;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
-import java.util.Enumeration;
 
 import jml2bml.Main;
 import jml2bml.bytecode.ClassFileLocation;
@@ -90,9 +88,7 @@ public class Jml2BmlPlugin extends Plugin {
 
   public void compile(final IFile a_jfile, final IFile a_bfile)
       throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException{
-    Bundle jml2bml = Jml2BmlPlugin.getDefault().getBundle();
-
-    ClassLoader applicationClassLoader = Jml2BmlPlugin.class.getClassLoader();
+    ClassLoader applicationClassLoader = this.getClass().getClassLoader();
     if (applicationClassLoader == null) {
       applicationClassLoader = ClassLoader.getSystemClassLoader();
     }
@@ -114,7 +110,7 @@ public class Jml2BmlPlugin extends Plugin {
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
-      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname));
+      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString());
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
     }
