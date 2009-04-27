@@ -1,7 +1,8 @@
 /*
- * @title "Jml2Bml" @description "JML to BML Compiler" @copyright "(c)
- * 2008-01-07 University of Warsaw" @license "All rights reserved. This program
- * and the accompanying materials are made available under the terms of the LGPL
+ * @title       "Jml2Bml" 
+ * @description "JML to BML Compiler" 
+ * @copyright   "(c) 2008-01-07 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying materials are made available under the terms of the LGPL
  * licence see LICENCE.txt file"
  */
 package jml2bml.bytecode;
@@ -62,35 +63,50 @@ public final class BytecodeUtil {
     final CharSequence name = sourceMethod.getName();
     final List<JCVariableDecl> parameters = sourceMethod.getParameters();
     List<BCMethod> candidates = new LinkedList < BCMethod >();
+    
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       final BCMethod method = clazz.getMethod(i);
       if (!method.getBcelMethod().getName().contentEquals(name))
         continue;
-      Type[] types = method.getBcelMethod().getArgumentTypes();
-      
+      Type[] types = method.getBcelMethod().getArgumentTypes();      
       if (types.length != parameters.size())
         continue;
+      
       boolean ok = true;
+      boolean direct = true;
       for(int j = 0; j < types.length; j++) {
         Type bytecodeType = types[j];
-        JCTree parameterType = parameters.get(j).getType();
-        String sourceTypeName = null;
-        if (parameterType.getKind() == Kind.PRIMITIVE_TYPE){
-           sourceTypeName = parameterType.toString();
-        } else if (parameterType.getKind() == Kind.IDENTIFIER) {
-          sourceTypeName = ((JCIdent) parameterType).sym.toString();          
-        } else
-          throw new RuntimeException("Unknown type kind: "+ parameterType + ":" + parameterType.getKind());
-        if (!sourceTypeName.contentEquals(bytecodeType.toString())){
-          ok = false;
-          break;
+        JCTree sourceType = parameters.get(j).getType();
+        if (bytecodeType instanceof BasicType) {
+          ok = (sourceType.getKind() == Kind.PRIMITIVE_TYPE) && ((BasicType) bytecodeType).toString().equals(sourceType.toString());
+        } else {
+          if (sourceType.getKind() == Kind.PRIMITIVE_TYPE){
+            ok = false;
+          } else {
+            String sourceTypeName = ((JCIdent) sourceType).toString();
+            String bytecodeTypeName = bytecodeType.toString();
+            
+            if (!sourceTypeName.equals(bytecodeTypeName)){
+              direct = false;
+              if (!sourceTypeName.equals(bytecodeTypeName.substring(bytecodeTypeName.lastIndexOf('.')+1))){
+                ok = false;
+              }
+            }
+          }
+          if (!ok) break;
         }
       }
+      if (direct)
+        return method;
       if (ok)
         candidates.add(method);
     }
     if (candidates.size() != 1){
-      String errMsg = "Multiple candidates for method " + name + ": ";
+      String errMsg;
+      if (candidates.size() == 0)
+        errMsg = "No matching candidate for method " + name + ": ";
+      else
+        errMsg = "Multiple candidates for method " + name + ": ";
       for (BCMethod met : candidates){
         errMsg += met.getBcelMethod().getSignature() +" ";
       }
@@ -99,54 +115,6 @@ public final class BytecodeUtil {
     return candidates.get(0);
   }
   
-  /**
-   * Searches for method of given name in given class.
-   * @param name name of the method
-   * @param clazz BCClass object representing the class
-   * @return BCMethod representing method <code>name</code>,
-   * or null, if the method was not found.
-   */
-  public static BCMethod findMethod(final CharSequence name, List<JCVariableDecl> parameters,
-                                    final BCClass clazz) {
-    List<BCMethod> candidates = new LinkedList < BCMethod >();
-    for (int i = 0; i < clazz.getMethodCount(); i++) {
-      final BCMethod method = clazz.getMethod(i);
-      if (method.getBcelMethod().getName().contentEquals(name)){
-        Type[] types = method.getBcelMethod().getArgumentTypes();
-        
-        if (types.length != parameters.size()){
-          continue;
-        }
-        for (int j = 0; j < types.length; j++){
-          String bcelTypeName = extractNameFromType(types[j]);
-        
-          if (bcelTypeName != parameters.get(j).vartype.toString()){
-            continue;
-          }
-                    
-        }
-        candidates.add(method);
-        return method;
-      }
-    }
-    if (candidates.size() != 1){
-      String errMsg = "Multiple candidates for method " + name + ": ";
-      for (BCMethod met : candidates){
-        errMsg += met.getBcelMethod().getSignature() +" ";
-      }
-      throw new Jml2BmlException(errMsg);
-    }
-    return candidates.get(0);
-  }
-
-  private static String extractNameFromType(Type type){
-    if (type instanceof BasicType){
-      return type.getSignature();
-    }
-    String[] splitted = type.getSignature().split("/");
-    String lastPart = splitted[splitted.length - 1]; 
-    return lastPart.substring(0, lastPart.length() - 1);
-  }
   /**
    * Creates FieldRef object for given field name in given class.
    * It is assumed that the field exists in this class. In the other case

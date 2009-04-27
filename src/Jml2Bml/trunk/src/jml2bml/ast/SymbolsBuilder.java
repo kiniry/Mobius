@@ -129,8 +129,7 @@ public class SymbolsBuilder extends
   private void handleLocal(final JmlVariableDecl node, final Tree method,
                            final Symbols s) {
     final BCClass cl = s.findClass();
-    final BCMethod m = BytecodeUtil.findMethod(((JmlMethodDecl) method).getName(),((JmlMethodDecl) method).params, 
-                                               cl);
+    final BCMethod m = BytecodeUtil.findMethod((JmlMethodDecl) method, cl);
     LocalVariable var = m.findLocalVariable(node.name.toString());
     if (var == null) {
       final int aindex = getIndex(m, node.getName().toString());

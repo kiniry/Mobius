@@ -384,8 +384,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
         throw new NotTranslatedRuntimeException(
           "Cannot find method for the \result: " + node);
       final JmlMethodDecl method = (JmlMethodDecl) methodTree;
-      final BCMethod bcMethod = BytecodeUtil.findMethod(method.getName(),method.params, 
-                                                        bcClazz);
+      final BCMethod bcMethod = BytecodeUtil.findMethod(method, bcClazz);
       return new RESULT(bcMethod);
     }
     throw new NotTranslatedRuntimeException("Singleton type not translated: " +

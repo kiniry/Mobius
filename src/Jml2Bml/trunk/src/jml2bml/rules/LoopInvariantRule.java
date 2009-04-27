@@ -212,7 +212,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
   public String visitJmlMethodDecl(final JmlMethodDecl node,
                                    final Symbols symb) {
     final BCClass clazz = symb.findClass();
-    final BCMethod bcMethod = BytecodeUtil.findMethod(node.getName(), node.params, clazz);
+    final BCMethod bcMethod = BytecodeUtil.findMethod(node, clazz);
     finder = myContext.get(TreeNodeFinder.class);
 
     if (bcMethod.getBcelMethod().isAbstract())
@@ -307,7 +307,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
           loop.sourceEnd == matchedLoop.sourceEnd) {
         final InstructionHandle loopAdd = loop.loopDesc
             .getInstructionToAnnotate().getInstruction();
-        addLoopSpecs(BytecodeUtil.findMethod(method.getName(), method.params, clazz), loopAdd,
+        addLoopSpecs(BytecodeUtil.findMethod(method, clazz), loopAdd,
                      modifies, invariant, decreases);
       }
   }
