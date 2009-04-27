@@ -24,7 +24,7 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA
    </license>
 
    <url>
-      <update label="BONc Update Site" url="http://kind.ucd.ie/products/opensource/BONc/updates"/>
+      <update label="BONc Update Site" url="http://kind.ucd.ie/products/opensource/BONc/update"/>
    </url>
 
    <requires>
