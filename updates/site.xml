@@ -18,18 +18,6 @@
    <feature url="features/MOBIUS_PVE_Editor_1.0.0.jar" id="MOBIUS_PVE_Editor" version="1.0.0">
       <category name="Mobius"/>
    </feature>
-   <feature url="features/ie.ucd.bon.plugin_0.1.0.jar" id="ie.ucd.bon.plugin" version="0.1.0">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/ch.ethz.inf.pm.jml.plugin_1.1.1.jar" id="ch.ethz.inf.pm.jml.plugin" version="1.1.1">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/ch.ethz.inf.pm.jml.plugin.help_1.0.3.jar" id="ch.ethz.inf.pm.jml.plugin.help" version="1.0.3">
-      <category name="Mobius"/>
-   </feature>
-   <feature url="features/mobius.escjava2.feature_2.0.8.jar" id="mobius.escjava2.feature" version="2.0.8">
-      <category name="Mobius"/>
-   </feature>
    <feature url="features/com.atlassw.tools.eclipse.checkstyle_4.3.3.jar" id="com.atlassw.tools.eclipse.checkstyle" version="4.3.3">
       <category name="Optional"/>
    </feature>
@@ -41,6 +29,9 @@
    </feature>
    <feature url="features/net.sourceforge.pmd.eclipse_3.2.5.v200810131150.jar" id="net.sourceforge.pmd.eclipse" version="3.2.5.v200810131150">
       <category name="Optional"/>
+   </feature>
+   <feature url="features/Mobius_Delta_Release_1.0.0.jar" id="Mobius_Delta_Release" version="1.0.0">
+      <category name="Mobius"/>
    </feature>
    <category-def name="Mobius" label="MobiusPVE"/>
    <category-def name="Optional" label="Optional">
