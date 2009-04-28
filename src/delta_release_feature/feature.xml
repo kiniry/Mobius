@@ -20,7 +20,7 @@
    <url>
       <discovery label="BONc" url="http://kind.ucd.ie/products/opensource/bonc/uppdates"/>
       <discovery label="ESCJava2" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
-      <discovery label="JML2" url="http://www.pm.inf.ethz/ch/research/universes/tools/eclipse"/>
+      <discovery label="JML2" url="http://www.pm.inf.ethz.ch/research/universes/tools/eclipse"/>
       <discovery label="Metrics" url="http://metrics.sourceforge.ent/updates"/>
       <discovery label="FindBugs" url="http://findbugs.cs.umd.edu/eclipse"/>
       <discovery label="PMD" url="http://pmd.sf.net/eclipse"/>
