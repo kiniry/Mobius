@@ -6,55 +6,21 @@
       plugin="mobius.pluginlib">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      Mobius PVE Delta Resource
    </description>
 
    <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+      EU IST Mobius contributors
    </copyright>
 
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
 
-   <includes
-         id="FreeBoogieFeature"
-         version="0.0.0"/>
-
-   <includes
-         id="ie.ucd.bon.plugin"
-         version="0.0.0"/>
-
-   <includes
-         id="mobius.BMLLib.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="mobius.escjava2.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="mobius.RCC.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="MOBIUS_Coq_Editor"
-         version="0.0.0"/>
-
-   <includes
-         id="MOBIUS_PVE_Editor"
-         version="0.0.0"/>
-
-   <includes
-         id="Prover_Editor_feature"
-         version="0.0.0"/>
-
-   <includes
-         id="DirectVCGen"
-         version="0.0.0"/>
-
-   <includes
-         id="mobius.Umbra.feature"
-         version="0.0.0"/>
+   <url>
+      <discovery label="BONc" url="http://kind.ucd.ie/products/opensource/bonc/uppdates"/>
+      <discovery label="ESCJava2" url="http://kind.ucd.ie/products/opensource/Escjava2/escjava2-eclipse/updates"/>
+      <discovery label="JML2" url="http://www.pm.inf.ethz/ch/research/universes/tools/eclipse"/>
+   </url>
 
 </feature>
