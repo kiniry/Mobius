@@ -1,9 +1,11 @@
 package mobius.logic.lang.boogie;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import freeboogie.ast.Declaration;
+import freeboogie.astutil.PrettyPrinter;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
 import org.antlr.runtime.ANTLRFileStream;
@@ -13,6 +15,7 @@ import org.antlr.runtime.RecognitionException;
 import mobius.logic.lang.ABasicLanguage;
 import mobius.logic.lang.generic.ast.GenericAst;
 import mobius.logic.lang.generic.ast.TypeCheckedAst;
+import mobius.util.Logger;
 
 /** 
  * Support for Boogie. 
@@ -34,8 +37,20 @@ public class BoogieLanguage extends ABasicLanguage {
 
   /** {@inheritDoc} */
   @Override public void generateFrom(final TypeCheckedAst ast) {
+    System.out.println("  Generate Boogie.");
     Declaration boogieAst = boogie.getFrom(ast);
-    assert false : "todo";
+    for (File f : getGenerate()) {
+      try {
+        FileWriter w = new FileWriter(f);
+        PrettyPrinter pp = new PrettyPrinter(w);
+        boogieAst.eval(pp);
+        w.close();
+      } 
+      catch (IOException e) {
+        Logger.warn.println("  Can't write to " + f.getName());
+        e.printStackTrace();
+      }
+    }
   }
 
   /** {@inheritDoc} */

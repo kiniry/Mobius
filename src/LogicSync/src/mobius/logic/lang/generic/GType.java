@@ -20,8 +20,9 @@ public class GType implements Iterable<GType> {
   
   public GType(String ...a) {
     last = this;
-    assert (a.length > 1);
+    assert (a.length >= 1);
     name = a[0];
+    // FIXME
   }
 
   public GType(GType t) {

@@ -107,7 +107,10 @@ public class TypeChecker {
     }
     return "";
   }
-  
+
+  public GType getTermType(final Term term) {
+    return termTypes.get(term);
+  }
   
   private class MyEvaluator extends Evaluator<Boolean> { 
     /** the list of variables declared by a forall. It is used like a Stack. */

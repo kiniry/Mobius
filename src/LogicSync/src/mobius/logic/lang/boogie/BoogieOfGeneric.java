@@ -9,11 +9,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import freeboogie.ast.Ast;
+import freeboogie.ast.AtomFun;
+import freeboogie.ast.AtomId;
+import freeboogie.ast.AtomQuant;
 import freeboogie.ast.Axiom;
 import freeboogie.ast.BinaryOp;
 import freeboogie.ast.ConstDecl;
 import freeboogie.ast.Declaration;
 import freeboogie.ast.Expr;
+import freeboogie.ast.Exprs;
 import freeboogie.ast.Function;
 import freeboogie.ast.PrimitiveType;
 import freeboogie.ast.Signature;
@@ -77,6 +81,23 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
     typeFromName = new HashMap<String, PrimitiveType.Ptype>();
     ignoredIds = new HashSet<String>();
     castIds = new HashSet<String>();
+    
+    binaryOpFromName.put("integralLE", BinaryOp.Op.LE);
+    binaryOpFromName.put("Zeq_bool", BinaryOp.Op.EQ);
+    binaryOpFromName.put("=", BinaryOp.Op.EQ);
+    binaryOpFromName.put("\\/", BinaryOp.Op.OR);
+    binaryOpFromName.put("bor", BinaryOp.Op.OR);
+
+    castIds.add("S_to_Z");
+    castIds.add("Z_to_S");
+    castIds.add("S_to_bool");
+
+    typeFromName.put("Z", PrimitiveType.Ptype.INT);
+    typeFromName.put("Prop", PrimitiveType.Ptype.BOOL);
+    typeFromName.put("bool", PrimitiveType.Ptype.BOOL);
+
+    ignoredIds.add("Z_to_S_elim");
+    ignoredIds.add("T");
   }
 
   public Declaration getFrom(final TypeCheckedAst typedGeneric) {
@@ -87,21 +108,35 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
   /** {@inheritDoc} */
   @Override
   public Ast evalApplication(final Term next, final Term first) {
-    assert false : "not implemented";
-    return null;
+    String op = ((Atom) first).getId();
+    UnaryOp.Op unaryOp;
+    BinaryOp.Op binaryOp;
+    if ((unaryOp = unaryOpFromName.get(op)) != null) {
+      return UnaryOp.mk(unaryOp, (Expr) first.getNext().eval(this));
+    }
+    else if ((binaryOp = binaryOpFromName.get(op)) != null) {
+      return BinaryOp.mk(
+        binaryOp, 
+        (Expr) first.getNext().eval(this),
+        (Expr) first.getNext().getNext().eval(this));
+    }
+    else return AtomFun.mk(
+      op, 
+      null, 
+      getActualArgs(first.getNext()));
   }
 
   /** {@inheritDoc} */
   @Override
   public Ast evalAtom(final Term next, final String id) {
-    assert false : "not implemented";
-    return null;
+    return AtomId.mk(id, null);
   }
 
   /** {@inheritDoc} */
   @Override
   public Declaration evalClauseList(final LinkedList<GenericAst> list) {
     Iterator<GenericAst> it = list.descendingIterator();
+System.out.println("  reset result");
     result = null;
     while (it.hasNext()) {
       it.next().eval(this);
@@ -112,15 +147,13 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
   /** {@inheritDoc} */
   @Override
   public Ast evalDoc(final String content) {
-    assert false : "not implemented";
-    return null;
+    return null; // TODO(rgrig): put comment in FreeBoogie AST
   }
 
   /** {@inheritDoc} */
   @Override
   public Ast evalForall(final Term next, final Atom vars, final Term term) {
-    assert false : "not implemented";
-    return null;
+    return wrapInForall((Expr) term.eval(this), vars);
   }
 
   /** {@inheritDoc} */
@@ -130,6 +163,7 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
   public Ast evalClause(final String id, final Term term) {
     if (isSpecial(id)) return result;
 
+System.out.println("  process " + id);
     GType t = tc.getType(id);
     if (t == null) {
       result = Axiom.mk(null, (Expr) term.eval(this), result);
@@ -137,12 +171,12 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
     else if (t.getArity() > 1) {
       // translate to function
       Declaration args = getArgs(t);
-      Declaration result = VariableDecl.mk(
+      Declaration funResult = VariableDecl.mk(
         Id.get("unnamed"), 
         convertType(t.getReturn()),
         null,
         null); 
-      Signature sig = Signature.mk(id, args, result, null);
+      Signature sig = Signature.mk(id, args, funResult, null);
       result = Function.mk(sig, result);
     } 
     else if (t.isTopType()) {
@@ -164,12 +198,30 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
       ignoredIds.contains(id);
   }
 
-  private Declaration getArgs(GType gt) {
+  private Declaration getArgs(final GType gt) {
     assert gt != null;
     if (gt.isLast()) return null;
     Type t = convertType(gt);
     Declaration tail = getArgs(gt.getNext());
     return VariableDecl.mk(Id.get("unnamed"), t, null, tail);
+  }
+
+  private Exprs getActualArgs(final Term term) {
+    if (term == null) return null;
+    return Exprs.mk((Expr) term.eval(this), getActualArgs(term.getNext()));
+  }
+
+  private Expr wrapInForall(final Expr e, final Atom vars) {
+    if (vars == null) return e;
+    return AtomQuant.mk(
+      AtomQuant.QuantType.FORALL,
+      VariableDecl.mk(
+        vars.getId(),
+        convertType(tc.getTermType(vars)),
+        null,
+        null),
+      null,
+      wrapInForall(e, (Atom) vars.getNext()));
   }
 
   private Type convertType(GType t) {
