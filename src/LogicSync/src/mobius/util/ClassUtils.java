@@ -54,7 +54,7 @@ public class ClassUtils {
 
   private static void getClassesFromDir(List<String> classes, File prefix,
                                   String packageName) {
-    if (!prefix.exists()) {
+    if (!prefix.exists() || ! prefix.isDirectory()) {
       return;
     }
     final File[] files = prefix.listFiles();

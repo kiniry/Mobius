@@ -24,6 +24,7 @@ import mobius.util.Logger;
  */
 public class BoogieLanguage extends ABasicLanguage {
   private BoogieOfGeneric boogie;
+  private GenericOfBoogie generic;
 
   /** {@inheritDoc} */
   @Override public boolean isLanguageFile(final File f) {
@@ -33,6 +34,7 @@ public class BoogieLanguage extends ABasicLanguage {
   /** Initialize. */
   @Override public void prepare() {
     boogie = new BoogieOfGeneric();
+    generic = new GenericOfBoogie();
   }
 
   /** {@inheritDoc} */
@@ -62,6 +64,7 @@ public class BoogieLanguage extends ABasicLanguage {
             new ANTLRFileStream(f.getAbsolutePath()))));
         parser.fileName = f.getName();
         final Declaration d = parser.program();
+        return generic.getFrom(d);
       } 
       catch (IOException e) {
         e.printStackTrace(); // FIXME
@@ -70,7 +73,6 @@ public class BoogieLanguage extends ABasicLanguage {
         e.printStackTrace(); // FIXME
       }
     }
-    assert false : "todo";
     return null;
   }
 

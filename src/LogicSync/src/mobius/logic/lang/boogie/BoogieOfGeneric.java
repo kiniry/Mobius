@@ -1,17 +1,21 @@
 package mobius.logic.lang.boogie;
 
 // {{{ imports
-import java.util.Map;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import freeboogie.ast.Ast;
+import freeboogie.ast.AtomCast;
 import freeboogie.ast.AtomFun;
 import freeboogie.ast.AtomId;
 import freeboogie.ast.AtomQuant;
+import freeboogie.ast.AtomLit;
 import freeboogie.ast.Axiom;
 import freeboogie.ast.BinaryOp;
 import freeboogie.ast.ConstDecl;
@@ -69,6 +73,8 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
   /** These ids are translated into casts. */
   private static Set<String> castIds;
 
+  private static Pattern castPattern = Pattern.compile("(.*)_to_(.*)");
+
   /** Typechecker for the generic language. */
   private TypeChecker tc;
 
@@ -81,12 +87,17 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
     typeFromName = new HashMap<String, PrimitiveType.Ptype>();
     ignoredIds = new HashSet<String>();
     castIds = new HashSet<String>();
+
+    unaryOpFromName.put("negb", UnaryOp.Op.NOT);
+    unaryOpFromName.put("not", UnaryOp.Op.NOT);
     
     binaryOpFromName.put("integralLE", BinaryOp.Op.LE);
     binaryOpFromName.put("Zeq_bool", BinaryOp.Op.EQ);
+    binaryOpFromName.put("Seq", BinaryOp.Op.EQ);
     binaryOpFromName.put("=", BinaryOp.Op.EQ);
     binaryOpFromName.put("\\/", BinaryOp.Op.OR);
     binaryOpFromName.put("bor", BinaryOp.Op.OR);
+    binaryOpFromName.put("->", BinaryOp.Op.IMPLIES);
 
     castIds.add("S_to_Z");
     castIds.add("Z_to_S");
@@ -120,6 +131,11 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
         (Expr) first.getNext().eval(this),
         (Expr) first.getNext().getNext().eval(this));
     }
+    else if (castIds.contains(op)) {
+      return AtomCast.mk(
+        (Expr) first.getNext().eval(this), 
+        getHackishName(op));
+    }
     else return AtomFun.mk(
       op, 
       null, 
@@ -128,7 +144,15 @@ public class BoogieOfGeneric extends ACleanEvaluator<Ast> {
 
   /** {@inheritDoc} */
   @Override
-  public Ast evalAtom(final Term next, final String id) {
+  public Ast evalAtom(final Term next, String id) {
+    // TODO: true/false
+    if (id.equals("true") || id.equals("True")) {
+      return AtomLit.mk(AtomLit.AtomType.TRUE);
+    }
+    else if (id.equals("false") || id.equals("False")) {
+      return AtomLit.mk(AtomLit.AtomType.FALSE);
+    }
+    else if (id.equals("null")) id = "Null";
     return AtomId.mk(id, null);
   }
 
@@ -160,7 +184,7 @@ System.out.println("  reset result");
   // TODO: what to do with generics? (in axioms and global declarations...)
   // TODO: constants vs variables
   @Override
-  public Ast evalClause(final String id, final Term term) {
+  public Ast evalClause(String id, final Term term) {
     if (isSpecial(id)) return result;
 
 System.out.println("  process " + id);
@@ -173,7 +197,7 @@ System.out.println("  process " + id);
       Declaration args = getArgs(t);
       Declaration funResult = VariableDecl.mk(
         Id.get("unnamed"), 
-        convertType(t.getReturn()),
+        convertType(t.getReturn().getName()),
         null,
         null); 
       Signature sig = Signature.mk(id, args, funResult, null);
@@ -183,7 +207,8 @@ System.out.println("  process " + id);
       result = TypeDecl.mk(id, result);
     }
     else {
-      result = ConstDecl.mk(id, convertType(t), false, result);
+      if (id.equals("null")) id = "Null";
+      result = ConstDecl.mk(id, convertType(t.getName()), false, result);
       // TODO: when to make variables?
     }
     return result;
@@ -201,7 +226,7 @@ System.out.println("  process " + id);
   private Declaration getArgs(final GType gt) {
     assert gt != null;
     if (gt.isLast()) return null;
-    Type t = convertType(gt);
+    Type t = convertType(gt.getName());
     Declaration tail = getArgs(gt.getNext());
     return VariableDecl.mk(Id.get("unnamed"), t, null, tail);
   }
@@ -217,15 +242,24 @@ System.out.println("  process " + id);
       AtomQuant.QuantType.FORALL,
       VariableDecl.mk(
         vars.getId(),
-        convertType(tc.getTermType(vars)),
+        convertType(tc.getTermType(vars).getName()),
         null,
         null),
       null,
       wrapInForall(e, (Atom) vars.getNext()));
   }
 
-  private Type convertType(GType t) {
-    PrimitiveType.Ptype ptype = typeFromName.get(t.getName());
-    return ptype == null? UserType.mk(t.getName()) : PrimitiveType.mk(ptype);
+  private Type convertType(String t) {
+    PrimitiveType.Ptype ptype = typeFromName.get(t);
+    return ptype == null? UserType.mk(t) : PrimitiveType.mk(ptype);
+  }
+
+  private Type getHackishName(String castId) {
+    Matcher m = castPattern.matcher(castId);
+    if (!m.matches()) {
+      throw new IllegalStateException("wrong stuff in castIds");
+    }
+    assert m.groupCount() == 2;
+    return convertType(m.group(2));
   }
 }

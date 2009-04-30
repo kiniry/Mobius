@@ -36,6 +36,7 @@ import freeboogie.ast.UnaryOp;
 import freeboogie.ast.UserType;
 import freeboogie.ast.VariableDecl;
 import mobius.logic.lang.generic.ast.Clause;
+import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.GenericAst;
 //}}}
 
@@ -104,20 +105,9 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
   private int fAxiomCnt;
 
 
-  /**
-   * @param boogie boogie
-   * @return FOL
-   */
-  public LinkedList<GenericAst> process(final Declaration boogie) {
-    fAxiomCnt = 0;
-    fResult = new LinkedList<GenericAst>();
-    if (boogie != null) { boogie.eval(this); }
-    return fResult;
-  }
-
-  /** @return a fresh axiom name */
-  private String freshAxiomName() {
-    return "axiom" + fAxiomCnt++;
+  public ClauseList getFrom(final Declaration boogie) {
+    assert false : "not implemented";
+    return null;
   }
 
   /** {@inheritDoc} */
@@ -222,13 +212,14 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
   /** {@inheritDoc} */
   @Override
   public GenericAst eval(
-    final Axiom axiom, 
+    final Axiom axiom,
+    final String name, 
     final Identifiers typeVars, 
     final Expr expr, 
     final Declaration tail
   ) {
     fResult.add(Clause.mk(
-      freshAxiomName(),
+      name,
       (mobius.logic.lang.generic.ast.Term)expr.eval(this)));
     if (tail != null) { tail.eval(this); }
     return null;
