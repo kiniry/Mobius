@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.ui.internal.ide.IMarkerImageProvider;
 
 import pluginlib.Log;
 import pluginlib.Utils;
@@ -225,13 +224,6 @@ public class EscjavaMarker implements IEscjavaListener {
 		}
 		list.add(s);
 		return list;
-	}
-	
-	static class Provider implements IMarkerImageProvider {
-		public String getImagePath(IMarker marker) {
-			System.out.println("CALLED");
-			return "icons/escjava_prolem.gif";
-		}	
 	}
 	
 }

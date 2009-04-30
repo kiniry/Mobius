@@ -36,7 +36,7 @@
    <!-- This extension defines the Esc/Java project nature -->
      
    <extension
-         id="autocheckEscjavaNature"
+         id="mobius.escjava2.plugin.autocheckEscjavaNature"
          name="EscjavaAutocheck"
          point="org.eclipse.core.resources.natures">
       <runtime>
@@ -48,7 +48,7 @@
             id="org.eclipse.jdt.core.javanature">
       </requires-nature>
       <builder
-            id="mobius.escjava2.plugin.autocheckEscjavaBuilder">
+            id="mobius.escjava2.ui.autocheckEscjavaBuilder">
       </builder>
    </extension>
 
@@ -56,7 +56,7 @@
 	runs Esc/Java on files -->
 	   
    <extension
-         id="autocheckEscjavaBuilder"
+         id="mobius.escjava2.plugin.autocheckEscjavaBuilder"
          name="ESC/Java2 Autocheck Builder"
          point="org.eclipse.core.resources.builders">
       <builder>
@@ -115,7 +115,7 @@
 <!-- This extension defines a new marker type for Esc/Java problems -->
 <!-- The attribute is used to associate additional information with the marker -->  
    <extension
-         id="mobius.escjava2.escjavaWarningMarker"
+         id="mobius.escjava2.plugin.escjavaWarningMarker"
          name="ESC/Java2 Warning"
          point="org.eclipse.core.resources.markers">
       <super
@@ -201,7 +201,7 @@
                class="escjava.plugin.EscjavaAction$DisableESC"
                menubarPath="JMLMenu/EscjavaGroup"
                id="mobius.escjava2.plugin.EscjavaAction.DisableESC"
-			   definitionId="mobius.escjava2.plugin.commands.DisableESC">
+			   definitionId="mobius.escjava2.ui.commands.DisableESC">
          </action>
          <action
                label="Enable auto ESC/Java2 checking"
@@ -380,6 +380,18 @@
             description="Highlights the declaration being violated by a given problem marker"
             categoryId="mobius.escjava2.plugin.EscjavaCommandCategory"
             id="mobius.escjava2.plugin.commands.GoToDeclaration">
+      </command>
+      <command
+            name="Disable auto ESC/Java2 checking"
+            description="Disables selected objects for auto ESC/Java2 checking"
+            categoryId="mobius.escjava2.plugin.EscjavaCommandCategory"
+            id="mobius.escjava2.ui.commands.DisableESC">
+      </command>
+      <command
+            name="Enable auto ESC/Java2 checking"
+            description="Enables selected objects for auto ESC/Java2 checking"
+            categoryId="mobius.escjava2.plugin.EscjavaCommandCategory"
+            id="mobius.escjava2.plugin.commands.EnableESC">
       </command>
   </extension>
 
