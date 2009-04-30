@@ -18,11 +18,9 @@ public class GType implements Iterable<GType> {
   /** the last element of this type. */
   private GType last;
   
-  public GType(String ...a) {
+  public GType(String a) {
     last = this;
-    assert (a.length >= 1);
-    name = a[0];
-    // FIXME
+    name = a;
   }
 
   public GType(GType t) {

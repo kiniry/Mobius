@@ -258,8 +258,8 @@
 	 <delete dir="${dist}"/>
   </target>
 	
- <target name="test-gen" depends="compile">
-  	<java fork="yes" dir="test/" classname="mobius.logic.Main">
+ <target name="test-gen" depends="dist">
+  	<java fork="yes" dir="test/" jar="dist/logicsync.jar">
         <classpath refid="test.path"/>
   		<arg value="-tc"/>
   		<arg value="output.fol"/>
