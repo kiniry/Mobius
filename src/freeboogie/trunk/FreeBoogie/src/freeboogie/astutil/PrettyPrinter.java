@@ -251,11 +251,13 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(
     Axiom axiom, 
+    String name,
     Identifiers typeVars, 
     Expr expr, 
     Declaration tail
   ) {
     say("axiom");
+    say (" "); say(name); say(": ");
     if (typeVars != null) {
       say("<");
       typeVars.eval(this);

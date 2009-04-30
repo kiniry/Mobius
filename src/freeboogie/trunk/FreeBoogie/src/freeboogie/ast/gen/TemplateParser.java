@@ -532,12 +532,9 @@ public class TemplateParser {
   /*
    * Writes |id| using the case convention |cs|.
    */
-  // candidate for memoization
-  private void writeId(String id, TemplateToken.Case cs) throws IOException {
-    if (cs == TemplateToken.Case.ORIGINAL_CASE) {
-      write(id);
-      return;
-    }
+  private static String convertId(String id, TemplateToken.Case cs) 
+  throws IOException {
+    if (cs == TemplateToken.Case.ORIGINAL_CASE) return id;
     StringBuilder res = new StringBuilder(id.length());
     boolean first = true;
     boolean prevIs_ = true;
@@ -583,9 +580,13 @@ public class TemplateParser {
         prevIsUpper = thisIsUpper;
       }
     }
-    write(res.toString());
+    return res.toString();
   }
-  
+
+  private void writeId(String id, TemplateToken.Case cs) throws IOException {
+    write(convertId(id, cs));
+  }
+   
   /*
    * Sends |s| to the |output|.
    */
@@ -597,5 +598,14 @@ public class TemplateParser {
   
   private void err(String e) {
     Err.error(lexer.getName() + lexer.getLoc() + ": " + e);
+  }
+
+  
+  /** Tests. */
+  public static void main(String[] args) throws Exception {
+    System.out.println("UserDefine = " + 
+      convertId("user_define", TemplateToken.Case.PASCAL_CASE));
+    System.out.println("Generic = " + 
+      convertId("generic", TemplateToken.Case.PASCAL_CASE));
   }
 }

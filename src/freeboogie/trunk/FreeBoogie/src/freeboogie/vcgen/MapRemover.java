@@ -101,6 +101,7 @@ public class MapRemover extends Transformer {
         null, 
         axiomExpr);
       ast = Axiom.mk(
+        "select_update_" + n,
         Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n)),
         axiomExpr,
         ast);
@@ -151,6 +152,7 @@ public class MapRemover extends Transformer {
           null,
           axiomExpr);
         ast = Axiom.mk(
+          "select_update_diff_" + n,
           Identifiers.mk(AtomId.mk("TV", null), nIdentifiers("T", n)),
           axiomExpr,
           ast);

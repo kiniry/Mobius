@@ -7,6 +7,8 @@ import freeboogie.util.StackedHashMap;
 
 /**
  * Constructs a {@code SymbolTable} from an AST.
+ *
+ * TODO(rgrig): Compute map axiom_name <-> axiom
  * 
  * @author rgrig 
  * @author miko
@@ -205,7 +207,7 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
   
   @Override
-  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
     typeVarDecl.push();
     collectTypeVars(typeVarDecl.peek(), typeVars);
     expr.eval(this);

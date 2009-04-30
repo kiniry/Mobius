@@ -35,7 +35,7 @@ public class AxiomSender<T extends Term<T>> extends Transformer {
   }
 
   @Override
-  public void see(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
     T a = term.of(expr);
     axioms.add(a);
     a.collectAxioms(axioms);

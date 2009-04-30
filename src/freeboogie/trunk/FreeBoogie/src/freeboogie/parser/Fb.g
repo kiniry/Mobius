@@ -67,7 +67,7 @@ function_decl_tail returns [Declaration v]:
 
 axiom_tail returns [Declaration v]:
   ('<' tv=id_list '>')? e=expr ';' declarations 
-    { if(ok) $v=Axiom.mk($tv.v,$e.v,$declarations.v,fileLoc($e.v)); }
+    { if(ok) $v=Axiom.mk(Id.get("axiom"),$tv.v,$e.v,$declarations.v,fileLoc($e.v)); }
 ;
 
 global_decl_tail returns [Declaration v]:

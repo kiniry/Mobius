@@ -740,7 +740,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+  public Type eval(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
     enclosingTypeVar.push();
     collectEnclosingTypeVars(typeVars);
     Type t = expr.eval(this);

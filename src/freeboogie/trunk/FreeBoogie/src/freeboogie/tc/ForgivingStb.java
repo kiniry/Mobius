@@ -134,7 +134,7 @@ public class ForgivingStb extends Transformer implements StbInterface {
   }
 
   @Override
-  public Axiom eval(Axiom axiom, Identifiers typeVars, Expr expr, Declaration tail) {
+  public Axiom eval(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
     toIntroduce.addFirst(new HashSet<String>());
     expr = (Expr)expr.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
@@ -142,7 +142,7 @@ public class ForgivingStb extends Transformer implements StbInterface {
       log.fine("Introducing " + ti + " as a generic on axiom at " + axiom.loc());
     }
     if (tail != null) tail = (Declaration)tail.eval(this);
-    return Axiom.mk(typeVars, expr, tail, axiom.loc());
+    return Axiom.mk(name, typeVars, expr, tail, axiom.loc());
   }
 
   @Override

@@ -7,9 +7,9 @@ import java.util.Map;
 import freeboogie.util.Err;
 
 /**
- * Lexer for template files. The macros and teh delimiters they use 
- * are recognized; everything inbetween is considered as the token
- * `other' and will be later copied verabtim to the output. 
+ * Lexer for template files. The macros and the delimiters they use 
+ * are recognized; everything in-between is considered as the token
+ * `other' and will be later copied verbatim to the output. 
  * 
  * @author rgrig 
  */

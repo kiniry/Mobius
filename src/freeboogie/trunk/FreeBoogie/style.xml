@@ -55,7 +55,7 @@
         <module name="InterfaceIsType"/>
 
         <module name="CyclomaticComplexity">
-          <property name="max" value="20"/>
+          <property name="max" value="50"/>
         </module>
 
         <module name="UpperEll"/>

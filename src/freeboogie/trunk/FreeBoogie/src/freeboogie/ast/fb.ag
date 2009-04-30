@@ -9,7 +9,7 @@ TypeDecl =     String! name, Declaration tail;
 ConstDecl=     String! id, Type! type, boolean uniq, Declaration tail;
 
 // These are declarations that may introduce type variables
-Axiom =        Identifiers typeVars, Expr! expr, Declaration tail;
+Axiom =        String! name, Identifiers typeVars, Expr! expr, Declaration tail;
 Function =     Signature! sig, Declaration tail;
 VariableDecl = String! name, Type! type, 
                Identifiers typeVars, Declaration tail;
