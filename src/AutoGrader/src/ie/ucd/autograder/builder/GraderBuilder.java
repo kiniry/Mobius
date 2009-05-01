@@ -124,18 +124,20 @@ public class GraderBuilder extends IncrementalProjectBuilder {
 
     if (cache != null) {
       AbstractMetricSource ms = cache.get(project);
-      for (IdName idName : MetricsConstants.METRICS) {
-        String name = idName.id;
-        Metric metric = ms.getValue(name);
+      if (ms != null) {
+        for (IdName idName : MetricsConstants.METRICS) {
+          String name = idName.id;
+          Metric metric = ms.getValue(name);
 
-        Avg averagePerPackage = ms.getAverage(name, Constants.PER_PACKAGE);        
-        Max maxPerPackage = ms.getMaximum(name, Constants.PER_PACKAGE);
-        Avg averagePerClass = ms.getAverage(name, Constants.PER_CLASS);
-        Max maxPerClass = ms.getMaximum(name, Constants.PER_CLASS);
-        Avg averagePerMethod = ms.getAverage(name, Constants.PER_METHOD);
-        Max maxPerMethod = ms.getMaximum(name, Constants.PER_METHOD);
-        MetricHolder holder = new MetricHolder(idName, metric, averagePerPackage, maxPerPackage, averagePerClass, maxPerClass, averagePerMethod, maxPerMethod);
-        metricMap.put(name, holder);
+          Avg averagePerPackage = ms.getAverage(name, Constants.PER_PACKAGE);        
+          Max maxPerPackage = ms.getMaximum(name, Constants.PER_PACKAGE);
+          Avg averagePerClass = ms.getAverage(name, Constants.PER_CLASS);
+          Max maxPerClass = ms.getMaximum(name, Constants.PER_CLASS);
+          Avg averagePerMethod = ms.getAverage(name, Constants.PER_METHOD);
+          Max maxPerMethod = ms.getMaximum(name, Constants.PER_METHOD);
+          MetricHolder holder = new MetricHolder(idName, metric, averagePerPackage, maxPerPackage, averagePerClass, maxPerClass, averagePerMethod, maxPerMethod);
+          metricMap.put(name, holder);
+        }
       }
     }
     return metricMap;
