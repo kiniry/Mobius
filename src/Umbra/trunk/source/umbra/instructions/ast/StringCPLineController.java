@@ -13,7 +13,6 @@ import java.util.HashMap;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantString;
 
-import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
 
@@ -35,29 +34,30 @@ public class StringCPLineController extends CPLineController {
    * for compatibility with
    * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public StringCPLineController(final String a_line_text, final String an_entry_type) {
+  public StringCPLineController(final String a_line_text,
+                                final String an_entry_type) {
     super(a_line_text, an_entry_type);
   }
-  
+
   /**
    * This method returns the string "String" which describes
    * CONSTANT_String_info constant pool entry type handled by the
    * current class.
-   * 
+   *
    * @return handled entry type
    */
   public static String getEntryType() {
     return BytecodeStrings.STRING_CP_ENTRY_KEYWORD;
   }
-  
+
   /**
    * The CONSTANT_String_info constant pool entry line is correct if
    * it has format: <br> <br>
-   * 
+   *
    * [ ]*const[ ]*&lt;ref&gt;[ ]*=[ ]*String[ ]*&lt;ref&gt;[ ]*;[ ]* <br> <br>
-   * 
+   *
    * where &lt;ref&gt; ::= #&lt;positive integer&gt;.
-   * 
+   *
    * @return <code> true </code> when the syntax of constant pool
    * entry is correct
    * @see CPLineController#correct()
@@ -66,7 +66,8 @@ public class StringCPLineController extends CPLineController {
     boolean res = parseTillEntryType();
     InstructionParser my_parser = getParser();
     res = res && my_parser.swallowWhitespace();
-    res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.STRING_CP_ENTRY_KEYWORD);
+    res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.
+                                                 STRING_CP_ENTRY_KEYWORD);
     res = res && my_parser.swallowWhitespace();
     res = res && my_parser.swallowDelimiter('#');
     res = res && my_parser.swallowCPReferenceNumber();
@@ -75,15 +76,15 @@ public class StringCPLineController extends CPLineController {
     res = res && !my_parser.swallowWhitespace();
     return res;
   }
-  
+
   /**
    * This method retrieves the reference to the string from the
    * CONSTANT_String_info constant pool entry in
    * {@link BytecodeLineController#getMy_line_text()}. This parameter
-   * is located after the entry type keyword. 
+   * is located after the entry type keyword.
    * The method assumes {@link BytecodeLineController#getMy_line_text()}
    * is correct.
-   * 
+   *
    * @return reference to the string described by constant pool entry
    */
   private int getStringReference() {
@@ -96,42 +97,42 @@ public class StringCPLineController extends CPLineController {
     my_parser.swallowCPReferenceNumber();
     return my_parser.getResult();
   }
-  
+
   /**
    * Returns the link to the BCEL string constant represented by the current
    * line. If there is no such constant it creates the constant before
    * returning. Newly created constant should then be associated with BML
    * constant pool representation. <br> <br>
-   * 
+   *
    * The constant reference number set for the newly created constant is
    * the "dirty" number. It should be changed to "clean" number in
    * {@link BytecodeController#recalculateCPNumbers()}. <br> <br>
-   * 
+   *
    * For explantation of "dirty" and "clean" number concepts see
    * {@link BytecodeController#recalculateCPNumbers()}.
-   * 
+   *
    * @return a BCEL constant represented by the current line
    */
   public Constant getConstant() {
-    if (my_constant != null) return my_constant;
-    my_constant = new ConstantString(getStringReference());
-    return my_constant;
+    if (getConstantAccessor() != null) return getConstantAccessor();
+    setConstant(new ConstantString(getStringReference()));
+    return getConstantAccessor();
   }
-  
+
   /**
    * This method changes reference to the utf8 CP entry containing string
    * referenced from this CP entry. <br>
    * The change has effect only in BCEL representation of constant pool and does
    * not affect internal Umbra representation. <br> <br>
-   * 
+   *
    * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
    * "dirty" and "clean" numbers concepts. <br> <br>
-   * 
-   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   *
+   * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap f) {
-    ((ConstantString) my_constant).
-    setStringIndex((Integer) f.get(getStringReference()));
+  public void updateReferences(HashMap a_map) {
+    ((ConstantString) getConstantAccessor()).
+    setStringIndex((Integer) a_map.get(getStringReference()));
   }
-  
+
 }

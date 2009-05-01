@@ -10,24 +10,21 @@ package umbra.instructions.ast;
 
 import java.util.HashMap;
 
-import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
-import umbra.instructions.LineContext;
-import umbra.lib.BMLParsing;
 import umbra.lib.BytecodeStrings;
-import umbra.lib.UmbraException;
 
 import org.apache.bcel.classfile.Constant;
-import org.apache.bcel.classfile.ConstantClass;
 
 
 /**
- * This is a class for lines in bytecode files inside the constant pool. <br> <br>
+ * This is a class for lines in bytecode files inside the constant pool.
+ * <br> <br>
  *
  * TODO (to236111) should be made abstract after removing old implementation
- * ({@link umbra.instructions.Preparsing#getTypeForInsides(String, LineContext, BMLParsing)})
+ * ({@link umbra.instructions.Preparsing#getTypeForInsides(String,
+ * LineContext, BMLParsing)})
  * <br> <Br>
- * 
+ *
  * TODO (to236111) add parameter fields to avoid mulitple parsings of the
  * same line?
  *
@@ -53,7 +50,7 @@ public class CPLineController extends BytecodeLineController {
     DoubleCPLineController.class,
     NameAndTypeCPLineController.class,
     Utf8CPLineController.class};
-  
+
   /**
    * The parser to parse the contents of the constant pool line.
    * NOTE (to236111) already exists in superclass
@@ -72,23 +69,23 @@ public class CPLineController extends BytecodeLineController {
    * NOTE (to236111) reimplemented using subclasses
    */
   // private int my_keyword;
-  
+
   /**
    * Link to the BCEL constant represented by this line.
    */
-  protected Constant my_constant;
-  
+  private Constant my_constant;
+
   /**
    * This variable has value <code>true</code> if the constant pool entry
    * this line represents is present in BML representation of constant pool.
    */
-  private boolean in_bml;
-  
+  private boolean my_in_bml;
+
   /**
    * This variable has value <code>true</code> if the constant pool entry
    * this line represents belongs to second constant pool.
    */
-  private boolean in_second_cp;
+  private boolean my_in_second_cp;
 
   /**
    * This creates an instance of a bytecode line handle to handle
@@ -100,16 +97,17 @@ public class CPLineController extends BytecodeLineController {
    * {@link umbra.instructions.DispatchingAutomaton#callConstructor}
    * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public CPLineController(final String a_line_text, final String an_entry_type) {
+  public CPLineController(final String a_line_text,
+                          final String an_entry_type) {
     super(a_line_text);
-    in_second_cp = false;
-    in_bml = false;
+    my_in_second_cp = false;
+    my_in_bml = false;
   }
 
   /**
    * This method returns the entry type handled by the current class.
    * It should be redefined in each subclass.
-   * 
+   *
    * @return handled entry type
    */
   public static String getEntryType() {
@@ -130,21 +128,21 @@ public class CPLineController extends BytecodeLineController {
   /**
    * This method is redefined in each subclass. It is used to check
    * syntactic correctness of the constant pool entry line.
-   * 
+   *
    * @return true if the constant pool entry is correct
    */
   public boolean correct() {
     return true;
   }
-  
-  
+
+
   /**
    * This method does the initial preparsing of the constant pool
    * entry line. This is the helper method which parses the common
    * part of each constant pool entry line: <br> <br>
-   * 
+   *
    *   [ ]*const[ ]*#&lt;ref&gt;[ ]*=[ ]* <br> <br>
-   *   
+   *
    * where &lt;ref&gt; ::= #&lt;positive integer&gt;. It initializes the parser
    * if hasn't been already initialized.
    *
@@ -182,9 +180,9 @@ public class CPLineController extends BytecodeLineController {
    * @return <code>true</code> in case the method isCPLineStartwas called with
    *   <code>true</code> and the parsing of the content of the constant pool
    *   entry, <code>false</code> otherwise
-   *   
+   *
    *   NOTE (to236111) reimplemented in subclasses
-   *   
+   *
    */
   /* private boolean parseEntry(final boolean an_utonow) {
     if (!an_utonow) {
@@ -205,89 +203,97 @@ public class CPLineController extends BytecodeLineController {
   public int getConstantNumber() {
     return my_constno;
   }
-  
+
   /**
    * Sets the link to the BCEL constant represented by the current line.
-   * 
+   *
    * @param a_constant a BCEL constant represented by the current line
    */
   public void setConstant(Constant a_constant) {
     my_constant = a_constant;
-    in_bml = true;
   }
-  
+
   /**
    * Returns the link to the BCEL constant represented by the current line.
    * If there is no such constant it creates the constant before returning.
    * Newly created constant should then be associated with BML constant pool
    * representation. <br> <br>
-   * 
+   *
    * Implemented in subclasses.
-   * 
+   *
    * @return a BCEL constant represented by the current line
    */
   public Constant getConstant() {
     return my_constant;
   }
-  
+
+  /**
+   * This method allows CPLineController subclasses to access my_constant.
+   *
+   * @return my_constant
+   */
+  protected Constant getConstantAccessor() {
+    return my_constant;
+  }
+
   /**
    * Returns <code>true</code> if the constant pool entry this line represents
    * is present in BML representation of constant pool, <code>false</code>
    * otherwise.
-   * 
+   *
    * @return <code>true</code> if the constant pool entry this line represents
    * is present in BML representation of constant pool
    */
   public boolean isInBML() {
-    return in_bml;
+    return my_in_bml;
   }
-  
+
   /**
    * Sets whether the constant pool entry this line represents
    * is present in BML representation of constant pool.
-   * 
-   * @param b value to set
+   *
+   * @param a_b value to set
    */
-  public void setInBML(boolean b) {
-    in_bml = b;
+  public void setInBML(boolean a_b) {
+    my_in_bml = a_b;
   }
-  
+
   /**
    * Marks current line as representing second constant pool entry.
    */
   public void mark() {
-    in_second_cp = true;
+    my_in_second_cp = true;
   }
-  
+
   /**
    * Marks current line as representing first constant pool entry.
    */
   public void unmark() {
-    in_second_cp = false;
+    my_in_second_cp = false;
   }
-  
+
   /**
    * Returns true if current line represents second constant pool entry.
    * @return true if current line represents second constant pool entry
    */
   public boolean isInSecondCP() {
-    return in_second_cp;
+    return my_in_second_cp;
   }
-  
+
   /**
    * This method changes all references to another CP entries
    * from a "dirty" numbers to a "clean" ones in BCEL representation
    * of this CP entry. <br> <br>
-   * 
+   *
    * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
    * "dirty" and "clean" numbers concepts. <br> <br>
-   * 
+   *
    * Implemented in subclasses.
-   * 
-   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   *
+   * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap f) {
-    
+  public void updateReferences(HashMap a_map) {
+
   }
-  
+
 }

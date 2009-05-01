@@ -12,10 +12,7 @@ import java.util.HashMap;
 
 import org.apache.bcel.generic.MethodGen;
 
-import b2bpl.bytecode.instructions.Instruction;
-
 import umbra.UmbraPlugin;
-import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.UmbraException;
 
@@ -31,6 +28,23 @@ import umbra.lib.UmbraException;
 public class MultiInstruction extends InstructionLineController {
 
   /**
+   * Stores parameter of current instruction.
+   */
+  private int my_ind;
+
+  /**
+   * Has value true if my_ind should be used instead of parsing parameter
+   * from textual representation of this line.
+   */
+  private boolean my_use_stored_ind;
+
+  /**
+   * If there is no parameter has value false, true otherwise. The getInd()
+   * should be called before for has_ind to have meaningfull value.
+   */
+  private boolean my_has_ind;
+
+  /**
    * This creates an instance of an instruction
    * named as <code>a_name</code> at the line number
    * <code>a_line_text</code>. Currently it just calls the constructor of the
@@ -42,25 +56,8 @@ public class MultiInstruction extends InstructionLineController {
    */
   public MultiInstruction(final String a_line_text, final String a_name) {
     super(a_line_text, a_name);
-    use_stored_ind = false;
+    my_use_stored_ind = false;
   }
-  
-  /**
-   * Stores parameter of current instruction.
-   */
-  protected int my_ind;
-  
-  /**
-   * Has value true if my_ind should be used instead of parsing parameter
-   * from textual representation of this line.
-   */
-  protected boolean use_stored_ind;
-  
-  /**
-   * If there is no parameter has value false, true otherwise. The getInd()
-   * should be called before for has_ind to have meaningfull value.
-   */
-  protected boolean has_ind;
 
   /**
    * This method checks if the last parenthesis in the given string
@@ -108,7 +105,7 @@ public class MultiInstruction extends InstructionLineController {
    * @return the parsed number or 0 in case the number cannot be parsed
    */
   protected int getInd() {
-    if (use_stored_ind) return my_ind;
+    if (my_use_stored_ind) return my_ind;
     final String my_line_text = getMy_line_text();
     if (my_line_text.lastIndexOf("(") >= my_line_text.lastIndexOf(")")) {
       UmbraPlugin.messagelog("A line is incorrect\n" +
@@ -118,11 +115,11 @@ public class MultiInstruction extends InstructionLineController {
                              my_line_text.lastIndexOf(")"));
     } else {
       if (MultiInstruction.onlyDigitsInParen(my_line_text)) {
-        has_ind = true;
+        my_has_ind = true;
         return MultiInstruction.getNumInParen(my_line_text);
       }
     }
-    has_ind = false;
+    my_has_ind = false;
     return 0;
   }
 
@@ -142,38 +139,38 @@ public class MultiInstruction extends InstructionLineController {
     res = res && a_parser.swallowDelimiter(')'); // )
     return res;
   }
-  
+
   /**
    * This method changes all references to constant pool
    * from a "dirty" numbers to a "clean" ones in BCEL representation
    * of this instruction. <br> <br>
-   * 
-   * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for explantation of
-   * "dirty" and "clean" numbers concepts. <br> <br>
-   * 
-   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   *
+   * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)}
+   * for explantation of "dirty" and "clean" numbers concepts. <br> <br>
+   *
+   * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    * @param a_pos position in method
-   * @throws UmbraException 
+   * @throws UmbraException in case the deletion of old method handle failed
    */
-  public void updateReferences(HashMap f, int a_pos) throws UmbraException {
+  public void updateReferences(HashMap a_map, int a_pos) throws UmbraException {
     getInd();
-    if (!has_ind) return;
+    if (!my_has_ind) return;
     //System.err.println(has_ind + " " + getInd());
-    my_ind = (Integer) f.get(getInd());
-    use_stored_ind = true;
+    my_ind = (Integer) a_map.get(getInd());
+    my_use_stored_ind = true;
     //int a_pos = this.getList().
-    a_pos = getNoInMethod();
-    
+    int pos = getNoInMethod();
+
     //bcelDump();
-    
+
     dispose();
-    makeHandleForPosition(getMethod(), a_pos);
-    
+    makeHandleForPosition(getMethod(), pos);
+
     //bcelDump();
-    
-    use_stored_ind = false;
+
+    my_use_stored_ind = false;
   }
-  
+
   /**
    * Prints BCEL instruction representation.
    * For debug use only.
@@ -181,9 +178,10 @@ public class MultiInstruction extends InstructionLineController {
   private void bcelDump() {
     MethodGen mg = this.getMethod();
     for (int i = 0; i < mg.getInstructionList().size(); i++) {
-      org.apache.bcel.generic.Instruction in = mg.getInstructionList().getInstructions()[i];
+      org.apache.bcel.generic.Instruction in =
+        mg.getInstructionList().getInstructions()[i];
       System.err.println(in.toString());
     }
   }
-  
+
 }

@@ -8,8 +8,6 @@
  */
 package umbra.instructions.ast;
 
-import java.util.HashMap;
-
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.LDC2_W;
@@ -17,7 +15,6 @@ import org.apache.bcel.generic.LDC_W;
 
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
-import umbra.lib.UmbraException;
 
 
 /**
@@ -80,7 +77,7 @@ public class LdcInstruction extends OtherInstruction {
     if (!correct()) {
       System.err.println("incorrect: " + getLineContent());
       return null;
-    }  
+    }
     Instruction res = null;
     index = getInd();
     if (getName().compareTo("ldc") == 0) {
@@ -149,5 +146,5 @@ public class LdcInstruction extends OtherInstruction {
     res = res && a_parser.swallowWhitespace();
     return res;
   }
-  
+
 }

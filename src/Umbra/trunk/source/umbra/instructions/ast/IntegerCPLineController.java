@@ -13,7 +13,6 @@ import java.util.HashMap;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantInteger;
 
-import umbra.instructions.BytecodeController;
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
 
@@ -35,28 +34,29 @@ public class IntegerCPLineController extends CPLineController {
    * for compatibility with
    * @see BytecodeLineController#BytecodeLineController(String)
    */
-  public IntegerCPLineController(final String a_line_text, final String an_entry_type) {
+  public IntegerCPLineController(final String a_line_text,
+                                 final String an_entry_type) {
     super(a_line_text, an_entry_type);
   }
-  
+
   /**
    * This method returns the string "Integer" which describes
    * CONSTANT_Integer_info constant pool entry type handled by the
    * current class.
-   * 
+   *
    * @return handled entry type
    */
   public static String getEntryType() {
     return BytecodeStrings.INTEGER_CP_ENTRY_KEYWORD;
   }
-  
+
   /**
    * The CONSTANT_Integer_info constant pool entry line is correct if
    * it has format: <br> <br>
-   * 
-   * [ ]*const[ ]*&lt;ref&gt;[ ]*=[ ]*Integer[ ]*&lt;num&gt;[ ]*;[ ]* <br> <br> 
+   *
+   * [ ]*const[ ]*&lt;ref&gt;[ ]*=[ ]*Integer[ ]*&lt;num&gt;[ ]*;[ ]* <br> <br>
    * where &lt;num&gt; is an integer.
-   * 
+   *
    * @return <code> true </code> when the syntax of constant pool
    * entry is correct
    * @see CPLineController#correct()
@@ -65,7 +65,8 @@ public class IntegerCPLineController extends CPLineController {
     boolean res = parseTillEntryType();
     InstructionParser my_parser = getParser();
     res = res && my_parser.swallowWhitespace();
-    res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.INTEGER_CP_ENTRY_KEYWORD);
+    res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.
+                                                 INTEGER_CP_ENTRY_KEYWORD);
     res = res && my_parser.swallowWhitespace();
     res = res && my_parser.swallowNumber();
     res = res && my_parser.swallowWhitespace();
@@ -73,7 +74,7 @@ public class IntegerCPLineController extends CPLineController {
     res = res && !my_parser.swallowWhitespace();
     return res;
   }
-  
+
   /**
    * This method parses the parameter of the current constant pool entry.
    *
@@ -82,7 +83,8 @@ public class IntegerCPLineController extends CPLineController {
    * This parameter is located after the constant pool entry keyword. The
    * method assumes {@link BytecodeLineController#getMy_line_text()} is correct.
    *
-   * @return the value of the floating point parameter of the constant pool entry
+   * @return the value of the floating point parameter of the constant pool
+   * entry
    */
   private int getParam() {
     parseTillEntryType();
@@ -93,37 +95,37 @@ public class IntegerCPLineController extends CPLineController {
     my_parser.swallowNumber();
     return my_parser.getResult();
   }
-  
+
   /**
    * Returns the link to the BCEL integer constant represented by the current
    * line. If there is no such constant it creates the constant before
    * returning. Newly created constant should then be associated with BML
    * constant pool representation. <br> <br>
-   *  
+   *
    * @return a BCEL constant represented by the current line
    */
   public Constant getConstant() {
-    if (my_constant != null) return my_constant;
-    my_constant = new ConstantInteger(getParam());
-    return my_constant;
+    if (getConstantAccessor() != null) return getConstantAccessor();
+    setConstant(new ConstantInteger(getParam()));
+    return getConstantAccessor();
   }
-  
+
   /**
-   * This method changes references to constant pool entries from "dirty" numbers
-   * to "clean" ones. <br>
+   * This method changes references to constant pool entries from "dirty"
+   * numbers to "clean" ones. <br>
    * The change has effect only in BCEL representation of constant pool and does
    * not affect internal Umbra representation. <br> <br>
-   * 
+   *
    * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
    * "dirty" and "clean" numbers concepts. <br> <br>
-   * 
+   *
    * This method does nothing as integer constant pool entries don't have any
-   * references. 
-   * 
-   * @param f a hash map which maps "dirty" numbers to "clean" ones
+   * references.
+   *
+   * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap f) {
-    
+  public void updateReferences(HashMap a_map) {
+
   }
-  
+
 }
