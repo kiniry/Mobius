@@ -30,16 +30,16 @@ public class ClassFileOperations {
    *
    * @param a_path a workspace relative path to the class file
    * @param a_repo the repository to load the class from
-   * @param ol the output location for the class files
+   * @param an_ol the output location for the class files
    * @return the BCEL {@link org.apache.bcel.classfile.JavaClass} structure with
    *   the content of the class file
    * @throws ClassNotFoundException in case the class cannot be loaded
    */
   public static JavaClass loadJavaClass(final IPath a_path,
                                   final SyntheticRepository a_repo,
-                                  IPath ol)
+                                  IPath an_ol)
     throws ClassNotFoundException {
-    IPath np = a_path.removeFirstSegments(a_path.matchingFirstSegments(ol));
+    IPath np = a_path.removeFirstSegments(a_path.matchingFirstSegments(an_ol));
     final String clname = np.removeFileExtension().toOSString();
     if (FileNames.DEBUG_MODE)
       UmbraPlugin.messagelog("We open class: " + clname);

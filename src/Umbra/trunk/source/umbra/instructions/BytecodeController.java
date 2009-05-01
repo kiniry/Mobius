@@ -8,7 +8,6 @@
  */
 package umbra.instructions;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -161,10 +160,12 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   public void addAllLines(final BytecodeDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
     throws UmbraException, UmbraLocationException {
-    final int methodno = getMethodForLine(a_start_rem); // NOTE (to236111) rem == -1 for no a method
+    final int methodno = getMethodForLine(a_start_rem);
+    // NOTE (to236111) rem == -1 for no a method
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
-    final LineContext ctxt = establishCurrentContext(a_start_rem); // NOTE (to236111) ctxt for CP
+    final LineContext ctxt = establishCurrentContext(a_start_rem);
+    // NOTE (to236111) ctxt for CP
     fgmparser.runParsing(ctxt);
                             // after that I must know all the instructions are
                             //correct
@@ -182,17 +183,18 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold, a_doc);
-    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP) updateBMLCPRepresentation(a_doc);
+    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP)
+      updateBMLCPRepresentation(a_doc);
     if (FileNames.DEBUG_MODE) controlPrint(1);
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
   }
-  
+
   /**
    * Propagates the change in textual representation of constant pool into
    * its BML representation.
-   * 
+   *
    * TODO (to236111) incremental change
-   * 
+   *
    * @param a_doc a document in which change happened
    */
   private void updateBMLCPRepresentation(BytecodeDocument a_doc) {
@@ -205,11 +207,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       }
     }
   }
-  
+
   /**
    * The method performs the special handling for areas which contain constant
    * pools. Currently, it does nothing.
-   * 
+   *
    * NOTE (to236111) unnecessary because of updateBMLCPRepresentation()?
    */
   private void doSpecialHandlingForCP() {
@@ -386,9 +388,6 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * @param a_stop another possible end of the area
    * @param the_lines the collection of the new lines to replace with the old
    *   ones
-   * @param entry_no counter which counts correct constant pool entries 
-   * @param a_ctxt a line context for the updated region
-   * @param a_doc a byte code document in which the modification has been made
    * @return the number of the first line in {@code the_lines} that was not
    *   replaced
    * @throws UmbraException in case it is impossible to remove the association
@@ -522,38 +521,39 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     return ok;
   }
-  
+
   /**
    * This method changes the "dirty" numbers in BCEL constant pool entries
    * into "clean" ones. The change will be reflected only in BCEL, not in
-   * internal Umbra representation. <br> 
+   * internal Umbra representation. <br>
    * It changes class name index, super class name index, attribute name index,
    * field name index and field signature index of BCEL JavaClass accordingly.
    * <br> <br>
-   * 
+   *
    * "Clean" and "dirty" numbers are the constant pool entry numbers and
    * references to other constant pool entries normally represented as #{num}.
    * <br> <br>
    * "Clean" numbers are the numbers of a consistent, correct bytecode file,
    * i.e. the file just loaded from class file. <br>
    * When numbers are "clean", constant
-   * pool entries are numbered with consecutive natural numbers, starting from 1, i.e.:
+   * pool entries are numbered with consecutive natural numbers,
+   * starting from 1, i.e.:
    * <br> <br>
-   * 
+   *
    * <code>
    * const #1 = Class ... <br>
    * const #2 = Utf8 ... <br>
    * const #3 = String ... <br>
    * const #4 = Utf8 ... <br>
    * </code> <br>
-   * 
+   *
    * and so on. <br> <br>
-   * 
+   *
    * "Dirty" numbers are numbers entered by user during editing. If for example
    * user wants to enter new entry between entries #2 and #3, it can be numbered
    * with some other number, providing there is no another constant pool entry
    * with such number, i.e.: <br> <br>
-   * 
+   *
    * <code>
    * const #1 = Class ... <br>
    * const #2 = Utf8 ... <br>
@@ -564,8 +564,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    *
    * In both situations ("clean" and "dirty") references reference to the
    * constant pool entry with a given number, i.e. in "dirty" situation:
-   * <br> <br> 
-   * 
+   * <br> <br>
+   *
    * <code>
    * const #1 = Class #3 <br>
    * const #2 = Utf8 "something" <br>
@@ -573,14 +573,14 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * const #3 = String #4 <br>
    * const #4 = Utf8 "a string" <br>
    * </code> <br>
-   * 
-   * first entry refers to the const #3, not to the third constant (numbered with
-   * #75) and entry const #3 refers to the const #4, no to itself (which is in
-   * fourth position). <br> <br>
-   * 
+   *
+   * first entry refers to the const #3, not to the third constant
+   * (numbered with #75) and entry const #3 refers to the const #4,
+   * no to itself (which is in fourth position). <br> <br>
+   *
    * After calling this method all constan pool entries are renumbered starting
    * from 1, and references change accordingly: <br> <br>
-   * 
+   *
    * <code>
    * const #1 = Class #4 <br>
    * const #2 = Utf8 "something" <br>
@@ -588,7 +588,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * const #4 = String #5 <br>
    * const #5 = Utf8 "a string" <br>
    * </code> <br> <br>
-   * 
+   *
    * @param a_jc BCEL representation of java class
    */
   public void recalculateCPNumbers(JavaClass a_jc) {
@@ -633,20 +633,20 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
     for (int i = 0; i < a_jc.getAttributes().length; i++) {
-      a_jc.getAttributes()[i].
-      setNameIndex((Integer) f.get(a_jc.getAttributes()[i].getNameIndex()));
+      a_jc.getAttributes()[i].setNameIndex(
+        (Integer) f.get(a_jc.getAttributes()[i].getNameIndex()));
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
     for (int i = 0; i < a_jc.getFields().length; i++) {
-      a_jc.getFields()[i].
-      setNameIndex((Integer) f.get(a_jc.getFields()[i].getNameIndex()));
-      a_jc.getFields()[i].
-      setSignatureIndex((Integer) f.get(a_jc.getFields()[i].getSignatureIndex()));
+      a_jc.getFields()[i].setNameIndex(
+        (Integer) f.get(a_jc.getFields()[i].getNameIndex()));
+      a_jc.getFields()[i].setSignatureIndex(
+        (Integer) f.get(a_jc.getFields()[i].getSignatureIndex()));
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating class names");
     a_jc.setClassNameIndex((Integer) f.get(class_name_index));
     a_jc.setSuperclassNameIndex((Integer) f.get(super_class_name_index));
     if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
   }
-  
+
 }

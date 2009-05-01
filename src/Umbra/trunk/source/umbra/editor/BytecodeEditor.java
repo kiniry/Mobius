@@ -186,9 +186,10 @@ public class BytecodeEditor extends TextEditor {
     final JavaClass jc = doc.getJavaClass();
 
     if (my_verification_factory == null) {
-      my_verification_factory = new SWTVerificationFactory(getSite().getShell());
+      my_verification_factory =
+        new SWTVerificationFactory(getSite().getShell());
     }
-    
+
     final BytecodeVerifier verifier = new BytecodeVerifier(jc);
     final ResultPresenter presenter = my_verification_factory.
                                         getResultPresenter(verifier);

@@ -221,20 +221,20 @@ public class BytecodeDocument extends Document {
     final BCClass bcc = getBmlp().getBcc();
     bcc.saveJC();
   }
-  
+
   /**
    * Updates BML representation of constant pool by changing
    * "dirty" numbers to "clean" ones. <br>
    * It also propagates the change into methodgens (BCEL constant
    * pool is automatically updated by BML, but the local pools of
    * methodgens must be updated manually) and BCEL fields. <br> <br>
-   * 
+   *
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for
    * explantation of "dirty" and "clean" numbers. <br> <br>
-   * 
+   *
    * TODO (to236111) merge with updateJavaClass()? and move to some more
    * proper object (BCClass?, BytecodeController?)
-   * 
+   *
    * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
    */
   public void updateBML() {
@@ -242,9 +242,10 @@ public class BytecodeDocument extends Document {
         !umbra.instructions.Preparsing.UPDATE_CP) return;
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
-    BCClass bc = my_bmlp.getBcc();
+    final BCClass bc = my_bmlp.getBcc();
     for (int i = 0; i < bc.getMethodCount(); i++) {
-      ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().getConstantPool());
+      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
+                                                      getConstantPool());
       bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
     }
     for (int i = 0; i < bc.getJC().getFields().length; i++) {

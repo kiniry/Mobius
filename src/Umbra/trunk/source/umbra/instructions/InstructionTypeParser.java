@@ -26,7 +26,7 @@ public class InstructionTypeParser extends InstructionNameParser {
    * array given as the parameter to {@link #swallowMnemonic(String[])}.
    * If no sensible mnemonic have been found the field has the value -1;
    */
-  protected int my_mnemonicno = -1;
+  private int my_mnemonicno = -1;
 
   /**
    * This constructor sets the string to be parsed and resets the parser
@@ -176,7 +176,7 @@ public class InstructionTypeParser extends InstructionNameParser {
     }
     return my_mnemonicno;
   }
-  
+
   /**
    * Checks if the line at the current position starts with a given
    * mnemonic.
@@ -222,4 +222,16 @@ public class InstructionTypeParser extends InstructionNameParser {
     }
     return res;
   }
+
+  /**
+   * Returns the index of the last mnemonic found by
+   * {@link #swallowMnemonic(String[])}. In case no mnemonic was found, the
+   * method returns -1.
+   *
+   * @return the number of the last mnemonic found
+   */
+  public final int getMnemonic() {
+    return my_mnemonicno;
+  }
+
 }

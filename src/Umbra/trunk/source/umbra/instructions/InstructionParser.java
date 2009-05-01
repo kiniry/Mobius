@@ -1,23 +1,20 @@
 /*
- * @title       "Umbra"
+ * @title "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2007-2009 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @copyright "(c) 2007-2009 University of Warsaw"
+ * @license "All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the LGPL licence see LICENCE.txt file"
  */
 package umbra.instructions;
 
 /**
  * This class allows to parse the line with instruction or constant pool
  * entry. It enables the analysis of the correctness.
- *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class InstructionParser extends InstructionTypeParser {
-
 
   /**
    * This field contains the number parsed from the chunk of the digits.
@@ -25,20 +22,20 @@ public class InstructionParser extends InstructionTypeParser {
    * is called.
    */
   private int my_result;
-  
+
   /**
    * This field contains the number parsed from the chunk of the digits.
    * It contains a sensible value right after the {@link #swallowLongNumber()}
    * is called.
    */
   private long my_long_result;
-  
+
   /**
    * This field contains the string representation of parsed floating point
    * number. It contains a sensible value right after the
-   * {@link #swallowFloatingPointNumber()} is called. 
+   * {@link #swallowFloatingPointNumber()} is called.
    */
-  private String my_fp_result; 
+  private String my_fp_result;
 
   /**
    * This constructor sets the string to be parsed and resets the parser
@@ -47,7 +44,7 @@ public class InstructionParser extends InstructionTypeParser {
    *
    * @param a_line the line with the content to parse
    */
-  public /*@ pure @*/ InstructionParser(final String a_line) {
+  public/*@ pure @*/InstructionParser(final String a_line) {
     super(a_line);
   }
 
@@ -67,27 +64,30 @@ public class InstructionParser extends InstructionTypeParser {
     boolean res = true;
     final String line = getLine();
     int index = getIndex();
-    if (index == line.length()) res = false;
+    if (index == line.length())
+      res = false;
     final int oldindex = index;
     while (Character.isDigit(line.charAt(index)) && res) {
       index = incIndex();
-      if (index == line.length()) break;
+      if (index == line.length())
+        break;
     }
-    if (oldindex == index) return false; //no digits were read
+    if (oldindex == index)
+      return false; //no digits were read
     if (index < line.length() &&
-        /* TODO (to236111) semicolon added for constant pool handling,
-         * creating separate function may be better
-         */
-        !Character.isWhitespace(line.charAt(index)) &&
-        line.charAt(index) != ':' && line.charAt(index) != ';' &&
-        line.charAt(index) != ')')
+    /* TODO (to236111) semicolon added for constant pool handling,
+     * creating separate function may be better
+     */
+      !Character.isWhitespace(line.charAt(index)) &&
+      line.charAt(index) != ':' &&
+        line.charAt(index) != ';' && line.charAt(index) != ')')
       // the line is not finished and the character at index is not whitespace
       // or : or ;
       return false;
     my_result = Integer.parseInt(line.substring(oldindex, index));
     return true;
   }
-  
+
   /**
    * This method swallows all the digits starting from the current
    * position of the index and the 'l' or 'L' character (if any).
@@ -105,29 +105,33 @@ public class InstructionParser extends InstructionTypeParser {
     boolean res = true;
     final String line = getLine();
     int index = getIndex();
-    if (index == line.length()) res = false;
+    if (index == line.length())
+      res = false;
     final int oldindex = index;
     while (Character.isDigit(line.charAt(index)) && res) {
       index = incIndex();
-      if (index == line.length()) break;
+      if (index == line.length())
+        break;
     }
-    if (index < line.length() && res && (
-        line.charAt(index) == 'L' || line.charAt(index) == 'l')) index = incIndex();
-    if (oldindex == index) return false; //no digits were read
-    if (index < line.length() &&
-        !Character.isWhitespace(line.charAt(index)) &&
+    if (index < line.length() && res &&
+        (line.charAt(index) == 'L' || line.charAt(index) == 'l'))
+      index = incIndex();
+    if (oldindex == index)
+      return false; //no digits were read
+    if (index < line.length() && !Character.isWhitespace(line.charAt(index)) &&
         line.charAt(index) != ':' && line.charAt(index) != ';' &&
         line.charAt(index) != ')')
       // the line is not finished and the character at index is not whitespace
       // or : or ;
       return false;
     // TODO (to23611) check whether index - 1 > 0
-    if (line.charAt(index - 1) == 'L' || line.charAt(index - 1) == 'l') 
+    if (line.charAt(index - 1) == 'L' || line.charAt(index - 1) == 'l')
       my_long_result = Long.parseLong(line.substring(oldindex, index - 1));
-    else my_long_result = Long.parseLong(line.substring(oldindex, index));
+    else
+      my_long_result = Long.parseLong(line.substring(oldindex, index));
     return true;
   }
-  
+
   /**
    * This method swallows all the digits starting from the current
    * position of the index. This method may not advance the index in case
@@ -151,19 +155,20 @@ public class InstructionParser extends InstructionTypeParser {
       res = false;
     }
     final int oldindex = index;
-    if (res && Character.isDigit(line.charAt(index))
-        && line.charAt(index) != '0') index = incIndex();
+    if (res && Character.isDigit(line.charAt(index)) &&
+        line.charAt(index) != '0')
+      index = incIndex();
     if (index < line.length()) {
       while (Character.isDigit(line.charAt(index)) && res) {
         index = incIndex();
-        if (index == line.length()) break;
+        if (index == line.length())
+          break;
       }
     }
     if (oldindex == index) {
       return false; //no digits were read
     }
-    if (index < line.length() &&
-        !Character.isWhitespace(line.charAt(index)) &&
+    if (index < line.length() && !Character.isWhitespace(line.charAt(index)) &&
         line.charAt(index) != ':' && line.charAt(index) != ';' &&
         line.charAt(index) != '.' && line.charAt(index) != '=')
       // the line is not finished and the character at index is not whitespace
@@ -172,7 +177,7 @@ public class InstructionParser extends InstructionTypeParser {
     my_result = Integer.parseInt(line.substring(oldindex, index));
     return true;
   }
-  
+
   /**
    * This method swallows all the characters which are parts of a correct
    * floating point number. The parsing starts from the current position
@@ -188,12 +193,13 @@ public class InstructionParser extends InstructionTypeParser {
    *
    * @return <code>true</code> when a number was successfully swallowed,
    *   <code>false</code> otherwise
-   *   
+   *
    */
   public boolean swallowFPNumber() {
     final int oldindex = getIndex();
     final AN automaton = AN.constructAutomaton();
-    if (!automaton.exec(getLine(), getIndex())) return false;
+    if (!automaton.exec(getLine(), getIndex()))
+      return false;
     moveIndex(automaton.getIndex() - oldindex);
     my_fp_result = getLine().substring(oldindex, getIndex());
     return true;
@@ -205,14 +211,14 @@ public class InstructionParser extends InstructionTypeParser {
   public int getResult() {
     return my_result;
   }
-  
+
   /**
    * @return the long number which is the result of parsing
    */
   public long getLongResult() {
     return my_long_result;
   }
-  
+
   /**
    * @return the string representation of the floating
    * point number which is the result of parsing
@@ -258,12 +264,12 @@ public class InstructionParser extends InstructionTypeParser {
     for (int i = 0; i < the_inventory.length; i++) {
       if (line.indexOf(the_inventory[i], index) >= index) {
         if (res == -1 ||
-            the_inventory[res].length() >  the_inventory[i].length())
+            the_inventory[res].length() > the_inventory[i].length())
           res = i;
       }
     }
     moveIndex(line.indexOf(the_inventory[res], index) +
-               the_inventory[res].length() - index);
+              the_inventory[res].length() - index);
   }
 
   /**
@@ -299,7 +305,8 @@ public class InstructionParser extends InstructionTypeParser {
     final int len = line.length();
     while (getIndex() < len && line.charAt(getIndex()) != '"') {
       if (line.charAt(getIndex()) == '\\') {
-        if (!swallowEscape()) return false;
+        if (!swallowEscape())
+          return false;
       } else {
         incIndex();
       }
@@ -320,9 +327,11 @@ public class InstructionParser extends InstructionTypeParser {
    * EscapeSequence:
    *     \ b                     - \u0008: backspace BS
    *     \ t                     - \u0009: horizontal tab HT
-   *     \ n                     - \u000a: linefeed LF
+   *     \ n                     -
+  : linefeed LF
    *     \ f                     - \u000c: form feed FF
-   *     \ r                     - \u000d: carriage return CR
+   *     \ r                     -
+  : carriage return CR
    *     \ "                     - \u0022: double quote "
    *     \ '                     - \u0027: single quote '
    *     \ \                     - \u005c: backslash \
@@ -391,17 +400,6 @@ public class InstructionParser extends InstructionTypeParser {
   }
 
   /**
-   * Returns the index of the last mnemonic found by
-   * {@link #swallowMnemonic(String[])}. In case no mnemonic was found, the
-   * method returns -1.
-   *
-   * @return the number of the last mnemonic found
-   */
-  public final int getMnemonic() {
-    return my_mnemonicno;
-  }
-
-  /**
    * This method swallows a single method reference. This method may not
    * advance the index in case the first character to be analysed is not the
    * proper first character of a reference name. We assume the string is not
@@ -418,8 +416,10 @@ public class InstructionParser extends InstructionTypeParser {
    *   swallowed, <code>false</code> otherwise
    */
   public boolean swallowMethodReference() {
-    if (!swallowMethodName()) return false;
-    if (!swallowWhitespace()) return false;
+    if (!swallowMethodName())
+      return false;
+    if (!swallowWhitespace())
+      return false;
     return swallowMethodDescriptor();
   }
 
@@ -473,17 +473,14 @@ public class InstructionParser extends InstructionTypeParser {
     final String line = getLine();
     final int index = getIndex();
     boolean res = true;
-    if (InstructionParserHelper.isBaseTypeDescriptor(
-                                       line.charAt(index)) ||
-        InstructionParserHelper.isVoidTypeDescriptor(
-                                       line.charAt(index))) {
+    if (InstructionParserHelper.isBaseTypeDescriptor(line.charAt(index)) ||
+        InstructionParserHelper.isVoidTypeDescriptor(line.charAt(index))) {
       incIndex();
       return true;
     }
     res = res && swallowRefTypeDescriptor();
     return res;
   }
-
 
   /**
    * This method swallows a single parameter descriptor. This method may not
@@ -521,7 +518,8 @@ public class InstructionParser extends InstructionTypeParser {
     boolean res = true;
     final String line = getLine();
     final int index = getIndex();
-    if (index == line.length()) res = false;
+    if (index == line.length())
+      res = false;
     if (line.charAt(index) == '-' && res) {
       incIndex();
       res = swallowNumber();

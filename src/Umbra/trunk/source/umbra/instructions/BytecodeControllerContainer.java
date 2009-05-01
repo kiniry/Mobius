@@ -302,15 +302,12 @@ public abstract class BytecodeControllerContainer extends
    * from {@code a_start} to {@code a_stop} inclusively. This method
    * also removes the connection between the removed lines and the BCEL
    * representation of the byte code.
-   * 
+   *
    * NOTE (to236111) it uses index to remove lines from my_editor_lines because
    * equals for EmptyLineController always returns true
    *
    * @param a_start the first line to be removed
    * @param a_stop the last line to be removed
-   * @param entry_no counter which counts correct constant pool entries 
-   * @param a_ctxt a line context for the updated region
-   * @param a_doc a byte code document in which the modification has been made
    * @throws UmbraException in case the structure of the editor lines is
    *   malformed
    */
@@ -318,7 +315,7 @@ public abstract class BytecodeControllerContainer extends
                                    final int a_stop)
     throws UmbraException {
     if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: REMOVE ::]]");
-    ArrayList<Integer> delete_list = new ArrayList<Integer>();
+    ArrayList < Integer > delete_list = new ArrayList < Integer > ();
     for (int i = a_stop + 1; i <= a_start; i++) {
       try {
         BytecodeLineController oldlc = getLineController(i);
@@ -335,7 +332,7 @@ public abstract class BytecodeControllerContainer extends
       }
     }
     int deleted = 0;
-    for (Integer j: delete_list) {
+    for (Integer j : delete_list) {
       my_editor_lines.remove(j.intValue() - deleted);
       deleted++;
     }

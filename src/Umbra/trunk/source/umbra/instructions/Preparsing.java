@@ -41,6 +41,22 @@ import umbra.lib.BytecodeStrings;
 public final class Preparsing {
 
   /**
+   * This constant determines whether the constant pool will be parsed. It
+   * is intended to be used only during development.
+   *
+   * TODO (to236111) remove
+   */
+  public static final boolean PARSE_CP = true;
+
+  /**
+   * This constant determines whether the change in textual representation of
+   * a constant pool will be propagated into its BML representation.
+   *
+   * TODO (to236111) remove
+   */
+  public static final boolean UPDATE_CP = true;
+
+  /**
    * The automaton to pre-parse the lines of the byte code document.
    */
   private static DispatchingAutomaton my_preparse_automaton;
@@ -51,22 +67,6 @@ public final class Preparsing {
    */
   private Preparsing() {
   }
-  
-  /**
-   * This constant determines whether the constant pool will be parsed. It
-   * is intended to be used only during development.
-   * 
-   * TODO (to236111) remove
-   */
-  public static final boolean PARSE_CP = true;
-  
-  /**
-   * This constant determines whether the change in textual representation of
-   * a constant pool will be propagated into its BML representation.
-   * 
-   * TODO (to236111) remove
-   */
-  public static final boolean UPDATE_CP = true;
 
   /**
    * Chooses one of line types that matches the given line
@@ -154,7 +154,8 @@ public final class Preparsing {
           return new FieldLineController(a_line, a_bmlp);
         }
       } else {
-        if (FieldLineController.isFieldLineStart(a_line) && !a_line.contains("(")) {
+        if (FieldLineController.isFieldLineStart(a_line) &&
+            !a_line.contains("(")) {
           return new FieldLineController(a_line, a_bmlp);
         }
       }
@@ -169,19 +170,20 @@ public final class Preparsing {
    * automaton needs a mnemonic to create {@code BytecodeLineController}
    * for given line the constant pool entry keyword is used as surrogate
    * mnemonic.
-   * 
-   * TODO (to236111) Create separate automaton for constant pool entries which uses
-   * IncorrectCPLineController instead of UnknownLineController for
+   *
+   * TODO (to236111) Create separate automaton for constant pool entries
+   * which uses IncorrectCPLineController instead of UnknownLineController for
    * incorrect lines to allow generating more specific information about
    * syntax errors inside constant pool.
-   * 
-   * @param node the CP node of automaton
+   *
+   * @param a_node the CP node of automaton
    */
-  private static void initCPNode(DispatchingAutomaton node) {
+  private static void initCPNode(DispatchingAutomaton a_node) {
+    DispatchingAutomaton node = a_node;
     addWhitespaceLoop(node);
     node = node.addSimple("#", UnknownLineController.class);
     final DispatchingAutomaton digitnode = node.addSimple("0",
-                                                          UnknownLineController.class);
+      UnknownLineController.class);
     for (int i = 1; i < 10; i++) {
       node.addStarRule(Integer.toString(i), digitnode);
     }
@@ -215,12 +217,10 @@ public final class Preparsing {
       } catch (NoSuchMethodException e) {
         UmbraPlugin.messagelog("Impossible NoSuchMethodException in" +
           " preparsing");
-      } catch (Exception e) {
-        e.printStackTrace();
       }
     }
   }
-  
+
   /**
    * This method returns the automaton which handles the preparsing of lines
    * and creates appropriate line controllers. In case the automaton has not
@@ -243,11 +243,11 @@ public final class Preparsing {
    *   <li>ANNOT - to recognise BML annotation start.</li>
    * </ul>
    * The INITIAL state contains a loop over whitespace characters and outgoing
-   * edges (paths) to THROWS, HEADER, COMMENT, CP, ANNOT and DIGIT states. The DIGIT
-   * state contains a loop over digits and an outgoing edge to the COLON state.
-   * The COLON state contains a loop over whitespace characters and outgoing
-   * edges to MNEMONIC states (paths to be precise).
-   * The CP state contains outgoing edges to CPENTRY states (paths to be precise).
+   * edges (paths) to THROWS, HEADER, COMMENT, CP, ANNOT and DIGIT states.
+   * The DIGIT state contains a loop over digits and an outgoing edge to the
+   * COLON state. The COLON state contains a loop over whitespace characters
+   * and outgoing edges to MNEMONIC states (paths to be precise). The CP state
+   * contains outgoing edges to CPENTRY states (paths to be precise).
    *
    * Note that this automaton is slightly inefficient as MNEMONIC, THROWS etc.
    * states could be made a single one.
@@ -273,12 +273,12 @@ public final class Preparsing {
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS],
         CPHeaderController.class);
-      
+
       if (PARSE_CP) {
         DispatchingAutomaton cpnode = my_preparse_automaton.addSimple(
-        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
-        UnknownLineController.class);
-      
+          BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
+          UnknownLineController.class);
+
         initCPNode(cpnode);
       }
 

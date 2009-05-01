@@ -102,10 +102,10 @@ public class BytecodeControllerInstructions
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
     return res;
   }
-  
+
   /**
    * Marks editor lines representing second constant pool entries.
-   * 
+   *
    * TODO (to236111) remove
    * @param a_doc a document containing lines to be marked
    */
@@ -118,11 +118,11 @@ public class BytecodeControllerInstructions
       }
     }
   }*/
-  
+
   /**
    * Prints BML constant pool representation of a constant pool in a given
    * bytecode document.
-   * 
+   *
    * @param a_doc a bytecode document contating constant pool which BML
    * representation is to be printed
    */
@@ -250,8 +250,8 @@ public class BytecodeControllerInstructions
    */
   protected final void controlPrint(final int an_index) {
     UmbraPlugin.messagelog("");
-    UmbraPlugin.messagelog("Control print of editor lines ("
-                           + an_index + "):");
+    UmbraPlugin.messagelog("Control print of editor lines (" +
+                           an_index + "):");
     for (int i = 0; i < getNoOfLines(); i++) {
       final BytecodeLineController line = getLineController(i);
       if (line == null) {
@@ -265,7 +265,8 @@ public class BytecodeControllerInstructions
                                cplc.getConstant().getClass().getName() +
                                (cplc.isInSecondCP() ? ", second CP" : ""));
       } else {
-        UmbraPlugin.messagelog(line.getClass().getName() + ": " + line.getLineContent());
+        UmbraPlugin.messagelog(line.getClass().getName() +
+                               ": " + line.getLineContent());
         if (!line.correct()) UmbraPlugin.messagelog("ABOVE INCORRECT");
       }
     }

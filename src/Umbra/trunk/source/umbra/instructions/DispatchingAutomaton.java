@@ -58,7 +58,7 @@ public class DispatchingAutomaton {
    * lines. It is used only when it is set to be non-null.
    */
   private String my_mnemonic;
-  
+
   /**
    * The name of the current node for debugging purposes.
    */
@@ -264,7 +264,7 @@ public class DispatchingAutomaton {
       throw new CannotCallRuleException(e);
     }
   }
-  
+
   /**
    * Return the name of the node for debugging puropses.
    * @return the name of the node
@@ -272,13 +272,13 @@ public class DispatchingAutomaton {
   public String getName() {
     return my_name;
   }
-  
+
   /**
    * Sets the name of the node for debugging purposes.
    * @param a_name a name of the node to set
    */
   public void setName(String a_name) {
     my_name = a_name;
-  } 
-  
+  }
+
 }
