@@ -2,7 +2,7 @@
 <feature
       id="AGFeature"
       label="AutoGrader Feature"
-      version="0.1.0">
+      version="0.1.1">
 
    <description url="http://www.example.com/description">
       AutoGrader.
@@ -29,7 +29,7 @@
          id="AutoGrader"
          download-size="0"
          install-size="0"
-         version="0.1.0"
+         version="0.1.1"
          unpack="false"/>
 
 </feature>
