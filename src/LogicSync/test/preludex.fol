@@ -1,0 +1,30 @@
+real : T
+elements : T
+struct : T
+
+// Field a -> Field
+// accessor functions go over values of a
+$Heap: MapRefNameX;
+  selectRefNameBool : 
+    (-> MapRefNameX 
+      (-> Ref (-> Name Bool)))
+  selectRefNameReal : ...;
+  selectRefNameElements : ...;
+  axiom select_update_RefNameReal: ...;
+  axiom IsHeap: IsHeap($Heap);
+  EqMapRefNameX: (-> MapRefNameX (->MapRefNameX Prop))
+  BeqMapRefNameX: (-> MapRefNameX (->MapRefNameX bool))
+IsHeap : (-> MapRefNameX Bool)
+const$allocated : Name;
+
+// ==> ----> ->
+// a != b ----> (not (EqX a b))
+axiom1: (EqName (DeclType const$exposeVersion) System.Object)
+axiom2: (forall c0 c1, 
+  (-> 
+    (not (EqName c0 c1)) 
+    (not (EqRef 
+      (ClassRepr c0) 
+      (ClassRepr c1))))
+
+s

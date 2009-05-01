@@ -190,7 +190,7 @@ System.out.println("  reset result");
 System.out.println("  process " + id);
     GType t = tc.getType(id);
     if (t == null) {
-      result = Axiom.mk(null, (Expr) term.eval(this), result);
+      result = Axiom.mk(id, null, (Expr) term.eval(this), result);
     } 
     else if (t.getArity() > 1) {
       // translate to function

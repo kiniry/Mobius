@@ -4,7 +4,7 @@ type real;
 type elements;
 type struct;
 type exposeVersionType;
-var $Heap<x> : [ref, <x>name]x where IsHeap($Heap);
+var $Heap<x> : [ref, <x>name]x where IsHeap($Heap); ;// x in [int, bool, ref]
 function IsHeap(h<x> : [ref, <x>name]x) returns ($$unnamed~a : bool);
 const $allocated : <bool>name;
 const $elements : <elements>name;

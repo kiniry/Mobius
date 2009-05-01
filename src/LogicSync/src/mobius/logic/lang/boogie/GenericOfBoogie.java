@@ -101,10 +101,6 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
   /** The result. This idiotic comment is forced by checkstyle. */
   private LinkedList<GenericAst> fResult;
 
-  /** An axiom counter. This other idiotic comment is forced by, guess who. */
-  private int fAxiomCnt;
-
-
   public ClauseList getFrom(final Declaration boogie) {
     assert false : "not implemented";
     return null;
