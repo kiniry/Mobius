@@ -2,7 +2,7 @@
 <feature
       id="mobius.escjava2.feature"
       label="ESCJava2"
-      version="2.0.9"
+      version="2.0.10"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
