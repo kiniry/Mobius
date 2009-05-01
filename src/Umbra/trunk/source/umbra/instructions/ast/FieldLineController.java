@@ -138,16 +138,16 @@ public class FieldLineController extends BytecodeLineController {
 
   /**
    * @param modif
-   * @param bmodif 
-   * @param modif2 
-   * @param bmodif2 
-   * @throws ModifException 
+   * @param bmodif
+   * @param modif2
+   * @param bmodif2
+   * @throws ModifException
    */
   private int setModifier(int modif, int modif2, int bmodif, int bmodif2)
     throws ModifException {
     if (modif < BytecodeStrings.BML_FIELD_PREFIX_START) {
       return setJavaModifier(modif, modif2);
-    } else if (modif < BytecodeStrings.BML_ACC_PREFIX_START){
+    } else if (modif < BytecodeStrings.BML_ACC_PREFIX_START) {
       throw new ModifException(setBMLMField(modif, bmodif), true);
     } else {
       throw new ModifException(setBMLModifier(modif, bmodif), false);
@@ -175,10 +175,10 @@ public class FieldLineController extends BytecodeLineController {
 
   /**
    * @param modif
-   * @param bmodif 
+   * @param bmodif
    */
   private int setBMLModifier(int modif, int bmodif) {
-    final int tmp = BMLModifiersFlags.BML_MODIFIERS[modif-9];
+    final int tmp = BMLModifiersFlags.BML_MODIFIERS[modif - 9];
     return bmodif | tmp;
   }
 
@@ -298,7 +298,7 @@ public class FieldLineController extends BytecodeLineController {
 
   /**
    * @return
-   * @throws UmbraException 
+   * @throws UmbraException
    */
   private Field getGhostFieldForMe() throws UmbraException {
     if (correct()) {
@@ -329,7 +329,7 @@ public class FieldLineController extends BytecodeLineController {
 
   /**
    * @return
-   * @throws UmbraException 
+   * @throws UmbraException
    */
   private Field getFieldForMe() throws UmbraException {
     if (correct()) {

@@ -94,7 +94,7 @@ public final class FileNames {
    * This constant says if the debugging print outs should be generated.
    */
   public static final boolean DEBUG_MODE = true;
-  
+
   /**
    * This constant says if the debugging print outs for CP should be generated.
    */

@@ -126,8 +126,8 @@ public class BytecodeControllerInstructions
    * @param a_doc a bytecode document contating constant pool which BML
    * representation is to be printed
    */
-  public void controlPrintCP(BytecodeDocument a_doc) {
-    BCConstantPool a_pool = a_doc.getBmlp().getBcc().getCp();
+  public void controlPrintCP(final BytecodeDocument a_doc) {
+    final BCConstantPool a_pool = a_doc.getBmlp().getBcc().getCp();
     System.err.println();
     System.err.println("Pool:");
     for (int i = 0; i < a_pool.size(); i++) {
@@ -259,7 +259,7 @@ public class BytecodeControllerInstructions
         return;
       }
       if (line instanceof CPLineController && Preparsing.PARSE_CP) {
-        CPLineController cplc = (CPLineController) line;
+        final CPLineController cplc = (CPLineController) line;
         UmbraPlugin.messagelog(line.getClass().getName() + ": " +
                                line.getLineContent() + ", BCEL entry: " +
                                cplc.getConstant().getClass().getName() +

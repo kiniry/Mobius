@@ -277,7 +277,7 @@ public class DispatchingAutomaton {
    * Sets the name of the node for debugging purposes.
    * @param a_name a name of the node to set
    */
-  public void setName(String a_name) {
+  public void setName(final String a_name) {
     my_name = a_name;
   }
 

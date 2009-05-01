@@ -209,7 +209,7 @@ public class CPLineController extends BytecodeLineController {
    *
    * @param a_constant a BCEL constant represented by the current line
    */
-  public void setConstant(Constant a_constant) {
+  public void setConstant(final Constant a_constant) {
     my_constant = a_constant;
   }
 
@@ -254,7 +254,7 @@ public class CPLineController extends BytecodeLineController {
    *
    * @param a_b value to set
    */
-  public void setInBML(boolean a_b) {
+  public void setInBML(final boolean a_b) {
     my_in_bml = a_b;
   }
 
@@ -292,7 +292,7 @@ public class CPLineController extends BytecodeLineController {
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap a_map) {
+  public void updateReferences(final HashMap a_map) {
 
   }
 

@@ -65,7 +65,7 @@ public class FloatCPLineController extends CPLineController {
    */
   public final boolean correct() {
     boolean res = parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     res = res && my_parser.swallowWhitespace();
     res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.
                                                  FLOAT_CP_ENTRY_KEYWORD);
@@ -97,7 +97,7 @@ public class FloatCPLineController extends CPLineController {
    */
   private float getParam() {
     parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     my_parser.swallowWhitespace();
     my_parser.swallowSingleMnemonic(BytecodeStrings.FLOAT_CP_ENTRY_KEYWORD);
     my_parser.swallowWhitespace();
@@ -133,7 +133,7 @@ public class FloatCPLineController extends CPLineController {
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap a_map) {
+  public void updateReferences(final HashMap a_map) {
 
   }
 

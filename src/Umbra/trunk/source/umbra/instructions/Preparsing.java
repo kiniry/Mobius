@@ -178,7 +178,7 @@ public final class Preparsing {
    *
    * @param a_node the CP node of automaton
    */
-  private static void initCPNode(DispatchingAutomaton a_node) {
+  private static void initCPNode(final DispatchingAutomaton a_node) {
     DispatchingAutomaton node = a_node;
     addWhitespaceLoop(node);
     node = node.addSimple("#", UnknownLineController.class);
@@ -275,7 +275,7 @@ public final class Preparsing {
         CPHeaderController.class);
 
       if (PARSE_CP) {
-        DispatchingAutomaton cpnode = my_preparse_automaton.addSimple(
+        final DispatchingAutomaton cpnode = my_preparse_automaton.addSimple(
           BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
           UnknownLineController.class);
 

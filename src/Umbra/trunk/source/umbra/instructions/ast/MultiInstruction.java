@@ -152,14 +152,15 @@ public class MultiInstruction extends InstructionLineController {
    * @param a_pos position in method
    * @throws UmbraException in case the deletion of old method handle failed
    */
-  public void updateReferences(HashMap a_map, int a_pos) throws UmbraException {
+  public void updateReferences(final HashMap a_map,
+                               final int a_pos) throws UmbraException {
     getInd();
     if (!my_has_ind) return;
     //System.err.println(has_ind + " " + getInd());
     my_ind = (Integer) a_map.get(getInd());
     my_use_stored_ind = true;
     //int a_pos = this.getList().
-    int pos = getNoInMethod();
+    final int pos = getNoInMethod();
 
     //bcelDump();
 
@@ -176,9 +177,9 @@ public class MultiInstruction extends InstructionLineController {
    * For debug use only.
    */
   private void bcelDump() {
-    MethodGen mg = this.getMethod();
+    final MethodGen mg = this.getMethod();
     for (int i = 0; i < mg.getInstructionList().size(); i++) {
-      org.apache.bcel.generic.Instruction in =
+      final org.apache.bcel.generic.Instruction in =
         mg.getInstructionList().getInstructions()[i];
       System.err.println(in.toString());
     }

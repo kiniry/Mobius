@@ -64,7 +64,7 @@ public class StringCPLineController extends CPLineController {
    */
   public final boolean correct() {
     boolean res = parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     res = res && my_parser.swallowWhitespace();
     res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.
                                                  STRING_CP_ENTRY_KEYWORD);
@@ -89,7 +89,7 @@ public class StringCPLineController extends CPLineController {
    */
   private int getStringReference() {
     parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     my_parser.swallowWhitespace();
     my_parser.swallowSingleMnemonic(BytecodeStrings.STRING_CP_ENTRY_KEYWORD);
     my_parser.swallowWhitespace();
@@ -130,7 +130,7 @@ public class StringCPLineController extends CPLineController {
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap a_map) {
+  public void updateReferences(final HashMap a_map) {
     ((ConstantString) getConstantAccessor()).
     setStringIndex((Integer) a_map.get(getStringReference()));
   }

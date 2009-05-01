@@ -50,7 +50,7 @@ public class AN {
    * @param an_is_final determines whether it is an accepting node
    * @param a_symbol name of the node
    */
-  public AN(boolean an_is_final, String a_symbol) {
+  public AN(final boolean an_is_final, final String a_symbol) {
     my_edges = new HashMap < Character, AN > ();
     my_index_counter = new Counter(0);
     this.my_is_final = an_is_final;
@@ -68,7 +68,7 @@ public class AN {
    * @param an_edge edge label
    * @param a_node a node to which the edge leads
    */
-  public void set(char an_edge, AN a_node) {
+  public void set(final char an_edge, final AN a_node) {
     a_node.setIndexCounter(my_index_counter);
     my_edges.put(an_edge, a_node);
   }
@@ -79,7 +79,7 @@ public class AN {
    *
    * @param a_node a node to which the edges leads
    */
-  public void setDigit(AN a_node) {
+  public void setDigit(final AN a_node) {
     for (int i = 0; i < 10; i++) set(Integer.toString(i).charAt(0), a_node);
   }
 
@@ -89,7 +89,7 @@ public class AN {
    *
    * @param a_node a node to which the edges leads
    */
-  public void setSymbol(AN a_node) {
+  public void setSymbol(final AN a_node) {
     set('d', a_node);
     set('D', a_node);
     set('f', a_node);
@@ -117,7 +117,7 @@ public class AN {
    * @return true if automaton accepts <code>a_line</code>, false
    * otherwise
    */
-  public boolean exec(String a_line, int an_index) {
+  public boolean exec(final String a_line, final int an_index) {
     my_index_counter.setValue(an_index);
     if (an_index == a_line.length()) {
       //System.err.println("Node: " + symbol + ", final: " + isFinal);
@@ -150,7 +150,7 @@ public class AN {
    * position in processed string and is shared among all nodes.
    * @param a_counter a counter to set
    */
-  public void setIndexCounter(Counter a_counter) {
+  public void setIndexCounter(final Counter a_counter) {
     my_index_counter = a_counter;
   }
 
@@ -163,17 +163,17 @@ public class AN {
    * @return constructed automaton
    */
   public static AN constructAutomaton() {
-    AN a = new AN(false, "a");
-    AN b = new AN(false, "b");
-    AN c = new AN(false, "c");
-    AN d = new AN(false, "d");
-    AN e = new AN(false, "e");
-    AN f = new AN(true, "f");
-    AN g = new AN(true, "g");
-    AN h = new AN(false, "h");
-    AN i = new AN(false, "i");
-    AN j = new AN(true, "j");
-    AN k = new AN(true, "k");
+    final AN a = new AN(false, "a");
+    final AN b = new AN(false, "b");
+    final AN c = new AN(false, "c");
+    final AN d = new AN(false, "d");
+    final AN e = new AN(false, "e");
+    final AN f = new AN(true, "f");
+    final AN g = new AN(true, "g");
+    final AN h = new AN(false, "h");
+    final AN i = new AN(false, "i");
+    final AN j = new AN(true, "j");
+    final AN k = new AN(true, "k");
     a.set('+', c);
     a.set('-', c);
     a.set('.', b);
@@ -224,7 +224,7 @@ public class AN {
      *
      * @param a_value a value to set
      */
-    public Counter(int a_value) {
+    public Counter(final int a_value) {
       my_value = a_value;
     }
 
@@ -242,7 +242,7 @@ public class AN {
      *
      * @param a_value a value to set
      */
-    public void setValue(int a_value) {
+    public void setValue(final int a_value) {
       my_value = a_value;
     }
 

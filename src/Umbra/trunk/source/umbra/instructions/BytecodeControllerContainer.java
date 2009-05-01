@@ -315,10 +315,10 @@ public abstract class BytecodeControllerContainer extends
                                    final int a_stop)
     throws UmbraException {
     if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: REMOVE ::]]");
-    ArrayList < Integer > delete_list = new ArrayList < Integer > ();
+    final ArrayList < Integer > delete_list = new ArrayList < Integer > ();
     for (int i = a_stop + 1; i <= a_start; i++) {
       try {
-        BytecodeLineController oldlc = getLineController(i);
+        final BytecodeLineController oldlc = getLineController(i);
         if (oldlc instanceof InstructionLineController) {
           ((InstructionLineController)oldlc).dispose();
         }

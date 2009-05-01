@@ -372,8 +372,8 @@ public class InitParser extends BytecodeCommentParser {
         break;
       }
       if (Preparsing.PARSE_CP) {
-        CPLineController cplc = (CPLineController) lc;
-        int const_no = cplc.getConstantNumber();
+        final CPLineController cplc = (CPLineController) lc;
+        final int const_no = cplc.getConstantNumber();
         cplc.setConstant(my_doc.getBmlp().
                          getBcc().getCp().getConstant(const_no));
         cplc.setInBML(true);

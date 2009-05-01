@@ -154,7 +154,7 @@ public class ArrayInstruction extends StringInstruction {
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    * @param a_pos position in method
    */
-  public void updateReferences(HashMap a_map, int a_pos) {
+  public void updateReferences(final HashMap a_map, final int a_pos) {
 
   }
 

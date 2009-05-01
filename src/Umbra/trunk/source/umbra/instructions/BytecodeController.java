@@ -197,12 +197,12 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    *
    * @param a_doc a document in which change happened
    */
-  private void updateBMLCPRepresentation(BytecodeDocument a_doc) {
-    BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
+  private void updateBMLCPRepresentation(final BytecodeDocument a_doc) {
+    final BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
     bcp.clearConstantPool();
     for (int i = 0; i < a_doc.getNumberOfLines(); i++) {
       if (getLineController(i) instanceof CPLineController) {
-        CPLineController cplc = (CPLineController) getLineController(i);
+        final CPLineController cplc = (CPLineController) getLineController(i);
         bcp.addConstant(cplc.getConstant(), false);
       }
     }
@@ -404,7 +404,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     for (int i = a_start_rem; i <= an_end_rem && i <= a_stop; i++, j++) {
       //we replace for the common part
       final BytecodeLineController oldlc = getLineController(i);
-      BytecodeLineController newlc =
+      final BytecodeLineController newlc =
         (BytecodeLineController)the_lines.get(j);
       if (FileNames.CP_DEBUG_MODE)
         System.err.print("<" + oldlc.getLineContent() + "> with ");
@@ -591,37 +591,37 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    *
    * @param a_jc BCEL representation of java class
    */
-  public void recalculateCPNumbers(JavaClass a_jc) {
+  public void recalculateCPNumbers(final JavaClass a_jc) {
     if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
-    HashMap f = new HashMap();
+    final HashMap f = new HashMap();
     /*
      * NOTE (to236111) changing number of those two constants forbidden
      * it's not a bug
      */
-    int class_name_index = a_jc.getClassNameIndex();
-    int super_class_name_index = a_jc.getSuperclassNameIndex();
+    final int class_name_index = a_jc.getClassNameIndex();
+    final int super_class_name_index = a_jc.getSuperclassNameIndex();
     int entry_no = 1;
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating pool entries");
     for (int i = 0; i < getNoOfLines(); i++) {
-      BytecodeLineController lc = getLineController(i);
+      final BytecodeLineController lc = getLineController(i);
       if (lc instanceof CPLineController) {
-        CPLineController cplc = (CPLineController) lc;
+        final CPLineController cplc = (CPLineController) lc;
         f.put(cplc.getConstantNumber(), entry_no);
         entry_no++;
       }
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating instructions");
     for (int i = 0; i < getNoOfLines(); i++) {
-      BytecodeLineController lc = getLineController(i);
+      final BytecodeLineController lc = getLineController(i);
       if (lc instanceof CPLineController) {
-        CPLineController cplc = (CPLineController) lc;
+        final CPLineController cplc = (CPLineController) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
         cplc.updateReferences(f);
       } else if (lc instanceof MultiInstruction) {
-        MultiInstruction mi = (MultiInstruction) lc;
+        final MultiInstruction mi = (MultiInstruction) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
         try {
-          int pos = getCurrentPositionInMethod(i);
+          final int pos = getCurrentPositionInMethod(i);
           if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
             throw new UmbraException();
           mi.updateReferences(f, pos);

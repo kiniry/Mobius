@@ -63,7 +63,7 @@ public class Utf8CPLineController extends CPLineController {
    */
   public final boolean correct() {
     boolean res = parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     res = res && my_parser.swallowWhitespace();
     res = res && my_parser.swallowSingleMnemonic(BytecodeStrings.
                                                  UTF8_CP_ENTRY_KEYWORD);
@@ -90,14 +90,14 @@ public class Utf8CPLineController extends CPLineController {
    */
   private String getParam() {
     parseTillEntryType();
-    InstructionParser my_parser = getParser();
+    final InstructionParser my_parser = getParser();
     my_parser.swallowWhitespace();
     my_parser.swallowSingleMnemonic(BytecodeStrings.UTF8_CP_ENTRY_KEYWORD);
     my_parser.swallowWhitespace();
     my_parser.swallowDelimiter('"');
-    int start = my_parser.getIndex();
+    final int start = my_parser.getIndex();
     my_parser.swallowString();
-    int end = my_parser.getIndex();
+    final int end = my_parser.getIndex();
     return my_parser.getLine().substring(start, end);
   }
 
@@ -129,7 +129,7 @@ public class Utf8CPLineController extends CPLineController {
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */
-  public void updateReferences(HashMap a_map) {
+  public void updateReferences(final HashMap a_map) {
 
   }
 
