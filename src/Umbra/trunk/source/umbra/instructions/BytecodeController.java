@@ -11,7 +11,9 @@ package umbra.instructions;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.SourceFile;
 import org.apache.bcel.generic.MethodGen;
 import annot.bcclass.BCConstantPool;
 
@@ -675,9 +677,12 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     // in the following code
     // (verificator will detect?)
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
-    for (int i = 0; i < a_jc.getAttributes().length; i++) {
-      a_jc.getAttributes()[i].setNameIndex(
-        (Integer) f.get(a_jc.getAttributes()[i].getNameIndex()));
+    for (Attribute a : a_jc.getAttributes()) {
+      a.setNameIndex((Integer) f.get(a.getNameIndex()));
+      if (a instanceof SourceFile) {
+        final SourceFile src = (SourceFile) a;
+        src.setSourceFileIndex((Integer) f.get(src.getSourceFileIndex()));
+      }
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
     for (int i = 0; i < a_jc.getFields().length; i++) {
