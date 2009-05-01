@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraNoSuchConstantException;
 
 import org.apache.bcel.classfile.Constant;
 
@@ -290,9 +291,15 @@ public class CPLineController extends BytecodeLineController {
    *
    * Implemented in subclasses.
    *
+   * TODO (to236111) IMPORTANT check whether rollback of changes to BML
+   * representation of constant needed in case of UmbraCPRecalculationException
+   *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
+   * @throws UmbraNoSuchConstantException when "dirty" number refers to non
+   * existing constant
    */
-  public void updateReferences(final HashMap a_map) {
+  public void updateReferences(final HashMap a_map)
+    throws UmbraNoSuchConstantException {
 
   }
 

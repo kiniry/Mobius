@@ -14,6 +14,8 @@ import org.apache.bcel.generic.MethodGen;
 
 import umbra.UmbraPlugin;
 import umbra.instructions.InstructionParser;
+import umbra.instructions.errors.NoSuchConstantError;
+import umbra.lib.UmbraNoSuchConstantException;
 import umbra.lib.UmbraException;
 
 /**
@@ -148,15 +150,25 @@ public class MultiInstruction extends InstructionLineController {
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)}
    * for explantation of "dirty" and "clean" numbers concepts. <br> <br>
    *
+   * TODO (to236111) IMPORTANT check whether rollback of changes to BCEL
+   * representation of instructions needed in case of
+   * UmbraCPRecalculationException
+   *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    * @param a_pos position in method
    * @throws UmbraException in case the deletion of old method handle failed
    */
-  public void updateReferences(final HashMap a_map,
-                               final int a_pos) throws UmbraException {
+  public void updateReferences(final HashMap a_map, final int a_pos)
+    throws UmbraException, UmbraNoSuchConstantException {
     getInd();
     if (!my_has_ind) return;
     //System.err.println(has_ind + " " + getInd());
+    if (!a_map.containsKey(getInd())) {
+      NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getInd());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
     my_ind = (Integer) a_map.get(getInd());
     my_use_stored_ind = true;
     //int a_pos = this.getList().

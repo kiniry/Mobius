@@ -14,7 +14,9 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantFieldref;
 
 import umbra.instructions.InstructionParser;
+import umbra.instructions.errors.NoSuchConstantError;
 import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraNoSuchConstantException;
 
 /**
  * This is a class that represents CONSTANT_Fieldref_info constant
@@ -158,8 +160,24 @@ public class FieldrefCPLineController extends CPLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
+   * @throws UmbraNoSuchConstantException when "dirty" numbers refer to non
+   * existing constants
    */
-  public void updateReferences(final HashMap a_map) {
+  public void updateReferences(final HashMap a_map)
+    throws UmbraNoSuchConstantException {
+    if (!a_map.containsKey(getClassReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getClassReference());
+      if (!a_map.containsKey(getNameAndTypeReference()))
+        an_error.addNumber(getNameAndTypeReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    } else if (!a_map.containsKey(getNameAndTypeReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getNameAndTypeReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
     ((ConstantFieldref) getConstantAccessor()).
     setClassIndex((Integer) a_map.get(getClassReference()));
     ((ConstantFieldref) getConstantAccessor()).

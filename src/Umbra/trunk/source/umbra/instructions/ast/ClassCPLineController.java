@@ -11,9 +11,11 @@ package umbra.instructions.ast;
 import java.util.HashMap;
 
 import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraNoSuchConstantException;
 import umbra.instructions.InstructionParser;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;
+import umbra.instructions.errors.NoSuchConstantError;
 
 /**
  * This is a class that represents CONSTANT_Class_info constant
@@ -132,8 +134,17 @@ public class ClassCPLineController extends CPLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
+   * @throws UmbraNoSuchConstantException when "dirty" number refers to non
+   * existing constant
    */
-  public void updateReferences(final HashMap a_map) {
+  public void updateReferences(final HashMap a_map)
+    throws UmbraNoSuchConstantException {
+    if (!a_map.containsKey(getClassReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getClassReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
     ((ConstantClass) getConstantAccessor()).setNameIndex(
       (Integer) a_map.get(getClassReference()));
   }

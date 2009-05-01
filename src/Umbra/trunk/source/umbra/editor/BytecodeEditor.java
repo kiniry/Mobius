@@ -29,17 +29,21 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
+import umbra.instructions.errors.BytecodeError;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
+import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
 import umbra.verifier.BytecodeVerifier;
@@ -170,6 +174,9 @@ public class BytecodeEditor extends TextEditor {
    * {@link org.apache.bcel.classfile.JavaClass} in BCEL and binary
    * files to make visible in the class file the changes made in the editor.
    *
+   * NOTE (to236111) why revert changes if save fails?
+   * NOTE (to236111) IMPORTANT what if errors occured and user decides to save
+   *
    * @param a_progress_monitor not used
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
@@ -178,7 +185,21 @@ public class BytecodeEditor extends TextEditor {
 
     final BytecodeDocument doc = getDocument();
     if (FileNames.CP_DEBUG_MODE) System.err.println("update bml");
-    doc.updateBML();
+    try {
+      doc.updateBML();
+    } catch (UmbraCPRecalculationException e1) {
+      final MessageBox msgBox = new MessageBox(getSite().getShell(),
+        SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+      String message = "Following errors occured:\n";
+      for (BytecodeError e : e1.getReport().getErrors()) {
+        message += e.getShortErrorMessage() + "\n";
+      }
+      message += "Save anyway?";
+      msgBox.setMessage(message);
+      msgBox.setText("Recalculation errors");
+      final int res = msgBox.open();
+      if (res != SWT.YES) return;
+    }
     if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
     doc.updateJavaClass();
     if (FileNames.CP_DEBUG_MODE) System.err.println("ok");

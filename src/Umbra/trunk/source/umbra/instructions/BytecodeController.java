@@ -29,9 +29,13 @@ import umbra.instructions.ast.HeaderLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.MultiInstruction;
 import umbra.instructions.ast.UnknownLineController;
+import umbra.instructions.errors.ConflictingCPNumbersError;
+import umbra.instructions.errors.ErrorReport;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
+import umbra.lib.UmbraNoSuchConstantException;
 
 /**
  * This class defines some structures related to BCEL as well
@@ -194,6 +198,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * its BML representation.
    *
    * TODO (to236111) incremental change
+   * NOTE (to236111) IMPORTANT what if CPLineController outside constant pool?
    *
    * @param a_doc a document in which change happened
    */
@@ -590,16 +595,42 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * </code> <br> <br>
    *
    * @param a_jc BCEL representation of java class
+   * @throws UmbraCPRecalculationException when errors in bytecode caused
+   * recalculation impossible
    */
-  public void recalculateCPNumbers(final JavaClass a_jc) {
+  public void recalculateCPNumbers(final JavaClass a_jc)
+    throws UmbraCPRecalculationException {
     if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
+    // TODO (to236111) use templates
     final HashMap f = new HashMap();
+    final HashMap conflict = new HashMap();
+    final ErrorReport a_report = new ErrorReport();
     /*
      * NOTE (to236111) changing number of those two constants forbidden
      * it's not a bug
      */
     final int class_name_index = a_jc.getClassNameIndex();
     final int super_class_name_index = a_jc.getSuperclassNameIndex();
+    if (FileNames.CP_DEBUG_MODE) System.err.println("detecting conflicts");
+    for (int i = 0; i < getNoOfLines(); i++) {
+      final BytecodeLineController lc = getLineController(i);
+      if (lc instanceof CPLineController) {
+        final CPLineController cplc = (CPLineController) lc;
+        final int no = cplc.getConstantNumber();
+        if (!conflict.containsKey(no)) {
+          final ConflictingCPNumbersError an_error =
+            new ConflictingCPNumbersError();
+          an_error.addLine(cplc);
+          conflict.put(no, an_error);
+        } else {
+          ((ConflictingCPNumbersError) conflict.get(no)).addLine(cplc);
+        }
+      }
+    }
+    for (Object o : conflict.values()) {
+      final ConflictingCPNumbersError cpne = (ConflictingCPNumbersError) o;
+      if (cpne.getLines().size() > 1) a_report.addError(cpne);
+    }
     int entry_no = 1;
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating pool entries");
     for (int i = 0; i < getNoOfLines(); i++) {
@@ -616,7 +647,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       if (lc instanceof CPLineController) {
         final CPLineController cplc = (CPLineController) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
-        cplc.updateReferences(f);
+        try {
+          cplc.updateReferences(f);
+        } catch (UmbraNoSuchConstantException e) {
+          a_report.addError(e.getError());
+        }
       } else if (lc instanceof MultiInstruction) {
         final MultiInstruction mi = (MultiInstruction) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
@@ -625,12 +660,20 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
             throw new UmbraException();
           mi.updateReferences(f, pos);
+        } catch (UmbraNoSuchConstantException e) {
+          a_report.addError(e.getError());
         } catch (UmbraException e) {
           // TODO (to236111) exception handling
           e.printStackTrace();
         }
       }
     }
+    if (!a_report.noErrors()) {
+      throw new UmbraCPRecalculationException(a_report);
+    }
+    // TODO (to236111) IMPORTANT also do checking for non existent constants
+    // in the following code
+    // (verificator will detect?)
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
     for (int i = 0; i < a_jc.getAttributes().length; i++) {
       a_jc.getAttributes()[i].setNameIndex(

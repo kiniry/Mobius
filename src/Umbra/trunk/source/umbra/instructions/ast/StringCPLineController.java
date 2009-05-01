@@ -14,7 +14,9 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantString;
 
 import umbra.instructions.InstructionParser;
+import umbra.instructions.errors.NoSuchConstantError;
 import umbra.lib.BytecodeStrings;
+import umbra.lib.UmbraNoSuchConstantException;
 
 /**
  * This is a class that represents CONSTANT_String_info constant
@@ -129,8 +131,17 @@ public class StringCPLineController extends CPLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
+   * @throws UmbraNoSuchConstantException when "dirty" number refers to non
+   * existing constant
    */
-  public void updateReferences(final HashMap a_map) {
+  public void updateReferences(final HashMap a_map)
+   throws UmbraNoSuchConstantException {
+    if (!a_map.containsKey(getStringReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getStringReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
     ((ConstantString) getConstantAccessor()).
     setStringIndex((Integer) a_map.get(getStringReference()));
   }

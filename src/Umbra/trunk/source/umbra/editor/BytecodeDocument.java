@@ -17,6 +17,7 @@ import org.eclipse.jface.text.Document;
 import umbra.instructions.BytecodeController;
 import umbra.lib.BMLParsing;
 import umbra.lib.FileNames;
+import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraException;
 import umbra.lib.UmbraLocationException;
 import umbra.lib.UmbraMethodException;
@@ -233,11 +234,18 @@ public class BytecodeDocument extends Document {
    * explantation of "dirty" and "clean" numbers. <br> <br>
    *
    * TODO (to236111) merge with updateJavaClass()? and move to some more
-   * proper object (BCClass?, BytecodeController?)
+   * proper object (BCClass?, BytecodeController?) <br> <br>
+   *
+   * TODO (to236111) IMPORTANT check whether non rollbacked changes in
+   * recalculateCPNumbers and objects which would be modified if not
+   * for UmbraCPRecalculationException does not conflict in case of
+   * that exception
    *
    * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
+   * @throws UmbraCPRecalculationException when errors in bytecode caused
+   * update impossible
    */
-  public void updateBML() {
+  public void updateBML() throws UmbraCPRecalculationException {
     if (!umbra.instructions.Preparsing.PARSE_CP ||
         !umbra.instructions.Preparsing.UPDATE_CP) return;
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
