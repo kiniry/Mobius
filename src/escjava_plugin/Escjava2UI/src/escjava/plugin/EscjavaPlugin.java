@@ -54,9 +54,9 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	/**
    * Name of jarfile of JML specs file (has been "jmlspecs.jar" for a *long* time).
    */
-  public static final String JML_JAR_FILENAME = "libs/specs/escspecs.jar";
-  public static final String JML_JAVA1_4_JAR_FILENAME = "libs/specs/escspecs-java1.4.jar";
-  public static final String JML_JAVACARD2_1_JAR_FILENAME = "libs/specs/escspecs-javacard.jar";
+  public static final String JML_JAR_FILENAME = "escspecs.jar";
+  public static final String JML_JAVA1_4_JAR_FILENAME = "escspecs-java1.4.jar";
+  public static final String JML_JAVACARD2_1_JAR_FILENAME = "escspecs-javacard.jar";
   
   /**
    * The name of the automatically-generated project that contains our specifications.
