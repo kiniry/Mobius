@@ -14,6 +14,7 @@ import jml2bml.plugin.Jml2BmlPlugin;
 import jml2bml.plugin.NotTranslatedException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -58,6 +59,8 @@ public class JMLCompile extends DisasBCEL {
     final IFile jFile = ((FileEditorInput)getEditor().getEditorInput()).
       getFile();
     final IFile bFile;
+    
+    IJavaProject project = FileNames.getJavaElement(getEditor()).getJavaProject();
     try {
       bFile = FileNames.getClassFileFile(jFile, getEditor());
     } catch (JavaModelException e) {
@@ -67,7 +70,7 @@ public class JMLCompile extends DisasBCEL {
       return;
     }
     try {
-      Jml2BmlPlugin.getDefault().compile(jFile, bFile);
+      Jml2BmlPlugin.getDefault().compile(jFile, bFile, project);
       openBCodeEditorForJavaFile(jFile);
     } catch (IOException e) {
       MessageDialog.openError(shell,
@@ -87,9 +90,10 @@ public class JMLCompile extends DisasBCEL {
     } catch (ReadAttributeException e) {
       messageProblemsWithLoading(jFile.getLocation());
     } catch (NotTranslatedException e) {
+      e.printStackTrace();
       MessageDialog.openError(shell,
                               GUIMessages.DISAS_MESSAGE_TITLE,
-                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+                              e.toString());
     }
   }
 }
