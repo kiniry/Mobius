@@ -22,72 +22,80 @@ import org.apache.bcel.verifier.VerifierFactory;
  *
  */
 public class BytecodeVerifier {
-  
-  private Verifier verifier;
-  
-  private JavaClass jc;
+
+  /**
+   * verifier used to check bytecode.
+   */
+  private Verifier my_verifier;
+
+  /**
+   * class checked by the verifier.
+   */
+  private JavaClass my_jc;
+
+  /**
+   * @param a_jc class to verify
+   */
+  public BytecodeVerifier(final JavaClass a_jc) {
+    this.my_jc = a_jc;
+    Repository.clearCache();
+    Repository.addClass(a_jc);
+    final String class_name = a_jc.getClassName();
+    my_verifier = VerifierFactory.getVerifier(class_name);
+    my_verifier.flush();
+  }
 
   /**
    * @return java class
    */
   public JavaClass getJavaClass() {
-    return jc;
+    return my_jc;
   }
-  
-  /**
-   * @param jc class to verify
-   */
-  public BytecodeVerifier(JavaClass jc) {
-    this.jc = jc;
-    Repository.clearCache();
-    Repository.addClass(jc);
-    String class_name = jc.getClassName();
-    verifier = VerifierFactory.getVerifier(class_name);
-    verifier.flush();
-  }
-  
+
   /**
    * @return result of pass 1 verification
    */
   public VerificationResult doPass1() {
-    return verifier.doPass1();
+    return my_verifier.doPass1();
   }
-  
+
   /**
    * @return result of pass 2 verification
    */
   public VerificationResult doPass2() {
-    return verifier.doPass2();
+    return my_verifier.doPass2();
   }
-  
+
   /**
-   * @param  method_no index of method to verify
+   * @param  a_method_no index of method to verify
    * @return result of pass 3a verification
    */
-  public VerificationResult doPass3a(int method_no) {
-    return verifier.doPass3a(method_no);
+  public VerificationResult doPass3a(final int a_method_no) {
+    return my_verifier.doPass3a(a_method_no);
   }
-  
+
   /**
-   * @param  method_no index of method to verify
+   * @param  a_method_no index of method to verify
    * @return result of pass 3b verification
    */
-  public VerificationResult doPass3b(int method_no) {
-    return verifier.doPass3b(method_no);
+  public VerificationResult doPass3b(final int a_method_no) {
+    return my_verifier.doPass3b(a_method_no);
   }
-  
+
   /**
    * @return true if verification passed false otherwise
    */
   public boolean passed() {
-    if (doPass1().getStatus() != VerificationResult.VERIFIED_OK) return false;
-    if (doPass2().getStatus() != VerificationResult.VERIFIED_OK) return false;
-    
-    for (int i = 0; i < jc.getMethods().length; i++) {
-      if (doPass3a(i).getStatus() != VerificationResult.VERIFIED_OK) return false;
-      if (doPass3b(i).getStatus() != VerificationResult.VERIFIED_OK) return false;
+    boolean ok = true;
+    if (doPass1().getStatus() != VerificationResult.VERIFIED_OK) ok = false;
+    if (ok && doPass2().getStatus() != VerificationResult.VERIFIED_OK)
+       ok = false;
+
+    for (int i = 0; ok && i < my_jc.getMethods().length; i++) {
+      if (doPass3a(i).getStatus() != VerificationResult.VERIFIED_OK) ok = false;
+      if (doPass3b(i).getStatus() != VerificationResult.VERIFIED_OK) ok = false;
     }
-    return true;
+    return ok;
   }
-    
+
 }
