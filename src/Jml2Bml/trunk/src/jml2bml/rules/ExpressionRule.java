@@ -57,6 +57,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
@@ -119,6 +120,13 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     } else {
       return new ArithmeticExpression(operator, lhs, rhs);
     }
+  }
+
+  @Override
+  public BCExpression visitUnary(final UnaryTree node, final Symbols p) {
+    final BCExpression expr = scan(node.getExpression(), p);
+    final int operator = BmlLibUtils.translateUnaryOperator(node.getKind()); 
+    return preVisit(node, p);
   }
 
   /**
@@ -390,4 +398,5 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     throw new NotTranslatedRuntimeException("Singleton type not translated: " +
                                             node);
   }
+  
 }

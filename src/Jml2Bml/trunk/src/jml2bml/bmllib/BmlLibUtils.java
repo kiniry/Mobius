@@ -53,6 +53,10 @@ public final class BmlLibUtils {
         return false;
     }
   }
+  
+  public static int translateUnaryOperator(final Kind kind) {
+    throw new Jml2BmlException("Not implemented unary operator: " + kind);    
+  }
 
   /**
    * Translates a binary operator from the OpenJml Constant to BmlLib constant.
