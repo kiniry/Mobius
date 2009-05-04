@@ -148,8 +148,7 @@ public class Jml2BmlPlugin extends Plugin {
       projectClassPath = "";
     }
     
-    System.out.println(bundleClassPath);
-
+    System.out.println("PROJECT CLASSPATH:"+projectClassPath);
     String bname = a_bfile.getName();
     final IPath path = a_bfile.getLocation();
     bname = bname.substring(0, bname.lastIndexOf("."));
@@ -160,7 +159,7 @@ public class Jml2BmlPlugin extends Plugin {
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
-//      System.setProperty("env.class.path", projectClassPath);
+      System.setProperty("env.class.path", bundleClassPath+projectClassPath);
       new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);

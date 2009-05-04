@@ -8,9 +8,11 @@ package jml2bml.rules;
 
 import javax.lang.model.element.ElementKind;
 
+import jml2bml.bytecode.TypeSignature;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.generic.Type;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
 import annot.bcclass.BCClass;
@@ -20,7 +22,6 @@ import annot.bcclass.BMLModifiersFlags;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -71,33 +72,12 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
         BCField field = new BCField(bcClazz);
         field.setName(name);
         field.setBMLFlags(builder.modifiers);
-        Type type = varSymbol.asType(); 
-        System.out.println(type);
-        
+        String typeSignature = TypeSignature.getSignature(varSymbol.asType());
+        field.setType(Type.getType(typeSignature));
+        bcClazz.updateFields(field);
       } else {
         throw new Jml2BmlException("Unknown variable kind:" + node.sym.kind);
       }
-//      System.out.println(node.sym.getKind());
-//      System.out.println(node.sym.type.tsym.asType().toString());
-//      System.out.println(node.sym.type.stringValue());
-//      Type type = Type.getType(node.sym.type.stringValue());
-//      Variable var = symb.get(name);
-//      if (var.isField()){
-//        BCField field = new BCField(bcClazz);
-//        field.setName(name);
-//        field.setBMLFlags(builder.modifiers);
-////        Type        
-//        field.setType(Type.getType(var.getVariable().checkType().toString()));
-//        bcClazz.updateFields(field);
-//        for(Field f: bcClazz.getJC().getFields()){
-//          if (f.getName().equals(name)){            
-//            field.setType(var.getVariable().getType());            
-//            BMLModifierAttribute attr = new BMLModifierAttribute(f, bcClazz);
-            
-//          }
-//        }
-//        bcClazz.getJC().getFields()
-//      }
     }    
     return "";
   }
