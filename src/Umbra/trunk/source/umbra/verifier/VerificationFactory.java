@@ -14,17 +14,20 @@ package umbra.verifier;
  *
  */
 public abstract class VerificationFactory {
-  
+
   /**
    * @return presenter for results of verification
-   * @param  verifier
+   * @param  a_verifier verifier
    */
-  public abstract ResultPresenter getResultPresenter(BytecodeVerifier verifier);
-  
+  public abstract ResultPresenter getResultPresenter(
+      final BytecodeVerifier a_verifier);
+
   /**
-   * @return object responsible for asking user if she wants to save despite of verification trouble
-   * @param  resultPresenter
+   * @return object responsible for asking user if she wants
+   * to save despite of verification trouble.
+   * @param  a_result_presenter presenter
    */
-  public abstract SaveConfirmer getSaveConfirmer(ResultPresenter resultPresenter);
+  public abstract SaveConfirmer getSaveConfirmer(
+      final ResultPresenter a_result_presenter);
 
 }
