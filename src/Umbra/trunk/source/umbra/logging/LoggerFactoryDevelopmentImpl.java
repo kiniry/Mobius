@@ -18,47 +18,52 @@ import java.util.logging.Formatter;
 import java.util.logging.SimpleFormatter;
 
 /**
+ * @author szymon wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
  */
 public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
 
+  /**
+   *
+   */
   LoggerFactoryDevelopmentImpl() {
     super("umbra_logs/dvpmt/");
   }
 
   /**
+   * @param a_class a class
    * @return new class logger
    */
   @Override
-  public Logger getClassLogger(final Class<?> c) {
-    String className = c.getName();
-    
-    Logger logger = Logger.getLogger(className);
+  public Logger getClassLogger(final Class < ? > a_class) {
+    final String className = a_class.getName();
+    final Logger logger = Logger.getLogger(className);
     logger.setLevel(Level.ALL);
-    
+
     for (Handler h : logger.getHandlers()) {
       h.setLevel(Level.WARNING);
     }
-    
+
     try {
-      FileHandler fileHandler = new FileHandler(logPath + className + logSuffix);
+      final FileHandler fileHandler = new FileHandler(
+               logPath + className + logSuffix);
       fileHandler.setLevel(Level.ALL);
-      Formatter formatter = new SimpleFormatter();
+      final Formatter formatter = new SimpleFormatter();
       fileHandler.setFormatter(formatter);
-      
+
       logger.addHandler(fileHandler);
     } catch (SecurityException e) {
       e.printStackTrace();
     } catch (IOException e) {
-      System.out.println("mkdir: " + System.getProperty("user.dir") + "/" + logPath);
-      boolean ok = (new File(logPath)).mkdirs();
+      System.out.println("mkdir: " +
+         System.getProperty("user.dir") + "/" + logPath);
+      final boolean ok = (new File(logPath)).mkdirs();
       if (ok) {
         System.out.println("done");
       } else {
         System.out.println("fail");
       }
     }
-    
     return logger;
   }
 
