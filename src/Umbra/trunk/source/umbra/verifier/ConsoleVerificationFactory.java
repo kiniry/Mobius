@@ -16,18 +16,22 @@ package umbra.verifier;
 public class ConsoleVerificationFactory extends VerificationFactory {
 
   /**
-   * 
+   * @param a_verifier verifier used to check bytecode.
+   * @return a new console presenter
    */
   @Override
-  public ResultPresenter getResultPresenter(BytecodeVerifier verifier) {
-    return new ConsoleResultPresenter(verifier);
+  public ResultPresenter getResultPresenter(final BytecodeVerifier a_verifier) {
+    return new ConsoleResultPresenter(a_verifier);
   }
 
   /**
-   * 
+   * @param a_result_presenter presenter used to show
+   * verification results.
+   * @return a new console confirmer
    */
   @Override
-  public SaveConfirmer getSaveConfirmer(ResultPresenter resultPresenter) {
-    return new ConsoleSaveConfirmer(resultPresenter); 
+  public SaveConfirmer getSaveConfirmer(
+           final ResultPresenter a_result_presenter) {
+    return new ConsoleSaveConfirmer(a_result_presenter);
   }
 }
