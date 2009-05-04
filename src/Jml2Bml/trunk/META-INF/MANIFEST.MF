@@ -19,7 +19,8 @@ Require-Bundle: mobius.bmllib,
  org.junit4;bundle-version="4.3.1",
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- bcel.plugin;bundle-version="5.2.0"
+ bcel.plugin;bundle-version="5.2.0",
+ org.eclipse.jdt.core
 Bundle-Vendor: Mobius & Warsaw University
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: jml2bml.plugin.Jml2BmlPlugin

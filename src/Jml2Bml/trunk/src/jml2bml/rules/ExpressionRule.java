@@ -313,7 +313,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
           .createFieldRef(isOld, fieldRefIndex, p));
     }
     //hardest case: we have to extend the constant pool.
-    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p);
+    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p, myContext);
     fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
                                                                identifier, p);
     if (fieldRefIndex != -1) {

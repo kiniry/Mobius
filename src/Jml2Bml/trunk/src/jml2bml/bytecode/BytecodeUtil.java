@@ -83,7 +83,7 @@ public final class BytecodeUtil {
           if (sourceType.getKind() == Kind.PRIMITIVE_TYPE){
             ok = false;
           } else {
-            String sourceTypeName = ((JCIdent) sourceType).toString();
+            String sourceTypeName = sourceType.toString();
             String bytecodeTypeName = bytecodeType.toString();
             
             if (!sourceTypeName.equals(bytecodeTypeName)){

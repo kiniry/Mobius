@@ -13,7 +13,10 @@ import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
+
+import com.sun.tools.javac.util.Context;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
@@ -41,10 +44,11 @@ public final class ConstantPoolHelper {
    * @return type of the field. If this field cannot be found in given class,
    * null will be returned.
    */
-  private static String findFieldType(final String className,
+  private static String findFieldType(final Context context,
+                                      final String className,
                                       final String fieldName) {
     try {
-      final JavaClass jc = SyntheticRepository.getInstance()
+      final JavaClass jc = SyntheticRepository.getInstance(context.get(ClassPath.class))
           .loadClass(className);
       final Field[] fields = jc.getFields();
       for (int i = 0; i < fields.length; i++) {
@@ -68,10 +72,11 @@ public final class ConstantPoolHelper {
    */
   public static void extendConstantPool(final String className,
                                         final String fieldName,
-                                        final Symbols symbols) {
+                                        final Symbols symbols,
+                                        final Context context) {
     final String trimmedClassName = className.substring(1, className
         .lastIndexOf(";"));
-    final String fieldType = findFieldType(trimmedClassName, fieldName);
+    final String fieldType = findFieldType(context, trimmedClassName, fieldName);
 
     if (fieldType == null) {
       throw new Jml2BmlException("Field " + fieldName + " not found in class " +

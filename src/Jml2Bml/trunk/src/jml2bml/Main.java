@@ -23,6 +23,7 @@ import jml2bml.utils.Logger;
 
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.util.ClassPath;
 import org.jmlspecs.openjml.JmlCompiler;
 import org.jmlspecs.openjml.JmlPretty;
 import org.jmlspecs.openjml.JmlSpecs;
@@ -82,7 +83,7 @@ public class Main {
         .get(1));
     if (out == null)
       out = loc.getClassFilePath() + "-wyn";
-    compile(arguments.get(2), loc, out);
+    compile(arguments.get(2), loc, out, "");
   }
 
   /**
@@ -118,10 +119,11 @@ public class Main {
    *   location
    */
   public void compile(final String sourceFile,
-                      final ClassFileLocation classLoc, final String out)
+                      final ClassFileLocation classLoc, final String out, final String classPath)
       throws ClassNotFoundException, ReadAttributeException,
       NotTranslatedException, IOException {
     final Context context = createContext();
+    context.put(ClassPath.class, new ClassPath(classPath));
     context.put(ClassFileLocation.class, classLoc);
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
         .getClassQualifiedName());

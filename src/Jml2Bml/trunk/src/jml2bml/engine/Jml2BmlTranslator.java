@@ -56,7 +56,7 @@ public class Jml2BmlTranslator extends
     super.preVisit(node, v);
     final Symbols symbs = node.accept(new SymbolsBuilder(context), v);
     for (Class < ? > cl : JmlNodes.JML_CLASSES) {
-      if (cl.equals(node.getClass())) {
+      if (cl.isAssignableFrom(node.getClass())){
         for (TranslationRule < String, Symbols > rule : rules) {
           // try to apply the rule
           node.accept(rule, symbs);

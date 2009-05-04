@@ -12,12 +12,17 @@ import java.io.PrintStream;
 
 import jml2bml.Main;
 import jml2bml.bytecode.ClassFileLocation;
+import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
@@ -97,8 +102,19 @@ public class Jml2BmlPlugin extends Plugin {
     }
     return result.toString();
   }
+  
+  private String getProjectClassPath(final IJavaProject project) throws JavaModelException{
+    StringBuffer result = new StringBuffer();
+    result.append(ResourcesPlugin.getWorkspace().getRoot().getFolder(project.getOutputLocation()).getLocation().toOSString());
+    
+    for (IClasspathEntry entry: project.getRawClasspath()){
+      System.out.println(entry);
+    }
+    
+    return result.toString();
+  }
 
-  public void compile(final IFile a_jfile, final IFile a_bfile)
+  public void compile(final IFile a_jfile, final IFile a_bfile, final IJavaProject project)
       throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException{
 
     String bundleClassPath;
@@ -107,6 +123,15 @@ public class Jml2BmlPlugin extends Plugin {
     } catch (BundleException e) {
       e.printStackTrace();
       bundleClassPath = "";
+    }
+    
+    String projectClassPath;
+    try {
+      projectClassPath = getProjectClassPath(project);
+    } catch (JavaModelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+      projectClassPath = "";
     }
     
     System.out.println(bundleClassPath);
@@ -120,10 +145,12 @@ public class Jml2BmlPlugin extends Plugin {
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
-      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString());
+      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
-    }
+    } catch (Jml2BmlException e2) {
+      throw new jml2bml.plugin.NotTranslatedException(e2);      
+    }  
     System.setProperty("java.class.path", oldPath);
 
   }
