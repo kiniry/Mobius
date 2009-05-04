@@ -46,7 +46,7 @@ public class SWTSaveConfirmer extends SaveConfirmer {
   public SWTSaveConfirmer(final ResultPresenter a_result_presenter,
                           final Shell a_shell) {
     super(a_result_presenter);
-    my_verifier = a_result_presenter.verifier;
+    my_verifier = a_result_presenter.getVerifier();
     this.my_shell = a_shell;
   }
 
@@ -65,7 +65,7 @@ public class SWTSaveConfirmer extends SaveConfirmer {
   @Override
   public boolean confirm() {
     if (!my_verifier.passed()) {
-      resultPresenter.presentAll();
+      getResultPresenter().presentAll();
       final MessageBox msgBox =
         new MessageBox(my_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
       msgBox.
