@@ -16,101 +16,110 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 /**
- * @author Szymon Wrzyszcz
+ * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
  *
  */
 public class SWTResultPresenter extends ResultPresenter {
 
-  private Shell a_shell;
-  private MessageBox msgBox; 
-  
   /**
-   * @param verifier
+   *
    */
-  public SWTResultPresenter(BytecodeVerifier verifier, Shell a_shell) {
-    super(verifier);
-    this.a_shell = a_shell;
-    msgBox = new MessageBox(a_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+  private final int my_width = 40;
+
+  /**
+   *
+   */
+  private Shell my_shell;
+
+  /**
+   *
+   */
+  private MessageBox my_msgBox;
+
+  /**
+   * @param a_verifier verifier
+   * @param a_shell    shell
+   */
+  public SWTResultPresenter(final BytecodeVerifier a_verifier,
+                            final Shell a_shell) {
+    super(a_verifier);
+    this.my_shell = a_shell;
+    my_msgBox = new MessageBox(my_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
   }
-  
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentAll()
+
+  /**
+   *
    */
   @Override
   public void presentAll() {
-    // TODO Auto-generated method stub
-     
-    msgBox.setMessage("");
+    my_msgBox.setMessage("");
     presentPass1();
     presentPass2();
     presentPass3a();
     presentPass3b();
-    msgBox.open();
+    my_msgBox.open();
   }
 
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentPass1()
+  /**
+   *
    */
   @Override
   public void presentPass1() {
-    // TODO Auto-generated method stub
-    VerificationResult result = verifier.doPass1();
-    
-    String s = msgBox.getMessage();
+    final VerificationResult result = getVerifier().doPass1();
+
+    String s = my_msgBox.getMessage();
     s += "pass1" + "\n";
-    s += line(40, '-') + "\n";
+    s += line(my_width, '-') + "\n";
     s += getInfo(result) + "\n";
-    msgBox.setMessage(s);
+    my_msgBox.setMessage(s);
   }
 
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentPass2()
+  /**
+   *
    */
   @Override
   public void presentPass2() {
-    // TODO Auto-generated method stub
-    VerificationResult result = verifier.doPass2();
-    
-    String s = msgBox.getMessage();
+    final VerificationResult result = getVerifier().doPass2();
+    String s = my_msgBox.getMessage();
     s += "pass2" + "\n";
-    s += line(40, '-') + "\n";
+    s += line(my_width, '-') + "\n";
     s += getInfo(result) + "\n";
-    msgBox.setMessage(s);
+    my_msgBox.setMessage(s);
   }
 
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentPass3a()
+  /**
+   *
    */
   @Override
   public void presentPass3a() {
-    String s = msgBox.getMessage();
+    String s = my_msgBox.getMessage();
     s += "pass3a" + "\n";
-    s += line(40, '-') + "\n";
-    JavaClass jc = verifier.getJavaClass();
-    Method[] methods = jc.getMethods();
-    for (int i=0; i < methods.length; i++) {
-      VerificationResult result = verifier.doPass3a(i);
+    s += line(my_width, '-') + "\n";
+    final JavaClass my_jc = getVerifier().getJavaClass();
+    final Method[] methods = my_jc.getMethods();
+    for (int i = 0; i < methods.length; i++) {
+      final VerificationResult result = getVerifier().doPass3a(i);
       s += presentMethod(methods[i]) + " " + getInfo(result) + "\n";
     }
-    msgBox.setMessage(s);
+    my_msgBox.setMessage(s);
   }
 
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentPass3b()
+  /**
+   *
    */
   @Override
   public void presentPass3b() {
-    String s = msgBox.getMessage();
+    String s = my_msgBox.getMessage();
     s += "pass3b" + "\n";
-    s += line(40, '-') + "\n";
-    JavaClass jc = verifier.getJavaClass();
-    Method[] methods = jc.getMethods();
-    for (int i=0; i < methods.length; i++) {
-      VerificationResult result = verifier.doPass3b(i);
+    s += line(my_width, '-') + "\n";
+    final JavaClass jc = getVerifier().getJavaClass();
+    final Method[] methods = jc.getMethods();
+    for (int i = 0; i < methods.length; i++) {
+      final VerificationResult result = getVerifier().doPass3b(i);
       s += presentMethod(methods[i]) + " " + getInfo(result) + "\n";
     }
-    msgBox.setMessage(s);
+    my_msgBox.setMessage(s);
   }
 
 }
