@@ -16,13 +16,13 @@ import org.jmlspecs.openjml.JmlTree.JmlForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlGroupName;
 import org.jmlspecs.openjml.JmlTree.JmlImport;
 import org.jmlspecs.openjml.JmlTree.JmlLblExpression;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseAssignable;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseConditional;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseStoreRef;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
@@ -845,7 +845,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  public R visitJmlMethodClauseAssignable(final JmlMethodClauseAssignable node,
+  public R visitJmlMethodClauseAssignable(final JmlMethodClauseStoreRef node,
                                           final P p) {
     final P tmpP = preVisit(node, p);
     return scan(node.list, tmpP);

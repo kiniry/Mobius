@@ -16,13 +16,13 @@ import org.jmlspecs.openjml.JmlTree.JmlForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlGroupName;
 import org.jmlspecs.openjml.JmlTree.JmlImport;
 import org.jmlspecs.openjml.JmlTree.JmlLblExpression;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseAssignable;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseConditional;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseStoreRef;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
@@ -367,7 +367,7 @@ public class IsJml implements TreeVisitor < Boolean, Void >,
   }
 
   public Boolean visitJmlMethodClauseAssignable(
-      final JmlMethodClauseAssignable anArg0,
+      final JmlMethodClauseStoreRef anArg0,
       final Void anArg1) {
     // TODO Auto-generated method stub
     return true;

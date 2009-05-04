@@ -17,9 +17,9 @@ import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseAssignable;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseStoreRef;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
@@ -74,7 +74,7 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
 
     @Override
     public String visitJmlMethodClauseAssignable(
-        final JmlMethodClauseAssignable node,
+        final JmlMethodClauseStoreRef node,
         final Symbols p) {
       final ExpressionRule exRule = new ExpressionRule(myContext);
       for (JCTree n : node.list) {

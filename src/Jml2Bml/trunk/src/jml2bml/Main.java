@@ -49,8 +49,8 @@ import com.sun.tools.javac.parser.JmlParser;
 import com.sun.tools.javac.parser.JmlScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.JavacMessages;
 import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Messages;
 import com.sun.tools.javac.util.Options;
 
 /*
@@ -187,7 +187,7 @@ public class Main {
    */
   private Context createContext() {
     final Context context = new Context();
-    Messages.instance(context).add(Utils.messagesJML); // registering an additional source of JML-specific error messages
+    JavacMessages.instance(context).add(Utils.messagesJML);// registering an additional source of JML-specific error messages
 
     JmlSpecs.preRegister(context); // registering the specifications repository
     JmlParser.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlParsers
