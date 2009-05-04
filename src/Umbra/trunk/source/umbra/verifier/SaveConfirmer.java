@@ -8,8 +8,6 @@
  */
 package umbra.verifier;
 
-import org.eclipse.swt.widgets.Shell;
-
 /**
  * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
@@ -17,21 +15,31 @@ import org.eclipse.swt.widgets.Shell;
  */
 public abstract class SaveConfirmer {
 
-  protected ResultPresenter resultPresenter;
-  
   /**
-   * @param resultPresenter
+   *
    */
-  public SaveConfirmer(ResultPresenter resultPresenter) {
-    this.resultPresenter = resultPresenter;
+  private ResultPresenter my_result_presenter;
+
+  /**
+   * @param a_result_presenter presenter
+   */
+  public SaveConfirmer(final ResultPresenter a_result_presenter) {
+    this.my_result_presenter = a_result_presenter;
   }
 
   /**
-   * in case there are verification problems asks user if she wants to save anyway
-   * 
-   * @param a_shell bytecode editor shell, used by graphical confirmers
+   * @return result presenter
+   */
+  public ResultPresenter getResultPresenter() {
+    return my_result_presenter;
+  }
+
+  /**
+   * in case there are verification problems asks user
+   * if she wants to save anyway.
+   *
    * @return true if user wants to save, false otherwise
    */
   public abstract boolean confirm();
-  
+
 }
