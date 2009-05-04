@@ -8,6 +8,7 @@
  */
 package jml2bml.engine;
 
+import jml2bml.rules.ModifiersRule;
 import jml2bml.rules.RulesFactory;
 
 import com.sun.tools.javac.util.Context;
@@ -52,7 +53,6 @@ public final class TranslationManager {
         .getTypeClauseExprRule(context));
     translator.registerTranslationRule(RulesFactory
         .getLoopInvariantRule(context));
-//    translator.registerTranslationRule(RulesFactory
-//                                       .getMethodSpecsRule(context));
+    translator.registerTranslationRule(new ModifiersRule(context));
   }
 }

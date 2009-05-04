@@ -8,8 +8,6 @@ package jml2bml.engine;
 
 import org.jmlspecs.openjml.JmlTree;
 
-import com.sun.tools.javac.tree.JCTree;
-
 public class JmlNodes {
   /**
    * all nodes that represent some JML annotations; for this nodes translation
@@ -21,5 +19,6 @@ public class JmlNodes {
     JmlTree.JmlSpecificationCase.class,
     JmlTree.JmlStatementExpr.class,
     JmlTree.JmlTypeClauseExpr.class,
-    JCTree.JCAnnotation.class };
+    JmlTree.JmlVariableDecl.class};
+  
 }

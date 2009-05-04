@@ -6,7 +6,7 @@
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry exported="true" kind="lib" path="lib/jmlruntime.jar" sourcepath="Jml2Bmlsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/jmlspecs.jar" sourcepath="Jml2Bmlsrc.zip"/>
-	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJML"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="/OpenJDK"/>
 	<classpathentry exported="true" kind="lib" path="lib/args4j-2.0.1.jar" sourcepath="Jml2Bmlsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

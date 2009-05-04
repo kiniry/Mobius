@@ -16,12 +16,15 @@ import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IPathVariableManager;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleContext;
@@ -104,11 +107,22 @@ public class Jml2BmlPlugin extends Plugin {
   }
   
   private String getProjectClassPath(final IJavaProject project) throws JavaModelException{
+    IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
     StringBuffer result = new StringBuffer();
-    result.append(ResourcesPlugin.getWorkspace().getRoot().getFolder(project.getOutputLocation()).getLocation().toOSString());
+    result.append(wr.getFolder(project.getOutputLocation()).getLocation().toOSString());
     
     for (IClasspathEntry entry: project.getRawClasspath()){
-      System.out.println(entry);
+      switch (entry.getEntryKind()) {
+        case IClasspathEntry.CPE_SOURCE:
+          if (entry.getOutputLocation() != null)
+            result.append(java.io.File.pathSeparator+entry.getOutputLocation());          
+          break;
+        case IClasspathEntry.CPE_LIBRARY:
+          result.append(java.io.File.pathSeparator+wr.getFolder(entry.getPath()).getLocation().toOSString());
+        default:
+//          System.out.println(entry.getPath());
+          break;
+      }
     }
     
     return result.toString();
@@ -142,9 +156,11 @@ public class Jml2BmlPlugin extends Plugin {
     final String bpath = path.removeLastSegments(1).toOSString();
     final String sourceFile = a_jfile.getLocation().toOSString();
     String oldPath = System.getProperty("java.class.path");
+    String oldCPath = System.getProperty("env.class.path");
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
+//      System.setProperty("env.class.path", projectClassPath);
       new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
@@ -152,6 +168,10 @@ public class Jml2BmlPlugin extends Plugin {
       throw new jml2bml.plugin.NotTranslatedException(e2);      
     }  
     System.setProperty("java.class.path", oldPath);
+    if (oldCPath!=null)
+      System.setProperty("env.class.path", oldCPath);
+    else
+      System.clearProperty("env.class.path");
 
   }
 }
