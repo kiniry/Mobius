@@ -10,8 +10,6 @@ package umbra.verifier;
 
 import java.util.Scanner;
 
-import org.eclipse.swt.widgets.Shell;
-
 /**
  * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
  * @version a-01
@@ -19,27 +17,30 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class ConsoleSaveConfirmer extends SaveConfirmer {
 
-  private BytecodeVerifier verifier;
-  
   /**
-   * @param resultPresenter
+   * verifier used to check bytecode.
    */
-  public ConsoleSaveConfirmer(ResultPresenter resultPresenter) {
-    super(resultPresenter);
-    this.verifier = resultPresenter.verifier;
+  private BytecodeVerifier my_verifier;
+
+  /**
+   * @param a_result_presenter presenter used to display
+   * verification status.
+   */
+  public ConsoleSaveConfirmer(final ResultPresenter a_result_presenter) {
+    super(a_result_presenter);
+    this.my_verifier = resultPresenter.verifier;
   }
 
   /**
-   * in case there are verification problems asks user if she wants to save anyway
-   * 
-   * @param a_shell bytecode editor shell, used by graphical confirmers
+   * in case there are verification problems asks use
+   * if she wants to save anyway.
    * @return true if user wants to save, false otherwise
    */
   @Override
   public boolean confirm() {
-    if (!verifier.passed()) {
+    if (!my_verifier.passed()) {
       resultPresenter.presentAll();
-      Scanner scanner = new Scanner(System.in);
+      final Scanner scanner = new Scanner(System.in);
       String token;
       do {
         System.out.println("verification failed. save anyway? y/n");
@@ -50,5 +51,5 @@ public class ConsoleSaveConfirmer extends SaveConfirmer {
       return true;
     }
   }
-  
+
 }
