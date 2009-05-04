@@ -46,7 +46,7 @@ public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
 
     try {
       final FileHandler fileHandler = new FileHandler(
-               logPath + className + logSuffix);
+              getLogPath() + className + getLogSuffix());
       fileHandler.setLevel(Level.ALL);
       final Formatter formatter = new SimpleFormatter();
       fileHandler.setFormatter(formatter);
@@ -56,8 +56,8 @@ public class LoggerFactoryDevelopmentImpl extends LoggerFactoryImpl {
       e.printStackTrace();
     } catch (IOException e) {
       System.out.println("mkdir: " +
-         System.getProperty("user.dir") + "/" + logPath);
-      final boolean ok = (new File(logPath)).mkdirs();
+         System.getProperty("user.dir") + "/" + getLogPath());
+      final boolean ok = (new File(getLogPath())).mkdirs();
       if (ok) {
         System.out.println("done");
       } else {
