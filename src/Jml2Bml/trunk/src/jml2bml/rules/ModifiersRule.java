@@ -40,6 +40,8 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
         String annotation = annot.getAnnotationType().toString();
         if (annotation.equals("org.jmlspecs.annotations.NonNull")){
           modifiers = modifiers | BMLModifiersFlags.BML_NON_NULL;
+        } else if (annotation.equals("org.jmlspecs.annotations.SpecPublic")){
+          modifiers = modifiers | BMLModifiersFlags.BML_SPEC_PUBLIC;
         } else
           throw new Jml2BmlException("Unknown annotation:"+annotation);
       }

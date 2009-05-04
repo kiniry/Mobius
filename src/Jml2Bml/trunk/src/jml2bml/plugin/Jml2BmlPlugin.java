@@ -16,7 +16,6 @@ import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
@@ -24,7 +23,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.osgi.framework.BundleContext;

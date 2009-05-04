@@ -168,21 +168,17 @@ public class SymbolsBuilder extends
                            final boolean isModal) {
     final BCClass cl = s.findClass();
 
-    final int nameIndex = cl.getFieldIndex(node.getName().toString());
-    if (nameIndex == -1) {
-      //unknown field. If it is ghost, create new constant, else throw an exc.
-      if (isGhost) {
-        final String name = node.getName().toString();
-        final String type = JavaType.getJavaType(node.getType().toString())
-            .toString();
+    if (isGhost) {
+      final String name = node.getName().toString();
+      final String type = JavaType.getJavaType(node.getType().toString())
+          .toString();
 
-        ConstantPoolHelper.addGhostField(type, name, s);
-      } else {
-        throw new Jml2BmlException("Unknown field: " + node.getName());
-      }
-    }
+      ConstantPoolHelper.addGhostField(type, name, s);
+    } else if (isModal){
+      throw new Jml2BmlException("Modal field not translated: " + node.getName());
+    } else if (BytecodeUtil.findField(cl, node.getName().toString()) == null)
+      throw new Jml2BmlException("Unknown field: " + node.getName());      
     s.put(node.name.toString(), new Variable((FieldRef) null, node));
-
   }
 
   /**

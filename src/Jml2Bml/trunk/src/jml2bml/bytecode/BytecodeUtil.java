@@ -17,6 +17,7 @@ import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
@@ -33,7 +34,6 @@ import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -190,5 +190,13 @@ public final class BytecodeUtil {
       else
         result.put(lng.getInstruction(), lng.getSourceLine());
     return result;
+  }
+  
+  public static Field findField(BCClass cl, String name){
+    for (Field field: cl.getJC().getFields()){
+      if (name.equals(field.getName()))
+          return field;
+    }
+    return null;
   }
 }

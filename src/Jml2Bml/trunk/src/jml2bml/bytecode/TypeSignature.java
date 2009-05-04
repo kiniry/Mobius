@@ -14,6 +14,7 @@ import static com.sun.tools.javac.code.TypeTags.SHORT;
 import static com.sun.tools.javac.code.TypeTags.TYPEVAR;
 import static com.sun.tools.javac.code.TypeTags.VOID;
 import static com.sun.tools.javac.code.TypeTags.WILDCARD;
+import jml2bml.exceptions.Jml2BmlException;
 
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTags;
@@ -111,7 +112,7 @@ public class TypeSignature {
         result.append(';');
         break;
       default:
-        throw new AssertionError("typeSig " + type.tag);
+        throw new Jml2BmlException("Unknown typeSig " + type.tag+ ":"+type);
     }
   }
 
