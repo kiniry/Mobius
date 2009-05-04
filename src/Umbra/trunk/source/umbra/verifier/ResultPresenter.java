@@ -18,64 +18,99 @@ import org.apache.bcel.verifier.VerificationResult;
  *
  */
 public abstract class ResultPresenter {
-  
-  protected BytecodeVerifier verifier;
-  
+
   /**
-   * @param verifier
+   * verifier used to check bytecode.
    */
-  public ResultPresenter(BytecodeVerifier verifier) {
-    this.verifier = verifier;
-  }
-  
+  private BytecodeVerifier my_verifier;
+
   /**
-   * presents pass1 verification results 
+   * @param a_verifier verifier
+   */
+  public ResultPresenter(final BytecodeVerifier a_verifier) {
+    this.my_verifier = a_verifier;
+  }
+
+  /**
+   *
+   * @return current verifier
+   */
+  public BytecodeVerifier getVerifier() {
+    return my_verifier;
+  }
+
+  /**
+   *
+   * @param a_verifier new verifier.
+   */
+  public void setVerifier(final BytecodeVerifier a_verifier) {
+    my_verifier = a_verifier;
+  }
+
+  /**
+   * presents pass1 verification results.
    */
   public abstract void presentPass1();
-  
+
   /**
-   * presents pass2 verification results
+   * presents pass2 verification results.
    */
   public abstract void presentPass2();
-  
+
   /**
-   * presents pass3a verification results
+   * presents pass3a verification results.
    */
   public abstract void presentPass3a();
-  
+
   /**
-   * presents pass3b verification results
+   * presents pass3b verification results.
    */
   public abstract void presentPass3b();
-  
+
   /**
-   * presents result of whole verification
+   * presents result of whole verification.
    */
   public abstract void presentAll();
-  
-  protected String getInfo(VerificationResult result) {
-    if (result.getStatus() == VerificationResult.VERIFIED_OK) {
+
+  /**
+   *
+   * @param a_result result of verification process
+   * @return info about verification results
+   */
+  protected String getInfo(final VerificationResult a_result) {
+    if (a_result.getStatus() == VerificationResult.VERIFIED_OK) {
       return "OK";
-    } else if (result.getStatus() == VerificationResult.VERIFIED_REJECTED) {
-      return result.getMessage();
+    } else if (a_result.getStatus() == VerificationResult.VERIFIED_REJECTED) {
+      return a_result.getMessage();
     } else {
       return "?";
     }
   }
-  
-  protected String line(int n, char c) {
-    StringBuilder sb = new StringBuilder();
-    for (int i=0; i < n; i++) {
-      sb.append(c);
+
+  /**
+   *
+   * @param a_length number of character forming a line
+   * @param a_char   char used to create a line
+   * @return string representing a line made of given chars
+   */
+  protected String line(final int a_length, final char a_char) {
+    final StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < a_length; i++) {
+      sb.append(a_char);
     }
     return sb.toString();
   }
-  
-  protected String presentMethod(Method m) {
-    Type ret = m.getReturnType();
-    String name = m.getName();
-    Type[] args = m.getArgumentTypes();
-    StringBuilder sb = new StringBuilder();
+
+  /**
+   *
+   * @param a_method method to be presented
+   * @return result of method verification
+   */
+  protected String presentMethod(final Method a_method) {
+    final Type ret = a_method.getReturnType();
+    final String name = a_method.getName();
+    final Type[] args = a_method.getArgumentTypes();
+    final StringBuilder sb = new StringBuilder();
     sb.append(ret.toString());
     sb.append(" ");
     sb.append(name);
@@ -89,5 +124,5 @@ public abstract class ResultPresenter {
     sb.append(")");
     return sb.toString();
   }
-  
+
 }
