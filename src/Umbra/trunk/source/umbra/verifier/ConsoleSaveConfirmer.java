@@ -28,7 +28,7 @@ public class ConsoleSaveConfirmer extends SaveConfirmer {
    */
   public ConsoleSaveConfirmer(final ResultPresenter a_result_presenter) {
     super(a_result_presenter);
-    this.my_verifier = resultPresenter.verifier;
+    this.my_verifier = getResultPresenter().getVerifier();
   }
 
   /**
@@ -39,7 +39,7 @@ public class ConsoleSaveConfirmer extends SaveConfirmer {
   @Override
   public boolean confirm() {
     if (!my_verifier.passed()) {
-      resultPresenter.presentAll();
+      getResultPresenter().presentAll();
       final Scanner scanner = new Scanner(System.in);
       String token;
       do {
