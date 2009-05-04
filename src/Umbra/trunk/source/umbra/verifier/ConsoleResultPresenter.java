@@ -10,7 +10,6 @@ package umbra.verifier;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.Type;
 import org.apache.bcel.verifier.VerificationResult;
 
 /**
@@ -21,23 +20,32 @@ import org.apache.bcel.verifier.VerificationResult;
 public class ConsoleResultPresenter extends ResultPresenter {
 
   /**
-   * @param verifier
+   * numer of chars used in a line in console presenter.
    */
-  public ConsoleResultPresenter(BytecodeVerifier verifier) {
-    super(verifier);
+  private final int my_width = 40;
+
+  /**
+   * @param a_verifier verifier used to check bytecode
+   */
+  public ConsoleResultPresenter(final BytecodeVerifier a_verifier) {
+    super(a_verifier);
   }
-  
-  private void out(Object o) {
-    System.out.println(o.toString());
+
+  /**
+   * prints to stdout result of toString() of an object.
+   * @param an_object object to be printed
+   */
+  private void out(final Object an_object) {
+    System.out.println(an_object.toString());
   }
-  
-  /* (non-Javadoc)
-   * @see umbra.verifier.ResultPresenter#presentPass1()
+
+  /**
+   * prints to stdout results of first phase of verification.
    */
   public void presentPass1() {
     out("pass1:");
-    out(line(40, '-'));
-    VerificationResult result = verifier.doPass1();
+    out(line(my_width, '-'));
+    final VerificationResult result = verifier.doPass1();
     out(getInfo(result));
     out("");
   }
@@ -46,40 +54,37 @@ public class ConsoleResultPresenter extends ResultPresenter {
    */
   public void presentPass2() {
     out("pass2:");
-    out(line(40, '-'));
-    VerificationResult result = verifier.doPass2();
+    out(line(my_width, '-'));
+    final VerificationResult result = verifier.doPass2();
     out(getInfo(result));
     out("");
   }
-  
-  
 
-  /** 
-   * 
+  /**
    */
   public void presentPass3a() {
     out("pass3a:");
-    out(line(40, '-'));
-    JavaClass jc = verifier.getJavaClass();
-    Method[] methods = jc.getMethods();
-    for (int i=0; i < methods.length; i++) {
-      VerificationResult result = verifier.doPass3a(i);
+    out(line(my_width, '-'));
+    final JavaClass jc = verifier.getJavaClass();
+    final Method[] methods = jc.getMethods();
+    for (int i = 0; i < methods.length; i++) {
+      final VerificationResult result = verifier.doPass3a(i);
       out(presentMethod(methods[i]) + " " + getInfo(result));
     }
     out("");
   }
 
-  /** 
+  /**
    */
   public void presentPass3b() {
     out("pass3b:");
-    out(line(40, '-'));
-    JavaClass jc = verifier.getJavaClass();
-    Method[] methods = jc.getMethods();
-    for (int i=0; i < methods.length; i++) {
-      VerificationResult result = verifier.doPass3b(i);
+    out(line(my_width, '-'));
+    final JavaClass jc = verifier.getJavaClass();
+    final Method[] methods = jc.getMethods();
+    for (int i = 0; i < methods.length; i++) {
+      final VerificationResult result = verifier.doPass3b(i);
       out(presentMethod(methods[i]) + " " + getInfo(result));
-    }    
+    }
     out("");
   }
 
