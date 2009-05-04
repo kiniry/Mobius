@@ -45,7 +45,7 @@ public class ConsoleResultPresenter extends ResultPresenter {
   public void presentPass1() {
     out("pass1:");
     out(line(my_width, '-'));
-    final VerificationResult result = verifier.doPass1();
+    final VerificationResult result = getVerifier().doPass1();
     out(getInfo(result));
     out("");
   }
@@ -55,7 +55,7 @@ public class ConsoleResultPresenter extends ResultPresenter {
   public void presentPass2() {
     out("pass2:");
     out(line(my_width, '-'));
-    final VerificationResult result = verifier.doPass2();
+    final VerificationResult result = getVerifier().doPass2();
     out(getInfo(result));
     out("");
   }
@@ -65,10 +65,10 @@ public class ConsoleResultPresenter extends ResultPresenter {
   public void presentPass3a() {
     out("pass3a:");
     out(line(my_width, '-'));
-    final JavaClass jc = verifier.getJavaClass();
+    final JavaClass jc = getVerifier().getJavaClass();
     final Method[] methods = jc.getMethods();
     for (int i = 0; i < methods.length; i++) {
-      final VerificationResult result = verifier.doPass3a(i);
+      final VerificationResult result = getVerifier().doPass3a(i);
       out(presentMethod(methods[i]) + " " + getInfo(result));
     }
     out("");
@@ -79,10 +79,10 @@ public class ConsoleResultPresenter extends ResultPresenter {
   public void presentPass3b() {
     out("pass3b:");
     out(line(my_width, '-'));
-    final JavaClass jc = verifier.getJavaClass();
+    final JavaClass jc = getVerifier().getJavaClass();
     final Method[] methods = jc.getMethods();
     for (int i = 0; i < methods.length; i++) {
-      final VerificationResult result = verifier.doPass3b(i);
+      final VerificationResult result = getVerifier().doPass3b(i);
       out(presentMethod(methods[i]) + " " + getInfo(result));
     }
     out("");
