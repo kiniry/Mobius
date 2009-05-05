@@ -2,7 +2,7 @@
 <feature
       id="mobius.escjava2.feature"
       label="ESCJava2"
-      version="2.0.10"
+      version="2.0.14"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
@@ -744,34 +744,11 @@ and
 limitations under the License.
    </license>
 
-   <requires>
-      <import plugin="bcel.plugin" version="5.2.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.ui.console"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.help"/>
-      <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jdt.core" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.jface.text" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.ide" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ui.editors" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="mobius.javafe.plugin" version="2.0.8" match="greaterOrEqual"/>
-      <import plugin="mobius.pluginlib" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="mobius.escjava2.esctools" version="2.0.8" match="greaterOrEqual"/>
-   </requires>
-
    <plugin
          id="mobius.escjava2.esctools"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.javafe.plugin"
@@ -783,8 +760,7 @@ limitations under the License.
          id="mobius.pluginlib"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.simplify.plugin"
@@ -794,13 +770,6 @@ limitations under the License.
 
    <plugin
          id="mobius.escjava2.ui"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="bcel.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
