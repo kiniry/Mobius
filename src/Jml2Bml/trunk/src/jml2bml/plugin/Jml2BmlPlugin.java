@@ -162,7 +162,7 @@ public class Jml2BmlPlugin extends Plugin {
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
-      System.setProperty("env.class.path", bundleClassPath+projectClassPath);
+      System.setProperty("env.class.path", projectClassPath+java.io.File.pathSeparator+bundleClassPath);
       new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath, writer);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);

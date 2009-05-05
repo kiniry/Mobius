@@ -370,7 +370,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
 //      isOld = tmp;
 //      return expr;
 //    }
-    throw new NotTranslatedRuntimeException("Method invocation not supported!");
+    throw new NotTranslatedRuntimeException("Method invocation not supported!"+node);
   }
 
   /**

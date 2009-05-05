@@ -131,8 +131,10 @@ public class SymbolsBuilder extends
     final BCClass cl = s.findClass();
     final BCMethod m = BytecodeUtil.findMethod((JmlMethodDecl) method, cl);
     LocalVariable var = m.findLocalVariable(node.name.toString());
-    if (var == null) {
+    if (var == null) {      
       final int aindex = getIndex(m, node.getName().toString());
+      if (aindex > m.getBcelMethod().getArgumentNames().length)
+        return;
       LocalVariableGen lvGen = new LocalVariableGen(aindex, null, m
           .getBcelMethod().getArgumentType(aindex - 1), null, null);
       var = new LocalVariable(false, m, aindex, node.getName().toString(),
