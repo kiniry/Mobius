@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins">
-		<accessrules>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/javaeditor/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/core/internal/resources/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/actions/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/ui/*"/>
-			<accessrule kind="accessible" pattern="org/eclipse/jdt/internal/core/CompilationUnit"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="src" path="source"/>
 	<classpathentry kind="src" path="tests-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
