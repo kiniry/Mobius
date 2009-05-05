@@ -22,6 +22,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
+import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.DocumentSynchroniser;
@@ -73,7 +74,7 @@ public class SynchrSBAction implements IEditorActionDelegate {
    * @param an_action the action that triggered the operation
    */
   public final void run(final IAction an_action) {
-    System.out.println("synchrSBAction on " + this);
+    UmbraPlugin.LOG.println("synchrSBAction on " + this);
     final ITextSelection selection = (ITextSelection) my_editor.
                     getSelectionProvider().getSelection();
     final int off = selection.getOffset();
