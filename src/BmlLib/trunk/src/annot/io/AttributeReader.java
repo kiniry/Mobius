@@ -6,6 +6,7 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.attributes.field.BMLModifierAttribute;
 import annot.bcclass.BCClass;
@@ -46,7 +47,6 @@ import annot.bcexpression.modifies.ModifiesSingleIndex;
 import annot.bcexpression.modifies.ModifiesStar;
 import annot.bcexpression.modifies.ModifyExpression;
 import annot.bcexpression.modifies.SpecArray;
-import annot.textio.AttributeNames;
 import bmllib.utils.NumberUtils;
 
 /**
@@ -130,6 +130,8 @@ public class AttributeReader {
       this.bcc.getCp();
     this.attributeHandlers[AttributeNames.INVARIANTS_ATTR_POS] =
       this.bcc.getInvariantTable();
+    this.attributeHandlers[AttributeNames.GHOST_FIELDS_ATTR_POS] =
+      this.bcc.getGhostFields();
   }
 
   /**

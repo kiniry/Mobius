@@ -12,7 +12,7 @@ import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.clazz.ClassAttribute;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCMethod;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -28,7 +28,7 @@ import annot.textio.BMLConfig;
  * @version a-01
  */
 public abstract class InCodeAttribute extends BCPrintableAttribute implements
-    ClassAttribute, Comparable < InCodeAttribute >  {
+    Comparable < InCodeAttribute >  {
 
   /**
    * InstructionHandle of bytecode instruction that this
@@ -190,7 +190,6 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
   /**
    * Removes this annotation.
    */
-  @Override
   public void remove() {
     getMethod().getAmap().removeAttribute(this);
   }
@@ -201,14 +200,12 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *
    * @param pa - annotation to replace with.
    */
-  @Override
-  public void replaceWith(final ClassAttribute pa) {
-    final InCodeAttribute ica = (InCodeAttribute) pa;
-    if (ica.ih == null) {
-      ica.ih = this.ih;
-      ica.minor = this.minor;
+  public void replaceWith(final InCodeAttribute pa) {
+    if (pa.ih == null) {
+      pa.ih = this.ih;
+      pa.minor = this.minor;
     }
-    this.method.getAmap().replaceAttribute(this, ica);
+    this.method.getAmap().replaceAttribute(this, pa);
   }
 
   /**
@@ -232,7 +229,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *
    * @param mnr - new minor number value to set.
    */
-  protected void setMinor(final int mnr) {
+  public void setMinor(final int mnr) {
     this.minor = mnr;
   }
 

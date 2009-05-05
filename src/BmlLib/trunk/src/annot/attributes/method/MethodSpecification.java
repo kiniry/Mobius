@@ -12,6 +12,8 @@ import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 
+import annot.attributes.AttributeNames;
+import annot.attributes.BCPrintableAttribute;
 import annot.attributes.IBCAttribute;
 import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCClass;
@@ -20,7 +22,6 @@ import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
@@ -191,9 +192,8 @@ public class MethodSpecification extends MethodAttribute implements
    *
    * @param pa - annotation to replace with.
    */
-  @Override
-  public void replaceWith(final ClassAttribute pa) {
-    this.method.setMspec((MethodSpecification) pa);
+  public void replaceWith(final BCPrintableAttribute pa) {
+    this.method.setMspec((MethodSpecification)pa);
   }
 
   /**

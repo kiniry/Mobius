@@ -37,14 +37,6 @@ public interface ClassAttribute {
   void replace(BCClass bcc);
 
   /**
-   * Replaces this annotation with a given one, updating
-   * necessary references in BCClass.
-   *
-   * @param pa - annotation to replace with.
-   */
-  void replaceWith(ClassAttribute pa);
-
-  /**
    * @return a simple string representation of the current attribute,
    *     for use in debugger only.
    */

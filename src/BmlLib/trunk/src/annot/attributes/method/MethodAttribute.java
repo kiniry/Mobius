@@ -26,13 +26,19 @@ import annot.textio.BMLConfig;
 public abstract class MethodAttribute extends BCPrintableAttribute
                                       implements ClassAttribute {
 
-  @Override
+  /**
+   * Replaces this annotation with the one parsed from the
+   * given {@link String}.
+   *
+   * @param code - correct code of annotation to replace with.
+   * @throws RecognitionException - if <code>code</code> is not correct
+   *   code of an annotation
+   */
   public abstract void parse(String code) throws RecognitionException;
 
   @Override
   protected abstract String printCode1(BMLConfig conf);
 
-  @Override
   public abstract void remove();
 
   /**

@@ -8,6 +8,8 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
+import annot.attributes.BCPrintableAttribute;
+import annot.attributes.IBCAttribute;
 import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
@@ -199,11 +201,11 @@ public class Parsing {
    * @return true iff <code>str</code> is correct, false
    *     otherwise.
    */
-  public ClassAttribute checkSyntax(final BCMethod m,
+  public BCPrintableAttribute checkSyntax(final BCMethod m,
                                           final InstructionHandle ih,
                                           final int minor, final String str) {
     try {
-      final ClassAttribute newattr = parseAttribute(m, ih, minor, str);
+      final BCPrintableAttribute newattr = parseAttribute(m, ih, minor, str);
       return newattr;
     } catch (final RecognitionException e) {
       return null;
@@ -235,9 +237,9 @@ public class Parsing {
    * @throws RecognitionException - if <code>str</code>
    *     isn't correct BML annotation.
    */
-  public ClassAttribute parseAttribute(final BCMethod m,
-                                             final InstructionHandle ih,
-                                             final int minor, final String str)
+  public BCPrintableAttribute parseAttribute(final BCMethod m,
+                                     final InstructionHandle ih,
+                                     final int minor, final String str)
     throws RecognitionException {
     final CharStream chstr = new ANTLRStringStream(str);
     final BMLLexer lex = new BMLLexer(chstr);
@@ -251,7 +253,7 @@ public class Parsing {
     }
     final BMLParser parser = new BMLParser(tokens);
     parser.init(this.bcc, m, this.bcc.getCp(), ih, minor);
-    final ClassAttribute result = parser.printableAttribute().ast;
+    final BCPrintableAttribute result = parser.printableAttribute().ast;
     if (lex.lastE != null) {
       throw lex.lastE;
     }

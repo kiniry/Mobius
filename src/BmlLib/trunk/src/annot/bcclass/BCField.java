@@ -23,11 +23,11 @@ import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.Type;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.field.BMLModifierAttribute;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 
 /**
  * This class contains the full functionality of a BML field. It allows to
@@ -286,7 +286,7 @@ public class BCField extends AccessFlags {
     if (myBMLFlags != 0) {
       aw.writeShort(attributes.length + 1);
       final BMLModifierAttribute bmmod =
-        new BMLModifierAttribute(bcc, myBMLFlags);
+        new BMLModifierAttribute(bcc, this);
       bmmod.save(aw);
     } else {
       aw.writeShort(attributes.length);
@@ -300,7 +300,8 @@ public class BCField extends AccessFlags {
         final int idx = attributes[i].getNameIndex();
         if (idx != idx1) attributes[i].dump(buf);
       } catch (IOException e) {
-        System.out.println("This should not happen");
+        MLog.putMsg(MLog.LEVEL_PWARNING,
+          "IOException in field saving. This should not happen");
       }
     }
     aw.writeBytes(mbuf.toByteArray());
@@ -338,7 +339,8 @@ public class BCField extends AccessFlags {
         attr = Attribute.readAttribute(buf, cp);
         final int idx = attr.getNameIndex();
         if (idx == idx1) {
-          final BMLModifierAttribute bmmod = new BMLModifierAttribute(bcc, 0);
+          final BMLModifierAttribute bmmod =
+            new BMLModifierAttribute(bcc, this);
           final AttributeReader nar = new AttributeReader(bmmod);
           nar.readAttribute((Unknown)attr);
           myBMLFlags = bmmod.getModifiers();

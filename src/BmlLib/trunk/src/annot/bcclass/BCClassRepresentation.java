@@ -23,6 +23,7 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 
 import annot.attributes.AType;
+import annot.attributes.AttributeNames;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.IBCAttribute;
 import annot.attributes.clazz.ClassAttribute;
@@ -36,7 +37,6 @@ import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import bmllib.utils.FileUtils;
 
 /**
@@ -283,7 +283,7 @@ public abstract class BCClassRepresentation {
 
 
   /**
-   * Initialize BCClass and read BML attributes from
+   * Initialize BCClass and read BML attributes from the
    * given JavaClass.
    *
    * @param ajc - JavaClass to initialize from.
@@ -321,6 +321,8 @@ public abstract class BCClassRepresentation {
 
   /**
    * This method generates a fresh BML modifier object for the given field.
+   * In case the field contains BML modifiers in its attributes the
+   * returned attribute includes the information from the attributes.
    *
    * @param field the field to generate the modifier for
    * @return a fresh modifiers structure for the field
@@ -415,7 +417,7 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * Removes the particular annotation from the class.
+   * Removes the particular class invariant from the class.
    *
    *  @param classInvariant the invariant to be removed
    */
@@ -498,8 +500,9 @@ public abstract class BCClassRepresentation {
   private Attribute[] addAndSaveNonJavaFields(final AttributeWriter aw,
                                      final Attribute[] attrs,
                                      final GhostFieldsAttribute ghstFldsAttr) {
-//  TODO implement this
-    return attrs;
+    Attribute[] res = attrs;
+    res = addAttribute(res, aw.writeAttribute(ghstFldsAttr));
+    return res;
   }
 
   /**
@@ -528,11 +531,15 @@ public abstract class BCClassRepresentation {
     final Field[] fields = jc.getFields();
     for (int i = 0; i < fields.length; i++) {
       final AttributeWriter aw = new AttributeWriter(this);
-      final Attribute[] attrs = removeBMLAttributes(fields[i].getAttributes());
-      final Attribute[] attrsa = new Attribute[attrs.length + 1];
-      System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
-      attrsa[attrs.length] =
-        aw.writeAttribute(bml_fmodifiers.get(i));
+      final Attribute[] attrs =
+        removeBMLAttributes(fields[i].getAttributes());
+      Attribute[] attrsa = attrs;
+      if (bml_fmodifiers.get(i).getModifiers() != BMLModifiersFlags.BML_NONE) {
+        attrsa = new Attribute[attrs.length + 1];
+        System.arraycopy(attrs, 0, attrsa, 0, attrs.length);
+        attrsa[attrs.length] =
+          aw.writeAttribute(bml_fmodifiers.get(i));
+      }
       fields[i].setAttributes(attrsa);
     }
   }

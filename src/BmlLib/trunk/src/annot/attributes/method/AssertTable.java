@@ -9,12 +9,12 @@
 package annot.attributes.method;
 
 import annot.attributes.AType;
+import annot.attributes.AttributeNames;
 import annot.attributes.BCAttributeTable;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 
 /**
  * This class represents "assert table" method attribute.

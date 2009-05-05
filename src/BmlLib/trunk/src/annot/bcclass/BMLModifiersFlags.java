@@ -17,6 +17,11 @@ package annot.bcclass;
 public final class BMLModifiersFlags {
 
   /**
+   * A BML modifier mask which means that none of the BML modifiers is set.
+   */
+  public static final int BML_NONE = 0x00000000;
+
+  /**
    * A Java feature (method/field etc.) declared as public for specification
    * purposes. It can only be used when the feature has a more restrictive
    * visibility in Java.

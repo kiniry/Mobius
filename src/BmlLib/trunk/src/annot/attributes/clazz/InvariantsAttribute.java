@@ -14,13 +14,14 @@ import java.util.Vector;
 
 import org.antlr.runtime.RecognitionException;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.BCPrintableAttribute;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
 import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
 
 /**
@@ -31,7 +32,7 @@ import annot.textio.BMLConfig;
  * @version a-01
  */
 public class InvariantsAttribute extends BCPrintableAttribute
-                                 implements ClassAttribute {
+                                 implements ClassAttribute, IBCAttribute {
 
   /**
    * The class in which the current invariant table is embedded.
@@ -89,7 +90,6 @@ public class InvariantsAttribute extends BCPrintableAttribute
   /**
    * Removes the invariants table from the class it is assigned to.
    */
-  @Override
   public void remove() {
     bcc.removeInvariants();
   }
@@ -115,8 +115,7 @@ public class InvariantsAttribute extends BCPrintableAttribute
    *
    * @param pa - annotation to replace with.
    */
-  @Override
-  public void replaceWith(final ClassAttribute pa) {
+  public void replaceWith(final BCPrintableAttribute pa) {
     bcc.setInvariants((InvariantsAttribute) pa);
     bcc = null;
   }
@@ -244,9 +243,7 @@ public class InvariantsAttribute extends BCPrintableAttribute
    * @throws ReadAttributeException in case the attribute has incorrect
    *   structure
    */
-  @Override
-  public void load(final AttributeReader ar)
-    throws ReadAttributeException {
+  public void load(final AttributeReader ar) throws ReadAttributeException {
     final int size = ar.readShort();
     invariants = new Vector < ClassInvariant > (size);
     for (int i = 0; i < size; i++) {

@@ -19,24 +19,22 @@ import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
 import annot.bcclass.MessageLog;
 import annot.bcexpression.ExpressionRoot;
-import annot.io.AttributeReader;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.Parsing;
 
 /**
- * This class represents all maximal annotations that
- * can be placed in one place in class'es code.
+ * This class represents the methods which are used for parsing and printing
+ * of an attribute.
  * WARNING: use only {@link ExpressionRoot} as imediate
  * subexpressions.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public abstract class BCPrintableAttribute implements IBCAttribute {
+public abstract class BCPrintableAttribute {
 
   /**
-   * Result of last printCode1(conf) method call.
+   * Result of the last execution of {@link #printCode(BMLConfig) method call.
    */
   private String last_code = "";
 
@@ -50,7 +48,7 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
    * @return String representation of this annotation
    *     in last printCode(conf) call.
    */
-  public String getLast_code() {
+  public String getLastCode() {
     return this.last_code;
   }
 
@@ -71,7 +69,7 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
   protected void parse(final BCClass bcc, final BCMethod m,
                        final InstructionHandle ih, final int minor,
                        final String code) throws RecognitionException {
-    final ClassAttribute pa = bcc.getParser().parseAttribute(m, ih,
+    final BCPrintableAttribute pa = bcc.getParser().parseAttribute(m, ih,
                                                                    minor, code);
     if (pa.getClass() == this.getClass()) {
       replaceWith(pa);
@@ -81,7 +79,7 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
       // XXX untested
       remove();
       if (m == null) {
-        bcc.addAttribute(pa);
+        bcc.addAttribute((ClassAttribute)pa);
       } else {
         if (pa instanceof MethodSpecification) {
           m.setMspec((MethodSpecification) pa);
@@ -95,18 +93,8 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
     }
   }
 
-
   /**
-   * Replaces the current annotation with a given one in the class
-   * ({@link BCClass}) in which the current annotation resides. The method
-   * updates necessary references in the {@link BCClass}.
-   *
-   * @param pa - annotation to replace with.
-   */
-  public abstract void replaceWith(ClassAttribute pa);
-
-  /**
-   * Replaces this annotation with the one parsed from
+   * Replaces this annotation with the one parsed from the
    * given String.
    *
    * @param code - correct code of annotation
@@ -140,28 +128,28 @@ public abstract class BCPrintableAttribute implements IBCAttribute {
   protected abstract String printCode1(BMLConfig conf);
 
   /**
-   * Removes this annotation from its container (i.e. class in case
+   * @return a simple string represenatation of the current attribute,
+   *    used for debugging purposes
+   */
+  @Override
+  public abstract String toString();
+
+  /**
+   * Removes the current attribute from its container (i.e. class in case
    * the annotation is a class annotation or method in case the annotation
    * is a class annotation).
    */
   public abstract void remove();
 
   /**
-   * @return Simple string represenatations of attribute,
-   *     for use in debugger only.
-   */
-  @Override
-  public abstract String toString();
-
-  /**
-   * Loads this annotation from BCEL's Unknown attribute,
-   * using attributeReader. It leaves the implementation to the subclasses.
+   * Replaces the current attribute with a given one in the class
+   * ({@link BCClass}) in which the current annotation resides. The method
+   * updates necessary references in the {@link BCClass}. It should do
+   * nothing if the attribute in the parameter is of a different class
+   * than the current attribute.
    *
-   * @param ar - stream to load from
-   * @throws ReadAttributeException in case the BML
-   *     attribute wasn't correctly parsed by this library.
+   * @param pa - annotation to replace with.
    */
-  public abstract void load(final AttributeReader ar)
-    throws ReadAttributeException;
+  public abstract void replaceWith(BCPrintableAttribute pa);
 
 }

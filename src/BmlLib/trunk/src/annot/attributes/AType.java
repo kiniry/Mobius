@@ -12,7 +12,6 @@ package annot.attributes;
  * Contains codes for each printable attribute type
  * and commonly used bit masks to represent sets of attributes
  * that we want to retrieve (through getAllAttribute(int mask) methods).
- * TODO w czym te kody sa wykorzystywane?
  *
  * @see BCClass#getAllAttributes(int)
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)

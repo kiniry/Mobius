@@ -721,14 +721,14 @@ instruction_line returns [InstructionHandle ih] :
 
 // bml level
 
-printableAttribute returns [ClassAttribute ast] :
-  (c=classAttribute {$ast = $c.ast;}
+printableAttribute returns [BCPrintableAttribute ast] :
+   (c=classAttribute {$ast = $c.ast;}
   | met=methodAttribute {$ast = $met.ast;}
   | i=inCodeAttribute {$ast = $i.ast;})
   EOF
   ;
 
-classAttribute returns [ClassAttribute ast] :
+classAttribute returns [BCPrintableAttribute ast] :
   | INVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, true);}
   | STATIC INVARIANT f2=formula {$ast = new ClassInvariant(bcc, $f2.ast, false);}
   ;

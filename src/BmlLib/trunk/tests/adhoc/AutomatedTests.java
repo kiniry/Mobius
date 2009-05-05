@@ -540,7 +540,7 @@ public final class AutomatedTests {
     //    try {
     BCPrintableAttribute pa = at[attr_id];
     final String rc = DisplayStyle.BML_COMMENT_NEXT +
-                      Parsing.purge(pa.getLast_code());
+                      Parsing.purge(pa.getLastCode());
     //final String kw = CodeFragment.getKeyword(rc) + " ";
     //newval = kw + newval;
     //pa.parse(newval);

@@ -11,6 +11,7 @@ package annot.attributes.clazz;
 import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.Constants;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
@@ -21,7 +22,6 @@ import annot.bcexpression.formula.Predicate0Ar;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 import annot.textio.Parsing;
@@ -200,7 +200,6 @@ public class ClassInvariant extends BCPrintableAttribute
   /**
   * Removes this annotation.
   */
-  @Override
   public void remove() {
     this.bcc.remove(this);
   }
@@ -218,11 +217,11 @@ public class ClassInvariant extends BCPrintableAttribute
 
   /**
    * Replaces this annotation with a given one, updating
-   * necsessary references in BCClass.
+   * necessary references in BCClass.
    *
    * @param pa - annotation to replace with.
    */
-  public void replaceWith(final ClassAttribute pa) {
+  public void replaceWith(final BCPrintableAttribute pa) {
     this.bcc.setInvariant((ClassInvariant) pa);
   }
 
@@ -271,9 +270,7 @@ public class ClassInvariant extends BCPrintableAttribute
    * @param ar the reader from which the structure is read
    * @throws ReadAttributeException in case the invariant structure is incorrect
    */
-  @Override
-  public void load(final AttributeReader ar)
-    throws ReadAttributeException {
+  public void load(final AttributeReader ar) throws ReadAttributeException {
     this.access_flags = ar.readShort();
     this.invariant = new ExpressionRoot < AbstractFormula > (this,
         ar.readFormula());

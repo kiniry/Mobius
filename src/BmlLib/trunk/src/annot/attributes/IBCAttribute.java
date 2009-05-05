@@ -44,7 +44,8 @@ public interface IBCAttribute {
 
   /**
    * Loads this annotation from BCEL's Unknown attribute,
-   * using attributeReader.
+   * using the given AttributeReader.
+   *
    * @param ar - stream to load from
    * @throws ReadAttributeException in case the BML
    *     attribute wasn't correctly parsed by this library.

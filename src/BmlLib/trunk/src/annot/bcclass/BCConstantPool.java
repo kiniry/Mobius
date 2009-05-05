@@ -26,12 +26,12 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ConstantPoolReader;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import annot.textio.DisplayStyle;
 
 /**
@@ -440,5 +440,20 @@ public class BCConstantPool extends BCCConstantPrinting
     final Constant [] cnst1 = (Constant[]) vec.toArray();
     final ConstantPoolGen cpg = new ConstantPoolGen(cnst1);
     return cpg.getFinalConstantPool();
+  }
+  
+  /**
+   * Removes this annotation from its container (i.e. class in case
+   * the annotation is a class annotation or method in case the annotation
+   * is a class annotation).
+   */
+  public void remove() {
+    // TODO 
+  }
+
+
+  public void replaceWith(final IBCAttribute pa) {
+    // TODO Auto-generated method stub
+    
   }
 }

@@ -12,13 +12,14 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.Unknown;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
+import annot.bcclass.BCField;
 import annot.bcclass.BMLModifiersFlags;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 import annot.textio.DisplayStyle;
 
 /**
@@ -35,9 +36,21 @@ public class BMLModifierAttribute implements IBCAttribute {
   private BCClass bcc;
 
   /**
+   * The Java field which contains this attribute. This is non-null only
+   * in case the modifier is associated with a Java field.
+   */
+  private Field field;
+
+  /**
+   * The BML field which contains this attribute. This is non-null only
+   * in case the modifier is associated with a BML model or ghost field.
+   */
+  private BCField bfield;
+
+  /**
    * The BML modifiers in this attribute.
    */
-  private int modifiers;
+  private int modifiers = BMLModifiersFlags.BML_NONE;
 
   /**
    * The field indicates if the attribute is read.
@@ -49,11 +62,13 @@ public class BMLModifierAttribute implements IBCAttribute {
    * class in which the attribute resides and the modifiers which it represents.
    *
    * @param abcc the class for this attribute
-   * @param amodifiers the modifiers for this attribute
+   * @param abfield the BML field for which the modifiers are held in this
+   *   attribute
    */
-  public BMLModifierAttribute(final BCClass abcc, final int amodifiers) {
+  public BMLModifierAttribute(final BCClass abcc, final BCField abfield) {
     bcc = abcc;
-    modifiers = amodifiers;
+    modifiers = abfield.getBMLFlags();
+    bfield = abfield;
   }
 
   /**
@@ -72,6 +87,7 @@ public class BMLModifierAttribute implements IBCAttribute {
                               final BCClass classRepresentation)
     throws ReadAttributeException {
     bcc = classRepresentation;
+    field = afield;
     readModifiers(afield.getAttributes());
   }
 
@@ -180,10 +196,58 @@ public class BMLModifierAttribute implements IBCAttribute {
   }
 
   /**
-   * @return the modifiers of the attribute
+   * @return the BML modifiers in the attribute
    */
   public int getModifiers() {
     return modifiers;
   }
 
+  /**
+   * Removes this annotation from its container in this case {@link BCClass}
+   * in case the modifier is a Java field BML modifier or from {@link BCField}
+   * in case the modifier is a BML field BML modifier.
+   */
+  public void remove() {
+    if (field != null) {
+      setModifiersForJavaField(BMLModifiersFlags.BML_NONE);
+    }
+    if (bfield != null) {
+      bfield.setModifiers(BMLModifiersFlags.BML_NONE);
+    }
+  }
+
+  /**
+   * Sets given modifiers for the current Java field in the current
+   * {@link BCClass}. It assumes that the field is in the fields
+   * array of the class.
+   *
+   * @param modif the modifiers to set
+   */
+  private void setModifiersForJavaField(final int modif) {
+    final Field[] fds = bcc.getJC().getFields();
+    for (int i = 0; i <= fds.length; i++) {
+      if (fds[i] == field) {
+        final BMLModifierAttribute bmod = bcc.getBMLModifierForField(i);
+        bmod.setModifiers(modif);
+      }
+    }
+  }
+
+  /**
+   * Replaces the modifiers associated with the current field with the
+   * ones from the given attribute. Note that this method does not change
+   * the actual objects the representation operates on, but it changes their
+   * content.
+   *
+   * @param pa the attribute with modifiers to set
+   */
+  public void replaceWith(final IBCAttribute pa) {
+    if (pa instanceof BMLModifierAttribute) {
+      final BMLModifierAttribute bmod = (BMLModifierAttribute) pa;
+      if (field != null)
+        setModifiersForJavaField(bmod.getModifiers());
+      if (bfield != null)
+        bfield.setBMLFlags(bmod.getModifiers());
+    }
+  }
 }

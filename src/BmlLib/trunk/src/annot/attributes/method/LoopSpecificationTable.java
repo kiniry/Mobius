@@ -9,14 +9,15 @@
 package annot.attributes.method;
 
 import annot.attributes.AType;
+import annot.attributes.AttributeNames;
 import annot.attributes.BCAttributeTable;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.AttributeReader;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 
 /**
  * This class represents "loop specification table" method
@@ -63,4 +64,17 @@ public class LoopSpecificationTable extends BCAttributeTable {
     return AType.C_LOOPSPEC;
   }
 
+  /**
+   * Removes this annotation from its container (i.e. class in case
+   * the annotation is a class annotation or method in case the annotation
+   * is a class annotation).
+   */
+  public void remove() {
+    // TODO 
+  }
+
+  public void replaceWith(final IBCAttribute pa) {
+    // TODO Auto-generated method stub
+    
+  }
 }

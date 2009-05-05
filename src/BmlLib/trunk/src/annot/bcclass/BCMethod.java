@@ -48,7 +48,7 @@ public class BCMethod {
   private static final boolean DISPLAY_STYLE = false;
 
   /**
-   * Collection of all attributes inside method body.
+   * Collection of all the BML attributes inside the method body.
    */
   private BCAttributeMap amap;
 
@@ -104,9 +104,8 @@ public class BCMethod {
     this.bcc = abcc;
     this.bcelMethod = m;
     this.amap = new BCAttributeMap(this);
-    final LocalVariableGen[] lvgens = m.getLocalVariables();
-    final int cnt = lvgens.length;
-    this.lvars = setLocalVariables(lvgens, cnt);
+
+    this.lvars = setLocalVariables(m);
     this.oldvars = setOldLocalVariables(lvars);
     this.params = setParams(m.getArgumentTypes());
     this.isConstructor = m.getName().equals(Constants.CONSTRUCTOR_NAME);
@@ -161,14 +160,13 @@ public class BCMethod {
    * generators is empty and method is an object method. It assumes then that
    * the local variables table should contain the representation of this.
    *
-   * @param lvgens the array of local variable generators
-   * @param len the length of the local variable array
+   * @param meth the method for which the local variables should be generated
    * @return the array with local variables
    */
-  private LocalVariable[] setLocalVariables(final LocalVariableGen[] lvgens,
-                                            final int len) {
-    LocalVariable[] res = new LocalVariable[len];
+  private LocalVariable[] setLocalVariables(final MethodGen meth) {
+    final LocalVariableGen[] lvgens = meth.getLocalVariables();
     final int cnt = lvgens.length;
+    LocalVariable[] res = new LocalVariable[lvgens.length];
     if (cnt == 0 && !bcelMethod.isStatic()) {
       res = new LocalVariable[1];
       final JavaClass jc = bcc.getJC();

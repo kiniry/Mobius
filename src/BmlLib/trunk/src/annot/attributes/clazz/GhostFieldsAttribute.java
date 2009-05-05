@@ -11,13 +11,13 @@ package annot.attributes.clazz;
 import java.util.Iterator;
 import java.util.Vector;
 
+import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCField;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
-import annot.textio.AttributeNames;
 
 /**
  * This class represents GhostFields class attribute described in "GhostFields
@@ -91,8 +91,8 @@ public class GhostFieldsAttribute implements ClassAttribute, IBCAttribute {
    *
    * @param pa - annotation to replace with.
    */
-  public void replaceWith(final ClassAttribute pa) {
-    pa.replace(bcc);
+  public void replaceWith(final IBCAttribute pa) {
+    ((ClassAttribute)pa).replace(bcc);
   }
 
   /**

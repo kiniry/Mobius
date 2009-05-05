@@ -75,9 +75,4 @@ Bundle-ClassPath: .,
  translation/
 Bundle-Vendor: Mobious & Warsaw University
 Import-Package: b2bpl.bytecode,
- b2bpl.bytecode.bml.ast,
- org.apache.bcel,
- org.apache.bcel.classfile,
- org.apache.bcel.generic,
- org.apache.bcel.util,
- org.apache.bcel.verifier
+ b2bpl.bytecode.bml.ast

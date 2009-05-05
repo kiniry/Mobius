@@ -11,6 +11,8 @@ package annot.attributes.method;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.AType;
+import annot.attributes.BCPrintableAttribute;
+import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
@@ -32,7 +34,7 @@ import annot.textio.DisplayStyle;
 public class SingleAssert extends InCodeAttribute {
 
   /**
-   * assert formula
+   * The formula inside the current assert attribute.
    */
   private ExpressionRoot < AbstractFormula >  formula;
 
@@ -176,26 +178,12 @@ public class SingleAssert extends InCodeAttribute {
       (getMinor() == -1 ? "any" : "" + getMinor()) + ")";
   }
 
-
-  public int getIndex() {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-
-  public String getName() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-
-  public void save(final AttributeWriter aw) {
+  public void replace(final BCClass bcc) {
     // TODO Auto-generated method stub
     
   }
 
-
-  public void replace(final BCClass bcc) {
+  public void replaceWith(final BCPrintableAttribute pa) {
     // TODO Auto-generated method stub
     
   }

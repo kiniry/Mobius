@@ -36,7 +36,6 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.CodeFragment;
 import annot.textio.CodePosition;
-import annot.textio.CodeSearch;
 
 /**
  * Manual tests for BmlLib library. After running some
@@ -161,7 +160,7 @@ public final class ManualTests {
       throw new RuntimeException("error (minor != 4)");
     }
     refresh();
-    CodeSearch.ComputeAttributeLines(bcc);
+    //CodeSearch.computeAttributeLines(bcc);
     code = bcc.printCode();
     final int clength = code.split("\n").length;
     int hash = 0;
