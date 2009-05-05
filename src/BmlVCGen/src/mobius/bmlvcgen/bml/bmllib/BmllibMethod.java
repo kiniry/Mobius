@@ -6,8 +6,8 @@ import mobius.bmlvcgen.bml.MethodVisitor;
 
 import org.apache.bcel.generic.MethodGen;
 
-import annot.attributes.MethodSpecification;
-import annot.attributes.SpecificationCase;
+import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCMethod;
 
 /**

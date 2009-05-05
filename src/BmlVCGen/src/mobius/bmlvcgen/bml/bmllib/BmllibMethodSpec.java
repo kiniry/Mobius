@@ -1,11 +1,11 @@
 package mobius.bmlvcgen.bml.bmllib;
 
+import annot.attributes.method.SpecificationCase;
 import mobius.bmlvcgen.bml.MethodSpec;
 import mobius.bmlvcgen.bml.MethodSpecVisitor;
 import mobius.bmlvcgen.bml.PostExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
 import mobius.bmlvcgen.util.Visitable;
-import annot.attributes.SpecificationCase;
 
 /**
  * Wrapper for bmllib method specification case.
