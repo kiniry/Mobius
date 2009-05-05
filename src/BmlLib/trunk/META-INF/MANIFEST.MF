@@ -3,11 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BmlLib Plug-in
 Bundle-SymbolicName: mobius.bmllib
 Bundle-Version: 1.1.9
-Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.apache.bcel_5.1,
+ org.eclipse.core.runtime,
  mobius.freeboogie,
- mobius.b2bpl,
- bcel.plugin;bundle-version="5.2.0"
+ mobius.b2bpl
 Export-Package: annot.attributes;
   uses:="annot.io,
    annot.bcclass,
@@ -17,8 +16,6 @@ Export-Package: annot.attributes;
    org.apache.bcel.generic,
    annot.bcexpression,
    annot.bcexpression.formula",
- annot.attributes.clazz,
- annot.attributes.method,
  annot.bcclass;
   uses:="annot.bcexpression.util,
    annot.textio,
@@ -74,5 +71,3 @@ Bundle-ClassPath: .,
  lib/antlr-runtime-3.0.jar,
  translation/
 Bundle-Vendor: Mobious & Warsaw University
-Import-Package: b2bpl.bytecode,
- b2bpl.bytecode.bml.ast
