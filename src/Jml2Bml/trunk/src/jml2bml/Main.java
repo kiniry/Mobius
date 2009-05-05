@@ -7,6 +7,7 @@
 package jml2bml;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.tools.JavaFileManager;
@@ -52,6 +53,7 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacMessages;
 import com.sun.tools.javac.util.List;
+import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Options;
 
 /*
@@ -83,7 +85,7 @@ public class Main {
         .get(1));
     if (out == null)
       out = loc.getClassFilePath() + "-wyn";
-    compile(arguments.get(2), loc, out, "");
+    compile(arguments.get(2), loc, out, "", null);
   }
 
   /**
@@ -119,10 +121,12 @@ public class Main {
    *   location
    */
   public void compile(final String sourceFile,
-                      final ClassFileLocation classLoc, final String out, final String classPath)
+                      final ClassFileLocation classLoc, final String out, 
+                      final String classPath,
+                      final PrintWriter printWriter)
       throws ClassNotFoundException, ReadAttributeException,
-      NotTranslatedException, IOException {
-    final Context context = createContext();
+      NotTranslatedException, IOException {   
+    final Context context = createContext(printWriter);
     context.put(ClassPath.class, new ClassPath(classPath));
     context.put(ClassFileLocation.class, classLoc);
     final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
@@ -187,8 +191,9 @@ public class Main {
    * Creates the application context and registers main components.
    * @return created application context.
    */
-  private Context createContext() {
+  private Context createContext(PrintWriter printWriter) {
     final Context context = new Context();
+    context.put(Log.outKey, printWriter);
     JavacMessages.instance(context).add(Utils.messagesJML);// registering an additional source of JML-specific error messages
 
     JmlSpecs.preRegister(context); // registering the specifications repository

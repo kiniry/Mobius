@@ -8,7 +8,9 @@
 package jml2bml.plugin;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import jml2bml.Main;
 import jml2bml.bytecode.ClassFileLocation;
@@ -126,9 +128,10 @@ public class Jml2BmlPlugin extends Plugin {
     return result.toString();
   }
 
-  public void compile(final IFile a_jfile, final IFile a_bfile, final IJavaProject project)
+  public void compile(final IFile a_jfile, final IFile a_bfile, final IJavaProject project, OutputStream out)
       throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException{
-
+    PrintWriter writer = new PrintWriter(out);
+    
     String bundleClassPath;
     try {
       bundleClassPath = getPluginClasspath();
@@ -136,6 +139,8 @@ public class Jml2BmlPlugin extends Plugin {
       e.printStackTrace();
       bundleClassPath = "";
     }
+    
+    writer.println("BUNDLE CLASSPATH:"+bundleClassPath);
     
     String projectClassPath;
     try {
@@ -146,7 +151,7 @@ public class Jml2BmlPlugin extends Plugin {
       projectClassPath = "";
     }
     
-    System.out.println("PROJECT CLASSPATH:"+projectClassPath);
+    writer.println("PROJECT CLASSPATH:"+projectClassPath);
     String bname = a_bfile.getName();
     final IPath path = a_bfile.getLocation();
     bname = bname.substring(0, bname.lastIndexOf("."));
@@ -158,7 +163,7 @@ public class Jml2BmlPlugin extends Plugin {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
       System.setProperty("env.class.path", bundleClassPath+projectClassPath);
-      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath);
+      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath, writer);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
     } catch (Jml2BmlException e2) {
