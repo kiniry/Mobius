@@ -44,3 +44,4 @@ Export-Package: escjava,
 Bundle-ClassPath: esctools2.jar,
  .
 Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Require-Bundle: mobius.javafe.plugin;bundle-version="2.0.8"
