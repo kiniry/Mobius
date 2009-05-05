@@ -3,10 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: BmlLib Plug-in
 Bundle-SymbolicName: mobius.bmllib
 Bundle-Version: 1.1.9
-Require-Bundle: org.apache.bcel_5.1,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  mobius.freeboogie,
- mobius.b2bpl
+ mobius.b2bpl,
+ bcel.plugin;bundle-version="5.2.0"
 Bundle-ClassPath: .,
  lib/antlr-3.0.1.jar,
  lib/antlr-runtime-3.0.jar,
