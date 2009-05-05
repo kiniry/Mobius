@@ -37,18 +37,8 @@ Export-Package: b2bpl;uses:="b2bpl.bytecode,b2bpl.bytecode.bml",
    b2bpl.bytecode,
    b2bpl.bpl.ast,
    b2bpl",
- b2bpl.translation.helpers;uses:="b2bpl.bpl.ast",
- org.objectweb.asm,
- org.objectweb.asm.attrs,
- org.objectweb.asm.commons;uses:="org.objectweb.asm,org.objectweb.asm.tree",
- org.objectweb.asm.optimizer;uses:="org.objectweb.asm,org.objectweb.asm.commons",
- org.objectweb.asm.signature,
- org.objectweb.asm.tree;uses:="org.objectweb.asm",
- org.objectweb.asm.tree.analysis;uses:="org.objectweb.asm,org.objectweb.asm.tree",
- org.objectweb.asm.util;uses:="org.objectweb.asm,org.objectweb.asm.signature",
- org.objectweb.asm.xml;
-  uses:="org.objectweb.asm,
-   javax.xml.transform,
-   org.xml.sax.helpers,
-   org.xml.sax"
+ b2bpl.translation.helpers;uses:="b2bpl.bpl.ast"
 Bundle-Vendor: Mobius & ETH Zürich
+Bundle-ClassPath: bin/,
+ .
+Require-Bundle: org.objectweb.asm;bundle-version="3.1.0"
