@@ -13,7 +13,16 @@ Bundle-ClassPath: Jml2Bml.jar,
  lib/jmlspecs.jar,
  lib/openjml.jar,
  lib/args4j-2.0.1.jar
-Export-Package: jml2bml.plugin
+Export-Package: jml2bml,
+ jml2bml.ast,
+ jml2bml.bmllib,
+ jml2bml.bytecode,
+ jml2bml.engine,
+ jml2bml.exceptions,
+ jml2bml.plugin,
+ jml2bml.rules,
+ jml2bml.symbols,
+ jml2bml.utils
 Require-Bundle: mobius.bmllib,
  org.junit4,
  org.eclipse.core.runtime,
