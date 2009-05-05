@@ -109,7 +109,14 @@ public class Jml2BmlPlugin extends Plugin {
   private String getProjectClassPath(final IJavaProject project) throws JavaModelException{
     IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
     StringBuffer result = new StringBuffer();
-    result.append(wr.getFolder(project.getOutputLocation()).getLocation().toOSString());
+    IPath oloc = project.getOutputLocation();
+    IPath proot = project.getPath();
+    if (!oloc.equals(proot)) { 
+      //result.append(wr.getFolder(oloc).getLocation().toOSString());
+      result.append(wr.getFolder(oloc).getLocation().toOSString());
+    } else {
+      result.append(project.getResource().getLocation().toOSString());
+    }
     
     for (IClasspathEntry entry: project.getRawClasspath()){
       switch (entry.getEntryKind()) {
