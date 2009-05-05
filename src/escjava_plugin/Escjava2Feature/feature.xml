@@ -2,7 +2,7 @@
 <feature
       id="mobius.escjava2.feature"
       label="ESCJava2"
-      version="2.0.14"
+      version="2.0.15"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
@@ -770,6 +770,12 @@ limitations under the License.
 
    <plugin
          id="mobius.escjava2.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="bcel.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
