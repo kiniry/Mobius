@@ -19,7 +19,15 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.console.ConsolePlugin;
+import org.eclipse.ui.console.IConsole;
+import org.eclipse.ui.console.IConsoleConstants;
+import org.eclipse.ui.console.IConsoleManager;
+import org.eclipse.ui.console.IConsoleView;
+import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.lib.FileNames;
@@ -54,6 +62,21 @@ public class JMLCompile extends DisasBCEL {
    * @see org.eclipse.ui.IActionDelegate#run(IAction)
    */
   public final void run(final IAction an_action) {
+    MessageConsole console = findConsole("Jml2Bml console");
+    console.clearConsole();
+    MessageConsoleStream out = console.newMessageStream();
+    
+    IWorkbenchPage page = getEditor().getEditorSite().getPage();
+    String id = IConsoleConstants.ID_CONSOLE_VIEW;
+    IConsoleView view = null;
+    try {
+      view = (IConsoleView) page.showView(id);
+    } catch (PartInitException e1) {
+      // TODO Auto-generated catch block
+      e1.printStackTrace();
+    }
+    view.display(console);
+    
     if (checkInitialSavingConditions()) return;
     final Shell shell = getEditor().getSite().getShell();
     final IFile jFile = ((FileEditorInput)getEditor().getEditorInput()).
@@ -70,7 +93,7 @@ public class JMLCompile extends DisasBCEL {
       return;
     }
     try {
-      Jml2BmlPlugin.getDefault().compile(jFile, bFile, project);
+      Jml2BmlPlugin.getDefault().compile(jFile, bFile, project, out);
       openBCodeEditorForJavaFile(jFile);
     } catch (IOException e) {
       MessageDialog.openError(shell,
@@ -96,4 +119,17 @@ public class JMLCompile extends DisasBCEL {
                               e.toString());
     }
   }
+  
+  private static MessageConsole findConsole(String name) {
+    ConsolePlugin plugin = ConsolePlugin.getDefault();
+    IConsoleManager conMan = plugin.getConsoleManager();
+    IConsole[] existing = conMan.getConsoles();
+    for (int i = 0; i < existing.length; i++)
+       if (name.equals(existing[i].getName()))
+          return (MessageConsole) existing[i];
+    //no console found, so create a new one
+    MessageConsole myConsole = new MessageConsole(name, null);
+    conMan.addConsoles(new IConsole[]{myConsole});
+    return myConsole;
+ }
 }
