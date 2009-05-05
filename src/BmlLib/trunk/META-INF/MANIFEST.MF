@@ -25,4 +25,5 @@ Export-Package: annot.attributes,
  annot.io,
  annot.textio,
  bmllib,
- bmllib.utils
+ bmllib.utils,
+ visitor
