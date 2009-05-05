@@ -145,7 +145,8 @@ public class ClassCPLineController extends CPLineController {
       an_error.addNumber(getClassReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantClass) getConstantAccessor()).setNameIndex(
+    // NOTE (to236111) IMPORTANT what removes constants before doSave()?
+    ((ConstantClass) getConstant()).setNameIndex(
       (Integer) a_map.get(getClassReference()));
   }
 

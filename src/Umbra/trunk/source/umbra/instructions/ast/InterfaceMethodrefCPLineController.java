@@ -179,9 +179,9 @@ public class InterfaceMethodrefCPLineController extends CPLineController {
       an_error.addNumber(getNameAndTypeReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantInterfaceMethodref) getConstantAccessor()).
+    ((ConstantInterfaceMethodref) getConstant()).
     setClassIndex((Integer) a_map.get(getClassReference()));
-    ((ConstantInterfaceMethodref) getConstantAccessor()).
+    ((ConstantInterfaceMethodref) getConstant()).
     setNameAndTypeIndex((Integer)a_map.get(getNameAndTypeReference()));
   }
 

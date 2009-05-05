@@ -93,6 +93,7 @@ public class DoubleCPLineController extends CPLineController {
    * constant pool entry in {@link BytecodeLineController#getMy_line_text()}.
    * This parameter is located after the constant pool entry keyword. The
    * method assumes {@link BytecodeLineController#getMy_line_text()} is correct.
+   * <br> <br> NOTE (to236111) above sentence is false
    *
    * @return the floating point parameter of the constant pool entry
    */
@@ -103,7 +104,15 @@ public class DoubleCPLineController extends CPLineController {
     my_parser.swallowSingleMnemonic(BytecodeStrings.DOUBLE_CP_ENTRY_KEYWORD);
     my_parser.swallowWhitespace();
     my_parser.swallowFPNumber();
-    return Double.parseDouble(my_parser.getFPResult());
+    double res = 0.0;
+    try {
+      res = Double.parseDouble(my_parser.getFPResult());
+    } catch (NumberFormatException e) {
+      // ignore();
+    } catch (NullPointerException e) {
+      // ignore();
+    }
+    return res;
   }
 
   /**

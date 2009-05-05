@@ -142,7 +142,7 @@ public class StringCPLineController extends CPLineController {
       an_error.addNumber(getStringReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantString) getConstantAccessor()).
+    ((ConstantString) getConstant()).
     setStringIndex((Integer) a_map.get(getStringReference()));
   }
 

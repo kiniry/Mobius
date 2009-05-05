@@ -182,9 +182,9 @@ public class NameAndTypeCPLineController extends CPLineController {
       an_error.addNumber(getTypeReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantNameAndType) getConstantAccessor()).
+    ((ConstantNameAndType) getConstant()).
     setNameIndex((Integer) a_map.get(getNameReference()));
-    ((ConstantNameAndType) getConstantAccessor()).
+    ((ConstantNameAndType) getConstant()).
     setSignatureIndex((Integer) a_map.get(getTypeReference()));
   }
 

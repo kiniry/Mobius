@@ -12,7 +12,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.ExceptionTable;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.PMGClass;
+import org.apache.bcel.classfile.Signature;
 import org.apache.bcel.classfile.SourceFile;
 import org.apache.bcel.generic.MethodGen;
 import annot.bcclass.BCConstantPool;
@@ -677,15 +681,10 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     // in the following code
     // (verificator will detect?)
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
-    for (Attribute a : a_jc.getAttributes()) {
-      a.setNameIndex((Integer) f.get(a.getNameIndex()));
-      if (a instanceof SourceFile) {
-        final SourceFile src = (SourceFile) a;
-        src.setSourceFileIndex((Integer) f.get(src.getSourceFileIndex()));
-      }
-    }
+    recalculateCPNumbersForAttributes(a_jc, f);
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
     for (int i = 0; i < a_jc.getFields().length; i++) {
+      // NOTE (to236111) IMPORTANT method name && signature?
       a_jc.getFields()[i].setNameIndex(
         (Integer) f.get(a_jc.getFields()[i].getNameIndex()));
       a_jc.getFields()[i].setSignatureIndex(
@@ -695,6 +694,44 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     a_jc.setClassNameIndex((Integer) f.get(class_name_index));
     a_jc.setSuperclassNameIndex((Integer) f.get(super_class_name_index));
     if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
+  }
+
+  /**
+   * This method affects references to constant pool entries for attributes
+   * in BCEL representation of bytecode. It changes the references from "dirty"
+   * to "clean" numbers.
+   *
+   * @param a_jc a BCEL representation of bytecode
+   * @param a_map mapping from "dirty" to "clean" numbers
+   */
+  private void recalculateCPNumbersForAttributes(final JavaClass a_jc,
+                                                 final HashMap a_map) {
+    for (Attribute a : a_jc.getAttributes()) {
+      a.setNameIndex((Integer) a_map.get(a.getNameIndex()));
+      if (a instanceof SourceFile) {
+        final SourceFile src = (SourceFile) a;
+        src.setSourceFileIndex((Integer) a_map.get(src.getSourceFileIndex()));
+      } else if (a instanceof ConstantValue) {
+        final ConstantValue cv = (ConstantValue) a;
+        cv.setConstantValueIndex((Integer)
+                                 a_map.get(cv.getConstantValueIndex()));
+      } else if (a instanceof ExceptionTable) {
+        final ExceptionTable et = (ExceptionTable) a;
+        final int[] exception_table =
+          new int[et.getExceptionIndexTable().length];
+        for (int i : exception_table) {
+          exception_table[i] =
+            (Integer) a_map.get(et.getExceptionIndexTable()[i]);
+        }
+        et.setExceptionIndexTable(exception_table);
+      } else if (a instanceof PMGClass) {
+        final PMGClass pmgc = (PMGClass) a;
+        pmgc.setPMGClassIndex((Integer) a_map.get(pmgc.getPMGClassIndex()));
+      } else if (a instanceof Signature) {
+        final Signature sig = (Signature) a;
+        sig.setSignatureIndex((Integer) a_map.get(sig.getSignatureIndex()));
+      }
+    }
   }
 
 }

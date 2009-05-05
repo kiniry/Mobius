@@ -233,7 +233,7 @@ public class CPLineController extends BytecodeLineController {
    *
    * @return my_constant
    */
-  protected Constant getConstantAccessor() {
+  public Constant getConstantAccessor() {
     return my_constant;
   }
 

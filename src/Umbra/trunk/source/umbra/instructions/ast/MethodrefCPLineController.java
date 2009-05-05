@@ -178,9 +178,9 @@ public class MethodrefCPLineController extends CPLineController {
       an_error.addNumber(getNameAndTypeReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantMethodref) getConstantAccessor()).
+    ((ConstantMethodref) getConstant()).
     setClassIndex((Integer) a_map.get(getClassReference()));
-    ((ConstantMethodref) getConstantAccessor()).
+    ((ConstantMethodref) getConstant()).
     setNameAndTypeIndex((Integer) a_map.get(getNameAndTypeReference()));
   }
 

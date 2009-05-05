@@ -178,9 +178,9 @@ public class FieldrefCPLineController extends CPLineController {
       an_error.addNumber(getNameAndTypeReference());
       throw new UmbraNoSuchConstantException(an_error);
     }
-    ((ConstantFieldref) getConstantAccessor()).
+    ((ConstantFieldref) getConstant()).
     setClassIndex((Integer) a_map.get(getClassReference()));
-    ((ConstantFieldref) getConstantAccessor()).
+    ((ConstantFieldref) getConstant()).
     setNameAndTypeIndex((Integer) a_map.get(getNameAndTypeReference()));
   }
 

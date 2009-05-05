@@ -256,6 +256,7 @@ public class BytecodeDocument extends Document {
                                                       getConstantPool());
       bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
     }
+    // NOTE (to236111) IMPORTANT do attributes need updating of constant pool?
     for (int i = 0; i < bc.getJC().getFields().length; i++) {
       bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());
     }

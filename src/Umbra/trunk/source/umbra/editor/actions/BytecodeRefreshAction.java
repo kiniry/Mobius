@@ -81,7 +81,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     final BytecodeEditor my_editor = getEditor();
 
     final int topvisible = my_editor.getVisibleRegion();
-    my_editor.doSave(null);
+    if (!my_editor.saveBytecode(null)) return;
     final FileEditorInput input = (FileEditorInput)my_editor.getEditorInput();
     final IFile file = input.getFile();
     try {

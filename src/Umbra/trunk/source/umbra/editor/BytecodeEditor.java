@@ -37,6 +37,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
+import umbra.instructions.ast.BytecodeLineController;
+import umbra.instructions.ast.CPLineController;
 import umbra.instructions.errors.BytecodeError;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;
@@ -166,7 +168,8 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * This method is run automatically while standard Eclipse
-   * 'save' action is executed. Additionally, the current class file is saved
+   * 'save' action is executed or when Umbra 'refresh' action is performed.
+   * Additionally, the current class file is saved
    * under the name with '_' at the beginning for the later use (see
    * {@link umbra.editor.actions.BytecodeRebuildAction} and
    * {@link umbra.editor.actions.BytecodeCombineAction}). Except
@@ -174,13 +177,15 @@ public class BytecodeEditor extends TextEditor {
    * {@link org.apache.bcel.classfile.JavaClass} in BCEL and binary
    * files to make visible in the class file the changes made in the editor.
    *
-   * NOTE (to236111) why revert changes if save fails?
    * NOTE (to236111) IMPORTANT what if errors occured and user decides to save
+   * TODO (to236111) IMPOTRANT error handling (if error occurs during save then
+   * internal representation of bytecode breaks after 'NO' pressed)
    *
    * @param a_progress_monitor not used
+   * @return true if bytecode file has been saved succesfully, false otherwise
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#doSave(IProgressMonitor)
    */
-  public final void doSave(final IProgressMonitor a_progress_monitor) {
+  public final boolean saveBytecode(final IProgressMonitor a_progress_monitor) {
     my_logger.info("doSave(" + a_progress_monitor + ")");
 
     final BytecodeDocument doc = getDocument();
@@ -198,7 +203,7 @@ public class BytecodeEditor extends TextEditor {
       msgBox.setMessage(message);
       msgBox.setText("Recalculation errors");
       final int res = msgBox.open();
-      if (res != SWT.YES) return;
+      if (res != SWT.YES) return false;
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
     doc.updateJavaClass();
@@ -217,13 +222,13 @@ public class BytecodeEditor extends TextEditor {
     final SaveConfirmer confirmer = my_verification_factory.
                                       getSaveConfirmer(presenter);
     if (!confirmer.confirm()) {
-      return;
+      return false;
     }
 
     final IDocumentProvider p = getDocumentProvider();
     final Shell shell = getSite().getShell();
     if (p == null)
-      return;
+      return false;
     if (p.isDeleted(getEditorInput())) {
       if (isSaveAsAllowed()) {
         my_logger.fine("save as is allowed");
@@ -245,7 +250,7 @@ public class BytecodeEditor extends TextEditor {
       performSave(true, a_progress_monitor);
     }
     final IFile a_file_from = makeSpareCopy();
-    if (a_file_from == null) return;
+    if (a_file_from == null) return true;
     final String path3 = a_file_from.getLocation().toOSString();
     try {
       doc.updateJavaClass();
@@ -254,6 +259,20 @@ public class BytecodeEditor extends TextEditor {
       MessageDialog.openError(shell, GUIMessages.BYTECODE_MESSAGE_TITLE,
         GUIMessages.substitute(GUIMessages.DISAS_SAVING_PROBLEMS, path3));
     }
+    return true;
+  }
+
+  /**
+   * Wrapper method for saveBytecode(). When standard Eclipse 'save' action
+   * is performed, this method is called and then it calls saveBytecode,
+   * which saves bytecode document. <br> <br>
+   *
+   * See {@link BytecodeEditor#saveBytecode(IProgressMonitor)}.
+   *
+   * @param a_progress_monitor not used
+   */
+  public void doSave(IProgressMonitor a_progress_monitor) {
+    saveBytecode(a_progress_monitor);
   }
 
   /**

@@ -118,7 +118,7 @@ public class LdcInstruction extends OtherInstruction {
     if (parser.getLine().charAt(parser.getIndex()) == '\"') {
       res = res && stringWithDelimiters(parser);
     } else {
-      /* TODO (to236111) check whether it is the proper format
+      /* TODO(to236111) check whether it is the proper format
        * FIXME (to236111) check whether other classes may need change from
        * swallowNumber() to swallowFPNumber()
        */
