@@ -3,6 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Javafe plugin
 Bundle-SymbolicName: mobius.javafe.plugin
 Bundle-Version: 2.0.8
+Bundle-ClassPath: libs/Javafe2.0.5b.jar
+Bundle-ActivationPolicy: lazy
 Bundle-Vendor: HP Labs and EU Mobius IST-15905
 Export-Package: javafe,
  javafe.ast,
@@ -17,4 +19,4 @@ Export-Package: javafe,
  javafe.test.lex,
  javafe.util
 Require-Bundle: bcel.plugin;bundle-version="5.2.0"
-Bundle-ClassPath: libs/Javafe2.0.5b.jar
+
