@@ -143,7 +143,7 @@
          point="org.eclipse.ui.editors.annotationTypes">
       <type
             markerSeverity="2"
-            markerType="mobius.escjava2.plugin.escjavaWarningMarker"
+            markerType="mobius.escjava2.escjavaWarningMarker"
             name="escjava.plugin.escjavaProblemAnnotation"
             super="org.eclipse.ui.workbench.texteditor.error">
       </type>
@@ -169,7 +169,7 @@
    <extension
 	    point="org.eclipse.ui.ide.markerResolution">
 	  <markerResolutionGenerator
-		markerType="mobius.escjava2.plugin.escjavaWarningMarker"
+		markerType="mobius.escjava2.escjavaWarningMarker"
 		class="escjava.plugin.MarkerResolutionGenerator">
 	  </markerResolutionGenerator>
    </extension>
@@ -198,7 +198,7 @@
          <action
                label="Disable auto ESC/Java2 checking"
                tooltip="Disables selected objects for auto ESC/Java2 checking"
-               class="escjava.plugin.EscjavaAction$DisableESC"
+               class="escjava.plugin.actions.DisableESC"
                menubarPath="JMLMenu/EscjavaGroup"
                id="mobius.escjava2.plugin.EscjavaAction.DisableESC"
 			   definitionId="mobius.escjava2.ui.commands.DisableESC">
@@ -206,7 +206,7 @@
          <action
                label="Enable auto ESC/Java2 checking"
                tooltip="Enables selected objects for auto ESC/Java2 checking"
-               class="escjava.plugin.EscjavaAction$EnableESC"
+               class="escjava.plugin.actions.EnableESC"
                menubarPath="JMLMenu/EscjavaGroup"
                id="mobius.escjava2.plugin.EscjavaAction.EnableESC"
 			   definitionId="mobius.escjava2.plugin.commands.EnableESC">
@@ -214,7 +214,7 @@
          <action
                label="Go to associated declaration"
                tooltip="Opens an editor and positions it at the location specified by some information associated with a marker"
-               class="escjava.plugin.EscjavaAction$GoToDecl"
+               class="escjava.plugin.actions.GoToDecl"
                menubarPath="JMLMenu/EscjavaGroup"
                id="mobius.escjava2.plugin.GoToDeclAction"
                definitionId="mobius.escjava2.plugin.commands.GoToDeclaration">
@@ -222,18 +222,19 @@
          <action
                label="Clear ESC/Java2 Markers"
                tooltip="Clears any ESC/Java2 markers in the selected object"
-               class="escjava.plugin.EscjavaAction$Clear"
+               class="escjava.plugin.actions.Clear"
                menubarPath="JMLMenu/EscjavaGroup"
                id="mobius.escjava2.plugin.ClearMarkerAction"
                definitionId="mobius.escjava2.plugin.commands.ClearMarkers">
          </action>
          <action
-               label="ESC/Java2"
-               tooltip="Runs ESC/Java2 static checks"
-               class="escjava.plugin.EscjavaAction$Check"
-               menubarPath="JMLMenu/EscjavaGroup"
+               class="escjava.plugin.actions.Check"
+               definitionId="mobius.escjava2.plugin.commands.CheckEscjava"
                id="mobius.escjava2.plugin.EscjavaAction.Check"
-               definitionId="mobius.escjava2.plugin.commands.CheckEscjava">
+               label="ESC/Java2"
+               menubarPath="JMLMenu/EscjavaGroup"
+               style="push"
+               tooltip="Runs ESC/Java2 static checks">
          </action>
 
          <!-- action
@@ -262,7 +263,7 @@
          <action
                label="Disable ESC/Java Nature, remove Builder in SELECTED projects"
                tooltip="Removes the ESC/Java Nature from the project and the ESC/Java Builder from the Incremental builder"
-               class="escjava.plugin.EscjavaAction$DisableEscjava"
+               class="escjava.plugin.actions.DisableEscjava"
                menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
                id="mobius.escjava2.plugin.EscjavaAction.DisableEscjava"
 			   definitionId="mobius.escjava2.plugin.commands.DisableEscjava">
@@ -270,7 +271,7 @@
          <action
                label="Enable ESC/Java Nature, add Builder in SELECTED projects"
                tooltip="Adds the ESC/Java Nature to the project and the ESC/Java Builder to the Incremental builder"
-               class="escjava.plugin.EscjavaAction$EnableEscjava"
+               class="escjava.plugin.actions.EnableEscjava"
                menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
                id="mobius.escjava2.plugin.EscjavaAction.EnableJML"
 			   definitionId="mobius.escjava2.plugin.commands.EnableEscjava">
@@ -289,7 +290,7 @@
   		<action 
   			label="Run ESC/Java2" 
   			tooltip="Runs ESC/Java2 on the project" 
-  			class="escjava.plugin.EscjavaAction$Check" 
+  			class="escjava.plugin.actions.Check" 
   			menubarPath="additions"
   			id="mobius.escjava2.plugin.Check.Popup" /> 
   	</objectContribution>
@@ -339,18 +340,16 @@
             description="ESC/Java related commands"
             id="mobius.escjava2.plugin.EscjavaCommandCategory">
       </category>
-<!--      <command
+      <command
             name="Enable Esc/Java2 autochecking"
             description="Enables Esc/Java2 autochecking of selected resources"
-            category="mobius.escjava2.plugin.EscjavaCommandCategory"
             id="mobius.escjava2.plugin.commands.EnableESC">
       </command> 
       <command
             name="Disable Esc/Java2 autochecking"
             description="Disables Esc/Java2 autochecking of selected resources"
-            category="mobius.escjava2.plugin.EscjavaCommandCategory"
             id="mobius.escjava2.plugin.commands.DisableESC">
-      </command>   -->
+      </command>   
       <command
             name="Install ESC/Java2"
             description="Installs ESC/Java2 nature and builder on the selected projects"

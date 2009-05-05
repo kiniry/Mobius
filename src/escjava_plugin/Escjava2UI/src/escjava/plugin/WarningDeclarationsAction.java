@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
@@ -134,14 +134,14 @@ public class WarningDeclarationsAction implements
             list.add(element);
           }
         }
-      } else if (selection instanceof TextSelection) {
+      } else if (selection instanceof ITextSelection) {
         try {
           IWorkbenchPage page = window.getActivePage();
           IEditorPart editor = page.getActiveEditor();
           IEditorInput input = editor.getEditorInput();
           IResource res = (IResource)input.getAdapter(IResource.class);
           IMarker[] markers = res.findMarkers(EscjavaMarker.ESCJAVA_MARKER_ID,true,IResource.DEPTH_INFINITE);
-          TextSelection tsel = (TextSelection)selection;
+          ITextSelection tsel = (ITextSelection)selection;
           for (int i = 0; i<markers.length; ++i) {
             //int charstart = markers[i].getAttribute(IMarker.CHAR_START,-1);
             int line = markers[i].getAttribute(IMarker.LINE_NUMBER,-1);

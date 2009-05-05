@@ -23,6 +23,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
+import escjava.plugin.actions.Check;
+
 import pluginlib.Log;
 import pluginlib.Utils;
 
@@ -69,7 +71,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		try {
 			EscjavaMarker.clearMarkers(getProject());
 			IJavaProject javaProject = JavaCore.create(getProject());
-			EscjavaAction.Check.checkProject(javaProject);
+			Check.checkProject(javaProject);
 		} catch (CoreException e) {
 			throw e;
 		} catch (Exception e) {
