@@ -35,9 +35,12 @@ import freeboogie.ast.TypeDecl;
 import freeboogie.ast.UnaryOp;
 import freeboogie.ast.UserType;
 import freeboogie.ast.VariableDecl;
+
+import mobius.logic.lang.generic.GType;
 import mobius.logic.lang.generic.ast.Clause;
 import mobius.logic.lang.generic.ast.ClauseList;
 import mobius.logic.lang.generic.ast.GenericAst;
+import mobius.logic.lang.generic.ast.Term;
 //}}}
 
 
@@ -98,12 +101,9 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     }
   }
 
-  /** The result. This idiotic comment is forced by checkstyle. */
-  private LinkedList<GenericAst> fResult;
-
+  // TODO(rgrig): get axioms from the types that were processed
   public ClauseList getFrom(final Declaration boogie) {
-    assert false : "not implemented";
-    return null;
+    return (ClauseList) boogie.eval(this);
   }
 
   /** {@inheritDoc} */
@@ -214,11 +214,11 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Expr expr, 
     final Declaration tail
   ) {
-    fResult.add(Clause.mk(
-      name,
-      (mobius.logic.lang.generic.ast.Term)expr.eval(this)));
-    if (tail != null) { tail.eval(this); }
-    return null;
+    return combine(
+      Clause.mk(
+        name,
+        (mobius.logic.lang.generic.ast.Term)expr.eval(this)),
+        tail);
   }
 
   /** {@inheritDoc} */
@@ -246,18 +246,18 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final boolean uniq, 
     final Declaration tail
   ) {
-    fResult.add(Clause.mk(
-      id,
-      (mobius.logic.lang.generic.ast.Term)type.eval(this)));
-    if (tail != null) { tail.eval(this); }
-    return null;
+    return combine(
+      Clause.mk(
+        id,
+        (mobius.logic.lang.generic.ast.Term)type.eval(this)),
+      tail);
   }
 
   /** {@inheritDoc} */
+  // TODO(rgrig): handle the predicate
   @Override
-  public GenericAst eval(final DepType depType, final Type type, final Expr pred) {
-    assert false : "not implemented";
-    return null;
+  public Term eval(final DepType depType, final Type type, final Expr pred) {
+    return (Term) type.eval(this);
   }
 
   /** {@inheritDoc} */
@@ -371,8 +371,11 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
   /** {@inheritDoc} */
   @Override
   public GenericAst eval(final TypeDecl typeDecl, final String name, final Declaration tail) {
-    assert false : "not implemented";
-    return null;
+    return combine(
+      Clause.mk(
+        name,
+        mobius.logic.lang.generic.ast.Atom.mk(null, GType.TopType)),
+      tail);
   }
 
   /** {@inheritDoc} */
@@ -398,7 +401,18 @@ public class GenericOfBoogie extends Evaluator<GenericAst> {
     final Identifiers typeVars, 
     final Declaration tail
   ) {
-    assert false : "not implemented";
-    return null;
+    return combine(
+      Clause.mk(
+        name,
+        (Term) type.eval(this)),
+      tail);
+  }
+
+  private ClauseList combine(Clause clause, Declaration tail) {
+    ClauseList result = tail == null? 
+      ClauseList.mk(new LinkedList<GenericAst>()) :
+      (ClauseList) tail.eval(this);
+    result.getList().addFirst(clause);
+    return result;
   }
 }
