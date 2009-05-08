@@ -26,7 +26,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
-import annot.attributes.AttributeNames;
+import annot.textio.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -110,6 +110,33 @@ public class BCConstantPool extends BCCConstantPrinting
       this.constants.add(c);
     } else {
       this.constants.add(initialSize++, c);
+      final Constant[] consts = new Constant[initialSize];
+      for (int i = 0; i < initialSize; i++) {
+        consts[i] = constants.get(i);
+      }
+      jc.getConstantPool().setConstantPool(consts);
+    }
+  }
+
+  /**
+   * Appends a constant to the constant pool after the constant at the given
+   * index.
+   *
+   * @param c - Constant to be added.
+   * @param an_index - An index of constant after which the constant should
+   * be added.
+   * @param toSecondCP - <code>true</code> in case the constant should be
+   *   added to the second constant pool, <code>false</code> in case this
+   *   should be added to the first one
+   */
+  public void addConstantAfter(final Constant c, final int an_index,
+                               final boolean toSecondCP) {
+    final int index = an_index + 1;
+    if (toSecondCP) {
+      this.constants.add(index, c);
+    } else {
+      this.constants.add(index, c);
+      initialSize++;
       final Constant[] consts = new Constant[initialSize];
       for (int i = 0; i < initialSize; i++) {
         consts[i] = constants.get(i);
@@ -430,6 +457,40 @@ public class BCConstantPool extends BCCConstantPrinting
     }
   }
 
+  /**
+   * Remove the given constant from the constants vector. It does not
+   * recalculates references.
+   *
+   * @param apos the number of the constant to remove
+   */
+  public void justRemoveConstant(final int apos) {
+    constants.remove(apos);
+    if (apos < initialSize) {
+      initialSize--;
+      final Constant[] consts = new Constant[initialSize];
+      for (int i = 0; i < initialSize; i++) {
+        final Constant mconst = constants.get(i);
+        consts[i] = mconst;
+      }
+      jc.getConstantPool().setConstantPool(consts);
+    }
+  }
+
+  /**
+   * This method replaces constant at index an_old_index with constant a_new.
+   *
+   * @param an_old_index an index of constant to replace
+   * @param a_new a new constant
+   */
+  public void replaceConstant(final int an_old_index, final Constant a_new) {
+    if (an_old_index > initialSize) {
+      justRemoveConstant(an_old_index);
+      addConstantAfter(a_new, an_old_index - 1, true);
+    } else {
+      justRemoveConstant(an_old_index);
+      addConstantAfter(a_new, an_old_index - 1, false);
+    }
+  }
 
   public ConstantPool createCombinedCP() {
     final Vector vec = new Vector();

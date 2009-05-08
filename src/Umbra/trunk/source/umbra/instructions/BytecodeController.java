@@ -8,6 +8,7 @@
  */
 package umbra.instructions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -170,6 +171,19 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   public void addAllLines(final BytecodeDocument a_doc,
               final int a_start_rem, final int an_end_rem, final int a_stop)
     throws UmbraException, UmbraLocationException {
+    final ArrayList < BytecodeLineController > old_lines =
+      new ArrayList < BytecodeLineController > ();
+    final ArrayList < Integer > old_lines_index = new ArrayList < Integer > ();
+    int entry_no = 0;
+    for (int i = 0; i < getNoOfLines(); i++) {
+      old_lines.add(getLineController(i));
+      if (getLineController(i) instanceof CPLineController) {
+        entry_no++;
+        old_lines_index.add(entry_no); 
+      } else {
+        old_lines_index.add(-1);
+      }
+    }
     final int methodno = getMethodForLine(a_start_rem);
     // NOTE (to236111) rem == -1 for no a method
     final FragmentParser fgmparser = new FragmentParser(
@@ -194,29 +208,106 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold, a_doc);
     if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP)
-      updateBMLCPRepresentation(a_doc);
+      updateBMLCPRepresentation(a_doc, a_start_rem, an_end_rem, a_stop,
+                                old_lines, old_lines_index);
     if (FileNames.DEBUG_MODE) controlPrint(1);
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
   }
 
   /**
    * Propagates the change in textual representation of constant pool into
-   * its BML representation.
+   * its BML representation. It is called after the change has been propagated
+   * into Umbra internal representation (line controllers)
    *
-   * TODO (to236111) incremental change
    * NOTE (to236111) IMPORTANT what if CPLineController outside constant pool?
    *
    * @param a_doc a document in which change happened
+   * @param a_start_rem a number of the first modified line as counted in the
+   *   old version of the document
+   * @param an_end_rem a number of the last modified line as counted in the
+   *   old version of the document
+   * @param a_stop a number of the last modified line as counted in the new
+   *   version of the document
+   * @param an_old_lines lines representing document before change
+   * @param an_old_indices an_old_indices.get(i) = k when an_old_lines.get(i)
+   *   is CPLineController and it represents a constant that is at position k
+   *   in BCEL representation of ConstantPool. If an_old_lines.get(i) isn't
+   *   CPLineController, an_old_indices.get(i) = -1.
    */
-  private void updateBMLCPRepresentation(final BytecodeDocument a_doc) {
+  private void updateBMLCPRepresentation(final BytecodeDocument a_doc,
+                      final int a_start_rem,
+                      final int an_end_rem, final int a_stop,
+                      final ArrayList < BytecodeLineController > an_old_lines,
+                      final ArrayList < Integer > an_old_indices) {
     final BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
+    int first_before = 0;
+    for (int i = a_start_rem - 1; i >= 0; i--) {
+      if (an_old_indices.get(i) > -1) {
+        first_before = an_old_indices.get(i);
+        break;
+      }
+    }
+    for (int i = a_start_rem; i <= an_end_rem; i++) {
+      if (an_old_lines.get(i) instanceof CPLineController) {
+        final CPLineController cplc = (CPLineController) an_old_lines.get(i);
+        if (i <= a_stop && getLineController(i) instanceof CPLineController) {
+          bcp.replaceConstant(an_old_indices.get(i),
+                              ((CPLineController)
+                                  getLineController(i)).getConstant());
+          first_before = an_old_indices.get(i);
+          if (FileNames.CP_DEBUG_MODE)
+            System.err.println("REPLACING " + an_old_lines.get(i) + ", index " +
+                             an_old_indices.get(i) + " WITH " +
+                             cplc.getConstant() +
+                             ", first_before " + first_before);
+        } else {
+          bcp.justRemoveConstant(an_old_indices.get(i));
+          if (FileNames.CP_DEBUG_MODE)
+            System.err.println("REMOVING " + an_old_lines.get(i) + ", index " +
+                             an_old_indices.get(i) + ", first_before " +
+                             first_before);
+          for (int j = i + 1; j <= an_end_rem; j++) {
+            an_old_indices.set(j, an_old_indices.get(j) - 1);
+          }
+        }
+      } else if (i <= a_stop &&
+          getLineController(i) instanceof CPLineController) {
+        bcp.addConstantAfter(((CPLineController)
+            getLineController(i)).getConstant(),
+                             first_before, false);
+        first_before++;
+        for (int j = i + 1; j < an_end_rem; j++) {
+          an_old_indices.set(j, an_old_indices.get(j) + 1);
+        }
+        if (FileNames.CP_DEBUG_MODE) System.err.println("ADDING " +
+                           ((CPLineController)
+                               getLineController(i)).getConstant() +
+                           ", first_before " + first_before);
+      }
+    }
+    if (an_end_rem < a_stop) {
+      for (int i = an_end_rem + 1; i <= a_stop; i++) {
+        if (getLineController(i) instanceof CPLineController) {
+          final CPLineController cplc = (CPLineController) getLineController(i);
+          bcp.addConstantAfter(cplc.getConstant(), first_before, false);
+          first_before++;
+          for (int j = i + 1; j < an_end_rem; j++) {
+            an_old_indices.set(j, an_old_indices.get(j) + 1);
+          }
+          if (FileNames.CP_DEBUG_MODE)
+            System.err.println("ADDING " + cplc.getConstant() +
+                             ", first_before " + first_before);
+        }
+      }
+    }
+    /* NOTE (to236111) old implementation
     bcp.clearConstantPool();
     for (int i = 0; i < a_doc.getNumberOfLines(); i++) {
       if (getLineController(i) instanceof CPLineController) {
         final CPLineController cplc = (CPLineController) getLineController(i);
         bcp.addConstant(cplc.getConstant(), false);
       }
-    }
+    } */
   }
 
   /**
@@ -607,6 +698,15 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   public void recalculateCPNumbers(final JavaClass a_jc)
     throws UmbraCPRecalculationException {
     if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
+    int const_no = 0;
+    for (int i = 0; i < this.getNoOfLines(); i++) {
+      if (getLineController(i) instanceof CPLineController) {
+        const_no++;
+        ((CPLineController)
+            getLineController(i)).setConstant(
+                                a_jc.getConstantPool().getConstant(const_no));
+      }
+    }
     // TODO (to236111) use templates
     final HashMap f = new HashMap();
     final HashMap conflict = new HashMap();
