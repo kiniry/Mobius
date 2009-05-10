@@ -49,7 +49,7 @@ GenClassDic:{"-gcd","--gen-class-dic"}:[default="false"]
 Graph:{"-g","--graph"}:{enum}:[choices="ICG,IIG",casesensitive="false"]
  : "Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph."
 
-Version:{"-v","--version"}:[default="false"]
+Version:{"-v","-version","--version"}:[default="false"]
  : "Print BONc version and exit."
 
 SourceFiles:{}:{file-list}:[between="",canbedir="false",mustexist="true"]
@@ -84,4 +84,7 @@ VALIDITY::
 
 {$(Print?) && !$(PrintOutput?)} : "Output file (-po) for printing must be provided." ; 
 
-{!$(ReadFromStdin) && ($(SourceFiles).size() == 0)} : "Must provide at least one source file or read from standard input.";
+//If none of the AloneOptions are true
+{!$(Version) && !$(Help) && !$(PrintMan) && !$(PrintReadme) && !$(PrintBashCompletion) && 
+ !$(ReadFromStdin) && ($(SourceFiles).size() == 0)} 
+  : "Must provide at least one source file or read from standard input.";

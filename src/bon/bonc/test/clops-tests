@@ -3,9 +3,15 @@ name: BONc
 valid: {${existing-file}}
 valid: {-i ${existing-file}}
 valid: {-f ${existing-file}}
+valid: {-tc=false ${existing-file}}
 valid: {-p html -po ${non-existant-file} ${existing-file}}
+valid: {-v}
+valid: {-h}
+valid: {-}
 
 invalid: {}
+invalid: {${non-existant-file}}
 invalid: {-i}
 invalid: {-f}
 invalid: {-f ${non-existant-file}}
+invalid: {-h ${existing-file}}

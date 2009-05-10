@@ -554,7 +554,7 @@
     </java>
   </target>
   
-  <target name="test-interface" depends="dist" description="Unit test the command line interface">
+  <target name="test-interface" description="Unit test the command line interface">
     <delete dir="${unit-test-dir}"/>
     <mkdir dir="${unit-test-dir}"/>
     <java classname="ie.ucd.clops.test.Main" fork="true">

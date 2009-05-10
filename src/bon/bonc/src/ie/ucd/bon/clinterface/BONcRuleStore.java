@@ -191,7 +191,8 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(final OptionStore optionStore) {
-      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getValue() && (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getValue().size() == 0);
+      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Version")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Help")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintMan")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintReadme")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintBashCompletion")).getValue() && 
+ !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getValue() && (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getValue().size() == 0);
     }
   }
     
