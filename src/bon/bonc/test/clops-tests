@@ -1,0 +1,11 @@
+file: ../bonc.clo
+name: BONc
+valid: {${existing-file}}
+valid: {-i ${existing-file}}
+valid: {-f ${existing-file}}
+valid: {-p html -po ${non-existant-file} ${existing-file}}
+
+invalid: {}
+invalid: {-i}
+invalid: {-f}
+invalid: {-f ${non-existant-file}}

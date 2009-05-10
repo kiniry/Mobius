@@ -33,10 +33,11 @@
   <property name="astgen-base" value="AstNode"/>
   <property name="astgen-pkg" value="ie.ucd.bon.ast"/>
   <property name="astgen-tpl-dir" location="astgen/tpl"/>
-  
+
+  <property name="unit-test-dir"  location="test/unittests"/>
+  <property name="unit-test-file"  location="test/clops-tests"/>
   
   <property name="java-target-version" value="1.5"/>
-	
   <property name="release-name" value="bonc"/>
   <property name="release-version" value="0.1.6"/>
 
@@ -66,6 +67,11 @@
     <path refid="base.path"/>
     <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar clops-runtime.jar"/>
     <pathelement location="${build}"/>
+  </path>
+  
+  <path id="test-interface.path">
+    <path refid="test.path"/>
+    <filelist dir="${lib}" files="clops.jar junit-4.6.jar"/>
   </path>
 	
 	<path id="compile.path">
@@ -544,7 +550,23 @@
 	    <arg value="${clops-pkg}"/>
 	    <arg value="-o"/>
 	    <arg value="${clops-target}"/>
-	    <arg value="${clops-file}"/>
-	  </java>
-	  </target>
+      <arg value="${clops-file}"/>
+    </java>
+  </target>
+  
+  <target name="test-interface" depends="dist" description="Unit test the command line interface">
+    <delete dir="${unit-test-dir}"/>
+    <mkdir dir="${unit-test-dir}"/>
+    <java classname="ie.ucd.clops.test.Main" fork="true">
+      <classpath>
+        <pathelement path="${toString:test-interface.path}"/>
+        <pathelement path="${java.class.path}"/>
+        <pathelement path="${unit-test-dir}"/>
+      </classpath>
+      <arg value="${unit-test-file}"/>
+      <arg value="-o"/>
+      <arg value="${unit-test-dir}"/>
+    </java>
+  </target>
+  
 </project>

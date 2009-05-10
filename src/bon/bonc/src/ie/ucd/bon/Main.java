@@ -17,7 +17,6 @@ import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
 import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
-import ie.ucd.clops.logging.CLOLogger;
 import ie.ucd.clops.util.OptionUtil;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +29,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -106,7 +104,7 @@ public final class Main {
           OptionUtil.printOptions(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS), 80, 2);
           return true;
         } else if (options.getPrintBashCompletion()) {
-          OptionUtil.printBashCompletionOptionsScript(System.out, options.getOptions(), "bonc");
+          OptionUtil.printBashCompletionOptionsScript(System.out, options.getOptionsWithoutErrorOption(), "bonc");
           return true;
         } else if (options.getHelp()) {
           System.out.println(getVersion());
@@ -232,15 +230,15 @@ public final class Main {
     }
   }
 
-  private static void print(final Collection<File> files, final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
+  private static void print(final Collection<File> files, final ParsingTracker tracker, final BONcOptionsInterface options, final boolean timing) {
 
-    if (!so.isPrintSet()) {
+    if (!options.isPrintSet()) {
       return;
     }
 
-    BONcOptionsInterface.Print printType = so.getPrint();
+    BONcOptionsInterface.Print printType = options.getPrint();
 
-    if (so.getGenClassDic() && printType != BONcOptionsInterface.Print.DIC) {
+    if (options.getGenClassDic() && printType != BONcOptionsInterface.Print.DIC) {
       try {
         String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
         File classDicAutoFile = new File("class-dic-auto");
@@ -254,20 +252,20 @@ public final class Main {
       }
     }
 
-    boolean printToFile = so.isPrintOutputSet();
+    boolean printToFile = options.isPrintOutputSet();
 
     PrintStream outputStream;
-    String outputFilePath = null;
+    File outputFile = null;
     if (printToFile) {
-      File outputFile = so.getPrintOutput();
+      outputFile = options.getPrintOutput();
 
       try {
         FileOutputStream outputFileStream = new FileOutputStream(outputFile);
         outputStream = new PrintStream(outputFileStream);
 
-        Main.logDebug("printing: " + printType + ", to: " + outputFilePath);
+        Main.logDebug("printing: " + printType + ", to: " + outputFile.getPath());
       } catch (FileNotFoundException fnfe) {
-        System.out.println("Error writing to file " + outputFilePath);
+        System.out.println("Error writing to file " + outputFile.getPath());
         return;
       }
     } else {
@@ -280,7 +278,7 @@ public final class Main {
 
     if (printToFile) {
       outputStream.close();
-      System.out.println("Succesfully created: " + outputFilePath);
+      System.out.println("Succesfully created: " + outputFile.getPath());
     }
   }
 

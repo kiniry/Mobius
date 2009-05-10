@@ -45,10 +45,7 @@ private final SourceLocation location;
   // === Others ===
   @Override
   public Indexing clone() {
-    
-      
-        List<IndexClause> newIndexes = indexes;
-      
+    List<IndexClause> newIndexes = indexes;
     
     return Indexing.mk(newIndexes, location);
   }

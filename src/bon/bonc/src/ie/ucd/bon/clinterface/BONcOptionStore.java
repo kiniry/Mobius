@@ -118,6 +118,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogReadFromStdin.setProperty("description", "Read input from stdin.");
     ogGenClassDic = new BooleanOption("GenClassDic", "(?:-gcd)|(?:--gen-class-dic)");
     addOption(ogGenClassDic);
+    ogGenClassDic.setProperty("default", "false");
     ogGenClassDic.setProperty("aliases", "-gcd,--gen-class-dic");
     ogGenClassDic.setProperty("description", "Generate the class dictionary when printing.");
     ogGraph = new EnumOption("Graph", "(?:-g)|(?:--graph)");
@@ -136,7 +137,6 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogSourceFiles.setProperty("between", "");
     ogSourceFiles.setProperty("canbedir", "false");
     ogSourceFiles.setProperty("mustexist", "true");
-    ogSourceFiles.setProperty("aliases", "");
     ogSourceFiles.setProperty("description", "Source files to process.");
   
     CLOPSERROROPTION = new ie.ucd.clops.runtime.options.CLOPSErrorOption();
@@ -167,8 +167,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogVersion);
     ogAloneOption.addOptionOrGroup(ogPrintReadme);
+    ogAloneOption.addOptionOrGroup(ogVersion);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);

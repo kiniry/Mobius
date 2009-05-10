@@ -45,6 +45,10 @@ public class BONcRuleStore extends RuleStore {
     ValidityRule rule5 = new ValidityRule(rule5Condition);
     rule5.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule5Expression()));
     addValidityRule(rule5);
+    Expression<Boolean> rule6Condition = new Rule6Condition();
+    ValidityRule rule6 = new ValidityRule(rule6Condition);
+    rule6.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule6Expression()));
+    addValidityRule(rule6);
   }
 
   public static class Rule1Condition implements Expression<Boolean> {
@@ -179,6 +183,24 @@ public class BONcRuleStore extends RuleStore {
      */
     public List<String> evaluate(final OptionStore optionStore) {
       return Arrays.asList("Output file (-po) for printing must be provided.");
+    }
+  }
+  
+  public static class Rule6Condition implements Expression<Boolean> {
+    /**
+     * {@inheritDoc}
+     */
+    public Boolean evaluate(final OptionStore optionStore) {
+      return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getValue() && (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getValue().size() == 0);
+    }
+  }
+    
+  public static class Rule6Expression implements Expression<List<String>> {
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> evaluate(final OptionStore optionStore) {
+      return Arrays.asList("Must provide at least one source file or read from standard input.");
     }
   }
   

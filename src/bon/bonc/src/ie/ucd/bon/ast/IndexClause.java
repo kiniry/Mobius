@@ -48,14 +48,8 @@ private final SourceLocation location;
   // === Others ===
   @Override
   public IndexClause clone() {
-    
-      
-        String newId = id;
-      
-    
-      
-        List<String> newIndexTerms = indexTerms;
-      
+    String newId = id;
+    List<String> newIndexTerms = indexTerms;
     
     return IndexClause.mk(newId, newIndexTerms, location);
   }

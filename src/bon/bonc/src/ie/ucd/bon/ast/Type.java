@@ -51,18 +51,9 @@ private final SourceLocation location;
   // === Others ===
   @Override
   public Type clone() {
-    
-      
-        String newIdentifier = identifier;
-      
-    
-      
-        List<BONType> newActualGenerics = actualGenerics;
-      
-    
-      
-        String newFullString = fullString;
-      
+    String newIdentifier = identifier;
+    List<BONType> newActualGenerics = actualGenerics;
+    String newFullString = fullString;
     
     return Type.mk(newIdentifier, newActualGenerics, newFullString, location);
   }

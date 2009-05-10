@@ -43,7 +43,7 @@ Debug:{"-d","--debug"}:[default="false"]
 ReadFromStdin:{"-"}:[default="false"]
  : "Read input from stdin."
 
-GenClassDic:{"-gcd","--gen-class-dic"}
+GenClassDic:{"-gcd","--gen-class-dic"}:[default="false"]
  : "Generate the class dictionary when printing."
 
 Graph:{"-g","--graph"}:{enum}:[choices="ICG,IIG",casesensitive="false"]
@@ -58,7 +58,7 @@ SourceFiles:{}:{file-list}:[between="",canbedir="false",mustexist="true"]
 
 FORMAT::
 
-  ( Option*  SourceFiles*) 
+  ( Option*  SourceFiles*   ) 
 | AloneOption;
 
 
@@ -83,3 +83,5 @@ OVERRIDES::
 VALIDITY::
 
 {$(Print?) && !$(PrintOutput?)} : "Output file (-po) for printing must be provided." ; 
+
+{!$(ReadFromStdin) && ($(SourceFiles).size() == 0)} : "Must provide at least one source file or read from standard input.";
