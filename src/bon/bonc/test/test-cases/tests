@@ -9,11 +9,12 @@
 @Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa, true> }
 
 //File problem tests
+//Commented out, since clops now handles this, and we have clops unit tests to ensure this.
 
-@Test-name: "No files error"
-@Location { doesnotmatter/ }
-@Input { }                    //No input files!
-@Output { < NoFilesError > }
+//@Test-name: "No files error"
+//@Location { doesnotmatter/ }
+//@Input { }                    //No input files!
+//@Output { < NoFilesError > }
 
 //@Test-name: "FileNotFoundError and NoFilesError"
 //@Location { test3/ }

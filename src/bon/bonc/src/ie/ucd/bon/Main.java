@@ -129,6 +129,7 @@ public final class Main {
         }
       } 
       //TODO print usage  
+      problems = null;
       System.out.println("Invalid arguments.");
       return false;
 

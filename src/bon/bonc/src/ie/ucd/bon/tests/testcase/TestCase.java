@@ -109,7 +109,11 @@ public class TestCase {
     System.setOut(oldOut);
     System.setErr(oldErr);
     
-    Problems foundProblems = Main.getProblems();  
+    Problems foundProblems = Main.getProblems();
+    if (foundProblems == null) {
+      //Avoid NPE
+      foundProblems = new Problems();
+    }
     Problems desiredProblems = new Problems();
     for (TestOutput output : outputs) {
       BONProblem problem = output.getProblem();
