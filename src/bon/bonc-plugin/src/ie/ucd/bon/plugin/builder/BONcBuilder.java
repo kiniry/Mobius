@@ -122,6 +122,12 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         int charPositionStart = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionStart();
         int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
+        //Adjusting for different counting of line-ending characters between eclipse and antlr
+        if (lineNumber != -1) {
+          charPositionStart += (lineNumber -1);
+          charPositionEnd += (lineNumber -1);
+        }
+        
         //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
 
         if (file != null && lineNumber > 0 && charPositionStart >= 0 && charPositionEnd >= 0) {
