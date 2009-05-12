@@ -1,5 +1,7 @@
 package mobius.bmlvcgen.vcgen;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.EnumSet;
 
 import org.apache.bcel.generic.BasicType;
@@ -16,12 +18,14 @@ import mobius.bmlvcgen.bml.MethodVisitor;
 import mobius.bmlvcgen.bml.Method.AccessFlag;
 import mobius.bmlvcgen.bml.bmllib.BmllibMethodName;
 import mobius.bmlvcgen.bml.bmllib.BmllibType;
+import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.vcgen.struct.Post;
 
 /**
@@ -30,7 +34,7 @@ import mobius.directVCGen.vcgen.struct.Post;
  * @author Tadeusz Sznuk (tsznuk@mimuw.edu.pl)
  */
 public class VCMethodVisitor implements MethodVisitor {
-  //private final Logger logger;
+  private final Logger logger;
   private final Env env;
   private final Lookup lookup;
   
@@ -52,7 +56,7 @@ public class VCMethodVisitor implements MethodVisitor {
   public VCMethodVisitor(final Env env,
                          final Lookup lookup,
                          final ObjectType self) {
-    //logger = env.getLoggerFactory().getLogger(this.getClass());
+    logger = env.getLoggerFactory().getLogger(this.getClass());
     this.env = env;
     this.lookup = lookup;
     this.self = self;
@@ -105,7 +109,25 @@ public class VCMethodVisitor implements MethodVisitor {
   /** {@inheritDoc} */ 
   @Override
   public void endSpecs() {
-
+    final File buildDir = 
+      new File(env.getArgs().getOutputDir());
+    final File methodDir = 
+      new File(getVCDir());
+    methodDir.mkdirs();
+    try {    
+      final BcCoqFile bcf = new BcCoqFile(buildDir, methodDir);
+      bcf.doIt(method);
+    } catch (final FileNotFoundException e) {
+      logger.exception(e);
+    }
+  }
+  
+  // Get directory in which VCs should be placed.
+  private String getVCDir() {
+    return
+      env.getArgs().getOutputDir() + "/vcs/" + 
+      self.getClassName().replace('.', '/') + "/" + 
+      method.getName();
   }
   
 }
