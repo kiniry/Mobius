@@ -80,7 +80,9 @@ public class EscjavaChecker extends escjava.Main
 				filename = ((java.io.File)f).getAbsolutePath();
 			}
 			line = Location.toLineNumber(loc);
-			cpos = Location.toOffset(loc);
+			if (!Location.isWholeFileLoc(loc)) {
+			  cpos = Location.toOffset(loc);
+			}
 		}
 		IProject p = null;
 		try {
@@ -135,7 +137,12 @@ public class EscjavaChecker extends escjava.Main
 	private void reportHelper(int loc) {
 		String f = Location.toFile(loc).getHumanName();
 		try {
-			EscjavaMarker.addMarkerInfo(f +" " + Location.toLineNumber(loc) + " " + Location.toOffset(loc));
+		  if (Location.isWholeFileLoc(loc)) {
+		    EscjavaMarker.addMarkerInfo(f +" " + Location.toLineNumber(loc)); 
+		  }
+		  else {
+		    EscjavaMarker.addMarkerInfo(f +" " + Location.toLineNumber(loc) + " " + Location.toOffset(loc));
+		  }
 		} catch (CoreException e) {
 			Log.errorlog("An internal error occurred while trying to record additional information on a Marker",e);
 			// Log and ignore the error
