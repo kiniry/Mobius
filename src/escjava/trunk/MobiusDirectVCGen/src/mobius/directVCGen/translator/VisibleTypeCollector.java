@@ -3,6 +3,7 @@ package mobius.directVCGen.translator;
 import java.util.HashSet;
 import java.util.Set;
 
+import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
 import javafe.ast.Expr;
@@ -110,7 +111,7 @@ final class VisibleTypeCollector extends ABasicVisitor {
     }
 
     fAssign = false;
-    ((Expr)x.od.childAt(0)).accept(this, o);
+    ((ASTNode)x.od.childAt(0)).accept(this, o);
     return null;
   }
 
