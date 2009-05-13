@@ -11,7 +11,6 @@ package annot.attributes.method;
 import org.antlr.runtime.RecognitionException;
 
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCMethod;
 import annot.textio.BMLConfig;
 
@@ -23,8 +22,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public abstract class MethodAttribute extends BCPrintableAttribute
-                                      implements ClassAttribute {
+public abstract class MethodAttribute extends BCPrintableAttribute {
 
   /**
    * Replaces this annotation with the one parsed from the
@@ -36,10 +34,14 @@ public abstract class MethodAttribute extends BCPrintableAttribute
    */
   public abstract void parse(String code) throws RecognitionException;
 
+  /**
+   * This method prints annotation to a string.
+   *
+   * @param conf the configuration of the printing area, see {@link BMLConfig}
+   * @return string representation of the current annotation
+   */
   @Override
   protected abstract String printCode1(BMLConfig conf);
-
-  public abstract void remove();
 
   /**
    * Replaces attribute of this type in given method with
@@ -49,6 +51,10 @@ public abstract class MethodAttribute extends BCPrintableAttribute
    */
   public abstract void replace(BCMethod m);
 
+  /**
+   * @return a simple string representation of the current attribute,
+   *    used for debugging purposes
+   */
   @Override
   public abstract String toString();
 

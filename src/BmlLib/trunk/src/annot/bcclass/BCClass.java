@@ -293,7 +293,7 @@ public class BCClass extends BCClassPrinting {
         found = true;
       }
     }
-    if (!found) {
+    if (!found) { //TODO this may not work in case the constant pool is modified by hand
       //remove ghost
       getGhostFields().removeBMLField(afield);
       //remove model

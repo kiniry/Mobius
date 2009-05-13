@@ -3,7 +3,7 @@ package visitor;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.Type;
 
-import annot.attributes.method.BCAttributeMap;
+import annot.bcclass.BCAttributeMap;
 import b2bpl.bytecode.IOpCodes;
 import b2bpl.bytecode.InstructionFactory;
 import b2bpl.bytecode.JClassType;

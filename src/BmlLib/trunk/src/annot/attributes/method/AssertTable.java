@@ -10,10 +10,11 @@ package annot.attributes.method;
 
 import annot.attributes.AType;
 import annot.attributes.AttributeNames;
-import annot.attributes.BCAttributeTable;
+import annot.bcclass.BCAttributeMap;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.io.AttributeReader;
+import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
 
 /**
@@ -68,11 +69,23 @@ public class AssertTable extends BCAttributeTable {
   }
 
   /**
+   * Saves a single assert to an {@link AttributeWriter}.
+   *
+   * @param icannot the annotation to write to the writer to
+   * @param aw a stream to write the annotation to
+   */
+  @Override
+  protected void saveSingle(final InCodeAnnotation icannot,
+                            final AttributeWriter aw) {
+    final SingleAssert sa = (SingleAssert) icannot;
+    sa.getFormula().write(aw);
+  }
+
+  /**
    * @return attribute type of a single annotation.
    */
   @Override
   protected int singleType() {
     return AType.C_ASSERT;
   }
-
 }

@@ -9,8 +9,6 @@ import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.IBCAttribute;
-import annot.attributes.clazz.ClassAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;

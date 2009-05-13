@@ -12,23 +12,19 @@ import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.BCPrintableAttribute;
-import annot.attributes.IBCAttribute;
 import annot.bcclass.BCMethod;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 /**
  * This class represents single annotations attached to
  * instructionHandle of an bytecode instruction.
- * (on or more InCodeAttribute per one bytecode instruction)
+ * (on or more InCodeAnnotation per one bytecode instruction)
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public abstract class InCodeAttribute extends BCPrintableAttribute implements
-    Comparable < InCodeAttribute >  {
+public abstract class InCodeAnnotation extends BCPrintableAttribute implements
+    Comparable < InCodeAnnotation >  {
 
   /**
    * InstructionHandle of bytecode instruction that this
@@ -62,7 +58,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    * @param a_minor - minor number of annotation, responsible
    *     for annotation ordering within single instruction.
    */
-  public InCodeAttribute(final BCMethod m,
+  public InCodeAnnotation(final BCMethod m,
                          final InstructionHandle a_ih,
                          final int a_minor) {
     this.method = m;
@@ -83,12 +79,12 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *     for annotation ordering within single instruction.
    */
   @Deprecated
-  public InCodeAttribute(final BCMethod m, final int pc, final int mnr) {
+  public InCodeAnnotation(final BCMethod m, final int pc, final int mnr) {
     this(m, m.findAtPC(pc), mnr);
   }
 
   /**
-   * @return annotation's type id, from AType interface.
+   * @return annotation's type id, from {@link AType} interface.
    */
   protected abstract int aType();
 
@@ -102,7 +98,7 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
    *     a negative integer if <code>o</code> is below,
    *     and zero if <code>o</code> is the same annotation.
    */
-  public int compareTo(final InCodeAttribute o) {
+  public int compareTo(final InCodeAnnotation o) {
     final int pc = getPC();
     final int opc = o.getPC();
     if (pc == opc) {
@@ -154,17 +150,6 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
   }
 
   /**
-   * Loads annotation's content from AttributeReader.
-   *
-   * @param ar - stream to load from.
-   * @throws ReadAttributeException - if data left
-   *     in <code>ar</code> doesn't represent correct
-   *     annotation.
-   */
-  public abstract void load(AttributeReader ar)
-    throws ReadAttributeException;
-
-  /**
    * Replaces this annotation with the one parsed from
    * given String.
    *
@@ -196,24 +181,20 @@ public abstract class InCodeAttribute extends BCPrintableAttribute implements
 
   /**
    * Replaces this annotation with a given one, updating
-   * nessesery references in BCAttributeMap in BCMethod.
+   * necessary references in BCAttributeMap in BCMethod.
+   * This method is always called with {@link InCodeAnnotation}
+   * as the argument.
    *
-   * @param pa - annotation to replace with.
+   * @param pa annotation to replace with (in fact {@link InCodeAnnotation}
    */
-  public void replaceWith(final InCodeAttribute pa) {
-    if (pa.ih == null) {
-      pa.ih = this.ih;
-      pa.minor = this.minor;
+  public void replaceWith(final BCPrintableAttribute pa) {
+    final InCodeAnnotation ica = (InCodeAnnotation)pa;
+    if (ica.ih == null) {
+      ica.ih = this.ih;
+      ica.minor = this.minor;
     }
-    this.method.getAmap().replaceAttribute(this, pa);
+    this.method.getAmap().replaceAttribute(this, ica);
   }
-
-  /**
-   * Saves annotation content using AttributeWriter.
-   *
-   * @param aw - stream to save to.
-   */
-  public abstract void saveSingle(AttributeWriter aw);
 
   /**
    * Sets instructionHandle parameter.

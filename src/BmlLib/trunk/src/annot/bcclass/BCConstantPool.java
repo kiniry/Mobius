@@ -26,7 +26,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.generic.ConstantPoolGen;
 
-import annot.textio.AttributeNames;
+import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -385,7 +385,7 @@ public class BCConstantPool extends BCCConstantPrinting
     // TODO Auto-generated method stub
     return null;
   }
-  
+
   /**
    * Returns the number of constants in first constant pool.
    * @return the number of constants in first constant pool
@@ -393,7 +393,7 @@ public class BCConstantPool extends BCCConstantPrinting
   public int getInitialSize() {
     return initialSize;
   }
-  
+
   /**
    * Returns the number of all constants.
    * @return the number of all constants
@@ -452,7 +452,7 @@ public class BCConstantPool extends BCCConstantPrinting
             default: //do nothing
           }
         }
-      }
+      } //TODO the references in other structures must be updated (fields etc.)
       jc.getConstantPool().setConstantPool(consts);
     }
   }

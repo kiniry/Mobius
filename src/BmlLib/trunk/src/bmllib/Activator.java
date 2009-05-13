@@ -36,11 +36,12 @@ public class Activator extends Plugin {
     return plugin;
   }
 
-  /*
-   * (non-Javadoc)
+  /**
+   * Starts up this plug-in. It associates the {@link BundleContext}
+   * with the superclass and sets the default plug-in object.
    *
-   * @see org.eclipse.core.runtime.Plugins#start(org.osgi.
-   *                                             framework.BundleContext)
+   * @param context the context of the plug-in
+   * @throws Exception if this plug-in did not start up properly
    */
   @Override
   public void start(final BundleContext context) throws Exception {

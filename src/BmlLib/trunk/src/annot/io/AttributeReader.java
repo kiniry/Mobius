@@ -270,14 +270,14 @@ public class AttributeReader {
   }
 
   /**
-   * Reads an attribute count (2 bytes integer) from
+   * Reads the count (2 bytes integer) of particular kind of items from
    * <code>input</code> stream.
    *
-   * @return read attribute count.
+   * @return the count of items to be read
    * @throws ReadAttributeException - if there is not enough
-   *     bytes in the stream to read a attribute count.
+   *   bytes in the stream to read the item count
    */
-  public int readAttributesCount() throws ReadAttributeException {
+  public int readItemsCount() throws ReadAttributeException {
     return readShort();
   }
 
@@ -474,22 +474,30 @@ public class AttributeReader {
    */
   public ModifyExpression readModifyExpression() throws ReadAttributeException {
     final int b = readByte();
+    ModifyExpression res;
     switch (b) {
       case Code.MODIFIES_NOTHING:
-        return ModifyExpression.NOTHING_MODIF;
+        res = ModifyExpression.NOTHING_MODIF;
+        break;
       case Code.MODIFIES_EVERYTHING:
-        return ModifyExpression.EVERYTHING_MODIF;
+        res = ModifyExpression.EVERYTHING_MODIF;
+        break;
       case Code.MODIFIES_IDENT:
-        return new ModifiesIdent(this, b);
+        res = new ModifiesIdent(this, b);
+        break;
       case Code.MODIFIES_DOT:
-        return new ModifiesDot(this, b);
+        res = new ModifiesDot(this, b);
+        break;
       case Code.MODIFIES_ARRAY:
-        return new ModifiesArray(this, b);
+        res = new ModifiesArray(this, b);
+        break;
       case Code.MODIFIES_LOCAL_VARIABLE:
-        return new ModifiesLocalVar(this, b);
+        res = new ModifiesLocalVar(this, b);
+        break;
       default:
         throw new ReadAttributeException("invalid modify opcode: " + b);
     }
+    return res;
   }
 
   /**

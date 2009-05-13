@@ -11,45 +11,50 @@ package annot.attributes.method;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.AType;
-import annot.attributes.BCPrintableAttribute;
-import annot.attributes.IBCAttribute;
-import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.Predicate0Ar;
-import annot.bcexpression.modifies.ModifyList;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
 /**
- * This class represents single loop specification annotation
- * (on or more InCodeAttribute per one bytecode instruction)
+ * This class represents a single loop specification annotation.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class SingleLoopSpecification extends InCodeAttribute {
+public class SingleLoopSpecification extends InCodeAnnotation {
+
+
+  /**
+   * The position of the invariant clause in the array of all expressions
+   * returned by {@link #getAllExpressions()}.
+   */
+  private static final int INVARIANT_POS = 0;
+
+  /**
+   * The position of the variant clause in the array of all expressions
+   * returned by {@link #getAllExpressions()}.
+   */
+  private static final int VARIANT_POS = 1;
+
+  /**
+   * An alias for the maximal position in the array of all expressions
+   * returned by {@link #getAllExpressions()}.
+   */
+  private static final int MAX_POS = VARIANT_POS;
 
   /**
    * a loop variant.
    */
-  private ExpressionRoot < BCExpression >  decreases;
+  private ExpressionRoot < BCExpression >  variant;
 
   /**
    * a loop's invariant.
    */
   private ExpressionRoot < BCExpression >  invariant;
-
-  /**
-   * list of variables that can be affected by specified
-   * loop.
-   */
-  private ExpressionRoot < ModifyList >  modifies;
 
   /**
    * A standard constructor.
@@ -59,99 +64,105 @@ public class SingleLoopSpecification extends InCodeAttribute {
    *     that this annotation should be attached to,
    * @param minor - minor number of annotation, responsible
    *     for annotation ordering within single instruction,
-   * @param amodifies - list of variables that can
-   *     be affected by specified loop,
    * @param ainvariant - loop's invariant,
    * @param adecreases - loop's variant.
    */
   public SingleLoopSpecification(final BCMethod m, final InstructionHandle ih,
-                                 final int minor, final ModifyList amodifies,
+                                 final int minor,
                                  final BCExpression ainvariant,
                                  final BCExpression adecreases) {
     super(m, ih, minor);
-    ModifyList mlist = amodifies;
-    if (mlist == null) {
-      mlist = new ModifyList();
-    }
-    BCExpression inv = ainvariant;
-    if (inv == null) {
-      inv = new Predicate0Ar(true);
-    }
-    BCExpression decr = adecreases;
-    if (decr == null) {
-      decr = new NumberLiteral(1);
-    }
-    this.modifies = new ExpressionRoot < ModifyList > (this, mlist);
-    this.invariant = new ExpressionRoot < BCExpression > (this, inv);
-    this.decreases = new ExpressionRoot < BCExpression > (this, decr);
+    this.invariant = setNewExpression(ainvariant, new Predicate0Ar(true));
+    this.variant = setNewExpression(ainvariant, new NumberLiteral(1));
   }
 
-  @Override
+  /**
+   * Conditional method which returns the first argument in case it is non-null
+   * and the second one otherwise. In each case the expression is packed
+   * in an {@link ExpressionRoot} object.
+   *
+   * @param externalexpr the first candidate expression to return
+   * @param dexpr the second candidate expression to return
+   * @return the chosen expression packed in {@link ExpressionRoot}
+   */
+  private ExpressionRoot < BCExpression > setNewExpression(
+      final BCExpression externalexpr, final BCExpression dexpr) {
+    BCExpression expr = externalexpr;
+    if (expr == null) {
+      expr = dexpr;
+    }
+    return new ExpressionRoot < BCExpression > (this, expr);
+  }
+
+
+  /**
+   * @return annotation's type id, from {@link AType} interface.
+   */
   protected int aType() {
     return AType.C_LOOPSPEC;
   }
 
+  /**
+   * Returns all the expressions in this loop specification i.e.
+   * its modifies clause (at {@link #MODIFIES_POS}), its invariant
+   * (at {@link #INVARIANT_POS}), and its variant pattern (at
+   * {@link #VARIANT_POS}).
+   *
+   * @return the expressions of this loop specification
+   */
   @Override
   public ExpressionRoot[] getAllExpressions() {
-    final ExpressionRoot[] all = new ExpressionRoot[3];
-    all[0] = this.modifies;
-    all[1] = this.invariant;
-    all[2] = this.decreases;
+    final ExpressionRoot[] all = new ExpressionRoot[MAX_POS + 1];
+    all[INVARIANT_POS] = this.invariant;
+    all[VARIANT_POS] = this.variant;
     return all;
   }
 
-  @Override
-  public void load(final AttributeReader ar) throws ReadAttributeException {
-    this.modifies = new ExpressionRoot < ModifyList > (this,
-        new ModifyList(ar));
-    this.invariant = new ExpressionRoot < BCExpression > (this,
-        ar.readExpression());
-    this.decreases = new ExpressionRoot < BCExpression > (this,
-        ar.readFormula());
-  }
-
+  /**
+   * This method should simply print the annotation to a string.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return string representation of assertion.
+   */
   @Override
   protected String printCode1(final BMLConfig conf) {
     String code = DisplayStyle._loopspec;
     conf.incInd();
     code += conf.nl() +
-      this.modifies.printLine(conf, DisplayStyle._loop_modifies);
+      this.invariant.printLine(conf, DisplayStyle.LOOP_INV_KWD);
     code += conf.nl() +
-      this.invariant.printLine(conf, DisplayStyle._loop_invariant);
-    code += conf.nl() +
-      this.decreases.printLine(conf, DisplayStyle._loop_decreases);
+      this.variant.printLine(conf, DisplayStyle.DECREASES_KWD);
     conf.decInd();
     return code;
   }
 
-  @Override
-  public void saveSingle(final AttributeWriter aw) {
-    this.modifies.write(aw);
-    this.invariant.write(aw);
-    this.decreases.write(aw);
-  }
-
+  /**
+   * @return simple string representation of the current annotation;
+   *     for use in debugger only
+   */
   @Override
   public String toString() {
     return "loop spec. at (" + getPC() + ", " +
       (getMinor() == -1 ? "any" : getMinor() + "") + ")";
   }
 
-  public void save(final AttributeWriter aw) {
-    // TODO Auto-generated method stub
-    
+  /**
+   * The loop invariant clause for the current loop specification case.
+   *
+   * @return the invariant clause for the current loop specification
+   */
+  public BCExpression getInvariant() {
+    return invariant;
   }
 
-
-  public void replace(final BCClass bcc) {
-    // TODO Auto-generated method stub
-    
+  /**
+   * The loop variant (decreases) clause for the current loop specification
+   * case.
+   *
+   * @return the variant clause for the current loop specification
+   */
+  public BCExpression getVariant() {
+    return variant;
   }
-
-  public void replaceWith(final BCPrintableAttribute pa) {
-    // TODO Auto-generated method stub
-    
-  }
-
 
 }

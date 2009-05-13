@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+<!--
+/*
+ * @title       "BMLLib"
+ * @description "A library to represent, parse, prettyprint, load and save BML
+ *               specifications"
+ * @copyright   "(c) 2006-2009 University of Warsaw"
+ * @license     "All rights reserved. This program and the accompanying
+ *               materials are made available under the terms of the LGPL
+ *               licence see LICENCE.txt file"
+ */
+-->
+<title>
+BMLLib library. Package annot.attributes.method.
+</title>
+</head>
+<body bgcolor="white">
+<p>
+The package represents the BML attributes that are located in
+the method attribute areas. It provides procedures to
+load and save them to class files.
+</p>
+
+<p>
+All the BML attributes of a method are held in a single container class
+{@link annot.bcclass.BCAttributeMap}.
+</p>
+
+<p>
+We have two kinds of method attributes:
+</p>
+<ol>
+  <li>Table-like attributes: asserts, loop specifications. These
+  	  attributes are represented by subclasses of
+  	  the abstract class {@link BCAttributeTable}</li>
+  <li>Attributes for single clauses: method specification.
+      These attributes are represented by subclasses of
+      the abstract class {@link MethodAttribute}</li>
+</ol>
+
+<p>
+The table-like attributes are currently:
+</p>
+<ol>
+  <li>{@link AssertTable} - which gathers information on all
+      the asserts in the body of a method</li>
+  <li>{@link LoopSpecificationTable} - which gathers information on all
+      loop specifications</li>
+</ol>
+
+<p>
+The table-like attributes contain annotations associated with the
+instructions of the method. These annotations are represented by
+subclasses of {@link InCodeAnnotation}. The subclasses of the
+{@link InCodeAnnotation} are:
+</p>
+<ol>
+  <li>{@link SingleAssert} - which represents assert clauses</li>
+  <li>{@link SingleLoopSpecification} - which represents loop
+      specification sets that contain: invariant and variant</li> 
+</ol>
+
+<p>
+The attributes for single clauses are currently:
+</p>
+<ol>
+  <li>{@link MethodSpecification} - which gathers information on the
+       whole method header specification in a simplified view this
+       is a sequence of (generalised) requires-ensures pairs
+  </li>
+</ol>
+
+<p>
+A single method header with BML specifications is represented by
+{@link MethodSpecificationAttribute}. This attribute contains
+a sequence of specification cases (roughly speaking requires-ensures
+pairs) represented by objects of {@link SpecificationCase}.
+</p>
+
+<p>
+Each {@link SpecificationCase} object consists of (possibly null):
+</p>
+<ol>
+  <li>expression for precondition</li>
+  <li>expression for postcondition</li>
+  <li>modifies expression</li>
+  <li>a (possibly empty) sequence of exceptional conditions</li>
+</ol>
+
+<p>
+This package contains also an auxiliary class {@link SingleList} which
+is used to gather together all the asserts associated with a single
+instruction in the bytecode.
+</p>
+
+<!-- Put @see and @since tags down here. -->
+
+</body>
+</html>

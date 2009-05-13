@@ -31,7 +31,7 @@ import annot.attributes.clazz.ClassInvariant;
 import annot.attributes.clazz.GhostFieldsAttribute;
 import annot.attributes.clazz.InvariantsAttribute;
 import annot.attributes.field.BMLModifierAttribute;
-import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.InCodeAnnotation;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
@@ -460,7 +460,7 @@ public abstract class BCClassRepresentation {
         }
       }
       if (m.getAmap() != null) {
-        final InCodeAttribute[] at = m.getAmap().getAllAttributes(types);
+        final InCodeAnnotation[] at = m.getAmap().getAllAttributes(types);
         for (int j = 0; j  <  at.length; j++) {
           v.add(at[j]);
         }

@@ -88,7 +88,7 @@ public class ModifyList extends BCExpression {
   @Override
   protected void read(final AttributeReader ar, final int root)
     throws ReadAttributeException {
-    final int size = ar.readAttributesCount();
+    final int size = ar.readItemsCount();
     setSubExprCount(size);
     for (int i = 0; i  <  size; i++) {
       final ModifyExpression me = ar.readModifyExpression();

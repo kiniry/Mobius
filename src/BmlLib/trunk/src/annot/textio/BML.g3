@@ -658,7 +658,7 @@ dims :
 throws_clause :
   (THROWS typename EOL)+;
 
-bml_in_method_spec returns [InCodeAttribute ast] :
+bml_in_method_spec returns [InCodeAnnotation ast] :
       BML_ONE_LINE_START assrt=assertspec EOL
       {
          if ($assrt.ast != null) {
@@ -667,10 +667,10 @@ bml_in_method_spec returns [InCodeAttribute ast] :
          syso("one line assert with //@");
       }
    |  st=BML_START EOL*
-      attr=inCodeAttribute EOL* en=BML_END EOL
+      attr=inCodeAnnot EOL* en=BML_END EOL
       {
          $ast = $attr.ast;
-         syso("inCodeAttribute in /*@ @*/");
+         syso("inCodeAnnot in /*@ @*/");
       }
    | EOL
      {
@@ -724,7 +724,7 @@ instruction_line returns [InstructionHandle ih] :
 printableAttribute returns [BCPrintableAttribute ast] :
    (c=classAttribute {$ast = $c.ast;}
   | met=methodAttribute {$ast = $met.ast;}
-  | i=inCodeAttribute {$ast = $i.ast;})
+  | i=inCodeAnnot {$ast = $i.ast;})
   EOF
   ;
 
@@ -736,7 +736,7 @@ classAttribute returns [BCPrintableAttribute ast] :
 methodAttribute returns [MethodAttribute ast] :
   m=methodSpecification {$ast = $m.ast;};
 
-methodSpecification returns [MethodSpecification ast] :
+methodSpecification returns [MethodSpecificationAttribute ast] :
     emptyspec
       {
         syso("empty spec parsed");
@@ -745,7 +745,7 @@ methodSpecification returns [MethodSpecification ast] :
   | s=specCase 
       {
         syso("specCase parsed");
-        $ast = new MethodSpecification(m);
+        $ast = new MethodSpecificationAttribute(m);
         $ast.addCase($s.ast);
       };
   
@@ -809,13 +809,13 @@ specCase returns [SpecificationCase ast] :
         $ast = new SpecificationCase(m, prec, modif, postc, exc);
     };
 
-inCodeAttribute returns [InCodeAttribute ast] :
+inCodeAnnot returns [InCodeAnnotation ast] :
     assrt=assertspec
     {
        if ( $assrt.ast != null ) {
          $ast = $assrt.ast;
        }
-       syso("inCodeAttribute, assertspec");
+       syso("inCodeAnnotation, assertspec");
     }
   | LOOPSPEC EOL
     {
@@ -823,11 +823,10 @@ inCodeAttribute returns [InCodeAttribute ast] :
        inv = null;
        dec = null;
      }
-     (MODIFIES ml=modifyList {modif = $ml.ast;} EOL)?
      (LINVARIANT iv=formula {inv = $iv.ast;} EOL)?
      (LDECREASES de=expression {dec = $de.ast;} EOL)?
      {
-        $ast = new SingleLoopSpecification(m, null, -1, modif, inv, dec);
+        $ast = new SingleLoopSpecification(m, null, -1, inv, dec);
      };
 
 assertspec returns [SingleAssert ast]  :

@@ -109,15 +109,22 @@ public class DisplayStyle {
 
   public static final String _exsures = "exsures";
 
-  public static final String _loop_decreases = "decreases";
+  /**
+   * BML loop "decreases" keyword.
+   */
+  public static final String DECREASES_KWD = "decreases";
 
-  public static final String _loop_invariant = "loop_inv";
-
-  public static final String _loop_modifies = "modifies";
+  /**
+   * BML loop invariant ("loop_inv") keyword.
+   */
+  public static final String LOOP_INV_KWD = "loop_inv";
 
   public static final String _loopspec = "loop_specification";
 
-  public static final String _modifies = "modifies";
+  /**
+   * BML "modifies" keyword.
+   */
+  public static final String MODIFIES_KWD = "modifies";
 
   public static final String _postcondition = "ensures";
 

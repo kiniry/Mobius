@@ -11,27 +11,21 @@ package annot.attributes.method;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.AType;
-import annot.attributes.BCPrintableAttribute;
-import annot.attributes.IBCAttribute;
-import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
-import annot.io.AttributeReader;
-import annot.io.AttributeWriter;
-import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
 /**
  * This class represents single assert annotation
- * (on or more InCodeAttribute per one bytecode instruction).
+ * (on or more InCodeAnnotation per one bytecode instruction).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class SingleAssert extends InCodeAttribute {
+public class SingleAssert extends InCodeAnnotation {
 
   /**
    * The formula inside the current assert attribute.
@@ -112,13 +106,16 @@ public class SingleAssert extends InCodeAttribute {
   }
 
   /**
-   * @return annotation's type id, from AType interface.
+   * @return annotation's type id, from {@link AType} interface.
    */
   @Override
   protected int aType() {
     return AType.C_ASSERT;
   }
 
+  /**
+   * @return the only expression of this assert
+   */
   @Override
   public ExpressionRoot[] getAllExpressions() {
     final ExpressionRoot[] all = new ExpressionRoot[1];
@@ -134,20 +131,6 @@ public class SingleAssert extends InCodeAttribute {
   }
 
   /**
-   * Loads assertion content from AttributeReader.
-   *
-   * @param ar - stream to load from.
-   * @throws ReadAttributeException - if data left
-   *     in <code>ar</code> doesn't represent correct
-   *     assertion.
-   */
-  @Override
-  public void load(final AttributeReader ar) throws ReadAttributeException {
-    this.formula = new ExpressionRoot < AbstractFormula > (this,
-        ar.readFormula());
-  }
-
-  /**
    * This method should simply print annotation to a string.
    *
    * @param conf - see {@link BMLConfig}.
@@ -159,33 +142,13 @@ public class SingleAssert extends InCodeAttribute {
   }
 
   /**
-   * Saves assertion content using AttributeWriter.
-   *
-   * @param aw - stream to save to.
-   */
-  @Override
-  public void saveSingle(final AttributeWriter aw) {
-    this.formula.write(aw);
-  }
-
-  /**
-   * @return Simple string represenatations of attribute,
-   *     for use in debugger only.
+   * @return simple string representation of the current annotation;
+   *     for use in debugger only
    */
   @Override
   public String toString() {
     return "assert at (" + getPC() + ", " +
       (getMinor() == -1 ? "any" : "" + getMinor()) + ")";
-  }
-
-  public void replace(final BCClass bcc) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  public void replaceWith(final BCPrintableAttribute pa) {
-    // TODO Auto-generated method stub
-    
   }
 
 }

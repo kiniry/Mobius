@@ -15,9 +15,9 @@ import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
 import annot.attributes.clazz.ClassInvariant;
-import annot.attributes.method.BCAttributeMap;
-import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.InCodeAnnotation;
 import annot.attributes.method.SingleList;
+import annot.bcclass.BCAttributeMap;
 import annot.bcclass.BCClass;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
@@ -180,7 +180,7 @@ public class TranslatingVisitor {
   }
 
   public b2bpl.bytecode.bml.ast.BMLMethodSpecification visit(
-                                                             annot.attributes.method.MethodSpecification spec) {
+                                                             annot.attributes.method.MethodSpecificationAttribute spec) {
     if (spec == null)
       return null;
     Vector<annot.attributes.method.SpecificationCase> cases = spec
@@ -233,7 +233,7 @@ public class TranslatingVisitor {
                                                                  allAnnotations);
     ExpressionTranslator exprTranslator = new ExpressionTranslator();
     res.setInstruction(translator.translate(instruction));
-    for (InCodeAttribute annotation : annotations.getAll(AType.C_LOOPSPEC)) {
+    for (InCodeAnnotation annotation : annotations.getAll(AType.C_LOOPSPEC)) {
       ExpressionRoot[] expressions = annotation.getAllExpressions();
       BMLExpression invariant = exprTranslator.visit(expressions[1]);
       BMLExpression decreases = exprTranslator.visit(expressions[2]);
@@ -251,7 +251,7 @@ public class TranslatingVisitor {
                                                                             new BMLPredicate(
                                                                                              decreases))));
     }
-    for (InCodeAttribute annotation : annotations.getAll(AType.C_ASSERT)) {
+    for (InCodeAnnotation annotation : annotations.getAll(AType.C_ASSERT)) {
       ExpressionRoot formula = annotation.getAllExpressions()[0];
       BMLExpression translatedFormula = exprTranslator.visit(formula);
       res

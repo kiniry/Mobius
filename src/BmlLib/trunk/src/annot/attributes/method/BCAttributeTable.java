@@ -6,10 +6,10 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package annot.attributes;
+package annot.attributes.method;
 
-import annot.attributes.method.BCAttributeMap;
-import annot.attributes.method.InCodeAttribute;
+import annot.attributes.IBCAttribute;
+import annot.bcclass.BCAttributeMap;
 import annot.bcclass.BCMethod;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -40,7 +40,7 @@ public abstract class BCAttributeTable implements IBCAttribute {
   /**
    * The method in which the attribute resides.
    */
-  private final BCMethod method;
+  private final /*@ non_null@*/ BCMethod method;
 
   /**
    * and it's annotation collection.
@@ -95,11 +95,11 @@ public abstract class BCAttributeTable implements IBCAttribute {
    *     annotation.
    */
   public void load(final AttributeReader ar) throws ReadAttributeException {
-    final int n = ar.readAttributesCount();
+    final int n = ar.readItemsCount();
     for (int i = 0; i  <  n; i++) {
       final int pc = ar.readShort();
       final int minor = ar.readShort();
-      final InCodeAttribute ica = loadSingle(this.method, ar);
+      final InCodeAnnotation ica = loadSingle(this.method, ar);
       ica.setIh(this.method.findAtPC(pc));
       ica.setMinor(minor);
       if (ica.getIh() == null) {
@@ -121,7 +121,7 @@ public abstract class BCAttributeTable implements IBCAttribute {
    * @throws ReadAttributeException if data left in <code>ar</code> does not
    *   represent a correct attribute
    */
-  protected abstract InCodeAttribute loadSingle(BCMethod m, AttributeReader ar)
+  protected abstract InCodeAnnotation loadSingle(BCMethod m, AttributeReader ar)
     throws ReadAttributeException;
 
   /**
@@ -146,15 +146,30 @@ public abstract class BCAttributeTable implements IBCAttribute {
    */
   public void save(final AttributeWriter aw) {
     aw.writeAttributeCount(this.parent.getAttributeCount(singleType()));
-    final InCodeAttribute[] all = this.parent.getAllAttributes(singleType());
+    final InCodeAnnotation[] all = this.parent.getAllAttributes(singleType());
     for (int i = 0; i  <  all.length; i++) {
       aw.writeShort(all[i].getPC());
       aw.writeShort(all[i].getMinor());
-      all[i].saveSingle(aw);
+      saveSingle(all[i], aw);
     }
   }
 
   /**
+   * Saves a single annotation to a file in case many annotations of a
+   * particular kind can reside in a table or array.
+   *
+   * @param icannot method containing this annotation
+   * @param aw stream to write the annotation to
+   */
+  protected abstract void saveSingle(final InCodeAnnotation icannot,
+                                     final AttributeWriter aw);
+
+  /**
+   * Returns the attribute type for the given attribute. The type is used
+   * as a property to filter annotations of a particular kind in the
+   * {@link BCAttributeMap} which contains the annotations associated with
+   * the current method.
+   *
    * @return attribute type of single annotation.
    */
   protected abstract int singleType();

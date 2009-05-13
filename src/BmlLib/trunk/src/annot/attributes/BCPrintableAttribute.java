@@ -12,8 +12,8 @@ import org.antlr.runtime.RecognitionException;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.clazz.ClassAttribute;
-import annot.attributes.method.InCodeAttribute;
-import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.InCodeAnnotation;
+import annot.attributes.method.MethodSpecificationAttribute;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcclass.MLog;
@@ -81,10 +81,10 @@ public abstract class BCPrintableAttribute {
       if (m == null) {
         bcc.addAttribute((ClassAttribute)pa);
       } else {
-        if (pa instanceof MethodSpecification) {
-          m.setMspec((MethodSpecification) pa);
-        } else if (pa instanceof InCodeAttribute) {
-          m.addAttribute((InCodeAttribute) pa);
+        if (pa instanceof MethodSpecificationAttribute) {
+          m.setMspec((MethodSpecificationAttribute) pa);
+        } else if (pa instanceof InCodeAnnotation) {
+          m.addAttribute((InCodeAnnotation) pa);
         } else {
           throw new RuntimeException("(BCPrintableAttribute.parse) Unknown " +
                                      "attribute");
@@ -120,15 +120,15 @@ public abstract class BCPrintableAttribute {
   }
 
   /**
-   * This method should simply print annotation to a string.
+   * This method prints annotation to a string.
    *
-   * @param conf - see {@link BMLConfig}.
-   * @return string representation of annotation.
+   * @param conf the configuration of the printing area, see {@link BMLConfig}
+   * @return string representation of the current annotation
    */
   protected abstract String printCode1(BMLConfig conf);
 
   /**
-   * @return a simple string represenatation of the current attribute,
+   * @return a simple string representation of the current attribute,
    *    used for debugging purposes
    */
   @Override

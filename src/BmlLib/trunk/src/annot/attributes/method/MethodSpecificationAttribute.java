@@ -15,8 +15,6 @@ import org.antlr.runtime.RecognitionException;
 import annot.attributes.AttributeNames;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.IBCAttribute;
-import annot.attributes.clazz.ClassAttribute;
-import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
 import annot.io.AttributeReader;
@@ -31,8 +29,8 @@ import annot.textio.Parsing;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class MethodSpecification extends MethodAttribute implements
-    ClassAttribute, IBCAttribute {
+public class MethodSpecificationAttribute extends MethodAttribute implements
+    IBCAttribute {
 
   /**
    * Method this annotation specifies.
@@ -51,7 +49,7 @@ public class MethodSpecification extends MethodAttribute implements
    *
    * @param m - method this annotation specifies.
    */
-  public MethodSpecification(final BCMethod m) {
+  public MethodSpecificationAttribute(final BCMethod m) {
     this(m, new SpecificationCase[0]);
   }
 
@@ -61,7 +59,7 @@ public class MethodSpecification extends MethodAttribute implements
    * @param m - method this annotation specifies,
    * @param sc - and specification cases.
    */
-  public MethodSpecification(final BCMethod m,
+  public MethodSpecificationAttribute(final BCMethod m,
                              final SpecificationCase[] sc) {
     this.method = m;
     this.specCases = new Vector < SpecificationCase > ();
@@ -113,9 +111,9 @@ public class MethodSpecification extends MethodAttribute implements
       }
     }
     if (pos != n) {
-      throw new RuntimeException("Error in" +
-                                 " MethodSpecification.getAllExpressions(): " +
-                                 n + " != " + pos);
+      throw new RuntimeException(
+        "Error in MethodSpecificationAttribute.getAllExpressions(): " +
+        n + " != " + pos);
     }
     return all;
   }
@@ -193,7 +191,7 @@ public class MethodSpecification extends MethodAttribute implements
    * @param pa - annotation to replace with.
    */
   public void replaceWith(final BCPrintableAttribute pa) {
-    this.method.setMspec((MethodSpecification)pa);
+    this.method.setMspec((MethodSpecificationAttribute)pa);
   }
 
   /**
@@ -232,11 +230,6 @@ public class MethodSpecification extends MethodAttribute implements
   @Override
   public String toString() {
     return "method specification of " + this.method.toString();
-  }
-
-  public void replace(final BCClass bcc) {
-    // TODO Auto-generated method stub
-    
   }
 
 }

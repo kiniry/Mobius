@@ -32,7 +32,7 @@ public class SingleList implements Comparable < SingleList >  {
   /**
    * Collection containing the annotations.
    */
-  private final LinkedList < InCodeAttribute >  attributes;
+  private final LinkedList < InCodeAnnotation >  attributes;
 
   /**
    * Bytecode instruction that all annotations from this
@@ -58,7 +58,7 @@ public class SingleList implements Comparable < SingleList >  {
   public SingleList(final BCMethod amethod, final InstructionHandle anih) {
     this.method = amethod;
     this.ih = anih;
-    this.attributes = new LinkedList < InCodeAttribute > ();
+    this.attributes = new LinkedList < InCodeAnnotation > ();
   }
 
   /**
@@ -69,7 +69,7 @@ public class SingleList implements Comparable < SingleList >  {
    *
    * @param ica - annotation to be added.
    */
-  public void addAttribute(final InCodeAttribute ica) {
+  public void addAttribute(final InCodeAnnotation ica) {
     if (ica.getMinor() == -1) {
       if (this.attributes.size() == 0) {
         ica.setMinor(0);
@@ -84,10 +84,10 @@ public class SingleList implements Comparable < SingleList >  {
       }
     }
     final int m = ica.getMinor();
-    final Iterator < InCodeAttribute >  iter = this.attributes.iterator();
-    InCodeAttribute prev = null;
+    final Iterator < InCodeAnnotation >  iter = this.attributes.iterator();
+    InCodeAnnotation prev = null;
     while (iter.hasNext()) {
-      final InCodeAttribute a = iter.next();
+      final InCodeAnnotation a = iter.next();
       if (a.getMinor()  >= m) {
         prev = a;
       }
@@ -105,12 +105,12 @@ public class SingleList implements Comparable < SingleList >  {
    * after the load.
    */
   private void setAttributesSequenceNumbers() {
-    Iterator < InCodeAttribute > iter;
+    Iterator < InCodeAnnotation > iter;
     iter = this.attributes.iterator();
     int minor = -1;
     int inc = 0;
     while (iter.hasNext()) {
-      final InCodeAttribute a = iter.next();
+      final InCodeAnnotation a = iter.next();
       if (a.getMinor() + inc == minor) {
         inc++;
       }
@@ -143,10 +143,10 @@ public class SingleList implements Comparable < SingleList >  {
    *     given one, or null if no annotations with such
    *     minor number could be found.
    */
-  public InCodeAttribute get(final int minor) {
-    final Iterator < InCodeAttribute >  iter = this.attributes.iterator();
+  public InCodeAnnotation get(final int minor) {
+    final Iterator < InCodeAnnotation >  iter = this.attributes.iterator();
     while (iter.hasNext()) {
-      final InCodeAttribute ica = iter.next();
+      final InCodeAnnotation ica = iter.next();
       if (ica.getMinor() == minor) {
         return ica;
       }
@@ -164,17 +164,17 @@ public class SingleList implements Comparable < SingleList >  {
    *     given type (it's type & types  >  0), sorted by
    *     their's minor numbers.
    */
-  public InCodeAttribute[] getAll(final int types) {
+  public InCodeAnnotation[] getAll(final int types) {
     Collections.sort(this.attributes);
-    final InCodeAttribute[] all = this.attributes
-        .toArray(new InCodeAttribute[this.attributes.size()]);
+    final InCodeAnnotation[] all = this.attributes
+        .toArray(new InCodeAnnotation[this.attributes.size()]);
     int n = 0;
     for (int i = 0; i  <  all.length; i++) {
       if ((all[i].aType() & types)  >  0) {
         n++;
       }
     }
-    final InCodeAttribute[] filtered = new InCodeAttribute[n];
+    final InCodeAnnotation[] filtered = new InCodeAnnotation[n];
     int pos = 0;
     for (int i = 0; i  <  all.length; i++) {
       if ((all[i].aType() & types)  >  0) {
@@ -186,9 +186,16 @@ public class SingleList implements Comparable < SingleList >  {
     return filtered;
   }
 
+  /**
+   * Returns the number of attributes of the given kind in the current list of
+   * attributes. The kind is represented by the first parameter.
+   *
+   * @param types the bit mask with the types to calculate the count for
+   * @return the number of attributes of the given kind in the current list
+   */
   public int getAttributeCount(final int types) {
     int cnt = 0;
-    final Iterator < InCodeAttribute >  i = this.attributes.iterator();
+    final Iterator < InCodeAnnotation >  i = this.attributes.iterator();
     while (i.hasNext()) {
       if ((i.next().aType() & types)  >  0) {
         cnt++;
@@ -236,7 +243,7 @@ public class SingleList implements Comparable < SingleList >  {
    *     displayed before it for the same instruction).
    * @return <code>n</code>-th annotation from this list.
    */
-  public InCodeAttribute nth(final int n) {
+  public InCodeAnnotation nth(final int n) {
     return this.attributes.get(n);
   }
 
@@ -249,7 +256,7 @@ public class SingleList implements Comparable < SingleList >  {
    */
   public String printCode(final BMLConfig conf) {
     String code = "";
-    final Iterator < InCodeAttribute >  iter = this.attributes.iterator();
+    final Iterator < InCodeAnnotation >  iter = this.attributes.iterator();
     while (iter.hasNext()) {
       code += iter.next().printCode(conf);
     }
@@ -268,7 +275,7 @@ public class SingleList implements Comparable < SingleList >  {
    *
    * @param ica - annotation to be removed.
    */
-  public void removeAttribute(final InCodeAttribute ica) {
+  public void removeAttribute(final InCodeAnnotation ica) {
     this.attributes.remove(ica);
   }
 
@@ -280,7 +287,8 @@ public class SingleList implements Comparable < SingleList >  {
    * @param newa - annotation to be added
    *     at <code>olda</code>'s place.
    */
-  public void replace(final InCodeAttribute olda, final InCodeAttribute newa) {
+  public void replace(final InCodeAnnotation olda,
+                      final InCodeAnnotation newa) {
     if (!this.attributes.contains(olda)) {
       throw new RuntimeException("(SingleList.replace): attribute not found!");
     }
@@ -295,7 +303,7 @@ public class SingleList implements Comparable < SingleList >  {
    * @param ica - annotation to replace <code>n</code>-th
    *     annotation from list.
    */
-  public void setNth(final int n, final InCodeAttribute ica) {
+  public void setNth(final int n, final InCodeAnnotation ica) {
     if (n  <  this.attributes.size()) {
       nth(n).replaceWith(ica);
     } else {

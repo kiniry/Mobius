@@ -34,6 +34,11 @@ public final class AType {
   public static final int C_ASSERT = 1;
 
   /**
+   * The value for method specification.
+   */
+  public static final int C_METHODSPEC = 2;
+
+  /**
    * The value for a class invariant.
    */
   public static final int C_CLASSINVARIANT = 4;
@@ -42,11 +47,6 @@ public final class AType {
    * The value for the loop specification.
    */
   public static final int C_LOOPSPEC = 8;
-
-  /**
-   * The value for method specification.
-   */
-  public static final int C_METHODSPEC = 2;
 
   /**
    * An empty private constructor to forbid the creation of instances.

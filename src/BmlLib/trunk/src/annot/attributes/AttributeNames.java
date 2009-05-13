@@ -72,10 +72,10 @@ public final class AttributeNames {
   public static final String FIELD_MODIFIERS_ATTR = BML_DOMAIN +
       "FieldModifiers";
   /**
-   * The String with the name of the MethodSpecification attribute.
+   * The String with the name of the MethodSpecificationAttribute attribute.
    */
   public static final String METHOD_SPECIFICATION_ATTR = BML_DOMAIN +
-      "MethodSpecification";
+      "MethodSpecificationAttribute";
   /**
    * The String with the name of the ParameterTable attribute.
    */

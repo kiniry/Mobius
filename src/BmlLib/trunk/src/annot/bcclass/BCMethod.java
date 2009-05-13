@@ -23,9 +23,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AType;
-import annot.attributes.method.BCAttributeMap;
-import annot.attributes.method.InCodeAttribute;
-import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.InCodeAnnotation;
+import annot.attributes.method.MethodSpecificationAttribute;
 import annot.bcexpression.LocalVariable;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -76,7 +75,7 @@ public class BCMethod {
   /**
    * Method specification attribute.
    */
-  private MethodSpecification mspec;
+  private MethodSpecificationAttribute mspec;
 
   /**
    * Old local variable array.
@@ -142,7 +141,7 @@ public class BCMethod {
    */
   private void readBMLAttributes(final MethodGen m)
     throws ReadAttributeException {
-    this.mspec = new MethodSpecification(this);
+    this.mspec = new MethodSpecificationAttribute(this);
     final Attribute[] attrs = m.getAttributes();
     final AttributeReader ar = new AttributeReader(this);
     for (int i = 0; i  <  attrs.length; i++) {
@@ -218,7 +217,7 @@ public class BCMethod {
    *
    * @param ica - annotation to be added.
    */
-  public void addAttribute(final InCodeAttribute ica) {
+  public void addAttribute(final InCodeAnnotation ica) {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS,
                 "adding attribute: " + ica.toString());
     this.amap.addAttribute(ica, ica.getMinor());
@@ -352,7 +351,7 @@ public class BCMethod {
   /**
    * @return method specification
    */
-  public MethodSpecification getMspec() {
+  public MethodSpecificationAttribute getMspec() {
     return this.mspec;
   }
 
@@ -413,7 +412,7 @@ public class BCMethod {
         final String line = lines_in[l];
         final int pc = Integer.parseInt(line.substring(0, line.indexOf(":")));
         String annotLines = "";
-        final InCodeAttribute[] attrs = this.amap.getAllAt(findAtPC(pc))
+        final InCodeAnnotation[] attrs = this.amap.getAllAt(findAtPC(pc))
             .getAll(AType.C_ALL);
         for (int i = 0; i  <  attrs.length; i++) {
           annotLines += attrs[i].printCode(conf);
@@ -484,7 +483,7 @@ public class BCMethod {
    *
    * @param amspec - new method specification.
    */
-  public void setMspec(final MethodSpecification /*@ non_null @*/ amspec) {
+  public void setMspec(final MethodSpecificationAttribute /*@ non_null @*/ amspec) {
     this.mspec = amspec;
   }
 

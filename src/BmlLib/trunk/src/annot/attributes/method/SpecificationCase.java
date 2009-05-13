@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
+import annot.bcexpression.Exsure;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.modifies.ModifyList;
@@ -30,12 +31,6 @@ import annot.textio.DisplayStyle;
  * @version a-01
  */
 public class SpecificationCase {
-
-  /**
-   * exception conditions vector. Each element describes
-   * on of exception throws by described method.
-   */
-  private Vector < Exsure >  excondition;
 
   /**
    * A method this specificationCase specifies.
@@ -58,6 +53,12 @@ public class SpecificationCase {
    * evaluates to true.
    */
   private ExpressionRoot < AbstractFormula >  precondition;
+
+  /**
+   * The exception conditions vector. Each element describes
+   * on of exception throws by described method.
+   */
+  private Vector < Exsure >  excondition;
 
   /**
    * Creates an empty specification case, with both
@@ -131,7 +132,7 @@ public class SpecificationCase {
     this.postcondition = new ExpressionRoot < AbstractFormula > (this, ar
         .readFormula());
     this.excondition = new Vector < Exsure > ();
-    final int count = ar.readAttributesCount();
+    final int count = ar.readItemsCount();
     for (int i = 0; i  <  count; i++) {
       final Exsure ex = new Exsure(ar);
       this.excondition.add(ex);
@@ -205,7 +206,7 @@ public class SpecificationCase {
     //conf.incInd();
     code += this.precondition.printLine(conf, DisplayStyle._requires);
     if (!this.modifies.getExpression().isEmpty()) {
-      code += this.modifies.printLine(conf, DisplayStyle._modifies);
+      code += this.modifies.printLine(conf, DisplayStyle.MODIFIES_KWD);
     }
     code += this.postcondition.printLine(conf, DisplayStyle._postcondition);
     if (this.excondition.size() == 1) {
@@ -243,21 +244,31 @@ public class SpecificationCase {
     }
   }
 
+  /**
+   * @return the exceptional return conditions for the method
+   */
   public Vector < Exsure > getExcondition() {
     return excondition;
   }
 
+  /**
+   * @return the modifies clause of the method
+   */
   public ExpressionRoot < ModifyList > getModifies() {
     return modifies;
   }
 
+  /**
+   * @return the normal return postcondition of the method
+   */
   public ExpressionRoot < AbstractFormula > getPostcondition() {
     return postcondition;
   }
 
+  /**
+   * @return the precondition of the method
+   */
   public ExpressionRoot < AbstractFormula > getPrecondition() {
     return precondition;
   }
-
-  
 }

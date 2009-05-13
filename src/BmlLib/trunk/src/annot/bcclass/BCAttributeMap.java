@@ -6,7 +6,7 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package annot.attributes.method;
+package annot.bcclass;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -16,9 +16,12 @@ import java.util.LinkedList;
 import org.apache.bcel.generic.InstructionHandle;
 
 import annot.attributes.AType;
-import annot.bcclass.BCMethod;
-import annot.bcclass.MLog;
-import annot.bcclass.MessageLog;
+import annot.attributes.method.AssertTable;
+import annot.attributes.method.InCodeAnnotation;
+import annot.attributes.method.LoopSpecificationTable;
+import annot.attributes.method.SingleAssert;
+import annot.attributes.method.SingleList;
+import annot.attributes.method.SingleLoopSpecification;
 
 /**
  * This class represents collection of all annotations inside
@@ -79,7 +82,7 @@ public class BCAttributeMap {
    *
    * @param ica - an attribute to be added.
    */
-  public void addAttribute(final InCodeAttribute ica) {
+  public void addAttribute(final InCodeAnnotation ica) {
     addAttribute(ica, -1);
   }
 
@@ -95,7 +98,7 @@ public class BCAttributeMap {
    *     with less or equal minor number than this
    *     parameter.
    */
-  public void addAttribute(final InCodeAttribute ica, final int minor) {
+  public void addAttribute(final InCodeAnnotation ica, final int minor) {
     if (ica.getIh() == null) {
       throw new RuntimeException("InstructionHandle not set");
     }
@@ -122,7 +125,7 @@ public class BCAttributeMap {
    * @return inserted annotation.
    */
   @Deprecated
-  public InCodeAttribute addAttribute(final int atype, final int pc,
+  public InCodeAnnotation addAttribute(final int atype, final int pc,
                                       final int minor) {
     switch (atype) {
       case AType.C_ASSERT:
@@ -132,7 +135,7 @@ public class BCAttributeMap {
         return sa;
       case AType.C_LOOPSPEC:
         final SingleLoopSpecification sls = new SingleLoopSpecification(
-          this.method, this.method.findAtPC(pc), minor, null, null, null);
+          this.method, this.method.findAtPC(pc), minor, null, null);
         addAttribute(sls, minor);
         return sls;
       default:
@@ -162,8 +165,9 @@ public class BCAttributeMap {
    * @param types - attribute types mask (from ATypes).
    * @return array of annotations matching given type mask.
    */
-  public InCodeAttribute[] getAllAttributes(final int types) {
-    final InCodeAttribute[] all = new InCodeAttribute[getAttributeCount(types)];
+  public InCodeAnnotation[] getAllAttributes(final int types) {
+    final InCodeAnnotation[] all =
+      new InCodeAnnotation[getAttributeCount(types)];
     final LinkedList < SingleList >  ll = new LinkedList < SingleList > ();
     final Iterator < SingleList >  iter1 = this.map.values().iterator();
     while (iter1.hasNext()) {
@@ -174,7 +178,7 @@ public class BCAttributeMap {
     int i = 0;
     while (iter.hasNext()) {
       final SingleList sl = iter.next();
-      final InCodeAttribute[] some = sl.getAll(types);
+      final InCodeAnnotation[] some = sl.getAll(types);
       for (int j = 0; j  <  some.length; j++) {
         all[i++] = some[j];
       }
@@ -246,7 +250,7 @@ public class BCAttributeMap {
    *
    * @param ica - annotation to be removed.
    */
-  public void removeAttribute(final InCodeAttribute ica) {
+  public void removeAttribute(final InCodeAnnotation ica) {
     if (!this.map.containsKey(ica.getIh())) {
       throw new RuntimeException("attribute not found!");
     }
@@ -264,8 +268,8 @@ public class BCAttributeMap {
    * @param newa - annotation to be inserted
    *     in <code>olda</code>'s place.
    */
-  public void replaceAttribute(final InCodeAttribute olda,
-                               final InCodeAttribute newa) {
+  public void replaceAttribute(final InCodeAnnotation olda,
+                               final InCodeAnnotation newa) {
     if (!this.map.containsKey(olda.getIh())) {
       throw new RuntimeException("attribute not found!");
     }

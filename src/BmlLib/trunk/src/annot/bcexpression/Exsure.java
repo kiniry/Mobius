@@ -6,10 +6,8 @@
  *               materials are made available under the terms of the LGPL
  *               licence see LICENCE.txt file"
  */
-package annot.attributes.method;
+package annot.bcexpression;
 
-import annot.bcexpression.BCExpression;
-import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.javatype.JavaType;

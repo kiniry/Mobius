@@ -11,7 +11,7 @@ import bmllib.utils.BMLChangeException;
 import annot.attributes.AType;
 import annot.attributes.BCPrintableAttribute;
 import annot.attributes.clazz.ClassInvariant;
-import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.MethodSpecificationAttribute;
 import annot.attributes.method.SingleAssert;
 import annot.attributes.method.SingleLoopSpecification;
 import annot.attributes.method.SpecificationCase;
@@ -145,7 +145,7 @@ public final class ManualTests {
       new SpecificationCase(m, new Predicate0Ar(true), null,
                             new Predicate0Ar(false), null)
     };
-    m.setMspec(new MethodSpecification(m, sc));
+    m.setMspec(new MethodSpecificationAttribute(m, sc));
     final SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
     m.getAmap().addAttribute(1, 5, 0);
     final SingleAssert sa = (SingleAssert) m.getAmap().addAttribute(1, 8, 2);
@@ -284,12 +284,12 @@ public final class ManualTests {
     final SingleAssert a3 = new SingleAssert(m2, 46, -1, f3);
     m2.addAttribute(a3);
     final SingleLoopSpecification sls1 = new SingleLoopSpecification(m2, m2
-        .findAtPC(52), -1, null, null, null);
+        .findAtPC(52), -1, null, null);
     m2.addAttribute(sls1);
     final AbstractFormula f4 = getSampleFormula(5, 3);
     final SingleAssert a4 = new SingleAssert(m2, 58, -1, f4);
     m2.addAttribute(a4);
-    final MethodSpecification ms = new MethodSpecification(m2);
+    final MethodSpecificationAttribute ms = new MethodSpecificationAttribute(m2);
     m2.setMspec(ms);
     final ClassInvariant civ = new ClassInvariant(bcc, true);
     bcc.addAttribute(civ);
@@ -316,7 +316,7 @@ public final class ManualTests {
       SpecificationCase[] specCase = new SpecificationCase[1];
       specCase[0] = new SpecificationCase(m, getSampleFormula(2 * i + 1, 0),
                                           null, null, null);
-      m.setMspec(new MethodSpecification(m, specCase));
+      m.setMspec(new MethodSpecificationAttribute(m, specCase));
       m.addAttribute(new SingleAssert(m, ihs[0], 0, getSampleFormula(2 * i + 2,
                                                                      0)));
       m.addAttribute(new SingleAssert(m, ihs[2], 0, getSampleFormula(2 * i + 2,
