@@ -391,5 +391,5 @@ Ltac arith :=
 	repeat rewrite Int.mul_prop;
 	repeat rewrite Int.add_prop;
 	repeat rewrite smod_prop;
-	repeat rewrite Int.const_prop...
+	repeat rewrite Int.const_prop.
 (* Axiom user : forall p: Prop, p. *)
