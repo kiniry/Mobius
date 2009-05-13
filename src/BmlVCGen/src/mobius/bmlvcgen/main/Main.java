@@ -73,7 +73,7 @@ public final class Main {
     System.out.println("   -s,--systempath" + 
                        "   Append system path to classpath.");
     System.out.println("   -b,--bicolano " + 
-                       "   Set bicolano directory.");
+                       "   Set path to bicolano JAR.");
     System.out.println("   -o,--output" + 
                        "   Set output directory.");
     System.out.println("   -h,--help" + 

@@ -1,5 +1,7 @@
 package mobius.bmlvcgen.main;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,6 +10,8 @@ import mobius.bmlvcgen.bml.ClassFile;
 import mobius.bmlvcgen.finder.ClassFinder;
 import mobius.bmlvcgen.finder.exceptions.FinderException;
 import mobius.bmlvcgen.logging.Logger;
+
+import mobius.directVCGen.bico.Unarchiver;
 
 /**
  * Class responsible for processing class files
@@ -30,6 +34,10 @@ public class BmlVCGen {
   private final Set<String> processed;
   // Object used to process class files.
   private ClassProcessor classProcessor;
+  // Path to bicolano jar.
+  private final String bicolano;
+  // Output directory/
+  private final String output;
   
   /**
    * Constructor.
@@ -41,6 +49,8 @@ public class BmlVCGen {
     classes = env.getArgs().getClassNames();
     processed = new HashSet<String>();
     classProcessor = new DefaultClassProcessor(env);
+    output = env.getArgs().getOutputDir();
+    bicolano = env.getArgs().getBicolanoJar();
   }
   
   /**
@@ -49,6 +59,7 @@ public class BmlVCGen {
   public void run() {
     int okCount = 0;
     int errCount = 0;
+    unpackBicolano();
     for (final String className : classes) {
       logger.info("Processing class: %1$s", className);
       switch (processClass(className)) {
@@ -100,6 +111,23 @@ public class BmlVCGen {
       return Result.ERROR;
     }
   }
+  
+  // Unpack biolano in output directory.
+  // No exceptions are thrown in case of
+  // failure (but the error is logged).
+  private void unpackBicolano() {
+    final Unarchiver arch;
+    logger.info("Unpacking bicolano from %s", 
+                bicolano);
+    try {
+      arch = new Unarchiver(new File(bicolano));
+      arch.inflat(new File(output));
+    } catch (final IOException e) {
+      logger.error("Unable to unpack bicolano");
+      logger.exception(e);
+    }
+  }
+  
   
   /**
    * Change object used to process classes.

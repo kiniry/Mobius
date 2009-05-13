@@ -21,7 +21,7 @@ public final class Args {
   private String classpath;
   private boolean addSystemPath;
   private String outputDir;
-  private String bicolanoDir;
+  private String bicolanoJar;
   private Collection<String> classNames;
   private boolean printHelp;
 
@@ -38,7 +38,7 @@ public final class Args {
                   System.getProperty("java.class.path", ""));
     addSystemPath = false;
     outputDir = "output";
-    bicolanoDir = ".";
+    bicolanoJar = "bicolano.jar";
     printHelp = false;
     classNames = new ArrayList<String>();
   }
@@ -69,7 +69,7 @@ public final class Args {
     if (addSystemPath) {
       logger.info("   System classpath used.");
     }
-    logger.info("   Bicolano directory: %1$s", bicolanoDir);
+    logger.info("   Bicolano directory: %1$s", bicolanoJar);
     logger.info("   Output directory: %1$s", outputDir);
     if (classNames.size() > 0) {
       logger.info("Classes to be processed:");
@@ -91,12 +91,12 @@ public final class Args {
   }
 
   /**
-   * Set path to bicolano directory.
-   * @param bicolanoDir Path to bicolano.
+   * Set path to bicolano jar.
+   * @param bicolanoJar Path to bicolano.
    */
   @CmdParam(shortName = 'b', longName = "bicolano")
-  public void setBicolanoDir(final String bicolanoDir) {
-    this.bicolanoDir = bicolanoDir;
+  public void setBicolanoJar(final String bicolanoJar) {
+    this.bicolanoJar = bicolanoJar;
   }
 
   /**
@@ -117,8 +117,7 @@ public final class Args {
   }
 
   /**
-   * Request append system path to specified
-   * classpath.
+   * Append system path to specified classpath.
    */
   @CmdParam(shortName = 's', longName = "systempath")
   public void requestAddSystemPath() {
@@ -134,11 +133,11 @@ public final class Args {
   }
 
   /**
-   * Get bicolano directory.
+   * Get path to bicolano jar.
    * @return Path to bicolano.
    */
-  public String getBicolanoDir() {
-    return bicolanoDir;
+  public String getBicolanoJar() {
+    return bicolanoJar;
   }
 
   /**

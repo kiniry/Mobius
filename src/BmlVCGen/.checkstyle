@@ -7,4 +7,7 @@
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
         <file-match-pattern match-pattern="tests" include-pattern="false"/>
     </fileset>
+    <filter name="FilesFromPackage" enabled="true">
+        <filter-data value="tests/src"/>
+    </filter>
 </fileset-config>

@@ -8,8 +8,6 @@ import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
 import escjava.sortedProver.NodeBuilder.Sort;
 
 import mobius.bmlvcgen.bml.MethodName;
@@ -17,16 +15,12 @@ import mobius.bmlvcgen.bml.MethodSpec;
 import mobius.bmlvcgen.bml.MethodVisitor;
 import mobius.bmlvcgen.bml.Method.AccessFlag;
 import mobius.bmlvcgen.bml.bmllib.BmllibMethodName;
-import mobius.bmlvcgen.bml.bmllib.BmllibType;
 import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.coq.BcCoqFile;
-import mobius.directVCGen.vcgen.struct.Post;
 
 /**
  * A visitor which calculates verification

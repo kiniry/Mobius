@@ -46,6 +46,7 @@ public class BmllibType implements Type {
     }
   }
   
+  // accept() for primitive types.
   private void processBasicType(final TypeVisitor v) {
     if (type == JavaBasicType.JavaInt) {
       v.visitInt();
@@ -58,11 +59,13 @@ public class BmllibType implements Type {
     }
   }
   
+  // accept() for array types.
   private void processArrayType(final TypeVisitor v) {
     final JavaArrayType arrayType = (JavaArrayType)type;
     v.visitArray(BmllibType.getInstance(arrayType.getSingleType()));
   }
   
+  // accept() for object types.
   private void processRefType(final TypeVisitor v) {
     // TODO: Format of bmllib reference type
     // is not specified...     

@@ -3,14 +3,12 @@ package mobius.bmlvcgen.vcgen;
 import org.apache.bcel.generic.ObjectType;
 
 import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
 import mobius.bmlvcgen.bml.PostExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 
 /**
