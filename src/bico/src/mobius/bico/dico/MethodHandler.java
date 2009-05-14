@@ -55,12 +55,18 @@ public class MethodHandler {
      * @param tret the type of its return value
      */
     private MethodType(final String name, final Type [] targs, final Type tret) {
+      String arguments = "T";
+      
       fArgsType = new ArrayList<Type>();
       for (Type t: targs) {
         fArgsType.add(t);
+        arguments += "_" + t.toString();
       }
+      arguments = Util.coqify(arguments);
       fReturnType = tret;
-      fName = name; // + "_" + targs.length;
+      //
+      
+      fName = name + arguments;
     }
     
     /**

@@ -93,14 +93,13 @@ class MethodExecutor extends ASignatureExecutor {
     final Method[] imeth = jc.getMethods();
     if (imeth.length == 0) {
       fOut.println(fImplemSpecif.getNoMethods());
-    } 
+    }
     else {
       String str2 = "(";
       for (int i = 0; i < imeth.length - 1; i++) {
         str2 += fImplemSpecif.methodsCons(getMethodHandler().getName(imeth[i]));
-       
       }
-      str2 += fImplemSpecif.methodsEnd(Util.coqify(imeth[imeth.length - 1].getName()));
+      str2 += fImplemSpecif.methodsEnd(getMethodHandler().getName(imeth[imeth.length - 1]));
       str2 += ")";
       fOut.println(str2);
     }
@@ -322,11 +321,12 @@ class MethodExecutor extends ASignatureExecutor {
       methodName++;
       final MethodGen mg = new MethodGen(meth, fClass.getClassName(), 
                                          fConstantPool);
-      getDico().addMethod(mg.getClassName() + "." + mg.getName(), 
+      getMethodHandler().addMethod(mg);
+      getDico().addMethod(getMethodHandler().getName(mg), 
                       getDico().getCoqPackageName(fClass.getJavaClass()),
                       getDico().getCoqClassName(fClass.getJavaClass()),
                       methodName);
-      getMethodHandler().addMethod(mg);
+
       final String name = getMethodHandler().getName(mg);
       doMethodSignature(meth, methodName, name);
     }
