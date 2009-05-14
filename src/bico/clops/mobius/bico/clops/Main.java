@@ -1,6 +1,8 @@
 package mobius.bico.clops;
 
+import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
+import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
 import java.io.IOException;
 
@@ -61,8 +63,10 @@ public final class Main {
    *            the program arguments
    * @throws IOException
    *             if the is an error while creating the files
+   * @throws InvalidOptionValueException 
+   * @throws AutomatonException 
    */
-  public static void main(final String[] args) throws IOException {
+  public static void main(final String[] args) throws IOException, AutomatonException, InvalidOptionValueException {
     System.out.println(WELCOME_MSG);
     Executor exec;
     
