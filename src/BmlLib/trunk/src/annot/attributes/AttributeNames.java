@@ -75,7 +75,7 @@ public final class AttributeNames {
    * The String with the name of the MethodSpecificationAttribute attribute.
    */
   public static final String METHOD_SPECIFICATION_ATTR = BML_DOMAIN +
-      "MethodSpecificationAttribute";
+      "MethodSpecification";
   /**
    * The String with the name of the ParameterTable attribute.
    */
