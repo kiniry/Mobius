@@ -25,12 +25,12 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
 import org.jmlspecs.openjml.JmlTree.JmlSpecificationCase;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
 
-import annot.attributes.method.Exsure;
-import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.MethodSpecificationAttribute;
 import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.Exsure;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.formula.Predicate0Ar;
@@ -231,9 +231,9 @@ public class SpecificationCaseRule extends TranslationRule < String, Symbols > {
     
     final BCMethod bcMethod = BytecodeUtil.findMethod(method, bcClazz);
     
-    MethodSpecification spec = bcMethod.getMspec();
+    MethodSpecificationAttribute spec = bcMethod.getMspec();
     if (spec == null) {
-      spec = new MethodSpecification(bcMethod);
+      spec = new MethodSpecificationAttribute(bcMethod);
       bcMethod.setMspec(spec);
     }
     new SpecificationCaseBuilder().scan(node.clauses, withParams);

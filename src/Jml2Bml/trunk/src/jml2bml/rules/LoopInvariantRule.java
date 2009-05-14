@@ -28,7 +28,7 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlStatementLoop;
 import org.jmlspecs.openjml.JmlTree.JmlWhileLoop;
 
-import annot.attributes.method.InCodeAttribute;
+import annot.attributes.method.InCodeAnnotation;
 import annot.attributes.method.SingleList;
 import annot.attributes.method.SingleLoopSpecification;
 import annot.bcclass.BCClass;
@@ -351,7 +351,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
     SingleLoopSpecification specs = null;
     //Find last SingleLoopSpecification annotation in this place
     for (int i = ihs.size() - 1; i >= 0; i--) {
-      final InCodeAttribute annot = ihs.get(i);
+      final InCodeAnnotation annot = ihs.get(i);
       if (annot instanceof SingleLoopSpecification) {
         specs = (SingleLoopSpecification) annot;
         break;
@@ -390,9 +390,9 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
     }
     final int count = addNew ? ihs.size() : specs.getMinor();
     final SingleLoopSpecification attr = addNew ?
-        new SingleLoopSpecification(bcMethod, ih, count, modifies, invariant,
+        new SingleLoopSpecification(bcMethod, ih, count, invariant,
                                     decreases) :
-        new SingleLoopSpecification(bcMethod, ih, count, oldModifies,
+        new SingleLoopSpecification(bcMethod, ih, count,
                                       oldInvariant, oldDecreases);
     if (addNew)
       bcMethod.addAttribute(attr);
