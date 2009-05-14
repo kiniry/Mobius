@@ -81,11 +81,9 @@
         <enable/>
       </assertions>
       <classpath refid="clops.path"/>
-      <arg value="-v"/>
       <arg value="-d"/>
+      <arg value="-t"/>
       <arg value="${clops-bico+-html-output}"/>
-      <arg value="-c"/>
-      <arg value="${clops-html-template}"/> 
       <arg value="-p"/>
       <arg value="${clops-bico+-pkg}"/>
       <arg value="-o"/>
@@ -101,10 +99,9 @@
         <enable/>
       </assertions>
       <classpath refid="clops.path"/>
-      <arg value="-v"/>
-      <arg value="-d=${clops-dvcg-html-output}"/>
-      <arg value="-c"/>
-      <arg value="${clops-html-template}"/> 
+      <arg value="-d"/>
+      <arg value="-t"/>
+      <arg value="${clops-dvcg-html-output}"/>
       <arg value="-p"/>
       <arg value="${clops-dvcg-pkg}"/>
       <arg value="-o"/>

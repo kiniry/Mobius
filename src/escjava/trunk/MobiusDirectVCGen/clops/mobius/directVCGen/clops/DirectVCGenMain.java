@@ -1,6 +1,8 @@
 package mobius.directVCGen.clops;
 
+import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
+import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +39,10 @@ public class DirectVCGenMain {
    * The main entry point.
    * @param args ESC/Java styles of args - most of them will be
    * ignored anyway -
+   * @throws InvalidOptionValueException 
+   * @throws AutomatonException 
    */
-  public static void main(final /*@ non_null @*/String[] args) {
+  public static void main(final /*@ non_null @*/String[] args) throws AutomatonException, InvalidOptionValueException {
     // the first argument is the output dir
     
     DirectVCGenParser parser;
