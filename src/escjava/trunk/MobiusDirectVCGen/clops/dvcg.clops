@@ -11,7 +11,7 @@ ARGS::
   FormalisationJar: {}:{file}:[between="", mustExist, canBeDir="false"]:
     "The path to a jar file containing the compiled Bicolano formalisation. 
      It usually have the name bicolano.jar."
-  Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z.]+)\0"]:
+  Clazz: {}:{string-list}:[suffixregexp="([a-zA-Z0-9.]+)\0"]:
     "The class to analyse. Its source must be in the working directory, or specify
      with the SourcePath option."
   ClassPath: {"-cp"}:{string}
