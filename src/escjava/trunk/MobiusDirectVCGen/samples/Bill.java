@@ -23,7 +23,7 @@ abstract class Bill {
    * @return <code>true</code> when the calculation is successful and
    * <code>false</code> when the calculation cannot be performed.
    */
-  //@ requires 0 < n;
+  //@ requires 0 <= n && n < 1000000 &&  sum < 1000000;
   //@ ensures sum <=  \old(sum) + n*(n+1)/2;
   public boolean produce_bill(final int n) {
     int i = 0;

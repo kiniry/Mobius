@@ -1,7 +1,70 @@
+Add LoadPath "Formalisation".
+Add LoadPath "Formalisation/Bicolano".
+Add LoadPath "Formalisation/Logic".
+Add LoadPath "Formalisation/Library".
+Add LoadPath "Formalisation/Library/Map".
+
+Add LoadPath "classes".
+
+Require Import Bico_annotations.
+Require Import defs_types.
+Import BicoAnnotations P Mwp.
+
+Open Local Scope Z_scope.
 
 
+Lemma a1: forall v, 0 <= v < 2147483648 -> v mod 4294967296 = v.
+Proof with auto; try omega.
+intros.
+assert ( v = 4294967296 * (v / 4294967296) + v mod 4294967296).
+apply Z_div_mod_eq; try omega...
 
-Ltac genclear H := generalize H; clear H.
+
+assert (h:= Z_div_ge 2147483648 v 4294967296).
+assert (2147483648 / 4294967296 >=  v  / 4294967296).
+apply h; omega...
+clear h.
+assert (2147483648 / 4294967296  = 0).
+compute...
+
+rewrite H2 in *.
+clear H2.
+assert (v / 4294967296 >= 0).
+apply Z_div_ge0...
+unfold Zge...
+Qed.
+
+Lemma a2: forall v,  -2147483648 <= v < 2147483648 -> v mod 4294967296 = v.
+Proof with auto; try omega.
+intros.
+destruct v...
+apply a1...
+Admitted.
+
+Lemma l: (forall v, - Int.half_base <= v < Int.half_base -> Int.smod v = v).
+Proof with auto; try omega.
+unfold Int.smod.
+unfold Int.base.
+unfold Int.half_base.
+simpl.
+unfold Zpower_pos.
+simpl.
+intros.
+assert (v mod 4294967296 = v).
+2:
+rewrite H0;
+destruct H;
+rewrite H1...
+destruct H.
+destruct v...
+apply a1...
+apply a2...
+Qed.
+
+Lemma modArith: (forall v, Int.range v  -> Int.smod v = v).
+apply l.
+Qed.
+
 
 
 
