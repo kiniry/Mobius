@@ -66,6 +66,7 @@ public class AnnotationExecutor extends Executor {
                             final List<String> classToTreat,
                             final IAnnotationGenerator generator) {
     this (outputDir, outputDir, classpath, classToTreat, generator);
+    Util.setMethodHandler(getMethodHandler());
   }
 
   /**
@@ -76,7 +77,6 @@ public class AnnotationExecutor extends Executor {
   @Override
   public void start() throws IOException, ClassNotFoundException {
     super.start(); // everything except the coffee
-    
     final NamingData data = getNamingData();
     // the coffee
     final File typ = new File(getBaseDir(), 

@@ -21,6 +21,7 @@ import javafe.ast.Stmt;
 import javafe.ast.TypeDecl;
 import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
+import mobius.bico.dico.MethodHandler;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.vcgen.DirectVCGen;
 import mobius.directVCGen.vcgen.struct.ExcpPost;
@@ -49,6 +50,10 @@ import escjava.tc.Types;
  */
 public final class Util extends mobius.bico.Util {
   
+  private static MethodHandler methHandler;
+
+
+
   /** */
   private Util() { }
   
@@ -65,7 +70,7 @@ public final class Util extends mobius.bico.Util {
 
     final String name = decl.getClassName().replace('.', '_');
 
-    return name + "Annotations." + Util.coqify(decl.getName());
+    return name + "Annotations." + methHandler.getName(decl);
     
   }
   
@@ -80,7 +85,7 @@ public final class Util extends mobius.bico.Util {
 
     final String name = decl.getClassName().replace('.', '_');
 
-    return name + "Signature." + Util.coqify(decl.getName());
+    return name + "Signature." + methHandler.getName(decl);
     
   }
   
@@ -95,7 +100,7 @@ public final class Util extends mobius.bico.Util {
 
     final String name = decl.getClassName().replace('.', '_');
 
-    return name + "." + Util.coqify(decl.getName());
+    return name + "." +  methHandler.getName(decl);
     
   }
 
@@ -748,6 +753,12 @@ public final class Util extends mobius.bico.Util {
       }
     }
     return res;
+  }
+
+
+
+  public static void setMethodHandler(MethodHandler methodHandler) {
+    methHandler = methodHandler;
   }
   
 }
