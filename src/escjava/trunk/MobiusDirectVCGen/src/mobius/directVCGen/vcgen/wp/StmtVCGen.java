@@ -513,12 +513,13 @@ public class StmtVCGen extends ExpressionVisitor {
     final VCEntry vce = (VCEntry) o;
     vce.setPost(treatAnnot(vce, getAnnotPost(x)));
     final VarInit init = x.decl.init;
-    //final QuantVariable qv = Expression.var(x.decl);
+    final QuantVariableRef qv = Expression.rvar(x.decl);
     if (init != null) {
-      final Term var = Expression.rvar(x.decl);
       // the init value replaces the quantification
-      final QuantVariableRef val = Expression.rvar(x.decl);
-      vce.setPost(new Post(val, Util.substVarWithVal(vce.getPost(), var, val)));
+      
+      
+      vce.setPost(new Post(qv, vce.getPost()));
+               //Util.substVarWithVal(vce.getPost(), var, val)));
       vce.setPost((Post)init.accept(this, vce));
       if (init instanceof ArrayInit) {
         // FIXME should add the array new too
@@ -527,7 +528,6 @@ public class StmtVCGen extends ExpressionVisitor {
 
     }
     else {
-      final QuantVariableRef qvr = Expression.rvar(x.decl);
       // the quantification is preemptive
       vce.setPost(new Post(vce.getPost().getRVar(), 
                            vce.getPost()));
@@ -535,7 +535,7 @@ public class StmtVCGen extends ExpressionVisitor {
       
     }
     // we must anyway declare it for every vc:
-    //addVarDecl(qv);
+    addVarDecl(qv.qvar);
     return treatAnnot(vce, getAnnotPre(x));
   }
 
@@ -549,12 +549,12 @@ public class StmtVCGen extends ExpressionVisitor {
   private void addVarDecl(final QuantVariable qv) {
     final List<Term> oldvcs = fVcs;
 
-    final QuantVariableRef qvr = Expression.rvar(qv);
+    //final QuantVariableRef qvr = Expression.rvar(qv);
     fVcs = new LinkedList<Term>();
     for (Term t: oldvcs) {
       // the quantification is preemptive
-      fVcs.add(t);
-      //fVcs.add(Logic.forall(qv, t));
+      //fVcs.add(t);
+      fVcs.add(Logic.forall(qv, t));
     }
 
   }
