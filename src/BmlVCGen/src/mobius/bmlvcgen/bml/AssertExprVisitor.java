@@ -26,5 +26,5 @@ public interface AssertExprVisitor
    * @param <Expr> Type of expressions.
    */
   <Expr extends Visitable<? super PreExprVisitor>>
-  void old(Expr expr);
+  void aold(Expr expr);
 }

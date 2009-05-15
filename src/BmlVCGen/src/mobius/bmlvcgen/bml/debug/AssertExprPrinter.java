@@ -43,7 +43,7 @@ public class AssertExprPrinter
   /** {@inheritDoc} */
   @Override
   public <Expr extends Visitable<? super PreExprVisitor>>
-  void old(final Expr expr) {
+  void aold(final Expr expr) {
     prePrinter.clear();
     expr.accept(prePrinter);
     append("\\old(");

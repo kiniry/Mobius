@@ -41,7 +41,7 @@ public class AssertExprTranslator
   /** {@inheritDoc} */
   @Override
   public <Expr extends Visitable<? super PreExprVisitor>> 
-  void old(final Expr expr) {
+  void aold(final Expr expr) {
     expr.accept(preTrans);
     setLastExpr(preTrans.getLastExpr());
     setLastType(preTrans.getLastType());
