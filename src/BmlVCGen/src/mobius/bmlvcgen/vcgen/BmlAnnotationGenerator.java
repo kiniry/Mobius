@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.util.Repository;
@@ -59,7 +60,9 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
     if (name != null) {
       return "lv_" + i + name;
     } else {
-      return "lv_" + i;
+      // WARNING: keep this consistent
+      // with BCEL's behaviour.
+      return "lv_" + i + "arg" + (i - 1);
     }
   }
   
@@ -99,10 +102,20 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
   public List<String> getArgumentsName(final MethodGen mg) {
     final List<String> result = new ArrayList<String>();
     int i = 0;
+    final LocalVariableGen[] locals = 
+      mg.getLocalVariables();
+    final int delta = mg.isStatic() ? 0 : 1;
+    
     for (final String arg : mg.getArgumentNames()) {
-      final String name = 
-        localVarName(i, arg,                   
+      final String name;
+      if (mg.isAbstract()) {
+        name = localVarName(i + delta, arg,                   
           BcelType.getInstance(mg.getArgumentType(i)));
+      } else {
+        name = localVarName(i + delta, 
+                            locals[i + delta].getName(),                   
+          BcelType.getInstance(mg.getArgumentType(i)));
+      }
       result.add(name);
       i = i + 1;
     }
