@@ -42,6 +42,7 @@ public class PostExprPrinter
   @Override
   public <Expr extends Visitable<? super PreExprVisitor>>
   void old(final Expr expr) {
+    //
     prePrinter.clear();
     expr.accept(prePrinter);
     append("\\old(");

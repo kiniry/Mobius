@@ -2,12 +2,16 @@ package mobius.bmlvcgen.bml.debug;
 
 import java.util.EnumSet;
 
+import mobius.bmlvcgen.bml.AssertExprVisitor;
+import mobius.bmlvcgen.bml.AssertType;
 import mobius.bmlvcgen.bml.MethodName;
 import mobius.bmlvcgen.bml.MethodSpec;
 import mobius.bmlvcgen.bml.MethodVisitor;
 import mobius.bmlvcgen.bml.Method.AccessFlag;
+import mobius.bmlvcgen.bml.types.TypePrinter;
 import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.util.StringUtil;
+import mobius.bmlvcgen.util.Visitable;
 
 /**
  * A method visitor which writes information
@@ -21,8 +25,12 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   private final MethodNamePrinter namePrinter;
   // Object used to log specification cases
   private final LoggingSpecVisitor specPrinter;
+  // Object used to convert assertions to strings.
+  private final AssertExprPrinter assertPrinter;
   // Builder used to construct output.
   private final StringBuilder builder;
+  // Object used to print types.
+  private final TypePrinter typePrinter;
   
   /**
    * Constructor.
@@ -33,6 +41,8 @@ public final class LoggingMethodVisitor implements MethodVisitor {
     namePrinter = new MethodNamePrinter();
     builder = new StringBuilder();
     specPrinter = new LoggingSpecVisitor(logger);
+    assertPrinter = new AssertExprPrinter(new PreExprPrinter());
+    typePrinter = new TypePrinter();
   }
 
   /** {@inheritDoc} */
@@ -55,7 +65,7 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   /** {@inheritDoc} */
   @Override
   public void beginSpecs() {
-    logger.debug(builder.toString());
+    // EMPTY
   }
   
   /** {@inheritDoc} */
@@ -67,7 +77,68 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   /** {@inheritDoc} */
   @Override
   public void endSpecs() {
-    
+    //
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public void beginAssertions() {
+    // 
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void visitAssertion(final int i, 
+      final AssertType type,
+      final Visitable<? super AssertExprVisitor> expr) {
+    expr.accept(assertPrinter);
+    switch (type) {
+      case POST:
+        logger.debug("Assertion after instruction %d: %s", i, 
+                     assertPrinter.getText());
+        break;
+      case PRE:
+        logger.debug("Assertion before instruction %d: %s", i, 
+                     assertPrinter.getText());
+        break;
+      default: 
+        assert (false); 
+        break;
+    }
+  }
+  
+  /** {@inheritDoc} */
+  @Override
+  public void endAssertions() {
+    //
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void beginLocals(final int maxLocals) {
+    // Print method name.
+    logger.debug(builder.toString());
+    logger.debug("LOCALS (%d)", maxLocals);    
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public void visitLocal(
+      final mobius.bmlvcgen.bml.LocalVariable var) {
+    var.getType().accept(typePrinter);
+    logger.debug("Local variable: %s, index %d, " + 
+                 "from %d to %d, type %s",
+                 var.getName(), var.getIndex(),
+                 var.getStart(), var.getEnd(), 
+                 typePrinter.getExternalName());
+  }
+  
+  /** {@inheritDoc} */
+  @Override
+  public void endLocals() {
+    logger.debug("END LOCALS");
+  }
+
+
 
 }

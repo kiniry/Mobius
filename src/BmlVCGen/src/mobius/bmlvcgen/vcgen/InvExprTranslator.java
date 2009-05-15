@@ -1,8 +1,8 @@
 package mobius.bmlvcgen.vcgen;
 
-import org.apache.bcel.generic.ObjectType;
-
 import mobius.bmlvcgen.bml.InvExprVisitor;
+
+import org.apache.bcel.generic.ObjectType;
 
 /**
  * Translator for invariant expressions.

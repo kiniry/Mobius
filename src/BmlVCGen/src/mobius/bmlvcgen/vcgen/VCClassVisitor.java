@@ -2,8 +2,6 @@ package mobius.bmlvcgen.vcgen;
 
 import java.util.EnumSet;
 
-import org.apache.bcel.generic.ObjectType;
-
 import mobius.bmlvcgen.bml.ClassVisitor;
 import mobius.bmlvcgen.bml.Field;
 import mobius.bmlvcgen.bml.InvExprVisitor;
@@ -13,6 +11,8 @@ import mobius.bmlvcgen.bml.ClassFile.Visibility;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.directVCGen.formula.Lookup;
+
+import org.apache.bcel.generic.ObjectType;
 
 /**
  * A class visitor which computes

@@ -1,12 +1,5 @@
 package mobius.bmlvcgen.vcgen;
 
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ObjectType;
-
-import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.Sort;
-
 import mobius.bmlvcgen.bml.MethodSpecVisitor;
 import mobius.bmlvcgen.bml.PostExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
@@ -18,6 +11,13 @@ import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.vcgen.struct.Post;
+
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
  * A visitor for method specifications.

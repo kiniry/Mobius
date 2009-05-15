@@ -1,18 +1,18 @@
 package mobius.bmlvcgen.vcgen;
 
-import org.apache.bcel.generic.ObjectType;
-
-import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.sortedProver.NodeBuilder.Sort;
-
 import mobius.bmlvcgen.bml.PostExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Type;
 
+import org.apache.bcel.generic.ObjectType;
+
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.NodeBuilder.Sort;
+
 /**
- * Translator for invariant expressions.
+ * Translator for postconditions.
  * @author Tadeusz Sznuk (tsznuk@mimuw.edu.pl)
  */
 public class PostExprTranslator 
@@ -56,7 +56,7 @@ public class PostExprTranslator
                   final String name, 
                   final mobius.bmlvcgen.bml.types.Type type) {
     final String varName = 
-      BmlAnnotationGenerator.localVarName(i, name, type);
+      BmlAnnotationGenerator.localVarName(i, name);
     final TypeConverter tc = getTypeConverter();
     type.accept(tc);
     final Sort sort = Type.getSort(tc.getType());

@@ -63,7 +63,6 @@ public interface ExprVisitor<V>
   <Expr extends Visitable<? super V>> 
   void getField(String field, Type type);
   
-  
   /**
    * Method call.
    * @param obj Object.

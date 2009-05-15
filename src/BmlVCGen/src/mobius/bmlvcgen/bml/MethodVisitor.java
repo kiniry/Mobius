@@ -3,6 +3,7 @@ package mobius.bmlvcgen.bml;
 import java.util.EnumSet;
 
 import mobius.bmlvcgen.bml.Method.AccessFlag;
+import mobius.bmlvcgen.util.Visitable;
 
 /**
  * Interface of objects used to visit method declarations.
@@ -22,6 +23,25 @@ public interface MethodVisitor {
   void visitName(MethodName name);
   
   /**
+   * Called before visiting local variables.
+   * @param maxLocals Max variable index.
+   */
+  void beginLocals(int maxLocals);
+  
+  /**
+   * Visit a local variable.
+   * @param var Variable description.
+   */
+  void visitLocal(LocalVariable var);
+  
+  /**
+   * Called after visiting local variables.
+   */
+  void endLocals();
+  
+  
+  
+  /**
    * Called before visiting specification cases.
    */
   void beginSpecs();
@@ -37,4 +57,25 @@ public interface MethodVisitor {
    */
   void endSpecs();
   
+  /**
+   * Called before visiting assertions.
+   */
+  void beginAssertions();
+  
+  /**
+   * Visit an assertion.
+   * @param i Instruction index.
+   * @param type Assertion type (pre or post).
+   * @param expr Assertion formula.
+   */
+  void visitAssertion(int i, 
+                      AssertType type,
+                      Visitable<? super AssertExprVisitor> expr);
+  
+  /**
+   * Called after visiting assertions.
+   */
+  void endAssertions();
+    
+  // TODO: Loop invariants.
 }

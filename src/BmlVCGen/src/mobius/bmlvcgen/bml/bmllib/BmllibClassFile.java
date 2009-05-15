@@ -11,8 +11,8 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 
 import annot.attributes.clazz.ClassInvariant;
-import annot.bcclass.BMLModifiersFlags;
 import annot.bcclass.BCClass;
+import annot.bcclass.BMLModifiersFlags;
 
 import com.sun.org.apache.xalan.internal.xsltc.compiler.Constants;
 

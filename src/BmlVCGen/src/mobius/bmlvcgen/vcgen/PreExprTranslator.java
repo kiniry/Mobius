@@ -1,13 +1,13 @@
 package mobius.bmlvcgen.vcgen;
 
+import mobius.bmlvcgen.bml.PreExprVisitor;
+import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Type;
+
 import org.apache.bcel.generic.ObjectType;
 
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.NodeBuilder.Sort;
-
-import mobius.bmlvcgen.bml.PreExprVisitor;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Type;
 
 /**
  * Translator for invariant expressions.
@@ -47,7 +47,7 @@ public class PreExprTranslator
                   final String name, 
                   final mobius.bmlvcgen.bml.types.Type type) {
     final String varName = 
-      BmlAnnotationGenerator.localVarName(i, name, type);
+      BmlAnnotationGenerator.localVarName(i, name);
     final TypeConverter tc = getTypeConverter();
     type.accept(tc);
     final Sort sort = Type.getSort(tc.getType());

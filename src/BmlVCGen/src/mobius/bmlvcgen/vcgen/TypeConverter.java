@@ -1,11 +1,11 @@
 package mobius.bmlvcgen.vcgen;
 
-import org.apache.bcel.generic.BasicType;
-import org.apache.bcel.generic.ArrayType;
-import org.apache.bcel.generic.ObjectType;
-
 import mobius.bmlvcgen.bml.types.ResultTypeVisitor;
 import mobius.bmlvcgen.bml.types.Type;
+
+import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ObjectType;
 
 /**
  * A type visitor which creates BCEL types.

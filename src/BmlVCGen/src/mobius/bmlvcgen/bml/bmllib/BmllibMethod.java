@@ -6,9 +6,10 @@ import mobius.bmlvcgen.bml.MethodVisitor;
 
 import org.apache.bcel.generic.MethodGen;
 
-import annot.attributes.method.MethodSpecification;
+import annot.attributes.method.MethodSpecificationAttribute;
 import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCMethod;
+import annot.bcexpression.LocalVariable;
 
 /**
  * Bmllib implementation of Method interface.
@@ -32,8 +33,15 @@ public class BmllibMethod implements Method {
     v.visitFlags(AccessFlag.fromMask(jm.getAccessFlags()));
     final MethodName name = BmllibMethodName.getInstance(jm);
     v.visitName(name);
+    processLocals(v);
+    processSpecs(v);
+  }
+
+  // Process specifications.
+  private void processSpecs(final MethodVisitor v) {
     v.beginSpecs();
-    final MethodSpecification specs = method.getMspec();
+    final MethodSpecificationAttribute specs = 
+      method.getMspec();
     if (specs != null) {                 // :-(
       for (final SpecificationCase scase : 
         specs.getSpecificationCases()) {
@@ -42,6 +50,32 @@ public class BmllibMethod implements Method {
         v.visitSpecification(new BmllibMethodSpec(scase));
       }
     }
-    v.endSpecs();
+    v.endSpecs();    
+  }
+  
+  // Process local variables.
+  private void processLocals(final MethodVisitor v) {
+    final int count = method.getLocalVariableCount();
+    v.beginLocals(count);
+    for (int i = 0; i < count; i++) {
+      final LocalVariable lv = 
+        method.getLocalVariable(false, i);
+      final BmllibType type = 
+        new BmllibType(lv.getType());
+      final int index = lv.getIndex();
+      if (lv.getBcelLvGen().getStart() != null) {
+        final int start = 
+          lv.getBcelLvGen().getStart().getPosition();
+        final int end = 
+          lv.getBcelLvGen().getEnd().getPosition();
+        final String name = lv.getName();
+        final mobius.bmlvcgen.bml.LocalVariable var =
+          new mobius.bmlvcgen.bml.LocalVariable(
+            name, index, start, end, type                        
+          );
+        v.visitLocal(var);
+      }
+    }
+    v.endLocals();    
   }
 }

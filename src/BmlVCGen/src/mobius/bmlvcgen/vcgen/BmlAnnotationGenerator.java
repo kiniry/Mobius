@@ -3,15 +3,7 @@ package mobius.bmlvcgen.vcgen;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.bcel.generic.ClassGen;
-import org.apache.bcel.generic.LocalVariableGen;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ObjectType;
-import org.apache.bcel.util.Repository;
-
 import mobius.bmlvcgen.bml.ClassFile;
-import mobius.bmlvcgen.bml.bmllib.BcelType;
-import mobius.bmlvcgen.bml.types.Type;
 import mobius.bmlvcgen.finder.ClassFinder;
 import mobius.bmlvcgen.finder.exceptions.FinderException;
 import mobius.bmlvcgen.logging.Logger;
@@ -19,6 +11,12 @@ import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
 import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.formula.Lookup;
+
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.LocalVariableGen;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.util.Repository;
 
 /**
  * Annotation generator which reads bml specifications
@@ -50,13 +48,11 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
    * Get variable name for function argument/local var.
    * @param i Local variable index.
    * @param name Suggested name.
-   * @param type Type.
    * @return Variable name.
    */
   public static String localVarName(
       final int i, 
-      final String name, 
-      final Type type) {
+      final String name) {
     if (name != null) {
       return "lv_" + i + name;
     } else {
@@ -100,6 +96,16 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
    */
   @Override
   public List<String> getArgumentsName(final MethodGen mg) {
+    return getArgumentNames(mg);
+  }
+  
+  /**
+   * Get argument names (which will be used in formulas
+   * to represent arguments).
+   * @param mg Method name and type.
+   * @return List of argument names.
+   */
+  public static List<String> getArgumentNames(final MethodGen mg) {
     final List<String> result = new ArrayList<String>();
     int i = 0;
     final LocalVariableGen[] locals = 
@@ -109,12 +115,10 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
     for (final String arg : mg.getArgumentNames()) {
       final String name;
       if (mg.isAbstract()) {
-        name = localVarName(i + delta, arg,                   
-          BcelType.getInstance(mg.getArgumentType(i)));
+        name = localVarName(i + delta, arg);
       } else {
         name = localVarName(i + delta, 
-                            locals[i + delta].getName(),                   
-          BcelType.getInstance(mg.getArgumentType(i)));
+                            locals[i + delta].getName());
       }
       result.add(name);
       i = i + 1;

@@ -10,7 +10,6 @@ import mobius.bmlvcgen.bml.ClassFile;
 import mobius.bmlvcgen.finder.ClassFinder;
 import mobius.bmlvcgen.finder.exceptions.FinderException;
 import mobius.bmlvcgen.logging.Logger;
-
 import mobius.directVCGen.bico.Unarchiver;
 
 /**

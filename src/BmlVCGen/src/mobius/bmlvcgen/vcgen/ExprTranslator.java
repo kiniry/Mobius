@@ -3,14 +3,6 @@ package mobius.bmlvcgen.vcgen;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.bcel.generic.ArrayType;
-import org.apache.bcel.generic.BasicType;
-import org.apache.bcel.generic.ObjectType;
-
-import escjava.sortedProver.Lifter.QuantVariable;
-import escjava.sortedProver.Lifter.QuantVariableRef;
-import escjava.sortedProver.Lifter.Term;
-import escjava.sortedProver.NodeBuilder.Sort;
 import mobius.bmlvcgen.bml.ExprVisitor;
 import mobius.bmlvcgen.bml.MethodName;
 import mobius.bmlvcgen.util.Visitable;
@@ -22,6 +14,15 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+
+import org.apache.bcel.generic.ArrayType;
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ObjectType;
+
+import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
  * Superclass of expression translators.

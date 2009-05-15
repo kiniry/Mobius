@@ -2,14 +2,13 @@ package mobius.bmlvcgen.vcgen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
-import org.apache.bcel.generic.BasicType;
-import org.apache.bcel.generic.MethodGen;
-import org.apache.bcel.generic.ObjectType;
-
-import escjava.sortedProver.NodeBuilder.Sort;
-
+import mobius.bmlvcgen.bml.AssertExprVisitor;
+import mobius.bmlvcgen.bml.AssertType;
+import mobius.bmlvcgen.bml.LocalVariable;
 import mobius.bmlvcgen.bml.MethodName;
 import mobius.bmlvcgen.bml.MethodSpec;
 import mobius.bmlvcgen.bml.MethodVisitor;
@@ -17,10 +16,27 @@ import mobius.bmlvcgen.bml.Method.AccessFlag;
 import mobius.bmlvcgen.bml.bmllib.BmllibMethodName;
 import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
+import mobius.bmlvcgen.util.Visitable;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
+import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.PositionHint;
+import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
+import mobius.directVCGen.formula.annotation.AAnnotation;
+import mobius.directVCGen.formula.annotation.AnnotationDecoration;
+import mobius.directVCGen.formula.annotation.Cut;
 import mobius.directVCGen.formula.coq.BcCoqFile;
+
+import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.generic.LocalVariableGen;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+
+import escjava.sortedProver.Lifter.QuantVariableRef;
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.Sort;
 
 /**
  * A visitor which calculates verification
@@ -41,6 +57,15 @@ public class VCMethodVisitor implements MethodVisitor {
   // Type of 'this' object.
   private final ObjectType self;
   
+  // Object used to translate assertions.
+  private final AssertExprTranslator assertTranslator;
+  
+  // Local variable information.
+  private VariableMap locals;
+  
+  // Assertion counter.
+  private int assertCount;
+  
   /**
    * Constructor.
    * @param env Environment.
@@ -54,6 +79,8 @@ public class VCMethodVisitor implements MethodVisitor {
     this.env = env;
     this.lookup = lookup;
     this.self = self;
+    assertTranslator = new AssertExprTranslator(self);
+    assertCount = 0;
   }
   
   /** {@inheritDoc} */
@@ -121,7 +148,135 @@ public class VCMethodVisitor implements MethodVisitor {
     return
       env.getArgs().getOutputDir() + "/vcs/" + 
       self.getClassName().replace('.', '/') + "/" + 
-      method.getName();
+      method.getName() + method.getSignature();
+  }
+
+  /** {@inheritDoc} */ 
+  @Override
+  public void beginAssertions() {
+    // TODO Auto-generated method stub
+    
+  }
+
+  /** {@inheritDoc} */ 
+  @Override
+  public void visitAssertion(final int i, 
+      final AssertType type,
+      final Visitable<? super AssertExprVisitor> expr) {
+    expr.accept(assertTranslator);
+    final InstructionHandle ih = 
+      method.getInstructionList().findHandle(i);
+    final PositionHint pos = new PositionHint(method, ih);
+    switch (type) {
+      case PRE:
+        addPreAssert(pos, assertTranslator.getLastExpr());
+        break;
+      case POST:
+        addPostAssert(pos, assertTranslator.getLastExpr());
+        break;
+      default: 
+        assert false;
+        break;
+    }
+  }
+  
+  // Add an assertion before an instruction.
+  private void addPreAssert(final PositionHint pos, 
+                            final Term formula) {
+    final List<AAnnotation> pre = 
+      AnnotationDecoration.inst.getAnnotPre(pos);
+    pre.add(new Cut("assert" + assertCount, 
+                    buildArgs(pos.getPostion()), 
+                    formula));
+    assertCount = assertCount + 1;
+    AnnotationDecoration.inst.setAnnotPre(pos, pre);
+    
+  }
+
+  // Add an assertion after an instruction.
+  private void addPostAssert(final PositionHint pos, 
+                             final Term formula) {
+    final List<AAnnotation> post = 
+      AnnotationDecoration.inst.getAnnotPost(pos);
+    post.add(new Cut("assert" + assertCount, 
+                     buildArgs(pos.getPostion()), 
+                     formula));
+    assertCount = assertCount + 1;
+    AnnotationDecoration.inst.setAnnotPost(pos, post);    
+  }
+  
+  // generate list of variables used by an assertion.
+  private List<QuantVariableRef> buildArgs(final int pc) {
+    final List<QuantVariableRef> result = 
+      new ArrayList<QuantVariableRef>();
+    final List<QuantVariableRef> args = getArgs();
+    final TypeConverter tc = new TypeConverter();
+    
+    // Add old arguments
+    for (final QuantVariableRef arg : args) {
+      result.add(Expression.old(arg));
+    }
+    // Add 'this'
+    result.add(Ref.varThis);
+    // Add current arguments.
+    result.addAll(args);
+    
+    // Add local variables.
+    for (final LocalVariable lv : locals.getLocals(pc)) {
+      lv.getType().accept(tc);
+      final Sort sort = Type.getSort(tc.getType());
+      final String name = 
+        BmlAnnotationGenerator.localVarName(lv.getIndex(), 
+                                            lv.getName());
+      result.add(Expression.rvar(name, sort));
+    }
+    return result;
+  }
+  
+  // Get argument list as list of variables.
+  private List<QuantVariableRef> getArgs() {
+    final List<QuantVariableRef> result = 
+      new ArrayList<QuantVariableRef>();
+    final LocalVariableGen[] loc = method.getLocalVariables();
+    final int argCount = method.getArgumentTypes().length;
+    final int delta = method.isStatic() ? 0 : 1;
+   
+    for (int i = 0; i < argCount; i++) {
+      final String name = loc[i + delta].getName();
+      final org.apache.bcel.generic.Type type = 
+        loc[i + delta].getType();
+      final Sort sort = Type.getSort(type);
+      
+      result.add(Expression.rvar(
+        BmlAnnotationGenerator.localVarName(i, name),
+        sort
+      ));
+    }
+    return result;
+  }
+  
+  /** {@inheritDoc} */ 
+  @Override
+  public void endAssertions() {
+    // EMPTY
+  }
+
+  /** {@inheritDoc} */ 
+  @Override
+  public void beginLocals(final int maxLocals) {
+    locals = new VariableMap(maxLocals);
+  }
+
+  /** {@inheritDoc} */ 
+  @Override
+  public void visitLocal(final LocalVariable var) {
+    locals.add(var);
+  }
+  
+  /** {@inheritDoc} */ 
+  @Override
+  public void endLocals() {
+    // EMPTY
   }
   
 }
