@@ -49,10 +49,9 @@ import escjava.tc.Types;
  * @author J. Charles (Julien.Charles@inria.fr)
  */
 public final class Util extends mobius.bico.Util {
-  
+  /** an instance of the method hanlder class. It is supposed to have 
+      been initialize by bico. */
   private static MethodHandler methHandler;
-
-
 
   /** */
   private Util() { }
@@ -165,6 +164,13 @@ public final class Util extends mobius.bico.Util {
     return min;
   }
 
+  /**
+   * Tries to get the line numbers corresponding to a specific
+   * instruction handler. 
+   * @param met
+   * @param ih
+   * @return
+   */
   public static LineNumberGen getLineNumbers(final MethodGen met, 
                                              final InstructionHandle ih) {
     LineNumberGen res = null;
@@ -180,6 +186,8 @@ public final class Util extends mobius.bico.Util {
     // TODO Auto-generated method stub
     return res;
   }
+  
+  
   /**
    * Return a list of line number gen corresponding at the
    * given instruction which starts at the given line on the 
@@ -756,8 +764,12 @@ public final class Util extends mobius.bico.Util {
   }
 
 
-
-  public static void setMethodHandler(MethodHandler methodHandler) {
+  /**
+   * Sets the instance of the current method handler.
+   * It is used to handle naming consistency.
+   * @param methodHandler the method handler to set as the current
+   */
+  public static void setMethodHandler(final MethodHandler methodHandler) {
     methHandler = methodHandler;
   }
   

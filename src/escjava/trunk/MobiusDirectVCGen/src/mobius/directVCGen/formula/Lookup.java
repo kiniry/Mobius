@@ -285,22 +285,22 @@ public final class Lookup {
 
   /**
    * Creates the arguments list of a method from its signature.
-   * @param rd the method to get the arguments from
+   * @param mg the method to get the arguments from
    * @return a list of variables
    */
-  public List<QuantVariableRef> mkArguments(final MethodGen rd) {
+  public List<QuantVariableRef> mkArguments(final MethodGen mg) {
     final List<QuantVariableRef> v = new Vector<QuantVariableRef>();
     
-    final org.apache.bcel.generic.Type [] args = rd.getArgumentTypes();
-    final List<String> names = fAnnotGen.getArgumentsName(rd);
+    final org.apache.bcel.generic.Type [] args = mg.getArgumentTypes();
+    final List<String> names = fAnnotGen.getArgumentsName(mg);
     if (names.size() != args.length) {
       // TODO: change to a logger class
       System.err.println("There is an inconsistency between the " +
-            "number of names and the number of variables for method " + rd + "!");
+            "number of names and the number of variables for method " + mg + "!");
     }
     v.add(Heap.var);
     
-    if (!rd.isStatic()) {
+    if (!mg.isStatic()) {
       v.add(Ref.varThis); 
     }
     
