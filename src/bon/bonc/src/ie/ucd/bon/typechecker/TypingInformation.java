@@ -174,17 +174,19 @@ public class TypingInformation {
   }
 
   public void addParent(BONType child, BONType parent, SourceLocation loc) {
-    if (child.hasGenerics()) {
-      problems.addProblem(new StaticTypeCannotHaveGenericsHere(loc, child.getNonGenericType(), " as the child in an inheritance relation."));
-    } else {
-      if (parent.getNonGenericType().equals(child.getNonGenericType())) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child.getFullString()));
+    if (child != null && parent != null) {
+      if (child.hasGenerics()) {
+        problems.addProblem(new StaticTypeCannotHaveGenericsHere(loc, child.getNonGenericType(), " as the child in an inheritance relation."));
       } else {
-        if (simpleClassInheritanceGraph.hasEdge(child.getFullString(), parent.getNonGenericType())) {
-          problems.addProblem(new DuplicateSuperclassWarning(loc, child.getFullString(), parent.getFullString()));
+        if (parent.getNonGenericType().equals(child.getNonGenericType())) {
+          problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child.getFullString()));
         } else {
-          classInheritanceGraph.addEdge(child.getFullString(), parent);
-          simpleClassInheritanceGraph.addEdge(child.getFullString(), parent.getNonGenericType());
+          if (simpleClassInheritanceGraph.hasEdge(child.getFullString(), parent.getNonGenericType())) {
+            problems.addProblem(new DuplicateSuperclassWarning(loc, child.getFullString(), parent.getFullString()));
+          } else {
+            classInheritanceGraph.addEdge(child.getFullString(), parent);
+            simpleClassInheritanceGraph.addEdge(child.getFullString(), parent.getNonGenericType());
+          }
         }
       }
     }
@@ -466,6 +468,6 @@ public class TypingInformation {
       informal.indexing(indexing);
     }
   }
-  
+
 }
 

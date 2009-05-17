@@ -193,3 +193,9 @@
 @Location { test25/ }
 @Input { deferred_feature_in_non_deferred_class.bon }
 @Output { < DeferredFeatureInNonDeferredClassError, #File:deferred_feature_in_non_deferred_class.bon, 7, 15, "X, Y", A > }
+
+@Test-name: "Eva's Zoo example."
+@Prog-args: {--informal}
+@Location { ./ }
+@Input { zoo_formal.bon }
+@Output { < SystemNotDefinedError > }
