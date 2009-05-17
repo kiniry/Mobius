@@ -8,8 +8,22 @@
  */
 package umbra.java.actions;
 
+import java.io.InputStream;
+
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jface.action.IAction;
@@ -19,13 +33,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionDelegate;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
+import annot.bcclass.BCClass;
+
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
+import umbra.editor.BytecodeDocumentProvider;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.DocumentSynchroniser;
+import umbra.lib.BMLParsing;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
@@ -38,6 +57,7 @@ import umbra.lib.UmbraSynchronisationException;
  * Java editor.
  *
  * @author Wojciech Wąs (ww209224@students.mimuw.edu.pl)
+ * @author Wojciech Tyczyński (wt237242@students.mimuw.edu.pl)
  * @version a-01
  */
 public class SynchrSBAction implements IEditorActionDelegate {
@@ -109,6 +129,24 @@ public class SynchrSBAction implements IEditorActionDelegate {
       final BytecodeDocument bDoc = ((BytecodeDocument)bcEditor.
                         getDocumentProvider().
                         getDocument(input));
+      System.out.println("bDoc = " + bDoc.toString());
+
+      /* wt237242@students.mimuw.edu.pl */
+      try {
+        bcEditor.setRelatedEditor(my_editor);
+        final BytecodeDocumentProvider bdp = 
+          (BytecodeDocumentProvider)bcEditor.getDocumentProvider();
+        final BytecodeDocument doc = (BytecodeDocument)bdp.getDocument(input);
+          // this doc is empty when there is no .btc
+          // file or contains the content of the file
+        final IPath cpath = FileNames.getClassFileFile(activef, my_editor).
+          getFullPath();
+        doc.getModel().initModTable();
+        bcEditor.refreshBytecode(cpath, doc, null, null);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
       synchronizeWithMessages(off, bDoc);
     } catch (PartInitException e) {
       e.printStackTrace();
