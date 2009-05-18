@@ -59,6 +59,7 @@ import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -321,7 +322,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
           .createFieldRef(isOld, fieldRefIndex, p));
     }
     //hardest case: we have to extend the constant pool.
-    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p, myContext);
+    JCFieldAccess t = (JCFieldAccess) node;
+    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p, t.sym);
+//    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p, myContext);
     fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
                                                                identifier, p);
     if (fieldRefIndex != -1) {
