@@ -57,6 +57,24 @@ public final class VariableMap {
     }
     return result;
   }
+
+  /**
+   * Get local variables declared before given program point.
+   * Variables returned are ordered by index.
+   * @param pc Program counter.
+   * @return List of variables.
+   */
+  public List<LocalVariable> getDeclaredLocals(final int pc) {
+    final List<LocalVariable> result = 
+      new ArrayList<LocalVariable>();
+    for (final LocalVariable lv : locals) {
+      if (lv.getStart() <= pc) {
+        result.add(lv);
+      }
+    }
+    Collections.sort(result, new IndexComparator());
+    return result;
+  }
   
   // Compare local variables by scope start.
   private static class LocalComparator 
@@ -71,6 +89,26 @@ public final class VariableMap {
       if (v1start < v2start) {
         return -1;
       } else if (v1start > v2start) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+  }
+  
+  // Compare local variables by index.
+  private static class IndexComparator 
+    implements Comparator<LocalVariable> {
+
+    /** {@inheritDoc} */
+    @Override
+    public int compare(final LocalVariable v1, 
+                       final LocalVariable v2) {
+      final int v1index = v1.getIndex();
+      final int v2index = v2.getIndex();
+      if (v1index < v2index) {
+        return -1;
+      } else if (v1index > v2index) {
         return 1;
       } else {
         return 0;

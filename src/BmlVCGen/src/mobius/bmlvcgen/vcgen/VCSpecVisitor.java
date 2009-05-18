@@ -14,7 +14,6 @@ import mobius.directVCGen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
-
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -48,7 +47,11 @@ public class VCSpecVisitor implements MethodSpecVisitor {
     logger = env.getLoggerFactory().getLogger(this.getClass());
     this.lookup = lookup;
     this.method = method;
-    resultVar = Expression.var(resultSort);
+    if (resultSort == null) {
+      resultVar = null;
+    } else {
+      resultVar = Expression.var(resultSort);
+    }
     preTranslator = new PreExprTranslator(self);
     postTranslator = new PostExprTranslator(
       self, 
@@ -63,10 +66,18 @@ public class VCSpecVisitor implements MethodSpecVisitor {
       final Visitable<? super PostExprVisitor> post) {
     post.accept(postTranslator);
     final Term pterm = postTranslator.getLastExpr();
-    final Post postcondition = new Post(
-      Expression.rvar(resultVar),
-      Logic.boolToPred(pterm)
-    );
+    final Post postcondition;
+    if (resultVar != null) {
+      postcondition = new Post(
+        Expression.rvar(resultVar),
+        Logic.boolToPred(pterm)
+      );
+    } else {
+      postcondition = new Post(
+        null,
+        Logic.boolToPred(pterm)
+      );      
+    }
     lookup.addNormalPostcondition(method, postcondition);
   }
 

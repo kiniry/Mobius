@@ -19,6 +19,7 @@ import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
 import mobius.directVCGen.formula.Expression;
+import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Ref;
@@ -103,7 +104,6 @@ public class VCMethodVisitor implements MethodVisitor {
     }
     if (name instanceof BmllibMethodName) {
       method = ((BmllibMethodName)name).getMethodGen();
-      
     } else {
       // Create a fake MethodGen? 
       // But will it work as dictionary key?
@@ -183,8 +183,11 @@ public class VCMethodVisitor implements MethodVisitor {
   // Add an assertion before an instruction.
   private void addPreAssert(final PositionHint pos, 
                             final Term formula) {
-    final List<AAnnotation> pre = 
+    List<AAnnotation> pre = 
       AnnotationDecoration.inst.getAnnotPre(pos);
+    if (pre == null) {
+      pre = new ArrayList<AAnnotation>();
+    }
     pre.add(new Cut("assert" + assertCount, 
                     buildArgs(pos.getPostion()), 
                     formula));
@@ -196,8 +199,11 @@ public class VCMethodVisitor implements MethodVisitor {
   // Add an assertion after an instruction.
   private void addPostAssert(final PositionHint pos, 
                              final Term formula) {
-    final List<AAnnotation> post = 
+    List<AAnnotation> post = 
       AnnotationDecoration.inst.getAnnotPost(pos);
+    if (post == null) {
+      post = new ArrayList<AAnnotation>();
+    }
     post.add(new Cut("assert" + assertCount, 
                      buildArgs(pos.getPostion()), 
                      formula));
@@ -211,18 +217,30 @@ public class VCMethodVisitor implements MethodVisitor {
       new ArrayList<QuantVariableRef>();
     final List<QuantVariableRef> args = getArgs();
     final TypeConverter tc = new TypeConverter();
+    final List<LocalVariable> loc = locals.getDeclaredLocals(pc);
     
+    // Add old heap.
+    result.add(Heap.varPre);
+    // Remove 'this' from local vars.
+    if (!method.isStatic()) {
+      loc.remove(0);
+    }
     // Add old arguments
     for (final QuantVariableRef arg : args) {
       result.add(Expression.old(arg));
+      loc.remove(0);
     }
+    // New heap.
+    result.add(Heap.var);
     // Add 'this'
-    result.add(Ref.varThis);
+    if (!method.isStatic()) {
+      result.add(Ref.varThis);
+    }
     // Add current arguments.
     result.addAll(args);
     
     // Add local variables.
-    for (final LocalVariable lv : locals.getLocals(pc)) {
+    for (final LocalVariable lv : loc) {
       lv.getType().accept(tc);
       final Sort sort = Type.getSort(tc.getType());
       final String name = 
@@ -248,7 +266,7 @@ public class VCMethodVisitor implements MethodVisitor {
       final Sort sort = Type.getSort(type);
       
       result.add(Expression.rvar(
-        BmlAnnotationGenerator.localVarName(i, name),
+        BmlAnnotationGenerator.localVarName(i + delta, name),
         sort
       ));
     }

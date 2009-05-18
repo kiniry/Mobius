@@ -84,6 +84,7 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
     try {
       clazz.accept(classVisitor);
     } catch (final TranslationException e) {
+      logger.exception(e);
       return false;
     }
     return true;

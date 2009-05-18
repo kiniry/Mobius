@@ -44,6 +44,8 @@ public class BmllibMethod implements Method {
 
   // Process specifications.
   private void processSpecs(final MethodVisitor v) {
+    boolean hasSpecs = false;
+    
     v.beginSpecs();
     final MethodSpecificationAttribute specs = 
       method.getMspec();
@@ -52,8 +54,12 @@ public class BmllibMethod implements Method {
         specs.getSpecificationCases()) {
         // ?????? ????? ????? ?????? ??????????? !
         // TODO: Exception conditions.
+        hasSpecs = true;
         v.visitSpecification(new BmllibMethodSpec(scase));
       }
+    }
+    if (!hasSpecs) {
+      v.visitSpecification(new DefaultSpec());
     }
     v.endSpecs();    
   }
@@ -94,7 +100,20 @@ public class BmllibMethod implements Method {
       final PreExprWrapper pre = new PreExprWrapper();
       final AssertExprWrapper w = new AssertExprWrapper(pre);
       // TODO: How do I know if this a pre or post assertion?
-      v.visitAssertion(pos, AssertType.POST, w.wrap(a.getFormula()));
+      v.visitAssertion(pos, AssertType.PRE, w.wrap(a.getFormula()));
     }
+//   Uncomment to debug assertions.
+//    if (!method.getBcelMethod().isAbstract()) {
+//      v.visitAssertion(0, AssertType.PRE, new FakeAssert());
+//    }
   }
+  
+//  private static final class FakeAssert implements Visitable<AssertExprVisitor> {
+//
+//    @Override
+//    public void accept(final AssertExprVisitor visitor) {
+//      visitor.boolConst(true);
+//    }
+//    
+//  }
 }
