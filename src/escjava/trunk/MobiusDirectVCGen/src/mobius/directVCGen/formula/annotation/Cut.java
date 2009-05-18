@@ -1,5 +1,6 @@
 package mobius.directVCGen.formula.annotation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -27,6 +28,40 @@ public class Cut extends AAnnotation {
       throw new NullPointerException();
     }
   }
+  
+  /**
+   * Construct an assertion around the given term.
+   * @param name the name of the annotation
+   * @param oldheap the name of the old heap variable used in the old cut
+   * @param oldvars the array of the old variables where each variable has its
+   * index corresponding to the index in the array
+   * @param heap the name of the heap variable used in the cut
+   * @param vars the array of the variables collected so far in the method
+   * where the index of the variable corresponds to the index in the array
+   * @param t the term which is the formula contained in 
+   * the cut
+   */
+  public Cut(final String name, 
+             final QuantVariableRef oldheap,
+             final QuantVariableRef [] oldvars,
+             final QuantVariableRef heap,
+             final QuantVariableRef [] vars,
+             final Term t) {
+    this(name, new ArrayList<QuantVariableRef> (), t);
+    final List<QuantVariableRef> l = getArgs();
+    l.add(oldheap);
+    for (QuantVariableRef qvr : oldvars) {
+      l.add(qvr);
+    }
+    l.add(heap);
+    for (QuantVariableRef qvr : vars) {
+      l.add(qvr);
+    }
+    if (t == null) {
+      throw new NullPointerException();
+    }
+  }
+
 
   /** {@inheritDoc} */
   @Override
