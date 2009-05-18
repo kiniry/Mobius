@@ -12,6 +12,7 @@ import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.Field;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
@@ -34,32 +35,6 @@ public final class ConstantPoolHelper {
   private ConstantPoolHelper() {
   }
 
-//  /**
-//   * Finds the type of <code>field</code> in class <code>className</code>.
-//   * @param className name of the class.
-//   * @param fieldName name of the field.
-//   * @return type of the field. If this field cannot be found in given class,
-//   * null will be returned.
-//   */
-//  private static String findFieldType(final Context context,
-//                                      final String className,
-//                                      final String fieldName) {
-//    try {
-//      final JavaClass jc = SyntheticRepository
-//          .getInstance(context.get(ClassPath.class)).loadClass(className);
-//      final Field[] fields = jc.getFields();
-//      for (int i = 0; i < fields.length; i++) {
-//        if (fields[i].getName().equals(fieldName)) {
-//          return fields[i].getSignature();
-//        }
-//      }
-//
-//    } catch (ClassNotFoundException e) {
-//      throw new Jml2BmlException("Class " + className + " not found.");
-//    }
-//    return null;
-//  }
-//
   /**
    * Extends the constant pool (of the class taken from symbols),
    * so that the fieldref <code>object.field</code> can be resolved.
@@ -90,40 +65,29 @@ public final class ConstantPoolHelper {
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
   }
 
-//  /**
-//   * Extends the constant pool (of the class taken from symbols),
-//   * so that the fieldref <code>object.field</code> can be resolved.
-//   * @param className - class of <code>object</code>
-//   * @param fieldName - name of <code>field</code>
-//   * @param symbols - symbol table (to find the current BCClass)
-//   */
-//  public static void extendConstantPool(final String className,
-//                                        final String fieldName,
-//                                        final Symbols symbols,
-//                                        final Context context) {
-//    final String trimmedClassName = className.substring(1, className
-//        .lastIndexOf(";"));
-//    final String fieldType = findFieldType(context, trimmedClassName, fieldName);
-//
-//    if (fieldType == null) {
-//      throw new Jml2BmlException("Field " + fieldName + " not found in class " +
-//                                 className + ".");
-//    }
-//    final BCClass clazz = symbols.findClass();
-//    final BCConstantPool cp = clazz.getCp();
-//    final int fieldTypeIndex = ConstantPoolHelper
-//        .tryInsert(cp, new ConstantUtf8(fieldType));
-//    final int fieldNameIndex = ConstantPoolHelper
-//        .tryInsert(cp, new ConstantUtf8(fieldName));
-//    final int classNameIndex = ConstantPoolHelper
-//        .tryInsert(cp, new ConstantUtf8(trimmedClassName));
-//    final int classIndex = ConstantPoolHelper
-//        .tryInsert(cp, new ConstantClass(classNameIndex));
-//    final int nameAndTypeIndex = ConstantPoolHelper
-//        .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
-//    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
-//  }
+  /**
+   * Finds the corresponding ConstantFieldRef for given className and
+   * field (for <code>object.field</code>).
+   * @param className - class name of the <code> object</code>
+   * @param field - <code> field </code>
+   * @param symbols - symbol table (to find the corresponding BCClass)
+   * @return the index in the constantPool, or -1, when no entry found.
+   */
+  public static int findFieldInConstantPool(String className, Field field,
+                                            Symbols symbols) {
+    final BCConstantPool cp = symbols.findClass().getCp();
+    
+    final String trimmedClassName = className.substring(1, className.lastIndexOf(";"));
+    
+    final int classNameIndex = cp.findConstant(trimmedClassName);
+    final int classIndex = getConstantClassForNameIndex(classNameIndex, cp);
+    
+    
+    final int nameAndTypeIndex = cp.findNATConstant(field.getNameIndex(), field.getSignatureIndex());
+    return getConstantFieldRefForClassAndNameAndType(classIndex, nameAndTypeIndex, cp);
+  }
 
+  
   /**
    * Finds the corresponding ConstantFieldRef for given className and
    * fieldName (for <code>object.field</code>).

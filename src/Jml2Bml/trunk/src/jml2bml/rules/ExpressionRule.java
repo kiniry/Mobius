@@ -60,6 +60,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -154,10 +155,11 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       return variable.getVariable();
     }
     if (variable.isField()) {
+      final JCIdent i = (JCIdent) node;
       //field access is handled in a different way:
       //(cannot be taken from the symbol table, we have to know,
       //whether it's old or not
-      return BytecodeUtil.createFieldRef(isOld, name, p);
+      return BytecodeUtil.createFieldRef(isOld, i.sym, p);
     }
     return null;
   };

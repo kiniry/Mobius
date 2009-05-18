@@ -17,6 +17,10 @@ import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
+import org.apache.bcel.Constants;
+import org.apache.bcel.classfile.Constant;
+import org.apache.bcel.classfile.ConstantInteger;
+import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.InstructionHandle;
@@ -28,11 +32,13 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
+import annot.bcexpression.NumberLiteral;
 import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
@@ -120,25 +126,28 @@ public final class BytecodeUtil {
    * It is assumed that the field exists in this class. In the other case
    * an exception will be thrown.
    * @param isOld - if the reference occurs in \old clause
-   * @param name - name of the field
+   * @param var - field variable
    * @param symbols - symbol table
    * @return FieldRef object.
    */
   public static BCExpression createFieldRef(final boolean isOld,
-                                            final String name,
+                                            final Symbol var,
                                             final Symbols symbols) {
     final BCClass clazz = symbols.findClass();
     String className = clazz.getJC().getClassName();
     className = "L" + className.replace('.', '/') + ";";
-    final int nameIndex = ConstantPoolHelper.findFieldInConstantPool(className,
-                                                                     name,
-                                                                     symbols);
-    if (nameIndex == -1) {
-      throw new Jml2BmlException("Field " + name +
-                                 " does not exist in given class.");
-    }
-    return new FieldRef(isOld, clazz.getCp(), nameIndex);
-
+    final Field field = findField(clazz, var.name.toString());
+    final ConstantValue constantValue = field.getConstantValue();
+    if (constantValue==null) {
+      return new FieldRef(isOld, clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, symbols));
+    } else {
+      final Constant constant = constantValue.getConstantPool().getConstant(constantValue.getConstantValueIndex());
+      if (constant instanceof ConstantInteger) {
+        ConstantInteger constantInt = (ConstantInteger) constant;
+        return new NumberLiteral(constantInt.getBytes());
+      }
+      throw new NotTranslatedRuntimeException("Not translated constant type: "+var+":"+constantValue);
+    }      
   }
 
   /**
