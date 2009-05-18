@@ -36,7 +36,9 @@ public class AnnotationClassExecutor extends ClassExecutor {
                                  final IAnnotationGenerator gen) throws FileNotFoundException {
     super(be, cg);
     fClass = cg;
-    gen.annotateClass(getRepository(), fClass);
+    if (!gen.annotateClass(getRepository(), fClass)) {
+    	throw new IllegalArgumentException("Generator failed.");
+    }
   }
   
  
