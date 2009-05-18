@@ -20,6 +20,7 @@ import mobius.bmlvcgen.util.Visitable;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.PositionHint;
 import mobius.directVCGen.formula.Ref;
@@ -190,7 +191,7 @@ public class VCMethodVisitor implements MethodVisitor {
     }
     pre.add(new Cut("assert" + assertCount, 
                     buildArgs(pos.getPostion()), 
-                    formula));
+                    Logic.boolToPred(formula)));
     assertCount = assertCount + 1;
     AnnotationDecoration.inst.setAnnotPre(pos, pre);
     
@@ -206,7 +207,7 @@ public class VCMethodVisitor implements MethodVisitor {
     }
     post.add(new Cut("assert" + assertCount, 
                      buildArgs(pos.getPostion()), 
-                     formula));
+                     Logic.boolToPred(formula)));
     assertCount = assertCount + 1;
     AnnotationDecoration.inst.setAnnotPost(pos, post);    
   }
