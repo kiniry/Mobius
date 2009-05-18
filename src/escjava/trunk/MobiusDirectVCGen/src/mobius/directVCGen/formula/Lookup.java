@@ -25,7 +25,7 @@ public final class Lookup {
   /** Defines whether 'null' can be returned or not. 
    *  If fFailSave is true, a default Term is returned
    *  instead of 'null' */
-  private static final boolean fFailSave = false;
+  private static final boolean fFailSave = true;
   
   /** an instance of the lookup object. */
   private static Lookup inst;
