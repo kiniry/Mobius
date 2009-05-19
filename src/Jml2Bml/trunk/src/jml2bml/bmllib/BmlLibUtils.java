@@ -212,9 +212,7 @@ public final class BmlLibUtils {
    * @param symbols symbol table
    * @return created field ref.
    */
-  public static FieldRef createFieldRef(final boolean isOld, final int index,
-                                        final Symbols symbols) {
-    final BCClass clazz = symbols.findClass();
+  public static FieldRef createFieldRef(final boolean isOld, final int index, final BCClass clazz) {
     return new FieldRef(isOld, clazz.getCp(), index);
   }
 

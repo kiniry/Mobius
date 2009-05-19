@@ -15,9 +15,7 @@ import java.util.Map;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
-import jml2bml.symbols.Symbols;
 
-import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantInteger;
 import org.apache.bcel.classfile.ConstantValue;
@@ -39,6 +37,8 @@ import com.sun.source.tree.LineMap;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
@@ -132,14 +132,13 @@ public final class BytecodeUtil {
    */
   public static BCExpression createFieldRef(final boolean isOld,
                                             final Symbol var,
-                                            final Symbols symbols) {
-    final BCClass clazz = symbols.findClass();
+                                            final BCClass clazz) {
     String className = clazz.getJC().getClassName();
     className = "L" + className.replace('.', '/') + ";";
     final Field field = findField(clazz, var.name.toString());
     final ConstantValue constantValue = field.getConstantValue();
     if (constantValue==null) {
-      return new FieldRef(isOld, clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, symbols));
+      return new FieldRef(isOld, clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, clazz));
     } else {
       final Constant constant = constantValue.getConstantPool().getConstant(constantValue.getConstantValueIndex());
       if (constant instanceof ConstantInteger) {
@@ -150,25 +149,25 @@ public final class BytecodeUtil {
     }      
   }
 
-  /**
-   * Creates BCClass object for class of given name.
-   * Inner classes are NOT supported
-   * @param name - class name.
-   * @param context - application context
-   * @return BCClass corresponding to given class name
-   */
-  public static BCClass createClass(final Name name, final Context context) {
-    //Really hacked!
-    final ClassFileLocation loc = context.get(ClassFileLocation.class);
-    final String qName = loc.getClassQualifiedName();
-    try {
-      return new BCClass(loc.getDirectoryName(), qName);
-    } catch (ClassNotFoundException e) {
-      throw new Jml2BmlException("Class " + qName + " not found.");
-    } catch (ReadAttributeException e) {
-      throw new Jml2BmlException("Error while loading class " + qName + ".");
-    }
-  }
+//  /**
+//   * Creates BCClass object for class of given name.
+//   * Inner classes are NOT supported
+//   * @param name - class name.
+//   * @param context - application context
+//   * @return BCClass corresponding to given class name
+//   */
+//  public static BCClass createClass(final Name name, final Context context) {
+//    //Really hacked!
+//    final ClassFileLocation loc = context.get(ClassFileLocation.class);
+//    final String qName = loc.getClassQualifiedName();
+//    try {
+//      return new BCClass(loc.getDirectoryName(), qName);
+//    } catch (ClassNotFoundException e) {
+//      throw new Jml2BmlException("Class " + qName + " not found.");
+//    } catch (ReadAttributeException e) {
+//      throw new Jml2BmlException("Error while loading class " + qName + ".");
+//    }
+//  }
 
   /**
    * Finds the line number for given node in given LineMap.

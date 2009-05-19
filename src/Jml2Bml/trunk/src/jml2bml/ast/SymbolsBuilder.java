@@ -3,6 +3,7 @@ package jml2bml.ast;
 import java.util.HashMap;
 import java.util.Map;
 
+import jml2bml.BCClassManager;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.exceptions.Jml2BmlException;
@@ -175,7 +176,7 @@ public class SymbolsBuilder extends
       final String type = JavaType.getJavaType(node.getType().toString())
           .toString();
 
-      ConstantPoolHelper.addGhostField(type, name, s);
+      ConstantPoolHelper.addGhostField(type, name, cl);
     } else if (isModal){
       throw new Jml2BmlException("Modal field not translated: " + node.getName());
     } else if (BytecodeUtil.findField(cl, node.getName().toString()) == null)
@@ -203,7 +204,8 @@ public class SymbolsBuilder extends
   @Override
   public Symbols visitJmlClassDecl(final JmlClassDecl node, final Symbols p) {
     final Symbols newSymbols = new Symbols(p);
-    newSymbols.setClass(BytecodeUtil.createClass(node.name, myContext));
+    BCClassManager manager = myContext.get(BCClassManager.class);
+    newSymbols.setClass(manager.getBCClass(node.sym.flatname.toString()));
     return newSymbols;
   }
 

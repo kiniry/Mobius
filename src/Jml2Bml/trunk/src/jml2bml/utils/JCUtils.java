@@ -9,7 +9,6 @@ package jml2bml.utils;
 import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
 
-import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.tree.JCTree;
 
 /**

@@ -75,35 +75,35 @@ public class Main {
   @Argument
   private java.util.List < String > arguments = new ArrayList < String >();
 
-  public void doMain(String[] args) throws IOException, CmdLineException,
-      ClassNotFoundException, ReadAttributeException, NotTranslatedException {
-    CmdLineParser parser = new CmdLineParser(this);
-    parser.parseArgument(args);
-    if (arguments.size() != 3)
-      throw new CmdLineException("Invalid argument number");
-    ClassFileLocation loc = new ClassFileLocation(arguments.get(0), arguments
-        .get(1));
-    if (out == null)
-      out = loc.getClassFilePath() + "-wyn";
-    compile(arguments.get(2), loc, out, "", null);
-  }
+//  public void doMain(String[] args) throws IOException, CmdLineException,
+//      ClassNotFoundException, ReadAttributeException, NotTranslatedException {
+//    CmdLineParser parser = new CmdLineParser(this);
+//    parser.parseArgument(args);
+//    if (arguments.size() != 3)
+//      throw new CmdLineException("Invalid argument number");
+//    ClassFileLocation loc = new ClassFileLocation(arguments.get(0), arguments
+//        .get(1));
+//    if (out == null)
+//      out = loc.getClassFilePath() + "-wyn";
+//    compile(arguments.get(2), loc, out, "", null);
+//  }
 
-  /**
-   * Main method of the Jml2Bml compiler. For given class and source,
-   * inserts into bytecode the translated Jml annotations from the source code.
-   * @param args <code>args[0]</code> directory containing compiled classes<br>
-   * <code>args[1]</code> class file name<br>
-   * <code>args[2]</code> source file (whole path)
-   * @throws ClassNotFoundException
-   * @throws ReadAttributeException
-   * @throws NotTranslatedException 
-   * @throws CmdLineException 
-   */
-  public static void main(final String[] args) throws ClassNotFoundException,
-      ReadAttributeException, IOException, CmdLineException,
-      NotTranslatedException {
-    new Main().doMain(args);
-  }
+//  /**
+//   * Main method of the Jml2Bml compiler. For given class and source,
+//   * inserts into bytecode the translated Jml annotations from the source code.
+//   * @param args <code>args[0]</code> directory containing compiled classes<br>
+//   * <code>args[1]</code> class file name<br>
+//   * <code>args[2]</code> source file (whole path)
+//   * @throws ClassNotFoundException
+//   * @throws ReadAttributeException
+//   * @throws NotTranslatedException 
+//   * @throws CmdLineException 
+//   */
+//  public static void main(final String[] args) throws ClassNotFoundException,
+//      ReadAttributeException, IOException, CmdLineException,
+//      NotTranslatedException {
+//    new Main().doMain(args);
+//  }
 
   /**
    * Main method of the Jml2Bml compiler. Compiles JML annotations from
@@ -121,17 +121,16 @@ public class Main {
    *   location
    */
   public void compile(final String sourceFile,
-                      final ClassFileLocation classLoc, final String out, 
+                      final String binLocationDir,
+                      final String outLocationDir,
                       final String classPath,
                       final PrintWriter printWriter)
       throws ClassNotFoundException, ReadAttributeException,
       NotTranslatedException, IOException {   
     final Context context = createContext(printWriter);
     context.put(ClassPath.class, new ClassPath(classPath));
-    context.put(ClassFileLocation.class, classLoc);
-    final BCClass clazz = new BCClass(classLoc.getDirectoryName(), classLoc
-        .getClassQualifiedName());
-    context.put(BCClass.class, clazz);
+    BCClassManager manager = new BCClassManager(binLocationDir, outLocationDir);
+    context.put(BCClassManager.class, manager);
 
     JavacFileManager fileManager = (JavacFileManager) context
         .get(JavaFileManager.class);
@@ -155,15 +154,15 @@ public class Main {
       log.info("------------- PRETTY PRINT ------------");
       new PrettyPrinter(System.out).prettyPrint(tree);
       log.info("LINE TABLES: ");
-      for (Method m : clazz.getJC().getMethods()) {
-        log.info(m.getName());
-        final LineNumberTable lnt = m.getLineNumberTable();
-        if (lnt != null) {
-          log.info(lnt.toString());
-        } else {
-          log.info("NO LINE NUMBER TABLE!!!");
-        }
-      }
+//      for (Method m : clazz.getJC().getMethods()) {
+//        log.info(m.getName());
+//        final LineNumberTable lnt = m.getLineNumberTable();
+//        if (lnt != null) {
+//          log.info(lnt.toString());
+//        } else {
+//          log.info("NO LINE NUMBER TABLE!!!");
+//        }
+//      }
       log.info("----------- END PRETTY PRINT ----------");
     }
     context.put(LineMap.class, tree.getLineMap());
@@ -175,15 +174,13 @@ public class Main {
     final Jml2BmlTranslator translator = TranslationManager
         .getTranslator(context);
     final Symbols syms = new Symbols();
-    syms.setClass(context.get(BCClass.class));
     try {
       tree.accept(translator, syms);
     } catch (NotTranslatedRuntimeException e) {
       throw new NotTranslatedException(e);
     }
-    clazz.saveToFile(out);
-    if (verbose)
-      log.info(clazz.printCode());
+    
+    manager.saveAll();
     System.out.println("Written to: " + out);
   }
 

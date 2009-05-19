@@ -61,10 +61,10 @@ public class Jml2BmlTranslator extends
           // try to apply the rule
           node.accept(rule, symbs);
         }
-        return v;
+        return symbs;
       }
     }
-    return v;
+    return symbs;
   }
 
   /**

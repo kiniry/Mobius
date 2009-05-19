@@ -45,9 +45,9 @@ public final class ConstantPoolHelper {
    */
   public static void extendConstantPool(final String className,
                                         final String fieldName,
-                                        final Symbols symbols, 
+                                        final BCClass clazz, 
                                         final Symbol symbol) {
-    final BCConstantPool cp = symbols.findClass().getCp();
+    final BCConstantPool cp = clazz.getCp();
     final String fieldType = TypeSignature.getSignature(symbol.type);
     final String trimmedClassName = className.substring(1, className
                                                         .lastIndexOf(";"));
@@ -73,9 +73,9 @@ public final class ConstantPoolHelper {
    * @param symbols - symbol table (to find the corresponding BCClass)
    * @return the index in the constantPool, or -1, when no entry found.
    */
-  public static int findFieldInConstantPool(String className, Field field,
-                                            Symbols symbols) {
-    final BCConstantPool cp = symbols.findClass().getCp();
+  public static int findFieldInConstantPool(final String className, final Field field,
+                                            final BCClass clazz) {
+    final BCConstantPool cp = clazz.getCp();
     
     final String trimmedClassName = className.substring(1, className.lastIndexOf(";"));
     
@@ -98,8 +98,7 @@ public final class ConstantPoolHelper {
    */
   public static int findFieldInConstantPool(final String className,
                                             final String fieldName,
-                                            final Symbols symbols) {
-    final BCClass clazz = symbols.findClass();
+                                            final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
     //a little bit hacked: the className is Lpackage/name;
     //we want only package/name
@@ -284,8 +283,7 @@ public final class ConstantPoolHelper {
   }
 
   public static void addGhostField(final String fieldType,
-                                   final String fieldName, final Symbols symbols) {
-    final BCClass clazz = symbols.findClass();
+                                   final String fieldName, final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
     final String className = clazz.getJC().getClassName().replace('.', '/');
     final int fieldTypeIndex = ConstantPoolHelper

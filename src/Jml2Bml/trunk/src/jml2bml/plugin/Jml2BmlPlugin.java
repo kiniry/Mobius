@@ -13,7 +13,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 import jml2bml.Main;
-import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedException;
 
@@ -106,17 +105,20 @@ public class Jml2BmlPlugin extends Plugin {
     return result.toString();
   }
   
+  private String getOutputLocation(final IJavaProject project) throws JavaModelException {
+    IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
+    IPath oloc = project.getOutputLocation();
+    IPath proot = project.getPath();
+    if (!oloc.equals(proot)) 
+      return wr.getFolder(oloc).getLocation().toOSString();
+    else
+      return project.getResource().getLocation().toOSString();
+  }
+  
   private String getProjectClassPath(final IJavaProject project) throws JavaModelException{
     IWorkspaceRoot wr = ResourcesPlugin.getWorkspace().getRoot();
     StringBuffer result = new StringBuffer();
-    IPath oloc = project.getOutputLocation();
-    IPath proot = project.getPath();
-    if (!oloc.equals(proot)) { 
-      //result.append(wr.getFolder(oloc).getLocation().toOSString());
-      result.append(wr.getFolder(oloc).getLocation().toOSString());
-    } else {
-      result.append(project.getResource().getLocation().toOSString());
-    }
+    result.append(getOutputLocation(project));
     
     for (IClasspathEntry entry: project.getRawClasspath()){
       switch (entry.getEntryKind()) {
@@ -135,9 +137,10 @@ public class Jml2BmlPlugin extends Plugin {
     return result.toString();
   }
 
-  public void compile(final IFile a_jfile, final IFile a_bfile, final IJavaProject project, OutputStream out)
-      throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException{
+  public void compile(final IFile a_jfile, final IJavaProject project, OutputStream out)
+      throws ClassNotFoundException, ReadAttributeException, IOException, jml2bml.plugin.NotTranslatedException, JavaModelException{
     PrintWriter writer = new PrintWriter(out);
+    final String outputLocation = getOutputLocation(project);
     
     String bundleClassPath;
     try {
@@ -159,18 +162,13 @@ public class Jml2BmlPlugin extends Plugin {
     }
     
     writer.println("PROJECT CLASSPATH:"+projectClassPath);
-    String bname = a_bfile.getName();
-    final IPath path = a_bfile.getLocation();
-    bname = bname.substring(0, bname.lastIndexOf("."));
-    final String bpath = path.removeLastSegments(1).toOSString();
-    final String sourceFile = a_jfile.getLocation().toOSString();
     String oldPath = System.getProperty("java.class.path");
     String oldCPath = System.getProperty("env.class.path");
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
       System.setProperty("env.class.path", projectClassPath+java.io.File.pathSeparator+bundleClassPath);
-      new Main().compile(sourceFile, new ClassFileLocation(bpath, bname), path.toOSString(), projectClassPath, writer);
+      new Main().compile(a_jfile.getLocation().toOSString(), outputLocation, outputLocation, projectClassPath, writer);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
     } catch (Jml2BmlException e2) {
