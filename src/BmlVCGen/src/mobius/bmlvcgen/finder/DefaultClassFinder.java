@@ -8,6 +8,7 @@ import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.util.StringUtil;
 
+import org.apache.bcel.util.Repository;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
 
@@ -64,6 +65,14 @@ public class DefaultClassFinder implements ClassFinder {
     result = new BmllibClassFile(bc);
     logClass(result);
     return result;
+  }
+  
+  /**
+   * Get BCEL repository.
+   * @return Repository.
+   */
+  public Repository getRepo() {
+    return repository;
   }
   
   // Log basic information from class file.

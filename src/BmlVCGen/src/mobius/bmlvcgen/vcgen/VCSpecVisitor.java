@@ -1,5 +1,8 @@
 package mobius.bmlvcgen.vcgen;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import mobius.bmlvcgen.bml.MethodSpecVisitor;
 import mobius.bmlvcgen.bml.PostExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
@@ -14,6 +17,8 @@ import mobius.directVCGen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.Type;
+
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
@@ -29,6 +34,7 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   private final QuantVariable resultVar;
   private final PreExprTranslator preTranslator;
   private final PostExprTranslator postTranslator;
+  private final Set<Type> visSet;
   private int counter;
   
   /**
@@ -57,6 +63,12 @@ public class VCSpecVisitor implements MethodSpecVisitor {
       self, 
       method.getReturnType(),
       resultVar);
+    visSet = new HashSet<Type>();
+    for (final String clsName : env.getArgs().getClassNames()) {
+      // TODO: Collect visible types?
+      final Type type = Type.getType("L" + clsName.replace('.', '/') + ";");
+      visSet.add(type);
+    }
     counter = 0;
   }
 
@@ -65,19 +77,21 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   public void visitPostcondition(
       final Visitable<? super PostExprVisitor> post) {
     post.accept(postTranslator);
-    final Term pterm = postTranslator.getLastExpr();
+    final Term pterm = Logic.boolToPred(postTranslator.getLastExpr());
+    
     final Post postcondition;
     if (resultVar != null) {
       postcondition = new Post(
         Expression.rvar(resultVar),
-        Logic.boolToPred(pterm)
+        pterm
       );
     } else {
       postcondition = new Post(
         null,
-        Logic.boolToPred(pterm)
+        pterm
       );      
     }
+    
     lookup.addNormalPostcondition(method, postcondition);
   }
 
@@ -108,22 +122,34 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   public void visitSignals(
                final String exc, 
                final Visitable<? super PostExprVisitor> expr) {
-    // TODO: Implement.
+    // TODO: Implement signals.
   }
   
   /**
    * Fill lookup with fake pre and postconditions
-   * if none were defined.
+   * if none were defined. Then add invariants to 
+   * pre and post conditions.
    */
   public void end() {
     if (counter == 0) {
       logger.debug("Adding default specification to method " + 
                    method.getName());
       lookup.addPrecondition(method, Logic.trueValue());
-      lookup.addNormalPostcondition(
-          method, 
-          new Post(Expression.rvar(resultVar), 
-                   Logic.trueValue()));
+      if (Type.VOID.equals(method.getReturnType())) {
+        lookup.addNormalPostcondition(
+                          method, 
+                          new Post(Expression.rvar(resultVar), 
+                                   Logic.trueValue()));        
+      } else {
+        lookup.addNormalPostcondition(
+                            method, 
+                            new Post(null, Logic.trueValue()));
+      }
     }
+    lookup.addPrecondition(method, Logic.invPostPred(visSet));
+    lookup.addNormalPostcondition(
+      method, 
+      new Post(null, 
+               Logic.invPostPred(visSet)));
   }
 }

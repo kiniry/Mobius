@@ -237,7 +237,7 @@ public abstract class ExprTranslator<V>
   @Override
   public <Expr extends Visitable<? super V>> 
   void self() {
-    lastExpr = Ref.varThis;
+    lastExpr = Heap.valueToSort(Ref.varThis, Ref.sort);
     lastType = thisType;
   }
 
@@ -373,6 +373,7 @@ public abstract class ExprTranslator<V>
     } else {
       lastExpr = Bool.equals(left, right);
     }
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
@@ -385,6 +386,7 @@ public abstract class ExprTranslator<V>
     r.accept(getThis());
     final Term right = lastExpr;
     lastExpr = Bool.ge(left, right);
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
@@ -397,6 +399,7 @@ public abstract class ExprTranslator<V>
     r.accept(getThis());
     final Term right = lastExpr;
     lastExpr = Bool.gt(left, right);
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
@@ -409,6 +412,7 @@ public abstract class ExprTranslator<V>
     r.accept(getThis());
     final Term right = lastExpr;
     lastExpr = Logic.typeLE(left, right);
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
@@ -421,6 +425,7 @@ public abstract class ExprTranslator<V>
     r.accept(getThis());
     final Term right = lastExpr;
     lastExpr = Bool.le(left, right);
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
@@ -433,6 +438,7 @@ public abstract class ExprTranslator<V>
     r.accept(getThis());
     final Term right = lastExpr;
     lastExpr = Bool.lt(left, right);
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
 
@@ -446,6 +452,7 @@ public abstract class ExprTranslator<V>
     } else {
       lastExpr = Bool.not(lastExpr);
     }
+    lastExpr = Logic.boolToPred(lastExpr);
     lastType = BasicType.BOOLEAN;
   }
   
