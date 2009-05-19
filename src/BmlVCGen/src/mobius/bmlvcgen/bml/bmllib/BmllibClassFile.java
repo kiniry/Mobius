@@ -23,6 +23,8 @@ import com.sun.org.apache.xalan.internal.xsltc.compiler.Constants;
 public class BmllibClassFile implements ClassFile {
   // Bmllib handle.
   private final BCClass clazz;
+  // BCEL handle.
+  private final JavaClass jc;
   // Object used to wrap invariants.
   private final InvExprWrapper invWrapper;
   
@@ -33,15 +35,24 @@ public class BmllibClassFile implements ClassFile {
   public BmllibClassFile(final BCClass clazz) {
     this.clazz = clazz;
     invWrapper = new InvExprWrapper();
+    jc = clazz.getJC();
   }
 
   /** {@inheritDoc} */
   @Override
   public void accept(final ClassVisitor v) {
-    final JavaClass jc = clazz.getJC();
     v.visitVersion(jc.getMajor(), jc.getMinor());
     v.visitFlags(AccessFlag.fromMask(jc.getAccessFlags()));
     v.visitName(jc.getClassName());
+    processSuper(v);
+    processInterfaces(v);
+    processFields(v);
+    processMethods(v);
+    processInvariants(v);
+  }
+  
+  // Visit superclass name.
+  private void processSuper(final ClassVisitor v) {
     try {
       if (jc.getSuperClass() == null) {
         v.visitSuperName(null);
@@ -50,25 +61,35 @@ public class BmllibClassFile implements ClassFile {
       }
     } catch (final ClassNotFoundException e) {
       v.visitSuperName(null);
-    }
-
+    }    
+  }
+  
+  // Visit interfaces.
+  private void processInterfaces(final ClassVisitor v) {
     v.beginInterfaces();
     for (final String i : jc.getInterfaceNames()) {
       v.visitInterface(i);
     }
-    v.endInterfaces();
-    // TODO: How to parse field flags??
+    v.endInterfaces();    
+  }
+
+  // Visit fields.
+  private void processFields(final ClassVisitor v) {
+ // TODO: How to parse field flags??
     v.beginFields();
     for (final Field field : jc.getFields()) {
       v.visitField(new BmllibField(field));
     }
-    v.endFields();
+    v.endFields();    
+  }
+  
+  // Visit methods.
+  private void processMethods(final ClassVisitor v) {
     v.beginMethods();
     for (int i = 0; i < clazz.getMethodCount(); i++) {
       v.visitMethod(new BmllibMethod(clazz.getMethod(i))); 
     }
-    v.endMethods();
-    processInvariants(v);
+    v.endMethods();    
   }
   
   // Wrap all invariants and pass them to a visitor.
