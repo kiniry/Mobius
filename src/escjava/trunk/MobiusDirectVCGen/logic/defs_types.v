@@ -65,8 +65,7 @@ Coercion Ref: Location >-> value.
  *  Let's assume for the moment that all invariants are always
  *  True 
  *)
-Definition inv (heap:Heap.t) (val: value) (typ: type) : Prop := 
-  True.
+Variable inv:  Heap.t -> value -> type -> Prop.
 
 Definition assignPred (h: Heap.t) (h0: Heap.t) (t: value) (f: FieldSignature) : Prop :=
     Heap.get h (Heap.DynamicField (loc t) f) = Heap.get h0 (Heap.DynamicField (loc t) f)

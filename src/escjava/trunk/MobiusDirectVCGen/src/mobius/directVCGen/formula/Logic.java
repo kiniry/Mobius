@@ -298,6 +298,7 @@ public final class Logic {
 
   /**
    * Create an object representing a logical full implies.
+   * It's an equivalence.
    * @param f1 the first element of the full implies
    * @param f2 the second element of the full implies
    * @return a nicely created fullimplies

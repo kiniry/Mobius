@@ -3,15 +3,25 @@ package mobius.directVCGen.bico;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
+import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Heap;
+import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
+import mobius.directVCGen.formula.Ref;
+import mobius.directVCGen.formula.Translator;
+import mobius.directVCGen.formula.Type;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ObjectType;
 
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.STerm;
 
@@ -92,10 +102,18 @@ public class AnnotationClassExecutor extends ClassExecutor {
 
 
   private void doInvariant(CoqStream out) {
-    final Term t = Lookup.getInst().getInvariant(fClass.getJavaClass());
+    final Term term = Lookup.getInst().getInvariant(fClass.getJavaClass());
+    QuantVariableRef h = Heap.var;
+    QuantVariableRef t = Type.translateToType(
+                       new ObjectType(fClass.getJavaClass().getClassName()));
+    QuantVariableRef self = Ref.varThis;
+    List<QuantVariableRef> l = new ArrayList<QuantVariableRef>();
+    l.add(h); l.add(self); 
+    Term f = Logic.forall(l, Logic.fullImplies(Logic.inv(h, self, t), term));
+    
     out.println("Variable invariant :");
     out.incPrintln();
-    out.println(Formula.generateFormulas(t) + ".");
+    out.println(Formula.generateFormulas(f) + ".");
     out.decTab();
     out.println();
   }

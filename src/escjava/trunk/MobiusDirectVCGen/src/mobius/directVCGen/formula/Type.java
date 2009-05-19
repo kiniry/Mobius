@@ -146,8 +146,9 @@ public final class Type {
           catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            name = "(ReferenceType Unsupported)";
+            name = "(Unsupported)";
           }
+          name = "(ReferenceType " + name + ")";
         }
         else {
           name = "(ReferenceType Unsupported)";
