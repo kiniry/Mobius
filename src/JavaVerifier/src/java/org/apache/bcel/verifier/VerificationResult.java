@@ -55,12 +55,21 @@ public class VerificationResult {
     private int numeric;
     /** The detailed message. */
     private String detailMessage;
+    /** The method number for which the error occurred. This field has
+     * value -1 in case the verification failed outside any method. This is
+     * the default value the result is initialised with. */
+    private int methodNo;
+    /** The instruction number in the method for which the error occurred. */
+    private int lineNo;
+    
+    
 
 
     /** The usual constructor. */
     public VerificationResult(int status, String message) {
         numeric = status;
         detailMessage = message;
+        methodNo = -1;
     }
 
 
@@ -121,7 +130,7 @@ public class VerificationResult {
      *   verification failed outside of any method
      */
     public int getMethod() {
-      return 0;
+      return methodNo;
     }
     
     /**
@@ -134,5 +143,16 @@ public class VerificationResult {
      */
     public int getInstructionInMethod() {
       return 0;
+    }
+
+
+    /**
+     * Sets the method for which the verification failed. Returns -1 in case
+     * the verification failed outside any method.
+     *
+     * @param the number of the method for which the verification failed
+     */
+    public void setMethod(final int i) {
+      methodNo = i;
     }
 }

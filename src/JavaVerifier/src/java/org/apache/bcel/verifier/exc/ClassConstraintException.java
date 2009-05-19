@@ -26,17 +26,45 @@ package org.apache.bcel.verifier.exc;
  * @author Enver Haase
  */
 public class ClassConstraintException extends VerificationException{
+  
+  /**
+   * The number of method for which the error occurred. -1 if no method is
+   * appropriate.
+   */
+  private int methodNo;
+  
 	/**
 	 * Constructs a new ClassConstraintException with null as its error message string.
 	 */
 	public ClassConstraintException(){
 		super();
+		methodNo = -1;
 	}
 	
 	/**
 	 * Constructs a new ClassConstraintException with the specified error message.
+	 * @param i 
 	 */
 	public ClassConstraintException(String message){
 		super (message);
+		methodNo = -1;
 	}
+	
+	 
+  /**
+   * Constructs a new ClassConstraintException with the specified error message
+   * and method number for which the error occurred.  
+   * @param method the method for which the error occurred
+   */
+  public ClassConstraintException(String message, int method){
+    super (message);
+    methodNo = method;
+  }
+
+  /**
+   * @return the method number for which 
+   */
+  public int getMethodNo() {
+    return methodNo;
+  }
 }
