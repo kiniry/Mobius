@@ -19,6 +19,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.FileEditorInput;
 
 import umbra.editor.BytecodeContribution;
+import umbra.editor.BytecodeDocument;
 import umbra.editor.BytecodeEditor;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.EclipseIdentifiers;
@@ -67,6 +68,9 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
     final Shell parent = getEditor().getSite().getShell();
     final IFile file = ((FileEditorInput)getEditor().getEditorInput()).
                                                      getFile();
+    if (getEditor().getDocument() == null)
+      getEditor().setDocument((BytecodeDocument)getEditor().
+        getDocumentProvider().getDocument(getEditor().getEditorInput()));
     final IPath active = file.getFullPath();
     final String fnameTo =
       active.toPortableString().replaceFirst(FileNames.BYTECODE_EXTENSION,
@@ -79,7 +83,9 @@ public class BytecodeRebuildAction extends BytecodeEditorAction {
       replaceFile(fileFrom, pathTo);
     }
     try {
-      ((BytecodeEditor)getEditor()).refreshBytecode(active,
+      final IPath cpath = FileNames.getClassFileFileFor(file, 
+         getEditor()).getFullPath();
+      ((BytecodeEditor)getEditor()).refreshBytecode(cpath,
                                   getEditor().getDocument(), null, null);
       final IEditorInput input = new FileEditorInput(file);
       getContributor().refreshEditor(getEditor(), input, null, null);

@@ -1,10 +1,9 @@
 /*
- * @title       "Umbra"
+ * @title "Umbra"
  * @description "An editor for the Java bytecode and BML specifications"
- * @copyright   "(c) 2006-2009 University of Warsaw"
- * @license     "All rights reserved. This program and the accompanying
- *               materials are made available under the terms of the LGPL
- *               licence see LICENCE.txt file"
+ * @copyright "(c) 2006-2009 University of Warsaw"
+ * @license "All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the LGPL licence see LICENCE.txt file"
  */
 package umbra.editor;
 
@@ -32,13 +31,20 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
-import umbra.instructions.ast.BytecodeLineController;
-import umbra.instructions.ast.CPLineController;
 import umbra.instructions.errors.BytecodeError;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;
@@ -49,8 +55,8 @@ import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
 import umbra.verifier.BytecodeVerifier;
-import umbra.verifier.SWTVerificationFactory;
 import umbra.verifier.ResultPresenter;
+import umbra.verifier.SWTVerificationFactory;
 import umbra.verifier.SaveConfirmer;
 import umbra.verifier.VerificationFactory;
 import annot.bcclass.BCClass;
@@ -217,10 +223,10 @@ public class BytecodeEditor extends TextEditor {
     }
 
     final BytecodeVerifier verifier = new BytecodeVerifier(jc);
-    final ResultPresenter presenter = my_verification_factory.
-                                        getResultPresenter(verifier);
-    final SaveConfirmer confirmer = my_verification_factory.
-                                      getSaveConfirmer(presenter);
+    final ResultPresenter presenter = my_verification_factory
+        .getResultPresenter(verifier);
+    final SaveConfirmer confirmer = my_verification_factory
+        .getSaveConfirmer(presenter);
     if (!confirmer.confirm()) {
       return false;
     }
@@ -249,7 +255,8 @@ public class BytecodeEditor extends TextEditor {
       validateState(getEditorInput());
       performSave(true, a_progress_monitor);
     }
-    final IFile a_file_from = makeSpareCopy();
+    IFile a_file_from;
+    a_file_from = makeSpareCopy();
     if (a_file_from == null) return true;
     final String path3 = a_file_from.getLocation().toOSString();
     try {
@@ -299,12 +306,12 @@ public class BytecodeEditor extends TextEditor {
     final Shell sh = getSite().getShell();
     IFile a_file_from;
     try {
-      a_file_from = FileNames.getClassFileFileFor(
-               ((FileEditorInput)getEditorInput()).getFile(),
-               my_related_editor);
+      a_file_from = FileNames
+          .getClassFileFileFor(((FileEditorInput) getEditorInput()).getFile(),
+                               this);
     } catch (JavaModelException e2) {
       MessageDialog.openError(sh, GUIMessages.BYTECODE_MESSAGE_TITLE,
-        GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
       return null;
     }
     my_logger.fine("a_file_from: " + a_file_from.getFullPath().toString());
@@ -395,6 +402,20 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
+   * This method return project of the current document.
+   *
+   * @return project of the current document
+   */
+  private IProject getCurrentProject() {
+    if (getRelatedEditor() != null) {
+      return ((IFileEditorInput)getRelatedEditor().
+          getEditorInput()).getFile().getProject();
+    }
+    return ((IFileEditorInput)getEditorInput()).
+      getFile().getProject();
+  }
+
+  /**
    * This method loads from the given Java class repository a class pointed out
    * by the given path.
    *
@@ -408,16 +429,15 @@ public class BytecodeEditor extends TextEditor {
     my_logger.info("loadJavaClass");
 
     try {
-      final IProject project = ((FileEditorInput)my_related_editor.
-          getEditorInput()).getFile().getProject();
+      final IProject project = getCurrentProject();
       final IJavaProject jproject = JavaCore.create(project);
       final IPath ol = jproject.getOutputLocation();
       return ClassFileOperations.loadJavaClass(a_path, a_repo, ol);
     } catch (ClassNotFoundException e) {
       MessageDialog.openError(getSite().getShell(),
-        GUIMessages.BYTECODE_MESSAGE_TITLE,
-        GUIMessages.substitute(GUIMessages.CANNOT_FIND_CLASS,
-                               a_path.lastSegment()));
+                              GUIMessages.BYTECODE_MESSAGE_TITLE, GUIMessages
+                                  .substitute(GUIMessages.CANNOT_FIND_CLASS,
+                                              a_path.lastSegment()));
       return null;
     } catch (JavaModelException e) {
       // TODO Auto-generated catch block
@@ -437,8 +457,7 @@ public class BytecodeEditor extends TextEditor {
   private SyntheticRepository getCurrentClassRepository()
     throws JavaModelException {
     //obtain the classpath for the classes
-    final IProject project = ((FileEditorInput)my_related_editor.
-        getEditorInput()).getFile().getProject();
+    final IProject project = getCurrentProject();
     final IJavaProject jproject = JavaCore.create(project);
     return ClassFileOperations.getClassRepoForProject(jproject);
   }
@@ -452,7 +471,8 @@ public class BytecodeEditor extends TextEditor {
   public final int newHistory() {
     my_logger.info("newHistory");
 
-    if (my_history_num == HistoryOperations.MAX_HISTORY) return -1;
+    if (my_history_num == HistoryOperations.MAX_HISTORY)
+      return -1;
     my_history_num++;
     return my_history_num;
   }
@@ -504,7 +524,7 @@ public class BytecodeEditor extends TextEditor {
    */
   protected void finalize() throws Throwable {
     //my_bconf.disposeColor();  //FIXME!! this instruction caused problems!
-                                //https://mobius.ucd.ie/ticket/603
+    //https://mobius.ucd.ie/ticket/603
     super.finalize();
 
     my_logger.info("finalize");
@@ -524,13 +544,14 @@ public class BytecodeEditor extends TextEditor {
     my_logger.info("renewConfiguration");
 
     my_bconf = new BytecodeConfiguration();
-    final SourceViewer sv = ((SourceViewer)getSourceViewer());
+    final SourceViewer sv = ((SourceViewer) getSourceViewer());
     sv.unconfigure();
     setSourceViewerConfiguration(my_bconf);
     sv.configure(my_bconf);
     //it is weird that this must be set by hand
     final IAnnotationModel am = sv.getAnnotationModel();
-    if (am != null) am.connect(a_doc);
+    if (am != null)
+      am.connect(a_doc);
     sv.refresh();
   }
 
@@ -568,6 +589,39 @@ public class BytecodeEditor extends TextEditor {
    */
   public BytecodeConfiguration getConfiguration() {
     return my_bconf;
+  }
+
+  /**
+   * Finds and sets related editor.
+   */
+  public void findRelatedEditor() {
+    if (getRelatedEditor() != null)
+      return;
+
+    final IPath path = ((IFileEditorInput) getEditorInput()).getFile()
+        .getFullPath();
+    final String javaPath = path.removeFileExtension().addFileExtension("java")
+        .toString();
+    final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+    final IFile javaFile = workspace.getRoot()
+        .getFile(Path.fromPortableString(javaPath));
+
+    final IWorkbenchPage page = getSite().getPage();
+
+    final IEditorDescriptor desc = PlatformUI.getWorkbench()
+        .getEditorRegistry().getDefaultEditor(javaFile.getName());
+
+    final IEditorPart java_editor;
+    try {
+      java_editor = page
+          .openEditor(new FileEditorInput(javaFile), desc.getId());
+
+      if (java_editor instanceof CompilationUnitEditor) {
+        setRelatedEditor((CompilationUnitEditor) java_editor);
+      }
+    } catch (PartInitException e) {
+      return;
+    }
   }
 
 }

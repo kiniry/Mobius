@@ -13,6 +13,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.swt.widgets.Shell;
 
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.editor.DocumentSynchroniser;
@@ -94,6 +95,8 @@ public class BytecodeSynchrAction extends BytecodeEditorAction {
    *   operations
    */
   private DocumentSynchroniser getDocSynch() {
+    if (getEditor().getRelatedEditor() == null)
+      getEditor().findRelatedEditor();
     final CompilationUnitEditor jsceditor =
                             getEditor().getRelatedEditor();
     my_synchroniser = new DocumentSynchroniser(getEditor().getDocument(),

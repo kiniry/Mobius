@@ -184,7 +184,7 @@ public final class FileNames {
    *   has no class file output location set
    */
   public static IFile getClassFileFile(final IFile a_java_file,
-                     final CompilationUnitEditor an_editor)
+                     final IEditorPart an_editor)
     throws JavaModelException {
     return getClassFileFileFor(a_java_file, an_editor);
   }
@@ -270,7 +270,7 @@ public final class FileNames {
    *                            has no class file output location set
    */
   public static IFile getClassFileFileFor(final IFile a_file,
-                     final CompilationUnitEditor an_editor)
+                     final IEditorPart an_editor)
     throws JavaModelException {
     final IProject project = ((FileEditorInput)an_editor.
         getEditorInput()).getFile().getProject();

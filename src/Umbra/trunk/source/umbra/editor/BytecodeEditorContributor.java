@@ -263,6 +263,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     super.contributeToToolBar(a_tbar_mngr);
     a_tbar_mngr.add(my_refresh_action);
     a_tbar_mngr.add(my_synchr_action);
+    a_tbar_mngr.add(my_rebuild_action);
   }
 
   /**
@@ -376,9 +377,8 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     final IWorkbenchPage page = an_editor.getEditorSite().getPage();
     final CompilationUnitEditor related = ((BytecodeEditor)an_editor).
                                                            getRelatedEditor();
-    final boolean proper = (related != null);
     my_bcode_cntrbtn.survive();
-    if (proper) ColorModeContainer.classKnown();
+    ColorModeContainer.classKnown();
     //FIXME: should we close here? https://mobius.ucd.ie/ticket/604
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
@@ -391,7 +391,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     ndoc.setEditor((BytecodeEditor)newEditor, bmlp);
     ndoc.init(a_comment_array, an_interline);
     ((BytecodeEditor) newEditor).setRelation(related);
-    if (proper) ColorModeContainer.classUnknown();
+    ColorModeContainer.classUnknown();
     return newEditor;
   }
 
