@@ -6,9 +6,14 @@ import java.io.FileOutputStream;
 
 import mobius.bico.bicolano.coq.CoqStream;
 import mobius.bico.executors.ClassExecutor;
+import mobius.directVCGen.formula.Formula;
+import mobius.directVCGen.formula.Lookup;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
+
+import escjava.sortedProver.Lifter.Term;
+import escjava.sortedProver.NodeBuilder.STerm;
 
 
 /**
@@ -74,14 +79,25 @@ public class AnnotationClassExecutor extends ClassExecutor {
         final AnnotationMethodExecutor ame = 
             new AnnotationMethodExecutor(this, anOut, fClass, met);
         ame.start();
-  
       }
-      anOut.decPrintln("End " + this.getModuleName() + "Annotations.\n");
-      
+      doInvariant(anOut);
+      anOut.decPrintln("End " + this.getModuleName() + "Annotations.\n");  
     } 
+    
     catch (FileNotFoundException e) {
       e.printStackTrace();
     }
+  }
+
+
+
+  private void doInvariant(CoqStream out) {
+    final Term t = Lookup.getInst().getInvariant(fClass.getJavaClass());
+    out.println("Variable invariant :");
+    out.incPrintln();
+    out.println(Formula.generateFormulas(t) + ".");
+    out.decTab();
+    out.println();
   }
 
 

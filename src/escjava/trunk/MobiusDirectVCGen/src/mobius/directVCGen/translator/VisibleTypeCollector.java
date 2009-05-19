@@ -3,13 +3,9 @@ package mobius.directVCGen.translator;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.bcel.classfile.JavaClass;
-import org.apache.bcel.generic.ObjectType;
-
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
-import javafe.ast.Expr;
 import javafe.ast.FieldAccess;
 import javafe.ast.MethodInvocation;
 import javafe.ast.PrimitiveType;
@@ -21,6 +17,10 @@ import javafe.ast.VariableAccess;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.ABasicVisitor;
+
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ObjectType;
+
 import escjava.ast.CondExprModifierPragma;
 import escjava.ast.EverythingExpr;
 import escjava.ast.ModifiesGroupPragma;
