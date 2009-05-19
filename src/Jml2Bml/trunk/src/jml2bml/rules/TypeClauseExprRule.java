@@ -62,7 +62,7 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
   public String visitJmlTypeClauseExpr(final JmlTypeClauseExpr node,
                                        final Symbols symb) {
     if (node.token == JmlToken.INVARIANT) {
-      final BCClass clazz = myContext.get(BCClass.class);
+      final BCClass clazz = symb.findClass();
       final AbstractFormula formula = TranslationUtil
               .getFormula(node.expression, symb, myContext);
       final ClassInvariant classInvariant =
