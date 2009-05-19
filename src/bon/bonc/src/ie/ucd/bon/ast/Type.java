@@ -17,7 +17,7 @@ public class Type extends AstNode {
   private final List<BONType> actualGenerics;
   private final String fullString;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Type(String identifier, List<BONType> actualGenerics, String fullString) {

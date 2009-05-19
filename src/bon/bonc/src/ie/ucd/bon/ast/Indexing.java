@@ -15,7 +15,7 @@ public class Indexing extends AstNode {
 
   private final List<IndexClause> indexes;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Indexing(List<IndexClause> indexes) {

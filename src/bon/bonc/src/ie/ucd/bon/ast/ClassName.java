@@ -15,7 +15,7 @@ public class ClassName extends IndirectionElement {
 
   private final String name;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClassName(String name) {

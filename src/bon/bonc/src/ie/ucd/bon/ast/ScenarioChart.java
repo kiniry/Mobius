@@ -19,7 +19,7 @@ public class ScenarioChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ScenarioChart(String systemName, List<ScenarioEntry> entries, Indexing indexing, String explanation, String part) {

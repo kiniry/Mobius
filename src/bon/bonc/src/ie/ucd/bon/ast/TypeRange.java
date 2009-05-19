@@ -16,7 +16,7 @@ public class TypeRange extends VariableRange {
   private final List<String> identifiers;
   private final BONType type;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected TypeRange(List<String> identifiers, BONType type) {

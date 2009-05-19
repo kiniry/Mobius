@@ -16,7 +16,7 @@ public class ScenarioEntry extends AstNode {
   private final String name;
   private final String description;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ScenarioEntry(String name, String description) {

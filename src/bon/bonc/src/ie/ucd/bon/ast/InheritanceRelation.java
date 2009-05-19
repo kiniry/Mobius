@@ -18,7 +18,7 @@ public class InheritanceRelation extends StaticRelation {
 
   private final String semanticLabel;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected InheritanceRelation(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel) {

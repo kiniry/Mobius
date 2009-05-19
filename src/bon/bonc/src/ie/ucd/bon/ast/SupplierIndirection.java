@@ -16,7 +16,7 @@ public class SupplierIndirection extends ClientEntity {
   private final GenericIndirection genericIndirection;
 
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected SupplierIndirection(IndirectionFeaturePart indirectionFeaturePart, GenericIndirection genericIndirection) {

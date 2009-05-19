@@ -15,7 +15,7 @@ public class ParentIndirection extends ClientEntity {
   private final GenericIndirection genericIndirection;
 
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ParentIndirection(GenericIndirection genericIndirection) {

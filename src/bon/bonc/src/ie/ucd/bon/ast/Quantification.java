@@ -21,7 +21,7 @@ public class Quantification extends Expression {
   private final Quant quantifier;
   private final List<VariableRange> variableRanges;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Quantification(Quant quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition) {

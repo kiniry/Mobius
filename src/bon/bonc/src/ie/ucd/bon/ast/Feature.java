@@ -17,7 +17,7 @@ public class Feature extends AstNode {
   private final List<String> selectiveExport;
   private final String comment;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Feature(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment) {

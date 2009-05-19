@@ -16,7 +16,7 @@ public class NamedIndirection extends IndirectionElement {
   private final String className;
   private final List<IndirectionElement> indirectionElements;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected NamedIndirection(String className, List<IndirectionElement> indirectionElements) {

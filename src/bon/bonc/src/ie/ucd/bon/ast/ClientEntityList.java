@@ -15,7 +15,7 @@ public class ClientEntityList extends ClientEntityExpression {
 
   private final List<ClientEntity> entities;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClientEntityList(List<ClientEntity> entities) {

@@ -16,7 +16,7 @@ public class ClassEntry extends AstNode {
   private final String name;
   private final String description;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClassEntry(String name, String description) {

@@ -19,7 +19,7 @@ public class ClassDictionary extends SpecificationElement {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClassDictionary(String systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part) {

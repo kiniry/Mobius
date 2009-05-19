@@ -15,7 +15,7 @@ public class GenericIndirection extends AstNode {
 
   private final String indirectionElement;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected GenericIndirection(String indirectionElement) {

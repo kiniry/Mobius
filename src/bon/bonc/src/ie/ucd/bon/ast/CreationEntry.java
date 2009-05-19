@@ -16,7 +16,7 @@ public class CreationEntry extends AstNode {
   private final String name;
   private final List<String> types;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected CreationEntry(String name, List<String> types) {

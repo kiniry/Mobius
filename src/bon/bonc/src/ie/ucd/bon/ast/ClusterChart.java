@@ -20,7 +20,7 @@ public class ClusterChart extends AstNode {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClusterChart(String name, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part) {

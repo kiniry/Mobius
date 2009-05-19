@@ -19,7 +19,7 @@ public class ClientRelation extends StaticRelation {
 
   private final String semanticLabel;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClientRelation(StaticRef client, StaticRef supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel) {

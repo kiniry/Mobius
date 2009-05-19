@@ -22,7 +22,7 @@ public class ClassChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClassChart(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part) {

@@ -18,7 +18,7 @@ public class Cluster extends StaticComponent {
   private final Boolean reused;
   private final String comment;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Cluster(String name, List<StaticComponent> components, Boolean reused, String comment) {

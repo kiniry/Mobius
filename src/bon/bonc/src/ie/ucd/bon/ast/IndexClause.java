@@ -16,7 +16,7 @@ public class IndexClause extends AstNode {
   private final String id;
   private final List<String> indexTerms;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected IndexClause(String id, List<String> indexTerms) {

@@ -23,7 +23,7 @@ public class FeatureSpecification extends AstNode {
   private final List<FeatureArgument> arguments;
   private final String comment;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected FeatureSpecification(List<String> featureNames, Boolean deferred, Boolean effective, Boolean redefined, List<FeatureArgument> arguments, HasType hasType, RenameClause renaming, ContractClause contracts, String comment) {

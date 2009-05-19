@@ -22,7 +22,7 @@ public class UnaryExp extends Expression {
 
   private final Op op;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected UnaryExp(Op op, Expression expression) {

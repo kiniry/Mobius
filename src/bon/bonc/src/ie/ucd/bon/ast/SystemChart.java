@@ -19,7 +19,7 @@ public class SystemChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected SystemChart(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part) {

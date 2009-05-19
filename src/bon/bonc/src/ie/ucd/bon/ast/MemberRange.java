@@ -16,7 +16,7 @@ public class MemberRange extends VariableRange {
 
   private final List<String> identifiers;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected MemberRange(List<String> identifiers, Expression expression) {

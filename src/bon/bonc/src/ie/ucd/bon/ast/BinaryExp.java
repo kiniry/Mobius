@@ -38,7 +38,7 @@ public class BinaryExp extends Expression {
 
   private final Op op;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected BinaryExp(Op op, Expression left, Expression right) {

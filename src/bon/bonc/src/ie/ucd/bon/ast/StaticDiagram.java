@@ -17,7 +17,7 @@ public class StaticDiagram extends SpecificationElement {
   private final String extendedId;
   private final String comment;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected StaticDiagram(List<StaticComponent> components, String extendedId, String comment) {

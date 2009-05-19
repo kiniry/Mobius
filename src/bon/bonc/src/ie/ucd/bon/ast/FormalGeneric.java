@@ -16,7 +16,7 @@ public class FormalGeneric extends AstNode {
   private final String identifier;
   private final BONType type;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected FormalGeneric(String identifier, BONType type) {

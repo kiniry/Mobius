@@ -17,7 +17,7 @@ public class DictionaryEntry extends AstNode {
   private final List<String> clusters;
   private final String description;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected DictionaryEntry(String name, List<String> clusters, String description) {

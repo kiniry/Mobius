@@ -15,7 +15,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
 
   private final List<FeatureName> featureNames;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected IndirectionFeatureList(List<FeatureName> featureNames) {

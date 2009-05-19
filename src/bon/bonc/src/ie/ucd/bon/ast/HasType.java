@@ -16,7 +16,7 @@ public class HasType extends AstNode {
 
   private final BONType type;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected HasType(TypeMark mark, BONType type) {

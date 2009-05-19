@@ -16,7 +16,7 @@ public class FeatureArgument extends AstNode {
   private final String identifier;
   private final BONType type;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected FeatureArgument(String identifier, BONType type) {

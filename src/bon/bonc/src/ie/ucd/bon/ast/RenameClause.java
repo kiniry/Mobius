@@ -16,7 +16,7 @@ public class RenameClause extends AstNode {
   private final String className;
   private final String featureName;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected RenameClause(String className, String featureName) {

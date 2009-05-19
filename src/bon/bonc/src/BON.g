@@ -514,19 +514,20 @@ cluster_name  :  i=IDENTIFIER
 
 /**********************************************/
 
-class_chart  :  c='class_chart' class_name 
-                { ClassChartDefinition classX = new ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
-                  getTI().informal().addClass(classX);
-                  getContext().enterClassChart(classX); }
-                (indexing)? 
-                (explanation)? 
-                (part)? 
-                (inherits)?
-                (queries)? 
-                (commands)? 
-                (constraints)? 
-                'end'
-                { getContext().leaveClassChart(); }
+class_chart returns [ClassChart cc] :
+  c='class_chart' class_name 
+  { ClassChartDefinition classX = new ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
+  getTI().informal().addClass(classX);
+  getContext().enterClassChart(classX); }
+  (indexing)? 
+  (explanation)? 
+  (part)? 
+  (inherits)?
+  (queries)? 
+  (commands)? 
+  (constraints)? 
+  'end'
+  { getContext().leaveClassChart(); }
               ->
               ^( 
                 CLASS_CHART[$c] class_name
@@ -540,84 +541,138 @@ class_chart  :  c='class_chart' class_name
                )
              ;
              
-inherits  :  i='inherit' { getContext().enterInheritsClause(); } 
-             class_name_list
-             { getContext().leaveInheritsClause(); }  
+inherits returns [List<String> inherits] :
+  i='inherit' { getContext().enterInheritsClause(); } 
+  class_name_list
+  { getContext().leaveInheritsClause(); }
+  { $inherits = $class_name_list.list; }
           -> ^(INHERITS[$i] class_name_list)
            | i='inherit' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name(s)", "in inherits clause", true)); }
           -> ^( INHERITS PARSE_ERROR )
             
           ;
 
-queries  : q='query' query_list  -> ^(QUERIES[$q] query_list)
+queries returns [List<String> queries] :
+  q='query' query_list  
+  { $queries = $query_list.queries; }
+ -> ^(QUERIES[$q] query_list)
          ;
          
-commands  : c='command' command_list  -> ^(COMMANDS[$c] command_list)
+commands returns [List<String> commands] :
+  c='command' command_list
+  { $commands = $command_list.commands; }
+  -> ^(COMMANDS[$c] command_list)
           ;
 
-constraints  : c='constraint' constraint_list  -> ^(CONSTRAINTS[$c] constraint_list)
+constraints returns [List<String> constraints] :
+  c='constraint' constraint_list
+  { $constraints = $constraint_list.string; }
+  -> ^(CONSTRAINTS[$c] constraint_list)
              ;
 
 
-query_list  :  m1=manifest_textblock { getTI().informal().addQuery($m1.text); }
-               (  (',' m=manifest_textblock { getTI().informal().addQuery($m.text); } ) 
-                | m=manifest_textblock { getTI().informal().addQuery($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); } 
-               )* 
-               ','?             
+query_list returns [List<String> queries] :
+  { $queries = new LinkedList<String>(); }
+  m1=manifest_textblock 
+  { getTI().informal().addQuery($m1.text); }
+  { $queries.add($m1.text); }
+  (  (',' m=manifest_textblock 
+      { getTI().informal().addQuery($m.text); }
+      { $queries.add($m.text); } 
+     )      
+   | m=manifest_textblock 
+     { getTI().informal().addQuery($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); }
+     { $queries.add($m.text); } 
+  )* 
+  ','?             
              -> 
              ^(
                QUERY_LIST[$m1.start] manifest_textblock+
               )
             ;
             
-command_list  :  m1=manifest_textblock { getTI().informal().addCommand($m1.text); }
-                 (  (',' m=manifest_textblock { getTI().informal().addCommand($m.text); } )
-                  | m=manifest_textblock { getTI().informal().addCommand($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
-                 )* 
-                 ','?
+command_list returns [List<String> commands] :
+  { $commands = new LinkedList<String>(); }
+  m1=manifest_textblock 
+  { getTI().informal().addCommand($m1.text); }
+  { $commands.add($m1.text); }
+  (  (',' m=manifest_textblock 
+      { getTI().informal().addCommand($m.text); }
+      { $commands.add($m.text); } 
+     )
+   | m=manifest_textblock 
+     { getTI().informal().addCommand($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
+     { $commands.add($m.text); }
+  )* 
+  ','?
                ->
                ^(
                  COMMAND_LIST[$m1.start] manifest_textblock+
                 )
               ;
               
-constraint_list  :  m1=manifest_textblock { getTI().informal().addConstraint($m1.text); }
-                    (  (',' m=manifest_textblock { getTI().informal().addConstraint($m.text); } )
-                     | m=manifest_textblock { getTI().informal().addConstraint($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
-                    )*
-                    ','?
+constraint_list returns [List<String> constraints] :
+  { $constraints = new LinkedList<String>(); }
+  m1=manifest_textblock 
+  { getTI().informal().addConstraint($m1.text); }
+  { $constraints.add($m1.text); }
+  (  (',' m=manifest_textblock 
+      { getTI().informal().addConstraint($m.text); }
+      { $constraints.add($m.text); }
+     )
+   | m=manifest_textblock 
+     { getTI().informal().addConstraint($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
+     { $constraints.add($m.text); }
+  )*
+  ','?
                   -> 
                   ^(
                     CONSTRAINT_LIST[$m1.start] manifest_textblock+
                    )
                  ;
 
-class_name_list  :  c1=class_name { getTI().classNameListEntry($c1.text, getSLoc($c1.stop)); }
-										(  ( ',' c=class_name { getTI().classNameListEntry($c.text, getSLoc($c.start)); } )
-										 | ( c=class_name 
-										     { getTI().classNameListEntry($c.text, getSLoc($c.start)); 
-										       addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }										       
-										   )
-										)*                  
+class_name_list returns [List<String> list] :
+  { $list = new LinkedList<String>(); }
+  c1=class_name 
+  { getTI().classNameListEntry($c1.text, getSLoc($c1.stop)); }
+  { $list.add($c1.text); }
+  (  ( ',' c=class_name 
+       { getTI().classNameListEntry($c.text, getSLoc($c.start)); }
+       { $list.add($c.text); } 
+     )
+   | ( c=class_name 
+       { getTI().classNameListEntry($c.text, getSLoc($c.start)); addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }
+       { $list.add($c.text); }										       
+     )
+  )*
                   ->
                   ^(
                     CLASS_NAME_LIST[$c1.start] class_name+
                    )
                  ;
                  
-cluster_name_list  :  c1=cluster_name
-                    (  ( ',' c=cluster_name )
-                     | ( c=cluster_name 
-                         { addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }                           
-                       )
-                    )*                  
+cluster_name_list returns [List<String> list] :
+  { $list = new LinkedList<String>(); }
+  c1=cluster_name
+  (  ( ',' c=cluster_name
+       { $list.add($c.text); } 
+     )
+   | ( c=cluster_name 
+       { addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }
+       { $list.add($c.text); }                           
+     )
+  )*                  
                   ->
                   ^(
                     CLUSTER_NAME_LIST[$c1.start] cluster_name+
                    )
                  ;
-                 
-class_or_cluster_name_list  :  (class_name ',' )* '(' cluster_name ')' ( ',' ( class_name | '(' cluster_name ')' ) )*
+
+// TODO not done.
+class_or_cluster_name_list returns [List<String> list] :
+  (class_name ',' )* 
+  '(' cluster_name ')' 
+  ( ',' ( class_name | '(' cluster_name ')' ) )*
                              ->
                                ^( CLASS_OR_CLUSTER_NAME_LIST (class_name)* (cluster_name)+ )
                              |
@@ -627,7 +682,9 @@ class_or_cluster_name_list  :  (class_name ',' )* '(' cluster_name ')' ( ',' ( c
                             ;
 
                  
-class_name  :  i=IDENTIFIER 
+class_name returns [String name] :
+  i=IDENTIFIER
+  { $name = $i.text; } 
              ->
              ^(
                CLASS_NAME[$i] IDENTIFIER
@@ -636,13 +693,14 @@ class_name  :  i=IDENTIFIER
 
 /**********************************************/
 
-event_chart  :  e='event_chart' system_name 
-                ('incoming' | 'outgoing')?
-                (indexing)?
-                (explanation)?
-                (part)?
-                (event_entries)?
-                'end'
+event_chart returns [EventChart ec] :
+  e='event_chart' system_name 
+  ('incoming' | 'outgoing')?
+  (indexing)?
+  (explanation)?
+  (part)?
+  (event_entries)?
+  'end'
               ->
               ^(
                 EVENT_CHART[$e]
@@ -655,7 +713,9 @@ event_chart  :  e='event_chart' system_name
                )
              ;
              
-event_entries  :  (event_entry)+ 
+event_entries returns [List<EventEntry> entries] :
+  { $entries = new LinkedList<EventEntry>(); }
+  (event_entry { $entries.add($event_entry.entry); } )+ 
                 ->
                 ^(
                   EVENT_ENTRIES
@@ -663,14 +723,25 @@ event_entries  :  (event_entry)+
                  )
                ;
                
-event_entry  
-@init { boolean mok=false; boolean cok=false; }
-             :  ( (e='event' manifest_textblock {mok=true;} )
-                 | e='event' { addParseProblem(new MissingElementParseError(getSourceLocation($e), "event name", "in event entry clause", true)); }
-                ) 
-                ( ('involves' class_or_cluster_name_list {cok=true;} )
-                 | i='involves' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
-                )
+event_entry returns [EventEntry event]
+@init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String m = null; Token stop=null; } :
+  e='event'
+  (  ( m=manifest_textblock 
+      {mok=true; m=$m.text;} 
+     )
+   |  
+   { addParseProblem(new MissingElementParseError(getSourceLocation($e), "event name", "in event entry clause", true)); }
+  ) 
+  i='involves'
+  (  (ccnl=class_or_cluster_name_list 
+      { cok=true; ccnl = $ccnl.list; }
+      { stop = $ccnl.stop; } 
+     )
+   |  
+     { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
+     { stop = $i.stop; }
+  )
+  { if (mok && cok) $event = EventEntry.mk(m, ccnl, getSLoc($e.start,stop)); }
               ->
                 {!mok}? ^( EVENT_ENTRY PARSE_ERROR )
               ->
@@ -685,12 +756,13 @@ event_entry
 
 /**********************************************/
 
-scenario_chart  :  s='scenario_chart' system_name
-                   (indexing)?
-                   (explanation)?
-                   (part)?
-                   (scenario_entries)?
-                   'end'
+scenario_chart returns [ScenarioChart sc] :
+  s='scenario_chart' system_name
+  (indexing)?
+  (explanation)?
+  (part)?
+  (scenario_entries)?
+  'end'
                  ->
                  ^(
                    SCENARIO_CHART[$s]
@@ -702,7 +774,9 @@ scenario_chart  :  s='scenario_chart' system_name
                   )
                 ;
                 
-scenario_entries  :  (scenario_entry)+ 
+scenario_entries returns [List<ScenarioEntry> entries] :
+  { $entries = new LinkedList<ScenarioEntry>(); }
+  (scenario_entry { $entries.add($scenario_entry.entry); } )+ 
                    ->
                    ^(
                      SCENARIO_ENTRIES
@@ -710,7 +784,9 @@ scenario_entries  :  (scenario_entry)+
                     )                     
                   ;
                   
-scenario_entry  :  s='scenario' MANIFEST_STRING description 
+scenario_entry returns [ScenarioEntry entry] :
+  s='scenario' m=MANIFEST_STRING d=description
+  { $entry =  ScenarioEntry.mk($m.text, $d.description getSLoc($s.start,$d.stop)); }
                  ->
                  ^(
                    SCENARIO_ENTRY[$s]
@@ -720,12 +796,13 @@ scenario_entry  :  s='scenario' MANIFEST_STRING description
 
 /**********************************************/
 
-creation_chart  :  c='creation_chart' system_name
-                   (indexing)?
-                   (explanation)?
-                   (part)?
-                   (creation_entries)?
-                   'end' 
+creation_chart returns [CreationChart cc] :
+  c='creation_chart' system_name
+  (indexing)?
+  (explanation)?
+  (part)?
+  (creation_entries)?
+  'end' 
                  ->
                  ^(
                    CREATION_CHART[$c]
@@ -737,7 +814,9 @@ creation_chart  :  c='creation_chart' system_name
                   )
                 ;
                 
-creation_entries  :  (creation_entry)+
+creation_entries returns [List<CreationEntry> entries] :
+  { $entries = new LinkedList<CreationEntry>(); }
+  (creation_entry { $entries.add($creation_entry.entry); } )+
                    ->
                    ^(
                      CREATION_ENTRIES
@@ -745,8 +824,10 @@ creation_entries  :  (creation_entry)+
                     )
                   ;
                   
-creation_entry  :  c='creator' class_name 
-                   'creates' class_or_cluster_name_list 
+creation_entry returns [CreationEntry entry] :
+  c='creator' class_name 
+  'creates' ccnl=class_or_cluster_name_list
+  { $entry = CreationEntry.mk($class_name.name, $ccnl.list, getSLoc($c.start,$ccnl.stop)); } 
                  ->
                  ^(
                    CREATION_ENTRY[$c]
@@ -759,49 +840,64 @@ creation_entry  :  c='creator' class_name
  ***   Static Diagrams                      ***
  **********************************************/
  
-static_diagram  :  s='static_diagram' (extended_id)? (COMMENT)? 
-                   'component' 
-                   (static_block)? 
-                   'end'                   
+static_diagram returns [StaticDiagram sd] 
+@init { String eid = null; String comment = null; } 
+:
+  s='static_diagram' 
+  (extended_id { eid=$extended_id.eid; } )? 
+  (c=COMMENT { comment=$c.text; } )? 
+  'component' 
+  sb=static_block 
+  e='end'
+  { $sd = StaticDiagram.mk($sb.components, eid, comment, getSLoc($s.start,$e.end)); }                
                  ->
                  ^(
                    STATIC_DIAGRAM[$s]
                    (extended_id)? (COMMENT)? 
-                   (static_block)? 
+                   static_block 
                   )
                 ;
                 
-extended_id  :  i=IDENTIFIER 
+extended_id returns [String eid] :  
+   i=IDENTIFIER
+   { $eid = $i.text; } 
               ->
               ^(
                 EXTENDED_ID[$i] IDENTIFIER
                )
-              | i=INTEGER 
+ | i=INTEGER
+   { $eid = $i.text; } 
               ->
               ^(
                 EXTENDED_ID[$i] INTEGER
                )
              ;
              
-static_block  :  (static_component)+
+static_block returns [List<StaticComponent> components] :
+  { $components = new LinkedList<StaticComponent>(); }
+  (sc=static_component { $components.add($sc.component); })*
                ->
                ^(
-                 STATIC_BLOCK (static_component)+
+                 STATIC_BLOCK (static_component)*
                 )
               ;
 
 //NB renamed "class" rule to "classX" as class is a reserved keyword in Java              
-static_component  :   c1=cluster 
+static_component returns [StaticComponent component] :
+   c1=cluster
+   { $component = $c1.cluster; } 
                     ->
                     ^(
                       STATIC_COMPONENT[$c1.start] cluster
                      )
-                    | c2=classX 
+ | c2=classX 
+   { $component = $c2.classX; }
                     ->
                     ^(
                       STATIC_COMPONENT[$c2.start] classX
                      )
-                    | s=static_relation 
+ | s=static_relation
+   { $component = $s.relation; } 
                     ->
                     ^(
                       STATIC_COMPONENT[$s.start] static_relation
@@ -810,13 +906,17 @@ static_component  :   c1=cluster
 
 /**********************************************/
 
-cluster  :  c='cluster' cluster_name 
-            ('reused')? (COMMENT)? 
-            { getTI().addCluster($cluster_name.text, getSLoc($c, $cluster_name.stop)); }   
-            ( { getContext().enterCluster($cluster_name.text); }
-              cluster_components
-              { getContext().leaveCluster(); }
-            )? 
+cluster returns [Cluster cluster] 
+@init { boolean reused = false; }
+:
+  c='cluster' cluster_name 
+  ('reused' { reused = true; } )? 
+  (COMMENT)? 
+  { getTI().addCluster($cluster_name.text, getSLoc($c, $cluster_name.stop)); }   
+  ( { getContext().enterCluster($cluster_name.text); }
+    cluster_components
+    { getContext().leaveCluster(); }
+  )?
           ->
           ^(
             CLUSTER[$c] cluster_name
@@ -825,14 +925,17 @@ cluster  :  c='cluster' cluster_name
            )
          ;
          
-cluster_components  :  c='component' (static_block)? 'end'
+cluster_components returns [List<StaticComponent> components] :  
+  c='component' static_block 'end'
+  { $components = $static_block.components; }
                      -> 
                      ^(
-                       CLUSTER_COMPONENTS[$c] (static_block)?
+                       CLUSTER_COMPONENTS[$c] static_block
                       ) 
                     ;
                     
-classX  :	 (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c,$c1.stop), "root"); getContext().enterClass($c1.text); }       ) 
+classX returns [Clazz clazz] :
+  (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c,$c1.stop), "root"); getContext().enterClass($c1.text); }       ) 
 						| ( 'deferred' c='class' c2=class_name   { getTI().addClass($c2.text, getSLoc($c,$c2.stop), "deferred"); getContext().enterClass($c2.text); }  )
 						| ( 'effective' c='class' c3=class_name  { getTI().addClass($c3.text, getSLoc($c,$c3.stop), "effective"); getContext().enterClass($c3.text); } )
 						| ( c='class' c4=class_name              { getTI().addClass($c4.text, getSLoc($c,$c4.stop), null); getContext().enterClass($c4.text); }        )
@@ -854,12 +957,15 @@ classX  :	 (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, g
           )
         ;
             
-static_relation  :  ir=inheritance_relation 
+static_relation returns [StaticRelation relation] :
+   ir=inheritance_relation
+   { $relation = $ir.relation; }
                   ->
                   ^(
                     STATIC_RELATION[$ir.start] inheritance_relation
                    )
-                  | cr=client_relation 
+ | cr=client_relation
+   { $relation = $cr.relation; }
                   ->
                   ^(
                     STATIC_RELATION[$cr.start] client_relation
@@ -2126,7 +2232,7 @@ MANIFEST_TEXTBLOCK_END  : '\\' (options {greedy=false;} : ~('"'|'\\') )+ '"'
 
 
 manifest_textblock  :   MANIFEST_STRING 
-											| MANIFEST_TEXTBLOCK_START MANIFEST_TEXTBLOCK_MIDDLE* MANIFEST_TEXTBLOCK_END
+					  | MANIFEST_TEXTBLOCK_START MANIFEST_TEXTBLOCK_MIDDLE* MANIFEST_TEXTBLOCK_END
                     ;
 
 COMMENT  :  LINE_COMMENT+ { $channel=HIDDEN; }

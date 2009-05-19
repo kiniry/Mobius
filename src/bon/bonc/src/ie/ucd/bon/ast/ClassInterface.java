@@ -18,7 +18,7 @@ public class ClassInterface extends AstNode {
   private final List<Feature> features;
   private final List<BONType> parents;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClassInterface(List<Feature> features, List<BONType> parents, Invariant invariant, Indexing indexing) {

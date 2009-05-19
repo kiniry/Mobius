@@ -18,7 +18,7 @@ public class TypeMark extends AstNode {
   private final Boolean isSharedMark;
   private final Integer multiplicity;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected TypeMark(Boolean hasMark, Boolean isAggregate, Boolean isSharedMark, Integer multiplicity) {

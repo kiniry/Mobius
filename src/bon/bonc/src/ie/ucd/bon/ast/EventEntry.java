@@ -16,7 +16,7 @@ public class EventEntry extends AstNode {
   private final String name;
   private final List<String> involved;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected EventEntry(String name, List<String> involved) {

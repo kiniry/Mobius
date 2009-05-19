@@ -16,7 +16,7 @@ public class ContractClause extends AstNode {
   private final List<AssertionClause> preconditions;
   private final List<AssertionClause> postconditions;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ContractClause(List<AssertionClause> preconditions, List<AssertionClause> postconditions) {

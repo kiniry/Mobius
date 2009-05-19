@@ -16,7 +16,7 @@ public class BonsourceFile extends AstNode {
 
   private final List<SpecificationElement> bonSpecification;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected BonsourceFile(List<SpecificationElement> bonSpecification, Indexing indexing) {

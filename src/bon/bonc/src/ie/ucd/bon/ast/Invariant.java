@@ -15,7 +15,7 @@ public class Invariant extends AstNode {
 
   private final List<AssertionClause> clauses;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected Invariant(List<AssertionClause> clauses) {

@@ -19,7 +19,7 @@ public class CreationChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected CreationChart(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part) {

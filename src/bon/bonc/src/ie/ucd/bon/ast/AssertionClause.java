@@ -15,7 +15,7 @@ public class AssertionClause extends AstNode {
   private final Expression expression;
 
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected AssertionClause(Expression expression) {

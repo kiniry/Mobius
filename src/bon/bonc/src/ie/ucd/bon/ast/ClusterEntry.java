@@ -16,7 +16,7 @@ public class ClusterEntry extends AstNode {
   private final String name;
   private final String description;
 
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected ClusterEntry(String name, String description) {
