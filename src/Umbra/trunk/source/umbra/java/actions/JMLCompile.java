@@ -84,16 +84,17 @@ public class JMLCompile extends DisasBCEL {
     final IFile bFile;
     
     IJavaProject project = FileNames.getJavaElement(getEditor()).getJavaProject();
+//    project.getOutputLocation()
+//    try {
+//      bFile = FileNames.getClassFileFile(jFile, getEditor());
+//    } catch (JavaModelException e) {
+//      MessageDialog.openError(shell,
+//                              GUIMessages.DISAS_MESSAGE_TITLE,
+//                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
+//      return;
+//    }
     try {
-      bFile = FileNames.getClassFileFile(jFile, getEditor());
-    } catch (JavaModelException e) {
-      MessageDialog.openError(shell,
-                              GUIMessages.DISAS_MESSAGE_TITLE,
-                              GUIMessages.DISAS_CLASSFILEOUTPUT_PROBLEMS);
-      return;
-    }
-    try {
-      Jml2BmlPlugin.getDefault().compile(jFile, bFile, project, out);
+      Jml2BmlPlugin.getDefault().compile(jFile, project, out);
       openBCodeEditorForJavaFile(jFile);
     } catch (IOException e) {
       MessageDialog.openError(shell,
