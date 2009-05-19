@@ -11,6 +11,7 @@ import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.formula.PositionHint.MethodHint;
 import mobius.directVCGen.vcgen.struct.Post;
 
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.MethodGen;
 
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -50,6 +51,9 @@ public final class Lookup {
   /**  the argument lists of each precondition without the heap. */
   private final Map<PositionHint, List<QuantVariableRef>> fPreArgsWithoutHeap = 
     new HashMap<PositionHint, List<QuantVariableRef>>();
+
+  /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
+  private final Map<JavaClass, Term> fInvariants = new HashMap<JavaClass, Term>();
 
   /** the current annotation generator which generates the informations
       of the lookup class. */
@@ -107,7 +111,36 @@ public final class Lookup {
     fPreconditions.put(ph, pNew);
   }
   
+  /**
+   * Returns the FOL Term representation of the class invariant.
+   * @param type the type to get the invariant from
+   * @return the precondition or <code>True</code>
+   */
+  public Term getInvariant(final JavaClass type) {
+    Term t = fInvariants.get(type);
+    if (t == null) {
+      t = Logic.trueValue();
+    }
+    return t;
+  }
   
+
+  /**
+   * Adds a given Term to the invariant of a given class. 
+   * @param type the type
+   * @param term fol term to be used as condition
+   */
+  public void addInvariant(final JavaClass type, final Term term) {
+    final Term pOld = fInvariants.get(type);
+    Term pNew;
+    if (pOld == null) {
+      pNew = term;
+    }
+    else {
+      pNew = Logic.and(pOld, term);
+    }
+    fInvariants.put(type, pNew);
+  }
 
   /**
    * Returns the FOL Term representation of the normal postcondition of routine m.

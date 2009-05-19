@@ -15,8 +15,10 @@ import javafe.ast.MethodInvocation;
 import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Type;
+import javafe.ast.TypeName;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VariableAccess;
+import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.vcgen.ABasicVisitor;
 import escjava.ast.CondExprModifierPragma;
@@ -24,7 +26,6 @@ import escjava.ast.EverythingExpr;
 import escjava.ast.ModifiesGroupPragma;
 import escjava.ast.TagConstants;
 import escjava.tc.FlowInsensitiveChecks;
-import escjava.tc.TypeSig;
 
 
 
@@ -151,11 +152,18 @@ final class VisibleTypeCollector extends ABasicVisitor {
     final Set<org.apache.bcel.generic.Type> ret = 
       new HashSet<org.apache.bcel.generic.Type>();
     for (Type t: s) {
+      TypeSig sig;
+      if (t instanceof TypeName) {
+        sig = TypeSig.getSig((TypeName) t);
+      }
       if (t instanceof TypeSig) {
+        sig = (TypeSig) t;
+      }
+      if (t != null) {
         JavaClass jc = mobius.directVCGen.formula.Translator.getInst().translate((TypeSig)t);
-        
         ret.add(new ObjectType(jc.getClassName()));
       }
+      
     }
     return ret;
   }

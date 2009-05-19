@@ -8,6 +8,7 @@ import org.apache.bcel.generic.MethodGen;
 
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
+import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Translator;
@@ -31,9 +32,6 @@ class LookupJavaFe {
   /** map containing ClassDecl as keys and Terms (the constraint) as value. **/
   private final Map<TypeDecl, Term> fConstraints = new HashMap<TypeDecl, Term>();
 
-  /** map containing ClassDecl as keys and Terms (the invariant) as value. **/
-  private final Map<TypeDecl, Term> fInvariants = new HashMap<TypeDecl, Term>();
-
 
   /**
    * Returns the FOL Term representation of the class invariant.
@@ -41,11 +39,8 @@ class LookupJavaFe {
    * @return the precondition or <code>True</code>
    */
   public Term getInvariant(final TypeDecl type) {
-    Term t = fInvariants.get(type);
-    if (t == null) {
-      t = Logic.trueValue();
-    }
-    return t;
+    
+    return Lookup.getInst().getInvariant(Translator.getInst().translate(TypeSig.getSig(type)));
   }
   
 
@@ -55,15 +50,7 @@ class LookupJavaFe {
    * @param term fol term to be used as condition
    */
   public void addInvariant(final TypeDecl type, final Term term) {
-    final Term pOld = fInvariants.get(type);
-    Term pNew;
-    if (pOld == null) {
-      pNew = term;
-    }
-    else {
-      pNew = Logic.and(pOld, term);
-    }
-    fInvariants.put(type, pNew);
+    Lookup.getInst().addInvariant(Translator.getInst().translate(TypeSig.getSig(type)), term);
   }
   
   /**
