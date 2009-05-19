@@ -21,7 +21,7 @@ public class \ClassName extends \Basename {
 }
 \primitives{  private final \Membertype \memberName;
 }
-private final SourceLocation location;
+  private final SourceLocation location;
 
   // === Constructors and Factories ===
   protected \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {

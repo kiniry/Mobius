@@ -32,11 +32,11 @@ StaticDiagram = List<StaticComponent>! components, String extendedID, String com
 StaticComponent :> Cluster, Clazz, StaticRelation;
 Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
 //Can root, deferred, effective be an enum? Similarly reused, persistent, interfaced?
-Clazz = Boolean! root, Boolean! deferred, Boolean! effective, Boolean! reused, Boolean! persistent, Boolean! interfaced, ClassInterface classInterface, FormalGenerics generics, String comment;
+Clazz = Boolean! root, Boolean! deferred, Boolean! effective, Boolean! reused, Boolean! persistent, Boolean! interfaced, ClassInterface classInterface, List<FormalGeneric> generics, String comment;
 StaticRelation :> InheritanceRelation, ClientRelation;
 
-InheritanceRelation = StaticRef! child, StaticRef! parent, Multiplicity multiplicity, SemanticLabel label;
-ClientRelation = StaticRef! client, StaticRef! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, SemanticLabel semanticLabel;
+InheritanceRelation = StaticRef! child, StaticRef! parent, Multiplicity multiplicity, String semanticLabel;
+ClientRelation = StaticRef! client, StaticRef! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
 ClientEntityExpression :> ClientEntityList, Multiplicity;
 ClientEntityList = List<ClientEntity>! entities;
 
@@ -56,11 +56,26 @@ Feature = List<FeatureSpecification> featureSpecifications, List<String> selecti
 FeatureSpecification = List<String>! featureNames, Boolean! deferred, Boolean! effective, Boolean! redefined, List<FeatureArgument>! arguments, HasType hasType, RenameClause renaming, ContractClause contracts, String comment;
 HasType = TypeMark! mark, BONType! type;
 ContractClause = List<AssertionClause> preconditions, List<AssertionClause> postconditions;
+Invariant = List<AssertionClause>! clauses;
+
 
 RenameClause = String! className, String! featureName;
 
-
+FeatureArgument = String identifier, BONType! type;
+FormalGeneric = String! identifier, BONType type;
 
 Type = String! identifier, List<BONType>! actualGenerics, String! fullString;
 
+AssertionClause = Expression! expression;
 
+Expression :> Quantification, BinaryExp, UnaryExp;
+
+Quantification = enum(Quant: FORALL, EXISTS) quantifier, List<VariableRange> variableRanges, Expression restriction, Expression! proposition;
+VariableRange :> MemberRange, TypeRange;
+MemberRange = List<String>! identifiers, Expression! expression;
+TypeRange =  List<String>! identifiers, BONType! type;
+
+BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, EQUIV, IMPLIES, AND, OR, XOR, LT, LE, GE, GT, EQ, NEQ, MEMBEROF, NOTMEMBEROF, HASTYPE) op, 
+            Expression! left, Expression! right;
+
+UnaryExp = enum(Op: NOT, DELTA, OLD, ADD, SUB) op, Expression! expression;

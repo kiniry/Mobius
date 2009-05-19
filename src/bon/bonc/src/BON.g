@@ -204,49 +204,73 @@ package ie.ucd.bon.parser;
  ##############################################
  **********************************************/
 
-prog  :  indexing? bon_specification EOF
+prog returns [BONSourceFile bonSource] :
+         bs=bon_specification EOF
+         { $bonSource = BonsourceFile.mk($bs.spec_els, null, getSLoc($bs.start, $bs.stop)); }
        ->
-         ^( PROG indexing? bon_specification )
+         ^( PROG bon_specification )
+       |
+         indexing bon_specification EOF
+         { $bonSource = BonsourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($bs.start, $bs.stop)); }
+       ->
+         ^( PROG indexing bon_specification )
        |
          indexing? e=EOF 
          { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
        ->
          ^( PROG PARSE_ERROR )
-         
-      ;
+;
 
 /**********************************************  
  ***   BON Specification                    ***
  **********************************************/
 
-bon_specification  :  (specification_element)+ 
-                   ;
+bon_specification returns [List<SpecificationElement> spec_els] :
+  { $spec_els = new LinkedList<SpecificationElement>(); }
+  ( se=specification_element
+    { $spec_els.add($se.se); }
+  )+ 
+;
 
-specification_element  :    informal_chart
-                          | class_dictionary
-                          | static_diagram
-                          | dynamic_diagram
-                          | notational_tuning 
-                       ;
+specification_element returns [SpecificationElement se] :
+    ic=informal_chart
+    { $se = $ic.ic; }
+  | cd=class_dictionary
+    { $se = $cd.cd; }
+  | sd=static_diagram
+    { $se = $sd.sd; }
+  | dd=dynamic_diagram
+    { $se = $dd.dd; }
+  | nt=notational_tuning
+    { $se = $nt.nt; } 
+;
 
 /**********************************************  
  ***   Informal charts                      ***
  **********************************************/
 
-informal_chart  :    system_chart
-                   | cluster_chart
-                   | class_chart
-                   | event_chart
-                   | scenario_chart
-                   | creation_chart 
-                ;
+informal_chart returns [InformalChart ic] :
+    system_chart
+    { $ic = $system_chart.sc; }
+  | cluster_chart
+    { $ic = $cluster_chart.cc; }
+  | class_chart
+    { $ic = $class_chart.cc; }
+  | event_chart
+    { $ic = $event_chart.ec; }
+  | scenario_chart
+    { $ic = $scenario_chart.sc; }
+  | creation_chart 
+    { $ic = $creation_chart.cc; }
+;
 			
-class_dictionary  :  d='dictionary' system_name 
-                     (indexing)?
-                     (explanation)? 
-                     (part)? 
-                     (dictionary_entry)+ 
-                     'end'
+class_dictionary returns [ClassDictionary cd] :  
+  d='dictionary' system_name 
+  (indexing)?
+  (explanation)? 
+  (part)? 
+  (dictionary_entry)+ 
+  'end'
                    ->
                    ^(
                      CLASS_DICTIONARY[$d] system_name 
@@ -266,9 +290,11 @@ class_dictionary  :  d='dictionary' system_name
                    ^( CLASS_DICTIONARY  PARSE_ERROR )
                   ;
 			
-dictionary_entry  :  c='class' class_name 
-                     'cluster' cluster_name_list 
-                     description 
+dictionary_entry returns [DictionaryEntry de] :  
+  c='class' class_name 
+  'cluster' cluster_name_list 
+  description 
+  { $de = DictionaryEntry.mk($class_name.text, $cluster_name_list.clusters, $description.text, getSLoc($c.start, $description.stop)); }
                    ->
                    ^(
                      DICTIONARY_ENTRY[$c] class_name
@@ -278,16 +304,17 @@ dictionary_entry  :  c='class' class_name
 
 /**********************************************/
 
-system_chart  :  s='system_chart' system_name 
-                 { ClusterChartDefinition system = new ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
-                    getTI().informal().setSystem(system);
-                    getContext().enterSystemChart(system); }
-                 (indexing)?
-                 (explanation)? 
-                 (part)? 
-                 (cluster_entries)? 
-                 'end'
-                 { getContext().leaveSystemChart(); }
+system_chart returns [SystemChart sc] :
+  s='system_chart' system_name 
+  { ClusterChartDefinition system = new ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
+  getTI().informal().setSystem(system);
+  getContext().enterSystemChart(system); }
+  (indexing)?
+  (explanation)? 
+  (part)? 
+  (cluster_entries)? 
+  'end'
+  { getContext().leaveSystemChart(); }
                ->
                ^(
                  SYSTEM_CHART[$s] system_name
@@ -298,8 +325,10 @@ system_chart  :  s='system_chart' system_name
                 )
               ;
 
-explanation  :  e='explanation' manifest_textblock
-                { getITI().setExplanation($manifest_textblock.text); }
+explanation returns [String explanation] :
+  e='explanation' manifest_textblock
+  { getITI().setExplanation($manifest_textblock.text); }
+  { $explanation = $e.text; }
               ->
               ^(
                 EXPLANATION[$e] manifest_textblock
@@ -323,40 +352,55 @@ indexing returns [Indexing indexing] :
            ^( INDEXING[$i] PARSE_ERROR )
           ;
 
-part  :  p='part' MANIFEST_STRING
+part returns [String part] :
+    p='part' m=MANIFEST_STRING
+    { $part = $m.text; }
        ->
        ^(
          PART[$p] MANIFEST_STRING
         )
-       |
-         p='part' { addParseProblem(new MissingElementParseError(getSourceLocation($p), "part text", "after 'part'", false)); }
+  |
+    p='part' 
+    { addParseProblem(new MissingElementParseError(getSourceLocation($p), "part text", "after 'part'", false)); }
+    { $part = ""; }
        ->
          ^( PART PARSE_ERROR ) 
       ;
 
-description  :  d='description' m=manifest_textblock { getTI().setDescription($m.text); }
+description returns [String description] :
+  d='description' m=manifest_textblock 
+  { getTI().setDescription($m.text); }
+  { $description = $m.text; }
+  
               ->
               ^(
                 DESCRIPTION[$d] manifest_textblock
                )  
              ;
 
-cluster_entries  :  (cluster_entry)+ 
+cluster_entries returns [List<ClusterEntry> entries] :
+  { $entries = new LinkedList<ClusterEntry>(); }
+  (cluster_entry { $entries.add($cluster_entry.ce); } )+
+   
                   ->
                   ^(
                     CLUSTER_ENTRIES (cluster_entry)+ 
                    )
                  ;
                  
-cluster_entry  :  c='cluster' cluster_name description
-                  { getTI().informal().addClusterEntry($cluster_name.text); } 
+cluster_entry returns [ClusterEntry ce] :
+  c='cluster' cluster_name description
+  { getTI().informal().addClusterEntry($cluster_name.text); }
+  { $ce = ClusterEntry.mk($cluster_name.text, $description.text, getSLoc($c.start, $description.stop)); } 
                 ->
                 ^(
                   CLUSTER_ENTRY[$c] cluster_name description
                  )
                ;
                
-system_name  :  i=IDENTIFIER 
+system_name returns [String name] :
+  i=IDENTIFIER
+  { $name = $i.text; } 
               ->
               ^(
                 SYSTEM_NAME[$i] IDENTIFIER
@@ -383,7 +427,7 @@ index_list returns [List<IndexClause> list] :
             
 index_clause returns [IndexClause clause] :  
                i=IDENTIFIER ':' index_term_list 
-               { $clause = IndexClause.mk($i.text, $index_term_list.strings); }
+               { $clause = IndexClause.mk($i.text, $index_term_list.strings, getSLoc($i.start, $index_term_list.stop)); }
                ->
                ^(
                  INDEX_CLAUSE[$i] IDENTIFIER index_term_list
@@ -407,7 +451,9 @@ index_term_list returns [List<String> strings] :
                    )
                  ;
                  
-index_string  :  m=MANIFEST_STRING    
+index_string returns [String s] :
+  m=MANIFEST_STRING
+  { $s = $m.text; }    
                ->
                ^(
                  INDEX_STRING[$m] MANIFEST_STRING
@@ -416,17 +462,18 @@ index_string  :  m=MANIFEST_STRING
 
 /**********************************************/
 
-cluster_chart  :  c='cluster_chart' cluster_name 
-                  { ClusterChartDefinition cluster = new ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
-                    getTI().informal().addCluster(cluster);
-                    getContext().enterClusterChart(cluster); }
-                  (indexing)? 
-                  (explanation)? 
-                  (part)? 
-                  (class_entries)? 
-                  (cluster_entries)? 
-                  'end'
-                  { getContext().leaveClusterChart(); }
+cluster_chart returns [ClusterChart cc] :
+  c='cluster_chart' cluster_name 
+  { ClusterChartDefinition cluster = new ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
+  getTI().informal().addCluster(cluster);
+  getContext().enterClusterChart(cluster); }
+  (indexing)? 
+  (explanation)? 
+  (part)? 
+  (class_entries)? 
+  (cluster_entries)? 
+  'end'
+  { getContext().leaveClusterChart(); }
                 ->
                 ^(
                   CLUSTER_CHART[$c] cluster_name 
@@ -438,16 +485,20 @@ cluster_chart  :  c='cluster_chart' cluster_name
                  )
                ;
                
-class_entries  :  (class_entry)+ 
+class_entries returns [List<ClassEntry> classes] :
+  { $classes = new LinkedList<ClassEntry>(); }
+  (class_entry { $classes.add($class_entry.entry); } )+ 
                 ->
                 ^(
                   CLASS_ENTRIES (class_entry)+ 
                  )
                ;
                
-class_entry  :  c='class' class_name { getContext().enterClassEntry($class_name.text); }
-                description
-                { getTI().informal().addClassEntry($class_name.text); getContext().leaveClassEntry(); }
+class_entry returns [ClassEntry entry] :
+  c='class' class_name { getContext().enterClassEntry($class_name.text); }
+  description
+  { getTI().informal().addClassEntry($class_name.text); getContext().leaveClassEntry(); }
+  { $entry = ClassEntry.mk($class_name.text, $description.text, getSLoc($c.start, $description.stop)); }
               ->
               ^(
                 CLASS_ENTRY[$c] class_name description

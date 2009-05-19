@@ -29,7 +29,7 @@ private final SourceLocation location;
     assert location != null;
     this.location = location;
     this.identifier = identifier; assert identifier != null;
-    this.actualGenerics = actualGenerics; 
+    this.actualGenerics = actualGenerics; assert actualGenerics != null;
     this.fullString = fullString; assert fullString != null;
     
   }
