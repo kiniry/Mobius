@@ -543,9 +543,6 @@
 	    <assertions><enable/></assertions>
 	    <classpath refid="clops.path"/>
 	    <arg value="-v"/>
-	    <arg value="-d"/>
-	    <arg value="-t"/>
-	    <arg value="${clops-html-output}"/> 
 	    <arg value="-p"/>
 	    <arg value="${clops-pkg}"/>
 	    <arg value="-o"/>

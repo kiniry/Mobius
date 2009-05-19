@@ -373,7 +373,7 @@ public interface BONcOptionsInterface {
   
 
 // Option Version. 
-// Aliases: [-v, --version]
+// Aliases: [-v, -version, --version]
 
   /**
    * @return true if the option Version has been used

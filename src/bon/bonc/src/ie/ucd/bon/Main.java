@@ -127,10 +127,13 @@ public final class Main {
             return success;
           }
         }
-      } 
+      }
       //TODO print usage  
       problems = null;
       System.out.println("Invalid arguments.");
+      if (exitOnFailure) {
+        System.exit(1);
+      }
       return false;
 
     } catch (Exception e) {

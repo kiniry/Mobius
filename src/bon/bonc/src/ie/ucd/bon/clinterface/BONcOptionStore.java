@@ -127,10 +127,10 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogGraph.setProperty("casesensitive", "false");
     ogGraph.setProperty("aliases", "-g,--graph");
     ogGraph.setProperty("description", "Display the chosen graph type. ICG for informal clustering graph, IIG for informal inheritance graph.");
-    ogVersion = new BooleanOption("Version", "(?:-v)|(?:--version)");
+    ogVersion = new BooleanOption("Version", "(?:-v)|(?:-version)|(?:--version)");
     addOption(ogVersion);
     ogVersion.setProperty("default", "false");
-    ogVersion.setProperty("aliases", "-v,--version");
+    ogVersion.setProperty("aliases", "-v,-version,--version");
     ogVersion.setProperty("description", "Print BONc version and exit.");
     ogSourceFiles = new FileListOption("SourceFiles", "");
     addOption(ogSourceFiles);
@@ -167,8 +167,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogVersion);
+    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);
@@ -628,7 +628,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
   }
   
 // Option Version.
-// Aliases: [-v, --version]
+// Aliases: [-v, -version, --version]
   
   /**
    * {@inheritDoc}
