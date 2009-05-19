@@ -126,7 +126,7 @@ class JmlVisitor extends BasicJMLTranslator {
   public final Object visitRoutineDecl(final /*@non_null*/ RoutineDecl x, 
                                        final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    fGlobal.addVisibleTypes(VisibleTypeCollector.getVisibleTypeSet(x));
+    fGlobal.addVisibleTypes(VisibleTypeCollector.getBCELVisibleTypeSet(x));
     prop.setRoutineBegin(true); 
     prop.setModifiesNothing(false);
     
@@ -567,31 +567,7 @@ class JmlVisitor extends BasicJMLTranslator {
     Lookup.getInst().addPrecondition(prop.getBCELDecl(), forAllTerm);
   }
 
-  /**
-   * Calculates the class invariants and the invariants predicates
-   * for the poscondition.
-   * @return a valid predicate
-   */
-  private Term invPostPred() {
-    final QuantVariableRef x = Expression.rvar(Ref.sort);
-    final QuantVariableRef type = Expression.rvar(Type.sort);
-    final QuantVariable[] vars = {x.qvar, type.qvar}; 
-    final Term invTerm = Logic.inv(Heap.var, x, type);
-    final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
-    final Term allocTerm = Logic.isAlive(Heap.var, x);
-    Term andTerm = Logic.and(allocTerm, typeOfTerm);
-    
-    final java.util.Set<javafe.ast.Type> visSet = fGlobal.getVisibleTypes();
-    if (!visSet.isEmpty()) {
-      
-      final Term visibleTerm = Logic.isVisibleIn(type, visSet);
-      andTerm = Logic.and(andTerm, visibleTerm);
-    }
-    
-    final Term implTerm = Logic.implies(andTerm, invTerm);
-    final Term forAllTerm = Logic.forall(vars, implTerm);
-    return forAllTerm;
-  }
+
   
   /**
    * Adds the class invariants and the invariants predicates
@@ -599,8 +575,8 @@ class JmlVisitor extends BasicJMLTranslator {
    * @param prop the targeted method
    */
   public void addInvPredToPostconditions(final /*@non_null*/ MethodProperties prop) { 
-    LookupJavaFe.getInst().addNormalPostcondition(prop, invPostPred());
-    Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), invPostPred());
+    LookupJavaFe.getInst().addNormalPostcondition(prop, Logic.invPostPred(fGlobal.getVisibleTypes()));
+    Lookup.getInst().addExceptionalPostcondition(prop.getBCELDecl(), Logic.invPostPred(fGlobal.getVisibleTypes()));
   }
 
   

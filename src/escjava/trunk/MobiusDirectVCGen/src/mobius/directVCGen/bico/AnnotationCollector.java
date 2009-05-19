@@ -121,7 +121,7 @@ public final class AnnotationCollector {
 
 
   /**
-   * Define the annotations for the bytecide with the right local variables.
+   * Define the annotations for the bytecode with the right local variables.
    * @param annot the assertion to translate
    */
   private void buildDefiner(final AAnnotation annot) {

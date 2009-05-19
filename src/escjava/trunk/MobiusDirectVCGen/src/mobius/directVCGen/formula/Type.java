@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.bcel.generic.BasicType;
+import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.ReferenceType;
 
 import javafe.ast.MethodDecl;
@@ -40,6 +41,14 @@ public final class Type {
   /** a second hashmap to get the orginal type from the given term. */
   private static final Map<QuantVariableRef, javafe.ast.Type> revtyp = 
     new HashMap<QuantVariableRef, javafe.ast.Type>();
+  
+  /** an hash map not to compute twice the types/term correspondance. */
+  private static final Map<org.apache.bcel.generic.Type, QuantVariableRef> bceltypes = 
+    new HashMap<org.apache.bcel.generic.Type, QuantVariableRef>();
+  
+  /** a second hashmap to get the orginal type from the given term. */
+  private static final Map<QuantVariableRef,  org.apache.bcel.generic.Type> bcelrevtyp = 
+    new HashMap<QuantVariableRef, org.apache.bcel.generic.Type>();
   
   /** a Set to stock the array types declaration the key is the original type. */
   private static final Map<QuantVariableRef, Term> arrays = 
@@ -103,7 +112,55 @@ public final class Type {
       return t;
     }
   }
+  /**
+   * Translate a type to a term which represents the name of the type.
+   * @param type the type to translate
+   * @return a term which has the type {@link Type#sort} and which represents
+   * the name of the type which is translated
+   */
+  public static QuantVariableRef translateToType(final org.apache.bcel.generic.Type type) {
+    QuantVariableRef t = bceltypes.get(type);
+    String name = "";
+    if (t != null) {
+      return t;
+    }
+    else {
+      if (type instanceof BasicType) {
+        name = "(PrimitiveType " + type.getSignature().substring(2).toUpperCase() + ")";     
+      }
+      else if (type instanceof ReferenceType) {
+        final ReferenceType refType = (ReferenceType) type;
+
+        if (refType instanceof ObjectType) {
+          final ObjectType o = (ObjectType) refType;
+          final String cname = o.getClassName();
+          try {
+            if (o.referencesClassExact()) {
+              name = "(ClassType " + cname + "Type.name)";
+            }
+            else {
+              // gee! it's an interface!
+              name = "(InterfaceType " + cname + "Type.name)";
+            }
+          } 
+          catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            name = "(ReferenceType Unsupported)";
+          }
+        }
+        else {
+          name = "(ReferenceType Unsupported)";
+        }
+      }
+    }
     
+    t = Expression.rvar(name, Type.sort);
+    bceltypes.put(type, t);
+    bcelrevtyp.put(t, type);
+    return t;
+  }
+ 
   /**
    * Translate a type to a valid name of the form: 
    * <code>classNameType.name</code>.

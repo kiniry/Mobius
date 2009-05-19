@@ -384,6 +384,13 @@ Ltac magickal :=
     end.
 
 Axiom smod_prop: forall z, Int.range z -> Int.smod z = z.
+
+
+
+Axiom toZ_inj: (forall z1 z2, Is_true (eq_bool (Int.toZ z1) (Int.toZ z2)) ->  
+                                   (Is_true (eq_bool z1 z2))).
+
+
 Ltac arith :=
     repeat rewrite Int.add_prop;
 	repeat rewrite Int.div_prop;
@@ -392,3 +399,5 @@ Ltac arith :=
 	repeat rewrite smod_prop;
 	repeat rewrite Int.const_prop.
 (* Axiom user : forall p: Prop, p. *)
+Hint Rewrite Int.add_prop Int.div_prop Int.mul_prop smod_prop: bicoarith.
+

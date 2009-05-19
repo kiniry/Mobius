@@ -15,8 +15,8 @@ public final class GlobalProperties {
   /** */
   private static final long serialVersionUID = 1L;
   
-  private final Set<javafe.ast.Type> fVisibleTypeSet = 
-    new HashSet<javafe.ast.Type>();
+  private final Set< org.apache.bcel.generic.Type> fVisibleTypeSet = 
+    new HashSet< org.apache.bcel.generic.Type>();
   
   private final Set<FieldAccess> subsetCheckingSet = 
     new HashSet<FieldAccess>();
@@ -41,11 +41,11 @@ public final class GlobalProperties {
     fClassId = id;
   }
   
-  public void addVisibleTypes(Set<javafe.ast.Type> visibleTypeSet) {
+  public void addVisibleTypes(Set<org.apache.bcel.generic.Type> visibleTypeSet) {
     fVisibleTypeSet.addAll(visibleTypeSet);
   }
   
-  public Set<javafe.ast.Type> getVisibleTypes() {
+  public Set<org.apache.bcel.generic.Type> getVisibleTypes() {
     return fVisibleTypeSet;
   }
 

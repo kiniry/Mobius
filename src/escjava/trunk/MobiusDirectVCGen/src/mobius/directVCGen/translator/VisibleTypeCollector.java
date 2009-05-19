@@ -3,6 +3,9 @@ package mobius.directVCGen.translator;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ObjectType;
+
 import javafe.ast.ASTNode;
 import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
@@ -142,6 +145,19 @@ final class VisibleTypeCollector extends ABasicVisitor {
     final VisibleTypeCollector vtc = new VisibleTypeCollector();
     x.accept(vtc, null);
     return vtc.fTypeSet;
+  }
+  public static Set<org.apache.bcel.generic.Type> getBCELVisibleTypeSet(final RoutineDecl x) {
+    final Set<Type> s = getVisibleTypeSet(x);
+    final Set<org.apache.bcel.generic.Type> ret = 
+      new HashSet<org.apache.bcel.generic.Type>();
+    for (Type t: s) {
+      if (t instanceof TypeSig) {
+        JavaClass jc = mobius.directVCGen.formula.Translator.getInst().translate((TypeSig)t);
+        
+        ret.add(new ObjectType(jc.getClassName()));
+      }
+    }
+    return ret;
   }
 
 }

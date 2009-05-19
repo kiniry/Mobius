@@ -16,6 +16,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.Type;
 import org.apache.bcel.util.Repository;
 
 import escjava.tc.TypeCheck;
@@ -266,5 +267,6 @@ public final class Translator  {
     }
     final TypeSig sig = getSig(clzz);
     return sig;
-  } 
+  }
+
 }

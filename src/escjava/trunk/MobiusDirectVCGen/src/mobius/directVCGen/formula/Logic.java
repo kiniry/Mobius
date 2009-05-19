@@ -580,11 +580,11 @@ public final class Logic {
    * @param list  a list of motifiable types.
    * @return A Term expressing the check described above.
    */
-  public static Term isVisibleIn(final Term var, final Set<javafe.ast.Type> list) {
+  public static Term isVisibleIn(final Term var, final Set< org.apache.bcel.generic.Type> list) {
     Term t1 = null;
     Term t2 = null;
     
-    for (javafe.ast.Type type: list) {
+    for (org.apache.bcel.generic.Type type: list) {
       final QuantVariableRef typeTerm = Type.translateToType(type);
       t1 = Logic.equals(var, typeTerm);
       if (t2 == null) {
@@ -658,5 +658,28 @@ public final class Logic {
                                           " found " + t.getSort() + "."); 
     }
   }
-
+  /**
+   * Calculates the class invariants and the invariants predicates
+   * for the poscondition.
+   * @return a valid predicate
+   */
+  public static Term invPostPred(final java.util.Set< org.apache.bcel.generic.Type> visSet) {
+    final QuantVariableRef x = Expression.rvar(Ref.sort);
+    final QuantVariableRef type = Expression.rvar(Type.sort);
+    final QuantVariable[] vars = {x.qvar, type.qvar}; 
+    final Term invTerm = Logic.inv(Heap.var, x, type);
+    final Term typeOfTerm = Logic.assignCompat(Heap.var, x, type);
+    final Term allocTerm = Logic.isAlive(Heap.var, x);
+    Term andTerm = Logic.and(allocTerm, typeOfTerm);
+    
+    if (!visSet.isEmpty()) {
+      
+      final Term visibleTerm = Logic.isVisibleIn(type, visSet);
+      andTerm = Logic.and(andTerm, visibleTerm);
+    }
+    
+    final Term implTerm = Logic.implies(andTerm, invTerm);
+    final Term forAllTerm = Logic.forall(vars, implTerm);
+    return forAllTerm;
+  }
 }
