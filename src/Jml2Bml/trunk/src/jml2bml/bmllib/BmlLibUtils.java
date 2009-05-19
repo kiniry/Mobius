@@ -9,7 +9,6 @@ package jml2bml.bmllib;
 import javax.lang.model.type.TypeKind;
 
 import jml2bml.exceptions.Jml2BmlException;
-import jml2bml.symbols.Symbols;
 
 import org.jmlspecs.openjml.JmlToken;
 

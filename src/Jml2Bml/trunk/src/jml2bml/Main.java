@@ -14,7 +14,6 @@ import javax.tools.JavaFileManager;
 
 import jml2bml.ast.PrettyPrinter;
 import jml2bml.ast.TreeNodeFinder;
-import jml2bml.bytecode.ClassFileLocation;
 import jml2bml.engine.Jml2BmlTranslator;
 import jml2bml.engine.TranslationManager;
 import jml2bml.exceptions.NotTranslatedException;
@@ -22,8 +21,6 @@ import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import jml2bml.utils.Logger;
 
-import org.apache.bcel.classfile.LineNumberTable;
-import org.apache.bcel.classfile.Method;
 import org.apache.bcel.util.ClassPath;
 import org.jmlspecs.openjml.JmlCompiler;
 import org.jmlspecs.openjml.JmlPretty;
@@ -35,7 +32,6 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.LineMap;
@@ -75,35 +71,34 @@ public class Main {
   @Argument
   private java.util.List < String > arguments = new ArrayList < String >();
 
-//  public void doMain(String[] args) throws IOException, CmdLineException,
-//      ClassNotFoundException, ReadAttributeException, NotTranslatedException {
-//    CmdLineParser parser = new CmdLineParser(this);
-//    parser.parseArgument(args);
-//    if (arguments.size() != 3)
-//      throw new CmdLineException("Invalid argument number");
-//    ClassFileLocation loc = new ClassFileLocation(arguments.get(0), arguments
-//        .get(1));
-//    if (out == null)
-//      out = loc.getClassFilePath() + "-wyn";
-//    compile(arguments.get(2), loc, out, "", null);
-//  }
+  public void doMain(String[] args) throws IOException, CmdLineException,
+      ClassNotFoundException, ReadAttributeException, NotTranslatedException {
+    CmdLineParser parser = new CmdLineParser(this);
+    parser.parseArgument(args);
+    if (arguments.size() != 3)
+      throw new CmdLineException("Invalid argument number");
+    String inputDir = arguments.get(1);
+    if (out == null)
+      out = inputDir + "-wyn";
+    compile(arguments.get(0), inputDir, out, "", null);
+  }
 
-//  /**
-//   * Main method of the Jml2Bml compiler. For given class and source,
-//   * inserts into bytecode the translated Jml annotations from the source code.
-//   * @param args <code>args[0]</code> directory containing compiled classes<br>
-//   * <code>args[1]</code> class file name<br>
-//   * <code>args[2]</code> source file (whole path)
-//   * @throws ClassNotFoundException
-//   * @throws ReadAttributeException
-//   * @throws NotTranslatedException 
-//   * @throws CmdLineException 
-//   */
-//  public static void main(final String[] args) throws ClassNotFoundException,
-//      ReadAttributeException, IOException, CmdLineException,
-//      NotTranslatedException {
-//    new Main().doMain(args);
-//  }
+  /**
+   * Main method of the Jml2Bml compiler. For given class and source,
+   * inserts into bytecode the translated Jml annotations from the source code.
+   * @param args <code>args[0]</code> directory containing compiled classes<br>
+   * <code>args[1]</code> class file name<br>
+   * <code>args[2]</code> source file (whole path)
+   * @throws ClassNotFoundException
+   * @throws ReadAttributeException
+   * @throws NotTranslatedException 
+   * @throws CmdLineException 
+   */
+  public static void main(final String[] args) throws ClassNotFoundException,
+      ReadAttributeException, IOException, CmdLineException,
+      NotTranslatedException {
+    new Main().doMain(args);
+  }
 
   /**
    * Main method of the Jml2Bml compiler. Compiles JML annotations from
@@ -153,7 +148,7 @@ public class Main {
     if (verbose) {
       log.info("------------- PRETTY PRINT ------------");
       new PrettyPrinter(System.out).prettyPrint(tree);
-      log.info("LINE TABLES: ");
+//      log.info("LINE TABLES: ");
 //      for (Method m : clazz.getJC().getMethods()) {
 //        log.info(m.getName());
 //        final LineNumberTable lnt = m.getLineNumberTable();

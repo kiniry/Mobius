@@ -5,7 +5,6 @@ import java.util.List;
 
 import jml2bml.bytecode.TypeSignature;
 import jml2bml.exceptions.Jml2BmlException;
-import jml2bml.symbols.Symbols;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantClass;
