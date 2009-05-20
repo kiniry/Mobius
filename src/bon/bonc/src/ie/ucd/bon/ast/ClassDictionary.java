@@ -31,7 +31,7 @@ public class ClassDictionary extends SpecificationElement {
     assert location != null;
     this.location = location;
     this.systemName = systemName; assert systemName != null;
-    this.entries = entries; 
+    this.entries = entries; assert entries != null;
     this.indexing = indexing; 
     this.explanation = explanation; 
     this.part = part; 

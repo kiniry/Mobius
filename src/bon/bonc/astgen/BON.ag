@@ -7,7 +7,7 @@ IndexClause = String! id, List<String>! indexTerms;
 
 InformalChart :> SystemChart, ClassChart, ClusterChart, EventChart, ScenarioChart, CreationChart;
 
-ClassDictionary = String! systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part; 
+ClassDictionary = String! systemName, List<DictionaryEntry>! entries, Indexing indexing, String explanation, String part; 
 DictionaryEntry = String! name, List<String>! clusters, String! description;
 
 SystemChart = String! name, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;

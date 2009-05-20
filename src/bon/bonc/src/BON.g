@@ -262,13 +262,20 @@ informal_chart returns [InformalChart ic] :
     { $ic = $creation_chart.cc; }
 ;
 			
-class_dictionary returns [ClassDictionary cd] :  
-  d='dictionary' system_name 
-  (indexing)?
-  (explanation)? 
-  (part)? 
-  (dictionary_entry)+ 
-  'end'
+class_dictionary returns [ClassDictionary cd] 
+@init { Indexing index = null; String expl = null; String p = null; 
+        List<DictionaryEntry> entries = new LinkedList<DictionaryEntry>(); }
+:  
+  d='dictionary' 
+  system_name 
+  (indexing { index = $indexing.indexing; } )?
+  (explanation { expl = $explanation.explanation; } )? 
+  (part { p = $part.part; } )? 
+  (de=dictionary_entry
+   { entries.add($de.entry); }
+  )+ 
+  e='end'
+  { cd = ClassDictionary.mk($system_name.name, entries, index, expl, p, getSLoc($d,$e)); }
                    ->
                    ^(
                      CLASS_DICTIONARY[$d] system_name 
@@ -288,11 +295,11 @@ class_dictionary returns [ClassDictionary cd] :
                    ^( CLASS_DICTIONARY  PARSE_ERROR )
                   ;
 			
-dictionary_entry returns [DictionaryEntry de] :  
+dictionary_entry returns [DictionaryEntry entry] :  
   c='class' class_name 
   'cluster' cluster_name_list 
   description 
-  { $de = DictionaryEntry.mk($class_name.text, $cluster_name_list.clusters, $description.text, getSLoc($c, $description.stop)); }
+  { $entry = DictionaryEntry.mk($class_name.text, $cluster_name_list.list, $description.text, getSLoc($c, $description.stop)); }
                    ->
                    ^(
                      DICTIONARY_ENTRY[$c] class_name
@@ -302,17 +309,25 @@ dictionary_entry returns [DictionaryEntry de] :
 
 /**********************************************/
 
-system_chart returns [SystemChart sc] :
-  s='system_chart' system_name 
+system_chart returns [SystemChart sc] 
+@init { Indexing index = null; String expl = null; String p = null; 
+        List<ClusterEntry> entries; }
+:
+  s='system_chart' 
+  system_name 
   { ClusterChartDefinition system = new ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
   getTI().informal().setSystem(system);
   getContext().enterSystemChart(system); }
-  (indexing)?
-  (explanation)? 
-  (part)? 
-  (cluster_entries)? 
-  'end'
+  (indexing { index = $indexing.indexing; } )?
+  (explanation { expl = $explanation.explanation; } )? 
+  (part { p = $part.part; } )? 
+  (  ce=cluster_entries 
+     { entries = $ce.entries; } 
+   | { ce = Constants.NO_CLUSTER_ENTRIES; }
+  ) 
+  e='end'
   { getContext().leaveSystemChart(); }
+  { sc = SystemChart.mk($system_name.name, entries, index, expl, p, getSLoc($s,$e)); }
                ->
                ^(
                  SYSTEM_CHART[$s] system_name
@@ -338,14 +353,17 @@ explanation returns [String explanation] :
              ;
 
 indexing returns [Indexing indexing] :  
-           i='indexing' index_list
-           { $indexing = Indexing.mk($index_list.list); getTI().indexing($indexing); }
+   i='indexing' index_list
+   { getTI().indexing($indexing); }
+   { $indexing = Indexing.mk($index_list.list, getSLoc($i,$index_list.stop)); } 
            ->
            ^(
              INDEXING[$i] index_list
             ) 
-           |
-             i='indexing' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "indexing entries", "after 'indexing'", false)); }
+ |
+   i='indexing' 
+   { addParseProblem(new MissingElementParseError(getSourceLocation($i), "indexing entries", "after 'indexing'", false)); }
+   { $indexing = Indexing.mk(Constants.NO_INDEX_CLAUSES, getSLoc($i)); }
            ->
            ^( INDEXING[$i] PARSE_ERROR )
           ;
@@ -564,7 +582,7 @@ commands returns [List<String> commands] :
 
 constraints returns [List<String> constraints] :
   c='constraint' constraint_list
-  { $constraints = $constraint_list.string; }
+  { $constraints = $constraint_list.constraints; }
   -> ^(CONSTRAINTS[$c] constraint_list)
              ;
 
@@ -721,7 +739,7 @@ event_entries returns [List<EventEntry> entries] :
                  )
                ;
                
-event_entry returns [EventEntry event]
+event_entry returns [EventEntry entry]
 @init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String name = null; Token stop=null; } :
   e='event'
   (  ( m=manifest_textblock 
@@ -739,7 +757,7 @@ event_entry returns [EventEntry event]
      { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
      { stop = $i; }
   )
-  { if (mok && cok) $event = EventEntry.mk(name, ccnl, getSLoc($e,stop)); }
+  { if (mok && cok) $entry = EventEntry.mk(name, ccnl, getSLoc($e,stop)); }
               ->
                 {!mok}? ^( EVENT_ENTRY PARSE_ERROR )
               ->
@@ -1300,7 +1318,7 @@ class_interface returns [ClassInterface ci]
 @init { Indexing indexing = null; List<BONType> parents = null; List<AssertionClause> invariant = null; Token start; }
 :
   (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
-  (pcl=parent_class_list { parents = $pcl.list; if (start == null) start = $pcl.start; } )?
+  (pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } )?
   features
   { if (start == null) start = $features.start; }
   (inv=class_invariant { invariant = $inv.invariant; } )?
@@ -1399,7 +1417,7 @@ feature_specification returns [FeatureSpecification spec]
   fnl=feature_name_list
   { getTI().featureSpecModifier(modifier); }
   (has_type { hasType = $has_type.htype; } )?
-  (rc=rename_clause { renaming = $rc.renaming; } )?
+  (rc=rename_clause { renaming = $rc.rename; } )?
   (c=COMMENT { comment = $c.text; } )?
   (  ga=feature_arguments
      { args = $fa.args; }
@@ -1462,7 +1480,7 @@ contracting_conditions returns [ContractClause contracts]
 precondition returns [List<AssertionClause> assertions] :
   'require' assertion 
   { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
-  { $assertions = $assertion.assertions; }
+  { $assertions = $assertion.clauses; }
                ->
                ^(
                  PRECONDITION assertion
@@ -1472,7 +1490,7 @@ precondition returns [List<AssertionClause> assertions] :
 postcondition returns [List<AssertionClause> assertions] :
   'ensure' assertion 
   { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
-  { $assertions = $assertion.assertions; }
+  { $assertions = $assertion.clauses; }
                 ->
                 ^(
                   POSTCONDITION assertion
@@ -1565,7 +1583,7 @@ feature_argument returns [List<FeatureArgument> args] :
      ) 
    | ( t2=type
        { getTI().featureArg(null,$t2.text); }
-       { $args = new ArrayList<FeatureArgument>(1); $args.add(FeatureArgument.mk(null, $t2.type, getSLoc($t2))); }
+       { $args = new ArrayList<FeatureArgument>(1); $args.add(FeatureArgument.mk(null, $t2.type, getSLoc($t2.start,$t2.stop))); }
      ) 
   )
                    ->
@@ -1717,12 +1735,12 @@ type returns [BONType type] :
  **********************************************/
 //TODO correct this all for use with the new expression grammar
 
-assertion returns [List<AssertionClause> assertions] :
-  { $assertions = new LinkedList<AssertionClause>(); }
+assertion returns [List<AssertionClause> clauses] :
+  { $clauses = new LinkedList<AssertionClause>(); }
   a1=assertion_clause
-  { $assertions.add($a1.clause); }
+  { $clauses.add($a1.clause); }
   (';' a=assertion_clause  
-   { $assertions.add($a.clause); }
+   { $clauses.add($a.clause); }
   )* 
   ';'?
   
@@ -1762,7 +1780,7 @@ quantification returns [Quantification quantification]
 :
   q=quantifier 
   rexp=range_expression 
-  (r=restriction { restrict = $r.restriction; } )? 
+  (r=restriction { restrict = $r.exp; } )? 
   p=proposition
   { $quantification = Quantification.mk($q.q, $rexp.ranges, restrict, $p.exp, getSLoc($q.start,$p.stop)); } 
                  ->
