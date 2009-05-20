@@ -138,7 +138,7 @@ public final class ManualTests {
   private static void addRemoveTest() throws IOException,
       ClassNotFoundException, ReadAttributeException, RecognitionException {
     System.out.println(xxx);
-    bcc = new BCClass(Paths.path, "test.Empty");
+    bcc = new BCClass(Paths.path, "adhoc.Empty");
     bcc.setInvariant(new ClassInvariant(bcc, true));
     final BCMethod m = bcc.getMethod(1);
     final SpecificationCase[] sc = {
@@ -149,7 +149,7 @@ public final class ManualTests {
     final SingleAssert olda = (SingleAssert) m.getAmap().addAttribute(1, 8, 3);
     m.getAmap().addAttribute(1, 5, 0);
     final SingleAssert sa = (SingleAssert) m.getAmap().addAttribute(1, 8, 2);
-    sa.parse("\\assert false");
+    sa.parse("assert false");
     final AbstractFormula af = generateRandomFormula(5);
     final SingleAssert newa = new SingleAssert(m, null, -1, af);
     olda.replaceWith(newa);
@@ -202,25 +202,25 @@ public final class ManualTests {
     System.out.println(xxx);
     System.out.println("length: " + code.length());
     errc = 0;
-    replaceTest("~true", " && true || ~true) ||", 554, 856, true);
+    replaceTest("!true", " && true || !true) ||", 554, 856, true);
     replaceTest("\\class", "))", 980, 765, true);
     replaceTest("requi", "| false", 565, 480, true);
-    replaceTest("\\a", "~tr", 386, 209, true);
-    replaceTest("~(~f", "e)", 593, noChange, true);
+    replaceTest("\\a", "!tr", 386, 209, true);
+    replaceTest("!(!f", "e)", 593, noChange, true);
     replaceTest("rt (tr", "ue) &", 905, noChange, true);
-    replaceTest("*    ~(~(~", "))", 753, 718, true);
-    replaceTest(" *    ~(~f", "e)", 479, noChange, true);
-    replaceTest("~(~(~(~", "sse", 129, 42, true);
+    replaceTest("*    !(!(!", "))", 753, 718, true);
+    replaceTest(" *    !(!f", "e)", 479, noChange, true);
+    replaceTest("!(!(!(!", "sse", 129, 42, true);
     replaceTest("/*", "*/", 735, 765, true);
     replaceTest(")\n/*", "*/", 102, 923, true);
-    replaceTest("assert", "~(~", 85, 923, true);
-    replaceTest("ldc", "~", 47, noChange, true);
+    replaceTest("assert", "!(!", 85, 923, true);
+    replaceTest("ldc", "!", 47, noChange, true);
     replaceTest("requires", "true", 536, 599, true);
     replaceTest("res (", "e))", 183, 25, true);
-    replaceTest("~(~false", "requi", 542, 517, true);
+    replaceTest("!(!false", "requi", 542, 517, true);
     replaceTest("invariant", "requires", 654, 765, true);
     replaceTest("rt false", " && (", 191, 830, true, "");
-    //replaceTest("~(~(~(~", "\\a", 574, 431, true,
+    //replaceTest("!(!(!(!", "\\a", 574, 431, true,
     //            "false)))\n\\assert true\n * ");
     replaceTest("(20)", "\n3:", 638, noChange, false, "\n/* \\assert false");
     replaceTest("(20)", "\n3:", 286, 993, true, "\n/* \\assert false */");
@@ -268,7 +268,7 @@ public final class ManualTests {
   public static BCClass createSampleClass() throws ClassNotFoundException,
       ReadAttributeException {
     MLog.putMsg(MLog.LEVEL_PINFO, xxx);
-    bcc = new BCClass(Paths.path, "test.Empty2");
+    bcc = new BCClass(Paths.path, "adhoc.Empty2");
     final BCMethod m1 = bcc.getMethod(2);
     final BCMethod m2 = bcc.getMethod(3);
     final AbstractFormula f0 = getSampleFormula(2, 0);
@@ -307,7 +307,7 @@ public final class ManualTests {
    */
   public static BCClass createSampleClass2() throws ClassNotFoundException,
       ReadAttributeException {
-    bcc = new BCClass(Paths.path, "test.Empty");
+    bcc = new BCClass(Paths.path, "adhoc.Empty");
     bcc.addAttribute(new ClassInvariant(bcc, getSampleFormula(4, 0), true));
     for (int i = 0; i < bcc.getMethodCount(); i++) {
       final BCMethod m = bcc.getMethod(i);
@@ -546,12 +546,12 @@ public final class ManualTests {
    */
   public static void main(final String[] args) {
     try {
-      //      addRemoveTest();
+      //addRemoveTest();
       //codeReplaceTest();
       variableSearchTest();
-      //      pp_test();
-      //      iterTest();
-      //      desugarTest();
+      //pp_test();
+      //iterTest();
+      //desugarTest();
       System.out.println("done.");
     } catch (final Exception e) {
       System.out.println("error!");
@@ -572,7 +572,7 @@ public final class ManualTests {
     // file name to save assert formula to / load it from.
     final String fname = "c04";
     if (generate) {
-      bcc = new BCClass(Paths.path, "test.Empty");
+      bcc = new BCClass(Paths.path, "adhoc.Empty");
       final BCMethod m = bcc.getMethod(1);
       final AbstractFormula f = generateRandomFormula(5);
       // AbstractFormula f = getSampleFormula();

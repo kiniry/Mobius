@@ -1100,6 +1100,7 @@ primaryExpr returns [BCExpression ast] :
   | MINUS min=primaryExpr {$ast = new UnaryArithmeticExpression(Code.NEG, $min.ast);}
   | PLUS px=primaryExpr {$ast = $px.ast;}
   | LOG_NOT p=primaryExpr {$ast = new Formula(Code.NOT, $p.ast);}
+  | BITWISENOT p=primaryExpr {$ast = new UnaryArithmeticExpression(Code.BITWISENOT, $p.ast);}
   | FALSE {$ast = new Predicate0Ar(false);}
   | TRUE {$ast = new Predicate0Ar(true);}
   | RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
@@ -1215,10 +1216,10 @@ NOTHING: '\\nothing';
 EVERYTHING: '\\everything';
 LOG_AND: '&&';
 LOG_OR: '||';
+LOG_NOT: '!';
 IMPLIES: '==>';
 EQUIV: '<==>';
 NOTEQUIV: '<=!=>';
-LOG_NOT: '~';
 SEMICOLON: ';';
 FORALL: '\\forall';
 EXISTS: '\\exists';
@@ -1247,6 +1248,7 @@ USHR: '>>>';
 BITWISEAND: '&';
 BITWISEOR: '|';
 BITWISEXOR: '^';
+BITWISENOT: '~';
 COND: '?';
 NULL: 'null'|'NULL';
 THIS: 'this'|'THIS';

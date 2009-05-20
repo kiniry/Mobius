@@ -57,54 +57,59 @@ public abstract class Priorities extends Code {
   public static final int EQUALITY_PRIORITY = 8;
 
   /**
+   * Priority of bitwise NOT operators.
+   */
+  public static final int BITWISENOT_PRIORITY = 9;
+
+  /**
    * Priority of bitwise AND operators.
    */
-  public static final int BITWISEAND_PRIORITY = 9;
+  public static final int BITWISEAND_PRIORITY = 10;
 
   /**
    * Priority of bitwise XOR operators.
    */
-  public static final int BITWISEXOR_PRIORITY = 10;
+  public static final int BITWISEXOR_PRIORITY = 11;
 
   /**
    * Priority of bitwise OR operators.
    */
-  public static final int BITWISEOR_PRIORITY = 11;
+  public static final int BITWISEOR_PRIORITY = 12;
 
   /**
    * Priority of logical conjunction operators.
    */
-  public static final int LOGICALAND_PRIORITY = 12;
+  public static final int LOGICALAND_PRIORITY = 13;
 
   /**
    * Priority of logical alternative operators.
    */
-  public static final int LOGICALOR_PRIORITY = 13;
+  public static final int LOGICALOR_PRIORITY = 14;
 
   /**
    * Priority of logical implication operators.
    */
-  public static final int LOGICALIMPL_PRIORITY = 14;
+  public static final int LOGICALIMPL_PRIORITY = 15;
 
   /**
    * Priority of logical equivalence operators.
    */
-  public static final int LOGICALEQUIV_PRIORITY = 15;
+  public static final int LOGICALEQUIV_PRIORITY = 16;
 
   /**
    * Priority of the conditional expression.
    */
-  public static final int COND_PRIORITY = 16;
+  public static final int COND_PRIORITY = 17;
 
   /**
    * Priority of quantifiers.
    */
-  public static final int QUANTIFIER_PRIORITY = 17;
+  public static final int QUANTIFIER_PRIORITY = 18;
 
   /**
    * Maximum possible expression priority.
    */
-  public static final int MAX_PRI = 17;
+  public static final int MAX_PRI = 18;
 
   /**
    * The associativity value which indicates no associativity at all.
@@ -235,6 +240,7 @@ public abstract class Priorities extends Code {
     priorities[SHR] = SHIFTOP_PRIORITY;
     priorities[USHR] = SHIFTOP_PRIORITY;
     setPrioritiesComparisons();
+    priorities[BITWISENOT] = BITWISENOT_PRIORITY;
     priorities[BITWISEAND] = BITWISEAND_PRIORITY;
     priorities[BITWISEXOR] = BITWISEXOR_PRIORITY;
     priorities[BITWISEOR] = BITWISEOR_PRIORITY;

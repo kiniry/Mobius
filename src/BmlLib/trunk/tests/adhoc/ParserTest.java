@@ -16,7 +16,7 @@ public class ParserTest {
   public static void main(String[] args) {
     BCClass bcc;
     try {
-      bcc = new BCClass("/home/alx/workspace/BmlLib/bin/test", "Empty");
+      bcc = new BCClass(Paths.path, "adhoc.Empty");
       String code = bcc.printCode();
       System.out.println(code);
       code = CodeFragment.preProcess(code);

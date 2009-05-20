@@ -23,7 +23,7 @@ public class DesugarWalker extends ExpressionWalker {
 
   /**
    * Removes double negation from <code>expr</code>:
-   * ~~expr -- >  expr
+   * !!expr -- >  expr
    */
   private void removeDoubleNegation(final BCExpression expr) {
     if (expr.getConnector() == Code.NOT) {

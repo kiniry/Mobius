@@ -20,6 +20,8 @@ public class Code {
 
   public static final int BITWISEAND = 0x30;
 
+  public static final int BITWISENOT = 0x36;
+
   public static final int BITWISEOR = 0x31;
 
   public static final int BITWISEXOR = 0x32;

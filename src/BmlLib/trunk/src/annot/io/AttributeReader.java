@@ -355,6 +355,7 @@ public class AttributeReader {
       case Code.USHR:
         return new ArithmeticExpression(this, b);
       case Code.NEG:
+      case Code.BITWISENOT:
         return new UnaryArithmeticExpression(this, b);
       case Code.INT_LITERAL:
         return new NumberLiteral(this, b);

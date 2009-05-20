@@ -116,7 +116,7 @@ public class Formula extends AbstractFormula {
       case Code.IMPLIES:
         return " == >  ";
       case Code.NOT:
-        return "~";
+        return "!";
       case Code.EQUIV:
         return "  <== >  ";
       case Code.NOTEQUIV:

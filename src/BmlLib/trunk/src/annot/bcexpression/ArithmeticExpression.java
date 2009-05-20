@@ -79,6 +79,8 @@ public class ArithmeticExpression extends AbstractIntExpression {
    */
   protected String printRoot() {
     switch (getConnector()) {
+      case Code.BITWISENOT:
+        return " ~ ";
       case Code.BITWISEAND:
         return " & ";
       case Code.BITWISEOR:
