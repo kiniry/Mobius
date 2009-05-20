@@ -43,6 +43,10 @@ public class Cluster extends StaticComponent {
   public static Cluster mk(String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation location) {
     return new Cluster(name, components, reused, comment, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

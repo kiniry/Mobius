@@ -41,6 +41,10 @@ public class DictionaryEntry extends AstNode {
   public static DictionaryEntry mk(String name, List<String> clusters, String description, SourceLocation location) {
     return new DictionaryEntry(name, clusters, description, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

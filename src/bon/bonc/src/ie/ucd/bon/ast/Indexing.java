@@ -37,6 +37,10 @@ public class Indexing extends AstNode {
   public static Indexing mk(List<IndexClause> indexes, SourceLocation location) {
     return new Indexing(indexes, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

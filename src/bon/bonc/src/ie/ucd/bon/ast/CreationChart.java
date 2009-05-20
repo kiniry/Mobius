@@ -45,6 +45,10 @@ public class CreationChart extends InformalChart {
   public static CreationChart mk(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new CreationChart(name, entries, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

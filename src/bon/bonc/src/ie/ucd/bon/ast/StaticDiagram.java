@@ -41,6 +41,10 @@ public class StaticDiagram extends SpecificationElement {
   public static StaticDiagram mk(List<StaticComponent> components, String extendedId, String comment, SourceLocation location) {
     return new StaticDiagram(components, extendedId, comment, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

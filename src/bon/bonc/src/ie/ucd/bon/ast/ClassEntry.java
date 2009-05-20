@@ -39,6 +39,10 @@ public class ClassEntry extends AstNode {
   public static ClassEntry mk(String name, String description, SourceLocation location) {
     return new ClassEntry(name, description, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

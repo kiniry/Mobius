@@ -39,6 +39,10 @@ public class BonSourceFile extends AstNode {
   public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
     return new BonSourceFile(bonSpecification, indexing, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

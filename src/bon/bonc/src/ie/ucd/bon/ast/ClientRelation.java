@@ -45,6 +45,10 @@ public class ClientRelation extends StaticRelation {
   public static ClientRelation mk(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
     return new ClientRelation(client, supplier, clientEntities, typeMark, semanticLabel, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

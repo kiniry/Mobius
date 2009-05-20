@@ -1,5 +1,9 @@
 package ie.ucd.bon.ast;
 
-public class AstNode {
+import ie.ucd.bon.source.SourceLocation;
 
+public abstract class AstNode {
+
+	public abstract SourceLocation getLocation();
+	
 }

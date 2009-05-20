@@ -37,6 +37,10 @@ public class GenericIndirection extends AstNode {
   public static GenericIndirection mk(String indirectionElement, SourceLocation location) {
     return new GenericIndirection(indirectionElement, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

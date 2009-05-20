@@ -39,6 +39,10 @@ public class IndexClause extends AstNode {
   public static IndexClause mk(String id, List<String> indexTerms, SourceLocation location) {
     return new IndexClause(id, indexTerms, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

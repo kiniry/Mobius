@@ -37,6 +37,10 @@ public class AssertionClause extends AstNode {
   public static AssertionClause mk(Expression expression, SourceLocation location) {
     return new AssertionClause(expression, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

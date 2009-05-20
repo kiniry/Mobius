@@ -39,6 +39,10 @@ public class FormalGeneric extends AstNode {
   public static FormalGeneric mk(String identifier, BONType type, SourceLocation location) {
     return new FormalGeneric(identifier, type, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

@@ -37,6 +37,10 @@ public class ParentIndirection extends ClientEntity {
   public static ParentIndirection mk(GenericIndirection genericIndirection, SourceLocation location) {
     return new ParentIndirection(genericIndirection, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

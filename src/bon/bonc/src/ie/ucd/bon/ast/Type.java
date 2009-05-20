@@ -41,6 +41,10 @@ public class Type extends AstNode {
   public static Type mk(String identifier, List<BONType> actualGenerics, String fullString, SourceLocation location) {
     return new Type(identifier, actualGenerics, fullString, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

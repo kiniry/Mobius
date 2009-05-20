@@ -39,6 +39,10 @@ public class HasType extends AstNode {
   public static HasType mk(TypeMark mark, BONType type, SourceLocation location) {
     return new HasType(mark, type, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

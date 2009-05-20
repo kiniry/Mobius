@@ -39,6 +39,10 @@ public class CreationEntry extends AstNode {
   public static CreationEntry mk(String name, List<String> types, SourceLocation location) {
     return new CreationEntry(name, types, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

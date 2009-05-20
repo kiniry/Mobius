@@ -292,7 +292,7 @@ dictionary_entry returns [DictionaryEntry de] :
   c='class' class_name 
   'cluster' cluster_name_list 
   description 
-  { $de = DictionaryEntry.mk($class_name.text, $cluster_name_list.clusters, $description.text, getSLoc($c.start, $description.stop)); }
+  { $de = DictionaryEntry.mk($class_name.text, $cluster_name_list.clusters, $description.text, getSLoc($c, $description.stop)); }
                    ->
                    ^(
                      DICTIONARY_ENTRY[$c] class_name
@@ -389,7 +389,7 @@ cluster_entries returns [List<ClusterEntry> entries] :
 cluster_entry returns [ClusterEntry ce] :
   c='cluster' cluster_name description
   { getTI().informal().addClusterEntry($cluster_name.text); }
-  { $ce = ClusterEntry.mk($cluster_name.text, $description.text, getSLoc($c.start, $description.stop)); } 
+  { $ce = ClusterEntry.mk($cluster_name.text, $description.text, getSLoc($c, $description.stop)); } 
                 ->
                 ^(
                   CLUSTER_ENTRY[$c] cluster_name description
@@ -496,7 +496,7 @@ class_entry returns [ClassEntry entry] :
   c='class' class_name { getContext().enterClassEntry($class_name.text); }
   description
   { getTI().informal().addClassEntry($class_name.text); getContext().leaveClassEntry(); }
-  { $entry = ClassEntry.mk($class_name.text, $description.text, getSLoc($c.start, $description.stop)); }
+  { $entry = ClassEntry.mk($class_name.text, $description.text, getSLoc($c, $description.stop)); }
               ->
               ^(
                 CLASS_ENTRY[$c] class_name description
@@ -722,24 +722,24 @@ event_entries returns [List<EventEntry> entries] :
                ;
                
 event_entry returns [EventEntry event]
-@init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String m = null; Token stop=null; } :
+@init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String name = null; Token stop=null; } :
   e='event'
   (  ( m=manifest_textblock 
-      {mok=true; m=$m.text;} 
+      {mok=true; name=$m.text;} 
      )
    |  
    { addParseProblem(new MissingElementParseError(getSourceLocation($e), "event name", "in event entry clause", true)); }
   ) 
   i='involves'
-  (  (ccnl=class_or_cluster_name_list 
-      { cok=true; ccnl = $ccnl.list; }
-      { stop = $ccnl.stop; } 
+  (  (ccns=class_or_cluster_name_list 
+      { cok=true; ccnl = $ccns.list; }
+      { stop = $ccns.stop; } 
      )
    |  
      { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
-     { stop = $i.stop; }
+     { stop = $i; }
   )
-  { if (mok && cok) $event = EventEntry.mk(m, ccnl, getSLoc($e.start,stop)); }
+  { if (mok && cok) $event = EventEntry.mk(name, ccnl, getSLoc($e,stop)); }
               ->
                 {!mok}? ^( EVENT_ENTRY PARSE_ERROR )
               ->
@@ -784,7 +784,7 @@ scenario_entries returns [List<ScenarioEntry> entries] :
                   
 scenario_entry returns [ScenarioEntry entry] :
   s='scenario' m=MANIFEST_STRING d=description
-  { $entry =  ScenarioEntry.mk($m.text, $d.description, getSLoc($s.start,$d.stop)); }
+  { $entry =  ScenarioEntry.mk($m.text, $d.description, getSLoc($s,$d.stop)); }
                  ->
                  ^(
                    SCENARIO_ENTRY[$s]
@@ -825,7 +825,7 @@ creation_entries returns [List<CreationEntry> entries] :
 creation_entry returns [CreationEntry entry] :
   c='creator' class_name 
   'creates' ccnl=class_or_cluster_name_list
-  { $entry = CreationEntry.mk($class_name.name, $ccnl.list, getSLoc($c.start,$ccnl.stop)); } 
+  { $entry = CreationEntry.mk($class_name.name, $ccnl.list, getSLoc($c,$ccnl.stop)); } 
                  ->
                  ^(
                    CREATION_ENTRY[$c]
@@ -977,7 +977,7 @@ inheritance_relation returns [InheritanceRelation relation]
 :
   c=child 'inherit' 
   ('{' multiplicity '}'
-   { multiplicity = $multiplicity.m; }
+   { multiplicity = Multiplicity.mk($multiplicity.num); }
   )? 
   p=parent 
   ( semantic_label
@@ -994,7 +994,7 @@ inheritance_relation returns [InheritanceRelation relation]
                       ;
                     
 client_relation returns [ClientRelation relation] 
-@init { List<ClientEntity> entities = null; TypeMark mark; String semanticLabel = null; Token end; }
+@init { ClientEntityExpression entities = null; TypeMark mark; String semanticLabel = null; Token end; }
 :
   c=client 'client'
   { ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
@@ -1021,7 +1021,7 @@ client_relation returns [ClientRelation relation]
                    )
                  ;
                  
-client_entities returns [List<ClientEntity> entities] :
+client_entities returns [ClientEntityExpression entities] :
   a='{' cee=client_entity_expression b='}'
   { $entities = $cee.entities; }
                   -> 
@@ -1031,14 +1031,15 @@ client_entities returns [List<ClientEntity> entities] :
                    )
                  ;
                  
-client_entity_expression returns [List<ClientEntity> entities] :
-  cel=client_entity_list
-  { $entities = $cel.entities; } 
+client_entity_expression returns [ClientEntityExpression entities] :
+   cel=client_entity_list
+   { $entities = ClientEntityList.mk($cel.entities,getSLoc($cel.start,$cel.stop)); } 
                            ->
                            ^(
                              CLIENT_ENTITY_EXPRESSION[$cel.start] client_entity_list
                             )
-                           | m=multiplicity 
+ | m=multiplicity
+   { $entities = Multiplicity.mk($m.num, getSLoc($m.start,$m.stop)); } 
                            ->
                            ^(
                              CLIENT_ENTITY_EXPRESSION[$m.start] multiplicity
@@ -1194,7 +1195,7 @@ type_mark returns [TypeMark mark] :
            
 shared_mark returns [TypeMark mark] :
   a=':' '(' m=multiplicity b=')'
-  { $mark = TypeMark.mk(TypeMark.Mark.SHAREDMARK, m.num, getSLoc($a.start, $b.stop)); }
+  { $mark = TypeMark.mk(TypeMark.Mark.SHAREDMARK, m.num, getSLoc($a, $b)); }
               ->
               ^(
                 SHARED_MARK multiplicity
@@ -1284,7 +1285,7 @@ multiplicity returns [Integer num] :
               
 semantic_label returns [String label] :
   m=MANIFEST_STRING
-  { label = $m.text; }
+  { $label = $m.text; }
                  ->
                  ^(
                    SEMANTIC_LABEL[$m] MANIFEST_STRING
@@ -1304,7 +1305,7 @@ class_interface returns [ClassInterface ci]
   { if (start == null) start = $features.start; }
   (inv=class_invariant { invariant = $inv.invariant; } )?
   e='end'
-  { $ci = ClassInterface.mk($features.features, parents, invariant, indexing, getSLoc(start, $e.stop)); }
+  { $ci = ClassInterface.mk($features.features, parents, invariant, indexing, getSLoc(start, $e)); }
                   ->
                   ^(
                     CLASS_INTERFACE
@@ -1346,7 +1347,7 @@ parent_class_list returns [List<BONType> parents] :
                    ;
                    
 features returns [List<Feature> features] :
-  { $features = new LinkedList<FeatureClause>(); }
+  { $features = new LinkedList<Feature>(); }
   (feature_clause { $features.add($feature_clause.feature); } )+
            -> 
            ^(
@@ -1365,7 +1366,7 @@ feature_clause returns [Feature feature]
   (c=COMMENT { comment = $c.text; } )? 
   fs=feature_specifications 
   { getContext().leaveFeatureClause(); }
-  { $feature = Feature.mk($fs.specs, selectiveExport, comment, getSLoc($f.start,$fs.stop)); }
+  { $feature = Feature.mk($fs.specs, selectiveExport, comment, getSLoc($f,$fs.stop)); }
                  ->
                  ^(
                    FEATURE_CLAUSE
@@ -1389,10 +1390,10 @@ feature_specification returns [FeatureSpecification spec]
 @init { FeatureSpecification.Modifier modifier; List<FeatureArgument> args; HasType hasType = null; 
         RenameClause renaming = null; String comment = null; ContractClause contracts;}
 :
-  (  'deferred'  { modifier = DEFERRED; } 
-   | 'effective' { modifier = EFFECTIVE; }
-   | 'redefined' { modifier = REDEFINED; }
-   |             { modifier = NONE; }
+  (  'deferred'  { modifier = FeatureSpecification.Modifier.DEFERRED; } 
+   | 'effective' { modifier = FeatureSpecification.Modifier.EFFECTIVE; }
+   | 'redefined' { modifier = FeatureSpecification.Modifier.REDEFINED; }
+   |             { modifier = FeatureSpecification.Modifier.NONE; }
   )
   { getContext().enterFeatureSpecification(); }
   fnl=feature_name_list
@@ -1409,7 +1410,7 @@ feature_specification returns [FeatureSpecification spec]
    | { contracts = Constants.EMPTY_CONTRACT; }
   ) 
   { getContext().leaveFeatureSpecification(); }
-  { $spec = FeatureSpecification.mk(modifier, $fnl.list, contracts, hasType, renaming, comment); }
+  { $spec = FeatureSpecification.mk(modifier, $fnl.list, args, contracts, hasType, renaming, comment); }
                         ->
                         ^(
                           FEATURE_SPECIFICATION
@@ -1443,11 +1444,11 @@ contract_clause returns [ContractClause contracts] :
 
 //NB. Rewritten from precondition | postcondition | pre_and_post                 
 contracting_conditions returns [ContractClause contracts] 
-@init { List<AssertionClause> post = null; }
+@init { List<AssertionClause> postC = null; }
 :
   (  (pre=precondition (post=postcondition { post = $post.assertions; } )?)
-     { if (post == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$post.stop)); 
-       else $contracts = ContractClause.mk($pre.assertions, post, getSLoc($pre.start,$post.stop)); }  
+     { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$post.stop)); 
+       else $contracts = ContractClause.mk($pre.assertions, postC, getSLoc($pre.start,$post.stop)); }  
    | post=postcondition
      { $contracts = ContractClause.mk(Constants.NO_ASSERTIONS, $post.assertions, getSLoc($pre.start,$post.stop)); }
   )
@@ -1457,20 +1458,21 @@ contracting_conditions returns [ContractClause contracts]
                            CONTRACTING_CONDITIONS (precondition)? (postcondition)?
                           )
                         ;
-                
-//pre_and_post  :  precondition postcondition 
-//              ;
-        
-precondition  :  'require' assertion 
-                 { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+
+precondition returns [List<AssertionClause> assertions] :
+  'require' assertion 
+  { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+  { $assertions = $assertion.assertions; }
                ->
                ^(
                  PRECONDITION assertion
                 )
               ;
               
-postcondition  :  'ensure' assertion 
-                  { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+postcondition returns [List<AssertionClause> assertions] :
+  'ensure' assertion 
+  { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+  { $assertions = $assertion.assertions; }
                 ->
                 ^(
                   POSTCONDITION assertion
@@ -1479,76 +1481,104 @@ postcondition  :  'ensure' assertion
 
 /**********************************************/
 
-selective_export  :  '{' 
-                     { getContext().enterSelectiveExport(); } 
-                     class_name_list 
-                     { getContext().leaveSelectiveExport(); }   
-                     '}' 
+selective_export returns [List<String> exports] :
+  '{' 
+  { getContext().enterSelectiveExport(); } 
+  cnl=class_name_list 
+  { getContext().leaveSelectiveExport(); }   
+  '}'
+  { $exports = $cnl.list; }  
                    ->
                    ^(
                      SELECTIVE_EXPORT class_name_list
                     )
                   ;
                   
-feature_name_list  :  f1=feature_name { getTI().featureNameListEntry($f1.text,getSLoc($f1.start,$f1.stop)); } 
-                      (',' f=feature_name { getTI().featureNameListEntry($f.text,getSLoc($f.start,$f1.stop)); } )*
+feature_name_list returns [List<String> list] :
+  { $list = new LinkedList<String>(); }
+  f1=feature_name 
+  { getTI().featureNameListEntry($f1.text,getSLoc($f1.start,$f1.stop)); }
+  { $list.add($f1.name); }
+  (',' f=feature_name 
+   { getTI().featureNameListEntry($f.text,getSLoc($f.start,$f1.stop)); }
+   { $list.add($f.name); } 
+  )*
                     -> 
                     ^(
                       FEATURE_NAME_LIST (feature_name)+
                      )
                    ;
                    
-feature_name  :  IDENTIFIER 
+feature_name returns [String name] :
+   i=IDENTIFIER
+   { $name = $i.text; }
                ->
                ^(
                  FEATURE_NAME IDENTIFIER
                 )
-               | prefix 
+ | prefix 
                ->
                ^(
                  FEATURE_NAME prefix
                 )
-               | infix 
+ | infix 
                ->
                ^(
                  FEATURE_NAME infix
                 )
               ;
               
-rename_clause  :  '{' renaming '}'
+rename_clause returns [RenameClause rename] :
+  '{' renaming '}'
+  { $rename = $renaming.renaming; }
                 ->
                 ^(
                   RENAME_CLAUSE renaming
                  )
                ;
                
-renaming  :  s='^' class_name '.' feature_name 
-             { getTI().renaming($class_name.text,$feature_name.text,getSLoc($s,$feature_name.stop)); }
+renaming returns [RenameClause renaming] :
+  s='^' class_name '.' feature_name 
+  { getTI().renaming($class_name.text,$feature_name.text,getSLoc($s,$feature_name.stop)); }
+  { $renaming = RenameClause.mk($class_name.name, $feature_name.name, getSLoc($s,$feature_name.stop)); }
            ->
            ^(
              RENAMING class_name feature_name
             )
           ;
           
-feature_arguments  :  (feature_argument)+ 
+feature_arguments returns [List<FeatureArgument> args] :
+  { $args = new LinkedList<FeatureArgument>(); }
+  (feature_argument { $args.addAll($feature_argument.args); } )+ 
                     ->
                     ^(
                       FEATURE_ARGUMENTS (feature_argument)+ 
                      )
                    ;
                    
-feature_argument  :  '->' 
-                     (  
-                        ( identifier_list ':' t1=type { getTI().featureArg($identifier_list.text,$t1.text); } ) 
-                      | ( t2=type                     { getTI().featureArg(null,$t2.text); }                  ) 
-                     )
+feature_argument returns [List<FeatureArgument> args] :
+  '->' 
+  (  
+     ( identifier_list ':' t1=type 
+       { getTI().featureArg($identifier_list.text,$t1.text); }
+       { List<String> ids = $identifier_list.list; $args = new ArrayList<FeatureArgument>(ids.size()); for (String id : $identifier_list.list) $args.add(FeatureArgument.mk(id, $t1.type, getSLoc($identifier_list.start, $t1.stop))); }   
+     ) 
+   | ( t2=type
+       { getTI().featureArg(null,$t2.text); }
+       { $args = new ArrayList<FeatureArgument>(1); $args.add(FeatureArgument.mk(null, $t2.type, getSLoc($t2))); }
+     ) 
+  )
                    ->
                    ^(
                      FEATURE_ARGUMENT (identifier_list)? type
                     )
                   ;
                   
-identifier_list  :  IDENTIFIER (',' IDENTIFIER)*
+identifier_list returns [List<String> list] :
+  { $list = new LinkedList<String>(); }
+  i1=IDENTIFIER
+  { $list.add($i1.text); } 
+  (',' i=IDENTIFIER { $list.add($i.text); } )*
                   ->
                   ^(
                     IDENTIFIER_LIST (IDENTIFIER)+
@@ -1603,19 +1633,26 @@ formal_generic_list  :  formal_generic (',' formal_generic)*
                        )
                      ;
                      
-formal_generic  :   f=formal_generic_name 								   { getTI().formalGeneric($f.text, null, getSLoc($f.start,$f.stop)); }
+formal_generic returns [FormalGeneric generic] :
+   f=formal_generic_name
+   { getTI().formalGeneric($f.text, null, getSLoc($f.start,$f.stop)); }
+   { $generic = FormalGeneric.mk($f.name, null, getSLoc($f.start,$f.stop)); }
 								 ->
 								 ^(
 								 	 FORMAL_GENERIC formal_generic_name
 								  )
-									| f=formal_generic_name '->' ct=class_type { getTI().formalGeneric($f.text, $ct.text, getSLoc($f.start,$f.stop)); }
+ | f=formal_generic_name '->' ct=class_type 
+   { getTI().formalGeneric($f.text, $ct.text, getSLoc($f.start,$f.stop)); }
+   { $generic = FormalGeneric.mk($f.name, $ct.type, getSLoc($f.start, $ct.stop)); }
                  -> 
                  ^(
                    FORMAL_GENERIC formal_generic_name class_type
                   )
                 ;
                 
-formal_generic_name  :  i=IDENTIFIER 
+formal_generic_name returns [String name] :
+  i=IDENTIFIER
+  { $name = $i.text; } 
                       -> 
                       ^(
                         FORMAL_GENERIC_NAME[$i] IDENTIFIER
@@ -1680,14 +1717,24 @@ type returns [BONType type] :
  **********************************************/
 //TODO correct this all for use with the new expression grammar
 
-assertion  :  assertion_clause (';' assertion_clause)* ';'? //Final semi-colon is optional
+assertion returns [List<AssertionClause> assertions] :
+  { $assertions = new LinkedList<AssertionClause>(); }
+  a1=assertion_clause
+  { $assertions.add($a1.clause); }
+  (';' a=assertion_clause  
+   { $assertions.add($a.clause); }
+  )* 
+  ';'?
+  
             -> 
             ^(
               ASSERTION (assertion_clause)+
              )
            ;
            
-assertion_clause  :  boolean_expression 
+assertion_clause returns [Expression clause] :
+  be=boolean_expression
+  { $clause = $be.exp; }
                    ->
                    ^(
                      ASSERTION_CLAUSE boolean_expression
@@ -1701,17 +1748,23 @@ assertion_clause  :  boolean_expression
                   ;
 
 //TODO - replace expression here?                  
-boolean_expression  :  expression 
+boolean_expression returns [Expression exp] :
+  expression
+  { $exp = $expression.exp; } 
                      ->
                      ^(
                        BOOLEAN_EXPRESSION expression
                       )
                     ;
             
-quantification  :  q=quantifier 
-                   range_expression 
-                   (restriction)? 
-                   proposition 
+quantification returns [Quantification quantification] 
+@init { Expression restrict; }
+:
+  q=quantifier 
+  rexp=range_expression 
+  (r=restriction { restrict = $r.restriction; } )? 
+  p=proposition
+  { $quantification = Quantification.mk($q.q, $rexp.ranges, restrict, $p.exp, getSLoc($q.start,$p.stop)); } 
                  ->
                  ^(
                    QUANTIFICATION[$q.start]
@@ -1722,59 +1775,80 @@ quantification  :  q=quantifier
                   )
                 ;
                 
-quantifier  :  f='for_all' 
+quantifier returns [Quantification.Quantifier q] :
+   f='for_all' 
+   { $q = Quantification.Quantifier.FORALL; }
              ->
              ^(
                QUANTIFIER[$f] 'for_all'
               )
-             | e='exists'
+ | e='exists'
+   { $q = Quantification.Quantifier.EXISTS; }
              ->
              ^(
                QUANTIFIER[$e] 'exists'
               )
             ;
             
-range_expression  :  vr=variable_range (';' variable_range)* ';'? 
+range_expression returns [List<VariableRange> ranges] :
+  { $ranges = new LinkedList<VariableRange>(); }
+  vr1=variable_range 
+  { $ranges.add($vr.range); }
+  (';' vr=variable_range
+   { $ranges.add($vr.range); }
+  )* 
+  ';'? 
                    ->
                    ^(
-                     RANGE_EXPRESSION[$vr.start] (variable_range)+
+                     RANGE_EXPRESSION[$vr1.start] (variable_range)+
                     )
                   ;
                   
-restriction  :  st='such_that' boolean_expression 
+restriction returns [Expression exp] :
+  st='such_that' be=boolean_expression
+  { $exp =  $be.exp; }
               ->
               ^(
                 RESTRICTION[$st] boolean_expression
                )
              ;
              
-proposition  :  ih='it_holds' boolean_expression 
+proposition returns [Expression exp] :
+  ih='it_holds' be=boolean_expression
+  { $exp = $be.exp; } 
               ->
               ^(
                 PROPOSITION[$ih] boolean_expression
                )
              ;
              
-variable_range  :  member_range 
+variable_range returns [VariableRange range] :
+   mr=member_range
+   { $range = $mr.range; }
                  ->
                  ^(
                    VARIABLE_RANGE member_range
                   )
-                 | type_range 
+ | tr=type_range 
+   { $range = $tr.range; } 
                  ->
                  ^(
                    VARIABLE_RANGE type_range
                   )
                 ;
                 
-member_range  :  identifier_list 'member_of' expression 
+member_range returns [MemberRange range] :
+  il=identifier_list 'member_of' e=expression
+  { $range = MemberRange.mk($il.list, $e.exp, getSLoc($il.start,$e.stop)); } 
                -> 
                ^(
                  MEMBER_RANGE identifier_list expression
                 )
               ;
               
-type_range  :  identifier_list ':' type 
+type_range returns [TypeRange range] :
+  il=identifier_list ':' t=type
+  { $range = TypeRange.mk($il.list, $t.type, getSLoc($il.start,$t.stop)); } 
              ->
              ^(
                TYPE_RANGE identifier_list type
@@ -2225,46 +2299,132 @@ change_prefix  :  'keyword_prefix' MANIFEST_STRING
  ***   Expressions                          ***
  **********************************************/
 
-expression  :  e=equivalence_expression  
+expression returns [Expression exp] :
+   e=equivalence_expression
+   { $exp = $e.exp; }  
              ->
              ^(
                EXPRESSION[$e.start] equivalence_expression
               )
-             | q=quantification
+ | q=quantification
+   { $exp = $q.quantification; }
              ->
              ^(
                EXPRESSION[$q.start] quantification
               )  
             ;
 
-equivalence_expression	:  implies_expression ('<->'^ implies_expression)* 
-                        ;
+equivalence_expression returns [Expression exp] :
+  l=implies_expression
+  { $exp = $l.exp; } 
+  ('<->'^ r=implies_expression
+   { $exp = BinaryExp.mk(BinaryExp.Op.EQUIV, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )*
+;
 
 //Right associative
-implies_expression  :  and_or_xor_expression ('->'^ implies_expression)?
-                    ;
+implies_expression returns [Expression exp] :
+  l=and_or_xor_expression
+  { $exp = $l.exp; } 
+  ('->' r=implies_expression
+   { $exp = BinaryExp.mk(BinaryExp.Op.IMPLIES, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )?
+;
 
-and_or_xor_expression  :  comparison_expression (and_or_xor_op^ comparison_expression)* 
-                       ;
+and_or_xor_expression returns [Expression exp] :
+  l=comparison_expression 
+  (op=and_or_xor_op comparison_expression)* 
+;
 
-comparison_expression  :  add_sub_expression (comparison_op^  add_sub_expression)* 
-                       ;
+comparison_expression returns [Expression exp] :
+  l=add_sub_expression 
+  (op=comparison_op  add_sub_expression)* 
+;
 
-add_sub_expression  :  mul_div_expression (add_sub_op^ mul_div_expression)* 
-                    ;
+add_sub_expression returns [Expression exp] :
+  l=mul_div_expression 
+  (op=add_sub_op mul_div_expression)* 
+;
 
-mul_div_expression  :  mod_pow_expression (mul_div_op^ mod_pow_expression)* 
-                    ;
+mul_div_expression returns [Expression exp] :
+  l=mod_pow_expression 
+  (op=mul_div_op mod_pow_expression)* 
+;
 
 //Right-associative
-mod_pow_expression  :  lowest_expression (mod_pow_op^ mod_pow_expression)? 
-                    ;
+mod_pow_expression returns [Expression exp] :
+  l=lowest_expression 
+  (op=mod_pow_op mod_pow_expression)? 
+;
 
-lowest_expression  :  (constant)=> constant
+lowest_expression returns [Expression exp] :
+  (constant)=> constant
 										|	unary lowest_expression
       					    | '(' expression ')' ('.' call_chain)?
       					    | call_chain
         					 ;
+
+/**********************************************  
+ ***   Operatives                           ***
+ **********************************************/
+
+add_sub_op returns [BinaryExp.Op op] :
+   '+' { $op = BinaryExp.Op.ADD; } 
+ | '-' { $op = BinaryExp.Op.SUB; }
+;
+
+add_sub_op_unary returns [UnaryExp.Op op] :
+   '+' { $op = UnaryExp.Op.ADD; } 
+ | '-' { $op = UnaryExp.Op.SUB; }
+;
+
+and_or_xor_op returns [BinaryExp.Op op] :
+   'and' { $op = BinaryExp.Op.AND; }
+ | 'or'  { $op = BinaryExp.Op.OR; }
+ | 'xor' { $op = BinaryExp.Op.XOR; }
+; 
+
+unary returns [UnaryExp.Op op]  :
+   other_unary       { $op = $other_unary.op; } 
+ | add_sub_op_unary  { $op = $add_sub_op_unary.op; }
+;
+
+other_unary returns [UnaryExp.Op op]  :
+   'delta' { $op = UnaryExp.Op.DELTA; } 
+ | 'old'   { $op = UnaryExp.Op.OLD; }
+ | 'not'   { $op = UnaryExp.Op.NOT; }
+;
+               
+binary  :   add_sub_op | mul_div_op | comparison_op 
+          | mod_pow_op | and_or_xor_op 
+          | '->' | '<->' ;
+
+comparison_op returns [BinaryExp.Op op] :
+   '<'  { $op = BinaryExp.Op.LT; }
+ | '>'  { $op = BinaryExp.Op.GT; }
+ | '<=' { $op = BinaryExp.Op.LE; }
+ | '>=' { $op = BinaryExp.Op.GE; }
+ | '='  { $op = BinaryExp.Op.EQ; }
+ | '/=' { $op = BinaryExp.Op.NEQ; }
+ | 'member_of' { $op = BinaryExp.Op.MEMBEROF; }
+ | 'not' 'member_of' { $op = BinaryExp.Op.NOTMEMBEROF; }
+                  ->
+                  	NOT_MEMBER_OF
+ | ':'  { $op = BinaryExp.Op.HASTYPE; }
+;
+
+       
+mul_div_op returns [BinaryExp.Op op] :
+   '*'  { $op = BinaryExp.Op.MUL; }
+ | '/'  { $op = BinaryExp.Op.DIV; }
+ | '//' { $op = BinaryExp.Op.INTDIV; }
+;
+               
+mod_pow_op returns [BinaryExp.Op op] :
+   '\\\\' { $op = BinaryExp.Op.MOD; } 
+ | '^'    { $op = BinaryExp.Op.POW; }
+;
+
 
 
 /*############################################*  
@@ -2336,66 +2496,6 @@ REAL  :  DIGIT+ '.' DIGIT+
 fragment 
 DIGIT  :  '0'..'9' 
        ;
-
-/**********************************************  
- ***   Operatives                           ***
- **********************************************/
-
-add_sub_op  :  '+' 
-             | '-'
-            ;
-
-and_or_xor_op  :  'and'
-                | 'or'
-                | 'xor'
-               ; 
-
-unary   :   other_unary 
-          | add_sub_op 
-        ;
-
-other_unary  :  delta 
-           		| old 
-           	 	| not
-           	 ;
-           	 
-delta : 'delta'
-      ;
-
-old : 'old'
-    ;
-    
-not : 'not'
-    ;
-               
-binary  :   add_sub_op | mul_div_op | comparison_op 
-          | mod_pow_op | and_or_xor_op 
-          | '->' | '<->' ;
-
-comparison_op  :    '<'
-                  | '>'
-                  | '<='
-                  | '>='
-                  | '='
-                  | '/='
-                  | 'member_of'
-                  | 'not' 'member_of'
-                  ->
-                  	NOT_MEMBER_OF
-                  | ':'                  
-                  ;
-
-       
-mul_div_op  :    '*'
-             | '/'
-             | '\\' 
-             | '//'
-            ;
-               
-mod_pow_op  :  '\\\\' 
-             | '^' 
-             ;
-
                
 /**********************************************  
  ***   Identifiers                          ***

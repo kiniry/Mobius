@@ -37,6 +37,10 @@ public class ClassName extends IndirectionElement {
   public static ClassName mk(String name, SourceLocation location) {
     return new ClassName(name, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

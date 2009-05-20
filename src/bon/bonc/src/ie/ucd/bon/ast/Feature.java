@@ -41,6 +41,10 @@ public class Feature extends AstNode {
   public static Feature mk(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment, SourceLocation location) {
     return new Feature(featureSpecifications, selectiveExport, comment, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

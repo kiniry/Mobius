@@ -51,6 +51,10 @@ public class ClassChart extends InformalChart {
   public static ClassChart mk(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassChart(name, inherits, queries, commands, constraints, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

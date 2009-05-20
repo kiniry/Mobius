@@ -39,6 +39,10 @@ public class SupplierIndirection extends ClientEntity {
   public static SupplierIndirection mk(IndirectionFeaturePart indirectionFeaturePart, GenericIndirection genericIndirection, SourceLocation location) {
     return new SupplierIndirection(indirectionFeaturePart, genericIndirection, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

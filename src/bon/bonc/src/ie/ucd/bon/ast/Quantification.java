@@ -46,6 +46,10 @@ public class Quantification extends Expression {
   public static Quantification mk(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
     return new Quantification(quantifier, variableRanges, restriction, proposition, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

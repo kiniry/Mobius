@@ -39,6 +39,10 @@ public class EventEntry extends AstNode {
   public static EventEntry mk(String name, List<String> involved, SourceLocation location) {
     return new EventEntry(name, involved, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

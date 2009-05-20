@@ -24,19 +24,19 @@ public class Clazz extends StaticComponent {
 
   private final ClassInterface classInterface;
 
-  private final modA modA;
-  private final modB modB;
+  private final ModA modA;
+  private final ModB modB;
   private final List<FormalGeneric> generics;
   private final String comment;
 
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Clazz(modA modA, modB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
+  protected Clazz(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
     this(modA,modB,classInterface,generics,comment, null);    
   }
 
-  protected Clazz(modA modA, modB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
+  protected Clazz(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -48,18 +48,22 @@ public class Clazz extends StaticComponent {
     
   }
   
-  public static Clazz mk(modA modA, modB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
+  public static Clazz mk(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
     return new Clazz(modA, modB, classInterface, generics, comment);
   }
 
-  public static Clazz mk(modA modA, modB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
+  public static Clazz mk(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
     return new Clazz(modA, modB, classInterface, generics, comment, location);
+  }
+  
+  public SourceLocation getLocation() {
+    return location;
   }
 
   // === Accessors ===
 
-  public modA getModA() { return modA; }
-  public modB getModB() { return modB; }
+  public ModA getModA() { return modA; }
+  public ModB getModB() { return modB; }
   public ClassInterface getClassInterface() { return classInterface; }
   public List<FormalGeneric> getGenerics() { return generics; }
   public String getComment() { return comment; }
@@ -67,8 +71,8 @@ public class Clazz extends StaticComponent {
   // === Others ===
   @Override
   public Clazz clone() {
-    modA newModA = modA;
-    modB newModB = modB;
+    ModA newModA = modA;
+    ModB newModB = modB;
     ClassInterface newClassInterface = classInterface == null ? null : classInterface.clone();
     List<FormalGeneric> newGenerics = generics;
     String newComment = comment;

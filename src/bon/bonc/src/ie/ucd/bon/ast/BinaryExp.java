@@ -18,6 +18,7 @@ public class BinaryExp extends Expression {
     NEQ, 
     XOR, 
     IMPLIES, 
+    POW, 
     NOTMEMBEROF, 
     MOD, 
     INTDIV, 
@@ -61,6 +62,10 @@ public class BinaryExp extends Expression {
 
   public static BinaryExp mk(Op op, Expression left, Expression right, SourceLocation location) {
     return new BinaryExp(op, left, right, location);
+  }
+  
+  public SourceLocation getLocation() {
+    return location;
   }
 
   // === Accessors ===

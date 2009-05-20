@@ -54,6 +54,10 @@ public class FeatureSpecification extends AstNode {
   public static FeatureSpecification mk(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
     return new FeatureSpecification(modifier, featureNames, arguments, contracts, hasType, renaming, comment, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

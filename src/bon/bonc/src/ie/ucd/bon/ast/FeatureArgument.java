@@ -39,6 +39,10 @@ public class FeatureArgument extends AstNode {
   public static FeatureArgument mk(String identifier, BONType type, SourceLocation location) {
     return new FeatureArgument(identifier, type, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

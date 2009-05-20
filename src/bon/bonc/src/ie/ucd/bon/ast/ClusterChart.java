@@ -47,6 +47,10 @@ public class ClusterChart extends InformalChart {
   public static ClusterChart mk(String name, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClusterChart(name, classes, clusters, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

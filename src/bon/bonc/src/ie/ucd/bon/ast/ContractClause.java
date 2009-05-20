@@ -39,6 +39,10 @@ public class ContractClause extends AstNode {
   public static ContractClause mk(List<AssertionClause> preconditions, List<AssertionClause> postconditions, SourceLocation location) {
     return new ContractClause(preconditions, postconditions, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

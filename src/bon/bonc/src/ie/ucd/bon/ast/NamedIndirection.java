@@ -39,6 +39,10 @@ public class NamedIndirection extends IndirectionElement {
   public static NamedIndirection mk(String className, List<IndirectionElement> indirectionElements, SourceLocation location) {
     return new NamedIndirection(className, indirectionElements, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

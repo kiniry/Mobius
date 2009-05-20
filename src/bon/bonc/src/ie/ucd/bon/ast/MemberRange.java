@@ -39,6 +39,10 @@ public class MemberRange extends VariableRange {
   public static MemberRange mk(List<String> identifiers, Expression expression, SourceLocation location) {
     return new MemberRange(identifiers, expression, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

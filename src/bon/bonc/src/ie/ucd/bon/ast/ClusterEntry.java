@@ -39,6 +39,10 @@ public class ClusterEntry extends AstNode {
   public static ClusterEntry mk(String name, String description, SourceLocation location) {
     return new ClusterEntry(name, description, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

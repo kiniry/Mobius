@@ -45,6 +45,10 @@ public class UnaryExp extends Expression {
   public static UnaryExp mk(Op op, Expression expression, SourceLocation location) {
     return new UnaryExp(op, expression, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

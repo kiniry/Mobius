@@ -37,6 +37,10 @@ public class ClientEntityList extends ClientEntityExpression {
   public static ClientEntityList mk(List<ClientEntity> entities, SourceLocation location) {
     return new ClientEntityList(entities, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

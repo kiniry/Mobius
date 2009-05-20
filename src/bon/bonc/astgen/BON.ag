@@ -32,8 +32,8 @@ StaticDiagram = List<StaticComponent>! components, String extendedID, String com
 StaticComponent :> Cluster, Clazz, StaticRelation;
 Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
 //Can root, deferred, effective be an enum? Similarly reused, persistent, interfaced?
-Clazz = enum(modA: ROOT, DEFERRED, EFFECTIVE, NONE) modA,
-        enum(modB: REUSED, PERSISTENT, INTERFACED, NONE) modB,  
+Clazz = enum(ModA: ROOT, DEFERRED, EFFECTIVE, NONE) modA,
+        enum(ModB: REUSED, PERSISTENT, INTERFACED, NONE) modB,  
         ClassInterface classInterface, List<FormalGeneric> generics, String comment;
 StaticRelation :> InheritanceRelation, ClientRelation;
 
@@ -41,6 +41,7 @@ InheritanceRelation = BONType! child, BONType! parent, Multiplicity multiplicity
 ClientRelation = BONType! client, BONType! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
 ClientEntityExpression :> ClientEntityList, Multiplicity;
 ClientEntityList = List<ClientEntity>! entities;
+Multiplicity = Integer! multiplicity;
 ClientEntity :> Infix, Prefix, SupplierIndirection, ParentIndirection;
 SupplierIndirection = IndirectionFeaturePart indirectionFeaturePart, GenericIndirection! genericIndirection;
 IndirectionFeaturePart :> FeatureName, IndirectionFeatureList;
@@ -74,7 +75,7 @@ VariableRange :> MemberRange, TypeRange;
 MemberRange = List<String>! identifiers, Expression! expression;
 TypeRange =  List<String>! identifiers, BONType! type;
 
-BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, EQUIV, IMPLIES, AND, OR, XOR, LT, LE, GE, GT, EQ, NEQ, MEMBEROF, NOTMEMBEROF, HASTYPE) op, 
+BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, POW, EQUIV, IMPLIES, AND, OR, XOR, LT, LE, GE, GT, EQ, NEQ, MEMBEROF, NOTMEMBEROF, HASTYPE) op, 
             Expression! left, Expression! right;
 
 UnaryExp = enum(Op: NOT, DELTA, OLD, ADD, SUB) op, Expression! expression;

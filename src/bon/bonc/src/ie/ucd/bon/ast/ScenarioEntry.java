@@ -39,6 +39,10 @@ public class ScenarioEntry extends AstNode {
   public static ScenarioEntry mk(String name, String description, SourceLocation location) {
     return new ScenarioEntry(name, description, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

@@ -43,6 +43,10 @@ public class ClassInterface extends AstNode {
   public static ClassInterface mk(List<Feature> features, List<BONType> parents, List<AssertionClause> invariant, Indexing indexing, SourceLocation location) {
     return new ClassInterface(features, parents, invariant, indexing, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

@@ -276,6 +276,10 @@ public abstract class AbstractBONParser extends Parser {
     return getSourceLocation(tStart, tEnd);
   }
   
+  public final SourceLocation getSLoc(SourceLocation start, SourceLocation end) {
+	return new SourceLocation(start, end);
+  }
+  
   public final void addParseProblem(BONProblem problem) {
     if (problem instanceof ParsingError) {
       if (((ParsingError)problem).isSevere()) {

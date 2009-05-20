@@ -39,6 +39,10 @@ public class RenameClause extends AstNode {
   public static RenameClause mk(String className, String featureName, SourceLocation location) {
     return new RenameClause(className, featureName, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

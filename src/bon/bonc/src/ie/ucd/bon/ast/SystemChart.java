@@ -45,6 +45,10 @@ public class SystemChart extends InformalChart {
   public static SystemChart mk(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new SystemChart(name, clusters, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

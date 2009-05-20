@@ -43,6 +43,10 @@ public class InheritanceRelation extends StaticRelation {
   public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

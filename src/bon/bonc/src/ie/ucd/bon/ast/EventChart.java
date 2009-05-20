@@ -49,6 +49,10 @@ public class EventChart extends InformalChart {
   public static EventChart mk(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new EventChart(systemName, incoming, outgoing, entries, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

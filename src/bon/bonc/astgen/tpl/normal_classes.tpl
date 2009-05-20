@@ -43,6 +43,10 @@ public class \ClassName extends \Basename {
   public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
     return new \ClassName(\members[, ]{\memberName}, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 \members{

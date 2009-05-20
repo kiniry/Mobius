@@ -44,6 +44,10 @@ public class TypeMark extends AstNode {
   public static TypeMark mk(Mark mark, Integer multiplicity, SourceLocation location) {
     return new TypeMark(mark, multiplicity, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

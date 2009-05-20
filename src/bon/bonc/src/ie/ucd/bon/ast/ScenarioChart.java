@@ -45,6 +45,10 @@ public class ScenarioChart extends InformalChart {
   public static ScenarioChart mk(String systemName, List<ScenarioEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ScenarioChart(systemName, entries, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

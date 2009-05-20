@@ -37,6 +37,10 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   public static IndirectionFeatureList mk(List<FeatureName> featureNames, SourceLocation location) {
     return new IndirectionFeatureList(featureNames, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

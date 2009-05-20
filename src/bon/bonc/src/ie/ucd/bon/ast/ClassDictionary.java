@@ -45,6 +45,10 @@ public class ClassDictionary extends SpecificationElement {
   public static ClassDictionary mk(String systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassDictionary(systemName, entries, indexing, explanation, part, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 

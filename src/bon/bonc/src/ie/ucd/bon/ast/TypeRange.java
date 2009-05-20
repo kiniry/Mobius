@@ -39,6 +39,10 @@ public class TypeRange extends VariableRange {
   public static TypeRange mk(List<String> identifiers, BONType type, SourceLocation location) {
     return new TypeRange(identifiers, type, location);
   }
+  
+  public SourceLocation getLocation() {
+    return location;
+  }
 
   // === Accessors ===
 
