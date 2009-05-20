@@ -72,6 +72,18 @@ public class VerificationResult {
         methodNo = -1;
     }
 
+    /** The constructor with method number. */
+    public VerificationResult(int status, String message, int method) {
+        numeric = status;
+        detailMessage = message;
+        methodNo = method;
+    }
+
+    public VerificationResult(VerificationResult vr, int method_no) {
+      numeric = vr.getStatus();
+      detailMessage = vr.detailMessage;
+      methodNo = method_no;
+    }
 
     /** Returns one one the VERIFIED_OK, VERIFIED_NOTYET, VERIFIED_REJECTED constants. */
     public int getStatus() {

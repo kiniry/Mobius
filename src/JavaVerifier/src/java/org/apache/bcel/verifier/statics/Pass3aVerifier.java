@@ -163,7 +163,7 @@ public final class Pass3aVerifier extends PassVerifier{
 			
 			// No Code? Nothing to verify!
 			if ( method.isAbstract() || method.isNative() ){ // IF mg HAS NO CODE (static constraint of Pass 2)
-				return VerificationResult.VR_OK;
+				return new VerificationResult(VerificationResult.VR_OK, method_no);
 			}
 
 			// TODO:
@@ -179,7 +179,7 @@ public final class Pass3aVerifier extends PassVerifier{
 				instructionList = new InstructionList(method.getCode().getCode());
 			}
 			catch(RuntimeException re){
-				return new VerificationResult(VerificationResult.VERIFIED_REJECTED, "Bad bytecode in the code array of the Code attribute of method '"+method+"'.");
+				return new VerificationResult(VerificationResult.VERIFIED_REJECTED, "Bad bytecode in the code array of the Code attribute of method '"+method+"'.", method_no);
 			}
 			
 			instructionList.setPositions(true);
@@ -190,7 +190,7 @@ public final class Pass3aVerifier extends PassVerifier{
 				delayedPass2Checks();
 			}
 			catch(ClassConstraintException cce){
-				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, cce.getMessage());
+				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, cce.getMessage(), method_no);
 				return vr;
 			}
 			try{
@@ -198,15 +198,15 @@ public final class Pass3aVerifier extends PassVerifier{
 				pass3StaticInstructionOperandsChecks();
 			}
 			catch(StaticCodeConstraintException scce){
-				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, scce.getMessage());
+				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, scce.getMessage(), method_no);
 			}
 			catch(ClassCastException cce){
-				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, "Class Cast Exception: " + cce.getMessage());
+				vr = new VerificationResult(VerificationResult.VERIFIED_REJECTED, "Class Cast Exception: " + cce.getMessage(), method_no);
 			}
 			return vr;
 		}
 		else{ //did not pass Pass 2.
-			return VerificationResult.VR_NOTYET;
+			return new VerificationResult(VerificationResult.VR_NOTYET, method_no);
 		}
 	    } catch (ClassNotFoundException e) {
 		// FIXME: maybe not the best way to handle this
