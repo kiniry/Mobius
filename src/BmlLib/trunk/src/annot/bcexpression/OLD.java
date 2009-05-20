@@ -2,6 +2,7 @@ package annot.bcexpression;
 
 import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
+import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
@@ -11,7 +12,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class OLD extends OldExpression {
+public class OLD extends BCExpression {
 
   /**
    * A constructor from AttributeReader.
@@ -31,16 +32,14 @@ public class OLD extends OldExpression {
   /**
    * A standard constructor.
    *
-   * @param connector - type of this expression, should
-   *     be {@link Code#OLD},
    * @param subExpr - it's subexpression.
    */
-  public OLD(final int connector, final BCExpression subExpr) {
-    super(makeOld(connector), subExpr);
+  public OLD(final BCExpression subExpr) {
+    super(Code.OLD, subExpr);
   }
 
   @Override
-  protected JavaType checkType2() {
+  protected JavaType checkType1() {
     return getSubExpr(0).getType();
   }
 

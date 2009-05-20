@@ -12,7 +12,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class THIS extends OldExpression {
+public class THIS extends BCExpression {
 
   /**
    * BCClass this expression represents.
@@ -25,14 +25,13 @@ public class THIS extends OldExpression {
    * @param isOld - whether it should be OLD_THIS or THIS,
    * @param classRepresentation - initializing class.
    */
-  public THIS(final boolean isOld,
-              final BCClass classRepresentation) {
-    super(isOld ? Code.OLD_THIS : Code.THIS, isOld);
+  public THIS(final BCClass classRepresentation) {
+    super(Code.THIS);
     this.bcc = classRepresentation;
   }
 
   @Override
-  protected JavaType checkType2() {
+  protected JavaType checkType1() {
     return getType();
   }
 
@@ -50,12 +49,12 @@ public class THIS extends OldExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return isOld() ? "old_this" : "this";
+    return "this";
   }
 
   @Override
   public String toString() {
-    return isOld() ? "old_this" : "this";
+    return "this";
   }
 
 }

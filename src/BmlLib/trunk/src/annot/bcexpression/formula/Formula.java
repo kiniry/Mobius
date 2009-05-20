@@ -114,13 +114,13 @@ public class Formula extends AbstractFormula {
       case Code.OR:
         return " || ";
       case Code.IMPLIES:
-        return " == >  ";
+        return " ==> ";
       case Code.NOT:
         return "!";
       case Code.EQUIV:
-        return "  <== >  ";
+        return "  <==>  ";
       case Code.NOTEQUIV:
-        return "  <=!= >  ";
+        return "  <=!=>  ";
       default:
         return "??";
     }

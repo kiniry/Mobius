@@ -114,21 +114,15 @@ options {
       reportError(null);
       return null;
     }
-    boolean isOld = false;
-    if (ident.startsWith("old_")) { //??!
-      ident = ident.substring(4);
-      isOld = true;
-    }
     if (env.containsKey(ident))
       return new SingleOccurence(env.get(ident));
     if (m != null) {
       LocalVariable lv = m.findLocalVariable(ident);
       if (lv != null) {
-        lv.setOld(isOld);
         return new SingleOccurence(lv);
       }
     }
-    FieldRef bfr = FieldRef.getFieldOfName(isOld, bcc.getCp(), ident);
+    FieldRef bfr = FieldRef.getFieldOfName(bcc.getCp(), ident);
     if (bfr != null)
       return bfr;
     MLog.putMsg(MLog.LEVEL_PINFO, "undefined identifier: " + ident);
@@ -881,8 +875,7 @@ modifyExpression returns [ModifyExpression ast] :
   );
 
 modifySubExpr returns [BCExpression ast] :
-  THIS {$ast = new THIS(false, bcc);}
-  | OLD_THIS {$ast = new THIS(true, bcc);}
+  THIS {$ast = new THIS(bcc);}
   | i=IDENT {$ast = whatIsIt($i.getText());}
   ;
 
@@ -1105,9 +1098,8 @@ primaryExpr returns [BCExpression ast] :
   | TRUE {$ast = new Predicate0Ar(true);}
   | RESULT {if (m == null) {reportError(null);} else {$ast = new RESULT(m);}}
   | NULL {$ast = new NULL();}
-  | THIS {$ast = new THIS(false, bcc);}
-  | OLD_THIS {$ast = new THIS(true, bcc);}
-  | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD(Code.OLD, $e1.ast);}
+  | THIS {$ast = new THIS(bcc);}
+  | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD($e1.ast);}
   | PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
   | LENGTH {$ast = new ArrayLength();}
   ;
@@ -1130,7 +1122,7 @@ localVar returns [LocalVariable lv] :
         syso("no such variable error");
         reportError(null);
       } else {
-        $lv = m.getLocalVariable(false, i);
+        $lv = m.getLocalVariable(i);
       }
     }
   };
@@ -1252,7 +1244,6 @@ BITWISENOT: '~';
 COND: '?';
 NULL: 'null'|'NULL';
 THIS: 'this'|'THIS';
-OLD_THIS: 'old_this'|'OLD_THIS';
 RESULT: '\\result';
 LV: 'lv';
 DOT2: '..';

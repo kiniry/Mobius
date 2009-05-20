@@ -364,23 +364,15 @@ public class AttributeReader {
       case Code.NULL:
         return new NULL();
       case Code.THIS:
-        return new THIS(false, this.bcc);
-      case Code.OLD_THIS:
-        return new THIS(true, this.bcc);
+        return new THIS(this.bcc);
       case Code.RESULT:
         return new RESULT(this.method);
       case Code.ARRAYLENGTH:
         return new ArrayLength();
       case Code.LOCAL_VARIABLE:
-        return new SingleOccurence(LocalVariable.getLocalVariable(false,
-                                                                  this.method,
-                                                                  this));
-      case Code.OLD_LOCAL_VARIABLE:
-        return new SingleOccurence(LocalVariable.getLocalVariable(true,
-                                                                  this.method,
+        return new SingleOccurence(LocalVariable.getLocalVariable(this.method,
                                                                   this));
       case Code.FIELD_REF:
-      case Code.OLD_FIELD_REF:
         return new FieldRef(this, b);
       case Code.ARRAY_ACCESS:
         return new ArrayAccess(this, b);

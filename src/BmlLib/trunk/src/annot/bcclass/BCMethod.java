@@ -78,11 +78,6 @@ public class BCMethod {
   private MethodSpecificationAttribute mspec;
 
   /**
-   * Old local variable array.
-   */
-  private final LocalVariable[] oldvars;
-
-  /**
    * The boolean flag which indicates if the method is a constructor.
    */
   private boolean isConstructor;
@@ -105,31 +100,11 @@ public class BCMethod {
     this.amap = new BCAttributeMap(this);
 
     this.lvars = setLocalVariables(m);
-    this.oldvars = setOldLocalVariables(lvars);
     this.params = setParams(m.getArgumentTypes());
     this.isConstructor = m.getName().equals(Constants.CONSTRUCTOR_NAME);
     readBMLAttributes(m);
   }
-
-  /**
-   * The method generates the old local variables table based on the table
-   * of the local variables. The method fills in the initial segment of the
-   * table with positions of the argument which are not null.
-   *
-   * @param lvars2 the array of local variables
-   * @return the array with the old local variables
-   */
-  private LocalVariable[] setOldLocalVariables(final LocalVariable[] lvars2) {
-    final LocalVariable[] res = new LocalVariable[lvars2.length];
-    for (int i = 0; i < lvars2.length; i++) {
-      if (lvars[i] != null) {
-        final String name = lvars[i].getName();
-        res[i] = new LocalVariable(true, this, i, name,
-                                   lvars[i].getBcelLvGen());
-      }
-    }
-    return res;
-  }
+ 
 
   /**
    * Examines the attributes of the given method and incorporates all the
@@ -172,13 +147,13 @@ public class BCMethod {
       final String typename = "L" + jc.getPackageName() +
                               jc.getClassName() + ";";
       final Type t = Type.getType(typename);
-      res[0] = new LocalVariable(false, this, 0, "this",
+      res[0] = new LocalVariable(this, 0, "this",
         new LocalVariableGen(0, "this", t, null, null));
       return res;
     }
     for (int i = 0; i  <  cnt; i++) {
       final String name = lvgens[i].getName();
-      res[i] = new LocalVariable(false, this, i, name, lvgens[i]);
+      res[i] = new LocalVariable(this, i, name, lvgens[i]);
     }
     return res;
   }
@@ -207,7 +182,7 @@ public class BCMethod {
         name = null;
         lvgen = new LocalVariableGen(i + 1, null, paramsNames[i], null, null);
       }
-      res[i] = new LocalVariable(false, this, i + 1, name, lvgen);
+      res[i] = new LocalVariable(this, i + 1, name, lvgen);
     }
     return res;
   }
@@ -319,20 +294,15 @@ public class BCMethod {
   /**
    * Returns local variable of given index.
    *
-   * @param isOld - false, unless we need OLD(local variable)
    * @param index - number of local variable
    *     (in this method),
    * @return <code>index</code>-th local variable of this
    *     method.
    */
-  public LocalVariable getLocalVariable(final boolean isOld, final int index) {
+  public LocalVariable getLocalVariable(final int index) {
     LocalVariable res;
     if (lvars.length > 1) {
-      if (isOld) {
-        res = this.oldvars[index];
-      } else {
-        res = this.lvars[index];
-      }
+      res = this.lvars[index];
     } else if (index == 0) {
       res = this.lvars[0];
     } else {

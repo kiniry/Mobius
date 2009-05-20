@@ -105,12 +105,6 @@ public class Code {
 
   public static final int OLD = 0x99;
 
-  public static final int OLD_FIELD_REF = 0x81;
-
-  public static final int OLD_LOCAL_VARIABLE = 0x91;
-
-  public static final int OLD_THIS = 0x71;
-
   public static final int OR = 0x03;
 
   public static final int PLUS = 0x20;

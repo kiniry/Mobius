@@ -868,7 +868,7 @@ public final class ManualTests {
     final int fi = bcc.getFieldIndex(fname);
     System.out.println(bcc.getCp().getConstant(fi).toString());
     final String vname = "last";
-    final FieldRef fr = new FieldRef(false, bcc.getCp(), fi);
+    final FieldRef fr = new FieldRef(bcc.getCp(), fi);
     System.out.println("field name, should be '" + fname + "': " +
                        fr.toString());
     final LocalVariable lv = bcc.getMethod(2)

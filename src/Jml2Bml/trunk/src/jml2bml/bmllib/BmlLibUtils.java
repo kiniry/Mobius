@@ -206,13 +206,12 @@ public final class BmlLibUtils {
 
   /**
    * Creates new fieldRef for given index.
-   * @param isOld indicates, if the BmlLib FieldRef should be marked as old
    * @param index index in the constant pool, where the field ref is being kept
    * @param symbols symbol table
    * @return created field ref.
    */
-  public static FieldRef createFieldRef(final boolean isOld, final int index, final BCClass clazz) {
-    return new FieldRef(isOld, clazz.getCp(), index);
+  public static FieldRef createFieldRef(final int index, final BCClass clazz) {
+    return new FieldRef(clazz.getCp(), index);
   }
 
 }

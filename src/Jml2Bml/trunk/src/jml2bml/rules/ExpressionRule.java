@@ -142,7 +142,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
                                       final Symbols p) {
     final String name = node.getName().toString();
     if (Constants.THIS.equals(name)) {
-      return new THIS(isOld, p.findClass());
+      return new THIS(p.findClass());
     }
     final Variable variable = p.get(name);
     if (variable == null) {
@@ -159,7 +159,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       //field access is handled in a different way:
       //(cannot be taken from the symbol table, we have to know,
       //whether it's old or not
-      return BytecodeUtil.createFieldRef(isOld, i.sym, p.findClass());
+      return BytecodeUtil.createFieldRef(i.sym, p.findClass());
     }
     return null;
   };
@@ -321,7 +321,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
         .toString(), identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
-          .createFieldRef(isOld, fieldRefIndex, p.findClass()));
+          .createFieldRef(fieldRefIndex, p.findClass()));
     }
     //hardest case: we have to extend the constant pool.
     JCFieldAccess t = (JCFieldAccess) node;
@@ -331,7 +331,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
                                                                identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
-          .createFieldRef(isOld, fieldRefIndex, p.findClass()));
+          .createFieldRef(fieldRefIndex, p.findClass()));
     }
     throw new Jml2BmlException("Unresolved field access in type " +
                                type.toString() + " to field " + identifier);

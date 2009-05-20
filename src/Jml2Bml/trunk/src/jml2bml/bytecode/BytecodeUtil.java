@@ -120,20 +120,18 @@ public final class BytecodeUtil {
    * Creates FieldRef object for given field name in given class.
    * It is assumed that the field exists in this class. In the other case
    * an exception will be thrown.
-   * @param isOld - if the reference occurs in \old clause
    * @param var - field variable
    * @param symbols - symbol table
    * @return FieldRef object.
    */
-  public static BCExpression createFieldRef(final boolean isOld,
-                                            final Symbol var,
+  public static BCExpression createFieldRef(final Symbol var,
                                             final BCClass clazz) {
     String className = clazz.getJC().getClassName();
     className = "L" + className.replace('.', '/') + ";";
     final Field field = findField(clazz, var.name.toString());
     final ConstantValue constantValue = field.getConstantValue();
     if (constantValue==null) {
-      return new FieldRef(isOld, clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, clazz));
+      return new FieldRef(clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, clazz));
     } else {
       final Constant constant = constantValue.getConstantPool().getConstant(constantValue.getConstantValueIndex());
       if (constant instanceof ConstantInteger) {

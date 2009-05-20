@@ -119,9 +119,6 @@ public class ExpressionTranslator  {
     return doVisitArithmeticExpression(connector, left, right);
   }
   public b2bpl.bytecode.bml.ast.BMLExpression visitThis(THIS expr) {
-    if (expr.isOld()){
-      return new  b2bpl.bytecode.bml.ast.BMLOldExpression(b2bpl.bytecode.bml.ast.BMLThisExpression.THIS);
-    }
     return b2bpl.bytecode.bml.ast.BMLThisExpression.THIS;
   }
 

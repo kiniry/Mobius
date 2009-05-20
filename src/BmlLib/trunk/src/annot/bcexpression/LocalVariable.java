@@ -17,7 +17,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class LocalVariable extends OldExpression {
+public class LocalVariable extends BCExpression {
 
   /**
    * BCEL's representation of this variable.
@@ -50,16 +50,15 @@ public class LocalVariable extends OldExpression {
    * use {@link #getLocalVariable(BCMethod, AttributeReader)}
    * intead.
    *
-   * @param isOld - tag marking the variable as old
    * @param meth - initializing method,
    * @param id - number (index) of this local variable
    *     in method <code>m</code>,
    * @param aname - name of this variable,
    * @param lvg - BCEL's representation of this variable.
    */
-  public LocalVariable(final boolean isOld, final BCMethod meth, final int id,
+  public LocalVariable(final BCMethod meth, final int id,
                        final String aname, final LocalVariableGen lvg) {
-    super(Code.LOCAL_VARIABLE, isOld);
+    super(Code.LOCAL_VARIABLE);
     this.m = meth;
     this.lvar_id = id;
     this.name = aname;
@@ -71,8 +70,6 @@ public class LocalVariable extends OldExpression {
   /**
    * A 'constructor' from AttributeReader.
    *
-   * @param isOld - whether it should be OLD_LocalVariable
-   *     or LocalVariable,
    * @param m - method in with variable has been declared,
    * @param ar - input stream to load from,
    * @return local variable of index read from
@@ -81,8 +78,7 @@ public class LocalVariable extends OldExpression {
    *     is greater or equal local variable count
    *     of method <code>m</code>.
    */
-  public static LocalVariable getLocalVariable(final boolean isOld,
-                                               final BCMethod m,
+  public static LocalVariable getLocalVariable(final BCMethod m,
                                                final AttributeReader ar)
     throws ReadAttributeException {
     final int index = ar.readShort();
@@ -90,11 +86,11 @@ public class LocalVariable extends OldExpression {
       throw new ReadAttributeException("invalid local variable index: " +
                                        index);
     }
-    return m.getLocalVariable(isOld, index);
+    return m.getLocalVariable(index);
   }
 
   @Override
-  protected JavaType checkType2() {
+  protected JavaType checkType1() {
     return this.type;
   }
 
@@ -127,20 +123,32 @@ public class LocalVariable extends OldExpression {
   @Override
   protected String printCode1(final BMLConfig conf) {
     if (this.name != null) {
-      return isOld() ? "old_" + this.name : this.name;
+      return this.name;
     } else {
-      return toString();
+      return lv();
     }
+  }
+
+  /**
+   *
+   * @return String "lv[i]" representing the local variable.
+   */
+  private String lv() {
+    return "lv[" + this.lvar_id + "]";
   }
 
   @Override
   public String toString() {
-    return (isOld() ? "old_" : "") + "lv[" + this.lvar_id + "]";
+    if (this.name != null) {
+      return "lv[" + this.lvar_id + "/" + this.name + "]";
+    } else {
+      return lv();
+    }
   }
 
   @Override
   public void write(final AttributeWriter aw) {
-    aw.writeByte(isOld() ? Code.OLD_LOCAL_VARIABLE : Code.LOCAL_VARIABLE);
+    aw.writeByte(Code.LOCAL_VARIABLE);
     aw.writeShort(this.lvar_id);
   }
 

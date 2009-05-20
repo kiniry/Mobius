@@ -138,8 +138,7 @@ public class SymbolsBuilder extends
         return;
       LocalVariableGen lvGen = new LocalVariableGen(aindex, null, m
           .getBcelMethod().getArgumentType(aindex - 1), null, null);
-      var = new LocalVariable(false, m, aindex, node.getName().toString(),
-                              lvGen);
+      var = new LocalVariable(m, aindex, node.getName().toString(), lvGen);
     }
     s.put(node.name.toString(), new Variable(var, node));
   }

@@ -20,7 +20,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class FieldRef extends OldExpression {
+public class FieldRef extends BCExpression {
 
   /**
    * Index of FieldRef constant in constant pool.
@@ -64,9 +64,9 @@ public class FieldRef extends OldExpression {
    *     BCEL's <code>ConstantFieldRef</code> constant
    *     is beeing held.
    */
-  public FieldRef(final boolean isOld, final BCConstantPool cp,
+  public FieldRef(final BCConstantPool cp,
                   final int acpIndex) {
-    super(Code.FIELD_REF, isOld);
+    super(Code.FIELD_REF);
     loadName(cp, acpIndex);
   }
 
@@ -83,8 +83,7 @@ public class FieldRef extends OldExpression {
    *     in no proper constant could be found
    *     in <code>cp</code>.
    */
-  public static FieldRef getFieldOfName(final boolean old,
-                                        final BCConstantPool cp,
+  public static FieldRef getFieldOfName(final BCConstantPool cp,
                                         final String name) {
     for (int i = 0; i  <  cp.size(); i++) {
       if (cp.getConstant(i) == null) {
@@ -100,14 +99,14 @@ public class FieldRef extends OldExpression {
           .getConstant(cnt.getNameIndex());
       final String cname = cu8.getBytes();
       if (cname.equals(name)) {
-        return new FieldRef(old, cp, i);
+        return new FieldRef(cp, i);
       }
     }
     return null;
   }
 
   @Override
-  protected JavaType checkType2() {
+  protected JavaType checkType1() {
     return this.type;
   }
 
@@ -138,7 +137,7 @@ public class FieldRef extends OldExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return isOld() ? "old_" + this.name : this.name;
+    return this.name;
   }
 
   @Override
@@ -158,7 +157,7 @@ public class FieldRef extends OldExpression {
 
   @Override
   public String toString() {
-    return this.type + " " + (isOld() ? "old_" + this.name : this.name);
+    return this.type + " " + this.name;
   }
 
   @Override
