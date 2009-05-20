@@ -12,20 +12,20 @@ import ie.ucd.bon.ast.AstNode;
 public class InheritanceRelation extends StaticRelation {
 
 
-  private final StaticRef child;
-  private final StaticRef parent;
   private final Multiplicity multiplicity;
 
+  private final BONType child;
+  private final BONType parent;
   private final String semanticLabel;
 
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected InheritanceRelation(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel) {
+  protected InheritanceRelation(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel) {
     this(child,parent,multiplicity,semanticLabel, null);    
   }
 
-  protected InheritanceRelation(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
+  protected InheritanceRelation(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -36,26 +36,26 @@ public class InheritanceRelation extends StaticRelation {
     
   }
   
-  public static InheritanceRelation mk(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel) {
+  public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel);
   }
 
-  public static InheritanceRelation mk(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
+  public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel, location);
   }
 
   // === Accessors ===
 
-  public StaticRef getChild() { return child; }
-  public StaticRef getParent() { return parent; }
+  public BONType getChild() { return child; }
+  public BONType getParent() { return parent; }
   public Multiplicity getMultiplicity() { return multiplicity; }
   public String getSemanticLabel() { return semanticLabel; }
 
   // === Others ===
   @Override
   public InheritanceRelation clone() {
-    StaticRef newChild = child == null ? null : child.clone();
-    StaticRef newParent = parent == null ? null : parent.clone();
+    BONType newChild = child;
+    BONType newParent = parent;
     Multiplicity newMultiplicity = multiplicity == null ? null : multiplicity.clone();
     String newSemanticLabel = semanticLabel;
     

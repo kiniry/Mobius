@@ -12,20 +12,20 @@ import ie.ucd.bon.ast.AstNode;
 public class ClassInterface extends AstNode {
 
 
-  private final Invariant invariant;
   private final Indexing indexing;
 
   private final List<Feature> features;
   private final List<BONType> parents;
+  private final List<AssertionClause> invariant;
 
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClassInterface(List<Feature> features, List<BONType> parents, Invariant invariant, Indexing indexing) {
+  protected ClassInterface(List<Feature> features, List<BONType> parents, List<AssertionClause> invariant, Indexing indexing) {
     this(features,parents,invariant,indexing, null);    
   }
 
-  protected ClassInterface(List<Feature> features, List<BONType> parents, Invariant invariant, Indexing indexing, SourceLocation location) {
+  protected ClassInterface(List<Feature> features, List<BONType> parents, List<AssertionClause> invariant, Indexing indexing, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -36,11 +36,11 @@ public class ClassInterface extends AstNode {
     
   }
   
-  public static ClassInterface mk(List<Feature> features, List<BONType> parents, Invariant invariant, Indexing indexing) {
+  public static ClassInterface mk(List<Feature> features, List<BONType> parents, List<AssertionClause> invariant, Indexing indexing) {
     return new ClassInterface(features, parents, invariant, indexing);
   }
 
-  public static ClassInterface mk(List<Feature> features, List<BONType> parents, Invariant invariant, Indexing indexing, SourceLocation location) {
+  public static ClassInterface mk(List<Feature> features, List<BONType> parents, List<AssertionClause> invariant, Indexing indexing, SourceLocation location) {
     return new ClassInterface(features, parents, invariant, indexing, location);
   }
 
@@ -48,7 +48,7 @@ public class ClassInterface extends AstNode {
 
   public List<Feature> getFeatures() { return features; }
   public List<BONType> getParents() { return parents; }
-  public Invariant getInvariant() { return invariant; }
+  public List<AssertionClause> getInvariant() { return invariant; }
   public Indexing getIndexing() { return indexing; }
 
   // === Others ===
@@ -56,7 +56,7 @@ public class ClassInterface extends AstNode {
   public ClassInterface clone() {
     List<Feature> newFeatures = features;
     List<BONType> newParents = parents;
-    Invariant newInvariant = invariant == null ? null : invariant.clone();
+    List<AssertionClause> newInvariant = invariant;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     
     return ClassInterface.mk(newFeatures, newParents, newInvariant, newIndexing, location);

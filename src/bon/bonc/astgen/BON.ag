@@ -1,11 +1,11 @@
 
-BONSourceFile = List<SpecificationElement>! bonSpecification, Indexing indexing;
+BonSourceFile = List<SpecificationElement>! bonSpecification, Indexing indexing;
 SpecificationElement :> InformalChart, ClassDictionary, StaticDiagram, DynamicDiagram, NotationalTuning;
 
 Indexing = List<IndexClause>! indexes;
 IndexClause = String! id, List<String>! indexTerms;
 
-InformalChart :> SystemChart, ClassChart, EventChart, ScenarioChart, CreationChart;
+InformalChart :> SystemChart, ClassChart, ClusterChart, EventChart, ScenarioChart, CreationChart;
 
 ClassDictionary = String! systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part; 
 DictionaryEntry = String! name, List<String>! clusters, String! description;
@@ -37,11 +37,10 @@ Clazz = enum(modA: ROOT, DEFERRED, EFFECTIVE, NONE) modA,
         ClassInterface classInterface, List<FormalGeneric> generics, String comment;
 StaticRelation :> InheritanceRelation, ClientRelation;
 
-InheritanceRelation = StaticRef! child, StaticRef! parent, Multiplicity multiplicity, String semanticLabel;
-ClientRelation = StaticRef! client, StaticRef! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
+InheritanceRelation = BONType! child, BONType! parent, Multiplicity multiplicity, String semanticLabel;
+ClientRelation = BONType! client, BONType! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
 ClientEntityExpression :> ClientEntityList, Multiplicity;
 ClientEntityList = List<ClientEntity>! entities;
-
 ClientEntity :> Infix, Prefix, SupplierIndirection, ParentIndirection;
 SupplierIndirection = IndirectionFeaturePart indirectionFeaturePart, GenericIndirection! genericIndirection;
 IndirectionFeaturePart :> FeatureName, IndirectionFeatureList;
@@ -50,15 +49,13 @@ ParentIndirection = GenericIndirection! genericIndirection;
 GenericIndirection = String! indirectionElement;
 NamedIndirection = String! className, List<IndirectionElement>! indirectionElements; 
 IndirectionElement :> NamedIndirection, ClassName;
-TypeMark = Boolean! hasMark, Boolean! isAggregate, Boolean! isSharedMark, Integer! multiplicity;
-StaticRef = BONType! type;
+TypeMark = enum(Mark: NONE, HASTYPE, AGGREGATE, SHAREDMARK) mark, Integer multiplicity;
 ClassName = String! name;
-ClassInterface = List<Feature>! features, List<BONType>! parents, Invariant invariant, Indexing indexing;  
-Feature = List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment;
-FeatureSpecification = List<String>! featureNames, Boolean! deferred, Boolean! effective, Boolean! redefined, List<FeatureArgument>! arguments, HasType hasType, RenameClause renaming, ContractClause contracts, String comment;
+ClassInterface = List<Feature>! features, List<BONType>! parents, List<AssertionClause> invariant, Indexing indexing;  
+Feature = List<FeatureSpecification>! featureSpecifications, List<String> selectiveExport, String comment;
+FeatureSpecification = enum(Modifier: NONE, DEFERRED, EFFECTIVE, REDEFINED) modifier, List<String>! featureNames, List<FeatureArgument>! arguments, ContractClause! contracts, HasType hasType, RenameClause renaming, String comment;
 HasType = TypeMark! mark, BONType! type;
 ContractClause = List<AssertionClause> preconditions, List<AssertionClause> postconditions;
-Invariant = List<AssertionClause>! clauses;
 
 
 RenameClause = String! className, String! featureName;
@@ -72,7 +69,7 @@ AssertionClause = Expression! expression;
 
 Expression :> Quantification, BinaryExp, UnaryExp;
 
-Quantification = enum(Quant: FORALL, EXISTS) quantifier, List<VariableRange> variableRanges, Expression restriction, Expression! proposition;
+Quantification = enum(Quantifier: FORALL, EXISTS) quantifier, List<VariableRange> variableRanges, Expression restriction, Expression! proposition;
 VariableRange :> MemberRange, TypeRange;
 MemberRange = List<String>! identifiers, Expression! expression;
 TypeRange =  List<String>! identifiers, BONType! type;

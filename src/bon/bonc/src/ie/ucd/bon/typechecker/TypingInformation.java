@@ -8,6 +8,7 @@ import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
+import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.source.SourceLocation;
@@ -208,7 +209,7 @@ public class TypingInformation {
     context.getFeatureSpec().setPostcondition(postcondition);
   }
 
-  public void featureSpecDeferred() {
+  private void featureSpecDeferred() {
     context.getFeatureSpec().setDeferred(); 
     String currentClass = context.getClassName();
     if (currentClass != null) {
@@ -235,11 +236,25 @@ public class TypingInformation {
       }
     }
   } 
-  public void featureSpecEffective(){ 
+  private void featureSpecEffective(){ 
     context.getFeatureSpec().setEffective(); 
   }
-  public void featureSpecRedefined() {
+  private void featureSpecRedefined() {
     context.getFeatureSpec().setRedefined();
+  }
+  
+  public void featureSpecModifier(ie.ucd.bon.ast.FeatureSpecification.Modifier modifier) {
+	switch(modifier) {
+	case DEFERRED:
+		featureSpecDeferred();
+		break;
+	case EFFECTIVE:
+		featureSpecEffective();
+		break;
+	case REDEFINED:
+		featureSpecRedefined();
+		break;
+	}
   }
 
   public void featureNameListEntry(String name, SourceLocation loc) {
@@ -291,8 +306,8 @@ public class TypingInformation {
     }
   }
 
-  public void hasType(String typeMarkString, String typeString) {
-    context.getFeatureSpec().setType(TypeMark.make(typeMarkString), BONType.mk(typeString));
+  public void hasType(TypeMark mark, String typeString) {
+    context.getFeatureSpec().setType(mark, BONType.mk(typeString));
   }
 
   public InformalTypingInformation informal() {
@@ -452,9 +467,9 @@ public class TypingInformation {
     return clientRelations;
   }
 
-  public void typeMark(String mark) {
+  public void typeMark(TypeMark mark) {
     if (context.isInClientRelation()) {
-      context.getClientRelation().setTypeMark(TypeMark.make(mark));
+      context.getClientRelation().setTypeMark(mark);
     }
   }
 

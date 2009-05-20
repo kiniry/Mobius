@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.typechecker;
 
+import ie.ucd.bon.ast.TypeMark;
+
 
 public class ClientRelation {
 

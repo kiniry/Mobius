@@ -182,8 +182,6 @@ tokens {
   import ie.ucd.bon.parser.errors.MissingElementParseError;
   import java.util.LinkedList;
   import ie.ucd.bon.ast.*;
-  import ie.ucd.bon.typechecker.informal.*;
-  import ie.ucd.bon.typechecker.*;
 }
 
 @lexer::header {
@@ -204,14 +202,14 @@ package ie.ucd.bon.parser;
  ##############################################
  **********************************************/
 
-prog returns [BONSourceFile bonSource] :
+prog returns [BonSourceFile bonSource] :
          bs=bon_specification EOF
-         { $bonSource = BonsourceFile.mk($bs.spec_els, null, getSLoc($bs.start, $bs.stop)); }
+         { $bonSource = BonSourceFile.mk($bs.spec_els, null, getSLoc($bs.start, $bs.stop)); }
        ->
          ^( PROG bon_specification )
        |
          indexing bon_specification EOF
-         { $bonSource = BonsourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($bs.start, $bs.stop)); }
+         { $bonSource = BonSourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($bs.start, $bs.stop)); }
        ->
          ^( PROG indexing bon_specification )
        |
@@ -786,7 +784,7 @@ scenario_entries returns [List<ScenarioEntry> entries] :
                   
 scenario_entry returns [ScenarioEntry entry] :
   s='scenario' m=MANIFEST_STRING d=description
-  { $entry =  ScenarioEntry.mk($m.text, $d.description getSLoc($s.start,$d.stop)); }
+  { $entry =  ScenarioEntry.mk($m.text, $d.description, getSLoc($s.start,$d.stop)); }
                  ->
                  ^(
                    SCENARIO_ENTRY[$s]
@@ -974,9 +972,19 @@ static_relation returns [StaticRelation relation] :
 
 /**********************************************/
 
-inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')? 
-                         parent (semantic_label)? 
-                         { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
+inheritance_relation returns [InheritanceRelation relation] 
+@init { Multiplicity multiplicity = null; String semanticLabel = null; }
+:
+  c=child 'inherit' 
+  ('{' multiplicity '}'
+   { multiplicity = $multiplicity.m; }
+  )? 
+  p=parent 
+  ( semantic_label
+   { semanticLabel = $semantic_label.label; } 
+  )? 
+  { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
+  { $relation = InheritanceRelation.mk($c.ref, $p.ref, multiplicity, semanticLabel); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]
@@ -985,19 +993,26 @@ inheritance_relation  :  c=child 'inherit' ('{' multiplicity '}')?
                         )
                       ;
                     
-client_relation  :  c=client 'client'
-										{ ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
-										  getContext().enterClientRelation(cr); } 
-                    (client_entities)? 
-                    ( type_mark 
-                      { getTI().typeMark($type_mark.text); }
-                      |
-                      { getTI().typeMark(""); }
-                    )
-                    supplier 
-                    { getContext().getClientRelation().setSupplier($supplier.text); }
-                    (semantic_label)?
-                    { getTI().addClientRelation(); } 
+client_relation returns [ClientRelation relation] 
+@init { List<ClientEntity> entities = null; TypeMark mark; String semanticLabel = null; Token end; }
+:
+  c=client 'client'
+  { ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
+  getContext().enterClientRelation(cr); } 
+  (client_entities { entities = $client_entities.entities; } )? 
+  ( type_mark 
+   { getTI().typeMark($type_mark.text); }
+   { mark = $type_mark.mark; }
+   |
+   { getTI().typeMark(""); }
+   { mark = Constants.NO_TYPE_MARK; }
+  )
+  s=supplier 
+  { end = $supplier.stop; }
+  { getContext().getClientRelation().setSupplier($supplier.text); }
+  (semantic_label { semanticLabel = $semanticLabel.label; end = $semantic_label.stop; } )?
+  { getTI().addClientRelation(); } 
+  { $relation = ClientRelation.mk($c.type,$s.type,entities,mark,semanticLabel,getSLoc($c.start,end)); }
                   ->
                   ^(
                     CLIENT_RELATION[$c.start]
@@ -1006,7 +1021,9 @@ client_relation  :  c=client 'client'
                    )
                  ;
                  
-client_entities  :  a='{' client_entity_expression '}'
+client_entities returns [List<ClientEntity> entities] :
+  a='{' cee=client_entity_expression b='}'
+  { $entities = $cee.entities; }
                   -> 
                   ^(
                     CLIENT_ENTITIES[$a]
@@ -1014,7 +1031,9 @@ client_entities  :  a='{' client_entity_expression '}'
                    )
                  ;
                  
-client_entity_expression  :  cel=client_entity_list 
+client_entity_expression returns [List<ClientEntity> entities] :
+  cel=client_entity_list
+  { $entities = $cel.entities; } 
                            ->
                            ^(
                              CLIENT_ENTITY_EXPRESSION[$cel.start] client_entity_list
@@ -1026,7 +1045,13 @@ client_entity_expression  :  cel=client_entity_list
                             )
                           ;
                           
-client_entity_list  :  ce=client_entity (',' client_entity)* 
+client_entity_list returns [List<ClientEntity> entities] :
+  { $entities = new LinkedList<ClientEntity>(); }
+  ce=client_entity
+  { $entities.add($ce.entity); }
+  (',' c=client_entity
+   { $entities.add($c.entity); }
+  )* 
                      -> 
                      ^(
                        CLIENT_ENTITY_LIST[$ce.start] (client_entity)+
@@ -1034,25 +1059,26 @@ client_entity_list  :  ce=client_entity (',' client_entity)*
                     ;
                     
 //Conflict here is:
-// feature_name can be a IDENTIFIER, and supplier_indirection can also be an IDENTIFIER
+// feature_name can be an IDENTIFIER, and supplier_indirection can also be an IDENTIFIER
 //TODO
 //client_entity  :    feature_name 
-client_entity  :    prefix
+client_entity returns [ClientEntity entity] :
+   prefix
                   ->
                   ^(
                     CLIENT_ENTITY prefix
                    )
-                  | infix
+ | infix
                   ->
                   ^(
                     CLIENT_ENTITY infix
                    )
-                  | supplier_indirection 
+ | supplier_indirection 
                   ->
                   ^(
                     CLIENT_ENTITY supplier_indirection
                    )
-                  | parent_indirection 
+ | parent_indirection 
                   ->
                   ^(
                     CLIENT_ENTITY parent_indirection
@@ -1145,24 +1171,30 @@ indirection_element  :   '...'
                      ;
 
                      
-type_mark  :  ':' 
+type_mark returns [TypeMark mark] :
+   m=':'
+   { $mark = TypeMark.mk(TypeMark.Mark.HASTYPE, null, getSLoc($m)); } 
             ->
             ^(
               TYPE_MARK ':'
              )
-            | ':{' 
+ | m=':{'
+   { $mark = TypeMark.mk(TypeMark.Mark.AGGREGATE, null, getSLoc($m)); } 
             ->
             ^(
               TYPE_MARK ':{'
              )
-            | shared_mark             
+ | sm=shared_mark
+   { $mark = $sm.mark; }             
             ->
             ^(
               TYPE_MARK shared_mark
              )
            ;
            
-shared_mark  :  ':' '(' multiplicity ')'
+shared_mark returns [TypeMark mark] :
+  a=':' '(' m=multiplicity b=')'
+  { $mark = TypeMark.mk(TypeMark.Mark.SHAREDMARK, m.num, getSLoc($a.start, $b.stop)); }
               ->
               ^(
                 SHARED_MARK multiplicity
@@ -1241,14 +1273,18 @@ static_component_name returns [BONType type] :
                          )
                        ;
                        
-multiplicity  :  i=INTEGER 
+multiplicity returns [Integer num] :
+  i=INTEGER
+  { $num = new Integer($i.text); } 
                ->
                ^(
                  MULTIPLICITY[$i] INTEGER
                 )
               ;
               
-semantic_label  :  m=MANIFEST_STRING
+semantic_label returns [String label] :
+  m=MANIFEST_STRING
+  { label = $m.text; }
                  ->
                  ^(
                    SEMANTIC_LABEL[$m] MANIFEST_STRING
@@ -1259,11 +1295,16 @@ semantic_label  :  m=MANIFEST_STRING
  ***   Class Interface Description          ***
  **********************************************/
 
-class_interface  :  (indexing)?
-                    (parent_class_list)?
-                    features
-                    (class_invariant)?
-                    'end'
+class_interface returns [ClassInterface ci] 
+@init { Indexing indexing = null; List<BONType> parents = null; List<AssertionClause> invariant = null; Token start; }
+:
+  (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
+  (pcl=parent_class_list { parents = $pcl.list; if (start == null) start = $pcl.start; } )?
+  features
+  { if (start == null) start = $features.start; }
+  (inv=class_invariant { invariant = $inv.invariant; } )?
+  e='end'
+  { $ci = ClassInterface.mk($features.features, parents, invariant, indexing, getSLoc(start, $e.stop)); }
                   ->
                   ^(
                     CLASS_INTERFACE
@@ -1274,20 +1315,26 @@ class_interface  :  (indexing)?
                    )
                  ;
                     
-class_invariant  :  'invariant' assertion 
-                    { getTI().addInvariant($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+class_invariant returns [List<AssertionClause> invariant] :
+  'invariant' assertion 
+  { getTI().addInvariant($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
+  { $invariant = $assertion.clauses; }
                   ->
                   ^(
                     CLASS_INVARIANT assertion
                    )                
                  ;
                  
-parent_class_list  :  'inherit' c1=class_type 
-                      { getTI().addParent($c1.type,getSLoc($c1.start,$c1.stop)); } 
-                      (';' c=class_type 
-                       { getTI().addParent($c.type,getSLoc($c.start,$c.stop)); } 
-                      )* 
-                      ';'? 
+parent_class_list returns [List<BONType> parents] :
+  { $parents = new LinkedList<BONType>(); }
+  'inherit' c1=class_type 
+  { getTI().addParent($c1.type,getSLoc($c1.start,$c1.stop)); }
+  { $parents.add($c1.type); } 
+  (';' c=class_type 
+   { getTI().addParent($c.type,getSLoc($c.start,$c.stop)); }
+   { $parents.add($c.type); } 
+  )* 
+  ';'? 
                     -> 
                     ^(
                       PARENT_CLASS_LIST (class_type)+
@@ -1298,7 +1345,9 @@ parent_class_list  :  'inherit' c1=class_type
                     ^(PARENT_CLASS_LIST PARSE_ERROR )
                    ;
                    
-features  :  (feature_clause)+
+features returns [List<Feature> features] :
+  { $features = new LinkedList<FeatureClause>(); }
+  (feature_clause { $features.add($feature_clause.feature); } )+
            -> 
            ^(
              FEATURES (feature_clause)+
@@ -1307,12 +1356,16 @@ features  :  (feature_clause)+
           
 /**********************************************/
 
-feature_clause  :  f='feature' 
-                   { getContext().enterFeatureClause(getSLoc($f)); }
-                   (selective_export)? 
-                   (COMMENT)? 
-                   feature_specifications 
-                   { getContext().leaveFeatureClause(); }
+feature_clause returns [Feature feature] 
+@init { String comment = null; List<String> selectiveExport; }
+:
+  f='feature' 
+  { getContext().enterFeatureClause(getSLoc($f)); }
+  (se=selective_export { selectiveExport = $se.exports; } )? 
+  (c=COMMENT { comment = $c.text; } )? 
+  fs=feature_specifications 
+  { getContext().leaveFeatureClause(); }
+  { $feature = Feature.mk($fs.specs, selectiveExport, comment, getSLoc($f.start,$fs.stop)); }
                  ->
                  ^(
                    FEATURE_CLAUSE
@@ -1322,7 +1375,9 @@ feature_clause  :  f='feature'
                   )
                 ;
                 
-feature_specifications  :  (feature_specification)+
+feature_specifications returns [List<FeatureSpecification> specs] :
+  { $specs = new LinkedList<FeatureSpecification>(); }
+  (fs=feature_specification { $specs.add($fs.spec); } )+
                          ->
                          ^(
                            FEATURE_SPECIFICATIONS
@@ -1330,17 +1385,31 @@ feature_specifications  :  (feature_specification)+
                           ) 
                         ;
                         
-feature_specification  :  ( ( 'deferred'  { getContext().enterFeatureSpecification(); } feature_name_list { getTI().featureSpecDeferred(); }  ) 
-                          | ( 'effective' { getContext().enterFeatureSpecification(); } feature_name_list { getTI().featureSpecEffective(); } )
-                          | ( 'redefined' { getContext().enterFeatureSpecification(); } feature_name_list { getTI().featureSpecRedefined(); } )
-                          | ( { getContext().enterFeatureSpecification(); } feature_name_list                                                 )
-                          )
-                          (has_type)?
-                          (rename_clause)?
-                          (COMMENT)?
-                          (feature_arguments)?
-                          (contract_clause)? 
-                          { getContext().leaveFeatureSpecification(); }
+feature_specification returns [FeatureSpecification spec] 
+@init { FeatureSpecification.Modifier modifier; List<FeatureArgument> args; HasType hasType = null; 
+        RenameClause renaming = null; String comment = null; ContractClause contracts;}
+:
+  (  'deferred'  { modifier = DEFERRED; } 
+   | 'effective' { modifier = EFFECTIVE; }
+   | 'redefined' { modifier = REDEFINED; }
+   |             { modifier = NONE; }
+  )
+  { getContext().enterFeatureSpecification(); }
+  fnl=feature_name_list
+  { getTI().featureSpecModifier(modifier); }
+  (has_type { hasType = $has_type.htype; } )?
+  (rc=rename_clause { renaming = $rc.renaming; } )?
+  (c=COMMENT { comment = $c.text; } )?
+  (  ga=feature_arguments
+     { args = $fa.args; }
+   | { args = Constants.NO_ARGS; }
+  )
+  (  cc=contract_clause 
+     { contracts = $cc.contracts; } 
+   | { contracts = Constants.EMPTY_CONTRACT; }
+  ) 
+  { getContext().leaveFeatureSpecification(); }
+  { $spec = FeatureSpecification.mk(modifier, $fnl.list, contracts, hasType, renaming, comment); }
                         ->
                         ^(
                           FEATURE_SPECIFICATION
@@ -1353,14 +1422,19 @@ feature_specification  :  ( ( 'deferred'  { getContext().enterFeatureSpecificati
                          )
                        ;
                        
-has_type  :  type_mark type { getTI().hasType($type_mark.text, $type.text); }
+has_type returns [HasType htype] :
+  type_mark type 
+  { getTI().hasType($type_mark.text, $type.text); }
+  { $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
            ->
            ^(HAS_TYPE type_mark type)
           ;
 
 /**********************************************/
 
-contract_clause  :  contracting_conditions 'end'
+contract_clause returns [ContractClause contracts] :
+  cc=contracting_conditions 'end'
+  { $contracts = $cc.contracts; }
                   ->
                   ^(
                     CONTRACT_CLAUSE contracting_conditions
@@ -1368,7 +1442,16 @@ contract_clause  :  contracting_conditions 'end'
                  ;
 
 //NB. Rewritten from precondition | postcondition | pre_and_post                 
-contracting_conditions  :  ((precondition (postcondition)?) | postcondition)
+contracting_conditions returns [ContractClause contracts] 
+@init { List<AssertionClause> post = null; }
+:
+  (  (pre=precondition (post=postcondition { post = $post.assertions; } )?)
+     { if (post == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$post.stop)); 
+       else $contracts = ContractClause.mk($pre.assertions, post, getSLoc($pre.start,$post.stop)); }  
+   | post=postcondition
+     { $contracts = ContractClause.mk(Constants.NO_ASSERTIONS, $post.assertions, getSLoc($pre.start,$post.stop)); }
+  )
+  
                          -> 
                          ^(
                            CONTRACTING_CONDITIONS (precondition)? (postcondition)?
@@ -1736,16 +1819,6 @@ expression_list  :  expression (',' expression)*
                     EXPRESSION_LIST (expression)+
                    )
                  ;
-  
-//Obsolete               
-//operator_expression  :    parenthesized 
-//                        | unary_expression 
-//                        | binary_expression 
-//                     ;
-                                        
-//parenthesized  :  '('! expression ')'!
-//               ;
-
 
 /**********************************************/
 

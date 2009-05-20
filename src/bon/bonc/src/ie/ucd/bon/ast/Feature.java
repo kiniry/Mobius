@@ -28,7 +28,7 @@ public class Feature extends AstNode {
     
     assert location != null;
     this.location = location;
-    this.featureSpecifications = featureSpecifications; 
+    this.featureSpecifications = featureSpecifications; assert featureSpecifications != null;
     this.selectiveExport = selectiveExport; 
     this.comment = comment; 
     

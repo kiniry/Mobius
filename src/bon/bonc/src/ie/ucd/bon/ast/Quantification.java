@@ -10,7 +10,7 @@ import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.ast.AstNode;
 
 public class Quantification extends Expression {
-  public static enum Quant {
+  public static enum Quantifier {
     FORALL, 
     EXISTS
   }
@@ -18,17 +18,17 @@ public class Quantification extends Expression {
   private final Expression restriction;
   private final Expression proposition;
 
-  private final Quant quantifier;
+  private final Quantifier quantifier;
   private final List<VariableRange> variableRanges;
 
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Quantification(Quant quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition) {
+  protected Quantification(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition) {
     this(quantifier,variableRanges,restriction,proposition, null);    
   }
 
-  protected Quantification(Quant quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
+  protected Quantification(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -39,17 +39,17 @@ public class Quantification extends Expression {
     
   }
   
-  public static Quantification mk(Quant quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition) {
+  public static Quantification mk(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition) {
     return new Quantification(quantifier, variableRanges, restriction, proposition);
   }
 
-  public static Quantification mk(Quant quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
+  public static Quantification mk(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
     return new Quantification(quantifier, variableRanges, restriction, proposition, location);
   }
 
   // === Accessors ===
 
-  public Quant getQuantifier() { return quantifier; }
+  public Quantifier getQuantifier() { return quantifier; }
   public List<VariableRange> getVariableRanges() { return variableRanges; }
   public Expression getRestriction() { return restriction; }
   public Expression getProposition() { return proposition; }
@@ -57,7 +57,7 @@ public class Quantification extends Expression {
   // === Others ===
   @Override
   public Quantification clone() {
-    Quant newQuantifier = quantifier;
+    Quantifier newQuantifier = quantifier;
     List<VariableRange> newVariableRanges = variableRanges;
     Expression newRestriction = restriction == null ? null : restriction.clone();
     Expression newProposition = proposition == null ? null : proposition.clone();

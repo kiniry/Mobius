@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.Type;
+import ie.ucd.bon.ast.TypeMark;
 
 import java.util.HashMap;
 import java.util.LinkedList;

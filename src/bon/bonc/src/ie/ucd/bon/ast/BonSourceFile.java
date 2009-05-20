@@ -9,7 +9,7 @@ import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.ast.AstNode;
 
-public class BonsourceFile extends AstNode {
+public class BonSourceFile extends AstNode {
 
 
   private final Indexing indexing;
@@ -19,11 +19,11 @@ public class BonsourceFile extends AstNode {
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected BonsourceFile(List<SpecificationElement> bonSpecification, Indexing indexing) {
+  protected BonSourceFile(List<SpecificationElement> bonSpecification, Indexing indexing) {
     this(bonSpecification,indexing, null);    
   }
 
-  protected BonsourceFile(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
+  protected BonSourceFile(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -32,12 +32,12 @@ public class BonsourceFile extends AstNode {
     
   }
   
-  public static BonsourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing) {
-    return new BonsourceFile(bonSpecification, indexing);
+  public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing) {
+    return new BonSourceFile(bonSpecification, indexing);
   }
 
-  public static BonsourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
-    return new BonsourceFile(bonSpecification, indexing, location);
+  public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
+    return new BonSourceFile(bonSpecification, indexing, location);
   }
 
   // === Accessors ===
@@ -47,17 +47,17 @@ public class BonsourceFile extends AstNode {
 
   // === Others ===
   @Override
-  public BonsourceFile clone() {
+  public BonSourceFile clone() {
     List<SpecificationElement> newBonSpecification = bonSpecification;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     
-    return BonsourceFile.mk(newBonSpecification, newIndexing, location);
+    return BonSourceFile.mk(newBonSpecification, newIndexing, location);
   }
   
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("BonsourceFile ast node: ");
+    sb.append("BonSourceFile ast node: ");
     
     sb.append("bonSpecification = ");
     sb.append(bonSpecification);

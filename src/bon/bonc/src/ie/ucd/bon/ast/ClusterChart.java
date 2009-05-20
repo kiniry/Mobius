@@ -9,7 +9,7 @@ import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.ast.AstNode;
 
-public class ClusterChart extends AstNode {
+public class ClusterChart extends InformalChart {
 
 
   private final Indexing indexing;
