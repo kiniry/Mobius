@@ -4,7 +4,8 @@ import java.util.*;
 
 /**
  * Represents a graph of objects of type {@code N}. The implementation
- * uses adjacency lists and hash tables.
+ * uses adjacency lists and hash tables. Nodes are compared using
+ * {@code equals()} rather than using {@code ==}.
  *
  * @author rgrig 
  * @param <N> the type of the graph node

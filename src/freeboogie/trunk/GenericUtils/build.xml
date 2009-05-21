@@ -9,7 +9,7 @@
 
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
-  <property name="version" value="0.0"/>
+  <property name="version" value="0.1"/>
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
     <pathelement path="${build}"  />
