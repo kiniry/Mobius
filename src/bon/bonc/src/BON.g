@@ -311,11 +311,11 @@ dictionary_entry returns [DictionaryEntry entry] :
 
 system_chart returns [SystemChart sc] 
 @init { Indexing index = null; String expl = null; String p = null; 
-        List<ClusterEntry> entries; }
+        List<ClusterEntry> entries = null; }
 :
   s='system_chart' 
   system_name 
-  { ClusterChartDefinition system = new ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
+  { ie.ucd.bon.typechecker.informal.ClusterChartDefinition system = new ie.ucd.bon.typechecker.informal.ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
   getTI().informal().setSystem(system);
   getContext().enterSystemChart(system); }
   (indexing { index = $indexing.indexing; } )?
@@ -480,7 +480,7 @@ index_string returns [String s] :
 
 cluster_chart returns [ClusterChart cc] :
   c='cluster_chart' cluster_name 
-  { ClusterChartDefinition cluster = new ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
+  { ie.ucd.bon.typechecker.informal.ClusterChartDefinition cluster = new ie.ucd.bon.typechecker.informal.ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
   getTI().informal().addCluster(cluster);
   getContext().enterClusterChart(cluster); }
   (indexing)? 
@@ -532,7 +532,7 @@ cluster_name  :  i=IDENTIFIER
 
 class_chart returns [ClassChart cc] :
   c='class_chart' class_name 
-  { ClassChartDefinition classX = new ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
+  { ie.ucd.bon.typechecker.informal.ClassChartDefinition classX = new ie.ucd.bon.typechecker.informal.ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
   getTI().informal().addClass(classX);
   getContext().enterClassChart(classX); }
   (indexing)? 
@@ -1011,17 +1011,17 @@ inheritance_relation returns [InheritanceRelation relation]
                       ;
                     
 client_relation returns [ClientRelation relation] 
-@init { ClientEntityExpression entities = null; TypeMark mark; String semanticLabel = null; Token end; }
+@init { ClientEntityExpression entities = null; TypeMark mark = null; String semanticLabel = null; Token end = null; }
 :
   c=client 'client'
   { ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
   getContext().enterClientRelation(cr); } 
   (client_entities { entities = $client_entities.entities; } )? 
   ( type_mark 
-   { getTI().typeMark($type_mark.text); }
+   { getTI().typeMark($type_mark.mark); }
    { mark = $type_mark.mark; }
    |
-   { getTI().typeMark(""); }
+   { getTI().typeMark(Constants.NO_TYPE_MARK); }
    { mark = Constants.NO_TYPE_MARK; }
   )
   s=supplier 
@@ -1314,7 +1314,7 @@ semantic_label returns [String label] :
  **********************************************/
 
 class_interface returns [ClassInterface ci] 
-@init { Indexing indexing = null; List<BONType> parents = null; List<AssertionClause> invariant = null; Token start; }
+@init { Indexing indexing = null; List<BONType> parents = null; List<Expression> invariant = null; Token start = null; }
 :
   (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
   (pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } )?
@@ -1333,7 +1333,7 @@ class_interface returns [ClassInterface ci]
                    )
                  ;
                     
-class_invariant returns [List<AssertionClause> invariant] :
+class_invariant returns [List<Expression> invariant] :
   'invariant' assertion 
   { getTI().addInvariant($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $invariant = $assertion.clauses; }
@@ -1375,7 +1375,7 @@ features returns [List<Feature> features] :
 /**********************************************/
 
 feature_clause returns [Feature feature] 
-@init { String comment = null; List<String> selectiveExport; }
+@init { String comment = null; List<String> selectiveExport = null; }
 :
   f='feature' 
   { getContext().enterFeatureClause(getSLoc($f)); }
@@ -1404,8 +1404,9 @@ feature_specifications returns [List<FeatureSpecification> specs] :
                         ;
                         
 feature_specification returns [FeatureSpecification spec] 
-@init { FeatureSpecification.Modifier modifier; List<FeatureArgument> args; HasType hasType = null; 
-        RenameClause renaming = null; String comment = null; ContractClause contracts;}
+@init { FeatureSpecification.Modifier modifier = FeatureSpecification.Modifier.NONE; 
+        List<FeatureArgument> args = null; HasType hasType = null; 
+        RenameClause renaming = null; String comment = null; ContractClause contracts = null;}
 :
   (  'deferred'  { modifier = FeatureSpecification.Modifier.DEFERRED; } 
    | 'effective' { modifier = FeatureSpecification.Modifier.EFFECTIVE; }
@@ -1442,7 +1443,7 @@ feature_specification returns [FeatureSpecification spec]
                        
 has_type returns [HasType htype] :
   type_mark type 
-  { getTI().hasType($type_mark.text, $type.text); }
+  { getTI().hasType($type_mark.mark, $type.text); }
   { $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
            ->
            ^(HAS_TYPE type_mark type)
@@ -1461,9 +1462,9 @@ contract_clause returns [ContractClause contracts] :
 
 //NB. Rewritten from precondition | postcondition | pre_and_post                 
 contracting_conditions returns [ContractClause contracts] 
-@init { List<AssertionClause> postC = null; }
+@init { List<Expression> postC = null; }
 :
-  (  (pre=precondition (post=postcondition { post = $post.assertions; } )?)
+  (  (pre=precondition (post=postcondition { postC = $post.assertions; } )?)
      { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$post.stop)); 
        else $contracts = ContractClause.mk($pre.assertions, postC, getSLoc($pre.start,$post.stop)); }  
    | post=postcondition
@@ -1476,7 +1477,7 @@ contracting_conditions returns [ContractClause contracts]
                           )
                         ;
 
-precondition returns [List<AssertionClause> assertions] :
+precondition returns [List<Expression> assertions] :
   'require' assertion 
   { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $assertions = $assertion.clauses; }
@@ -1486,7 +1487,7 @@ precondition returns [List<AssertionClause> assertions] :
                 )
               ;
               
-postcondition returns [List<AssertionClause> assertions] :
+postcondition returns [List<Expression> assertions] :
   'ensure' assertion 
   { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $assertions = $assertion.clauses; }
@@ -1734,8 +1735,8 @@ type returns [BONType type] :
  **********************************************/
 //TODO correct this all for use with the new expression grammar
 
-assertion returns [List<AssertionClause> clauses] :
-  { $clauses = new LinkedList<AssertionClause>(); }
+assertion returns [List<Expression> clauses] :
+  { $clauses = new LinkedList<Expression>(); }
   a1=assertion_clause
   { $clauses.add($a1.clause); }
   (';' a=assertion_clause  
@@ -1775,7 +1776,7 @@ boolean_expression returns [Expression exp] :
                     ;
             
 quantification returns [Quantification quantification] 
-@init { Expression restrict; }
+@init { Expression restrict = null; }
 :
   q=quantifier 
   rexp=range_expression 
@@ -2075,7 +2076,7 @@ real_constant  :  (sign)? r=REAL
  **********************************************/
 
 dynamic_diagram returns [DynamicDiagram dd] 
-@init { String id = null; String comment = null; List<DynamicComponent> components; }
+@init { String id = null; String comment = null; List<DynamicComponent> components = null; }
 :
   s='dynamic_diagram' 
   (eid=extended_id { id = $eid.eid; } )? 
@@ -2200,8 +2201,9 @@ scenario_name returns [String name] :
 /**********************************************/
 
 object_group returns [ObjectGroup group] 
-@init { String comment = null; List<DynamicComponent> components; ObjectGroup.Nameless nameless; 
-        Token start; Token end; }
+@init { String comment = null; List<DynamicComponent> components = null; 
+        ObjectGroup.Nameless nameless = ObjectGroup.Nameless.NOTNAMELESS; 
+        Token start = null; Token end = null; }
 :
   (  n='nameless'
      { nameless = ObjectGroup.Nameless.NAMELESS; start = $n; }
@@ -2232,13 +2234,13 @@ group_components returns [List<DynamicComponent> components] :
                   ;
                   
 object_stack returns [ObjectStack stack] 
-@init { String comment = null; Token end; }
+@init { String comment = null; Token end = null; }
 :
   s='object_stack' 
   n=object_name
   { end = $n.stop; } 
   (c=COMMENT { comment = $c.text; end = $c; } )?
-  { $stack = ObjectStack.mk($n.name, comment); }
+  { $stack = ObjectStack.mk($n.name, comment, getSLoc($s,end)); }
                ->
                ^(
                  OBJECT_STACK object_name (COMMENT)?
@@ -2246,13 +2248,13 @@ object_stack returns [ObjectStack stack]
               ;
               
 object returns [ObjectInstance object] 
-@init { String comment = null; Token end; }
+@init { String comment = null; Token end = null; }
 :  
-  'object' 
+  s='object' 
   n=object_name
   { end = $n.stop; } 
   (c=COMMENT { comment = $c.text; end = $c; } )?
-  { $object = ObjectInstance.mk($n.name, comment); } 
+  { $object = ObjectInstance.mk($n.name, comment, getSLoc($s,end)); } 
          ->
          ^(
            OBJECT object_name (COMMENT)?
@@ -2312,7 +2314,7 @@ dynamic_component_name  :  (IDENTIFIER ('.' extended_id)?)
                         ;
 
 object_name returns [ObjectName name] 
-@init { String id = null; Token end; }
+@init { String id = null; Token end = null; }
 :
   n=class_name 
   { end = $n.stop; }

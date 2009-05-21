@@ -52,11 +52,11 @@ NamedIndirection = String! className, List<IndirectionElement>! indirectionEleme
 IndirectionElement :> NamedIndirection, ClassName;
 TypeMark = enum(Mark: NONE, HASTYPE, AGGREGATE, SHAREDMARK) mark, Integer multiplicity;
 ClassName = String! name;
-ClassInterface = List<Feature>! features, List<BONType>! parents, List<AssertionClause> invariant, Indexing indexing;  
+ClassInterface = List<Feature>! features, List<BONType>! parents, List<Expression> invariant, Indexing indexing;  
 Feature = List<FeatureSpecification>! featureSpecifications, List<String> selectiveExport, String comment;
 FeatureSpecification = enum(Modifier: NONE, DEFERRED, EFFECTIVE, REDEFINED) modifier, List<String>! featureNames, List<FeatureArgument>! arguments, ContractClause! contracts, HasType hasType, RenameClause renaming, String comment;
 HasType = TypeMark! mark, BONType! type;
-ContractClause = List<AssertionClause> preconditions, List<AssertionClause> postconditions;
+ContractClause = List<Expression> preconditions, List<Expression> postconditions;
 
 
 RenameClause = String! className, String! featureName;
@@ -65,8 +65,6 @@ FeatureArgument = String identifier, BONType! type;
 FormalGeneric = String! identifier, BONType type;
 
 Type = String! identifier, List<BONType>! actualGenerics, String! fullString;
-
-AssertionClause = Expression! expression;
 
 Expression :> Quantification, BinaryExp, UnaryExp;
 

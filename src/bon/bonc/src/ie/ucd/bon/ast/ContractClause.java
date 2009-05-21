@@ -13,17 +13,17 @@ public class ContractClause extends AstNode {
 
 
 
-  private final List<AssertionClause> preconditions;
-  private final List<AssertionClause> postconditions;
+  private final List<Expression> preconditions;
+  private final List<Expression> postconditions;
 
   private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ContractClause(List<AssertionClause> preconditions, List<AssertionClause> postconditions) {
+  protected ContractClause(List<Expression> preconditions, List<Expression> postconditions) {
     this(preconditions,postconditions, null);    
   }
 
-  protected ContractClause(List<AssertionClause> preconditions, List<AssertionClause> postconditions, SourceLocation location) {
+  protected ContractClause(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
     
     assert location != null;
     this.location = location;
@@ -32,11 +32,11 @@ public class ContractClause extends AstNode {
     
   }
   
-  public static ContractClause mk(List<AssertionClause> preconditions, List<AssertionClause> postconditions) {
+  public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions) {
     return new ContractClause(preconditions, postconditions);
   }
 
-  public static ContractClause mk(List<AssertionClause> preconditions, List<AssertionClause> postconditions, SourceLocation location) {
+  public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
     return new ContractClause(preconditions, postconditions, location);
   }
   
@@ -46,14 +46,14 @@ public class ContractClause extends AstNode {
 
   // === Accessors ===
 
-  public List<AssertionClause> getPreconditions() { return preconditions; }
-  public List<AssertionClause> getPostconditions() { return postconditions; }
+  public List<Expression> getPreconditions() { return preconditions; }
+  public List<Expression> getPostconditions() { return postconditions; }
 
   // === Others ===
   @Override
   public ContractClause clone() {
-    List<AssertionClause> newPreconditions = preconditions;
-    List<AssertionClause> newPostconditions = postconditions;
+    List<Expression> newPreconditions = preconditions;
+    List<Expression> newPostconditions = postconditions;
     
     return ContractClause.mk(newPreconditions, newPostconditions, location);
   }
