@@ -13,12 +13,6 @@ public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */
   public String name = null;
   
-  /** A base class which has has been declared in the grammar.
-   *  If {@code baseClass} is {@code null}, {@code base} can be
-   *  used to textually represent a class outside the grammar's
-   *  context. */
-  private AgClass baseClass = null;  
-
   /** The class members. */
   private List<AgMember> members = new ArrayList<AgMember>(10);
   
@@ -38,17 +32,14 @@ public class AgClass implements Comparable<AgClass> {
    */
   @Deprecated
   public List<AgMember> getMembers() {
-    List<AgMember> retv = getInheritedMembers();
-    retv.addAll(members);
-    return retv;
+    return members;
   }
 
   /** Returns inherited members.
    * @return a freshly allocated list of members */
   @Deprecated
   public List<AgMember> getInheritedMembers() {
-    return baseClass==null ? 
-      new ArrayList<AgMember>(0) : baseClass.getMembers();
+    return null;
   }
 
   /** Returns members of this class introduced by this class.*/ 
@@ -70,7 +61,7 @@ public class AgClass implements Comparable<AgClass> {
 
   @Deprecated
   public AgClass getBaseClass() {
-    return baseClass;
+    return null;
   }
 
   public void addMember(AgMember member) {

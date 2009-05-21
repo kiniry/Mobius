@@ -1,0 +1,5 @@
+. Abstract classes do not have members, normal classes do not have
+  subtypes. It is allowed to say "A = B x;" where A is an abstract
+  class as a shorthand for adding the member "B x" in all normal
+  subclasses of A. This should be implemented by 'fixing' the grammar
+  after parsing.
