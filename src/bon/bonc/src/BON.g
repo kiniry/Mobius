@@ -1465,10 +1465,10 @@ contracting_conditions returns [ContractClause contracts]
 @init { List<Expression> postC = null; }
 :
   (  (pre=precondition (post=postcondition { postC = $post.assertions; } )?)
-     { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$post.stop)); 
+     { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$pre.stop)); 
        else $contracts = ContractClause.mk($pre.assertions, postC, getSLoc($pre.start,$post.stop)); }  
    | post=postcondition
-     { $contracts = ContractClause.mk(Constants.NO_ASSERTIONS, $post.assertions, getSLoc($pre.start,$post.stop)); }
+     { $contracts = ContractClause.mk(Constants.NO_ASSERTIONS, $post.assertions, getSLoc($post.start,$post.stop)); }
   )
   
                          -> 
