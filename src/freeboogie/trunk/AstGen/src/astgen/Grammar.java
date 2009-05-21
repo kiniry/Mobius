@@ -3,6 +3,8 @@ package astgen;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 /**
  * Represents an abstract grammar (AG). It is basically a map from
  * class names to {@code AgClass} objects plus a couple of utility
@@ -12,18 +14,16 @@ import java.util.Map;
  */
 public class Grammar {
 
-  /**
-   * A map from class names to {@code AgClass} objects.
-   */
-  public Map<String, AgClass> classes;
+  /** A map from class names to {@code AgClass} objects.  */
+  public Map<String, AgClass> classes = Maps.newHashMap();
 
   public HashMap<String, String> userDefs;
 
-  /** Creates a new grammar object. */
-  public Grammar() {
-    classes = new HashMap<String, AgClass>(101);
-  }
-  
+  public TransitiveRelation<String> subtype = 
+      new TransitiveRelation<String>();
+  public TransitiveRelation<String> convertible = 
+      new TransitiveRelation<String>();
+
   /**
    * Return the class with the specified name, initializing an 
    * {@code AgClass} object if necessary.

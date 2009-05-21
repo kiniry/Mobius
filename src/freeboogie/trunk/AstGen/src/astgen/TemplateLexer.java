@@ -146,8 +146,8 @@ public class TemplateLexer extends PeekStream<TemplateToken> {
   /*
    * This method always read ahead one character.
    *  
-   * @see freeboogie.ast.gen.PeekStream#read() 
-   * @see freeboogie.ast.gen.AgLexer#read()
+   * @see astgen.PeekStream#read() 
+   * @see astgen.AgLexer#read()
    */
   @Override
   protected TemplateToken read() throws IOException {

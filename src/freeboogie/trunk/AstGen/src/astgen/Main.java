@@ -11,12 +11,12 @@ import genericutils.Err;
 
 /**
  * The entry point of the AST generator. The usage is:
- * <pre>java freeboogie.ast.gen.Main [-b defaultBase] grammar templates</pre>.
+ * <pre>java astgen.Main [-b defaultBase] grammar templates</pre>.
  * 
  * @author rgrig
  */
 public final class Main {
-  private static final Logger log = Logger.getLogger("freeboogie.ast.gen");
+  private static final Logger log = Logger.getLogger("astgen");
   
   private static String defaultBase = "Ast";
 
@@ -62,7 +62,7 @@ public final class Main {
     }
 
     if (arg_idx == args.length) { 
-      Err.fatal("Syntax: java freeboogie.ast.gen.Main" 
+      Err.fatal("Syntax: java astgen.Main" 
         + " [-b defaultBaseName] (-Dkey=value)* grammar templates", 1);
     }
     

@@ -13,10 +13,6 @@ public class AgClass implements Comparable<AgClass> {
   /** The name of the class. */
   public String name = null;
   
-  /** The base class name of this class. 
-   * Should be nonnull for a consistent grammar. */
-  private String base = null;
-
   /** A base class which has has been declared in the grammar.
    *  If {@code baseClass} is {@code null}, {@code base} can be
    *  used to textually represent a class outside the grammar's
@@ -40,47 +36,39 @@ public class AgClass implements Comparable<AgClass> {
   /** Returns all the members in this class, including the inherited ones.
    * @return {@code getInheritedMembers} concat {@code getSelfMembers}
    */
+  @Deprecated
   public List<AgMember> getMembers() {
     List<AgMember> retv = getInheritedMembers();
     retv.addAll(members);
     return retv;
   }
 
-
   /** Returns inherited members.
    * @return a freshly allocated list of members */
+  @Deprecated
   public List<AgMember> getInheritedMembers() {
     return baseClass==null ? 
       new ArrayList<AgMember>(0) : baseClass.getMembers();
   }
 
-
-
   /** Returns members of this class introduced by this class.*/ 
+  @Deprecated
   public List<AgMember> getSelfMembers() {
     return new ArrayList<AgMember>(members);
   }
 
-  /** 
-   * Set base class name in the case that there is no base
-   * class within the gramma. That is, it should be called
-   * only if {@code getBaseClass()==null}; otherwise {@code
-   * setBaseClass()} should be used.
-   */
-  public void setBaseClassName(String name) {
-    assert baseClass == null || baseClass.name.equals(name);
-    base = name;
-  }
+  /** Store the data in {@code Grammar} directly. */
+  @Deprecated
+  public void setBaseClassName(String name) {}
 
-  public void setBaseClass(AgClass baseClass) {
-    base = baseClass.name;
-    this.baseClass = baseClass;
-  }
+  /** Store the data in {@code Grammar} directly. */
+  @Deprecated
+  public void setBaseClass(AgClass baseClass) {}
 
-  public String getBaseClassName() {
-    return base;
-  }
+  @Deprecated
+  public String getBaseClassName() { return null; }
 
+  @Deprecated
   public AgClass getBaseClass() {
     return baseClass;
   }
@@ -89,8 +77,6 @@ public class AgClass implements Comparable<AgClass> {
     assert !members.contains(member);
     members.add(member);
   }
-
-
   
   /**
    * Returns whether an enum with the given name exists already.
@@ -120,19 +106,10 @@ public class AgClass implements Comparable<AgClass> {
     return r;
   }
 
-  @Override
-  public int compareTo(AgClass o) {
-    return name.compareTo(o.name);
-  }
-
-  @Override
-  public boolean equals(Object o) {
+  @Override public int compareTo(AgClass o) { return name.compareTo(o.name); }
+  @Override public int hashCode() { return name.hashCode(); }
+  @Override public boolean equals(Object o) {
     if (!(o instanceof AgClass)) return false;
     return compareTo((AgClass)o) == 0;
-  }
-
-  @Override
-  public int hashCode() {
-    return name.hashCode();
   }
 }

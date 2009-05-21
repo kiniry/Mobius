@@ -40,7 +40,7 @@ public class CharStream extends PeekStream<Character> {
     return name;
   }
 
-  /* @see freeboogie.ast.gen.PeekStream#read() */
+  /* @see astgen.PeekStream#read() */
   @Override
   public Character read() throws IOException {
     Character r = null;

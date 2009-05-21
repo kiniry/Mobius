@@ -64,7 +64,7 @@ public class TemplateParser {
    * macros seen in the input.
    */
 
-  private static final Logger log = Logger.getLogger("freeboogie.ast.gen");
+  private static final Logger log = Logger.getLogger("astgen");
   
   private TemplateLexer lexer;
   private Grammar grammar;

@@ -11,7 +11,7 @@
 <p>
 The code generator fills in macros in a template with information from
 an abstract grammar. The abstract grammar notation is described in 
-the package {@link freeboogie.ast}. Here we describe the template macros
+the package {@code freeboogie.ast}. Here we describe the template macros
 and the design of the code generator.
 </p>
 
@@ -23,7 +23,7 @@ to macros.
 
 <pre>
 AbstractClass = String! name;
-NormalClass = String! name, String! base, Members members, Enums enums, Invariants invs;
+NormalClass = String! name, Members members, Enums enums, Invariants invs;
 Members = String! type, String! name, boolean isPrimitive, boolean nonNull, Members tail;
 Enums = String! name, EnumValues values, Enums tail;
 EnumValues = String! name, EnumValues tail;

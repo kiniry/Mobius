@@ -9,8 +9,9 @@
 
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
-  <property name="version" value="0.1"/>
-  <property name="guver" value="0.0"/> <!-- version of GenericUtils -->
+  <property name="version" value="0.2"/>
+  <property name="genericutils-jar" value="genericutils-0.0.jar"/>
+  <property name="gcollect-jar" value="google-collect-1.0-rc1.jar"/>
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
     <pathelement path="build"  />
@@ -41,10 +42,12 @@
          basedir="build">
       <manifest>
         <attribute name="Main-Class" value="astgen.Main"/>
-        <attribute name="Class-Path" value="genericutils-${guver}.jar" />
+        <attribute name="Class-Path" 
+          value="${genericutils-jar} ${gcollect-jar}" />
       </manifest>
     </jar>
-    <copy file="lib/genericutils-${guver}.jar" todir="dist" />
+    <copy file="lib/${genericutils-jar}" todir="dist" />
+    <copy file="lib/${gcollect-jar}" todir="dist" />
   </target>
 
 

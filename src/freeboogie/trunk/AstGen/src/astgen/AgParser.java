@@ -17,20 +17,15 @@ class EofReached extends Exception {
 }
 
 /**
- * A hand-crafted parser for abstract grammar (AG) textual descriptions.
- * See packages {@link freeboogie.ast} and {@link freeboogie.ast.gen}
- * for examples. A reason why this is handcrafted is that I want to
- * compare the experience of writing it with the experience of writing
- * the BoogiePL parser using ANTLR. It should also be not too hard since
- * the input language is <i>really</i> simple. On the other hand I can 
- * explore the design space of a parse more, for example by giving really
- * custom error messages and hints of what might be wrong.
+ * A hand-crafted parser for abstract grammar (AG) textual
+ * descriptions. The result of the parsing is an abstract
+ * grammar representation ({@code AgGrammar}).
  * 
  * @author rgrig 
  */
 public class AgParser {
   
-  private static final Logger log = Logger.getLogger("freeboogie.ast.gen"); 
+  private static final Logger log = Logger.getLogger("astgen"); 
   
   private AgLexer lexer;
   private Grammar grammar;

@@ -67,7 +67,7 @@ public abstract class PeekStream<T> {
     }
   }
   
-  private static final Logger log = Logger.getLogger("freeboogie.ast.gen");
+  private static final Logger log = Logger.getLogger("astgen");
   
   private Node<ElLocPair> buffer;
   private Node<ElLocPair> nextElement; 
@@ -110,7 +110,7 @@ public abstract class PeekStream<T> {
   
   /**
    * Marks the current position (if not already marked).
-   * @see freeboogie.ast.gen.PeekStream#rewind()
+   * @see astgen.PeekStream#rewind()
    */
   public void mark() {
     if (markedStack != null && markedStack.data == nextElement) return;
@@ -120,7 +120,7 @@ public abstract class PeekStream<T> {
   /**
    * Go back to the previously marked element or to the beginning of 
    * the (not-yet-eaten) stream if no element is marked.
-   * @see freeboogie.ast.gen.PeekStream#mark()
+   * @see astgen.PeekStream#mark()
    */
   public void rewind() {
     if (markedStack == null) nextElement = buffer;

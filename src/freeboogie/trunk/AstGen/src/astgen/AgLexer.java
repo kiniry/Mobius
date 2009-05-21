@@ -57,7 +57,7 @@ public class AgLexer extends PeekStream<AgToken> {
    *
    * The method is a bit too complex but lexers usually are.
    * 
-   * @see freeboogie.ast.gen.PeekStream#read()
+   * @see astgen.PeekStream#read()
    */
   @Override
   protected AgToken read() throws IOException {
