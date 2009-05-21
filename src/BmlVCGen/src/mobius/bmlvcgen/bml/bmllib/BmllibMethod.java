@@ -70,7 +70,7 @@ public class BmllibMethod implements Method {
     v.beginLocals(count);
     for (int i = 0; i < count; i++) {
       final LocalVariable lv = 
-        method.getLocalVariable(false, i);
+        method.getLocalVariable(i);
       final BmllibType type = 
         new BmllibType(lv.getType());
       final int index = lv.getIndex();
