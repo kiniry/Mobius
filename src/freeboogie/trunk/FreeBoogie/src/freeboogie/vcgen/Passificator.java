@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import genericutils.Err;
+import genericutils.Id;
+import genericutils.SimpleGraph;
+
 import freeboogie.ast.AssertAssumeCmd;
 import freeboogie.ast.AssignmentCmd;
 import freeboogie.ast.Ast;
@@ -28,9 +32,6 @@ import freeboogie.ast.VariableDecl;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.SPGRecognizer;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.Err;
-import freeboogie.util.Id;
-import freeboogie.util.SimpleGraph;
 
 /**
  * Passify option.

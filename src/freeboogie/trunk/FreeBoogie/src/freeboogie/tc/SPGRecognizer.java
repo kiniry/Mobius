@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
+import genericutils.SimpleGraph;
+
 import freeboogie.ast.Block;
 import freeboogie.ast.Body;
 import freeboogie.ast.Declaration;
@@ -14,7 +16,6 @@ import freeboogie.ast.Evaluator;
 import freeboogie.ast.Implementation;
 import freeboogie.ast.Program;
 import freeboogie.ast.Signature;
-import freeboogie.util.SimpleGraph;
 
 /**
  * An implementation of an algorithm to recognize 

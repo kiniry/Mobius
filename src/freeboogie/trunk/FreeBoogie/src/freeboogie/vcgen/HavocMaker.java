@@ -2,10 +2,11 @@ package freeboogie.vcgen;
 
 import java.util.*;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
-import freeboogie.util.*;
 
 /**
  * Havocs variables potentially assigned to in loops at the entry point

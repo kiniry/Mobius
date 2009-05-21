@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import freeboogie.util.Id;
+import genericutils.Id;
 
 /**
  * Utilities for handling {@code SmtTerm}s.

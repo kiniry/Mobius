@@ -4,9 +4,10 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Logger;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.*;
 import freeboogie.tc.*;
 
 /**

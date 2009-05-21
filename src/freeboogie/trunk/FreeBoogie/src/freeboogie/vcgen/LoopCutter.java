@@ -3,10 +3,11 @@ package freeboogie.vcgen;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
-import freeboogie.util.*;
 
 /**
  * Cuts back edges and removes unreachable blocks. (Back edges

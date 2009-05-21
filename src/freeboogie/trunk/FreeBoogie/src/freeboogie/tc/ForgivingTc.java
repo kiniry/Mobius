@@ -2,8 +2,10 @@ package freeboogie.tc;
 
 import java.util.*;
 import java.util.logging.Logger;
+
+import genericutils.SimpleGraph;
+
 import freeboogie.ast.*;
-import freeboogie.util.SimpleGraph;
 
 //DBG import java.io.PrintWriter;
 //DBG import freeboogie.astutil.*;

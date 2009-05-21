@@ -50,6 +50,7 @@ public class Evaluator<R> {
  */
 package freeboogie.ast;
 import java.math.BigInteger;
+import genericutils.AssociativeOperator;
 
 public class AssociativeEvaluator<R> extends Evaluator<R> {
   protected AssociativeOperator<R> assocOp;

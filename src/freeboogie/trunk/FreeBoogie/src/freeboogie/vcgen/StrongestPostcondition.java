@@ -2,10 +2,11 @@ package freeboogie.vcgen;
 
 import java.util.ArrayList;
 
+import genericutils.Closure;
+
 import freeboogie.ast.Block;
 import freeboogie.backend.Term;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.Closure;
 
 /**
  * Computes strongest postcondition for one {@code

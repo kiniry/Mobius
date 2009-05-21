@@ -4,10 +4,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import genericutils.Err;
+import genericutils.StackedHashMap;
+
 import freeboogie.ast.Expr;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.Err;
-import freeboogie.util.StackedHashMap;
 
 /**
  * This class is responsible for sort-checking. The subclasses

@@ -3,6 +3,8 @@ package freeboogie.vcgen;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import genericutils.SimpleGraph;
+
 import freeboogie.Main;
 import freeboogie.ast.AssertAssumeCmd;
 import freeboogie.ast.Block;
@@ -11,7 +13,6 @@ import freeboogie.ast.Command;
 import freeboogie.backend.Term;
 import freeboogie.backend.TermBuilder;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.SimpleGraph;
 
 /**
  * Base class for weakest precondition and strongest postcondition

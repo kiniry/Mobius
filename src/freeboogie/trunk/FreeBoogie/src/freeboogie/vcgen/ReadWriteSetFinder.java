@@ -2,9 +2,10 @@ package freeboogie.vcgen;
 
 import java.util.*;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.tc.SymbolTable;
-import freeboogie.util.*;
 
 /**
  * Finds what identifiers appear in an expression and in what context.

@@ -16,36 +16,22 @@
 
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
-  <property name="src" location="src" />
-  <property name="build" location="classes" />
-  <property name="dist" location="dist" />
-  <property name="doc" location="doc" />
   <property name="version" value="0.1"/>
-  <property name="ast" location="src/freeboogie/ast" />
-  <property name="astgen" location="src/freeboogie/ast/gen" />
-  <property name="parser" location="src/freeboogie/parser" />
-  <property name="junit_src" location="test/junit" />
-  <property name="junit_reports" location="test/junit/reports"/>
+  <property name="genericutils-jar" value="genericutils-0.0.jar"/>
+  <property name="antlr-jar" value="antlr-runtime-3.1.3.jar" />
+  <property name="astgen-jar" value="astgen-0.1.jar"/>
+  <property name="ast-dir" location="src/freeboogie/ast" />
+  <property name="parser-dir" location="src/freeboogie/parser" />
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
-    <pathelement path="${build}"  />
+    <pathelement path="classes"  />
   </path>
 
-
-
-  <!-- AST generation -->
-  <target name="compile_astgen" description="compile freeboogie.ast">
-    <mkdir dir="${build}" />
-    <javac srcdir="${src}" destdir="${build}"
-      deprecation="yes" optimize="yes" debug="${debug}"
-      includes="freeboogie/ast/gen/*.java"
-    />
-  </target>
-
+  <!-- code generation and related -->
   <target name="generate_ast" depends="clean_ast" 
     description="generates AST">
-    <mkdir dir="${build}" />
-    <java fork="yes" dir="${ast}" jar="lib/astgen.jar">
+    <mkdir dir="classes" />
+    <java fork="yes" dir="${ast-dir}" jar="lib/${astgen-jar}">
       <arg value="fb.ag" />
       <arg value="abstract_classes.tpl" />
       <arg value="normal_classes.tpl" />
@@ -58,7 +44,7 @@
   </target>
 
   <target name="generate_ast_picture" depends="generate_ast">
-    <exec dir="${ast}" executable="dot">
+    <exec dir="${ast-dir}" executable="dot">
       <arg value="-Tgif" />
       <arg value="hierarchy.dot" />
       <arg value="-o" />
@@ -66,10 +52,8 @@
     </exec>
   </target>
 
-
-  <!-- Parser generation (using ANTLR) -->
   <target name="generate_parser">
-    <java fork="yes" dir="${parser}" classname="org.antlr.Tool">
+    <java fork="yes" dir="${parser-dir}" classname="org.antlr.Tool">
       <classpath refid="classpath" />
       <arg value="Fb.g" />
     </java>
@@ -78,7 +62,7 @@
   <!-- Compilation and documentation targets -->
   <target name="compile_ast" depends="generate_ast"
           description="compiles the AST">
-    <javac srcdir="${ast}" destdir="${build}"
+    <javac srcdir="${ast-dir}" destdir="classes"
            optimize="yes" debug="${debug}">
       <classpath refid="classpath" />
       <compilerarg value="-Xlint:all" />
@@ -87,7 +71,7 @@
 
   <target name="compile_parser" depends="generate_parser,compile_ast"
           description="compiles the parser with warnings turned off">
-    <javac srcdir="${parser}" sourcepath="${src}" destdir="${build}" 
+    <javac srcdir="${parser-dir}" sourcepath="src" destdir="classes" 
            optimize="yes" debug="no">
       <classpath refid="classpath" /> 
     </javac>
@@ -95,7 +79,7 @@
 
   <target name="compile" depends="compile_parser"
     description="compile the source ">
-    <javac srcdir="${src}" destdir="${build}" 
+    <javac srcdir="src" destdir="classes" 
            optimize="yes" debug="${debug}">
       <classpath refid="classpath" /> 
       <compilerarg value="-Xlint:all" />
@@ -104,50 +88,33 @@
   
   <target name="doc" description="generate javadoc" 
     depends="generate_ast,generate_parser">
-    <javadoc destdir="${doc}" sourcepath="${src}">
+    <javadoc destdir="docs/api" sourcepath="src">
       <package name="freeboogie.*" />
       <classpath refid="classpath" />
     </javadoc>
   </target>
 
-  <!-- Distribution targets -->
+  <!-- Distribution -->
 
   <target
       name="dist"
-      depends="dist_freeboogie,dist_astgen"
-      description="generate distribution jars" />
-
-  <target
-      name="dist_freeboogie"
       depends="compile"
       description="generate the distribution">
-    <mkdir dir="${dist}" />
-    <mkdir dir="${dist}/lib" />
+    <mkdir dir="dist" />
+    <mkdir dir="dist/lib" />
     <jar 
-        jarfile="${dist}/freeboogie-${version}.jar"
-        basedir="${build}"
-        excludes="freeboogie/ast/gen/**/*">
+        jarfile="dist/freeboogie-${version}.jar"
+        basedir="classes">
       <manifest>
         <attribute name="Main-Class" value="freeboogie.Main" />
-        <attribute name="Class-Path" value="lib/antlr-3.1.3-runtime.jar" />
+        <attribute name="Class-Path" 
+          value="lib/${antlr-jar} lib/${genericutils-jar}" />
       </manifest>
     </jar>
-    <copy file="lib/antlr-runtime-3.1.3.jar" todir="dist/lib" />
+    <copy file="lib/${antlr-jar}" todir="dist/lib" />
+    <copy file="lib/${genericutils-jar}" todir="dist/lib" />
   </target>
   
-  <target name="dist_astgen" 
-          depends="compile_astgen" 
-          description="creates a jar file with the ast generator"> 
-    <mkdir dir="dist"/>
-    <jar destfile="dist/astgen.jar" 
-         basedir="${build}"
-         includes="freeboogie/ast/gen/*.class,freeboogie/util/*.class,">
-      <manifest>
-        <attribute name="Main-Class" value="freeboogie.ast.gen.Main"/>
-      </manifest>
-    </jar>
-  </target>
-
  
   <!-- Test targets -->
 
@@ -185,7 +152,7 @@
   <!-- Static analyzes -->
   <target name="style">
     <checkstyle config="style.xml">
-      <fileset dir="${src}">
+      <fileset dir="src">
          <include name="**/*.java"/>
          <exclude name="**/parser/*"/>
          <exclude name="**/ast/*"/>
@@ -197,14 +164,14 @@
   <!-- Cleanup targets -->
   <target name="clean_ast" description="removes AST generated files">
     <delete>
-      <fileset dir="${ast}" includesfile="${ast}/generated.list"/>
+      <fileset dir="${ast-dir}" includesfile="${ast-dir}/generated.list"/>
     </delete>
   </target>
 
   <target name="clean" depends="clean_ast" description="clean up">
-    <delete dir="${build}" />
-    <delete dir="${dist}" />
-    <delete dir="${doc}" />
+    <delete dir="classes" />
+    <delete dir="dist" />
+    <delete dir="docs/api" />
     <delete>
       <!-- ANTLR generated files -->
       <fileset dir="src/freeboogie/parser" includes="FbParser.java" />

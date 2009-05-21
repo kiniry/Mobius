@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.HashMap;
 
 import freeboogie.ast.*;
-import freeboogie.util.Err;
+import genericutils.Err;
 
 /**
  * Prints AST nodes in a readable (and parseable) way.

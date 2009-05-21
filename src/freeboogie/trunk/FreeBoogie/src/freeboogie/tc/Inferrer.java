@@ -2,8 +2,10 @@ package freeboogie.tc;
 
 import java.util.*;
 import java.util.logging.Logger;
+
+import genericutils.Id;
+
 import freeboogie.ast.*;
-import freeboogie.util.Id;
 
 
 /**

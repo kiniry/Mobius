@@ -1,8 +1,10 @@
 package freeboogie.tc;
 
 import java.util.*;
+
+import genericutils.StackedHashMap;
+
 import freeboogie.ast.*;
-import freeboogie.util.StackedHashMap;
 
 //DBG import java.io.PrintWriter;
 //DBG import freeboogie.astutil.PrettyPrinter;

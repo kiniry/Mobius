@@ -4,9 +4,10 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.Logger;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.astutil.TreeChecker;
-import freeboogie.util.*;
 
 /**
  * Typechecks an AST.

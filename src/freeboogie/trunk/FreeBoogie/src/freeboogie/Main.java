@@ -3,6 +3,7 @@ package freeboogie;
 import java.io.*;
 import java.util.logging.*;
 
+import genericutils.*;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 
@@ -13,7 +14,6 @@ import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
 import freeboogie.tc.*;
-import freeboogie.util.*;
 import freeboogie.vcgen.*;
 
 /**

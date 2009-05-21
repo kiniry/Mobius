@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import freeboogie.util.Err;
+import genericutils.Err;
 
 /**
  * Parses options. Right now it supports simple boolean and integer

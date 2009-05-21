@@ -2,9 +2,10 @@ package freeboogie.backend;
 
 import java.util.Map;
 
+import genericutils.Err;
+
 import freeboogie.ast.*;
 import freeboogie.tc.*;
-import freeboogie.util.Err;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.

@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.Err;
+import genericutils.Err;
 
 /**
  * Various utilities for handling {@code Type}. For the moment, it contains

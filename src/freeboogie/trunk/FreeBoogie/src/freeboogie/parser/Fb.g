@@ -4,7 +4,7 @@ grammar Fb;
   package freeboogie.parser; 
   import freeboogie.ast.*; 
   import freeboogie.tc.TypeUtils;
-  import freeboogie.util.Id;
+  import genericutils.Id;
   import java.math.BigInteger;
 
 }

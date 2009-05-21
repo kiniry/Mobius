@@ -2,8 +2,9 @@ package freeboogie.tc;
 
 import java.util.*;
 
+import genericutils.StackedHashMap;
+
 import freeboogie.ast.*;
-import freeboogie.util.StackedHashMap;
 
 /**
  * Constructs a {@code SymbolTable} from an AST.

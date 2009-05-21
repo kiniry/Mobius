@@ -3,7 +3,7 @@ package freeboogie.backend;
 import java.util.*;
 import java.util.logging.*;
 
-import freeboogie.util.FramedStack;
+import genericutils.FramedStack;
 
 /**
  * A prover can be used to check if a formula is valid.

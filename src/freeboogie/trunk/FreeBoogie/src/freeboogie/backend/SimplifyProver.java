@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.logging.*;
 
+import genericutils.Err;
+
 import freeboogie.Main;
-import freeboogie.util.Err;
 
 /**
  * Used to interact with Simplify and Z3 (when run in Simplify

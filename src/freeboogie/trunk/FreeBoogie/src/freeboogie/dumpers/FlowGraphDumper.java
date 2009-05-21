@@ -2,10 +2,11 @@ package freeboogie.dumpers;
 
 import java.io.StringWriter;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.*;
 
 /**
  * Dumps flow graphs for all implementations in dot format.

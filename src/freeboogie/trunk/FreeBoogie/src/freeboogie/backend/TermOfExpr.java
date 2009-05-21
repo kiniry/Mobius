@@ -3,9 +3,10 @@ package freeboogie.backend;
 import java.math.BigInteger;
 import java.util.*;
 
+import genericutils.Err;
+
 import freeboogie.ast.*;
 import freeboogie.tc.*;
-import freeboogie.util.Err;
 
 /**
  * Builds {@code Term}s out of Boogie expressions.

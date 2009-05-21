@@ -1,0 +1,51 @@
+<!-- 
+  When modifying this file please make sure that:
+   - All generated files are removed by the "clean" target.
+   - Do *not* use tabs.
+-->
+
+<project name="GenericUtils" default="dist" basedir=".">
+  <description>General purpose data structures algorithms</description>
+
+  <!-- set global properties for this build -->
+  <property name="debug" value="yes" />
+  <property name="version" value="0.0"/>
+  <path id="classpath">
+    <fileset dir="lib" includes="*.jar" />
+    <pathelement path="${build}"  />
+  </path>
+
+  <target name="compile">
+    <mkdir dir="build" />
+    <javac srcdir="src" destdir="build"
+        deprecation="yes" optimize="yes" debug="${debug}">
+      <compilerarg value="-Xlint:all" />
+    </javac>
+  </target>
+
+  <target name="doc"> 
+    <mkdir dir="docs/api"/>
+    <javadoc destdir="docs/api" sourcepath="src">
+      <package name="genericutils.*" />
+    </javadoc>
+  </target>
+
+  <!-- Distribution targets -->
+
+  <target name="dist" depends="compile">
+    <mkdir dir="dist"/>
+    <jar destfile="dist/genericutils-${version}.jar" 
+         basedir="build">
+    </jar>
+  </target>
+
+
+  <!-- Cleanup targets -->
+
+  <target name="clean">
+    <delete dir="build" />
+    <delete dir="dist" />
+    <delete dir="docs/api" />
+  </target>
+</project>
+

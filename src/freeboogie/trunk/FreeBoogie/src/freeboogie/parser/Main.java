@@ -10,7 +10,7 @@ import org.antlr.runtime.RecognitionException;
 
 import freeboogie.ast.Declaration;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.Err;
+import genericutils.Err;
 
 /**
  * Generate a pretty print of the AST constructed during parsing.

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import freeboogie.util.Closure;
+import genericutils.Closure;
 
 /**
  * Used to map usage of a name to the deinition of that name.

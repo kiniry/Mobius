@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import genericutils.*;
+
 import freeboogie.ast.*;
-import freeboogie.util.*;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
 

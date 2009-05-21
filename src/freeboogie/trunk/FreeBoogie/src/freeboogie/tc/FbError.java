@@ -3,7 +3,7 @@ package freeboogie.tc;
 import java.util.List;
 
 import freeboogie.ast.Ast;
-import freeboogie.util.Err;
+import genericutils.Err;
 
 /**
  * Represents an error.

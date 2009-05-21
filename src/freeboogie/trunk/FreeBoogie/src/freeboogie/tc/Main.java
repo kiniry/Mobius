@@ -3,6 +3,7 @@ package freeboogie.tc;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import genericutils.Err;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
@@ -10,7 +11,6 @@ import org.antlr.runtime.RecognitionException;
 import freeboogie.ast.Declaration;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
-import freeboogie.util.Err;
 
 /**
  * Used for testing the typechecker.

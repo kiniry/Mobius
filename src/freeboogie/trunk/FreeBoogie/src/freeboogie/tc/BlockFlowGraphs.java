@@ -4,9 +4,10 @@ import java.util.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import genericutils.Err;
+import genericutils.SimpleGraph;
+
 import freeboogie.ast.*;
-import freeboogie.util.Err;
-import freeboogie.util.SimpleGraph;
 
 /**
  * Constructs a flowgraph of blocks for each implementation.

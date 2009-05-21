@@ -4,10 +4,11 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Logger;
 
+import genericutils.Err;
+import genericutils.Id;
+
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.util.Err;
-import freeboogie.util.Id;
 import freeboogie.tc.FbError;
 import freeboogie.tc.TcInterface;
 
