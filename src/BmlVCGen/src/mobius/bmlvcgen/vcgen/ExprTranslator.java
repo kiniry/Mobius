@@ -162,9 +162,13 @@ public abstract class ExprTranslator<V>
   @Override
   public <Expr extends Visitable<? super V>> 
   void arrayLength(final Expr array) {
-    // TODO: How to create this term?
-    throw new TranslationException(
-      "Array.length is not supported");
+    final QuantVariableRef heap = getCurrentHeap();
+    array.accept(getThis());
+    final Term left = lastExpr;
+    final Sort fieldType = Num.sortInt;
+    final QuantVariable fld = Expression.length;
+    lastExpr = Heap.select(heap, left, fld, fieldType);
+    lastType = org.apache.bcel.generic.Type.INT;
   }
 
   /** {@inheritDoc} */

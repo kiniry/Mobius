@@ -88,7 +88,7 @@ public class VCMethodVisitor implements MethodVisitor {
   /** {@inheritDoc} */
   @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
-    // TODO:
+    // TODO: Parse flags.
   }
 
   /** {@inheritDoc} */
@@ -155,7 +155,7 @@ public class VCMethodVisitor implements MethodVisitor {
   /** {@inheritDoc} */ 
   @Override
   public void beginAssertions() {
-    // TODO Auto-generated method stub
+    // EMPTY
     
   }
 
