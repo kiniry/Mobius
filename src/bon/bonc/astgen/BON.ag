@@ -66,7 +66,10 @@ FormalGeneric = String! identifier, BONType type;
 
 Type = String! identifier, List<BONType>! actualGenerics, String! fullString;
 
-Expression :> Quantification, BinaryExp, UnaryExp;
+Expression :> Quantification, BinaryExp, UnaryExp, CallExp, Constant;
+
+CallExp = Expression qualifier, List<UnqualifiedCall>! callChain; 
+UnqualifiedCall = String! id, List<Expression>! args;
 
 Quantification = enum(Quantifier: FORALL, EXISTS) quantifier, List<VariableRange> variableRanges, Expression restriction, Expression! proposition;
 VariableRange :> MemberRange, TypeRange;
@@ -77,6 +80,21 @@ BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, POW, EQUIV, IMPLIES, AND, 
             Expression! left, Expression! right;
 
 UnaryExp = enum(Op: NOT, DELTA, OLD, ADD, SUB) op, Expression! expression;
+
+Constant :> ManifestConstant, Current, Void;
+ManifestConstant :> BooleanConstant, IntegerConstant, RealConstant, CharacterConstant, StringConstant, SetConstant;
+
+BooleanConstant = Boolean! value;
+IntegerConstant = Integer! value;
+RealConstant = Double! value;
+CharacterConstant = Character! value;
+StringConstant = String! value;
+SetConstant = List<EnumerationElement> enumerations;
+EnumerationElement :> Expression, Interval;
+Interval :> IntegerInterval, CharacterInterval;
+IntegerInterval = Integer! start, Integer! stop;
+CharacterInterval = Character! start, Character! stop;
+
 
 DynamicDiagram = List<DynamicComponent>! components, String extendedId, String comment;
 DynamicComponent :> ScenarioDescription, ObjectGroup, ObjectStack, ObjectInstance, MessageRelation;

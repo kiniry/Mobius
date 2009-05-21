@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ClassName extends IndirectionElement {
 
@@ -15,31 +14,16 @@ public class ClassName extends IndirectionElement {
 
   private final String name;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClassName(String name) {
-    this(name, null);    
-  }
-
   protected ClassName(String name, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     
   }
   
-  public static ClassName mk(String name) {
-    return new ClassName(name);
-  }
-
   public static ClassName mk(String name, SourceLocation location) {
     return new ClassName(name, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -51,7 +35,7 @@ public class ClassName extends IndirectionElement {
   public ClassName clone() {
     String newName = name;
     
-    return ClassName.mk(newName, location);
+    return ClassName.mk(newName, getLocation());
   }
   
   @Override

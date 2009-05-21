@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class Clazz extends StaticComponent {
   public static enum ModA {
@@ -29,17 +28,10 @@ public class Clazz extends StaticComponent {
   private final List<FormalGeneric> generics;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Clazz(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
-    this(modA,modB,classInterface,generics,comment, null);    
-  }
-
   protected Clazz(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.modA = modA; 
     this.modB = modB; 
     this.classInterface = classInterface; 
@@ -48,16 +40,8 @@ public class Clazz extends StaticComponent {
     
   }
   
-  public static Clazz mk(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment) {
-    return new Clazz(modA, modB, classInterface, generics, comment);
-  }
-
   public static Clazz mk(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
     return new Clazz(modA, modB, classInterface, generics, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -77,7 +61,7 @@ public class Clazz extends StaticComponent {
     List<FormalGeneric> newGenerics = generics;
     String newComment = comment;
     
-    return Clazz.mk(newModA, newModB, newClassInterface, newGenerics, newComment, location);
+    return Clazz.mk(newModA, newModB, newClassInterface, newGenerics, newComment, getLocation());
   }
   
   @Override

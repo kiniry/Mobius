@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class InheritanceRelation extends StaticRelation {
 
@@ -18,17 +17,10 @@ public class InheritanceRelation extends StaticRelation {
   private final BONType parent;
   private final String semanticLabel;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected InheritanceRelation(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel) {
-    this(child,parent,multiplicity,semanticLabel, null);    
-  }
-
   protected InheritanceRelation(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.child = child; assert child != null;
     this.parent = parent; assert parent != null;
     this.multiplicity = multiplicity; 
@@ -36,16 +28,8 @@ public class InheritanceRelation extends StaticRelation {
     
   }
   
-  public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel) {
-    return new InheritanceRelation(child, parent, multiplicity, semanticLabel);
-  }
-
   public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -63,7 +47,7 @@ public class InheritanceRelation extends StaticRelation {
     Multiplicity newMultiplicity = multiplicity == null ? null : multiplicity.clone();
     String newSemanticLabel = semanticLabel;
     
-    return InheritanceRelation.mk(newChild, newParent, newMultiplicity, newSemanticLabel, location);
+    return InheritanceRelation.mk(newChild, newParent, newMultiplicity, newSemanticLabel, getLocation());
   }
   
   @Override

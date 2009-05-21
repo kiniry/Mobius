@@ -5,7 +5,14 @@
  */
 package ie.ucd.bon.ast;
 
-public abstract class Expression extends AstNode {
+import ie.ucd.bon.source.SourceLocation;
+
+public abstract class Expression extends EnumerationElement {
+
+  public Expression(SourceLocation location) {
+    super(location);
+  }
+
   // a more specific return type
   @Override
   public abstract Expression clone();

@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class EventChart extends InformalChart {
 
@@ -21,17 +20,10 @@ public class EventChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected EventChart(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part) {
-    this(systemName,incoming,outgoing,entries,indexing,explanation,part, null);    
-  }
-
   protected EventChart(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.systemName = systemName; assert systemName != null;
     this.incoming = incoming; assert incoming != null;
     this.outgoing = outgoing; assert outgoing != null;
@@ -42,16 +34,8 @@ public class EventChart extends InformalChart {
     
   }
   
-  public static EventChart mk(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part) {
-    return new EventChart(systemName, incoming, outgoing, entries, indexing, explanation, part);
-  }
-
   public static EventChart mk(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new EventChart(systemName, incoming, outgoing, entries, indexing, explanation, part, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -75,7 +59,7 @@ public class EventChart extends InformalChart {
     String newExplanation = explanation;
     String newPart = part;
     
-    return EventChart.mk(newSystemName, newIncoming, newOutgoing, newEntries, newIndexing, newExplanation, newPart, location);
+    return EventChart.mk(newSystemName, newIncoming, newOutgoing, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
   
   @Override

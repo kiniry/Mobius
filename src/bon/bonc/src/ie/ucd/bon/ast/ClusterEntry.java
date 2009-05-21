@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ClusterEntry extends AstNode {
 
@@ -16,32 +15,17 @@ public class ClusterEntry extends AstNode {
   private final String name;
   private final String description;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClusterEntry(String name, String description) {
-    this(name,description, null);    
-  }
-
   protected ClusterEntry(String name, String description, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.description = description; assert description != null;
     
   }
   
-  public static ClusterEntry mk(String name, String description) {
-    return new ClusterEntry(name, description);
-  }
-
   public static ClusterEntry mk(String name, String description, SourceLocation location) {
     return new ClusterEntry(name, description, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class ClusterEntry extends AstNode {
     String newName = name;
     String newDescription = description;
     
-    return ClusterEntry.mk(newName, newDescription, location);
+    return ClusterEntry.mk(newName, newDescription, getLocation());
   }
   
   @Override

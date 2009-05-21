@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class IndexClause extends AstNode {
 
@@ -16,32 +15,17 @@ public class IndexClause extends AstNode {
   private final String id;
   private final List<String> indexTerms;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected IndexClause(String id, List<String> indexTerms) {
-    this(id,indexTerms, null);    
-  }
-
   protected IndexClause(String id, List<String> indexTerms, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.id = id; assert id != null;
     this.indexTerms = indexTerms; assert indexTerms != null;
     
   }
   
-  public static IndexClause mk(String id, List<String> indexTerms) {
-    return new IndexClause(id, indexTerms);
-  }
-
   public static IndexClause mk(String id, List<String> indexTerms, SourceLocation location) {
     return new IndexClause(id, indexTerms, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class IndexClause extends AstNode {
     String newId = id;
     List<String> newIndexTerms = indexTerms;
     
-    return IndexClause.mk(newId, newIndexTerms, location);
+    return IndexClause.mk(newId, newIndexTerms, getLocation());
   }
   
   @Override

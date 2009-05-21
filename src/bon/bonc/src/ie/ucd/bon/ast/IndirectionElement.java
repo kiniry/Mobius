@@ -5,7 +5,14 @@
  */
 package ie.ucd.bon.ast;
 
+import ie.ucd.bon.source.SourceLocation;
+
 public abstract class IndirectionElement extends AstNode {
+
+  public IndirectionElement(SourceLocation location) {
+    super(location);
+  }
+
   // a more specific return type
   @Override
   public abstract IndirectionElement clone();

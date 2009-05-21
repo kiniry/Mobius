@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ObjectInstance extends DynamicComponent {
 
@@ -16,32 +15,17 @@ public class ObjectInstance extends DynamicComponent {
 
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ObjectInstance(ObjectName name, String comment) {
-    this(name,comment, null);    
-  }
-
   protected ObjectInstance(ObjectName name, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.comment = comment; 
     
   }
   
-  public static ObjectInstance mk(ObjectName name, String comment) {
-    return new ObjectInstance(name, comment);
-  }
-
   public static ObjectInstance mk(ObjectName name, String comment, SourceLocation location) {
     return new ObjectInstance(name, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class ObjectInstance extends DynamicComponent {
     ObjectName newName = name == null ? null : name.clone();
     String newComment = comment;
     
-    return ObjectInstance.mk(newName, newComment, location);
+    return ObjectInstance.mk(newName, newComment, getLocation());
   }
   
   @Override

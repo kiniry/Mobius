@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class RenameClause extends AstNode {
 
@@ -16,32 +15,17 @@ public class RenameClause extends AstNode {
   private final String className;
   private final String featureName;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected RenameClause(String className, String featureName) {
-    this(className,featureName, null);    
-  }
-
   protected RenameClause(String className, String featureName, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.className = className; assert className != null;
     this.featureName = featureName; assert featureName != null;
     
   }
   
-  public static RenameClause mk(String className, String featureName) {
-    return new RenameClause(className, featureName);
-  }
-
   public static RenameClause mk(String className, String featureName, SourceLocation location) {
     return new RenameClause(className, featureName, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class RenameClause extends AstNode {
     String newClassName = className;
     String newFeatureName = featureName;
     
-    return RenameClause.mk(newClassName, newFeatureName, location);
+    return RenameClause.mk(newClassName, newFeatureName, getLocation());
   }
   
   @Override

@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ClientEntityList extends ClientEntityExpression {
 
@@ -15,31 +14,16 @@ public class ClientEntityList extends ClientEntityExpression {
 
   private final List<ClientEntity> entities;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClientEntityList(List<ClientEntity> entities) {
-    this(entities, null);    
-  }
-
   protected ClientEntityList(List<ClientEntity> entities, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.entities = entities; assert entities != null;
     
   }
   
-  public static ClientEntityList mk(List<ClientEntity> entities) {
-    return new ClientEntityList(entities);
-  }
-
   public static ClientEntityList mk(List<ClientEntity> entities, SourceLocation location) {
     return new ClientEntityList(entities, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -51,7 +35,7 @@ public class ClientEntityList extends ClientEntityExpression {
   public ClientEntityList clone() {
     List<ClientEntity> newEntities = entities;
     
-    return ClientEntityList.mk(newEntities, location);
+    return ClientEntityList.mk(newEntities, getLocation());
   }
   
   @Override

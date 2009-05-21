@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class IndirectionFeatureList extends IndirectionFeaturePart {
 
@@ -15,31 +14,16 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
 
   private final List<FeatureName> featureNames;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected IndirectionFeatureList(List<FeatureName> featureNames) {
-    this(featureNames, null);    
-  }
-
   protected IndirectionFeatureList(List<FeatureName> featureNames, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.featureNames = featureNames; 
     
   }
   
-  public static IndirectionFeatureList mk(List<FeatureName> featureNames) {
-    return new IndirectionFeatureList(featureNames);
-  }
-
   public static IndirectionFeatureList mk(List<FeatureName> featureNames, SourceLocation location) {
     return new IndirectionFeatureList(featureNames, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -51,7 +35,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   public IndirectionFeatureList clone() {
     List<FeatureName> newFeatureNames = featureNames;
     
-    return IndirectionFeatureList.mk(newFeatureNames, location);
+    return IndirectionFeatureList.mk(newFeatureNames, getLocation());
   }
   
   @Override

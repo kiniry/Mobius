@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class Cluster extends StaticComponent {
 
@@ -18,17 +17,10 @@ public class Cluster extends StaticComponent {
   private final Boolean reused;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Cluster(String name, List<StaticComponent> components, Boolean reused, String comment) {
-    this(name,components,reused,comment, null);    
-  }
-
   protected Cluster(String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.components = components; assert components != null;
     this.reused = reused; assert reused != null;
@@ -36,16 +28,8 @@ public class Cluster extends StaticComponent {
     
   }
   
-  public static Cluster mk(String name, List<StaticComponent> components, Boolean reused, String comment) {
-    return new Cluster(name, components, reused, comment);
-  }
-
   public static Cluster mk(String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation location) {
     return new Cluster(name, components, reused, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -63,7 +47,7 @@ public class Cluster extends StaticComponent {
     Boolean newReused = reused;
     String newComment = comment;
     
-    return Cluster.mk(newName, newComponents, newReused, newComment, location);
+    return Cluster.mk(newName, newComponents, newReused, newComment, getLocation());
   }
   
   @Override

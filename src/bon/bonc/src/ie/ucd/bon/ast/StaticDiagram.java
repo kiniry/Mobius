@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class StaticDiagram extends SpecificationElement {
 
@@ -17,33 +16,18 @@ public class StaticDiagram extends SpecificationElement {
   private final String extendedId;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected StaticDiagram(List<StaticComponent> components, String extendedId, String comment) {
-    this(components,extendedId,comment, null);    
-  }
-
   protected StaticDiagram(List<StaticComponent> components, String extendedId, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.components = components; assert components != null;
     this.extendedId = extendedId; 
     this.comment = comment; 
     
   }
   
-  public static StaticDiagram mk(List<StaticComponent> components, String extendedId, String comment) {
-    return new StaticDiagram(components, extendedId, comment);
-  }
-
   public static StaticDiagram mk(List<StaticComponent> components, String extendedId, String comment, SourceLocation location) {
     return new StaticDiagram(components, extendedId, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -59,7 +43,7 @@ public class StaticDiagram extends SpecificationElement {
     String newExtendedId = extendedId;
     String newComment = comment;
     
-    return StaticDiagram.mk(newComponents, newExtendedId, newComment, location);
+    return StaticDiagram.mk(newComponents, newExtendedId, newComment, getLocation());
   }
   
   @Override

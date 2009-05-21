@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ObjectGroup extends DynamicComponent {
   public static enum Nameless {
@@ -21,17 +20,10 @@ public class ObjectGroup extends DynamicComponent {
   private final List<DynamicComponent> components;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ObjectGroup(Nameless nameless, String name, List<DynamicComponent> components, String comment) {
-    this(nameless,name,components,comment, null);    
-  }
-
   protected ObjectGroup(Nameless nameless, String name, List<DynamicComponent> components, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.nameless = nameless; 
     this.name = name; assert name != null;
     this.components = components; assert components != null;
@@ -39,16 +31,8 @@ public class ObjectGroup extends DynamicComponent {
     
   }
   
-  public static ObjectGroup mk(Nameless nameless, String name, List<DynamicComponent> components, String comment) {
-    return new ObjectGroup(nameless, name, components, comment);
-  }
-
   public static ObjectGroup mk(Nameless nameless, String name, List<DynamicComponent> components, String comment, SourceLocation location) {
     return new ObjectGroup(nameless, name, components, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -66,7 +50,7 @@ public class ObjectGroup extends DynamicComponent {
     List<DynamicComponent> newComponents = components;
     String newComment = comment;
     
-    return ObjectGroup.mk(newNameless, newName, newComponents, newComment, location);
+    return ObjectGroup.mk(newNameless, newName, newComponents, newComment, getLocation());
   }
   
   @Override

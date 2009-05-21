@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class MemberRange extends VariableRange {
 
@@ -16,32 +15,17 @@ public class MemberRange extends VariableRange {
 
   private final List<String> identifiers;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected MemberRange(List<String> identifiers, Expression expression) {
-    this(identifiers,expression, null);    
-  }
-
   protected MemberRange(List<String> identifiers, Expression expression, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.identifiers = identifiers; assert identifiers != null;
     this.expression = expression; assert expression != null;
     
   }
   
-  public static MemberRange mk(List<String> identifiers, Expression expression) {
-    return new MemberRange(identifiers, expression);
-  }
-
   public static MemberRange mk(List<String> identifiers, Expression expression, SourceLocation location) {
     return new MemberRange(identifiers, expression, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class MemberRange extends VariableRange {
     List<String> newIdentifiers = identifiers;
     Expression newExpression = expression == null ? null : expression.clone();
     
-    return MemberRange.mk(newIdentifiers, newExpression, location);
+    return MemberRange.mk(newIdentifiers, newExpression, getLocation());
   }
   
   @Override

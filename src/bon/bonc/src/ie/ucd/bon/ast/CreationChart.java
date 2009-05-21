@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class CreationChart extends InformalChart {
 
@@ -19,17 +18,10 @@ public class CreationChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected CreationChart(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part) {
-    this(name,entries,indexing,explanation,part, null);    
-  }
-
   protected CreationChart(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.entries = entries; assert entries != null;
     this.indexing = indexing; 
@@ -38,16 +30,8 @@ public class CreationChart extends InformalChart {
     
   }
   
-  public static CreationChart mk(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part) {
-    return new CreationChart(name, entries, indexing, explanation, part);
-  }
-
   public static CreationChart mk(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new CreationChart(name, entries, indexing, explanation, part, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -67,7 +51,7 @@ public class CreationChart extends InformalChart {
     String newExplanation = explanation;
     String newPart = part;
     
-    return CreationChart.mk(newName, newEntries, newIndexing, newExplanation, newPart, location);
+    return CreationChart.mk(newName, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
   
   @Override

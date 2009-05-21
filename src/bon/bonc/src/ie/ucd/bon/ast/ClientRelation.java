@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ClientRelation extends StaticRelation {
 
@@ -19,17 +18,10 @@ public class ClientRelation extends StaticRelation {
   private final BONType supplier;
   private final String semanticLabel;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClientRelation(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel) {
-    this(client,supplier,clientEntities,typeMark,semanticLabel, null);    
-  }
-
   protected ClientRelation(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.client = client; assert client != null;
     this.supplier = supplier; assert supplier != null;
     this.clientEntities = clientEntities; 
@@ -38,16 +30,8 @@ public class ClientRelation extends StaticRelation {
     
   }
   
-  public static ClientRelation mk(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel) {
-    return new ClientRelation(client, supplier, clientEntities, typeMark, semanticLabel);
-  }
-
   public static ClientRelation mk(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
     return new ClientRelation(client, supplier, clientEntities, typeMark, semanticLabel, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -67,7 +51,7 @@ public class ClientRelation extends StaticRelation {
     TypeMark newTypeMark = typeMark == null ? null : typeMark.clone();
     String newSemanticLabel = semanticLabel;
     
-    return ClientRelation.mk(newClient, newSupplier, newClientEntities, newTypeMark, newSemanticLabel, location);
+    return ClientRelation.mk(newClient, newSupplier, newClientEntities, newTypeMark, newSemanticLabel, getLocation());
   }
   
   @Override

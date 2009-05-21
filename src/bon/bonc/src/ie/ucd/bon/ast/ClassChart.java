@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ClassChart extends InformalChart {
 
@@ -22,17 +21,10 @@ public class ClassChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ClassChart(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part) {
-    this(name,inherits,queries,commands,constraints,indexing,explanation,part, null);    
-  }
-
   protected ClassChart(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.inherits = inherits; assert inherits != null;
     this.queries = queries; assert queries != null;
@@ -44,16 +36,8 @@ public class ClassChart extends InformalChart {
     
   }
   
-  public static ClassChart mk(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part) {
-    return new ClassChart(name, inherits, queries, commands, constraints, indexing, explanation, part);
-  }
-
   public static ClassChart mk(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassChart(name, inherits, queries, commands, constraints, indexing, explanation, part, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -79,7 +63,7 @@ public class ClassChart extends InformalChart {
     String newExplanation = explanation;
     String newPart = part;
     
-    return ClassChart.mk(newName, newInherits, newQueries, newCommands, newConstraints, newIndexing, newExplanation, newPart, location);
+    return ClassChart.mk(newName, newInherits, newQueries, newCommands, newConstraints, newIndexing, newExplanation, newPart, getLocation());
   }
   
   @Override

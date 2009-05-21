@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class FormalGeneric extends AstNode {
 
@@ -16,32 +15,17 @@ public class FormalGeneric extends AstNode {
   private final String identifier;
   private final BONType type;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected FormalGeneric(String identifier, BONType type) {
-    this(identifier,type, null);    
-  }
-
   protected FormalGeneric(String identifier, BONType type, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.identifier = identifier; assert identifier != null;
     this.type = type; 
     
   }
   
-  public static FormalGeneric mk(String identifier, BONType type) {
-    return new FormalGeneric(identifier, type);
-  }
-
   public static FormalGeneric mk(String identifier, BONType type, SourceLocation location) {
     return new FormalGeneric(identifier, type, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class FormalGeneric extends AstNode {
     String newIdentifier = identifier;
     BONType newType = type;
     
-    return FormalGeneric.mk(newIdentifier, newType, location);
+    return FormalGeneric.mk(newIdentifier, newType, getLocation());
   }
   
   @Override

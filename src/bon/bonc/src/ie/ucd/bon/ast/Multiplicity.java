@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class Multiplicity extends ClientEntityExpression {
 
@@ -15,31 +14,16 @@ public class Multiplicity extends ClientEntityExpression {
 
   private final Integer multiplicity;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Multiplicity(Integer multiplicity) {
-    this(multiplicity, null);    
-  }
-
   protected Multiplicity(Integer multiplicity, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.multiplicity = multiplicity; assert multiplicity != null;
     
   }
   
-  public static Multiplicity mk(Integer multiplicity) {
-    return new Multiplicity(multiplicity);
-  }
-
   public static Multiplicity mk(Integer multiplicity, SourceLocation location) {
     return new Multiplicity(multiplicity, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -51,7 +35,7 @@ public class Multiplicity extends ClientEntityExpression {
   public Multiplicity clone() {
     Integer newMultiplicity = multiplicity;
     
-    return Multiplicity.mk(newMultiplicity, location);
+    return Multiplicity.mk(newMultiplicity, getLocation());
   }
   
   @Override

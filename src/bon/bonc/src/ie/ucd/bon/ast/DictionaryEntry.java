@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class DictionaryEntry extends AstNode {
 
@@ -17,33 +16,18 @@ public class DictionaryEntry extends AstNode {
   private final List<String> clusters;
   private final String description;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected DictionaryEntry(String name, List<String> clusters, String description) {
-    this(name,clusters,description, null);    
-  }
-
   protected DictionaryEntry(String name, List<String> clusters, String description, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.clusters = clusters; assert clusters != null;
     this.description = description; assert description != null;
     
   }
   
-  public static DictionaryEntry mk(String name, List<String> clusters, String description) {
-    return new DictionaryEntry(name, clusters, description);
-  }
-
   public static DictionaryEntry mk(String name, List<String> clusters, String description, SourceLocation location) {
     return new DictionaryEntry(name, clusters, description, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -59,7 +43,7 @@ public class DictionaryEntry extends AstNode {
     List<String> newClusters = clusters;
     String newDescription = description;
     
-    return DictionaryEntry.mk(newName, newClusters, newDescription, location);
+    return DictionaryEntry.mk(newName, newClusters, newDescription, getLocation());
   }
   
   @Override

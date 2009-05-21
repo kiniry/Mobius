@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class NamedIndirection extends IndirectionElement {
 
@@ -16,32 +15,17 @@ public class NamedIndirection extends IndirectionElement {
   private final String className;
   private final List<IndirectionElement> indirectionElements;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected NamedIndirection(String className, List<IndirectionElement> indirectionElements) {
-    this(className,indirectionElements, null);    
-  }
-
   protected NamedIndirection(String className, List<IndirectionElement> indirectionElements, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.className = className; assert className != null;
     this.indirectionElements = indirectionElements; assert indirectionElements != null;
     
   }
   
-  public static NamedIndirection mk(String className, List<IndirectionElement> indirectionElements) {
-    return new NamedIndirection(className, indirectionElements);
-  }
-
   public static NamedIndirection mk(String className, List<IndirectionElement> indirectionElements, SourceLocation location) {
     return new NamedIndirection(className, indirectionElements, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class NamedIndirection extends IndirectionElement {
     String newClassName = className;
     List<IndirectionElement> newIndirectionElements = indirectionElements;
     
-    return NamedIndirection.mk(newClassName, newIndirectionElements, location);
+    return NamedIndirection.mk(newClassName, newIndirectionElements, getLocation());
   }
   
   @Override

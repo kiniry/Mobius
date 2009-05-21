@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class BinaryExp extends Expression {
   public static enum Op {
@@ -39,33 +38,18 @@ public class BinaryExp extends Expression {
 
   private final Op op;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected BinaryExp(Op op, Expression left, Expression right) {
-    this(op,left,right, null);    
-  }
-
   protected BinaryExp(Op op, Expression left, Expression right, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.op = op; 
     this.left = left; assert left != null;
     this.right = right; assert right != null;
     
   }
   
-  public static BinaryExp mk(Op op, Expression left, Expression right) {
-    return new BinaryExp(op, left, right);
-  }
-
   public static BinaryExp mk(Op op, Expression left, Expression right, SourceLocation location) {
     return new BinaryExp(op, left, right, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -81,7 +65,7 @@ public class BinaryExp extends Expression {
     Expression newLeft = left == null ? null : left.clone();
     Expression newRight = right == null ? null : right.clone();
     
-    return BinaryExp.mk(newOp, newLeft, newRight, location);
+    return BinaryExp.mk(newOp, newLeft, newRight, getLocation());
   }
   
   @Override

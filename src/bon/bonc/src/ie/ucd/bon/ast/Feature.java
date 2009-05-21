@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class Feature extends AstNode {
 
@@ -17,33 +16,18 @@ public class Feature extends AstNode {
   private final List<String> selectiveExport;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected Feature(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment) {
-    this(featureSpecifications,selectiveExport,comment, null);    
-  }
-
   protected Feature(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.featureSpecifications = featureSpecifications; assert featureSpecifications != null;
     this.selectiveExport = selectiveExport; 
     this.comment = comment; 
     
   }
   
-  public static Feature mk(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment) {
-    return new Feature(featureSpecifications, selectiveExport, comment);
-  }
-
   public static Feature mk(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment, SourceLocation location) {
     return new Feature(featureSpecifications, selectiveExport, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -59,7 +43,7 @@ public class Feature extends AstNode {
     List<String> newSelectiveExport = selectiveExport;
     String newComment = comment;
     
-    return Feature.mk(newFeatureSpecifications, newSelectiveExport, newComment, location);
+    return Feature.mk(newFeatureSpecifications, newSelectiveExport, newComment, getLocation());
   }
   
   @Override

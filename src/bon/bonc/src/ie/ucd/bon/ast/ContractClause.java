@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ContractClause extends AstNode {
 
@@ -16,32 +15,17 @@ public class ContractClause extends AstNode {
   private final List<Expression> preconditions;
   private final List<Expression> postconditions;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ContractClause(List<Expression> preconditions, List<Expression> postconditions) {
-    this(preconditions,postconditions, null);    
-  }
-
   protected ContractClause(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.preconditions = preconditions; 
     this.postconditions = postconditions; 
     
   }
   
-  public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions) {
-    return new ContractClause(preconditions, postconditions);
-  }
-
   public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
     return new ContractClause(preconditions, postconditions, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class ContractClause extends AstNode {
     List<Expression> newPreconditions = preconditions;
     List<Expression> newPostconditions = postconditions;
     
-    return ContractClause.mk(newPreconditions, newPostconditions, location);
+    return ContractClause.mk(newPreconditions, newPostconditions, getLocation());
   }
   
   @Override

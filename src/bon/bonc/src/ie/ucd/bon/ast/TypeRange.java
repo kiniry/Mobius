@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class TypeRange extends VariableRange {
 
@@ -16,32 +15,17 @@ public class TypeRange extends VariableRange {
   private final List<String> identifiers;
   private final BONType type;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected TypeRange(List<String> identifiers, BONType type) {
-    this(identifiers,type, null);    
-  }
-
   protected TypeRange(List<String> identifiers, BONType type, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.identifiers = identifiers; assert identifiers != null;
     this.type = type; assert type != null;
     
   }
   
-  public static TypeRange mk(List<String> identifiers, BONType type) {
-    return new TypeRange(identifiers, type);
-  }
-
   public static TypeRange mk(List<String> identifiers, BONType type, SourceLocation location) {
     return new TypeRange(identifiers, type, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class TypeRange extends VariableRange {
     List<String> newIdentifiers = identifiers;
     BONType newType = type;
     
-    return TypeRange.mk(newIdentifiers, newType, location);
+    return TypeRange.mk(newIdentifiers, newType, getLocation());
   }
   
   @Override

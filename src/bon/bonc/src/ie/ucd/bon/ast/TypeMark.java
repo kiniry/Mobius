@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class TypeMark extends AstNode {
   public static enum Mark {
@@ -21,32 +20,17 @@ public class TypeMark extends AstNode {
   private final Mark mark;
   private final Integer multiplicity;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected TypeMark(Mark mark, Integer multiplicity) {
-    this(mark,multiplicity, null);    
-  }
-
   protected TypeMark(Mark mark, Integer multiplicity, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.mark = mark; 
     this.multiplicity = multiplicity; 
     
   }
   
-  public static TypeMark mk(Mark mark, Integer multiplicity) {
-    return new TypeMark(mark, multiplicity);
-  }
-
   public static TypeMark mk(Mark mark, Integer multiplicity, SourceLocation location) {
     return new TypeMark(mark, multiplicity, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -60,7 +44,7 @@ public class TypeMark extends AstNode {
     Mark newMark = mark;
     Integer newMultiplicity = multiplicity;
     
-    return TypeMark.mk(newMark, newMultiplicity, location);
+    return TypeMark.mk(newMark, newMultiplicity, getLocation());
   }
   
   @Override

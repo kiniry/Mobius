@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ObjectName extends AstNode {
 
@@ -16,32 +15,17 @@ public class ObjectName extends AstNode {
   private final String className;
   private final String extendedId;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ObjectName(String className, String extendedId) {
-    this(className,extendedId, null);    
-  }
-
   protected ObjectName(String className, String extendedId, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.className = className; assert className != null;
     this.extendedId = extendedId; 
     
   }
   
-  public static ObjectName mk(String className, String extendedId) {
-    return new ObjectName(className, extendedId);
-  }
-
   public static ObjectName mk(String className, String extendedId, SourceLocation location) {
     return new ObjectName(className, extendedId, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class ObjectName extends AstNode {
     String newClassName = className;
     String newExtendedId = extendedId;
     
-    return ObjectName.mk(newClassName, newExtendedId, location);
+    return ObjectName.mk(newClassName, newExtendedId, getLocation());
   }
   
   @Override

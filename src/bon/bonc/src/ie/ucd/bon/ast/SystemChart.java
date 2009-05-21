@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class SystemChart extends InformalChart {
 
@@ -19,17 +18,10 @@ public class SystemChart extends InformalChart {
   private final String explanation;
   private final String part;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected SystemChart(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part) {
-    this(name,clusters,indexing,explanation,part, null);    
-  }
-
   protected SystemChart(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.clusters = clusters; assert clusters != null;
     this.indexing = indexing; 
@@ -38,16 +30,8 @@ public class SystemChart extends InformalChart {
     
   }
   
-  public static SystemChart mk(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part) {
-    return new SystemChart(name, clusters, indexing, explanation, part);
-  }
-
   public static SystemChart mk(String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new SystemChart(name, clusters, indexing, explanation, part, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -67,7 +51,7 @@ public class SystemChart extends InformalChart {
     String newExplanation = explanation;
     String newPart = part;
     
-    return SystemChart.mk(newName, newClusters, newIndexing, newExplanation, newPart, location);
+    return SystemChart.mk(newName, newClusters, newIndexing, newExplanation, newPart, getLocation());
   }
   
   @Override

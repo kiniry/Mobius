@@ -166,7 +166,7 @@ tokens {
   SET_EXPRESSION;
   EXPRESSION;
   NOT_MEMBER_OF;
-//  CHARACTER_CONSTANT;
+//  character_constant;
   INHERITS;
   QUERIES;
   COMMANDS;
@@ -208,13 +208,20 @@ prog returns [BonSourceFile bonSource] :
        ->
          ^( PROG bon_specification )
        |
-         indexing bon_specification EOF
-         { $bonSource = BonSourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($bs.start, $bs.stop)); }
+         i=indexing bs=bon_specification EOF
+         { $bonSource = BonSourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($i.start, $bs.stop)); }
        ->
          ^( PROG indexing bon_specification )
        |
-         indexing? e=EOF 
+         e=EOF 
          { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
+         { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, null, getSLoc($e)); }
+       ->
+         ^( PROG PARSE_ERROR )
+       | 
+         indexing e=EOF 
+         { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
+         { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, $i.indexing, getSLoc($i.start,$i.stop)); }
        ->
          ^( PROG PARSE_ERROR )
 ;
@@ -990,18 +997,19 @@ static_relation returns [StaticRelation relation] :
 /**********************************************/
 
 inheritance_relation returns [InheritanceRelation relation] 
-@init { Multiplicity multiplicity = null; String semanticLabel = null; }
+@init { Multiplicity multiplicity = null; String semanticLabel = null; Token end = null; }
 :
   c=child 'inherit' 
-  ('{' multiplicity '}'
-   { multiplicity = Multiplicity.mk($multiplicity.num); }
+  (a='{' multiplicity b='}'
+   { multiplicity = Multiplicity.mk($multiplicity.num, getSLoc($a,$b)); }
   )? 
   p=parent 
+  { end = $p.stop; }
   ( semantic_label
-   { semanticLabel = $semantic_label.label; } 
+   { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } 
   )? 
   { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
-  { $relation = InheritanceRelation.mk($c.type, $p.type, multiplicity, semanticLabel); }
+  { $relation = InheritanceRelation.mk($c.type, $p.type, multiplicity, semanticLabel, getSLoc($c.start, end)); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]
@@ -1284,7 +1292,7 @@ cluster_prefix  :  c1=cluster_name '.' (cluster_name '.')*
 //static_component_name  :  class_name | cluster_name 
 static_component_name returns [BONType type] :
                         i=IDENTIFIER
-                        { $type = BONType.mk($i.text, null, $i.text); }
+                        { $type = BONType.mk($i.text, null, $i.text, getSLoc($i)); }
                         ->
                         ^(
                           STATIC_COMPONENT_NAME[$i] IDENTIFIER
@@ -1405,30 +1413,31 @@ feature_specifications returns [List<FeatureSpecification> specs] :
                         
 feature_specification returns [FeatureSpecification spec] 
 @init { FeatureSpecification.Modifier modifier = FeatureSpecification.Modifier.NONE; 
-        List<FeatureArgument> args = null; HasType hasType = null; 
+        List<FeatureArgument> args = null; HasType hasType = null; Token start = null; Token end = null;
         RenameClause renaming = null; String comment = null; ContractClause contracts = null;}
 :
-  (  'deferred'  { modifier = FeatureSpecification.Modifier.DEFERRED; } 
-   | 'effective' { modifier = FeatureSpecification.Modifier.EFFECTIVE; }
-   | 'redefined' { modifier = FeatureSpecification.Modifier.REDEFINED; }
+  (  d='deferred'  { modifier = FeatureSpecification.Modifier.DEFERRED; start = $d; } 
+   | e='effective' { modifier = FeatureSpecification.Modifier.EFFECTIVE; start = $e; }
+   | r='redefined' { modifier = FeatureSpecification.Modifier.REDEFINED; start = $r; }
    |             { modifier = FeatureSpecification.Modifier.NONE; }
   )
   { getContext().enterFeatureSpecification(); }
   fnl=feature_name_list
+  { end=$fnl.stop; if (start==null) start=$fnl.start; }
   { getTI().featureSpecModifier(modifier); }
-  (has_type { hasType = $has_type.htype; } )?
-  (rc=rename_clause { renaming = $rc.rename; } )?
-  (c=COMMENT { comment = $c.text; } )?
+  (has_type { hasType = $has_type.htype; end=$has_type.stop; } )?
+  (rc=rename_clause { renaming = $rc.rename; end=$rc.stop; } )?
+  (c=COMMENT { comment = $c.text; end=$c; } )?
   (  fa=feature_arguments
-     { args = $fa.args; }
+     { args = $fa.args; end=$fa.stop; }
    | { args = Constants.NO_ARGS; }
   )
   (  cc=contract_clause 
-     { contracts = $cc.contracts; } 
+     { contracts = $cc.contracts; end=$cc.stop; } 
    | { contracts = Constants.EMPTY_CONTRACT; }
   ) 
   { getContext().leaveFeatureSpecification(); }
-  { $spec = FeatureSpecification.mk(modifier, $fnl.list, args, contracts, hasType, renaming, comment); }
+  { $spec = FeatureSpecification.mk(modifier, $fnl.list, args, contracts, hasType, renaming, comment, getSLoc(start,end)); }
                         ->
                         ^(
                           FEATURE_SPECIFICATION
@@ -1465,10 +1474,10 @@ contracting_conditions returns [ContractClause contracts]
 @init { List<Expression> postC = null; }
 :
   (  (pre=precondition (post=postcondition { postC = $post.assertions; } )?)
-     { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_ASSERTIONS, getSLoc($pre.start,$pre.stop)); 
+     { if (postC == null) $contracts = ContractClause.mk($pre.assertions, Constants.NO_EXPRESSIONS, getSLoc($pre.start,$pre.stop)); 
        else $contracts = ContractClause.mk($pre.assertions, postC, getSLoc($pre.start,$post.stop)); }  
    | post=postcondition
-     { $contracts = ContractClause.mk(Constants.NO_ASSERTIONS, $post.assertions, getSLoc($post.start,$post.stop)); }
+     { $contracts = ContractClause.mk(Constants.NO_EXPRESSIONS, $post.assertions, getSLoc($post.start,$post.stop)); }
   )
   
                          -> 
@@ -1680,9 +1689,9 @@ formal_generic_name returns [String name] :
 class_type returns [BONType type] :  
              c=class_name 
              ( actual_generics
-                 { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text)); }
+                 { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
                |
-               { $type = BONType.mk($c.text, null, $c.text); } 
+               { $type = BONType.mk($c.text, null, $c.text, getSLoc($c.start,$c.stop)); } 
              ) 
              ->
              ^(
@@ -1715,13 +1724,13 @@ type_list returns [List<BONType> types]  :
 //And formal_generic_name is IDENTIFIER          
 //type  :  class_type | formal_generic_name 
 type returns [BONType type] :  
-       IDENTIFIER 
+       i=IDENTIFIER 
        (
         ( actual_generics 
-          { $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, $IDENTIFIER.text.concat($actual_generics.text)); }
+          { $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, $IDENTIFIER.text.concat($actual_generics.text), getSLoc($i,$actual_generics.stop)); }
         ) 
         |
-        { $type = BONType.mk($IDENTIFIER.text, null, $IDENTIFIER.text); }
+        { $type = BONType.mk($IDENTIFIER.text, null, $IDENTIFIER.text,getSLoc($i)); }
        ) 
        
        ->
@@ -1884,33 +1893,57 @@ type_range returns [TypeRange range] :
 //        )
 //      ;
                                
-call_chain  :  unqualified_call ('.' unqualified_call)* 
+call_chain returns [List<UnqualifiedCall> calls] :
+  { $calls = new LinkedList<UnqualifiedCall>(); }
+  uc1=unqualified_call
+  { $calls.add($uc1.call); }
+  ('.' uc=unqualified_call { $calls.add($uc.call); } )* 
              -> 
              ^(
                CALL_CHAIN (unqualified_call)+
               )
-            ;
+;
             
-unqualified_call  :  IDENTIFIER (actual_arguments)? 
+unqualified_call returns [UnqualifiedCall call] 
+@init { List<Expression> args = null; Token end = null;}
+:
+  i=IDENTIFIER 
+  { end = $i; }
+  (  aa=actual_arguments
+     { args = $aa.args; end = $aa.stop; }
+   | { args = Constants.NO_EXPRESSIONS; }
+  )
+  { $call = UnqualifiedCall.mk($i.text, args, getSLoc($i,end)); } 
                    ->
                    ^(
                      UNQUALIFIED_CALL IDENTIFIER (actual_arguments)?
                     )
-                  ;
+;
                   
-actual_arguments  :  '(' expression_list? ')' 
+actual_arguments returns [List<Expression> args] 
+:
+  '(' 
+  (  el=expression_list
+     { $args = $el.list; } 
+   | { $args = Constants.NO_EXPRESSIONS; }
+  )
+  ')' 
                    ->
                    ^(
                      ACTUAL_ARGUMENTS expression_list?
                     )
                   ;
               
-expression_list  :  expression (',' expression)* 
+expression_list returns [List<Expression> list] :
+  { $list = new LinkedList<Expression>(); }
+  e1=expression 
+  { $list.add($e1.exp); }
+  (',' e=expression { $list.add($e.exp); } )* 
                   -> 
                   ^(
                     EXPRESSION_LIST (expression)+
                    )
-                 ;
+;
 
 /**********************************************/
 
@@ -1927,135 +1960,177 @@ expression_list  :  expression (',' expression)*
 //                  )
 //                ;
                 
-enumerated_set  :  '{' enumeration_list '}'
+enumerated_set returns [List<EnumerationElement> list] :
+  '{' el=enumeration_list '}'
+  { $list = $el.list; } 
                  ->
                  ^(
                    ENUMERATED_SET enumeration_list
                   )
                 ;
                 
-enumeration_list  :  enumeration_element (',' enumeration_element)* 
+enumeration_list returns [List<EnumerationElement> list] :
+  { $list = new LinkedList<EnumerationElement>(); }
+  el1=enumeration_element
+  { $list.add($el1.el); } 
+  (',' el=enumeration_element { $list.add($el.el); } )*
+   
                    -> 
                    ^(
                      ENUMERATION_LIST (enumeration_element)+
                     )
                   ;
          
-enumeration_element  :  expression 
+enumeration_element returns [EnumerationElement el] :
+   e=expression
+   { $el = $e.exp; }  
                       ->
                       ^(
                         ENUMERATION_ELEMENT expression
                        )
-                      | interval 
+ | i=interval
+   { $el = $i.interval; }  
                       ->
                       ^(
                         ENUMERATION_ELEMENT interval
                        )
                      ;
                      
-interval  :  integer_interval
+interval returns [Interval interval]  :
+   ii=integer_interval
+   { $interval = $ii.interval; }
            ->
            ^(
              INTERVAL integer_interval
             ) 
-           | character_interval 
+ | ci=character_interval
+   { $interval = $ci.interval; } 
            ->
            ^(
              INTERVAL character_interval
             ) 
-          ;
+;
           
-integer_interval  :  integer_constant '..' integer_constant 
+integer_interval returns [IntegerInterval interval] :
+  i1=integer_constant '..' i2=integer_constant
+  { $interval = IntegerInterval.mk($i1.value,$i2.value,getSLoc($i1.start,$i2.stop)); } 
                    ->
                    ^(
                      INTEGER_INTERVAL integer_constant integer_constant
                     )
                   ;
                   
-character_interval  :  CHARACTER_CONSTANT '..' CHARACTER_CONSTANT 
+character_interval returns [CharacterInterval interval] :  
+  c1=character_constant '..' c2=character_constant 
+  { $interval = CharacterInterval.mk($c1.value,$c2.value,getSLoc($c1.start,$c2.stop)); }
                      ->
                      ^(
-                       CHARACTER_INTERVAL CHARACTER_CONSTANT CHARACTER_CONSTANT
+                       CHARACTER_INTERVAL character_constant character_constant
                       )
                     ;
 /**********************************************/
 
-constant  :  mc=manifest_constant 
+constant returns [Constant constant] :
+   mc=manifest_constant
+   { $constant = $mc.constant; } 
            ->
            ^(
              CONSTANT[$mc.start] manifest_constant
             )
-           | c='Current' 
+ | c='Current'
+   { $constant = CurrentImpl.mk(getSLoc($c)); } 
            ->
            ^(
              CONSTANT[$c] 'Current'
             )
-           | v='Void'            
+ | v='Void'
+   { $constant = VoidImpl.mk(getSLoc($v)); }            
            ->
            ^(
              CONSTANT[$v] 'Void'
             )
           ;
 
-manifest_constant  :   bc=boolean_constant 
+manifest_constant returns [ManifestConstant constant] :
+   bc=boolean_constant
+   { $constant = BooleanConstant.mk($bc.value,getSLoc($bc.start,$bc.stop)); } 
                      ->
                      ^(
                        MANIFEST_CONSTANT[$bc.start] boolean_constant
                       )
-                     | cc=CHARACTER_CONSTANT 
+ | cc=character_constant
+   { $constant = CharacterConstant.mk($cc.value,getSLoc($cc.start,$cc.stop)); } 
                      ->
                      ^(
-                       MANIFEST_CONSTANT[$cc] CHARACTER_CONSTANT
+                       MANIFEST_CONSTANT[$cc.start] character_constant
                       )
-                     | ic=integer_constant 
+ | ic=integer_constant 
+   { $constant = IntegerConstant.mk($ic.value,getSLoc($ic.start,$ic.stop)); }
                      ->
                      ^(
                        MANIFEST_CONSTANT[$ic.start] integer_constant
                       )
-                     | rc=real_constant 
+ | rc=real_constant 
+   { $constant = RealConstant.mk($rc.value,getSLoc($rc.start,$rc.stop)); }
                      ->
                      ^(
                        MANIFEST_CONSTANT[$rc.start] real_constant
                       )
-                     | ms=MANIFEST_STRING 
+ | ms=MANIFEST_STRING 
+   { $constant = StringConstant.mk($ms.text,getSLoc($ms)); }
                      ->
                      ^(
                        MANIFEST_CONSTANT[$ms] MANIFEST_STRING
                       )
-                     | es=enumerated_set
+ | es=enumerated_set
+   { $constant = SetConstant.mk($es.list, getSLoc($es.start,$es.stop)); }
                      ->
                      ^(
                      	 MANIFEST_CONSTANT[$es.start] enumerated_set
                      	)
                    ;
                    
-sign  :  add_sub_op
+sign returns [BinaryExp.Op op] :
+  add_sub_op
+  { $op = $add_sub_op.op; }
        ->
        ^(
          SIGN add_sub_op
         )
       ;
       
-boolean_constant  :  'true' 
+boolean_constant returns [Boolean value] :
+   'true'
+   { $value = true; } 
                    ->
                    ^(
                      BOOLEAN_CONSTANT 'true'
                     )
-                   | 'false' 
+ | 'false' 
+   { $value = false; }
                    ->
                    ^(
                      BOOLEAN_CONSTANT 'false'
                     )
-                  ;
+;
 
 
 //Changed to lexer rule, as we greedily take any character preceded and followed by a '                  
-CHARACTER_CONSTANT  :  '\'' . '\'' 
-                    ;
+character_constant returns [Character value] :
+	cc=CHARACTER_CONSTANT
+  { $value = $cc.text.charAt(1); } 
+;
+
+CHARACTER_CONSTANT :  '\'' v=. '\''; 
 
 
                     
-integer_constant  :  (sign)? i=INTEGER 
+integer_constant returns [Integer value]  
+@init { boolean negative = false; }
+:
+  (sign { if ($sign.op == BinaryExp.Op.SUB) negative = true; })? 
+  i=INTEGER
+  { $value = new Integer($i.text); if (negative) $value = -$value; } 
                    ->
                    ^(
                      INTEGER_CONSTANT[$i]
@@ -2063,7 +2138,12 @@ integer_constant  :  (sign)? i=INTEGER
                     )
                   ;
                   
-real_constant  :  (sign)? r=REAL 
+real_constant returns [Double value] 
+@init { boolean negative = false; }
+:
+  (sign { if ($sign.op == BinaryExp.Op.SUB) negative = true; })?  
+  r=REAL 
+  { $value = new Double($r.text); if (negative) $value = -$value; }
                 ->
                 ^(
                   REAL_CONSTANT[$r]
@@ -2423,37 +2503,60 @@ implies_expression returns [Expression exp] :
 ;
 
 and_or_xor_expression returns [Expression exp] :
-  l=comparison_expression 
-  (op=and_or_xor_op comparison_expression)* 
+  l=comparison_expression
+  { $exp = $l.exp; } 
+  (op=and_or_xor_op r=comparison_expression
+   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )* 
 ;
 
 comparison_expression returns [Expression exp] :
-  l=add_sub_expression 
-  (op=comparison_op  add_sub_expression)* 
+  l=add_sub_expression
+  { $exp = $l.exp; } 
+  (op=comparison_op  r=add_sub_expression
+   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )* 
 ;
 
 add_sub_expression returns [Expression exp] :
-  l=mul_div_expression 
-  (op=add_sub_op mul_div_expression)* 
+  l=mul_div_expression
+  { $exp = $l.exp; } 
+  (op=add_sub_op r=mul_div_expression
+   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )* 
 ;
 
 mul_div_expression returns [Expression exp] :
-  l=mod_pow_expression 
-  (op=mul_div_op mod_pow_expression)* 
+  l=mod_pow_expression
+  { $exp = $l.exp; } 
+  (op=mul_div_op r=mod_pow_expression
+   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )* 
 ;
 
 //Right-associative
 mod_pow_expression returns [Expression exp] :
-  l=lowest_expression 
-  (op=mod_pow_op mod_pow_expression)? 
+  l=lowest_expression
+  { $exp = $l.exp; } 
+  (op=mod_pow_op r=mod_pow_expression
+   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  )? 
 ;
 
 lowest_expression returns [Expression exp] :
-  (constant)=> constant
-										|	unary lowest_expression
-      					    | '(' expression ')' ('.' call_chain)?
-      					    | call_chain
-        					 ;
+    (constant)=> constant
+    { $exp = $constant.constant; }
+ |	unary le=lowest_expression
+    { $exp = UnaryExp.mk($unary.op, $le.exp, getSLoc($unary.start,$le.stop)); }
+ | s='(' e=expression ')'  
+   ( ('.' cc=call_chain
+      { $exp = CallExp.mk($e.exp, $cc.calls, getSLoc($s,$cc.stop)); }
+     )
+    | { $exp = $e.exp; } //Parenthesized expression
+   )
+ | cc=call_chain
+   { $exp =  CallExp.mk(null, $cc.calls, getSLoc($cc.start,$cc.stop)); }
+;
 
 /**********************************************  
  ***   Operatives                           ***

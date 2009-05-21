@@ -9,7 +9,6 @@ package \Userdefine{pkg};
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class \ClassName extends \Basename {
 \enums{  public static enum \EnumName {\values[, ]{
@@ -21,31 +20,16 @@ public class \ClassName extends \Basename {
 }
 \primitives{  private final \Membertype \memberName;
 }
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
-    this(\members[,]{\memberName}, null);    
-  }
-
   protected \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }    
   }
   
-  public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}) {
-    return new \ClassName(\members[, ]{\memberName});
-  }
-
   public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
     return new \ClassName(\members[, ]{\memberName}, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -57,7 +41,7 @@ public class \ClassName extends \Basename {
   public \ClassName clone() {
     \members{\if_primitive{\Membertype new\MemberName = \memberName;}{\MemberType new\MemberName = \memberName == null ? null : \memberName.clone();}
     }
-    return \ClassName.mk(\members[, ]{new\MemberName}, location);
+    return \ClassName.mk(\members[, ]{new\MemberName}, getLocation());
   }
   
   @Override

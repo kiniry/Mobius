@@ -171,7 +171,7 @@ public class TypingInformation {
   }
 
   public void addParent(BONType parent, SourceLocation loc) {
-    addParent(BONType.mk(context.getClassName(), null, context.getClassName()), parent, loc);
+    addParent(BONType.mk(context.getClassName(), null, context.getClassName(), loc), parent, loc);
   }
 
   public void addParent(BONType child, BONType parent, SourceLocation loc) {

@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class HasType extends AstNode {
 
@@ -16,32 +15,17 @@ public class HasType extends AstNode {
 
   private final BONType type;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected HasType(TypeMark mark, BONType type) {
-    this(mark,type, null);    
-  }
-
   protected HasType(TypeMark mark, BONType type, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.mark = mark; assert mark != null;
     this.type = type; assert type != null;
     
   }
   
-  public static HasType mk(TypeMark mark, BONType type) {
-    return new HasType(mark, type);
-  }
-
   public static HasType mk(TypeMark mark, BONType type, SourceLocation location) {
     return new HasType(mark, type, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class HasType extends AstNode {
     TypeMark newMark = mark == null ? null : mark.clone();
     BONType newType = type;
     
-    return HasType.mk(newMark, newType, location);
+    return HasType.mk(newMark, newType, getLocation());
   }
   
   @Override

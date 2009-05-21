@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class FeatureSpecification extends AstNode {
   public static enum Modifier {
@@ -26,17 +25,10 @@ public class FeatureSpecification extends AstNode {
   private final List<FeatureArgument> arguments;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected FeatureSpecification(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment) {
-    this(modifier,featureNames,arguments,contracts,hasType,renaming,comment, null);    
-  }
-
   protected FeatureSpecification(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.modifier = modifier; 
     this.featureNames = featureNames; assert featureNames != null;
     this.arguments = arguments; assert arguments != null;
@@ -47,16 +39,8 @@ public class FeatureSpecification extends AstNode {
     
   }
   
-  public static FeatureSpecification mk(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment) {
-    return new FeatureSpecification(modifier, featureNames, arguments, contracts, hasType, renaming, comment);
-  }
-
   public static FeatureSpecification mk(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
     return new FeatureSpecification(modifier, featureNames, arguments, contracts, hasType, renaming, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -80,7 +64,7 @@ public class FeatureSpecification extends AstNode {
     RenameClause newRenaming = renaming == null ? null : renaming.clone();
     String newComment = comment;
     
-    return FeatureSpecification.mk(newModifier, newFeatureNames, newArguments, newContracts, newHasType, newRenaming, newComment, location);
+    return FeatureSpecification.mk(newModifier, newFeatureNames, newArguments, newContracts, newHasType, newRenaming, newComment, getLocation());
   }
   
   @Override

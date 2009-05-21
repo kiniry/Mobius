@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class BonSourceFile extends AstNode {
 
@@ -16,32 +15,17 @@ public class BonSourceFile extends AstNode {
 
   private final List<SpecificationElement> bonSpecification;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected BonSourceFile(List<SpecificationElement> bonSpecification, Indexing indexing) {
-    this(bonSpecification,indexing, null);    
-  }
-
   protected BonSourceFile(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.bonSpecification = bonSpecification; assert bonSpecification != null;
     this.indexing = indexing; 
     
   }
   
-  public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing) {
-    return new BonSourceFile(bonSpecification, indexing);
-  }
-
   public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
     return new BonSourceFile(bonSpecification, indexing, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -55,7 +39,7 @@ public class BonSourceFile extends AstNode {
     List<SpecificationElement> newBonSpecification = bonSpecification;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     
-    return BonSourceFile.mk(newBonSpecification, newIndexing, location);
+    return BonSourceFile.mk(newBonSpecification, newIndexing, getLocation());
   }
   
   @Override

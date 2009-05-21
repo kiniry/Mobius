@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class ScenarioDescription extends DynamicComponent {
 
@@ -17,33 +16,18 @@ public class ScenarioDescription extends DynamicComponent {
   private final List<LabelledAction> actions;
   private final String comment;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected ScenarioDescription(String name, List<LabelledAction> actions, String comment) {
-    this(name,actions,comment, null);    
-  }
-
   protected ScenarioDescription(String name, List<LabelledAction> actions, String comment, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.name = name; assert name != null;
     this.actions = actions; assert actions != null;
     this.comment = comment; 
     
   }
   
-  public static ScenarioDescription mk(String name, List<LabelledAction> actions, String comment) {
-    return new ScenarioDescription(name, actions, comment);
-  }
-
   public static ScenarioDescription mk(String name, List<LabelledAction> actions, String comment, SourceLocation location) {
     return new ScenarioDescription(name, actions, comment, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -59,7 +43,7 @@ public class ScenarioDescription extends DynamicComponent {
     List<LabelledAction> newActions = actions;
     String newComment = comment;
     
-    return ScenarioDescription.mk(newName, newActions, newComment, location);
+    return ScenarioDescription.mk(newName, newActions, newComment, getLocation());
   }
   
   @Override

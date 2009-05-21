@@ -7,7 +7,6 @@ package ie.ucd.bon.ast;
 
 import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.ast.AstNode;
 
 public class GenericIndirection extends AstNode {
 
@@ -15,31 +14,16 @@ public class GenericIndirection extends AstNode {
 
   private final String indirectionElement;
 
-  private final SourceLocation location;
 
   // === Constructors and Factories ===
-  protected GenericIndirection(String indirectionElement) {
-    this(indirectionElement, null);    
-  }
-
   protected GenericIndirection(String indirectionElement, SourceLocation location) {
-    
-    assert location != null;
-    this.location = location;
+    super(location);
     this.indirectionElement = indirectionElement; assert indirectionElement != null;
     
   }
   
-  public static GenericIndirection mk(String indirectionElement) {
-    return new GenericIndirection(indirectionElement);
-  }
-
   public static GenericIndirection mk(String indirectionElement, SourceLocation location) {
     return new GenericIndirection(indirectionElement, location);
-  }
-  
-  public SourceLocation getLocation() {
-    return location;
   }
 
   // === Accessors ===
@@ -51,7 +35,7 @@ public class GenericIndirection extends AstNode {
   public GenericIndirection clone() {
     String newIndirectionElement = indirectionElement;
     
-    return GenericIndirection.mk(newIndirectionElement, location);
+    return GenericIndirection.mk(newIndirectionElement, getLocation());
   }
   
   @Override

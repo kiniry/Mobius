@@ -16,20 +16,6 @@ public class BONType extends Type {
     typeMap.put(fullString, this);
   }
 
-  public BONType(String identifier, List<BONType> actualGenerics, String fullString) {
-    super(identifier, actualGenerics, fullString);
-    typeMap.put(fullString, this);
-  }
-
-  public static BONType mk(String identifier, List<BONType> actualGenerics, String fullString) {
-    BONType type = typeMap.get(fullString);
-    if (type == null) {
-      return new BONType(identifier, actualGenerics, fullString);
-    } else {
-      return type;
-    }
-  }
-
   public static BONType mk(String identifier, List<BONType> actualGenerics, String fullString, SourceLocation location) {
     BONType type = typeMap.get(fullString);
     if (type == null) {

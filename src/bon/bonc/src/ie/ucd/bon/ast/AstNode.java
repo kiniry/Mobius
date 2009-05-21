@@ -4,6 +4,14 @@ import ie.ucd.bon.source.SourceLocation;
 
 public abstract class AstNode {
 
-	public abstract SourceLocation getLocation();
-	
+  private final SourceLocation location;
+
+  public AstNode(SourceLocation location) {
+    this.location = location;
+  }
+
+  public SourceLocation getLocation() {
+    return location;
+  }
+
 }
