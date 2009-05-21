@@ -11,6 +11,7 @@ import annot.attributes.AType;
 import annot.attributes.method.InCodeAnnotation;
 import annot.attributes.method.MethodSpecificationAttribute;
 import annot.attributes.method.SingleAssert;
+import annot.attributes.method.SingleLoopSpecification;
 import annot.attributes.method.SpecificationCase;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.LocalVariable;
@@ -39,7 +40,10 @@ public class BmllibMethod implements Method {
     v.visitName(name);
     processLocals(v);
     processSpecs(v);
+    v.beginAssertions();
     processAssertions(v);
+    processLoops(v); // Desugar into assertions.
+    v.endAssertions();
   }
 
   // Process specifications.
@@ -102,18 +106,21 @@ public class BmllibMethod implements Method {
       // TODO: How do I know if this a pre or post assertion?
       v.visitAssertion(pos, AssertType.PRE, w.wrap(a.getFormula()));
     }
-//   Uncomment to debug assertions.
-//    if (!method.getBcelMethod().isAbstract()) {
-//      v.visitAssertion(0, AssertType.PRE, new FakeAssert());
-//    }
+  }
+    
+  // Desugar loop specifications.
+  private void processLoops(final MethodVisitor v) {
+    for (final InCodeAnnotation annot :
+      method.getAmap().getAllAttributes(AType.C_LOOPSPEC)) {
+      
+      final SingleLoopSpecification ls = 
+        (SingleLoopSpecification)annot;
+      final int pos = ls.getPC();
+      final PreExprWrapper pre = new PreExprWrapper();
+      final AssertExprWrapper w = new AssertExprWrapper(pre);
+      v.visitAssertion(pos, AssertType.PRE, w.wrap(ls.getInvariant()));
+      // TODO: Variants (how to compare old and new value?).
+    }
   }
   
-//  private static final class FakeAssert implements Visitable<AssertExprVisitor> {
-//
-//    @Override
-//    public void accept(final AssertExprVisitor visitor) {
-//      visitor.boolConst(true);
-//    }
-//    
-//  }
 }
