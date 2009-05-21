@@ -42,10 +42,10 @@
     />
   </target>
 
-  <target name="generate_ast" depends="clean_ast,compile_astgen" 
+  <target name="generate_ast" depends="clean_ast" 
     description="generates AST">
-    <java fork="yes" dir="${ast}" classpath="${build}"
-      classname="freeboogie.ast.gen.Main">
+    <mkdir dir="${build}" />
+    <java fork="yes" dir="${ast}" jar="lib/astgen.jar">
       <arg value="fb.ag" />
       <arg value="abstract_classes.tpl" />
       <arg value="normal_classes.tpl" />
