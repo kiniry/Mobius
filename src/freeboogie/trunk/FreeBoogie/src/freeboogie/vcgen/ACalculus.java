@@ -10,8 +10,8 @@ import freeboogie.ast.Body;
 import freeboogie.ast.Command;
 import freeboogie.backend.Term;
 import freeboogie.backend.TermBuilder;
-import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
+import freeboogie.util.SimpleGraph;
 
 /**
  * Base class for weakest precondition and strongest postcondition

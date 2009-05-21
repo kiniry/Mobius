@@ -2,6 +2,7 @@ package freeboogie.tc;
 
 import java.util.*;
 import freeboogie.ast.*;
+import freeboogie.util.SimpleGraph;
 
 /**
  * Interface for type-checkers.

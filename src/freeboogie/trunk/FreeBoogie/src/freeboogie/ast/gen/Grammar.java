@@ -18,7 +18,7 @@ public class Grammar {
   public Map<String, AgClass> classes;
 
   public HashMap<String, String> userDefs;
-  
+
   /** Creates a new grammar object. */
   public Grammar() {
     classes = new HashMap<String, AgClass>(101);

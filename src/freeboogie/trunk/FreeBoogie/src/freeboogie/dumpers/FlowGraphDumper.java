@@ -4,10 +4,8 @@ import java.io.StringWriter;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
-import freeboogie.util.Closure;
-import freeboogie.util.Pair;
+import freeboogie.util.*;
 
 /**
  * Dumps flow graphs for all implementations in dot format.

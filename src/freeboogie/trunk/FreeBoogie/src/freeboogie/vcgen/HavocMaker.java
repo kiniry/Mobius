@@ -3,12 +3,9 @@ package freeboogie.vcgen;
 import java.util.*;
 
 import freeboogie.ast.*;
-import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
-import freeboogie.util.CSeq;
-import freeboogie.util.Id;
-import freeboogie.util.Pair;
+import freeboogie.util.*;
 
 /**
  * Havocs variables potentially assigned to in loops at the entry point

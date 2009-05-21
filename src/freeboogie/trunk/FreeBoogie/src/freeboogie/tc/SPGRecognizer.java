@@ -14,6 +14,7 @@ import freeboogie.ast.Evaluator;
 import freeboogie.ast.Implementation;
 import freeboogie.ast.Program;
 import freeboogie.ast.Signature;
+import freeboogie.util.SimpleGraph;
 
 /**
  * An implementation of an algorithm to recognize 

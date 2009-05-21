@@ -27,10 +27,10 @@ import freeboogie.ast.Type;
 import freeboogie.ast.VariableDecl;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.SPGRecognizer;
-import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.util.Err;
 import freeboogie.util.Id;
+import freeboogie.util.SimpleGraph;
 
 /**
  * Passify option.

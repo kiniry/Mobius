@@ -1,4 +1,4 @@
-package freeboogie.tc;
+package freeboogie.util;
 
 import java.util.ArrayList;
 import java.util.Map;

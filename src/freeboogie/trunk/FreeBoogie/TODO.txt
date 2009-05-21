@@ -69,5 +69,7 @@
  . Allow easy redirection of output.
  . Add a parser for SMT so that you can provide a piece of text to
    build an SmtTerm.
+ . Maybe an abstract class for ast_gen should be one that is not inherited
+   from, instead of one that doesn't have members.
 
 vim:spell:ts=3:sw=3:fdm=manual:

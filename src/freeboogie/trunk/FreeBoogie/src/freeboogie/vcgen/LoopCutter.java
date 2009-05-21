@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 
 import freeboogie.ast.*;
-import freeboogie.tc.SimpleGraph;
 import freeboogie.tc.TcInterface;
 import freeboogie.tc.TypeUtils;
 import freeboogie.util.*;

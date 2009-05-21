@@ -6,6 +6,7 @@ import java.util.Set;
 
 import freeboogie.ast.*;
 import freeboogie.util.Err;
+import freeboogie.util.SimpleGraph;
 
 /**
  * Constructs a flowgraph of blocks for each implementation.
