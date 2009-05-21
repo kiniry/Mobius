@@ -239,8 +239,8 @@ specification_element returns [SpecificationElement se] :
     { $se = $sd.sd; }
   | dd=dynamic_diagram
     { $se = $dd.dd; }
-  | nt=notational_tuning
-    { $se = $nt.nt; } 
+//  | nt=notational_tuning
+//    { $se = $nt.nt; } 
 ;
 
 /**********************************************  
@@ -275,7 +275,7 @@ class_dictionary returns [ClassDictionary cd]
    { entries.add($de.entry); }
   )+ 
   e='end'
-  { cd = ClassDictionary.mk($system_name.name, entries, index, expl, p, getSLoc($d,$e)); }
+  { $cd = ClassDictionary.mk($system_name.name, entries, index, expl, p, getSLoc($d,$e)); }
                    ->
                    ^(
                      CLASS_DICTIONARY[$d] system_name 
@@ -323,11 +323,11 @@ system_chart returns [SystemChart sc]
   (part { p = $part.part; } )? 
   (  ce=cluster_entries 
      { entries = $ce.entries; } 
-   | { ce = Constants.NO_CLUSTER_ENTRIES; }
+   | { entries = Constants.NO_CLUSTER_ENTRIES; }
   ) 
   e='end'
   { getContext().leaveSystemChart(); }
-  { sc = SystemChart.mk($system_name.name, entries, index, expl, p, getSLoc($s,$e)); }
+  { $sc = SystemChart.mk($system_name.name, entries, index, expl, p, getSLoc($s,$e)); }
                ->
                ^(
                  SYSTEM_CHART[$s] system_name
@@ -443,7 +443,7 @@ index_list returns [List<IndexClause> list] :
             
 index_clause returns [IndexClause clause] :  
                i=IDENTIFIER ':' index_term_list 
-               { $clause = IndexClause.mk($i.text, $index_term_list.strings, getSLoc($i.start, $index_term_list.stop)); }
+               { $clause = IndexClause.mk($i.text, $index_term_list.strings, getSLoc($i, $index_term_list.stop)); }
                ->
                ^(
                  INDEX_CLAUSE[$i] IDENTIFIER index_term_list
@@ -865,7 +865,7 @@ static_diagram returns [StaticDiagram sd]
   'component' 
   sb=static_block 
   e='end'
-  { $sd = StaticDiagram.mk($sb.components, eid, comment, getSLoc($s.start,$e.end)); }                
+  { $sd = StaticDiagram.mk($sb.components, eid, comment, getSLoc($s,$e)); }                
                  ->
                  ^(
                    STATIC_DIAGRAM[$s]
@@ -897,8 +897,7 @@ static_block returns [List<StaticComponent> components] :
                  STATIC_BLOCK (static_component)*
                 )
               ;
-
-//NB renamed "class" rule to "classX" as class is a reserved keyword in Java              
+             
 static_component returns [StaticComponent component] :
    c1=cluster
    { $component = $c1.cluster; } 
@@ -906,11 +905,11 @@ static_component returns [StaticComponent component] :
                     ^(
                       STATIC_COMPONENT[$c1.start] cluster
                      )
- | c2=classX 
-   { $component = $c2.classX; }
+ | c2=clazz 
+   { $component = $c2.clazz; }
                     ->
                     ^(
-                      STATIC_COMPONENT[$c2.start] classX
+                      STATIC_COMPONENT[$c2.start] clazz
                      )
  | s=static_relation
    { $component = $s.relation; } 
@@ -950,7 +949,7 @@ cluster_components returns [List<StaticComponent> components] :
                       ) 
                     ;
                     
-classX returns [Clazz clazz] :
+clazz returns [Clazz clazz] :
   (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c,$c1.stop), "root"); getContext().enterClass($c1.text); }       ) 
 						| ( 'deferred' c='class' c2=class_name   { getTI().addClass($c2.text, getSLoc($c,$c2.stop), "deferred"); getContext().enterClass($c2.text); }  )
 						| ( 'effective' c='class' c3=class_name  { getTI().addClass($c3.text, getSLoc($c,$c3.stop), "effective"); getContext().enterClass($c3.text); } )
@@ -1002,7 +1001,7 @@ inheritance_relation returns [InheritanceRelation relation]
    { semanticLabel = $semantic_label.label; } 
   )? 
   { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
-  { $relation = InheritanceRelation.mk($c.ref, $p.ref, multiplicity, semanticLabel); }
+  { $relation = InheritanceRelation.mk($c.type, $p.type, multiplicity, semanticLabel); }
                        ->
                        ^(
                          INHERITANCE_RELATION[$c.start]
@@ -1028,7 +1027,7 @@ client_relation returns [ClientRelation relation]
   s=supplier 
   { end = $supplier.stop; }
   { getContext().getClientRelation().setSupplier($supplier.text); }
-  (semantic_label { semanticLabel = $semanticLabel.label; end = $semantic_label.stop; } )?
+  (semantic_label { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } )?
   { getTI().addClientRelation(); } 
   { $relation = ClientRelation.mk($c.type,$s.type,entities,mark,semanticLabel,getSLoc($c.start,end)); }
                   ->
@@ -1419,7 +1418,7 @@ feature_specification returns [FeatureSpecification spec]
   (has_type { hasType = $has_type.htype; } )?
   (rc=rename_clause { renaming = $rc.rename; } )?
   (c=COMMENT { comment = $c.text; } )?
-  (  ga=feature_arguments
+  (  fa=feature_arguments
      { args = $fa.args; }
    | { args = Constants.NO_ARGS; }
   )
@@ -2075,8 +2074,19 @@ real_constant  :  (sign)? r=REAL
  ***   Dynamic Diagrams                     ***
  **********************************************/
 
-dynamic_diagram  :  'dynamic_diagram' (extended_id)? (COMMENT)?
-                    'component' (dynamic_block)? 'end'
+dynamic_diagram returns [DynamicDiagram dd] 
+@init { String id = null; String comment = null; List<DynamicComponent> components; }
+:
+  s='dynamic_diagram' 
+  (eid=extended_id { id = $eid.eid; } )? 
+  (c=COMMENT { comment = $c.text; } )?
+  'component' 
+  ( db=dynamic_block
+    { components = $db.components; }
+   | { components = Constants.NO_COMPONENTS; }
+  ) 
+  e='end'
+  { $dd = DynamicDiagram.mk(components, id, comment, getSLoc($s,$e)); }
                   ->
                   ^(
                     DYNAMIC_DIAGRAM
@@ -2085,7 +2095,9 @@ dynamic_diagram  :  'dynamic_diagram' (extended_id)? (COMMENT)?
                    )
                  ;
                  
-dynamic_block  :  (dynamic_component)+ 
+dynamic_block returns [List<DynamicComponent> components] :
+  { $components = new LinkedList<DynamicComponent>(); }
+  (dc=dynamic_component { $components.add($dc.component); } )+ 
                 ->
                 ^(
                   DYNAMIC_BLOCK
@@ -2093,37 +2105,45 @@ dynamic_block  :  (dynamic_component)+
                  )
                ;
                
-dynamic_component  :   scenario_description
+dynamic_component returns [DynamicComponent component] :
+   scenario_description
                      -> 
                      ^(
                        DYNAMIC_COMPONENT scenario_description
                       )
-                     | object_group 
+ | object_group 
                      -> 
                      ^(
                        DYNAMIC_COMPONENT object_group
                       )
-                     | object_stack
+ | object_stack
                      -> 
                      ^(
                        DYNAMIC_COMPONENT object_stack
                       )
-                     | object
+ | object
                      -> 
                      ^(
                        DYNAMIC_COMPONENT object
                       )
-                     | message_relation 
+ | message_relation 
                      -> 
                      ^(
                        DYNAMIC_COMPONENT message_relation
                       )
-                   ; 
+; 
 
 /**********************************************/
 
-scenario_description  :  'scenario' scenario_name (COMMENT)?
-                         'action' labelled_actions 'end'
+scenario_description returns [ScenarioDescription description] 
+@init { String comment = null; }
+:
+  s='scenario' scenario_name 
+  (c=COMMENT { comment = $c.text; } )?
+  'action' 
+  la=labelled_actions 
+  e='end'
+  { $description = ScenarioDescription.mk($scenario_name.name, $la.actions, comment, getSLoc($s,$c)); }
                        ->
                        ^(
                          SCENARIO_DESCRIPTION 
@@ -2132,35 +2152,45 @@ scenario_description  :  'scenario' scenario_name (COMMENT)?
                         )
                       ;
                       
-labelled_actions  :  (labelled_action)+ 
+labelled_actions returns [List<LabelledAction> actions] :
+  { $actions = new LinkedList<LabelledAction>(); }
+  (la=labelled_action { $actions.add($la.action); } )+ 
                    ->
                    ^(
                      LABELLED_ACTIONS (labelled_action)+
                     )
                   ;
                   
-labelled_action  :  action_label action_description 
+labelled_action returns [LabelledAction action] :
+  al=action_label ad=action_description
+  { $action = LabelledAction.mk($al.label, $ad.description, getSLoc($al.start,$ad.stop)); } 
                   ->
                   ^(
                     LABELLED_ACTION action_label action_description
                    )
                  ;
                  
-action_label  :  MANIFEST_STRING 
+action_label returns [String label] :
+  m=MANIFEST_STRING
+  { $label = $m.text; }
                ->
                ^(
                  ACTION_LABEL MANIFEST_STRING
                 )
               ;
               
-action_description  :  manifest_textblock 
+action_description returns [String description] :
+  m=manifest_textblock
+  { $description = $m.text; }
                      ->
                      ^(
                        ACTION_DESCRIPTION manifest_textblock
                       )
                     ;
                     
-scenario_name  :  manifest_textblock 
+scenario_name returns [String name] :
+  m=manifest_textblock
+  { $name = $m.text; }
                 ->
                 ^(
                   SCENARIO_NAME MANIFEST_STRING
@@ -2169,29 +2199,60 @@ scenario_name  :  manifest_textblock
 
 /**********************************************/
 
-object_group  :  ('nameless')? 'object_group' group_name (COMMENT)? 
-                 (group_components)? 
+object_group returns [ObjectGroup group] 
+@init { String comment = null; List<DynamicComponent> components; ObjectGroup.Nameless nameless; 
+        Token start; Token end; }
+:
+  (  n='nameless'
+     { nameless = ObjectGroup.Nameless.NAMELESS; start = $n; }
+   | { nameless = ObjectGroup.Nameless.NOTNAMELESS; }
+  ) 
+  s='object_group' { if (start==null) start=$s; }
+  group_name 
+  { end = $group_name.stop; }
+  (c=COMMENT { comment = $c.text; end = $c; } )? 
+  (  gc=group_components
+     { components = $gc.components; }
+   | { components = Constants.NO_COMPONENTS; }
+  )
+  { $group = ObjectGroup.mk(nameless, $group_name.text, components, comment, getSLoc(start,end)); }
                ->
                ^(
                  OBJECT_GROUP ('nameless')? group_name (COMMENT)? (group_components)? 
                 )
               ;
               
-group_components  :  'component' dynamic_block 'end'
+group_components returns [List<DynamicComponent> components] :
+  'component' dynamic_block 'end'
+  { $components = $dynamic_block.components; }
                    ->
                    ^(
                      GROUP_COMPONENTS dynamic_block
                     ) 
                   ;
                   
-object_stack  :  'object_stack' object_name (COMMENT)?
+object_stack returns [ObjectStack stack] 
+@init { String comment = null; Token end; }
+:
+  s='object_stack' 
+  n=object_name
+  { end = $n.stop; } 
+  (c=COMMENT { comment = $c.text; end = $c; } )?
+  { $stack = ObjectStack.mk($n.name, comment); }
                ->
                ^(
                  OBJECT_STACK object_name (COMMENT)?
                 )
               ;
               
-object  :  'object' object_name (COMMENT)? 
+object returns [ObjectInstance object] 
+@init { String comment = null; Token end; }
+:  
+  'object' 
+  n=object_name
+  { end = $n.stop; } 
+  (c=COMMENT { comment = $c.text; end = $c; } )?
+  { $object = ObjectInstance.mk($n.name, comment); } 
          ->
          ^(
            OBJECT object_name (COMMENT)?
@@ -2250,21 +2311,31 @@ dynamic_component_name  :  (IDENTIFIER ('.' extended_id)?)
                           )
                         ;
 
-object_name  :  class_name ('.' extended_id)? 
+object_name returns [ObjectName name] 
+@init { String id = null; Token end; }
+:
+  n=class_name 
+  { end = $n.stop; }
+  ('.' e=extended_id { id = $e.eid; end=$e.stop; } )?
+  { $name = ObjectName.mk($n.name, id, getSLoc($n.start,end)); } 
               ->
               ^(
                 OBJECT_NAME class_name (extended_id)?
                )
              ;
              
-group_name  :  extended_id
+group_name returns [String name] :
+  e=extended_id
+  { $name = $e.eid; }
              ->
              ^(
                GROUP_NAME extended_id
               ) 
             ;
             
-message_label  :  MANIFEST_STRING 
+message_label returns [String label] :
+  m=MANIFEST_STRING
+  { $label = $m.text; }   
                 ->
                 ^(
                   MESSAGE_LABEL MANIFEST_STRING
@@ -2275,7 +2346,7 @@ message_label  :  MANIFEST_STRING
  ***   Notational Tuning                    ***
  **********************************************/
 //TODO - do we want any of this section currently?
-notational_tuning  :  change_string_marks 
+notational_tuning :  change_string_marks 
                     ->
                     ^(
                       NOTATIONAL_TUNING change_string_marks

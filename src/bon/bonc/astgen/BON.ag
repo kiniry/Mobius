@@ -79,3 +79,13 @@ BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, POW, EQUIV, IMPLIES, AND, 
             Expression! left, Expression! right;
 
 UnaryExp = enum(Op: NOT, DELTA, OLD, ADD, SUB) op, Expression! expression;
+
+DynamicDiagram = List<DynamicComponent>! components, String extendedId, String comment;
+DynamicComponent :> ScenarioDescription, ObjectGroup, ObjectStack, ObjectInstance, MessageRelation;
+ScenarioDescription = String! name, List<LabelledAction>! actions, String comment;
+LabelledAction = String! label, String! description;
+
+ObjectGroup = enum(Nameless: NAMELESS, NOTNAMELESS) nameless, String! name, List<DynamicComponent>! components, String comment;
+ObjectStack = ObjectName! name, String comment;
+ObjectInstance = ObjectName! name, String comment;
+ObjectName = String! className, String extendedId;
