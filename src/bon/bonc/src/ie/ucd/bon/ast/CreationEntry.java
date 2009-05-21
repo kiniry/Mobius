@@ -33,6 +33,11 @@ public class CreationEntry extends AstNode {
   public String getName() { return name; }
   public List<String> getTypes() { return types; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCreationEntry(this);
+  }
+
   // === Others ===
   @Override
   public CreationEntry clone() {

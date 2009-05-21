@@ -45,6 +45,11 @@ public class ClusterChart extends InformalChart {
   public String getExplanation() { return explanation; }
   public String getPart() { return part; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClusterChart(this);
+  }
+
   // === Others ===
   @Override
   public ClusterChart clone() {

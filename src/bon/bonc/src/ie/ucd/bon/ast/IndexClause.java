@@ -33,6 +33,11 @@ public class IndexClause extends AstNode {
   public String getId() { return id; }
   public List<String> getIndexTerms() { return indexTerms; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitIndexClause(this);
+  }
+
   // === Others ===
   @Override
   public IndexClause clone() {

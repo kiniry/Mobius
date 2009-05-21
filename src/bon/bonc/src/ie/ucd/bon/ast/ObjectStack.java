@@ -33,6 +33,11 @@ public class ObjectStack extends DynamicComponent {
   public ObjectName getName() { return name; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitObjectStack(this);
+  }
+
   // === Others ===
   @Override
   public ObjectStack clone() {

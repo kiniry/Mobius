@@ -36,6 +36,11 @@ public class DynamicDiagram extends SpecificationElement {
   public String getExtendedId() { return extendedId; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitDynamicDiagram(this);
+  }
+
   // === Others ===
   @Override
   public DynamicDiagram clone() {

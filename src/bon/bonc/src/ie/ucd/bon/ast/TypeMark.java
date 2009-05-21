@@ -38,6 +38,11 @@ public class TypeMark extends AstNode {
   public Mark getMark() { return mark; }
   public Integer getMultiplicity() { return multiplicity; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitTypeMark(this);
+  }
+
   // === Others ===
   @Override
   public TypeMark clone() {

@@ -17,3 +17,4 @@ public abstract class VariableRange extends AstNode {
   @Override
   public abstract VariableRange clone();
 }
+

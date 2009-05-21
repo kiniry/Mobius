@@ -30,6 +30,11 @@ public class SetConstant extends ManifestConstant {
 
   public List<EnumerationElement> getEnumerations() { return enumerations; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitSetConstant(this);
+  }
+
   // === Others ===
   @Override
   public SetConstant clone() {

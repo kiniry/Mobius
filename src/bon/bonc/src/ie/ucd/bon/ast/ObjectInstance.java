@@ -33,6 +33,11 @@ public class ObjectInstance extends DynamicComponent {
   public ObjectName getName() { return name; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitObjectInstance(this);
+  }
+
   // === Others ===
   @Override
   public ObjectInstance clone() {

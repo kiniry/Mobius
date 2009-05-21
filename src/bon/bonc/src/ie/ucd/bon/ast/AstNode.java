@@ -13,5 +13,7 @@ public abstract class AstNode {
   public SourceLocation getLocation() {
     return location;
   }
+  
+  public abstract void accept(IVisitor visitor);
 
 }

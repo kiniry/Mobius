@@ -36,6 +36,11 @@ public class DictionaryEntry extends AstNode {
   public List<String> getClusters() { return clusters; }
   public String getDescription() { return description; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitDictionaryEntry(this);
+  }
+
   // === Others ===
   @Override
   public DictionaryEntry clone() {

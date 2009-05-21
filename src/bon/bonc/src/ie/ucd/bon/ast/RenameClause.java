@@ -33,6 +33,11 @@ public class RenameClause extends AstNode {
   public String getClassName() { return className; }
   public String getFeatureName() { return featureName; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitRenameClause(this);
+  }
+
   // === Others ===
   @Override
   public RenameClause clone() {

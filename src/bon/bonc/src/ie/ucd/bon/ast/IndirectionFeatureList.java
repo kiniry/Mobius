@@ -30,6 +30,11 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
 
   public List<FeatureName> getFeatureNames() { return featureNames; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitIndirectionFeatureList(this);
+  }
+
   // === Others ===
   @Override
   public IndirectionFeatureList clone() {

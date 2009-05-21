@@ -33,6 +33,11 @@ public class MemberRange extends VariableRange {
   public List<String> getIdentifiers() { return identifiers; }
   public Expression getExpression() { return expression; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitMemberRange(this);
+  }
+
   // === Others ===
   @Override
   public MemberRange clone() {

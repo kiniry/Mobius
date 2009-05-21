@@ -33,6 +33,11 @@ public class ClusterEntry extends AstNode {
   public String getName() { return name; }
   public String getDescription() { return description; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClusterEntry(this);
+  }
+
   // === Others ===
   @Override
   public ClusterEntry clone() {

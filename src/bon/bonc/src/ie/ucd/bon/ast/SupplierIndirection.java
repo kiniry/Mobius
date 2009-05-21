@@ -33,6 +33,11 @@ public class SupplierIndirection extends ClientEntity {
   public IndirectionFeaturePart getIndirectionFeaturePart() { return indirectionFeaturePart; }
   public GenericIndirection getGenericIndirection() { return genericIndirection; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitSupplierIndirection(this);
+  }
+
   // === Others ===
   @Override
   public SupplierIndirection clone() {

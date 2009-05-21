@@ -30,6 +30,11 @@ public class ClassName extends IndirectionElement {
 
   public String getName() { return name; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClassName(this);
+  }
+
   // === Others ===
   @Override
   public ClassName clone() {

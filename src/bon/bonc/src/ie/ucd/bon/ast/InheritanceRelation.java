@@ -39,6 +39,11 @@ public class InheritanceRelation extends StaticRelation {
   public Multiplicity getMultiplicity() { return multiplicity; }
   public String getSemanticLabel() { return semanticLabel; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitInheritanceRelation(this);
+  }
+
   // === Others ===
   @Override
   public InheritanceRelation clone() {

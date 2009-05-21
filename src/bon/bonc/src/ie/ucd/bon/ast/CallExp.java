@@ -33,6 +33,11 @@ public class CallExp extends Expression {
   public Expression getQualifier() { return qualifier; }
   public List<UnqualifiedCall> getCallChain() { return callChain; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCallExp(this);
+  }
+
   // === Others ===
   @Override
   public CallExp clone() {

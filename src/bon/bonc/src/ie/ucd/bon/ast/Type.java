@@ -36,6 +36,11 @@ public class Type extends AstNode {
   public List<BONType> getActualGenerics() { return actualGenerics; }
   public String getFullString() { return fullString; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitType(this);
+  }
+
   // === Others ===
   @Override
   public Type clone() {

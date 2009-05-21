@@ -39,6 +39,11 @@ public class Cluster extends StaticComponent {
   public Boolean getReused() { return reused; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCluster(this);
+  }
+
   // === Others ===
   @Override
   public Cluster clone() {

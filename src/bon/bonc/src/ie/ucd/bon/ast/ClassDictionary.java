@@ -42,6 +42,11 @@ public class ClassDictionary extends SpecificationElement {
   public String getExplanation() { return explanation; }
   public String getPart() { return part; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClassDictionary(this);
+  }
+
   // === Others ===
   @Override
   public ClassDictionary clone() {

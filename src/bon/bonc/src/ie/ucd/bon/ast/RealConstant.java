@@ -30,6 +30,11 @@ public class RealConstant extends ManifestConstant {
 
   public Double getValue() { return value; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitRealConstant(this);
+  }
+
   // === Others ===
   @Override
   public RealConstant clone() {

@@ -33,6 +33,11 @@ public class LabelledAction extends AstNode {
   public String getLabel() { return label; }
   public String getDescription() { return description; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitLabelledAction(this);
+  }
+
   // === Others ===
   @Override
   public LabelledAction clone() {

@@ -33,6 +33,11 @@ public class ObjectName extends AstNode {
   public String getClassName() { return className; }
   public String getExtendedId() { return extendedId; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitObjectName(this);
+  }
+
   // === Others ===
   @Override
   public ObjectName clone() {

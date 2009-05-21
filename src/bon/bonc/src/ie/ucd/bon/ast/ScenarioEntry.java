@@ -33,6 +33,11 @@ public class ScenarioEntry extends AstNode {
   public String getName() { return name; }
   public String getDescription() { return description; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitScenarioEntry(this);
+  }
+
   // === Others ===
   @Override
   public ScenarioEntry clone() {

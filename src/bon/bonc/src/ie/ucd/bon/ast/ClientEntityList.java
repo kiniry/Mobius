@@ -30,6 +30,11 @@ public class ClientEntityList extends ClientEntityExpression {
 
   public List<ClientEntity> getEntities() { return entities; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClientEntityList(this);
+  }
+
   // === Others ===
   @Override
   public ClientEntityList clone() {

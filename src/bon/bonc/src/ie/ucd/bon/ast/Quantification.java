@@ -42,6 +42,11 @@ public class Quantification extends Expression {
   public Expression getRestriction() { return restriction; }
   public Expression getProposition() { return proposition; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitQuantification(this);
+  }
+
   // === Others ===
   @Override
   public Quantification clone() {

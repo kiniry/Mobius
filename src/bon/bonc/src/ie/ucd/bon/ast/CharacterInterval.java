@@ -33,6 +33,11 @@ public class CharacterInterval extends Interval {
   public Character getStart() { return start; }
   public Character getStop() { return stop; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCharacterInterval(this);
+  }
+
   // === Others ===
   @Override
   public CharacterInterval clone() {

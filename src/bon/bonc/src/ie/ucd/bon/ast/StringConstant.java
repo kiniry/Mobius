@@ -30,6 +30,11 @@ public class StringConstant extends ManifestConstant {
 
   public String getValue() { return value; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitStringConstant(this);
+  }
+
   // === Others ===
   @Override
   public StringConstant clone() {

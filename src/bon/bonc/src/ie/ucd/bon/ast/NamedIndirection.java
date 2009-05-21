@@ -33,6 +33,11 @@ public class NamedIndirection extends IndirectionElement {
   public String getClassName() { return className; }
   public List<IndirectionElement> getIndirectionElements() { return indirectionElements; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitNamedIndirection(this);
+  }
+
   // === Others ===
   @Override
   public NamedIndirection clone() {

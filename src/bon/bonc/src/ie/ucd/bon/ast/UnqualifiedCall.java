@@ -33,6 +33,11 @@ public class UnqualifiedCall extends AstNode {
   public String getId() { return id; }
   public List<Expression> getArgs() { return args; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitUnqualifiedCall(this);
+  }
+
   // === Others ===
   @Override
   public UnqualifiedCall clone() {

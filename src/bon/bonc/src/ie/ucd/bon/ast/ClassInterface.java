@@ -39,6 +39,11 @@ public class ClassInterface extends AstNode {
   public List<Expression> getInvariant() { return invariant; }
   public Indexing getIndexing() { return indexing; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClassInterface(this);
+  }
+
   // === Others ===
   @Override
   public ClassInterface clone() {

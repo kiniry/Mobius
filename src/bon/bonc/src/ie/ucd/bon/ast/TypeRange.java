@@ -33,6 +33,11 @@ public class TypeRange extends VariableRange {
   public List<String> getIdentifiers() { return identifiers; }
   public BONType getType() { return type; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitTypeRange(this);
+  }
+
   // === Others ===
   @Override
   public TypeRange clone() {

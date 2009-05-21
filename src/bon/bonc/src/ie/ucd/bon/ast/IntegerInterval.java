@@ -33,6 +33,11 @@ public class IntegerInterval extends Interval {
   public Integer getStart() { return start; }
   public Integer getStop() { return stop; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitIntegerInterval(this);
+  }
+
   // === Others ===
   @Override
   public IntegerInterval clone() {

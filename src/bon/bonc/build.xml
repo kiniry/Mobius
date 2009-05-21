@@ -522,6 +522,7 @@
       <arg value="${astgen-dir}/BON.ag" />
       <arg value="${astgen-tpl-dir}/abstract_classes.tpl" />
       <arg value="${astgen-tpl-dir}/normal_classes.tpl" />
+    	<arg value="${astgen-tpl-dir}/abstract_visitor.tpl" />
     </java>
   </target>
   

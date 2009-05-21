@@ -30,6 +30,11 @@ public class Indexing extends AstNode {
 
   public List<IndexClause> getIndexes() { return indexes; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitIndexing(this);
+  }
+
   // === Others ===
   @Override
   public Indexing clone() {

@@ -42,6 +42,11 @@ public class SystemChart extends InformalChart {
   public String getExplanation() { return explanation; }
   public String getPart() { return part; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitSystemChart(this);
+  }
+
   // === Others ===
   @Override
   public SystemChart clone() {

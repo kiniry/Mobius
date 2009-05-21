@@ -36,6 +36,11 @@ public class Feature extends AstNode {
   public List<String> getSelectiveExport() { return selectiveExport; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitFeature(this);
+  }
+
   // === Others ===
   @Override
   public Feature clone() {

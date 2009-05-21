@@ -33,6 +33,11 @@ public class BonSourceFile extends AstNode {
   public List<SpecificationElement> getBonSpecification() { return bonSpecification; }
   public Indexing getIndexing() { return indexing; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitBonSourceFile(this);
+  }
+
   // === Others ===
   @Override
   public BonSourceFile clone() {

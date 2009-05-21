@@ -58,6 +58,11 @@ public class BinaryExp extends Expression {
   public Expression getLeft() { return left; }
   public Expression getRight() { return right; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitBinaryExp(this);
+  }
+
   // === Others ===
   @Override
   public BinaryExp clone() {

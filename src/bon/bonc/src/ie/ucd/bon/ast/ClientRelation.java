@@ -42,6 +42,11 @@ public class ClientRelation extends StaticRelation {
   public TypeMark getTypeMark() { return typeMark; }
   public String getSemanticLabel() { return semanticLabel; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClientRelation(this);
+  }
+
   // === Others ===
   @Override
   public ClientRelation clone() {

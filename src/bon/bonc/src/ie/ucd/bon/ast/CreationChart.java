@@ -42,6 +42,11 @@ public class CreationChart extends InformalChart {
   public String getExplanation() { return explanation; }
   public String getPart() { return part; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCreationChart(this);
+  }
+
   // === Others ===
   @Override
   public CreationChart clone() {

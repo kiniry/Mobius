@@ -33,6 +33,11 @@ public class HasType extends AstNode {
   public TypeMark getMark() { return mark; }
   public BONType getType() { return type; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitHasType(this);
+  }
+
   // === Others ===
   @Override
   public HasType clone() {

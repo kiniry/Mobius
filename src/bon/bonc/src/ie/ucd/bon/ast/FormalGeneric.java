@@ -33,6 +33,11 @@ public class FormalGeneric extends AstNode {
   public String getIdentifier() { return identifier; }
   public BONType getType() { return type; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitFormalGeneric(this);
+  }
+
   // === Others ===
   @Override
   public FormalGeneric clone() {

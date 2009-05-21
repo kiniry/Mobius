@@ -33,6 +33,11 @@ public class ContractClause extends AstNode {
   public List<Expression> getPreconditions() { return preconditions; }
   public List<Expression> getPostconditions() { return postconditions; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitContractClause(this);
+  }
+
   // === Others ===
   @Override
   public ContractClause clone() {

@@ -30,6 +30,11 @@ public class Multiplicity extends ClientEntityExpression {
 
   public Integer getMultiplicity() { return multiplicity; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitMultiplicity(this);
+  }
+
   // === Others ===
   @Override
   public Multiplicity clone() {

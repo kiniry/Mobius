@@ -2038,13 +2038,13 @@ constant returns [Constant constant] :
              CONSTANT[$mc.start] manifest_constant
             )
  | c='Current'
-   { $constant = CurrentImpl.mk(getSLoc($c)); } 
+   { $constant = KeywordConstant.mk(KeywordConstant.Constant.CURRENT, getSLoc($c)); } 
            ->
            ^(
              CONSTANT[$c] 'Current'
             )
  | v='Void'
-   { $constant = VoidImpl.mk(getSLoc($v)); }            
+   { $constant = KeywordConstant.mk(KeywordConstant.Constant.VOID, getSLoc($v)); }            
            ->
            ^(
              CONSTANT[$v] 'Void'

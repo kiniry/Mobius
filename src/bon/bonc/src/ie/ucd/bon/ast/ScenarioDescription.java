@@ -36,6 +36,11 @@ public class ScenarioDescription extends DynamicComponent {
   public List<LabelledAction> getActions() { return actions; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitScenarioDescription(this);
+  }
+
   // === Others ===
   @Override
   public ScenarioDescription clone() {

@@ -33,6 +33,11 @@ public class ClassEntry extends AstNode {
   public String getName() { return name; }
   public String getDescription() { return description; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClassEntry(this);
+  }
+
   // === Others ===
   @Override
   public ClassEntry clone() {

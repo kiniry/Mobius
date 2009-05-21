@@ -42,6 +42,11 @@ public class ObjectGroup extends DynamicComponent {
   public List<DynamicComponent> getComponents() { return components; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitObjectGroup(this);
+  }
+
   // === Others ===
   @Override
   public ObjectGroup clone() {

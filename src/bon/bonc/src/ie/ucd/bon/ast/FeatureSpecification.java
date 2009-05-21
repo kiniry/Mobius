@@ -53,6 +53,11 @@ public class FeatureSpecification extends AstNode {
   public RenameClause getRenaming() { return renaming; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitFeatureSpecification(this);
+  }
+
   // === Others ===
   @Override
   public FeatureSpecification clone() {

@@ -30,6 +30,11 @@ public class CharacterConstant extends ManifestConstant {
 
   public Character getValue() { return value; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitCharacterConstant(this);
+  }
+
   // === Others ===
   @Override
   public CharacterConstant clone() {

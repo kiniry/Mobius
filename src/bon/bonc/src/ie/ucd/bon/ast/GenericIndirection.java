@@ -30,6 +30,11 @@ public class GenericIndirection extends AstNode {
 
   public String getIndirectionElement() { return indirectionElement; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitGenericIndirection(this);
+  }
+
   // === Others ===
   @Override
   public GenericIndirection clone() {

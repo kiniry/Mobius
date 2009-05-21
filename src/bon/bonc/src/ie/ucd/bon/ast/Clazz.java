@@ -52,6 +52,11 @@ public class Clazz extends StaticComponent {
   public List<FormalGeneric> getGenerics() { return generics; }
   public String getComment() { return comment; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitClazz(this);
+  }
+
   // === Others ===
   @Override
   public Clazz clone() {

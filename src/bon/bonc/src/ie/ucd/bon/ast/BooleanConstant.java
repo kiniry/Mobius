@@ -30,6 +30,11 @@ public class BooleanConstant extends ManifestConstant {
 
   public Boolean getValue() { return value; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitBooleanConstant(this);
+  }
+
   // === Others ===
   @Override
   public BooleanConstant clone() {

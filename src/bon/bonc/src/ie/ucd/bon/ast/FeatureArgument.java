@@ -33,6 +33,11 @@ public class FeatureArgument extends AstNode {
   public String getIdentifier() { return identifier; }
   public BONType getType() { return type; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitFeatureArgument(this);
+  }
+
   // === Others ===
   @Override
   public FeatureArgument clone() {

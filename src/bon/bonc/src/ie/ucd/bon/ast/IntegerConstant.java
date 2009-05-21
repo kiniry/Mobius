@@ -30,6 +30,11 @@ public class IntegerConstant extends ManifestConstant {
 
   public Integer getValue() { return value; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitIntegerConstant(this);
+  }
+
   // === Others ===
   @Override
   public IntegerConstant clone() {

@@ -36,6 +36,11 @@ public class \ClassName extends \Basename {
 \members{
   public \if_primitive{\Membertype}{\MemberType} get\MemberName() { return \memberName; }}
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visit\ClassName(this);
+  }
+
   // === Others ===
   @Override
   public \ClassName clone() {

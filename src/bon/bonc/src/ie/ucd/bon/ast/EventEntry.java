@@ -33,6 +33,11 @@ public class EventEntry extends AstNode {
   public String getName() { return name; }
   public List<String> getInvolved() { return involved; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitEventEntry(this);
+  }
+
   // === Others ===
   @Override
   public EventEntry clone() {

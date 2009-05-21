@@ -39,6 +39,11 @@ public class UnaryExp extends Expression {
   public Op getOp() { return op; }
   public Expression getExpression() { return expression; }
 
+  // === Visitor ===
+  public void accept(IVisitor visitor) {
+    visitor.visitUnaryExp(this);
+  }
+
   // === Others ===
   @Override
   public UnaryExp clone() {
