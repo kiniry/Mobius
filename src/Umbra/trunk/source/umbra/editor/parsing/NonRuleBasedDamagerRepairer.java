@@ -107,7 +107,7 @@ public class NonRuleBasedDamagerRepairer
    * which starts with the beginning of the line in which the modification
    * started and ends with the end of the last line in which the modification
    * occurred. The region is always included in the given damaged region so
-   * we have to check for cases in which the region starts/end in the middle
+   * we have to check for cases in which the region starts/ends in the middle
    * of a line.
    *
    * @param a_partition a region which is damaged

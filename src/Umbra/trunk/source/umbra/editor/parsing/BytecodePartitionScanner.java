@@ -136,8 +136,10 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
     generateFixedRules(rules);
     for (int i = 0; i < BytecodeStrings.HEADER_PREFIX.length;
          i++) {
-      rules[NUMBER_OF_RULES + i] = new EndOfLineRule(
-        BytecodeStrings.HEADER_PREFIX[i], head);
+      final MultiLineRule mlr = new MultiLineRule(
+         BytecodeStrings.HEADER_PREFIX[i], "\n", head);
+      mlr.setColumnConstraint(0);
+      rules[NUMBER_OF_RULES + i] = mlr;
     }
     setPredicateRules(rules);
   }

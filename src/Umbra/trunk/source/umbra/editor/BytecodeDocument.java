@@ -251,6 +251,7 @@ public class BytecodeDocument extends Document {
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
     final BCClass bc = my_bmlp.getBcc();
+    //TODO take a look at that, probably this should be done in BMLLib
     for (int i = 0; i < bc.getMethodCount(); i++) {
       final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
                                                       getConstantPool());
