@@ -11,6 +11,13 @@
     <name>Mobius</name>
     <url>http://mobius.ucd.ie/</url>
   </organization>
+  <repositories>
+    <repository>
+      <id>Mobius</id>
+      <url>http://omega.ucd.ie:8080/artifactory/repo/</url>
+    </repository>
+  </repositories>
+  
   <properties>
     <organization.logo>https://mobius.ucd.ie/repos/websites/MobiusToolsWiki/Images/mobius_transparent.png</organization.logo>
   </properties>
