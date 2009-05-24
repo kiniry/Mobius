@@ -2,7 +2,7 @@
 <feature
       id="mobius.simplify.feature"
       label="Simplify Feature"
-      version="1.5.6"
+      version="1.5.7"
       provider-name="EU MOBIUS IST-15905 Project">
 
    <description url=" ">
@@ -55,7 +55,6 @@ For inquiries please contact: Hewlett-Packard Company.
          id="mobius.simplify.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="true"/>
+         version="0.0.0"/>
 
 </feature>
