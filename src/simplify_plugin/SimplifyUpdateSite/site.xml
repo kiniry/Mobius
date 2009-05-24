@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/mobius.simplify.feature_1.5.6.jar" id="mobius.simplify.feature" version="1.5.6"/>
+   <feature url="features/mobius.simplify.feature_1.5.7.jar" id="mobius.simplify.feature" version="1.5.7"/>
 </site>
