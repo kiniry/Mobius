@@ -401,4 +401,18 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
   public final BytecodeRefreshAction getRefreshAction() {
     return my_refresh_action;
   }
+
+  /**
+   * @return the GUI element responsible for the communication between
+   * the GUI and the internal representation of a document
+   *
+   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl) <br>
+   * Note: this method was added to allow saving the bytecode by
+   * creating fake {@link BytecodeRefreshAction} and calling its
+   * {@link BytecodeRefreshAction#run()} method.
+   */
+  public BytecodeContribution getBytecodeContribution() {
+    return my_bcode_cntrbtn;
+  }
+
 }

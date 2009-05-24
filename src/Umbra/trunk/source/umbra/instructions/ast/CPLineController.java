@@ -83,12 +83,6 @@ public class CPLineController extends BytecodeLineController {
   private boolean my_in_bml;
 
   /**
-   * This variable has value <code>true</code> if the constant pool entry
-   * this line represents belongs to second constant pool.
-   */
-  private boolean my_in_second_cp;
-
-  /**
    * This creates an instance of a bytecode line handle to handle
    * constant pool entry.
    *
@@ -101,7 +95,6 @@ public class CPLineController extends BytecodeLineController {
   public CPLineController(final String a_line_text,
                           final String an_entry_type) {
     super(a_line_text);
-    my_in_second_cp = false;
     my_in_bml = false;
   }
 
@@ -257,28 +250,6 @@ public class CPLineController extends BytecodeLineController {
    */
   public void setInBML(final boolean a_b) {
     my_in_bml = a_b;
-  }
-
-  /**
-   * Marks current line as representing second constant pool entry.
-   */
-  public void mark() {
-    my_in_second_cp = true;
-  }
-
-  /**
-   * Marks current line as representing first constant pool entry.
-   */
-  public void unmark() {
-    my_in_second_cp = false;
-  }
-
-  /**
-   * Returns true if current line represents second constant pool entry.
-   * @return true if current line represents second constant pool entry
-   */
-  public boolean isInSecondCP() {
-    return my_in_second_cp;
   }
 
   /**

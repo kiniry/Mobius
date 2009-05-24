@@ -150,6 +150,8 @@ public class MultiInstruction extends InstructionLineController {
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)}
    * for explantation of "dirty" and "clean" numbers concepts. <br> <br>
    *
+   * TODO (to236111) this method breaks jump instructions <br> <br>
+   *
    * TODO (to236111) IMPORTANT check whether rollback of changes to BCEL
    * representation of instructions needed in case of
    * UmbraCPRecalculationException
@@ -159,27 +161,18 @@ public class MultiInstruction extends InstructionLineController {
    * @throws UmbraException in case the deletion of old method handle failed
    */
   public void updateReferences(final HashMap a_map, final int a_pos)
-    throws UmbraException, UmbraNoSuchConstantException {
+    throws UmbraException {
+    if (!correct()) return;
     getInd();
     if (!my_has_ind) return;
-    //System.err.println(has_ind + " " + getInd());
-    if (!a_map.containsKey(getInd())) {
-      NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getInd());
-      throw new UmbraNoSuchConstantException(an_error);
-    }
-    my_ind = (Integer) a_map.get(getInd());
+
+    my_ind = (Integer) dirtyToClean(a_map, getInd());
     my_use_stored_ind = true;
     //int a_pos = this.getList().
     final int pos = getNoInMethod();
 
-    //bcelDump();
-
     dispose();
     makeHandleForPosition(getMethod(), pos);
-
-    //bcelDump();
 
     my_use_stored_ind = false;
   }
@@ -188,6 +181,7 @@ public class MultiInstruction extends InstructionLineController {
    * Prints BCEL instruction representation.
    * For debug use only.
    */
+  @SuppressWarnings("unused")
   private void bcelDump() {
     final MethodGen mg = this.getMethod();
     for (int i = 0; i < mg.getInstructionList().size(); i++) {

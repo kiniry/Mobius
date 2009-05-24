@@ -165,23 +165,11 @@ public class FieldrefCPLineController extends CPLineController {
    */
   public void updateReferences(final HashMap a_map)
     throws UmbraNoSuchConstantException {
-    if (!a_map.containsKey(getClassReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getClassReference());
-      if (!a_map.containsKey(getNameAndTypeReference()))
-        an_error.addNumber(getNameAndTypeReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    } else if (!a_map.containsKey(getNameAndTypeReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getNameAndTypeReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    }
-    ((ConstantFieldref) getConstant()).
-    setClassIndex((Integer) a_map.get(getClassReference()));
-    ((ConstantFieldref) getConstant()).
-    setNameAndTypeIndex((Integer) a_map.get(getNameAndTypeReference()));
+    ((ConstantFieldref) getConstantAccessor()).
+    setClassIndex((Integer) dirtyToClean(a_map, getClassReference()));
+    ((ConstantFieldref) getConstantAccessor()).
+    setNameAndTypeIndex((Integer)
+                        dirtyToClean(a_map, getNameAndTypeReference()));
   }
 
 }

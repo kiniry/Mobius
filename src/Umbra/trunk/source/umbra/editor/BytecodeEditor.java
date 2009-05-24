@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.util.SyntheticRepository;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -28,30 +29,24 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
-import umbra.instructions.errors.BytecodeError;
+import umbra.editor.actions.BytecodeRefreshAction;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;
 import umbra.lib.FileNames;
 import umbra.lib.GUIMessages;
 import umbra.lib.HistoryOperations;
-import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraRepresentationException;
 import umbra.logging.LoggerFactory;
 import umbra.verifier.BytecodeVerifier;
@@ -171,7 +166,7 @@ public class BytecodeEditor extends TextEditor {
     ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
                                       this, getEditorInput(), doc.getBmlp());
   }
-
+  
   /**
    * This method is run automatically while standard Eclipse
    * 'save' action is executed or when Umbra 'refresh' action is performed.
@@ -182,10 +177,14 @@ public class BytecodeEditor extends TextEditor {
    * for that, the method updates structure
    * {@link org.apache.bcel.classfile.JavaClass} in BCEL and binary
    * files to make visible in the class file the changes made in the editor.
-   *
-   * NOTE (to236111) IMPORTANT what if errors occured and user decides to save
-   * TODO (to236111) IMPOTRANT error handling (if error occurs during save then
-   * internal representation of bytecode breaks after 'NO' pressed)
+   * <br> <br>
+   * XXX (to236111):
+   * If there are errors in bytecode and user decides to save the incorrect
+   * class file is created. <br>
+   * Note that if user removes constant pool entries that are referenced from
+   * attributes or contain class name index etc., fixing such class file may
+   * be impossible by editing bytecode in Umbra (rebuild from .java file
+   * will be necessary).
    *
    * @param a_progress_monitor not used
    * @return true if bytecode file has been saved succesfully, false otherwise
@@ -196,21 +195,17 @@ public class BytecodeEditor extends TextEditor {
 
     final BytecodeDocument doc = getDocument();
     if (FileNames.CP_DEBUG_MODE) System.err.println("update bml");
-    try {
-      doc.updateBML();
-    } catch (UmbraCPRecalculationException e1) {
-      final MessageBox msgBox = new MessageBox(getSite().getShell(),
-        SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-      String message = "Following errors occured:\n";
-      for (BytecodeError e : e1.getReport().getErrors()) {
-        message += e.getShortErrorMessage() + "\n";
-      }
-      message += "Save anyway?";
-      msgBox.setMessage(message);
-      msgBox.setText("Recalculation errors");
-      final int res = msgBox.open();
-      if (res != SWT.YES) return false;
+
+    // TODO (to236111) NOW because it was moved here, the bytecode won't be
+    // correct without save
+    // TODO (to236111) NOW error handling
+    final BCClass bc = doc.getBmlp().getBcc();
+    for (int i = 0; i < bc.getMethodCount(); i++) {
+      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
+                                                      getConstantPool());
+      bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
     }
+
     if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
     doc.updateJavaClass();
     if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
@@ -222,7 +217,15 @@ public class BytecodeEditor extends TextEditor {
         new SWTVerificationFactory(getSite().getShell());
     }
 
-    final BytecodeVerifier verifier = new BytecodeVerifier(jc);
+    BytecodeVerifier verifier = null;
+    try {
+      verifier = new BytecodeVerifier(jc, getCurrentClassRepository());
+    } catch (JavaModelException e1) {
+      MessageDialog.openError(getSite().getShell(),
+                              GUIMessages.BYTECODE_MESSAGE_TITLE,
+                              "Failed to initialize bytecode verifier");
+      return false;
+    }
     final ResultPresenter presenter = my_verification_factory
         .getResultPresenter(verifier);
     final SaveConfirmer confirmer = my_verification_factory
@@ -271,15 +274,24 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * Wrapper method for saveBytecode(). When standard Eclipse 'save' action
-   * is performed, this method is called and then it calls saveBytecode,
-   * which saves bytecode document. <br> <br>
+   * is performed, this method is called and then it creates fake
+   * {@link BytecodeRefreshAction} and calls its
+   * {@link BytecodeRefreshAction#run()} method, which in turn calls
+   * saveBytecode(). <br> <br>
    *
    * See {@link BytecodeEditor#saveBytecode(IProgressMonitor)}.
    *
    * @param a_progress_monitor not used
    */
-  public void doSave(IProgressMonitor a_progress_monitor) {
-    saveBytecode(a_progress_monitor);
+  public void doSave(final IProgressMonitor a_progress_monitor) {
+    final BytecodeEditorContributor contributor =
+      new BytecodeEditorContributor();
+    final BytecodeRefreshAction action =
+      new BytecodeRefreshAction(contributor,
+                                contributor.getBytecodeContribution());
+    action.setActiveEditor(this);
+    action.run();
+    getDocument().getModel().initializeMapping(getDocument());
   }
 
   /**
@@ -448,7 +460,9 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * The method gives the repository where all the class files associated
-   * with the current project are located.
+   * with the current project are located. <br> <br>
+   *
+   * TODO it does not handle referenced jars and projects
    *
    * @return the repository of the class files
    * @throws JavaModelException if the output location for the current project

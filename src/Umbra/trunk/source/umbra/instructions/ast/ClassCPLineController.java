@@ -139,15 +139,8 @@ public class ClassCPLineController extends CPLineController {
    */
   public void updateReferences(final HashMap a_map)
     throws UmbraNoSuchConstantException {
-    if (!a_map.containsKey(getClassReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getClassReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    }
-    // NOTE (to236111) IMPORTANT what removes constants before doSave()?
-    ((ConstantClass) getConstant()).setNameIndex(
-      (Integer) a_map.get(getClassReference()));
+    ((ConstantClass) getConstantAccessor()).setNameIndex((Integer)
+      dirtyToClean(a_map, getClassReference()));
   }
 
 }

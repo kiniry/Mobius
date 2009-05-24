@@ -12,12 +12,15 @@ package umbra.verifier;
 
 import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.util.ClassPath;
+import org.apache.bcel.util.SyntheticRepository;
 import org.apache.bcel.verifier.VerificationResult;
 import org.apache.bcel.verifier.Verifier;
 import org.apache.bcel.verifier.VerifierFactory;
 
 /**
  * @author Szymon Wrzyszcz (sw237122@students.mimuw.edu.pl)
+ * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @version a-01
  *
  */
@@ -35,11 +38,13 @@ public class BytecodeVerifier {
 
   /**
    * @param a_jc class to verify
+   * @param a_repo a repositiry of the project the verified
+   * class belongs to
    */
-  public BytecodeVerifier(final JavaClass a_jc) {
+  public BytecodeVerifier(final JavaClass a_jc,
+                          final SyntheticRepository a_repo) {
     this.my_jc = a_jc;
-    Repository.clearCache();
-    Repository.addClass(a_jc);
+    Repository.setRepository(a_repo);
     final String class_name = a_jc.getClassName();
     my_verifier = VerifierFactory.getVerifier(class_name);
     my_verifier.flush();

@@ -169,23 +169,10 @@ public class NameAndTypeCPLineController extends CPLineController {
    */
   public void updateReferences(final HashMap a_map)
     throws UmbraNoSuchConstantException {
-    if (!a_map.containsKey(getNameReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getNameReference());
-      if (!a_map.containsKey(getTypeReference()))
-        an_error.addNumber(getTypeReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    } else if (!a_map.containsKey(getTypeReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getTypeReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    }
-    ((ConstantNameAndType) getConstant()).
-    setNameIndex((Integer) a_map.get(getNameReference()));
-    ((ConstantNameAndType) getConstant()).
-    setSignatureIndex((Integer) a_map.get(getTypeReference()));
+    ((ConstantNameAndType) getConstantAccessor()).
+    setNameIndex((Integer) dirtyToClean(a_map, getNameReference()));
+    ((ConstantNameAndType) getConstantAccessor()).
+    setSignatureIndex((Integer) dirtyToClean(a_map, getTypeReference()));
   }
 
 }

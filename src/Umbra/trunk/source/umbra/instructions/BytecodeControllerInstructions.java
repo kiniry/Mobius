@@ -10,8 +10,16 @@ package umbra.instructions;
 
 import java.util.LinkedList;
 
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
+import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.SourceFile;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.ExceptionTable;
+import org.apache.bcel.classfile.PMGClass;
+import org.apache.bcel.classfile.Signature;
 
 import annot.bcclass.BCConstantPool;
 
@@ -97,27 +105,52 @@ public class BytecodeControllerInstructions
                   getMethodNo() + 1;
     }
     fillModTable(a_methodnum);
-    //markSecondCP(a_doc);
+    initializeMapping(a_doc);
     if (FileNames.DEBUG_MODE) controlPrint(0);
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
     return res;
   }
 
   /**
-   * Marks editor lines representing second constant pool entries.
+   * Initializes the mapping object (see {@link BytecodeMapping}).
    *
-   * TODO (to236111) remove
-   * @param a_doc a document containing lines to be marked
+   * @param a_doc a bytecode document for which the mapping is set
    */
-  /*private void markSecondCP(BytecodeDocument a_doc) {
-    BCConstantPool bcp = a_doc.getBmlp().getBcc().getCp();
-    for (int i = 0; i < getNoOfLines(); i++) {
-      if (getLineController(i) instanceof CPLineController) {
-        CPLineController cplc = (CPLineController) getLineController(i);
-        if (cplc.getConstantNumber() >= bcp.getInitialSize()) cplc.mark();
+  public void initializeMapping(final BytecodeDocument a_doc) {
+    getMapping().reset();
+    getMapping().setClassNameIndex(a_doc.getJavaClass().getClassNameIndex());
+    getMapping().
+      setSuperclassNameIndex(a_doc.getJavaClass().getSuperclassNameIndex());
+    for (Field f : a_doc.getJavaClass().getFields()) {
+      getMapping().addFieldName(f, f.getNameIndex());
+      getMapping().addFieldSignature(f, f.getSignatureIndex());
+    }
+    for (Method m : a_doc.getJavaClass().getMethods()) {
+      getMapping().addMethodName(m, m.getNameIndex());
+      getMapping().addMethodSignature(m, m.getSignatureIndex());
+    }
+    for (Attribute a : a_doc.getJavaClass().getAttributes()) {
+      getMapping().addAttributeName(a, a.getNameIndex());
+      if (a instanceof SourceFile) {
+        getMapping().
+          addAttributeSecondValue(a, ((SourceFile) a).getSourceFileIndex());
+      } else if (a instanceof ConstantValue) {
+        getMapping().
+          addAttributeSecondValue(a,
+                                  ((ConstantValue) a).getConstantValueIndex());
+      } else if (a instanceof PMGClass) {
+        final PMGClass p = (PMGClass) a;
+        getMapping().addAttributeSecondValue(p, p.getPMGIndex());
+        getMapping().addPMGClass(p, p.getPMGClassIndex());
+      } else if (a instanceof Signature) {
+        getMapping().
+          addAttributeSecondValue(a, ((Signature) a).getSignatureIndex());
+      } else if (a instanceof ExceptionTable) {
+        final ExceptionTable e = (ExceptionTable) a;
+        getMapping().addExceptionTable(e, e.getExceptionIndexTable());
       }
     }
-  }*/
+  }
 
   /**
    * Prints BML constant pool representation of a constant pool in a given
@@ -132,6 +165,16 @@ public class BytecodeControllerInstructions
     System.err.println("Pool:");
     for (int i = 0; i < a_pool.size(); i++) {
       System.err.println(i + ": " + a_pool.getConstant(i));
+    }
+    System.err.println("Control print for methods:");
+    for (int i = 0; i < a_doc.getJavaClass().getMethods().length; i++) {
+      System.err.println("method " + i);
+      for (int j = 0; j <
+      a_doc.getJavaClass().getMethods()[i].getConstantPool().getLength(); j++) {
+        System.err.println(j + ": " +
+                           a_doc.getJavaClass().getMethods()[i].
+                           getConstantPool().getConstant(j));
+      }
     }
   }
 
@@ -262,8 +305,7 @@ public class BytecodeControllerInstructions
         final CPLineController cplc = (CPLineController) line;
         UmbraPlugin.messagelog(line.getClass().getName() + ": " +
                                line.getLineContent() + ", BCEL entry: " +
-                               cplc.getConstant().getClass().getName() +
-                               (cplc.isInSecondCP() ? ", second CP" : ""));
+                               cplc.getConstant().getClass().getName());
       } else {
         UmbraPlugin.messagelog(line.getClass().getName() +
                                ": " + line.getLineContent());

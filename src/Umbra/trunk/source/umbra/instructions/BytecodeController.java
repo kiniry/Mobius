@@ -105,7 +105,6 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         ctxt.setFieldArea();
         break;
       }
-      /* NOTE (to236111) CPLineController added */
       if (blc instanceof EmptyLineController ||
           blc instanceof InstructionLineController ||
           blc instanceof CommentLineController ||
@@ -179,17 +178,15 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       old_lines.add(getLineController(i));
       if (getLineController(i) instanceof CPLineController) {
         entry_no++;
-        old_lines_index.add(entry_no); 
+        old_lines_index.add(entry_no);
       } else {
         old_lines_index.add(-1);
       }
     }
     final int methodno = getMethodForLine(a_start_rem);
-    // NOTE (to236111) rem == -1 for no a method
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
     final LineContext ctxt = establishCurrentContext(a_start_rem);
-    // NOTE (to236111) ctxt for CP
     fgmparser.runParsing(ctxt);
                             // after that I must know all the instructions are
                             //correct
@@ -210,6 +207,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP)
       updateBMLCPRepresentation(a_doc, a_start_rem, an_end_rem, a_stop,
                                 old_lines, old_lines_index);
+    try {
+      a_doc.updateBML();
+    } catch (umbra.lib.UmbraCPRecalculationException e) {
+      e.printStackTrace();
+    }
     if (FileNames.DEBUG_MODE) controlPrint(1);
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
   }
@@ -217,9 +219,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   /**
    * Propagates the change in textual representation of constant pool into
    * its BML representation. It is called after the change has been propagated
-   * into Umbra internal representation (line controllers)
+   * into Umbra internal representation (line controllers) <br> <br>
    *
-   * NOTE (to236111) IMPORTANT what if CPLineController outside constant pool?
+   * TODO (to236111) what if CPLineController outside constant pool? <br> <br>
+   *
+   * TODO (to236111) NOW disabel in case new field added
    *
    * @param a_doc a document in which change happened
    * @param a_start_rem a number of the first modified line as counted in the
@@ -300,7 +304,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         }
       }
     }
-    /* NOTE (to236111) old implementation
+    /* XXX (to236111) old implementation
     bcp.clearConstantPool();
     for (int i = 0; i < a_doc.getNumberOfLines(); i++) {
       if (getLineController(i) instanceof CPLineController) {
@@ -412,7 +416,6 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       removeEditorLines(an_end_rem, a_stop);
     }
     //my_editor_lines.addAll(a_start_rem, the_lines);
-    /* NOTE (to236111) isInsideConstantPool() added */
     if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
         !a_ctxt.isInFieldsArea() &&
         (Preparsing.PARSE_CP ? !a_ctxt.isInsideConstantPool() : true)) {
@@ -513,10 +516,6 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       if (FileNames.CP_DEBUG_MODE)
         System.err.println("<" + newlc.getLineContent() + ">");
       if (oldlc.equals(newlc)) continue;
-      /* NOTE (to236111) following ifs essentially means:
-       * if (newlc insatnceof InstructionLineController and it may be
-       * better for readability of code to point it explicitely.
-       */
       if (newlc.needsMg() && oldlc.hasMg()) {
         final InstructionLineController iolc =
           (InstructionLineController) oldlc;
@@ -699,7 +698,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     throws UmbraCPRecalculationException {
     if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
     int const_no = 0;
-    for (int i = 0; i < this.getNoOfLines(); i++) {
+    // XXX (to236111) why this is necessary?
+    for (int i = 0; i < getNoOfLines(); i++) {
       if (getLineController(i) instanceof CPLineController) {
         const_no++;
         ((CPLineController)
@@ -711,12 +711,13 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     final HashMap f = new HashMap();
     final HashMap conflict = new HashMap();
     final ErrorReport a_report = new ErrorReport();
+    f.put(-1, a_jc.getConstantPool().getLength());
     /*
-     * NOTE (to236111) changing number of those two constants forbidden
+     * XXX (to236111) changing the index of those two constants forbidden
      * it's not a bug
      */
-    final int class_name_index = a_jc.getClassNameIndex();
-    final int super_class_name_index = a_jc.getSuperclassNameIndex();
+    final int class_name_index = getMapping().getClassNameIndex();
+    final int super_class_name_index = getMapping().getSuperclassNameIndex();
     if (FileNames.CP_DEBUG_MODE) System.err.println("detecting conflicts");
     for (int i = 0; i < getNoOfLines(); i++) {
       final BytecodeLineController lc = getLineController(i);
@@ -778,28 +779,37 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       throw new UmbraCPRecalculationException(a_report);
     }
     // TODO (to236111) IMPORTANT also do checking for non existent constants
-    // in the following code
-    // (verificator will detect?)
+    // in the following code (or maybe verificator will detect?)
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
     recalculateCPNumbersForAttributes(a_jc, f);
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
     for (int i = 0; i < a_jc.getFields().length; i++) {
-      // NOTE (to236111) IMPORTANT method name && signature?
       a_jc.getFields()[i].setNameIndex(
-        (Integer) f.get(a_jc.getFields()[i].getNameIndex()));
+        (Integer) dirtyToClean(f,
+                               getMapping().getFieldName(a_jc.getFields()[i])));
       a_jc.getFields()[i].setSignatureIndex(
-        (Integer) f.get(a_jc.getFields()[i].getSignatureIndex()));
+        (Integer) dirtyToClean(f,
+                          getMapping().getFieldSignature(a_jc.getFields()[i])));
+    }
+    for (int i = 0; i < a_jc.getMethods().length; i++) {
+      a_jc.getMethods()[i].setNameIndex((Integer)
+        dirtyToClean(f, getMapping().getMethodName(a_jc.getMethods()[i])));
+      a_jc.getMethods()[i].setSignatureIndex((Integer)
+        dirtyToClean(f, getMapping().getMethodSignature(a_jc.getMethods()[i])));
     }
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating class names");
-    a_jc.setClassNameIndex((Integer) f.get(class_name_index));
-    a_jc.setSuperclassNameIndex((Integer) f.get(super_class_name_index));
+    a_jc.setClassNameIndex((Integer) dirtyToClean(f, class_name_index));
+    a_jc.setSuperclassNameIndex((Integer)
+                                dirtyToClean(f, super_class_name_index));
     if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
   }
 
   /**
    * This method affects references to constant pool entries for attributes
    * in BCEL representation of bytecode. It changes the references from "dirty"
-   * to "clean" numbers.
+   * to "clean" numbers. <br> <br>
+   *
+   * TODO (to236111) correctness for ExceptionTable not checked
    *
    * @param a_jc a BCEL representation of bytecode
    * @param a_map mapping from "dirty" to "clean" numbers
@@ -807,31 +817,53 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   private void recalculateCPNumbersForAttributes(final JavaClass a_jc,
                                                  final HashMap a_map) {
     for (Attribute a : a_jc.getAttributes()) {
-      a.setNameIndex((Integer) a_map.get(a.getNameIndex()));
+      a.setNameIndex((Integer) dirtyToClean(a_map,
+                                            getMapping().getAttributeName(a)));
       if (a instanceof SourceFile) {
         final SourceFile src = (SourceFile) a;
-        src.setSourceFileIndex((Integer) a_map.get(src.getSourceFileIndex()));
+        src.setSourceFileIndex((Integer)
+          dirtyToClean(a_map, getMapping().getAttributeSecondValue(src)));
       } else if (a instanceof ConstantValue) {
         final ConstantValue cv = (ConstantValue) a;
         cv.setConstantValueIndex((Integer)
-                                 a_map.get(cv.getConstantValueIndex()));
+          dirtyToClean(a_map, getMapping().getAttributeSecondValue(cv)));
       } else if (a instanceof ExceptionTable) {
         final ExceptionTable et = (ExceptionTable) a;
         final int[] exception_table =
           new int[et.getExceptionIndexTable().length];
         for (int i : exception_table) {
           exception_table[i] =
-            (Integer) a_map.get(et.getExceptionIndexTable()[i]);
+            (Integer) dirtyToClean(a_map,
+                                   getMapping().getExceptionTable(et)[i]);
         }
         et.setExceptionIndexTable(exception_table);
       } else if (a instanceof PMGClass) {
         final PMGClass pmgc = (PMGClass) a;
-        pmgc.setPMGClassIndex((Integer) a_map.get(pmgc.getPMGClassIndex()));
+        pmgc.setPMGClassIndex((Integer)
+          dirtyToClean(a_map, getMapping().getPMGClass(pmgc)));
+        pmgc.setPMGIndex((Integer)
+          dirtyToClean(a_map, getMapping().getAttributeSecondValue(pmgc)));
       } else if (a instanceof Signature) {
         final Signature sig = (Signature) a;
-        sig.setSignatureIndex((Integer) a_map.get(sig.getSignatureIndex()));
+        sig.setSignatureIndex((Integer)
+          dirtyToClean(a_map, getMapping().getAttributeSecondValue(sig)));
       }
     }
+  }
+
+  /**
+   * Returns "clean" number for a given "dirty" one. If there is no such
+   * "dirty" number (there is no constant with that number in textual bytecode
+   * representation) size of constant pool + 1 is returned.
+   *
+   * @param a_map a map that maps "dirty" numbers onto "clean" ones; the map
+   * should contain size of the constant pool at the key -1
+   * @param a_num "dirty" number
+   * @return "clean" number corresponding to a given "dirty" one
+   */
+  public int dirtyToClean(final HashMap a_map, final int a_num) {
+    if (a_map.containsKey(a_num)) return (Integer) a_map.get(a_num);
+    return (Integer) a_map.get(-1) + 1;
   }
 
 }

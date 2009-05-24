@@ -182,8 +182,9 @@ public class InstructionParser extends InstructionTypeParser {
    * This method swallows all the characters which are parts of a correct
    * floating point number. The parsing starts from the current position
    * of the index. This method assumes that a number is finished when
-   * automaton {@link AN} accepts it (see Umbra/docs/codedocs/automaton.eps
-   * for automaton schema. The automaton will stop processing number
+   * automaton {@link RegExpAutomaton} accepts it (see
+   * Umbra/docs/codedocs/automaton.eps for automaton schema).
+   * The automaton will stop processing number
    * when it read character for which its current state doesn't have an
    * outgoing edges ot if it will reach end of line. If that current state
    * is an accepting state the automaton accepts number.
@@ -197,7 +198,7 @@ public class InstructionParser extends InstructionTypeParser {
    */
   public boolean swallowFPNumber() {
     final int oldindex = getIndex();
-    final AN automaton = AN.constructAutomaton();
+    final RegExpAutomaton automaton = RegExpAutomaton.constructAutomaton();
     if (!automaton.exec(getLine(), getIndex()))
       return false;
     moveIndex(automaton.getIndex() - oldindex);

@@ -251,15 +251,13 @@ public class BytecodeDocument extends Document {
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
     final BCClass bc = my_bmlp.getBcc();
+    // TODO (to236111) IMPORTANT do attributes need updating of constant pool?
     //TODO take a look at that, probably this should be done in BMLLib
-    for (int i = 0; i < bc.getMethodCount(); i++) {
-      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
-                                                      getConstantPool());
-      bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
-    }
-    // NOTE (to236111) IMPORTANT do attributes need updating of constant pool?
     for (int i = 0; i < bc.getJC().getFields().length; i++) {
       bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());
+    }
+    for (int i = 0; i < bc.getJC().getMethods().length; i++) {
+      bc.getJC().getMethods()[i].setConstantPool(bc.getJC().getConstantPool());
     }
     if (FileNames.CP_DEBUG_MODE) {
       my_bcc.controlPrintCP(this);

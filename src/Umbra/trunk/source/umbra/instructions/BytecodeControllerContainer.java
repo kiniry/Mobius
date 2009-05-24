@@ -45,12 +45,22 @@ public abstract class BytecodeControllerContainer extends
     @*/
 
   /**
+   * This object maps the references to constant pool entries in BCEL
+   * representation of bytecode onto editor lines that represents that entries
+   * (for constants having such editor line) and references to constant pool
+   * entries that was generated automatically when new field was added
+   * from those fields.
+   */
+  private BytecodeMapping my_mapping;
+
+  /**
    * The constructor does only the initialisation of the superclass. It does
    * no initalisation. The initialisation should be done in the
    * initialisation method.
    */
   public BytecodeControllerContainer() {
     super();
+    my_mapping = new BytecodeMapping();
   }
 
   /**
@@ -336,6 +346,19 @@ public abstract class BytecodeControllerContainer extends
       my_editor_lines.remove(j.intValue() - deleted);
       deleted++;
     }
+  }
+
+  /**
+   * Returns the object that maps the references to constant pool entries in
+   * BCEL representation of bytecode onto editor lines that represents that
+   * entries (for constants having such editor line) and references to constant
+   * pool entries that was generated automatically when new field was added
+   * from those fields.
+   *
+   * @return the mapping object
+   */
+  public BytecodeMapping getMapping() {
+    return my_mapping;
   }
 
 }

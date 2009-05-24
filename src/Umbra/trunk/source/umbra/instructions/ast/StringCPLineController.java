@@ -135,15 +135,9 @@ public class StringCPLineController extends CPLineController {
    * existing constant
    */
   public void updateReferences(final HashMap a_map)
-   throws UmbraNoSuchConstantException {
-    if (!a_map.containsKey(getStringReference())) {
-      final NoSuchConstantError an_error = new NoSuchConstantError();
-      an_error.addLine(this);
-      an_error.addNumber(getStringReference());
-      throw new UmbraNoSuchConstantException(an_error);
-    }
-    ((ConstantString) getConstant()).
-    setStringIndex((Integer) a_map.get(getStringReference()));
+    throws UmbraNoSuchConstantException {
+    ((ConstantString) getConstantAccessor()).
+    setStringIndex((Integer) dirtyToClean(a_map, getStringReference()));
   }
 
 }

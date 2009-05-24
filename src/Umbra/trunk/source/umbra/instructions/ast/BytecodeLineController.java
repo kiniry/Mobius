@@ -8,6 +8,8 @@
  */
 package umbra.instructions.ast;
 
+import java.util.HashMap;
+
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -326,4 +328,24 @@ public abstract class BytecodeLineController {
   public int hashCode() {
     return my_line_text.trim().hashCode();
   }
+
+  /**
+   * Returns "clean" number for a given "dirty" one. If there is no such
+   * "dirty" number (there is no constant with that number in textual bytecode
+   * representation) size of constant pool + 1 is returned. <br>
+   * Note: this method was inserted to BytecodeLineController to make it visible
+   * for both instruction and constant pool subclasses.
+   *
+   * @param a_map a map that maps "dirty" numbers onto "clean" ones; the map
+   * should contain size of the constant pool at the key -1
+   * @param a_num "dirty" number
+   * @return "clean" number corresponding to a given "dirty" one
+   *
+   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
+   */
+  protected int dirtyToClean(final HashMap a_map, final int a_num) {
+    if (a_map.containsKey(a_num)) return (Integer) a_map.get(a_num);
+    return (Integer) a_map.get(-1) + 1;
+  }
+
 }
