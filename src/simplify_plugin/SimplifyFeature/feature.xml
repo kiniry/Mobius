@@ -55,6 +55,7 @@ For inquiries please contact: Hewlett-Packard Company.
          id="mobius.simplify.plugin"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="true"/>
 
 </feature>
