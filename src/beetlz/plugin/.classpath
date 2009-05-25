@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="lib/antlr-3.1.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/bonc2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/clops.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/beetlz.jar"/>
+	<classpathentry kind="lib" path="lib/openjml.jar" sourcepath="CCheckerPluginsrc.zip"/>
+	<classpathentry kind="lib" path="lib/CommandlineParser.jar" sourcepath="CCheckerPluginsrc.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry excluding="beetlzplugin/popup/actions/TestAction.java" kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Beetlz"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
