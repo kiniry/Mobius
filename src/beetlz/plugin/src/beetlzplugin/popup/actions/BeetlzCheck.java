@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -105,6 +106,9 @@ public class BeetlzCheck implements IObjectActionDelegate {
   /** The selected project, or at least one of them. */
   private IProject my_project;
 
+  /** The last used specs path, stored so it can be removed from the classpath when changed. */
+  private String lastUsedSpecsPath;
+  
   /**
    * Constructor for Action1.
    */
@@ -198,13 +202,30 @@ public class BeetlzCheck implements IObjectActionDelegate {
    * Prepend the provided path to the start of the system class path, unless it is already present.
    * @param pathToAdd the path to add to the system class path.
    */
-  private static void updateClassPath(String pathToAdd) {
-    String[] cpParts = System.getProperty("java.class.path").split(File.pathSeparator);
-    if (!Arrays.asList(cpParts).contains(pathToAdd)) {
+  private void updateClassPath(String pathToAdd) {
+    
+    if (lastUsedSpecsPath == null || !lastUsedSpecsPath.equals(pathToAdd)) {
+      System.out.println("Old classpath: " + System.getProperty("java.class.path"));
+      List<String> cpParts = Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator));
+      if (lastUsedSpecsPath != null) {
+        cpParts.remove(lastUsedSpecsPath);
+      }
+      List<String> newCPParts = new ArrayList<String>(cpParts.size()+1);
+      newCPParts.add(pathToAdd);
+      newCPParts.addAll(cpParts);
+      StringBuilder newPath = new StringBuilder(File.pathSeparator);
+      for (String path : newCPParts) {
+        newPath.append(path);
+        System.out.println("Added: " + path);
+        newPath.append(File.pathSeparator);
+      }
+            
       System.setProperty("java.class.path",  //$NON-NLS-1$
-          System.getProperty("java.class.path") + //$NON-NLS-2$
-          pathToAdd);
-    }    
+          newPath.toString());
+      System.out.println("New classpath: " + System.getProperty("java.class.path"));
+      lastUsedSpecsPath = pathToAdd;
+    }
+    
   }
   
   /**
