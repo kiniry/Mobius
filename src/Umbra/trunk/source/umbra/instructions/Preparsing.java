@@ -139,14 +139,15 @@ public final class Preparsing {
         a_context.revertState();
       }
     } else if (a_context.isInsideConstantPool()) {
-      /* TODO (to236111) automaton here */
+      /* TODO (to236111) create separate automaton for constant
+       * pool and place it here automaton here */
       if (!PARSE_CP) {
         if (CPLineController.isCPLineStart(a_line)) {
           return new CPLineController(a_line, null);
         }
       }
     } else if (a_context.isInFieldsArea()) {
-      // NOTE (to236111) if the field area is empty methods are next and they
+      // XXX (to236111) if the field area is empty methods are next and they
       // can start with the same words as fields ('public' etc.);
       // it's a rather dirty way to avoid that
       if (!PARSE_CP) {

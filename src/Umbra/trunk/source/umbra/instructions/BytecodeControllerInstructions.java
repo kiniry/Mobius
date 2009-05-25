@@ -93,6 +93,8 @@ public class BytecodeControllerInstructions
                      final String[] a_comment_array,
                      final String[] a_interline)
     throws UmbraLocationException, UmbraMethodException, UmbraSyntaxException {
+    // reset of mapping should be made here to switch constant pool parsing on
+    getMapping().reset();
     final InitParser initParser = new InitParser(a_doc, a_comment_array,
                                                  a_interline);
     final String res = initParser.runParsing();
@@ -117,7 +119,6 @@ public class BytecodeControllerInstructions
    * @param a_doc a bytecode document for which the mapping is set
    */
   public void initializeMapping(final BytecodeDocument a_doc) {
-    getMapping().reset();
     getMapping().setClassNameIndex(a_doc.getJavaClass().getClassNameIndex());
     getMapping().
       setSuperclassNameIndex(a_doc.getJavaClass().getSuperclassNameIndex());

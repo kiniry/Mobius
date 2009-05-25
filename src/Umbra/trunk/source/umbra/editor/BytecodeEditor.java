@@ -8,6 +8,7 @@
 package umbra.editor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -29,6 +30,8 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
@@ -42,6 +45,9 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeRefreshAction;
+import umbra.instructions.Preparsing;
+import umbra.instructions.errors.BytecodeError;
+import umbra.instructions.errors.ErrorReport;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;
 import umbra.lib.FileNames;
@@ -117,6 +123,13 @@ public class BytecodeEditor extends TextEditor {
   private BytecodeDocument my_current_doc;
 
   /**
+   * List of constant pools used to recover original methodgens
+   * state if save failed. <br>
+   * TODO (to236111) NOW explains
+   */
+  private ArrayList < ConstantPoolGen > my_constant_pools;
+
+  /**
    * This constructor creates the class and initialises the default
    * colour manager.
    */
@@ -166,7 +179,18 @@ public class BytecodeEditor extends TextEditor {
     ((BytecodeDocumentProvider)getDocumentProvider()).setRelation(an_editor,
                                       this, getEditorInput(), doc.getBmlp());
   }
-  
+
+  /**
+   * Recovers original methodgens state if save failed.
+   * @param a_doc bytecode document being saved
+   */
+  private void recoverConstantPools(final BytecodeDocument a_doc) {
+    final BCClass bc = a_doc.getBmlp().getBcc();
+    for (int i = 0; i < bc.getMethodCount(); i++) {
+      bc.getMethod(i).getBcelMethod().setConstantPool(my_constant_pools.get(i));
+    }
+  }
+
   /**
    * This method is run automatically while standard Eclipse
    * 'save' action is executed or when Umbra 'refresh' action is performed.
@@ -196,14 +220,31 @@ public class BytecodeEditor extends TextEditor {
     final BytecodeDocument doc = getDocument();
     if (FileNames.CP_DEBUG_MODE) System.err.println("update bml");
 
-    // TODO (to236111) NOW because it was moved here, the bytecode won't be
-    // correct without save
-    // TODO (to236111) NOW error handling
-    final BCClass bc = doc.getBmlp().getBcc();
-    for (int i = 0; i < bc.getMethodCount(); i++) {
-      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
+    System.err.println(doc.getModel().getMapping().getClassNameIndex());
+
+    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP) {
+      // TODO (to236111) NOW because it was moved here, the bytecode won't be
+      // correct without save
+      // TODO (to236111) NOW rollback if not saved
+      final BCClass bc = doc.getBmlp().getBcc();
+      my_constant_pools = new ArrayList < ConstantPoolGen > ();
+      final ErrorReport a_report =
+        doc.getModel().getErrorReport(doc.getJavaClass());
+      if (a_report.getErrors().size() > 0) {
+        final MessageBox msgBox = new MessageBox(getSite().getShell(),
+          SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+        msgBox.setMessage(GUIMessages.constantPoolError(a_report));
+        msgBox.setText(GUIMessages.BYTECODE_MESSAGE_TITLE);
+        final int res = msgBox.open();
+        if (res != SWT.YES) return false;
+      }
+      for (int i = 0; i < bc.getMethodCount(); i++) {
+        final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
                                                       getConstantPool());
-      bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
+        my_constant_pools.add(bc.getMethod(i).
+                              getBcelMethod().getConstantPool());
+        bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
+      }
     }
 
     if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
@@ -224,6 +265,7 @@ public class BytecodeEditor extends TextEditor {
       MessageDialog.openError(getSite().getShell(),
                               GUIMessages.BYTECODE_MESSAGE_TITLE,
                               "Failed to initialize bytecode verifier");
+      recoverConstantPools(doc);
       return false;
     }
     final ResultPresenter presenter = my_verification_factory
@@ -231,13 +273,16 @@ public class BytecodeEditor extends TextEditor {
     final SaveConfirmer confirmer = my_verification_factory
         .getSaveConfirmer(presenter);
     if (!confirmer.confirm()) {
+      recoverConstantPools(doc);
       return false;
     }
 
     final IDocumentProvider p = getDocumentProvider();
     final Shell shell = getSite().getShell();
-    if (p == null)
+    if (p == null) {
+      recoverConstantPools(doc);
       return false;
+    }
     if (p.isDeleted(getEditorInput())) {
       if (isSaveAsAllowed()) {
         my_logger.fine("save as is allowed");
@@ -278,6 +323,10 @@ public class BytecodeEditor extends TextEditor {
    * {@link BytecodeRefreshAction} and calls its
    * {@link BytecodeRefreshAction#run()} method, which in turn calls
    * saveBytecode(). <br> <br>
+   * TODO (to236111) NOW document is still marked as unsaved after save
+   * <br> <br>
+   * TODO (to236111) NOW check whether the mapping should always be
+   * not reinitialized when action returns false
    *
    * See {@link BytecodeEditor#saveBytecode(IProgressMonitor)}.
    *
@@ -290,8 +339,9 @@ public class BytecodeEditor extends TextEditor {
       new BytecodeRefreshAction(contributor,
                                 contributor.getBytecodeContribution());
     action.setActiveEditor(this);
-    action.run();
-    getDocument().getModel().initializeMapping(getDocument());
+    if (action.doRun()) {
+      getDocument().getModel().initializeMapping(getDocument());
+    }
   }
 
   /**

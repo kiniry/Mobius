@@ -201,9 +201,6 @@ public class BytecodeContribution extends ControlContribution {
       final Shell sh = my_editor.getEditorSite().getShell();
       try {
         a_doc.updateFragment(a_start, an_oldend, a_newend);
-        /* TODO (to236111) for constant pool changes it should be only
-         * enabled in case the constant pool is correct
-         */
         my_editor.getAction(BytecodeEditorContributor.REFRESH_ID).
                  setEnabled(true);
       } catch (UmbraException e) {

@@ -10,11 +10,13 @@ package umbra.instructions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.ExceptionTable;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.PMGClass;
 import org.apache.bcel.classfile.Signature;
@@ -109,7 +111,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           blc instanceof InstructionLineController ||
           blc instanceof CommentLineController ||
           blc instanceof UnknownLineController ||
-         (Preparsing.PARSE_CP && blc instanceof CPLineController)) {
+         (
+             Preparsing.PARSE_CP && blc instanceof CPLineController)) {
         i--;
       } else {
         break;
@@ -187,9 +190,25 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     final FragmentParser fgmparser = new FragmentParser(
       (BytecodeDocument)a_doc, a_start_rem, a_stop, methodno);
     final LineContext ctxt = establishCurrentContext(a_start_rem);
+    if (ctxt.isInsideConstantPool() && !getMapping().isCPEditionAllowed())
+      throw new UmbraException();
     fgmparser.runParsing(ctxt);
                             // after that I must know all the instructions are
                             //correct
+    /*for (int i = 0; i < fgmparser.getEditorLinesPreserve().size(); i++) {
+      final BytecodeLineController blc =
+        (BytecodeLineController) fgmparser.getEditorLinesPreserve().get(i);
+      if (blc instanceof FieldLineController) {
+        getMapping().setCPEditionAllowed(false);
+      }
+      System.err.println(blc.getLineContent());
+    }*/
+    for (Field f : a_doc.getJavaClass().getFields()) {
+      if (!getMapping().containsField(f)) {
+        getMapping().setCPEditionAllowed(false);
+        break;
+      }
+    }
     final LineContext ctxtold = establishCurrentContext(a_start_rem);
     if (ctxtold.isInsideConstantPool()) {
       doSpecialHandlingForCP();
@@ -204,13 +223,15 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     updateComments(a_start_rem, an_end_rem, a_stop, fgmparser.getComments());
     updateEditorLines(a_start_rem, an_end_rem, a_stop,
                       fgmparser.getEditorLines(), ctxtold, a_doc);
-    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP)
+    if (getMapping().isCPEditionAllowed() &&
+        Preparsing.PARSE_CP && Preparsing.UPDATE_CP) {
       updateBMLCPRepresentation(a_doc, a_start_rem, an_end_rem, a_stop,
                                 old_lines, old_lines_index);
-    try {
-      a_doc.updateBML();
-    } catch (umbra.lib.UmbraCPRecalculationException e) {
-      e.printStackTrace();
+      try {
+        a_doc.updateBML();
+      } catch (umbra.lib.UmbraCPRecalculationException e) {
+        e.printStackTrace();
+      }
     }
     if (FileNames.DEBUG_MODE) controlPrint(1);
     if (FileNames.CP_DEBUG_MODE) controlPrintCP(a_doc);
@@ -317,8 +338,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   /**
    * The method performs the special handling for areas which contain constant
    * pools. Currently, it does nothing.
-   *
-   * NOTE (to236111) unnecessary because of updateBMLCPRepresentation()?
+   * <br> <br>
+   * XXX (to236111) unnecessary because of updateBMLCPRepresentation()?
    */
   private void doSpecialHandlingForCP() {
   }
@@ -698,7 +719,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     throws UmbraCPRecalculationException {
     if (!Preparsing.PARSE_CP || !Preparsing.UPDATE_CP) return;
     int const_no = 0;
-    // XXX (to236111) why this is necessary?
+    // XXX (to236111) why is this necessary?
     for (int i = 0; i < getNoOfLines(); i++) {
       if (getLineController(i) instanceof CPLineController) {
         const_no++;
@@ -709,8 +730,6 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     // TODO (to236111) use templates
     final HashMap f = new HashMap();
-    final HashMap conflict = new HashMap();
-    final ErrorReport a_report = new ErrorReport();
     f.put(-1, a_jc.getConstantPool().getLength());
     /*
      * XXX (to236111) changing the index of those two constants forbidden
@@ -718,28 +737,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
      */
     final int class_name_index = getMapping().getClassNameIndex();
     final int super_class_name_index = getMapping().getSuperclassNameIndex();
-    if (FileNames.CP_DEBUG_MODE) System.err.println("detecting conflicts");
-    for (int i = 0; i < getNoOfLines(); i++) {
-      final BytecodeLineController lc = getLineController(i);
-      if (lc instanceof CPLineController) {
-        final CPLineController cplc = (CPLineController) lc;
-        final int no = cplc.getConstantNumber();
-        if (!conflict.containsKey(no)) {
-          final ConflictingCPNumbersError an_error =
-            new ConflictingCPNumbersError();
-          an_error.addLine(cplc);
-          conflict.put(no, an_error);
-        } else {
-          ((ConflictingCPNumbersError) conflict.get(no)).addLine(cplc);
-        }
-      }
-    }
-    for (Object o : conflict.values()) {
-      final ConflictingCPNumbersError cpne = (ConflictingCPNumbersError) o;
-      if (cpne.getLines().size() > 1) a_report.addError(cpne);
-    }
     int entry_no = 1;
-    if (FileNames.CP_DEBUG_MODE) System.err.println("updating pool entries");
+    if (FileNames.CP_DEBUG_MODE) System.err.println("creating map");
     for (int i = 0; i < getNoOfLines(); i++) {
       final BytecodeLineController lc = getLineController(i);
       if (lc instanceof CPLineController) {
@@ -748,17 +747,14 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         entry_no++;
       }
     }
-    if (FileNames.CP_DEBUG_MODE) System.err.println("updating instructions");
+    if (FileNames.CP_DEBUG_MODE)
+      System.err.println("updating pool and instructions");
     for (int i = 0; i < getNoOfLines(); i++) {
       final BytecodeLineController lc = getLineController(i);
       if (lc instanceof CPLineController) {
         final CPLineController cplc = (CPLineController) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
-        try {
-          cplc.updateReferences(f);
-        } catch (UmbraNoSuchConstantException e) {
-          a_report.addError(e.getError());
-        }
+        cplc.updateReferences(f);
       } else if (lc instanceof MultiInstruction) {
         final MultiInstruction mi = (MultiInstruction) lc;
         if (FileNames.CP_DEBUG_MODE) System.err.println(lc.getLineContent());
@@ -767,19 +763,12 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
             throw new UmbraException();
           mi.updateReferences(f, pos);
-        } catch (UmbraNoSuchConstantException e) {
-          a_report.addError(e.getError());
         } catch (UmbraException e) {
           // TODO (to236111) exception handling
           e.printStackTrace();
         }
       }
     }
-    if (!a_report.noErrors()) {
-      throw new UmbraCPRecalculationException(a_report);
-    }
-    // TODO (to236111) IMPORTANT also do checking for non existent constants
-    // in the following code (or maybe verificator will detect?)
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating attributes");
     recalculateCPNumbersForAttributes(a_jc, f);
     if (FileNames.CP_DEBUG_MODE) System.err.println("updating fields");
@@ -809,7 +798,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * in BCEL representation of bytecode. It changes the references from "dirty"
    * to "clean" numbers. <br> <br>
    *
-   * TODO (to236111) correctness for ExceptionTable not checked
+   * TODO (to236111) correctness for ExceptionTable not tested (and generally
+   * how exceptions work with constant pool editor)
    *
    * @param a_jc a BCEL representation of bytecode
    * @param a_map mapping from "dirty" to "clean" numbers
@@ -864,6 +854,63 @@ public final class BytecodeController extends BytecodeControllerInstructions {
   public int dirtyToClean(final HashMap a_map, final int a_num) {
     if (a_map.containsKey(a_num)) return (Integer) a_map.get(a_num);
     return (Integer) a_map.get(-1) + 1;
+  }
+
+  /**
+   * Checks if there are any conflicting constant numbers in bytecode
+   * representation of constant pool or are there any references to
+   * non-existing constants. <br> <br>
+   *
+   * TODO (to236111) NOW also do checking for non existent constants
+   * in attributes etc. (or maybe verificator will detect?)
+   *
+   * @param a_jc a BCEL representation of bytecode
+   * @return error report
+   */
+  public ErrorReport getErrorReport(final JavaClass a_jc) {
+    final HashSet < Integer > existing = new HashSet < Integer > ();
+    final HashMap conflict = new HashMap();
+    final ErrorReport a_report = new ErrorReport();
+    if (FileNames.CP_DEBUG_MODE) System.err.println("detecting conflicts");
+    for (int i = 0; i < getNoOfLines(); i++) {
+      final BytecodeLineController lc = getLineController(i);
+      if (lc instanceof CPLineController) {
+        final CPLineController cplc = (CPLineController) lc;
+        existing.add(cplc.getConstantNumber());
+        final int no = cplc.getConstantNumber();
+        if (!conflict.containsKey(no)) {
+          final ConflictingCPNumbersError an_error =
+            new ConflictingCPNumbersError();
+          an_error.addLine(cplc);
+          conflict.put(no, an_error);
+        } else {
+          ((ConflictingCPNumbersError) conflict.get(no)).addLine(cplc);
+        }
+      }
+    }
+    for (Object o : conflict.values()) {
+      final ConflictingCPNumbersError cpne = (ConflictingCPNumbersError) o;
+      if (cpne.getLines().size() > 1) a_report.addError(cpne);
+    }
+    for (int i = 0; i < getNoOfLines(); i++) {
+      final BytecodeLineController lc = getLineController(i);
+      if (lc instanceof CPLineController) {
+        final CPLineController cplc = (CPLineController) lc;
+        try {
+          cplc.checkCorrectness(existing);
+        } catch (UmbraNoSuchConstantException e) {
+          a_report.addError(e.getError());
+        }
+      } else if (lc instanceof MultiInstruction) {
+        final MultiInstruction mlc = (MultiInstruction) lc;
+        try {
+          mlc.checkCorrectness(existing);
+        } catch (UmbraNoSuchConstantException e) {
+          a_report.addError(e.getError());
+        }
+      }
+    }
+    return a_report;
   }
 
 }

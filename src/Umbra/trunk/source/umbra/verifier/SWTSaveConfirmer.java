@@ -12,13 +12,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import umbra.lib.GUIMessages;
+
 /**
  * This class is used during saving a bytecode file. If a
  * bytecode verification error occurs it creates dialog
  * window which asks user whether to proceed with saving the
  * file or not.
- *
- * TODO (to236111) add window which presents verification results
  *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @version a-01
@@ -54,10 +54,7 @@ public class SWTSaveConfirmer extends SaveConfirmer {
    * This method is called during saving a bytecode file. If a
    * bytecode verification error occurs it creates dialog
    * window which asks user whether to proceed with saving the
-   * file or not
-   *
-   * TODO (to236111) add constants in GUIMessages for error message
-   * and window title
+   * file or not.
    *
    * @return <code>true</code> if there weren't any verification
    * errors, user decision otheriwse
@@ -69,8 +66,8 @@ public class SWTSaveConfirmer extends SaveConfirmer {
       final MessageBox msgBox =
         new MessageBox(my_shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
       msgBox.
-      setMessage("Errors occured during bytecode verification. Save anyway?");
-      msgBox.setText("Verification errors");
+      setMessage(GUIMessages.VERIFICATION_ERROR_MESSAGE);
+      msgBox.setText(GUIMessages.VERIFICATION_MESSAGE_TITLE);
       final int res = msgBox.open();
       return (res == SWT.YES);
     } else {

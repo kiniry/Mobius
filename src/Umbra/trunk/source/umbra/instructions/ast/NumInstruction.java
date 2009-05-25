@@ -9,8 +9,11 @@
 package umbra.instructions.ast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import umbra.instructions.InstructionParser;
+import umbra.instructions.errors.NoSuchConstantError;
+import umbra.lib.UmbraNoSuchConstantException;
 
 
 /**
@@ -122,6 +125,20 @@ public class NumInstruction extends MultiInstruction {
    * @param a_pos position in method
    */
   public void updateReferences(final HashMap a_map, final int a_pos) {
+
+  }
+
+  /**
+   * This method checks if there are any references to non-existing
+   * constant from this instruction, and throws exception in such case.
+   * <br> <br>
+   * This method does nothing, because this class represents instructions
+   * that do not have any reference to constant pool entries.
+   *
+   * @param a_set a set of constant numbers in textual representation
+   * of bytecode
+   */
+  public void checkCorrectness(final HashSet a_set) {
 
   }
 

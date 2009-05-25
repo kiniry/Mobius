@@ -9,6 +9,7 @@
 package umbra.instructions.ast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.apache.bcel.generic.MethodGen;
 
@@ -175,6 +176,28 @@ public class MultiInstruction extends InstructionLineController {
     makeHandleForPosition(getMethod(), pos);
 
     my_use_stored_ind = false;
+  }
+
+  /**
+   * This method checks if there are any references to non-existing
+   * constant from this instruction, and throws exception in such case.
+   *
+   * @param a_set a set of constant numbers in textual representation
+   * of bytecode
+   * @throws UmbraNoSuchConstantException if there is reference from
+   * this instruction to non-existing constant
+   */
+  public void checkCorrectness(final HashSet a_set)
+    throws UmbraNoSuchConstantException {
+    if (!correct()) return;
+    getInd();
+    if (!my_has_ind) return;
+    if (!a_set.contains(getInd())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getInd());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
   }
 
   /**

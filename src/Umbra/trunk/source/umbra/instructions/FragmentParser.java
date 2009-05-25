@@ -153,7 +153,7 @@ public class FragmentParser extends BytecodeCommentParser {
   }
 
   /**
-   * NOTE (to236111) current method???
+   * XXX (to236111) REMOVE current method???
    * This method parses a fragment of a constant pool. The fragment is delimited
    * with {@code a_start} and {@code my_end} (inclusively). The line context
    * gives the number of the current method and should be set in the

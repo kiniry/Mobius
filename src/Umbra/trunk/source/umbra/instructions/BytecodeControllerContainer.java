@@ -312,9 +312,9 @@ public abstract class BytecodeControllerContainer extends
    * from {@code a_start} to {@code a_stop} inclusively. This method
    * also removes the connection between the removed lines and the BCEL
    * representation of the byte code.
-   *
-   * NOTE (to236111) it uses index to remove lines from my_editor_lines because
-   * equals for EmptyLineController always returns true
+   * <br> <br>
+   * It uses index to remove lines from my_editor_lines because
+   * equals for EmptyLineController always returns true.
    *
    * @param a_start the first line to be removed
    * @param a_stop the last line to be removed

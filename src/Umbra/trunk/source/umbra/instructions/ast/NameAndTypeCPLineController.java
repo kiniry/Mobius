@@ -9,6 +9,7 @@
 package umbra.instructions.ast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantNameAndType;
@@ -164,15 +165,39 @@ public class NameAndTypeCPLineController extends CPLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
-   * @throws UmbraNoSuchConstantException when "dirty" numbers refer to non
-   * existing constants
    */
-  public void updateReferences(final HashMap a_map)
-    throws UmbraNoSuchConstantException {
+  public void updateReferences(final HashMap a_map) {
     ((ConstantNameAndType) getConstantAccessor()).
     setNameIndex((Integer) dirtyToClean(a_map, getNameReference()));
     ((ConstantNameAndType) getConstantAccessor()).
     setSignatureIndex((Integer) dirtyToClean(a_map, getTypeReference()));
+  }
+
+  /**
+   * This method checks if there are any references to non-existing
+   * constant from this constant, and throws exception in such case.
+   *
+   * @param a_set a set of constant numbers in textual representation
+   * of bytecode
+   * @throws UmbraNoSuchConstantException if there is reference from
+   * this constant to non-existing constant
+   */
+  public void checkCorrectness(final HashSet a_set)
+    throws UmbraNoSuchConstantException {
+    if (!a_set.contains(getNameReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getNameReference());
+      if (!a_set.contains(getTypeReference())) {
+        an_error.addNumber(getTypeReference());
+      }
+      throw new UmbraNoSuchConstantException(an_error);
+    } else if (!a_set.contains(getTypeReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getTypeReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
   }
 
 }

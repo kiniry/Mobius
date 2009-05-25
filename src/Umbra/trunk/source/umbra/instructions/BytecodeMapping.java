@@ -40,6 +40,13 @@ public class BytecodeMapping {
   private IdentityHashMap < Field, Integer > my_field_signatures;
 
   /**
+   * Determines whether to allow constant pool edition. It should be
+   * true in all cases with exception of situation when new field was
+   * added and bytecode wasn't refreshed or saved.
+   */
+  private boolean my_cp_edition_allowed;
+
+  /**
    * Contains mapping of method names.
    */
   private IdentityHashMap < Method, Integer > my_method_names;
@@ -111,6 +118,7 @@ public class BytecodeMapping {
     my_attribute_second_indices = new IdentityHashMap < Attribute, Integer > ();
     my_pmg_classes = new IdentityHashMap < PMGClass, Integer > ();
     my_exception_tables = new IdentityHashMap < ExceptionTable, int[] > ();
+    my_cp_edition_allowed = true;
   }
 
   /**
@@ -409,12 +417,42 @@ public class BytecodeMapping {
     return my_superclass_name_index;
   }
 
-  public Object[] getAttributes() {
+  /**
+   *
+   * @param a_field a field which the method checks whether
+   * there is a mapping stored for
+   * @return true if there is a mapping stored in this object
+   * for field a_field
+   */
+  public boolean containsField(final Field a_field) {
+    return my_field_names.containsKey(a_field);
+  }
+
+  /*public Object[] getAttributes() {
     return my_attribute_names.keySet().toArray();
   }
 
   public Object[] getMethods() {
     return my_method_names.keySet().toArray();
+  }*/
+
+  /**
+   * Sets whether constant pool edition should be allowed.
+   *
+   * @param a_b <code>true</code> if constant pool edition should be allowed,
+   * <code>false</code> otherwise
+   */
+  public void setCPEditionAllowed(final boolean a_b) {
+    my_cp_edition_allowed = a_b;
+  }
+
+  /**
+   *
+   * @return <code>true</code> if constant pool edition is allowed,
+   * <code>false</code> otherwise
+   */
+  public boolean isCPEditionAllowed() {
+    return my_cp_edition_allowed;
   }
 
 }

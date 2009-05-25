@@ -166,6 +166,16 @@ public abstract class BytecodeTextParser {
   }
 
   /**
+   * Returns the list of all the lines in the internal representation.
+   *
+   * @return the list of the {@link BytecodeLineController} objects that
+   *   represent all the lines in the currently parsed document
+   */
+  public LinkedList getEditorLinesPreserve() {
+    return my_editor_lines;
+  }
+
+  /**
    * This method adds the specified line controller at the specified position.
    * It shifts the element currently at that position (if any) and any
    * subsequent elements to the right (adds one to their indices).

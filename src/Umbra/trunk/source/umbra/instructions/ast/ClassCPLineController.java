@@ -9,6 +9,7 @@
 package umbra.instructions.ast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import umbra.lib.BytecodeStrings;
 import umbra.lib.UmbraNoSuchConstantException;
@@ -134,13 +135,29 @@ public class ClassCPLineController extends CPLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
-   * @throws UmbraNoSuchConstantException when "dirty" number refers to non
-   * existing constant
    */
-  public void updateReferences(final HashMap a_map)
-    throws UmbraNoSuchConstantException {
+  public void updateReferences(final HashMap a_map) {
     ((ConstantClass) getConstantAccessor()).setNameIndex((Integer)
       dirtyToClean(a_map, getClassReference()));
+  }
+
+  /**
+   * This method checks if there are any references to non-existing
+   * constant from this constant, and throws exception in such case.
+   *
+   * @param a_set a set of constant numbers in textual representation
+   * of bytecode
+   * @throws UmbraNoSuchConstantException if there is reference from
+   * this constant to non-existing constant
+   */
+  public void checkCorrectness(final HashSet a_set)
+    throws UmbraNoSuchConstantException {
+    if (!a_set.contains(getClassReference())) {
+      final NoSuchConstantError an_error = new NoSuchConstantError();
+      an_error.addLine(this);
+      an_error.addNumber(getClassReference());
+      throw new UmbraNoSuchConstantException(an_error);
+    }
   }
 
 }

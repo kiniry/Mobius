@@ -9,6 +9,7 @@
 package umbra.instructions.ast;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import umbra.instructions.InstructionParser;
 import umbra.lib.BytecodeStrings;
@@ -21,13 +22,10 @@ import org.apache.bcel.classfile.Constant;
  * This is a class for lines in bytecode files inside the constant pool.
  * <br> <br>
  *
- * TODO (to236111) should be made abstract after removing old implementation
+ * TODO (to236111) NOW should be made abstract after removing old implementation
  * ({@link umbra.instructions.Preparsing#getTypeForInsides(String,
  * LineContext, BMLParsing)})
  * <br> <Br>
- *
- * TODO (to236111) add parameter fields to avoid mulitple parsings of the
- * same line?
  *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
@@ -54,7 +52,7 @@ public class CPLineController extends BytecodeLineController {
 
   /**
    * The parser to parse the contents of the constant pool line.
-   * NOTE (to236111) already exists in superclass
+   * XXX (to236111) already exists in superclass
    */
   // private InstructionParser my_parser;
 
@@ -67,7 +65,7 @@ public class CPLineController extends BytecodeLineController {
   /**
    * The keyword which identifies the type of the current constant pool
    * constant.
-   * NOTE (to236111) reimplemented using subclasses
+   * XXX (to236111) REMOVE reimplemented using subclasses
    */
   // private int my_keyword;
 
@@ -175,7 +173,7 @@ public class CPLineController extends BytecodeLineController {
    *   <code>true</code> and the parsing of the content of the constant pool
    *   entry, <code>false</code> otherwise
    *
-   *   NOTE (to236111) reimplemented in subclasses
+   *   XXX (to236111) REMOVE reimplemented in subclasses
    *
    */
   /* private boolean parseEntry(final boolean an_utonow) {
@@ -266,10 +264,23 @@ public class CPLineController extends BytecodeLineController {
    * representation of constant needed in case of UmbraCPRecalculationException
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
-   * @throws UmbraNoSuchConstantException when "dirty" number refers to non
-   * existing constant
    */
-  public void updateReferences(final HashMap a_map)
+  public void updateReferences(final HashMap a_map) {
+
+  }
+
+  /**
+   * This method checks if there are any references to non-existing
+   * constant from this constant, and throws exception in such case.
+   * <br> <br>
+   * Implemented in subclasses.
+   *
+   * @param a_set a set of constant numbers in textual representation
+   * of bytecode
+   * @throws UmbraNoSuchConstantException if there is reference from
+   * this constant to non-existing constant
+   */
+  public void checkCorrectness(final HashSet a_set)
     throws UmbraNoSuchConstantException {
 
   }

@@ -11,6 +11,9 @@ package umbra.lib;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import umbra.instructions.errors.BytecodeError;
+import umbra.instructions.errors.ErrorReport;
+
 /**
  * This is just container for texts of all the GUI messages.
  *
@@ -52,6 +55,13 @@ public final class GUIMessages {
    * connection with the byte code text editor.
    */
   public static final String BYTECODE_MESSAGE_TITLE = "Bytecode";
+
+  /**
+   * A string used as a generic header in the message panes launched in
+   * connection with the byte code verification.
+   */
+  public static final String VERIFICATION_MESSAGE_TITLE =
+    "Bytecode verification";
 
   /**
    * A string used as a header in the message panes launched in connection
@@ -355,6 +365,28 @@ public final class GUIMessages {
    */
   public static final String REPRESENTATION_ERROR_MESSAGE =
     "Problem in establishing internal representation: " + SUBSTITUTE;
+
+  /**
+   * The message informs the user that the verification of bytecode ended
+   * with error.
+   */
+  public static final String VERIFICATION_ERROR_MESSAGE =
+    "Errors occured during bytecode verification. Save anyway?";
+
+  /**
+   * The message informs the user that errors in textual representation
+   * of bytecode has been detected and list those errors.
+   * @param a_report error report
+   * @return message
+   */
+  public static String constantPoolError(final ErrorReport a_report) {
+    String message = "Following errors occured:\n";
+    for (BytecodeError e : a_report.getErrors()) {
+      message += e.getShortErrorMessage() + "\n";
+    }
+    message += "Save anyway?";
+    return message;
+  }
 
   /**
    * The empty constructor to forbid the creation of the instances.

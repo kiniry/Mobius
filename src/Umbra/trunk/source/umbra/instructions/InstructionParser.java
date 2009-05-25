@@ -75,7 +75,7 @@ public class InstructionParser extends InstructionTypeParser {
     if (oldindex == index)
       return false; //no digits were read
     if (index < line.length() &&
-    /* TODO (to236111) semicolon added for constant pool handling,
+    /* XXX (to236111) semicolon added for constant pool handling,
      * creating separate function may be better
      */
       !Character.isWhitespace(line.charAt(index)) &&

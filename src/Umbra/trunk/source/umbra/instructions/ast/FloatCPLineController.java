@@ -90,9 +90,9 @@ public class FloatCPLineController extends CPLineController {
    *
    * This method retrieves the floating point parameter of the
    * constant pool entry in {@link BytecodeLineController#getMy_line_text()}.
-   * This parameter is located after the constant pool entry keyword. The
-   * method assumes {@link BytecodeLineController#getMy_line_text()} is correct.
-   * <br> <br> NOTE (to236111) above sentence is false
+   * This parameter is located after the constant pool entry keyword. In case
+   * the {@link BytecodeLineController#getMy_line_text()} is not correct we
+   * catch and ignore exception to allow editing.
    *
    * @return the floating point parameter of the constant pool entry
    */

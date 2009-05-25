@@ -233,10 +233,7 @@ public class BytecodeDocument extends Document {
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for
    * explantation of "dirty" and "clean" numbers. <br> <br>
    *
-   * TODO (to236111) merge with updateJavaClass()? and move to some more
-   * proper object (BCClass?, BytecodeController?) <br> <br>
-   *
-   * TODO (to236111) IMPORTANT check whether non rollbacked changes in
+   * TODO (to236111) NOW check whether non rollbacked changes in
    * recalculateCPNumbers and objects which would be modified if not
    * for UmbraCPRecalculationException does not conflict in case of
    * that exception
@@ -251,7 +248,7 @@ public class BytecodeDocument extends Document {
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
     final BCClass bc = my_bmlp.getBcc();
-    // TODO (to236111) IMPORTANT do attributes need updating of constant pool?
+    // TODO (to236111) do attributes need updating of constant pool?
     //TODO take a look at that, probably this should be done in BMLLib
     for (int i = 0; i < bc.getJC().getFields().length; i++) {
       bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());

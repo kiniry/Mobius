@@ -69,19 +69,28 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
   }
 
   /**
+   * Wrapper method for {@link BytecodeRefreshAction#doRun()}.
+   */
+  public final void run() {
+    doRun();
+  }
+
+  /**
    * This method saves the editor content in the files .btc. and .class
    * associated with it and then creates a new input from the .class file.
    * Finally replaces content of the editor window with the newly generated
    * text. The general idea is that the current modifications are stored
    * in a file and then retrieved back to the editor to obtain a nicely
    * formatted presentation of the code.
+   * @return <code>true</code> if action succeeded, <code>false</code> if
+   * error occured
    */
-  public final void run() {
+  public final boolean doRun() {
     final Shell parent = getEditor().getSite().getShell();
     final BytecodeEditor my_editor = getEditor();
 
     final int topvisible = my_editor.getVisibleRegion();
-    if (!my_editor.saveBytecode(null)) return;
+    if (!my_editor.saveBytecode(null)) return false;
     final FileEditorInput input = (FileEditorInput)my_editor.getEditorInput();
     final IFile file = input.getFile();
     try {
@@ -95,6 +104,7 @@ public class BytecodeRefreshAction extends BytecodeEditorAction {
     } catch (UmbraRepresentationException e) {
       wrongRepresentationMessage(parent, getDescription(), e);
     }
+    return true;
   }
 
   /**

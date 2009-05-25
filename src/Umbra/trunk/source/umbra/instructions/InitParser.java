@@ -366,7 +366,7 @@ public class InitParser extends BytecodeCommentParser {
       line = getLineFromDoc(my_doc, num, a_ctxt);
       lc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
       if (!(lc instanceof CPLineController)) {
-        /* NOTE (to236111) it only works if all contant pool lines are
+        /* XXX (to236111) it only works if all contant pool lines are
          * correct and not separated by empty lines (which should be true
          * when loaded from .class file) */
         break;
