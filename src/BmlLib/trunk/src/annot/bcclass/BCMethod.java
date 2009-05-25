@@ -453,7 +453,8 @@ public class BCMethod {
    *
    * @param amspec - new method specification.
    */
-  public void setMspec(final MethodSpecificationAttribute /*@ non_null @*/ amspec) {
+  public void setMspec(
+      final MethodSpecificationAttribute /*@ non_null @*/ amspec) {
     this.mspec = amspec;
   }
 

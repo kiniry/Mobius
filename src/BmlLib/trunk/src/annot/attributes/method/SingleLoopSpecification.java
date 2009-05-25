@@ -73,7 +73,7 @@ public class SingleLoopSpecification extends InCodeAnnotation {
                                  final BCExpression adecreases) {
     super(m, ih, minor);
     this.invariant = setNewExpression(ainvariant, new Predicate0Ar(true));
-    this.variant = setNewExpression(ainvariant, new NumberLiteral(1));
+    this.variant = setNewExpression(adecreases, new NumberLiteral(1));
   }
 
   /**

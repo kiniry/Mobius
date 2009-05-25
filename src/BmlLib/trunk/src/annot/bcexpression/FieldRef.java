@@ -13,7 +13,7 @@ import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
 /**
- * This class represents field reference occurence.
+ * This class represents field reference occurrence.
  * One <code>FieldRef</code> per one field reference
  * occurence.
  *

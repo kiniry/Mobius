@@ -12,6 +12,30 @@ package annot.textio;
 public class DisplayStyle {
 
   /**
+   * This constant contains an array with all the BML keywords.
+   * The BML lines are handled by
+   * {@link umbra.instructions.ast.AnnotationLineController} class.
+   *
+   * FIXME: this should be retrieved from BMLlib;
+   *   https://mobius.ucd.ie/ticket/551
+   */
+  public static final String[] BML_KEYWORDS = new String[] {
+    "invariant",
+    "assert",
+    "requires",
+    "{|",
+    "|}",
+    "precondition",
+    "modifies",
+    "ensures",
+    "exsures",
+    "\\result",
+    "loop_specification",
+    "modifies",
+    "loop_inv",
+    "decreases"};
+  
+  /**
    * Java keyword for package.
    */
   public static final String PACKAGE_KWD = "package";
