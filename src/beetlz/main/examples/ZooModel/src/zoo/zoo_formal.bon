@@ -1,0 +1,272 @@
+indexing
+  about:        "A test zoo.";
+  title:        "Zoo model";
+  author:       "Evka";
+  copyright:    "none";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "March 2009";
+  version:      "Revision: 1";
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ZOO       
+-- a test zoo.
+component 
+
+-- Test of generic and compound types
+class ENCLOSURE 	--
+indexing
+	about: "some explanation"
+feature
+   	count: INTEGER 
+   	animalCapacity: VALUE
+   	accomodateAnimal: BOOLEAN
+   		-> animal: SEQUENCE[ANIMAL] 
+   		ensure
+   			delta ANY;
+   		end 		
+   	removeAnimal: SET[ANIMAL]
+   		-> animal: SEQUENCE[ANIMAL] 
+   		ensure
+   			delta ANY;
+   		end 
+   	moveAnimal  
+   		-> newPlace: CAGE
+   		-> reason: STRING
+   	addAnimals
+   		-> animals: TABLE[ANIMAL, STRING]
+   	nameAnimal
+   		-> name: STRING
+end 
+
+ 
+class WATERPARK -- A wet cage.
+
+--Test for generics
+class TERRARIUM--[T -> ANIMAL, S] -- A warm cage.
+inherit  
+	ENCLOSURE
+feature
+	temperature: SET[ANY]
+	regulateTemperature
+		-> temps: Set[INTEGER]
+	heatUp: SET[SET[STRING]]  
+end -- end class Terrarium
+
+class CAGE[T -> ANIMAL]
+feature
+	numSnakes, numMice, numBugs, numCats: INTEGER
+	occupants: SEQUENCE[ANIMAL]
+	count: INTEGER
+	maxCapacity: INTEGER
+		ensure
+			Result = 50;
+		end
+	putIn
+		-> newOccupant: ANIMAL
+		require
+			occupants.size < maxCapacity;
+		ensure
+			count = old(count) + 1;
+		end
+	remove
+		-> toGo: ANIMAL
+		require
+			count > 0;
+			occupants.contains(toGo);
+		ensure
+			count /= old(count); 
+		end
+invariant
+	numCats < numMice;
+	numBugs < 100;
+	numMice >= 50;
+  	numSnakes <= 10;
+end
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ANIMALS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+deferred class ANIMAL -- An abstract animal.
+indexing    
+  about:  "An abstract animal.";
+  author: "Evka";
+  version: "1";
+feature
+  	weight, feedingFrequency: VALUE
+  	place: ENCLOSURE
+  	sleeping: BOOLEAN
+  	deferred wakeUp
+  	scareAwake
+end 
+
+class ZEBRA -- A zebra animal. With stripes. Preferably black and white.
+feature
+	weight: INTEGER
+	hungry: BOOLEAN
+	pissed: BOOLEAN
+	stripes: SEQUENCE[STRING]
+	feed
+		-> amount: VALUE
+		ensure
+			delta {hungry, asleep};
+			sleeping -> pissed = true;
+		end  
+	
+	wakeUp
+		require
+			asleep = true;
+		ensure
+			delta asleep;
+			asleep = false;
+		end
+	makePicture
+	paintOver
+		ensure
+			delta stripes;
+		end
+feature{ZEBRA}
+	asleep: BOOLEAN
+invariant 
+	weight > 0;
+end 
+
+deferred class LION -- A lion animal. The king.
+inherit 
+	ANIMAL
+feature
+	feed
+		-> amount: REAL
+	make
+		-> name: SEQUENCE[SEQUENCE[STRING]]
+	isHappy: BOOLEAN
+feature{NONE}
+	effective wakeWakeUp
+	
+end 
+
+class MANE
+feature--{MANE, LION}
+	make
+end
+
+class ROAR
+feature{NONE}
+	make
+end
+
+
+LION client {3} :{ MANE
+LION client {1} KEEPER
+
+effective class PENGUIN -- A penguin animal. In a dress coat.
+feature
+	food: FOOD
+		--ensure
+			--Result = FOOD.fish
+		--end
+	luckyNumber: INTEGER
+		ensure
+			Result = 9
+		end
+	noLuckyNumber: INTEGER
+	make
+		-> name: STRING
+	make2
+		-> name: STRING
+		-> age: VALUE  
+feature{PENGUIN}
+	make3
+		-> name: STRING
+		-> encl: ENCLOSURE
+feature{NONE}
+	make4   
+		-> name: VALUE
+end 
+    
+   
+ 
+effective class SNAKE --overloaded features
+inherit 
+	ANIMAL; DANGEROUS_ANIMAL
+feature
+	feed
+  	feed1
+  		-> amount: VALUE
+  	feed2
+  		-> what: STRING
+ 	feed3
+  		-> amount: VALUE
+  		-> what: STRING
+  	feed4
+  		-> what: STRING
+  		-> amount: STRING
+  	countStripes
+	pattern
+	dummy
+	redefined wakeUp
+feature{SNAKE}
+	patternOne: STRING
+	patternTwo: STRING
+end 
+
+
+class FOOD  
+feature
+      fish:FOOD
+      grass:FOOD
+      blood:FOOD
+      anything:FOOD
+end
+
+deferred class DANGEROUS_ANIMAL --interface    
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- PERSONNEL cluster classes
+-- Here we test our class modifier
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--Test for interface
+deferred class PERSONNEL -- interface
+feature  
+	name: STRING
+		ensure
+			Result = "Mickey Mouse"
+		end
+	--area: STRING  
+	deferred getID: VALUE
+	deferred setVacation 
+	--deferred name: STRING
+
+end   
+
+effective class KEEPER  -- strictfp
+inherit 
+	PERSONNEL
+feature
+	redefined getID: INTEGER
+	redefined setVacation  
+	name: STRING
+	feedAnimal: BOOLEAN
+		-> animal: ANIMAL
+		ensure
+			delta ANY;
+		end
+end
+
+class MOP	--static member
+class BRUSH  --final
+
+KEEPER client :{ MOP
+KEEPER client :{ BRUSH
+
+--MANAGER client :{ KEEPER
+
+root class MANAGER persistent interfaced  --root
+feature  
+	start
+	endd
+end
+	
+--class SPREADSHEET reused --reused, can be ignored
+
+end 
