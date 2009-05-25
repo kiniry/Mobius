@@ -144,24 +144,25 @@ public class BeetlzCheck implements IObjectActionDelegate {
     } catch (final Exception e){}
     //Get options
     final List < String > args = new Vector < String > ();
-    final boolean cont = getUserOptions(args);
+    final boolean success = getUserOptions(args);
 
     //Get files
     args.add("-files"); //$NON-NLS-1$
     args.addAll(getFileArguments());
 
-    if (cont) {
+    if (success) {
       try {
         //Now run the Consistency Checker
-        final Beetlz beetl =
-          new Beetlz(args.toArray(new String[args.size()]), errStream, outStream);
+        final Beetlz beetl = new Beetlz(args.toArray(new String[args.size()]), errStream, outStream);
 
         if (beetl.getStatus() == Status.HELP) {
-          err.flush(); out.flush();
+          err.flush(); 
+          out.flush();
           final BeetlzHelpGui helpGui = new BeetlzHelpGui(my_shell, SWT.NULL);
           helpGui.open();
         } else if (beetl.getStatus() == Status.PARSING_PROBLEM) {
-          err.flush(); out.flush();
+          err.flush(); 
+          out.flush();
           if (err.size() > 0) {
             MessageDialog.openError(
                 my_shell, Messages.getString("BeetlzCheck.parsingError"), //$NON-NLS-1$
@@ -204,7 +205,8 @@ public class BeetlzCheck implements IObjectActionDelegate {
     final String userFile = store.getString(PreferenceConstants.USER_SETTING_PATH);
     System.setProperty("java.class.path",  //$NON-NLS-1$
         System.getProperty("java.class.path") + //$NON-NLS-2$
-          ";" + fileName); //$NON-NLS-1$
+          File.pathSeparator + fileName); //$NON-NLS-1$
+    
     if (userFile != null && userFile.length() > 0) {
       args.add("-userSettings"); //$NON-NLS-1$
       args.add(userFile);
@@ -230,6 +232,9 @@ public class BeetlzCheck implements IObjectActionDelegate {
       args.add("-help"); //$NON-NLS-1$
       return true;
     }
+    
+    args.add(Beetlz.SPECS_OPTION);
+    args.add(fileName);
 
     if (!useJml) args.add(Beetlz.NO_JML_OPTION);
     if (!useJava) args.add(Beetlz.NO_JAVA_OPTION);

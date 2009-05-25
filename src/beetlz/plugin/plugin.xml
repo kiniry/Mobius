@@ -46,9 +46,7 @@
          </action>
       </objectContribution>
    </extension>
-   <classpath>
    
-   </classpath>
    <extension
          id="beetlzjavaerrormarker"
          name="Beetlz Java error"

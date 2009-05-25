@@ -11,6 +11,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Resource;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
@@ -26,8 +27,8 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class SWTResourceManager {
 
-  private static HashMap resources = new HashMap();
-  private static Vector users = new Vector();
+  private static HashMap<String, Resource> resources = new HashMap<String, Resource>();
+  private static Vector<Widget> users = new Vector<Widget>();
   private static SWTResourceManager instance = new SWTResourceManager();
 
   private static DisposeListener disposeListener = new DisposeListener() {
@@ -56,7 +57,7 @@ public class SWTResourceManager {
   }
 
   public static void dispose() {
-    Iterator it = resources.keySet().iterator();
+    Iterator<String> it = resources.keySet().iterator();
     while (it.hasNext()) {
       Object resource = resources.get(it.next());
       if (resource instanceof Font)
@@ -82,7 +83,7 @@ public class SWTResourceManager {
     FontData fd = new FontData(name, size, style);
     if (strikeout || underline) {
       try {
-        Class lfCls = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
+        Class<?> lfCls = Class.forName("org.eclipse.swt.internal.win32.LOGFONT"); //$NON-NLS-1$
         Object lf = FontData.class.getField("data").get(fd); //$NON-NLS-1$
         if (lf != null && lfCls != null) {
           if (strikeout)
