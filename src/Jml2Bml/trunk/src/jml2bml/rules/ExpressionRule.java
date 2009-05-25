@@ -37,6 +37,7 @@ import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
+import annot.bcexpression.OLD;
 import annot.bcexpression.RESULT;
 import annot.bcexpression.THIS;
 import annot.bcexpression.formula.Formula;
@@ -74,11 +75,6 @@ import com.sun.tools.javac.util.Name;
  *
  */
 public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
-  /**
-   * Indicates, if the currently translated expression is \old.
-   */
-  private boolean isOld;
-
   /**
    * application context.
    */
@@ -363,19 +359,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
   public BCExpression visitJmlMethodInvocation(final JmlMethodInvocation node,
                                                final Symbols p) {
     if (node.token == JmlToken.BSOLD){
-      final boolean tmp = isOld;
-      isOld = true;
       final BCExpression expr = scan(node.getArguments(), p);
-      isOld = tmp;
-      return expr;
+      return new OLD(expr);
     }
-//    if (JCUtils.isOld(node.getMethodSelect())) {
-//      final boolean tmp = isOld;
-//      isOld = false;
-//      final BCExpression expr = scan(node.getArguments(), p);
-//      isOld = tmp;
-//      return expr;
-//    }
     throw new NotTranslatedRuntimeException("Method invocation not supported!"+node);
   }
 
