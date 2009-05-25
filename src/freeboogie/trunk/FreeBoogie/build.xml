@@ -120,7 +120,7 @@
 
   <target name="compile_junit" depends="compile" 
     description="compile the junit tests ">
-    <javac srcdir="${junit_src}" destdir="build" 
+    <javac srcdir="${junit_src}" destdir="classes" 
            optimize="yes" debug="${debug}">
       <classpath refid="classpath" /> 
       <compilerarg value="-Xlint:all" />
