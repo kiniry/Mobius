@@ -1,0 +1,35 @@
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ZOO
+component 
+deferred class ENCLOSURE 	--An abstract enclosure.
+feature
+   	size, animalCount, animalCapacity: VALUE
+   	accomodateAnimal: BOOLEAN 
+   		-> animal: ANIMAL
+   		require
+   			animalCount < animalCapacity
+   		ensure
+   			size > 0
+   		end
+   	removeAnimal: BOOLEAN
+   		-> animal: ANIMAL
+   	moveAnimal: BOOLEAN
+   		-> animal: ANIMAL
+   		-> newPlace: CAGE
+invariant
+	animalCount <= animalCapacity
+end -- class Enclosure
+
+effective class CAGE 	-- A simple multiple-purpose cage made of wires.
+inherit 
+	ENCLOSURE
+feature
+   none: VALUE
+
+--invariant
+    -- only small animals can live here
+end --end class Cage
+
+end 

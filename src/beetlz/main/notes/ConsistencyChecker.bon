@@ -1,0 +1,492 @@
+-- ===================================================================
+-- System Chart
+-- ===================================================================
+system_chart ConsistencyChecker
+  indexing
+    author: "Evka";
+  explanation 
+    "An application for checking consistency between a BON model and a\
+     \ JML annotated Java source code."
+  cluster CORE
+    description
+      "Does the actual mapping between BON and Java."
+  cluster INPUT
+    description
+      "Coordinates parsing of BON and Java/JML source code."
+  cluster OUTPUT
+    description
+      "Coordinates output to various places."
+  cluster GUI
+    description
+      "Graphical user interface."
+  
+end
+
+-- ===================================================================
+-- Cluster Charts
+-- ===================================================================
+cluster_chart CORE
+  indexing
+    author: "Evka";
+  
+  class CONSISTENCY_CHECKER
+    description 
+      "Main class handling the communication between the classes and \
+       \ organising the consistency checking."
+  class TRANSLATOR
+    description 
+      "Translates logic expressions between JML and BON specifications."
+  class DICTIONARY
+    description 
+      "Reference/helper for Translator. May include 1-1 mapping if class \
+       \ names in Java and BON are different."
+  --The following list has classes that may or may not be included:
+  class CLASS_CHECKER
+    description 
+      "Checks if class name & signature match."
+  class METHOD_CHECKER 
+    description 
+      "Checks if method signatures match."
+  class JML_CHECKER
+    description 
+      "Checks if JML annotations match BON specifications."
+  class FIELD_CHECKER
+    description 
+      "Checks if fields match"
+  --may be extended...
+  class BON_EXPRESSION
+    description 
+      "Container class for a BON logic expression."
+  class JML_EXPRESSION
+    description 
+      "Container class for a JML logic expression."
+end
+
+cluster_chart INPUT
+  indexing
+    author: "Evka";
+  class JAVA_FILE
+    description 
+      "Access Java source files. The source will be given in several source files,\
+       \ this class will collect them and present as one. It will also encapsulate \
+       \ the OpenJML parser."
+  class JML_TREE_WALKER
+    description
+      "JMLTreeVisitor adapted for this particular problem."
+  class BON_FILE
+    description 
+      "Access BON source files. The source will be given in several source files,\
+       \ this class will collect them and present as one. It will also encapsulate \
+       \ the BONc parser."
+  class BON_TREE_WALKER
+    description
+      "A TreeVisitor for BON."
+  class UNIT
+    description 
+      "One input source file with basic functionality, eg open, close, save, \
+       \ checking for validity or being empty."
+  class JAVA_UNIT
+    description 
+      "One Java input source file."
+  class BON_UNIT
+    description 
+      "One BON input file."
+end
+
+cluster_chart OUTPUT
+  indexing
+    author: "Evka";
+  class LOG_FILE
+    description 
+      "Interface for recording changes and inconsistencies."
+  class JAVA_LOG_FILE
+    description 
+      "Change messages in Java specific way."
+  class BON_LOG_FILE
+    description 
+      "Change messages in BON specific way."
+  class SKELETON_CODE
+    description
+      "Interface for creating skeleton code."
+  class JAVA_SKELETON
+    description
+      "Creates java skeleton code."
+  class BON_SKELETON
+    description
+      "Creates bon skeleton code."
+  class OUTPUT_MANAGER
+    description 
+      "Controls the different output places and makes sure correct information \
+       \ gets displayed in correct view. Will write to standard output or a file\
+       \ directly, output in Eclipse will be passed on to a helper class."
+  class ECLIPSE_OUTPUT
+    description 
+      "Eclipse specific output, eg highlighting in Editor or output to \
+       \ Problems view."
+end
+
+cluster_chart GUI
+  indexing
+    author: "Evka";
+  -- This will be decided at a later stage.
+end
+
+-- ===================================================================
+-- Class Charts
+-- ===================================================================
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- CORE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class_chart CONSISTENCY_CHECKER
+  indexing
+    author: "Evka"
+  explanation
+    "Main class handling the communication between the classes and \
+     \ organising the consistency checking."
+  query
+    ""
+  command
+    "Get files.", "Process cmd line options.", "Start check."
+  constraint
+    ""
+end
+
+class_chart TRANSLATOR
+  indexing
+    author: "Evka"
+  explanation
+    "Translates logic expressions between JML and BON specifications."
+  query
+    ""
+  command
+    "Translate JML expr.", "Translate BON expr."
+  constraint
+    "Only recognize expressions specified in dictionary.",
+    "If expression not recognized, throw error."
+end
+
+class_chart DICTIONARY
+  indexing
+    author: "Evka"
+  explanation
+    "Reference/helper for Translator. May include 1-1 mapping if class \
+     \ names in Java and BON are different."
+  query
+    "List dictionary."
+  command
+    "Lookup JML expr.", "Lookup BON expr.", "Lookup Java class name.",
+    "Lookup BON class name"
+  constraint
+    "Strictly one-one mapping.",
+    "May have orphans, ie expression exists in one source but not in other."
+end
+
+class_chart CLASS_CHECKER
+  indexing
+    author: "Evka"
+  explanation
+     "Checks if class name & signature match."
+  query
+    "Class XY present."
+  command
+    "Check class XY.", "Check class XY only on selected features.",
+    "Check class XY with rename option."
+  constraint
+    "Check only 1 class at a time.",
+    "Assumes class has compiled successfully.",
+    "Assumes class has been static checked successfully."
+end
+
+class_chart METHOD_CHECKER
+  indexing
+    author: "Evka"
+  explanation
+    "Checks if method signatures match."
+  query
+    "Method XY present."
+  command
+    "Check method XY.", "Check method XY only on selected features.",
+  constraint
+    "Check only 1 method at a time.",
+    "Assumes method has compiled successfully.",
+    "Assumes method has been static checked successfully."
+end
+
+class_chart JML_CHECKER
+  indexing
+    author: "Evka"
+  explanation
+    "Checks if JML annotations match BON specifications."
+  query
+    "Class and method of this annotation present.",
+    "Annotation present."
+  command
+    "Find annotation in class/method.", "Check annotation.",
+    "Check annotation under assumptions."
+  constraint
+    "Assumes source has compiled successfully.",
+    "Assumes source has been static checked successfully."
+end
+
+class_chart FIELD_CHECKER
+  indexing
+    author: "Evka"
+  explanation
+    "Checks if fields match"
+  query
+    "Field present."
+  command
+    "Check field XY."
+  constraint
+    "Assumes source has compiled successfully.",
+    "Assumes source has been static checked successfully."
+end
+
+class_chart BON_EXPRESSION
+  indexing
+    author: "Evka"
+  explanation
+    "Container class for a BON logic expression."
+  query
+    "Operand one.", "Operand two.", "Operator.",
+    "Type of operation.", "Comment."
+  command
+    ""
+  constraint
+    "Can hold at most one statement."
+end
+
+class_chart JML_EXPRESSION
+  indexing
+    author: "Evka"
+  explanation
+    "Container class for a JML logic expression."
+  query
+    "Operand one.", "Operand two.", "Operator.",
+    "Type of operation.", "Comment."
+  command
+    ""
+  constraint
+    "Can hold at most one statement."
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- INPUT cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class_chart JAVA_FILE
+  indexing
+    author: "Evka"
+  explanation
+    "Access Java source files. The source will be given in several source files,\
+     \ this class will collect them and present as one. It will also encapsulate\
+     \ the OpenJML parser."
+  query
+    "Number input units.", "Input valid.", "List classes.",
+    "Next class.", "TreeWalker"
+  command
+    "Open files.", "Close files.", "Validate files.", "Create tree"
+  constraint
+    "If files invalid throw appropriate exception.",
+    "Only consider files with *java* suffix."    
+end
+
+class_chart JML_TREE_WALKER
+  indexing
+    author: "Evka"
+  explanation
+    "JMLTreeVisitor adapted for this particular problem."
+  query
+    "we'll see..."
+  command
+    "we'll see.."
+  constraint
+    "we'll see..."
+end
+
+class_chart BON_FILE
+  indexing
+    author: "Evka"
+  explanation
+    "Access BON source files. The source will be given in several source files,\
+     \ this class will collect them and present as one. It will also encapsulate\
+     \ the BONc parser."
+  query
+    "Number input units.", "Input valid.", "List classes.",
+    "Next class.", "BONTreeVisitor."
+  command
+    "Open files.", "Close files.", "Validate files.", "Create tree",
+  constraint
+    "If files invalid throw appropriate exception.",
+    "Only consider files with *bon* suffix."
+end
+
+class_chart BON_TREE_WALKER
+  indexing
+    author: "Evka"
+  explanation
+    "A TreeVisitor for BON."
+  query
+    "we'll see..."
+  command
+    "we'll see.."
+  constraint
+    "we'll see..."
+end
+
+class_chart UNIT
+  indexing
+    author: "Evka"
+  explanation
+    "One input source file with basic functionality, eg open, close, save, \
+     \ checking for validity or being empty."
+  query
+    "File valid."
+  command
+    "Open file.", "Close file.", "Save file."
+  constraint
+    ""
+end
+
+class_chart JAVA_UNIT
+  indexing
+    author: "Evka"
+  explanation
+    "One Java input source file."
+  inherit UNIT
+  query
+    ""
+  command
+    "Open file.", "Close file.", "Save file."
+  constraint
+    ""
+end
+
+class_chart BON_UNIT
+  indexing
+    author: "Evka"
+  explanation
+    "One BON input file."
+  inherit UNIT
+  query
+    ""
+  command
+    "Open file.", "Close file.", "Save file."
+  constraint
+    ""
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- INPUT cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class_chart LOG_FILE
+  indexing
+    author: "Evka"
+  explanation
+    "Interface for recording changes and inconsistencies."
+  query
+    "Number of changes.", "List changes."
+  command
+    "Log change in class XY.", "Log change in method XY.",
+    "Log change in annotation.", "Log change in field",
+    "Print log"
+  constraint
+    ""
+end
+
+class_chart JAVA_LOG_FILE
+  indexing
+    author: "Evka"
+  explanation
+    "Change messages in Java specific way."
+  inherit LOG_FILE
+  query
+    ""
+  command
+    ""
+  constraint
+    "Will create Java custom messages."
+end
+
+class_chart BON_LOG_FILE
+  indexing
+    author: "Evka"
+  explanation
+    "Change messages in BON specific way."
+  inherit LOG_FILE
+  query
+    ""
+  command
+    ""
+  constraint
+    "Will create BON custom messages."
+end
+
+class_chart SKELETON_CODE
+  indexing
+    author: "Evka"
+  explanation
+    "Interface for creating skeleton code."
+  query
+    ""
+  command
+    "New class.", "New method.", "New Field.", "New annotation"
+  constraint
+    ""
+end
+
+class_chart JAVA_SKELETON
+  indexing
+    author: "Evka"
+  explanation
+    "Creates Java skeleton code."
+  inherit SKELETON_CODE
+  query
+    ""
+  command
+    ""
+  constraint
+    "Create only what will compile."
+end
+
+class_chart BON_SKELETON
+  indexing
+    author: "Evka"
+  explanation
+    "Creates BON skeleton code."
+  inherit SKELETON_CODE
+  query
+    ""
+  command
+    ""
+  constraint
+    "Create only what will compile."
+end
+
+class_chart OUTPUT_MANAGER
+  indexing
+    author: "Evka"
+  explanation
+    "Controls the different output places and makes sure correct information \
+     \ gets displayed in correct view. Will write to standard output or a file\
+     \ directly, output in Eclipse will be passed on to a helper class."
+  query
+    "Output type.", "Output type available."
+  command
+    "Print to stdout", "Print to file.", "Print to Eclipse."
+  constraint
+    "If printing to Eclipse, do not print to stdout."
+end
+
+class_chart ECLIPSE_OUTPUT
+  indexing
+    author: "Evka"
+  explanation
+    "Eclipse specific output, eg highlighting in Editor or output to \
+     \ Problems view."
+  query
+    "we'll see..."
+  command
+    "we'll see..."
+  constraint
+    "we'll see..."
+end

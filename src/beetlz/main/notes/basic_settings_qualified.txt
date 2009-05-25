@@ -1,0 +1,89 @@
+--This is the basic setting file. Better not remove/move.
+
+type_mapping value {VALUE} {byte, short, int, long, double, float, 
+                            java.util.concurrent.atomic.AtomicInteger, 
+                            java.util.concurrent.atomic.AtomicLong, 
+                            java.math.BigDecimal, java.math.BigInteger, 
+                            java.lang.Byte, java.lang.Double, java.lang.Float, 
+                            java.lang.Integer, java.lang.Long, java.lang.Short,
+                            java.lang.Number};
+type_mapping integer {INTEGER} {byte, short, int, long, 
+							java.util.concurrent.atomic.AtomicInteger, 
+							java.util.concurrent.atomic.AtomicLong, 
+							java.math.BigInteger, java.lang.Byte, 
+							java.lang.Integer, java.lang.Long, java.lang.Short};
+type_mapping real {REAL} {double, float, java.math.BigDecimal, java.lang.Double, 
+							java.lang.Float};
+type_mapping boolean {BOOLEAN} {boolean, java.util.concurrent.atomic.AtomicBoolean};
+type_mapping character {CHARACTER} {char};
+type_mapping string {STRING} {java.lang.String};
+type_mapping string {ANY} {java.lang.Object};
+
+--no duplicate elements
+type_mapping set {SET} {java.util.SortedSet, 
+						java.util.NavigableSet, 
+						java.util.concurrent.ConcurrentSkipListSet, 
+						java.util.TreeSet,
+						java.util.Set, java.util.AbstractSet, 
+						java.util.concurrent.CopyOnWriteArraySet, 
+						java.util.EnumSet, 
+						java.util.HashSet, 
+						java.util.LinkedHashSet};
+--duplicate elements allowed
+type_mapping sequence {SEQUENCE} {java.util.List, 
+						java.util.AbstractList, 
+						java.util.AbstractSequentialList, 
+						java.util.ArrayList, 
+						javax.management.AttributeList, 
+						java.util.concurrent.CopyOnWriteArrayList, 
+						java.util.LinkedList, 
+						javax.management.relation.RoleList, 
+						javax.management.relation.RoleUnresolvedList, 
+						java.util.Stack, java.util.Vector,
+						java.util.Queue, java.util.AbstractQueue, 
+						java.util.concurrent.ArrayBlockingQueue, 
+						java.util.ArrayDeque, 
+						java.util.concurrent.ConcurrentLinkedQueue, 
+						java.util.concurrent.DelayQueue, 
+						java.util.concurrent.LinkedBlockingDeque, 
+						java.util.concurrent.LinkedBlockingQueue, 
+						java.util.LinkedList, PriorityBlockingQueue, 
+						java.util.concurrent.PriorityQueue, 
+						java.util.concurrent.SynchronousQueue, 
+						java.util.Deque,
+						java.util.concurrent.BlockingQueue, 
+						java.util.concurrent.BlockingDeque};							    						    
+type_mapping map {TABLE} {java.util.Map, java.util.AbstractMap, 
+						java.util.jar.Attributes, 
+						java.security.AuthProvider, 
+						java.util.concurrent.ConcurrentHashMap, 
+						java.util.concurrent.ConcurrentSkipListMap, 
+						java.util.EnumMap, 
+						java.util.HashMap, 
+						java.util.Hashtable, 
+						java.util.IdentityHashMap, 
+						java.util.LinkedHashMap, 
+						javax.print.attribute.standard.PrinterStateReasons, 
+						java.util.Properties, 
+						java.security.Provider, 
+						java.awt.RenderingHints, 
+						javax.script.SimpleBindings, 
+						javax.management.openmbean.TabularDataSupport, 
+						java.util.TreeMap, 
+						javax.swing.UIDefaults, 
+						java.util.WeakHashMap,
+						javax.script.Bindings, 
+						java.util.concurrent.ConcurrentMap, 
+						java.util.concurrent.ConcurrentNavigableMap, 
+						javax.xml.ws.handler.LogicalMessageContext, 
+						javax.xml.ws.handler.MessageContext, 
+						java.util.NavigableMap, 
+						javax.xml.ws.handler.soap.SOAPMessageContext, 
+						java.util.SortedMap};
+type_mapping time {DATE, TIME} {java.sql.Date,
+						java.sql.Date,
+						java.sql.Time, 
+						java.sql.Timestamp,
+						java.security.Timestamp};
+	
+						    

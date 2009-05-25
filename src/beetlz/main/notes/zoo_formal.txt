@@ -1,0 +1,140 @@
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ZOO
+component 
+deferred class ENCLOSURE 	--An abstract enclosure.
+feature
+   	size, animalCount, animalCapacity: VALUE
+   	accomodateAnimal: BOOLEAN
+   		-> animal: ANIMAL
+   		require
+   			animalCount < animalCapacity
+   		ensure
+   			size > 0
+   		end
+   	removeAnimal: BOOLEAN
+   		-> animal: ANIMAL
+   	moveAnimal: BOOLEAN
+   		-> animal: ANIMAL
+   		-> newPlace: CAGE
+invariant
+	animalCount <= animalCapacity
+end -- class Enclosure
+
+effective class CAGE 	-- A simple multiple-purpose cage made of wires.
+inherit 
+	ENCLOSURE
+feature
+   none: VALUE
+--invariant
+    -- only small animals can live here
+end --end class Cage
+
+effective class WATERPARK -- A wet cage.
+inherit 
+	ENCLOSURE
+feature
+	waterDepth, waterTemperature: VALUE
+	salty: BOOLEAN
+	refreshWater: VOID
+	heatWater: VOID
+		-> newTemperature: VALUE
+--invariant
+  --only for animals that dont drown
+end --end class Waterpark
+
+effective class OUTDOOR_ENCLOSURE -- A big fenced in enclosure outdoors.
+inherit 
+	ENCLOSURE
+feature
+	barbedWire, electicalFence: BOOLEAN
+	switchFenceOnOff: VOID
+		-> on: BOOLEAN
+--invariant
+end --end class OutdoorEnclosure
+
+effective class TERRARIUM -- A warm cage.
+inherit 
+	ENCLOSURE
+feature
+	temperature: VALUE
+	regulateTemperature: VOID
+invariant	
+	temperature < 90
+end -- end class Terrarium
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ANIMALS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+deferred class ANIMAL -- An abstract animal.
+feature
+  	height, weight, feedingFrequency: VALUE
+  	place: ENCLOSURE
+  	sleeping: BOOLEAN
+  	feed: VOID
+  	wakeUp: VOID
+--invariant
+    --cannot feed if not awake
+end --end class Animal
+
+effective class ZEBRA -- A zebra animal. With stripes. Preferably black and white.
+inherit 
+	ANIMAL
+feature
+	animal: BOOLEAN
+-- invariant
+	 -- has to live in outdoorEnclosure
+	 -- can't share with lions
+end -- end class Zebra
+
+effective class LION -- A lion animal. The king.
+inherit 
+	ANIMAL
+feature
+	animal: BOOLEAN
+-- invariant
+  	 -- has to live in outdoorEnclosure
+end -- end class Lion
+
+effective class PENGUIN -- A penguin animal. In a dress coat.
+inherit 
+	ANIMAL
+feature
+	animal: BOOLEAN
+-- invariant
+     -- has to live in a waterpark
+end --end class Penguin
+
+effective class SNAKE -- A snake animal. Maybe poisonous.
+inherit 
+	ANIMAL
+feature
+	animal: BOOLEAN
+-- invariant
+	-- temperature > 30
+    -- place is a Terrarium 
+end --end class Snake
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- PERSONNEL cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+root class PERSONNEL -- A person working in a zoo.
+feature
+	personnelID: VALUE
+	name: STRING
+-- invariant
+end --end class Personnel
+
+effective class KEEPER -- A person taking care of the animals, eg feeding them.
+inherit 
+	PERSONNEL
+feature
+	feedAnimal: BOOLEAN
+		-> animal: ANIMAL
+	feedAllAnimals: BOOLEAN
+	checkAllAnimals: BOOLEAN
+-- invariant
+end
+
+end 

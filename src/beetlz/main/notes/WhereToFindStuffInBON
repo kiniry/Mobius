@@ -1,0 +1,132 @@
+From: Fintan Fairmichael, on 25. November 2008
+
+The class ie.ucd.bon.typechecker.TypingInformation stores, as you would expect, the typing information collected. 
+A similar class ie.ucd.bon.typechecker.informal.InformalTypingInformation deals with the information from the informal level. 
+The method informal() in TypingInformation returns the instance of InformalTypingInformation.
+
+The package ie.ucd.bon.typechecker is where most of the classes mentioned below live. 
+The informal parts are in ie.ucd.bon.typechecker.informal.
+
+*******************************************************************************************************
+1)Clusters: 
+-a list of classes/clusters that are contained in it.
+Formal:
+		TypingInformation -> getClusters()    
+			#returns Map<String,ClusterDefinition> (mapping cluster names to ClusterDefinition instances)
+Informal:
+		InformalTypingInformation -> getClusters()    
+			#returns Map<String,ClusterChartDefinition> (mapping cluster names to ClusterChartDefinition instances) 
+
+*******************************************************************************************************
+2) Classes:
+- header annotation (if parametrized, the parameters)
+- inherited classes
+- public features (a list)
+- invariants (a list)
+
+Formal:
+		TypingInformation -> getClasses()    
+			#returns Map<String,ClassDefinition> (mapping cluster names to ClassDefinition instances)
+Informal:
+		InformalTypingInformation -> getClasses()    
+			#returns Map<String,ClassChartDefinition> (mapping cluster names to ClassChartDefinition instances)
+
+-------------------------------------------------------------------------------------------------------
+ClassDefinition (formal):
+	isRoot()
+	isDeferred()
+	isEffective()
+	getFormalGenerics() 
+		#returns Collection<FormalGeneric>
+	getParentClasses() 
+		#returns Set<Type>
+	getFeatures() 
+		#returns Collection<FeatureSpecificationInstance>
+	getInvariants() 
+		#returns Collection<String>  (for the moment...)
+		
+-------------------------------------------------------------------------------------------------------
+Type:
+	getNonGenericType() 
+		#returns String (i.e. the 'List' part of List[X,Y,Z])
+	getGenerics() 
+		#returns Collection<Type> (i.e. the types of X,Y,Z in List[X,Y,Z])
+ 
+
+*******************************************************************************************************
+3)Features:
+-implementation status (i.e. deferred, effective, redefined)
+-signature (arguments, return type)
+-preconditions
+-postconditions
+
+
+One thing to note about Features in BON. The grammar allows you to write features as A,B,C: TYPE. 
+As a result, all attributes of a feature (deferred, type, contract clauses) are applied to all the named features (in this case A,B and C). Due to this, I created two classes FeatureSpecificationInstance and FeatureSpecification. In the above example one FeatureSpecification would be created with all the interesting information (type, etc.), and then three FeatureSpecificationInstances would be created (one each for A,B,C). The FeatureSpecification instance essentially adds the name of the feature, and provides access to the FeatureSpecification (method getFeatureSpec()). Hopefully that's not too confusing.
+ 
+FeatureSpecification:
+	isDeferred()
+	isEffective()
+	isRedefined()
+	getType() 
+		#returns Type (i.e. the return type)
+	getArgs() 
+		#returns List<FeatureArgument>
+	getPrecondition() 
+		#returns String (for now)
+	getPostcondition() 
+		#returns String (for now)
+
+*******************************************************************************************************
+4)Invariants:
+See above ClassDefintion... just string at the moment.
+ 
+
+*******************************************************************************************************
+So finally, how do you get the TypingInformation for a parse?
+
+Use the static method ie.ucd.bon.Main.main2(String[],boolean). 
+The first argument are the args that you would pass from the commandline (e.g. ["-i","input.bon",...]), 
+and the second should be false (true causes BONc to call System.exit on errors and so on which is not what you want!).
+
+Since you can assume no typing errors for your input, make your arguments "-ntc file1.bon file2.bon ...". 
+If you are adding your arguments to a list, you can use argsList.toArray(new String[argsList.size()]). 
+Alternatively you can append to a string and finally call myArgsString.split("\\s+")
+
+If main2 returns with a result of true, then you should be safe to proceed with a call to ie.ucd.bon.Main.getTypingInfo().
+
+*******************************************************************************************************
+And these are the options:
+
+BON Parser and Typechecker.
+
+Default usage: 
+	bonc [options] file1 [file2 ...]
+
+Options:
+  -                             Read from standard input.
+  -d, --debug                   Print debugging output.
+  -f, -formal, --formal         Only check formal charts.
+  -g, -graph, --graph=TYPE      Display the chosen graph type. ICG for
+                                informal clustering graph, IIG for informal
+                                inheritance graph.
+  -h, --help                    Print this help message
+  -i, -informal, --informal     Only check informal charts.
+  -nc, --no-consistency         Do not check consistency between levels.
+  -ngcd, --no-gen-class-dic     Do not generate the class dictionary when
+                                printing.
+  -ntc, --no-typecheck          Do not typecheck the input.
+  -p, -print, --print=TYPE      Print the parsed input in the given format.
+                                TXT for plain-text, HTML for html generation
+                                of informal charts, DIC to generate the class
+                                dictionary, IIG for the informal class
+                                inheritance graph. See the manpage or README.
+                                txt for more information and a list of all
+                                printing options.
+  -po, --print-output=FILE      Print output to the given file instead of to
+                                stdout.
+  -pp, --pretty-print           Pretty-print the parsed input. This is
+                                equivalent to -p=TXT.
+  -t, -time, --time             Print timing information.
+  -v, --version                 Print BONc version and exit.
+

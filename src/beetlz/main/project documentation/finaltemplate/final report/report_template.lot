@@ -1,0 +1,19 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Class header}}{9}{table.2.1}
+\contentsline {table}{\numberline {2.2}{\ignorespaces Feature modifier}}{9}{table.2.2}
+\contentsline {table}{\numberline {2.3}{\ignorespaces BON keywords for use in assertions}}{9}{table.2.3}
+\contentsline {table}{\numberline {2.4}{\ignorespaces Specification clauses for method declarations}}{13}{table.2.4}
+\contentsline {table}{\numberline {2.5}{\ignorespaces Additional JML keywords and operators}}{13}{table.2.5}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Class modifier relations}}{16}{table.3.1}
+\contentsline {table}{\numberline {3.2}{\ignorespaces Inheritance relations}}{17}{table.3.2}
+\contentsline {table}{\numberline {3.3}{\ignorespaces Relations on generics}}{18}{table.3.3}
+\contentsline {table}{\numberline {3.4}{\ignorespaces Feature visibility relations}}{19}{table.3.4}
+\contentsline {table}{\numberline {3.5}{\ignorespaces Feature modifier relations}}{20}{table.3.5}
+\contentsline {table}{\numberline {3.6}{\ignorespaces Recognised types}}{20}{table.3.6}
+\contentsline {table}{\numberline {3.7}{\ignorespaces Nullity in BON and JML}}{23}{table.3.7}
+\contentsline {table}{\numberline {3.8}{\ignorespaces Assertion language operators sorted by precedence}}{25}{table.3.8}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Technical specification}}{26}{table.4.1}
+\addvspace {10\p@ }

@@ -1,0 +1,397 @@
+Monday, 19.January 2009
+*interfaces in BON
+	- interfaced keyword suggested
+	
+*BON build in types(INTEGER, REAL, CHARACTER, STRING, BOOLEAN)
+	- have been defined somewhere, Joe has some agreed on set
+
+*SET[G], SEQUENCE[G]
+	- will be translated to some Java standard interfaces, which ones
+		is to be decided
+		
+*null reference in BON
+	- none, VOID
+	- there are also the types ANY and NONE
+		every class inherits from ANY 
+		NONE inherits from all classes --> no class can inherit from this
+		
+*what are primary&secondary variables?
+	- still no clue, haven't found the text piece
+	
+*query-command, do we make the distinction? Is it in formal BON
+	- its not there explicitly, thus we have to check for it
+	- we do make a distinction, but only issue warnings
+	
+*invariants hold for whole class both in BON & JML?
+	- yep
+
+*semantics- preserving?
+	- forgot to ask
+
+*renaming in Java
+	- not allowed
+		we have to come up with some trick
+		Joe suggested some kind of memory, 
+		where we remember previous renamings, I think
+	
+*features can be defined covariantly in BON
+	- yep, and that will cause trouble
+		we'll probably have to come up with some policy and disallow 
+		it altogether or partly or something
+		
+*export policy in Java(parent public, child private not allowed but is in BON)
+	- will cause trouble 
+		need some sensible strategy
+	
+DONE:
+- Using JUnit tests
+- Reading in class information more or less
+- Exception handling started
+- Read BON book to look for what information that needs translation
+- started translation.xls with translations 
+---------------------------------------------------------------------------------------------
+Thursday, 29.January 2009
+*interfaces 
+	- my opinion: deferred class with ALL features deferred
+	- Joes opinion: interfaced modifier
+	- agreed on: interfaced means all features are public (fully public)
+	--> we'll have to find some compromise
+		maybe accept both options
+		but I prefer mine, so maybe issue a warning with interfaced modifier
+ 
+*Plugin development does not work on Mac OS X
+	- no Standard VM on macs accepted, this breaks Ant builder
+	- patches don't work
+	--> install Windows Vista with Bootcamp
+		do critical work in Vista :-(((
+		
+*repeated inheritance, what's it good for?
+	- some languages support automatic renaming (Java doesn't)
+	- some do delegation (Java doesn't)
+	- some distinguish between code inheritance & interfacing
+		(could work with small adjustments in Java)
+	- sort of like internal fields, that are no references (details concerned with
+		heap and so on, not my concern)
+		--> we can equate to references in Java
+	- so far BONc doesn't allow it anyway
+	
+*Annotation types in Java - do we need to worry about them?
+	- nope
+	
+*Duplicate class names allowed in Java, in different packages
+	in BON thats not the case
+	- just add the package name to fully qualified name
+	--> in translation Java -> BON we may need some adjustments
+	- e.g. JAVA_LANG_STRING
+	
+*Member classes =? aggregations in BON
+	- viable translation
+	- classes are still regraded as independent, since they can be 
+		used publicly, even though inside class
+	
+*Logging
+	- is in Mobius repository
+	- get the project, read tutorial, hopefully understand
+	
+*basic BON types
+	- find them in BONc 
+	- find them in Joes thesis, whereever it is....
+
+*additional information about BON, papers, examples
+	- according to Joe there are some 15 papers around
+	- possible authors:
+		Waldin & Nersen
+		Kiniry
+		Meyer
+		Paige & Ostroff
+		two more...
+		
+*BON restricted features
+	- according to Fintan, the info is there, we just have to find it
+	
+*if no class modifier specified, what is it then?
+	- should NOT be abstract
+	- rest we have to try how BONc behaves
+	
+DONE:
+- Implemented some class translations BON -> Java
+- did some refactoring, got rid of some unnecessary classes
+- added translation to xls file
+- found out plugin develp. doesn't work on Mac
+
+---------------------------------------------------------------------------------------------
+Thursday, 5.February 2009
+*static classes/methods in BON?
+	- no
+
+*final classes/methods in BON?
+	- no
+	
+*private methods are not being checked
+	- has been approved
+	
+*private member classes are not being checked
+	- we have to be careful with anonymous classes though
+		
+*classes in BON are all public, so what do we do with public/protected/private classes in Java?
+	- as long as we don't have a constructor, we can't check this, 
+		it would qualify as an implementation detail
+	- if we have a constructor, see note below
+	
+*any definition for SET, SEQUENCE, TABLE, STACK etc.
+	- Fintan is looking for the basic types list
+	- we have to get a list of basic equivalent classes
+	- list has to be extendable
+	
+*Inheritance/Interfaces: do we check in both directions?
+	- we ignore classes/interfaces that do not appear in model
+	- we give an error/warning for classes that DO appear in the model
+	
+*Java constructors
+	- don't exist in BON
+	- do exist in Eiffel as 'make'
+	- we could include that, as an extension of BON, then we could also deal with
+		protected and private classes
+		--> this needs more thought and discussion
+		
+*protected visibility in BON:
+	- subclasses have by default access (always), but we can make it explicit by saying
+		export to itself
+	- for packages: 
+		-either we list all classes inside a class
+		-we list the cluster/package name (Fintan wants to fix bug, so that the names will be unique)
+		-or we find a notation(extend BON) to mark a name as cluster name
+		
+*Exception
+	- don't exist in BON
+	--> we ignore them
+	
+*Fintan's suggestion: We need a way to ask the user questions for making decisions
+	about ambiguities or other stuff that cannot be decided automatically.
+	- Fintan's idea: database --> that's probably a bit overkill
+	- my suggestion: text file, simple read-write
+	
+*we have to come up with a list of interfaces, classes that will be in general recognized, 
+	e.g. Comparable etc
+
+---------------------------------------------------------------------------------------------
+Thursday, 12.February 2009
+* interface & superclass are treated as interchangeable 
+ 	- for typing purposes acceptable
+ 
+* Checkstyle/Findbugs/Eclipse setting
+	- can be found in Mobius repository: Checkstyle, Eclipse, PMD
+
+* rename class?
+	- not possible
+	
+* constraint generics in BON
+	- FOO[A -> INT] is equivalent to Foo<? extends Integer>
+	
+* cluster hierarchy, why only innermost cluster returned?
+	- information is there, can be retrieved
+	
+* persistent = Java Persistent API?
+	- no, use Serializable and Externalizable instead
+	
+* BON features, no overleading allowed
+	- true, so either disallow overloading or
+	- agree on a notation eg number feature names
+	
+* difference SET/SEQUENCE
+	- sequence allows duplicates
+	
+* TABLE
+	-HashMap, Map
+	
+* member class: static abstract;
+	- don't know
+	
+* frame: list of queries a feature may modify:
+	- JMl: @modify tag
+	
+* attribute: no contract
+	- this means, contract is true, which can then be redefined in future implementations
+	
+* post/precondition weakening
+	- JML: @also
+	
+* constructor:
+	- Eiffel: make 
+	
+* covariant args:
+	- error
+
+---------------------------------------------------------------------------------------------
+Thursday, 19.February 2009
+* light-weight vs heavy-weight
+	- mapping can be done on heavy-weight
+	- implementation will be done at least for the moment on light-weight
+	
+* JML annotations in code or as separate file
+	- OpenJML handles this and gives it as one AST, thus we do not need to worry about it
+	
+* _redundantly
+	- marks redundant specs, we ignore
+
+* implies_that
+	-redundant too, we ignore
+	
+* measured_by
+	- specifies termination criterion for loops
+	- will be applicable to public API details only in very rare cases
+	--> don't worry about this now
+	
+* assume
+	- annotation in code stating that some statement hold true at that exact point
+	- implementation detail, we don't worry about that
+	
+* such_that
+	- probably normal such that
+	--> check, find examples
+	
+* for_example
+	- examples of usage, sometimes used by tools for generation of test cases
+	- we ignore
+	
+* critical change since 2006: all references and objects are by default non-null!!!
+	--> in BON everything is by default null
+
+---------------------------------------------------------------------------------------------
+Thursday, 26.February 2009
+--> postponed due to talk
+
+
+---------------------------------------------------------------------------------------------
+Thursday, 5.March 2009
+* PMD doesn't like System.out
+	- use Logging Framework from Java
+	
+* static vs instant
+	- ignore
+	
+* constants
+	- feature with invariant: i==2 eg
+	
+* inheritance for static constraints/invariants?
+	- all inherited
+	
+* delta clause in BON, where?
+	- postcondition
+	-\nothing by default
+
+* BON precedence of operators 
+	- assume the same as in Java
+ 
+* if statements in BON
+	- must be transformed into predicates
+	
+* model and ghost fields
+	- 2 possibilities: ignore completely, or treat as non-model, since BON is a model
+	--> we'll opt for: treat as non-model
+	
+* heavyweight - lightweight behaviour
+	- heavy-weight on paper, but implement simple case
+	--> partial representation
+	
+* \product, \max, \min, \sum
+	- ignore, translate as comments
+	
+* shift, bitwise operators
+	- ignore, shouldn't be there in the first place, since too
+		detailed for high-level description
+	- xor is fine
+
+* can we use : name = "hello"
+	- yep, "hello" or whatever should be immutable
+	
+* can we say non-null for whole class in BON?
+	- nope
+	
+* can we express nullable?
+	- nope, not really
+
+* feature params are local params in BON?
+	- yep
+	
+* history constraint wth ?!
+	- different from invariant in that we can use \old
+	- is concatenated to invariant
+	
+* for_all i element_of INTEGER it_holds i > 0
+	- (\forall int/long/short i; i > 0)
+	
+* \fresh
+	- without modifies clause
+	- creates charts?! aeh?
+
+* \nonnullelements
+	- ARRAY[] \= Void and for_all i it_holds ARRAY[i] \= Void
+	
+* spec_public 
+	- ignore
+
+* A[*] or x.* 
+	- doesn't exist in BON
+	
+	
+	
+---------------------------------------------------------------------------------------------
+Thursday, 26.March 2009
+* Done:
+	- getter and setter are ignored, when there is an equivalent field
+	- spec_public and spec_protected is used for visibility, not the actual
+	- assignable clause
+	- pure/ query-command distinction
+	- constants
+	
+* Eclipse plugin issue:
+	-> hardcode it, since Eclipse is stupid
+	-> once it works, we'll ask the user for input with GUI
+
+* @assignable \everything and \nothing in BON?
+	- delta NONE and ANY doesnt quite work, since those are types
+	-> Fintan suggests making up keywords
+	-> ask Joe
+
+* @assignable array[0] will only be compared to delta array, since x[*] not
+	possible in BON
+	- approved
+	
+* delta default is \nothing, according to Joe, but this doesn't make sense for commands
+	-> ask Joe: either different defaults, or default must be \everything
+	
+* how to convert CamelCase to CAMEL_CASE?
+	-Fintan did sth like that, he'll look as to how he did it...
+	
+* feature{THIS_CLASS} accepted as protected
+	- approved, otherwise we get a huge mess
+	
+* skeleton Java code
+	- would be nice to get AST... we'll try
+	
+PLAN:
+- continue skeleton code
+- eclipse plugin
+- start final report
+ 
+	
+	
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+

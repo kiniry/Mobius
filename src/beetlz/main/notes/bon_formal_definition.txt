@@ -1,0 +1,54 @@
+indexing
+  about:        "An example of formal BON as recognized by BONc";
+  title:        "Formal definition";
+  author:       "Eva Darulova";
+  copyright:    " ";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "December 2008";
+  version:      "Revision: 1";
+
+system_chart FOO_SYSTEM
+  cluster MY_CLUSTER description "A cluster."
+end
+
+cluster_chart MY_CLUSTER
+  class MY_CLASS description "A normal class."
+  class MY_ABSTRACT_CLASS description "An abstract class."
+end
+
+
+static_diagram MY_PROGRAM
+component 
+
+-- A normal class
+class MY_CLASS
+inherit
+	MY_ABSTRACT_CLASS
+	
+feature
+   	fooCount, fooCapacity: VALUE	--(public) fields
+   	foo: BOOLEAN
+   		->fooArgOne: INTEGER
+   		->fooArgTwo: STRING
+   		require						--precondition
+        	0 <= fooArgOne;
+   		ensure						--postcondition
+        	is_correct();
+      	end
+    is_correct: BOOLEAN
+    
+invariant							--invariant
+	fooCount <= fooCapacity
+end
+
+
+-- An abstract class
+deferred class MY_ABSTRACT_CLASS
+feature
+   	deferred foo: BOOLEAN
+   	deferred fooOther: INTEGER
+   	redefined fooYetAnother: STRING
+end
+end --end of component
+
+
