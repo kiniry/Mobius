@@ -1,0 +1,12 @@
+-- Custom file for testing the custom file feature;
+feature_mapping count@ENCLOSURE animalCount@zoo_faults.enclosure.Enclosure;
+feature_mapping pattern@SNAKE getPattern@zoo_faults.animal.Snake;
+feature_mapping asleep@ZEBRA sleeping@zoo_faults.animal.Zebra;
+
+class_mapping LION zoo.animal.AbstractLion;
+
+ignore_prefix my_ _;
+
+ignore_classes {} {zoo.personnels.Snake};
+
+--ignore_classes {KEEPER, MANAGER} {zoo.personnel.Keeper$Mop, zoo.animal.Zebra};
