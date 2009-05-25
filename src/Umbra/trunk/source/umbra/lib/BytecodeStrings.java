@@ -253,16 +253,7 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * headers in byte code text files. The header lines are handled by
    * {@link umbra.instructions.ast.HeaderLineController} class.
    */
-  public static final String[] HEADER_PREFIX = new String[] {"public",
-                                                             "abstract",
-                                                             "static", "void",
-                                                             "private",
-                                                             "int", "char",
-                                                             "protected",
-                                                             "boolean",
-                                                             "String", "byte",
-                                                             "package",
-                                                             "}",
+  public static final String[] HEADER_PREFIX = new String[] {"package",
                                                              "class"};
 
   /**

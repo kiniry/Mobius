@@ -19,7 +19,7 @@ import org.junit.Test;
  * @version a-01
  *
  */
-public class ANTest {
+public class RegExpAutomatonTest {
 
   
   private String lines[] = {
@@ -46,14 +46,14 @@ public class ANTest {
     "765.e-f"
   };
   
-  private AN automaton;
+  private RegExpAutomaton automaton;
   
   /**
    * @throws java.lang.Exception
    */
   @Before
   public void setUp() throws Exception {
-    automaton = AN.constructAutomaton();
+    automaton = RegExpAutomaton.constructAutomaton();
   }
   
   /**
