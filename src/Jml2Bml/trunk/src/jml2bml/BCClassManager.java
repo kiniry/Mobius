@@ -25,7 +25,7 @@ public class BCClassManager {
     if (classes.containsKey(name))
       return classes.get(name);
 
-    String path = name.replaceAll("\\.", File.separator);
+    String path = name.replace('.', File.separatorChar);
     String lastSegment = path
         .substring(path.lastIndexOf(File.separatorChar) + 1);
     String fileDir = inputDir + File.separator +
@@ -45,7 +45,7 @@ public class BCClassManager {
     for (String name: classes.keySet()){
       final BCClass clazz = classes.get(name);
       
-      String outputName = outputDir+File.separator+name.replaceAll("\\.", File.separator) + ".class";      
+      String outputName = outputDir+File.separator+name.replace('.', File.separatorChar) + ".class";      
       clazz.saveToFile(outputName);
     }
   }

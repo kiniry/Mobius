@@ -39,6 +39,7 @@ import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.RESULT;
 import annot.bcexpression.THIS;
+import annot.bcexpression.formula.Formula;
 import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.formula.Predicate2Ar;
 import annot.bcexpression.formula.QuantifiedFormula;
@@ -127,8 +128,8 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
   @Override
   public BCExpression visitUnary(final UnaryTree node, final Symbols p) {
     final BCExpression expr = scan(node.getExpression(), p);
-    final int operator = BmlLibUtils.translateUnaryOperator(node.getKind()); 
-    return preVisit(node, p);
+    final int operator = BmlLibUtils.translateUnaryOperator(node.getKind());
+    return new Formula(operator, expr);
   }
 
   /**
