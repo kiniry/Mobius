@@ -59,7 +59,10 @@ public class MethodRule implements IPredicateRule {
       while (true) {
         c = a_scanner.read();
         if (c == ')') return my_token;
-        if (c == '\n' || c == ICharacterScanner.EOF) return Token.UNDEFINED;
+        if (c == '\n' || c == ICharacterScanner.EOF) {
+          a_scanner.unread();
+          return Token.UNDEFINED;
+        }
       }
     }
     while (true) {
@@ -86,7 +89,10 @@ public class MethodRule implements IPredicateRule {
       while (true) {
         c = a_scanner.read();
         if (c == ')') return my_token;
-        if (c == '\n') return Token.UNDEFINED;
+        if (c == '\n') {
+          a_scanner.unread();
+          return Token.UNDEFINED;
+        }
       }
     }
 
