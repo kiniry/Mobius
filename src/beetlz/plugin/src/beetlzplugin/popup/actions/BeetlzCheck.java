@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -194,6 +195,19 @@ public class BeetlzCheck implements IObjectActionDelegate {
   }
 
   /**
+   * Prepend the provided path to the start of the system class path, unless it is already present.
+   * @param pathToAdd the path to add to the system class path.
+   */
+  private static void updateClassPath(String pathToAdd) {
+    String[] cpParts = System.getProperty("java.class.path").split(File.pathSeparator);
+    if (!Arrays.asList(cpParts).contains(pathToAdd)) {
+      System.setProperty("java.class.path",  //$NON-NLS-1$
+          System.getProperty("java.class.path") + //$NON-NLS-2$
+          pathToAdd);
+    }    
+  }
+  
+  /**
    * Get options the user selected on preference page and ask again
    * with gui.
    * @param args arguments list to fill in
@@ -203,12 +217,11 @@ public class BeetlzCheck implements IObjectActionDelegate {
     final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
     final String fileName = store.getString(PreferenceConstants.SPEC_PATH);
     final String userFile = store.getString(PreferenceConstants.USER_SETTING_PATH);
-    System.setProperty("java.class.path",  //$NON-NLS-1$
-        System.getProperty("java.class.path") + //$NON-NLS-2$
-          File.pathSeparator + fileName); //$NON-NLS-1$
+    
+    updateClassPath(fileName);
     
     if (userFile != null && userFile.length() > 0) {
-      args.add("-userSettings"); //$NON-NLS-1$
+      args.add(Beetlz.USERSET_OPTION); //$NON-NLS-1$
       args.add(userFile);
     }
 
