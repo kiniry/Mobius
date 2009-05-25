@@ -22,6 +22,8 @@
   <property name="astgen-jar" value="astgen-0.1.jar"/>
   <property name="ast-dir" location="src/freeboogie/ast" />
   <property name="parser-dir" location="src/freeboogie/parser" />
+  <property name="junit_src" location="test/junit" />
+  <property name="junit_reports" location="test/junit/reports"/>
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
     <pathelement path="classes"  />
