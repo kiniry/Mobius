@@ -48,6 +48,12 @@ import check.ClassTranslator;
  * @version beta-1
  */
 public class Beetlz {
+  
+  /** The id for this (Eclipse) plugin */
+  public static final String PLUGIN_ID = "Beetlz";
+  /** The path to the built-in jmlspecs for this plugin */
+  public static final String JMLSPECS_PATH = "lib/openjml.jar";
+  
   /**
    * Filter for BON files.
    * @author Eva Darulova (edarulova@googlemail.com)
