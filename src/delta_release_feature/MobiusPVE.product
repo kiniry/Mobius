@@ -3,8 +3,12 @@
 
 <product name="Mobius Program Verification Environment" id="mobius.pve" application="org.eclipse.ui.ide.workbench" version="Epsilon" useFeatures="true">
 
+
    <configIni use="default">
       <linux>/Mobius Delta Release/config.ini</linux>
+      <macosx>/Mobius Delta Release/config.ini</macosx>
+      <solaris>/Mobius Delta Release/config.ini</solaris>
+      <win32>/Mobius Delta Release/config.ini</win32>
    </configIni>
 
    <launcherArgs>
@@ -14,13 +18,15 @@
    <windowImages/>
 
    <splash
-      location="mobius" />
-   <launcher>
+      location="mobius"
+      startupProgressRect="5,275,445,15" />
+   <launcher name="mobius">
       <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
+
 
    <vm>
    </vm>
@@ -29,23 +35,21 @@
    </plugins>
 
    <features>
-      <feature id="com.atlassw.tools.eclipse.checkstyle" version="4.4.2"/>
-      <feature id="com.sun.jna" version="3.0.9"/>
       <feature id="mobius.bml" version="0.0.10"/>
       <feature id="mobius.directvcgen" version="1.0.0"/>
       <feature id="mobius.esc" version="2.0.18"/>
       <feature id="mobius.provereditor" version="1.0.0"/>
-      <feature id="mobius.pve" version="0.0.3"/>
       <feature id="mobius.rcc.feature" version="1.0.0"/>
       <feature id="mobius.required" version="1.0.0"/>
+      <feature id="mobius.jml" version="1.0.0"/>
+      <feature id="com.atlassw.tools.eclipse.checkstyle" version="4.4.2"/>
+      <feature id="com.sun.jna" version="3.0.9"/>
       <feature id="org.eclipse.cdt" version="5.0.2.200902130801"/>
       <feature id="org.eclipse.cdt.gnu.build" version="5.0.2.200902130801"/>
       <feature id="org.eclipse.cdt.gnu.debug" version="5.0.2.200902130801"/>
       <feature id="org.eclipse.cdt.platform" version="5.0.2.200902130801"/>
       <feature id="org.eclipse.cvs" version="1.1.2.R342_v20090122-7C79E9x9sLM1t6M9YD7_A7"/>
       <feature id="org.eclipse.cvs.source" version="1.1.2.R342_v20090122-7C79E9x9sLM1t6M9YD7_A7"/>
-      <feature id="org.eclipse.equinox.p2.user.ui" version="1.0.2.r34x_v20090120-7d-7tEQcCaaYSBeNOClOn02267"/>
-      <feature id="org.eclipse.equinox.p2.user.ui.source" version="1.0.2.r34x_v20090120-7d-7tEQcCaaYSBeNOClOn02267"/>
       <feature id="org.eclipse.help" version="1.0.2.R342_v20090122-7r7xEKaEJBZu5oGhP3u6nOmbM9VK"/>
       <feature id="org.eclipse.help.source" version="1.0.2.R342_v20090122-7r7xEKaEJBZu5oGhP3u6nOmbM9VK"/>
       <feature id="org.eclipse.jdt" version="3.4.2.r342_v20081217-7o7tEAoEEDWEm5HTrKn-svO4BbDI"/>
@@ -59,12 +63,18 @@
       <feature id="org.eclipse.rcp" version="3.4.200.R342_v20090122-989JESTEbig-SVaL8UJHcYBr4A63"/>
       <feature id="org.eclipse.rcp.source" version="3.4.200.R342_v20090122-989JESTEbig-SVaL8UJHcYBr4A63"/>
       <feature id="org.eclipse.sdk" version="3.4.2.R342_v20090122-7O7S7GApJ3_vCyk7ETmsfcmjhz0eHnqw7MIjk9Vdhe4Ic"/>
+      <feature id="org.maven.ide.components.maven_embedder.feature" version="2.1.0.20080530-2300"/>
+      <feature id="org.maven.ide.eclipse.book.feature" version="0.9.8.200905041414"/>
+      <feature id="org.maven.ide.eclipse.editor.feature" version="0.9.8.200905041414"/>
+      <feature id="org.maven.ide.eclipse.editor.xml.feature" version="0.9.8.200905041414"/>
+      <feature id="org.maven.ide.eclipse.feature" version="0.9.8.200905041414"/>
+      <feature id="org.maven.ide.eclipse.subclipse.feature" version="0.9.8.200905041414"/>
       <feature id="org.tigris.subversion.clientadapter.feature" version="1.5.3"/>
       <feature id="org.tigris.subversion.clientadapter.svnkit.feature" version="1.5.6.1"/>
       <feature id="org.tigris.subversion.subclipse" version="1.4.8"/>
       <feature id="org.tigris.subversion.subclipse.graph.feature" version="1.0.5"/>
       <feature id="org.tmatesoft.svnkit" version="1.2.2.5405"/>
-      <feature id="mobius.jml" version="1.0.0"/>
+      <feature id="mobius.pve" version="0.0.4"/>
    </features>
 
 </product>

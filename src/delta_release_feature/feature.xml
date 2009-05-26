@@ -2,7 +2,7 @@
 <feature
       id="mobius.pve"
       label="Mobius PVE Feature"
-      version="0.0.3"
+      version="0.0.4"
       plugin="mobius.pluginlib">
 
    <description url="http://www.example.com/description">
@@ -84,7 +84,6 @@
          id="mobius"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
