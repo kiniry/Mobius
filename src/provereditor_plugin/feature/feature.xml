@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="Prover_Editor_feature"
+      id="mobius.provereditor"
       label="Prover_Editor_feature Feature"
       version="1.0.0"
       provider-name="MOBIUS and Julien Charles">
@@ -16,6 +16,10 @@
    <license url="http://www.example.com/license">
       [Enter License Description here.]
    </license>
+
+   <url>
+      <update url="http://kind.ucd.ie/products/opensource/Mobius/updates/"/>
+   </url>
 
    <plugin
          id="coq.editor"
@@ -33,13 +37,6 @@
 
    <plugin
          id="prover.editor"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="PvsEditor"
          download-size="0"
          install-size="0"
          version="0.0.0"
