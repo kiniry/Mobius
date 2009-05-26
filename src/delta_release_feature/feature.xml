@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="Mobius_Delta_Release"
-      label="Mobius_Delta_Release Feature"
-      version="1.0.0"
+      id="mobius.pve"
+      label="Mobius PVE Feature"
+      version="0.0.3"
       plugin="mobius.pluginlib">
 
    <description url="http://www.example.com/description">
@@ -18,13 +18,73 @@
    </license>
 
    <url>
+      <update url="http://kind.ucd.ie/products/opensource/Mobius/updates/"/>
       <discovery label="BONc" url="http://kind.ucd.ie/products/opensource/bonc/update"/>
-      <discovery label="ESCJava2" url="http://kind.ucd.ie/products/opensource/ESCJava2/escjava-eclipse/updates/"/>
       <discovery label="JML2" url="http://www.pm.inf.ethz.ch/research/universes/tools/eclipse"/>
       <discovery label="Metrics" url="http://metrics.sourceforge.net/updates"/>
       <discovery label="FindBugs" url="http://findbugs.cs.umd.edu/eclipse"/>
       <discovery label="PMD" url="http://pmd.sf.net/eclipse"/>
       <discovery label="Checkstyle" url="http://eclipse-cs.sf.net/update"/>
    </url>
+
+   <includes
+         id="mobius.directvcgen"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.provereditor"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.rcc.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.required"
+         version="0.0.0"/>
+
+   <includes
+         id="org.tigris.subversion.subclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="org.tigris.subversion.clientadapter.feature"
+         version="0.0.0"
+         search-location="both"/>
+
+   <includes
+         id="org.tigris.subversion.clientadapter.svnkit.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.tigris.subversion.subclipse"
+         version="0.0.0"/>
+
+   <includes
+         id="org.tigris.subversion.subclipse.graph.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="org.tmatesoft.svnkit"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.bml"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.esc"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.jml"
+         version="0.0.0"/>
+
+   <plugin
+         id="mobius"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
