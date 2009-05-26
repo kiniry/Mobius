@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="mobius.escjava2.feature"
-      label="ESCJava2"
+      id="mobius.esc"
+      label="ExtendedStaticChecking"
       version="2.0.18"
       provider-name="MOBIUS">
 
@@ -744,6 +744,14 @@ and
 limitations under the License.
    </license>
 
+   <url>
+      <update url="http://kind.ucd.ie/products/opensource/Mobius/updates/"/>
+   </url>
+
+   <requires>
+      <import feature="mobius.required" version="1.0.0"/>
+   </requires>
+
    <plugin
          id="mobius.escjava2.esctools"
          download-size="0"
@@ -752,12 +760,6 @@ limitations under the License.
 
    <plugin
          id="mobius.javafe.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="mobius.pluginlib"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -775,9 +777,10 @@ limitations under the License.
          version="0.0.0"/>
 
    <plugin
-         id="bcel.plugin"
+         id="mobius.freeboogie"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
