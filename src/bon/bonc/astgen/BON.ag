@@ -32,9 +32,9 @@ StaticDiagram = List<StaticComponent>! components, String extendedID, String com
 StaticComponent :> Cluster, Clazz, StaticRelation;
 Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
 //Can root, deferred, effective be an enum? Similarly reused, persistent, interfaced?
-Clazz = enum(ModA: ROOT, DEFERRED, EFFECTIVE, NONE) modA,
-        enum(ModB: REUSED, PERSISTENT, INTERFACED, NONE) modB,  
-        ClassInterface classInterface, List<FormalGeneric> generics, String comment;
+Clazz = String! name, List<FormalGeneric> generics,
+        enum(Mod: ROOT, DEFERRED, EFFECTIVE, NONE) mod, ClassInterface classInterface,  
+        Boolean! reused, Boolean! persistent, Boolean! interfaced, String comment;
 StaticRelation :> InheritanceRelation, ClientRelation;
 
 InheritanceRelation = BONType! child, BONType! parent, Multiplicity multiplicity, String semanticLabel;

@@ -9,47 +9,51 @@ import java.util.List;
 import ie.ucd.bon.source.SourceLocation;
 
 public class Clazz extends StaticComponent {
-  public static enum ModA {
+  public static enum Mod {
     NONE, 
     DEFERRED, 
     ROOT, 
     EFFECTIVE
-  }  public static enum ModB {
-    INTERFACED, 
-    REUSED, 
-    PERSISTENT, 
-    NONE
   }
 
   private final ClassInterface classInterface;
 
-  private final ModA modA;
-  private final ModB modB;
+  private final String name;
   private final List<FormalGeneric> generics;
+  private final Mod mod;
+  private final Boolean reused;
+  private final Boolean persistent;
+  private final Boolean interfaced;
   private final String comment;
 
 
   // === Constructors and Factories ===
-  protected Clazz(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
+  protected Clazz(String name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
     super(location);
-    this.modA = modA; 
-    this.modB = modB; 
-    this.classInterface = classInterface; 
+    this.name = name; assert name != null;
     this.generics = generics; 
+    this.mod = mod; 
+    this.classInterface = classInterface; 
+    this.reused = reused; assert reused != null;
+    this.persistent = persistent; assert persistent != null;
+    this.interfaced = interfaced; assert interfaced != null;
     this.comment = comment; 
     
   }
   
-  public static Clazz mk(ModA modA, ModB modB, ClassInterface classInterface, List<FormalGeneric> generics, String comment, SourceLocation location) {
-    return new Clazz(modA, modB, classInterface, generics, comment, location);
+  public static Clazz mk(String name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
+    return new Clazz(name, generics, mod, classInterface, reused, persistent, interfaced, comment, location);
   }
 
   // === Accessors ===
 
-  public ModA getModA() { return modA; }
-  public ModB getModB() { return modB; }
-  public ClassInterface getClassInterface() { return classInterface; }
+  public String getName() { return name; }
   public List<FormalGeneric> getGenerics() { return generics; }
+  public Mod getMod() { return mod; }
+  public ClassInterface getClassInterface() { return classInterface; }
+  public Boolean getReused() { return reused; }
+  public Boolean getPersistent() { return persistent; }
+  public Boolean getInterfaced() { return interfaced; }
   public String getComment() { return comment; }
 
   // === Visitor ===
@@ -60,13 +64,16 @@ public class Clazz extends StaticComponent {
   // === Others ===
   @Override
   public Clazz clone() {
-    ModA newModA = modA;
-    ModB newModB = modB;
-    ClassInterface newClassInterface = classInterface == null ? null : classInterface.clone();
+    String newName = name;
     List<FormalGeneric> newGenerics = generics;
+    Mod newMod = mod;
+    ClassInterface newClassInterface = classInterface == null ? null : classInterface.clone();
+    Boolean newReused = reused;
+    Boolean newPersistent = persistent;
+    Boolean newInterfaced = interfaced;
     String newComment = comment;
     
-    return Clazz.mk(newModA, newModB, newClassInterface, newGenerics, newComment, getLocation());
+    return Clazz.mk(newName, newGenerics, newMod, newClassInterface, newReused, newPersistent, newInterfaced, newComment, getLocation());
   }
   
   @Override
@@ -74,20 +81,32 @@ public class Clazz extends StaticComponent {
     StringBuilder sb = new StringBuilder();
     sb.append("Clazz ast node: ");
     
-    sb.append("modA = ");
-    sb.append(modA);
+    sb.append("name = ");
+    sb.append(name);
     sb.append(", ");
     
-    sb.append("modB = ");
-    sb.append(modB);
+    sb.append("generics = ");
+    sb.append(generics);
+    sb.append(", ");
+    
+    sb.append("mod = ");
+    sb.append(mod);
     sb.append(", ");
     
     sb.append("classInterface = ");
     sb.append(classInterface);
     sb.append(", ");
     
-    sb.append("generics = ");
-    sb.append(generics);
+    sb.append("reused = ");
+    sb.append(reused);
+    sb.append(", ");
+    
+    sb.append("persistent = ");
+    sb.append(persistent);
+    sb.append(", ");
+    
+    sb.append("interfaced = ");
+    sb.append(interfaced);
     sb.append(", ");
     
     sb.append("comment = ");

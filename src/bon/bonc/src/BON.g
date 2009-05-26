@@ -956,19 +956,28 @@ cluster_components returns [List<StaticComponent> components] :
                       ) 
                     ;
                     
-clazz returns [Clazz clazz] :
-  (  ( 'root' c='class' c1=class_name 			{ getTI().addClass($c1.text, getSLoc($c,$c1.stop), "root"); getContext().enterClass($c1.text); }       ) 
-						| ( 'deferred' c='class' c2=class_name   { getTI().addClass($c2.text, getSLoc($c,$c2.stop), "deferred"); getContext().enterClass($c2.text); }  )
-						| ( 'effective' c='class' c3=class_name  { getTI().addClass($c3.text, getSLoc($c,$c3.stop), "effective"); getContext().enterClass($c3.text); } )
-						| ( c='class' c4=class_name              { getTI().addClass($c4.text, getSLoc($c,$c4.stop), null); getContext().enterClass($c4.text); }        )
-					 )             
-           (formal_generics)?
-           ('reused' { getTI().setClassReused(); } )? 
-           ('persistent' { getTI().setClassPersistent(); })?   
-           ('interfaced' { getTI().setClassInterfaced(); })? 
-           (COMMENT)?
-           (class_interface)? 
-           { getContext().leaveClass(); }
+clazz returns [Clazz clazz] 
+@init { Clazz.Mod mod = null; List<FormalGeneric> generics = null; Token start = null; Token end = null;
+        boolean reused = false; boolean persistent = false; boolean interfaced = false; 
+        String comment = null; ClassInterface classInterface = null; }
+:
+  (   r='root'      { mod = Clazz.Mod.ROOT; start = $r; }
+    | d='deferred'  { mod = Clazz.Mod.DEFERRED; start = $d; }
+    | e='effective' { mod = Clazz.Mod.EFFECTIVE; start = $e; }
+    |             { mod = Clazz.Mod.NONE; }
+  )
+  c='class' 
+  { if (start == null) start = $c; }
+  cn=class_name
+  { getTI().addClass($cn.text, getSLoc($c,$cn.stop), mod); getContext().enterClass($cn.text); end = $cn.stop; }
+  (fg=formal_generics { generics = $fg.generics; } )?
+  (ru='reused' { getTI().setClassReused(); reused = true; end = $ru; } )? 
+  (p='persistent' { getTI().setClassPersistent(); persistent = true; end = $p; })?   
+  (i='interfaced' { getTI().setClassInterfaced(); interfaced = true; end = $i; })? 
+  (co=COMMENT { comment = $co.text; end = $co; } )?
+  (ci=class_interface { classInterface = $ci.ci; end = $ci.stop; } )? 
+  { getContext().leaveClass(); }
+  { $clazz = Clazz.mk($cn.name, generics, mod, classInterface, reused, persistent, interfaced, comment, getSLoc(start,end)); }
          ->
          ^(
            CLASS[$c]
@@ -1646,14 +1655,22 @@ infix_operator  :  binary
 
 /**********************************************/
 
-formal_generics  :  '[' formal_generic_list ']'
+formal_generics returns [List<FormalGeneric> generics] :
+  '[' fgl=formal_generic_list ']'
+  { $generics = $fgl.list; } 
                   ->
                   ^(
                     FORMAL_GENERICS formal_generic_list
                    )
                  ;
                  
-formal_generic_list  :  formal_generic (',' formal_generic)* 
+formal_generic_list returns [List<FormalGeneric> list] :
+  { $list = new LinkedList<FormalGeneric>(); }
+  fg1=formal_generic
+  { $list.add($fg1.generic); }
+  (',' fg=formal_generic
+   { $list.add($fg.generic); }
+  )* 
                       -> 
                       ^(
                         FORMAL_GENERIC_LIST (formal_generic)+

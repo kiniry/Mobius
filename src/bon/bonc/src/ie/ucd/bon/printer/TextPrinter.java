@@ -32,6 +32,11 @@ public class TextPrinter {
     }
   }
   
+  public void printLine(String line) {
+    ps.println(line);
+    printIndentation();
+  }
+  
   public void printIndentation() {
     for (int i=0; i < indentation*spacesPerIndent; i++) {
       ps.println(' ');

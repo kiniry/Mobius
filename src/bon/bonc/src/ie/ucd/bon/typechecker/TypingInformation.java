@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
@@ -123,7 +124,7 @@ public class TypingInformation {
     } 
   }
 
-  public void addClass(String className, SourceLocation loc, String keyword) {
+  public void addClass(String className, SourceLocation loc, Clazz.Mod mod) {
     ClusterDefinition clusterDef = clusters.get(className);
     if (clusterDef != null) {
       problems.addProblem(new NameNotUniqueError(loc, "Class", className, "cluster", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
@@ -131,15 +132,14 @@ public class TypingInformation {
     ClassDefinition def = classes.get(className);
     if (def == null) {
       def = new ClassDefinition(className, loc, this);
-
-      if (keyword != null) {
-        if (keyword.equals("root")) {
-          def.setRoot();
-        } else if (keyword.equals("deferred")) {
-          def.setDeferred();
-        } else if (keyword.equals("effective")) {
-          def.setEffective();
-        }
+      
+      switch (mod) {
+      case DEFERRED:
+        def.setDeferred();
+      case ROOT:
+        def.setRoot();
+      case EFFECTIVE:
+        def.setEffective();
       }
 
       classes.put(className, def);

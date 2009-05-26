@@ -1,6 +1,7 @@
 package ie.ucd.bon.printer;
 
 import ie.ucd.bon.ast.AbstractVisitor;
+import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.BooleanConstant;
@@ -67,6 +68,7 @@ import ie.ucd.bon.ast.UnaryExp;
 import ie.ucd.bon.ast.UnqualifiedCall;
 
 import java.io.PrintStream;
+import java.util.List;
 
 public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
@@ -96,8 +98,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitBooleanConstant(BooleanConstant node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(node.getValue().toString());
   }
 
   @Override
@@ -108,8 +109,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitCharacterConstant(CharacterConstant node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(node.getValue().toString());
   }
 
   @Override
@@ -121,7 +121,6 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
   @Override
   public void visitClassChart(ClassChart node) {
     // TODO Auto-generated method stub
-    
   }
 
   @Override
@@ -144,14 +143,31 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitClassName(ClassName node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(node.getName());
   }
 
   @Override
   public void visitClazz(Clazz node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(toString(node.getMod()));
+    tp.print(node.getName());
+    List<FormalGeneric> generics = node.getGenerics(); 
+    if (generics != null && generics.size() > 0) {
+      //TODO print list of...
+    } else {
+      tp.print(" ");
+    }
+    if (node.getReused()) {
+      tp.print("reused ");
+    }
+    if (node.getPersistent()) {
+      tp.print("persistent ");
+    }
+    if (node.getInterfaced()) {
+      tp.print("reused ");
+    }
+    tp.printLine();
+    printComment(node.getComment());
+    visitNodeIfNonNull(node.getClassInterface());
   }
 
   @Override
@@ -290,8 +306,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitIntegerConstant(IntegerConstant node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(node.getValue().toString());
   }
 
   @Override
@@ -302,8 +317,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitKeywordConstant(KeywordConstant node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(toString(node.getConstant()));
   }
 
   @Override
@@ -368,8 +382,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitRealConstant(RealConstant node) {
-    // TODO Auto-generated method stub
-    
+    tp.print(node.getValue().toString());
   }
 
   @Override
@@ -457,5 +470,38 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
   }
 
   
+  protected String toString(KeywordConstant.Constant constant) {
+    switch (constant) {
+    case CURRENT:
+      return "Current";
+    case VOID:
+      return "Void";
+    }
+    return "";
+  }
   
+  protected String toString(Clazz.Mod modifier) {
+    switch (modifier) {
+    case DEFERRED:
+      return "deferred ";
+    case EFFECTIVE:
+      return "effective ";
+    case ROOT:
+      return "root ";
+    default:
+      return "";
+    }
+  }
+  
+  protected void printComment(String commentText) {
+    if (commentText != null) {
+      tp.printLine("--" + commentText);
+    }
+  }
+  
+  protected final void visitNodeIfNonNull(AstNode node) {
+    if (node != null) {
+      node.accept(this);
+    }
+  }
 }
