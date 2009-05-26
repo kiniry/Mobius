@@ -135,12 +135,15 @@ public class VCMethodVisitor implements MethodVisitor {
       new File(env.getArgs().getOutputDir());
     final File methodDir = 
       new File(getVCDir());
-    methodDir.mkdirs();
-    try {    
-      final BcCoqFile bcf = new BcCoqFile(buildDir, methodDir);
-      bcf.doIt(method);
-    } catch (final FileNotFoundException e) {
-      logger.exception(e);
+    if (!methodDir.mkdirs()) {
+      logger.error("Unable to create vcs directory.");
+    } else {
+      try {    
+        final BcCoqFile bcf = new BcCoqFile(buildDir, methodDir);
+        bcf.doIt(method);
+      } catch (final FileNotFoundException e) {
+        logger.exception(e);
+      }
     }
   }
   
@@ -149,9 +152,14 @@ public class VCMethodVisitor implements MethodVisitor {
     return
       env.getArgs().getOutputDir() + "/vcs/" + 
       self.getClassName().replace('.', '/') + "/" + 
-      method.getName() + method.getSignature();
+      fix(method.getName()) + fix(method.getSignature());
   }
 
+  // Fix file/directory name by removing unfriendly chars.
+  private String fix(final String d) {
+    return d.replaceAll("<|>|\\(|\\)|\\$|;", "_");
+  }
+  
   /** {@inheritDoc} */ 
   @Override
   public void beginAssertions() {

@@ -20,6 +20,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.Type;
 
 import escjava.sortedProver.Lifter.QuantVariable;
+import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 import escjava.sortedProver.NodeBuilder.Sort;
 
@@ -147,9 +148,11 @@ public class VCSpecVisitor implements MethodSpecVisitor {
       }
     }
     lookup.addPrecondition(method, Logic.invPostPred(visSet));
+    final QuantVariableRef qvr = 
+      resultVar == null ? null : Expression.rvar(resultVar);
     lookup.addNormalPostcondition(
       method, 
-      new Post(null, 
+      new Post(qvr, 
                Logic.invPostPred(visSet)));
   }
 }
