@@ -127,7 +127,8 @@ public abstract class BytecodeTextParser {
    * @return the byte code line without end-of-line comment and final
    *   whitespace
    */
-  public static final String removeCommentFromLine(final String a_line) {
+  public static final String removeCommentFromLine(final String a_line,
+                                                   final String line_delimiter) {
     String res;
     final InstructionParser parser = new InstructionParser(a_line);
     int j = a_line.length() - 1;
@@ -146,8 +147,8 @@ public abstract class BytecodeTextParser {
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
     res = a_line.substring(0, j + 1);
-    if (a_line.endsWith(EclipseIdentifiers.EOL))
-      res += EclipseIdentifiers.EOL;
+    if (line_delimiter != null && a_line.endsWith(line_delimiter))
+      res += line_delimiter;      
     return res;
   }
 
@@ -186,7 +187,7 @@ public abstract class BytecodeTextParser {
   public void addEditorLine(final int a_pos,
                             final BytecodeLineController a_line) {
     final int pos_in_combined = getPosOfLine(a_pos);
-    final String instr = a_line.getLineContent();
+    String instr = a_line.getLineContent();
     insertAt(pos_in_combined, instr);
     enrichWithComment(a_line, pos_in_combined, my_instruction_no);
     my_editor_lines.add(a_pos, a_line);

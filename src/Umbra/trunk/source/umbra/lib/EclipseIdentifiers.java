@@ -57,11 +57,6 @@ public final class EclipseIdentifiers {
    */
   public static final String COLOR_GROUP = "colorGroup";
 
-  /**
-   * The end of line sequence for the current operating system.
-   */
-  public static final String EOL = System.getProperty("line.separator");
-
   /* *********************************************************************
    * ACTION NAMES
    */

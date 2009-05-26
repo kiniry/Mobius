@@ -160,16 +160,18 @@ public class BytecodeCommentParser extends BytecodeTextParser {
                                   final int a_line,
                                   final LineContext a_ctxt)
     throws UmbraLocationException {
-    String line;
+    final String line;
+    final String line_delimiter;
     try {
       line = a_doc.get(a_doc.getLineOffset(a_line),
                                     a_doc.getLineLength(a_line));
+      line_delimiter = a_doc.getLineDelimiter(a_line);
     } catch (BadLocationException e) {
       throw new UmbraLocationException(a_line, true);
     }
     final String lineName;
     if (!a_ctxt.isInsideComment() || !a_ctxt.isInsideAnnotation()) {
-      lineName = removeCommentFromLine(line);
+      lineName = removeCommentFromLine(line, line_delimiter);
       my_current_comment = extractCommentFromLine(line, a_ctxt);
     } else {
       lineName = line;
