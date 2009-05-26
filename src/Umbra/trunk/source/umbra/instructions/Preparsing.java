@@ -10,7 +10,11 @@ package umbra.instructions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.jface.text.rules.IToken;
+import org.eclipse.jface.text.rules.Token;
+
 import umbra.UmbraPlugin;
+import umbra.editor.parsing.MethodRule;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CPHeaderController;
@@ -24,6 +28,7 @@ import umbra.instructions.ast.InstructionLineController;
 import umbra.instructions.ast.ThrowsLineController;
 import umbra.instructions.ast.UnknownLineController;
 import umbra.lib.BMLParsing;
+import umbra.lib.BufferScanner;
 import umbra.lib.BytecodeStrings;
 
 /**
@@ -57,9 +62,19 @@ public final class Preparsing {
   public static final boolean UPDATE_CP = true;
 
   /**
+   * The identifier for the token returned in search for the method header.
+   */
+  private static final String HLC_TOKEN = "header line controller";
+
+  /**
    * The automaton to pre-parse the lines of the byte code document.
    */
   private static DispatchingAutomaton my_preparse_automaton;
+
+  /**
+   * The recognition rule which parses method headers.
+   */
+  private static MethodRule my_mrule;
 
   /**
    * Private constructor added to prevent the creation of objects of this
@@ -87,8 +102,10 @@ public final class Preparsing {
   public static BytecodeLineController getType(final String a_line,
                                          final LineContext a_context,
                                          final BMLParsing a_bmlp) {
-    final BytecodeLineController initial = getTypeForInsides(a_line,
+    BytecodeLineController initial = getTypeForInsides(a_line,
                                                              a_context, a_bmlp);
+    if (initial != null) return initial;
+    initial = getTypeForMethodHeader(a_line, a_bmlp);
     if (initial != null) return initial;
     final DispatchingAutomaton automaton = Preparsing.getAutomaton();
     BytecodeLineController  blc;
@@ -105,6 +122,33 @@ public final class Preparsing {
       }
     }
     return blc;
+  }
+
+  /**
+   * @param a_line
+   * @param a_bmlp
+   * @return
+   */
+  private static BytecodeLineController getTypeForMethodHeader(
+      final String a_line, final BMLParsing a_bmlp) {
+    // methods
+    final MethodRule mrule = getMethodRule();
+    final BufferScanner bs = new BufferScanner(a_line);
+    final IToken tkn = mrule.evaluate(bs);
+    if (HLC_TOKEN.equals(tkn.getData()))
+      return new HeaderLineController(a_line);
+    else
+      return null;
+  }
+
+  /**
+   * @return the rule to recognise the method headers
+   */
+  private static MethodRule getMethodRule() {
+    if (my_mrule == null) {
+      my_mrule = new MethodRule(new Token(HLC_TOKEN));
+    }
+    return my_mrule;
   }
 
   /**
@@ -265,6 +309,7 @@ public final class Preparsing {
                         ThrowsLineController.class);
       addSimpleForArray(BytecodeStrings.HEADER_PREFIX,
                         HeaderLineController.class);
+      addMethodHeaderRules();
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CLASS_KEYWORD_POS],
         ClassHeaderLineController.class);
@@ -302,6 +347,14 @@ public final class Preparsing {
       addAllMnemonics(colonnode);
     }
     return my_preparse_automaton;
+  }
+
+  /**
+   * 
+   */
+  private static void addMethodHeaderRules() {
+    // TODO Auto-generated method stub
+    
   }
 
   /**

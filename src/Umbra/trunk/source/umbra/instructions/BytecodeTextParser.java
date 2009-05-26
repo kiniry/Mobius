@@ -127,8 +127,8 @@ public abstract class BytecodeTextParser {
    * @return the byte code line without end-of-line comment and final
    *   whitespace
    */
-  public static final String removeCommentFromLine(final String a_line,
-                                                   final String line_delimiter) {
+  public static final String removeCommentFromLine(
+      final String a_line, final String a_line_delimiter) {
     String res;
     final InstructionParser parser = new InstructionParser(a_line);
     int j = a_line.length() - 1;
@@ -147,8 +147,8 @@ public abstract class BytecodeTextParser {
     while ((j >= 0) && (Character.isWhitespace(a_line.charAt(j))))
       j--;
     res = a_line.substring(0, j + 1);
-    if (line_delimiter != null && a_line.endsWith(line_delimiter))
-      res += line_delimiter;      
+    if (a_line_delimiter != null && a_line.endsWith(a_line_delimiter))
+      res += a_line_delimiter;
     return res;
   }
 

@@ -56,14 +56,7 @@ public class MethodRule implements IPredicateRule {
     boolean dot = false;
     int c;
     if (a_resume) {
-      while (true) {
-        c = a_scanner.read();
-        if (c == ')') return my_token;
-        if (c == '\n' || c == ICharacterScanner.EOF) {
-          a_scanner.unread();
-          return Token.UNDEFINED;
-        }
-      }
+      return scanClosingParen(a_scanner);
     }
     while (true) {
       if (scanIdent(a_scanner)) {
@@ -99,6 +92,22 @@ public class MethodRule implements IPredicateRule {
     return Token.UNDEFINED;
   }
 
+  /**
+   * @param a_scanner
+   * @param cha
+   * @return
+   */
+  private IToken scanClosingParen(final ICharacterScanner a_scanner) {
+    while (true) {
+      final int c = a_scanner.read();
+      if (c == ')') return my_token;
+      if (c == '\n' || c == ICharacterScanner.EOF) {
+        a_scanner.unread();
+        return Token.UNDEFINED;
+      }
+    }
+  }
+
 
   /**
    * @param a_scanner
@@ -114,9 +123,13 @@ public class MethodRule implements IPredicateRule {
   }
 
   /**
-   * @param a_scanner
+   * The method scans in a method identifier. These include also "&lt;init&gt;"
+   * and "&lt;clinit&gt;" bytecode identifiers.
+   *
+   * @param a_scanner the scanner to read the identifier from
+   * @return <code>true</code> in case an identifier is recognised
    */
-  private boolean scanIdent(ICharacterScanner a_scanner) {
+  private boolean scanIdent(final ICharacterScanner a_scanner) {
     int c = a_scanner.read();
     final StringBuffer buf = new StringBuffer("");
     boolean ok = false;

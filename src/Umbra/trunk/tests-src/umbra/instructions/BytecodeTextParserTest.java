@@ -88,19 +88,20 @@ public class BytecodeTextParserTest {
   public void testRemoveCommentFromLine() {
     assertEquals("simple comment",
       "a",
-      BytecodeTextParser.removeCommentFromLine("a // some comment"));
+      BytecodeTextParser.removeCommentFromLine("a // some comment", null));
     assertEquals("no comment",
                  "a",
-                 BytecodeTextParser.removeCommentFromLine("a "));
+                 BytecodeTextParser.removeCommentFromLine("a ", null));
     assertEquals("string + comment",
                  "\"a\"",
-                 BytecodeTextParser.removeCommentFromLine("\"a\" // c"));
+                 BytecodeTextParser.removeCommentFromLine("\"a\" // c", null));
     assertEquals("string + comment in string",
                  "\"//\"",
-                 BytecodeTextParser.removeCommentFromLine("\"//\" // c"));
+                 BytecodeTextParser.removeCommentFromLine("\"//\" // c", null));
     assertEquals("string + string in comment",
                  "\"//\"",
-                 BytecodeTextParser.removeCommentFromLine("\"//\" // \" \"c"));
+                 BytecodeTextParser.removeCommentFromLine("\"//\" // \" \"c",
+                                                          null));
   }
 
   /**

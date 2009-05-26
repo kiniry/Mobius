@@ -113,10 +113,13 @@ public class ClassCPLineController extends CPLineController {
    *
    * The constant reference number set for the newly created constant is
    * the "dirty" number. It should be changed to "clean" number in
-   * {@link BytecodeController#recalculateCPNumbers()}. <br> <br>
+   * {@link umbra.instructions.BytecodeController#recalculateCPNumbers(
+   * org.apache.bcel.classfile.JavaClass)}.
+   * <br> <br>
    *
    * For explantation of "dirty" and "clean" number concepts see
-   * {@link BytecodeController#recalculateCPNumbers()}.
+   * {@link umbra.instructions.BytecodeController#recalculateCPNumbers(
+   * org.apache.bcel.classfile.JavaClass)}.
    *
    * @return a BCEL constant represented by the current line
    */
@@ -131,7 +134,8 @@ public class ClassCPLineController extends CPLineController {
    * CP entry from a "dirty" number to a "clean" one in BCEL representation
    * of this CP entry. <br> <br>
    *
-   * See {@link BytecodeController#recalculateCPNumbers()} for explantation of
+   * See {@link umbra.instructions.BytecodeController#recalculateCPNumbers(
+   * org.apache.bcel.classfile.JavaClass)} for explantation of
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones

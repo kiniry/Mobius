@@ -150,9 +150,10 @@ public class InitParserTest {
     final LineContext ctxt = new LineContext();
     ctxt.setInitial();
     assertEquals("does not leave end of line", "something\n",
-                 InitParser.removeCommentFromLine("something // something"));
+                 InitParser.removeCommentFromLine("something // something",
+                                                  null));
     assertEquals("leaves whitespace", "something\n",
-                   InitParser.removeCommentFromLine("something // "));    
+                   InitParser.removeCommentFromLine("something // ", null));    
   }
 
   /**
