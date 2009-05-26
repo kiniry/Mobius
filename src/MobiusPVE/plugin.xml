@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="pve"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.eclipse.ui.ide.workbench"
+            name="Mobius Program Verification Environment">
+         <property
+               name="appName"
+               value="Mobius Program Verification Environment">
+         </property>
+         <property
+               name="preferenceCustomization"
+               value="plugin_customization.ini">
+         </property>
+         <property
+               name="startupProgressRect"
+               value="5,275,445,15">
+         </property>
+      </product>
+   </extension>
+
+<!--
+  <extension 
+        point="org.eclipse.ui.actionSets">
+        <actionSet label="%UpdateActionSet.label" visible="true"
+                    id="org.eclipse.update.ui.softwareUpdates">
+             <menu
+                label="%UpdateActionSet.menu.label"
+                path="help/group.updates"
+                id="org.eclipse.update.ui.updateMenu">
+            </menu>
+              <action
+                    definitionId="org.eclipse.ui.update.findAndInstallUpdates"
+                    helpContextId="org.eclipse.update.ui.newUpdates"
+                    id="mobius.findAndInstall"
+                    label="%UpdateActionSet.configManager.label"
+                    class="mobius.rcp.InstallWizardAction"
+                    menubarPath="help/org.eclipse.update.ui.update">
+      </action>
+        </actionSet>
+   </extension>
+   -->
+   <!-- <extension
+         point="org.eclipse.ui.menus">     
+         <menuContribution
+             locationURI="menu:help?after=additions">
+       <menu id="org.eclipse.update.ui.updateMenu" label="%updateMenu.label">
+               <command
+                     commandId="org.eclipse.ui.update.findAndInstallUpdates"
+                     helpContextId="org.eclipse.update.ui.newUpdates"
+                     icon="icons/full/elcl16/usearch_obj.gif"
+                     label="%actionSets.updates.label"
+                     style="push">
+               </command>
+               <command
+                     commandId="org.eclipse.ui.update.manageConfiguration"
+                     helpContextId="org.eclipse.update.ui.newUpdates"
+                     icon="icons/full/elcl16/configs.gif"
+                     label="%actionSets.configManager.label"
+                     style="push">
+               </command>
+       </menu>
+       </menuContribution>
+    </extension> -->
+   
+ <!--  <extension
+         point="org.eclipse.help.toc">
+      <toc
+            file="MOBIUS_Help.xml"
+            primary="true">
+      </toc>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="%Update.command"
+            id="org.eclipse.ui.update.findAndInstallUpdates">
+      </command>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="mobius.rcp.ManageConfigurationHandler"
+            commandId="org.eclipse.ui.update.manageConfiguration">
+      </handler>
+      <handler
+            class="mobius.rcp.FindAndInstallHandler"
+            commandId="org.eclipse.ui.update.findAndInstallUpdates">
+      </handler>
+
+   </extension>
+   -->
+    <!-- Update Actions -->
+    <!--
+      <handler
+            commandId="org.eclipse.equinox.p2.ui.sdk.update"
+            class="mobius.rcp.FindAndInstallHandler">
+      </handler>    <extension
+        point="org.eclipse.ui.actionSets">
+        <actionSet
+            label="%UpdateActionSet.label"
+            visible="true"
+            id="org.eclipse.update.ui.softwareUpdates">
+            <menu
+                label="%UpdateActionSet.menu.label"
+                path="help/group.updates"
+                id="org.eclipse.update.ui.updateMenu">
+                <separator
+                    name="group0">
+                </separator>
+                <separator
+                    name="group1">
+                </separator>
+            </menu>
+            <action
+                class="org.objectweb.proactive.ic2d.base.update.ConfigurationManagerAction"
+                definitionId="org.eclipse.ui.update.manageConfiguration"
+                helpContextId="org.eclipse.update.ui.newUpdates"
+                icon="$nl$/icons/configs.gif"
+                id="org.eclipse.update.ui.configManager"
+                label="%UpdateActionSet.configManager.label"
+                menubarPath="help/org.eclipse.update.ui.updateMenu/group0">
+            </action>
+            <action
+                class="org.objectweb.proactive.ic2d.base.update.InstallWizardAction"
+                definitionId="org.eclipse.ui.update.findAndInstallUpdates"
+                helpContextId="org.eclipse.update.ui.newUpdates"
+                icon="$nl$/icons/usearch_obj.gif"
+                id="org.eclipse.update.ui.newUpdates"
+                label="%UpdateActionSet.updates.label"
+                menubarPath="help/org.eclipse.update.ui.updateMenu/group0">
+            </action>
+        </actionSet>
+    </extension>
+    <extension
+        point="org.eclipse.core.runtime.preferences">
+        <initializer class="org.eclipse.ui.internal.ide.IDEPreferenceInitializer"/>
+    </extension>-->
+    <!-- End Update -->
+   
+</plugin>
