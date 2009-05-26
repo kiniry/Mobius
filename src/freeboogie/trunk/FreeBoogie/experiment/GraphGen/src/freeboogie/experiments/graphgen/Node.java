@@ -27,6 +27,16 @@ public class Node<Payload> {
     successors.add(node);
     node.predecessors.add(this);
   }
+  
+  public void removePredecessor(Node<Payload> node) {
+    predecessors.remove(node);
+    node.successors.remove(node);
+  }
+  
+  public void removeSuccessor(Node<Payload> node) {
+    successors.remove(node);
+    node.predecessors.remove(node);
+  }
 
   public int getId() {
     return id;
@@ -49,6 +59,24 @@ public class Node<Payload> {
     return "" + id;
   }
   
-  
+  public Node<Payload> join(Node<Payload> node) {
+    if (node == this) {
+      return this;
+    }
+    for (Node<Payload> succ : node.getSuccessors()) {
+      this.addSuccessor(succ);
+    }
+    for (Node<Payload> pred : node.getPredecessors()) {
+      this.addPredecessor(pred);
+    }
+    for (Node<Payload> succ : node.getSuccessors()) {
+      node.removeSuccessor(succ);
+    }
+    for (Node<Payload> pred : node.getPredecessors()) {
+      node.removePredecessor(pred);
+    }
+     
+    return this;
+  }
   
 }
