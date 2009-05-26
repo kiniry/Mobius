@@ -239,10 +239,10 @@ class JmlVisitor extends BasicJMLTranslator {
       if (x.expr instanceof FieldAccess) {
         
         final FieldAccess var = (FieldAccess) x.expr;
-        final QuantVariableRef targetVar = (QuantVariableRef) var.od.accept(this, o);
+        final Term targetVar = (Term) var.od.accept(this, o);
         final QuantVariableRef fieldVar = Expression.rvar(var.decl);
-        final QuantVariableRef[] qvars = {targetVar, fieldVar};
-        prop.fAssignableSet.add(qvars);   
+        final Term[] qvars = {targetVar, fieldVar};
+        prop.getAssignableSet().add(qvars);   
       } 
       else if (x.expr instanceof NothingExpr) {
         prop.setModifiesNothing(true);
@@ -610,12 +610,12 @@ class JmlVisitor extends BasicJMLTranslator {
    */
   public void doAssignable(final Object o) {
     final MethodProperties prop = (MethodProperties) o;
-    if (prop.isModifiesNothing() || !prop.fAssignableSet.isEmpty()) {
+    if (prop.isModifiesNothing() || !prop.getAssignableSet().isEmpty()) {
       final QuantVariableRef target = Expression.rvar(Ref.sort);
       final QuantVariableRef field = Expression.rvar(Type.sortField);
       final QuantVariable[] vars = {target.qvar, field.qvar};
       Term t;
-      if (!prop.fAssignableSet.isEmpty()) {
+      if (!prop.getAssignableSet().isEmpty()) {
         t = Logic.or(JmlVisitor.isAssignable(target, field, prop), 
                           Logic.assignablePred(Heap.var, Heap.varPre, target, field));
       } 
@@ -678,8 +678,7 @@ class JmlVisitor extends BasicJMLTranslator {
                                   final QuantVariableRef f, final MethodProperties prop) {
     Term t1 = null;
     Term t2 = null;
-    final java.util.Set<QuantVariableRef[]> assignSet = 
-      (java.util.Set<QuantVariableRef[]>) prop.getAssignableSet();
+    final java.util.Set<Term[]> assignSet = prop.getAssignableSet();
     final Iterator iter = assignSet.iterator();
     
     while (iter.hasNext()) {

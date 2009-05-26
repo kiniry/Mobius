@@ -43,8 +43,8 @@ public final class MethodProperties extends ContextProperties implements ILocalV
   /** the routine is a JML \helper routine. See JML reference */
   private final boolean fIsHelper;
   
-  /** the set of variables that can be assigned in the current method. */
-  public  final Set<QuantVariableRef[]> fAssignableSet = new HashSet<QuantVariableRef[]>(); 
+  /** the set of variables that can be assigned in the current method, the first arg being a term the second a quantvarref. */
+  private final Set<Term[]> fAssignableSet = new HashSet<Term[]>(); 
 
   
   /** key to represent a result in the properties set. */  
@@ -122,7 +122,7 @@ public final class MethodProperties extends ContextProperties implements ILocalV
   }
 
 
-  public Set<QuantVariableRef[]> getAssignableSet() {
+  public Set<Term[]> getAssignableSet() {
 
     return fAssignableSet;
   }

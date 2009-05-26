@@ -3,7 +3,10 @@ Bundle-ManifestVersion: 2
 Bundle-Name: bico
 Bundle-SymbolicName: bico
 Bundle-Version: 1.0.0
-Bundle-ClassPath: bico.jar
+Bundle-ClassPath: bico.jar,
+ lib/antlr-runtime-3.1.3.jar,
+ lib/clops-runtime.jar
 Bundle-Localization: 
 Export-Package: mobius.bico
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: bcel.plugin;bundle-version="5.2.0"
