@@ -2,18 +2,18 @@
 <feature
       id="mobius.pve"
       label="Mobius PVE Feature"
-      version="0.0.4"
+      version="0.0.6"
       plugin="mobius">
 
-   <description url="http://www.example.com/description">
-      Mobius PVE Delta Resource
+   <description>
+      Mobius PVE
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright>
       EU IST Mobius contributors
    </copyright>
 
-   <license url="http://www.example.com/license">
+   <license>
       [Enter License Description here.]
    </license>
 
