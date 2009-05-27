@@ -2,7 +2,7 @@
 <feature
       id="mobius.required"
       label="RequiredPlugins Feature"
-      version="1.0.1">
+      version="1.0.2">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -43,5 +43,17 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="antlr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="ClopsRuntime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
