@@ -3,7 +3,7 @@
       id="mobius.pve"
       label="Mobius PVE Feature"
       version="0.0.4"
-      plugin="mobius.pluginlib">
+      plugin="mobius">
 
    <description url="http://www.example.com/description">
       Mobius PVE Delta Resource
@@ -44,31 +44,6 @@
          version="0.0.0"/>
 
    <includes
-         id="org.tigris.subversion.subclipse"
-         version="0.0.0"/>
-
-   <includes
-         id="org.tigris.subversion.clientadapter.feature"
-         version="0.0.0"
-         search-location="both"/>
-
-   <includes
-         id="org.tigris.subversion.clientadapter.svnkit.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.tigris.subversion.subclipse"
-         version="0.0.0"/>
-
-   <includes
-         id="org.tigris.subversion.subclipse.graph.feature"
-         version="0.0.0"/>
-
-   <includes
-         id="org.tmatesoft.svnkit"
-         version="0.0.0"/>
-
-   <includes
          id="mobius.bml"
          version="0.0.0"/>
 
@@ -80,10 +55,40 @@
          id="mobius.jml"
          version="0.0.0"/>
 
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.ui.ide" version="3.4.2" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.update.ui" version="3.2.101" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.update.core" version="3.2.202" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.equinox.p2.ui.sdk" version="1.0.1" match="greaterOrEqual"/>
+   </requires>
+
    <plugin
          id="mobius"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.ecf"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.identity"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.filetransfer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
