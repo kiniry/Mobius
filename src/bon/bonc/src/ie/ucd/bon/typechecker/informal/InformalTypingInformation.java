@@ -8,7 +8,6 @@ import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.ClassDefinition;
 import ie.ucd.bon.typechecker.Context;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.DuplicateSuperclassWarning;
@@ -79,7 +78,7 @@ public class InformalTypingInformation {
   public void addCluster(ClusterChartDefinition clusterDef) {
     ClassChartDefinition classDef = classes.get(clusterDef.getName());
     if (classDef != null) {
-      problems.addProblem(new NameNotUniqueError(clusterDef.getSourceLocation(), "Cluster", clusterDef.getName(), "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
+      problems.addProblem(new NameNotUniqueError(clusterDef.getSourceLocation(), "Cluster", clusterDef.getName(), "class", classDef.getSourceLocation()));
     }
     ClusterChartDefinition cluster = clusters.get(clusterDef.getName());
     if (cluster != null) {
@@ -98,7 +97,7 @@ public class InformalTypingInformation {
     SourceLocation loc = classX.getSourceLocation();
     ClusterChartDefinition clusterDef = clusters.get(className);
     if (clusterDef != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Class chart", className, "cluster chart", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
+      problems.addProblem(new NameNotUniqueError(loc, "Class chart", className, "cluster chart", clusterDef.getSourceLocation()));
     }
     ClassChartDefinition classDef = classes.get(className);
     if (classDef != null) {
