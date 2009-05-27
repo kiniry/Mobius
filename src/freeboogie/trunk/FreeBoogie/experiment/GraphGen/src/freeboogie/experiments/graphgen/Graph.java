@@ -23,6 +23,7 @@ public class Graph<T> {
     return new Graph<T>(this.startNode, graph.endNode);
   }
   
+  @Deprecated
   public static <T> Graph<T> join(Graph<T> graph1, Graph<T> graph2) {
     graph1.endNode.addSuccessor(graph2.startNode);
     return graph1.join(graph2);

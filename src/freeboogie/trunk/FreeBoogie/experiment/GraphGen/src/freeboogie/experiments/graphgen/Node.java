@@ -81,17 +81,11 @@ public class Node<Payload> {
     }
     for (Node<Payload> succ : node.getSuccessors()) {
       this.addSuccessor(succ);
+      succ.predecessors.remove(node);
     }
     for (Node<Payload> pred : node.getPredecessors()) {
       this.addPredecessor(pred);
-    }
-    List<Node<Payload>> succs = new ArrayList<Node<Payload>>(node.getSuccessors());
-    for (Node<Payload> succ : succs) {
-      succ.removePredecessor(node);
-    }
-    List<Node<Payload>> preds = new ArrayList<Node<Payload>>(node.getPredecessors());
-    for (Node<Payload> pred : preds) {
-      pred.removeSuccessor(node);
+      pred.successors.remove(node);
     }
     counter.decreaseCount();
     allNodes.remove(node);

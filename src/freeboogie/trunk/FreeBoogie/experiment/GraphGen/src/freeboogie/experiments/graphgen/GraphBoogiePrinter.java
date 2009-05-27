@@ -3,6 +3,7 @@ package freeboogie.experiments.graphgen;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Iterator;
 
 public class GraphBoogiePrinter {
 
@@ -51,20 +52,13 @@ public class GraphBoogiePrinter {
     node.getPayload().printBoogie(ps);
     ps.print("  goto ");
     
-    List<Node<FlowGraphPayload>> succList = node.getSuccessorsAsList();
-    
-    if (node.getSuccessors().size() == 1) {
-      ps.print(nodeName(succList.get(0)));
-      ps.println(";");
-    } else if (succList.size() == 2) {
-      ps.print(nodeName(succList.get(0)));
+    Iterator<Node<FlowGraphPayload>> it = node.getSuccessorsAsList().iterator();
+    ps.print(nodeName(it.next()));
+    while (it.hasNext()) {
       ps.print(", ");
-      ps.print(nodeName(succList.get(1)));
-      ps.println(";");
-    } else {
-      System.out.println("Warning, more than 2 successors for this node (" + node.toString() + ")");
+      ps.print(nodeName(it.next()));
     }
-    ps.println();
+    ps.println(";");
   }
   
   private String nodeName(Node<?> node) {

@@ -20,10 +20,10 @@ public class Generator<T> {
     
     if (depth >= maxDepth) {
 //      System.out.println("Reached max depth");
-      return singleNodeGraph(creator, counter);
+      return smallGraph(creator, counter);
     } else if (counter.getCount() > maxNodes) {
       System.out.println("Reached max nodes");
-      return singleNodeGraph(creator, counter);
+      return smallGraph(creator, counter);
     }
     
     return randomlyGenerate(depth, maxDepth, maxNodes, creator, counter);
@@ -40,7 +40,7 @@ public class Generator<T> {
     } else if (randomDouble < linkProbability) {
       return linkGraph(depth, maxDepth, maxNodes, creator, counter);
     } else {
-      return singleNodeGraph(creator, counter);
+      return smallGraph(creator, counter);
     }
   }
   
@@ -50,7 +50,7 @@ public class Generator<T> {
     return result;
   }
   
-  public Graph<T> singleNodeGraph(PayloadCreator<T> creator, Counter counter) {
+  public Graph<T> smallGraph(PayloadCreator<T> creator, Counter counter) {
     //Node<T> node = singleNode(creator, counter);
     //return new Graph<T>(node, node);
     Node<T> node1 = singleNode(creator, counter);
@@ -74,22 +74,12 @@ public class Generator<T> {
   public Graph<T> splitGraph(int depth, int maxDepth, int maxNodes, PayloadCreator<T> creator, Counter counter) {
     Graph<T> graph1 = generate(depth+1, maxDepth, maxNodes, creator, counter);
     Graph<T> graph2 = generate(depth+1, maxDepth, maxNodes, creator, counter);
-    Graph<T> graph3 = generate(depth+1, maxDepth, maxNodes, creator, counter);
-    Graph<T> graph4 = generate(depth+1, maxDepth, maxNodes, creator, counter);
     
-    //graph1.getEndNode().addSuccessor(graph2.getStartNode()); // 1->2
-    Node<T> joined1 = graph1.getEndNode().join(graph2.getStartNode(), counter, allNodesList);
-    //graph1.getEndNode().addSuccessor(graph3.getStartNode()); // 1->3
-    joined1.join(graph3.getStartNode(), counter, allNodesList);
-    //graph2.getEndNode().addSuccessor(graph4.getStartNode()); // 2->4
-    Node<T> joined2 = graph2.getEndNode().join(graph4.getStartNode(), counter, allNodesList);
-    //graph3.getEndNode().addSuccessor(graph4.getStartNode()); // 3->4
-    graph3.getEndNode().join(joined2, counter, allNodesList);
+    graph1.getStartNode().join(graph2.getStartNode(), counter, allNodesList);
+    graph2.getEndNode().join(graph1.getEndNode(), counter, allNodesList);
   
-    //Graph<T> result = new Graph<T>(graph1.getStartNode(), graph4.getEndNode());
-    
-//    System.out.println(result);
-    return graph1.join(graph4);
+    //System.out.println(result);
+    return graph1.join(graph2);
   }
 
   public Collection<Node<T>> getAllNodes() {
