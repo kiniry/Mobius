@@ -56,7 +56,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * annotations. This uses the format of the grammar from
    * "BML Reference Manual" section "Textual Representation of Specifications":
    *
-   *    typebody ::= [ staticsection ] [ objectsection ] constructor [ methods ]
+   *    typebody ::= [ staticsection ] [ objectsection ] [ methods ]
    *
    * @param conf the configuration of the display on which the returned string
    *   is printed out
@@ -66,7 +66,6 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     final StringBuffer code = new StringBuffer("");
     printUpperSection(conf, code, true);
     printUpperSection(conf, code, false);
-    printConstructors(conf, code);
     printMethods(conf, code);
     return conf.getPrettyPrinter().afterDisplay(code.toString());
   }
@@ -86,34 +85,9 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     for (int i = 0; i  <  getMethodCount(); i++) {
       code.append("\n");
       final BCMethod m = getMethod(i);
-      if (!m.isConstructor()) {
-        code.append(m.printCode(conf));
-      }
+      code.append(m.printCode(conf));
     }
   }
-
-  /**
-   * The method prints out the representation of all the constructors.
-   * The constructors are printed out using the grammar:
-   *
-   *   method ::= [ methodspec ] methodheader [ methodbody ]
-   *
-   * from "BML Reference Manual" section "Class Member Declarations".
-   *
-   * @param conf the pretty printing configuration
-   * @param code the buffer to print the representation to
-   */
-  private void printConstructors(final BMLConfig conf,
-                                 final StringBuffer code) {
-    for (int i = 0; i  <  getMethodCount(); i++) {
-      code.append("\n");
-      final BCMethod m = getMethod(i);
-      if (m.isConstructor()) {
-        code.append(m.printCode(conf));
-      }
-    }
-  }
-
 
   /**
    * The method prints out the representation of the specifications.
