@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.4)
+The top-level auxiliary file: jml2bml.aux
+The style file: abbrv.bst
+Database file #1: jml2bml.bib
+Warning--to sort, need author or key in BMGcase
+Warning--to sort, need author or key in MOBIUSscenarios
+Warning--to sort, need author or key in mobius
+Warning--to sort, need author or key in mobius31
+Warning--can't use both author and editor fields in JML
+You've used 27 entries,
+            2118 wiz_defined-function locations,
+            659 strings with 9218 characters,
+and the built_in function-call counts, 9298 in all, are:
+= -- 891
+> -- 488
+< -- 12
++ -- 198
+- -- 166
+* -- 613
+:= -- 1494
+add.period$ -- 82
+call.type$ -- 27
+change.case$ -- 159
+chr.to.int$ -- 0
+cite$ -- 32
+duplicate$ -- 367
+empty$ -- 710
+format.name$ -- 166
+if$ -- 2004
+int.to.chr$ -- 0
+int.to.str$ -- 27
+missing$ -- 19
+newline$ -- 133
+num.names$ -- 50
+pop$ -- 212
+preamble$ -- 1
+purify$ -- 135
+quote$ -- 0
+skip$ -- 287
+stack$ -- 0
+substring$ -- 405
+swap$ -- 112
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 104
+warning$ -- 5
+while$ -- 70
+width$ -- 29
+write$ -- 288
+(There were 5 warnings)

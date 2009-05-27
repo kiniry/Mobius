@@ -8,6 +8,8 @@
  */
 package jml2bml.rules;
 
+import javax.lang.model.element.Modifier;
+
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 
@@ -18,6 +20,7 @@ import annot.attributes.clazz.ClassInvariant;
 import annot.bcclass.BCClass;
 import annot.bcexpression.formula.AbstractFormula;
 
+import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -65,8 +68,10 @@ public class TypeClauseExprRule extends TranslationRule<String, Symbols> {
       final BCClass clazz = symb.findClass();
       final AbstractFormula formula = TranslationUtil
               .getFormula(node.expression, symb, myContext);
+      final boolean isstatic =
+        node.modifiers.getFlags().contains(Modifier.STATIC);
       final ClassInvariant classInvariant =
-        new ClassInvariant(clazz, formula, true);
+        new ClassInvariant(clazz, formula, !isstatic);
       clazz.setInvariant(classInvariant);
     } else
       throw new NotTranslatedRuntimeException(

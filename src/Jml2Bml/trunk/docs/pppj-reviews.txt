@@ -1,0 +1,249 @@
+From chairs@pppj08.confmaster.net Tue Jun 10 18:57:08 2008
+Return-Path: <chairs@pppj08.confmaster.net>
+X-Original-To: alx@mimuw.edu.pl
+Delivered-To: alx@mimuw.edu.pl
+Received: from localhost (localhost [127.0.0.1] ident=amavis) by
+	duch.mimuw.edu.pl (Postfix) with ESMTP id E099E14000AD; Tue, 10 Jun 2008
+	18:57:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mimuw.edu.pl
+Received: from duch.mimuw.edu.pl ([127.0.0.1]) by localhost
+	(duch.mimuw.edu.pl [127.0.0.1]) (amavisd-new, port 10024) with ESMTP id
+	BEKYBPEHlpN1; Tue, 10 Jun 2008 18:57:01 +0200 (CEST)
+X-Greylist: delayed 365 seconds by postgrey-1.31 at duch; Tue, 10 Jun 2008
+	18:57:01 CEST
+X-Mimuw-Not-Authenticated: sender was not authenticated at mimuw.edu.pl
+Received: from dd10800.kasserver.com (dd10800.kasserver.com
+	[85.13.133.108]) by duch.mimuw.edu.pl (Postfix) with ESMTP; Tue, 10 Jun
+	2008 18:57:00 +0200 (CEST)
+Received: by dd10800.kasserver.com (Postfix, from userid 30) id 372183B032;
+	Tue, 10 Jun 2008 18:50:53 +0200 (CEST)
+To: kjk@mimuw.edu.pl,chairs@pppj08.confmaster.net, fulara@mimuw.edu.pl, alx@mimuw.edu.pl
+Subject: [PPPJ08] Your Paper #23
+MIME-Version: 1.0
+From: chairs@pppj08.confmaster.net
+Content-Type: text/plain; charset="ISO-8859-1"
+Message-ID: <k29ast.fngt4b@pppj08.confmaster.net>
+Date: Tue, 10 Jun 2008 18:50:53 +0200 (CEST)
+X-Evolution-Source: pop://alx@mail.mimuw.edu.pl/
+Content-Transfer-Encoding: 8bit
+
+Dear Krzysztof Jakubczyk, Jedrzej Fulara, Aleksy Schubert
+
+We regret to inform you that your paper
+-- Supplementing Java Bytecode with Specifications
+has not been accepted for publication for PPPJ 2008. The review process was extremely selective and many good papers could not be accepted for the final program.   Out of 40 submissions, the program committee selected only 19 for presentation at the conference.
+
+The reviews of your paper are included below.
+
+Although you may feel disappointed at the decision of the program committee, we hope you will still choose to attend the conference.The conference program as well as the online registration form will be available on the conference website shortly. 
+
+Thank you again for submitting your paper to PPPJ 2008.
+
+Best regards,
+
+R. Nigel Horspool
+PPPJ 2008 Program Chair------------- Review from Reviewer 1 -------------
+-- Comments to the author(s):
+I think you have done an interesting work. But you have to improve your approach in at least two points:
+
+
+
+1. You must give an correctness prove for your translation, The proof is done 
+
+    best by an automatical proof with a theorem prover.
+
+
+
+2. You have to describe in detail the differences and the improvements of your 
+
+    approach in comparison to the older approach, which is implemented in   
+
+    JACK.
+
+
+
+For more details see "summary".
+
+
+
+Note: in Fig. 4 "bmllib" is should be wrtiiten as "BMLLib" as in the text. 
+
+
+-- Summary:
+In the paper a compiler from Java Modeling Language (JML) to Bytecode Modeling Language (BML) is described. The two specification languages JML and BML are shortly introduced. There is given a small example which presents the translation from JML to BML. Unfortunately the BML annotations are given in the JML-style, such that nearly no differences are visible. Then the archtitecture of the implemented compiler is presented. The presentation style is not standard. I would expect some UML-Diagrams, for example. After that the
+
+translation mechanisms is descibed. The description describes mainly the scalablity of the implemented software. Furthermore some exemplary implementations are given. Unfortunately the overview and the idea of the algorithm is not visible.
+
+The translation function is not described in detail. Furthermore, there is no 
+
+specification for the algorithm. 
+
+Consequentially, there is no verification for the algorithm. This is not acceptable.
+
+The compiler transforms conditions, which guarantee some properties of the implemented system. However the transformation is not proved as correct. This means that proofs which guarantees properties of the byte-code are worthless.
+
+
+
+An important part which is missing is the comparison to an older implementation
+
+of the compiler in the verification environment JACK. There is only said, that BML and the attribut format have evolved largely. But no details of the changing are given. This means that the novelty can not be judged.
+
+
+
+Many space is given for the loop detection. I think loop detection is an important part. But it is not such interesting, that it is maintainable to spend such much space.
+
+
+
+In section 4 a subset of JML is named as JML Level 0. But there is neither a detailed definition nor a reference. Although the JML2BML compiler works only for this subset. 
+
+
+
+
+---------- End of Review from Reviewer 1 ----------------------- Review from Reviewer 2 -------------
+-- Comments to the author(s):
+- Sect. 1: You talk about nullpointer and array-out-bounds exceptions
+
+  as being inconsistencies that can be eliminated with the help of
+
+  some additional information like, e.g., @NonNull annotations.
+
+  I doubt that such kind of annotations help to avoid the type of 
+
+  exceptions mentioned above. First of all, such exceptions cannot
+
+  not be detected by static analysis (as the bytecode verifier does)
+
+  in general since it is an undecidable problem. Secondly, what would
+
+  be the benefit of a @NonNull annotation for the JVM? If the object
+
+  is in fact null, then the JVM fails anyway, no matter if an annotation
+
+  is available or not.
+
+  I.e., the annotation itself does not guarantee anything. Only a proof
+
+  of the absence of such problems would guarantee that the program does
+
+  not throw an exception.
+
+- Sect. 1: "...and check automatically the compliance of the code with
+
+  these desctiptions"
+
+  Again, automatic checking is in general not possible due to 
+
+  undecidability. Nevertheless, automatic testing would be a feasable
+
+  approach.
+
+- Sect. 4.2: you write that all rules are applied to each node. Isn't it
+
+  possible that two or more rules are applicable which are conflicting
+
+  (especially someone extends the translation by additional rules)? Is
+
+  there are 1:1 mapping between rules and node type of an AST?
+
+  OK, from reading the subsequent paragraph I assume this is true as 
+
+  there seems to be a dedicated methods for each node type... But maybe
+
+  this could be clarified in the text.
+
+- Sect. 5: Assuming we use an non-optimising compiler: is in this case
+
+  the translation of loops not deterministic? In this case the 
+
+  quite tricky detection of loop types on bytecode level would not be
+
+  required (if the source code is available)
+
+
+
+minor issues:
+
+-------------
+
+
+
+
+
+- Please do not completely capitalize section headings (e.g., Sect. 1)
+
+- Abstract: better write "obeys certain policies..." and "does not store
+
+  passwords..."-
+
+- Sect. 1: "Many of the current sercurity guarantees..."  What are the
+
+  current sec. gar.?
+
+- Sect. 1: "Another guarantee which is not secured by the tradiational
+
+  bytecode verification procedure is the lack of..."
+
+  I did not understand this sentence
+
+- Sect. 1: Attach footnote 1 directly to MOBIUS
+
+- Sect. 1: avoid linebreak between "principle" and "[23]"
+
+  Problems like that occur several times in the paper.
+
+- Sect. 1: "...compiled to Java bytecode" instead of "compile to the same
+
+  Java bytecode".
+
+- Sect. 3.2: "Figure 3 shows..." instead of "The Figure 3 shows..."
+
+- Sect. 3.2, 2nd paragraph: what means "requires-onuses pairs"?
+
+- Sect. 5, paragraph below Fog. 6: I think it should read "we enter
+
+  the loop body which starts right after b..." instead of "right after c..."
+
+- Sect. 5, 2nd para below Fig.7: "At the end checks,..."  -> omit "checks"?
+
+
+-- Summary:
+The paper describes an approach for supplementing Java bytecode with 
+
+specifications. The bytecode specfication language called BML is closely
+
+related to the Java modelling language JML. 
+
+A substantial part of the papers deals with the question how to identify
+
+loops in the bytecode and how to relate them to the corresponding loops
+
+in the source code. Algorithms for solving this problem are presented, 
+
+though without a proof or proof sketch. A solution to that problem was
+
+already presented in work done by Pavlova (see, e.g., her PhD thesis),
+
+to the novelty of the described approach is not clear to me. A 
+
+thorough comparision of the two approach is clearly necessary. 
+
+The same applies for the rest of the paper: the authors should make more
+
+clear what their own contribution is.
+
+
+---------- End of Review from Reviewer 2 ----------------------- Review from Reviewer 3 -------------
+-- Comments to the author(s):
+This paper describes a tool for taking JML specifications attached to source Java programs, translating them into BML, and injecting them into the bytecode class files output from an arbitrary Java compiler (eg, javac).  This is a somewhat ambitious approach, since the source-level program features to which JML code has been attached need to be identified in the bytecode file so the translated BML can placed appropriately.  Thus, full-blown analysis of the bytecode is needed (eg, to identify loops) to match constructs.
+
+
+
+There is not much in the paper that strikes me as particularly novel -- the techniques used are standard, and nothing new is needed.  There is also no full-blown evaluation of the resulting tool that convinces me that it handles all the "corner" cases that might be encountered in large Java programs.
+-- Summary:
+I am not very enthusiastic about this paper because I am skeptical about the underlying tool design -- ultimately I believe the translation from JML to BML is best achieved by extending an integrated Java source-to-bytecode compiler rather than by taking the source and resulting bytecode output from an arbitrary Java compiler, off-line analysing the two to match constructs, and inserting the BML translations into the bytecode file.  Perhaps my perspective underestimates what has been achieved here, though I do note that the techniques applied are not particularly novel.
+---------- End of Review from Reviewer 3 ----------
+
+////////////////////////////////////////////////////
+Powered by ConfMaster.net
+///////////////////////////////////////////////////
+

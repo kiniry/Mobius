@@ -29,7 +29,9 @@ public class BCClassManager {
     String lastSegment = path
         .substring(path.lastIndexOf(File.separatorChar) + 1);
     String fileDir = inputDir + File.separator +
-                     path.substring(0, path.lastIndexOf(File.separatorChar));
+      ((path.lastIndexOf(File.separatorChar) > 0) ?
+          path.substring(0, path.lastIndexOf(File.separatorChar)) :
+          "");
     try {
       BCClass result = new BCClass(fileDir, lastSegment);
       classes.put(name, result);
