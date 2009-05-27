@@ -183,10 +183,10 @@
 @Test-name: "Identifier uniqueness."
 @Location { test24/ }
 @Input { uniqueness.bon }
-@Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 0, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7 >,
-          < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14 >, 
-          < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24 >,
-          < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29 > }
+@Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 0, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7, 0 >,
+          < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14, 0 >, 
+          < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24, 3 >,
+          < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29, 2 > }
 
 @Test-name: "Deferred feature in non-deferred class"
 @Prog-args: {--formal}

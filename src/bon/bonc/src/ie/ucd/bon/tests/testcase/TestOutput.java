@@ -73,13 +73,16 @@ public class TestOutput {
     
     Class<?>[] paramTypes = constructor.getParameterTypes();
 
-    if (paramTypes.length != extraParams.size()) {
-      if (paramTypes[0].equals(SourceLocation.class) && paramTypes.length == extraParams.size() - 2) {
-        //It's ok
-      } else {
-        System.out.println("Invalid arguments for constructor of " + errorType);
-        return null;
+    int countSL = 0;
+    for (Class<?> clazz : paramTypes) {
+      if (clazz.equals(SourceLocation.class)) {
+        countSL++;
       }
+    }
+    
+    if (paramTypes.length != extraParams.size() - (countSL*2)) {
+      System.out.println("Invalid arguments for constructor of " + errorType);
+      return null;
     }
 
     Object[] args = new Object[paramTypes.length];
