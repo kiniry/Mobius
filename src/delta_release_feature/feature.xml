@@ -2,7 +2,7 @@
 <feature
       id="mobius.pve"
       label="Mobius PVE Feature"
-      version="0.0.4"
+      version="0.0.5"
       plugin="mobius">
 
    <description url="http://www.example.com/description">
