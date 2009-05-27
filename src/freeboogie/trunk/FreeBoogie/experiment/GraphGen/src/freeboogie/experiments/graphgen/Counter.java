@@ -2,9 +2,11 @@ package freeboogie.experiments.graphgen;
 
 public class Counter {
 
+  private int uniqueCount;
   private int count;
 
   public Counter() {
+    uniqueCount = 0;
     count = 0;
   }
 
@@ -12,8 +14,17 @@ public class Counter {
     return count;
   }
   
-  public int getIncreasedCount() {
-    return ++count;
+  public void increaseCount() {
+     ++uniqueCount;
+     ++count;
+  }
+  
+  public void decreaseCount() {
+    count--;
+  }
+  
+  public int getUnique() {
+    return uniqueCount;
   }
   
 }

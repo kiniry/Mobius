@@ -1,6 +1,6 @@
 package freeboogie.experiments.graphgen;
 import java.io.PrintStream;
-import java.util.List;
+import java.util.Collection;
 
 public class GraphDotPrinter <T> {
 
@@ -35,7 +35,7 @@ public class GraphDotPrinter <T> {
     }
   }
   
-  public void printNodes(List<Node<T>> nodes) {
+  public void printNodes(Collection<Node<T>> nodes) {
     for (Node<T> node : nodes) {
       printNode(node); 
     }

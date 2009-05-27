@@ -1,6 +1,6 @@
 package freeboogie.experiments.graphgen;
 
-import java.util.List;
+import java.util.Collection;
 
 public class FlowGraphDecorator {
 
@@ -32,7 +32,7 @@ public class FlowGraphDecorator {
     writeCount += payload.isWrite() ? 1 : 0;
   }
   
-  public void decorate(List<Node<FlowGraphPayload>> nodes) {
+  public void decorate(Collection<Node<FlowGraphPayload>> nodes) {
     for (Node<FlowGraphPayload> node : nodes) {
       decorate(node);
     }

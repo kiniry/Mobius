@@ -1,21 +1,24 @@
 package freeboogie.experiments.graphgen;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 
 public class Node<Payload> {
 
-  private final int id;
+  private int id;
   
-  private final List<Node<Payload>> predecessors;
-  private final List<Node<Payload>> successors;
+  private final Collection<Node<Payload>> predecessors;
+  private final Collection<Node<Payload>> successors;
   private final Payload payload;
   
   public Node(Payload payload, Counter counter) {
-    this.id = counter.getIncreasedCount();
+    this.id = counter.getUnique();
+    counter.increaseCount();
     this.payload = payload;
-    predecessors = new LinkedList<Node<Payload>>();
-    successors = new LinkedList<Node<Payload>>();
+    predecessors = new LinkedHashSet<Node<Payload>>();
+    successors = new LinkedHashSet<Node<Payload>>();
   }
   
   public void addPredecessor(Node<Payload> node) {
@@ -30,24 +33,36 @@ public class Node<Payload> {
   
   public void removePredecessor(Node<Payload> node) {
     predecessors.remove(node);
-    node.successors.remove(node);
+    node.successors.remove(this);
   }
   
   public void removeSuccessor(Node<Payload> node) {
     successors.remove(node);
-    node.predecessors.remove(node);
+    node.predecessors.remove(this);
   }
 
   public int getId() {
     return id;
   }
 
-  public List<Node<Payload>> getPredecessors() {
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public Collection<Node<Payload>> getPredecessors() {
     return predecessors;
   }
 
-  public List<Node<Payload>> getSuccessors() {
+  public Collection<Node<Payload>> getSuccessors() {
     return successors;
+  }
+  
+  public List<Node<Payload>> getPredecessorsAsList() {
+    return new ArrayList<Node<Payload>>(predecessors);
+  }
+
+  public List<Node<Payload>> getSuccessorsAsList() {
+    return new ArrayList<Node<Payload>>(successors);
   }
   
   public Payload getPayload() {
@@ -59,8 +74,9 @@ public class Node<Payload> {
     return "" + id;
   }
   
-  public Node<Payload> join(Node<Payload> node) {
+  public Node<Payload> join(Node<Payload> node, Counter counter, Collection<Node<Payload>> allNodes) {
     if (node == this) {
+      System.out.println("The same!");
       return this;
     }
     for (Node<Payload> succ : node.getSuccessors()) {
@@ -69,14 +85,34 @@ public class Node<Payload> {
     for (Node<Payload> pred : node.getPredecessors()) {
       this.addPredecessor(pred);
     }
-    for (Node<Payload> succ : node.getSuccessors()) {
-      node.removeSuccessor(succ);
+    List<Node<Payload>> succs = new ArrayList<Node<Payload>>(node.getSuccessors());
+    for (Node<Payload> succ : succs) {
+      succ.removePredecessor(node);
     }
-    for (Node<Payload> pred : node.getPredecessors()) {
-      node.removePredecessor(pred);
+    List<Node<Payload>> preds = new ArrayList<Node<Payload>>(node.getPredecessors());
+    for (Node<Payload> pred : preds) {
+      pred.removeSuccessor(node);
     }
-     
+    counter.decreaseCount();
+    allNodes.remove(node);
     return this;
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Node) {
+      return getId() == ((Node<Payload>)obj).getId();
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    return getId();
+  }
+  
+  
   
 }

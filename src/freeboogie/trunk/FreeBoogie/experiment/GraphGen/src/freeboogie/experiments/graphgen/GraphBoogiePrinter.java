@@ -1,6 +1,7 @@
 package freeboogie.experiments.graphgen;
 
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.List;
 
 public class GraphBoogiePrinter {
@@ -22,7 +23,7 @@ public class GraphBoogiePrinter {
   }
   
   
-  public GraphBoogiePrinter print(List<Node<FlowGraphPayload>> list) {
+  public GraphBoogiePrinter print(Collection<Node<FlowGraphPayload>> list) {
     for (Node<FlowGraphPayload> node : list) {
       print(node);
     }
@@ -49,13 +50,16 @@ public class GraphBoogiePrinter {
     ps.println(":");
     node.getPayload().printBoogie(ps);
     ps.print("  goto ");
+    
+    List<Node<FlowGraphPayload>> succList = node.getSuccessorsAsList();
+    
     if (node.getSuccessors().size() == 1) {
-      ps.print(nodeName(node.getSuccessors().get(0)));
+      ps.print(nodeName(succList.get(0)));
       ps.println(";");
-    } else if (node.getSuccessors().size() == 2) {
-      ps.print(nodeName(node.getSuccessors().get(0)));
+    } else if (succList.size() == 2) {
+      ps.print(nodeName(succList.get(0)));
       ps.print(", ");
-      ps.print(nodeName(node.getSuccessors().get(1)));
+      ps.print(nodeName(succList.get(1)));
       ps.println(";");
     } else {
       System.out.println("Warning, more than 2 successors for this node (" + node.toString() + ")");
@@ -72,7 +76,7 @@ public class GraphBoogiePrinter {
     ps.close();
   }
   
-  public static void printBoogie(PrintStream ps, List<Node<FlowGraphPayload>> nodes) {
+  public static void printBoogie(PrintStream ps, Collection<Node<FlowGraphPayload>> nodes) {
     new GraphBoogiePrinter(ps).print(nodes).finish();
   }
   
