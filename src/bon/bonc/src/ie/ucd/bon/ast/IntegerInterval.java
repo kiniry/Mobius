@@ -35,7 +35,7 @@ public class IntegerInterval extends Interval {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitIntegerInterval(this);
+    visitor.visitIntegerInterval(this, start, stop);
   }
 
   // === Others ===

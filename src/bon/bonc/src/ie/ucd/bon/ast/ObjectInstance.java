@@ -35,7 +35,7 @@ public class ObjectInstance extends DynamicComponent {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitObjectInstance(this);
+    visitor.visitObjectInstance(this, name, comment);
   }
 
   // === Others ===

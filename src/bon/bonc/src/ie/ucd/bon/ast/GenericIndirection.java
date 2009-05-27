@@ -32,7 +32,7 @@ public class GenericIndirection extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitGenericIndirection(this);
+    visitor.visitGenericIndirection(this, indirectionElement);
   }
 
   // === Others ===

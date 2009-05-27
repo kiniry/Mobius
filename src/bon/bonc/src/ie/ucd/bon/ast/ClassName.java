@@ -32,7 +32,7 @@ public class ClassName extends IndirectionElement {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClassName(this);
+    visitor.visitClassName(this, name);
   }
 
   // === Others ===

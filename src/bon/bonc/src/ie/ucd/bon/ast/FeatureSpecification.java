@@ -55,7 +55,7 @@ public class FeatureSpecification extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitFeatureSpecification(this);
+    visitor.visitFeatureSpecification(this, modifier, featureNames, arguments, contracts, hasType, renaming, comment);
   }
 
   // === Others ===

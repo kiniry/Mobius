@@ -35,7 +35,7 @@ public class BonSourceFile extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitBonSourceFile(this);
+    visitor.visitBonSourceFile(this, bonSpecification, indexing);
   }
 
   // === Others ===

@@ -35,7 +35,7 @@ public class ClusterEntry extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClusterEntry(this);
+    visitor.visitClusterEntry(this, name, description);
   }
 
   // === Others ===

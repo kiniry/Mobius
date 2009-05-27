@@ -32,7 +32,7 @@ public class Multiplicity extends ClientEntityExpression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitMultiplicity(this);
+    visitor.visitMultiplicity(this, multiplicity);
   }
 
   // === Others ===

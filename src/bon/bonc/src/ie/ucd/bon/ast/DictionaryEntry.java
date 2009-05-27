@@ -38,7 +38,7 @@ public class DictionaryEntry extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitDictionaryEntry(this);
+    visitor.visitDictionaryEntry(this, name, clusters, description);
   }
 
   // === Others ===

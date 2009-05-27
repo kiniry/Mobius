@@ -36,7 +36,7 @@ public class TestOutput {
 
   
   public BONProblem getProblem() {
-    Class c = null;
+    Class<?> c = null;
 
     for (String pack : PACKAGES) {
       try {
@@ -54,7 +54,7 @@ public class TestOutput {
       return null;
     }
 
-    Constructor[] cons = c.getConstructors();
+    Constructor<?>[] cons = c.getConstructors();
 
     //Find the constructor which requires the most arguments and use it.
     int longestConstructorIndex = 0;
@@ -69,9 +69,9 @@ public class TestOutput {
         longestConstructorSize = cons[i].getParameterTypes().length;
       }
     }    
-    Constructor constructor = cons[longestConstructorIndex];
+    Constructor<?> constructor = cons[longestConstructorIndex];
     
-    Class[] paramTypes = constructor.getParameterTypes();
+    Class<?>[] paramTypes = constructor.getParameterTypes();
 
     if (paramTypes.length != extraParams.size()) {
       if (paramTypes[0].equals(SourceLocation.class) && paramTypes.length == extraParams.size() - 2) {

@@ -18,6 +18,9 @@ import ie.ucd.bon.util.NullOutputStream;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.antlr.runtime.BitSet;
 import org.antlr.runtime.EarlyExitException;
@@ -317,4 +320,13 @@ public abstract class AbstractBONParser extends Parser {
     return context;
   }
 
+  protected static <T> List<T> createList() {
+    //return new LinkedList<T>();
+    return new ArrayList<T>();
+  }
+  
+  protected static <T> List<T> emptyList() {
+    return Collections.emptyList();
+  }
+  
 }

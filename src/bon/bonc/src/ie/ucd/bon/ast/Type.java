@@ -38,7 +38,7 @@ public class Type extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitType(this);
+    visitor.visitType(this, identifier, actualGenerics, fullString);
   }
 
   // === Others ===

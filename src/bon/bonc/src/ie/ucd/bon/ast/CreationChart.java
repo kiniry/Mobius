@@ -44,7 +44,7 @@ public class CreationChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitCreationChart(this);
+    visitor.visitCreationChart(this, name, entries, indexing, explanation, part);
   }
 
   // === Others ===

@@ -41,7 +41,7 @@ public class ClassInterface extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClassInterface(this);
+    visitor.visitClassInterface(this, features, parents, invariant, indexing);
   }
 
   // === Others ===

@@ -35,7 +35,7 @@ public class ObjectStack extends DynamicComponent {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitObjectStack(this);
+    visitor.visitObjectStack(this, name, comment);
   }
 
   // === Others ===

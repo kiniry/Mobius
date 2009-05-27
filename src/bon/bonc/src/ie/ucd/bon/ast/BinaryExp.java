@@ -60,7 +60,7 @@ public class BinaryExp extends Expression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitBinaryExp(this);
+    visitor.visitBinaryExp(this, op, left, right);
   }
 
   // === Others ===

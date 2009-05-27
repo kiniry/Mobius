@@ -41,7 +41,7 @@ public class UnaryExp extends Expression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitUnaryExp(this);
+    visitor.visitUnaryExp(this, op, expression);
   }
 
   // === Others ===

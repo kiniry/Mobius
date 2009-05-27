@@ -40,7 +40,7 @@ public class TypeMark extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitTypeMark(this);
+    visitor.visitTypeMark(this, mark, multiplicity);
   }
 
   // === Others ===

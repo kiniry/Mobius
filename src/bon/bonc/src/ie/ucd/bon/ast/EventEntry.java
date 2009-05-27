@@ -35,7 +35,7 @@ public class EventEntry extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitEventEntry(this);
+    visitor.visitEventEntry(this, name, involved);
   }
 
   // === Others ===

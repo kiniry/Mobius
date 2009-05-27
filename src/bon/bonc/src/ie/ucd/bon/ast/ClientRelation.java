@@ -44,7 +44,7 @@ public class ClientRelation extends StaticRelation {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClientRelation(this);
+    visitor.visitClientRelation(this, client, supplier, clientEntities, typeMark, semanticLabel);
   }
 
   // === Others ===

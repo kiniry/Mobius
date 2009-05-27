@@ -35,7 +35,7 @@ public class HasType extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitHasType(this);
+    visitor.visitHasType(this, mark, type);
   }
 
   // === Others ===

@@ -32,7 +32,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitIndirectionFeatureList(this);
+    visitor.visitIndirectionFeatureList(this, featureNames);
   }
 
   // === Others ===

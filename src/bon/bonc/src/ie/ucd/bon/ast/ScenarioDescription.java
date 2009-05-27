@@ -38,7 +38,7 @@ public class ScenarioDescription extends DynamicComponent {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitScenarioDescription(this);
+    visitor.visitScenarioDescription(this, name, actions, comment);
   }
 
   // === Others ===

@@ -50,7 +50,7 @@ public class EventChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitEventChart(this);
+    visitor.visitEventChart(this, systemName, incoming, outgoing, entries, indexing, explanation, part);
   }
 
   // === Others ===

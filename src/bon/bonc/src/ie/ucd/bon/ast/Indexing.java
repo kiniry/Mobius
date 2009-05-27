@@ -32,7 +32,7 @@ public class Indexing extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitIndexing(this);
+    visitor.visitIndexing(this, indexes);
   }
 
   // === Others ===

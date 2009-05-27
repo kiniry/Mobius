@@ -47,7 +47,7 @@ public class ClusterChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClusterChart(this);
+    visitor.visitClusterChart(this, name, classes, clusters, indexing, explanation, part);
   }
 
   // === Others ===

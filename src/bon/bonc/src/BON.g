@@ -180,7 +180,6 @@ tokens {
   package ie.ucd.bon.parser; 
   
   import ie.ucd.bon.parser.errors.MissingElementParseError;
-  import java.util.LinkedList;
   import ie.ucd.bon.ast.*;
 }
 
@@ -231,7 +230,7 @@ prog returns [BonSourceFile bonSource] :
  **********************************************/
 
 bon_specification returns [List<SpecificationElement> spec_els] :
-  { $spec_els = new LinkedList<SpecificationElement>(); }
+  { $spec_els = createList(); }
   ( se=specification_element
     { $spec_els.add($se.se); }
   )+ 
@@ -271,7 +270,7 @@ informal_chart returns [InformalChart ic] :
 			
 class_dictionary returns [ClassDictionary cd] 
 @init { Indexing index = null; String expl = null; String p = null; 
-        List<DictionaryEntry> entries = new LinkedList<DictionaryEntry>(); }
+        List<DictionaryEntry> entries = createList(); }
 :  
   d='dictionary' 
   system_name 
@@ -330,7 +329,7 @@ system_chart returns [SystemChart sc]
   (part { p = $part.part; } )? 
   (  ce=cluster_entries 
      { entries = $ce.entries; } 
-   | { entries = Constants.NO_CLUSTER_ENTRIES; }
+   | { entries = emptyList(); }
   ) 
   e='end'
   { getContext().leaveSystemChart(); }
@@ -402,7 +401,7 @@ description returns [String description] :
              ;
 
 cluster_entries returns [List<ClusterEntry> entries] :
-  { $entries = new LinkedList<ClusterEntry>(); }
+  { $entries = createList(); }
   (cluster_entry { $entries.add($cluster_entry.ce); } )+
    
                   ->
@@ -433,7 +432,7 @@ system_name returns [String name] :
 /**********************************************/
 
 index_list returns [List<IndexClause> list] :  
-               { $list = new LinkedList<IndexClause>(); }
+               { $list = createList(); }
                i1=index_clause 
                { $list.add($i1.clause); }
                (  (';' i2=index_clause)
@@ -462,7 +461,7 @@ index_clause returns [IndexClause clause] :
               ;
                 
 index_term_list returns [List<String> strings] :
-                  { $strings = new LinkedList<String>(); }
+                  { $strings = createList(); }
                   i1=index_string 
                   { $strings.add($i1.text); }
                   (',' i=index_string
@@ -485,18 +484,22 @@ index_string returns [String s] :
 
 /**********************************************/
 
-cluster_chart returns [ClusterChart cc] :
+cluster_chart returns [ClusterChart cc] 
+@init { List<ClassEntry> classes = null; List<ClusterEntry> clusters = null; 
+        Indexing indexing = null; String explanation = null; String part = null;  }
+:
   c='cluster_chart' cluster_name 
   { ie.ucd.bon.typechecker.informal.ClusterChartDefinition cluster = new ie.ucd.bon.typechecker.informal.ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
   getTI().informal().addCluster(cluster);
   getContext().enterClusterChart(cluster); }
-  (indexing)? 
-  (explanation)? 
-  (part)? 
-  (class_entries)? 
-  (cluster_entries)? 
-  'end'
+  (i=indexing { indexing = $i.indexing; } )? 
+  (explanation { explanation = $explanation.explanation; } )? 
+  (part { part = $part.part; } )? 
+  (ce=class_entries { classes = $ce.entries; } )? 
+  (cle=cluster_entries { clusters = $cle.entries; } )? 
+  e='end'
   { getContext().leaveClusterChart(); }
+  { $cc = ClusterChart.mk($cluster_name.name, classes, clusters, indexing, explanation, part, getSLoc($c,$e)); }
                 ->
                 ^(
                   CLUSTER_CHART[$c] cluster_name 
@@ -508,9 +511,9 @@ cluster_chart returns [ClusterChart cc] :
                  )
                ;
                
-class_entries returns [List<ClassEntry> classes] :
-  { $classes = new LinkedList<ClassEntry>(); }
-  (class_entry { $classes.add($class_entry.entry); } )+ 
+class_entries returns [List<ClassEntry> entries] :
+  { $entries = createList(); }
+  (class_entry { $entries.add($class_entry.entry); } )+ 
                 ->
                 ^(
                   CLASS_ENTRIES (class_entry)+ 
@@ -528,7 +531,9 @@ class_entry returns [ClassEntry entry] :
                )
              ;
              
-cluster_name  :  i=IDENTIFIER 
+cluster_name returns [String name] :
+  i=IDENTIFIER
+  { $name = $i.text; } 
                ->
                ^(
                  CLUSTER_NAME[$i] IDENTIFIER
@@ -537,20 +542,37 @@ cluster_name  :  i=IDENTIFIER
 
 /**********************************************/
 
-class_chart returns [ClassChart cc] :
+class_chart returns [ClassChart cc] 
+@init { Indexing indexing = null; String explanation = null; String part = null;
+        List<String> inherits = null; List<String> commands = null; List<String> queries = null; 
+        List<String> constraints = null;  }
+:
   c='class_chart' class_name 
   { ie.ucd.bon.typechecker.informal.ClassChartDefinition classX = new ie.ucd.bon.typechecker.informal.ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
   getTI().informal().addClass(classX);
   getContext().enterClassChart(classX); }
-  (indexing)? 
-  (explanation)? 
-  (part)? 
-  (inherits)?
-  (queries)? 
-  (commands)? 
-  (constraints)? 
-  'end'
+  (i=indexing { indexing = $i.indexing; } )? 
+  (explanation { explanation = $explanation.explanation; } )? 
+  (part { part = $part.part; } )? 
+  (  inherits
+     { inherits = $inherits.inherits; }
+   | { inherits = emptyList(); } 
+  )
+  (  queries
+     { queries = $queries.queries; }
+   | { queries = emptyList(); }
+  )
+  (  commands
+     { commands = $commands.commands; }
+   | { commands = emptyList(); }
+  ) 
+  (  constraints
+     { constraints = $constraints.constraints; }
+   | { constraints = emptyList(); }
+  ) 
+  e='end'
   { getContext().leaveClassChart(); }
+  { $cc = ClassChart.mk($class_name.name, inherits, queries, commands, constraints, indexing, explanation, part, getSLoc($c,$e)); }
               ->
               ^( 
                 CLASS_CHART[$c] class_name
@@ -595,7 +617,7 @@ constraints returns [List<String> constraints] :
 
 
 query_list returns [List<String> queries] :
-  { $queries = new LinkedList<String>(); }
+  { $queries = createList(); }
   m1=manifest_textblock 
   { getTI().informal().addQuery($m1.text); }
   { $queries.add($m1.text); }
@@ -615,7 +637,7 @@ query_list returns [List<String> queries] :
             ;
             
 command_list returns [List<String> commands] :
-  { $commands = new LinkedList<String>(); }
+  { $commands = createList(); }
   m1=manifest_textblock 
   { getTI().informal().addCommand($m1.text); }
   { $commands.add($m1.text); }
@@ -635,7 +657,7 @@ command_list returns [List<String> commands] :
               ;
               
 constraint_list returns [List<String> constraints] :
-  { $constraints = new LinkedList<String>(); }
+  { $constraints = createList(); }
   m1=manifest_textblock 
   { getTI().informal().addConstraint($m1.text); }
   { $constraints.add($m1.text); }
@@ -655,7 +677,7 @@ constraint_list returns [List<String> constraints] :
                  ;
 
 class_name_list returns [List<String> list] :
-  { $list = new LinkedList<String>(); }
+  { $list = createList(); }
   c1=class_name 
   { getTI().classNameListEntry($c1.text, getSLoc($c1.stop)); }
   { $list.add($c1.text); }
@@ -675,7 +697,7 @@ class_name_list returns [List<String> list] :
                  ;
                  
 cluster_name_list returns [List<String> list] :
-  { $list = new LinkedList<String>(); }
+  { $list = createList(); }
   c1=cluster_name
   (  ( ',' c=cluster_name
        { $list.add($c.text); } 
@@ -691,20 +713,23 @@ cluster_name_list returns [List<String> list] :
                    )
                  ;
 
-// TODO not done.
 class_or_cluster_name_list returns [List<String> list] :
-  (class_name ',' )* 
-  '(' cluster_name ')' 
-  ( ',' ( class_name | '(' cluster_name ')' ) )*
-                             ->
-                               ^( CLASS_OR_CLUSTER_NAME_LIST (class_name)* (cluster_name)+ )
-                             |
-                               class_name_list
-                             ->
-                               ^( CLASS_OR_CLUSTER_NAME_LIST class_name_list ) 
-                            ;
+  { $list = createList(); }
+  c1=class_or_bracketed_cluster_name
+  { $list.add($c1.name); }
+  ( ',' c=class_or_bracketed_cluster_name
+    { $list.add($c.name); } 
+  )*
+  
+;
 
-                 
+class_or_bracketed_cluster_name returns [String name] :
+   class_name
+   { $name = $class_name.name; }
+ | '(' cluster_name ')'
+   { $name = $cluster_name.name; }
+;
+
 class_name returns [String name] :
   i=IDENTIFIER
   { $name = $i.text; } 
@@ -737,7 +762,7 @@ event_chart returns [EventChart ec] :
              ;
              
 event_entries returns [List<EventEntry> entries] :
-  { $entries = new LinkedList<EventEntry>(); }
+  { $entries = createList(); }
   (event_entry { $entries.add($event_entry.entry); } )+ 
                 ->
                 ^(
@@ -798,7 +823,7 @@ scenario_chart returns [ScenarioChart sc] :
                 ;
                 
 scenario_entries returns [List<ScenarioEntry> entries] :
-  { $entries = new LinkedList<ScenarioEntry>(); }
+  { $entries = createList(); }
   (scenario_entry { $entries.add($scenario_entry.entry); } )+ 
                    ->
                    ^(
@@ -838,7 +863,7 @@ creation_chart returns [CreationChart cc] :
                 ;
                 
 creation_entries returns [List<CreationEntry> entries] :
-  { $entries = new LinkedList<CreationEntry>(); }
+  { $entries = createList(); }
   (creation_entry { $entries.add($creation_entry.entry); } )+
                    ->
                    ^(
@@ -897,7 +922,7 @@ extended_id returns [String eid] :
              ;
              
 static_block returns [List<StaticComponent> components] :
-  { $components = new LinkedList<StaticComponent>(); }
+  { $components = createList(); }
   (sc=static_component { $components.add($sc.component); })*
                ->
                ^(
@@ -1081,7 +1106,7 @@ client_entity_expression returns [ClientEntityExpression entities] :
                           ;
                           
 client_entity_list returns [List<ClientEntity> entities] :
-  { $entities = new LinkedList<ClientEntity>(); }
+  { $entities = createList(); }
   ce=client_entity
   { $entities.add($ce.entity); }
   (',' c=client_entity
@@ -1361,7 +1386,7 @@ class_invariant returns [List<Expression> invariant] :
                  ;
                  
 parent_class_list returns [List<BONType> parents] :
-  { $parents = new LinkedList<BONType>(); }
+  { $parents = createList(); }
   'inherit' c1=class_type 
   { getTI().addParent($c1.type,getSLoc($c1.start,$c1.stop)); }
   { $parents.add($c1.type); } 
@@ -1381,7 +1406,7 @@ parent_class_list returns [List<BONType> parents] :
                    ;
                    
 features returns [List<Feature> features] :
-  { $features = new LinkedList<Feature>(); }
+  { $features = createList(); }
   (feature_clause { $features.add($feature_clause.feature); } )+
            -> 
            ^(
@@ -1411,7 +1436,7 @@ feature_clause returns [Feature feature]
                 ;
                 
 feature_specifications returns [List<FeatureSpecification> specs] :
-  { $specs = new LinkedList<FeatureSpecification>(); }
+  { $specs = createList(); }
   (fs=feature_specification { $specs.add($fs.spec); } )+
                          ->
                          ^(
@@ -1439,7 +1464,7 @@ feature_specification returns [FeatureSpecification spec]
   (c=COMMENT { comment = $c.text; end=$c; } )?
   (  fa=feature_arguments
      { args = $fa.args; end=$fa.stop; }
-   | { args = Constants.NO_ARGS; }
+   | { args = emptyList(); }
   )
   (  cc=contract_clause 
      { contracts = $cc.contracts; end=$cc.stop; } 
@@ -1531,7 +1556,7 @@ selective_export returns [List<String> exports] :
                   ;
                   
 feature_name_list returns [List<String> list] :
-  { $list = new LinkedList<String>(); }
+  { $list = createList(); }
   f1=feature_name 
   { getTI().featureNameListEntry($f1.text,getSLoc($f1.start,$f1.stop)); }
   { $list.add($f1.name); }
@@ -1584,7 +1609,7 @@ renaming returns [RenameClause renaming] :
           ;
           
 feature_arguments returns [List<FeatureArgument> args] :
-  { $args = new LinkedList<FeatureArgument>(); }
+  { $args = createList(); }
   (feature_argument { $args.addAll($feature_argument.args); } )+ 
                     ->
                     ^(
@@ -1611,7 +1636,7 @@ feature_argument returns [List<FeatureArgument> args] :
                   ;
                   
 identifier_list returns [List<String> list] :
-  { $list = new LinkedList<String>(); }
+  { $list = createList(); }
   i1=IDENTIFIER
   { $list.add($i1.text); } 
   (',' i=IDENTIFIER { $list.add($i.text); } )*
@@ -1665,7 +1690,7 @@ formal_generics returns [List<FormalGeneric> generics] :
                  ;
                  
 formal_generic_list returns [List<FormalGeneric> list] :
-  { $list = new LinkedList<FormalGeneric>(); }
+  { $list = createList(); }
   fg1=formal_generic
   { $list.add($fg1.generic); }
   (',' fg=formal_generic
@@ -1727,7 +1752,7 @@ actual_generics returns [List<BONType> types] :
                  
 type_list returns [List<BONType> types]  :
            t1=type
-           { $types = new LinkedList<BONType>(); $types.add($t1.type); } 
+           { $types = createList(); $types.add($t1.type); } 
            (',' t=type
            { $types.add($t.type); }
            )* 
@@ -1762,7 +1787,7 @@ type returns [BONType type] :
 //TODO correct this all for use with the new expression grammar
 
 assertion returns [List<Expression> clauses] :
-  { $clauses = new LinkedList<Expression>(); }
+  { $clauses = createList(); }
   a1=assertion_clause
   { $clauses.add($a1.clause); }
   (';' a=assertion_clause  
@@ -1835,7 +1860,7 @@ quantifier returns [Quantification.Quantifier q] :
             ;
             
 range_expression returns [List<VariableRange> ranges] :
-  { $ranges = new LinkedList<VariableRange>(); }
+  { $ranges = createList(); }
   vr1=variable_range 
   { $ranges.add($vr.range); }
   (';' vr=variable_range
@@ -1911,7 +1936,7 @@ type_range returns [TypeRange range] :
 //      ;
                                
 call_chain returns [List<UnqualifiedCall> calls] :
-  { $calls = new LinkedList<UnqualifiedCall>(); }
+  { $calls = createList(); }
   uc1=unqualified_call
   { $calls.add($uc1.call); }
   ('.' uc=unqualified_call { $calls.add($uc.call); } )* 
@@ -1928,7 +1953,7 @@ unqualified_call returns [UnqualifiedCall call]
   { end = $i; }
   (  aa=actual_arguments
      { args = $aa.args; end = $aa.stop; }
-   | { args = Constants.NO_EXPRESSIONS; }
+   | { args = emptyList(); }
   )
   { $call = UnqualifiedCall.mk($i.text, args, getSLoc($i,end)); } 
                    ->
@@ -1942,7 +1967,7 @@ actual_arguments returns [List<Expression> args]
   '(' 
   (  el=expression_list
      { $args = $el.list; } 
-   | { $args = Constants.NO_EXPRESSIONS; }
+   | { $args = emptyList(); }
   )
   ')' 
                    ->
@@ -1952,7 +1977,7 @@ actual_arguments returns [List<Expression> args]
                   ;
               
 expression_list returns [List<Expression> list] :
-  { $list = new LinkedList<Expression>(); }
+  { $list = createList(); }
   e1=expression 
   { $list.add($e1.exp); }
   (',' e=expression { $list.add($e.exp); } )* 
@@ -1987,7 +2012,7 @@ enumerated_set returns [List<EnumerationElement> list] :
                 ;
                 
 enumeration_list returns [List<EnumerationElement> list] :
-  { $list = new LinkedList<EnumerationElement>(); }
+  { $list = createList(); }
   el1=enumeration_element
   { $list.add($el1.el); } 
   (',' el=enumeration_element { $list.add($el.el); } )*
@@ -2181,7 +2206,7 @@ dynamic_diagram returns [DynamicDiagram dd]
   'component' 
   ( db=dynamic_block
     { components = $db.components; }
-   | { components = Constants.NO_COMPONENTS; }
+   | { components = emptyList(); }
   ) 
   e='end'
   { $dd = DynamicDiagram.mk(components, id, comment, getSLoc($s,$e)); }
@@ -2194,7 +2219,7 @@ dynamic_diagram returns [DynamicDiagram dd]
                  ;
                  
 dynamic_block returns [List<DynamicComponent> components] :
-  { $components = new LinkedList<DynamicComponent>(); }
+  { $components = createList(); }
   (dc=dynamic_component { $components.add($dc.component); } )+ 
                 ->
                 ^(
@@ -2251,7 +2276,7 @@ scenario_description returns [ScenarioDescription description]
                       ;
                       
 labelled_actions returns [List<LabelledAction> actions] :
-  { $actions = new LinkedList<LabelledAction>(); }
+  { $actions = createList(); }
   (la=labelled_action { $actions.add($la.action); } )+ 
                    ->
                    ^(
@@ -2312,7 +2337,7 @@ object_group returns [ObjectGroup group]
   (c=COMMENT { comment = $c.text; end = $c; } )? 
   (  gc=group_components
      { components = $gc.components; }
-   | { components = Constants.NO_COMPONENTS; }
+   | { components = emptyList(); }
   )
   { $group = ObjectGroup.mk(nameless, $group_name.text, components, comment, getSLoc(start,end)); }
                ->

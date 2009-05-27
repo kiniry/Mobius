@@ -44,7 +44,7 @@ public class ObjectGroup extends DynamicComponent {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitObjectGroup(this);
+    visitor.visitObjectGroup(this, nameless, name, components, comment);
   }
 
   // === Others ===
