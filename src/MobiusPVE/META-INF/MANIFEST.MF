@@ -6,10 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: mobius.rcp.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.ide;bundle-version="3.4.2",
- org.eclipse.update.ui;bundle-version="3.2.101",
- org.eclipse.update.core;bundle-version="3.2.202",
- org.eclipse.equinox.p2.ui.sdk;bundle-version="1.0.1"
+ org.eclipse.equinox.p2.artifact.repository;bundle-version="1.0.100"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: mobius.rcp
