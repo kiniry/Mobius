@@ -32,7 +32,7 @@ public class ClientEntityList extends ClientEntityExpression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClientEntityList(this, entities);
+    visitor.visitClientEntityList(this, entities, getLocation());
   }
 
   // === Others ===

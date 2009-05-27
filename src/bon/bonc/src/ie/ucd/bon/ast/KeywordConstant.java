@@ -35,7 +35,7 @@ public class KeywordConstant extends Constant {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitKeywordConstant(this, constant);
+    visitor.visitKeywordConstant(this, constant, getLocation());
   }
 
   // === Others ===

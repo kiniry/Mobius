@@ -38,7 +38,7 @@ public class \ClassName extends \Basename {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visit\ClassName(this,\members[,]{ \memberName});
+    visitor.visit\ClassName(this,\members[,]{ \memberName}, getLocation());
   }
 
   // === Others ===

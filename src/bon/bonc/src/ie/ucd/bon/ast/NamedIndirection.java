@@ -35,7 +35,7 @@ public class NamedIndirection extends IndirectionElement {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitNamedIndirection(this, className, indirectionElements);
+    visitor.visitNamedIndirection(this, className, indirectionElements, getLocation());
   }
 
   // === Others ===

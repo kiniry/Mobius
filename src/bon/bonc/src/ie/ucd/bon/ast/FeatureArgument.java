@@ -35,7 +35,7 @@ public class FeatureArgument extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitFeatureArgument(this, identifier, type);
+    visitor.visitFeatureArgument(this, identifier, type, getLocation());
   }
 
   // === Others ===

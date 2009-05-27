@@ -44,7 +44,7 @@ public class ScenarioChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitScenarioChart(this, systemName, entries, indexing, explanation, part);
+    visitor.visitScenarioChart(this, systemName, entries, indexing, explanation, part, getLocation());
   }
 
   // === Others ===

@@ -35,7 +35,7 @@ public class CallExp extends Expression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitCallExp(this, qualifier, callChain);
+    visitor.visitCallExp(this, qualifier, callChain, getLocation());
   }
 
   // === Others ===

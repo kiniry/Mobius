@@ -35,7 +35,7 @@ public class ContractClause extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitContractClause(this, preconditions, postconditions);
+    visitor.visitContractClause(this, preconditions, postconditions, getLocation());
   }
 
   // === Others ===

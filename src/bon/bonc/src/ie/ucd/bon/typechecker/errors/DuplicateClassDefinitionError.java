@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.errors;
 
+import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.ClassDefinition;
 import ie.ucd.bon.typechecker.TypeCheckingError;
@@ -23,6 +24,13 @@ public class DuplicateClassDefinitionError extends TypeCheckingError {
     this.className = other.getName();
     this.otherClassFile = other.getSourceLocation().getSourceFile();
     this.otherClassLineNumber = other.getSourceLocation().getLineNumber();
+  }
+  
+  public DuplicateClassDefinitionError(SourceLocation loc, Clazz other) {
+    super(loc);
+    this.className = other.getName();
+    this.otherClassFile = other.getLocation().getSourceFile();
+    this.otherClassLineNumber = other.getLocation().getLineNumber();
   }
   
   //Testing

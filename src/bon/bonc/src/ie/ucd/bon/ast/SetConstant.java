@@ -32,7 +32,7 @@ public class SetConstant extends ManifestConstant {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitSetConstant(this, enumerations);
+    visitor.visitSetConstant(this, enumerations, getLocation());
   }
 
   // === Others ===

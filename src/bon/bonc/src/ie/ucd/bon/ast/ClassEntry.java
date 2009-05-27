@@ -35,7 +35,7 @@ public class ClassEntry extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClassEntry(this, name, description);
+    visitor.visitClassEntry(this, name, description, getLocation());
   }
 
   // === Others ===

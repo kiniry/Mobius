@@ -35,7 +35,7 @@ public class MemberRange extends VariableRange {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitMemberRange(this, identifiers, expression);
+    visitor.visitMemberRange(this, identifiers, expression, getLocation());
   }
 
   // === Others ===

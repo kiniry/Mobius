@@ -32,7 +32,7 @@ public class StringConstant extends ManifestConstant {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitStringConstant(this, value);
+    visitor.visitStringConstant(this, value, getLocation());
   }
 
   // === Others ===

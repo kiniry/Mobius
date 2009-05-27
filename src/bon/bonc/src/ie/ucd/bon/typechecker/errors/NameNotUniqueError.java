@@ -20,13 +20,13 @@ public class NameNotUniqueError extends TypeCheckingError {
   private final int otherUseLineNumber;
 
   public NameNotUniqueError(SourceLocation loc, String type, String name,
-      String otherUseType, File otherUseFile, int otherUseLineNumber) {
+      String otherUseType, SourceLocation otherUseLoc) {
     super(loc);
     this.type = type;
     this.name = name;
     this.otherUseType = otherUseType;
-    this.otherUseFile = otherUseFile;
-    this.otherUseLineNumber = otherUseLineNumber;
+    this.otherUseFile = otherUseLoc.getSourceFile();
+    this.otherUseLineNumber = otherUseLoc.getLineNumber();
   }
 
   @Override

@@ -7,12 +7,13 @@ This is the generic interface for a visitor.
 package \Userdefine{pkg};
 
 import java.util.List;
+import ie.ucd.bon.source.SourceLocation;
 
 public abstract class AbstractVisitor implements IVisitor {
 
 
 \normal_classes{
-  public void visit\ClassName(\ClassName node,\members[,]{ \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName}) {
+  public void visit\ClassName(\ClassName node,\members[,]{ \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName}, SourceLocation loc) {
     //Do nothing
   }
 }
@@ -25,11 +26,12 @@ public abstract class AbstractVisitor implements IVisitor {
 package \Userdefine{pkg};
 
 import java.util.List;
+import ie.ucd.bon.source.SourceLocation;
 
 public interface IVisitor {
 
 
 \normal_classes{
-  void visit\ClassName(\ClassName node,\members[,]{ \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName });
+  void visit\ClassName(\ClassName node,\members[,]{ \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName }, SourceLocation loc);
 }
 }

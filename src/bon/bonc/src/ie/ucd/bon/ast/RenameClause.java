@@ -35,7 +35,7 @@ public class RenameClause extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitRenameClause(this, className, featureName);
+    visitor.visitRenameClause(this, className, featureName, getLocation());
   }
 
   // === Others ===

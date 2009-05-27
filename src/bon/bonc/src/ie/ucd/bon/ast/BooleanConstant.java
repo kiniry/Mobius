@@ -32,7 +32,7 @@ public class BooleanConstant extends ManifestConstant {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitBooleanConstant(this, value);
+    visitor.visitBooleanConstant(this, value, getLocation());
   }
 
   // === Others ===

@@ -44,7 +44,7 @@ public class SystemChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitSystemChart(this, name, clusters, indexing, explanation, part);
+    visitor.visitSystemChart(this, name, clusters, indexing, explanation, part, getLocation());
   }
 
   // === Others ===

@@ -32,7 +32,7 @@ public class CharacterConstant extends ManifestConstant {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitCharacterConstant(this, value);
+    visitor.visitCharacterConstant(this, value, getLocation());
   }
 
   // === Others ===

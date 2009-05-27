@@ -107,7 +107,7 @@ public class TypingInformation {
   public void addCluster(String clusterName, SourceLocation loc) {
     ClassDefinition classDef = classes.get(clusterName);
     if (classDef != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster", clusterName, "class", classDef.getSourceLocation().getSourceFile(), classDef.getSourceLocation().getLineNumber()));
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", clusterName, "class", classDef.getSourceLocation()));
     }
     ClusterDefinition def = clusters.get(clusterName);
     if (def == null) {
@@ -127,7 +127,7 @@ public class TypingInformation {
   public void addClass(String className, SourceLocation loc, Clazz.Mod mod) {
     ClusterDefinition clusterDef = clusters.get(className);
     if (clusterDef != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Class", className, "cluster", clusterDef.getSourceLocation().getSourceFile(), clusterDef.getSourceLocation().getLineNumber()));
+      problems.addProblem(new NameNotUniqueError(loc, "Class", className, "cluster", clusterDef.getSourceLocation()));
     }
     ClassDefinition def = classes.get(className);
     if (def == null) {

@@ -35,7 +35,7 @@ public class FormalGeneric extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitFormalGeneric(this, identifier, type);
+    visitor.visitFormalGeneric(this, identifier, type, getLocation());
   }
 
   // === Others ===

@@ -44,7 +44,7 @@ public class ClassDictionary extends SpecificationElement {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClassDictionary(this, systemName, entries, indexing, explanation, part);
+    visitor.visitClassDictionary(this, systemName, entries, indexing, explanation, part, getLocation());
   }
 
   // === Others ===

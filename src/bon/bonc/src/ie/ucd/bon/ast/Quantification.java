@@ -44,7 +44,7 @@ public class Quantification extends Expression {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitQuantification(this, quantifier, variableRanges, restriction, proposition);
+    visitor.visitQuantification(this, quantifier, variableRanges, restriction, proposition, getLocation());
   }
 
   // === Others ===

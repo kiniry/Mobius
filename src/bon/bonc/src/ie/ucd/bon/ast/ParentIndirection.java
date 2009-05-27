@@ -32,7 +32,7 @@ public class ParentIndirection extends ClientEntity {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitParentIndirection(this, genericIndirection);
+    visitor.visitParentIndirection(this, genericIndirection, getLocation());
   }
 
   // === Others ===

@@ -41,7 +41,7 @@ public class InheritanceRelation extends StaticRelation {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitInheritanceRelation(this, child, parent, multiplicity, semanticLabel);
+    visitor.visitInheritanceRelation(this, child, parent, multiplicity, semanticLabel, getLocation());
   }
 
   // === Others ===

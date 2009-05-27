@@ -53,7 +53,7 @@ public class ClassChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClassChart(this, name, inherits, queries, commands, constraints, indexing, explanation, part);
+    visitor.visitClassChart(this, name, inherits, queries, commands, constraints, indexing, explanation, part, getLocation());
   }
 
   // === Others ===

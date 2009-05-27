@@ -35,7 +35,7 @@ public class LabelledAction extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitLabelledAction(this, label, description);
+    visitor.visitLabelledAction(this, label, description, getLocation());
   }
 
   // === Others ===

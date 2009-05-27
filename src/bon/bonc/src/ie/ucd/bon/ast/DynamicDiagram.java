@@ -38,7 +38,7 @@ public class DynamicDiagram extends SpecificationElement {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitDynamicDiagram(this, components, extendedId, comment);
+    visitor.visitDynamicDiagram(this, components, extendedId, comment, getLocation());
   }
 
   // === Others ===

@@ -35,7 +35,7 @@ public class IndexClause extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitIndexClause(this, id, indexTerms);
+    visitor.visitIndexClause(this, id, indexTerms, getLocation());
   }
 
   // === Others ===

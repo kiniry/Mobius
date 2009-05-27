@@ -35,7 +35,7 @@ public class ObjectName extends AstNode {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitObjectName(this, className, extendedId);
+    visitor.visitObjectName(this, className, extendedId, getLocation());
   }
 
   // === Others ===

@@ -38,7 +38,7 @@ public class StaticDiagram extends SpecificationElement {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitStaticDiagram(this, components, extendedId, comment);
+    visitor.visitStaticDiagram(this, components, extendedId, comment, getLocation());
   }
 
   // === Others ===

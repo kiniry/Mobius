@@ -41,7 +41,7 @@ public class Cluster extends StaticComponent {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitCluster(this, name, components, reused, comment);
+    visitor.visitCluster(this, name, components, reused, comment, getLocation());
   }
 
   // === Others ===
