@@ -52,12 +52,6 @@ public class ClassInvariant extends BCPrintableAttribute
   private ExpressionRoot < AbstractFormula >  invariant;
 
   /**
-   * The flag which is <code>true</code> in case the invariant is
-   * an instance invariant and <code>false</code> otherwise.
-   */
-  private boolean isInstance;
-
-  /**
    * A constructor from BCClass and AbstractFormula.
    *
    * @param abcc - BCClass containing this invariant,
@@ -69,8 +63,7 @@ public class ClassInvariant extends BCPrintableAttribute
                         final boolean instanceflag) {
     this.bcc = abcc;
     this.invariant = new ExpressionRoot < AbstractFormula > (this, ainv);
-    this.isInstance = instanceflag;
-    commitInstanceFlag();
+    commitInstanceFlag(instanceflag);
   }
 
   /**
@@ -88,7 +81,7 @@ public class ClassInvariant extends BCPrintableAttribute
                         final AttributeReader ar)
     throws ReadAttributeException {
     this.bcc = (BCClass) bcc2;
-    this.isInstance = (this.access_flags & Constants.ACC_STATIC) == 0;
+    commitInstanceFlag((this.access_flags & Constants.ACC_STATIC) == 0);
     this.load(ar);
   }
 
@@ -103,16 +96,17 @@ public class ClassInvariant extends BCPrintableAttribute
     this.bcc = abcc;
     this.invariant = new ExpressionRoot < AbstractFormula > (this,
         new Predicate0Ar(true));
-    this.isInstance = instanceflag;
-    commitInstanceFlag();
+    commitInstanceFlag(instanceflag);
   }
 
   /**
-   * This method propagates the {@link #isInstance} flag to the
+   * This method propagates the instance flag to the
    * access_flags field.
+   * @param instanceflag <code>true</code> in case the invariant is an
+   *   instance invariant
    */
-  private void commitInstanceFlag() {
-    if (!this.isInstance) {
+  private void commitInstanceFlag(final boolean instanceflag) {
+    if (!instanceflag) {
       this.access_flags = this.access_flags | Constants.ACC_STATIC;
     }
   }
@@ -166,7 +160,7 @@ public class ClassInvariant extends BCPrintableAttribute
    *   invariant, <code>false</code> otherwise
    */
   public boolean isInstance() {
-    return this.isInstance;
+    return (this.access_flags & Constants.ACC_STATIC) == 0;
   }
 
   /**
@@ -191,8 +185,9 @@ public class ClassInvariant extends BCPrintableAttribute
    */
   @Override
   public String printCode1(final BMLConfig conf) {
-    final String header = this.isInstance ? DisplayStyle.INVARIANT_KWD :
-                                            DisplayStyle._staticInvariant;
+    final String header = isInstance() ? DisplayStyle.INVARIANT_KWD :
+                                         (DisplayStyle.STATIC_KWD + " " +
+                                          DisplayStyle.INVARIANT_KWD);
     final String code = this.invariant.printLine(conf, header);
     return "\n" + Parsing.addComment(code);
   }
@@ -232,10 +227,10 @@ public class ClassInvariant extends BCPrintableAttribute
    */
   @Override
   public String toString() {
-    if (this.isInstance) {
+    if (isInstance()) {
       return "invariant";
     } else {
-      return "class invariant";
+      return "static invariant";
     }
   }
 

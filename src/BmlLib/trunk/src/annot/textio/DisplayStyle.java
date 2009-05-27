@@ -34,7 +34,7 @@ public class DisplayStyle {
     "modifies",
     "loop_inv",
     "decreases"};
-  
+
   /**
    * Java keyword for package.
    */
@@ -161,8 +161,6 @@ public class DisplayStyle {
   public static final String _sc_end = "|}";
 
   public static final String _sc_start = "{|";
-
-  public static final String _staticInvariant = "static invariant";
 
   public static final String ASSERT_KWD = "assert";
 

@@ -382,7 +382,29 @@ nsbmlkindmodifier returns [int modif]:
    | GHOST { $modif = BCField.GHOST_FIELD; }
   );
 
-staticinvariants : BML_START STATIC INVARIANT BML_END EOL;
+staticinvariants : 
+  (staticinvariant)+ EOL
+  {
+     syso("static invariants");
+  };
+
+staticinvariant : 
+     BML_START (EOL)? STATIC methodmodifier? INVARIANT f=formula (EOL)? BML_END EOL
+     {
+        if ($f.ast != null) {
+          ClassInvariant inv = new ClassInvariant(bcc, $f.ast, false);
+          bcc.setInvariant(inv, invNo++);
+        }
+     }
+  |  BML_START (EOL)* BML_END EOL
+     {
+        {syso("empty static invariant");}
+     }
+  |  BML_START (~('\n')* EOL)* BML_END EOL
+     {
+        {syso("wrong static invariant");}
+     };
+
 
 staticconstraints : BML_START STATIC CONSTRAINT BML_END EOL;
 
