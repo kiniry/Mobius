@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: ClopsRuntime
+Bundle-SymbolicName: ClopsRuntime
+Bundle-Version: 0.2.1
+Bundle-Activator: clops.runtime.Activator
+Bundle-ClassPath: lib/clops-runtime.jar
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
