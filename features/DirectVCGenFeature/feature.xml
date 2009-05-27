@@ -2,7 +2,7 @@
 <feature
       id="mobius.directvcgen"
       label="DirectVCGen Feature"
-      version="1.0.2">
+      version="1.0.3">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -21,10 +21,11 @@
    </url>
 
    <requires>
+      <import plugin="bcel.plugin" version="5.2.0" match="greaterOrEqual"/>
       <import feature="mobius.provereditor" version="1.0.0"/>
       <import feature="mobius.required" version="1.0.0"/>
       <import feature="org.eclipse.cdt" version="6.0.0.200905150807"/>
-      <import plugin="bcel.plugin" version="5.2.0" match="greaterOrEqual"/>
+      <import plugin="ClopsRuntime" version="0.2.1" match="greaterOrEqual"/>
    </requires>
 
    <plugin
