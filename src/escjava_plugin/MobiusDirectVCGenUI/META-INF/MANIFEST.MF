@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: CoqEscjavaUI Plug-in
 Bundle-SymbolicName: MobiusDirectVCGenUI;singleton:=true
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Bundle-Activator: mobius.directVCGen.ui.poview.Activator
 Bundle-Localization: ./
 Require-Bundle: org.eclipse.ui,
@@ -20,7 +20,8 @@ Require-Bundle: org.eclipse.ui,
  mobius.escjava2.esctools;bundle-version="2.0.9",
  mobius.javafe.plugin;bundle-version="2.0.9",
  bcel.plugin;bundle-version="5.2.0",
- bico;bundle-version="1.0.0"
+ bico;bundle-version="1.0.0",
+ ClopsRuntime;bundle-version="0.2.1"
 Bundle-ActivationPolicy: lazy
 Export-Package: mobius.directVCGen.ui.poview;
   uses:="org.eclipse.core.runtime,
@@ -46,7 +47,5 @@ Export-Package: mobius.directVCGen.ui.poview;
 Bundle-ClassPath: .,
  lib/javac.jar,
  lib/junit.jar,
- lib/DirectVCGen.jar,
- lib/antlr-3.1.1-runtime.jar,
- lib/clops-runtime.jar
+ lib/DirectVCGen.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
