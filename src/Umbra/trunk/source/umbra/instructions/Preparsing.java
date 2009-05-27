@@ -105,7 +105,7 @@ public final class Preparsing {
     BytecodeLineController initial = getTypeForInsides(a_line,
                                                              a_context, a_bmlp);
     if (initial != null) return initial;
-    initial = getTypeForMethodHeader(a_line, a_bmlp);
+    initial = getTypeForMethodHeader(a_line);
     if (initial != null) return initial;
     final DispatchingAutomaton automaton = Preparsing.getAutomaton();
     BytecodeLineController  blc;
@@ -125,12 +125,17 @@ public final class Preparsing {
   }
 
   /**
-   * @param a_line
-   * @param a_bmlp
-   * @return
+   * This method checks if the given line is a method header line and
+   * in that case returns the {@link HeaderLineController} for the line.
+   * In case the line is not a method header line then <code>null</code> is
+   * returned.
+   *
+   * @param a_line the content of the line
+   * @return the header line controller or <code>null</code> in case the line is
+   *   not a method header
    */
   private static BytecodeLineController getTypeForMethodHeader(
-      final String a_line, final BMLParsing a_bmlp) {
+      final String a_line) {
     // methods
     final MethodRule mrule = getMethodRule();
     final BufferScanner bs = new BufferScanner(a_line);
@@ -191,21 +196,36 @@ public final class Preparsing {
         }
       }
     } else if (a_context.isInFieldsArea()) {
-      // XXX (to236111) if the field area is empty methods are next and they
-      // can start with the same words as fields ('public' etc.);
-      // it's a rather dirty way to avoid that
-      if (!PARSE_CP) {
-        if (FieldLineController.isFieldLineStart(a_line)) {
-          return new FieldLineController(a_line, a_bmlp);
-        }
-      } else {
-        if (FieldLineController.isFieldLineStart(a_line) &&
-            !a_line.contains("(")) {
-          return new FieldLineController(a_line, a_bmlp);
-        }
-      }
+      lc = handleFieldsArea(a_line, a_bmlp);
     }
     return lc;
+  }
+
+  /**
+   * The method handles the generation of line controllers for the fields area.
+   * It generates a {@link FieldLineController} in case a line with a field
+   * is recognised and <code>null</code> otherwise.
+   *
+   * @param a_line the line
+   * @param a_bmlp a link to the BML representation of the field
+   * @return the field line controller or <code>null</code> in case the field
+   *   is not recognised
+   */
+  private static FieldLineController handleFieldsArea(final String a_line,
+                                                      final BMLParsing a_bmlp) {
+    // XXX (to236111) if the field area is empty methods are next and they
+    // can start with the same words as fields ('public' etc.);
+    // it's a rather dirty way to avoid that
+    if (!PARSE_CP) {
+      if (FieldLineController.isFieldLineStart(a_line)) {
+        return new FieldLineController(a_line, a_bmlp);
+      }
+    } else {
+      if (FieldLineController.isFieldLineStart(a_line)) {
+        return new FieldLineController(a_line, a_bmlp);
+      }
+    }
+    return null;
   }
 
   /**
@@ -239,13 +259,22 @@ public final class Preparsing {
     addWhitespaceLoop(node);
     node = node.addSimple("=", UnknownLineController.class);
     addWhitespaceLoop(node);
+    addClassPoolClasses(node);
+  }
+
+  /**
+   * The method adds the nodes for different kinds of constant pool entries.
+   *
+   * @param a_node the node automaton to add the constant pool entries to
+   */
+  private static void addClassPoolClasses(final DispatchingAutomaton a_node) {
     for (int i = 0; i < CPLineController.CP_CLASS_HIERARCHY.length;
          i++) {
       try {
         final String entry_type = (String)
             (CPLineController.CP_CLASS_HIERARCHY[i].
                 getMethod("getEntryType").invoke(null));
-        node.addMnemonic(entry_type, entry_type,
+        a_node.addMnemonic(entry_type, entry_type,
                          CPLineController.CP_CLASS_HIERARCHY[i]);
       } catch (IllegalArgumentException e) {
         UmbraPlugin.messagelog("Impossible IllegalArgumentException in" +
@@ -309,7 +338,6 @@ public final class Preparsing {
                         ThrowsLineController.class);
       addSimpleForArray(BytecodeStrings.HEADER_PREFIX,
                         HeaderLineController.class);
-      addMethodHeaderRules();
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CLASS_KEYWORD_POS],
         ClassHeaderLineController.class);
@@ -327,34 +355,33 @@ public final class Preparsing {
 
         initCPNode(cpnode);
       }
-
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);
       my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_START,
                                       AnnotationLineController.class);
-      final DispatchingAutomaton digitnode = my_preparse_automaton.
-               addSimple("0",
-                         UnknownLineController.class);
-      for (int i = 1; i < 10; i++) {
-        my_preparse_automaton.addStarRule(Integer.toString(i), digitnode);
-      }
-      for (int i = 0; i < 10; i++) {
-        my_preparse_automaton.addStarRule("0" + Integer.toString(i), digitnode);
-      }
-      final DispatchingAutomaton colonnode = digitnode.addSimple(":",
-                                               UnknownLineController.class);
-      addWhitespaceLoop(colonnode);
-      addAllMnemonics(colonnode);
+      addInstructionLines();
     }
     return my_preparse_automaton;
   }
 
   /**
-   * 
+   * The method adds to the automaton the cases which recognise the lines
+   * with instructions.
    */
-  private static void addMethodHeaderRules() {
-    // TODO Auto-generated method stub
-    
+  private static void addInstructionLines() {
+    final DispatchingAutomaton digitnode = my_preparse_automaton.
+             addSimple("0",
+                       UnknownLineController.class);
+    for (int i = 1; i < 10; i++) {
+      my_preparse_automaton.addStarRule(Integer.toString(i), digitnode);
+    }
+    for (int i = 0; i < 10; i++) {
+      my_preparse_automaton.addStarRule("0" + Integer.toString(i), digitnode);
+    }
+    final DispatchingAutomaton colonnode = digitnode.addSimple(":",
+                                             UnknownLineController.class);
+    addWhitespaceLoop(colonnode);
+    addAllMnemonics(colonnode);
   }
 
   /**
