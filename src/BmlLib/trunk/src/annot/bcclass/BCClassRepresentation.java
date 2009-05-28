@@ -494,7 +494,7 @@ public abstract class BCClassRepresentation {
     attrs = addAndSaveNonJavaFields(aw, attrs, getModelFields());
     this.jc.setAttributes(attrs);
     updateFieldAttributes();
-    this.cp.save(this.jc);
+    this.cp.save(this.jc, this.methods);
   }
 
   private Attribute[] addAndSaveNonJavaFields(final AttributeWriter aw,

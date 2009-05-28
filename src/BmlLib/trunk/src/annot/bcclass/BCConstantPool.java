@@ -11,6 +11,7 @@ package annot.bcclass;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.bcel.Constants;
@@ -18,6 +19,13 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
 import org.apache.bcel.classfile.ConstantClass;
+import org.apache.bcel.classfile.ConstantDouble;
+import org.apache.bcel.classfile.ConstantFieldref;
+import org.apache.bcel.classfile.ConstantFloat;
+import org.apache.bcel.classfile.ConstantInteger;
+import org.apache.bcel.classfile.ConstantInterfaceMethodref;
+import org.apache.bcel.classfile.ConstantLong;
+import org.apache.bcel.classfile.ConstantMethodref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantString;
@@ -283,19 +291,16 @@ public class BCConstantPool extends BCCConstantPrinting
    * as an "second constant pool" class attribute).
    *
    * @param ajc - JavaClass to save to.
+   * @param methods the BML representation of methods
    */
-  public void save(final JavaClass ajc) {
-    final int n = this.constants.size();
-    final Constant[] carr = new Constant[this.initialSize];
-    for (int i = 0; i  <  this.initialSize; i++) {
-      carr[i] = this.constants.elementAt(i);
-    }
+  public void save(final JavaClass ajc, final BCMethod[] methods) {
+    final Constant[] carr = getConstantsToSave(methods);
     ajc.getConstantPool().setConstantPool(carr);
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final DataOutputStream file = new DataOutputStream(baos);
     try {
-      file.writeShort(n - this.initialSize);
-      for (int i = this.initialSize; i  <  n; i++) {
+      file.writeShort(constants.size() - this.initialSize);
+      for (int i = this.initialSize; i  <  constants.size(); i++) {
         this.constants.elementAt(i).dump(file);
       }
     } catch (final IOException e) {
@@ -310,6 +315,66 @@ public class BCConstantPool extends BCCConstantPrinting
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
     final Attribute[] atab = BCClass.addAttribute(ajc.getAttributes(), scp);
     ajc.setAttributes(atab);
+  }
+
+  /**
+   * This method creates a new {@link Constant} array that results from
+   * combining the constants from methods and from the class constant pool.
+   *
+   * @param methods the methods to add the constants from
+   * @return an array of constants
+   */
+  private Constant[] getConstantsToSave(final BCMethod[] methods) {
+    final ConstantPoolGen cpg = new ConstantPoolGen();
+    final ConstantPool cp = jc.getConstantPool();
+    addConstantsFromCP(cpg, cp);
+    for (int i = 0; i < methods.length; i++) {
+      addConstantsFromCP(cpg,
+        methods[i].getBcelMethod().getConstantPool().getConstantPool());
+    }
+    final ConstantPool ncp = cpg.getConstantPool();
+    final Constant[] carr = new Constant[cpg.getSize()];
+    for (int i = 0; i < carr.length; i++) {
+      carr[i] = ncp.getConstant(i);
+    }
+    return carr;
+  }
+
+  /**
+   * Copies constants from the given constant pool to the given constant pool
+   * generator.
+   *
+   * @param a_cpg a new constant pool generator to add the constants to
+   * @param a_cp the constant pool to take the constants from
+   */
+  private void addConstantsFromCP(final ConstantPoolGen a_cpg,
+                                  final ConstantPool a_cp) {
+    final ConstantPoolGen cpcpg = new ConstantPoolGen(a_cp);
+    for (int i = 1; i < a_cp.getLength(); i++) {
+      final Constant cnst = a_cp.getConstant(i);
+      if (cnst instanceof ConstantClass) {
+        final ConstantClass ccl = (ConstantClass)cnst;
+        final String clname = ccl.getBytes(a_cp);
+        final int pos = a_cpg.getSize();
+        int isin = a_cpg.lookupUtf8(clname);
+        if (isin == -1) {
+          isin = pos + 1;
+        }
+        for (int j = 0; j <= a_cp.getLength(); j++) {
+          if (a_cpg.lookupInteger(j) == -1) {
+            a_cpg.addInteger(j); // dummy addition to increase the pos. in cpg
+            break;
+          }
+        }
+        final ConstantClass nccl = new ConstantClass(isin);
+        a_cpg.setConstant(pos, nccl);
+        if (isin == pos + 1) {
+          a_cpg.addUtf8(clname);
+        }
+      } else if (cnst != null) {
+        a_cpg.addConstant(cnst, cpcpg);
+      }
+    }
   }
 
   /**
