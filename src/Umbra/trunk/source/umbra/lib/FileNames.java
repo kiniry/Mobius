@@ -24,13 +24,13 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
-import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.eclipse.jdt.internal.ui.actions.SelectionConverter;
 import org.eclipse.jdt.internal.ui.javaeditor.CompilationUnitEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.JavaEditor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.IFileEditorInput;
 
 
 /**
@@ -272,16 +272,16 @@ public final class FileNames {
   public static IFile getClassFileFileFor(final IFile a_file,
                      final IEditorPart an_editor)
     throws JavaModelException {
-    final IProject project = ((FileEditorInput)an_editor.
-        getEditorInput()).getFile().getProject();
+    
+    final IProject project = ((IFileEditorInput) an_editor.getEditorInput()).getFile().getProject();
     final IJavaProject jproject = JavaCore.create(project);
     final IPath outputloc = jproject.getOutputLocation();
     final IPath elempath = a_file.getFullPath().
       removeFileExtension().addFileExtension(JAVA_EXTENSION.substring(1));
     final IPath nelempath = removeSourcePath(elempath,
                                              jproject.getRawClasspath());
-    final CompilationUnit elem =
-      (CompilationUnit) jproject.findElement(nelempath);
+    final ICompilationUnit elem =
+      (ICompilationUnit) jproject.findElement(nelempath);
     final IType typ = elem.findPrimaryType();
     final String fqn = typ.getFullyQualifiedName();
     final IPath np = outputloc.append(fqn.replace(Signature.C_DOT,
