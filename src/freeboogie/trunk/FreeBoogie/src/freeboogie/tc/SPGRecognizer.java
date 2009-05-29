@@ -171,20 +171,20 @@ public class SPGRecognizer<T> {
 
   
   private List<T> getChangeList(Map<T, T> oldPred, Map<T, T> oldSucc) {
-    return new ArrayList<T>(succ.keySet());
-//    List<T> res = new ArrayList<T>();
-//    for (T n: succ.keySet()) {
-//      if (oldSucc.get(n) == null) { //|| oldPred.get(n) == null) {
-//        continue;
-//      }
-//      int oldDeg = f(oldSucc.get(n)) - f(oldPred.get(n));
-//      int deg = d(n);
-//      if (deg != oldDeg) {
-//        res.add(n);
-//      }
-//    }
-//    
-//    return res;
+    List<T> res = new ArrayList<T>();
+    for (T n: succ.keySet()) {
+      if (oldSucc.get(n) == null || oldPred.get(n) == null) {
+        // source or a sink
+        continue;
+      }
+      int oldDeg = f(oldSucc.get(n)) - f(oldPred.get(n));
+      int deg = d(n);
+      if (deg != oldDeg) {
+        res.add(n);
+      }
+    }
+    
+    return res;
   }
 
   /**
