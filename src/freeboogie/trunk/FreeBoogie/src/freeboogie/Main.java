@@ -141,7 +141,7 @@ public class Main {
         }}));
   }
   private void spgCheck() {
-    SPGRecognizer.check(program, tc);
+    TtspRecognizer.check(program, tc);
   }
   private void passivate(boolean isVerbose) {
     Passivator p = new Passivator(isVerbose);

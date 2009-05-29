@@ -22,6 +22,7 @@
   <property name="astgen-jar" value="astgen-0.1.jar"/>
   <property name="ast-dir" location="src/freeboogie/ast" />
   <property name="parser-dir" location="src/freeboogie/parser" />
+  <property name="gcollect-jar" value="google-collect-1.0-rc1.jar"/>
   <property name="junit_src" location="test/junit" />
   <property name="junit_reports" location="test/junit/reports"/>
   <path id="classpath">
@@ -110,10 +111,11 @@
       <manifest>
         <attribute name="Main-Class" value="freeboogie.Main" />
         <attribute name="Class-Path" 
-          value="lib/${antlr-jar} lib/${genericutils-jar}" />
+          value="lib/${antlr-jar} lib/${genericutils-jar} lib/${gcollect-jar}" />
       </manifest>
     </jar>
     <copy file="lib/${antlr-jar}" todir="dist/lib" />
+    <copy file="lib/${gcollect-jar}" todir="dist/lib" />
     <copy file="lib/${genericutils-jar}" todir="dist/lib" />
   </target>
   
