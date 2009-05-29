@@ -106,7 +106,8 @@ public class SPGRecognizer<T> {
     if (!e) {
       if (x == pred.get(b)) {
         pred.put(b, a);
-      } else {// x != pred.get(b)
+      } 
+      else {// x != pred.get(b)
         if (a == pred.get(succ.get(a))) {
           succ.put(a, b);
         } else {
@@ -129,55 +130,64 @@ public class SPGRecognizer<T> {
   
   @SuppressWarnings("unchecked")
   private boolean reductionStrategy() {
+    
+    // initialize buckets
     Stack<T>[] bucketsTable = new Stack [maxDeg];
     for (int i = 0; i < maxDeg; i++) {
       bucketsTable[i] = new Stack<T> ();
     }
+    
+    // put all the blue redexes in the right buckets
     for (T a: succ.keySet()) {
       if (isBlue(a)) {
         // a blue redex
-        
           bucketsTable[d(a)].push(a);
-        
       }
     }
-    List<T> inspected = new ArrayList<T>();
+    
+    // reduces, beginning by the innermost redex
+
     for (int i = 0; i < bucketsTable.length; i++) {
       while (!bucketsTable[i].empty()) {
         T curr = bucketsTable[i].pop();
         
-        if (d(curr) == i) {
-          inspected.add(curr);
-//          Map<T, T> oldPred =  new HashMap<T,T>(pred);
-//          Map<T, T> oldSucc =  new HashMap<T, T>(succ);
-          boolean res = reduction(curr);
-          if (!res) {
-            return false;
-          }
-          
-          List<T> nodes = getChangeList();
-          for (T n : nodes) {
-            int diff = d(n); 
-            if (!bucketsTable[diff].contains(n) &&
-                (diff == i && !inspected.contains(n))) {
-              bucketsTable[diff].push(n);
-            }
-          }
+        int da = -1;
+        int db = -1;
+        
+        T a = pred.get(curr);
+        if (isBlue(a)) {
+          da = d(a);
         }
-      }
+        
+        T b = succ.get(curr);
+        if (isBlue(b)) {
+          db = d(b);
+        }
+        
+        boolean res = reduction(curr);
+        if (!res) {
+          return false;
+        }
+        // have we changed a or b?
+        int nda = -1;
+        int ndb = -1;
+        
+        if (isBlue(a)) {
+          nda = d(a);
+        }
+        if (isBlue(b)) {
+          ndb = d(b);
+        }
+        
+//        if (nda != da) {
+//          bucketsTable[nda].push(a);
+//        }
+//        if (ndb != db) {
+//          bucketsTable[ndb].push(b);
+//        }
+      }   
     }
     return true;
-  }
-
-  
-  private List<T> getChangeList() {
-    List<T> res = new ArrayList<T>();
-    for (T n: succ.keySet()) {
-      if (isBlue(n)) {
-        res.add(n);
-      }
-    }
-    return res;
   }
 
   /**
