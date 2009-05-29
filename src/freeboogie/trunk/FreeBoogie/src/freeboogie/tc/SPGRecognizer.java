@@ -102,7 +102,7 @@ public class SPGRecognizer<T> {
   private boolean reduction(T x) {
     T a = pred.get(x);
     T b = succ.get(x);
-    boolean e = a == pred.get(b) || succ.get(a) == b;
+    boolean e = ((a == pred.get(b)) || (succ.get(a) == b));
     if (!e) {
       if (x == pred.get(b)) {
         pred.put(b, a);
@@ -136,7 +136,9 @@ public class SPGRecognizer<T> {
     for (T a: succ.keySet()) {
       if (isBlue(a)) {
         // a blue redex
-        bucketsTable[d(a)].push(a);
+        
+          bucketsTable[d(a)].push(a);
+        
       }
     }
     
@@ -155,7 +157,10 @@ public class SPGRecognizer<T> {
           List<T> nodes = getChangeList(oldPred, oldSucc);
           for (T n : nodes) {
             if (isBlue(n)) {
-              bucketsTable[d(n)].push(n);
+              int diff = d(n); 
+              if (diff > i) {
+                bucketsTable[diff].push(n);
+              }
             }
           }
         }
@@ -166,18 +171,20 @@ public class SPGRecognizer<T> {
 
   
   private List<T> getChangeList(Map<T, T> oldPred, Map<T, T> oldSucc) {
-    List<T> res = new ArrayList<T>();
-    for (T n: succ.keySet()) {
-      if (oldSucc.get(n) == null || oldPred.get(n) == null) {
-        continue;
-      }
-      int oldDeg = f(oldSucc.get(n)) - f(oldPred.get(n));
-      int deg = d(n);
-      if (deg != oldDeg) {
-        res.add(n);
-      }
-    }
-    return res;
+    return new ArrayList<T>(succ.keySet());
+//    List<T> res = new ArrayList<T>();
+//    for (T n: succ.keySet()) {
+//      if (oldSucc.get(n) == null) { //|| oldPred.get(n) == null) {
+//        continue;
+//      }
+//      int oldDeg = f(oldSucc.get(n)) - f(oldPred.get(n));
+//      int deg = d(n);
+//      if (deg != oldDeg) {
+//        res.add(n);
+//      }
+//    }
+//    
+//    return res;
   }
 
   /**
@@ -186,6 +193,10 @@ public class SPGRecognizer<T> {
    * @return true if (a, b) is blue
    */
   private boolean isBlue(T a) {
+    if (succ.get(a) != null && pred.get(a) != null) {
+      // a source or a sink
+      return false; // not blue
+    }
     T b = succ.get(a);
     return pred.get(b) != a;
   }
