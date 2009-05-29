@@ -193,7 +193,7 @@ public class SPGRecognizer<T> {
    * @return true if (a, b) is blue
    */
   private boolean isBlue(T a) {
-    if (succ.get(a) != null && pred.get(a) != null) {
+    if (succ.get(a) == null || pred.get(a) == null) {
       // a source or a sink
       return false; // not blue
     }
