@@ -141,26 +141,26 @@ public class SPGRecognizer<T> {
         
       }
     }
-    
+    List<T> inspected = new ArrayList<T>();
     for (int i = 0; i < bucketsTable.length; i++) {
       while (!bucketsTable[i].empty()) {
         T curr = bucketsTable[i].pop();
+        
         if (d(curr) == i) {
-
-          Map<T, T> oldPred =  new HashMap<T,T>(pred);
-          Map<T, T> oldSucc =  new HashMap<T, T>(succ);
+          inspected.add(curr);
+//          Map<T, T> oldPred =  new HashMap<T,T>(pred);
+//          Map<T, T> oldSucc =  new HashMap<T, T>(succ);
           boolean res = reduction(curr);
           if (!res) {
             return false;
           }
           
-          List<T> nodes = getChangeList(oldPred, oldSucc);
+          List<T> nodes = getChangeList();
           for (T n : nodes) {
-            if (isBlue(n)) {
-              int diff = d(n); 
-              if (diff > i) {
-                bucketsTable[diff].push(n);
-              }
+            int diff = d(n); 
+            if (!bucketsTable[diff].contains(n) &&
+                (diff == i && !inspected.contains(n))) {
+              bucketsTable[diff].push(n);
             }
           }
         }
@@ -170,20 +170,13 @@ public class SPGRecognizer<T> {
   }
 
   
-  private List<T> getChangeList(Map<T, T> oldPred, Map<T, T> oldSucc) {
+  private List<T> getChangeList() {
     List<T> res = new ArrayList<T>();
     for (T n: succ.keySet()) {
-      if (oldSucc.get(n) == null || oldPred.get(n) == null) {
-        // source or a sink
-        continue;
-      }
-      int oldDeg = f(oldSucc.get(n)) - f(oldPred.get(n));
-      int deg = d(n);
-      if (deg != oldDeg) {
+      if (isBlue(n)) {
         res.add(n);
       }
     }
-    
     return res;
   }
 
