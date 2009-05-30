@@ -17,7 +17,6 @@ import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.InstructionLineController;
 import umbra.lib.BytecodeStrings;
-import umbra.lib.EclipseIdentifiers;
 import umbra.lib.UmbraMethodException;
 
 /**
@@ -124,6 +123,7 @@ public abstract class BytecodeTextParser {
    * Removes an one-line comment from a line of byte code.
    *
    * @param a_line a line of byte code
+   * @param line_delimiter line delimiter for the line of bytecode
    * @return the byte code line without end-of-line comment and final
    *   whitespace
    */

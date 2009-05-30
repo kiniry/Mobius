@@ -17,6 +17,7 @@ import org.eclipse.jface.text.rules.RuleBasedPartitionScanner;
 import org.eclipse.jface.text.rules.Token;
 
 import umbra.lib.BytecodeStrings;
+import umbra.lib.EclipseIdentifiers;
 
 
 /**
@@ -114,8 +115,8 @@ public class BytecodePartitionScanner extends RuleBasedPartitionScanner {
   /**
    * The string which indicates an empty line.
    */
-  private static final String EMPTY_LINE_MARKER =
-    System.getProperty("line.separator") + System.getProperty("line.separator");
+  private static final String EMPTY_LINE_MARKER = 
+    EclipseIdentifiers.EDITOR_EOL + EclipseIdentifiers.EDITOR_EOL;
 
   /**
    * This constructor creates rules and configures the scanner with them.

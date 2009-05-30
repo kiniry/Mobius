@@ -55,7 +55,7 @@ public class BytecodeCPSecScanner extends RuleBasedScanner {
     final IToken[] tokens = TokenGetter.getTokenTab(the_manager, a_mode);
     final IRule[] rules = new IRule[NUMBER_OF_RULES];
 
-    // Add rule for cosnt keyword
+    // Add rule for const keyword
     rules[KEYWORD_RULE] = createKeywordRule(
       tokens[ColorValues.SLOT_BMLKEYWORDS]);
     setRules(rules);

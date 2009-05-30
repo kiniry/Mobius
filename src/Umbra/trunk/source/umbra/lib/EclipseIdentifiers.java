@@ -57,6 +57,11 @@ public final class EclipseIdentifiers {
    */
   public static final String COLOR_GROUP = "colorGroup";
 
+  /**
+   * The end of line sequence for editor.
+   */
+  public static final String EDITOR_EOL = "\n";
+
   /* *********************************************************************
    * ACTION NAMES
    */
