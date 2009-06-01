@@ -181,7 +181,7 @@ public class BCClass extends BCClassPrinting {
   }
 
   private void updateModelField(final BCField afield) {
-    // TODO Auto-generated method stub
+    // TODO make it work
   }
 
   /**
@@ -194,6 +194,15 @@ public class BCClass extends BCClassPrinting {
    */
   private void updateGhostField(final BCField afield) {
     final GhostFieldsAttribute fds = getGhostFields();
+    updateNJavaField(afield, fds);
+  }
+
+  /**
+   * @param afield
+   * @param fds
+   */
+  private void updateNJavaField(final BCField afield,
+                                final GhostFieldsAttribute fds) {
     boolean found = false;
     for (int i = 0; i < fds.size(); i++) {
       final BCField fd = fds.get(i);
@@ -310,6 +319,12 @@ public class BCClass extends BCClassPrinting {
     }
   }
 
+  /**
+   * Returns an attribute that is supposed to contain ghost fields and which
+   * actually contains no fields.
+   *
+   * @return the ghost fields attribute with no ghost fields
+   */
   protected GhostFieldsAttribute getFreshGhostFields() {
     return new GhostFieldsAttribute(this);
   }

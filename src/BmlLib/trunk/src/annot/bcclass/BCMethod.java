@@ -16,6 +16,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.LocalVariableGen;
@@ -525,5 +526,15 @@ public class BCMethod {
    */
   public boolean isConstructor() {
     return isConstructor;
+  }
+
+
+  public ConstantPoolGen getConstantPool() {
+    return bcelMethod.getConstantPool();
+  }
+
+
+  public void setConstantPool(ConstantPoolGen ncpg) {
+    bcelMethod.setConstantPool(ncpg);    
   }
 }

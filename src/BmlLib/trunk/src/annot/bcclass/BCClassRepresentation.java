@@ -21,6 +21,7 @@ import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 import annot.attributes.AType;
 import annot.attributes.AttributeNames;
@@ -477,11 +478,8 @@ public abstract class BCClassRepresentation {
    * into it.
    */
   public void saveJC() {
+    final Method[] marr = generateMethodsToSave();
     this.cp.reset();
-    final Method[] marr = new Method[this.methods.length];
-    for (int i = 0; i  <  this.methods.length; i++) {
-      marr[i] = this.methods[i].save();
-    }
     this.jc.setMethods(marr);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "  saving class attributes");
     final AttributeWriter aw = new AttributeWriter(this);
@@ -494,9 +492,51 @@ public abstract class BCClassRepresentation {
     attrs = addAndSaveNonJavaFields(aw, attrs, getModelFields());
     this.jc.setAttributes(attrs);
     updateFieldAttributes();
-    this.cp.save(this.jc, this.methods);
+    this.cp.save(this.jc);
   }
 
+  /**
+   * Generates an array of methods which will be saved to the new JavaClass.
+   *
+   * @return the generated methods
+   */
+  private Method[] generateMethodsToSave() {
+    final ConstantPoolGen ncpg = new ConstantPoolGen(this.jc.getConstantPool());
+    final Method[] marr = new Method[this.methods.length];
+    for (int i = 0; i  <  this.methods.length; i++) {
+      updateConstantPool(ncpg, this.methods[i].getConstantPool());
+      this.methods[i].setConstantPool(ncpg);
+      marr[i] = this.methods[i].save();
+    }
+    this.jc.setConstantPool(ncpg.getFinalConstantPool());
+    return marr;
+  }
+
+  /**
+   * This method updates the first constant pool with the entries from the
+   * second one.
+   *
+   * @param ncpg the constant pool to add entries to
+   * @param constantPool the constant pool to take entries from
+   */
+  private void updateConstantPool(final ConstantPoolGen ncpg,
+                                  final ConstantPoolGen constantPool) {
+    for (int i = 1; i < constantPool.getSize(); i++) {
+      ncpg.addConstant(constantPool.getConstant(i), constantPool);
+    }
+  }
+
+  /**
+   * This method extends the given array of attributes and adds to it the
+   * attribute with BML fields. In addition, it writes the attribute to the
+   * given attribute writer. This method can be used to write both
+   * ghost and model fields.
+   *
+   * @param aw the attribute writer to write the attribute to
+   * @param attrs the array of attributes to extend
+   * @param ghstFldsAttr the attribute with ghost fields
+   * @return the extended array of atributes
+   */
   private Attribute[] addAndSaveNonJavaFields(final AttributeWriter aw,
                                      final Attribute[] attrs,
                                      final GhostFieldsAttribute ghstFldsAttr) {
@@ -634,8 +674,10 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * 
-   * @return
+   * Returns an attribute that is supposed to contain ghost fields and which
+   * actually contains no fields.
+   *
+   * @return the ghost fields attribute with no ghost fields
    */
   protected abstract GhostFieldsAttribute getFreshGhostFields();
 

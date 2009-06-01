@@ -65,6 +65,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
   public String printTypeBody(final BMLConfig conf) {
     final StringBuffer code = new StringBuffer("");
     printUpperSection(conf, code, true);
+    code.append("\n");
     printUpperSection(conf, code, false);
     printMethods(conf, code);
     return conf.getPrettyPrinter().afterDisplay(code.toString());

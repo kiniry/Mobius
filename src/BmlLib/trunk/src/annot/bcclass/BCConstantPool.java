@@ -11,7 +11,6 @@ package annot.bcclass;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.bcel.Constants;
@@ -19,13 +18,6 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
 import org.apache.bcel.classfile.ConstantClass;
-import org.apache.bcel.classfile.ConstantDouble;
-import org.apache.bcel.classfile.ConstantFieldref;
-import org.apache.bcel.classfile.ConstantFloat;
-import org.apache.bcel.classfile.ConstantInteger;
-import org.apache.bcel.classfile.ConstantInterfaceMethodref;
-import org.apache.bcel.classfile.ConstantLong;
-import org.apache.bcel.classfile.ConstantMethodref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantString;
@@ -271,11 +263,12 @@ public class BCConstantPool extends BCCConstantPrinting
 
   /**
    * Reinitializes constant pool from it's JavaClass'es
-   * primary constant pool, removing all variables from
-   * secondary constant pool.
+   * primary constant pool. The variables from the second constant
+   * pool are copied to the new constant pool.
    */
   public void reset() {
-    MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "clearing second constant pool");
+    final int oldsize = getInitialSize();
+    final Vector < Constant > oconst = this.constants;
     this.constants = new Vector < Constant > ();
     final ConstantPoolGen cpg = new ConstantPoolGen(this.jc.getConstantPool());
     addStandardConstants(cpg);
@@ -283,6 +276,9 @@ public class BCConstantPool extends BCCConstantPrinting
     final ConstantPool cp = this.jc.getConstantPool();
     this.initialSize = cp.getLength();
     readInCP(cp);
+    for (int i = oldsize; i < oconst.size(); i++) {
+      this.constants.add(oconst.get(i));
+    }
   }
 
   /**
@@ -291,10 +287,9 @@ public class BCConstantPool extends BCCConstantPrinting
    * as an "second constant pool" class attribute).
    *
    * @param ajc - JavaClass to save to.
-   * @param methods the BML representation of methods
    */
-  public void save(final JavaClass ajc, final BCMethod[] methods) {
-    final Constant[] carr = getConstantsToSave(methods);
+  public void save(final JavaClass ajc) {
+    final Constant[] carr = jc.getConstantPool().getConstantPool();
     ajc.getConstantPool().setConstantPool(carr);
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final DataOutputStream file = new DataOutputStream(baos);
@@ -315,29 +310,6 @@ public class BCConstantPool extends BCCConstantPrinting
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
     final Attribute[] atab = BCClass.addAttribute(ajc.getAttributes(), scp);
     ajc.setAttributes(atab);
-  }
-
-  /**
-   * This method creates a new {@link Constant} array that results from
-   * combining the constants from methods and from the class constant pool.
-   *
-   * @param methods the methods to add the constants from
-   * @return an array of constants
-   */
-  private Constant[] getConstantsToSave(final BCMethod[] methods) {
-    final ConstantPoolGen cpg = new ConstantPoolGen();
-    final ConstantPool cp = jc.getConstantPool();
-    addConstantsFromCP(cpg, cp);
-    for (int i = 0; i < methods.length; i++) {
-      addConstantsFromCP(cpg,
-        methods[i].getBcelMethod().getConstantPool().getConstantPool());
-    }
-    final ConstantPool ncp = cpg.getConstantPool();
-    final Constant[] carr = new Constant[cpg.getSize()];
-    for (int i = 0; i < carr.length; i++) {
-      carr[i] = ncp.getConstant(i);
-    }
-    return carr;
   }
 
   /**
