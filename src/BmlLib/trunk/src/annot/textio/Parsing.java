@@ -304,12 +304,26 @@ public class Parsing {
         throw new RuntimeException("parsing failed while updating BCClass");
       }
       this.my_errmsg = "error in " + e.line + " : " +
-                       e.charPositionInLine + 1;
+                        (e.charPositionInLine + 1);
+//                       (calculatePosInLine(code, e.charPositionInLine) + 1);
       return false;
     }
     this.my_errmsg = "";
     return true;
   }
+
+//  private int calculatePosInLine(String code, int charPositionInLine) {
+//    final String[] lines = code.split("\n");
+//    int charstilnow = 0;
+//    for (int i = 0; i < lines.length; i++) {
+//      if (charstilnow + lines[i].length() + 1 < charPositionInLine) {
+//        charstilnow += lines[i].length() + 1;
+//      } else {
+//        break;
+//      }
+//    }
+//    return charPositionInLine - charstilnow;
+//  }
 
   /**
    * Returns the structure with BML specification areas markers (i.e. / *@,

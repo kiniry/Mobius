@@ -913,12 +913,13 @@ formula returns [AbstractFormula ast] :
     if ($e.ast == null) {
       syso("*** error ***");
       syso("no unchecked expression error");
-      reportError(null);
+      reportError(new RecognitionException(input));
     } else {
-      if ($e.ast.checkType() != JavaBasicType.JavaBool) {
+      JavaType jt = $e.ast.checkType();
+      if (jt != JavaBasicType.JavaBool) {
         syso("*** error ***");
         syso("wrong type error");
-        reportError(null);
+        reportError(new RecognitionException(input));
       } else {
         if ($e.ast instanceof AbstractFormula) {
           $ast = (AbstractFormula)$e.ast;

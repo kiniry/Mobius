@@ -20,22 +20,41 @@ public class NULL extends BCExpression {
     super(Code.NULL);
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression provided that all
+   * the subexpressions have correct types. In this case, this is
+   * {@link JavaReferenceType#ANY}.
+   *
+   * @return the type of the expression ({@link JavaReferenceType#ANY})
+   */
   protected JavaType checkType1() {
     return JavaReferenceType.ANY;
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression. In this case, this is
+   * {@link JavaReferenceType#ANY}.
+   *
+   * @return the type of the expression ({@link JavaReferenceType#ANY})
+   */
   public JavaType getType1() {
     return JavaReferenceType.ANY;
   }
 
-  @Override
+  /**
+   * Returns the string representation of the expression i.e. "null" String.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return "null" String
+   */
   protected String printCode1(final BMLConfig conf) {
     return "null";
   }
 
-  @Override
+  /**
+   * @return Simple String representation of this
+   *     expression, for debugging only.
+   */
   public String toString() {
     return "null";
   }
