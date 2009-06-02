@@ -1,11 +1,15 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.ast.AbstractVisitor;
+import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.Expression;
+import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.IVisitor;
+import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.Clazz.Mod;
 import ie.ucd.bon.errorreporting.Problems;
@@ -20,10 +24,12 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
 
   private final BONST st;
   private final Problems problems;
+  private final VisitorContext context;
 
   public STBuilderVisitor() {
     st = new BONST();
     problems = new Problems();
+    context = new VisitorContext();
   }
 
   public BONST getSt() {
@@ -47,6 +53,10 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       problems.addProblem(new DuplicateClassDefinitionError(loc, clazz));
     } else {
       st.classes.put(name, node);
+      
+      context.clazz = node;
+      classInterface.accept(this);
+      context.clazz = null;      
     }
   }
 
@@ -64,6 +74,19 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       st.clusters.put(name, node);
     }
     
+  }
+
+  @Override
+  public void visitClassInterface(ClassInterface node, List<Feature> features,
+      List<BONType> parents, List<Expression> invariant, Indexing indexing,
+      SourceLocation loc) {
+    
+    for (BONType parent : parents) {
+      st.classInheritanceGraph.addEdge(context.clazz.getName(), parent);
+      st.simpleClassInheritanceGraph.addEdge(context.clazz.getName(), parent.getIdentifier());
+    }
+    
+    st.indexing.put(context.clazz, indexing);
   }
 
 

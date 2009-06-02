@@ -30,6 +30,12 @@ public class Graph<A,B> {
     bs.add(to);
   }
   
+  public final void addEdges(final A from, final Collection<B> tos) {
+    for (B to : tos) {
+      addEdge(from, to);
+    }
+  }
+  
   public boolean removeEdge(final A from, final B to) {
     Set<B> bs = edges.get(from);
     if (bs != null) {
