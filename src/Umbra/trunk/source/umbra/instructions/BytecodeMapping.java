@@ -423,7 +423,20 @@ public class BytecodeMapping {
   /**
    * For a given method returns the number of constant (in textual
    * representation of bytecode) that represents constant containing
-   * method's name.
+   * method's name. <br> <br>
+   *
+   * FIXME (Umbra) following error occurs:
+   * We have class that uses class Y from package x in the same project
+   * (import x.Y). We change the constant with that class name in CP
+   * (const Utf8 "x/Y") to const Utf8 "z/Y", where z is a package in another
+   * project referenced by project in which x.Y is. x.Y and z.Y are identical.
+   * The verifier fails to detect z.y (because it does not handle imports from
+   * other project) and error message pops. We decide not to save, return to
+   * edition and change constant back to "x/Y". Now we try to save and editor
+   * crashes in this method. <br>
+   * It is possible that the cause of error is not rollbacking the changes made
+   * by DummyGenerator after the error during verification occured (see second
+   * TODO in BytecodeEditor#prepareConstantPool).
    *
    * @param a_method a method for which the number is returned
    * @return the number of constant (in textual representation

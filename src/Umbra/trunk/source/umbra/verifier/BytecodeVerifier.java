@@ -47,7 +47,11 @@ public class BytecodeVerifier {
     final ClassPath ncp = new ClassPath(cp.toString() + ":" + a_build_path);
     final SyntheticRepository sr = SyntheticRepository.getInstance(ncp);
     Repository.setRepository(sr);
-    System.err.println(a_jc.getClassName());
+    /*
+     * TODO (Umbra) it is possible that the old version of class is loaded from
+     * project build path and adding the fresh (present in editor) version of
+     * class to the repository does not work.
+     */
     Repository.addClass(a_jc);
     final String class_name = a_jc.getClassName();
     my_verifier = VerifierFactory.getVerifier(class_name);
