@@ -47,6 +47,8 @@ public class BytecodeVerifier {
     final ClassPath ncp = new ClassPath(cp.toString() + ":" + a_build_path);
     final SyntheticRepository sr = SyntheticRepository.getInstance(ncp);
     Repository.setRepository(sr);
+    System.err.println(a_jc.getClassName());
+    Repository.addClass(a_jc);
     final String class_name = a_jc.getClassName();
     my_verifier = VerifierFactory.getVerifier(class_name);
     my_verifier.flush();
