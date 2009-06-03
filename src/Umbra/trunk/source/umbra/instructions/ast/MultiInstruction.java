@@ -151,11 +151,7 @@ public class MultiInstruction extends InstructionLineController {
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)}
    * for explantation of "dirty" and "clean" numbers concepts. <br> <br>
    *
-   * TODO (to236111) this method breaks jump instructions <br> <br>
-   *
-   * TODO (to236111) IMPORTANT check whether rollback of changes to BCEL
-   * representation of instructions needed in case of
-   * UmbraCPRecalculationException
+   * TODO (Umbra) this method breaks jump instructions <br> <br>
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    * @param a_pos position in method

@@ -22,8 +22,6 @@ import umbra.instructions.errors.NoSuchConstantError;
  * This is a class that represents CONSTANT_Class_info constant
  * pool entry line controller.
  *
- * TODO (to236111) javadoc: use better English
- *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @version a-01
  *
@@ -31,7 +29,7 @@ import umbra.instructions.errors.NoSuchConstantError;
 public class ClassCPLineController extends CPLineController {
 
   /**
-   * This creates an instance of a bytecode line handle to handle
+   * This creates an instance of a bytecode line controller to handle
    * constant pool entry of the type CONSTANT_Class_info.
    *
    * @param a_line_text the string representation of the line text
@@ -85,7 +83,7 @@ public class ClassCPLineController extends CPLineController {
 
   /**
   * This method retrieves the reference to the utf8 CP entry
-  * containg name of the class represented by the class constant
+  * containing name of the class represented by the class constant
   * pool entry in {@link BytecodeLineController#getMy_line_text()}.
   * This parameter is located after the entry type keyword.
   * The method assumes {@link BytecodeLineController#getMy_line_text()}
@@ -130,9 +128,9 @@ public class ClassCPLineController extends CPLineController {
   }
 
   /**
-   * This method changes reference to the utf8 CP entry referenced by this class
-   * CP entry from a "dirty" number to a "clean" one in BCEL representation
-   * of this CP entry. <br> <br>
+   * This method changes reference to the utf8 CP entry referenced by this
+   * constant from a "dirty" number to a "clean" one in BCEL representation
+   * of constant pool. <br> <br>
    *
    * See {@link umbra.instructions.BytecodeController#recalculateCPNumbers(
    * org.apache.bcel.classfile.JavaClass)} for explantation of

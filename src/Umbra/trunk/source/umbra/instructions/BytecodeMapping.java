@@ -8,13 +8,20 @@
  */
 package umbra.instructions;
 
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.ExceptionTable;
+import org.apache.bcel.classfile.LocalVariable;
+import org.apache.bcel.classfile.LocalVariableTable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.PMGClass;
 import org.apache.bcel.classfile.Field;
+
+import org.apache.bcel.classfile.JavaClass;
 
 /**
  * This class maps the references to constant pool entries in BCEL
@@ -38,6 +45,26 @@ public class BytecodeMapping {
    * Contains mapping of field signatures.
    */
   private IdentityHashMap < Field, Integer > my_field_signatures;
+
+  /**
+   * Contains mapping of local variable names.
+   */
+  private IdentityHashMap < LocalVariable, Integer > my_lvar_name_indexes;
+
+  /**
+   * Contains mapping of local variable signatures.
+   */
+  private IdentityHashMap < LocalVariable, Integer > my_lvar_signature_indexes;
+
+  /**
+   * Contains local variable names.
+   */
+  private IdentityHashMap < LocalVariable, String > my_lvar_names;
+
+  /**
+   * Contains local variable signatures.
+   */
+  private IdentityHashMap < LocalVariable, String > my_lvar_signatures;
 
   /**
    * Determines whether to allow constant pool edition. It should be
@@ -110,6 +137,10 @@ public class BytecodeMapping {
   public void reset() {
     my_field_names = new IdentityHashMap < Field, Integer > ();
     my_field_signatures = new IdentityHashMap < Field, Integer > ();
+    my_lvar_name_indexes = new IdentityHashMap < LocalVariable, Integer > ();
+    my_lvar_signature_indexes = new IdentityHashMap < LocalVariable, Integer > ();
+    my_lvar_names = new IdentityHashMap < LocalVariable, String > ();
+    my_lvar_signatures = new IdentityHashMap < LocalVariable, String > ();
     my_method_names = new IdentityHashMap < Method, Integer > ();
     my_method_signatures = new IdentityHashMap < Method, Integer > ();
     my_field_name_constants = new IdentityHashMap < Field, Integer > ();
@@ -135,11 +166,11 @@ public class BytecodeMapping {
 
   /**
    * Maps field onto the number of constant (in textual representation of
-   * bytecode) that represents constant contatining field's signature.
+   * bytecode) that represents constant containing field's signature.
    *
    * @param a_field a field which is mapped
    * @param a_signature_index the number of constant (in textual representation
-   * of bytecode) that represents constant contatining field's signature
+   * of bytecode) that represents constant containing field's signature
    */
   public void addFieldSignature(final Field a_field,
                                 final Integer a_signature_index) {
@@ -147,12 +178,60 @@ public class BytecodeMapping {
   }
 
   /**
+   * Maps local variable onto the number of constant (in textual
+   * representation of bytecode) that represents constant containing
+   * variable's name.
+   *
+   * @param a_lvar a variable which is mapped
+   * @param a_name_index the number of constant (in textual representation of
+   * bytecode) that represents constant containing variable's name
+   */
+  public void addLocVarNameIndex(final LocalVariable a_lvar,
+                            final Integer a_name_index) {
+    my_lvar_name_indexes.put(a_lvar, a_name_index);
+  }
+
+  /**
+   * Remembers name of the local variable.
+   *
+   * @param a_lvar a variable for which we remember name
+   * @param a_name a name of variable
+   */
+  public void addLocVarName(final LocalVariable a_lvar, final String a_name) {
+    my_lvar_names.put(a_lvar, a_name);
+  }
+
+  /**
+   * Maps local variable onto the number of constant (in textual representation
+   * of bytecode) that represents constant containing variable's signature.
+   *
+   * @param a_lvar a variable which is mapped
+   * @param a_signature_index the number of constant (in textual representation
+   * of bytecode) that represents constant containing variable's signature
+   */
+  public void addLocVarSignatureIndex(final LocalVariable a_lvar,
+                                final Integer a_signature_index) {
+    my_lvar_signature_indexes.put(a_lvar, a_signature_index);
+  }
+
+  /**
+   * Remembers signature of the local variable.
+   *
+   * @param a_lvar a variable for which we remember signature
+   * @param a_signature a signature of variable
+   */
+  public void addLocVarSignature(final LocalVariable a_lvar,
+                                 final String a_signature) {
+    my_lvar_signatures.put(a_lvar, a_signature);
+  }
+
+  /**
    * Maps method onto the number of constant (in textual representation of
-   * bytecode) that represents constant contatining method's name.
+   * bytecode) that represents constant containing method's name.
    *
    * @param a_method a method which is mapped
    * @param a_name_index the number of constant (in textual representation of
-   * bytecode) that represents constant contatining method's name
+   * bytecode) that represents constant containing method's name
    */
   public void addMethodName(final Method a_method, final Integer a_name_index) {
     my_method_names.put(a_method, a_name_index);
@@ -160,11 +239,11 @@ public class BytecodeMapping {
 
   /**
    * Maps method onto the number of constant (in textual representation of
-   * bytecode) that represents constant contatining method's signature.
+   * bytecode) that represents constant containing method's signature.
    *
    * @param a_method a method which is mapped
    * @param a_signature_index the number of constant (in textual representation
-   * of bytecode) that represents constant contatining method's signature
+   * of bytecode) that represents constant containing method's signature
    */
   public void addMethodSignature(final Method a_method,
                                 final Integer a_signature_index) {
@@ -173,11 +252,11 @@ public class BytecodeMapping {
 
   /**
    * Maps field onto the constant (in BCEL representation of bytecode)
-   * that contatins field's name.
+   * that contains field's name.
    *
    * @param a_field a field which is mapped
    * @param a_constant the constant (in BCEL representation of bytecode)
-   * that contatins field's name
+   * that contains field's name
    */
   public void addFieldNameConstant(final Field a_field,
                                    final int a_constant) {
@@ -186,11 +265,11 @@ public class BytecodeMapping {
 
   /**
    * Maps field onto the constant (in BCEL representation of bytecode)
-   * that contatins field's signature.
+   * that contains field's signature.
    *
    * @param a_field a field which is mapped
    * @param a_constant the constant (in BCEL representation of bytecode)
-   * that contatins field's signature
+   * that contains field's signature
    */
   public void addFieldSignatureConstant(final Field a_field,
                                         final int a_constant) {
@@ -199,11 +278,11 @@ public class BytecodeMapping {
 
   /**
    * Maps attribute onto the number of constant (in textual representation of
-   * bytecode) that represents constant contatining attribute's name.
+   * bytecode) that represents constant containing attribute's name.
    *
    * @param an_attribute an attribute which is mapped
    * @param a_name_index the number of constant (in textual representation
-   * of bytecode) that represents constant contatining attribute's name
+   * of bytecode) that represents constant containing attribute's name
    */
   public void addAttributeName(final Attribute an_attribute,
                                 final Integer a_name_index) {
@@ -212,12 +291,12 @@ public class BytecodeMapping {
 
   /**
    * Maps attribute onto the number of constant (in textual representation of
-   * bytecode) that represents constant contatining source file, constant value,
+   * bytecode) that represents constant containing source file, constant value,
    * PMG class or signature.
    *
    * @param an_attribute an attribute which is mapped
    * @param an_index the number of constant (in textual
-   * representation of bytecode) that represents constant contatining source
+   * representation of bytecode) that represents constant containing source
    * file, constant value, PMG class or signature
    */
   public void addAttributeSecondValue(final Attribute an_attribute,
@@ -227,11 +306,11 @@ public class BytecodeMapping {
 
   /**
    * Maps PMGClass attribute onto the number of constant (in textual
-   * representation of bytecode) that represents constant contatining PMG class.
+   * representation of bytecode) that represents constant containing PMG class.
    *
    * @param a_pmg_class an attribute which is mapped
    * @param an_index the number of constant (in textual representation of
-   * bytecode) that represents constant contatining PMG class
+   * bytecode) that represents constant containing PMG class
    */
   public void addPMGClass(final PMGClass a_pmg_class, final Integer an_index) {
     my_pmg_classes.put(a_pmg_class, an_index);
@@ -240,12 +319,12 @@ public class BytecodeMapping {
 
   /**
    * Maps ExceptionTable attribute onto the numbers of constants (in textual
-   * representation of bytecode) that represents constants contatining
+   * representation of bytecode) that represents constants containing
    * exception tables.
    *
    * @param an_exception_table an ExceptionTable attribute which is mapped
    * @param an_indices the numbers of constants (in textual representation of
-   * bytecode) that represents constants contatining exception tables
+   * bytecode) that represents constants containing exception tables
    */
   public void addExceptionTable(final ExceptionTable an_exception_table,
                                 final int[] an_indices) {
@@ -273,11 +352,11 @@ public class BytecodeMapping {
 
   /**
    * For a given field returns the number of constant (in textual representation
-   * of bytecode) that represents constant contatining field's name.
+   * of bytecode) that represents constant containing field's name.
    *
    * @param a_field a field for which the number is returned
    * @return the number of constant (in textual representation
-   * of bytecode) that represents constant contatining field's name
+   * of bytecode) that represents constant containing field's name
    */
   public int getFieldName(final Field a_field) {
     return my_field_names.get(a_field);
@@ -285,24 +364,70 @@ public class BytecodeMapping {
 
   /**
    * For a given field returns the number of constant (in textual representation
-   * of bytecode) that represents constant contatining field's signature.
+   * of bytecode) that represents constant containing field's signature.
    *
    * @param a_field a field for which the number is returned
    * @return the number of constant (in textual representation
-   * of bytecode) that represents constant contatining field's signature
+   * of bytecode) that represents constant containing field's signature
    */
   public int getFieldSignature(final Field a_field) {
     return my_field_signatures.get(a_field);
   }
 
   /**
+   * For a given local variable returns the number of constant (in textual
+   * representation of bytecode) that represents constant containing
+   * variable's name.
+   *
+   * @param a_lvar a variable for which the number is returned
+   * @return the number of constant (in textual representation
+   * of bytecode) that represents constant containing variable's name
+   */
+  public int getLocVarNameIndex(final LocalVariable a_lvar) {
+    return my_lvar_name_indexes.get(a_lvar);
+  }
+
+  /**
+   * Returns the name of the given local variable.
+   *
+   * @param a_lvar a variable
+   * @return the name of variable
+   */
+  public String getLocVarName(final LocalVariable a_lvar) {
+    return my_lvar_names.get(a_lvar);
+  }
+
+  /**
+   * For a given local variable returns the number of constant (in textual
+   * representation of bytecode) that represents constant containing
+   * variable's signature.
+   *
+   * @param a_lvar a variable for which the number is returned
+   * @return the number of constant (in textual representation
+   * of bytecode) that represents constant containing variable's signature
+   */
+  public int getLocVarSignatureIndex(final LocalVariable a_lvar) {
+    return my_lvar_signature_indexes.get(a_lvar);
+  }
+
+  /**
+   * Returns the signature of the given local variable.
+   *
+   * @param a_lvar a variable
+   * @return the signature of variable
+   */
+  public String getLocVarSignature(final LocalVariable a_lvar) {
+    return my_lvar_signatures.get(a_lvar);
+  }
+
+  /**
    * For a given method returns the number of constant (in textual
-   * representation of bytecode) that represents constant contatining
+   * representation of bytecode) that represents constant containing
    * method's name.
    *
    * @param a_method a method for which the number is returned
    * @return the number of constant (in textual representation
-   * of bytecode) that represents constant contatining method's name
+   * of bytecode) that represents constant containing method's name
    */
   public int getMethodName(final Method a_method) {
     return my_method_names.get(a_method);
@@ -310,12 +435,12 @@ public class BytecodeMapping {
 
   /**
    * For a given method returns the number of constant (in textual
-   * representation of bytecode) that represents constant contatining
+   * representation of bytecode) that represents constant containing
    * method's signature.
    *
    * @param a_method a method for which the number is returned
    * @return the number of constant (in textual representation
-   * of bytecode) that represents constant contatining method's signature
+   * of bytecode) that represents constant containing method's signature
    */
   public int getMethodSignature(final Method a_method) {
     return my_method_signatures.get(a_method);
@@ -323,11 +448,11 @@ public class BytecodeMapping {
 
   /**
    * For a given field returns the constant (in BCEL representation of bytecode)
-   * that contatins field's name.
+   * that contains field's name.
    *
    * @param a_field a field for which the constant is returned
    * @return the constant (in BCEL representation of bytecode)
-   * that contatins field's name
+   * that contains field's name
    */
   public int getFieldNameConstant(final Field a_field) {
     return my_field_name_constants.get(a_field);
@@ -335,11 +460,11 @@ public class BytecodeMapping {
 
   /**
    * For a given field returns the constant (in BCEL representation of bytecode)
-   * that contatins field's signature.
+   * that contains field's signature.
    *
    * @param a_field a field for which the constant is returned
    * @return the constant (in BCEL representation of bytecode)
-   * that contatins field's signature
+   * that contains field's signature
    */
   public int getFieldSignatureConstant(final Field a_field) {
     return my_field_signature_constants.get(a_field);
@@ -347,12 +472,12 @@ public class BytecodeMapping {
 
   /**
    * For a given attribute returns the number of constant (in textual
-   * representation of bytecode) that represents constant contatining
+   * representation of bytecode) that represents constant containing
    * attribute's name.
    *
    * @param an_attribute an attribute for which the number is returned
    * @return the number of constant (in textual representation
-   * of bytecode) that represents constant contatining attribute's name
+   * of bytecode) that represents constant containing attribute's name
    */
   public int getAttributeName(final Attribute an_attribute) {
     return my_attribute_names.get(an_attribute);
@@ -360,12 +485,12 @@ public class BytecodeMapping {
 
   /**
    * For a given attribute returns the number of constant (in textual
-   * representation of bytecode) that represents constant contatining source
+   * representation of bytecode) that represents constant containing source
    * file, constant value, PMG class or signature.
    *
    * @param an_attribute an attribute for which the number is returned
    * @return the number of constant (in textual
-   * representation of bytecode) that represents constant contatining source
+   * representation of bytecode) that represents constant containing source
    * file, constant value, PMG class or signature
    */
   public int getAttributeSecondValue(final Attribute an_attribute) {
@@ -374,11 +499,11 @@ public class BytecodeMapping {
 
   /**
    * For a given PMGClass attribute returns the number of constant (in textual
-   * representation of bytecode) that represents constant contatining PMG class.
+   * representation of bytecode) that represents constant containing PMG class.
    *
    * @param a_pmg_class an attribute for which the number is returned
    * @return the number of constant (in textual representation of
-   * bytecode) that represents constant contatining PMG class
+   * bytecode) that represents constant containing PMG class
    */
   public int getPMGClass(final PMGClass a_pmg_class) {
     return my_pmg_classes.get(a_pmg_class);
@@ -387,12 +512,12 @@ public class BytecodeMapping {
   /**
    * For a given ExceptionTable attribute returns the number of constant
    * (in textual representation of bytecode) that represents constants
-   * contatining exception tables.
+   * containing exception tables.
    *
    * @param an_exception_table an ExceptionTable attribute for which the numbers
    * are returned
    * @return the numbers of constants (in textual representation of
-   * bytecode) that represents constants contatining exception tables
+   * bytecode) that represents constants containing exception tables
    */
   public int[] getExceptionTable(final ExceptionTable an_exception_table) {
     return my_exception_tables.get(an_exception_table);
@@ -427,15 +552,6 @@ public class BytecodeMapping {
   public boolean containsField(final Field a_field) {
     return my_field_names.containsKey(a_field);
   }
-
-  /*public Object[] getAttributes() {
-    return my_attribute_names.keySet().toArray();
-  }
-
-  public Object[] getMethods() {
-    return my_method_names.keySet().toArray();
-  }*/
-
   /**
    * Sets whether constant pool edition should be allowed.
    *
@@ -453,6 +569,28 @@ public class BytecodeMapping {
    */
   public boolean isCPEditionAllowed() {
     return my_cp_edition_allowed;
+  }
+
+  /**
+   *
+   * @param a_jc a java class
+   * @return list of all local variables in java class
+   */
+  public List < LocalVariable > getLocVars(final JavaClass a_jc) {
+    final List < LocalVariable > al = new ArrayList < LocalVariable > ();
+    for (Method m : a_jc.getMethods()) {
+      for (Attribute a : m.getAttributes()) {
+        if (a instanceof Code) {
+          for (Attribute at : ((Code) a).getAttributes()) {
+            if (at instanceof LocalVariableTable) {
+              for (LocalVariable lv :
+                ((LocalVariableTable) at).getLocalVariableTable()) al.add(lv);
+            }
+          }
+        }
+      }
+    }
+    return al;
   }
 
 }

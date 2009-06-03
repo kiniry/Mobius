@@ -118,7 +118,7 @@ public class LdcInstruction extends OtherInstruction {
     if (parser.getLine().charAt(parser.getIndex()) == '\"') {
       res = res && stringWithDelimiters(parser);
     } else {
-      /* TODO (to236111) check whether other classes can take
+      /* XXX (Umbra) check whether other classes can take
        * floating point parameters (and change from swallowNumber()
        * to swallowFPNumber() is needed)
        */

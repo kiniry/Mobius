@@ -366,18 +366,15 @@ public class InitParser extends BytecodeCommentParser {
       line = getLineFromDoc(my_doc, num, a_ctxt);
       lc = Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
       if (!(lc instanceof CPLineController)) {
-        /* XXX (to236111) it only works if all contant pool lines are
+        /* XXX (Umbra) it only works if all contant pool lines are
          * correct and not separated by empty lines (which should be true
          * when loaded from .class file) */
         break;
       }
-      if (Preparsing.PARSE_CP) {
-        final CPLineController cplc = (CPLineController) lc;
-        final int const_no = cplc.getConstantNumber();
-        cplc.setConstant(my_doc.getBmlp().
-                         getBcc().getCp().getConstant(const_no));
-        cplc.setInBML(true);
-      }
+      final CPLineController cplc = (CPLineController) lc;
+      final int const_no = cplc.getConstantNumber();
+      cplc.setConstant(my_doc.getBmlp().
+                       getBcc().getCp().getConstant(const_no));
       addEditorLine(lc);
       num++;
     }

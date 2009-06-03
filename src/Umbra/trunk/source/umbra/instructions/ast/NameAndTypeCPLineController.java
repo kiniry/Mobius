@@ -23,7 +23,7 @@ import umbra.lib.UmbraNoSuchConstantException;
  * This is a class that represents CONSTANT_NameAndType_info constant
  * pool entry line controller. <br> <br>
  *
- * FIXME (to236111) isn't ':' an error? manual has: <br>
+ * TODO (Umbra) isn't ':' an error? manual has: <br>
  * name-and-type-cp-entry ::= NameAndType cp-ref.cp-ref;
  *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)

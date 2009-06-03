@@ -20,18 +20,12 @@ import org.apache.bcel.classfile.Constant;
 
 /**
  * This is a class for lines in bytecode files inside the constant pool.
- * <br> <br>
- *
- * TODO (to236111) NOW should be made abstract after removing old implementation
- * ({@link umbra.instructions.Preparsing#getTypeForInsides(String,
- * LineContext, BMLParsing)})
- * <br> <Br>
  *
  * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class CPLineController extends BytecodeLineController {
+public abstract class CPLineController extends BytecodeLineController {
 
   /**
    * This array contains the classes which are able to handle constant
@@ -51,34 +45,15 @@ public class CPLineController extends BytecodeLineController {
     Utf8CPLineController.class};
 
   /**
-   * The parser to parse the contents of the constant pool line.
-   * XXX (to236111) already exists in superclass
-   */
-  // private InstructionParser my_parser;
-
-  /**
    * The number of the constant in the constant pool which is represented
    * by the current line.
    */
   private int my_constno;
 
   /**
-   * The keyword which identifies the type of the current constant pool
-   * constant.
-   * XXX (to236111) REMOVE reimplemented using subclasses
-   */
-  // private int my_keyword;
-
-  /**
    * Link to the BCEL constant represented by this line.
    */
   private Constant my_constant;
-
-  /**
-   * This variable has value <code>true</code> if the constant pool entry
-   * this line represents is present in BML representation of constant pool.
-   */
-  private boolean my_in_bml;
 
   /**
    * This creates an instance of a bytecode line handle to handle
@@ -93,7 +68,6 @@ public class CPLineController extends BytecodeLineController {
   public CPLineController(final String a_line_text,
                           final String an_entry_type) {
     super(a_line_text);
-    my_in_bml = false;
   }
 
   /**
@@ -114,7 +88,10 @@ public class CPLineController extends BytecodeLineController {
    *   <code>false</code> otherwise
    */
   public static boolean isCPLineStart(final String a_line) {
-    return a_line.startsWith(BytecodeStrings.CP_ENTRY_PREFIX[0]);
+    final String line = a_line.replaceAll("[ \t]+", " ");
+    System.err.println(line);
+    return line.startsWith(BytecodeStrings.CP_ENTRY_PREFIX[0]) ||
+    line.startsWith(BytecodeStrings.CP_ENTRY_PREFIX[1]);
   }
 
   /**
@@ -163,30 +140,6 @@ public class CPLineController extends BytecodeLineController {
     return res;
   }
 
-
-  /**
-   * This method parses the content of the constant pool entry. Currently,
-   * it only checks the correctness of the constant pool entry kind.
-   *
-   * @param an_utonow the status of the parsing up to the current position
-   * @return <code>true</code> in case the method isCPLineStartwas called with
-   *   <code>true</code> and the parsing of the content of the constant pool
-   *   entry, <code>false</code> otherwise
-   *
-   *   XXX (to236111) REMOVE reimplemented in subclasses
-   *
-   */
-  /* private boolean parseEntry(final boolean an_utonow) {
-    if (!an_utonow) {
-      return an_utonow;
-    }
-    boolean res = an_utonow;
-    res = res && my_parser.swallowWhitespace();
-    my_keyword = my_parser.swallowMnemonic(BytecodeStrings.CP_TYPE_KEYWORDS);
-    res = res && (my_keyword >= 0);
-    return res;
-  } */
-
   /**
    * Returns the number of the constant in the constant pool.
    *
@@ -229,28 +182,6 @@ public class CPLineController extends BytecodeLineController {
   }
 
   /**
-   * Returns <code>true</code> if the constant pool entry this line represents
-   * is present in BML representation of constant pool, <code>false</code>
-   * otherwise.
-   *
-   * @return <code>true</code> if the constant pool entry this line represents
-   * is present in BML representation of constant pool
-   */
-  public boolean isInBML() {
-    return my_in_bml;
-  }
-
-  /**
-   * Sets whether the constant pool entry this line represents
-   * is present in BML representation of constant pool.
-   *
-   * @param a_b value to set
-   */
-  public void setInBML(final boolean a_b) {
-    my_in_bml = a_b;
-  }
-
-  /**
    * This method changes all references to another CP entries
    * from a "dirty" numbers to a "clean" ones in BCEL representation
    * of this CP entry. <br> <br>
@@ -259,9 +190,6 @@ public class CPLineController extends BytecodeLineController {
    * "dirty" and "clean" numbers concepts. <br> <br>
    *
    * Implemented in subclasses.
-   *
-   * TODO (to236111) IMPORTANT check whether rollback of changes to BML
-   * representation of constant needed in case of UmbraCPRecalculationException
    *
    * @param a_map a hash map which maps "dirty" numbers to "clean" ones
    */

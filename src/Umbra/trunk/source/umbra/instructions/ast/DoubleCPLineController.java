@@ -94,7 +94,7 @@ public class DoubleCPLineController extends CPLineController {
    * This parameter is located after the constant pool entry keyword. In case
    * the {@link BytecodeLineController#getMy_line_text()} is not correct we
    * catch and ignore exception to allow editing.
-   * <br> <br> TODO (to236111) check whether other controllers may need to catch
+   * <br> <br> XXX (Umbra) check if other controllers may need to catch
    * and ignore exception to allow editing
    *
    * @return the floating point parameter of the constant pool entry

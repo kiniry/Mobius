@@ -46,22 +46,6 @@ import umbra.lib.BytecodeStrings;
 public final class Preparsing {
 
   /**
-   * This constant determines whether the constant pool will be parsed. It
-   * is intended to be used only during development.
-   *
-   * TODO (to236111) remove
-   */
-  public static final boolean PARSE_CP = true;
-
-  /**
-   * This constant determines whether the change in textual representation of
-   * a constant pool will be propagated into its BML representation.
-   *
-   * TODO (to236111) remove
-   */
-  public static final boolean UPDATE_CP = true;
-
-  /**
    * The identifier for the token returned in search for the method header.
    */
   private static final String HLC_TOKEN = "header line controller";
@@ -70,6 +54,11 @@ public final class Preparsing {
    * The automaton to pre-parse the lines of the byte code document.
    */
   private static DispatchingAutomaton my_preparse_automaton;
+
+  /**
+   * The automaton to pre-parse the constant pool.
+   */
+  private static DispatchingAutomaton my_cp_automaton;
 
   /**
    * The recognition rule which parses method headers.
@@ -188,12 +177,14 @@ public final class Preparsing {
         a_context.revertState();
       }
     } else if (a_context.isInsideConstantPool()) {
-      /* TODO (to236111) create separate automaton for constant
-       * pool and place it here automaton here */
-      if (!PARSE_CP) {
-        if (CPLineController.isCPLineStart(a_line)) {
-          return new CPLineController(a_line, null);
+      if (CPLineController.isCPLineStart(a_line)) {
+        BytecodeLineController blc;
+        try {
+          blc = Preparsing.getCPAutomaton().execForString(a_line, a_line);
+        } catch (CannotCallRuleException e) {
+          blc = new UnknownLineController(a_line);
         }
+        return blc;
       }
     } else if (a_context.isInFieldsArea()) {
       lc = handleFieldsArea(a_line, a_bmlp);
@@ -213,40 +204,36 @@ public final class Preparsing {
    */
   private static FieldLineController handleFieldsArea(final String a_line,
                                                       final BMLParsing a_bmlp) {
-    // XXX (to236111) if the field area is empty methods are next and they
+    // XXX (Umbra) if the field area is empty methods are next and they
     // can start with the same words as fields ('public' etc.);
     // it's a rather dirty way to avoid that
-    if (!PARSE_CP) {
-      if (FieldLineController.isFieldLineStart(a_line)) {
-        return new FieldLineController(a_line, a_bmlp);
-      }
-    } else {
-      if (FieldLineController.isFieldLineStart(a_line)) {
-        return new FieldLineController(a_line, a_bmlp);
-      }
+    if (FieldLineController.isFieldLineStart(a_line) &&
+        !a_line.contains("(")) {
+      return new FieldLineController(a_line, a_bmlp);
     }
     return null;
   }
 
   /**
-   * This method initializes the CP node of the automaton.
+   * This method creates the automaton for parsing of constant pool.
    * The current implementation uses the same mechanism for handling
    * both constant pool entries and instruction lines. Because the
    * automaton needs a mnemonic to create {@code BytecodeLineController}
    * for given line the constant pool entry keyword is used as surrogate
    * mnemonic.
    *
-   * TODO (to236111) Create separate automaton for constant pool entries
-   * which uses IncorrectCPLineController instead of UnknownLineController for
-   * incorrect lines to allow generating more specific information about
-   * syntax errors inside constant pool.
-   *
-   * @param a_node the CP node of automaton
+   * @return automaton for parsing constant pool entries
    */
-  private static void initCPNode(final DispatchingAutomaton a_node) {
-    DispatchingAutomaton node = a_node;
-    addWhitespaceLoop(node);
-    node = node.addSimple("#", UnknownLineController.class);
+  private static DispatchingAutomaton getCPAutomaton() {
+    if (my_cp_automaton == null) my_cp_automaton = new DispatchingAutomaton();
+    my_cp_automaton.addSimple("", EmptyLineController.class);
+    addWhitespaceLoop(my_cp_automaton);
+    final DispatchingAutomaton cpnode = my_cp_automaton.addSimple(
+        BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
+        UnknownLineController.class);
+    addWhitespaceLoop(cpnode);
+    DispatchingAutomaton node =
+      cpnode.addSimple("#", UnknownLineController.class);
     final DispatchingAutomaton digitnode = node.addSimple("0",
       UnknownLineController.class);
     for (int i = 1; i < 10; i++) {
@@ -260,6 +247,7 @@ public final class Preparsing {
     node = node.addSimple("=", UnknownLineController.class);
     addWhitespaceLoop(node);
     addClassPoolClasses(node);
+    return my_cp_automaton;
   }
 
   /**
@@ -347,14 +335,6 @@ public final class Preparsing {
       my_preparse_automaton.addSimple(
         BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS],
         CPHeaderController.class);
-
-      if (PARSE_CP) {
-        final DispatchingAutomaton cpnode = my_preparse_automaton.addSimple(
-          BytecodeStrings.JAVA_KEYWORDS[BytecodeStrings.CP_ENTRY_KEYWORD_POS],
-          UnknownLineController.class);
-
-        initCPNode(cpnode);
-      }
       my_preparse_automaton.addSimple(BytecodeStrings.COMMENT_LINE_START,
                                       CommentLineController.class);
       my_preparse_automaton.addSimple(BytecodeStrings.ANNOT_START,

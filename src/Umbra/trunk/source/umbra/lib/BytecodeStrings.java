@@ -246,7 +246,8 @@ public final class BytecodeStrings extends BytecodeStringsMnemonics {
    * pool lines in byte code text files. The constant pool lines are handled by
    * {@link umbra.instructions.ast.CPLineController} class.
    */
-  public static final String[] CP_ENTRY_PREFIX = new String[] {"  const #"};
+  public static final String[] CP_ENTRY_PREFIX = new String[] {" const #",
+                                                               "const #"};
 
   /**
    * This constant contains an array with all the possible prefixes of throw

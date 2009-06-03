@@ -8,12 +8,16 @@
  */
 package umbra.instructions;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
+import org.apache.bcel.classfile.Code;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.LocalVariable;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.SourceFile;
 import org.apache.bcel.classfile.ConstantValue;
@@ -122,15 +126,25 @@ public class BytecodeControllerInstructions
     getMapping().setClassNameIndex(a_doc.getJavaClass().getClassNameIndex());
     getMapping().
       setSuperclassNameIndex(a_doc.getJavaClass().getSuperclassNameIndex());
+    final List < Attribute > attrs = new ArrayList < Attribute > ();
     for (Field f : a_doc.getJavaClass().getFields()) {
       getMapping().addFieldName(f, f.getNameIndex());
       getMapping().addFieldSignature(f, f.getSignatureIndex());
+      for (Attribute a : f.getAttributes()) attrs.add(a);
     }
     for (Method m : a_doc.getJavaClass().getMethods()) {
       getMapping().addMethodName(m, m.getNameIndex());
       getMapping().addMethodSignature(m, m.getSignatureIndex());
+      for (Attribute a : m.getAttributes()) {
+        if (a instanceof Code) {
+          final Code c = (Code) a;
+          for (Attribute at : c.getAttributes()) attrs.add(at);
+        }
+        attrs.add(a);
+      }
     }
-    for (Attribute a : a_doc.getJavaClass().getAttributes()) {
+    for (Attribute a : a_doc.getJavaClass().getAttributes()) attrs.add(a);
+    for (Attribute a : attrs) {
       getMapping().addAttributeName(a, a.getNameIndex());
       if (a instanceof SourceFile) {
         getMapping().
@@ -151,6 +165,14 @@ public class BytecodeControllerInstructions
         getMapping().addExceptionTable(e, e.getExceptionIndexTable());
       }
     }
+    final List < LocalVariable > lvars =
+      getMapping().getLocVars(a_doc.getJavaClass());
+    for (LocalVariable lv : lvars) {
+      getMapping().addLocVarNameIndex(lv, lv.getNameIndex());
+      getMapping().addLocVarSignatureIndex(lv, lv.getSignatureIndex());
+      getMapping().addLocVarName(lv, lv.getName());
+      getMapping().addLocVarSignature(lv, lv.getSignature());
+    }
   }
 
   /**
@@ -162,17 +184,17 @@ public class BytecodeControllerInstructions
    */
   public void controlPrintCP(final BytecodeDocument a_doc) {
     final BCConstantPool a_pool = a_doc.getBmlp().getBcc().getCp();
-    System.err.println();
-    System.err.println("Pool:");
+    UmbraPlugin.messagelog("");
+    UmbraPlugin.messagelog("Pool:");
     for (int i = 0; i < a_pool.size(); i++) {
-      System.err.println(i + ": " + a_pool.getConstant(i));
+      UmbraPlugin.messagelog(i + ": " + a_pool.getConstant(i));
     }
-    System.err.println("Control print for methods:");
+    UmbraPlugin.messagelog("Control print for methods:");
     for (int i = 0; i < a_doc.getJavaClass().getMethods().length; i++) {
-      System.err.println("method " + i);
+      UmbraPlugin.messagelog("method " + i);
       for (int j = 0; j <
       a_doc.getJavaClass().getMethods()[i].getConstantPool().getLength(); j++) {
-        System.err.println(j + ": " +
+        UmbraPlugin.messagelog(j + ": " +
                            a_doc.getJavaClass().getMethods()[i].
                            getConstantPool().getConstant(j));
       }
@@ -302,7 +324,7 @@ public class BytecodeControllerInstructions
         UmbraPlugin.messagelog("null");
         return;
       }
-      if (line instanceof CPLineController && Preparsing.PARSE_CP) {
+      if (line instanceof CPLineController) {
         final CPLineController cplc = (CPLineController) line;
         UmbraPlugin.messagelog(line.getClass().getName() + ": " +
                                line.getLineContent() + ", BCEL entry: " +

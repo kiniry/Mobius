@@ -69,6 +69,11 @@ public class BytecodeDocument extends Document {
    */
   private boolean my_is_in_init;
 
+  /**
+   * It is true if there are unsaved changes in document.
+   */
+  private boolean my_is_dirty;
+
 
   /**
    * This constructor creates a {@link BytecodeDocument} and associates
@@ -76,6 +81,7 @@ public class BytecodeDocument extends Document {
    */
   public BytecodeDocument() {
     super();
+    my_is_dirty = false;
     this.my_bcc = new BytecodeController();
   }
 
@@ -230,24 +236,17 @@ public class BytecodeDocument extends Document {
    * methodgens must be updated manually) and BCEL fields. <br> <br>
    *
    * See {@link BytecodeController#recalculateCPNumbers(JavaClass a_jc)} for
-   * explantation of "dirty" and "clean" numbers. <br> <br>
-   *
-   * TODO (to236111) NOW check whether non rollbacked changes in
-   * recalculateCPNumbers and objects which would be modified if not
-   * for UmbraCPRecalculationException does not conflict in case of
-   * that exception
+   * explantation of "dirty" and "clean" numbers.
    *
    * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
    * @throws UmbraCPRecalculationException when errors in bytecode caused
    * update impossible
    */
   public void updateBML() throws UmbraCPRecalculationException {
-    if (!umbra.instructions.Preparsing.PARSE_CP ||
-        !umbra.instructions.Preparsing.UPDATE_CP) return;
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
     my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
     final BCClass bc = my_bmlp.getBcc();
-    // TODO (to236111) do attributes need updating of constant pool?
+    // TODO (Umbra) do attributes need updating of constant pool?
     //TODO take a look at that, probably this should be done in BMLLib
     for (int i = 0; i < bc.getJC().getFields().length; i++) {
       bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());
@@ -341,6 +340,23 @@ public class BytecodeDocument extends Document {
    */
   public BytecodeController getModel() {
     return my_bcc;
+  }
+
+  /**
+   *
+   * @return true if there are unsaved changes in the document
+   */
+  public boolean isDirty() {
+    return my_is_dirty;
+  }
+
+  /**
+   *
+   * @param an_is_dirty true if there are unsaved changes in the document
+   */
+  public void setDirty(final boolean an_is_dirty) {
+    my_is_dirty = an_is_dirty;
+    getEditor().notifyDirtyChange();
   }
 
 }

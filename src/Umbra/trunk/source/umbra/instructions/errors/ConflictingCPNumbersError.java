@@ -37,7 +37,8 @@ public class ConflictingCPNumbersError extends BytecodeError {
 
   /**
    * Adds a line to the list of lines in which an error occured and
-   * extracts a constant number from it.
+   * extracts a constant number from it. All the lines should be
+   * CPLineControllers with the same constant number.
    *
    * @param a_line a line to be added
    */

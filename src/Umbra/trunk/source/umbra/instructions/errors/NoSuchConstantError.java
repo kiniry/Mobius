@@ -55,17 +55,26 @@ public class NoSuchConstantError extends BytecodeError {
   }
 
   /**
+   *
+   * @return string containing the numbers of constants which caused the error
+   */
+  private String getNumbers() {
+    String res = "";
+    if (my_numbers.size() == 1) return res + " #" + my_numbers.get(0);
+    for (int i = 0; i <  my_numbers.size() - 1; i++) {
+      res += " #" + my_numbers.get(i) + ",";
+    }
+    return res + " #" + my_numbers.get(my_numbers.size() - 1);
+  }
+
+  /**
    * Returns textual representation of the error.
    *
    * @return a string with error message
    */
   public String getShortErrorMessage() {
-    String res = "Reference in bytecode to non existing constants";
-    if (my_numbers.size() == 1) return res + " #" + my_numbers.get(0);
-    for (int i = 0; i <  my_numbers.size() - 1; i++) {
-      res += " #" + i + ",";
-    }
-    return res + " #" + my_numbers.get(my_numbers.size() - 1);
+    final String res = "Reference in bytecode to non existing constants";
+    return res + getNumbers();
   }
 
   /**
@@ -78,12 +87,8 @@ public class NoSuchConstantError extends BytecodeError {
    * @return a string with error message
    */
   public String getErrorMessage() {
-    String res = "Reference in bytecode to non existing constants";
-    if (my_numbers.size() == 1) return res + " #" + my_numbers.get(0) + ":";
-    for (int i = 0; i <  my_numbers.size() - 1; i++) {
-      res += " #" + i + ",";
-    }
-    return res + " #" + my_numbers.get(my_numbers.size() - 1) + ":";
+    final String res = "Reference in bytecode to non existing constants";
+    return res + getNumbers() + ":";
   }
 
 }

@@ -153,7 +153,6 @@ public class FragmentParser extends BytecodeCommentParser {
   }
 
   /**
-   * XXX (to236111) REMOVE current method???
    * This method parses a fragment of a constant pool. The fragment is delimited
    * with {@code a_start} and {@code my_end} (inclusively). The line context
    * gives the number of the current method and should be set in the
@@ -172,12 +171,6 @@ public class FragmentParser extends BytecodeCommentParser {
       final String line = this.getLineFromDoc(my_doc, j, a_ctxt);
       final BytecodeLineController blc =
         Preparsing.getType(line, a_ctxt, my_doc.getBmlp());
-      /*if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP
-        && blc instanceof CPLineController) {
-        CPLineController cplc = (CPLineController) blc;
-        int const_no = cplc.getConstantNumber();
-        my_doc.getBmlp().getBcc().getCp().getConstant(const_no);
-      }*/
       addEditorLine(blc);
       j++;
     }

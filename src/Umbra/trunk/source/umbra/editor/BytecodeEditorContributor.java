@@ -380,6 +380,7 @@ public class BytecodeEditorContributor extends EditorActionBarContributor {
     my_bcode_cntrbtn.survive();
     ColorModeContainer.classKnown();
     //FIXME: should we close here? https://mobius.ucd.ie/ticket/604
+    an_editor.getDocument().setDirty(false);
     page.closeEditor(an_editor, true);
     final BytecodeEditor newEditor = (BytecodeEditor)(page.openEditor(an_input,
                         EclipseIdentifiers.BYTECODE_EDITOR_CLASS, true));

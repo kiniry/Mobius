@@ -153,6 +153,7 @@ public class StringCPLineController extends CPLineController {
       final NoSuchConstantError an_error = new NoSuchConstantError();
       an_error.addLine(this);
       an_error.addNumber(getStringReference());
+      throw new UmbraNoSuchConstantException(an_error);
     }
   }
 

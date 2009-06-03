@@ -233,7 +233,6 @@ public class BytecodeContribution extends ControlContribution {
     public final void documentChanged(final DocumentEvent an_event) {
       final BytecodeDocument doc = transformDocWithMessage(an_event.fDocument);
       if (doc == null || doc.isInInit()) return;
-
       int stop = 0;
       int start_rem = 0;
       try {
@@ -260,8 +259,12 @@ public class BytecodeContribution extends ControlContribution {
       }
 
       updateFragment(doc, start_rem, my_stop_rem, stop);
+      /*
+       * FIXME (Umbra) changing field name in constant pool causes an error
+       * in the following method; the source of error is probably not here
+       * but in constant pool updating methods in BytecodeController
+       */
       updateBML(an_event);
-      /* FIXME (to236111) doesn't work */
       displayPosition(doc, an_event.getOffset());
       if (!doc.getModel().bodyCorrect()) {
         displayError(Integer.toString(doc.getModel().getFirstError() + 1) +

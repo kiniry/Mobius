@@ -374,24 +374,28 @@ public final class GUIMessages {
     "Errors occured during bytecode verification. Save anyway?";
 
   /**
+   * The empty constructor to forbid the creation of the instances.
+   */
+  private GUIMessages() {
+  }
+
+  /**
    * The message informs the user that errors in textual representation
    * of bytecode has been detected and list those errors.
    * @param a_report error report
+   * @param an_error <code>true</code> if there are error in constant pool
+   * that are not in error report
    * @return message
    */
-  public static String constantPoolError(final ErrorReport a_report) {
+  public static String constantPoolError(final ErrorReport a_report,
+                                         final boolean an_error) {
     String message = "Following errors occured:\n";
     for (BytecodeError e : a_report.getErrors()) {
       message += e.getShortErrorMessage() + "\n";
     }
+    if (an_error) message += "constant pool inconsistent\n";
     message += "Save anyway?";
     return message;
-  }
-
-  /**
-   * The empty constructor to forbid the creation of the instances.
-   */
-  private GUIMessages() {
   }
 
   /**

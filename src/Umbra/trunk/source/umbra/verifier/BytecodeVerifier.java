@@ -38,13 +38,15 @@ public class BytecodeVerifier {
 
   /**
    * @param a_jc class to verify
-   * @param a_repo a repositiry of the project the verified
+   * @param a_build_path a build path of the project the verified
    * class belongs to
    */
-  public BytecodeVerifier(final JavaClass a_jc,
-                          final SyntheticRepository a_repo) {
+  public BytecodeVerifier(final JavaClass a_jc, final String a_build_path) {
     this.my_jc = a_jc;
-    Repository.setRepository(a_repo);
+    final ClassPath cp = ClassPath.SYSTEM_CLASS_PATH;
+    final ClassPath ncp = new ClassPath(cp.toString() + ":" + a_build_path);
+    final SyntheticRepository sr = SyntheticRepository.getInstance(ncp);
+    Repository.setRepository(sr);
     final String class_name = a_jc.getClassName();
     my_verifier = VerifierFactory.getVerifier(class_name);
     my_verifier.flush();

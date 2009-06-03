@@ -45,6 +45,7 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeRefreshAction;
+import umbra.instructions.DummyGenerator;
 import umbra.instructions.Preparsing;
 import umbra.instructions.errors.BytecodeError;
 import umbra.instructions.errors.ErrorReport;
@@ -96,7 +97,7 @@ public class BytecodeEditor extends TextEditor {
    * Factory used to create some verification related stuff.
    * As for now simple graphical version is used.
    */
-  private VerificationFactory my_verification_factory = null;
+  private VerificationFactory my_verification_factory;
 
   /**
    * The Java source code editor that corresponds to the current
@@ -124,8 +125,13 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * List of constant pools used to recover original methodgens
-   * state if save failed. <br>
-   * TODO (to236111) NOW explains
+   * state if save failed. <br> <br>
+   * During save methodgens are updated: their constant pool is refreshed
+   * to comply with the constant pool of java class. During edition
+   * the constant pools of methodgens should not be changed, because
+   * constant pool gen constructor, which is used to update methodgens,
+   * assumes the constant pool is consistent, which is not always the case
+   * during edition.
    */
   private ArrayList < ConstantPoolGen > my_constant_pools;
 
@@ -192,6 +198,74 @@ public class BytecodeEditor extends TextEditor {
   }
 
   /**
+   * Returns build path of the project the document opened in editor is
+   * associated with. <br> <br>
+   *
+   * TODO (Umbra) maybe there is a better way to do that than reading
+   * from .classpath <br> <br>
+   *
+   * TODO (Umbra) it does not handle imports from jar files and other
+   * projects
+   *
+   * @return build path of the project the document opened in editor is
+   * associated with
+   */
+  private String getBuildPath() {
+    final IProject proj = ((IFileEditorInput)
+        getEditorInput()).getFile().getProject();
+    String path = proj.getLocation() + "/.classpath";
+    path = new Path(path).toOSString();
+    final ClassPathParser parser = new ClassPathParser();
+    parser.parseDocument(path);
+    return
+    new Path(proj.getLocation() + "/" + parser.getBuildPath()).toOSString();
+  }
+
+  /**
+   * Prepares constant pool for saving.
+   * @param a_doc document being saved
+   * @return <code>false</code> if errors occured, <code>true</code> otherwise
+   */
+  public boolean prepareConstantPool(final BytecodeDocument a_doc) {
+    final BCClass bc = a_doc.getBmlp().getBcc();
+    my_constant_pools = new ArrayList < ConstantPoolGen > ();
+    final ErrorReport a_report =
+      a_doc.getModel().getErrorReport(a_doc.getJavaClass());
+    boolean was_error = false;
+    try {
+      new ConstantPoolGen(a_doc.getJavaClass().getConstantPool());
+    } catch (Exception e) {
+      was_error = true;
+    }
+    if (a_report.getErrors().size() > 0) {
+      final MessageBox msgBox = new MessageBox(getSite().getShell(),
+        SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+      msgBox.setMessage(GUIMessages.constantPoolError(a_report, was_error));
+      msgBox.setText(GUIMessages.BYTECODE_MESSAGE_TITLE);
+      final int res = msgBox.open();
+      if (res != SWT.YES) return false;
+    }
+    // TODO (Umbra) if all errors would be catched by getErrorReport()
+    // the following method should be only called in case msgBox returns NO
+    final DummyGenerator generator =
+      new DummyGenerator(a_doc.getJavaClass(),
+                         bc, a_doc.getModel().getMapping());
+    // TODO (Umbra) those changes should be rollbacked in case save failed,
+    // because they add new constants to JavaClass constant pool that are not
+    // visible in textual representation (and constant pool editor assumes there
+    // are no such constants); this may cause editor to crash
+    generator.generateDummyConstants();
+    for (int i = 0; i < bc.getMethodCount(); i++) {
+      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
+                                                    getConstantPool());
+      my_constant_pools.add(bc.getMethod(i).
+                            getBcelMethod().getConstantPool());
+      bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
+    }
+    return true;
+  }
+
+  /**
    * This method is run automatically while standard Eclipse
    * 'save' action is executed or when Umbra 'refresh' action is performed.
    * Additionally, the current class file is saved
@@ -202,9 +276,8 @@ public class BytecodeEditor extends TextEditor {
    * {@link org.apache.bcel.classfile.JavaClass} in BCEL and binary
    * files to make visible in the class file the changes made in the editor.
    * <br> <br>
-   * XXX (to236111):
-   * If there are errors in bytecode and user decides to save the incorrect
-   * class file is created. <br>
+   * XXX (Umbra): If there are errors in bytecode and user decides to save
+   * the incorrect class file is created. <br>
    * Note that if user removes constant pool entries that are referenced from
    * attributes or contain class name index etc., fixing such class file may
    * be impossible by editing bytecode in Umbra (rebuild from .java file
@@ -218,38 +291,13 @@ public class BytecodeEditor extends TextEditor {
     my_logger.info("doSave(" + a_progress_monitor + ")");
 
     final BytecodeDocument doc = getDocument();
-    if (FileNames.CP_DEBUG_MODE) System.err.println("update bml");
+    if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("update bml");
 
-    System.err.println(doc.getModel().getMapping().getClassNameIndex());
+    if (!prepareConstantPool(doc)) return false;
 
-    if (Preparsing.PARSE_CP && Preparsing.UPDATE_CP) {
-      // TODO (to236111) NOW because it was moved here, the bytecode won't be
-      // correct without save
-      // TODO (to236111) NOW rollback if not saved
-      final BCClass bc = doc.getBmlp().getBcc();
-      my_constant_pools = new ArrayList < ConstantPoolGen > ();
-      final ErrorReport a_report =
-        doc.getModel().getErrorReport(doc.getJavaClass());
-      if (a_report.getErrors().size() > 0) {
-        final MessageBox msgBox = new MessageBox(getSite().getShell(),
-          SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-        msgBox.setMessage(GUIMessages.constantPoolError(a_report));
-        msgBox.setText(GUIMessages.BYTECODE_MESSAGE_TITLE);
-        final int res = msgBox.open();
-        if (res != SWT.YES) return false;
-      }
-      for (int i = 0; i < bc.getMethodCount(); i++) {
-        final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
-                                                      getConstantPool());
-        my_constant_pools.add(bc.getMethod(i).
-                              getBcelMethod().getConstantPool());
-        bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
-      }
-    }
-
-    if (FileNames.CP_DEBUG_MODE) System.err.println("update java class");
+    if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("update java class");
     doc.updateJavaClass();
-    if (FileNames.CP_DEBUG_MODE) System.err.println("ok");
+    if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("ok");
 
     final JavaClass jc = doc.getJavaClass();
 
@@ -259,15 +307,7 @@ public class BytecodeEditor extends TextEditor {
     }
 
     BytecodeVerifier verifier = null;
-    try {
-      verifier = new BytecodeVerifier(jc, getCurrentClassRepository());
-    } catch (JavaModelException e1) {
-      MessageDialog.openError(getSite().getShell(),
-                              GUIMessages.BYTECODE_MESSAGE_TITLE,
-                              "Failed to initialize bytecode verifier");
-      recoverConstantPools(doc);
-      return false;
-    }
+    verifier = new BytecodeVerifier(jc, getBuildPath());
     final ResultPresenter presenter = my_verification_factory
         .getResultPresenter(verifier);
     final SaveConfirmer confirmer = my_verification_factory
@@ -323,10 +363,6 @@ public class BytecodeEditor extends TextEditor {
    * {@link BytecodeRefreshAction} and calls its
    * {@link BytecodeRefreshAction#run()} method, which in turn calls
    * saveBytecode(). <br> <br>
-   * TODO (to236111) NOW document is still marked as unsaved after save
-   * <br> <br>
-   * TODO (to236111) NOW check whether the mapping should always be
-   * not reinitialized when action returns false
    *
    * See {@link BytecodeEditor#saveBytecode(IProgressMonitor)}.
    *
@@ -341,6 +377,7 @@ public class BytecodeEditor extends TextEditor {
     action.setActiveEditor(this);
     if (action.doRun()) {
       getDocument().getModel().initializeMapping(getDocument());
+      getDocument().setDirty(false);
     }
   }
 
@@ -510,9 +547,7 @@ public class BytecodeEditor extends TextEditor {
 
   /**
    * The method gives the repository where all the class files associated
-   * with the current project are located. <br> <br>
-   *
-   * TODO it does not handle referenced jars and projects
+   * with the current project are located.
    *
    * @return the repository of the class files
    * @throws JavaModelException if the output location for the current project
@@ -686,6 +721,22 @@ public class BytecodeEditor extends TextEditor {
     } catch (PartInitException e) {
       return;
     }
+  }
+
+  /**
+   *
+   * @return true if the document in editor has been changed and not saved
+   */
+  public boolean isDirty() {
+    if (getDocument() == null) return super.isDirty();
+    return getDocument().isDirty();
+  }
+
+  /**
+   * Notifies editor that the status of document changed.
+   */
+  public void notifyDirtyChange() {
+    firePropertyChange(IEditorPart.PROP_DIRTY);
   }
 
 }

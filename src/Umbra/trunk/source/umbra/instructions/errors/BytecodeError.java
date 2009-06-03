@@ -18,7 +18,7 @@ import umbra.instructions.ast.BytecodeLineController;
  * @version a-01
  *
  */
-public class BytecodeError {
+public abstract class BytecodeError {
 
   /**
    * List of editor lines in which an error occured.
@@ -33,12 +33,20 @@ public class BytecodeError {
   }
 
   /**
-   * Retrieves editor lines in which an error occured.
+   * Retrieves description of places in which an error occured.
+   * Default usage is editor lines in which error occured, but some
+   * subclasses may override it.
    *
-   * @return editor lines in which an error occured
+   * @return description of places in which an error occured
    */
-  public ArrayList < BytecodeLineController > getLines() {
-    return my_lines;
+  public String[] getCauses() {
+    final String[] desc = new String[my_lines.size()];
+    int i = 0;
+    for (BytecodeLineController blc : my_lines) {
+      desc[i] = blc.getLineContent();
+      i++;
+    }
+    return desc;
   }
 
   /**
