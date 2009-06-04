@@ -71,7 +71,7 @@ public abstract class AbstractVisitor implements IVisitor {
     //Do nothing
   }
 
-  public void visitClusterChart(ClusterChart node, String name, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation loc) {
+  public void visitClusterChart(ClusterChart node, String name, Boolean isSystem, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation loc) {
     //Do nothing
   }
 
@@ -232,10 +232,6 @@ public abstract class AbstractVisitor implements IVisitor {
   }
 
   public void visitSupplierIndirection(SupplierIndirection node, IndirectionFeaturePart indirectionFeaturePart, GenericIndirection genericIndirection, SourceLocation loc) {
-    //Do nothing
-  }
-
-  public void visitSystemChart(SystemChart node, String name, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation loc) {
     //Do nothing
   }
 

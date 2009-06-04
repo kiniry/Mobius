@@ -41,7 +41,7 @@ public interface IVisitor {
 
   void visitCluster(Cluster node, String name , List<StaticComponent> components , Boolean reused , String comment , SourceLocation loc);
 
-  void visitClusterChart(ClusterChart node, String name , List<ClassEntry> classes , List<ClusterEntry> clusters , Indexing indexing , String explanation , String part , SourceLocation loc);
+  void visitClusterChart(ClusterChart node, String name , Boolean isSystem , List<ClassEntry> classes , List<ClusterEntry> clusters , Indexing indexing , String explanation , String part , SourceLocation loc);
 
   void visitClusterEntry(ClusterEntry node, String name , String description , SourceLocation loc);
 
@@ -122,8 +122,6 @@ public interface IVisitor {
   void visitStringConstant(StringConstant node, String value , SourceLocation loc);
 
   void visitSupplierIndirection(SupplierIndirection node, IndirectionFeaturePart indirectionFeaturePart , GenericIndirection genericIndirection , SourceLocation loc);
-
-  void visitSystemChart(SystemChart node, String name , List<ClusterEntry> clusters , Indexing indexing , String explanation , String part , SourceLocation loc);
 
   void visitType(Type node, String identifier , List<BONType> actualGenerics , String fullString , SourceLocation loc);
 

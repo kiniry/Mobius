@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal.errors;
 
+import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
@@ -23,6 +24,13 @@ public class DuplicateClusterChartError extends TypeCheckingError {
     this.clusterName = other.getName();
     this.otherChartFile = other.getSourceLocation().getSourceFile();
     this.otherChartLineNumber = other.getSourceLocation().getLineNumber();
+  }
+  
+  public DuplicateClusterChartError(SourceLocation loc, ClusterChart other) {
+    super(loc);
+    this.clusterName = other.getName();
+    this.otherChartFile = other.getLocation().getSourceFile();
+    this.otherChartLineNumber = other.getLocation().getLineNumber();
   }
   
   public DuplicateClusterChartError(SourceLocation loc, String clusterName, File otherChartFile, int otherLineNumber) {

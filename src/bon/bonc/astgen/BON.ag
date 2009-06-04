@@ -5,19 +5,18 @@ SpecificationElement :> InformalChart, ClassDictionary, StaticDiagram, DynamicDi
 Indexing = List<IndexClause>! indexes;
 IndexClause = String! id, List<String>! indexTerms;
 
-InformalChart :> SystemChart, ClassChart, ClusterChart, EventChart, ScenarioChart, CreationChart;
+InformalChart :> ClusterChart, ClassChart, EventChart, ScenarioChart, CreationChart;
 
 ClassDictionary = String! systemName, List<DictionaryEntry>! entries, Indexing indexing, String explanation, String part; 
 DictionaryEntry = String! name, List<String>! clusters, String! description;
 
-SystemChart = String! name, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
-ClusterChart = String! name, List<ClassEntry>! classes, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
+//SystemChart = String! name, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
+ClusterChart = String! name, Boolean! isSystem, List<ClassEntry>! classes, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
 ClassChart = String! name, List<String>! inherits, List<String>! queries, List<String>! commands, List<String>! constraints, Indexing indexing, String explanation, String part;
 
 ClusterEntry = String! name, String! description;
 ClassEntry = String! name, String! description;
  
-
 EventChart = String! systemName, Boolean! incoming, Boolean! outgoing, List<EventEntry>! entries, Indexing indexing, String explanation, String part; 
 EventEntry = String! name, List<String>! involved;
 

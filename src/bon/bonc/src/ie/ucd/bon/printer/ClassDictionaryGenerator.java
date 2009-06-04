@@ -10,6 +10,7 @@ import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -48,7 +49,7 @@ public class ClassDictionaryGenerator {
     for (String className : classNames) {
       ClassChartDefinition classDef = classes.get(className);
       
-      Set<ClusterChartDefinition> inClusters = classClusterGraph.getLinkedNodes(className);
+      Collection<ClusterChartDefinition> inClusters = classClusterGraph.get(className);
       if (inClusters == null || inClusters.size() == 0) {
         //TODO or just ignore?
         throw new UnableToGenerateClassDictionaryException("Class " + className + " is not in any cluster!");

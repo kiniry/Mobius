@@ -14,6 +14,7 @@ public class ClusterChart extends InformalChart {
   private final Indexing indexing;
 
   private final String name;
+  private final Boolean isSystem;
   private final List<ClassEntry> classes;
   private final List<ClusterEntry> clusters;
   private final String explanation;
@@ -21,9 +22,10 @@ public class ClusterChart extends InformalChart {
 
 
   // === Constructors and Factories ===
-  protected ClusterChart(String name, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
+  protected ClusterChart(String name, Boolean isSystem, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
+    this.isSystem = isSystem; assert isSystem != null;
     this.classes = classes; assert classes != null;
     this.clusters = clusters; assert clusters != null;
     this.indexing = indexing; 
@@ -32,13 +34,14 @@ public class ClusterChart extends InformalChart {
     
   }
   
-  public static ClusterChart mk(String name, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
-    return new ClusterChart(name, classes, clusters, indexing, explanation, part, location);
+  public static ClusterChart mk(String name, Boolean isSystem, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
+    return new ClusterChart(name, isSystem, classes, clusters, indexing, explanation, part, location);
   }
 
   // === Accessors ===
 
   public String getName() { return name; }
+  public Boolean getIsSystem() { return isSystem; }
   public List<ClassEntry> getClasses() { return classes; }
   public List<ClusterEntry> getClusters() { return clusters; }
   public Indexing getIndexing() { return indexing; }
@@ -47,20 +50,21 @@ public class ClusterChart extends InformalChart {
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
-    visitor.visitClusterChart(this, name, classes, clusters, indexing, explanation, part, getLocation());
+    visitor.visitClusterChart(this, name, isSystem, classes, clusters, indexing, explanation, part, getLocation());
   }
 
   // === Others ===
   @Override
   public ClusterChart clone() {
     String newName = name;
+    Boolean newIsSystem = isSystem;
     List<ClassEntry> newClasses = classes;
     List<ClusterEntry> newClusters = clusters;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     String newExplanation = explanation;
     String newPart = part;
     
-    return ClusterChart.mk(newName, newClasses, newClusters, newIndexing, newExplanation, newPart, getLocation());
+    return ClusterChart.mk(newName, newIsSystem, newClasses, newClusters, newIndexing, newExplanation, newPart, getLocation());
   }
   
   @Override
@@ -70,6 +74,10 @@ public class ClusterChart extends InformalChart {
     
     sb.append("name = ");
     sb.append(name);
+    sb.append(", ");
+    
+    sb.append("isSystem = ");
+    sb.append(isSystem);
     sb.append(", ");
     
     sb.append("classes = ");

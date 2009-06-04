@@ -4,16 +4,15 @@
  */
 package ie.ucd.bon.graph;
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public abstract class Converter<B,A> {
 
   public abstract A convert(B toConvert);
   
-  public SortedSet<A> convert(final Set<B> toConvert) {
-    TreeSet<A> result = new TreeSet<A>();
+  public Collection<A> convert(final Collection<B> toConvert) {
+    Collection<A> result = new LinkedList<A>();
     for (B b : toConvert) {
       if (b != null) {
         result.add(convert(b));

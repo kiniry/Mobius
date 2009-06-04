@@ -315,7 +315,7 @@ dictionary_entry returns [DictionaryEntry entry] :
 
 /**********************************************/
 
-system_chart returns [SystemChart sc] 
+system_chart returns [ClusterChart sc] 
 @init { Indexing index = null; String expl = null; String p = null; 
         List<ClusterEntry> entries = null; }
 :
@@ -333,7 +333,7 @@ system_chart returns [SystemChart sc]
   ) 
   e='end'
   { getContext().leaveSystemChart(); }
-  { $sc = SystemChart.mk($system_name.name, entries, index, expl, p, getSLoc($s,$e)); }
+  { $sc = ClusterChart.mk($system_name.name, true, Constants.NO_CLASS_ENTRIES, entries, index, expl, p, getSLoc($s,$e)); }
                ->
                ^(
                  SYSTEM_CHART[$s] system_name
@@ -499,7 +499,7 @@ cluster_chart returns [ClusterChart cc]
   (cle=cluster_entries { clusters = $cle.entries; } )? 
   e='end'
   { getContext().leaveClusterChart(); }
-  { $cc = ClusterChart.mk($cluster_name.name, classes, clusters, indexing, explanation, part, getSLoc($c,$e)); }
+  { $cc = ClusterChart.mk($cluster_name.name, false, classes, clusters, indexing, explanation, part, getSLoc($c,$e)); }
                 ->
                 ^(
                   CLUSTER_CHART[$c] cluster_name 

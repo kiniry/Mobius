@@ -140,16 +140,16 @@ public class InformalTypingInformation {
     if (context.isInSystemChart()) {
       clustersInSystem.add(clusterName);
     } else if (context.isInClusterChart()) {
-      clusterClusterGraph.addEdge(clusterName, context.getClusterChart());
-      reverseClusterClusterGraph.addEdge(context.getClusterChart().getName(), clusterName);
+      clusterClusterGraph.put(clusterName, context.getClusterChart());
+      reverseClusterClusterGraph.put(context.getClusterChart().getName(), clusterName);
     }
   }
   
   public void addClassEntry(String className) {
     if (context.isInClusterChart()) {
       //Should be, sanity check anyway
-      classClusterGraph.addEdge(className, clusters.get(context.getClusterChart()));
-      reverseClassClusterGraph.addEdge(context.getClusterChart().getName(), className);
+      classClusterGraph.put(className, clusters.get(context.getClusterChart()));
+      reverseClassClusterGraph.put(context.getClusterChart().getName(), className);
     }
   }
   
@@ -166,11 +166,11 @@ public class InformalTypingInformation {
       problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, currentClass.getName()));
     } else {
       
-      if (classInheritanceGraph.hasEdge(currentClass.getName(), className)) {
+      if (classInheritanceGraph.containsEntry(currentClass.getName(), className)) {
         problems.addProblem(new DuplicateSuperclassWarning(loc,context.getClassChart().getName(),className));
       } else {
-        classInheritanceGraph.addEdge(currentClass.getName(), className);
-        reverseClassInheritanceGraph.addEdge(className, currentClass.getName());
+        classInheritanceGraph.put(currentClass.getName(), className);
+        reverseClassInheritanceGraph.put(className, currentClass.getName());
         ClassChartDefinition classDef = classes.get(currentClass.getName());
         classDef.addSuperClass(className);
       }
@@ -235,7 +235,7 @@ public class InformalTypingInformation {
   public String getAlternativeClassDescription(final String className) {
     //Probably makes more sense to only store one in the first place since we'll only use one.
     //This won't make a big difference in practice, as almost always a class will be in one cluster only.
-    Iterator<String> descriptions = alternativeClassDescriptionsGraph.getLinkedNodes(className).iterator();
+    Iterator<String> descriptions = alternativeClassDescriptionsGraph.get(className).iterator();
     if (descriptions.hasNext()) {
       return descriptions.next();
     } else {
@@ -245,7 +245,7 @@ public class InformalTypingInformation {
   
   public void setDescription(String description) {
     if (context.isInClassEntry()) {
-      alternativeClassDescriptionsGraph.addEdge(context.getClassEntryName(), description);
+      alternativeClassDescriptionsGraph.put(context.getClassEntryName(), description);
     }
   }
   

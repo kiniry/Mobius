@@ -183,7 +183,7 @@ public class FormalTypeChecker {
       Main.logDebug(classDef + " is not effective");
       return;
     }
-    Set<BONType> parents = classDef.getParentClasses();
+    Collection<BONType> parents = classDef.getParentClasses();
     
     for (BONType t : parents) {
       if (!t.hasGenerics()) {
@@ -266,7 +266,7 @@ public class FormalTypeChecker {
   }
   
   public final boolean isClassInCluster(String className, String clusterName) {
-    Set<ClusterDefinition> clustersClassIsIn = classClusterGraph.getLinkedNodes(className);
+    Collection<ClusterDefinition> clustersClassIsIn = classClusterGraph.get(className);
     if (clustersClassIsIn != null) {
       ClusterDefinition cluster = clusters.get(clusterName);
       if (cluster != null) {
@@ -277,7 +277,7 @@ public class FormalTypeChecker {
   }
   
   public final boolean isClusterInCluster(String clusterName, String containingClusterName) {
-    Set<ClusterDefinition> clustersClusterIsIn = clusterClusterGraph.getLinkedNodes(clusterName);
+    Collection<ClusterDefinition> clustersClusterIsIn = clusterClusterGraph.get(clusterName);
     if (clustersClusterIsIn != null) {
       ClusterDefinition containingCluster = clusters.get(containingClusterName);
       if (containingCluster != null) {
@@ -414,7 +414,7 @@ public class FormalTypeChecker {
   
   
   
-  private Set<String> getParentsForClassName(String className) {
+  private Collection<String> getParentsForClassName(String className) {
     ClassDefinition def = classes.get(className);
     return def == null ? null : def.getSimpleParentClasses();
   }

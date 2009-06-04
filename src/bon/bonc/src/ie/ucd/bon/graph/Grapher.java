@@ -13,6 +13,7 @@ import ie.ucd.bon.util.XMLWriter;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -42,8 +43,8 @@ public class Grapher {
     printInformalClasses(informalTypingInfo, sb);
 
     appendLine("//Class inheritance links", sb);
-    for (String subclassName : classInheritanceGraph.getStartingNodes()) {
-      for (String parentClassName : classInheritanceGraph.getLinkedNodes(subclassName)) {
+    for (String subclassName : classInheritanceGraph.keys()) {
+      for (String parentClassName : classInheritanceGraph.get(subclassName)) {
         printClassInheritanceLink(subclassName, parentClassName, sb);
       }
     }    
@@ -81,8 +82,8 @@ public class Grapher {
     }
 
     appendLine("//Cluster-cluster links", sb);
-    for (String clusterName : clusterClusterGraph.getStartingNodes()) {
-      Set<ClusterChartDefinition> containingClusters = clusterClusterGraph.getLinkedNodes(clusterName);
+    for (String clusterName : clusterClusterGraph.keys()) {
+      Collection<ClusterChartDefinition> containingClusters = clusterClusterGraph.get(clusterName);
       for (ClusterChartDefinition containingCluster : containingClusters) {
         printClusterClusterLink(clusterName, containingCluster, sb);
       }
@@ -90,8 +91,8 @@ public class Grapher {
     appendLine(sb);
 
     appendLine("//Class-cluster links", sb);
-    for (String className : classClusterGraph.getStartingNodes()) {
-      Set<ClusterChartDefinition> containingClusters = classClusterGraph.getLinkedNodes(className);
+    for (String className : classClusterGraph.keys()) {
+      Collection<ClusterChartDefinition> containingClusters = classClusterGraph.get(className);
       for (ClusterChartDefinition containingCluster : containingClusters) {
         printClassClusterLink(className, containingCluster, sb);
       }
@@ -235,8 +236,8 @@ public class Grapher {
 
   private static void printPrefuseCluster(String clusterName, Graph<String,String> reverseClusterClusterGraph, Graph<String,String> reverseClassClusterGraph, XMLWriter xw) throws IOException {
 
-    Set<String> clusters = reverseClusterClusterGraph.getLinkedNodes(clusterName);
-    Set<String> classes = reverseClassClusterGraph.getLinkedNodes(clusterName);
+    Collection<String> clusters = reverseClusterClusterGraph.get(clusterName);
+    Collection<String> classes = reverseClassClusterGraph.get(clusterName);
 
     if (clusters != null || classes != null) {
       xw.writeEntity("branch");
@@ -293,7 +294,7 @@ public class Grapher {
     Set<String> topLevel = new TreeSet<String>();
     
     for (String className : classes) {
-      if (!inheritanceGraph.hasEdge(className)) {
+      if (!inheritanceGraph.containsKey(className)) {
         topLevel.add(className);
       }
     }
@@ -339,7 +340,7 @@ public class Grapher {
   private static void printPrefuseClassWithInheritance(String className, Graph<String,String> reverseInheritanceGraph, XMLWriter xw) throws IOException {
     
     
-    Set<String> subclasses = reverseInheritanceGraph.getLinkedNodes(className);
+    Collection<String> subclasses = reverseInheritanceGraph.get(className);
     
     if (subclasses != null && subclasses.size() > 0) {
       xw.writeEntity("branch");

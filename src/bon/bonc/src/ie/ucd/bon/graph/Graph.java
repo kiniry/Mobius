@@ -6,65 +6,24 @@ package ie.ucd.bon.graph;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
 
-public class Graph<A,B> {
-  private static final boolean REMOVE_EDGES_TO_EMPTY_SET = true;
-  
-  private final HashMap<A,Set<B>> edges;
+import com.google.common.collect.ForwardingMultimap;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
+public class Graph<A,B> extends ForwardingMultimap<A,B> {
+ 
+  private final Multimap<A,B> delegate;
   
   public Graph() {
-    edges = new HashMap<A,Set<B>>();
+    delegate = LinkedListMultimap.create();
   }
   
-  public final void addEdge(final A from, final B to) {
-    Set<B> bs = edges.get(from);
-    if (bs == null) {
-      bs = new HashSet<B>();
-      edges.put(from, bs);
-    }
-    bs.add(to);
-  }
-  
-  public final void addEdges(final A from, final Collection<B> tos) {
-    for (B to : tos) {
-      addEdge(from, to);
-    }
-  }
-  
-  public boolean removeEdge(final A from, final B to) {
-    Set<B> bs = edges.get(from);
-    if (bs != null) {
-      boolean success = bs.remove(to);
-      if (success && REMOVE_EDGES_TO_EMPTY_SET && bs.size() == 0) {
-        edges.remove(from);
-      }
-      return success;
-    } else {
-      return false;
-    }
-  }
-  
-  public final boolean hasEdge(final A from) {
-    return edges.containsKey(from);
-  }
-  
-  public final boolean hasEdge(final A from, final B to) {
-    Set<B> bs = edges.get(from);
-    return bs==null ? false : bs.contains(to);
-  }
-  
-  public final Set<B> getLinkedNodes(final A from) {
-    Set<B> result = edges.get(from);
-    return result == null ? new HashSet<B>() : result;
-  }
-  
-  public final Set<A> getStartingNodes() {
-    return edges.keySet();
+  @Override
+  protected Multimap<A, B> delegate() {
+    return delegate;
   }
 
   /**
@@ -81,9 +40,9 @@ public class Graph<A,B> {
     todo.addLast(startNode);
     while (!todo.isEmpty()) {
       A a = todo.removeFirst();
-      Set<B> nbs = edges.get(a);
+      Collection<B> nbs = get(a);
       if (nbs == null) continue;
-      Set<A> nas = converter.convert(nbs);
+      Collection<A> nas = converter.convert(nbs);
       for (A na : nas) if (pred.get(na) == null) {
         if (na.equals(startNode)) {
           // build and return cycle
@@ -103,15 +62,11 @@ public class Graph<A,B> {
     return null;
   }
   
-  public Set<Map.Entry<A, Set<B>>> getEdges() {
-    return edges.entrySet();
-  }
-
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     
-    for (Entry<A,Set<B>> edge : edges.entrySet()) {
+    for (Entry<A,B> edge : entries()) {
       sb.append(edge.getKey());
       sb.append(" -> ");
       sb.append(edge.getValue());

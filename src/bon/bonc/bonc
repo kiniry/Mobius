@@ -39,7 +39,7 @@ if [[ ! -d $BON_HOME ]]; then
 fi
 
 #Lib files
-LIB_ARRAY=(BON.jar antlr-runtime-3.1.3.jar antlr-2.7.7.jar stringtemplate.jar prefuse.jar clops-runtime.jar)
+LIB_ARRAY=(BON.jar antlr-runtime-3.1.3.jar antlr-2.7.7.jar stringtemplate.jar prefuse.jar clops-runtime.jar google-collect-1.0-rc2.jar)
 
 #Check each lib file exists
 for lib in ${LIB_ARRAY[@]}

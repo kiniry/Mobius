@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 public class ClassDefinition extends ClassChartDefinition implements Comparable<ClassDefinition> {
@@ -55,7 +54,7 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
   }
 
   public boolean hasParentClass(BONType parent) {
-    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getName()).contains(parent.getNonGenericType());
+    return typingInfo.getSimpleClassInheritanceGraph().get(getName()).contains(parent.getNonGenericType());
   }
   
   public void addFormalGeneric(String name, Type type, SourceLocation loc) {
@@ -115,12 +114,12 @@ public class ClassDefinition extends ClassChartDefinition implements Comparable<
     return features.values();
   }
 
-  public Set<BONType> getParentClasses() {
-    return typingInfo.getClassInheritanceGraph().getLinkedNodes(getName());
+  public Collection<BONType> getParentClasses() {
+    return typingInfo.getClassInheritanceGraph().get(getName());
   }
   
-  public Set<String> getSimpleParentClasses() {
-    return typingInfo.getSimpleClassInheritanceGraph().getLinkedNodes(getName());
+  public Collection<String> getSimpleParentClasses() {
+    return typingInfo.getSimpleClassInheritanceGraph().get(getName());
   }
   
   public Collection<FeatureSpecificationInstance> getDeferredFeatures() {

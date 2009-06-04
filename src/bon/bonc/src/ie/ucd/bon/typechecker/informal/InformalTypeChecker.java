@@ -114,7 +114,7 @@ public class InformalTypeChecker {
   public void checkAllClassesInClusters() {
     Set<String> allClasses = classes.keySet();
     for (String className : allClasses) {
-      if (!classClusterGraph.hasEdge(className)) {
+      if (!classClusterGraph.containsKey(className)) {
         SourceLocation loc = classes.get(className).getSourceLocation();
         problems.addProblem(new ClassNotInAnyClusterError(loc, className));
       }
@@ -124,7 +124,7 @@ public class InformalTypeChecker {
   public void checkAllClustersInClustersOrSystem() {
     Set<String> allClusters = clusters.keySet();
     for (String clusterName : allClusters) {
-      if (!clusterClusterGraph.hasEdge(clusterName) && !clustersInSystem.contains(clusterName)) {
+      if (!clusterClusterGraph.containsKey(clusterName) && !clustersInSystem.contains(clusterName)) {
         SourceLocation loc = clusters.get(clusterName).getSourceLocation();
         problems.addProblem(new ClusterNotInAnyClusterOrSystemError(loc, clusterName));
       }
@@ -144,7 +144,7 @@ public class InformalTypeChecker {
   }
   
   public void checkClassIsInCluster(String className, String clusterName, SourceLocation loc) {
-    Set<ClusterChartDefinition> inClusters = classClusterGraph.getLinkedNodes(className);
+    Collection<ClusterChartDefinition> inClusters = classClusterGraph.get(className);
     ClusterChartDefinition cluster = clusters.get(clusterName);
     if (cluster != null) {
       if (inClusters == null || !inClusters.contains(cluster)) {

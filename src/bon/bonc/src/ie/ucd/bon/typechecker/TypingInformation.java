@@ -27,13 +27,13 @@ import ie.ucd.bon.typechecker.errors.StaticTypeCannotHaveGenericsHere;
 import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 /**
  * 
@@ -119,8 +119,8 @@ public class TypingInformation {
     }
 
     if (context.isInCluster()) {
-      clusterClusterGraph.addEdge(clusterName, clusters.get(context.getInnermostCluster()));
-      reverseClusterClusterGraph.addEdge(context.getInnermostCluster(), clusters.get(clusterName));
+      clusterClusterGraph.put(clusterName, clusters.get(context.getInnermostCluster()));
+      reverseClusterClusterGraph.put(context.getInnermostCluster(), clusters.get(clusterName));
     } 
   }
 
@@ -149,8 +149,8 @@ public class TypingInformation {
     }
 
     if (context.isInCluster()) {
-      classClusterGraph.addEdge(className, clusters.get(context.getInnermostCluster()));
-      reverseClassClusterGraph.addEdge(context.getInnermostCluster(), def);
+      classClusterGraph.put(className, clusters.get(context.getInnermostCluster()));
+      reverseClassClusterGraph.put(context.getInnermostCluster(), def);
     } 
   }
 
@@ -182,11 +182,11 @@ public class TypingInformation {
         if (parent.getNonGenericType().equals(child.getNonGenericType())) {
           problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child.getFullString()));
         } else {
-          if (simpleClassInheritanceGraph.hasEdge(child.getFullString(), parent.getNonGenericType())) {
+          if (simpleClassInheritanceGraph.containsEntry(child.getFullString(), parent.getNonGenericType())) {
             problems.addProblem(new DuplicateSuperclassWarning(loc, child.getFullString(), parent.getFullString()));
           } else {
-            classInheritanceGraph.addEdge(child.getFullString(), parent);
-            simpleClassInheritanceGraph.addEdge(child.getFullString(), parent.getNonGenericType());
+            classInheritanceGraph.put(child.getFullString(), parent);
+            simpleClassInheritanceGraph.put(child.getFullString(), parent.getNonGenericType());
           }
         }
       }
@@ -344,15 +344,17 @@ public class TypingInformation {
   private void expandClusterInheritanceToClasses() {
     Main.logDebug("Expanding cluster inheritance.");
     Main.logDebug("Simple class inherit graph before: \n" + simpleClassInheritanceGraph);
-    Set<Entry<String,Set<BONType>>> complexEdges = classInheritanceGraph.getEdges();
+    
+    //Collection<Entry<String,BONType>> complexEdges = classInheritanceGraph.entries();
+    Set<String> classNames = classInheritanceGraph.keySet();
 
-    for (Entry<String,Set<BONType>> edge : new ArrayList<Entry<String,Set<BONType>>>(complexEdges)) {
-      String childName = edge.getKey();
-      Set<BONType> parentTypes = edge.getValue();
+    //for (Entry<String,Set<BONType>> edge : new ArrayList<Entry<String,Set<BONType>>>(complexEdges)) {
+    for (String childName : classNames) {
+      Collection<BONType> parentTypes = classInheritanceGraph.get(childName);
 
       Main.logDebug("Edge: " + childName + " -> " + parentTypes);
 
-      Set<ClassDefinition> childClasses = getClassesForType(childName);
+      Collection<ClassDefinition> childClasses = getClassesForType(childName);
       Main.logDebug("Child classes: " + childClasses);
 
       for (ClassDefinition childDef : childClasses) {
@@ -361,12 +363,12 @@ public class TypingInformation {
 
           if (!classes.containsKey(parentType.getNonGenericType()) && clusters.containsKey(parentType.getNonGenericType())) {
             Main.logDebug("It's a cluster.");
-            Set<ClassDefinition> parentClasses = getClassesForType(parentType.getNonGenericType());
+            Collection<ClassDefinition> parentClasses = getClassesForType(parentType.getNonGenericType());
             Main.logDebug("Actual parents: " + parentClasses);
 
             //First remove original link from child to parent (cluster)
-            boolean removedSimpleEdge = simpleClassInheritanceGraph.removeEdge(childName, parentType.getNonGenericType());
-            boolean removedComplexEdge = classInheritanceGraph.removeEdge(childName, parentType);
+            boolean removedSimpleEdge = simpleClassInheritanceGraph.remove(childName, parentType.getNonGenericType());
+            boolean removedComplexEdge = classInheritanceGraph.remove(childName, parentType);
             if (!removedSimpleEdge) { Main.logDebug("No simple edge to remove: " + childName + ", " + parentType.getNonGenericType()); }
             if (!removedComplexEdge) { Main.logDebug("No complex edge to remove: " + childName + ", " + parentType); }
 
@@ -375,8 +377,8 @@ public class TypingInformation {
               if (parentDef.equals(childDef)) {
                 problems.addProblem(new ClassCannotHaveSelfAsParentError(childDef.getSourceLocation(), childDef.getName()));
               } else {
-                simpleClassInheritanceGraph.addEdge(childDef.getName(), parentDef.getName());
-                classInheritanceGraph.addEdge(childDef.getName(), BONType.mk(parentDef.getName()));
+                simpleClassInheritanceGraph.put(childDef.getName(), parentDef.getName());
+                classInheritanceGraph.put(childDef.getName(), BONType.mk(parentDef.getName()));
               }
             }
           } else {
@@ -388,8 +390,8 @@ public class TypingInformation {
     Main.logDebug("Simple class inherit graph after: \n" + simpleClassInheritanceGraph);
   }
 
-  private Set<ClassDefinition> getClassesForType(String type) {
-    Set<ClassDefinition> theClasses;
+  private Collection<ClassDefinition> getClassesForType(String type) {
+    Collection<ClassDefinition> theClasses;
     if (classes.containsKey(type)) {
       theClasses = new HashSet<ClassDefinition>();
       theClasses.add(classes.get(type));
@@ -401,11 +403,11 @@ public class TypingInformation {
     return theClasses;
   }
 
-  private Set<ClassDefinition> getClassesInCluster(String clusterName, Set<ClusterDefinition> seen) {
+  private Collection<ClassDefinition> getClassesInCluster(String clusterName, Set<ClusterDefinition> seen) {
     seen.add(clusters.get(clusterName));
 
-    Set<ClassDefinition> classes = reverseClassClusterGraph.getLinkedNodes(clusterName);
-    Set<ClusterDefinition> clusters = reverseClusterClusterGraph.getLinkedNodes(clusterName);
+    Collection<ClassDefinition> classes = reverseClassClusterGraph.get(clusterName);
+    Collection<ClusterDefinition> clusters = reverseClusterClusterGraph.get(clusterName);
 
     for (ClusterDefinition cluster : clusters) {
       if (!seen.contains(cluster)) {

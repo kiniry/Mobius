@@ -50,6 +50,7 @@
       <file name="CommandlineParser.jar"/>
       <file name="antlr-2.7.7.jar"/>
     	<file name="prefuse.jar"/>
+    	<file name="google-collect-1.0-rc2.jar"/>
     </filelist>
   </path>
 	
