@@ -283,7 +283,6 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
    * @param decreases decreases to insert
    */
   private void insertSpecs(final Tree loopNode, final Symbols symb,
-                           final ModifyList modifies,
                            final AbstractFormula invariant,
                            final BCExpression decreases) {
     final BCClass clazz = symb.findClass();
@@ -308,7 +307,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
         final InstructionHandle loopAdd = loop.loopDesc
             .getInstructionToAnnotate().getInstruction();
         addLoopSpecs(BytecodeUtil.findMethod(method, clazz), loopAdd,
-                     modifies, invariant, decreases);
+                     invariant, decreases);
       }
   }
 
@@ -338,13 +337,11 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
    * it adds a new one.
    * @param bcMethod method where attribute should be added
    * @param ih the instruction handle to add attribute to
-   * @param modifies modifies parameter of the attribute
    * @param invariant invariant of the attribute
    * @param decreases decreases of the attribute
    */
   private void addLoopSpecs(final BCMethod bcMethod,
                             final InstructionHandle ih,
-                            final ModifyList modifies,
                             final BCExpression invariant,
                             final BCExpression decreases) {
     final SingleList ihs = bcMethod.getAmap().getAllAt(ih);
@@ -357,7 +354,6 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
         break;
       }
     }
-    ModifyList oldModifies = null;
     BCExpression oldInvariant = null;
     BCExpression oldDecreases = null;
 
@@ -366,21 +362,14 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
       addNew = true;
     else {
       final ExpressionRoot[] allExprs = specs.getAllExpressions();
-      oldModifies = (ModifyList) allExprs[0].getSubExpr(0);
-      if (modifies != null) {
-        if (!oldModifies.isEmpty())
-          addNew = true;
-        else
-          oldModifies = modifies;
-      }
-      oldInvariant = allExprs[1].getSubExpr(0);
+      oldInvariant = allExprs[SingleLoopSpecification.INVARIANT_POS].getSubExpr(0);
       if (invariant != null) {
         if (!isEmptyInvariant(oldInvariant))
           addNew = true;
         else
           oldInvariant = invariant;
       }
-      oldDecreases = allExprs[2].getSubExpr(0);
+      oldDecreases = allExprs[SingleLoopSpecification.VARIANT_POS].getSubExpr(0);
       if (decreases != null) {
         if (!isEmptyDecreases(oldDecreases))
           addNew = true;
@@ -415,7 +404,6 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
       loopNode = finder.getNextSibling(loopNode);
     final Symbols newSymbols = loopNode.accept(new SymbolTableUpdater(), symb);
 
-    final ModifyList modifies = null;
     AbstractFormula invariant = null;
     BCExpression decreases = null;
     if (node.token == JmlToken.LOOP_INVARIANT)
@@ -427,7 +415,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
     else
       throw new NotTranslatedRuntimeException(
          "Not translating JmlStatementLoop of " + "type: " + node.token);
-    insertSpecs(loopNode, newSymbols, modifies, invariant, decreases);
+    insertSpecs(loopNode, newSymbols, invariant, decreases);
     return "";
   }
 }
