@@ -39,6 +39,8 @@ public class BONST {
     
     public final Graph<ClassChart,String> classInheritanceGraph = new Graph<ClassChart,String>();
     
+    public final Graph<String,String> descriptionGraph = new Graph<String,String>();
+    
     public ClusterChart systemChart;
     
   }

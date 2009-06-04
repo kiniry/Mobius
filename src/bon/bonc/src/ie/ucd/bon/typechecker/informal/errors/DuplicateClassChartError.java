@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.informal.errors;
 
+import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
@@ -23,6 +24,13 @@ public class DuplicateClassChartError extends TypeCheckingError {
     this.className = other.getName();
     this.otherChartFile = other.getSourceLocation().getSourceFile();
     this.otherChartLineNumber = other.getSourceLocation().getLineNumber();
+  }
+  
+  public DuplicateClassChartError(SourceLocation loc, ClassChart other) {
+    super(loc);
+    this.className = other.getName();
+    this.otherChartFile = other.getLocation().getSourceFile();
+    this.otherChartLineNumber = other.getLocation().getLineNumber();
   }
   
   //For the test cases...

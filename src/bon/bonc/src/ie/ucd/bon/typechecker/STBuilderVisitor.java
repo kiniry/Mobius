@@ -93,6 +93,16 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       st.classInheritanceGraph.put(context.clazz.getName(), parent);
       st.simpleClassInheritanceGraph.put(context.clazz.getName(), parent.getIdentifier());
     }
+    
+    for (Feature feature : features) {
+      //TODO proper ST for feature
+      
+      feature.accept(this);
+    }
+    
+    for (Expression inv : invariant) {
+      inv.accept(this);
+    }
 
     indexing(context.clazz, indexing);
   }
@@ -122,9 +132,7 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       if (parent.equals(name)) {
         problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, name));
       } else {
-        
-        
-        
+        st.informal.classInheritanceGraph.put(node, parent);      
       }
     }
     
@@ -162,11 +170,13 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     for (ClassEntry entry : classes) {
       //TODO check for duplicate class entries
       st.informal.classClusterGraph.put(entry.getName(), node);
+      st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
     }
     
     for (ClusterEntry entry : clusters) {
       //TODO check for duplicate cluster entries
       st.informal.classClusterGraph.put(entry.getName(), node);
+      st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
     }
 
     indexing(node, indexing);
