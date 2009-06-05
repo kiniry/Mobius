@@ -15,7 +15,6 @@ import ie.ucd.bon.graph.display.PrefuseGraphDisplay;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceReader;
-import ie.ucd.bon.typechecker.TypingInformation;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.clops.util.OptionUtil;
 
@@ -48,7 +47,6 @@ public final class Main {
   private static String version;
 
   private static Problems problems;  
-  private static TypingInformation typingInfo;
 
   /** Prevent instantiation of Main. */
   private Main() { }
@@ -319,7 +317,6 @@ public final class Main {
 
   private static void printResults(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
     problems = tracker.getErrorsAndWarnings(checkInformal, checkFormal, checkConsistency);
-    typingInfo = tracker.getTypingInformation();
     problems.printProblems(System.out);
     problems.printSummary(System.out);
     tracker.printFinalMessage(System.out);
@@ -338,13 +335,6 @@ public final class Main {
 
   public static Problems getProblems() {
     return problems;
-  }
-
-  public static TypingInformation getTypingInfo() {
-    if (typingInfo != null) {
-      typingInfo.finalProcess();
-    }
-    return typingInfo;
   }
 
 }

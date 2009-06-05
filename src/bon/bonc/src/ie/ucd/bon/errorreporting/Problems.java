@@ -5,19 +5,23 @@
 package ie.ucd.bon.errorreporting;
 
 import java.io.PrintStream;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Collection;
+
+import com.google.common.collect.TreeMultiset;
 
 public class Problems {
 
-  private final SortedSet<BONProblem> problems;
+  private final Collection<BONProblem> problems;
   private int numberOfErrors;
   private int numberOfWarnings;
   
-  public Problems() {
-    problems = new TreeSet<BONProblem>();
+  private final String id;
+  
+  public Problems(String id) {
+    problems = TreeMultiset.create();
     numberOfErrors = 0;
     numberOfWarnings = 0;
+    this.id = id;
   }
   
   public void addProblem(BONProblem problem) {
@@ -26,10 +30,11 @@ public class Problems {
     countProblem(problem);
   }
   
-  public void addProblems(Problems problems) {
+  public void addProblems(Problems newProblems) {
+//    System.out.println("Adding " + newProblems.id + " to " + this.id);
     //In time filter here
-    this.problems.addAll(problems.getProblems());
-    for (BONProblem problem : problems.getProblems()) {
+    this.problems.addAll(newProblems.problems);
+    for (BONProblem problem : newProblems.getProblems()) {
       countProblem(problem);
     }
   }
@@ -42,7 +47,7 @@ public class Problems {
     }
   }
   
-  public SortedSet<BONProblem> getProblems() {
+  public Collection<BONProblem> getProblems() {
     return problems;
   }
 
@@ -95,6 +100,11 @@ public class Problems {
 
   public int getNumberOfWarnings() {
     return numberOfWarnings;
+  }
+
+  @Override
+  public String toString() {
+    return problems.size() + " problems.\n" + problems;
   }
   
   

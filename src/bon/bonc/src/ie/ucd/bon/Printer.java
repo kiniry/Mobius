@@ -7,7 +7,6 @@ package ie.ucd.bon;
 import ie.ucd.bon.clinterface.BONcOptionsInterface.Print;
 import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.linguistical.MiscLing;
-import ie.ucd.bon.parser.BONSTTreeWalker;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.ClassDictionaryGenerator;
@@ -26,11 +25,7 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 
 import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.CommonTree;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.runtime.tree.Tree;
-import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.StringTemplateGroup;
 
 /**
@@ -42,8 +37,6 @@ public final class Printer {
 
   /** Prevent instantiation of Printer. */
   private Printer() { }
-
-  private static BONSTTreeWalker walker = new BONSTTreeWalker(null);
 
   public static String getPrintingOptionName(final Print p) {
     switch(p) {
@@ -140,16 +133,17 @@ public final class Printer {
     try {
       StringTemplateGroup templates = new StringTemplateGroup(stFile);
       stFile.close();
-
-      CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
-      CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
-      nodes.setTokenStream(parseResult.getTokens());
-
-      walker.initialise(nodes, templates, printingTracker, printingOption); //Reset walker, provide inputs
-
-      BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
-      StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
-      return output.toString();
+      //TODO fix!
+      return "";
+//      CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
+//      CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
+//      nodes.setTokenStream(parseResult.getTokens());
+//
+//      walker.initialise(nodes, templates, printingTracker, printingOption); //Reset walker, provide inputs
+//
+//      BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
+//      StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
+//      return output.toString();
 
     } catch (IOException ioe) {
       System.out.println("An error occurred whilst reading templateFile " + stFile);
@@ -168,8 +162,10 @@ public final class Printer {
 
   public static String printDotToString(final ParseResult parseResult) {
     DOTTreeGenerator gen = new DOTTreeGenerator();
-    StringTemplate st = gen.toDOT((Tree)parseResult.getParse().getTree());
-    return st.toString();
+    //TODO fix!
+    return "";
+//    StringTemplate st = gen.toDOT((Tree)parseResult.getParse().getTree());
+//    return st.toString();
   }
 
   private static String printStartToString(final Print printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
@@ -181,7 +177,9 @@ public final class Printer {
   }
 
   private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    ClusterChartDefinition sysDef = parsingTracker.getInformalTypingInformation().getSystem();
+    ClusterChartDefinition sysDef = null; 
+    //TODO fix!
+    //parsingTracker.getInformalTypingInformation().getSystem();
     String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName(); 
     return String.format(toFormat, 
         printTime, 

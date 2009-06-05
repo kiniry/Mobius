@@ -112,9 +112,9 @@ public class TestCase {
     Problems foundProblems = Main.getProblems();
     if (foundProblems == null) {
       //Avoid NPE
-      foundProblems = new Problems();
+      foundProblems = new Problems("Test(Found)");
     }
-    Problems desiredProblems = new Problems();
+    Problems desiredProblems = new Problems("Test(Desired)");
     for (TestOutput output : outputs) {
       BONProblem problem = output.getProblem();
       if (problem != null) {

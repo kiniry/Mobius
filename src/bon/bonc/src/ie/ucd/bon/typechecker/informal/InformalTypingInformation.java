@@ -60,7 +60,7 @@ public class InformalTypingInformation {
     
     alternativeClassDescriptionsGraph = new Graph<String,String>();
     
-    problems = new Problems();
+    problems = new Problems("ITI");
   }
   
   public void setSystem(ClusterChartDefinition newSystem) {

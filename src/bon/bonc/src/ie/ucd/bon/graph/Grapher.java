@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class Grapher {
@@ -34,72 +33,74 @@ public class Grapher {
     Main.logDebug("Printing informal class inheritance graph");
     StringBuilder sb = new StringBuilder();
 
-    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
+    //TODO fix!
+    
+    //InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
 
-    printGraphName(informalTypingInfo, sb);
+//    printGraphName(informalTypingInfo, sb);
+//
+//    Graph<String,String> classInheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
+//
+//    printInformalClasses(informalTypingInfo, sb);
 
-    Graph<String,String> classInheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
-
-    printInformalClasses(informalTypingInfo, sb);
-
-    appendLine("//Class inheritance links", sb);
-    for (String subclassName : classInheritanceGraph.keys()) {
-      for (String parentClassName : classInheritanceGraph.get(subclassName)) {
-        printClassInheritanceLink(subclassName, parentClassName, sb);
-      }
-    }    
-    appendLine(sb);
-
-    appendLine("}", sb);
+//    appendLine("//Class inheritance links", sb);
+//    for (String subclassName : classInheritanceGraph.keys()) {
+//      for (String parentClassName : classInheritanceGraph.get(subclassName)) {
+//        printClassInheritanceLink(subclassName, parentClassName, sb);
+//      }
+//    }    
+//    appendLine(sb);
+//
+//    appendLine("}", sb);
     return sb.toString();
   }
 
   public static String graphInformalClusterContainment(final ParsingTracker parseTracker) {
     StringBuilder sb = new StringBuilder();
+    //TODO fix!
+    //InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
 
-    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
-
-    printGraphName(informalTypingInfo, sb);
-
-    Graph<String,ClusterChartDefinition> classClusterGraph = informalTypingInfo.getClassClusterGraph();
-    Graph<String,ClusterChartDefinition> clusterClusterGraph = informalTypingInfo.getClusterClusterGraph();
-    Set<String> clustersInSystem = informalTypingInfo.getClustersInSystem();
-
-    printInformalClasses(informalTypingInfo, sb);
-    printInformalClusters(informalTypingInfo, sb);
-
-    ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
-    if (sysDef != null) {
-      String systemName = sysDef.getName();
-      if (systemName != null) {
-        printSystemNode(systemName, sb);
-        appendLine("//Cluster-system links", sb);
-        for (String clusterName : clustersInSystem) {
-          printClusterSystemLink(clusterName, systemName, sb);
-        }
-        appendLine(sb);
-      }
-    }
-
-    appendLine("//Cluster-cluster links", sb);
-    for (String clusterName : clusterClusterGraph.keys()) {
-      Collection<ClusterChartDefinition> containingClusters = clusterClusterGraph.get(clusterName);
-      for (ClusterChartDefinition containingCluster : containingClusters) {
-        printClusterClusterLink(clusterName, containingCluster, sb);
-      }
-    }
-    appendLine(sb);
-
-    appendLine("//Class-cluster links", sb);
-    for (String className : classClusterGraph.keys()) {
-      Collection<ClusterChartDefinition> containingClusters = classClusterGraph.get(className);
-      for (ClusterChartDefinition containingCluster : containingClusters) {
-        printClassClusterLink(className, containingCluster, sb);
-      }
-    }
-    appendLine(sb);
-
-    appendLine("}", sb);
+//    printGraphName(informalTypingInfo, sb);
+//
+//    Graph<String,ClusterChartDefinition> classClusterGraph = informalTypingInfo.getClassClusterGraph();
+//    Graph<String,ClusterChartDefinition> clusterClusterGraph = informalTypingInfo.getClusterClusterGraph();
+//    Set<String> clustersInSystem = informalTypingInfo.getClustersInSystem();
+//
+//    printInformalClasses(informalTypingInfo, sb);
+//    printInformalClusters(informalTypingInfo, sb);
+//
+//    ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
+//    if (sysDef != null) {
+//      String systemName = sysDef.getName();
+//      if (systemName != null) {
+//        printSystemNode(systemName, sb);
+//        appendLine("//Cluster-system links", sb);
+//        for (String clusterName : clustersInSystem) {
+//          printClusterSystemLink(clusterName, systemName, sb);
+//        }
+//        appendLine(sb);
+//      }
+//    }
+//
+//    appendLine("//Cluster-cluster links", sb);
+//    for (String clusterName : clusterClusterGraph.keys()) {
+//      Collection<ClusterChartDefinition> containingClusters = clusterClusterGraph.get(clusterName);
+//      for (ClusterChartDefinition containingCluster : containingClusters) {
+//        printClusterClusterLink(clusterName, containingCluster, sb);
+//      }
+//    }
+//    appendLine(sb);
+//
+//    appendLine("//Class-cluster links", sb);
+//    for (String className : classClusterGraph.keys()) {
+//      Collection<ClusterChartDefinition> containingClusters = classClusterGraph.get(className);
+//      for (ClusterChartDefinition containingCluster : containingClusters) {
+//        printClassClusterLink(className, containingCluster, sb);
+//      }
+//    }
+//    appendLine(sb);
+//
+//    appendLine("}", sb);
     return sb.toString();
   }
 
@@ -173,65 +174,65 @@ public class Grapher {
     //Output
     StringWriter sw = new StringWriter();
     XMLWriter xw = new XMLWriter(sw);
-
+//TODO fix!
     //Relevant collected data
-    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
-    Graph<String,String> reverseClassClusterGraph = informalTypingInfo.getReverseClassClusterGraph();
-    Graph<String,String> reverseClusterClusterGraph = informalTypingInfo.getReverseClusterClusterGraph();
-    Set<String> clustersInSystem = informalTypingInfo.getClustersInSystem();
-
-    try {
-      //Start xml
-      xw.writeEntity("tree");
-      xw.writeEntity("declarations");
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "name");
-      xw.writeAttribute("type", "String");
-      xw.endEntity(); //attributeDecl
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "cluster");
-      xw.writeAttribute("type", "Boolean");
-      xw.endEntity(); //attributeDecl
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "class");
-      xw.writeAttribute("type", "Boolean");
-      xw.endEntity(); //attributeDecl
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "system");
-      xw.writeAttribute("type", "Boolean");
-      xw.endEntity(); //attributeDecl
-      
-      xw.endEntity(); //declarations
-
-      //Top-level branch/system node
-      xw.writeEntity("branch");
-
-      ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
-      if (sysDef == null) {
-        printPrefuseAttribute("name", "Unnamed System", xw);
-      } else {
-        printPrefuseAttribute("name", sysDef.getName(), xw);
-      }
-      printPrefuseAttribute("system", "true", xw);
-
-      clustersInSystem = new TreeSet<String>(clustersInSystem);
-      for (String clusterName : clustersInSystem) {
-        printPrefuseCluster(clusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
-      }
-
-      xw.endEntity(); //system node/top-level branch
-
-      xw.endEntity(); //tree
-      xw.close();
+//    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
+//    Graph<String,String> reverseClassClusterGraph = informalTypingInfo.getReverseClassClusterGraph();
+//    Graph<String,String> reverseClusterClusterGraph = informalTypingInfo.getReverseClusterClusterGraph();
+//    Set<String> clustersInSystem = informalTypingInfo.getClustersInSystem();
+//
+//    try {
+//      //Start xml
+//      xw.writeEntity("tree");
+//      xw.writeEntity("declarations");
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "name");
+//      xw.writeAttribute("type", "String");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "cluster");
+//      xw.writeAttribute("type", "Boolean");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "class");
+//      xw.writeAttribute("type", "Boolean");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "system");
+//      xw.writeAttribute("type", "Boolean");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.endEntity(); //declarations
+//
+//      //Top-level branch/system node
+//      xw.writeEntity("branch");
+//
+//      ClusterChartDefinition sysDef = informalTypingInfo.getSystem();
+//      if (sysDef == null) {
+//        printPrefuseAttribute("name", "Unnamed System", xw);
+//      } else {
+//        printPrefuseAttribute("name", sysDef.getName(), xw);
+//      }
+//      printPrefuseAttribute("system", "true", xw);
+//
+//      clustersInSystem = new TreeSet<String>(clustersInSystem);
+//      for (String clusterName : clustersInSystem) {
+//        printPrefuseCluster(clusterName, reverseClusterClusterGraph, reverseClassClusterGraph, xw);
+//      }
+//
+//      xw.endEntity(); //system node/top-level branch
+//
+//      xw.endEntity(); //tree
+//      xw.close();
       return sw.toString();
-    } catch (IOException ioe) {
-      Main.logDebug("IOException while writing XML: " + ioe);
-      return "";
-    }
+//    } catch (IOException ioe) {
+//      Main.logDebug("IOException while writing XML: " + ioe);
+//      return "";
+//    }
   }
 
   private static void printPrefuseCluster(String clusterName, Graph<String,String> reverseClusterClusterGraph, Graph<String,String> reverseClassClusterGraph, XMLWriter xw) throws IOException {
@@ -285,56 +286,56 @@ public class Grapher {
   //Output
     StringWriter sw = new StringWriter();
     XMLWriter xw = new XMLWriter(sw);
-
+//TODO fix!
     //Relevant collected data
-    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
-    Set<String> classes = informalTypingInfo.getClasses().keySet();
-    Graph<String,String> inheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
-    Graph<String,String> reverseInheritanceGraph = informalTypingInfo.getReverseClassInheritanceGraph();
-    Set<String> topLevel = new TreeSet<String>();
-    
-    for (String className : classes) {
-      if (!inheritanceGraph.containsKey(className)) {
-        topLevel.add(className);
-      }
-    }
-    
-    try {
-      //Start xml
-      xw.writeEntity("tree");
-      xw.writeEntity("declarations");
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "name");
-      xw.writeAttribute("type", "String");
-      xw.endEntity(); //attributeDecl
-      
-      xw.writeEntity("attributeDecl");
-      xw.writeAttribute("name", "class");
-      xw.writeAttribute("type", "Boolean");
-      xw.endEntity(); //attributeDecl
-      
-      xw.endEntity(); //declarations
-
-      //Top-level branch/system node
-      xw.writeEntity("branch");
-
-      
-      printPrefuseAttribute("name", "BOTTOM", xw);
-
-      for (String className : topLevel) {
-        printPrefuseClassWithInheritance(className, reverseInheritanceGraph, xw);
-      }
-
-      xw.endEntity(); //system node/top-level branch
-
-      xw.endEntity(); //tree
-      xw.close();
+//    InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
+//    Set<String> classes = informalTypingInfo.getClasses().keySet();
+//    Graph<String,String> inheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
+//    Graph<String,String> reverseInheritanceGraph = informalTypingInfo.getReverseClassInheritanceGraph();
+//    Set<String> topLevel = new TreeSet<String>();
+//    
+//    for (String className : classes) {
+//      if (!inheritanceGraph.containsKey(className)) {
+//        topLevel.add(className);
+//      }
+//    }
+//    
+//    try {
+//      //Start xml
+//      xw.writeEntity("tree");
+//      xw.writeEntity("declarations");
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "name");
+//      xw.writeAttribute("type", "String");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.writeEntity("attributeDecl");
+//      xw.writeAttribute("name", "class");
+//      xw.writeAttribute("type", "Boolean");
+//      xw.endEntity(); //attributeDecl
+//      
+//      xw.endEntity(); //declarations
+//
+//      //Top-level branch/system node
+//      xw.writeEntity("branch");
+//
+//      
+//      printPrefuseAttribute("name", "BOTTOM", xw);
+//
+//      for (String className : topLevel) {
+//        printPrefuseClassWithInheritance(className, reverseInheritanceGraph, xw);
+//      }
+//
+//      xw.endEntity(); //system node/top-level branch
+//
+//      xw.endEntity(); //tree
+//      xw.close();
       return sw.toString();
-    } catch (IOException ioe) {
-      Main.logDebug("IOException while writing XML: " + ioe);
-      return "";
-    }
+//    } catch (IOException ioe) {
+//      Main.logDebug("IOException while writing XML: " + ioe);
+//      return "";
+//    }
   }
   
   private static void printPrefuseClassWithInheritance(String className, Graph<String,String> reverseInheritanceGraph, XMLWriter xw) throws IOException {

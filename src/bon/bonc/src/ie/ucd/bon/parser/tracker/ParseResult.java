@@ -4,10 +4,9 @@
  */
 package ie.ucd.bon.parser.tracker;
 
+import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
-import ie.ucd.bon.parser.BONParser;
-import ie.ucd.bon.parser.BONParser.prog_return;
 import ie.ucd.bon.parser.errors.ParsingError;
 
 import java.io.File;
@@ -22,22 +21,23 @@ import org.antlr.runtime.CommonTokenStream;
 public class ParseResult {
 
   private final boolean validParse;
-  private final BONParser.prog_return parse;
+  private final BonSourceFile parse;
   private final CommonTokenStream tokens;
   private final File file;
   private final Problems parseProblems;
   private final Problems lexerProblems;
+  private final Problems stProblems;
   
   private final int severeProblemCount;
   
-  public ParseResult(final boolean validParse, final prog_return parse, final CommonTokenStream tokens, final File file, final Problems problems, final Problems lexerProblems) {
+  public ParseResult(final boolean validParse, final BonSourceFile parse, final CommonTokenStream tokens, final File file, final Problems problems, final Problems lexerProblems, final Problems stProblems) {
     this.validParse = validParse;
     this.parse = parse;
     this.tokens = tokens;
     this.file = file;
     this.parseProblems = problems;
     this.lexerProblems = lexerProblems;
-    
+    this.stProblems = stProblems;
     this.severeProblemCount = countSevere(problems);
   }
   
@@ -65,6 +65,10 @@ public class ParseResult {
     return lexerProblems;
   }
 
+  public Problems getStProblems() {
+    return stProblems;
+  }
+
   public String getFilePath() {
     return file != null ? file.getPath() : "stdin";
   }
@@ -77,7 +81,7 @@ public class ParseResult {
     return file;
   }
   
-  public BONParser.prog_return getParse() {
+  public BonSourceFile getParse() {
     return parse;
   }
 

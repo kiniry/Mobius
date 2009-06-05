@@ -222,30 +222,6 @@
   	</condition>
 	</target>
 	
-	<target name="checkAntlrPrinterBuildUpToDate">
-	 	<echo message="Checking if the ANTLR printer generated files are up to date"/>
-		<condition property="antlrPrinterBuild.required">
-			<or>
-				<isset property="antlrParserBuild.required"/>
-				<not>
-					<uptodate srcfile="${src}/${antlr-pp-src}.g" targetfile="${src-parser}/${antlr-pp-src}.java"/>
-				</not>
-			</or>
-		</condition>
-  </target>
-	
-	<target name="checkAntlrTypeCheckerBuildUpToDate">
-		<echo message="Checking if the ANTLR printer generated files are up to date"/>
-		<condition property="antlrTypeCheckerBuild.required">
-			<or>
-				<isset property="antlrParserBuild.required"/>
-				<not>
-					<uptodate srcfile="${src}/${antlr-tc-src}.g" targetfile="${src-parser}/${antlr-tc-src}.java"/>
-				</not>
-			</or>
-		</condition>
-  </target>
-	
 	<target name="checkAntlrTesterBuildUpToDate">
 		<echo message="Checking if the ANTLR printer generated files are up to date"/>
 		<condition property="antlrTesterBuild.required">
@@ -254,8 +230,6 @@
 			</not>
 		</condition>
   </target>
-	
-	<!-- <target name="checkAntlrBuildUpToDate" depends="checkAntlrParserBuildUpToDate,checkAntlrPrinterBuildUpToDate,checkAntlrTypeCheckerBuildUpToDate,checkAntlrTesterBuildUpToDate"/> -->
 	
 	<target name="buildAntlrParser" depends="checkAntlrParserBuildUpToDate" if="antlrParserBuild.required">
 		<antcall target="clean-antlr-parser"/>
@@ -266,32 +240,6 @@
 			<arg value="${src}/ie/ucd/bon/parser"/>
 			<arg value="${antlr-src}.g"/>
 	  </java>
-	</target>
-
-	<target name="buildAntlrPrinter" depends="buildAntlrParser,checkAntlrPrinterBuildUpToDate" if="antlrPrinterBuild.required">
-		<antcall target="clean-antlr-printer"/>
-		<echo message="Building Printer"/>
-		<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
-	    <classpath refid="antlr.path" />
-	    <arg value="-lib"/>
-	    <arg value="${src-parser}"/>
-	    <arg value="-o"/>
-	    <arg value="${src}/ie/ucd/bon/parser"/>
-	    <arg value="${antlr-pp-src}.g"/>
-	  </java>
-	</target>
-	
-	<target name="buildAntlrTypeChecker" depends="buildAntlrParser,checkAntlrTypeCheckerBuildUpToDate" if="antlrTypeCheckerBuild.required">
-			<antcall target="clean-antlr-type-checker"/>
-			<echo message="Building Type Checker"/>
-			<java fork="yes" dir="${src}" classname="org.antlr.Tool">      
-		    <classpath refid="antlr.path" />
-		    <arg value="-lib"/>
-		    <arg value="${src-parser}"/>
-		    <arg value="-o"/>
-		    <arg value="${src}/ie/ucd/bon/parser"/>
-		    <arg value="${antlr-tc-src}.g"/>
-		  </java>
 	</target>
 	
 	<target name="buildAntlrTester" depends="checkAntlrTesterBuildUpToDate" if="antlrTesterBuild.required">
@@ -306,19 +254,6 @@
 			<arg value="${antlr-tester-src}.g"/>
 	  </java>
   </target>
-		
-	
-	<target name="clean-antlr-type-checker" description="Clean up antlr printer generated files">
-		<echo message="Deleting printer generated files"/>
-		<delete file="${src-parser}/${antlr-tc-src}.java"/>
-		<delete file="${src-parser}/${antlr-tc-src}.tokens"/>
-	</target>	
-	
-	<target name="clean-antlr-printer" description="Clean up antlr printer generated files">
-		<echo message="Deleting printer generated files"/>
-		<delete file="${src-parser}/${antlr-pp-src}.java"/>
-		<delete file="${src-parser}/${antlr-pp-src}.tokens"/>
-	</target>	
 		
 	<target name="clean-antlr-parser" description="Clean up antlr parser generated files">
 		<echo message="Deleting parser generated files"/>
@@ -341,14 +276,10 @@
 			<antcall target="buildAntlrParser"></antcall>
 			<antcall target="buildAntlrTester"></antcall>
 		</parallel>
-		<parallel>
-			<antcall target="buildAntlrPrinter"></antcall>
-			<antcall target="buildAntlrTypeChecker"></antcall>
-		</parallel>
 	</target>
 			
 		
-	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-printer,clean-antlr-type-checker,clean-antlr-tester"/>
+	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-tester"/>
 	
   <target name="clean-all" depends="clean-build,clean-antlr,clean-release,clean-debian-release" description="clean up"/>
 	

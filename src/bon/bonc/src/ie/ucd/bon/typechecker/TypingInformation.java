@@ -67,7 +67,7 @@ public class TypingInformation {
   public TypingInformation() {
     context = Context.getContext();
     informal = new InformalTypingInformation(context);
-    problems = new Problems();
+    problems = new Problems("TI");
     clusters = new HashMap<String,ClusterDefinition>();
     classes = new HashMap<String,ClassDefinition>();
     types = new HashMap<String,BONType>();

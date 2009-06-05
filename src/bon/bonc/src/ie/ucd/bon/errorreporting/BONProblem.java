@@ -124,7 +124,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
 
   public int hashCode() {
-    return this.getLocation().hashCode() + this.getMessage().hashCode();
+    return this.getLocation() == null ? 0 : this.getLocation().hashCode() + this.getMessage().hashCode()*10000;
   }
 
 }

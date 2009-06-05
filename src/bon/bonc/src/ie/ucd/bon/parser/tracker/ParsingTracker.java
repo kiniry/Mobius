@@ -6,10 +6,7 @@ package ie.ucd.bon.parser.tracker;
 
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
-import ie.ucd.bon.typechecker.FormalTypeChecker;
-import ie.ucd.bon.typechecker.TypingInformation;
-import ie.ucd.bon.typechecker.informal.InformalTypeChecker;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
+import ie.ucd.bon.typechecker.BONST;
 
 import java.io.PrintStream;
 import java.util.Collection;
@@ -21,29 +18,26 @@ public class ParsingTracker {
 
   private final Vector<ParseResult> parses;
   private final Map<String,ParseResult> parsesMap;
-  private final TypingInformation typingInformation;
   private final Problems problems;
-  
-  private FormalTypeChecker ftc;
-  private InformalTypeChecker itc;
   
   private int severeProblemCount;
   private boolean containsFailedParses;
+  
+  private BONST symbolTable;
   
   private String finalMessage;
   
   public ParsingTracker() {
     parses = new Vector<ParseResult>(); 
-    typingInformation = new TypingInformation();
     parsesMap = new HashMap<String,ParseResult>();
-    problems = new Problems();
+    problems = new Problems("Tracker");
     
     severeProblemCount = 0;
     containsFailedParses = false;
     
     finalMessage = null;
     
-    itc = null;
+    symbolTable = new BONST();
   }
 
   public Collection<ParseResult> getParses() {
@@ -67,18 +61,18 @@ public class ParsingTracker {
     }
   }
 
-  public TypingInformation getTypingInformation() {
-    return typingInformation;
-  }
-  
-  public InformalTypingInformation getInformalTypingInformation() {
-    return typingInformation.informal();
-  }
-
   public void addProblem(BONProblem problem) {
     problems.addProblem(problem);
   }
   
+  public void addProblems(Problems newProblems) {
+    problems.addProblems(newProblems);
+  }
+  
+  public Problems getProblems() {
+    return problems;
+  }
+
   public void setFinalMessage(String finalMessage) {
     this.finalMessage = finalMessage;
   }
@@ -86,24 +80,24 @@ public class ParsingTracker {
   public Problems getErrorsAndWarnings(boolean checkInformal, boolean checkFormal, boolean checkConsistency) {
     //TODO provide filter level and filter...
     
-    Problems probs = new Problems();
+    Problems probs = new Problems("Return");
     probs.addProblems(this.problems);
     
-    probs.addProblems(typingInformation.getProblems());
+//    probs.addProblems(typingInformation.getProblems());
     
-    probs.addProblems(typingInformation.informal().getProblems());
+//    probs.addProblems(typingInformation.informal().getProblems());
     
-    if (checkInformal && itc != null) {
-      probs.addProblems(itc.getProblems());
-    }
-    
-    if (checkFormal && ftc != null) {
-      probs.addProblems(ftc.getProblems());
-    }
-    
-    if (checkConsistency && ftc != null) {
-      probs.addProblems(ftc.getConsistencyProblems());
-    }
+//    if (checkInformal && itc != null) {
+//      probs.addProblems(itc.getProblems());
+//    }
+//    
+//    if (checkFormal && ftc != null) {
+//      probs.addProblems(ftc.getProblems());
+//    }
+//    
+//    if (checkConsistency && ftc != null) {
+//      probs.addProblems(ftc.getConsistencyProblems());
+//    }
     
     for (ParseResult parse : parses) {
       probs.addProblems(parse.getParseProblems());
@@ -111,12 +105,15 @@ public class ParsingTracker {
       if (lexerProblems != null) {
         probs.addProblems(lexerProblems);
       }
+      Problems stProblems = parse.getStProblems();
+      if (stProblems != null) {
+        probs.addProblems(stProblems);
+      }
     }
     return probs;
   }
   
-  public void printFinalMessage(PrintStream ps) {
-        
+  public void printFinalMessage(PrintStream ps) {        
     if (finalMessage != null) {
       ps.println(finalMessage);
     }
@@ -126,18 +123,11 @@ public class ParsingTracker {
   public boolean continueFromParse(int safeNumberOfSevereParseErrors) {
     return containsFailedParses ? false : severeProblemCount <= safeNumberOfSevereParseErrors;
   }
-  
-  public InformalTypeChecker getInformalTypeChecker() {
-    if (itc == null) {
-      itc = typingInformation.informal().getInformalTypeChecker();
-    }
-    return itc;
+
+  public BONST getSymbolTable() {
+    return symbolTable;
   }
   
-  public FormalTypeChecker getFormalTypeChecker() {
-    if (ftc == null) {
-      ftc = typingInformation.getFormalTypeChecker();
-    }
-    return ftc;
-  }
+  
+
 }

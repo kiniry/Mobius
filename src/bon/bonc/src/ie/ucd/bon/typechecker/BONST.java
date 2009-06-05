@@ -4,11 +4,14 @@ import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.graph.Graph;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,11 +24,11 @@ public class BONST {
   public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
   
   public final Graph<String,Cluster> classClusterGraph = new Graph<String,Cluster>();
-  public final Graph<String,Clazz> reverseClassClusterGraph = new Graph<String,Clazz>();
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
-  public final Graph<String,Cluster> reverseClusterClusterGraph = new Graph<String,Cluster>();
   
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
+  
+  public final Collection<ClientRelation> clientRelations = new ArrayList<ClientRelation>();
   
   public final BONSTInformal informal = new BONSTInformal();
   

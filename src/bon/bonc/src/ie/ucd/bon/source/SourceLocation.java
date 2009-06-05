@@ -57,6 +57,9 @@ public class SourceLocation implements Comparable<SourceLocation> {
 			//System.out.println("Set absolute start: " + this.absoluteCharPositionStart);
 		} else {
 		  Main.logDebug(("Not CommonToken. " + start.getClass()));
+		  if (Main.isDebug()) {
+		    Thread.dumpStack();  
+		  }
 			this.absoluteCharPositionStart = -1;  
 		}
 
@@ -66,6 +69,9 @@ public class SourceLocation implements Comparable<SourceLocation> {
 			//System.out.println("Set absolute end: " + this.absoluteCharPositionEnd);
 		} else {
 			Main.logDebug("Not CommonToken. " + (end==null? null : end.getClass()));
+			if (Main.isDebug()) {
+        Thread.dumpStack();  
+      }
 			this.absoluteCharPositionEnd = -1;  
 		}
 	}

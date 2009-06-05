@@ -11,9 +11,7 @@ import ie.ucd.bon.parser.errors.AntlrParsingError;
 import ie.ucd.bon.parser.errors.ParsingError;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.Context;
-import ie.ucd.bon.typechecker.TypingInformation;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
+import ie.ucd.bon.util.NullIgnoringList;
 import ie.ucd.bon.util.NullOutputStream;
 
 import java.io.File;
@@ -41,16 +39,12 @@ import org.antlr.runtime.TokenStream;
  */
 public abstract class AbstractBONParser extends Parser {
 
-  private final Context context;
-  
   private boolean validParse;
   private File sourceFile;
-  private TypingInformation typingInformation;
   private Problems problems;
 
   public AbstractBONParser(TokenStream input, RecognizerSharedState state) {
     super(null, state);
-    this.context = Context.getContext();
   }
 
   /**
@@ -59,8 +53,7 @@ public abstract class AbstractBONParser extends Parser {
   public void initialise(ParsingTracker tracker, TokenStream input, File sourceFile) {
     this.sourceFile = sourceFile;
     validParse = true;
-    this.typingInformation = tracker.getTypingInformation();
-    problems = new Problems();
+    problems = new Problems("Parser");
     super.setTokenStream(input);
   }
 
@@ -292,37 +285,13 @@ public abstract class AbstractBONParser extends Parser {
     problems.addProblem(problem);
   }
   
-  /**
-   * 
-   * @return the typing information for this 
-   */
-  public final TypingInformation getTypingInformation() {
-    return typingInformation;
-  }
-  
-  /**
-   * 
-   * @return the typing information for this 
-   */
-  public final TypingInformation getTI() {
-    return typingInformation;
-  }
-  
-  public final InformalTypingInformation getITI() {
-    return typingInformation.informal();
-  }
-
   public Problems getProblems() {
     return problems;
-  }
-  
-  public Context getContext() {
-    return context;
   }
 
   protected static <T> List<T> createList() {
     //return new LinkedList<T>();
-    return new ArrayList<T>();
+    return new NullIgnoringList<T>(new ArrayList<T>());
   }
   
   protected static <T> List<T> emptyList() {

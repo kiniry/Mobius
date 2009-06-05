@@ -38,7 +38,7 @@ public abstract class AbstractBONLexer extends Lexer {
   public void initialise(CharStream input, File sourceFile) {
     super.input = input;
     this.sourceFile = sourceFile;
-    problems = new Problems();
+    problems = new Problems("Lexer");
     super.reset();
   }
 

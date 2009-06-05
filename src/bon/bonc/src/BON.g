@@ -5,175 +5,8 @@
 
 grammar BON;
 options {
-  output=AST;
   ASTLabelType=CommonTree;
   superClass=AbstractBONParser;
-}
-tokens {
-  PROG;
-  CLASS_CHART;
-  CLASS_DICTIONARY;
-  DICTIONARY_ENTRY;
-  SYSTEM_CHART;
-  EXPLANATION;
-  INDEXING;
-  PART;
-  DESCRIPTION;
-  CLUSTER_ENTRIES;
-  CLUSTER_ENTRY;
-  SYSTEM_NAME;
-  INDEX_LIST;
-  INDEX_CLAUSE;
-  INDEX_TERM_LIST;
-  INDEX_STRING;
-  CLUSTER_CHART;
-  CLASS_ENTRIES;
-  CLASS_ENTRY;
-  CLUSTER_NAME;
-  QUERY_LIST;
-  COMMAND_LIST;
-  CONSTRAINT_LIST;
-  CLASS_NAME_LIST;
-  CLASS_OR_CLUSTER_NAME_LIST;
-  CLASS_NAME;
-  EVENT_CHART;
-  EVENT_ENTRIES;
-  EVENT_ENTRY;
-  SCENARIO_CHART;
-  SCENARIO_ENTRIES;
-  SCENARIO_ENTRY;
-  CREATION_CHART;
-  CREATION_ENTRIES;
-  CREATION_ENTRY;
-  STATIC_DIAGRAM;
-  EXTENDED_ID;
-  STATIC_BLOCK;
-  STATIC_COMPONENT;
-  CLUSTER;
-  CLUSTER_COMPONENTS;
-  CLASS;
-  STATIC_RELATION;
-  INHERITANCE_RELATION;
-  CLIENT_RELATION;
-  CLIENT_ENTITIES;
-  INDIRECTION_ELEMENT;
-  CLIENT_ENTITY_EXPRESSION;
-  CLIENT_ENTITY_LIST;
-  CLIENT_ENTITY;
-  SUPPLIER_INDIRECTION;
-  INDIRECTION_FEATURE_PART;
-  INDIRECTION_FEATURE_LIST;
-  PARENT_INDIRECTION;
-  GENERIC_INDIRECTION;
-  NAMED_INDIRECTION;
-  INDIRECTION_LIST;
-  TYPE_MARK;
-  SHARED_MARK;
-  CHILD;
-  PARENT;
-  CLIENT;
-  SUPPLIER;
-  STATIC_REF;
-  CLUSTER_PREFIX;
-  STATIC_COMPONENT_NAME;
-  MULTIPLICITY;
-  SEMANTIC_LABEL;
-  CLASS_INTERFACE;
-  CLASS_INVARIANT;
-  PARENT_CLASS_LIST;
-  FEATURES;
-  FEATURE_CLAUSE;
-  FEATURE_SPECIFICATIONS;
-  FEATURE_SPECIFICATION;
-  CONTRACT_CLAUSE;
-  CONTRACTING_CONDITIONS;
-  PRECONDITION;
-  POSTCONDITION;
-  SELECTIVE_EXPORT;
-  FEATURE_NAME_LIST;
-  FEATURE_NAME;
-  RENAME_CLAUSE;
-  RENAMING;
-  FEATURE_ARGUMENTS;
-  FEATURE_ARGUMENT;
-  IDENTIFIER_LIST;
-  PREFIX;
-  INFIX;
-  PREFIX_OPERATOR;
-  INFIX_OPERATOR;
-  FORMAL_GENERICS;
-  FORMAL_GENERIC_LIST;
-  FORMAL_GENERIC;
-  FORMAL_GENERIC_NAME;
-  CLASS_TYPE;
-  ACTUAL_GENERICS;
-  TYPE_LIST;
-  TYPE;
-  ASSERTION;
-  ASSERTION_CLAUSE;
-  BOOLEAN_EXPRESSION;
-  QUANTIFICATION;
-  QUANTIFIER;
-  RANGE_EXPRESSION;
-  RESTRICTION;
-  PROPOSITION;
-  VARIABLE_RANGE;
-  MEMBER_RANGE;
-  TYPE_RANGE;
-  CALL;
-  CALL_CHAIN;
-  UNQUALIFIED_CALL;
-  ACTUAL_ARGUMENTS;
-  EXPRESSION_LIST;
-  ENUMERATED_SET;
-  ENUMERATION_LIST;
-  ENUMERATION_ELEMENT;
-  INTERVAL;
-  INTEGER_INTERVAL;
-  CHARACTER_INTERVAL;
-  CONSTANT;
-  MANIFEST_CONSTANT;
-  SIGN;
-  BOOLEAN_CONSTANT;
-  INTEGER_CONSTANT;
-  REAL_CONSTANT;
-  DYNAMIC_DIAGRAM;
-  DYNAMIC_BLOCK;
-  DYNAMIC_COMPONENT;
-  SCENARIO_DESCRIPTION;
-  LABELLED_ACTIONS;
-  LABELLED_ACTION;
-  ACTION_LABEL;
-  ACTION_DESCRIPTION;
-  SCENARIO_NAME;
-  OBJECT_GROUP;
-  GROUP_COMPONENTS;
-  OBJECT_STACK;
-  OBJECT;
-  MESSAGE_RELATION;
-  RECEIVER;
-  DYNAMIC_REF;
-  DYNAMIC_COMPONENT_NAME;
-  OBJECT_NAME;
-  GROUP_NAME;
-  MESSAGE_LABEL;
-  NOTATIONAL_TUNING;
-  CHANGE_STRING_MARKS;
-  CHANGE_CONCATENATOR;
-  MANFIEST_STRING;
-  CHANGE_PREFIX;
-  LOWEST;
-  SET_EXPRESSION;
-  EXPRESSION;
-  NOT_MEMBER_OF;
-//  character_constant;
-  INHERITS;
-  QUERIES;
-  COMMANDS;
-  CONSTRAINTS;
-  HAS_TYPE;
-  PARSE_ERROR;
-  CLUSTER_NAME_LIST;
 }
 
 @header {
@@ -204,25 +37,17 @@ package ie.ucd.bon.parser;
 prog returns [BonSourceFile bonSource] :
          bs=bon_specification EOF
          { $bonSource = BonSourceFile.mk($bs.spec_els, null, getSLoc($bs.start, $bs.stop)); }
-       ->
-         ^( PROG bon_specification )
        |
          i=indexing bs=bon_specification EOF
          { $bonSource = BonSourceFile.mk($bs.spec_els, $indexing.indexing, getSLoc($i.start, $bs.stop)); }
-       ->
-         ^( PROG indexing bon_specification )
        |
          e=EOF 
          { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
          { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, null, getSLoc($e)); }
-       ->
-         ^( PROG PARSE_ERROR )
        | 
          indexing e=EOF 
          { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
          { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, $i.indexing, getSLoc($i.start,$i.stop)); }
-       ->
-         ^( PROG PARSE_ERROR )
 ;
 
 /**********************************************  
@@ -282,36 +107,14 @@ class_dictionary returns [ClassDictionary cd]
   )+ 
   e='end'
   { $cd = ClassDictionary.mk($system_name.name, entries, index, expl, p, getSLoc($d,$e)); }
-                   ->
-                   ^(
-                     CLASS_DICTIONARY[$d] system_name 
-                     (indexing)?
-                     (explanation)? 
-                     (part)? 
-                     (dictionary_entry)+ 
-                    )
-                   |
-                     d='dictionary' system_name 
-                     (indexing)?
-                     (explanation)? 
-                     (part)? 
-                     'end'
-                     { addParseProblem(new MissingElementParseError(getSourceLocation($d), "dictionary entries", "in system dictionary", false)); }
-                   -> 
-                   ^( CLASS_DICTIONARY  PARSE_ERROR )
-                  ;
+;
 			
 dictionary_entry returns [DictionaryEntry entry] :  
   c='class' class_name 
   'cluster' cluster_name_list 
   description 
   { $entry = DictionaryEntry.mk($class_name.text, $cluster_name_list.list, $description.text, getSLoc($c, $description.stop)); }
-                   ->
-                   ^(
-                     DICTIONARY_ENTRY[$c] class_name
-                     cluster_name_list description 
-                    )
-                  ;
+;
 
 /**********************************************/
 
@@ -321,9 +124,6 @@ system_chart returns [ClusterChart sc]
 :
   s='system_chart' 
   system_name 
-  { ie.ucd.bon.typechecker.informal.ClusterChartDefinition system = new ie.ucd.bon.typechecker.informal.ClusterChartDefinition($system_name.text, getSLoc($s, $system_name.stop), true);
-  getTI().informal().setSystem(system);
-  getContext().enterSystemChart(system); }
   (indexing { index = $indexing.indexing; } )?
   (explanation { expl = $explanation.explanation; } )? 
   (part { p = $part.part; } )? 
@@ -332,102 +132,54 @@ system_chart returns [ClusterChart sc]
    | { entries = emptyList(); }
   ) 
   e='end'
-  { getContext().leaveSystemChart(); }
   { $sc = ClusterChart.mk($system_name.name, true, Constants.NO_CLASS_ENTRIES, entries, index, expl, p, getSLoc($s,$e)); }
-               ->
-               ^(
-                 SYSTEM_CHART[$s] system_name
-                 (indexing)?
-                 (explanation)? 
-                 (part)? 
-                 (cluster_entries)? 
-                )
-              ;
+;
 
 explanation returns [String explanation] :
   e='explanation' manifest_textblock
-  { getITI().setExplanation($manifest_textblock.text); }
   { $explanation = $e.text; }
-              ->
-              ^(
-                EXPLANATION[$e] manifest_textblock
-               )
-              |
-               e='explanation' { addParseProblem(new MissingElementParseError(getSourceLocation($e), "explanation text", "after 'explanation'", false)); }
-              ->
-              ^( EXPLANATION[$e] PARSE_ERROR )
-             ;
+ |
+  e='explanation' 
+  { addParseProblem(new MissingElementParseError(getSourceLocation($e), "explanation text", "after 'explanation'", false)); }
+;
 
 indexing returns [Indexing indexing] :  
    i='indexing' index_list
-   { getTI().indexing($indexing); }
    { $indexing = Indexing.mk($index_list.list, getSLoc($i,$index_list.stop)); } 
-           ->
-           ^(
-             INDEXING[$i] index_list
-            ) 
  |
    i='indexing' 
    { addParseProblem(new MissingElementParseError(getSourceLocation($i), "indexing entries", "after 'indexing'", false)); }
    { $indexing = Indexing.mk(Constants.NO_INDEX_CLAUSES, getSLoc($i)); }
-           ->
-           ^( INDEXING[$i] PARSE_ERROR )
-          ;
+;
 
 part returns [String part] :
     p='part' m=MANIFEST_STRING
     { $part = $m.text; }
-       ->
-       ^(
-         PART[$p] MANIFEST_STRING
-        )
   |
     p='part' 
     { addParseProblem(new MissingElementParseError(getSourceLocation($p), "part text", "after 'part'", false)); }
     { $part = ""; }
-       ->
-         ^( PART PARSE_ERROR ) 
-      ;
+;
 
 description returns [String description] :
   d='description' m=manifest_textblock 
-  { getTI().setDescription($m.text); }
   { $description = $m.text; }
-  
-              ->
-              ^(
-                DESCRIPTION[$d] manifest_textblock
-               )  
-             ;
+;
 
 cluster_entries returns [List<ClusterEntry> entries] :
   { $entries = createList(); }
   (cluster_entry { $entries.add($cluster_entry.ce); } )+
-   
-                  ->
-                  ^(
-                    CLUSTER_ENTRIES (cluster_entry)+ 
-                   )
-                 ;
+;
                  
 cluster_entry returns [ClusterEntry ce] :
   c='cluster' cluster_name description
-  { getTI().informal().addClusterEntry($cluster_name.text); }
   { $ce = ClusterEntry.mk($cluster_name.text, $description.text, getSLoc($c, $description.stop)); } 
-                ->
-                ^(
-                  CLUSTER_ENTRY[$c] cluster_name description
-                 )
-               ;
+;
                
 system_name returns [String name] :
   i=IDENTIFIER
   { $name = $i.text; } 
-              ->
-              ^(
-                SYSTEM_NAME[$i] IDENTIFIER
-               )
-             ;
+;
 
 /**********************************************/
 
@@ -441,46 +193,29 @@ index_list returns [List<IndexClause> list] :
                   { $list.add($i.clause); }
                )* 
                ';'? //Final semi-colon optional
-             -> 
-             ^(
-               INDEX_LIST[$i1.start] index_clause+
-              )
-            ;
+;
             
 index_clause returns [IndexClause clause] :  
-               i=IDENTIFIER ':' index_term_list 
-               { $clause = IndexClause.mk($i.text, $index_term_list.strings, getSLoc($i, $index_term_list.stop)); }
-               ->
-               ^(
-                 INDEX_CLAUSE[$i] IDENTIFIER index_term_list
-                )
-               |
-                 i=IDENTIFIER ':' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "index term(s)", "in index clause", true)); }
-               ->
-                 ^(INDEX_CLAUSE PARSE_ERROR)
-              ;
+  i=IDENTIFIER ':' index_term_list 
+  { $clause = IndexClause.mk($i.text, $index_term_list.strings, getSLoc($i, $index_term_list.stop)); }
+ |
+  i=IDENTIFIER ':' 
+  { addParseProblem(new MissingElementParseError(getSourceLocation($i), "index term(s)", "in index clause", true)); }
+;
                 
 index_term_list returns [List<String> strings] :
-                  { $strings = createList(); }
-                  i1=index_string 
-                  { $strings.add($i1.text); }
-                  (',' i=index_string
-                  { $strings.add($i.text); }
-                  )* 
-                  -> 
-                  ^(
-                    INDEX_TERM_LIST[$i1.start] index_string+
-                   )
-                 ;
+  { $strings = createList(); }
+  i1=index_string 
+  { $strings.add($i1.text); }
+  (',' i=index_string
+   { $strings.add($i.text); }
+  )* 
+;
                  
 index_string returns [String s] :
   m=MANIFEST_STRING
   { $s = $m.text; }    
-               ->
-               ^(
-                 INDEX_STRING[$m] MANIFEST_STRING
-                )
-              ;
+;
 
 /**********************************************/
 
@@ -489,56 +224,34 @@ cluster_chart returns [ClusterChart cc]
         Indexing indexing = null; String explanation = null; String part = null;  }
 :
   c='cluster_chart' cluster_name 
-  { ie.ucd.bon.typechecker.informal.ClusterChartDefinition cluster = new ie.ucd.bon.typechecker.informal.ClusterChartDefinition($cluster_name.text, getSLoc($c, $cluster_name.stop), false);
-  getTI().informal().addCluster(cluster);
-  getContext().enterClusterChart(cluster); }
   (i=indexing { indexing = $i.indexing; } )? 
   (explanation { explanation = $explanation.explanation; } )? 
   (part { part = $part.part; } )? 
-  (ce=class_entries { classes = $ce.entries; } )? 
-  (cle=cluster_entries { clusters = $cle.entries; } )? 
+  (  ce=class_entries { classes = $ce.entries; }
+   | { classes = emptyList(); } 
+  ) 
+  (  cle=cluster_entries { clusters = $cle.entries; } 
+   | { clusters = emptyList(); }
+  ) 
   e='end'
-  { getContext().leaveClusterChart(); }
   { $cc = ClusterChart.mk($cluster_name.name, false, classes, clusters, indexing, explanation, part, getSLoc($c,$e)); }
-                ->
-                ^(
-                  CLUSTER_CHART[$c] cluster_name 
-                  (indexing)? 
-                  (explanation)? 
-                  (part)? 
-                  (class_entries)? 
-                  (cluster_entries)? 
-                 )
-               ;
+;
                
 class_entries returns [List<ClassEntry> entries] :
   { $entries = createList(); }
   (class_entry { $entries.add($class_entry.entry); } )+ 
-                ->
-                ^(
-                  CLASS_ENTRIES (class_entry)+ 
-                 )
-               ;
+;
                
 class_entry returns [ClassEntry entry] :
-  c='class' class_name { getContext().enterClassEntry($class_name.text); }
+  c='class' class_name
   description
-  { getTI().informal().addClassEntry($class_name.text); getContext().leaveClassEntry(); }
   { $entry = ClassEntry.mk($class_name.text, $description.text, getSLoc($c, $description.stop)); }
-              ->
-              ^(
-                CLASS_ENTRY[$c] class_name description
-               )
-             ;
+;
              
 cluster_name returns [String name] :
   i=IDENTIFIER
   { $name = $i.text; } 
-               ->
-               ^(
-                 CLUSTER_NAME[$i] IDENTIFIER
-                )
-              ;
+;
 
 /**********************************************/
 
@@ -548,9 +261,6 @@ class_chart returns [ClassChart cc]
         List<String> constraints = null;  }
 :
   c='class_chart' class_name 
-  { ie.ucd.bon.typechecker.informal.ClassChartDefinition classX = new ie.ucd.bon.typechecker.informal.ClassChartDefinition($class_name.text, getSLoc($c, $class_name.stop));
-  getTI().informal().addClass(classX);
-  getContext().enterClassChart(classX); }
   (i=indexing { indexing = $i.indexing; } )? 
   (explanation { explanation = $explanation.explanation; } )? 
   (part { part = $part.part; } )? 
@@ -571,130 +281,86 @@ class_chart returns [ClassChart cc]
    | { constraints = emptyList(); }
   ) 
   e='end'
-  { getContext().leaveClassChart(); }
   { $cc = ClassChart.mk($class_name.name, inherits, queries, commands, constraints, indexing, explanation, part, getSLoc($c,$e)); }
-              ->
-              ^( 
-                CLASS_CHART[$c] class_name
-                (indexing)? 
-                (explanation)? 
-                (part)? 
-                (inherits)?
-                (queries)? 
-                (commands)? 
-                (constraints)?
-               )
-             ;
+;
              
 inherits returns [List<String> inherits] :
-  i='inherit' { getContext().enterInheritsClause(); } 
+  i='inherit' 
   class_name_list
-  { getContext().leaveInheritsClause(); }
   { $inherits = $class_name_list.list; }
-          -> ^(INHERITS[$i] class_name_list)
-           | i='inherit' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name(s)", "in inherits clause", true)); }
-          -> ^( INHERITS PARSE_ERROR )
-            
-          ;
+ | 
+  i='inherit' 
+  { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name(s)", "in inherits clause", true)); }
+;
 
 queries returns [List<String> queries] :
   q='query' query_list  
   { $queries = $query_list.queries; }
- -> ^(QUERIES[$q] query_list)
-         ;
+;
          
 commands returns [List<String> commands] :
   c='command' command_list
   { $commands = $command_list.commands; }
-  -> ^(COMMANDS[$c] command_list)
-          ;
+;
 
 constraints returns [List<String> constraints] :
   c='constraint' constraint_list
   { $constraints = $constraint_list.constraints; }
-  -> ^(CONSTRAINTS[$c] constraint_list)
-             ;
+;
 
 
 query_list returns [List<String> queries] :
   { $queries = createList(); }
   m1=manifest_textblock 
-  { getTI().informal().addQuery($m1.text); }
   { $queries.add($m1.text); }
   (  (',' m=manifest_textblock 
-      { getTI().informal().addQuery($m.text); }
       { $queries.add($m.text); } 
      )      
    | m=manifest_textblock 
-     { getTI().informal().addQuery($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); }
+     { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional query item", false)); }
      { $queries.add($m.text); } 
   )* 
   ','?             
-             -> 
-             ^(
-               QUERY_LIST[$m1.start] manifest_textblock+
-              )
-            ;
+;
             
 command_list returns [List<String> commands] :
   { $commands = createList(); }
   m1=manifest_textblock 
-  { getTI().informal().addCommand($m1.text); }
   { $commands.add($m1.text); }
   (  (',' m=manifest_textblock 
-      { getTI().informal().addCommand($m.text); }
       { $commands.add($m.text); } 
      )
    | m=manifest_textblock 
-     { getTI().informal().addCommand($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
+     { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional command item", false)); }
      { $commands.add($m.text); }
   )* 
   ','?
-               ->
-               ^(
-                 COMMAND_LIST[$m1.start] manifest_textblock+
-                )
-              ;
+;
               
 constraint_list returns [List<String> constraints] :
   { $constraints = createList(); }
   m1=manifest_textblock 
-  { getTI().informal().addConstraint($m1.text); }
   { $constraints.add($m1.text); }
-  (  (',' m=manifest_textblock 
-      { getTI().informal().addConstraint($m.text); }
-      { $constraints.add($m.text); }
-     )
+  (  (',' m=manifest_textblock )
    | m=manifest_textblock 
-     { getTI().informal().addConstraint($m.text); addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
+     { addParseProblem(new MissingElementParseError(getSourceLocation($m.start), "comma", "before additional constraint item", false)); }
      { $constraints.add($m.text); }
   )*
   ','?
-                  -> 
-                  ^(
-                    CONSTRAINT_LIST[$m1.start] manifest_textblock+
-                   )
-                 ;
+;
 
 class_name_list returns [List<String> list] :
   { $list = createList(); }
   c1=class_name 
-  { getTI().classNameListEntry($c1.text, getSLoc($c1.stop)); }
   { $list.add($c1.text); }
   (  ( ',' c=class_name 
-       { getTI().classNameListEntry($c.text, getSLoc($c.start)); }
        { $list.add($c.text); } 
      )
    | ( c=class_name 
-       { getTI().classNameListEntry($c.text, getSLoc($c.start)); addParseProblem(new MissingElementParseError(getSourceLocation($c.start), "comma", "before additional class name", false)); }
        { $list.add($c.text); }										       
      )
   )*
-                  ->
-                  ^(
-                    CLASS_NAME_LIST[$c1.start] class_name+
-                   )
-                 ;
+;
                  
 cluster_name_list returns [List<String> list] :
   { $list = createList(); }
@@ -707,11 +373,7 @@ cluster_name_list returns [List<String> list] :
        { $list.add($c.text); }                           
      )
   )*                  
-                  ->
-                  ^(
-                    CLUSTER_NAME_LIST[$c1.start] cluster_name+
-                   )
-                 ;
+;
 
 class_or_cluster_name_list returns [List<String> list] :
   { $list = createList(); }
@@ -720,24 +382,20 @@ class_or_cluster_name_list returns [List<String> list] :
   ( ',' c=class_or_bracketed_cluster_name
     { $list.add($c.name); } 
   )*
-  
 ;
 
 class_or_bracketed_cluster_name returns [String name] :
    class_name
    { $name = $class_name.name; }
- | '(' cluster_name ')'
+ | 
+   '(' cluster_name ')'
    { $name = $cluster_name.name; }
 ;
 
 class_name returns [String name] :
   i=IDENTIFIER
   { $name = $i.text; } 
-             ->
-             ^(
-               CLASS_NAME[$i] IDENTIFIER
-              )
-            ;
+;
 
 /**********************************************/
 
@@ -749,27 +407,12 @@ event_chart returns [EventChart ec] :
   (part)?
   (event_entries)?
   'end'
-              ->
-              ^(
-                EVENT_CHART[$e]
-                system_name 
-                ('incoming')? ('outgoing')?
-                (indexing)?
-                (explanation)?
-                (part)?
-                (event_entries)?
-               )
-             ;
+;
              
 event_entries returns [List<EventEntry> entries] :
   { $entries = createList(); }
   (event_entry { $entries.add($event_entry.entry); } )+ 
-                ->
-                ^(
-                  EVENT_ENTRIES
-                  (event_entry)+
-                 )
-               ;
+;
                
 event_entry returns [EventEntry entry]
 @init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String name = null; Token stop=null; } :
@@ -790,17 +433,7 @@ event_entry returns [EventEntry entry]
      { stop = $i; }
   )
   { if (mok && cok) $entry = EventEntry.mk(name, ccnl, getSLoc($e,stop)); }
-              ->
-                {!mok}? ^( EVENT_ENTRY PARSE_ERROR )
-              ->
-                {!cok}? ^( EVENT_ENTRY PARSE_ERROR )
-              ->
-              ^(
-                EVENT_ENTRY[$e]
-                manifest_textblock
-                class_or_cluster_name_list
-               )
-             ;
+;
 
 /**********************************************/
 
@@ -811,36 +444,17 @@ scenario_chart returns [ScenarioChart sc] :
   (part)?
   (scenario_entries)?
   'end'
-                 ->
-                 ^(
-                   SCENARIO_CHART[$s]
-                   system_name
-                   (indexing)?
-                   (explanation)?
-                   (part)?
-                   (scenario_entries)?
-                  )
-                ;
+;
                 
 scenario_entries returns [List<ScenarioEntry> entries] :
   { $entries = createList(); }
   (scenario_entry { $entries.add($scenario_entry.entry); } )+ 
-                   ->
-                   ^(
-                     SCENARIO_ENTRIES
-                     (scenario_entry)+ 
-                    )                     
-                  ;
+;
                   
 scenario_entry returns [ScenarioEntry entry] :
   s='scenario' m=MANIFEST_STRING d=description
   { $entry =  ScenarioEntry.mk($m.text, $d.description, getSLoc($s,$d.stop)); }
-                 ->
-                 ^(
-                   SCENARIO_ENTRY[$s]
-                   MANIFEST_STRING description 
-                  )
-                ;
+;
 
 /**********************************************/
 
@@ -851,38 +465,18 @@ creation_chart returns [CreationChart cc] :
   (part)?
   (creation_entries)?
   'end' 
-                 ->
-                 ^(
-                   CREATION_CHART[$c]
-                   system_name
-                   (indexing)?
-                   (explanation)?
-                   (part)?
-                   (creation_entries)?
-                  )
-                ;
+;
                 
 creation_entries returns [List<CreationEntry> entries] :
   { $entries = createList(); }
   (creation_entry { $entries.add($creation_entry.entry); } )+
-                   ->
-                   ^(
-                     CREATION_ENTRIES
-                     (creation_entry)+
-                    )
-                  ;
+;
                   
 creation_entry returns [CreationEntry entry] :
   c='creator' class_name 
   'creates' ccnl=class_or_cluster_name_list
   { $entry = CreationEntry.mk($class_name.name, $ccnl.list, getSLoc($c,$ccnl.stop)); } 
-                 ->
-                 ^(
-                   CREATION_ENTRY[$c]
-                   class_name 
-                   class_or_cluster_name_list 
-                  )
-                ;
+;
 
 /**********************************************  
  ***   Static Diagrams                      ***
@@ -898,88 +492,49 @@ static_diagram returns [StaticDiagram sd]
   sb=static_block 
   e='end'
   { $sd = StaticDiagram.mk($sb.components, eid, comment, getSLoc($s,$e)); }                
-                 ->
-                 ^(
-                   STATIC_DIAGRAM[$s]
-                   (extended_id)? (COMMENT)? 
-                   static_block 
-                  )
-                ;
+;
                 
 extended_id returns [String eid] :  
    i=IDENTIFIER
    { $eid = $i.text; } 
-              ->
-              ^(
-                EXTENDED_ID[$i] IDENTIFIER
-               )
  | i=INTEGER
    { $eid = $i.text; } 
-              ->
-              ^(
-                EXTENDED_ID[$i] INTEGER
-               )
-             ;
+;
              
 static_block returns [List<StaticComponent> components] :
   { $components = createList(); }
   (sc=static_component { $components.add($sc.component); })*
-               ->
-               ^(
-                 STATIC_BLOCK (static_component)*
-                )
-              ;
+;
              
 static_component returns [StaticComponent component] :
    c1=cluster
    { $component = $c1.cluster; } 
-                    ->
-                    ^(
-                      STATIC_COMPONENT[$c1.start] cluster
-                     )
  | c2=clazz 
    { $component = $c2.clazz; }
-                    ->
-                    ^(
-                      STATIC_COMPONENT[$c2.start] clazz
-                     )
  | s=static_relation
    { $component = $s.relation; } 
-                    ->
-                    ^(
-                      STATIC_COMPONENT[$s.start] static_relation
-                     )
-                  ;
+;
 
 /**********************************************/
 
 cluster returns [Cluster cluster] 
-@init { boolean reused = false; }
+@init { boolean reused = false; String comment = null; List<StaticComponent> components = null; Token end = null; }
 :
-  c='cluster' cluster_name 
-  ('reused' { reused = true; } )? 
-  (COMMENT)? 
-  { getTI().addCluster($cluster_name.text, getSLoc($c, $cluster_name.stop)); }   
-  ( { getContext().enterCluster($cluster_name.text); }
-    cluster_components
-    { getContext().leaveCluster(); }
-  )?
-          ->
-          ^(
-            CLUSTER[$c] cluster_name
-            ('reused')? (COMMENT)? 
-            (cluster_components)?
-           )
-         ;
+  c='cluster' cluster_name { end = $cluster_name.stop; }
+  (r='reused' { reused = true; end = $r; } )? 
+  (co=COMMENT { comment = $co.text; end = $co;} )?    
+  (  cc=cluster_components 
+     { components = $cc.components; end = $cc.stop;}
+   |
+     { components = emptyList(); } 
+  )
+  { $cluster = Cluster.mk($cluster_name.name, components, reused, comment, getSLoc($c,end)); }
+;
          
 cluster_components returns [List<StaticComponent> components] :  
   c='component' static_block 'end'
   { $components = $static_block.components; }
-                     -> 
-                     ^(
-                       CLUSTER_COMPONENTS[$c] static_block
-                      ) 
-                    ;
+;
                     
 clazz returns [Clazz clazz] 
 @init { Clazz.Mod mod = null; List<FormalGeneric> generics = null; Token start = null; Token end = null;
@@ -989,44 +544,29 @@ clazz returns [Clazz clazz]
   (   r='root'      { mod = Clazz.Mod.ROOT; start = $r; }
     | d='deferred'  { mod = Clazz.Mod.DEFERRED; start = $d; }
     | e='effective' { mod = Clazz.Mod.EFFECTIVE; start = $e; }
-    |             { mod = Clazz.Mod.NONE; }
+    |               { mod = Clazz.Mod.NONE; }
   )
   c='class' 
   { if (start == null) start = $c; }
   cn=class_name
-  { getTI().addClass($cn.text, getSLoc($c,$cn.stop), mod); getContext().enterClass($cn.text); end = $cn.stop; }
-  (fg=formal_generics { generics = $fg.generics; } )?
-  (ru='reused' { getTI().setClassReused(); reused = true; end = $ru; } )? 
-  (p='persistent' { getTI().setClassPersistent(); persistent = true; end = $p; })?   
-  (i='interfaced' { getTI().setClassInterfaced(); interfaced = true; end = $i; })? 
+  { end = $cn.stop; }
+  (  fg=formal_generics { generics = $fg.generics; end = $fg.stop; } 
+   | { generics = emptyList(); } 
+  )
+  (ru='reused' { reused = true; end = $ru; } )? 
+  (p='persistent' { persistent = true; end = $p; })?   
+  (i='interfaced' { interfaced = true; end = $i; })? 
   (co=COMMENT { comment = $co.text; end = $co; } )?
   (ci=class_interface { classInterface = $ci.ci; end = $ci.stop; } )? 
-  { getContext().leaveClass(); }
   { $clazz = Clazz.mk($cn.name, generics, mod, classInterface, reused, persistent, interfaced, comment, getSLoc(start,end)); }
-         ->
-         ^(
-           CLASS[$c]
-           ('root')? ('deferred')? ('effective')? 
-           class_name (formal_generics)?
-           ('reused')? ('persistent')?  ('interfaced')? (COMMENT)?
-           (class_interface)? 
-          )
-        ;
+;
             
 static_relation returns [StaticRelation relation] :
    ir=inheritance_relation
    { $relation = $ir.relation; }
-                  ->
-                  ^(
-                    STATIC_RELATION[$ir.start] inheritance_relation
-                   )
  | cr=client_relation
    { $relation = $cr.relation; }
-                  ->
-                  ^(
-                    STATIC_RELATION[$cr.start] client_relation
-                   )                   
-                 ;
+;
 
 /**********************************************/
 
@@ -1042,68 +582,36 @@ inheritance_relation returns [InheritanceRelation relation]
   ( semantic_label
    { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } 
   )? 
-  { getTI().addParent($c.type,$parent.type,getSLoc($c.start,$parent.stop)); }
   { $relation = InheritanceRelation.mk($c.type, $p.type, multiplicity, semanticLabel, getSLoc($c.start, end)); }
-                       ->
-                       ^(
-                         INHERITANCE_RELATION[$c.start]
-                         child (multiplicity)? 
-                         parent (semantic_label)? 
-                        )
-                      ;
+;
                     
 client_relation returns [ClientRelation relation] 
 @init { ClientEntityExpression entities = null; TypeMark mark = null; String semanticLabel = null; Token end = null; }
 :
   c=client 'client'
-  { ie.ucd.bon.typechecker.ClientRelation cr = new ie.ucd.bon.typechecker.ClientRelation($c.text); 
-  getContext().enterClientRelation(cr); } 
   (client_entities { entities = $client_entities.entities; } )? 
   ( type_mark 
-   { getTI().typeMark($type_mark.mark); }
    { mark = $type_mark.mark; }
    |
-   { getTI().typeMark(Constants.NO_TYPE_MARK); }
    { mark = Constants.NO_TYPE_MARK; }
   )
   s=supplier 
   { end = $supplier.stop; }
-  { getContext().getClientRelation().setSupplier($supplier.text); }
   (semantic_label { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } )?
-  { getTI().addClientRelation(); } 
   { $relation = ClientRelation.mk($c.type,$s.type,entities,mark,semanticLabel,getSLoc($c.start,end)); }
-                  ->
-                  ^(
-                    CLIENT_RELATION[$c.start]
-                    client (client_entities)? (type_mark)? 
-                    supplier (semantic_label)? 
-                   )
-                 ;
+;
                  
 client_entities returns [ClientEntityExpression entities] :
   a='{' cee=client_entity_expression b='}'
   { $entities = $cee.entities; }
-                  -> 
-                  ^(
-                    CLIENT_ENTITIES[$a]
-                    client_entity_expression
-                   )
-                 ;
+;
                  
 client_entity_expression returns [ClientEntityExpression entities] :
    cel=client_entity_list
    { $entities = ClientEntityList.mk($cel.entities,getSLoc($cel.start,$cel.stop)); } 
-                           ->
-                           ^(
-                             CLIENT_ENTITY_EXPRESSION[$cel.start] client_entity_list
-                            )
  | m=multiplicity
    { $entities = Multiplicity.mk($m.num, getSLoc($m.start,$m.stop)); } 
-                           ->
-                           ^(
-                             CLIENT_ENTITY_EXPRESSION[$m.start] multiplicity
-                            )
-                          ;
+;
                           
 client_entity_list returns [List<ClientEntity> entities] :
   { $entities = createList(); }
@@ -1112,11 +620,7 @@ client_entity_list returns [List<ClientEntity> entities] :
   (',' c=client_entity
    { $entities.add($c.entity); }
   )* 
-                     -> 
-                     ^(
-                       CLIENT_ENTITY_LIST[$ce.start] (client_entity)+
-                      )
-                    ;
+;
                     
 //Conflict here is:
 // feature_name can be an IDENTIFIER, and supplier_indirection can also be an IDENTIFIER
@@ -1124,232 +628,119 @@ client_entity_list returns [List<ClientEntity> entities] :
 //client_entity  :    feature_name 
 client_entity returns [ClientEntity entity] :
    prefix
-                  ->
-                  ^(
-                    CLIENT_ENTITY prefix
-                   )
  | infix
-                  ->
-                  ^(
-                    CLIENT_ENTITY infix
-                   )
  | supplier_indirection 
-                  ->
-                  ^(
-                    CLIENT_ENTITY supplier_indirection
-                   )
  | parent_indirection 
-                  ->
-                  ^(
-                    CLIENT_ENTITY parent_indirection
-                   )
-               ;
+;
                
-supplier_indirection  :  (indirection_feature_part ':')? generic_indirection 
-                       ->
-                       ^(
-                         SUPPLIER_INDIRECTION (indirection_feature_part)? generic_indirection 
-                        )
-                      ;
+supplier_indirection  :  
+  (indirection_feature_part ':')? generic_indirection 
+;
                       
-indirection_feature_part  :  feature_name 
-                           ->
-                           ^(
-                             INDIRECTION_FEATURE_PART feature_name
-                            )
-                           | indirection_feature_list 
-                           ->
-                           ^(
-                             INDIRECTION_FEATURE_PART indirection_feature_list
-                            )
-                          ;	
+indirection_feature_part  :
+   feature_name 
+ | indirection_feature_list 
+;	
                           
-indirection_feature_list  :  '(' feature_name_list ')' 
-                           ->
-                           ^(
-                             INDIRECTION_FEATURE_LIST feature_name_list
-                            )
-                          ;
+indirection_feature_list  :
+  '(' feature_name_list ')' 
+;
                           
-parent_indirection  :  '->' generic_indirection
-                     ->
-                     ^(
-                       PARENT_INDIRECTION generic_indirection
-                      )
-                    ;
+parent_indirection  :  
+  '->' generic_indirection
+;
 
 /**********************************************/
 
 generic_indirection  :
-//                        formal_generic_name 
-//                      ->
-//                      ^(
-//                        GENERIC_INDIRECTION formal_generic_name
-//                       )
+//  formal_generic_name 
                        //NB - changed the below... both are IDENTIFIERs
-//                      | 
-                      indirection_element
-                      ->
-                      ^(
-                        GENERIC_INDIRECTION indirection_element
-                       )
-                     ;
+// | 
+    indirection_element
+;
                      
-named_indirection :  class_name '[' indirection_list ']'
-                    ->
-                    ^(
-                      NAMED_INDIRECTION class_name indirection_list
-                     )
-                    |
-                     s='[' indirection_list ']'  { addParseProblem(new MissingElementParseError(getSLoc($s), "class name", "before indirection list", true)); }
-                    ->
-                      ^(NAMED_INDIRECTION PARSE_ERROR) 
-                   ;
+named_indirection :
+   class_name '[' indirection_list ']'
+ |
+   s='[' indirection_list ']'  
+   { addParseProblem(new MissingElementParseError(getSLoc($s), "class name", "before indirection list", true)); }
+;
                    
-indirection_list  :  indirection_element (',' indirection_element)* 
-                   -> 
-                   ^(
-                     INDIRECTION_LIST indirection_element+
-                    )
-                  ;
+indirection_list  :
+  indirection_element (',' indirection_element)* 
+;
                   
-indirection_element  :   '...'
-                       ->
-                       ^(
-                         INDIRECTION_ELEMENT '...'
-                        )
-                      | named_indirection 
-                       ->
-                       ^(
-                         INDIRECTION_ELEMENT named_indirection
-                        )
-                      | class_name
-                       ->
-                       ^(
-                       	 INDIRECTION_ELEMENT class_name
-                       	)
-                     ;
+indirection_element  :   
+   '...'
+ | named_indirection 
+ | class_name
+;
 
                      
 type_mark returns [TypeMark mark] :
    m=':'
    { $mark = TypeMark.mk(TypeMark.Mark.HASTYPE, null, getSLoc($m)); } 
-            ->
-            ^(
-              TYPE_MARK ':'
-             )
  | m=':{'
    { $mark = TypeMark.mk(TypeMark.Mark.AGGREGATE, null, getSLoc($m)); } 
-            ->
-            ^(
-              TYPE_MARK ':{'
-             )
  | sm=shared_mark
    { $mark = $sm.mark; }             
-            ->
-            ^(
-              TYPE_MARK shared_mark
-             )
-           ;
+;
            
 shared_mark returns [TypeMark mark] :
   a=':' '(' m=multiplicity b=')'
   { $mark = TypeMark.mk(TypeMark.Mark.SHAREDMARK, m.num, getSLoc($a, $b)); }
-              ->
-              ^(
-                SHARED_MARK multiplicity
-               )
-             ;
+;
 
 /**********************************************/
 
 child returns [BONType type] :
-         s=static_ref
-         { $type = $s.type; } 
-        ->
-        ^(
-          CHILD static_ref
-         )
-       ;
+  s=static_ref
+  { $type = $s.type; }
+;
        
 parent returns [BONType type] :
-         s=static_ref
-         { $type = $s.type; }         
-         ->
-         ^(
-           PARENT static_ref
-          )
-        ;
+  s=static_ref
+  { $type = $s.type; }         
+;
         
 client returns [BONType type] :
-           s=static_ref
-           { $type = $s.type; } 
-         ->
-         ^(
-           CLIENT static_ref
-          )
-        ;
+  s=static_ref
+  { $type = $s.type; } 
+;
         
 supplier returns [BONType type] :
-           s=static_ref
-           { $type = $s.type; }
-           ->
-           ^(
-             SUPPLIER static_ref
-            )
-          ;
+  s=static_ref
+  { $type = $s.type; }
+;
           
 static_ref returns [BONType type] :  
-               s=static_component_name
-               { $type = $s.type; }
-             ->
-             ^(
-               STATIC_REF[$s.start] static_component_name
-              )
-             | 
-               c=cluster_prefix s=static_component_name
-               { $type = $s.type; } 
-             ->
-             ^(
-               STATIC_REF[$c.start] cluster_prefix static_component_name
-              )
-            ;
+   s=static_component_name
+   { $type = $s.type; }
+ | 
+   c=cluster_prefix s=static_component_name
+   { $type = $s.type; } 
+;
             
-cluster_prefix  :  c1=cluster_name '.' (cluster_name '.')*
-                 ->
-                 ^(
-                   CLUSTER_PREFIX[$c1.start] (cluster_name)+
-                  )
-                ;
+cluster_prefix  :
+  c1=cluster_name '.' (cluster_name '.')*
+;
   
 //TODO - class_name and cluster_name are both just IDENTIFIERs.              
 //static_component_name  :  class_name | cluster_name 
 static_component_name returns [BONType type] :
-                        i=IDENTIFIER
-                        { $type = BONType.mk($i.text, null, $i.text, getSLoc($i)); }
-                        ->
-                        ^(
-                          STATIC_COMPONENT_NAME[$i] IDENTIFIER
-                         )
-                       ;
+  i=IDENTIFIER
+  { $type = BONType.mk($i.text, null, $i.text, getSLoc($i)); }
+;
                        
 multiplicity returns [Integer num] :
   i=INTEGER
   { $num = new Integer($i.text); } 
-               ->
-               ^(
-                 MULTIPLICITY[$i] INTEGER
-                )
-              ;
+;
               
 semantic_label returns [String label] :
   m=MANIFEST_STRING
   { $label = $m.text; }
-                 ->
-                 ^(
-                   SEMANTIC_LABEL[$m] MANIFEST_STRING
-                  )
-                ;
+;
 
 /**********************************************  
  ***   Class Interface Description          ***
@@ -1359,60 +750,40 @@ class_interface returns [ClassInterface ci]
 @init { Indexing indexing = null; List<BONType> parents = null; List<Expression> invariant = null; Token start = null; }
 :
   (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
-  (pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } )?
+  (  pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } 
+   | { parents = emptyList(); }
+  )
   features
   { if (start == null) start = $features.start; }
-  (inv=class_invariant { invariant = $inv.invariant; } )?
+  (  inv=class_invariant { invariant = $inv.invariant; } 
+   | { invariant = emptyList(); }
+  )
   e='end'
   { $ci = ClassInterface.mk($features.features, parents, invariant, indexing, getSLoc(start, $e)); }
-                  ->
-                  ^(
-                    CLASS_INTERFACE
-                    (indexing)?
-                    (parent_class_list)?
-                    (features)?
-                    (class_invariant)?
-                   )
-                 ;
+;
                     
 class_invariant returns [List<Expression> invariant] :
   'invariant' assertion 
-  { getTI().addInvariant($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $invariant = $assertion.clauses; }
-                  ->
-                  ^(
-                    CLASS_INVARIANT assertion
-                   )                
-                 ;
+;
                  
 parent_class_list returns [List<BONType> parents] :
   { $parents = createList(); }
   'inherit' c1=class_type 
-  { getTI().addParent($c1.type,getSLoc($c1.start,$c1.stop)); }
   { $parents.add($c1.type); } 
   (';' c=class_type 
-   { getTI().addParent($c.type,getSLoc($c.start,$c.stop)); }
    { $parents.add($c.type); } 
   )* 
   ';'? 
-                    -> 
-                    ^(
-                      PARENT_CLASS_LIST (class_type)+
-                     )
-                    |
-                       i='inherit' { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name(s)", "in inherits clause", true)); }
-                    ->
-                    ^(PARENT_CLASS_LIST PARSE_ERROR )
-                   ;
+ |
+  i='inherit' 
+  { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name(s)", "in inherits clause", true)); }
+;
                    
 features returns [List<Feature> features] :
   { $features = createList(); }
   (feature_clause { $features.add($feature_clause.feature); } )+
-           -> 
-           ^(
-             FEATURES (feature_clause)+
-            )
-          ;
+;
           
 /**********************************************/
 
@@ -1420,30 +791,18 @@ feature_clause returns [Feature feature]
 @init { String comment = null; List<String> selectiveExport = null; }
 :
   f='feature' 
-  { getContext().enterFeatureClause(getSLoc($f)); }
-  (se=selective_export { selectiveExport = $se.exports; } )? 
+  (  se=selective_export { selectiveExport = $se.exports; } 
+   | { selectiveExport = emptyList(); }
+  ) 
   (c=COMMENT { comment = $c.text; } )? 
   fs=feature_specifications 
-  { getContext().leaveFeatureClause(); }
   { $feature = Feature.mk($fs.specs, selectiveExport, comment, getSLoc($f,$fs.stop)); }
-                 ->
-                 ^(
-                   FEATURE_CLAUSE
-                   (selective_export)? 
-                   (COMMENT)? 
-                   feature_specifications 
-                  )
-                ;
+;
                 
 feature_specifications returns [List<FeatureSpecification> specs] :
   { $specs = createList(); }
   (fs=feature_specification { $specs.add($fs.spec); } )+
-                         ->
-                         ^(
-                           FEATURE_SPECIFICATIONS
-                           (feature_specification)+
-                          ) 
-                        ;
+;
                         
 feature_specification returns [FeatureSpecification spec] 
 @init { FeatureSpecification.Modifier modifier = FeatureSpecification.Modifier.NONE; 
@@ -1455,10 +814,8 @@ feature_specification returns [FeatureSpecification spec]
    | r='redefined' { modifier = FeatureSpecification.Modifier.REDEFINED; start = $r; }
    |             { modifier = FeatureSpecification.Modifier.NONE; }
   )
-  { getContext().enterFeatureSpecification(); }
   fnl=feature_name_list
   { end=$fnl.stop; if (start==null) start=$fnl.start; }
-  { getTI().featureSpecModifier(modifier); }
   (has_type { hasType = $has_type.htype; end=$has_type.stop; } )?
   (rc=rename_clause { renaming = $rc.rename; end=$rc.stop; } )?
   (c=COMMENT { comment = $c.text; end=$c; } )?
@@ -1470,38 +827,20 @@ feature_specification returns [FeatureSpecification spec]
      { contracts = $cc.contracts; end=$cc.stop; } 
    | { contracts = Constants.EMPTY_CONTRACT; }
   ) 
-  { getContext().leaveFeatureSpecification(); }
   { $spec = FeatureSpecification.mk(modifier, $fnl.list, args, contracts, hasType, renaming, comment, getSLoc(start,end)); }
-                        ->
-                        ^(
-                          FEATURE_SPECIFICATION
-                          ('deferred')? ('effective')? ('redefined')?
-                          feature_name_list (has_type)?
-                          (rename_clause)?
-                          (COMMENT)?
-                          (feature_arguments)?
-                          (contract_clause)? 
-                         )
-                       ;
+;
                        
 has_type returns [HasType htype] :
   type_mark type 
-  { getTI().hasType($type_mark.mark, $type.text); }
   { $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
-           ->
-           ^(HAS_TYPE type_mark type)
-          ;
+;
 
 /**********************************************/
 
 contract_clause returns [ContractClause contracts] :
   cc=contracting_conditions 'end'
   { $contracts = $cc.contracts; }
-                  ->
-                  ^(
-                    CONTRACT_CLAUSE contracting_conditions
-                   ) 
-                 ;
+;
 
 //NB. Rewritten from precondition | postcondition | pre_and_post                 
 contracting_conditions returns [ContractClause contracts] 
@@ -1513,181 +852,98 @@ contracting_conditions returns [ContractClause contracts]
    | post=postcondition
      { $contracts = ContractClause.mk(Constants.NO_EXPRESSIONS, $post.assertions, getSLoc($post.start,$post.stop)); }
   )
-  
-                         -> 
-                         ^(
-                           CONTRACTING_CONDITIONS (precondition)? (postcondition)?
-                          )
-                        ;
+;
 
 precondition returns [List<Expression> assertions] :
   'require' assertion 
-  { getTI().setPrecondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $assertions = $assertion.clauses; }
-               ->
-               ^(
-                 PRECONDITION assertion
-                )
-              ;
+;
               
 postcondition returns [List<Expression> assertions] :
   'ensure' assertion 
-  { getTI().setPostcondition($assertion.text,getSLoc($assertion.start,$assertion.stop)); }
   { $assertions = $assertion.clauses; }
-                ->
-                ^(
-                  POSTCONDITION assertion
-                 )
-               ;
+;
 
 /**********************************************/
 
 selective_export returns [List<String> exports] :
-  '{' 
-  { getContext().enterSelectiveExport(); } 
-  cnl=class_name_list 
-  { getContext().leaveSelectiveExport(); }   
-  '}'
+  '{' cnl=class_name_list '}'
   { $exports = $cnl.list; }  
-                   ->
-                   ^(
-                     SELECTIVE_EXPORT class_name_list
-                    )
-                  ;
+;
                   
 feature_name_list returns [List<String> list] :
   { $list = createList(); }
   f1=feature_name 
-  { getTI().featureNameListEntry($f1.text,getSLoc($f1.start,$f1.stop)); }
   { $list.add($f1.name); }
   (',' f=feature_name 
-   { getTI().featureNameListEntry($f.text,getSLoc($f.start,$f1.stop)); }
    { $list.add($f.name); } 
   )*
-                    -> 
-                    ^(
-                      FEATURE_NAME_LIST (feature_name)+
-                     )
-                   ;
+;
                    
 feature_name returns [String name] :
    i=IDENTIFIER
    { $name = $i.text; }
-               ->
-               ^(
-                 FEATURE_NAME IDENTIFIER
-                )
  | prefix 
-               ->
-               ^(
-                 FEATURE_NAME prefix
-                )
  | infix 
-               ->
-               ^(
-                 FEATURE_NAME infix
-                )
-              ;
+;
               
 rename_clause returns [RenameClause rename] :
   '{' renaming '}'
   { $rename = $renaming.renaming; }
-                ->
-                ^(
-                  RENAME_CLAUSE renaming
-                 )
-               ;
+;
                
 renaming returns [RenameClause renaming] :
   s='^' class_name '.' feature_name 
-  { getTI().renaming($class_name.text,$feature_name.text,getSLoc($s,$feature_name.stop)); }
   { $renaming = RenameClause.mk($class_name.name, $feature_name.name, getSLoc($s,$feature_name.stop)); }
-           ->
-           ^(
-             RENAMING class_name feature_name
-            )
-          ;
+;
           
 feature_arguments returns [List<FeatureArgument> args] :
   { $args = createList(); }
   (feature_argument { $args.addAll($feature_argument.args); } )+ 
-                    ->
-                    ^(
-                      FEATURE_ARGUMENTS (feature_argument)+ 
-                     )
-                   ;
+;
                    
 feature_argument returns [List<FeatureArgument> args] :
   '->' 
   (  
      ( identifier_list ':' t1=type 
-       { getTI().featureArg($identifier_list.text,$t1.text); }
        { List<String> ids = $identifier_list.list; $args = new ArrayList<FeatureArgument>(ids.size()); for (String id : $identifier_list.list) $args.add(FeatureArgument.mk(id, $t1.type, getSLoc($identifier_list.start, $t1.stop))); }   
      ) 
    | ( t2=type
-       { getTI().featureArg(null,$t2.text); }
        { $args = new ArrayList<FeatureArgument>(1); $args.add(FeatureArgument.mk(null, $t2.type, getSLoc($t2.start,$t2.stop))); }
      ) 
   )
-                   ->
-                   ^(
-                     FEATURE_ARGUMENT (identifier_list)? type
-                    )
-                  ;
+;
                   
 identifier_list returns [List<String> list] :
   { $list = createList(); }
   i1=IDENTIFIER
   { $list.add($i1.text); } 
   (',' i=IDENTIFIER { $list.add($i.text); } )*
-                  ->
-                  ^(
-                    IDENTIFIER_LIST (IDENTIFIER)+
-                   )
-                 ;
+;
 
 //TODO - are these necessary if we do not allow free operators?                 
 prefix  :  'prefix' '"' prefix_operator '"'
-         ->
-         ^(
-           PREFIX prefix_operator
-          ) 
-        ;
+;
         
 infix  :  'infix' '"' infix_operator '"' 
-        ->
-        ^(
-          INFIX infix_operator
-         )
-       ;
+;
        
 //TODO - Add free_operator back?
 prefix_operator  :  unary
-                  ->
-                  ^(
-                    PREFIX_OPERATOR unary
-                   )
-                 ;
+;
 //prefix_operator  :  UNARY | free_operator                  
 
-infix_operator  :  binary
-                 ->
-                 ^(
-                   INFIX_OPERATOR binary
-                  )
-//infix_operator  :  binary | free_operator 
-                ;
+infix_operator  :  
+  binary
+//  infix_operator  :  binary | free_operator 
+;
 
 /**********************************************/
 
 formal_generics returns [List<FormalGeneric> generics] :
   '[' fgl=formal_generic_list ']'
   { $generics = $fgl.list; } 
-                  ->
-                  ^(
-                    FORMAL_GENERICS formal_generic_list
-                   )
-                 ;
+;
                  
 formal_generic_list returns [List<FormalGeneric> list] :
   { $list = createList(); }
@@ -1696,59 +952,33 @@ formal_generic_list returns [List<FormalGeneric> list] :
   (',' fg=formal_generic
    { $list.add($fg.generic); }
   )* 
-                      -> 
-                      ^(
-                        FORMAL_GENERIC_LIST (formal_generic)+
-                       )
-                     ;
+;
                      
 formal_generic returns [FormalGeneric generic] :
    f=formal_generic_name
-   { getTI().formalGeneric($f.text, null, getSLoc($f.start,$f.stop)); }
    { $generic = FormalGeneric.mk($f.name, null, getSLoc($f.start,$f.stop)); }
-								 ->
-								 ^(
-								 	 FORMAL_GENERIC formal_generic_name
-								  )
  | f=formal_generic_name '->' ct=class_type 
-   { getTI().formalGeneric($f.text, $ct.text, getSLoc($f.start,$f.stop)); }
    { $generic = FormalGeneric.mk($f.name, $ct.type, getSLoc($f.start, $ct.stop)); }
-                 -> 
-                 ^(
-                   FORMAL_GENERIC formal_generic_name class_type
-                  )
-                ;
+;
                 
 formal_generic_name returns [String name] :
   i=IDENTIFIER
   { $name = $i.text; } 
-                      -> 
-                      ^(
-                        FORMAL_GENERIC_NAME[$i] IDENTIFIER
-                       )
-                     ;
+;
                      
 class_type returns [BONType type] :  
-             c=class_name 
-             ( actual_generics
-                 { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
-               |
-               { $type = BONType.mk($c.text, null, $c.text, getSLoc($c.start,$c.stop)); } 
-             ) 
-             ->
-             ^(
-               CLASS_TYPE[$c.start] class_name (actual_generics)? 
-              )
-            ;
+  c=class_name 
+  (  actual_generics
+     { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
+    |
+     { $type = BONType.mk($c.text, null, $c.text, getSLoc($c.start,$c.stop)); } 
+  ) 
+;
             
 actual_generics returns [List<BONType> types] :  
                   '[' type_list ']'
                   { $types = $type_list.types; }
-                  ->
-                  ^(
-                    ACTUAL_GENERICS type_list
-                   ) 
-                 ;
+;
                  
 type_list returns [List<BONType> types]  :
            t1=type
@@ -1756,11 +986,7 @@ type_list returns [List<BONType> types]  :
            (',' t=type
            { $types.add($t.type); }
            )* 
-            ->
-            ^(
-              TYPE_LIST (type)+
-             )
-           ;
+;
 
 //TODO - Conflict - class_type is essentially IDENTIFIER (actual_generics)?
 //And formal_generic_name is IDENTIFIER          
@@ -1774,11 +1000,6 @@ type returns [BONType type] :
         |
         { $type = BONType.mk($IDENTIFIER.text, null, $IDENTIFIER.text,getSLoc($i)); }
        ) 
-       
-       ->
-       ^(
-         TYPE IDENTIFIER (actual_generics)?
-        )
 ;
 
 /**********************************************  
@@ -1794,37 +1015,20 @@ assertion returns [List<Expression> clauses] :
    { $clauses.add($a.clause); }
   )* 
   ';'?
-  
-            -> 
-            ^(
-              ASSERTION (assertion_clause)+
-             )
-           ;
+;
            
 assertion_clause returns [Expression clause] :
   be=boolean_expression
   { $clause = $be.exp; }
-                   ->
-                   ^(
-                     ASSERTION_CLAUSE boolean_expression
-                    )
-//                   | COMMENT 
-//                   ->
-//                   ^(
-//                     ASSERTION_CLAUSE COMMENT
-//                    )
+// | COMMENT 
 //TODO - Disallowing until revisiting this part of the grammar, as allowing comments here seems to make no sense
-                  ;
+;
 
 //TODO - replace expression here?                  
 boolean_expression returns [Expression exp] :
   expression
   { $exp = $expression.exp; } 
-                     ->
-                     ^(
-                       BOOLEAN_EXPRESSION expression
-                      )
-                    ;
+;
             
 quantification returns [Quantification quantification] 
 @init { Expression restrict = null; }
@@ -1834,30 +1038,14 @@ quantification returns [Quantification quantification]
   (r=restriction { restrict = $r.exp; } )? 
   p=proposition
   { $quantification = Quantification.mk($q.q, $rexp.ranges, restrict, $p.exp, getSLoc($q.start,$p.stop)); } 
-                 ->
-                 ^(
-                   QUANTIFICATION[$q.start]
-                   quantifier  
-                   range_expression 
-                   (restriction)? 
-                   proposition 
-                  )
-                ;
+;
                 
 quantifier returns [Quantification.Quantifier q] :
    f='for_all' 
    { $q = Quantification.Quantifier.FORALL; }
-             ->
-             ^(
-               QUANTIFIER[$f] 'for_all'
-              )
  | e='exists'
    { $q = Quantification.Quantifier.EXISTS; }
-             ->
-             ^(
-               QUANTIFIER[$e] 'exists'
-              )
-            ;
+;
             
 range_expression returns [List<VariableRange> ranges] :
   { $ranges = createList(); }
@@ -1867,72 +1055,39 @@ range_expression returns [List<VariableRange> ranges] :
    { $ranges.add($vr.range); }
   )* 
   ';'? 
-                   ->
-                   ^(
-                     RANGE_EXPRESSION[$vr1.start] (variable_range)+
-                    )
-                  ;
+;
                   
 restriction returns [Expression exp] :
   st='such_that' be=boolean_expression
   { $exp =  $be.exp; }
-              ->
-              ^(
-                RESTRICTION[$st] boolean_expression
-               )
-             ;
+;
              
 proposition returns [Expression exp] :
   ih='it_holds' be=boolean_expression
   { $exp = $be.exp; } 
-              ->
-              ^(
-                PROPOSITION[$ih] boolean_expression
-               )
-             ;
+;
              
 variable_range returns [VariableRange range] :
    mr=member_range
    { $range = $mr.range; }
-                 ->
-                 ^(
-                   VARIABLE_RANGE member_range
-                  )
  | tr=type_range 
    { $range = $tr.range; } 
-                 ->
-                 ^(
-                   VARIABLE_RANGE type_range
-                  )
-                ;
+;
                 
 member_range returns [MemberRange range] :
   il=identifier_list 'member_of' e=expression
   { $range = MemberRange.mk($il.list, $e.exp, getSLoc($il.start,$e.stop)); } 
-               -> 
-               ^(
-                 MEMBER_RANGE identifier_list expression
-                )
-              ;
+;
               
 type_range returns [TypeRange range] :
   il=identifier_list ':' t=type
   { $range = TypeRange.mk($il.list, $t.type, getSLoc($il.start,$t.stop)); } 
-             ->
-             ^(
-               TYPE_RANGE identifier_list type
-              )
-            ;
+;
 
 /**********************************************/
 
 //Not used...
 //call  :  ('(' expression ')' '.')? call_chain 
-//       -> 
-//       ^(
-//         CALL
-//         (expression)? call_chain
-//        )
 //      ;
                                
 call_chain returns [List<UnqualifiedCall> calls] :
@@ -1940,10 +1095,6 @@ call_chain returns [List<UnqualifiedCall> calls] :
   uc1=unqualified_call
   { $calls.add($uc1.call); }
   ('.' uc=unqualified_call { $calls.add($uc.call); } )* 
-             -> 
-             ^(
-               CALL_CHAIN (unqualified_call)+
-              )
 ;
             
 unqualified_call returns [UnqualifiedCall call] 
@@ -1956,10 +1107,6 @@ unqualified_call returns [UnqualifiedCall call]
    | { args = emptyList(); }
   )
   { $call = UnqualifiedCall.mk($i.text, args, getSLoc($i,end)); } 
-                   ->
-                   ^(
-                     UNQUALIFIED_CALL IDENTIFIER (actual_arguments)?
-                    )
 ;
                   
 actual_arguments returns [List<Expression> args] 
@@ -1970,21 +1117,13 @@ actual_arguments returns [List<Expression> args]
    | { $args = emptyList(); }
   )
   ')' 
-                   ->
-                   ^(
-                     ACTUAL_ARGUMENTS expression_list?
-                    )
-                  ;
+;
               
 expression_list returns [List<Expression> list] :
   { $list = createList(); }
   e1=expression 
   { $list.add($e1.exp); }
   (',' e=expression { $list.add($e.exp); } )* 
-                  -> 
-                  ^(
-                    EXPRESSION_LIST (expression)+
-                   )
 ;
 
 /**********************************************/
@@ -1992,168 +1131,81 @@ expression_list returns [List<Expression> list] :
 //enumerated sets are allowed as an expression
 //set_expression  :  enumerated_set 
 //                 ->
-//                 ^(
-//                   SET_EXPRESSION enumerated_set
-//                  )
 //                 | expression 
-//                 ->
-//                 ^(
-//                   SET_EXPRESSION expression
-//                  )
 //                ;
                 
 enumerated_set returns [List<EnumerationElement> list] :
   '{' el=enumeration_list '}'
   { $list = $el.list; } 
-                 ->
-                 ^(
-                   ENUMERATED_SET enumeration_list
-                  )
-                ;
+;
                 
 enumeration_list returns [List<EnumerationElement> list] :
   { $list = createList(); }
   el1=enumeration_element
   { $list.add($el1.el); } 
   (',' el=enumeration_element { $list.add($el.el); } )*
-   
-                   -> 
-                   ^(
-                     ENUMERATION_LIST (enumeration_element)+
-                    )
-                  ;
+;
          
 enumeration_element returns [EnumerationElement el] :
    e=expression
    { $el = $e.exp; }  
-                      ->
-                      ^(
-                        ENUMERATION_ELEMENT expression
-                       )
  | i=interval
    { $el = $i.interval; }  
-                      ->
-                      ^(
-                        ENUMERATION_ELEMENT interval
-                       )
-                     ;
+;
                      
 interval returns [Interval interval]  :
    ii=integer_interval
    { $interval = $ii.interval; }
-           ->
-           ^(
-             INTERVAL integer_interval
-            ) 
  | ci=character_interval
    { $interval = $ci.interval; } 
-           ->
-           ^(
-             INTERVAL character_interval
-            ) 
 ;
           
 integer_interval returns [IntegerInterval interval] :
   i1=integer_constant '..' i2=integer_constant
   { $interval = IntegerInterval.mk($i1.value,$i2.value,getSLoc($i1.start,$i2.stop)); } 
-                   ->
-                   ^(
-                     INTEGER_INTERVAL integer_constant integer_constant
-                    )
-                  ;
+;
                   
 character_interval returns [CharacterInterval interval] :  
   c1=character_constant '..' c2=character_constant 
   { $interval = CharacterInterval.mk($c1.value,$c2.value,getSLoc($c1.start,$c2.stop)); }
-                     ->
-                     ^(
-                       CHARACTER_INTERVAL character_constant character_constant
-                      )
-                    ;
+;
+
 /**********************************************/
 
 constant returns [Constant constant] :
    mc=manifest_constant
    { $constant = $mc.constant; } 
-           ->
-           ^(
-             CONSTANT[$mc.start] manifest_constant
-            )
  | c='Current'
    { $constant = KeywordConstant.mk(KeywordConstant.Constant.CURRENT, getSLoc($c)); } 
-           ->
-           ^(
-             CONSTANT[$c] 'Current'
-            )
  | v='Void'
    { $constant = KeywordConstant.mk(KeywordConstant.Constant.VOID, getSLoc($v)); }            
-           ->
-           ^(
-             CONSTANT[$v] 'Void'
-            )
-          ;
+;
 
 manifest_constant returns [ManifestConstant constant] :
    bc=boolean_constant
    { $constant = BooleanConstant.mk($bc.value,getSLoc($bc.start,$bc.stop)); } 
-                     ->
-                     ^(
-                       MANIFEST_CONSTANT[$bc.start] boolean_constant
-                      )
  | cc=character_constant
    { $constant = CharacterConstant.mk($cc.value,getSLoc($cc.start,$cc.stop)); } 
-                     ->
-                     ^(
-                       MANIFEST_CONSTANT[$cc.start] character_constant
-                      )
  | ic=integer_constant 
    { $constant = IntegerConstant.mk($ic.value,getSLoc($ic.start,$ic.stop)); }
-                     ->
-                     ^(
-                       MANIFEST_CONSTANT[$ic.start] integer_constant
-                      )
  | rc=real_constant 
    { $constant = RealConstant.mk($rc.value,getSLoc($rc.start,$rc.stop)); }
-                     ->
-                     ^(
-                       MANIFEST_CONSTANT[$rc.start] real_constant
-                      )
  | ms=MANIFEST_STRING 
    { $constant = StringConstant.mk($ms.text,getSLoc($ms)); }
-                     ->
-                     ^(
-                       MANIFEST_CONSTANT[$ms] MANIFEST_STRING
-                      )
  | es=enumerated_set
    { $constant = SetConstant.mk($es.list, getSLoc($es.start,$es.stop)); }
-                     ->
-                     ^(
-                     	 MANIFEST_CONSTANT[$es.start] enumerated_set
-                     	)
-                   ;
+;
                    
 sign returns [BinaryExp.Op op] :
   add_sub_op
   { $op = $add_sub_op.op; }
-       ->
-       ^(
-         SIGN add_sub_op
-        )
-      ;
+;
       
 boolean_constant returns [Boolean value] :
    'true'
    { $value = true; } 
-                   ->
-                   ^(
-                     BOOLEAN_CONSTANT 'true'
-                    )
  | 'false' 
    { $value = false; }
-                   ->
-                   ^(
-                     BOOLEAN_CONSTANT 'false'
-                    )
 ;
 
 
@@ -2173,12 +1225,7 @@ integer_constant returns [Integer value]
   (sign { if ($sign.op == BinaryExp.Op.SUB) negative = true; })? 
   i=INTEGER
   { $value = new Integer($i.text); if (negative) $value = -$value; } 
-                   ->
-                   ^(
-                     INTEGER_CONSTANT[$i]
-                     (sign)? INTEGER
-                    )
-                  ;
+;
                   
 real_constant returns [Double value] 
 @init { boolean negative = false; }
@@ -2186,12 +1233,7 @@ real_constant returns [Double value]
   (sign { if ($sign.op == BinaryExp.Op.SUB) negative = true; })?  
   r=REAL 
   { $value = new Double($r.text); if (negative) $value = -$value; }
-                ->
-                ^(
-                  REAL_CONSTANT[$r]
-                  (sign)? REAL
-                 )
-               ;
+;
 
 /**********************************************  
  ***   Dynamic Diagrams                     ***
@@ -2210,50 +1252,19 @@ dynamic_diagram returns [DynamicDiagram dd]
   ) 
   e='end'
   { $dd = DynamicDiagram.mk(components, id, comment, getSLoc($s,$e)); }
-                  ->
-                  ^(
-                    DYNAMIC_DIAGRAM
-                    (extended_id)? (COMMENT)?
-                    (dynamic_block)?
-                   )
-                 ;
+;
                  
 dynamic_block returns [List<DynamicComponent> components] :
   { $components = createList(); }
   (dc=dynamic_component { $components.add($dc.component); } )+ 
-                ->
-                ^(
-                  DYNAMIC_BLOCK
-                  (dynamic_component)+
-                 )
-               ;
+;
                
 dynamic_component returns [DynamicComponent component] :
    scenario_description
-                     -> 
-                     ^(
-                       DYNAMIC_COMPONENT scenario_description
-                      )
  | object_group 
-                     -> 
-                     ^(
-                       DYNAMIC_COMPONENT object_group
-                      )
  | object_stack
-                     -> 
-                     ^(
-                       DYNAMIC_COMPONENT object_stack
-                      )
  | object
-                     -> 
-                     ^(
-                       DYNAMIC_COMPONENT object
-                      )
  | message_relation 
-                     -> 
-                     ^(
-                       DYNAMIC_COMPONENT message_relation
-                      )
 ; 
 
 /**********************************************/
@@ -2267,58 +1278,32 @@ scenario_description returns [ScenarioDescription description]
   la=labelled_actions 
   e='end'
   { $description = ScenarioDescription.mk($scenario_name.name, $la.actions, comment, getSLoc($s,$c)); }
-                       ->
-                       ^(
-                         SCENARIO_DESCRIPTION 
-                         scenario_name (COMMENT)?
-                         labelled_actions 
-                        )
-                      ;
+;
                       
 labelled_actions returns [List<LabelledAction> actions] :
   { $actions = createList(); }
   (la=labelled_action { $actions.add($la.action); } )+ 
-                   ->
-                   ^(
-                     LABELLED_ACTIONS (labelled_action)+
-                    )
-                  ;
+;
                   
 labelled_action returns [LabelledAction action] :
   al=action_label ad=action_description
   { $action = LabelledAction.mk($al.label, $ad.description, getSLoc($al.start,$ad.stop)); } 
-                  ->
-                  ^(
-                    LABELLED_ACTION action_label action_description
-                   )
-                 ;
+;
                  
 action_label returns [String label] :
   m=MANIFEST_STRING
   { $label = $m.text; }
-               ->
-               ^(
-                 ACTION_LABEL MANIFEST_STRING
-                )
-              ;
+;
               
 action_description returns [String description] :
   m=manifest_textblock
   { $description = $m.text; }
-                     ->
-                     ^(
-                       ACTION_DESCRIPTION manifest_textblock
-                      )
-                    ;
+;
                     
 scenario_name returns [String name] :
   m=manifest_textblock
   { $name = $m.text; }
-                ->
-                ^(
-                  SCENARIO_NAME MANIFEST_STRING
-                 )
-               ;
+;
 
 /**********************************************/
 
@@ -2340,20 +1325,12 @@ object_group returns [ObjectGroup group]
    | { components = emptyList(); }
   )
   { $group = ObjectGroup.mk(nameless, $group_name.text, components, comment, getSLoc(start,end)); }
-               ->
-               ^(
-                 OBJECT_GROUP ('nameless')? group_name (COMMENT)? (group_components)? 
-                )
-              ;
+;
               
 group_components returns [List<DynamicComponent> components] :
   'component' dynamic_block 'end'
   { $components = $dynamic_block.components; }
-                   ->
-                   ^(
-                     GROUP_COMPONENTS dynamic_block
-                    ) 
-                  ;
+;
                   
 object_stack returns [ObjectStack stack] 
 @init { String comment = null; Token end = null; }
@@ -2363,11 +1340,7 @@ object_stack returns [ObjectStack stack]
   { end = $n.stop; } 
   (c=COMMENT { comment = $c.text; end = $c; } )?
   { $stack = ObjectStack.mk($n.name, comment, getSLoc($s,end)); }
-               ->
-               ^(
-                 OBJECT_STACK object_name (COMMENT)?
-                )
-              ;
+;
               
 object returns [ObjectInstance object] 
 @init { String comment = null; Token end = null; }
@@ -2377,45 +1350,25 @@ object returns [ObjectInstance object]
   { end = $n.stop; } 
   (c=COMMENT { comment = $c.text; end = $c; } )?
   { $object = ObjectInstance.mk($n.name, comment, getSLoc($s,end)); } 
-         ->
-         ^(
-           OBJECT object_name (COMMENT)?
-          )
-        ;
+;
 
 /**********************************************/
 
 message_relation  :  caller 'calls' receiver (message_label)? 
-                   ->
-                   ^(
-                     MESSAGE_RELATION caller receiver (message_label)?
-                    )
-                  ;
+;
                   
 caller  :  dynamic_ref 
-         ->
-         ^(
-           RECEIVER dynamic_ref
-          )
-        ;
+;
         
 receiver  :  dynamic_ref 
-           ->
-           ^(
-             RECEIVER dynamic_ref
-            )
-          ;
+;
           
 //TODO - the below change fixes a conflict, and allows the same grammar
 //...but we lose some information here as to what the dynamic ref is.
 //Can this be fixed at a later point when going over the AST?
 //dynamic_ref  :  (group_prefix)* dynamic_component_name 
 dynamic_ref  :  extended_id ('.' extended_id)*
-              ->
-              ^(
-                DYNAMIC_REF (extended_id)+
-               )
-             ;
+;
        
 //group_prefix  :  group_name '.'
 //              ;
@@ -2423,17 +1376,10 @@ dynamic_ref  :  extended_id ('.' extended_id)*
 //TODO - similarly this rule matches the same grammar, but will we need to know
 // which we're actually matching?
 //dynamic_component_name  :   object_name | group_name
-dynamic_component_name  :  (IDENTIFIER ('.' extended_id)?) 
-                         ->
-                         ^(
-                           DYNAMIC_COMPONENT_NAME IDENTIFIER (extended_id)?
-                          )
-                         | INTEGER
-                         ->
-                         ^(
-                           DYNAMIC_COMPONENT_NAME INTEGER
-                          )
-                        ;
+dynamic_component_name  :  
+   (IDENTIFIER ('.' extended_id)?) 
+ | INTEGER
+;
 
 object_name returns [ObjectName name] 
 @init { String id = null; Token end = null; }
@@ -2442,71 +1388,39 @@ object_name returns [ObjectName name]
   { end = $n.stop; }
   ('.' e=extended_id { id = $e.eid; end=$e.stop; } )?
   { $name = ObjectName.mk($n.name, id, getSLoc($n.start,end)); } 
-              ->
-              ^(
-                OBJECT_NAME class_name (extended_id)?
-               )
-             ;
+;
              
 group_name returns [String name] :
   e=extended_id
   { $name = $e.eid; }
-             ->
-             ^(
-               GROUP_NAME extended_id
-              ) 
-            ;
+;
             
 message_label returns [String label] :
   m=MANIFEST_STRING
   { $label = $m.text; }   
-                ->
-                ^(
-                  MESSAGE_LABEL MANIFEST_STRING
-                 )
-               ;
+;
 
 /**********************************************  
  ***   Notational Tuning                    ***
  **********************************************/
 //TODO - do we want any of this section currently?
-notational_tuning :  change_string_marks 
-                    ->
-                    ^(
-                      NOTATIONAL_TUNING change_string_marks
-                     )
-                    | change_concatenator
-                    ->
-                    ^(
-                      NOTATIONAL_TUNING change_concatenator
-                     )
-                    | change_prefix 
-                    ->
-                    ^(
-                      NOTATIONAL_TUNING change_prefix
-                     )
-                   ;
+notational_tuning :  
+   change_string_marks 
+ | change_concatenator
+ | change_prefix 
+;
 
-change_string_marks  :  'string_marks' MANIFEST_STRING MANIFEST_STRING 
-                      ->
-                      ^(
-                        CHANGE_STRING_MARKS MANIFEST_STRING MANIFEST_STRING
-                       )
-                     ;
+change_string_marks  :  
+  'string_marks' MANIFEST_STRING MANIFEST_STRING 
+;
                      
-change_concatenator  :  'concatenator' MANIFEST_STRING 
-                      ->
-                      ^(
-                        CHANGE_CONCATENATOR MANIFEST_STRING
-                       )
-                     ;
+change_concatenator  :
+  'concatenator' MANIFEST_STRING 
+;
                      
-change_prefix  :  'keyword_prefix' MANIFEST_STRING 
-                ->
-                ^(
-                  CHANGE_PREFIX MANIFEST_STRING
-                 )
-               ;
+change_prefix  :
+  'keyword_prefix' MANIFEST_STRING 
+;
     
 /**********************************************  
  ***   Expressions                          ***
@@ -2515,22 +1429,14 @@ change_prefix  :  'keyword_prefix' MANIFEST_STRING
 expression returns [Expression exp] :
    e=equivalence_expression
    { $exp = $e.exp; }  
-             ->
-             ^(
-               EXPRESSION[$e.start] equivalence_expression
-              )
  | q=quantification
    { $exp = $q.quantification; }
-             ->
-             ^(
-               EXPRESSION[$q.start] quantification
-              )  
-            ;
+;
 
 equivalence_expression returns [Expression exp] :
   l=implies_expression
   { $exp = $l.exp; } 
-  ('<->'^ r=implies_expression
+  ('<->' r=implies_expression
    { $exp = BinaryExp.mk(BinaryExp.Op.EQUIV, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )*
 ;
@@ -2644,8 +1550,6 @@ comparison_op returns [BinaryExp.Op op] :
  | '/=' { $op = BinaryExp.Op.NEQ; }
  | 'member_of' { $op = BinaryExp.Op.MEMBEROF; }
  | 'not' 'member_of' { $op = BinaryExp.Op.NOTMEMBEROF; }
-                  ->
-                  	NOT_MEMBER_OF
  | ':'  { $op = BinaryExp.Op.HASTYPE; }
 ;
 

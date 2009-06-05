@@ -3,10 +3,13 @@ package ie.ucd.bon.typechecker;
 import ie.ucd.bon.ast.AbstractVisitor;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.ClassEntry;
 import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.ClientEntityExpression;
+import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.ClusterEntry;
@@ -15,7 +18,10 @@ import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.IVisitor;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
+import ie.ucd.bon.ast.StaticDiagram;
+import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.Clazz.Mod;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
@@ -24,8 +30,10 @@ import ie.ucd.bon.typechecker.errors.DuplicateClassDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateClusterDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateSystemDefinitionError;
 import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
+import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
+import java.util.Collection;
 import java.util.List;
 
 public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
@@ -34,9 +42,9 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   private final Problems problems;
   private final VisitorContext context;
 
-  public STBuilderVisitor() {
-    st = new BONST();
-    problems = new Problems();
+  public STBuilderVisitor(BONST st) {
+    this.st = st;
+    problems = new Problems("STBuilder");
     context = new VisitorContext();
   }
 
@@ -49,9 +57,27 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   }
 
   @Override
+  public void visitBonSourceFile(BonSourceFile node,
+      List<SpecificationElement> bonSpecification, Indexing indexing,
+      SourceLocation loc) {
+    
+    visitAll(bonSpecification);
+    indexing(node, indexing);
+  }
+  
+  @Override
+  public void visitStaticDiagram(StaticDiagram node,
+      List<StaticComponent> components, String extendedId, String comment,
+      SourceLocation loc) {
+    
+    visitAll(components);    
+  }
+
+  @Override
   public void visitClazz(Clazz node, String name, List<FormalGeneric> generics,
       Mod mod, ClassInterface classInterface, Boolean reused,
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
+
     Clazz clazz = st.classes.get(name);
     Cluster cluster = st.clusters.get(name);
 
@@ -62,15 +88,21 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     } else {
       st.classes.put(name, node);
 
+      if (!context.clusterStack.empty()) {
+        st.classClusterGraph.put(name, context.clusterStack.peek());
+      }
+      
       context.clazz = node;
-      classInterface.accept(this);
+      visitNode(classInterface);
       context.clazz = null;      
+
     }
   }
 
   @Override
   public void visitCluster(Cluster node, String name,
       List<StaticComponent> components, Boolean reused, String comment, SourceLocation loc) {
+
     Clazz clazz = st.classes.get(name);
     Cluster cluster = st.clusters.get(name);
 
@@ -82,27 +114,28 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       st.clusters.put(name, node);
     }
 
+    if (!context.clusterStack.empty()) {
+      st.clusterClusterGraph.put(name, context.clusterStack.peek());
+    }
+    
+    context.clusterStack.push(node);
+    visitAll(components);
+    context.clusterStack.pop();
   }
 
   @Override
   public void visitClassInterface(ClassInterface node, List<Feature> features,
       List<BONType> parents, List<Expression> invariant, Indexing indexing,
       SourceLocation loc) {
-
+    
     for (BONType parent : parents) {
       st.classInheritanceGraph.put(context.clazz.getName(), parent);
       st.simpleClassInheritanceGraph.put(context.clazz.getName(), parent.getIdentifier());
     }
     
-    for (Feature feature : features) {
-      //TODO proper ST for feature
-      
-      feature.accept(this);
-    }
-    
-    for (Expression inv : invariant) {
-      inv.accept(this);
-    }
+    //TODO proper ST for feature
+    visitAll(features);
+    visitAll(invariant);
 
     indexing(context.clazz, indexing);
   }
@@ -114,15 +147,15 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       List<String> inherits, List<String> queries, List<String> commands,
       List<String> constraints, Indexing indexing, String explanation,
       String part, SourceLocation loc) {
-
+    
     //Check if name unique
     ClusterChart otherCluster = st.informal.clusters.get(name);
     if (otherCluster != null) {
-      problems.addProblem(new DuplicateClusterChartError(loc, otherCluster));
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", otherCluster.getLocation()));
     }else {
       ClassChart clazz = st.informal.classes.get(name);
       if (clazz != null) {
-        problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", clazz.getLocation()));
+        problems.addProblem(new DuplicateClassChartError(loc, clazz));  
       } else {
         st.informal.classes.put(name, node);
       }
@@ -149,6 +182,7 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       if (st.informal.systemChart != null) {
         //Duplicate system, add error.
         problems.addProblem(new DuplicateSystemDefinitionError(loc, node));
+        return;
       } else {
         st.informal.systemChart = node;
       }
@@ -182,8 +216,28 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     indexing(node, indexing);
   }  
 
+  public void visitAll(Collection<? extends AstNode> nodes) {
+    if (nodes != null) {
+      for (AstNode node : nodes) {
+        node.accept(this);
+      }
+    }
+  }
   
+  public void visitNode(AstNode node) {
+    if (node != null) {
+      node.accept(this);
+    }
+  }
   
+  @Override
+  public void visitClientRelation(ClientRelation node, BONType client,
+      BONType supplier, ClientEntityExpression clientEntities,
+      TypeMark typeMark, String semanticLabel, SourceLocation loc) {
+    
+    st.clientRelations.add(node);
+  }
+
   private void indexing(AstNode node, Indexing indexing) {
     if (indexing != null) {
       st.indexing.put(node, indexing);

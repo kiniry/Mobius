@@ -54,7 +54,7 @@ public class InformalTypeChecker {
     this.classInheritanceGraph = classInheritanceGraph;
     
     this.context = Context.getContext();
-    this.problems = new Problems();
+    this.problems = new Problems("ITC");
   }
  
   public Problems getProblems() {

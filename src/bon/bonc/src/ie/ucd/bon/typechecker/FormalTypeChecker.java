@@ -69,8 +69,8 @@ public class FormalTypeChecker {
     this.clusterClusterGraph = clusterClusterGraph;
     
     this.context = Context.getContext();
-    this.problems = new Problems();
-    consistencyProblems = new Problems();
+    this.problems = new Problems("FTC");
+    consistencyProblems = new Problems("Consistency");
   }
   
   /**
@@ -333,53 +333,6 @@ public class FormalTypeChecker {
     checkType(BONType.mk(t), loc);
   }
   
-  public String computeClassInheritanceCycleString(String className) {
-    Stack<String> currentPath = new Stack<String>();
-    Stack<SortedSet<String>> waitingPaths = new Stack<SortedSet<String>>();
-    
-    Set<String> explored = new HashSet<String>();
-    
-    currentPath.push(className);
-    
-    while (currentPath.size() > 0) {
-      
-      String currentToExplore = currentPath.peek();
-      TreeSet<String> currentParents = new TreeSet<String>(getParentsForClassName(currentToExplore));
-      
-      if (currentParents.contains(className)) {
-        //Match, return String of cycle
-        StringBuffer sb = new StringBuffer();
-        for (String name : currentPath) {
-          sb.append(name);
-          sb.append("->");
-        }
-        sb.append(className);
-        return sb.toString();
-      }
-      
-      currentParents.removeAll(explored);
-      
-      if (currentParents.size() > 0) {
-        String first = currentParents.first();
-        currentPath.push(first);
-        currentParents.remove(first);
-        waitingPaths.push(currentParents);
-      } else {
-        currentPath.pop();
-        SortedSet<String> waiting = waitingPaths.peek();
-        if (waiting.size() > 0) {
-          String first = waiting.first();
-          currentPath.push(first);
-          waiting.remove(first);
-        } else {
-          waitingPaths.pop();
-        }
-      }
-    }
-    
-    return null;
-  }
-  
   private ClassDefinition getClassDefinitionForTopLevelOfType(BONType t) {
     return classes.get(t.getNonGenericType());
   }
@@ -412,8 +365,6 @@ public class FormalTypeChecker {
     return null;
   }
   
-  
-  
   private Collection<String> getParentsForClassName(String className) {
     ClassDefinition def = classes.get(className);
     return def == null ? null : def.getSimpleParentClasses();
@@ -424,7 +375,6 @@ public class FormalTypeChecker {
     if (parent != null && !parent.containsFeatureByName(featureName)) {
       problems.addProblem(new ClassDoesNotDeclareFeatureError(loc, className, featureName));
     }
-    
   }
 
   public Problems getProblems() {
