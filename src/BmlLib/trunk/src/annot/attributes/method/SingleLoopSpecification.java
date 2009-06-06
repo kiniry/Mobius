@@ -32,13 +32,13 @@ public class SingleLoopSpecification extends InCodeAnnotation {
    * The position of the invariant clause in the array of all expressions
    * returned by {@link #getAllExpressions()}.
    */
-  private static final int INVARIANT_POS = 0;
+  public static final int INVARIANT_POS = 0;
 
   /**
    * The position of the variant clause in the array of all expressions
    * returned by {@link #getAllExpressions()}.
    */
-  private static final int VARIANT_POS = 1;
+  public static final int VARIANT_POS = 1;
 
   /**
    * An alias for the maximal position in the array of all expressions
