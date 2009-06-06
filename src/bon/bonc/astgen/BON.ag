@@ -81,7 +81,7 @@ BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, POW, EQUIV, IMPLIES, AND, 
 UnaryExp = enum(Op: NOT, DELTA, OLD, ADD, SUB) op, Expression! expression;
 
 Constant :> ManifestConstant, KeywordConstant;
-KeywordConstant = enum(Constant: CURRENT, VOID) constant;
+KeywordConstant = enum(Constant: CURRENT, VOID, RESULT) constant;
 ManifestConstant :> BooleanConstant, IntegerConstant, RealConstant, CharacterConstant, StringConstant, SetConstant;
 
 BooleanConstant = Boolean! value;

@@ -21,10 +21,14 @@ public abstract class Converter<B,A> {
     return result;
   }
   
-  public static final Converter<String,String> stringIdentityConverter = new Converter<String,String>() {
-    public final String convert(final String toConvert) {
-      return toConvert;
-    }              
-  };
+  public static final Converter<String,String> stringIdentityConverter = identityConverter();
+  
+  public static final <T> Converter<T,T> identityConverter() {
+    return new Converter<T,T>() {
+      public final T convert(final T t) {
+        return t;
+      }
+    };
+  }
 
 }

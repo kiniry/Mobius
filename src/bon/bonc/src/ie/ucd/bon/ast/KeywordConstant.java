@@ -10,6 +10,7 @@ import ie.ucd.bon.source.SourceLocation;
 
 public class KeywordConstant extends Constant {
   public static enum Constant {
+    RESULT, 
     VOID, 
     CURRENT
   }

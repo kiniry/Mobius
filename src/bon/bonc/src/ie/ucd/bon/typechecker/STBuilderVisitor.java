@@ -129,8 +129,12 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       SourceLocation loc) {
     
     for (BONType parent : parents) {
-      st.classInheritanceGraph.put(context.clazz.getName(), parent);
-      st.simpleClassInheritanceGraph.put(context.clazz.getName(), parent.getIdentifier());
+      if (parent.getNonGenericType().equals(context.clazz.getName())) {
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, context.clazz.getName()));
+      } else {
+        st.classInheritanceGraph.put(context.clazz.getName(), parent);
+        st.simpleClassInheritanceGraph.put(context.clazz.getName(), parent.getIdentifier());
+      }
     }
     
     //TODO proper ST for feature
@@ -196,22 +200,24 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       ClusterChart otherCluster = st.informal.clusters.get(name);
       if (otherCluster != null) {
         problems.addProblem(new DuplicateClusterChartError(loc, otherCluster));
+        return;
       } else {
         st.informal.clusters.put(name, node);
       }
     }
     
+    context.clusterChart = node;
     for (ClassEntry entry : classes) {
       //TODO check for duplicate class entries
       st.informal.classClusterGraph.put(entry.getName(), node);
       st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
     }
-    
     for (ClusterEntry entry : clusters) {
       //TODO check for duplicate cluster entries
-      st.informal.classClusterGraph.put(entry.getName(), node);
+      st.informal.clusterClusterGraph.put(entry.getName(), node);
       st.informal.descriptionGraph.put(entry.getName(), entry.getDescription());
     }
+    context.clusterChart = null;
 
     indexing(node, indexing);
   }  
@@ -244,4 +250,18 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     }
   }
 
+//  @Override
+//  public void visitClassEntry(ClassEntry node, String name, String description,
+//      SourceLocation loc) {
+//    st.informal.classClusterGraph.put(name, context.clusterChart);
+//  }
+//
+//  @Override
+//  public void visitClusterEntry(ClusterEntry node, String name,
+//      String description, SourceLocation loc) {
+//    st.informal.clusterClusterGraph.put(name, context.clusterChart);
+//  }
+
+  
+  
 }

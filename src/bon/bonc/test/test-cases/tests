@@ -91,10 +91,12 @@
 @Input { static_component_not_contained }
 @Output { < NotContainedInClusterError, #File:static_component_not_contained, 12, 4, B, true, X > }
 
-@Test-name: "Duplicate superclass."
-@Location { test16/ }
-@Input { dup_super }
-@Output { < DuplicateSuperclassWarning, #File:dup_super, 15, 10, B, Z > }
+//This is technically allowed in BON, so we should not issue an error automatically.
+//Possibly this should be an option as to whether to warn/give error for duplicate superclass.
+//@Test-name: "Duplicate superclass."
+//@Location { test16/ }
+//@Input { dup_super }
+//@Output { < DuplicateSuperclassWarning, #File:dup_super, 15, 10, B, Z > }
 
 @Test-name: "Cluster containment cycle."
 @Prog-args: {--informal}
@@ -129,13 +131,13 @@
 @Prog-args: {--informal}
 @Location { test22/ }
 @Input { self_as_super1 }
-@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 10, 10, C > }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 9, 0, C > }
 
 @Test-name: "Class has self as parent (formal)."
 @Prog-args: {--formal}
 @Location { test22/ }
 @Input { self_as_super2 }
-@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 8, 6, X > }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 7, 4, X > }
 
 @Test-name: "Connector system."
 @Prog-args: {--informal}

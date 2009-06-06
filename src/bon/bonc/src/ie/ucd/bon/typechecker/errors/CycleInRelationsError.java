@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.typechecker.errors;
 
+import ie.ucd.bon.ast.ClassChart;
+import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
@@ -15,23 +17,31 @@ public class CycleInRelationsError extends TypeCheckingError {
   private static final String message2 = "%s %s has a cycle in its %s (%s)";
   
   private final String itemType;
-  private final String itemName;
+  private final String item;
   private final String cycleString;
   private final String relationType;
-  
-  /*public CycleInRelationsError(File sourceFile, int lineNumber, int charPosition, String itemType, String itemName, Collection<String> cycle, String relationType) {
-    super(sourceFile, lineNumber, charPosition);
-    this.itemType = itemType;
-    this.itemName = itemName;
-    this.cycleString = convertToCycleString(cycle, itemName);
-    this.relationType = relationType;
-  }*/
 
-  public CycleInRelationsError(SourceLocation loc, String itemType, String itemName, Collection<String> cycle, String relationType) {
+  public CycleInRelationsError(SourceLocation loc, String itemType, String item, Collection<String> cycle, String relationType) {
     super(loc);
     this.itemType = itemType;
-    this.itemName = itemName;
-    this.cycleString = convertToCycleString(cycle, itemName);
+    this.item = item;
+    this.cycleString = convertToCycleString(cycle, item);
+    this.relationType = relationType;
+  }
+  
+  public CycleInRelationsError(SourceLocation loc, String itemType, ClassChart item, Collection<ClassChart> cycle, String relationType) {
+    super(loc);
+    this.itemType = itemType;
+    this.item = item.getName();
+    this.cycleString = convertToCycleString(cycle, item);
+    this.relationType = relationType;
+  }
+  
+  public CycleInRelationsError(SourceLocation loc, String itemType, ClusterChart item, Collection<String> cycle, String relationType) {
+    super(loc);
+    this.itemType = itemType;
+    this.item = item.getName();
+    this.cycleString = convertToCycleString(cycle, item.getName());
     this.relationType = relationType;
   }
   
@@ -39,7 +49,7 @@ public class CycleInRelationsError extends TypeCheckingError {
   public CycleInRelationsError(SourceLocation loc, String itemType, String itemName, String cycle, String relationType) {
     super(loc);
     this.itemType = itemType;
-    this.itemName = itemName;
+    this.item = itemName;
     this.cycleString = cycle;
     this.relationType = relationType;
   }
@@ -53,13 +63,33 @@ public class CycleInRelationsError extends TypeCheckingError {
     sb.append(start);
     return sb.toString();
   }
+  
+  private static String convertToCycleString(Collection<ClassChart> cycle, ClassChart start) {
+    StringBuilder sb = new StringBuilder();
+    for (ClassChart chart : cycle) {
+      sb.append(chart.getName());
+      sb.append("->");
+    }
+    sb.append(start.getName());
+    return sb.toString();
+  }
+  
+  private static String convertToCycleString(Collection<ClusterChart> cycle, ClusterChart start) {
+    StringBuilder sb = new StringBuilder();
+    for (ClusterChart chart : cycle) {
+      sb.append(chart.getName());
+      sb.append("->");
+    }
+    sb.append(start.getName());
+    return sb.toString();
+  }
 
   @Override
   public String getMessage() {
     if (cycleString == null) {
-      return String.format(message1, itemType, itemName, relationType);
+      return String.format(message1, itemType, item, relationType);
     } else {
-      return String.format(message2, itemType, itemName, relationType, cycleString);
+      return String.format(message2, itemType, item, relationType, cycleString);
     }
   }
   

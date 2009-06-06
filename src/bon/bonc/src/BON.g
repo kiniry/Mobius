@@ -1179,6 +1179,8 @@ constant returns [Constant constant] :
    { $constant = KeywordConstant.mk(KeywordConstant.Constant.CURRENT, getSLoc($c)); } 
  | v='Void'
    { $constant = KeywordConstant.mk(KeywordConstant.Constant.VOID, getSLoc($v)); }            
+ | v='Result'
+   { $constant = KeywordConstant.mk(KeywordConstant.Constant.RESULT, getSLoc($v)); }
 ;
 
 manifest_constant returns [ManifestConstant constant] :
