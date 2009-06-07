@@ -48,15 +48,13 @@ public final class ConstantPoolHelper {
                                         final Symbol symbol) {
     final BCConstantPool cp = clazz.getCp();
     final String fieldType = TypeSignature.getSignature(symbol.type);
-    final String trimmedClassName = className.substring(1, className
-                                                        .lastIndexOf(";"));
 
     final int fieldTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantUtf8(fieldType));
     final int fieldNameIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantUtf8(fieldName));
     final int classNameIndex = ConstantPoolHelper
-        .tryInsert(cp, new ConstantUtf8(trimmedClassName));
+        .tryInsert(cp, new ConstantUtf8(trimClassName(className)));
     final int classIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
@@ -102,8 +100,7 @@ public final class ConstantPoolHelper {
     //a little bit hacked: the className is Lpackage/name;
     //we want only package/name
     System.out.println("to tu: " + className + " " + fieldName);
-    final String trimmedClassName = className.substring(1, className
-        .lastIndexOf(";"));
+    final String trimmedClassName = trimClassName(className);
     final int fieldNameIndex = cp.findConstant(fieldName);
     final int classNameIndex = cp.findConstant(trimmedClassName);
     final int classIndex = getConstantClassForNameIndex(classNameIndex, cp);
@@ -297,5 +294,11 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
     System.err.println(cp.printCode(new StringBuffer()));
+  }
+  
+  private static String trimClassName(String className){
+    if (className.endsWith(";"))
+      return className.substring(1, className.lastIndexOf(";"));
+    return className;    
   }
 }

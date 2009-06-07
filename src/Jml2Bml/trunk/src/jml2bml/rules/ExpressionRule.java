@@ -314,8 +314,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       }
     }
     //simplest case - there exist also in java code the same field access
-    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type
-        .toString(), identifier, p.findClass());
+    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(), identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(fieldRefIndex, p.findClass()));

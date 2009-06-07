@@ -13,6 +13,7 @@ import jml2bml.symbols.Symbols;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
@@ -47,7 +48,7 @@ public final class TranslationUtil {
       return null;
     final BCExpression bcExpr = expression.accept(RulesFactory
         .getExpressionRule(context), symb);
-    if (bcExpr.getType1() != JavaBasicType.JavaBool)
+    if (JavaBasicType.JavaBool.compareTypes(bcExpr.getType1()) != JavaType.TYPES_EQUAL)
       throw new NotTranslatedRuntimeException(
         "assert expression must be boolean");
     return (AbstractFormula) bcExpr;
