@@ -283,7 +283,7 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
    * @param decreases decreases to insert
    */
   private void insertSpecs(final Tree loopNode, final Symbols symb,
-                           final AbstractFormula invariant,
+                           final BCExpression invariant,
                            final BCExpression decreases) {
     final BCClass clazz = symb.findClass();
     final JmlMethodDecl method = (JmlMethodDecl) finder.getAncestor(loopNode,
@@ -404,11 +404,12 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
       loopNode = finder.getNextSibling(loopNode);
     final Symbols newSymbols = loopNode.accept(new SymbolTableUpdater(), symb);
 
-    AbstractFormula invariant = null;
+    BCExpression invariant = null;
     BCExpression decreases = null;
     if (node.token == JmlToken.LOOP_INVARIANT)
-      invariant = TranslationUtil.getFormula(node.expression, newSymbols,
-                                             myContext);
+      invariant = node.expression.accept(RulesFactory.getExpressionRule(myContext), newSymbols);
+//      invariant = TranslationUtil.getFormula(node.expression, newSymbols,
+//                                             myContext);
     else if (node.token == JmlToken.DECREASES)
       decreases = node.expression.accept(RulesFactory
           .getExpressionRule(myContext), newSymbols);
