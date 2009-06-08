@@ -6,6 +6,8 @@
  */
 package jml2bml.rules;
 
+import javax.lang.model.type.TypeKind;
+
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bmllib.ConstantPoolHelper;
@@ -61,6 +63,8 @@ import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
@@ -301,37 +305,25 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
                                         final Symbols p) {
     //FIXME no function calls supported
     final BCExpression expr = scan(node.getExpression(), p);
-    final JavaType type = expr.checkType();
+    final Type type = ((JCTree) node).type;
     final String identifier = node.getIdentifier().toString();
-    if (type == null) {
-      throw new Jml2BmlException("Cannot determine type for object " + expr);
-    }
-    if (Constants.ARRAY_LENGTH.equals(identifier)) {
-      //special case - array length
-      if (type != null &&
-          type.toString().startsWith(Constants.ARRAYTYPE_PREFIX)) {
+    if (type.getKind() == TypeKind.ARRAY && Constants.ARRAY_LENGTH.equals(identifier))
         return new FieldAccess(Code.FIELD_ACCESS, expr, new ArrayLength());
-      }
-    }
     //simplest case - there exist also in java code the same field access
-    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(), identifier, p.findClass());
+    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type, identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(fieldRefIndex, p.findClass()));
     }
     //hardest case: we have to extend the constant pool.
     JCFieldAccess t = (JCFieldAccess) node;
-    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p.findClass(), t.sym);
-//    ConstantPoolHelper.extendConstantPool(type.toString(), identifier, p, myContext);
-    fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type.toString(),
-                                                               identifier, p.findClass());
+    ConstantPoolHelper.extendConstantPool(type, identifier, p.findClass(), t.sym);
+    fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type, identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(fieldRefIndex, p.findClass()));
     }
-    throw new Jml2BmlException("Unresolved field access in type " +
-                               type.toString() + " to field " + identifier);
-
+    throw new Jml2BmlException("Unresolved field access in type " + type + " to field " + identifier);
   }
 
   /**

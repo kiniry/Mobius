@@ -17,6 +17,7 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
 
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 
 /*
  * Manipulations on the BCConstantPool. Finding the corresponding
@@ -42,7 +43,7 @@ public final class ConstantPoolHelper {
    * @param symbols - symbol table (to find the current BCClass)
    * @param symbol - type symbol of <code>field</code>
    */
-  public static void extendConstantPool(final String className,
+  public static void extendConstantPool(final Type type,
                                         final String fieldName,
                                         final BCClass clazz, 
                                         final Symbol symbol) {
@@ -54,7 +55,7 @@ public final class ConstantPoolHelper {
     final int fieldNameIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantUtf8(fieldName));
     final int classNameIndex = ConstantPoolHelper
-        .tryInsert(cp, new ConstantUtf8(trimClassName(className)));
+        .tryInsert(cp, new ConstantUtf8(trimClassName(TypeSignature.getSignature(type))));
     final int classIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
@@ -93,12 +94,13 @@ public final class ConstantPoolHelper {
    * @param symbols - symbol table (to find the corresponding BCClass)
    * @return the index in the constantPool, or -1, when no entry found.
    */
-  public static int findFieldInConstantPool(final String className,
+  public static int findFieldInConstantPool(final Type type,
                                             final String fieldName,
                                             final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
     //a little bit hacked: the className is Lpackage/name;
     //we want only package/name
+    String className = TypeSignature.getSignature(type);
     System.out.println("to tu: " + className + " " + fieldName);
     final String trimmedClassName = trimClassName(className);
     final int fieldNameIndex = cp.findConstant(fieldName);
@@ -278,12 +280,12 @@ public final class ConstantPoolHelper {
 
   }
 
-  public static void addGhostField(final String fieldType,
+  public static void addGhostField(final Type fieldType,
                                    final String fieldName, final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
     final String className = clazz.getJC().getClassName().replace('.', '/');
     final int fieldTypeIndex = ConstantPoolHelper
-        .tryInsert(cp, new ConstantUtf8(fieldType));
+        .tryInsert(cp, new ConstantUtf8(TypeSignature.getSignature(fieldType)));
     final int fieldNameIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantUtf8(fieldName));
     final int classNameIndex = ConstantPoolHelper

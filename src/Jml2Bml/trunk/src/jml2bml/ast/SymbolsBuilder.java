@@ -20,10 +20,10 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
-import annot.bcexpression.javatype.JavaType;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -169,12 +169,10 @@ public class SymbolsBuilder extends
                            final Symbols s, final boolean isGhost,
                            final boolean isModal) {
     final BCClass cl = s.findClass();
+    Type type = node.type;
 
     if (isGhost) {
       final String name = node.getName().toString();
-      final String type = JavaType.getJavaType(node.getType().toString())
-          .toString();
-
       ConstantPoolHelper.addGhostField(type, name, cl);
     } else if (isModal){
       throw new Jml2BmlException("Modal field not translated: " + node.getName());
