@@ -43,6 +43,7 @@ public class Graph<A,B> extends ForwardingMultimap<A,B> {
       Collection<B> nbs = get(a);
       if (nbs == null) continue;
       Collection<A> nas = converter.convert(nbs);
+      if (nas == null) continue;
       for (A na : nas) if (pred.get(na) == null) {
         if (na.equals(startNode)) {
           // build and return cycle

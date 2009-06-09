@@ -47,7 +47,7 @@ public class PreliminaryChecker {
         st.informal.classInheritanceGraph.findCycle(classChart, 
           new Converter<String,ClassChart>() {
             public ClassChart convert(final String name) {
-               return st.informal.classes.get(name);
+              return st.informal.classes.get(name);
             }
           });
       if (cycle != null) {

@@ -4,18 +4,21 @@
  */
 package ie.ucd.bon.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 
 public abstract class Converter<B,A> {
 
   public abstract A convert(B toConvert);
   
   public Collection<A> convert(final Collection<B> toConvert) {
-    Collection<A> result = new LinkedList<A>();
+    Collection<A> result = new ArrayList<A>(toConvert.size());
     for (B b : toConvert) {
       if (b != null) {
-        result.add(convert(b));
+        A a = convert(b);
+        if (a != null) {
+          result.add(a);
+        }
       }
     }
     return result;
