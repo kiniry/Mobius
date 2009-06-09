@@ -4,10 +4,10 @@
 <product name="Mobius Program Verification Environment" uid="MobiusPVE" id="mobius.pve" application="org.eclipse.ui.ide.workbench" version="Epsilon" useFeatures="true" includeLaunchers="true">
 
    <configIni use="default">
-      <linux>/Mobius Delta Release/config.ini</linux>
-      <macosx>/Mobius Delta Release/config.ini</macosx>
-      <solaris>/Mobius Delta Release/config.ini</solaris>
-      <win32>/Mobius Delta Release/config.ini</win32>
+      <linux>/MobiusPVEFeature/config.ini</linux>
+      <macosx>/MobiusPVEFeature/config.ini</macosx>
+      <solaris>/MobiusPVEFeature/config.ini</solaris>
+      <win32>/MobiusPVEFeature/config.ini</win32>
    </configIni>
 
    <launcherArgs>
