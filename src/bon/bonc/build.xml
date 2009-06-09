@@ -281,8 +281,6 @@
 		
 	<target name="clean-antlr" depends="clean-antlr-parser,clean-antlr-tester"/>
 	
-  <target name="clean-all" depends="clean-build,clean-antlr,clean-release,clean-debian-release" description="clean up"/>
-	
 	<target name="clean-build" description="Clean up the build">
 		<delete dir="${build}"/>
 		<delete dir="${dist}"/>
@@ -307,7 +305,7 @@
   <target name="all-src" depends="init,antlr" description="Create all source files"/>
   
   <target name="all" depends="clean,all-src,compile,dist,all-tests"/>
-  <target name="clean" depends="clean-all"/>
+  <target name="clean" depends="clean-build,clean-release,clean-debian-release"/>
 
 	<target name="clean-changelogs">
 	  <delete file="${doc-src}/changelog/changelog"/>
