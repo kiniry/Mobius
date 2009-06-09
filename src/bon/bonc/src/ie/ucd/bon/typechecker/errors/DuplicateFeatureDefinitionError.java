@@ -4,11 +4,12 @@
  */
 package ie.ucd.bon.typechecker.errors;
 
-import java.io.File;
-
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.FeatureSpecificationInstance;
 import ie.ucd.bon.typechecker.TypeCheckingError;
+
+import java.io.File;
 
 public class DuplicateFeatureDefinitionError extends TypeCheckingError {
 
@@ -25,6 +26,14 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
     this.className = other.getFeatureSpec().getClassName();
     this.otherFeatureFile = other.getSourceLocation().getSourceFile();
     this.otherFeatureLineNumber = other.getSourceLocation().getLineNumber();
+  }
+  
+  public DuplicateFeatureDefinitionError(SourceLocation loc, String className, String featureName, FeatureSpecification other) {
+    super(loc);
+    this.featureName = featureName;
+    this.className = className;
+    this.otherFeatureFile = other.getLocation().getSourceFile();
+    this.otherFeatureLineNumber = other.getLocation().getLineNumber();
   }
 
   //Testing

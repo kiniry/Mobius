@@ -7,6 +7,7 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.graph.Graph;
 
@@ -25,6 +26,8 @@ public class BONST {
   
   public final Graph<String,Cluster> classClusterGraph = new Graph<String,Cluster>();
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
+  
+  public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
   
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
   

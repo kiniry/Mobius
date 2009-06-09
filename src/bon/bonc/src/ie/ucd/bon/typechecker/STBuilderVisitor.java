@@ -13,28 +13,38 @@ import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.ClusterEntry;
+import ie.ucd.bon.ast.ContractClause;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
+import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
+import ie.ucd.bon.ast.HasType;
 import ie.ucd.bon.ast.IVisitor;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.Clazz.Mod;
+import ie.ucd.bon.ast.FeatureSpecification.Modifier;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.DuplicateClassDefinitionError;
 import ie.ucd.bon.typechecker.errors.DuplicateClusterDefinitionError;
+import ie.ucd.bon.typechecker.errors.DuplicateFeatureDefinitionError;
+import ie.ucd.bon.typechecker.errors.DuplicateFormalGenericNameError;
 import ie.ucd.bon.typechecker.errors.DuplicateSystemDefinitionError;
 import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
 
@@ -92,6 +102,16 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
         st.classClusterGraph.put(name, context.clusterStack.peek());
       }
       
+      Map<String,FormalGeneric> genericIdsMap = new HashMap<String,FormalGeneric>();
+      for (FormalGeneric generic : generics) {
+        FormalGeneric other = genericIdsMap.get(generic.getIdentifier());
+        if (other == null) {
+          genericIdsMap.put(generic.getIdentifier(), generic);
+        } else {
+          problems.addProblem(new DuplicateFormalGenericNameError(generic.getLocation(), generic.getIdentifier()));
+        }
+      }
+      
       context.clazz = node;
       visitNode(classInterface);
       context.clazz = null;      
@@ -145,6 +165,31 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   }
 
 
+
+  @Override
+  public void visitFeature(Feature node,
+      List<FeatureSpecification> featureSpecifications,
+      List<String> selectiveExport, String comment, SourceLocation loc) {
+
+    context.selectiveExport = selectiveExport;
+    visitAll(featureSpecifications);
+  }
+  
+  @Override
+  public void visitFeatureSpecification(FeatureSpecification node,
+      Modifier modifier, List<String> featureNames,
+      List<FeatureArgument> arguments, ContractClause contracts,
+      HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
+
+    for (String name : featureNames) {
+      FeatureSpecification other = st.featuresMap.get(context.clazz, name);
+      if (other == null) {
+        st.featuresMap.put(context.clazz, name, node);
+      } else {
+        problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName(), name, other));
+      }
+    }
+  }
 
   @Override
   public void visitClassChart(ClassChart node, String name,
@@ -249,19 +294,6 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       st.indexing.put(node, indexing);
     }
   }
-
-//  @Override
-//  public void visitClassEntry(ClassEntry node, String name, String description,
-//      SourceLocation loc) {
-//    st.informal.classClusterGraph.put(name, context.clusterChart);
-//  }
-//
-//  @Override
-//  public void visitClusterEntry(ClusterEntry node, String name,
-//      String description, SourceLocation loc) {
-//    st.informal.clusterClusterGraph.put(name, context.clusterChart);
-//  }
-
   
   
 }
