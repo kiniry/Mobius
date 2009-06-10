@@ -7,7 +7,6 @@ package ie.ucd.bon.typechecker.informal.errors;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.TypeCheckingError;
-import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
 
 import java.io.File;
 
@@ -18,13 +17,6 @@ public class DuplicateClassChartError extends TypeCheckingError {
   private final String className;
   private final File otherChartFile;
   private final int otherChartLineNumber;
-  
-  public DuplicateClassChartError(SourceLocation loc, ClassChartDefinition other) {
-    super(loc);
-    this.className = other.getName();
-    this.otherChartFile = other.getSourceLocation().getSourceFile();
-    this.otherChartLineNumber = other.getSourceLocation().getLineNumber();
-  }
   
   public DuplicateClassChartError(SourceLocation loc, ClassChart other) {
     super(loc);

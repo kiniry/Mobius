@@ -4,11 +4,8 @@
  */
 package ie.ucd.bon;
 
-import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.typechecker.FormalTypeChecker;
 import ie.ucd.bon.typechecker.PreliminaryChecker;
-import ie.ucd.bon.typechecker.informal.InformalTypeChecker;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -52,8 +49,8 @@ public final class TypeChecker {
     tracker.addProblems(preCheck.getProblems());
   }
   
-  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {
-    Main.logDebug("Typechecking " + parse.getFilePath());
+//  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {
+//    Main.logDebug("Typechecking " + parse.getFilePath());
     
     //TODO fix!
     
@@ -64,6 +61,6 @@ public final class TypeChecker {
 //    walker.initialise(nodes, itc, ftc, parse.getFile()); //Reset walker, provide inputs
 //
 //    walker.prog();  //Walk    
-  }
+//  }
   
 }

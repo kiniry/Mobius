@@ -73,16 +73,6 @@ public class CycleInRelationsError extends TypeCheckingError {
     sb.append(start.getName());
     return sb.toString();
   }
-  
-  private static String convertToCycleString(Collection<ClusterChart> cycle, ClusterChart start) {
-    StringBuilder sb = new StringBuilder();
-    for (ClusterChart chart : cycle) {
-      sb.append(chart.getName());
-      sb.append("->");
-    }
-    sb.append(start.getName());
-    return sb.toString();
-  }
 
   @Override
   public String getMessage() {

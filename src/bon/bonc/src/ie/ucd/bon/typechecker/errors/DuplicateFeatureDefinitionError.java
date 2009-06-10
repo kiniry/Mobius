@@ -6,7 +6,6 @@ package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.FeatureSpecificationInstance;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
 import java.io.File;
@@ -19,14 +18,6 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
   private final String className;
   private final File otherFeatureFile;
   private final int otherFeatureLineNumber;
-  
-  public DuplicateFeatureDefinitionError(SourceLocation loc, FeatureSpecificationInstance other) {
-    super(loc);
-    this.featureName = other.getName();
-    this.className = other.getFeatureSpec().getClassName();
-    this.otherFeatureFile = other.getSourceLocation().getSourceFile();
-    this.otherFeatureLineNumber = other.getSourceLocation().getLineNumber();
-  }
   
   public DuplicateFeatureDefinitionError(SourceLocation loc, String className, String featureName, FeatureSpecification other) {
     super(loc);

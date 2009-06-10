@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.clinterface.BONcOptionsInterface.Print;
 import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.linguistical.MiscLing;
@@ -13,7 +14,6 @@ import ie.ucd.bon.printer.ClassDictionaryGenerator;
 import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
-import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
 import ie.ucd.bon.util.FileUtil;
 
 import java.io.File;
@@ -177,9 +177,8 @@ public final class Printer {
   }
 
   private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    ClusterChartDefinition sysDef = null; 
-    //TODO fix!
-    //parsingTracker.getInformalTypingInformation().getSystem();
+    ClusterChart sysDef = null; 
+    sysDef = parsingTracker.getSymbolTable().informal.systemChart;
     String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName(); 
     return String.format(toFormat, 
         printTime, 
@@ -264,9 +263,9 @@ public final class Printer {
     case CL:
       return MiscLing.printClassChartSentences(parsingTracker);
     case PICG:
-      return Grapher.graphPrefuseInformalClusterContainment(parsingTracker);
+      //return Grapher.graphPrefuseInformalClusterContainment(parsingTracker);
     case PIIG:
-      return Grapher.graphPrefuseInformalInheritance(parsingTracker);
+      //return Grapher.graphPrefuseInformalInheritance(parsingTracker);
     default:
       return "";
     }

@@ -104,7 +104,7 @@ public class Problems {
 
   @Override
   public String toString() {
-    return problems.size() + " problems.\n" + problems;
+    return id + "Problems: " + problems.size() + " problems.\n" + problems;
   }
   
   

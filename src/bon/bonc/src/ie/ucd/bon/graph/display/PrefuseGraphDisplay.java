@@ -32,31 +32,33 @@ public class PrefuseGraphDisplay {
   }
 
   public static void displayICGGraph(final ParsingTracker tracker) {
-    String xmlGraph = Grapher.graphPrefuseInformalClusterContainment(tracker);
-    InputStream is = new ByteArrayInputStream(xmlGraph.getBytes());
-
-    UILib.setPlatformLookAndFeel();
-    JComponent treeview = TreeView.demo(is, "name");
-
-    JFrame frame = new JFrame("b o n c  |  c l u s t e r  v i e w");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setContentPane(treeview);
-    frame.pack();
-    frame.setVisible(true);
+    //TODO fix
+//    String xmlGraph = Grapher.graphPrefuseInformalClusterContainment(tracker);
+//    InputStream is = new ByteArrayInputStream(xmlGraph.getBytes());
+//
+//    UILib.setPlatformLookAndFeel();
+//    JComponent treeview = TreeView.demo(is, "name");
+//
+//    JFrame frame = new JFrame("b o n c  |  c l u s t e r  v i e w");
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    frame.setContentPane(treeview);
+//    frame.pack();
+//    frame.setVisible(true);
   }
 
   public static void displayIIGGraph(final ParsingTracker tracker) {
-    String xmlGraph = Grapher.graphPrefuseInformalInheritance(tracker);
-    InputStream is = new ByteArrayInputStream(xmlGraph.getBytes());
-
-    UILib.setPlatformLookAndFeel();
-    JComponent treeview = TreeView.demo(is, "name");
-
-    JFrame frame = new JFrame("b o n c  |  c l u s t e r  v i e w");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setContentPane(treeview);
-    frame.pack();
-    frame.setVisible(true);
+  //TODO fix
+//    String xmlGraph = Grapher.graphPrefuseInformalInheritance(tracker);
+//    InputStream is = new ByteArrayInputStream(xmlGraph.getBytes());
+//
+//    UILib.setPlatformLookAndFeel();
+//    JComponent treeview = TreeView.demo(is, "name");
+//
+//    JFrame frame = new JFrame("b o n c  |  c l u s t e r  v i e w");
+//    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    frame.setContentPane(treeview);
+//    frame.pack();
+//    frame.setVisible(true);
   }
 
 }

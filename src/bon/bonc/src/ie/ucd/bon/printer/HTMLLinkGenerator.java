@@ -5,10 +5,6 @@
 package ie.ucd.bon.printer;
 
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
-
-import java.util.Set;
-import java.util.TreeSet;
 
 public class HTMLLinkGenerator {
 

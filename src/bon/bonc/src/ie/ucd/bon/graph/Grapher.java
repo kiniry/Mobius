@@ -6,9 +6,6 @@ package ie.ucd.bon.graph;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
-import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
 import ie.ucd.bon.util.XMLWriter;
 
 import java.io.IOException;
@@ -103,7 +100,7 @@ public class Grapher {
 //    appendLine("}", sb);
     return sb.toString();
   }
-
+/*
   private static void printSystemNode(String systemName, StringBuilder sb) {
     appendLine("//System", sb);
     String comment = "System: " + systemName;
@@ -362,7 +359,7 @@ public class Grapher {
       xw.endEntity(); //leaf
     }
     
-    
   }
+  */
 
 }

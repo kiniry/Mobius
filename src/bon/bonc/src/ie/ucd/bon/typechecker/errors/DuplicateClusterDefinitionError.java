@@ -6,7 +6,6 @@ package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.ClusterDefinition;
 import ie.ucd.bon.typechecker.TypeCheckingError;
 
 import java.io.File;
@@ -19,13 +18,6 @@ public class DuplicateClusterDefinitionError extends TypeCheckingError {
   private final String clusterName;
   private final File otherClusterFile;
   private final int otherClusterLineNumber;
-  
-  public DuplicateClusterDefinitionError(SourceLocation loc, ClusterDefinition other) {
-    super(loc);
-    this.clusterName = other.getName();
-    this.otherClusterFile = other.getSourceLocation().getSourceFile();
-    this.otherClusterLineNumber = other.getSourceLocation().getLineNumber();
-  }
   
   public DuplicateClusterDefinitionError(SourceLocation loc, Cluster other) {
     super(loc);

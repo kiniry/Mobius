@@ -5,9 +5,6 @@
 package ie.ucd.bon.linguistical;
 
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
-
-import java.util.Collection;
 
 public class MiscLing {
 

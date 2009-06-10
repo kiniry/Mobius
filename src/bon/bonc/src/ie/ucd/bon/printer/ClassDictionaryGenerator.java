@@ -4,16 +4,7 @@
  */
 package ie.ucd.bon.printer;
 
-import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.typechecker.informal.ClassChartDefinition;
-import ie.ucd.bon.typechecker.informal.ClusterChartDefinition;
-import ie.ucd.bon.typechecker.informal.InformalTypingInformation;
-
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class ClassDictionaryGenerator {
 
