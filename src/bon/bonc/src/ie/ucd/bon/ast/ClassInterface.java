@@ -14,12 +14,12 @@ public class ClassInterface extends AstNode {
   private final Indexing indexing;
 
   private final List<Feature> features;
-  private final List<BONType> parents;
+  private final List<Type> parents;
   private final List<Expression> invariant;
 
 
   // === Constructors and Factories ===
-  protected ClassInterface(List<Feature> features, List<BONType> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
+  protected ClassInterface(List<Feature> features, List<Type> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
     super(location);
     this.features = features; assert features != null;
     this.parents = parents; assert parents != null;
@@ -28,14 +28,14 @@ public class ClassInterface extends AstNode {
     
   }
   
-  public static ClassInterface mk(List<Feature> features, List<BONType> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
+  public static ClassInterface mk(List<Feature> features, List<Type> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
     return new ClassInterface(features, parents, invariant, indexing, location);
   }
 
   // === Accessors ===
 
   public List<Feature> getFeatures() { return features; }
-  public List<BONType> getParents() { return parents; }
+  public List<Type> getParents() { return parents; }
   public List<Expression> getInvariant() { return invariant; }
   public Indexing getIndexing() { return indexing; }
 
@@ -48,7 +48,7 @@ public class ClassInterface extends AstNode {
   @Override
   public ClassInterface clone() {
     List<Feature> newFeatures = features;
-    List<BONType> newParents = parents;
+    List<Type> newParents = parents;
     List<Expression> newInvariant = invariant;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     

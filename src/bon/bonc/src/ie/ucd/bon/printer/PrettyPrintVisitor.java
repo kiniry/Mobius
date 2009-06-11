@@ -49,11 +49,11 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
   }
 
   @Override
-  public void visitClazz(Clazz node, String name, List<FormalGeneric> generics,
+  public void visitClazz(Clazz node, ClassName name, List<FormalGeneric> generics,
       Mod mod, ClassInterface classInterface, Boolean reused,
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
     tp.print(toString(mod));
-    tp.print(name);
+    tp.print(name.getName());
     
     if (generics != null && generics.size() > 0) {
       //TODO print list of...

@@ -11,27 +11,27 @@ import ie.ucd.bon.source.SourceLocation;
 public class TypeRange extends VariableRange {
 
 
+  private final Type type;
 
   private final List<String> identifiers;
-  private final BONType type;
 
 
   // === Constructors and Factories ===
-  protected TypeRange(List<String> identifiers, BONType type, SourceLocation location) {
+  protected TypeRange(List<String> identifiers, Type type, SourceLocation location) {
     super(location);
     this.identifiers = identifiers; assert identifiers != null;
     this.type = type; assert type != null;
     
   }
   
-  public static TypeRange mk(List<String> identifiers, BONType type, SourceLocation location) {
+  public static TypeRange mk(List<String> identifiers, Type type, SourceLocation location) {
     return new TypeRange(identifiers, type, location);
   }
 
   // === Accessors ===
 
   public List<String> getIdentifiers() { return identifiers; }
-  public BONType getType() { return type; }
+  public Type getType() { return type; }
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
@@ -42,7 +42,7 @@ public class TypeRange extends VariableRange {
   @Override
   public TypeRange clone() {
     List<String> newIdentifiers = identifiers;
-    BONType newType = type;
+    Type newType = type == null ? null : type.clone();
     
     return TypeRange.mk(newIdentifiers, newType, getLocation());
   }

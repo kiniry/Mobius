@@ -228,7 +228,5 @@ public class SourceLocation implements Comparable<SourceLocation> {
   public int hashCode() {
     return this.sourceFile.hashCode() + (this.lineNumber*1024*1024) + (this.absoluteCharPositionStart*1024) + this.charPositionInLine;
   }
-
-	
 	
 }

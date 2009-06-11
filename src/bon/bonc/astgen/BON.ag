@@ -12,7 +12,7 @@ DictionaryEntry = String! name, List<String>! clusters, String! description;
 
 //SystemChart = String! name, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
 ClusterChart = String! name, Boolean! isSystem, List<ClassEntry>! classes, List<ClusterEntry>! clusters, Indexing indexing, String explanation, String part;
-ClassChart = String! name, List<String>! inherits, List<String>! queries, List<String>! commands, List<String>! constraints, Indexing indexing, String explanation, String part;
+ClassChart = ClassName! name, List<ClassName>! inherits, List<String>! queries, List<String>! commands, List<String>! constraints, Indexing indexing, String explanation, String part;
 
 ClusterEntry = String! name, String! description;
 ClassEntry = String! name, String! description;
@@ -24,20 +24,22 @@ ScenarioChart = String! systemName, List<ScenarioEntry>! entries, Indexing index
 ScenarioEntry = String! name, String! description;
 
 CreationChart = String! name, List<CreationEntry>! entries, Indexing indexing, String explanation, String part;
-CreationEntry = String! name, List<String>! types;
+CreationEntry = ClassName! name, List<String>! types;
 
 StaticDiagram = List<StaticComponent>! components, String extendedID, String comment;
 
 StaticComponent :> Cluster, Clazz, StaticRelation;
 Cluster = String! name, List<StaticComponent>! components, Boolean! reused, String comment; 
 //Can root, deferred, effective be an enum? Similarly reused, persistent, interfaced?
-Clazz = String! name, List<FormalGeneric> generics,
+Clazz = ClassName! name, List<FormalGeneric> generics,
         enum(Mod: ROOT, DEFERRED, EFFECTIVE, NONE) mod, ClassInterface classInterface,  
         Boolean! reused, Boolean! persistent, Boolean! interfaced, String comment;
 StaticRelation :> InheritanceRelation, ClientRelation;
 
-InheritanceRelation = BONType! child, BONType! parent, Multiplicity multiplicity, String semanticLabel;
-ClientRelation = BONType! client, BONType! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
+InheritanceRelation = StaticRef! child, StaticRef! parent, Multiplicity multiplicity, String semanticLabel;
+ClientRelation = StaticRef! client, StaticRef! supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel;
+StaticRef = List<StaticRefPart>! prefix, StaticRefPart! name;
+StaticRefPart = String! name;
 ClientEntityExpression :> ClientEntityList, Multiplicity;
 ClientEntityList = List<ClientEntity>! entities;
 Multiplicity = Integer! multiplicity;
@@ -51,19 +53,19 @@ NamedIndirection = String! className, List<IndirectionElement>! indirectionEleme
 IndirectionElement :> NamedIndirection, ClassName;
 TypeMark = enum(Mark: NONE, HASTYPE, AGGREGATE, SHAREDMARK) mark, Integer multiplicity;
 ClassName = String! name;
-ClassInterface = List<Feature>! features, List<BONType>! parents, List<Expression> invariant, Indexing indexing;  
-Feature = List<FeatureSpecification>! featureSpecifications, List<String> selectiveExport, String comment;
+ClassInterface = List<Feature>! features, List<Type>! parents, List<Expression> invariant, Indexing indexing;  
+Feature = List<FeatureSpecification>! featureSpecifications, List<ClassName> selectiveExport, String comment;
 FeatureSpecification = enum(Modifier: NONE, DEFERRED, EFFECTIVE, REDEFINED) modifier, List<String>! featureNames, List<FeatureArgument>! arguments, ContractClause! contracts, HasType hasType, RenameClause renaming, String comment;
-HasType = TypeMark! mark, BONType! type;
+HasType = TypeMark! mark, Type! type;
 ContractClause = List<Expression> preconditions, List<Expression> postconditions;
 
 
-RenameClause = String! className, String! featureName;
+RenameClause = ClassName! className, String! featureName;
 
-FeatureArgument = String identifier, BONType! type;
-FormalGeneric = String! identifier, BONType type;
+FeatureArgument = String identifier, Type! type;
+FormalGeneric = String! identifier, Type type;
 
-Type = String! identifier, List<BONType>! actualGenerics, String! fullString;
+Type = String! identifier, List<Type>! actualGenerics, String! fullString;
 
 Expression :> Quantification, BinaryExp, UnaryExp, CallExp, Constant;
 
@@ -73,7 +75,7 @@ UnqualifiedCall = String! id, List<Expression>! args;
 Quantification = enum(Quantifier: FORALL, EXISTS) quantifier, List<VariableRange> variableRanges, Expression restriction, Expression! proposition;
 VariableRange :> MemberRange, TypeRange;
 MemberRange = List<String>! identifiers, Expression! expression;
-TypeRange =  List<String>! identifiers, BONType! type;
+TypeRange =  List<String>! identifiers, Type! type;
 
 BinaryExp = enum(Op: ADD, SUB, MUL, DIV, INTDIV, MOD, POW, EQUIV, IMPLIES, AND, OR, XOR, LT, LE, GE, GT, EQ, NEQ, MEMBEROF, NOTMEMBEROF, HASTYPE) op, 
             Expression! left, Expression! right;
@@ -104,4 +106,4 @@ LabelledAction = String! label, String! description;
 ObjectGroup = enum(Nameless: NAMELESS, NOTNAMELESS) nameless, String! name, List<DynamicComponent>! components, String comment;
 ObjectStack = ObjectName! name, String comment;
 ObjectInstance = ObjectName! name, String comment;
-ObjectName = String! className, String extendedId;
+ObjectName = ClassName! className, String extendedId;

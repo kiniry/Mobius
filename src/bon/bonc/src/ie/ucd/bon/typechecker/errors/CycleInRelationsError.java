@@ -32,7 +32,7 @@ public class CycleInRelationsError extends TypeCheckingError {
   public CycleInRelationsError(SourceLocation loc, String itemType, ClassChart item, Collection<ClassChart> cycle, String relationType) {
     super(loc);
     this.itemType = itemType;
-    this.item = item.getName();
+    this.item = item.getName().getName();
     this.cycleString = convertToCycleString(cycle, item);
     this.relationType = relationType;
   }
@@ -67,10 +67,10 @@ public class CycleInRelationsError extends TypeCheckingError {
   private static String convertToCycleString(Collection<ClassChart> cycle, ClassChart start) {
     StringBuilder sb = new StringBuilder();
     for (ClassChart chart : cycle) {
-      sb.append(chart.getName());
+      sb.append(chart.getName().getName());
       sb.append("->");
     }
-    sb.append(start.getName());
+    sb.append(start.getName().getName());
     return sb.toString();
   }
 

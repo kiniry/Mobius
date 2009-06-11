@@ -4,8 +4,10 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.PreliminaryChecker;
+import ie.ucd.bon.typechecker.TypeCheckerVisitor;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -47,6 +49,12 @@ public final class TypeChecker {
     PreliminaryChecker preCheck = new PreliminaryChecker(tracker.getSymbolTable());
     preCheck.runChecks(checkFormal, checkInformal);
     tracker.addProblems(preCheck.getProblems());
+    
+    TypeCheckerVisitor visitor = new TypeCheckerVisitor(tracker.getSymbolTable());
+    for (ParseResult parse : tracker.getParses()) {
+      parse.getParse().accept(visitor);
+    }
+    tracker.addProblems(visitor.getProblems());
   }
   
 //  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {

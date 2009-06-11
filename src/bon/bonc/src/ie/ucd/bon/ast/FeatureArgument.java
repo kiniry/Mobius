@@ -11,27 +11,27 @@ import ie.ucd.bon.source.SourceLocation;
 public class FeatureArgument extends AstNode {
 
 
+  private final Type type;
 
   private final String identifier;
-  private final BONType type;
 
 
   // === Constructors and Factories ===
-  protected FeatureArgument(String identifier, BONType type, SourceLocation location) {
+  protected FeatureArgument(String identifier, Type type, SourceLocation location) {
     super(location);
     this.identifier = identifier; 
     this.type = type; assert type != null;
     
   }
   
-  public static FeatureArgument mk(String identifier, BONType type, SourceLocation location) {
+  public static FeatureArgument mk(String identifier, Type type, SourceLocation location) {
     return new FeatureArgument(identifier, type, location);
   }
 
   // === Accessors ===
 
   public String getIdentifier() { return identifier; }
-  public BONType getType() { return type; }
+  public Type getType() { return type; }
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
@@ -42,7 +42,7 @@ public class FeatureArgument extends AstNode {
   @Override
   public FeatureArgument clone() {
     String newIdentifier = identifier;
-    BONType newType = type;
+    Type newType = type == null ? null : type.clone();
     
     return FeatureArgument.mk(newIdentifier, newType, getLocation());
   }

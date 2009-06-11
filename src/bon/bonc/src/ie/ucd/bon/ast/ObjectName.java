@@ -11,26 +11,26 @@ import ie.ucd.bon.source.SourceLocation;
 public class ObjectName extends AstNode {
 
 
+  private final ClassName className;
 
-  private final String className;
   private final String extendedId;
 
 
   // === Constructors and Factories ===
-  protected ObjectName(String className, String extendedId, SourceLocation location) {
+  protected ObjectName(ClassName className, String extendedId, SourceLocation location) {
     super(location);
     this.className = className; assert className != null;
     this.extendedId = extendedId; 
     
   }
   
-  public static ObjectName mk(String className, String extendedId, SourceLocation location) {
+  public static ObjectName mk(ClassName className, String extendedId, SourceLocation location) {
     return new ObjectName(className, extendedId, location);
   }
 
   // === Accessors ===
 
-  public String getClassName() { return className; }
+  public ClassName getClassName() { return className; }
   public String getExtendedId() { return extendedId; }
 
   // === Visitor ===
@@ -41,7 +41,7 @@ public class ObjectName extends AstNode {
   // === Others ===
   @Override
   public ObjectName clone() {
-    String newClassName = className;
+    ClassName newClassName = className == null ? null : className.clone();
     String newExtendedId = extendedId;
     
     return ObjectName.mk(newClassName, newExtendedId, getLocation());

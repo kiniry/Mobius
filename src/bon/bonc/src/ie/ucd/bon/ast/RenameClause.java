@@ -11,26 +11,26 @@ import ie.ucd.bon.source.SourceLocation;
 public class RenameClause extends AstNode {
 
 
+  private final ClassName className;
 
-  private final String className;
   private final String featureName;
 
 
   // === Constructors and Factories ===
-  protected RenameClause(String className, String featureName, SourceLocation location) {
+  protected RenameClause(ClassName className, String featureName, SourceLocation location) {
     super(location);
     this.className = className; assert className != null;
     this.featureName = featureName; assert featureName != null;
     
   }
   
-  public static RenameClause mk(String className, String featureName, SourceLocation location) {
+  public static RenameClause mk(ClassName className, String featureName, SourceLocation location) {
     return new RenameClause(className, featureName, location);
   }
 
   // === Accessors ===
 
-  public String getClassName() { return className; }
+  public ClassName getClassName() { return className; }
   public String getFeatureName() { return featureName; }
 
   // === Visitor ===
@@ -41,7 +41,7 @@ public class RenameClause extends AstNode {
   // === Others ===
   @Override
   public RenameClause clone() {
-    String newClassName = className;
+    ClassName newClassName = className == null ? null : className.clone();
     String newFeatureName = featureName;
     
     return RenameClause.mk(newClassName, newFeatureName, getLocation());

@@ -11,16 +11,16 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClientRelation extends StaticRelation {
 
 
+  private final StaticRef client;
+  private final StaticRef supplier;
   private final ClientEntityExpression clientEntities;
   private final TypeMark typeMark;
 
-  private final BONType client;
-  private final BONType supplier;
   private final String semanticLabel;
 
 
   // === Constructors and Factories ===
-  protected ClientRelation(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
+  protected ClientRelation(StaticRef client, StaticRef supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
     super(location);
     this.client = client; assert client != null;
     this.supplier = supplier; assert supplier != null;
@@ -30,14 +30,14 @@ public class ClientRelation extends StaticRelation {
     
   }
   
-  public static ClientRelation mk(BONType client, BONType supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
+  public static ClientRelation mk(StaticRef client, StaticRef supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
     return new ClientRelation(client, supplier, clientEntities, typeMark, semanticLabel, location);
   }
 
   // === Accessors ===
 
-  public BONType getClient() { return client; }
-  public BONType getSupplier() { return supplier; }
+  public StaticRef getClient() { return client; }
+  public StaticRef getSupplier() { return supplier; }
   public ClientEntityExpression getClientEntities() { return clientEntities; }
   public TypeMark getTypeMark() { return typeMark; }
   public String getSemanticLabel() { return semanticLabel; }
@@ -50,8 +50,8 @@ public class ClientRelation extends StaticRelation {
   // === Others ===
   @Override
   public ClientRelation clone() {
-    BONType newClient = client;
-    BONType newSupplier = supplier;
+    StaticRef newClient = client == null ? null : client.clone();
+    StaticRef newSupplier = supplier == null ? null : supplier.clone();
     ClientEntityExpression newClientEntities = clientEntities == null ? null : clientEntities.clone();
     TypeMark newTypeMark = typeMark == null ? null : typeMark.clone();
     String newSemanticLabel = semanticLabel;

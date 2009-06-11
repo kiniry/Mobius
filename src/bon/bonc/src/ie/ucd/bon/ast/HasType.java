@@ -12,26 +12,26 @@ public class HasType extends AstNode {
 
 
   private final TypeMark mark;
+  private final Type type;
 
-  private final BONType type;
 
 
   // === Constructors and Factories ===
-  protected HasType(TypeMark mark, BONType type, SourceLocation location) {
+  protected HasType(TypeMark mark, Type type, SourceLocation location) {
     super(location);
     this.mark = mark; assert mark != null;
     this.type = type; assert type != null;
     
   }
   
-  public static HasType mk(TypeMark mark, BONType type, SourceLocation location) {
+  public static HasType mk(TypeMark mark, Type type, SourceLocation location) {
     return new HasType(mark, type, location);
   }
 
   // === Accessors ===
 
   public TypeMark getMark() { return mark; }
-  public BONType getType() { return type; }
+  public Type getType() { return type; }
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
@@ -42,7 +42,7 @@ public class HasType extends AstNode {
   @Override
   public HasType clone() {
     TypeMark newMark = mark == null ? null : mark.clone();
-    BONType newType = type;
+    Type newType = type == null ? null : type.clone();
     
     return HasType.mk(newMark, newType, getLocation());
   }

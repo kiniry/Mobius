@@ -10,13 +10,13 @@ public class BONType extends Type {
 
   private static Map<String,BONType> typeMap = new HashMap<String,BONType>();
 
-  public BONType(String identifier, List<BONType> actualGenerics,
+  public BONType(String identifier, List<Type> actualGenerics,
       String fullString, SourceLocation location) {
     super(identifier, actualGenerics, fullString, location);
     typeMap.put(fullString, this);
   }
 
-  public static BONType mk(String identifier, List<BONType> actualGenerics, String fullString, SourceLocation location) {
+  public static BONType mk(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
     BONType type = typeMap.get(fullString);
     if (type == null) {
       return new BONType(identifier, actualGenerics, fullString, location);

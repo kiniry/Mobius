@@ -16,9 +16,9 @@ public class Clazz extends StaticComponent {
     EFFECTIVE
   }
 
+  private final ClassName name;
   private final ClassInterface classInterface;
 
-  private final String name;
   private final List<FormalGeneric> generics;
   private final Mod mod;
   private final Boolean reused;
@@ -28,7 +28,7 @@ public class Clazz extends StaticComponent {
 
 
   // === Constructors and Factories ===
-  protected Clazz(String name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
+  protected Clazz(ClassName name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
     this.generics = generics; 
@@ -41,13 +41,13 @@ public class Clazz extends StaticComponent {
     
   }
   
-  public static Clazz mk(String name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
+  public static Clazz mk(ClassName name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
     return new Clazz(name, generics, mod, classInterface, reused, persistent, interfaced, comment, location);
   }
 
   // === Accessors ===
 
-  public String getName() { return name; }
+  public ClassName getName() { return name; }
   public List<FormalGeneric> getGenerics() { return generics; }
   public Mod getMod() { return mod; }
   public ClassInterface getClassInterface() { return classInterface; }
@@ -64,7 +64,7 @@ public class Clazz extends StaticComponent {
   // === Others ===
   @Override
   public Clazz clone() {
-    String newName = name;
+    ClassName newName = name == null ? null : name.clone();
     List<FormalGeneric> newGenerics = generics;
     Mod newMod = mod;
     ClassInterface newClassInterface = classInterface == null ? null : classInterface.clone();

@@ -257,8 +257,8 @@ cluster_name returns [String name] :
 
 class_chart returns [ClassChart cc] 
 @init { Indexing indexing = null; String explanation = null; String part = null;
-        List<String> inherits = null; List<String> commands = null; List<String> queries = null; 
-        List<String> constraints = null;  }
+        List<ClassName> inherits = emptyList(); List<String> commands = emptyList(); List<String> queries = emptyList(); 
+        List<String> constraints = emptyList();  }
 :
   c='class_chart' class_name 
   (i=indexing { indexing = $i.indexing; } )? 
@@ -266,25 +266,21 @@ class_chart returns [ClassChart cc]
   (part { part = $part.part; } )? 
   (  inherits
      { inherits = $inherits.inherits; }
-   | { inherits = emptyList(); } 
-  )
+  )?
   (  queries
      { queries = $queries.queries; }
-   | { queries = emptyList(); }
-  )
+  )?
   (  commands
      { commands = $commands.commands; }
-   | { commands = emptyList(); }
-  ) 
+  )?
   (  constraints
      { constraints = $constraints.constraints; }
-   | { constraints = emptyList(); }
-  ) 
+  )?
   e='end'
   { $cc = ClassChart.mk($class_name.name, inherits, queries, commands, constraints, indexing, explanation, part, getSLoc($c,$e)); }
 ;
              
-inherits returns [List<String> inherits] :
+inherits returns [List<ClassName> inherits] :
   i='inherit' 
   class_name_list
   { $inherits = $class_name_list.list; }
@@ -294,17 +290,17 @@ inherits returns [List<String> inherits] :
 ;
 
 queries returns [List<String> queries] :
-  q='query' query_list  
+  'query' query_list  
   { $queries = $query_list.queries; }
 ;
          
 commands returns [List<String> commands] :
-  c='command' command_list
+  'command' command_list
   { $commands = $command_list.commands; }
 ;
 
 constraints returns [List<String> constraints] :
-  c='constraint' constraint_list
+  'constraint' constraint_list
   { $constraints = $constraint_list.constraints; }
 ;
 
@@ -349,15 +345,16 @@ constraint_list returns [List<String> constraints] :
   ','?
 ;
 
-class_name_list returns [List<String> list] :
+class_name_list returns [List<ClassName> list] :
   { $list = createList(); }
   c1=class_name 
-  { $list.add($c1.text); }
+  { $list.add($c1.name); }
   (  ( ',' c=class_name 
-       { $list.add($c.text); } 
+       { $list.add($c.name); } 
      )
    | ( c=class_name 
-       { $list.add($c.text); }										       
+       { $list.add($c.name); }	
+       //TODO warn missing comma									       
      )
   )*
 ;
@@ -365,6 +362,7 @@ class_name_list returns [List<String> list] :
 cluster_name_list returns [List<String> list] :
   { $list = createList(); }
   c1=cluster_name
+  { $list.add($c1.text); }
   (  ( ',' c=cluster_name
        { $list.add($c.text); } 
      )
@@ -386,15 +384,15 @@ class_or_cluster_name_list returns [List<String> list] :
 
 class_or_bracketed_cluster_name returns [String name] :
    class_name
-   { $name = $class_name.name; }
+   { $name = $class_name.name.getName(); }
  | 
    '(' cluster_name ')'
    { $name = $cluster_name.name; }
 ;
 
-class_name returns [String name] :
+class_name returns [ClassName name] :
   i=IDENTIFIER
-  { $name = $i.text; } 
+  { $name = ClassName.mk($i.text, getSLoc($i)); } 
 ;
 
 /**********************************************/
@@ -459,7 +457,7 @@ scenario_entry returns [ScenarioEntry entry] :
 /**********************************************/
 
 creation_chart returns [CreationChart cc] :
-  c='creation_chart' system_name
+  'creation_chart' system_name
   (indexing)?
   (explanation)?
   (part)?
@@ -532,7 +530,7 @@ cluster returns [Cluster cluster]
 ;
          
 cluster_components returns [List<StaticComponent> components] :  
-  c='component' static_block 'end'
+  'component' static_block 'end'
   { $components = $static_block.components; }
 ;
                     
@@ -582,7 +580,7 @@ inheritance_relation returns [InheritanceRelation relation]
   ( semantic_label
    { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } 
   )? 
-  { $relation = InheritanceRelation.mk($c.type, $p.type, multiplicity, semanticLabel, getSLoc($c.start, end)); }
+  { $relation = InheritanceRelation.mk($c.ref, $p.ref, multiplicity, semanticLabel, getSLoc($c.start, end)); }
 ;
                     
 client_relation returns [ClientRelation relation] 
@@ -598,11 +596,11 @@ client_relation returns [ClientRelation relation]
   s=supplier 
   { end = $supplier.stop; }
   (semantic_label { semanticLabel = $semantic_label.label; end = $semantic_label.stop; } )?
-  { $relation = ClientRelation.mk($c.type,$s.type,entities,mark,semanticLabel,getSLoc($c.start,end)); }
+  { $relation = ClientRelation.mk($c.ref,$s.ref,entities,mark,semanticLabel,getSLoc($c.start,end)); }
 ;
                  
 client_entities returns [ClientEntityExpression entities] :
-  a='{' cee=client_entity_expression b='}'
+  '{' cee=client_entity_expression '}'
   { $entities = $cee.entities; }
 ;
                  
@@ -693,43 +691,49 @@ shared_mark returns [TypeMark mark] :
 
 /**********************************************/
 
-child returns [BONType type] :
+child returns [StaticRef ref] :
   s=static_ref
-  { $type = $s.type; }
+  { $ref = $s.ref; }
 ;
        
-parent returns [BONType type] :
+parent returns [StaticRef ref] :
   s=static_ref
-  { $type = $s.type; }         
+  { $ref = $s.ref; }         
 ;
         
-client returns [BONType type] :
+client returns [StaticRef ref] :
   s=static_ref
-  { $type = $s.type; } 
+  { $ref = $s.ref; } 
 ;
         
-supplier returns [BONType type] :
+supplier returns [StaticRef ref] :
   s=static_ref
-  { $type = $s.type; }
+  { $ref = $s.ref; }
 ;
           
-static_ref returns [BONType type] :  
+static_ref returns [StaticRef ref] :  
    s=static_component_name
-   { $type = $s.type; }
+   { List<StaticRefPart> empty = emptyList(); $ref = StaticRef.mk(empty, $s.ref, getSLoc($s.start,$s.stop)); }
  | 
-   c=cluster_prefix s=static_component_name
-   { $type = $s.type; } 
+   cp=cluster_prefix s=static_component_name
+   { $ref = StaticRef.mk($cp.prefix, $s.ref, getSLoc($cp.start,$s.stop)); } 
 ;
             
-cluster_prefix  :
-  c1=cluster_name '.' (cluster_name '.')*
+cluster_prefix returns [List<StaticRefPart> prefix] :
+  { $prefix = createList(); }
+  c1=cluster_name 
+  { $prefix.add(StaticRefPart.mk($c1.name, getSLoc($c1.start,$c1.stop))); }
+  '.' 
+  ( c=cluster_name '.'
+    { $prefix.add(StaticRefPart.mk($c.name, getSLoc($c.start,$c.stop))); }
+  )*
 ;
   
 //TODO - class_name and cluster_name are both just IDENTIFIERs.              
 //static_component_name  :  class_name | cluster_name 
-static_component_name returns [BONType type] :
+static_component_name returns [StaticRefPart ref] :
   i=IDENTIFIER
-  { $type = BONType.mk($i.text, null, $i.text, getSLoc($i)); }
+  { $ref = StaticRefPart.mk($i.text, getSLoc($i)); }
 ;
                        
 multiplicity returns [Integer num] :
@@ -747,7 +751,7 @@ semantic_label returns [String label] :
  **********************************************/
 
 class_interface returns [ClassInterface ci] 
-@init { Indexing indexing = null; List<BONType> parents = null; List<Expression> invariant = null; Token start = null; }
+@init { Indexing indexing = null; List<Type> parents = null; List<Expression> invariant = null; Token start = null; }
 :
   (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
   (  pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } 
@@ -767,7 +771,7 @@ class_invariant returns [List<Expression> invariant] :
   { $invariant = $assertion.clauses; }
 ;
                  
-parent_class_list returns [List<BONType> parents] :
+parent_class_list returns [List<Type> parents] :
   { $parents = createList(); }
   'inherit' c1=class_type 
   { $parents.add($c1.type); } 
@@ -788,7 +792,7 @@ features returns [List<Feature> features] :
 /**********************************************/
 
 feature_clause returns [Feature feature] 
-@init { String comment = null; List<String> selectiveExport = null; }
+@init { String comment = null; List<ClassName> selectiveExport = null; }
 :
   f='feature' 
   (  se=selective_export { selectiveExport = $se.exports; } 
@@ -866,7 +870,7 @@ postcondition returns [List<Expression> assertions] :
 
 /**********************************************/
 
-selective_export returns [List<String> exports] :
+selective_export returns [List<ClassName> exports] :
   '{' cnl=class_name_list '}'
   { $exports = $cnl.list; }  
 ;
@@ -966,7 +970,7 @@ formal_generic_name returns [String name] :
   { $name = $i.text; } 
 ;
                      
-class_type returns [BONType type] :  
+class_type returns [Type type] :  
   c=class_name 
   (  actual_generics
      { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
@@ -975,12 +979,12 @@ class_type returns [BONType type] :
   ) 
 ;
             
-actual_generics returns [List<BONType> types] :  
+actual_generics returns [List<Type> types] :  
                   '[' type_list ']'
                   { $types = $type_list.types; }
 ;
                  
-type_list returns [List<BONType> types]  :
+type_list returns [List<Type> types]  :
            t1=type
            { $types = createList(); $types.add($t1.type); } 
            (',' t=type
@@ -991,7 +995,7 @@ type_list returns [List<BONType> types]  :
 //TODO - Conflict - class_type is essentially IDENTIFIER (actual_generics)?
 //And formal_generic_name is IDENTIFIER          
 //type  :  class_type | formal_generic_name 
-type returns [BONType type] :  
+type returns [Type type] :  
        i=IDENTIFIER 
        (
         ( actual_generics 

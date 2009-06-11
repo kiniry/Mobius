@@ -1,7 +1,6 @@
 package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.ast.AstNode;
-import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientRelation;
@@ -9,6 +8,7 @@ import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.graph.Graph;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class BONST {
   public final Map<String,Cluster> clusters = new HashMap<String,Cluster>();
   public final Map<String,Clazz> classes = new HashMap<String,Clazz>();
   
-  public final Graph<String,BONType> classInheritanceGraph = new Graph<String,BONType>();
+  public final Graph<String,Type> classInheritanceGraph = new Graph<String,Type>();
   public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
   
   public final Graph<String,Cluster> classClusterGraph = new Graph<String,Cluster>();

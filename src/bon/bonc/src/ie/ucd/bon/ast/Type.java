@@ -13,12 +13,12 @@ public class Type extends AstNode {
 
 
   private final String identifier;
-  private final List<BONType> actualGenerics;
+  private final List<Type> actualGenerics;
   private final String fullString;
 
 
   // === Constructors and Factories ===
-  protected Type(String identifier, List<BONType> actualGenerics, String fullString, SourceLocation location) {
+  protected Type(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
     super(location);
     this.identifier = identifier; assert identifier != null;
     this.actualGenerics = actualGenerics; assert actualGenerics != null;
@@ -26,14 +26,14 @@ public class Type extends AstNode {
     
   }
   
-  public static Type mk(String identifier, List<BONType> actualGenerics, String fullString, SourceLocation location) {
+  public static Type mk(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
     return new Type(identifier, actualGenerics, fullString, location);
   }
 
   // === Accessors ===
 
   public String getIdentifier() { return identifier; }
-  public List<BONType> getActualGenerics() { return actualGenerics; }
+  public List<Type> getActualGenerics() { return actualGenerics; }
   public String getFullString() { return fullString; }
 
   // === Visitor ===
@@ -45,7 +45,7 @@ public class Type extends AstNode {
   @Override
   public Type clone() {
     String newIdentifier = identifier;
-    List<BONType> newActualGenerics = actualGenerics;
+    List<Type> newActualGenerics = actualGenerics;
     String newFullString = fullString;
     
     return Type.mk(newIdentifier, newActualGenerics, newFullString, getLocation());

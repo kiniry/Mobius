@@ -11,15 +11,15 @@ import ie.ucd.bon.source.SourceLocation;
 public class InheritanceRelation extends StaticRelation {
 
 
+  private final StaticRef child;
+  private final StaticRef parent;
   private final Multiplicity multiplicity;
 
-  private final BONType child;
-  private final BONType parent;
   private final String semanticLabel;
 
 
   // === Constructors and Factories ===
-  protected InheritanceRelation(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
+  protected InheritanceRelation(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     super(location);
     this.child = child; assert child != null;
     this.parent = parent; assert parent != null;
@@ -28,14 +28,14 @@ public class InheritanceRelation extends StaticRelation {
     
   }
   
-  public static InheritanceRelation mk(BONType child, BONType parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
+  public static InheritanceRelation mk(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel, location);
   }
 
   // === Accessors ===
 
-  public BONType getChild() { return child; }
-  public BONType getParent() { return parent; }
+  public StaticRef getChild() { return child; }
+  public StaticRef getParent() { return parent; }
   public Multiplicity getMultiplicity() { return multiplicity; }
   public String getSemanticLabel() { return semanticLabel; }
 
@@ -47,8 +47,8 @@ public class InheritanceRelation extends StaticRelation {
   // === Others ===
   @Override
   public InheritanceRelation clone() {
-    BONType newChild = child;
-    BONType newParent = parent;
+    StaticRef newChild = child == null ? null : child.clone();
+    StaticRef newParent = parent == null ? null : parent.clone();
     Multiplicity newMultiplicity = multiplicity == null ? null : multiplicity.clone();
     String newSemanticLabel = semanticLabel;
     

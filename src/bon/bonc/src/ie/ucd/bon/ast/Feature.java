@@ -13,12 +13,12 @@ public class Feature extends AstNode {
 
 
   private final List<FeatureSpecification> featureSpecifications;
-  private final List<String> selectiveExport;
+  private final List<ClassName> selectiveExport;
   private final String comment;
 
 
   // === Constructors and Factories ===
-  protected Feature(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment, SourceLocation location) {
+  protected Feature(List<FeatureSpecification> featureSpecifications, List<ClassName> selectiveExport, String comment, SourceLocation location) {
     super(location);
     this.featureSpecifications = featureSpecifications; assert featureSpecifications != null;
     this.selectiveExport = selectiveExport; 
@@ -26,14 +26,14 @@ public class Feature extends AstNode {
     
   }
   
-  public static Feature mk(List<FeatureSpecification> featureSpecifications, List<String> selectiveExport, String comment, SourceLocation location) {
+  public static Feature mk(List<FeatureSpecification> featureSpecifications, List<ClassName> selectiveExport, String comment, SourceLocation location) {
     return new Feature(featureSpecifications, selectiveExport, comment, location);
   }
 
   // === Accessors ===
 
   public List<FeatureSpecification> getFeatureSpecifications() { return featureSpecifications; }
-  public List<String> getSelectiveExport() { return selectiveExport; }
+  public List<ClassName> getSelectiveExport() { return selectiveExport; }
   public String getComment() { return comment; }
 
   // === Visitor ===
@@ -45,7 +45,7 @@ public class Feature extends AstNode {
   @Override
   public Feature clone() {
     List<FeatureSpecification> newFeatureSpecifications = featureSpecifications;
-    List<String> newSelectiveExport = selectiveExport;
+    List<ClassName> newSelectiveExport = selectiveExport;
     String newComment = comment;
     
     return Feature.mk(newFeatureSpecifications, newSelectiveExport, newComment, getLocation());

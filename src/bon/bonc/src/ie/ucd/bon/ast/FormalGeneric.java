@@ -11,27 +11,27 @@ import ie.ucd.bon.source.SourceLocation;
 public class FormalGeneric extends AstNode {
 
 
+  private final Type type;
 
   private final String identifier;
-  private final BONType type;
 
 
   // === Constructors and Factories ===
-  protected FormalGeneric(String identifier, BONType type, SourceLocation location) {
+  protected FormalGeneric(String identifier, Type type, SourceLocation location) {
     super(location);
     this.identifier = identifier; assert identifier != null;
     this.type = type; 
     
   }
   
-  public static FormalGeneric mk(String identifier, BONType type, SourceLocation location) {
+  public static FormalGeneric mk(String identifier, Type type, SourceLocation location) {
     return new FormalGeneric(identifier, type, location);
   }
 
   // === Accessors ===
 
   public String getIdentifier() { return identifier; }
-  public BONType getType() { return type; }
+  public Type getType() { return type; }
 
   // === Visitor ===
   public void accept(IVisitor visitor) {
@@ -42,7 +42,7 @@ public class FormalGeneric extends AstNode {
   @Override
   public FormalGeneric clone() {
     String newIdentifier = identifier;
-    BONType newType = type;
+    Type newType = type == null ? null : type.clone();
     
     return FormalGeneric.mk(newIdentifier, newType, getLocation());
   }

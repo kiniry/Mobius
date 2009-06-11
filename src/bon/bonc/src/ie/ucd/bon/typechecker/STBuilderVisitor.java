@@ -7,6 +7,7 @@ import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.ClassEntry;
 import ie.ucd.bon.ast.ClassInterface;
+import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientEntityExpression;
 import ie.ucd.bon.ast.ClientRelation;
@@ -26,6 +27,8 @@ import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
+import ie.ucd.bon.ast.StaticRef;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.Clazz.Mod;
 import ie.ucd.bon.ast.FeatureSpecification.Modifier;
@@ -41,7 +44,6 @@ import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,22 +86,22 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   }
 
   @Override
-  public void visitClazz(Clazz node, String name, List<FormalGeneric> generics,
+  public void visitClazz(Clazz node, ClassName name, List<FormalGeneric> generics,
       Mod mod, ClassInterface classInterface, Boolean reused,
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
 
-    Clazz clazz = st.classes.get(name);
-    Cluster cluster = st.clusters.get(name);
+    Clazz clazz = st.classes.get(name.getName());
+    Cluster cluster = st.clusters.get(name.getName());
 
     if (cluster != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Class", name, "cluster", cluster.getLocation()));  
+      problems.addProblem(new NameNotUniqueError(loc, "Class", name.getName(), "cluster", cluster.getLocation()));  
     } else if (clazz != null) {
       problems.addProblem(new DuplicateClassDefinitionError(loc, clazz));
     } else {
-      st.classes.put(name, node);
+      st.classes.put(name.getName(), node);
 
       if (!context.clusterStack.empty()) {
-        st.classClusterGraph.put(name, context.clusterStack.peek());
+        st.classClusterGraph.put(name.getName(), context.clusterStack.peek());
       }
       
       Map<String,FormalGeneric> genericIdsMap = new HashMap<String,FormalGeneric>();
@@ -145,15 +147,15 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitClassInterface(ClassInterface node, List<Feature> features,
-      List<BONType> parents, List<Expression> invariant, Indexing indexing,
+      List<Type> parents, List<Expression> invariant, Indexing indexing,
       SourceLocation loc) {
     
-    for (BONType parent : parents) {
-      if (parent.getNonGenericType().equals(context.clazz.getName())) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, context.clazz.getName()));
+    for (Type parent : parents) {
+      if (parent.getIdentifier().equals(context.clazz.getName().getName())) {
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, context.clazz.getName().getName()));
       } else {
-        st.classInheritanceGraph.put(context.clazz.getName(), parent);
-        st.simpleClassInheritanceGraph.put(context.clazz.getName(), parent.getIdentifier());
+        st.classInheritanceGraph.put(context.clazz.getName().getName(), parent);
+        st.simpleClassInheritanceGraph.put(context.clazz.getName().getName(), parent.getIdentifier());
       }
     }
     
@@ -169,7 +171,7 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   @Override
   public void visitFeature(Feature node,
       List<FeatureSpecification> featureSpecifications,
-      List<String> selectiveExport, String comment, SourceLocation loc) {
+      List<ClassName> selectiveExport, String comment, SourceLocation loc) {
 
     context.selectiveExport = selectiveExport;
     visitAll(featureSpecifications);
@@ -186,35 +188,35 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       if (other == null) {
         st.featuresMap.put(context.clazz, name, node);
       } else {
-        problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName(), name, other));
+        problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName().getName(), name, other));
       }
     }
   }
 
   @Override
-  public void visitClassChart(ClassChart node, String name,
-      List<String> inherits, List<String> queries, List<String> commands,
+  public void visitClassChart(ClassChart node, ClassName name,
+      List<ClassName> inherits, List<String> queries, List<String> commands,
       List<String> constraints, Indexing indexing, String explanation,
       String part, SourceLocation loc) {
     
     //Check if name unique
-    ClusterChart otherCluster = st.informal.clusters.get(name);
+    ClusterChart otherCluster = st.informal.clusters.get(name.getName());
     if (otherCluster != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", otherCluster.getLocation()));
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name.getName(), "class", otherCluster.getLocation()));
     }else {
-      ClassChart clazz = st.informal.classes.get(name);
+      ClassChart clazz = st.informal.classes.get(name.getName());
       if (clazz != null) {
         problems.addProblem(new DuplicateClassChartError(loc, clazz));  
       } else {
-        st.informal.classes.put(name, node);
+        st.informal.classes.put(name.getName(), node);
       }
     }
 
-    for (String parent : inherits) {
+    for (ClassName parent : inherits) {
       if (parent.equals(name)) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, name));
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, name.getName()));
       } else {
-        st.informal.classInheritanceGraph.put(node, parent);      
+        st.informal.classInheritanceGraph.put(node, parent.getName());      
       }
     }
     
@@ -267,23 +269,9 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     indexing(node, indexing);
   }  
 
-  public void visitAll(Collection<? extends AstNode> nodes) {
-    if (nodes != null) {
-      for (AstNode node : nodes) {
-        node.accept(this);
-      }
-    }
-  }
-  
-  public void visitNode(AstNode node) {
-    if (node != null) {
-      node.accept(this);
-    }
-  }
-  
   @Override
-  public void visitClientRelation(ClientRelation node, BONType client,
-      BONType supplier, ClientEntityExpression clientEntities,
+  public void visitClientRelation(ClientRelation node, StaticRef client,
+      StaticRef supplier, ClientEntityExpression clientEntities,
       TypeMark typeMark, String semanticLabel, SourceLocation loc) {
     
     st.clientRelations.add(node);

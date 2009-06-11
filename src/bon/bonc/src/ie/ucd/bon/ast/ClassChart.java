@@ -11,10 +11,10 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassChart extends InformalChart {
 
 
+  private final ClassName name;
   private final Indexing indexing;
 
-  private final String name;
-  private final List<String> inherits;
+  private final List<ClassName> inherits;
   private final List<String> queries;
   private final List<String> commands;
   private final List<String> constraints;
@@ -23,7 +23,7 @@ public class ClassChart extends InformalChart {
 
 
   // === Constructors and Factories ===
-  protected ClassChart(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
+  protected ClassChart(ClassName name, List<ClassName> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
     this.inherits = inherits; assert inherits != null;
@@ -36,14 +36,14 @@ public class ClassChart extends InformalChart {
     
   }
   
-  public static ClassChart mk(String name, List<String> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
+  public static ClassChart mk(ClassName name, List<ClassName> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassChart(name, inherits, queries, commands, constraints, indexing, explanation, part, location);
   }
 
   // === Accessors ===
 
-  public String getName() { return name; }
-  public List<String> getInherits() { return inherits; }
+  public ClassName getName() { return name; }
+  public List<ClassName> getInherits() { return inherits; }
   public List<String> getQueries() { return queries; }
   public List<String> getCommands() { return commands; }
   public List<String> getConstraints() { return constraints; }
@@ -59,8 +59,8 @@ public class ClassChart extends InformalChart {
   // === Others ===
   @Override
   public ClassChart clone() {
-    String newName = name;
-    List<String> newInherits = inherits;
+    ClassName newName = name == null ? null : name.clone();
+    List<ClassName> newInherits = inherits;
     List<String> newQueries = queries;
     List<String> newCommands = commands;
     List<String> newConstraints = constraints;

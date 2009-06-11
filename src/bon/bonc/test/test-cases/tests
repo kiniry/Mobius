@@ -89,7 +89,7 @@
 @Test-name: "Static component is not contained in cluster."
 @Location { test15/ }
 @Input { static_component_not_contained }
-@Output { < NotContainedInClusterError, #File:static_component_not_contained, 12, 4, B, true, X > }
+@Output { < NotContainedInClusterError, #File:static_component_not_contained, 12, 2, B, true, X > }
 
 //This is technically allowed in BON, so we should not issue an error automatically.
 //Possibly this should be an option as to whether to warn/give error for duplicate superclass.
@@ -131,7 +131,8 @@
 @Prog-args: {--informal}
 @Location { test22/ }
 @Input { self_as_super1 }
-@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 9, 0, C > }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 9, 12, C >,
+          < CycleInRelationsError, #File:self_as_super1, 9, 0, Class, C, "C->C->C", "class hierarchy" > }
 
 @Test-name: "Class has self as parent (formal)."
 @Prog-args: {--formal}
