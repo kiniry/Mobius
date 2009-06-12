@@ -12,6 +12,8 @@ import java.util.LinkedList;
 
 import org.apache.bcel.generic.MethodGen;
 
+import annot.bcclass.BCMethod;
+
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.AnnotationLineController;
 import umbra.instructions.ast.BytecodeLineController;
@@ -113,8 +115,8 @@ public abstract class BytecodeTextParser {
    * @return the BCEL structure which describes the method
    * @throws UmbraMethodException in case the given method number is wrong
    */
-  protected static MethodGen getMethodGenFromDoc(final BytecodeDocument a_doc,
-                                                 final int a_method_no)
+  protected static BCMethod getMethodGenFromDoc(final BytecodeDocument a_doc,
+                                                final int a_method_no)
     throws UmbraMethodException {
     return a_doc.getMethodGen(a_method_no);
   }

@@ -25,8 +25,10 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.PMGClass;
 import org.apache.bcel.classfile.Signature;
 import org.apache.bcel.classfile.SourceFile;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import annot.bcclass.BCConstantPool;
+import annot.bcclass.BCMethod;
 
 import umbra.UmbraPlugin;
 import umbra.editor.BytecodeDocument;
@@ -300,7 +302,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
           getLineController(i) instanceof CPLineController) {
         bcp.addConstantAfter(((CPLineController)
             getLineController(i)).getConstant(),
-                             first_before, false);
+                             first_before);
         first_before++;
         for (int j = i + 1; j < an_end_rem; j++) {
           an_old_indices.set(j, an_old_indices.get(j) + 1);
@@ -315,7 +317,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       for (int i = an_end_rem + 1; i <= a_stop; i++) {
         if (getLineController(i) instanceof CPLineController) {
           final CPLineController cplc = (CPLineController) getLineController(i);
-          bcp.addConstantAfter(cplc.getConstant(), first_before, false);
+          bcp.addConstantAfter(cplc.getConstant(), first_before);
           first_before++;
           for (int j = i + 1; j < an_end_rem; j++) {
             an_old_indices.set(j, an_old_indices.get(j) + 1);
@@ -354,11 +356,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                                               final int a_methodno,
                                               final FragmentParser a_parser)
     throws UmbraException {
-    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    final BCMethod mg = getCurrentMethod(a_start_rem, an_end_rem);
     markModified(a_methodno);
-    mg.removeLineNumbers();
+    mg.getBcelMethod().removeLineNumbers();
     replaceInstructions(a_start_rem, an_end_rem, a_parser.getInstructions());
-    mg.getInstructionList().setPositions();
+    mg.getInstructions().setPositions();
   }
 
   /**
@@ -419,7 +421,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                                  final BytecodeDocument a_doc)
     throws UmbraException {
     if (the_lines.isEmpty()) return; //in case edit should not change anything
-    final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+    final BCMethod mg = getCurrentMethod(a_start_rem, an_end_rem);
     final int j = replaceEditorLines(a_start_rem, an_end_rem, a_stop,
                                      the_lines);
     if (an_end_rem < a_stop) { //we must add the new lines
@@ -430,9 +432,9 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     //my_editor_lines.addAll(a_start_rem, the_lines);
     if (!a_ctxt.isInsideAnnotation() && !a_ctxt.isInInvariantArea() &&
         !a_ctxt.isInFieldsArea() && !a_ctxt.isInsideConstantPool()) {
-      mg.getInstructionList().update();
-      mg.update();
-      mg.getInstructionList().setPositions();
+      mg.getInstructions().update();
+      mg.getBcelMethod().update();
+      mg.getInstructions().setPositions();
     }
   }
 
@@ -462,7 +464,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                               final int a_stop,
                               final LinkedList the_lines,
                               final int an_index,
-                              final MethodGen a_methgen) throws UmbraException {
+                              final BCMethod a_methgen) throws UmbraException {
     if (FileNames.CP_DEBUG_MODE) System.err.println("[[:: ADD ::]]");
     int j = an_index;
     int pos = 0;
@@ -534,7 +536,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         iolc.replace(ilc);
       } else if (newlc.needsMg()) {
         final InstructionLineController ilc = (InstructionLineController) newlc;
-        final MethodGen mg = getCurrentMethodGen(a_start_rem, an_end_rem);
+        final BCMethod mg = getCurrentMethod(a_start_rem, an_end_rem);
         final int pos = getCurrentPositionInMethod(i);
         if (pos == BytecodeLineController.WRONG_POSITION_IN_METHOD)
           throw new UmbraException();
@@ -585,15 +587,15 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    *
    * @param a_start_rem the first line of the edited area
    * @param an_end_rem the last line of the edited area
-   * @return the {@link MethodGen} structure which handles the editing of this
+   * @return the {@link BCMethod} structure which handles the editing of this
    *   area
-   * @throws UmbraException the {@link MethodGen} cannot be successfully
+   * @throws UmbraException the {@link BCMethod} cannot be successfully
    *   obtained
    */
-  private MethodGen getCurrentMethodGen(final int a_start_rem,
-                                        final int an_end_rem)
+  private BCMethod getCurrentMethod(final int a_start_rem,
+                                    final int an_end_rem)
     throws UmbraException {
-    MethodGen mg = null;
+    BCMethod mg = null;
     for (int i = a_start_rem; i >= 0; i--) {
       final BytecodeLineController bcl = getLineController(i);
       if (bcl instanceof HeaderLineController) {
@@ -701,11 +703,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * const #5 = Utf8 "a string" <br>
    * </code> <br> <br>
    *
-   * @param a_jc BCEL representation of java class
+   * @param classGen BCEL representation of java class
    * @throws UmbraCPRecalculationException when errors in bytecode caused
    * recalculation impossible
    */
-  public void recalculateCPNumbers(final JavaClass a_jc)
+  public void recalculateCPNumbers(final ClassGen classGen)
     throws UmbraCPRecalculationException {
     int const_no = 0;
     // XXX (Umbra) why is this necessary?
@@ -715,11 +717,11 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         const_no++;
         ((CPLineController)
             getLineController(i)).setConstant(
-                                a_jc.getConstantPool().getConstant(const_no));
+                                classGen.getConstantPool().getConstant(const_no));
       }
     }
     final HashMap f = new HashMap();
-    f.put(-1, a_jc.getConstantPool().getLength());
+    f.put(-1, classGen.getConstantPool().getSize());
     /*
      * XXX (Umbra) changing the index of those two constants forbidden
      * it's not a bug
@@ -764,21 +766,21 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("updating attributes");
     final List < Attribute > attrs = new ArrayList < Attribute > ();
     if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("updating fields");
-    for (int i = 0; i < a_jc.getFields().length; i++) {
-      a_jc.getFields()[i].setNameIndex(
+    for (int i = 0; i < classGen.getFields().length; i++) {
+      classGen.getFields()[i].setNameIndex(
         (Integer) dirtyToClean(f,
-                               getMapping().getFieldName(a_jc.getFields()[i])));
-      a_jc.getFields()[i].setSignatureIndex(
+                               getMapping().getFieldName(classGen.getFields()[i])));
+      classGen.getFields()[i].setSignatureIndex(
         (Integer) dirtyToClean(f,
-                          getMapping().getFieldSignature(a_jc.getFields()[i])));
-      for (Attribute a : a_jc.getFields()[i].getAttributes()) attrs.add(a);
+                          getMapping().getFieldSignature(classGen.getFields()[i])));
+      for (Attribute a : classGen.getFields()[i].getAttributes()) attrs.add(a);
     }
-    for (int i = 0; i < a_jc.getMethods().length; i++) {
-      a_jc.getMethods()[i].setNameIndex((Integer)
-        dirtyToClean(f, getMapping().getMethodName(a_jc.getMethods()[i])));
-      a_jc.getMethods()[i].setSignatureIndex((Integer)
-        dirtyToClean(f, getMapping().getMethodSignature(a_jc.getMethods()[i])));
-      for (Attribute a : a_jc.getMethods()[i].getAttributes()) {
+    for (int i = 0; i < classGen.getMethods().length; i++) {
+      classGen.getMethods()[i].setNameIndex((Integer)
+        dirtyToClean(f, getMapping().getMethodName(classGen.getMethods()[i])));
+      classGen.getMethods()[i].setSignatureIndex((Integer)
+        dirtyToClean(f, getMapping().getMethodSignature(classGen.getMethods()[i])));
+      for (Attribute a : classGen.getMethods()[i].getAttributes()) {
         if (a instanceof Code) {
           final Code c = (Code) a;
           for (Attribute at : c.getAttributes()) attrs.add(at);
@@ -786,7 +788,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         attrs.add(a);
       }
     }
-    for (Attribute a : a_jc.getAttributes()) attrs.add(a);
+    for (Attribute a : classGen.getAttributes()) attrs.add(a);
     recalculateCPNumbersForAttributes(attrs, f);
     /*
      * XXX (Umbra) Local variables (LocalVariable in BCEL) also have
@@ -796,7 +798,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
      * following code for manual update of local variable references was
      * added:
      */
-    final List < LocalVariable > lvars = getMapping().getLocVars(a_jc);
+    final List < LocalVariable > lvars = getMapping().getLocVars(classGen);
     for (LocalVariable lv : lvars) {
       lv.setNameIndex((Integer)
                       dirtyToClean(f, getMapping().getLocVarNameIndex(lv)));
@@ -804,8 +806,8 @@ public final class BytecodeController extends BytecodeControllerInstructions {
                          dirtyToClean(f, getMapping().getLocVarSignatureIndex(lv)));
     }
     if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("updating class names");
-    a_jc.setClassNameIndex((Integer) dirtyToClean(f, class_name_index));
-    a_jc.setSuperclassNameIndex((Integer)
+    classGen.setClassNameIndex((Integer) dirtyToClean(f, class_name_index));
+    classGen.setSuperclassNameIndex((Integer)
                                 dirtyToClean(f, super_class_name_index));
     if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("ok");
   }
@@ -886,10 +888,10 @@ public final class BytecodeController extends BytecodeControllerInstructions {
    * TODO (Umbra) also check if there are references to non existing
    * constants from local variables (name and signature index)
    *
-   * @param a_jc a BCEL representation of bytecode
+   * @param classGen a BCEL representation of bytecode
    * @return error report
    */
-  public ErrorReport getErrorReport(final JavaClass a_jc) {
+  public ErrorReport getErrorReport(final ClassGen classGen) {
     final HashSet < Integer > existing = new HashSet < Integer > ();
     final HashMap conflict = new HashMap();
     final ErrorReport a_report = new ErrorReport();
@@ -944,7 +946,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
       a_report.addError(scnnsce);
     }
     final List < Attribute > attrs = new ArrayList < Attribute > ();
-    for (Field f : a_jc.getFields()) {
+    for (Field f : classGen.getFields()) {
       for (Attribute a : f.getAttributes()) attrs.add(a);
       if (!existing.contains(getMapping().getFieldName(f))) {
         final FieldNoSuchConstantError fnsce = new FieldNoSuchConstantError();
@@ -961,7 +963,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         a_report.addError(fnsce);
       }
     }
-    for (Method m : a_jc.getMethods()) {
+    for (Method m : classGen.getMethods()) {
       for (Attribute a : m.getAttributes()) {
         if (a instanceof Code) {
           final Code c = (Code) a;
@@ -984,7 +986,7 @@ public final class BytecodeController extends BytecodeControllerInstructions {
         a_report.addError(mnsce);
       }
     }
-    for (Attribute a : a_jc.getAttributes()) attrs.add(a);
+    for (Attribute a : classGen.getAttributes()) attrs.add(a);
     checkForAttributes(attrs, existing, a_report);
     return a_report;
   }

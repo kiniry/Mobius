@@ -16,6 +16,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.NOP;
 import org.apache.bcel.generic.TargetLostException;
 
+import annot.bcclass.BCMethod;
+
 import umbra.UmbraPlugin;
 import umbra.instructions.InstructionParser;
 import umbra.lib.UmbraException;
@@ -70,7 +72,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * A BCEL object that represents the method in which the current instruction
    * is located.
    */
-  private MethodGen my_methodgen;
+  private BCMethod my_methodgen;
 
   /**
    * The mnemonic name of the current instruction.
@@ -117,7 +119,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    */
   public final boolean addHandle(final InstructionHandle a_handle,
                final InstructionList a_list,
-               final MethodGen a_method_gen) {
+               final BCMethod a_method_gen) {
     this.my_instr_handle = a_handle;
     this.my_instr_list = a_list;
     this.my_methodgen = a_method_gen;
@@ -200,12 +202,12 @@ public abstract class InstructionLineController extends BytecodeLineController {
   }
 
   /**
-   * Returns the {@link MethodGen} structure responsible for the method in
+   * Returns the {@link BCMethod} structure responsible for the method in
    * which the instruction resides.
    *
    * @return the method in which the current instruction is located
    */
-  public final MethodGen getMethod() {
+  public final BCMethod getMethod() {
     return my_methodgen;
   }
 
@@ -290,8 +292,8 @@ public abstract class InstructionLineController extends BytecodeLineController {
     if (ins == null) {
       ins = new NOP();
     }
-    final MethodGen mg = getMethod();
-    final InstructionList il = mg.getInstructionList();
+    final BCMethod mg = getMethod();
+    final InstructionList il = mg.getInstructions();
     final InstructionHandle prevIh = my_instr_handle.getPrev();
     final InstructionHandle newIh;
     if (prevIh != null)
@@ -335,7 +337,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
     @*/
   /**
    * This method adds to the current line controller the given method generation
-   * structure ({@link MethodGen}) together with its instruction list and
+   * structure ({@link BCMethod}) together with its instruction list and
    * a handle for the new instruction inserted on the given position
    * {@code an_ino}. All the instructions starting with the given number are
    * shifted one position further.
@@ -344,10 +346,10 @@ public abstract class InstructionLineController extends BytecodeLineController {
    * @param an_ino the instruction number in the instruction list starting with
    *   0 (zero)
    */
-  public final void makeHandleForPosition(final MethodGen a_methodgen,
+  public final void makeHandleForPosition(final BCMethod a_methodgen,
                         final int an_ino) {
     this.my_methodgen = a_methodgen;
-    this.my_instr_list = a_methodgen.getInstructionList();
+    this.my_instr_list = a_methodgen.getInstructions();
     final Instruction ins = getInstruction();
     if (an_ino < my_instr_list.getInstructionHandles().length) {
       final InstructionHandle prevInstr =
@@ -395,7 +397,7 @@ public abstract class InstructionLineController extends BytecodeLineController {
    *   be determined
    */
   public int getNoInMethod() {
-    final InstructionHandle[] ihs = getMethod().getInstructionList().
+    final InstructionHandle[] ihs = getMethod().getInstructions().
                               getInstructionHandles();
     int res = -1;
     for (int i = 0; i < ihs.length; i++) {

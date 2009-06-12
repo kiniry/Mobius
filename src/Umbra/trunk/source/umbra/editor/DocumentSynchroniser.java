@@ -11,6 +11,7 @@ package umbra.editor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.LineNumber;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ClassGen;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
@@ -150,7 +151,7 @@ public class DocumentSynchroniser {
    *       LineNumberTable</li>
    * </ul>
    *
-   * @param a_java_class {@link org.apache.bcel.classfile.JavaClass} with
+   * @param classGen {@link org.apache.bcel.classfile.JavaClass} with
    *   current byte code BCEL representation
    * @param a_line_no index of line in byte code editor
    * @return the line of the source code corresponding to given byte code
@@ -160,14 +161,14 @@ public class DocumentSynchroniser {
    * @throws UmbraSynchronisationException in case there is no instruction
    *   line that can be reasonably associated with the given line number
    */
-  private int syncBS(final JavaClass a_java_class,
+  private int syncBS(final ClassGen classGen,
                      final int a_line_no)
     throws UmbraException, UmbraSynchronisationException {
     final BytecodeController model = my_bcode_doc.getModel();
     final int lineno = model.getInstructionLineBelow(a_line_no);
     final int mno = model.getMethodForLine(lineno);
     final int label = model.getLabelForLine(lineno);
-    final Method m = a_java_class.getMethods()[mno];
+    final Method m = classGen.getMethods()[mno];
     if (m.getLineNumberTable() == null)
       throw new UmbraSynchronisationException();
     final LineNumber[] lnt = m.getLineNumberTable().getLineNumberTable();
@@ -242,7 +243,7 @@ public class DocumentSynchroniser {
    *   and the signature of the method
    *   https://mobius.ucd.ie/ticket/595
    *
-   * @param a_java_class {@link JavaClass} with current byte code
+   * @param classGen {@link JavaClass} with current byte code
    * @param an_editor Java source code editor
    * @param a_pos a position in the source code to synchronise with
    * @return array of 2 ({@link #NO_OF_POSITIONS}) ints representing index of
@@ -255,15 +256,15 @@ public class DocumentSynchroniser {
    *   Java source code. May occur also if byte code in {@link JavaClass}
    *   <code>a_java_class</code> is out-of-date.
    */
-  private int[] syncSB(final JavaClass a_java_class,
+  private int[] syncSB(final ClassGen classGen,
                        final CompilationUnitEditor an_editor,
                        final int a_pos)
     throws UmbraSynchronisationException,
            JavaModelException, UmbraLocationException {
-    final Method[] methods = a_java_class.getMethods();
+    final Method[] methods = classGen.getMethods();
 
     final int mno = getSrcMethodNumber(a_pos, an_editor,
-                                    a_java_class.getClassName()) + 1;
+                                    classGen.getClassName()) + 1;
                                     // +1 for <init>
     final Method m = methods[mno];
     int line;

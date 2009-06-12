@@ -12,6 +12,8 @@ import org.apache.bcel.generic.MethodGen;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
+import annot.bcclass.BCMethod;
+
 import umbra.editor.parsing.MethodRule;
 import umbra.lib.BufferScanner;
 import umbra.lib.BytecodeStrings;
@@ -33,10 +35,10 @@ public class HeaderLineController extends BytecodeLineController {
   private static final String HLC_TOKEN = "header line controller";
 
   /**
-   * A BCEL object that represents the method the header of which is
+   * A BMLLib object that represents the method the header of which is
    * in the current object.
    */
-  private MethodGen my_methodgen;
+  private BCMethod my_methodgen;
 
   /**
    * The recognition rule which parses method headers.
@@ -90,22 +92,22 @@ public class HeaderLineController extends BytecodeLineController {
   }
 
   /**
-   * Returns the {@link MethodGen} structure responsible for the method in
+   * Returns the {@link BCMethod} structure responsible for the method in
    * which the instruction resides.
    *
    * @return the method in which the current instruction is located
    */
-  public final MethodGen getMethod() {
+  public final BCMethod getMethod() {
     return my_methodgen;
   }
 
   /**
-   * Sets the {@link MethodGen} structure responsible for the method the
+   * Sets the {@link BCMethod} structure responsible for the method the
    * header of which resides in the current object.
    *
-   * @param a_mg the {@link MethodGen} structure to associate with the header
+   * @param a_mg the {@link BCMethod} structure to associate with the header
    */
-  public final void setMethod(final MethodGen a_mg) {
+  public final void setMethod(final BCMethod a_mg) {
     my_methodgen = a_mg;
   }
 }

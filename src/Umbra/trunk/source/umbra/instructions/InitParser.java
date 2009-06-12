@@ -14,6 +14,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import annot.bcclass.BCMethod;
+
 import umbra.editor.BytecodeDocument;
 import umbra.instructions.ast.BytecodeLineController;
 import umbra.instructions.ast.CPHeaderController;
@@ -411,12 +413,12 @@ public class InitParser extends BytecodeCommentParser {
 
     int j = swallowEmptyLines(my_doc, the_line_no,
                               my_doc.getNumberOfLines() - 1, a_ctxt);
-    final MethodGen mg = getMethodGenFromDoc(my_doc, a_method_no);
+    final BCMethod mg = getMethodGenFromDoc(my_doc, a_method_no);
 
     //swallow method header
     j = swallowMethodHeader(a_ctxt, j, mg);
 
-    final InstructionList il = mg.getInstructionList();
+    final InstructionList il = mg.getInstructions();
     if (il != null) {
       il.setPositions();
       final Iterator iter = il.iterator();
@@ -452,7 +454,7 @@ public class InitParser extends BytecodeCommentParser {
    *
    * @param a_ctxt the parsing context with which the parsing is done
    * @param a_lineno the line number of the first line to be parsed
-   * @param a_methodgen the BCEL method representation
+   * @param a_methodgen the BMLLib method representation
    * @return the number of the first line that could not be parsed by this
    *   method
    * @throws UmbraLocationException in case a line number has been reached
@@ -460,7 +462,7 @@ public class InitParser extends BytecodeCommentParser {
    */
   private int swallowMethodHeader(final LineContext a_ctxt,
                                   final int a_lineno,
-                                  final MethodGen a_methodgen)
+                                  final BCMethod a_methodgen)
     throws UmbraLocationException {
 
     int res = a_lineno;
@@ -501,20 +503,20 @@ public class InitParser extends BytecodeCommentParser {
    * to the instructions structure and handles the comments for the line.
    *
    * @param a_lctrl the line controller which is handled
-   * @param a_methgen a BCEL representation of method in which the instruction
+   * @param mg a BCEL representation of method in which the instruction
    *   lies
    * @param an_ilist an instruction list from the method above
    * @param an_iter the iterator in the instruction list above
    */
   private void handleleInstructionLine(final InstructionLineController a_lctrl,
-                                       final MethodGen a_methgen,
+                                       final BCMethod mg,
                                        final InstructionList an_ilist,
                                        final Iterator an_iter) {
 
     InstructionHandle ih = null;
     if (an_iter.hasNext())
       ih = (InstructionHandle)(an_iter.next());
-    a_lctrl.addHandle(ih, an_ilist, a_methgen);
+    a_lctrl.addHandle(ih, an_ilist, mg);
     final int ino = addInstruction(a_lctrl);
     handleComments(a_lctrl, ino);
     incInstructionNo();

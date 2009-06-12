@@ -34,6 +34,8 @@ import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.PMGClass;
 import org.apache.bcel.classfile.Signature;
 import org.apache.bcel.classfile.SourceFile;
+import org.apache.bcel.generic.ClassGen;
+import org.apache.bcel.generic.ConstantPoolGen;
 
 import annot.bcclass.BCClass;
 
@@ -139,15 +141,15 @@ public class DummyGenerator {
 
   /**
    *
-   * @param a_jc a class for which we check constant pool
+   * @param classGen a class for which we check constant pool
    * correctness and generate dummy constants if necessary
    * @param a_bc BML representation of this class
    * @param a_mapping object from which we can get local variable names when
    * constant pool is not consistent
    */
-  public DummyGenerator(final JavaClass a_jc, final BCClass a_bc,
+  public DummyGenerator(final JavaClass classGen, final BCClass a_bc,
                         final BytecodeMapping a_mapping) {
-    my_jc = a_jc;
+    my_jc = classGen;
     my_bc = a_bc;
     my_mapping = a_mapping;
     my_dummy_utfs = new HashMap < Class, Integer > ();
@@ -171,7 +173,8 @@ public class DummyGenerator {
    */
   public void generateDummyConstants() {
     my_constants = new ArrayList < Constant > ();
-    for (Constant c : my_jc.getConstantPool().getConstantPool()) {
+    for (Constant c : my_jc.getConstantPool().
+                            getConstantPool()) {
       my_constants.add(c);
     }
     initDummyUtfs();
@@ -246,7 +249,12 @@ public class DummyGenerator {
       cp[k] = c;
       k++;
     }
-    my_jc.getConstantPool().setConstantPool(cp);
+    final ConstantPoolGen cpg = new ConstantPoolGen(my_jc.getConstantPool());
+    for (Constant c : cp) {
+      if (c != null) cpg.addConstant(c, cpg);
+    }
+    my_jc.getConstantPool().setConstantPool(cpg.getFinalConstantPool().
+                                            getConstantPool());
   }
 
   /**

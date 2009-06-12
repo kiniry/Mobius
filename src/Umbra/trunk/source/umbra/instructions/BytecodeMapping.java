@@ -22,6 +22,7 @@ import org.apache.bcel.classfile.PMGClass;
 import org.apache.bcel.classfile.Field;
 
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.generic.ClassGen;
 
 /**
  * This class maps the references to constant pool entries in BCEL
@@ -586,12 +587,12 @@ public class BytecodeMapping {
 
   /**
    *
-   * @param a_jc a java class
+   * @param classGen a java class
    * @return list of all local variables in java class
    */
-  public List < LocalVariable > getLocVars(final JavaClass a_jc) {
+  public List < LocalVariable > getLocVars(final ClassGen classGen) {
     final List < LocalVariable > al = new ArrayList < LocalVariable > ();
-    for (Method m : a_jc.getMethods()) {
+    for (Method m : classGen.getMethods()) {
       for (Attribute a : m.getAttributes()) {
         if (a instanceof Code) {
           for (Attribute at : ((Code) a).getAttributes()) {

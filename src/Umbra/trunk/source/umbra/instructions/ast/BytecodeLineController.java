@@ -15,6 +15,8 @@ import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
 import org.apache.bcel.generic.MethodGen;
 
+import annot.bcclass.BCMethod;
+
 import umbra.instructions.InstructionParser;
 import umbra.lib.UmbraException;
 
@@ -153,13 +155,13 @@ public abstract class BytecodeLineController {
   }
 
   /**
-   * Returns the {@link MethodGen} structure responsible for the method in
+   * Returns the {@link BCMethod} structure responsible for the method in
    * which the instruction resides. In case of {@link BytecodeLineController}
    * this method always returns <code>null</code>.
    *
    * @return the method in which the current instruction is located
    */
-  public MethodGen getMethod() {
+  public BCMethod getMethod() {
     return null;
   }
 

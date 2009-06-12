@@ -186,7 +186,7 @@ public class BytecodeControllerInstructions
     final BCConstantPool a_pool = a_doc.getBmlp().getBcc().getCp();
     UmbraPlugin.messagelog("");
     UmbraPlugin.messagelog("Pool:");
-    for (int i = 0; i < a_pool.size(); i++) {
+    for (int i = 0; i < a_pool.getSize(); i++) {
       UmbraPlugin.messagelog(i + ": " + a_pool.getConstant(i));
     }
     UmbraPlugin.messagelog("Control print for methods:");

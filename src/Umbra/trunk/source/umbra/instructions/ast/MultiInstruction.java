@@ -13,6 +13,8 @@ import java.util.HashSet;
 
 import org.apache.bcel.generic.MethodGen;
 
+import annot.bcclass.BCMethod;
+
 import umbra.UmbraPlugin;
 import umbra.instructions.InstructionParser;
 import umbra.instructions.errors.NoSuchConstantError;
@@ -202,10 +204,10 @@ public class MultiInstruction extends InstructionLineController {
    */
   @SuppressWarnings("unused")
   private void bcelDump() {
-    final MethodGen mg = this.getMethod();
-    for (int i = 0; i < mg.getInstructionList().size(); i++) {
+    final BCMethod mg = this.getMethod();
+    for (int i = 0; i < mg.getInstructions().size(); i++) {
       final org.apache.bcel.generic.Instruction in =
-        mg.getInstructionList().getInstructions()[i];
+        mg.getInstructions().getInstructions()[i];
       System.err.println(in.toString());
     }
   }

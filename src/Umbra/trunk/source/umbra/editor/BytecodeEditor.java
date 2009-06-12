@@ -233,7 +233,7 @@ public class BytecodeEditor extends TextEditor {
       a_doc.getModel().getErrorReport(a_doc.getJavaClass());
     boolean was_error = false;
     try {
-      new ConstantPoolGen(a_doc.getJavaClass().getConstantPool());
+      a_doc.getJavaClass().getConstantPool();
     } catch (Exception e) {
       was_error = true;
     }
@@ -248,7 +248,7 @@ public class BytecodeEditor extends TextEditor {
     // TODO (Umbra) if all errors would be catched by getErrorReport()
     // the following method should be only called in case msgBox returns NO
     final DummyGenerator generator =
-      new DummyGenerator(a_doc.getJavaClass(),
+      new DummyGenerator(a_doc.getFinalJavaClass(),
                          bc, a_doc.getModel().getMapping());
     // TODO (Umbra) those changes should be rollbacked in case save failed,
     // because they add new constants to JavaClass constant pool that are not
@@ -256,8 +256,7 @@ public class BytecodeEditor extends TextEditor {
     // are no such constants); this may cause editor to crash
     generator.generateDummyConstants();
     for (int i = 0; i < bc.getMethodCount(); i++) {
-      final ConstantPoolGen cpg = new ConstantPoolGen(bc.getJC().
-                                                    getConstantPool());
+      final ConstantPoolGen cpg = bc.getBCELClass().getConstantPool();
       my_constant_pools.add(bc.getMethod(i).
                             getBcelMethod().getConstantPool());
       bc.getMethod(i).getBcelMethod().setConstantPool(cpg);
@@ -299,7 +298,7 @@ public class BytecodeEditor extends TextEditor {
     doc.updateJavaClass();
     if (FileNames.CP_DEBUG_MODE) UmbraPlugin.messagelog("ok");
 
-    final JavaClass jc = doc.getJavaClass();
+    final JavaClass jc = doc.getFinalJavaClass();
 
     if (my_verification_factory == null) {
       my_verification_factory =

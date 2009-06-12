@@ -23,6 +23,7 @@ import umbra.lib.UmbraMethodException;
 import umbra.lib.UmbraRepresentationException;
 import umbra.lib.UmbraSyntaxException;
 import annot.bcclass.BCClass;
+import annot.bcclass.BCMethod;
 
 /**
  * This class is an abstract model of a byte code textual document.
@@ -86,11 +87,19 @@ public class BytecodeDocument extends Document {
   }
 
   /**
-   * @return the current representation of the Java class associated with
-   * the document.
+   * @return the current editable representation of the Java class associated
+   * with the document.
    */
-  public final JavaClass getJavaClass() {
-    return getBmlp().getBcc().getJC();
+  public final ClassGen getJavaClass() {
+    return getBmlp().getBcc().getBCELClass();
+  }
+
+
+  /**
+   * @return the saveable representation of the Java class.
+   */
+  public JavaClass getFinalJavaClass() {
+    return getBmlp().getBcc().saveJC();
   }
 
   /**
@@ -101,7 +110,7 @@ public class BytecodeDocument extends Document {
    * @return the current generator of the Java class file
    */
   public final ClassGen getClassGen() {
-    return new ClassGen(getBmlp().getBcc().getJC());
+    return getBmlp().getBcc().getBCELClass();
   }
 
   /**
@@ -244,15 +253,18 @@ public class BytecodeDocument extends Document {
    */
   public void updateBML() throws UmbraCPRecalculationException {
     if (FileNames.CP_DEBUG_MODE) System.err.println("updateBML()");
-    my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getJC());
+    my_bcc.recalculateCPNumbers(my_bmlp.getBcc().getBCELClass());
     final BCClass bc = my_bmlp.getBcc();
     // TODO (Umbra) do attributes need updating of constant pool?
     //TODO take a look at that, probably this should be done in BMLLib
-    for (int i = 0; i < bc.getJC().getFields().length; i++) {
-      bc.getJC().getFields()[i].setConstantPool(bc.getJC().getConstantPool());
+    for (int i = 0; i < bc.getBCELClass().getFields().length; i++) {
+      //TODO this may be wrong
+      bc.getBCELClass().getFields()[i].
+        setConstantPool(bc.getBCELClass().getConstantPool().getConstantPool());
     }
-    for (int i = 0; i < bc.getJC().getMethods().length; i++) {
-      bc.getJC().getMethods()[i].setConstantPool(bc.getJC().getConstantPool());
+    for (int i = 0; i < bc.getBCELClass().getMethods().length; i++) {
+      bc.getBCELClass().getMethods()[i].
+        setConstantPool(bc.getBCELClass().getConstantPool().getConstantPool());
     }
     if (FileNames.CP_DEBUG_MODE) {
       my_bcc.controlPrintCP(this);
@@ -278,10 +290,10 @@ public class BytecodeDocument extends Document {
    * @throws UmbraMethodException thrown in case the given method number
    *   is outside the range of available methods
    */
-  public MethodGen getMethodGen(final int a_method_no)
+  public BCMethod getMethodGen(final int a_method_no)
     throws UmbraMethodException {
     try {
-      return my_bmlp.getBcc().getMethod(a_method_no).getBcelMethod();
+      return my_bmlp.getBcc().getMethod(a_method_no);
     } catch (IndexOutOfBoundsException e) {
       throw new UmbraMethodException(a_method_no);
     }
@@ -358,5 +370,6 @@ public class BytecodeDocument extends Document {
     my_is_dirty = an_is_dirty;
     getEditor().notifyDirtyChange();
   }
+
 
 }

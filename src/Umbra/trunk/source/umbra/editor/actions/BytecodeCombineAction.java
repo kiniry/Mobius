@@ -203,7 +203,7 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
       throw new UmbraClassException(e1);
     }
     a_repo.removeClass(jc);
-    final JavaClass oldJc = my_editor.getDocument().getJavaClass();
+    final ClassGen oldJc = my_editor.getDocument().getJavaClass();
     final ClassGen cg = updateModifiedMethods(oldJc, jc);
     jc = cg.getJavaClass();
     final String fullName = FileNames.getPath(a_path).toOSString();
@@ -339,13 +339,12 @@ public class BytecodeCombineAction extends BytecodeEditorAction {
    * provided that <code>my_btcodeCntrbtn</code> regards them as
    * modified.
    *
-   * @param an_old_jc the class from which the modifications are acquired
+   * @param oldCg the class from which the modifications are acquired
    * @param a_jc the class for to which the modifications are added
    * @return the class representation with added modifications
    */
-  private ClassGen updateModifiedMethods(final JavaClass an_old_jc,
+  private ClassGen updateModifiedMethods(final ClassGen oldCg,
                        final JavaClass a_jc) {
-    final ClassGen oldCg = new ClassGen(an_old_jc);
     final ClassGen cg = new ClassGen(a_jc);
     final int oldMeths = oldCg.getMethods().length;
     final int meths = cg.getMethods().length;

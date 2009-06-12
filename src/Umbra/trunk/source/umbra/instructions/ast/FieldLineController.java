@@ -306,22 +306,22 @@ public class FieldLineController extends BytecodeLineController {
       if (bcp.findConstant(my_name) >= 0) {
         throw new UmbraException();
       }
-      bcp.addConstant(new ConstantUtf8(my_name), true);
+      bcp.addConstant(new ConstantUtf8(my_name), true, null);
       final int name_index = bcp.findConstant(my_name);
       final Attribute[] attrs = getAttributes();
       final String sname = Utility.getSignature(my_type);
       int signature_index = bcp.findConstant(sname);
       if (signature_index < 0) {
-        bcp.addConstant(new ConstantUtf8(sname), true);
+        bcp.addConstant(new ConstantUtf8(sname), true, null);
         signature_index = bcp.findConstant(sname);
       }
       final int pos = bcp.findNATConstant(name_index, signature_index);
       if (pos < 0) {
         bcp.addConstant(new ConstantNameAndType(name_index, signature_index),
-                        true);
+                        true, bcp.getCoombinedCP());
       }
       return new Field(my_java_modif, name_index, signature_index,
-                       attrs, my_bcc.getJC().getConstantPool());
+        attrs, my_bcc.getBCELClass().getConstantPool().getConstantPool());
     }
     return null;
   }
@@ -340,23 +340,23 @@ public class FieldLineController extends BytecodeLineController {
       // TODO: this does not work in case the signatures
       //       happen to exist in the second constant pool, but
       //       do not exist in the first one
-      bcp.addConstant(new ConstantUtf8(my_name), false);
+      bcp.addConstant(new ConstantUtf8(my_name), false, null);
       final int name_index = bcp.findConstant(my_name);
       final Attribute[] attrs = getAttributes();
       int signature_index =
         bcp.findConstant(Utility.getSignature(my_type));
       if (signature_index < 0) {
         bcp.addConstant(new ConstantUtf8(Utility.getSignature(my_type)),
-                        false);
+                        false, null);
         signature_index = bcp.findConstant(Utility.getSignature(my_type));
       }
       final int pos = bcp.findNATConstant(name_index, signature_index);
       if (pos < 0) {
         bcp.addConstant(new ConstantNameAndType(name_index, signature_index),
-                        false);
+                        false, bcp.getCoombinedCP());
       }
       return new Field(my_java_modif, name_index, signature_index,
-                       attrs, my_bcc.getJC().getConstantPool());
+        attrs, my_bcc.getBCELClass().getConstantPool().getConstantPool());
     }
     return null;
   }
