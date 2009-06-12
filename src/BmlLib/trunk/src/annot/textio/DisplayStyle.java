@@ -4,9 +4,10 @@ package annot.textio;
  * This class describes how BML annotations should be
  * displayed.
  *
- * Note: be careful to modify BML.g3 as well
+ * Be careful to modify BML.g3 as well
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class DisplayStyle {
@@ -15,9 +16,6 @@ public class DisplayStyle {
    * This constant contains an array with all the BML keywords.
    * The BML lines are handled by
    * {@link umbra.instructions.ast.AnnotationLineController} class.
-   *
-   * FIXME: this should be retrieved from BMLlib;
-   *   https://mobius.ucd.ie/ticket/551
    */
   public static final String[] BML_KEYWORDS = new String[] {
     "invariant",
@@ -51,13 +49,7 @@ public class DisplayStyle {
   public static final String DEFAULT_PACKAGE_NAME_KWD = "[default]";
 
   /**
-   * BML annotations keywords (at the beginning
-   * of annotations only). If you want to change them,
-   * remember to update lexer (in BML.g3).
-   * Must not end with whitespace (it causes errors
-   * in tests)!
-   *
-   * Be careful to modify BML.g3 as well
+   * BML "invariant" keyword.
    */
   public static final String INVARIANT_KWD = "invariant";
 
@@ -130,9 +122,6 @@ public class DisplayStyle {
    * BML keyword for "Utf8" type in the constant pool.
    */
   public static final String UTF8_KWD = "Utf8";
-
-  public static final String _exsures = "exsures";
-
   /**
    * BML loop "decreases" keyword.
    */
@@ -143,25 +132,49 @@ public class DisplayStyle {
    */
   public static final String LOOP_INV_KWD = "loop_inv";
 
-  public static final String _loopspec = "loop_specification";
+  /**
+   * BML loop specification ("loop_specification") keyword.
+   */
+  public static final String LOOPSPEC_KWD = "loop_specification";
+
+  /**
+   * BML "requires" keyword.
+   */
+  public static final String REQUIRES_KWD = "requires";
 
   /**
    * BML "modifies" keyword.
    */
   public static final String MODIFIES_KWD = "modifies";
 
-  public static final String _postcondition = "ensures";
+  /**
+   * BML "ensures" keyword.
+   */
+  public static final String ENSURES_KWD = "ensures";
 
-  public static final String _precondition = "precondition";
+  /**
+   * BML "signals" keyword.
+   */
+  public static final String SIGNALS_KWD = "signals";
 
-  public static final String _requires = "requires";
+  /**
+   * BML "signals_only" keyword.
+   */
+  public static final String SIGNALS_ONLY_KWD = "signals_only";
 
-  public static final String _result = "\\result";
+  /**
+   * BML "\nothing" keyword.
+   */
+  public static final String NOTHING_KWD = "\\nothing";
 
-  public static final String _sc_end = "|}";
+  /**
+   * BML "\result" keyword.
+   */
+  public static final String RESULT_KWD = "\\result";
 
-  public static final String _sc_start = "{|";
-
+  /**
+   * BML "assert" keyword.
+   */
   public static final String ASSERT_KWD = "assert";
 
   /**
@@ -214,6 +227,11 @@ public class DisplayStyle {
    * BML keyword for "readonly" modifier.
    */
   public static final String READONLY_KWD = "readonly";
+
+  /**
+   * Java keyword for "null" value.
+   */
+  public static final String NULL_KWD = "null";
 
   /**
    * Array with all the BML modifiers.
@@ -309,7 +327,7 @@ public class DisplayStyle {
    * whether display each implication branch of quantified
    * formula at the same level as quantifier itself or not.
    */
-  public static final boolean go3argQuantifiers = true;
+  public static final boolean DISPLAY_3ARG_QUANTIFIERS = true;
 
   /**
    * Debug mode (displays AST below each annotation).
@@ -319,18 +337,17 @@ public class DisplayStyle {
   /**
    * Shows right margin in displayed code, after
    * {@value #MAX_TOTAL_LINE_WIDTH}'s character,
-   * for prettyPrinter debugging only. Some features like
+   * for prettyPrinter debugging only. Some features such as
    * CodeSearch mechanisms may not work with this flag on.
    */
-  public static final boolean goShowRightMargin = false;
+  public static final boolean DISPLAY_RIGHT_MARGIN_MARKS = false;
 
   /**
-   * whether use simplified (raw) prettyPrinter or not.
-   * Set in to true only if main (advanced) prettyPrinter
-   * makes several errors and resulting code became
-   * unreadable.
+   * Indicates if a simplified (raw) prettyPrinter should be used or not.
+   * Set in to <code>true</code> only if main (advanced) prettyPrinter
+   * makes several errors and resulting code is unreadable.
    */
-  public static final boolean goUseSimplePrettyPrinter = false;
+  public static final boolean DISPLAY_USE_SIMPLE_PRETTYPRINTER = false;
 
   /**
    * The string with name of integer boolean type.

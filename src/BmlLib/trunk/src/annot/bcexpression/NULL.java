@@ -4,6 +4,7 @@ import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
+import annot.textio.DisplayStyle;
 
 /**
  * This class represents <code>null</code> value.
@@ -42,21 +43,22 @@ public class NULL extends BCExpression {
   }
 
   /**
-   * Returns the string representation of the expression i.e. "null" String.
+   * Returns the string representation of the expression i.e.
+   * {@link DisplayStyle#NULL_KWD}.
    *
    * @param conf - see {@link BMLConfig}.
-   * @return "null" String
+   * @return {@link DisplayStyle#NULL_KWD} string
    */
   protected String printCode1(final BMLConfig conf) {
-    return "null";
+    return DisplayStyle.NULL_KWD;
   }
 
   /**
-   * @return Simple String representation of this
+   * @return simple string representation of this
    *     expression, for debugging only.
    */
   public String toString() {
-    return "null";
+    return DisplayStyle.NULL_KWD;
   }
 
 }

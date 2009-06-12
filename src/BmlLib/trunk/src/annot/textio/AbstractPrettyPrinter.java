@@ -45,7 +45,7 @@ public abstract class AbstractPrettyPrinter {
     for (int i = 0; i  <  lines.length; i++) {
       String s = lines[i];
       s = filter1(s);
-      if (DisplayStyle.goShowRightMargin) {
+      if (DisplayStyle.DISPLAY_RIGHT_MARGIN_MARKS) {
         s = filter2(s);
       }
       result += s + "\n";

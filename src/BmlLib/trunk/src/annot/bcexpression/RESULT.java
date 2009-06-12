@@ -37,7 +37,13 @@ public class RESULT extends BCExpression {
         .getSignature());
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression provided that all
+   * the subexpressions have correct types. In this case, this is
+   * the type of the method to which the result is assigned.
+   *
+   * @return the type of the method with this result
+   */
   protected JavaType checkType1() {
     return this.type;
   }
@@ -49,19 +55,33 @@ public class RESULT extends BCExpression {
     return this.method;
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression. In this case, this is
+   * the type of the method to which the result is assigned.
+   *
+   * @return the type of the method with this result
+   */
   public JavaType getType1() {
     return this.type;
   }
 
-  @Override
+  /**
+   * Returns the string representation of the expression which is
+   * contained in {@link DisplayStyle#RESULT_KWD}.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return {@link DisplayStyle#RESULT_KWD}
+   */
   protected String printCode1(final BMLConfig conf) {
-    return DisplayStyle._result;
+    return DisplayStyle.RESULT_KWD;
   }
 
-  @Override
+  /**
+   * @return simple String representation of this
+   *     expression, for debugging only.
+   */
   public String toString() {
-    return DisplayStyle._result;
+    return DisplayStyle.RESULT_KWD;
   }
 
 }

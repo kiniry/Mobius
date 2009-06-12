@@ -126,7 +126,7 @@ public class SingleLoopSpecification extends InCodeAnnotation {
    */
   @Override
   protected String printCode1(final BMLConfig conf) {
-    String code = DisplayStyle._loopspec;
+    String code = DisplayStyle.LOOPSPEC_KWD;
     conf.incInd();
     code += conf.nl() +
       this.invariant.printLine(conf, DisplayStyle.LOOP_INV_KWD);

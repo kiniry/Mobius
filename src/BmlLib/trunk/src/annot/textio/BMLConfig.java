@@ -28,8 +28,9 @@ public class BMLConfig extends DisplayStyle {
    * Currently used prettyPrinter.
    */
   private final AbstractPrettyPrinter prettyPrinter =
-    DisplayStyle.goUseSimplePrettyPrinter ? new SimplePrettyPrinter(this) :
-                                             new AdvancedPrettyPrinter(this);
+    DisplayStyle.DISPLAY_USE_SIMPLE_PRETTYPRINTER ?
+        new SimplePrettyPrinter(this) :
+          new AdvancedPrettyPrinter(this);
 
   /**
    * Priority of the parent of currently displayed

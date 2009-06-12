@@ -20,7 +20,7 @@ public class JavaReferenceType extends JavaType {
 
   /**
    * A type's signature. It can be any String, currently
-   * it's value is never parsed into other structures
+   * its value is never parsed into other structures
    * in this library.
    */
   private final String signature;
@@ -34,7 +34,21 @@ public class JavaReferenceType extends JavaType {
     this.signature = asignature;
   }
 
-  @Override
+  /**
+   * Compares this type with given type.<br>
+   * //TODO checking for subtypes currently unsupported!
+   *
+   * @param type - type to compare to.
+   * @return <b>{@link #TYPES_UNRELATED}</b> - if neither
+   *     this type is a subtype of given one, nor given
+   *     type is a subtype of this type,<br>
+   *     <b>{@link #IS_SUBTYPE}</b> - if given type
+   *     is a subtype of this type,<br>
+   *     <b>{@link #IS_SUPERTYPE}</b> - if this type
+   *     is a subtype of given type,<br>
+   *     <b>{@link #TYPES_EQUAL}</b> - if this type
+   *     is equal to given type.
+   */
   public int compareTypes(final JavaType type) {
     if (this.signature == null) {
       throw new RuntimeException("signature == null, what does it mean?");
@@ -52,25 +66,37 @@ public class JavaReferenceType extends JavaType {
     return TYPES_UNRELATED;
   }
 
+  /**
+   * @return the fully qualified type name as stored in constant pool.
+   */
   public String getSignature() {
     return this.signature;
   }
 
   /**
-   * Returns this type's signature as a String
-   * (the same String as given in constructor).
+   * Returns the string representation of the expression. This is the
+   * string with the fully qualified type name as stored in constant pool.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return {@link DisplayStyle#RESULT_KWD}
    */
-  @Override
   protected String printCode1(final BMLConfig conf) {
     return this.signature;
   }
 
-  @Override
+  /**
+   * @return simple String representation of this
+   *     expression, for debugging only.
+   */
   public String toString() {
     return this.signature;
   }
 
-  @Override
+  /**
+   * Writes this expression to the AttributeWirter.
+   *
+   * @param aw - stream to save the type to
+   */
   public void write(final AttributeWriter aw) {
     aw.writeByte(Code.JAVA_TYPE);
     final int cpIndex = aw.findConstant(this.signature);

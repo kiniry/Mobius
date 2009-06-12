@@ -11,11 +11,14 @@ package annot.attributes.method;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.bcel.classfile.ConstantUtf8;
+
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.Exsure;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
+import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.modifies.ModifyList;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -28,6 +31,7 @@ import annot.textio.DisplayStyle;
  * of method specification.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class SpecificationCase {
@@ -55,10 +59,15 @@ public class SpecificationCase {
   private ExpressionRoot < AbstractFormula >  precondition;
 
   /**
-   * The exception conditions vector. Each element describes
-   * on of exception throws by described method.
+   * The exception conditions vector. Each element contains a single
+   * signals clause.
    */
   private Vector < Exsure >  excondition;
+
+  /**
+   * The vector with the exceptions declared in signals_only clause.
+   */
+  private Vector < JavaReferenceType >  signalsonly;
 
   /**
    * Creates an empty specification case, with both
@@ -75,41 +84,40 @@ public class SpecificationCase {
     this.postcondition = new ExpressionRoot < AbstractFormula > (
         this,
         new Predicate0Ar(true));
-    this.excondition = new Vector < Exsure > ();
+    createInitialExcondition();
+    createInitialSignalsOnly(m);
   }
 
   /**
    * A standard constructor.
    *
    * @param m - a method this specificationCase specifies.
-   * @param aprecondition - a precondition of the specification case
+   * @param aprecnd - a precondition of the specification case
    * @param amodifies - a modifies clause for the specification case
    * @param apostcondition - a postcondition for the specification case
    * @param anexsures - exceptional ensures for the specification case
    */
   public SpecificationCase(final BCMethod m,
-                           final AbstractFormula aprecondition,
+                           final AbstractFormula aprecnd,
                            final ModifyList amodifies,
                            final AbstractFormula apostcondition,
                            final Vector < Exsure >  anexsures) {
     this.method = m;
-    if (aprecondition == null) {
-      this.precondition =
-      new ExpressionRoot < AbstractFormula > (this,
-          new Predicate0Ar(true));
-    } else {
-      this.precondition =
-        new ExpressionRoot < AbstractFormula > (this, aprecondition);
-    }
-    final ModifyList mmodifies = (amodifies == null) ?
-                                new ModifyList() : amodifies;
-    this.modifies = new ExpressionRoot < ModifyList > (this, mmodifies);
+    this.precondition = (aprecnd == null) ?
+      new ExpressionRoot < AbstractFormula > (this, new Predicate0Ar(true)) :
+      new ExpressionRoot < AbstractFormula > (this, aprecnd);
+    final ModifyList mmod = (amodifies == null) ? new ModifyList() : amodifies;
+    this.modifies = new ExpressionRoot < ModifyList > (this, mmod);
     final AbstractFormula mpostcondition = (apostcondition == null) ?
         new Predicate0Ar(true) : apostcondition;
     this.postcondition = new ExpressionRoot < AbstractFormula > (this,
                                                              mpostcondition);
-    this.excondition = (anexsures == null) ? new Vector < Exsure > () :
-      anexsures;
+    if (anexsures == null || anexsures.size() == 0) {
+      createInitialExcondition();
+    } else {
+      this.excondition = anexsures;
+    }
+    createInitialSignalsOnly(m);
   }
 
   /**
@@ -136,6 +144,56 @@ public class SpecificationCase {
     for (int i = 0; i  <  count; i++) {
       final Exsure ex = new Exsure(ar);
       this.excondition.add(ex);
+    }
+    readInSignalsOnly(m, ar);
+  }
+
+  /**
+   * The method reads from the given attribute reader stream the exceptions
+   * from signals_only clause.
+   *
+   * @param m the method for which the signals_only is created
+   * @param ar the reader to read the signals_only from
+   * @throws ReadAttributeException if there is not enough
+   *   bytes in the stream to read correctly the signals_only clause
+   */
+  private void readInSignalsOnly(final BCMethod m, final AttributeReader ar)
+    throws ReadAttributeException {
+    this.signalsonly = new Vector < JavaReferenceType > ();
+    final int socount = ar.readItemsCount();
+    for (int i = 0; i  <  socount; i++) {
+      final int idx = ar.readShort();
+      final String ename =
+        ((ConstantUtf8)m.getBcc().getCp().getConstant(idx)).getBytes();
+      final JavaReferenceType jrt = new JavaReferenceType(ename);
+      this.signalsonly.add(jrt);
+    }
+  }
+
+
+  /**
+   * This method creates the initial signals condition:
+   * signals (Exception) true.
+   */
+  private void createInitialExcondition() {
+    this.excondition = new Vector < Exsure > ();
+    this.excondition.add(
+      new Exsure(new JavaReferenceType("java/lang/Exception"),
+                 new Predicate0Ar(true)));
+  }
+
+
+  /**
+   * Creates the initial value of the signals_only clause by
+   * initialising it with the exceptions of the given method.
+   *
+   * @param ameth the method to extract the exceptions from
+   */
+  private void createInitialSignalsOnly(final BCMethod ameth) {
+    final String [] exnames = ameth .getBcelMethod().getExceptions();
+    this.signalsonly = new Vector < JavaReferenceType > ();
+    for (int i = 0; i < exnames.length; i++) {
+      this.signalsonly.add(new JavaReferenceType(exnames[i]));
     }
   }
 
@@ -201,31 +259,70 @@ public class SpecificationCase {
    * @return string representation of specificatoin case.
    */
   public String printCode(final BMLConfig conf) {
-    String code = "";
+    final StringBuffer code = new StringBuffer("");
     //code += IDisplayStyle._sc_start + conf.newLine();
     //conf.incInd();
-    code += this.precondition.printLine(conf, DisplayStyle._requires);
+    code.append(this.precondition.printLine(conf, DisplayStyle.REQUIRES_KWD));
     if (!this.modifies.getExpression().isEmpty()) {
-      code += this.modifies.printLine(conf, DisplayStyle.MODIFIES_KWD);
+      code.append(this.modifies.printLine(conf, DisplayStyle.MODIFIES_KWD));
     }
-    code += this.postcondition.printLine(conf, DisplayStyle._postcondition);
-    if (this.excondition.size() == 1) {
-      code += conf.getIndent() + DisplayStyle._exsures + " " +
-        this.excondition.get(0).printCode(conf);
-    } else if (this.excondition.size()  >  1) {
-      code += conf.getIndent() + DisplayStyle._exsures;
-      final Iterator < Exsure >  iter = this.excondition.iterator();
-      while (iter.hasNext()) {
-        code += conf.newLine();
-        code += iter.next().printCode(conf);
-      }
-      conf.decInd();
-      code += conf.newLine();
-      conf.incInd();
-    }
+    code.append(this.postcondition.printLine(conf, DisplayStyle.ENSURES_KWD));
+    printSignals(conf, code);
+    printSignalsOnly(conf, code);
     //conf.decInd();
     //code += " " + IDisplayStyle._sc_end + conf.newLine();
-    return code;
+    return code.toString();
+  }
+
+  /**
+   * The method appends to the given {@link StringBuffer} the textual
+   * representation of the signals_only clause.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @param code the buffer to append the signals_only clause to
+   */
+  private void printSignalsOnly(final BMLConfig conf,
+                                final StringBuffer code) {
+    code.append(conf.getIndent()).append(DisplayStyle.SIGNALS_ONLY_KWD);
+    if (this.signalsonly.size() == 0) {
+      code.append(" ").append(DisplayStyle.NOTHING_KWD);
+    } else if (this.signalsonly.size() == 1) {
+      code.append(" ").append(this.signalsonly.get(0).printCode(conf));
+    } else if (this.signalsonly.size() > 1) {
+      final Iterator < JavaReferenceType >  iter = this.signalsonly.iterator();
+      while (iter.hasNext()) {
+        code.append(conf.newLine());
+        code.append(iter.next().printCode(conf));
+      }
+      conf.decInd();
+      code.append(conf.newLine());
+      conf.incInd();
+    }
+  }
+
+  /**
+   * The method appends to the given {@link StringBuffer} the textual
+   * representation of the signals clause.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @param code the buffer to append the signals clause to
+   */
+  private void printSignals(final BMLConfig conf,
+                            final StringBuffer code) {
+    if (this.excondition.size() == 1) {
+      code.append(conf.getIndent()).append(DisplayStyle.SIGNALS_KWD).
+           append(" ").append(this.excondition.get(0).printCode(conf));
+    } else if (this.excondition.size()  >  1) {
+      code.append(conf.getIndent()).append(DisplayStyle.SIGNALS_KWD);
+      final Iterator < Exsure >  iter = this.excondition.iterator();
+      while (iter.hasNext()) {
+        code.append(conf.newLine());
+        code.append(iter.next().printCode(conf));
+      }
+      conf.decInd();
+      code.append(conf.newLine());
+      conf.incInd();
+    }
   }
 
   /**
@@ -241,6 +338,12 @@ public class SpecificationCase {
     final Iterator < Exsure >  iter = this.excondition.iterator();
     while (iter.hasNext()) {
       iter.next().writeSingle(aw);
+    }
+    aw.writeAttributeCount(this.signalsonly.size());
+    final Iterator < JavaReferenceType >  itera = this.signalsonly.iterator();
+    while (itera.hasNext()) {
+      final JavaReferenceType tp = itera.next();
+      tp.write(aw);
     }
   }
 

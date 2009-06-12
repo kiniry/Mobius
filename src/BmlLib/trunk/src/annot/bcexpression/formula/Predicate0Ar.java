@@ -62,7 +62,7 @@ public class Predicate0Ar extends AbstractFormula {
   }
 
   /**
-   * @return Simple String representation of this
+   * @return simple String representation of this
    *     predicate, for debugging only.
    */
   @Override
@@ -70,6 +70,10 @@ public class Predicate0Ar extends AbstractFormula {
     return "" + this.value;
   }
 
+  /**
+   * @return the value of the constant (i.e. <code>true</code> or
+   *   <code>false</code>)
+   */
   public boolean getValue() {
     return value;
   }

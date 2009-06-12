@@ -93,7 +93,9 @@ public class BCConstantPool extends BCCConstantPrinting
   }
 
   /**
-   * Adds a constant to the first or second constant pool.
+   * Adds a constant to the first or second constant pool. If the constant
+   * pool is <code>null</code> then the combined constant pool is
+   * used as the reference for the constant from the first parameter.
    *
    * @param c - Constant to be added.
    * @param toSecondCP - <code>true</code> in case the constant should be
@@ -105,7 +107,8 @@ public class BCConstantPool extends BCCConstantPrinting
                           final boolean toSecondCP,
                           final ConstantPoolGen constantPoolGen) {
     if (toSecondCP) {
-      this.combinedcp.addConstant(c, constantPoolGen);
+      this.combinedcp.addConstant(c,
+        constantPoolGen != null ? constantPoolGen : combinedcp);
     } else {
       addConstantAfter(c, initialSize);
     }

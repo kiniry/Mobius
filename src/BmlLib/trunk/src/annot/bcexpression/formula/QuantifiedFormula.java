@@ -174,7 +174,7 @@ public class QuantifiedFormula extends AbstractFormula {
     code += "; ";
     code += DisplayStyle.BLOCK_EXPR_END;
     String str = getSubExpr(0).printCode(conf);
-    if (DisplayStyle.go3argQuantifiers) {
+    if (DisplayStyle.DISPLAY_3ARG_QUANTIFIERS) {
       str = str.substring(1, str.length() - 1);
     }
     code += str;
