@@ -30,7 +30,7 @@ import freeboogie.ast.TupleType;
 import freeboogie.ast.Type;
 import freeboogie.ast.VariableDecl;
 import freeboogie.astutil.PrettyPrinter;
-import freeboogie.tc.SPGRecognizer;
+import freeboogie.tc.TtspRecognizer;
 import freeboogie.tc.TcInterface;
 
 /**
@@ -104,7 +104,7 @@ public class Passificator extends ABasicPassifier {
   @Override
   public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
     SimpleGraph<Block> currentFG = getTypeChecker().getFlowGraph(implementation);
-    SPGRecognizer<Block> recog = new SPGRecognizer<Block>(currentFG);
+    TtspRecognizer<Block> recog = new TtspRecognizer<Block>(currentFG, oldBody.getBlocks());
     Body body = oldBody;
     if (!recog.check()) {
       Err.warning(this + " " + implementation.loc() + ": Implementation " + 

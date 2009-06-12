@@ -16,6 +16,7 @@ import freeboogie.ast.Evaluator;
 import freeboogie.ast.Implementation;
 import freeboogie.ast.Program;
 import freeboogie.ast.Signature;
+import freeboogie.ast.Transformer;
 
 /**
  * An implementation of an algorithm to recognize 
@@ -235,9 +236,9 @@ public class SPGRecognizer<T> {
   }
 
   public static void check(final Program program, final TcInterface tc) {
-    program.ast.eval(new  Evaluator<Boolean>() {
+    program.ast.eval(new Transformer() {
       @Override
-      public Boolean eval(Implementation impl, Signature sig, 
+      public void see(Implementation impl, Signature sig, 
                           Body body, Declaration tail) {
         System.out.print(this + " " + impl.loc() + ": Implementation " + 
           sig.getName() + " SPG check...");
@@ -245,11 +246,10 @@ public class SPGRecognizer<T> {
        SPGRecognizer<Block> recog = new SPGRecognizer<Block>(currentFG);
        if (!recog.check()) {
          System.out.println("FAILED.");
-         return false;
        } else {
          System.out.println("SUCCESS.");
-         return true;
        }
+       if (tail != null) tail.eval(this);
       }
     });
 
