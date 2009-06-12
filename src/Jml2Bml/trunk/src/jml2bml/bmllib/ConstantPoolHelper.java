@@ -60,7 +60,8 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
-    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
+    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true,
+                   cp.getConstantPool());
   }
 
   /**
@@ -131,7 +132,7 @@ public final class ConstantPoolHelper {
    */
   private static int getConstantClassForNameIndex(final int classNameIndex,
                                                   final BCConstantPool cp) {
-    final int size = cp.size();
+    final int size = cp.getSize();
     for (int i = 0; i < size; i++) {
       final Constant c = cp.getConstant(i);
       if (c instanceof ConstantClass) {
@@ -154,7 +155,7 @@ public final class ConstantPoolHelper {
   private static List < Integer > getConstantNameAndTypeForNameIndex(
                                                                      final int nameIndex,
                                                                      final BCConstantPool cp) {
-    final int size = cp.size();
+    final int size = cp.getSize();
     final List < Integer > res = new LinkedList < Integer >();
     for (int i = 0; i < size; i++) {
       final Constant c = cp.getConstant(i);
@@ -178,7 +179,7 @@ public final class ConstantPoolHelper {
                                                                final int classIndex,
                                                                final int nameAndTypeindex,
                                                                final BCConstantPool cp) {
-    final int size = cp.size();
+    final int size = cp.getSize();
     for (int i = 0; i < size; i++) {
       final Constant c = cp.getConstant(i);
       if (c instanceof ConstantFieldref) {
@@ -208,7 +209,7 @@ public final class ConstantPoolHelper {
     if (index != -1) {
       return index;
     }
-    cp.addConstant(constant, true);
+    cp.addConstant(constant, true, null);
     return cp.findConstant(key);
   }
 
@@ -222,7 +223,7 @@ public final class ConstantPoolHelper {
    * (or of the old with the same value)
    */
   private static int tryInsert(final BCConstantPool cp, final ConstantClass cl) {
-    for (int i = 0; i < cp.size(); i++) {
+    for (int i = 0; i < cp.getSize(); i++) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
         if (tmp.getNameIndex() == cl.getNameIndex()) {
@@ -230,8 +231,8 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cl, true);
-    for (int i = cp.size() - 1; i >= 0; i--) {
+    cp.addConstant(cl, true, cp.getConstantPool());
+    for (int i = cp.getSize() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
         if (tmp.getNameIndex() == cl.getNameIndex()) {
@@ -255,7 +256,7 @@ public final class ConstantPoolHelper {
    */
   private static int tryInsert(final BCConstantPool cp,
                                final ConstantNameAndType cnt) {
-    for (int i = 0; i < cp.size(); i++) {
+    for (int i = 0; i < cp.getSize(); i++) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
         if ((tmp.getNameIndex() == cnt.getNameIndex()) &&
@@ -264,8 +265,8 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cnt, true);
-    for (int i = cp.size() - 1; i >= 0; i--) {
+    cp.addConstant(cnt, true, cp.getConstantPool());
+    for (int i = cp.getSize() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
         if ((tmp.getNameIndex() == cnt.getNameIndex()) &&
@@ -283,7 +284,7 @@ public final class ConstantPoolHelper {
   public static void addGhostField(final Type fieldType,
                                    final String fieldName, final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
-    final String className = clazz.getJC().getClassName().replace('.', '/');
+    final String className = clazz.getBCELClass().getClassName().replace('.', '/');
     final int fieldTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantUtf8(TypeSignature.getSignature(fieldType)));
     final int fieldNameIndex = ConstantPoolHelper
@@ -294,7 +295,8 @@ public final class ConstantPoolHelper {
         .tryInsert(cp, new ConstantClass(classNameIndex));
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
-    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true);
+    cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true,
+                   cp.getConstantPool());
     System.err.println(cp.printCode(new StringBuffer()));
   }
   

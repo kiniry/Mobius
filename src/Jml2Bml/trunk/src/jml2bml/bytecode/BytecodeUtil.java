@@ -126,7 +126,7 @@ public final class BytecodeUtil {
    */
   public static BCExpression createFieldRef(final Symbol var,
                                             final BCClass clazz) {
-    String className = clazz.getJC().getClassName();
+    String className = clazz.getBCELClass().getClassName();
     className = "L" + className.replace('.', '/') + ";";
     final Field field = findField(clazz, var.name.toString());
     final ConstantValue constantValue = field.getConstantValue();
@@ -194,7 +194,7 @@ public final class BytecodeUtil {
   }
   
   public static Field findField(BCClass cl, String name){
-    for (Field field: cl.getJC().getFields()){
+    for (Field field: cl.getBCELClass().getFields()){
       if (name.equals(field.getName()))
           return field;
     }
