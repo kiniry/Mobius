@@ -53,8 +53,8 @@ public class TranslatingVisitor {
   private ConstantPoolGen cpg;
 
   public JClassType visit(BCClass clazz) {
-    cpg = new ConstantPoolGen(clazz.getJC().getConstantPool());
-    final JClassType type = new JClassType(clazz.getJC().getClassName());
+    cpg = clazz.getBCELClass().getConstantPool();
+    final JClassType type = new JClassType(clazz.getBCELClass().getClassName());
     //translating methods
     b2bpl.bytecode.BCMethod[] resMethods = new b2bpl.bytecode.BCMethod[clazz
         .getMethodCount()];
@@ -63,7 +63,7 @@ public class TranslatingVisitor {
       resMethods[i] = visit(clazz.getMethod(i), type);
     }
     //translating fields
-    Field[] fields = clazz.getJC().getFields();
+    Field[] fields = clazz.getBCELClass().getFields();
     BCField[] resFields = new BCField[fields.length];
     for (int i = 0; i < fields.length; i++) {
       resFields[i] = new BCField(translateFlags(fields[i].getAccessFlags()),

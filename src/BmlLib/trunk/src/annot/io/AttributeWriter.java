@@ -81,8 +81,8 @@ public class AttributeWriter {
     final int constPos = this.bcc.getCp().findConstant(str);
     if (constPos == -1) {
       final ConstantUtf8 cu8 = new ConstantUtf8(str);
-      this.bcc.getCp().addConstant(cu8, true);
-      return this.bcc.getCp().size() - 1;
+      this.bcc.getCp().addConstant(cu8, true, null);
+      return this.bcc.getCp().getSize() - 1;
     }
     return constPos;
   }
@@ -129,16 +129,15 @@ public class AttributeWriter {
     int where = bcp.findConstant(attr.getName());
     final Constant constnt = new ConstantUtf8(attr.getName());
     if (where < 0) {
-      bcp.addConstant(constnt, false);
+      bcp.addConstant(constnt, false, null);
       where = bcp.findConstant(attr.getName());
     }
     if (bcp.isSecondConstantPoolIndex(where)) {
-      bcp.removeConstant(where);
-      bcp.addConstant(constnt, false);
+      bcp.addConstant(constnt, false, null);
     }
     System.arraycopy(output, 0, bytes, 0, this.pos);
     return new Unknown(attr.getIndex(), this.pos, bytes,
-                       this.bcc.getJC().getConstantPool());
+      this.bcc.getBCELClass().getConstantPool().getFinalConstantPool());
   }
 
   /**

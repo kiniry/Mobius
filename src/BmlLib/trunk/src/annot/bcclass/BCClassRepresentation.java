@@ -16,11 +16,11 @@ import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantNameAndType;
-import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 
 import annot.attributes.AType;
@@ -34,6 +34,7 @@ import annot.attributes.clazz.InvariantsAttribute;
 import annot.attributes.field.BMLModifierAttribute;
 import annot.attributes.method.InCodeAnnotation;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.FieldRef;
 import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
@@ -73,10 +74,10 @@ public abstract class BCClassRepresentation {
   private InvariantsAttribute invariants;
 
   /**
-   * BCEL's JavaClass for this class, for bytecode
+   * BCEL's {@link ClassGen} for this class, for bytecode
    * operations.
    */
-  private JavaClass jc;
+  private ClassGen jc;
 
   /**
    * Array with methods.
@@ -196,12 +197,8 @@ public abstract class BCClassRepresentation {
    *   is found not to be correct
    */
   public void addField(final Field f) throws ReadAttributeException {
-    final Field[] fds = jc.getFields();
-    final Field[] nfds = new Field[fds.length + 1];
-    System.arraycopy(fds, 0, nfds, 0, fds.length);
-    nfds[nfds.length - 1] = f;
-    jc.setFields(nfds);
-    bml_fmodifiers.add(nfds.length - 1, getFreshFieldMod(f));
+    jc.addField(f);
+    bml_fmodifiers.add(jc.getFields().length - 1, getFreshFieldMod(f));
   }
 
   /**
@@ -259,9 +256,9 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * @return BCEL's JavaClass
+   * @return BCEL's {@link ClassGen}
    */
-  public JavaClass getJC() {
+  public ClassGen getBCELClass() {
     return this.jc;
   }
 
@@ -287,15 +284,15 @@ public abstract class BCClassRepresentation {
    * Initialize BCClass and read BML attributes from the
    * given JavaClass.
    *
-   * @param ajc - JavaClass to initialize from.
+   * @param ajc - {@link ClassGen} to initialize from.
    * @throws ReadAttributeException - if any of BML
    *     attributes wasn't correctly parsed
    *     by this library.
    */
-  protected void load(final JavaClass ajc) throws ReadAttributeException {
+  protected void load(final ClassGen ajc) throws ReadAttributeException {
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "initializing bcclass");
     this.jc = ajc;
-    this.cp = new BCConstantPool(ajc);
+    this.cp = new BCConstantPool(ajc, this);
 
     MLog.putMsg(MessageLog.LEVEL_PINFO, "  loading class attributes");
     final Attribute[] attrs = ajc.getAttributes();
@@ -315,8 +312,7 @@ public abstract class BCClassRepresentation {
     final Method[] mtab = ajc.getMethods();
     this.methods = new BCMethod[mtab.length];
     for (int i = 0; i  <  mtab.length; i++) {
-      this.methods[i] = getFreshMethod(mtab[i], ajc.getClassName(),
-                                       ajc.getConstantPool());
+      this.methods[i] = getFreshMethod(mtab[i], ajc.getClassName());
     }
   }
 
@@ -347,8 +343,7 @@ public abstract class BCClassRepresentation {
    *   correctly parsed by BMLLib
    */
   protected abstract BCMethod getFreshMethod(final Method meth,
-                                             final String clname,
-                                             final ConstantPool cpool)
+                                             final String clname)
     throws ReadAttributeException;
 
   /**
@@ -373,12 +368,13 @@ public abstract class BCClassRepresentation {
     for (int i = 0; i  <  ftab.length; i++) {
       if (fieldName.equals(ftab[i].getName())) {
         final int ni = ftab[i].getNameIndex();
-        final Constant[] ctab = this.jc.getConstantPool().getConstantPool();
-        for (int j = 0; j  <  ctab.length; j++) {
-          if (ctab[j] instanceof ConstantNameAndType) {
-            final ConstantNameAndType cnt = (ConstantNameAndType) ctab[j];
+        final ConstantPoolGen cpg = this.jc.getConstantPool();
+        for (int j = 0; j  <  cpg.getSize(); j++) {
+          final Constant cnst = cpg.getConstant(j); 
+          if (cnst instanceof ConstantNameAndType) {
+            final ConstantNameAndType cnt = (ConstantNameAndType) cnst;
             if (cnt.getNameIndex() == ni) {
-              return getFieldRefForNameAndType(ctab, j);
+              return getFieldRefForNameAndType(cpg, j);
             }
           }
         }
@@ -395,17 +391,18 @@ public abstract class BCClassRepresentation {
    * Returns the index in the given constant table which contains the field
    * reference that points to the given name and type reference.
    *
-   * @param ctab the constant table to retrieve the information from
+   * @param cpg the constant table to retrieve the information from
    * @param nameAndType the index of the name and type specification in the
    *   constant table
    * @return the index of the field reference object or -1 in case there
    *   is no object with the given name and type specification
    */
-  private int getFieldRefForNameAndType(final Constant[] ctab,
+  private int getFieldRefForNameAndType(final ConstantPoolGen cpg,
                                         final int nameAndType) {
-    for (int k = 0; k  <  ctab.length; k++) {
-      if (ctab[k] instanceof ConstantFieldref) {
-        final ConstantFieldref cfr = (ConstantFieldref) ctab[k];
+    for (int k = 0; k  <  cpg.getSize(); k++) {
+      final Constant cnst = cpg.getConstant(k);
+      if (cnst instanceof ConstantFieldref) {
+        final ConstantFieldref cfr = (ConstantFieldref) cnst;
         if (cfr.getClassIndex() == 1 &&
             cfr.getNameAndTypeIndex() == nameAndType) {
           return k;
@@ -474,25 +471,26 @@ public abstract class BCClassRepresentation {
 
 
   /**
-   * Updates it's JavaClass by writing all BML attributes
-   * into it.
+   * Generates a {@link JavaClass} from the local representation and writes all
+   * BML attributes into it.
    */
-  public void saveJC() {
+  public JavaClass saveJC() {
+    final JavaClass ajc = this.jc.getJavaClass();
     final Method[] marr = generateMethodsToSave();
-    this.cp.reset();
-    this.jc.setMethods(marr);
+    ajc.setMethods(marr);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "  saving class attributes");
     final AttributeWriter aw = new AttributeWriter(this);
     Attribute[] attrs = removeBMLAttributes(this.jc.getAttributes());
-    this.jc.setAttributes(attrs);
+    ajc.setAttributes(attrs);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "   saving second constant pool");
-    attrs = this.jc.getAttributes();
+    attrs = ajc.getAttributes();
     attrs = addAndSaveInvariants(aw, attrs);
     attrs = addAndSaveNonJavaFields(aw, attrs, getGhostFields());
     attrs = addAndSaveNonJavaFields(aw, attrs, getModelFields());
-    this.jc.setAttributes(attrs);
-    updateFieldAttributes();
-    this.cp.save(this.jc);
+    ajc.setAttributes(attrs);
+    updateFieldAttributes(ajc);
+    this.cp.save(ajc);
+    return ajc;
   }
 
   /**
@@ -501,29 +499,11 @@ public abstract class BCClassRepresentation {
    * @return the generated methods
    */
   private Method[] generateMethodsToSave() {
-    final ConstantPoolGen ncpg = new ConstantPoolGen(this.jc.getConstantPool());
     final Method[] marr = new Method[this.methods.length];
     for (int i = 0; i  <  this.methods.length; i++) {
-      updateConstantPool(ncpg, this.methods[i].getConstantPool());
-      this.methods[i].setConstantPool(ncpg);
       marr[i] = this.methods[i].save();
     }
-    this.jc.setConstantPool(ncpg.getFinalConstantPool());
     return marr;
-  }
-
-  /**
-   * This method updates the first constant pool with the entries from the
-   * second one.
-   *
-   * @param ncpg the constant pool to add entries to
-   * @param constantPool the constant pool to take entries from
-   */
-  private void updateConstantPool(final ConstantPoolGen ncpg,
-                                  final ConstantPoolGen constantPool) {
-    for (int i = 1; i < constantPool.getSize(); i++) {
-      ncpg.addConstant(constantPool.getConstant(i), constantPool);
-    }
   }
 
   /**
@@ -541,7 +521,9 @@ public abstract class BCClassRepresentation {
                                      final Attribute[] attrs,
                                      final GhostFieldsAttribute ghstFldsAttr) {
     Attribute[] res = attrs;
-    res = addAttribute(res, aw.writeAttribute(ghstFldsAttr));
+    if (ghstFldsAttr.size() > 0) {
+      res = addAttribute(res, aw.writeAttribute(ghstFldsAttr));
+    }
     return res;
   }
 
@@ -565,10 +547,11 @@ public abstract class BCClassRepresentation {
 
   /**
    * This method updates the BML attributes associated with Java fields
-   * of the current class.
+   * of the given class.
+   * @param ajc the Java class to update fields in
    */
-  private void updateFieldAttributes() {
-    final Field[] fields = jc.getFields();
+  private void updateFieldAttributes(final JavaClass ajc) {
+    final Field[] fields = ajc.getFields();
     for (int i = 0; i < fields.length; i++) {
       final AttributeWriter aw = new AttributeWriter(this);
       final Attribute[] attrs =
@@ -647,8 +630,8 @@ public abstract class BCClassRepresentation {
   public void saveToFile(final String fileName) throws IOException {
     final String osSpecificFileName = FileUtils.toOsSpecificName(fileName);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "saving to: " + fileName);
-    saveJC();
-    this.jc.dump(osSpecificFileName);
+    JavaClass ajc = saveJC();
+    ajc.dump(osSpecificFileName);
   }
 
   /**
@@ -717,18 +700,9 @@ public abstract class BCClassRepresentation {
 
 
   /**
-   * Removes all the ghost fields from the class. It updates the constant
-   * pool.
+   * Removes all the ghost fields from the class.
    */
   public void removeGhostFields() {
-    final int size = this.ghostFields.size();
-    for (int i = 0; i < size; i++) {
-      final BCField bcf = ghostFields.get(i);
-      final int nat = getCp().findNATConstant(bcf.getNameIndex(),
-                                              bcf.getDescriptorIndex());
-      getCp().removeConstant(nat);
-      getCp().removeConstant(bcf.getNameIndex());
-    }
     this.ghostFields = getFreshGhostFields();
   }
 

@@ -16,7 +16,7 @@ import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
-import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.util.ClassPath;
 import org.apache.bcel.util.SyntheticRepository;
@@ -62,7 +62,8 @@ public class BCClass extends BCClassPrinting {
   public BCClass(final JavaClass ajc) throws ReadAttributeException {
     logger.info("ctor");
     this.parser = new Parsing(this);
-    load(ajc);
+    final ClassGen cg = new ClassGen(ajc);
+    load(cg);
   }
 
   /**
@@ -97,7 +98,8 @@ public class BCClass extends BCClassPrinting {
     final JavaClass ajc = SyntheticRepository.getInstance(acp)
         .loadClass(className);
     this.parser = new Parsing(this);
-    load(ajc);
+    final ClassGen cg = new ClassGen(ajc);
+    load(cg);
   }
 
   /**
@@ -128,18 +130,16 @@ public class BCClass extends BCClassPrinting {
    *
    * @param meth the BCEL method based on which the BMLLib method is generated
    * @param clname the name of the class in which the method is located
-   * @param cpool the constant pool
    * @return the BMLLib method representation
    * @throws ReadAttributeException in case some of the BML attributes wasn't
    *   correctly parsed by BMLLib
    * @see BCClassRepresentation#getFreshMethod(Method, String, ConstantPool)
    */
   protected BCMethod getFreshMethod(final Method meth,
-                                    final String clname,
-                                    final ConstantPool cpool)
+                                    final String clname)
     throws ReadAttributeException {
     return new BCMethod(this, new MethodGen(meth, clname,
-      new ConstantPoolGen(cpool)));
+                                            getCp().getConstantPool()));
   }
 
   /**
@@ -235,18 +235,15 @@ public class BCClass extends BCClassPrinting {
    *   moved to the second constant pool
    */
   private void removeField(final BCField afield, final boolean b) {
-    final Field[] fds = getJC().getFields();
+    final Field[] fds = getBCELClass().getFields();
     int idx = 0;
     final int anidx = afield.getNameIndex();
     for (; idx < fds.length; idx++) {
       final int nidx = fds[idx].getNameIndex();
       if (anidx == nidx) break;
     }
-    if (idx < fds.length) { //the field exists
-      final Field[] nfds = new Field[fds.length - 1];
-      System.arraycopy(fds, 0, nfds, 0, idx);
-      System.arraycopy(fds, idx + 1, nfds, idx, nfds.length - idx);
-      getJC().setFields(nfds);
+    if (idx < fds.length) { //the normal field exists
+      getBCELClass().removeField(fds[idx]);
       if (b) {
         final Field fd = fds[idx];
         updateConstantPoolForFields(afield, fd);
@@ -263,16 +260,10 @@ public class BCClass extends BCClassPrinting {
     final int natidx = bcp.findNATConstant(nidx, signidx);
     final ConstantNameAndType natcnst =
       (ConstantNameAndType) bcp.getConstant(natidx);
-    bcp.removeConstant(nidx);
-    bcp.addConstant(cnst, true);
+    bcp.addConstant(cnst, true, bcp.getConstantPool());
     afield.setName(cnst.getBytes());
     natcnst.setNameIndex(afield.getNameIndex() - 1); //we remove one position
-    //nidx = bcp.findConstant(fd.getName());
-    if (natidx > nidx) //previous remove may change the position
-      bcp.removeConstant(natidx - 1);
-    else
-      bcp.removeConstant(natidx);
-    bcp.addConstant(natcnst, true);
+    bcp.addConstant(natcnst, true, bcp.getConstantPool());
   }
 
   /**
@@ -284,7 +275,7 @@ public class BCClass extends BCClassPrinting {
    * @param afield a field to update the class with
    */
   private void updateJavaField(final BCField afield) {
-    final Field[] fds = getJC().getFields();
+    final Field[] fds = getBCELClass().getFields();
     boolean found = false;
     for (int i = 0; i < fds.length; i++) {
       if (afield.getNameIndex() == fds[i].getNameIndex()) {
@@ -293,8 +284,7 @@ public class BCClass extends BCClassPrinting {
         if (getCp().isSecondConstantPoolIndex(idx)) {
           final ConstantUtf8 cnst = (ConstantUtf8)(getCp().getConstant(idx));
           final String val = cnst.getBytes();
-          getCp().removeConstant(idx);
-          getCp().addConstant(cnst, false);
+          getCp().addConstant(cnst, false, null);
           idx = getCp().findConstant(val);
         }
         fds[i].setSignatureIndex(idx);
@@ -310,7 +300,7 @@ public class BCClass extends BCClassPrinting {
       final Field fd = new Field(afield.getAccessFlags(),
                                  afield.getNameIndex(),
                                  afield.getDescriptorIndex(), null,
-                                 getJC().getConstantPool());
+                                 getBCELClass().getConstantPool().getConstantPool());
       try {
         addField(fd);
       } catch (ReadAttributeException e) {

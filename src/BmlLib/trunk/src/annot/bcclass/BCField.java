@@ -18,6 +18,7 @@ import java.util.Vector;
 import org.apache.bcel.classfile.AccessFlags;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassFormatException;
+import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Unknown;
@@ -222,7 +223,11 @@ public class BCField extends AccessFlags {
    * @return the type of the current field
    */
   public Type getType() {
-    return null;
+    final int pos = ((ConstantNameAndType)bcc.getCp().
+              getConstant(descriptorIndex)).getSignatureIndex();
+    final String tname = ((ConstantUtf8)bcc.getCp().getConstant(pos)).
+              getBytes();
+    return Type.getType(tname);
   }
 
   /**
@@ -242,7 +247,7 @@ public class BCField extends AccessFlags {
   public void setName(final String name) {
     int idx = bcc.getCp().findConstant(name);
     if (idx < 0) {
-      bcc.getCp().addConstant(new ConstantUtf8(name), myBMLKind != 0);
+      bcc.getCp().addConstant(new ConstantUtf8(name), myBMLKind != 0, null);
       idx = bcc.getCp().findConstant(name);
     }
     nameIndex = idx;
@@ -259,7 +264,7 @@ public class BCField extends AccessFlags {
     int idx = bcc.getCp().findConstant(sig);
     if (idx < 0) {
       bcc.getCp().addConstant(new ConstantUtf8(sig),
-                               myBMLKind != 0);
+                               myBMLKind != 0, null);
       idx = bcc.getCp().findConstant(sig);
     }
     descriptorIndex = idx;
@@ -308,7 +313,7 @@ public class BCField extends AccessFlags {
   }
 
   /**
-   * This method loades the current field from the given reader. It uses the
+   * This method loads the current field from the given reader. It uses the
    * fieldinfo structure as in Section 4.5 Fields of "The Java Virtual Machine
    * Specification":
    *   field_info {
@@ -358,5 +363,4 @@ public class BCField extends AccessFlags {
     }
     attributes = (Attribute[]) attrs.toArray();
   }
-
 }

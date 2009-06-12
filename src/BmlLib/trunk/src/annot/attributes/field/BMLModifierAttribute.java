@@ -224,7 +224,7 @@ public class BMLModifierAttribute implements IBCAttribute {
    * @param modif the modifiers to set
    */
   private void setModifiersForJavaField(final int modif) {
-    final Field[] fds = bcc.getJC().getFields();
+    final Field[] fds = bcc.getBCELClass().getFields();
     for (int i = 0; i <= fds.length; i++) {
       if (fds[i] == field) {
         final BMLModifierAttribute bmod = bcc.getBMLModifierForField(i);

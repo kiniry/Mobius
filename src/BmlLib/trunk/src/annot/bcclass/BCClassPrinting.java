@@ -30,6 +30,11 @@ import annot.textio.DisplayStyle;
 public abstract class BCClassPrinting extends BCClassRepresentation {
 
   /**
+   * A cached package name of the current class.
+   */
+  private String package_name;
+
+  /**
    * Dumps all string representation of the current class, with BML annotations.
    * This uses the format of the grammar from "BML Reference Manual" section
    * "Textual Representation of Specifications":
@@ -230,7 +235,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
   private void printJavaFields(final BMLConfig conf,
                                final StringBuffer code,
                                final boolean isStatic) {
-    final Field[] fds = getJC().getFields();
+    final Field[] fds = getBCELClass().getFields();
     final StringBuffer res = new StringBuffer("");
     for (int i = 0; i < fds.length; i++) {
       final Field fd = fds[i];
@@ -300,11 +305,11 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
     // fileheader
     String ret = printFileHeader();
     // typeheader
-    ret += "class " + getJC().getClassName();
-    if (!"java.lang.Object".equals(getJC().getSuperclassName())) {
-      ret += " extends " + getJC().getSuperclassName();
+    ret += "class " + getBCELClass().getClassName();
+    if (!"java.lang.Object".equals(getBCELClass().getSuperclassName())) {
+      ret += " extends " + getBCELClass().getSuperclassName();
     }
-    final String[] interfaceNames = getJC().getInterfaceNames();
+    final String[] interfaceNames = getBCELClass().getInterfaceNames();
     if (interfaceNames.length  >  0) {
       ret += " implements ";
       for (int i = 0; i  <  interfaceNames.length; i++) {
@@ -346,13 +351,26 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
    * @return the buffer with the representation of package information
    */
   private StringBuffer generatePackageInfo() {
-    String pname = getJC().getPackageName();
+    String pname = getPackageName();
     if ("".equals(pname)) {
       pname = DisplayStyle.DEFAULT_PACKAGE_NAME_KWD;
     }
     final StringBuffer ret = new StringBuffer(DisplayStyle.PACKAGE_KWD + " ");
     ret.append(pname);
     return ret;
+  }
+
+
+  private String getPackageName() {
+    if (package_name == null) {
+      String cname = getBCELClass().getClassName();
+      int index = cname.lastIndexOf('.');
+      if(index < 0)
+        package_name = "";
+      else
+        package_name = cname.substring(0, index);
+    }
+    return package_name;
   }
 
 }

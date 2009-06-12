@@ -85,7 +85,7 @@ public class FieldRef extends BCExpression {
    */
   public static FieldRef getFieldOfName(final BCConstantPool cp,
                                         final String name) {
-    for (int i = 0; i  <  cp.size(); i++) {
+    for (int i = 0; i  <  cp.getSize(); i++) {
       if (cp.getConstant(i) == null) {
         continue;
       }

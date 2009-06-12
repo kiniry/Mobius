@@ -12,10 +12,10 @@ import java.util.Iterator;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.classfile.Unknown;
 import org.apache.bcel.classfile.Utility;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.InstructionList;
@@ -144,9 +144,8 @@ public class BCMethod {
     LocalVariable[] res = new LocalVariable[lvgens.length];
     if (cnt == 0 && !bcelMethod.isStatic()) {
       res = new LocalVariable[1];
-      final JavaClass jc = bcc.getJC();
-      final String typename = "L" + jc.getPackageName() +
-                              jc.getClassName() + ";";
+      final ClassGen jc = bcc.getBCELClass();
+      final String typename = "L" + jc.getClassName() + ";";
       final Type t = Type.getType(typename);
       res[0] = new LocalVariable(this, 0, "this",
         new LocalVariableGen(0, "this", t, null, null));
@@ -412,7 +411,8 @@ public class BCMethod {
       bcode.append(this.amap.getAllAt(ih).printCode(conf));
       bcode.append(ih.getPosition()).append(": ").
             append(ih.getInstruction().
-                      toString(this.bcc.getJC().getConstantPool())).
+                      toString(this.bcc.getBCELClass().getConstantPool().
+                               getConstantPool())).
             append("\n");
     }
     return bcode.toString();

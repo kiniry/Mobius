@@ -11,19 +11,21 @@ package annot.bcclass;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Vector;
 
 import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.Attribute;
+import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantCP;
 import org.apache.bcel.classfile.ConstantClass;
+import org.apache.bcel.classfile.ConstantInteger;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantString;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.ConstantPoolGen;
 
 import annot.attributes.AttributeNames;
@@ -48,12 +50,12 @@ public class BCConstantPool extends BCCConstantPrinting
                             implements IBCAttribute {
 
   /**
-   * Constant array.
+   * The representation of the combined constant pool.
    */
-  private Vector < Constant >  constants;
+  private ConstantPoolGen combinedcp;
 
   /**
-   * Number of constants in first constant pool.
+   * Number of constants in the first constant pool.
    */
   private int initialSize;
 
@@ -61,7 +63,12 @@ public class BCConstantPool extends BCCConstantPrinting
    * JavaClass related with it's primary constantPool,
    * used for {@link #reset()} method.
    */
-  private final JavaClass jc;
+  private final ClassGen jc;
+
+  /**
+   * BML class representation. (bcc.jc == jc).
+   */
+  private BCClassRepresentation bcc;
 
   /**
    * A standard constructor, from JavaClass. It inserts
@@ -69,90 +76,157 @@ public class BCConstantPool extends BCCConstantPrinting
    * not read in the second constant pool. This waits until
    * the class attributes are read.
    *
-   * @param ajc - JavaClass to initialize from.
+   * @param ajc - {@link ClassGen} to initialize from.
+   * @param classRepresentation the BML class representation
    * @throws ReadAttributeException - if second constant
    *     pool attribute format is invalid.
    */
-  public BCConstantPool(final JavaClass ajc) throws ReadAttributeException {
+  public BCConstantPool(final ClassGen ajc,
+                        final BCClassRepresentation classRepresentation)
+    throws ReadAttributeException {
     this.jc = ajc;
-    this.constants = new Vector < Constant > ();
-    final ConstantPoolGen cpg = new ConstantPoolGen(ajc.getConstantPool());
-    addStandardConstants(cpg);
-    ajc.setConstantPool(cpg.getFinalConstantPool());
-    final ConstantPool cp = ajc.getConstantPool();
-    this.initialSize = cp.getLength();
-    readInCP(cp);
+    this.bcc = classRepresentation;
+    addStandardConstants(ajc.getConstantPool());
+    final ConstantPoolGen cp = ajc.getConstantPool();
+    this.initialSize = cp.getSize();
+    this.combinedcp = new ConstantPoolGen(cp.getFinalConstantPool());
   }
 
   /**
-   * Reads in to the internal constant pool representation the content of the
-   * first constant pool.
-   *
-   * @param cp the BCEL representation of the constant pool to read in
-   */
-  private void readInCP(final ConstantPool cp) {
-    for (int i = 0; i  <  this.initialSize; i++) {
-      this.constants.add(cp.getConstant(i));
-    }
-  }
-
-  /**
-   * Appends a constant to the second constant pool.
+   * Adds a constant to the first or second constant pool.
    *
    * @param c - Constant to be added.
    * @param toSecondCP - <code>true</code> in case the constant should be
    *   added to the second constant pool, <code>false</code> in case this
    *   should be added to the first one
+   * @param constantPoolGen in which the new constant is interpreted
    */
   public void addConstant(final Constant c,
-                          final boolean toSecondCP) {
+                          final boolean toSecondCP,
+                          final ConstantPoolGen constantPoolGen) {
     if (toSecondCP) {
-      this.constants.add(c);
+      this.combinedcp.addConstant(c, constantPoolGen);
     } else {
-      this.constants.add(initialSize++, c);
-      final Constant[] consts = new Constant[initialSize];
-      for (int i = 0; i < initialSize; i++) {
-        consts[i] = constants.get(i);
-      }
-      jc.getConstantPool().setConstantPool(consts);
+      addConstantAfter(c, initialSize);
     }
   }
 
   /**
-   * Appends a constant to the constant pool after the constant at the given
-   * index.
+   * Adds a constant to the combined constant pool after the constant at the
+   * given index. This method takes care of changing the number of indices
+   * in constants.
    *
-   * @param c - Constant to be added.
-   * @param an_index - An index of constant after which the constant should
-   * be added.
-   * @param toSecondCP - <code>true</code> in case the constant should be
-   *   added to the second constant pool, <code>false</code> in case this
-   *   should be added to the first one
+   * @param c - Constant to be added, indices should be as in the final
+   *   constant pool
+   * @param an_index - An index of the constant after which the constant should
+   *   be added.
    */
-  public void addConstantAfter(final Constant c, final int an_index,
-                               final boolean toSecondCP) {
-    final int index = an_index + 1;
-    if (toSecondCP) {
-      this.constants.add(index, c);
-    } else {
-      this.constants.add(index, c);
+  public void addConstantAfter(final Constant c, final int an_index) {
+    reindexConstantPool(an_index + 1, combinedcp); //this reindexes the cp in jc
+                                                   //as well
+    if (an_index + 1 <= initialSize) {
       initialSize++;
-      final Constant[] consts = new Constant[initialSize];
-      for (int i = 0; i < initialSize; i++) {
-        consts[i] = constants.get(i);
-      }
-      jc.getConstantPool().setConstantPool(consts);
+    }
+    final ConstantPoolGen cpg = jc.getConstantPool();
+    addNoReindexing(an_index, cpg);
+    addNoReindexing(an_index, combinedcp);
+  }
+
+  /**
+   * Adds a constant to the constant pool after the constant at the given
+   * index. This method does not take care of changing the number of indices
+   * in constants.
+   *
+   * @param index An index of the constant after which the constant should
+   *   be added
+   * @param cpg the constant pool to add the constant to
+   */
+  private void addNoReindexing(final int index, final ConstantPoolGen cpg) {
+    final int unusednum = getUnusedNum(cpg);
+    cpg.addConstant(new ConstantInteger(unusednum), cpg);
+    final int size = cpg.getSize();
+    for (int i = size - 1; i > index; i--) {
+      cpg.setConstant(i, cpg.getConstant(i - 1));
     }
   }
-  
+
+  /**
+   * Seeks the first integer number which does not occur in the given constant
+   * pool.
+   *
+   * @param cpg the constant pool to look the integers for
+   * @return the first unused number
+   */
+  private static int getUnusedNum(final ConstantPoolGen cpg) {
+    int num = 0;
+    while (cpg.lookupInteger(num) >= 0) {
+      num++;
+    }
+    return num;
+  }
+
+  /**
+   * The method reindexes the constant pool entries so that the constant at the
+   * given position can be added and all the constants with numbers starting
+   * with the constant are shifted upwards.
+   *
+   * @param index the indices greater or equal should be incremented
+   * @param cpg the constant pool to reindex constants in
+   */
+  private void reindexConstantPool(final int index,
+                                   final ConstantPoolGen cpg) {
+    for (int i = cpg.getSize() - 1; i > 0; i--) { // null in 0 always
+      final Constant cnst = cpg.getConstant(i);
+      switch (cnst.getTag()) { //reindexing
+        case Constants.CONSTANT_Class:
+          final ConstantClass ccnst = (ConstantClass) cnst;
+          if (ccnst.getNameIndex() >= index)
+            ccnst.setNameIndex(ccnst.getNameIndex() + 1);
+          break;
+        case Constants.CONSTANT_Fieldref:
+        case Constants.CONSTANT_Methodref:
+        case Constants.CONSTANT_InterfaceMethodref:
+          final ConstantCP cfref = (ConstantCP) cnst;
+          if (cfref.getClassIndex() >= index)
+            cfref.setClassIndex(cfref.getClassIndex() + 1);
+          if (cfref.getNameAndTypeIndex() >= index) {
+            cfref.setNameAndTypeIndex(cfref.getNameAndTypeIndex() + 1);
+          }
+          break;
+        case Constants.CONSTANT_String:
+          final ConstantString cstr = (ConstantString) cnst;
+          if (cstr.getStringIndex() >= index)
+            cstr.setStringIndex(cstr.getStringIndex() + 1);
+          break;
+        case Constants.CONSTANT_Integer:
+        case Constants.CONSTANT_Float:
+        case Constants.CONSTANT_Long:
+        case Constants.CONSTANT_Double:
+        case Constants.CONSTANT_Utf8:
+          break; //no reindexing needed
+        case Constants.CONSTANT_NameAndType:
+          final ConstantNameAndType cnat = (ConstantNameAndType) cnst;
+          if (cnat.getNameIndex() >= index)
+            cnat.setNameIndex(cnat.getNameIndex() + 1);
+          if (cnat.getSignatureIndex() >= index) {
+            cnat.setSignatureIndex(cnat.getSignatureIndex() + 1);
+          }
+          break;
+        default:
+          throw new ClassFormatException("Invalid byte tag in constant: " +
+                                         cnst.getTag());
+      }
+    }
+  }
+
   /**
    * Removes all entries from constant pool.
-   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl) 
+   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
    */
   public void clearConstantPool() {
-    constants.clear();
+    //constants.clear();
     initialSize = 0;
-    addConstant(null, false);
+    //addConstant(null, false);
   }
 
   /**
@@ -183,17 +257,7 @@ public class BCConstantPool extends BCCConstantPrinting
    *     Constant could be found.
    */
   public int findConstant(final String cdata) {
-    final int n = this.constants.size();
-    for (int i = 0; i  <  n; i++) {
-      final Constant c = this.constants.elementAt(i);
-      if (c instanceof ConstantUtf8) {
-        final ConstantUtf8 uc8 = (ConstantUtf8) c;
-        if (cdata.equals(uc8.getBytes())) {
-          return i;
-        }
-      }
-    }
-    return -1;
+    return combinedcp.lookupUtf8(cdata);
   }
 
   /**
@@ -206,18 +270,10 @@ public class BCConstantPool extends BCCConstantPrinting
    *     Constant could be found.
    */
   public int findNATConstant(final int idx1, final int idx2) {
-    final int n = this.constants.size();
-    for (int i = 0; i  <  n; i++) {
-      final Constant c = this.constants.elementAt(i);
-      if (c instanceof ConstantNameAndType) {
-        final ConstantNameAndType cn = (ConstantNameAndType) c;
-        if (idx1 == cn.getNameIndex() &&
-            idx2 == cn.getSignatureIndex()) {
-          return i;
-        }
-      }
-    }
-    return -1;
+    final String name = ((ConstantUtf8)combinedcp.getConstant(idx1)).getBytes();
+    final String signature = ((ConstantUtf8)combinedcp.getConstant(idx2)).
+      getBytes();
+    return combinedcp.lookupNameAndType(name, signature);
   }
 
   /**
@@ -231,7 +287,7 @@ public class BCConstantPool extends BCCConstantPrinting
    * @return i-th constant.
    */
   public Constant getConstant(final int i) {
-    return this.constants.elementAt(i);
+    return this.combinedcp.getConstant(i);
   }
 
   /**
@@ -249,7 +305,7 @@ public class BCConstantPool extends BCCConstantPrinting
     for (int i = 0; i  <  this.initialSize; i++) {
       a_code.append(printElement(i));
     }
-    final int n = this.constants.size();
+    final int n = this.combinedcp.getSize();
     if (n == this.initialSize) {
       return a_code;
     }
@@ -261,25 +317,23 @@ public class BCConstantPool extends BCCConstantPrinting
   }
 
 
-  /**
-   * Reinitializes constant pool from it's JavaClass'es
-   * primary constant pool. The variables from the second constant
-   * pool are copied to the new constant pool.
-   */
-  public void reset() {
-    final int oldsize = getInitialSize();
-    final Vector < Constant > oconst = this.constants;
-    this.constants = new Vector < Constant > ();
-    final ConstantPoolGen cpg = new ConstantPoolGen(this.jc.getConstantPool());
-    addStandardConstants(cpg);
-    this.jc.setConstantPool(cpg.getFinalConstantPool());
-    final ConstantPool cp = this.jc.getConstantPool();
-    this.initialSize = cp.getLength();
-    readInCP(cp);
-    for (int i = oldsize; i < oconst.size(); i++) {
-      this.constants.add(oconst.get(i));
-    }
-  }
+//  /**
+//   * Reinitializes constant pool from its Java class representation
+//   * primary constant pool. The variables from the second constant
+//   * pool are copied to the new constant pool.
+//   */
+//  public void reset() {
+//    final int oldsize = getInitialSize();
+//    final ConstantPoolGen ocpg = this.combinedcp;
+//    this.combinedcp =
+//      new ConstantPoolGen(this.jc.getConstantPool().getConstantPool());
+//    addStandardConstants(combinedcp);
+//    addStandardConstants(this.jc.getConstantPool());
+//    this.initialSize = combinedcp.getSize();
+//    for (int i = oldsize; i < ocpg.getSize(); i++) {
+//      this.combinedcp.addConstant(ocpg.getConstant(i), ocpg);
+//    }
+//  }
 
   /**
    * Saves both constant pools to given JavaClass
@@ -289,14 +343,13 @@ public class BCConstantPool extends BCCConstantPrinting
    * @param ajc - JavaClass to save to.
    */
   public void save(final JavaClass ajc) {
-    final Constant[] carr = jc.getConstantPool().getConstantPool();
-    ajc.getConstantPool().setConstantPool(carr);
+    ajc.setConstantPool(jc.getConstantPool().getFinalConstantPool());
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final DataOutputStream file = new DataOutputStream(baos);
     try {
-      file.writeShort(constants.size() - this.initialSize);
-      for (int i = this.initialSize; i  <  constants.size(); i++) {
-        this.constants.elementAt(i).dump(file);
+      file.writeShort(combinedcp.getSize() - this.initialSize);
+      for (int i = this.initialSize; i  <  combinedcp.getSize(); i++) {
+        this.combinedcp.getConstant(i).dump(file);
       }
     } catch (final IOException e) {
       e.printStackTrace();
@@ -310,43 +363,6 @@ public class BCConstantPool extends BCCConstantPrinting
     final Unknown scp = new Unknown(nameIndex, length, bytes, cp);
     final Attribute[] atab = BCClass.addAttribute(ajc.getAttributes(), scp);
     ajc.setAttributes(atab);
-  }
-
-  /**
-   * Copies constants from the given constant pool to the given constant pool
-   * generator.
-   *
-   * @param a_cpg a new constant pool generator to add the constants to
-   * @param a_cp the constant pool to take the constants from
-   */
-  private void addConstantsFromCP(final ConstantPoolGen a_cpg,
-                                  final ConstantPool a_cp) {
-    final ConstantPoolGen cpcpg = new ConstantPoolGen(a_cp);
-    for (int i = 1; i < a_cp.getLength(); i++) {
-      final Constant cnst = a_cp.getConstant(i);
-      if (cnst instanceof ConstantClass) {
-        final ConstantClass ccl = (ConstantClass)cnst;
-        final String clname = ccl.getBytes(a_cp);
-        final int pos = a_cpg.getSize();
-        int isin = a_cpg.lookupUtf8(clname);
-        if (isin == -1) {
-          isin = pos + 1;
-        }
-        for (int j = 0; j <= a_cp.getLength(); j++) {
-          if (a_cpg.lookupInteger(j) == -1) {
-            a_cpg.addInteger(j); // dummy addition to increase the pos. in cpg
-            break;
-          }
-        }
-        final ConstantClass nccl = new ConstantClass(isin);
-        a_cpg.setConstant(pos, nccl);
-        if (isin == pos + 1) {
-          a_cpg.addUtf8(clname);
-        }
-      } else if (cnst != null) {
-        a_cpg.addConstant(cnst, cpcpg);
-      }
-    }
   }
 
   /**
@@ -366,13 +382,13 @@ public class BCConstantPool extends BCCConstantPrinting
     return getConstant(pos);
   }
 
-  /**
-   * @return number of constants stored in both
-   *     constant pools.
-   */
-  public int size() {
-    return this.constants.size();
-  }
+//  /**
+//   * @return number of constants stored in both
+//   *     constant pools.
+//   */
+//  public int size() {
+//    return this.combinedcp.getSize();
+//  }
 
   /**
    * Returns <code>true</code> only if the index is an index to a second
@@ -409,7 +425,9 @@ public class BCConstantPool extends BCCConstantPrinting
     final int size = attributeReader.readShort();
     for (int i = 0; i  <  size; i++) {
       final Constant c = ConstantPoolReader.readConstant(attributeReader);
-      this.constants.add(c);
+      final int num = getUnusedNum(combinedcp);
+      combinedcp.addInteger(num);
+      this.combinedcp.setConstant(combinedcp.getSize() - 1, c);
     }
   }
 
@@ -436,7 +454,7 @@ public class BCConstantPool extends BCCConstantPrinting
    * @return the number of all constants
    */
   public int getSize() {
-    return constants.size();
+    return combinedcp.getSize();
   }
 
 
@@ -444,102 +462,10 @@ public class BCConstantPool extends BCCConstantPrinting
     // TODO Auto-generated method stub
   }
 
-  /**
-   * Remove the given constant from the constants vector. It takes care of the
-   * case when the constant is from the first constant pool.
-   *
-   * @param apos the number of the constant to remove
-   */
-  public void removeConstant(final int apos) {
-    constants.remove(apos);
-    if (apos < initialSize) {
-      initialSize--;
-      final Constant[] consts = new Constant[initialSize];
-      for (int i = 0; i < initialSize; i++) {
-        final Constant mconst = constants.get(i);
-        consts[i] = mconst;
-        if (mconst != null) {
-          switch (constants.get(i).getTag()) { //recalculation of indexes
-            case Constants.CONSTANT_Class:
-              final ConstantClass cconst = (ConstantClass)mconst;
-              if (cconst.getNameIndex() > apos)
-                cconst.setNameIndex(cconst.getNameIndex() - 1);
-              break;
-            case Constants.CONSTANT_Fieldref:
-            case Constants.CONSTANT_InterfaceMethodref:
-            case Constants.CONSTANT_Methodref:
-              final ConstantCP frconst = (ConstantCP)mconst;
-              if (frconst.getClassIndex() > apos)
-                frconst.setClassIndex(frconst.getClassIndex() - 1);
-              if (frconst.getNameAndTypeIndex() > apos)
-                frconst.setNameAndTypeIndex(frconst.getNameAndTypeIndex() - 1);
-              break;
-            case Constants.CONSTANT_NameAndType:
-              final ConstantNameAndType natconst = (ConstantNameAndType)mconst;
-              if (natconst.getNameIndex() > apos)
-                natconst.setNameIndex(natconst.getNameIndex() - 1);
-              if (natconst.getSignatureIndex() > apos)
-                natconst.setSignatureIndex(natconst.getSignatureIndex() - 1);
-              break;
-            case Constants.CONSTANT_String:
-              final ConstantString strconst = (ConstantString)mconst;
-              if (strconst.getStringIndex() > apos)
-                strconst.setStringIndex(strconst.getStringIndex() - 1);
-              break;
-            default: //do nothing
-          }
-        }
-      } //TODO the references in other structures must be updated (fields etc.)
-      jc.getConstantPool().setConstantPool(consts);
-    }
-  }
-
-  /**
-   * Remove the given constant from the constants vector. It does not
-   * recalculates references.
-   *
-   * @param apos the number of the constant to remove
-   */
-  public void justRemoveConstant(final int apos) {
-    constants.remove(apos);
-    if (apos < initialSize) {
-      initialSize--;
-      final Constant[] consts = new Constant[initialSize];
-      for (int i = 0; i < initialSize; i++) {
-        final Constant mconst = constants.get(i);
-        consts[i] = mconst;
-      }
-      jc.getConstantPool().setConstantPool(consts);
-    }
-  }
-
-  /**
-   * This method replaces constant at index an_old_index with constant a_new.
-   *
-   * @param an_old_index an index of constant to replace
-   * @param a_new a new constant
-   */
-  public void replaceConstant(final int an_old_index, final Constant a_new) {
-    if (an_old_index > initialSize) {
-      justRemoveConstant(an_old_index);
-      addConstantAfter(a_new, an_old_index - 1, true);
-    } else {
-      justRemoveConstant(an_old_index);
-      addConstantAfter(a_new, an_old_index - 1, false);
-    }
-  }
-
   public ConstantPool createCombinedCP() {
-    final Vector vec = new Vector();
-    final Constant[] cnst = jc.getConstantPool().getConstantPool();
-    vec.ensureCapacity(cnst.length);
-    vec.copyInto(cnst);
-    vec.addAll(constants);
-    final Constant [] cnst1 = (Constant[]) vec.toArray();
-    final ConstantPoolGen cpg = new ConstantPoolGen(cnst1);
-    return cpg.getFinalConstantPool();
+    return combinedcp.getConstantPool();
   }
-  
+
   /**
    * Removes this annotation from its container (i.e. class in case
    * the annotation is a class annotation or method in case the annotation
@@ -554,4 +480,75 @@ public class BCConstantPool extends BCCConstantPrinting
     // TODO Auto-generated method stub
     
   }
+
+  public ConstantPoolGen getConstantPool() {
+    return jc.getConstantPool();
+  }
+
+  public ConstantPoolGen getCoombinedCP() {
+    return combinedcp;
+  }
+
+  /**
+   * Remove the given constant from the constants vector. It does not
+   * recalculate references. The constants at indices higher than the
+   * given one are moved to indices less by one.
+   *
+   * @param apos the number of the constant to remove
+   */
+  public void justRemoveConstant(final int apos) {
+    //we assume the constant pool in jc and the combined constant pool
+    //are synchronised
+    final ConstantPoolGen fcp = jc.getConstantPool();
+    if (apos < fcp.getSize()) {
+      final ConstantPoolGen nfcp = justRemoveConstantFromCPG(fcp, apos);
+      jc.setConstantPool(nfcp);
+      initialSize--;
+      final int numm = bcc.getMethodCount();
+      for (int i = 0; i < numm; i++) {
+        final BCMethod bcm = bcc.getMethod(i);
+        bcm.setConstantPool(nfcp);
+      }
+    } // no else as we remove from both cpgs
+    if (apos < combinedcp.getSize()) {
+      combinedcp = justRemoveConstantFromCPG(combinedcp, apos);
+    }
+  }
+
+  /**
+   * Remove the given constant from the constant pool. It does not
+   * recalculate references. The constants at indices higher than the
+   * given one are moved to indices less by one.
+   *
+   * @param fcp the constant pool to remove constant from
+   * @param pos the number of the constant to remove
+   * @return a new constant pool with less entries by one
+   */
+  private static ConstantPoolGen justRemoveConstantFromCPG(
+      final ConstantPoolGen fcp,
+      final int pos) {
+    for (int i = pos; i < fcp.getSize() - 1; i++) {
+      fcp.setConstant(i, fcp.getConstant(i + 1));
+    }
+    final Constant[] cs = fcp.getConstantPool().getConstantPool();
+    final Constant[] ncs = new Constant[cs.length - 1];
+    System.arraycopy(cs, 0, ncs, 0, cs.length - 1);
+    return new ConstantPoolGen(ncs);
+  }
+
+  /**
+   * This method replaces constant at index an_old_index with constant a_new.
+   *
+   * @param an_old_index an index of constant to replace
+   * @param a_new a new constant
+   */
+  public void replaceConstant(final int an_old_index, final Constant a_new) {
+    if (an_old_index < initialSize) {
+      jc.getConstantPool().setConstant(an_old_index, a_new);
+    } // we update both cpgs
+    if (an_old_index < combinedcp.getSize()) {
+      combinedcp.setConstant(an_old_index, a_new);
+    }
+  }
+
 }

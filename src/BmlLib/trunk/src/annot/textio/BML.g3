@@ -554,7 +554,7 @@ arr_type returns [Type typ]:
           $typ = Type.getType(fsig);
         } catch (ClassFormatException e) {
           //not signature type
-          $typ = Type.getType("V"); //TODO stupid default
+          $typ = Type.getType("Lsome/unrecognised/type;"); //TODO stupid default
         }
       }
       syso("arr_type");
@@ -567,9 +567,10 @@ type returns [String name] :
 reference_type returns [String name] :
   rname=typename
   {
-    syso("reference type: " + $rname.name);
-    $name = $rname.name;
-    fsig = $rname.name;
+    String tn = "L" + $rname.name + ";";
+    syso("reference type: " + tn);
+    $name = tn;
+    fsig = tn;
   };
 
 built_in_type returns [String name] :
