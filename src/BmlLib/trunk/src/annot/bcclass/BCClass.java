@@ -210,7 +210,8 @@ public class BCClass extends BCClassPrinting {
         fd.setAccessFlags(afield.getAccessFlags());
         final int idx = afield.getDescriptorIndex();
         fd.setDescriptorIndex(idx);
-        getBMLModifierForField(i).setModifiers(afield.getBMLFlags());
+        fd.setBMLFlags(afield.getBMLFlags());
+        fd.setBMLKind(afield.getBMLKind());
         found = true;
       }
     }
@@ -219,6 +220,7 @@ public class BCClass extends BCClassPrinting {
       removeField(afield, true);
       //remove model
       getModelFields().removeBMLField(afield);
+      afield.setupCPEntries();
       addGhostField(afield);
     }
   }
@@ -228,7 +230,7 @@ public class BCClass extends BCClassPrinting {
    * moves the field descriptors from the first constant pool to the second
    * one if instructed to do so. It moves the name of the field, and its
    * NameAndType descriptor. Additionally these values change in the
-   * <code>afield</code> paramerer.
+   * <code>afield</code> parameter.
    *
    * @param afield the field to remove from the class
    * @param b <code>true</code> in case the constant pool entries should be

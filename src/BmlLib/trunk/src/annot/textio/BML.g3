@@ -175,12 +175,13 @@ typename returns [String name] :
   | STRING_CP { $name = "String"; }
     ((DIV | DOT) n=typename { $name +=  '/' + $n.name; })?;
 
-constant_pools : constant_pool ( second_constant_pool )? EOL;
+constant_pools : constant_pool (EOL)* ( second_constant_pool )? EOL;
 
 constant_pool : CONSTANT_POOL EOL constant_pool_content
   {syso("constant_pool");};
 
-second_constant_pool : SECOND_CONSTANT_POOL EOL constant_pool_content;
+second_constant_pool : SECOND_CONSTANT_POOL EOL constant_pool_content
+  {syso("second_constant_pool");};
 
 constant_pool_content : constant_pool_line EOL ( constant_pool_line EOL )*;
 
@@ -194,7 +195,10 @@ constant_pool_entry : class_cp_entry | field_cp_entry
    
 class_cp_entry : CLASS_CP cp_ref SEMICOLON ;
 
-field_cp_entry : FIELDREF_CP cp_ref.cp_ref SEMICOLON;
+field_cp_entry : FIELDREF_CP cp_ref.cp_ref SEMICOLON
+  {
+    syso("field_cp_entry");
+  };
 
 method_cp_entry : METHODREF_CP cp_ref DOT cp_ref SEMICOLON;
 
@@ -210,7 +214,10 @@ long_cp_entry : LONG_CP ( sign )? NATL SEMICOLON;
 
 double_cp_entry : DOUBLE_CP ( sign )? floating_point_literal SEMICOLON;
 
-name_and_type_cp_entry : NAMEANDTYPE_CP cp_ref COLON cp_ref SEMICOLON;
+name_and_type_cp_entry : NAMEANDTYPE_CP cp_ref COLON cp_ref SEMICOLON
+  {
+    syso("name_and_type_cp_entry");
+  };
 
 utf8_cp_entry :
   UTF8_CP StringLiteral SEMICOLON
@@ -325,15 +332,16 @@ staticfield :
   STATIC field
   {
     if (afield.getNameIndex() >= 0) {
+      afield.setConstantPool(bcc.getCp().getCoombinedCP().getFinalConstantPool());
       bcc.updateFields(afield);
     }
     syso("static field");
   };
 
 field returns [BCField bcf]:
-  (nsfieldmodifier[afield])* typ=arr_type nm=ident SEMICOLON
+  (nsfieldmodifier[afield])* typ=arr_type nm=ident smcol=SEMICOLON
   {
-     if ($nm.name != null && $typ.typ != null) {
+     if ($nm.name != null && $typ.typ != null && $smcol.type == BMLLexer.SEMICOLON) {
                //may be null in case of syntax error
      	afield.setName($nm.name);
      	afield.setType($typ.typ);
@@ -426,6 +434,7 @@ objectfields :
   field EOL
     {
        if (afield.getNameIndex() >= 0) {
+         afield.setConstantPool(bcc.getCp().getCoombinedCP().getFinalConstantPool());
          bcc.updateFields(afield);
        }
     }

@@ -10,12 +10,14 @@ package annot.bcclass;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantNameAndType;
+import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
@@ -302,6 +304,8 @@ public abstract class BCClassRepresentation {
         ar.readAttribute((Unknown) attrs[i]);
       }
     }
+    updateConstantPoolForFields(ghostFields);
+    updateConstantPoolForFields(modelFields);
 
     final Field[] fields = ajc.getFields();
     this.bml_fmodifiers = new Vector < BMLModifierAttribute > (fields.length);
@@ -313,6 +317,20 @@ public abstract class BCClassRepresentation {
     this.methods = new BCMethod[mtab.length];
     for (int i = 0; i  <  mtab.length; i++) {
       this.methods[i] = getFreshMethod(mtab[i], ajc.getClassName());
+    }
+  }
+
+  /**
+   * This method updates the constant pools in the given fields attribute.
+   *
+   * @param fields the attribute to update constant pool in
+   */
+  private void updateConstantPoolForFields(final GhostFieldsAttribute fields) {
+    if (fields == null) return;
+    final ConstantPool ccp = getCp().getCoombinedCP().getFinalConstantPool();
+    for (final Iterator < BCField > i = fields.iterator(); i.hasNext();) {
+      final BCField fd = i.next();
+      fd.setConstantPool(ccp);
     }
   }
 
@@ -635,16 +653,6 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * Returns the BML modifiers for the given non-BML field.
-   *
-   * @param a_fieldno the number of the field to extract the modifiers for
-   * @return the modifiers for the given field number
-   */
-  public BMLModifierAttribute getModifiersForField(final int a_fieldno) {
-    return bml_fmodifiers.get(a_fieldno);
-  }
-
-  /**
    * Returns the ghost fields in the class.
    *
    * @return the ghost fields of the class
@@ -695,7 +703,11 @@ public abstract class BCClassRepresentation {
    * @return the modifier for the given field
    */
   public BMLModifierAttribute getBMLModifierForField(final int i) {
-    return bml_fmodifiers.get(i);
+    try {
+      return bml_fmodifiers.get(i);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      return null;
+    }
   }
 
 

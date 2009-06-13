@@ -234,6 +234,16 @@ public class DisplayStyle {
   public static final String NULL_KWD = "null";
 
   /**
+   * BML keyword for "ghost" modifier.
+   */
+  public static final String GHOST_KWD = "ghost";
+
+  /**
+   * BML keyword for "model" modifier.
+   */
+  public static final String MODEL_KWD = "model";
+
+  /**
    * Array with all the BML modifiers.
    */
   public static final String[] BML_MODIFIERS = {

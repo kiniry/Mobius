@@ -35,7 +35,7 @@ public class ArrayLength extends BCExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return "length";
+    return "\\length";
   }
 
   @Override

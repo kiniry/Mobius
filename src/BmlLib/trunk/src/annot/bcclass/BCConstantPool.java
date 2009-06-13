@@ -110,7 +110,7 @@ public class BCConstantPool extends BCCConstantPrinting
       this.combinedcp.addConstant(c,
         constantPoolGen != null ? constantPoolGen : combinedcp);
     } else {
-      addConstantAfter(c, initialSize);
+      addConstantAfter(c, initialSize - 1);
     }
   }
 
@@ -127,12 +127,12 @@ public class BCConstantPool extends BCCConstantPrinting
   public void addConstantAfter(final Constant c, final int an_index) {
     reindexConstantPool(an_index + 1, combinedcp); //this reindexes the cp in jc
                                                    //as well
+    addNoReindexing(an_index, c, combinedcp);
     if (an_index + 1 <= initialSize) {
       initialSize++;
+      final ConstantPoolGen cpg = jc.getConstantPool();
+      addNoReindexing(an_index, c, cpg);
     }
-    final ConstantPoolGen cpg = jc.getConstantPool();
-    addNoReindexing(an_index, cpg);
-    addNoReindexing(an_index, combinedcp);
   }
 
   /**
@@ -142,15 +142,23 @@ public class BCConstantPool extends BCCConstantPrinting
    *
    * @param index An index of the constant after which the constant should
    *   be added
+   * @param c the constant to add
    * @param cpg the constant pool to add the constant to
    */
-  private void addNoReindexing(final int index, final ConstantPoolGen cpg) {
+  private void addNoReindexing(final int index, final Constant c,
+                               final ConstantPoolGen cpg) {
     final int unusednum = getUnusedNum(cpg);
-    cpg.addConstant(new ConstantInteger(unusednum), cpg);
+    final int oldsize = cpg.getSize();
+    cpg.addConstant(c, cpg);
+    if (cpg.getSize() == oldsize) {
+      cpg.addConstant(new ConstantInteger(unusednum), cpg);
+      cpg.setConstant(cpg.getSize() - 1, c);
+    }
     final int size = cpg.getSize();
-    for (int i = size - 1; i > index; i--) {
+    for (int i = size - 1; i > index + 1; i--) {
       cpg.setConstant(i, cpg.getConstant(i - 1));
     }
+    cpg.setConstant(index + 1, c);
   }
 
   /**
@@ -264,7 +272,7 @@ public class BCConstantPool extends BCCConstantPrinting
   }
 
   /**
-   * Searches for a NameAndType constant with two indicies which are equal
+   * Searches for a NameAndType constant with two indices which are equal
    * to the ones given in the arguments.
    *
    * @param idx1 - the first (name) index
@@ -552,6 +560,13 @@ public class BCConstantPool extends BCCConstantPrinting
     if (an_old_index < combinedcp.getSize()) {
       combinedcp.setConstant(an_old_index, a_new);
     }
+  }
+
+  public int findFieldref(int classNameIndex, int nameAndTypeIndex) {
+    final String class_name = ((ConstantUtf8)combinedcp.getConstant(classNameIndex)).getBytes();
+    final ConstantNameAndType cnat = (ConstantNameAndType) (combinedcp.getConstant(nameAndTypeIndex));
+    final String field_name = ((ConstantUtf8)combinedcp.getConstant(cnat.getNameIndex())).getBytes();
+    return combinedcp.lookupFieldref(class_name, field_name, cnat.getSignature(combinedcp.getConstantPool()));
   }
 
 }

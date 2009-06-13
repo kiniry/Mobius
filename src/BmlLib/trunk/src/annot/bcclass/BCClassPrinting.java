@@ -211,6 +211,12 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
           final int af = fd.getAccessFlags();
           res.append(Utility.accessToString(af));
           if (res.length() != 0) res.append(" ");
+          if (fd.getBMLKind() == BCField.GHOST_FIELD) {
+            res.append(DisplayStyle.GHOST_KWD);
+          } else if (fd.getBMLKind() == BCField.MODEL_FIELD) {
+            res.append(DisplayStyle.MODEL_KWD);
+          }
+          if (res.length() != 0) res.append(" ");
           res.append(BMLModifierAttribute.printBMLModifiers(fd.getBMLFlags()));
           if (res.length() != 0) res.append(" ");
           res.append(fd.getType().toString());
@@ -247,7 +253,7 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
         res.append(Utility.accessToString(af));
         if (res.length() > len) res.append(" ");
         len = res.length();
-        res.append(getModifiersForField(i).toString());
+        res.append(getBMLModifierForField(i).toString());
         if (res.length() > len) res.append(" ");
         res.append(fd.getType().toString());
         res.append(" ");

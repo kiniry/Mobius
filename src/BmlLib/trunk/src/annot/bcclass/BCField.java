@@ -15,13 +15,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Vector;
 
-import org.apache.bcel.classfile.AccessFlags;
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.Unknown;
+import org.apache.bcel.classfile.Visitor;
 import org.apache.bcel.generic.Type;
 
 import annot.attributes.AttributeNames;
@@ -38,7 +40,7 @@ import annot.io.ReadAttributeException;
  * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public class BCField extends AccessFlags {
+public class BCField extends FieldOrMethod {
 
   /**
    * A constant representing the information that the field is a normal Java
@@ -75,16 +77,6 @@ public class BCField extends AccessFlags {
   private int myBMLKind;
 
   /**
-   * Points to field name in the second constant pool.
-   */
-  private int nameIndex;
-
-  /**
-   * Points to type descriptor in the first or second constant pool.
-   */
-  private int descriptorIndex;
-
-  /**
    * The class in which the field resides.
    */
   private BCClass bcc;
@@ -93,7 +85,7 @@ public class BCField extends AccessFlags {
    * The attributes of the current ghost field. Note that it contains all
    * the attributes except the {@link BMLModifierAttribute}.
    */
-  private Attribute[] attributes;
+  private Attribute[] attributes = new Attribute[0];
 
   /**
    * A constructor from already existing {@link BCField}. That
@@ -106,11 +98,11 @@ public class BCField extends AccessFlags {
    *     by this library.
    */
   public BCField(final BCField fd) throws ReadAttributeException {
+    super(fd.getAccessFlags(), fd.getNameIndex(), fd.getDescriptorIndex(),
+          fd.getAttributes(), fd.getConstantPool());
     setAccessFlags(fd.getAccessFlags());
     myBMLFlags = fd.getBMLFlags();
     setBMLKind(fd.getBMLKind());
-    nameIndex = fd.getNameIndex();
-    descriptorIndex = fd.getDescriptorIndex();
     bcc = fd.getBMLClass();
     attributes = fd.getAttributes();
   }
@@ -123,21 +115,10 @@ public class BCField extends AccessFlags {
    * @param abcc the class in which the field will be located
    */
   public BCField(final BCClass abcc) {
-    setAccessFlags(0);
+    super(0, -1, -1, null,
+          abcc.getCp().getCoombinedCP().getFinalConstantPool());
     myBMLFlags = 0;
-    nameIndex = -1;
-    descriptorIndex = -1;
     bcc = abcc;
-  }
-
-  /**
-   * Returns the attributes of the current BML field except the
-   * {@link BMLModifierAttribute}.
-   *
-   * @return the attributes of the field
-   */
-  public Attribute[] getAttributes() {
-    return attributes;
   }
 
   /**
@@ -158,7 +139,7 @@ public class BCField extends AccessFlags {
    * @return the index of the type descriptor of the field
    */
   public int getDescriptorIndex() {
-    return descriptorIndex;
+    return getSignatureIndex();
   }
 
 
@@ -169,16 +150,7 @@ public class BCField extends AccessFlags {
    * @param idx the index to set
    */
   public void setDescriptorIndex(final int idx) {
-    this.descriptorIndex = idx;
-  }
-
-  /**
-   * Returns the index to the combined constant pool of the name of the field.
-   *
-   * @return the index of the name of the field
-   */
-  public int getNameIndex() {
-    return nameIndex;
+    setSignatureIndex(idx);
   }
 
 
@@ -223,20 +195,9 @@ public class BCField extends AccessFlags {
    * @return the type of the current field
    */
   public Type getType() {
-    final int pos = ((ConstantNameAndType)bcc.getCp().
-              getConstant(descriptorIndex)).getSignatureIndex();
-    final String tname = ((ConstantUtf8)bcc.getCp().getConstant(pos)).
+    final String tname = ((ConstantUtf8)bcc.getCp().getConstant(getSignatureIndex())).
               getBytes();
     return Type.getType(tname);
-  }
-
-  /**
-   * The name of the field as represented in the constant pool.
-   *
-   * @return the string with the name
-   */
-  public String getName() {
-    return ((ConstantUtf8)(bcc.getCp()).getConstant(nameIndex)).getBytes();
   }
 
   /**
@@ -250,7 +211,7 @@ public class BCField extends AccessFlags {
       bcc.getCp().addConstant(new ConstantUtf8(name), myBMLKind != 0, null);
       idx = bcc.getCp().findConstant(name);
     }
-    nameIndex = idx;
+    setNameIndex(idx);
   }
 
   /**
@@ -267,7 +228,7 @@ public class BCField extends AccessFlags {
                                myBMLKind != 0, null);
       idx = bcc.getCp().findConstant(sig);
     }
-    descriptorIndex = idx;
+    setSignatureIndex(idx);
   }
 
   /**
@@ -286,8 +247,8 @@ public class BCField extends AccessFlags {
    */
   public void save(final AttributeWriter aw) {
     aw.writeShort(getAccessFlags());
-    aw.writeShort(nameIndex);
-    aw.writeShort(descriptorIndex);
+    aw.writeShort(getNameIndex());
+    aw.writeShort(getSignatureIndex());
     if (myBMLFlags != 0) {
       aw.writeShort(attributes.length + 1);
       final BMLModifierAttribute bmmod =
@@ -329,8 +290,8 @@ public class BCField extends AccessFlags {
    */
   public void load(final AttributeReader ar) throws ReadAttributeException {
     setAccessFlags(ar.readShort());
-    nameIndex = ar.readShort();
-    descriptorIndex = ar.readShort();
+    setNameIndex(ar.readShort());
+    setSignatureIndex(ar.readShort());
     final int len = ar.readShort();
     final ByteArrayInputStream mbuf = new ByteArrayInputStream(ar.getInput());
     final DataInputStream buf = new DataInputStream(mbuf);
@@ -361,6 +322,28 @@ public class BCField extends AccessFlags {
         e.printStackTrace();
       }
     }
-    attributes = (Attribute[]) attrs.toArray();
+    if (attrs.size() == 0) {
+      attributes = new Attribute[0];
+    } else {
+      attributes = (Attribute[]) attrs.toArray();
+    }
+  }
+
+  public void accept(Visitor obj) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  public ConstantValue getConstantValue() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public int setupCPEntries() {
+    BCConstantPool bcp = bcc.getCp();
+    if (getNameIndex() < 0 || getSignatureIndex() < 0)
+      return -1;
+    return bcp.getCoombinedCP().addFieldref(bcc.getBCELClass().getClassName(),
+                                            getName(), getSignature());
   }
 }

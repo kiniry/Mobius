@@ -11,6 +11,8 @@ package annot.attributes.clazz;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.apache.bcel.classfile.ConstantUtf8;
+
 import annot.attributes.AttributeNames;
 import annot.attributes.IBCAttribute;
 import annot.bcclass.BCClass;
@@ -47,6 +49,10 @@ public class GhostFieldsAttribute implements ClassAttribute, IBCAttribute {
    */
   public GhostFieldsAttribute(final BCClass classRepresentation) {
     this.bcc = classRepresentation;
+    if (classRepresentation.getCp().findConstant(getName()) == -1) {
+      classRepresentation.getCp().addConstant(new ConstantUtf8(getName()),
+        false, bcc.getCp().getConstantPool());
+    }
     this.ghostFields = new Vector < BCField > ();
   }
 
@@ -175,6 +181,8 @@ public class GhostFieldsAttribute implements ClassAttribute, IBCAttribute {
     for (int i = 0; i < size; i++) {
       final BCField fd = new BCField(bcc);
       fd.load(ar);
+      fd.setBMLKind(BCField.GHOST_FIELD);
+      ghostFields.add(fd);
     }
   }
 
@@ -219,6 +227,16 @@ public class GhostFieldsAttribute implements ClassAttribute, IBCAttribute {
    */
   public void add(final BCField afield) {
     ghostFields.add(afield);
+  }
+
+  /**
+   * The iterator which allows to operate on all the fields in the current
+   * attribute.
+   *
+   * @return the iterator over fields
+   */
+  public Iterator < BCField > iterator() {
+    return ghostFields.iterator();
   }
 
 }
