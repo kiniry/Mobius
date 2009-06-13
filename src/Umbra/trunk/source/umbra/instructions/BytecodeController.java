@@ -51,6 +51,7 @@ import umbra.instructions.errors.ErrorReport;
 import umbra.instructions.errors.FieldNoSuchConstantError;
 import umbra.instructions.errors.MethodNoSuchConstantError;
 import umbra.instructions.errors.SuperclassNameNoSuchConstantError;
+import umbra.lib.BytecodeStrings;
 import umbra.lib.FileNames;
 import umbra.lib.UmbraCPRecalculationException;
 import umbra.lib.UmbraException;
@@ -741,9 +742,17 @@ public final class BytecodeController extends BytecodeControllerInstructions {
     }
     if (FileNames.CP_DEBUG_MODE)
       UmbraPlugin.messagelog("updating pool and instructions");
+    boolean wasscp = false;
     for (int i = 0; i < getNoOfLines(); i++) {
       final BytecodeLineController lc = getLineController(i);
-      if (lc instanceof CPLineController) {
+      if (lc instanceof CPHeaderController &&
+          lc.getMy_line_text().
+             startsWith(BytecodeStrings.
+                        JAVA_KEYWORDS[BytecodeStrings.SCP_KEYWORD_POS])) {
+        wasscp = true;
+        continue;
+      }
+      if (lc instanceof CPLineController && !wasscp) {
         final CPLineController cplc = (CPLineController) lc;
         if (FileNames.CP_DEBUG_MODE)
           UmbraPlugin.messagelog(lc.getLineContent());
