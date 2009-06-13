@@ -8,6 +8,7 @@
 package jml2bml.bytecode;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.apache.bcel.classfile.Constant;
 import org.apache.bcel.classfile.ConstantInteger;
 import org.apache.bcel.classfile.ConstantValue;
 import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.InstructionHandle;
 import org.apache.bcel.generic.LineNumberGen;
@@ -27,6 +29,7 @@ import org.apache.bcel.generic.Type;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BCField;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.FieldRef;
@@ -128,8 +131,13 @@ public final class BytecodeUtil {
                                             final BCClass clazz) {
     String className = clazz.getBCELClass().getClassName();
     className = "L" + className.replace('.', '/') + ";";
-    final Field field = findField(clazz, var.name.toString());
-    final ConstantValue constantValue = field.getConstantValue();
+    final FieldOrMethod field = findField(clazz, var.name.toString());
+    ConstantValue constantValue = null;
+    if (field instanceof Field) {
+      constantValue = ((Field)field).getConstantValue();
+    } else {
+      constantValue = ((BCField)field).getConstantValue();
+    }
     if (constantValue==null) {
       return new FieldRef(clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, clazz));
     } else {
@@ -193,8 +201,22 @@ public final class BytecodeUtil {
     return result;
   }
   
-  public static Field findField(BCClass cl, String name){
-    for (Field field: cl.getBCELClass().getFields()){
+  public static FieldOrMethod findField(BCClass cl, String name){
+    for (Field field : cl.getBCELClass().getFields()){
+      if (name.equals(field.getName()))
+          return field;
+    }
+    // ghost fields
+    for (final Iterator <BCField> i = cl.getGhostFields().iterator();
+         i.hasNext();) {
+      final BCField field = i.next();
+      if (name.equals(field.getName()))
+          return field;
+    }
+    // model fields
+    for (final Iterator <BCField> i = cl.getModelFields().iterator();
+         i.hasNext();) {
+      final BCField field = i.next();
       if (name.equals(field.getName()))
           return field;
     }

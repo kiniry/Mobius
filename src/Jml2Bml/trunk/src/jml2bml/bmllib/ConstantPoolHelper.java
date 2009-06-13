@@ -12,9 +12,11 @@ import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.FieldOrMethod;
 
 import annot.bcclass.BCClass;
 import annot.bcclass.BCConstantPool;
+import annot.bcclass.BCField;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
@@ -61,7 +63,7 @@ public final class ConstantPoolHelper {
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true,
-                   cp.getConstantPool());
+                   null);
   }
 
   /**
@@ -72,7 +74,7 @@ public final class ConstantPoolHelper {
    * @param symbols - symbol table (to find the corresponding BCClass)
    * @return the index in the constantPool, or -1, when no entry found.
    */
-  public static int findFieldInConstantPool(final String className, final Field field,
+  public static int findFieldInConstantPool(final String className, final FieldOrMethod field,
                                             final BCClass clazz) {
     final BCConstantPool cp = clazz.getCp();
     
@@ -86,11 +88,10 @@ public final class ConstantPoolHelper {
     return getConstantFieldRefForClassAndNameAndType(classIndex, nameAndTypeIndex, cp);
   }
 
-  
   /**
    * Finds the corresponding ConstantFieldRef for given className and
    * fieldName (for <code>object.field</code>).
-   * @param className - class name of the <code> object</code>
+   * @param type - the type of the class where the field is declared
    * @param fieldName - name of the <code> field </code>
    * @param symbols - symbol table (to find the corresponding BCClass)
    * @return the index in the constantPool, or -1, when no entry found.
@@ -231,7 +232,7 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cl, true, cp.getConstantPool());
+    cp.addConstant(cl, true, null);
     for (int i = cp.getSize() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
@@ -265,7 +266,7 @@ public final class ConstantPoolHelper {
         }
       }
     }
-    cp.addConstant(cnt, true, cp.getConstantPool());
+    cp.addConstant(cnt, true, null);
     for (int i = cp.getSize() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantNameAndType) {
         final ConstantNameAndType tmp = (ConstantNameAndType) cp.getConstant(i);
@@ -296,7 +297,12 @@ public final class ConstantPoolHelper {
     final int nameAndTypeIndex = ConstantPoolHelper
         .tryInsert(cp, new ConstantNameAndType(fieldNameIndex, fieldTypeIndex));
     cp.addConstant(new ConstantFieldref(classIndex, nameAndTypeIndex), true,
-                   cp.getConstantPool());
+                   null);
+    final BCField afield = new BCField(clazz);
+    afield.setNameIndex(fieldNameIndex);
+    afield.setSignatureIndex(fieldTypeIndex);
+    afield.setBMLKind(BCField.GHOST_FIELD);
+    clazz.addGhostField(afield);
     System.err.println(cp.printCode(new StringBuffer()));
   }
   

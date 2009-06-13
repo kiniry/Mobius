@@ -12,6 +12,7 @@ import jml2bml.symbols.Variable;
 import jml2bml.utils.JCUtils;
 
 import org.apache.bcel.generic.LocalVariableGen;
+import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
@@ -23,6 +24,7 @@ import annot.bcexpression.LocalVariable;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Context;
 
@@ -98,7 +100,7 @@ public class SymbolsBuilder extends
     final boolean isModal = JCUtils.isModal(node);
     final Tree block = ancestorFinder.getAncestor(node, Tree.Kind.BLOCK);
     final Tree method = ancestorFinder.getAncestor(node, Tree.Kind.METHOD);
-    if (method != null && block != null) {
+    if (method != null || block != null) {
 
       final Tree clazz = ancestorFinder.getAncestor(node, Tree.Kind.CLASS);
       if (method == ancestorFinder.getAncestor(clazz, Tree.Kind.METHOD) ||
@@ -132,7 +134,7 @@ public class SymbolsBuilder extends
     final BCClass cl = s.findClass();
     final BCMethod m = BytecodeUtil.findMethod((JmlMethodDecl) method, cl);
     LocalVariable var = m.findLocalVariable(node.name.toString());
-    if (var == null) {      
+    if (var == null) {
       final int aindex = getIndex(m, node.getName().toString());
       if (aindex > m.getBcelMethod().getArgumentNames().length)
         return;
@@ -176,8 +178,10 @@ public class SymbolsBuilder extends
       ConstantPoolHelper.addGhostField(type, name, cl);
     } else if (isModal){
       throw new Jml2BmlException("Modal field not translated: " + node.getName());
-    } else if (BytecodeUtil.findField(cl, node.getName().toString()) == null)
-      throw new Jml2BmlException("Unknown field: " + node.getName());      
+    } else { //this is a quantified variable in an invariant or sth. similar 
+      //TODO: currently we interpret this as a ghost field
+      ConstantPoolHelper.addGhostField(type, node.getName().toString(), cl);
+    }
     s.put(node.name.toString(), new Variable((FieldRef) null, node));
   }
 

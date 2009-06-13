@@ -33,6 +33,7 @@ import com.sun.tools.javac.util.Context;
 public class ModifiersRule extends TranslationRule < String, Symbols > {
   private class ModifiersBuilder extends TranslationRule < String, Symbols > {
     public int modifiers = 0;
+    public int kind = BCField.JAVA_FIELD;
     @Override
     public String visitModifiers(final ModifiersTree node, final Symbols symb) {
 
@@ -42,6 +43,10 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
           modifiers = modifiers | BMLModifiersFlags.BML_NON_NULL;
         } else if (annotation.equals("org.jmlspecs.annotations.SpecPublic")){
           modifiers = modifiers | BMLModifiersFlags.BML_SPEC_PUBLIC;
+        } else if (annotation.equals("org.jmlspecs.annotations.Ghost")){
+          kind = BCField.GHOST_FIELD;
+        } else if (annotation.equals("org.jmlspecs.annotations.Model")){
+          kind = BCField.MODEL_FIELD;
         } else
           throw new Jml2BmlException("Unknown annotation:"+annotation);
       }

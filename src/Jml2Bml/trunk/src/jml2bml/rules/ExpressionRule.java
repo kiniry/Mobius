@@ -306,11 +306,12 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     //FIXME no function calls supported
     final BCExpression expr = scan(node.getExpression(), p);
     final Type type = ((JCTree) node).type;
+    final Type ctype = ((JCTree.JCFieldAccess) node).selected.type;
     final String identifier = node.getIdentifier().toString();
     if (type.getKind() == TypeKind.ARRAY && Constants.ARRAY_LENGTH.equals(identifier))
         return new FieldAccess(Code.FIELD_ACCESS, expr, new ArrayLength());
     //simplest case - there exist also in java code the same field access
-    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type, identifier, p.findClass());
+    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(ctype, identifier, p.findClass());
     if (fieldRefIndex != -1) {
       return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
           .createFieldRef(fieldRefIndex, p.findClass()));

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.jmlspecs.openjml.JmlTree;
+
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
