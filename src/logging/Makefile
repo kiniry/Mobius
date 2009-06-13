@@ -164,9 +164,9 @@ docmakerflags =	-version -author -protected
 # Complete list of packages for API documentation generation.
 
 stdpackages = \
-	idebug \
-	idebug.examples \
-	idebug.testsuite
+	mobius \
+	mobius.examples \
+	mobius.testsuite
 
 hcpackages = \
 	idebug_jass \
@@ -188,7 +188,7 @@ hcclassinterfaces =	$(foreach javafile,$(hcjavainterfaces),\
 			$(subst .java,.class,$(javafile)))
 
 javainterfaces =	$(foreach hcjavafile,$(hcjavainterfaces),\
-			$(subst idebug_jass,idebug,$(hcjavafile)))
+			$(subst idebug_jass,mobius,$(hcjavafile)))
 
 classinterfaces =	$(foreach javaint,$(javainterfaces),\
 			$(subst .java,.class,$(javaint)))
@@ -204,14 +204,14 @@ hcclassfiles =	$(foreach hcjavafile,$(hcjavafiles),\
 		$(subst .java,.class,$(hcjavafile)))
 
 stdjavafiles =	$(foreach hcjavafile,$(hcjavafiles),\
-		$(subst idebug_jass,idebug,$(hcjavafile)))
+		$(subst idebug_jass,mobius,$(hcjavafile)))
 
 stdclassfiles =	$(foreach javafile,$(stdjavafiles),\
 		$(subst .java,.class,$(javafile)))
 
-javafiles =	$(hcjavafiles) $(stdjavafiles)
+javafiles =	$(stdjavafiles)
 
-classfiles = 	$(hcclassfiles) $(stdclassfiles)
+classfiles = 	$(stdclassfiles)
 
 classfiles_nopath =	$(subst $(srcreldir)/,,$(classfiles))
 
