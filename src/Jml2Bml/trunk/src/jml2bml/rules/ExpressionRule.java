@@ -309,7 +309,7 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     final Type ctype = ((JCTree.JCFieldAccess) node).selected.type;
     final String identifier = node.getIdentifier().toString();
     if (type.getKind() == TypeKind.ARRAY && Constants.ARRAY_LENGTH.equals(identifier))
-        return new FieldAccess(Code.FIELD_ACCESS, expr, new ArrayLength());
+        return new ArrayLength(expr);
     //simplest case - there exist also in java code the same field access
     int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(ctype, identifier, p.findClass());
     if (fieldRefIndex != -1) {
