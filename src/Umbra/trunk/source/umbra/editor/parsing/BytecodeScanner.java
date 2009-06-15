@@ -189,11 +189,11 @@ public class BytecodeScanner extends RuleBasedScanner {
 
     rules[RULE_ANNOT] = new MultiLineRule(BytecodeStrings.ANNOT_START,
                                           BytecodeStrings.ANNOT_END,
-                                          the_tokens[ColorValues.SLOT_BML]);
+                                          the_tokens[ColorValues.SLOT_TAG]);
     rules[RULE_ANNOT_SIMPLE] = new MultiLineRule(
                                           BytecodeStrings.ANNOT_START,
                                           BytecodeStrings.ANNOT_END_SIMPLE,
-                                          the_tokens[ColorValues.SLOT_BML]);
+                                          the_tokens[ColorValues.SLOT_TAG]);
     rules[RULE_COMMENT] = new MultiLineRule("/*", "*/",
       the_tokens[ColorValues.SLOT_COMMENT]);
     return rules;
