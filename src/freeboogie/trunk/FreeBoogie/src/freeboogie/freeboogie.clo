@@ -1,0 +1,80 @@
+NAME::
+  Fb
+
+ARGS::
+  LogFile :{"--log-file"} :{file} 
+    :"log file name"
+  LogCategories :{"--log-categories"} :{enum-list} 
+    :[choices="foo"]
+    :"what is logged"
+  LogLevel :{"--log-level"} :{enum} 
+    :[choices="foo"]
+    :"how much information is logged"
+  ReportOn :{"--report-on", "--out-categories"} :{enum-list}
+    :[choice="foo"]
+    :"what is sent to stdout"
+  ReportLevel :{"--report-level", "--out-level"} :{enum}
+    :[choice="foo"]
+    :"how much information goes to stdout"
+  PrettyPrint :{"--pretty-print"} 
+    :"pretty print the files after type-checking"
+  PrintSymbolTable :{"--print-symbol-table"}
+    :"for each identifier definition, print its uses"
+  PrintFlowgraphs :{"--print-flowgraphs"}
+    :"for each implementation, print a dot-style description of the flowgraph"
+  Passivate :{"--passivate"}
+    :"perform passivation"
+  PassivateEscjava :{"--passivate-escjava"}
+    :"perform passivation using the ESC/Java algorithm (worse)"
+  DesugarSpecs :{"--desugar-specs"}
+    :"desugar preconditions/postconditions/modifies"
+  DesugarCalls :{"--desugar-calls"}
+    :"desugar calls into assert;havoc;assume"
+  DesugarHavoc :{"--desugar-havoc"}
+    :"desugar havoc into assignments from fresh variables"
+  HavocLoopVariables :{"--havoc-loop-variables"}
+    :"havoc at the loop entry the variables modified in the body of the loop"
+  CutLoops :{"--cut-loops"}
+    :"cut backedges from the flowgraph"
+  DesugarMaps :{"--desugar-maps"}
+    :"desugars maps using select/update functions"
+  BackwardCompatible :{"--backward-compatible"}
+    :"processes BoogiePL"
+  ProverCommandLine :{"--prover-command-line"} :{string}
+    :"specify a custom command line to use to start a prover"
+  Prover :{"--prover"} :{enum} :[choices="simplify,yes"]
+    :"specify which prover to use"
+  Verify :{"--verify","-v"}
+    :"verifies that the code is correct"
+  UnshareVc :{"--unshare-vc"}
+    :"extract common subexpression in the VC"
+  VcMethod :{"--vc-method"} :{enum}
+    :[choices="wp,sp"]
+    :"the method used to compute the VC"
+  SeriesParallelCheck :{"--series-parallel-check"}
+    :"checks if the flowgraphs are series-parallel"
+
+FORMAT::
+  (Option | Files)*;
+
+WHERE::
+  Option:
+    OutputOption |
+    PrintOption |
+    PhaseOption |
+    ActionOption |
+    ConfigOption;
+
+  OutputOption: LogFile | LogCategories | LogLevel | ReportOn | ReportLevel;
+  PrintOption: PrettyPrint | PrintSymbolTable | PrintFlowgraphs;
+  PhaseOption: 
+    PassivateOption |
+    DesugarSpecs |
+    DesugarCalls |
+    DesugarHavoc |
+    HavocLoopVariables |
+    CutLoops |
+    DesugarMaps |
+    UnshareVc;
+  ActionOption: Verify | SeriesParallelCheck;
+  ConfigOption: BackwardCompatible | ProverCommandLine | Prover | VcMethod;
