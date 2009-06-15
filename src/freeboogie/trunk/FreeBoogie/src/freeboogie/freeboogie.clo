@@ -11,10 +11,10 @@ ARGS::
     :[choices="foo"]
     :"how much information is logged"
   ReportOn :{"--report-on", "--out-categories"} :{enum-list}
-    :[choice="foo"]
+    :[choices="foo"]
     :"what is sent to stdout"
   ReportLevel :{"--report-level", "--out-level"} :{enum}
-    :[choice="foo"]
+    :[choices="foo"]
     :"how much information goes to stdout"
   PrettyPrint :{"--pretty-print"} 
     :"pretty print the files after type-checking"

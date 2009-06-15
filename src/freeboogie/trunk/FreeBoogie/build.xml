@@ -93,7 +93,7 @@
     </javac>
   </target>
 
-  <target name="compile" depends="compile_parser"
+  <target name="compile" depends="compile_parser,generate_clo_parser"
     description="compile the source ">
     <javac srcdir="src" destdir="classes" 
            optimize="yes" debug="${debug}">
