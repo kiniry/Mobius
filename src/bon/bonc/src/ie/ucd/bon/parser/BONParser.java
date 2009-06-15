@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-06-11 02:08:19
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-06-15 23:48:06
 
   package ie.ucd.bon.parser; 
   
@@ -8586,7 +8586,7 @@ public class BONParser extends AbstractBONParser {
                     // BON.g:978:6: 
                     {
                     if ( state.backtracking==0 ) {
-                       retval.type = BONType.mk((c!=null?input.toString(c.start,c.stop):null), null, (c!=null?input.toString(c.start,c.stop):null), getSLoc((c!=null?((Token)c.start):null),(c!=null?((Token)c.stop):null))); 
+                       retval.type = BONType.mk((c!=null?input.toString(c.start,c.stop):null), Constants.EMPTY_TYPE_LIST, (c!=null?input.toString(c.start,c.stop):null), getSLoc((c!=null?((Token)c.start):null),(c!=null?((Token)c.stop):null))); 
                     }
 
                     }
@@ -8784,7 +8784,7 @@ public class BONParser extends AbstractBONParser {
                     // BON.g:1005:9: 
                     {
                     if ( state.backtracking==0 ) {
-                       retval.type = BONType.mk((i!=null?i.getText():null), null, (i!=null?i.getText():null),getSLoc(i)); 
+                       retval.type = BONType.mk((i!=null?i.getText():null), Constants.EMPTY_TYPE_LIST, (i!=null?i.getText():null),getSLoc(i)); 
                     }
 
                     }

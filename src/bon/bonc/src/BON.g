@@ -975,7 +975,7 @@ class_type returns [Type type] :
   (  actual_generics
      { $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
     |
-     { $type = BONType.mk($c.text, null, $c.text, getSLoc($c.start,$c.stop)); } 
+     { $type = BONType.mk($c.text, Constants.EMPTY_TYPE_LIST, $c.text, getSLoc($c.start,$c.stop)); } 
   ) 
 ;
             
@@ -1002,7 +1002,7 @@ type returns [Type type] :
           { $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, $IDENTIFIER.text.concat($actual_generics.text), getSLoc($i,$actual_generics.stop)); }
         ) 
         |
-        { $type = BONType.mk($IDENTIFIER.text, null, $IDENTIFIER.text,getSLoc($i)); }
+        { $type = BONType.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, $IDENTIFIER.text,getSLoc($i)); }
        ) 
 ;
 
@@ -1089,10 +1089,6 @@ type_range returns [TypeRange range] :
 ;
 
 /**********************************************/
-
-//Not used...
-//call  :  ('(' expression ')' '.')? call_chain 
-//      ;
                                
 call_chain returns [List<UnqualifiedCall> calls] :
   { $calls = createList(); }

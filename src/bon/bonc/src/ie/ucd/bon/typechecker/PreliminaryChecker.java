@@ -2,7 +2,10 @@ package ie.ucd.bon.typechecker;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.ast.ClassChart;
+import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
+import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
@@ -73,7 +76,35 @@ public class PreliminaryChecker {
   }
 
   public void checkFormalGraphsForCycles() {
+    Main.logDebug("Check formal class inheritance for cycles");
+    for (Clazz clazz : st.classes.values()) {
+      Collection<String> cycle = 
+        st.classInheritanceGraph.findCycle(clazz.getName().getName(), 
+          new Converter<Type,String>() {
+            public String convert(final Type type) {
+              return type.getIdentifier();
+            }
+          });
+      if (cycle != null) {
+        //TODO mark class as having cycle
+        problems.addProblem(new CycleInRelationsError(clazz.getLocation(), "Class", clazz.getName().getName(), cycle, "class hierarchy"));
+      }
+    }
     
+    Main.logDebug("Checking formal clusters for cycles");
+    for (Cluster cluster : st.clusters.values()) { 
+      Collection<String> cycle = 
+        st.clusterClusterGraph.findCycle(cluster.getName(),
+          new Converter<Cluster,String>() {
+            public String convert(final Cluster name) {
+              return name.getName();
+            }
+          });
+      if (cycle != null) {
+        //TODO mark cluster as having cycle
+        problems.addProblem(new CycleInRelationsError(cluster.getLocation(), "Cluster", cluster.getName(), cycle, "clustering hierarchy"));
+      }
+    }
   }
 
   public void checkAllClassesInClusters() {

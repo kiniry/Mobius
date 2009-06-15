@@ -4,6 +4,7 @@ import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
+import ie.ucd.bon.ast.Type;
 
 import java.util.List;
 import java.util.Stack;
@@ -15,5 +16,6 @@ public class VisitorContext {
   public final Stack<Cluster> clusterStack = new Stack<Cluster>();
   
   public List<ClassName> selectiveExport = null;
-  
+ 
+  public Type callQualifier = null;
 }

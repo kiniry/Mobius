@@ -6,7 +6,6 @@ package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.TypeCheckingError;
 
 import java.io.File;
 

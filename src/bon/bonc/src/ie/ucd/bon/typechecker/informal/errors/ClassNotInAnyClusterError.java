@@ -5,7 +5,7 @@
 package ie.ucd.bon.typechecker.informal.errors;
 
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.TypeCheckingError;
+import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 
 public class ClassNotInAnyClusterError extends TypeCheckingError {
 

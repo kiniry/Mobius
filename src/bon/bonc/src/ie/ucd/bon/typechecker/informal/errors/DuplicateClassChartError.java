@@ -6,7 +6,7 @@ package ie.ucd.bon.typechecker.informal.errors;
 
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.TypeCheckingError;
+import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 
 import java.io.File;
 

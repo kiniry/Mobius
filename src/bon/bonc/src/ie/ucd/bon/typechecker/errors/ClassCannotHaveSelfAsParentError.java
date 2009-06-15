@@ -5,7 +5,6 @@
 package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.typechecker.TypeCheckingError;
 
 public class ClassCannotHaveSelfAsParentError extends TypeCheckingError {
 

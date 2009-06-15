@@ -9,13 +9,18 @@ import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ClientEntityExpression;
 import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.ContractClause;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
+import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
+import ie.ucd.bon.ast.HasType;
 import ie.ucd.bon.ast.IVisitor;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.InheritanceRelation;
 import ie.ucd.bon.ast.Multiplicity;
+import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
@@ -24,6 +29,7 @@ import ie.ucd.bon.ast.StaticRefPart;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.Clazz.Mod;
+import ie.ucd.bon.ast.FeatureSpecification.Modifier;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
@@ -135,10 +141,12 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
 
     for (Type parent : parents) {
       if (!isClass(parent)) {
+        //TODO typecheck these properly..
         problems.addProblem(new InvalidFormalClassTypeError(parent.getLocation(), parent.getIdentifier()));
       }
     }
     
+    visitAll(features);
     visitAll(invariant);
   }
 
@@ -149,8 +157,23 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
 
     visitNode(classInterface);
   }
-
   
+  @Override
+  public void visitFeature(Feature node,
+      List<FeatureSpecification> featureSpecifications,
+      List<ClassName> selectiveExport, String comment, SourceLocation loc) {
+    visitAll(featureSpecifications);
+  }
+
+  @Override
+  public void visitFeatureSpecification(FeatureSpecification node,
+      Modifier modifier, List<String> featureNames,
+      List<FeatureArgument> arguments, ContractClause contracts,
+      HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
+    
+    visitNode(contracts);
+  }
+
   @Override
   public void visitCluster(Cluster node, String name,
       List<StaticComponent> components, Boolean reused, String comment,
