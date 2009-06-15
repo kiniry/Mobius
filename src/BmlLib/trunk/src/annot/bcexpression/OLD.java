@@ -5,6 +5,7 @@ import annot.io.AttributeReader;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
+import annot.textio.DisplayStyle;
 
 /**
  * This class represents an <code>OLD</code> expression.
@@ -40,7 +41,7 @@ public class OLD extends BCExpression {
 
   @Override
   protected JavaType checkType1() {
-    return getSubExpr(0).getType();
+    return getSubExpr(0).checkType1();
   }
 
   @Override
@@ -50,10 +51,19 @@ public class OLD extends BCExpression {
 
   @Override
   protected String printCode1(final BMLConfig conf) {
-    return "\\old(" + getSubExpr(0).printCode(conf) + ")";
+    return DisplayStyle.OLD_KWD + "(" + getSubExpr(0).printCode(conf) + ")";
   }
 
-  @Override
+  /**
+   * Reads the subexpression from an AttributeReader (except
+   * connector, that has been already read and set).
+   *
+   * @param ar - stream to load from,
+   * @param root - connentor.
+   * @throws ReadAttributeException - if connector + stream
+   *     in <code>ar</code> doesn't represent any
+   *     expression from calling subclass.
+   */
   protected void read(final AttributeReader ar, final int root)
     throws ReadAttributeException {
     setSubExprCount(1);
@@ -62,7 +72,7 @@ public class OLD extends BCExpression {
 
   @Override
   public String toString() {
-    return "\\old(" + getSubExpr(0).toString() + ")";
+    return DisplayStyle.OLD_KWD + "(...)";
   }
 
 }

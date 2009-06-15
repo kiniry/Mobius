@@ -220,6 +220,8 @@ public class BCClass extends BCClassPrinting {
       removeField(afield, true);
       //remove model
       getModelFields().removeBMLField(afield);
+      //remove previous ghost field of the same name
+      getGhostFields().removeBMLField(afield);
       afield.setupCPEntries();
       addGhostField(afield);
     }

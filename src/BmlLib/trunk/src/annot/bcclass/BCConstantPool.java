@@ -268,7 +268,18 @@ public class BCConstantPool extends BCCConstantPrinting
    *     Constant could be found.
    */
   public int findConstant(final String cdata) {
-    return combinedcp.lookupUtf8(cdata);
+    final int idx = combinedcp.lookupUtf8(cdata);
+    if (idx >= 0) return idx;
+    final int size = combinedcp.getSize();
+    for (int i = 0; i < size; i++) {
+      final Constant cnst = combinedcp.getConstant(i);
+      if (cnst != null && cnst instanceof ConstantUtf8) {
+        final String data = ((ConstantUtf8) cnst).getBytes();
+        if (data.equals(cdata))
+          return i;
+      }
+    }
+    return -1;
   }
 
   /**

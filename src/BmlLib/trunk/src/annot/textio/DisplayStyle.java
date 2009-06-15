@@ -173,6 +173,16 @@ public class DisplayStyle {
   public static final String RESULT_KWD = "\\result";
 
   /**
+   * BML "\length" keyword.
+   */
+  public static final String LENGTH_KWD = "\\length";
+
+  /**
+   * BML "\old" keyword.
+   */
+  public static final String OLD_KWD = "\\old";
+
+  /**
    * BML "assert" keyword.
    */
   public static final String ASSERT_KWD = "assert";

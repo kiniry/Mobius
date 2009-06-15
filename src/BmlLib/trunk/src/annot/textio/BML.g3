@@ -823,8 +823,10 @@ specCase returns [SpecificationCase ast] :
           exc.add(ex);
         }
       }
-     )+
+     )+ 
    )?
+   (SIGNALS PAR_LEFT typename PAR_RIGHT formula EOL)*
+   (SIGNALSONLY ( NOTHING | name_list ) EOL)?
   ) en=BML_END EOL
     {
       bml_positions.add(new PosInCode($st.getLine(),
@@ -967,31 +969,31 @@ uncheckedExpression returns [BCExpression ast] :
 
 conditionalExpression returns [BCExpression ast] :
   c=equivalenceExpr {$ast = $c.ast;}
-  (COND t=uncheckedExpression COLON f=uncheckedExpression {
+  (COND (EOL)* t=uncheckedExpression COLON (EOL)* f=uncheckedExpression {
     $ast = new ConditionalExpression($c.ast, $t.ast, $f.ast);
   })?
   ;
 
 equivalenceExpr returns [BCExpression ast] :
   e=impliesExpr {$ast = $e.ast;}
-  ( EQUIV r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
-    | NOTEQUIV r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
+  ( EQUIV (EOL)* r=impliesExpr {$ast = new Formula(Code.EQUIV, $ast, $r.ast);}
+    | NOTEQUIV (EOL)* r=impliesExpr {$ast = new Formula(Code.NOTEQUIV, $ast, $r.ast);}
   )*
   ;
 
 impliesExpr returns [BCExpression ast] :
   e=logicalOrExpr {$ast = $e.ast;}
-  (IMPLIES r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
+  (IMPLIES (EOL)* r=logicalOrExpr {$ast = new Formula(Code.IMPLIES, $ast, $r.ast);})*
   ;
 
 logicalOrExpr returns [BCExpression ast] :
   e=logicalAndExpr {$ast = $e.ast;}
-  (LOG_OR r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
+  (LOG_OR (EOL)* r=logicalAndExpr {$ast = new Formula(Code.OR, $ast, $r.ast);})*
   ;
 
 logicalAndExpr returns [BCExpression ast] :
   e=bitwiseOrExpr {$ast = $e.ast;}
-  (LOG_AND r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
+  (LOG_AND (EOL)* r=bitwiseOrExpr {$ast = new Formula(Code.AND, $ast, $r.ast);})*
   ;
 
 bitwiseOrExpr returns [BCExpression ast] :
@@ -1134,7 +1136,7 @@ primaryExpr returns [BCExpression ast] :
   | THIS {$ast = new THIS(bcc);}
   | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD($e1.ast);}
   | PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
-  | LENGTH {$ast = new ArrayLength();}
+  | LENGTH PAR_LEFT  e1=uncheckedExpression PAR_RIGHT {$ast = new ArrayLength($e1.ast);}
   ;
 
 localVar returns [LocalVariable lv] :
@@ -1236,6 +1238,8 @@ SECOND_CONSTANT_POOL: 'Second constant pool:';
 CONST: 'const';
 COMMA: ',';
 EXSURES: 'exsures';
+SIGNALS: 'signals';
+SIGNALSONLY: 'signals_only';
 COLON: ':';
 NOTHING: '\\nothing';
 EVERYTHING: '\\everything';
@@ -1282,7 +1286,7 @@ LV: 'lv';
 DOT2: '..';
 DOT: '.';
 OLD: '\\old';
-LENGTH: 'length';
+LENGTH: '\\length';
 BML_ONE_LINE_START: '//@';
 ONE_LINE_COMMENT: '//';
 BML_START: '/*@';

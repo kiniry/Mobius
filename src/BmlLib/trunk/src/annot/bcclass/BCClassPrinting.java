@@ -30,11 +30,6 @@ import annot.textio.DisplayStyle;
 public abstract class BCClassPrinting extends BCClassRepresentation {
 
   /**
-   * A cached package name of the current class.
-   */
-  private String package_name;
-
-  /**
    * Dumps all string representation of the current class, with BML annotations.
    * This uses the format of the grammar from "BML Reference Manual" section
    * "Textual Representation of Specifications":
@@ -367,16 +362,5 @@ public abstract class BCClassPrinting extends BCClassRepresentation {
   }
 
 
-  private String getPackageName() {
-    if (package_name == null) {
-      String cname = getBCELClass().getClassName();
-      int index = cname.lastIndexOf('.');
-      if(index < 0)
-        package_name = "";
-      else
-        package_name = cname.substring(0, index);
-    }
-    return package_name;
-  }
 
 }

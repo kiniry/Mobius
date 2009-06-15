@@ -41,6 +41,7 @@ import annot.bcexpression.util.ExpressionWalker;
 import annot.io.AttributeReader;
 import annot.io.AttributeWriter;
 import annot.io.ReadAttributeException;
+import annot.textio.BMLParser.second_constant_pool_return;
 import bmllib.utils.FileUtils;
 
 /**
@@ -100,6 +101,11 @@ public abstract class BCClassRepresentation {
    * The model fields of the class.
    */
   private GhostFieldsAttribute modelFields;
+
+  /**
+   * A cached package name of the current class.
+   */
+  private String package_name;
 
   /**
    * Removes all Attributes used by this library from
@@ -299,13 +305,28 @@ public abstract class BCClassRepresentation {
     MLog.putMsg(MessageLog.LEVEL_PINFO, "  loading class attributes");
     final Attribute[] attrs = ajc.getAttributes();
     final AttributeReader ar = getFreshAttributeReader();
+    //it is essential to read the second constant pool first
     for (int i = 0; i  <  attrs.length; i++) {
       if (attrs[i] instanceof Unknown) {
-        ar.readAttribute((Unknown) attrs[i]);
+        final Unknown attr = (Unknown) attrs[i];
+        if (!attr.getName().equals(AttributeNames.SECOND_CONSTANT_POOL_ATTR)) {
+          continue;
+        }
+        ar.readAttribute(attr);
+        break;
       }
     }
-    updateConstantPoolForFields(ghostFields);
-    updateConstantPoolForFields(modelFields);
+    for (int i = 0; i  <  attrs.length; i++) {
+      if (attrs[i] instanceof Unknown) {
+        final Unknown attr = (Unknown) attrs[i];
+        if (attr.getName().equals(AttributeNames.SECOND_CONSTANT_POOL_ATTR)) {
+          continue;
+        }
+        ar.readAttribute(attr);
+      }
+    }
+    //updateConstantPoolForFields(ghostFields);
+    //updateConstantPoolForFields(modelFields);
 
     final Field[] fields = ajc.getFields();
     this.bml_fmodifiers = new Vector < BMLModifierAttribute > (fields.length);
@@ -726,5 +747,18 @@ public abstract class BCClassRepresentation {
    */
   public void setGhostFields(final GhostFieldsAttribute gfa) {
     ghostFields = gfa;
+  }
+  
+
+  public String getPackageName() {
+    if (package_name == null) {
+      String cname = getBCELClass().getClassName();
+      int index = cname.lastIndexOf('.');
+      if(index < 0)
+        package_name = "";
+      else
+        package_name = cname.substring(0, index);
+    }
+    return package_name;
   }
 }

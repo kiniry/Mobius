@@ -29,12 +29,12 @@ public class FieldRef extends BCExpression {
   private int cpIndex;
 
   /**
-   * name of the field.
+   * The name of the field.
    */
   private String name;
 
   /**
-   * type of the field.
+   * The type of the field.
    */
   private JavaType type;
 
@@ -154,7 +154,23 @@ public class FieldRef extends BCExpression {
                                        acpIndex);
     }
   }
-
+  /**
+   * Prints expression as a string. This method should not
+   * be called in attributes nor subclasses to get full
+   * string representation. Use printLine(conf)
+   * in attributes and printCode1(conf) in subclasses.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return string representation of expression,
+   *     without line-breaking.
+   */
+  public String printCode(final BMLConfig conf) {
+    if (conf.isGoControlPrint()) {
+      return controlPrint(conf);
+    } else {
+      return printCode1(conf);
+    }
+  }
   @Override
   public String toString() {
     return this.type + " " + this.name;

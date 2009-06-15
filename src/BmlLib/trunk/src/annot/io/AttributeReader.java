@@ -368,7 +368,7 @@ public class AttributeReader {
       case Code.RESULT:
         return new RESULT(this.method);
       case Code.ARRAYLENGTH:
-        return new ArrayLength();
+        return new ArrayLength(this, b);
       case Code.LOCAL_VARIABLE:
         return new SingleOccurence(LocalVariable.getLocalVariable(this.method,
                                                                   this));

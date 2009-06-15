@@ -11,6 +11,7 @@ import annot.textio.DisplayStyle;
  * (return value of a method).
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class RESULT extends BCExpression {
