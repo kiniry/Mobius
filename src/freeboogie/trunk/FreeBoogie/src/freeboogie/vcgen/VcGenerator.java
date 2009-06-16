@@ -69,7 +69,7 @@ public class VcGenerator<T extends Term<T>> {
     callDesugarer = new CallDesugarer();
     havocDesugarer = new HavocDesugarer(); 
     specDesugarer = new SpecDesugarer();
-    passivator = new Passivator(false);
+    passivator = new Passivator();
     mapRemover = new MapRemover();
     functionRegisterer = new FunctionRegisterer();
     axiomSender = new AxiomSender<T>();
@@ -107,7 +107,7 @@ public class VcGenerator<T extends Term<T>> {
    * {@code implementation} must be part the AST last processed.
    * Also, a prover must have been set.
    */
-  public boolean verify(Implementation implementation, boolean removeSharing) throws ProverException {
+  public boolean verify(Implementation implementation) throws ProverException {
     assert prover != null && ast != null;
     calculus.setCurrentBody(implementation.getBody());
     T vc = calculus.vc();

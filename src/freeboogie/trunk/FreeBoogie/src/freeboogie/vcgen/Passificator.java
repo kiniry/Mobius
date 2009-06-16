@@ -57,8 +57,8 @@ public class Passificator extends ABasicPassifier {
    * @param tc the current system type checker
    * @param verbose triggers the statistics printing
    */
-  public Passificator(TcInterface tc, boolean verbose) {
-    super(tc, verbose);
+  public Passificator(TcInterface tc) {
+    super(tc);
   }
 
   public Program process(Program program) {
@@ -75,7 +75,7 @@ public class Passificator extends ABasicPassifier {
     fEnv = new Environment(fileName);
     Declaration passifiedAst = (Declaration)ast.eval(this);
     
-    if (isVerbose()) {
+    if (false) { // TODO log-categ
       System.out.print(fEnv.globalToString());
     }
     passifiedAst = addVariableDeclarations(passifiedAst);
@@ -113,17 +113,22 @@ public class Passificator extends ABasicPassifier {
       Err.warning(this + " " + implementation.loc() + ": Implementation " + 
         sig.getName() + " has cycles. I'm not passifying it.");
     } else {
-      if (isVerbose()) {
+      if (false) { // TODO log-categ
         System.out.println("process " + sig.getName());
       }
-      BodyPassifier bp = BodyPassifier.passify(getTypeChecker(), isVerbose(), fEnv, 
-                                               oldBody, sig);
-      sig = Signature.mk(sig.getName(), sig.getArgs(),
-                         bp.getResult(),
-                         sig.getTypeVars(), sig.loc());
+      BodyPassifier bp = BodyPassifier.passify(
+        getTypeChecker(),
+        fEnv, 
+        oldBody,
+        sig);
+      sig = Signature.mk(
+        sig.getName(), 
+        sig.getArgs(),
+        bp.getResult(),
+        sig.getTypeVars(), 
+        sig.loc());
       body = bp.getBody();
       fEnv.updateGlobalWith(bp.getEnvironment());
-
     }
 
     // process the rest of the program
@@ -196,9 +201,12 @@ public class Passificator extends ABasicPassifier {
      * @param bIsVerbose
      * @param globalEnv 
      * @param sig */
-    public BodyPassifier(final TcInterface typeChecker, boolean bIsVerbose,
-                         Environment globalEnv, final Signature sig) {
-      super(typeChecker, bIsVerbose);
+    public BodyPassifier(
+      final TcInterface typeChecker, 
+      Environment globalEnv,
+      final Signature sig
+    ) {
+      super(typeChecker);
       freshEnv = new Environment(sig.loc() + " " + sig.getName());
       fResults = (VariableDecl) sig.getResults();
       freshEnv.putAll(globalEnv);
@@ -217,10 +225,13 @@ public class Passificator extends ABasicPassifier {
       return fBody;
     }
 
-    public static BodyPassifier passify(TcInterface fTypeChecker, boolean bIsVerbose,
-                                        Environment globalEnv, 
-                                        Body body, Signature sig) {
-      BodyPassifier bp = new BodyPassifier(fTypeChecker, bIsVerbose, globalEnv, sig);
+    public static BodyPassifier passify(
+      TcInterface fTypeChecker,
+      Environment globalEnv, 
+      Body body,
+      Signature sig
+    ) {
+      BodyPassifier bp = new BodyPassifier(fTypeChecker, globalEnv, sig);
       body.eval(bp);
       return bp;
     }
@@ -266,7 +277,7 @@ public class Passificator extends ABasicPassifier {
       Block newBlocks = evalBlock(iter.next(), iter);
       
       
-      if (isVerbose()) {
+      if (false) { // TODO log-categ
         System.out.print(freshEnv.localToString());
       }
       computeDeclarations();
@@ -376,7 +387,7 @@ public class Passificator extends ABasicPassifier {
       int belowOld = 0;
       
       public CommandEvaluator(TcInterface tc, Environment env) {
-        super (tc, false);
+        super (tc);
         this.env = env;
       }
 

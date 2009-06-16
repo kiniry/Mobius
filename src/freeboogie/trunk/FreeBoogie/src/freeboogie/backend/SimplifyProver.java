@@ -143,7 +143,7 @@ public class SimplifyProver extends Prover<SmtTerm> {
     boolean r = simplify.isValid(strBuilder.toString());
     long endTime = System.nanoTime();
     long time = endTime - startTime;
-    if (Main.opt.boolVal("-stats")) {
+    if (false) { // TODO log-categ
       System.out.println("Provertime " + time);
     }
     return r;

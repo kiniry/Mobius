@@ -1,5 +1,5 @@
 NAME::
-  Fb
+  FbCli
 
 ARGS::
   LogFile :{"--log-file"} :{file} 
@@ -8,13 +8,13 @@ ARGS::
     :[choices="foo"]
     :"what is logged"
   LogLevel :{"--log-level"} :{enum} 
-    :[choices="foo"]
+    :[choices="SEVERE,WARNING,INFO,CONFIG,FINE,FINER,FINEST"]
     :"how much information is logged"
   ReportOn :{"--report-on", "--out-categories"} :{enum-list}
     :[choices="foo"]
     :"what is sent to stdout"
   ReportLevel :{"--report-level", "--out-level"} :{enum}
-    :[choices="foo"]
+    :[choices="QUIET,NORMAL,VERBOSE,DEBUG", default="NORMAL"]
     :"how much information goes to stdout"
   PrettyPrint :{"--pretty-print"} 
     :"pretty print the files after type-checking"
@@ -22,10 +22,9 @@ ARGS::
     :"for each identifier definition, print its uses"
   PrintFlowgraphs :{"--print-flowgraphs"}
     :"for each implementation, print a dot-style description of the flowgraph"
-  Passivate :{"--passivate"}
+  Passivate :{"--passivate"} :{enum}
+    :[choices="NONE,OPTIM,ESCJAVA", default="NONE"]
     :"perform passivation"
-  PassivateEscjava :{"--passivate-escjava"}
-    :"perform passivation using the ESC/Java algorithm (worse)"
   DesugarSpecs :{"--desugar-specs"}
     :"desugar preconditions/postconditions/modifies"
   DesugarCalls :{"--desugar-calls"}
@@ -42,17 +41,20 @@ ARGS::
     :"processes BoogiePL"
   ProverCommandLine :{"--prover-command-line"} :{string}
     :"specify a custom command line to use to start a prover"
-  Prover :{"--prover"} :{enum} :[choices="simplify,yes"]
+  Prover :{"--prover"} :{enum} 
+    :[choices="simplify(SIMPLIFY),yes(YESMAN)", default="simplify"]
     :"specify which prover to use"
   Verify :{"--verify","-v"}
     :"verifies that the code is correct"
   UnshareVc :{"--unshare-vc"}
     :"extract common subexpression in the VC"
   VcMethod :{"--vc-method"} :{enum}
-    :[choices="wp,sp"]
+    :[choices="wp(WP),wpno(WPNO),sp(SP)", default="wp"]
     :"the method used to compute the VC"
   SeriesParallelCheck :{"--series-parallel-check"}
     :"checks if the flowgraphs are series-parallel"
+  Files :{} :{file-list} :[mustExist="true",between=""]
+    :"the files to process"
 
 FORMAT::
   (Option | Files)*;
@@ -78,3 +80,7 @@ WHERE::
     UnshareVc;
   ActionOption: Verify | SeriesParallelCheck;
   ConfigOption: BackwardCompatible | ProverCommandLine | Prover | VcMethod;
+
+OVERRIDES::
+// TODO: default command line for various provers
+//  {$(Prover)==SIMPLIFY && !$(ProverCommandLine?)}

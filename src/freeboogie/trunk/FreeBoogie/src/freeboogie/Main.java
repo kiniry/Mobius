@@ -4,17 +4,24 @@ import java.io.*;
 import java.util.logging.*;
 
 import genericutils.*;
+import ie.ucd.clops.runtime.automaton.AutomatonException;
+import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
+import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 import org.antlr.runtime.ANTLRFileStream;
 import org.antlr.runtime.CommonTokenStream;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.backend.*;
+import freeboogie.clo.FbCliOptionsInterface;
+import freeboogie.clo.FbCliParser;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
 import freeboogie.tc.*;
 import freeboogie.vcgen.*;
+
+import static freeboogie.clo.FbCliOptionsInterface.ReportLevel;
 
 /**
  * Used to print information in the symbol table.
@@ -57,13 +64,15 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  */
 public class Main {
   private static Logger log = Logger.getLogger("freeboogie"); 
-  public static Options opt;
+  public static FbCliOptionsInterface opt;
   
   /**
    * The main entry point of the application.
    * @param args the command line arguments
    */
-  public static void main(String[] args) { new Main().run(args); }
+  public static void main(String[] args) throws Throwable { 
+    new Main().run(args); 
+  }
 
   private PrintWriter pwriter;
   private PrettyPrinter pp;
@@ -77,29 +86,6 @@ public class Main {
 
 
   public Main() {
-    opt = new Options();
-    opt.regBool("-log", "log events to ./freeboogie.log");
-    opt.regBool("-pp", "pretty print");
-    opt.regBool("-pst", "print symbol table");
-    opt.regBool("-pfg", "print flow graphs");
-    opt.regBool("-pass", "passivate");
-    opt.regBool("-passify", "passify (Flanagan/Saxe algorithm)");
-    opt.regBool("-dspec", "desugar specs");
-    opt.regBool("-dcall", "desugar calls");
-    opt.regBool("-dhavoc", "desugar havoc");
-    opt.regBool("-dloop", "havoc loop variables at loop entry");
-    opt.regBool("-cut", "cut loops by removing back-edges");
-    opt.regBool("-dmap", "desugar maps");
-    opt.regBool("-old", "accept old constructs");
-    opt.regBool("-win", "windows mode");
-    opt.regBool("-verify", "do everything");
-    opt.regBool("-removesharing", "remove sharing in vc");
-    opt.regBool("-stats", "Prints some statistics");
-    opt.regBool("-wp", "weakest precondition");
-    opt.regBool("-wpno", "weakest precondition with no tricks");
-    opt.regBool("-spg", "checks if the control flow graph of the program is a Series Parallel Graph");
-    opt.regBool("-dummyprover", "use the YesSmtProver (everything is valid)");
-    opt.regInt("-v", 4, "verbosity level: 0, 1, 2, 3, 4");
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
     fgd = new FlowGraphDumper();
@@ -143,12 +129,12 @@ public class Main {
   private void spgCheck() {
     TtspRecognizer.check(program, tc);
   }
-  private void passivate(boolean isVerbose) {
-    Passivator p = new Passivator(isVerbose);
+  private void passivate() {
+    Passivator p = new Passivator();
     program = p.process(program, tc);
   }
-  private void passify(boolean isVerbose) {
-    Passificator p = new Passificator(tc, isVerbose);
+  private void passify() {
+    Passificator p = new Passificator(tc);
     program = p.process(program);
   }
   
@@ -183,30 +169,34 @@ public class Main {
   }
 
   private void verify() throws ProverException {
-    ACalculus<SmtTerm> calculus;
-    if (opt.boolVal("-wp")) {
-      calculus = new WeakestPrecondition<SmtTerm>(tc);
-    } else if (opt.boolVal("-wpno")) {
+    ACalculus<SmtTerm> calculus = null;
+    switch (opt.getVcMethod()) {
+    case WP: 
+      calculus = new WeakestPrecondition<SmtTerm>(tc); 
+      break;
+    case WPNO: 
       calculus = new WeakestPrecondition<SmtTerm>(tc);
       ((WeakestPrecondition<SmtTerm>)calculus).setAssertAsAssertAssume(false);
-    } else {
+      break;
+    case SP:
       calculus = new StrongestPostcondition<SmtTerm>(tc);
+      break;
+    default:
+      assert false : "Internal error";
     }
     
     if (prover == null) {
-      if (opt.boolVal("-win"))
-        prover = new SimplifyProver(new String[]{"Z3.exe", "/si"});
-      else if (opt.boolVal("-dummyprover"))
+      switch (opt.getProver()) {
+      case SIMPLIFY: 
+        prover = new SimplifyProver(opt.getProverCommandLine().split("\\s+"));
+        break;
+      case YESMAN:
         prover = new YesSmtProver();
-      else
-        prover = new SimplifyProver(new String[]{"z3", "-si"});
-      
+      }
       vcgen.initialize(prover, calculus);
     }
     program = new Program(vcgen.process(program.ast, tc), program.fileName);
 
-    boolean removeSharing = opt.boolVal("-removesharing");
-    
     // This is ugly. Perhaps put this in a visitor that also knows
     // how to filter which implementations to check.
     Declaration d = program.ast;
@@ -221,7 +211,7 @@ public class Main {
         Implementation impl = (Implementation)d;
         System.out.printf(
           "%s: %s (%s)\n",
-          vcgen.verify(impl, removeSharing)? " OK" : "NOK",
+          vcgen.verify(impl)? " OK" : "NOK",
           impl.getSig().getName(),
           impl.getSig().loc());
         d = impl.getTail();
@@ -229,56 +219,83 @@ public class Main {
     }
   }
 
-  public void run(String[] args) {
+  public void run(String[] args) 
+  throws InvalidOptionPropertyValueException, AutomatonException {
     // parse command line arguments
-    opt.parse(args);
-    Err.setVerbosity(opt.intVal("-v"));
-    tc = opt.boolVal("-old") ? new ForgivingTc() : new TypeChecker();
+    FbCliParser cliParser = new FbCliParser();
+    try {
+      if (!cliParser.parse(args)) {
+        System.err.println("TODO: print usage message.");
+        System.exit(1);
+      }
+    } catch (InvalidOptionValueException e) {
+      // TODO: this shouldn't be an exception in clops
+      System.exit(2);
+    }
+    opt = cliParser.getOptionStore();
+
+    Err.setVerbosity(4); // TODO: take from the command line 
+    tc = opt.isBackwardCompatibleSet()? new ForgivingTc() : new TypeChecker();
     
     // prepare logging
-    log.setLevel(Level.ALL);
     log.setUseParentHandlers(false); // the root logger sends >=INFO to console
-    try {
-      FileHandler logh = new FileHandler("freeboogie.log");
-      logh.setFormatter(new OneLineLogFormatter());
-      log.addHandler(logh);
-      if (opt.boolVal("-log")) log.setLevel(Level.ALL);
-    } catch (IOException e) {
-      Err.warning("Can't create log file. Nevermind.");
+    if (opt.isLogFileSet()) {
+      try {
+        FileHandler logh = new FileHandler(opt.getLogFile().getPath(), true);
+        logh.setFormatter(new OneLineLogFormatter());
+        log.addHandler(logh);
+      } catch (IOException e) {
+        Err.warning("Can't create log file. Nevermind.");
+      }
+    }
+    if (opt.isLogLevelSet()) {
+      switch (opt.getLogLevel()) {
+      case SEVERE: log.setLevel(Level.SEVERE); break;
+      case WARNING: log.setLevel(Level.WARNING); break;
+      case INFO: log.setLevel(Level.INFO); break;
+      case CONFIG: log.setLevel(Level.CONFIG); break;
+      case FINE: log.setLevel(Level.FINE); break;
+      case FINER: log.setLevel(Level.FINER); break;
+      case FINEST: log.setLevel(Level.FINEST); break;
+      default: assert false : "Internal error";
+      }
     }
     
     // process files one by one
-    for (String file : opt.otherArgs()) {
-      if (opt.intVal("-v") > 0) {
+    for (File file : opt.getFiles()) {
+      if (ReportLevel.NORMAL.compareTo(opt.getReportLevel()) >= 0) {
         System.out.println("Processing file " + file);
       }
       try {
         // parse an input file
-        FbLexer lexer = new FbLexer(new ANTLRFileStream(file));
+        FbLexer lexer = new FbLexer(new ANTLRFileStream(file.getPath()));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FbParser parser = new FbParser(tokens);
-        parser.fileName = file;
-        program = new Program(parser.program(), file);
+        parser.fileName = file.getName();
+        program = new Program(parser.program(), file.getName());
         if (program.ast == null) 
           continue; // errors while parsing or empty file
         
         // do what we are asked to do with this file
         if (FbError.reportAll(tc.process(program.ast))) continue;
         program = new Program(tc.getAST(), program.fileName);
-        if (opt.boolVal("-pst")) printSymbolTable();
-        if (!opt.boolVal("-verify")) {
-          if (opt.boolVal("-dloop")) makeHavoc();
-          if (opt.boolVal("-cut")) cutLoops();
-          if (opt.boolVal("-dcall")) desugarCalls();
-          if (opt.boolVal("-dhavoc")) desugarHavoc();
-          if (opt.boolVal("-dspec")) desugarSpecs();
-          if (opt.boolVal("-spg")) spgCheck();
-          if (opt.boolVal("-pass")) passivate(opt.boolVal("-stats"));
-          if (opt.boolVal("-passify")) passify(opt.boolVal("-stats"));
-          if (opt.boolVal("-dmap")) removeMaps();
+        if (opt.isPrintSymbolTableSet()) printSymbolTable();
+        if (!opt.isVerifySet()) {
+          if (opt.isHavocLoopVariablesSet()) makeHavoc();
+          if (opt.isCutLoopsSet()) cutLoops();
+          if (opt.isDesugarCallsSet()) desugarCalls();
+          if (opt.isDesugarHavocSet()) desugarHavoc();
+          if (opt.isDesugarSpecsSet()) desugarSpecs();
+          if (opt.isSeriesParallelCheckSet()) spgCheck();
+          switch (opt.getPassivate()) {
+          case OPTIM: passivate(); break;
+          case ESCJAVA: passify(); break;
+          default: // do nothing
+          }
+          if (opt.isDesugarMapsSet()) removeMaps();
         } else verify();
-        if (opt.boolVal("-pfg")) fgd.process(program.ast, tc);
-        if (opt.boolVal("-pp")) program.ast.eval(pp);
+        if (opt.isPrintFlowgraphsSet()) fgd.process(program.ast, tc);
+        if (opt.isPrettyPrintSet()) program.ast.eval(pp);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (ProverException e) {

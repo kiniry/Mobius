@@ -21,10 +21,8 @@ import freeboogie.tc.TypeUtils;
 public abstract class ABasicPassifier extends Transformer {
 
   private final TcInterface fTypeChecker;
-  private boolean fIsVerbose;
-  public ABasicPassifier (TcInterface tc, boolean bVerbose) {
+  public ABasicPassifier (TcInterface tc) {
     fTypeChecker = tc;
-    fIsVerbose = bVerbose;
   }
   /**
    * Returns the variable declaration corresponding to the given id.
@@ -75,9 +73,6 @@ public abstract class ABasicPassifier extends Transformer {
       next);
   }
 
-  public boolean isVerbose() {
-    return fIsVerbose;
-  }
   /**
    * 
    * TODO: description.

@@ -67,7 +67,7 @@ public abstract class ACalculus<T extends Term<T>> {
   public void setCurrentBody(Body bdy) {
     log.info("prepare to compute sp on a new flow graph");
     flow = tc.getFlowGraph(bdy);
-    if (Main.opt.boolVal("-stats")) {
+    if (false) { // TODO: log-categ
       System.out.println("Flow graph size " + flow.nodesInTopologicalOrder().size());
     }
     currentBody = bdy;

@@ -69,14 +69,8 @@ public class Passivator extends Transformer {
   private Deque<Boolean> context; // true = write, false = read
   private int belowOld;
 
-  private boolean isVerbose;
-
   // === public interface ===
   
-  public Passivator(boolean bIsVerbose) {
-    isVerbose = bIsVerbose;
-  }
-
   public Program process(Program program, TcInterface tc) {
     fileName = program.fileName;
     return new Program(process(program.ast, tc), fileName);
@@ -102,7 +96,7 @@ public class Passivator extends Transformer {
           ast);
       }
     }
-    if (isVerbose) {
+    if (false) { // TODO log-categ
       System.out.print(Environment.mapToString(toReport));
     }
     if (!tc.process(ast).isEmpty()) {
@@ -296,7 +290,7 @@ public class Passivator extends Transformer {
   @Override
   public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
     int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
-    if (isVerbose) {
+    if (false) { // TODO log-categ
       toReport.put(variableDecl, last);
     }
     newVarsCnt.remove(variableDecl);
@@ -331,7 +325,7 @@ public class Passivator extends Transformer {
   private VariableDecl newResults(VariableDecl old) {
     if (old == null) return null;
     Integer last = newVarsCnt.get(old);
-    if (isVerbose) {
+    if (false) { // TODO log-categ
       toReport.put(old, last);
     }
     newVarsCnt.remove(old);
