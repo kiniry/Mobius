@@ -67,7 +67,7 @@ public class ProverManager {
       
     }
     
-    if( useSimplify && (simplify == null)) { 
+    if(!useSorted && useSimplify && (simplify == null)) { 
       
       long startTime = java.lang.System.currentTimeMillis();
       simplify = new Simplify();

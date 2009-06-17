@@ -1,13 +1,26 @@
 package escjava.sortedProver.simplify;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.channels.FileChannel;
 import java.util.Enumeration;
 import java.util.Properties;
 
 import javafe.util.Assert;
+import javafe.util.ErrorSet;
 import javafe.util.Info;
 
 import escjava.backpred.BackPred;
 import escjava.sortedProver.SortedProverResponse;
+import escjava.prover.SExp;
+import escjava.prover.SList;
+import escjava.prover.Simplify;
+import escjava.prover.SimplifyOutput;
+import escjava.prover.SimplifyResult;
 import escjava.sortedProver.CounterExampleResponse;
 import escjava.sortedProver.EscNodeBuilder;
 import escjava.sortedProver.SortedProver;
@@ -18,7 +31,7 @@ import escjava.sortedProver.NodeBuilder;
 import escjava.translate.VcToString;
 
 /*@ non_null_by_default @*/
-public class SimplifySortedProver extends SortedProver
+public class SimplifyProver extends SortedProver
 {
 	private SimplifyNodeBuilder nodeBuilder;
 	private SimplifyProcess simpl;
@@ -30,17 +43,26 @@ public class SimplifySortedProver extends SortedProver
   private SortedProverResponse no;
   private SortedProverResponse fail;
 
-  public SimplifySortedProver() {
+    // dump query to file with this extension
+    private String optDumpExt;
+    // dump all queries to this file
+    private String dumpLog;
+    // stream for dumpLog
+    private PrintStream dumpStream;
+
+  public SimplifyProver() {
     this(new String[] {System.getProperty("simplify", "simplify")});
   }
 
-  public SimplifySortedProver(String[] cmd) {
+  public SimplifyProver(String[] cmd) {
     nodeBuilder = new SimplifyNodeBuilder();
     backPred = new BackPred();
     ok = new SortedProverResponse(SortedProverResponse.OK);
     yes = new SortedProverResponse(SortedProverResponse.YES);
     no = new SortedProverResponse(SortedProverResponse.NO);
     fail = new SortedProverResponse(SortedProverResponse.FAIL);
+    optDumpExt = "";
+    dumpLog = "simplify.log";
     try {
       simpl = new SimplifyProcess(cmd);
     } catch (ProverError e) {
@@ -58,7 +80,9 @@ public class SimplifySortedProver extends SortedProver
 	}
 
 	public SortedProverResponse setProverResourceFlags(Properties properties)	{
-		return ok;
+	    optDumpExt = properties.getProperty("DumpExt", optDumpExt);
+	    
+	    return ok;
 	}
 
 	public SortedProverResponse sendBackgroundPredicate()	{
@@ -77,7 +101,9 @@ public class SimplifySortedProver extends SortedProver
 	{
 		Assert.notFalse(pushHeight == 0);
     try {
-  		simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
+		String cmd = "(BG_PUSH\n" + formulaToString(formula) + "\n)";
+		dump(cmd);
+		simpl.sendCommand(cmd);
 	  	return ok;
     } catch (ProverError e) {
       started = false;
@@ -97,7 +123,9 @@ public class SimplifySortedProver extends SortedProver
 	{	
 		pushHeight++;
     try {
-      simpl.sendCommand("(BG_PUSH\n" + formulaToString(formula) + "\n)");
+      String cmd = "(BG_PUSH\n" + formulaToString(formula) + "\n)";
+      dump(cmd);
+      simpl.sendCommand(cmd);
       return ok;
     } catch (ProverError e) {
       --pushHeight;
@@ -111,8 +139,11 @@ public class SimplifySortedProver extends SortedProver
 		Assert.notFalse(pushHeight >= count);
     try {
       pushHeight -= count;
-      while (count-- > 0)
-        simpl.sendCommand("(BG_POP)");
+      while (count-- > 0) {
+	String cmd = "(BG_POP)";
+	dump(cmd);
+	simpl.sendCommand(cmd);
+      }
       return ok;
     } catch (ProverError e) {
       started = false;
@@ -126,6 +157,22 @@ public class SimplifySortedProver extends SortedProver
       String form = formulaToString(formula);
       if (Info.on)
         Info.out("[proving formula\n" + form + "]");
+
+	    dump(form);
+	    if (optDumpExt != "") {
+		getDumpStream().flush();
+
+		try {
+		    FileChannel srcChannel = new FileInputStream(dumpLog).getChannel();
+		    FileChannel dstChannel = new FileOutputStream(getDumpFile(properties)).getChannel();
+		    dstChannel.transferFrom(srcChannel, 0, srcChannel.size());
+		    srcChannel.close();
+		    dstChannel.close();
+		} catch (IOException e) {
+		    ErrorSet.fatal("Couldn't copy dump file: " + dumpLog + " : " + e);
+		}
+	    }
+
       boolean result = simpl.isValid(form);
       if (!result) 
         callback.processResponse(new CounterExampleResponse(simpl.getLabels()));
@@ -139,6 +186,42 @@ public class SimplifySortedProver extends SortedProver
 	public SortedProverResponse stopProver() {
 		started = false;
 		simpl.stopProver();
+		cleanupDumpStream();
 		return ok;
 	}
+
+
+    private String quote(String name) {
+        return name.replace('$', '_');
+    }
+
+    private String getDumpFile(Properties properties) {
+	return quote(properties.getProperty("ProblemName") + "." + optDumpExt);
+    }
+
+    public PrintStream getDumpStream() {
+	if (dumpStream == null) {
+	    try {
+		dumpStream = new PrintStream(new FileOutputStream(dumpLog));
+	    } catch (FileNotFoundException e) {
+		ErrorSet.fatal("Couldn't create dump file: " + dumpLog + " : " + e);
+		return null;
+	    }
+	}
+	return dumpStream;
+    }
+
+    public void cleanupDumpStream () {
+	if (dumpStream != null) {
+	    dumpStream.close();
+	    dumpStream = null;
+	    (new File(dumpLog)).delete();
+	}
+    }
+
+    public void dump(String cmd) {
+	if (optDumpExt != "") {
+	    getDumpStream().println(cmd);
+	}
+    }
 }

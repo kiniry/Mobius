@@ -253,9 +253,13 @@ export ESCJAVA_CLASSFILES4RAC = ${ESCJAVA_ROOT}/classfiles4rac
 ## Paths to Mocha components
 export MOCHA_LIB = ${JAR_FILES}/mochalib.jar
 
+## CVC3 Prover Library
+export CVC3_LIB_PATH ?= /usr/local/lib
+export CVC3_LIB      ?= ${CVC3_LIB_PATH}/libcvc3.jar
+
 ## This is the path needed to *run* Escjava.
 export ESC_CLASSPATH = \
-	${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${JAVAFE_LIB}
+	${ESCJAVA_CLASSFILES}:${ESCTOOLS_ROOT}/Utils:${MOCHA_LIB}:${BCEL_LIB}:${JUNIT_LIB}:${ANT_LIB}:${XMLRPC_LIB}:${JAVAFE_LIB}:${CVC3_LIB}
 export ESCJAVA_CLASSPATH=$(ESC_CLASSPATH)
 
 ## The front-end for Escjava that should be used for testing.
@@ -453,22 +457,7 @@ ESCJAVA_BUILD_CLASSPATH:=${RAC_CLASSES}:${ESCJAVA_BUILD_CLASSPATH}
 endif
 
 
-################################################################################
-## Paths and parameters necessary for CVC JNI compillation
-## Variables should be (re)defined in Makefile.local
-## JNI header file location
-export JDK_INCLUDE_DIR ?= ${JAVA_HOME}/include
-## OS-specific JNI header files
-export JDK_INCLUDE_OS ?= ${JDK_INCLUDE}/linux
-## JNI javah binary location
-export JAVAH ?= ${JAVA_HOME}/bin/javah
-## Preferred C++ compiler
-export CC ?= g++
-## Library directory of CVC installed
-export CVC_LIB_DIR ?= /usr/local/lib
-## Include directory of CVC install (default)
-export CVC_INCLUDE_DIR ?= /usr/local/include/cvcl
-export LD_LIBRARY_PATH = ${MOCHA_LIBRARY_PATH}:${CVC_LIB_DIR}:${ESCTOOLS_ROOT}/libs
+export LD_LIBRARY_PATH = ${MOCHA_LIBRARY_PATH}:${CVC3_LIB_PATH}:${ESCTOOLS_ROOT}/libs
 
 export TEXINPUTS := .:${TEXINPUTS}
 

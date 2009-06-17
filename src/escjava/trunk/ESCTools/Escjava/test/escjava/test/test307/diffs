@@ -1,7 +1,0 @@
-1c1,4
-< ./rtest: line 32: ./run: Permission denied
----
-> Test307.java:12: Warning: Possible null dereference (Null)
->                         s += s444[i].length(); // error
->                                     ^
-> 1 warning

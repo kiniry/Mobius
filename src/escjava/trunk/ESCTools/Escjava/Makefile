@@ -62,7 +62,7 @@ ESCJAVA_SOURCE_FILES_RELATIVE = \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/simplify/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/z3/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/fx7/*.java) \
-	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/cvc/*.java) \
+	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/cvc3/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/auflia/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/sortedProver/fx7pg/*.java) \
 	$(wildcard $(ESCJAVA_SOURCE_DIR_REL)/escjava/*.java)

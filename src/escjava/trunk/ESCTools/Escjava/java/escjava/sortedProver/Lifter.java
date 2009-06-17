@@ -362,6 +362,13 @@ public class Lifter extends EscNodeBuilder
 		}
 		
 		public Sort getSort() { return retType; }
+
+
+	    // apply a conversion function to a term
+	    public FnTerm cast(FnSymbol fn, Term term)
+	    {
+		return new FnTerm(fn, new Term[] { term });
+	    }
 		
 		void enforceArgType(int i, Sort r)
 		{
@@ -375,30 +382,46 @@ public class Lifter extends EscNodeBuilder
 			if (isEarlySort (r, p))
 				return;
 			
-			FnSymbol conv = null;
+			FnTerm conv = null;
 			
 			int minpass = 2;
-			if (p == sortValue)
-				conv =
-					r == sortInt ? symValueToInt : 
-					r == sortRef ? symValueToRef : 
-					r == sortBool ? symValueToBool : 
-					r == sortPred ? symValueToPred : // TODO flag this with warning
-					r == sortReal ? symValueToReal :
-					null;
-			else if (p == sortInt && r == sortReal) {
-				conv = symIntToReal;
+
+			if (p != r) {
+			    if (p == sortValue) {
+				if (r == sortBool)
+				    conv = cast(symValueToBool, args[i]);
+				else if (r == sortInt)
+				    conv = cast(symValueToInt, args[i]);
+				else if (r == sortReal)
+				    conv = cast(symValueToReal, args[i]);
+				else if (r == sortRef)
+				    conv = cast(symValueToRef, args[i]);
+				else if (r == sortType)
+				    conv = cast(symRefToType, (cast(symValueToRef, args[i])));
+				else if (r == sortPred)
+				    // TODO flag this with warning
+				    conv = cast(symValueToPred, args[i]);
+			    } else if (p == sortInt && r == sortReal) {
+				conv = cast(symIntToReal, args[i]);
 				minpass = 0;
-			} else if (p == sortPred && (r == sortValue || r == sortBool)) {
-				conv = symPredToBool;
-				warn("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);				
-			} else if (p == sortBool && r == sortPred) {
-				conv = symIsTrue;
+			    } else if (p == sortRef && r == sortType) {
+				conv = cast(symRefToType, args[i]);
+			    } else if (p == sortBool && r == sortPred) {
+				conv = cast(symIsTrue, args[i]);
 				minpass = 1;
+			    } else if (p == sortPred) {
+				if (r == sortBool) {
+				    warn("using pred -> bool conversion! in arg #" + (1+i) + " of " + fn + " / " + this);
+				    conv = cast(symPredToBool, args[i]);
+				} else if (r == sortValue) {
+				    warn("using pred -> value conversion! in arg #" + (1+i) + " of " + fn + " / " + this);
+				    conv = cast(symBoolToValue, cast(symPredToBool, args[i]));
+				}
+			    }
 			}
-			
+
 			if (pass >= minpass && conv != null) {
-				args[i] = new FnTerm(conv, new Term[] { args[i] });
+			    args[i] = conv;
 			} else if (!require(p, r, args[i]))
 				ErrorSet.error("which is arg #" + (1+i) + " of " + fn + " / " + this);
 		}
@@ -594,9 +617,13 @@ public class Lifter extends EscNodeBuilder
 						dumpBuilder.buildBool(true),
 						dumpBuilder.buildBool(false));
 			
-			if (fn == symValueToBool || fn == symValueToInt || fn == symValueToReal ||
-				fn == symValueToRef || fn == symIntToReal || fn == symBoolToValue || 
-				fn == symIntToValue || fn == symRealToValue || fn == symRefToValue)
+			if (fn == symValueToBool || fn == symValueToInt ||
+			    fn == symValueToReal || fn == symValueToRef ||
+			    fn == symIntToReal ||
+			    fn == symBoolToValue || fn == symIntToValue ||
+			    fn == symRealToValue || fn == symRefToValue ||
+			    fn == symRefToType || fn == symTypeToRef
+			    )
 				return dumpBuilder.buildValueConversion(mapSortTo(dumpBuilder, fn.argumentTypes[0]),
 								mapSortTo(dumpBuilder, fn.retType), args[0].dumpValue());
 			if (fn == symIntBoolFn) {
@@ -750,7 +777,9 @@ public class Lifter extends EscNodeBuilder
 			STerm[] qnopats = null;
 			
 			if (pats != null) {
-				qpats = new SAny[pats.length][];
+			    // patterns might be SPred, e.g. for the 'is' predicate,
+			    // so this must be STerm, not SAny,
+				qpats = new STerm[pats.length][];
 				for (int i = 0; i < pats.length; ++i)
 					qpats[i] = dumpTermArray(pats[i]);				
 			}
@@ -1017,13 +1046,24 @@ public class Lifter extends EscNodeBuilder
     public FnSymbol symValueToAny = registerFnSymbol("%valueToAny", new Sort[] { sortValue }, sortAny);
 
     
-    public FnSymbol symRefToValue = registerFnSymbol("%RefToValue", new Sort[] { sortRef}, sortValue);
-    public FnSymbol symIntToValue = registerFnSymbol("%IntToValue", new Sort[] { sortInt}, sortValue);
-    public FnSymbol symBoolToValue = registerFnSymbol("%BoolToValue", new Sort[] {sortBool}, sortValue);
-    public FnSymbol symRealToValue = registerFnSymbol("%RealToValue", new Sort[] {sortReal}, sortValue);
+    public FnSymbol symRefToValue = registerFnSymbol("%refToValue", new Sort[] { sortRef}, sortValue);
+    public FnSymbol symIntToValue = registerFnSymbol("%intToValue", new Sort[] { sortInt}, sortValue);
+    public FnSymbol symBoolToValue = registerFnSymbol("%boolToValue", new Sort[] {sortBool}, sortValue);
+    public FnSymbol symRealToValue = registerFnSymbol("%tealToValue", new Sort[] {sortReal}, sortValue);
 
     public FnSymbol symIntToReal = registerFnSymbol("%intToReal", new Sort[] { sortInt }, sortReal);
-    
+
+    // in some verification conditions types are used as references (meta classes),
+    // so we need to be able to convert between the two.
+    // e.g in the escjava test25 test case DirectType.java we get something like:
+    //   getClass(_) = typeof(_)
+    //   getClass(_) != null
+    //   is(getClass(_), T_java.lang.Class)
+    // so getClass returns the type (class) of an object,
+    // which is compared with another type resp. a reference.
+    public FnSymbol symRefToType = registerFnSymbol("%refToType", new Sort[] { sortRef}, sortType);
+    public FnSymbol symTypeToRef = registerFnSymbol("%typeToRef", new Sort[] { sortType}, sortRef);
+
     public PredSymbol symValueToPred = registerPredSymbol("%valueToPred", new Sort[] { sortValue });
     public FnSymbol symPredToBool = registerFnSymbol("%predToBool", new Sort[] { sortPred }, sortBool);    
     
@@ -1941,7 +1981,7 @@ public class Lifter extends EscNodeBuilder
 	
 	STerm[] dumpTermArray(Term[] args)
 	{
-		STerm[] params = new SAny[args.length];
+		STerm[] params = new STerm[args.length];
 		for (int i = 0; i < args.length; ++i)
 			params[i] = args[i].dump();
 		return params;

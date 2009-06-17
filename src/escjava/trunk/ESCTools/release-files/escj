@@ -177,6 +177,16 @@ else
     ESCJ_SIMPLIFY=${ESCJ_SIMPLIFY_DIR}/${SIMPLIFY}
 fi
     
+
+
+############ Setting CVC3, if necessary
+
+if [ -z "$CVC3_LIB" ]; then
+  export CVC3_LIB=${ESCTOOLS_ROOT}/Utils/libcvc3.jar
+  warn "Guessing CVC3_LIB=$CVC3_lIB"
+fi
+
+
 ## (Optional) If the OS does not supply the class path for Java system files,
 ## or you want to override it, then supply a definition for BOOTCLASSPATH
 if [ -z "$BOOTCLASSPATH" ]; then
@@ -239,9 +249,9 @@ fi
 ## release
 if [ -z "$ESC_CLASSPATH" ]; then
     if (( $VCSVER > 0 )) ; then
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${JAVAFE_LIB}:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/Escjava/classfiles:${JAVAFE_LIB}:${ESCTOOLS_ROOT}/Utils:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}:${CVC3_LIB}
     else
-	ESC_CLASSPATH=${ESCTOOLS_ROOT}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}:${JAVAFE_LIB}
+	ESC_CLASSPATH=${ESCTOOLS_ROOT}/esctools2.jar:${XMLRPC_LIB}:${BCEL_LIB}:${ANT_LIB}:${JUNIT_LIB}:${JAVAFE_LIB}:${CVC3_LIB}
     fi
     warn "Setting ESC_CLASSPATH=$ESC_CLASSPATH"
 fi
