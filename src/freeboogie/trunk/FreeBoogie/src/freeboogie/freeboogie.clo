@@ -3,10 +3,12 @@ NAME::
 
 ARGS::
   LogFile :{"--log-file"} :{file} 
-    :"log file name"
+    :"Specify the file where logging is done. If the file does not exist
+      it is crated; if the file does exist the new log messages are appended."
   LogCategories :{"--log-categories"} :{enum-list} 
     :[choices="foo"]
-    :"what is logged"
+    :"Specify the logging categories that should be enabled. Use a comma
+      separated list. By default all categories are disabled."
   LogLevel :{"--log-level"} :{enum} 
     :[choices="SEVERE,WARNING,INFO,CONFIG,FINE,FINER,FINEST"]
     :"how much information is logged"
@@ -32,7 +34,14 @@ ARGS::
   DesugarHavoc :{"--desugar-havoc"}
     :"desugar havoc into assignments from fresh variables"
   HavocLoopVariables :{"--havoc-loop-variables"}
-    :"havoc at the loop entry the variables modified in the body of the loop"
+    :"Havocs variables modified by a loop on entering that loop. If
+      back-edges are removed later on then the verification is still
+      sound. It is desirable to insert loop invariants to ensure
+      completeness, but this is not done at the moment. On the bright
+      side, this phase handles irreducible flow-graphs. The exact
+      rules are: for each entry in a strongly connected component of
+      the flowgraph there will be a havoc introduced for all the
+      variables that are assigned in the component."
   CutLoops :{"--cut-loops"}
     :"cut backedges from the flowgraph"
   DesugarMaps :{"--desugar-maps"}
@@ -53,11 +62,13 @@ ARGS::
     :"the method used to compute the VC"
   SeriesParallelCheck :{"--series-parallel-check"}
     :"checks if the flowgraphs are series-parallel"
-  Files :{} :{file-list} :[mustExist="true",between=""]
+  Files :{} :{file-list} :[mustExist,canBeDir="false",between=""]
     :"the files to process"
+  Help :{"--help", "-h"}
+    :"describe the command line interface"
 
 FORMAT::
-  (Option | Files)*;
+  (Option | Files)* | Help;
 
 WHERE::
   Option:

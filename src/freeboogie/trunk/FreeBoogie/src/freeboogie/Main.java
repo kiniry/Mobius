@@ -13,15 +13,16 @@ import org.antlr.runtime.CommonTokenStream;
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.backend.*;
-import freeboogie.clo.FbCliOptionsInterface;
-import freeboogie.clo.FbCliParser;
+import freeboogie.cli.FbCliOptionsInterface;
+import freeboogie.cli.FbCliParser;
+import freeboogie.cli.FbCliUtil;
 import freeboogie.dumpers.FlowGraphDumper;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
 import freeboogie.tc.*;
 import freeboogie.vcgen.*;
 
-import static freeboogie.clo.FbCliOptionsInterface.ReportLevel;
+import static freeboogie.cli.FbCliOptionsInterface.ReportLevel;
 
 /**
  * Used to print information in the symbol table.
@@ -219,20 +220,26 @@ public class Main {
     }
   }
 
+  public void badCli() {
+    System.err.println("I don't understand what you want. Try --help.");
+    System.exit(1);
+  }
+
   public void run(String[] args) 
   throws InvalidOptionPropertyValueException, AutomatonException {
     // parse command line arguments
     FbCliParser cliParser = new FbCliParser();
-    try {
-      if (!cliParser.parse(args)) {
-        System.err.println("TODO: print usage message.");
-        System.exit(1);
-      }
-    } catch (InvalidOptionValueException e) {
-      // TODO: this shouldn't be an exception in clops
-      System.exit(2);
-    }
+    try { if (!cliParser.parse(args)) badCli(); }
+    catch (InvalidOptionValueException e) { badCli(); }
     opt = cliParser.getOptionStore();
+    if (opt.isHelpSet()) {
+      FbCliUtil.printUsage();
+      return;
+    }
+    if (opt.getFiles().isEmpty()) {
+      System.out.println("Nothing to do. Try --help.");
+      return;
+    }
 
     Err.setVerbosity(4); // TODO: take from the command line 
     tc = opt.isBackwardCompatibleSet()? new ForgivingTc() : new TypeChecker();

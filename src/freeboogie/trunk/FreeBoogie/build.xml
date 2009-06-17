@@ -62,15 +62,16 @@
     </java>
   </target>
 
-  <target name="generate_clo_parser">
-    <mkdir dir="src/freeboogie/clo" />
+  <target name="generate_cli_parser">
+    <mkdir dir="src/freeboogie/cli" />
     <java fork="yes" classname="ie.ucd.clops.dsl.Main">
       <assertions><enable/></assertions>
       <classpath refid="classpath"/>
-      <arg value="-o"/>
-      <arg value="src/freeboogie/clo"/>
-      <arg value="-p"/>
-      <arg value="freeboogie.clo"/>
+      <arg value="-o=src/freeboogie/cli"/>
+      <arg value="-t=src/freeboogie/cli"/>
+      <arg value="-b=html"/>
+      <arg value="-c=src/freeboogie/usage.vm"/>
+      <arg value="-p=freeboogie.cli"/>
       <arg value="src/freeboogie/freeboogie.clo"/>
     </java>
   </target>
@@ -93,7 +94,7 @@
     </javac>
   </target>
 
-  <target name="compile" depends="compile_parser,generate_clo_parser"
+  <target name="compile" depends="compile_parser,generate_cli_parser"
     description="compile the source ">
     <javac srcdir="src" destdir="classes" 
            optimize="yes" debug="${debug}">
@@ -189,7 +190,7 @@
     <delete dir="classes" />
     <delete dir="dist" />
     <delete dir="docs/api" />
-    <delete dir="src/freeboogie/clo" />
+    <delete dir="src/freeboogie/cli" />
     <delete>
       <!-- ANTLR generated files -->
       <fileset dir="src/freeboogie/parser" includes="FbParser.java" />
