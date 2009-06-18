@@ -12,7 +12,7 @@ ARGS::
   Verify :{"--verify","-v"}
     :"Verifies that each implementation is correct."
   SeriesParallelCheck :{"--series-parallel-check"}
-    :"Checks if the flowgraph of the given implementations are 
+    :"Checks if the flowgraphs of the given implementations are 
       series--parallel. A (two terminal) series--parallel graph is either
       an edge or the series composition of two series--parallel graphs or
       the parallel composition of two series--parallel graphs. For the
@@ -113,7 +113,7 @@ WHERE::
   OutputOption: LogFile | LogCategories | LogLevel | ReportOn | ReportLevel;
   PrintOption: PrettyPrint | PrintSymbolTable | PrintFlowgraphs;
   PhaseOption: 
-    PassivateOption |
+    Passivate |
     DesugarSpecs |
     DesugarCalls |
     DesugarHavoc |
@@ -125,5 +125,21 @@ WHERE::
   ConfigOption: BackwardCompatible | ProverCommandLine | Prover | VcMethod;
 
 OVERRIDES::
-// TODO: default command line for various provers
-//  {$(Prover)==SIMPLIFY && !$(ProverCommandLine?)}
+  {$(Prover).toLowerCase().equals("simplify") && !$(ProverCommandLine?)} -> 
+    ProverCommandLine := {"z3 -si"};
+  {!$(Passivate).toLowerCase().equals("none")} -> 
+    CutLoops := {true},
+    HavocLoopVariables := {true};
+  {$(CutLoops?)} -> 
+    HavocLoopVariables := {true};
+  {$(Verify?)} ->
+    HavocLoopVariables := {true},
+    CutLoops := {true},
+    DesugarCalls := {true},
+    DesugarHavoc := {true},
+    DesugarSpecs := {true},
+    DesugarMaps := {true},
+    UnshareVc := {true}; // TODO: there's no way now to turn this off
+
+  {$(Verify?) && $(Passivate).toLowerCase().equals("none") } ->
+    Passivate := {"optim"};

@@ -1,80 +1,75 @@
- . Use CLOPS.
+ . Convert the BPLs in the test suite to Boogie 2.
+ . Add a "for all types" construct.
+ . Move to Boogie 2.
+ . Release 0.2.
+ . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
+ . Add axioms for %. (It it NOT built in in "z3 -si".)
  . Configure the new categories/levels for logging/output.
    (Search for "log-categ" to see places that must be fixed.)
- . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
- . Move astgen tests to astgen.
+ . Release 0.3.
  . Reorganize the code for turning on/off various phases.
- . Add axioms for %. (It it NOT built in in "z3 -si".)
- . Convert the BPLs in the test suite to Boogie 2.
  . Add null-by-default switch to bml2bpl.
- . Move to Boogie 2.
- . Add a "for all types" construct.
- . Release FreeBoogie 0.2.
- . Simple interface to parse from strings
+ . Move astgen tests to astgen.
+ . Release 0.4.
+ . Simple interface to parse from strings.
  . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
  . Desugar dependent types in procedure signatures.
+ . Release 0.5.
  . Provide a web interface.
  . Have some unified mechanism for making sure that terms start with
    "term$$". Check that term$$ is not prepended to number literals.
  . Have a way to cope with identifiers in the input that contain $$.
    In general, think harder about possible name clashes.
+ . Release 0.6.
  . Only parse functions if they return exactly one value.
  . Change the grammar and the AST to allow for parallel assignments.
  . Implement a generic UNION-FIND DS and use it in Inferrer and TypeChecker.
- . Test typechecker thoroughly and add tests for the 'old' mode.
+ . Release 0.7.
+ . Test typechecker thoroughly.
  . Does ImplementationChecker treat type vars correctly?
  . The comments and code disagree for TypeChecker.checkExact
+ . Release 0.8
  . Make flow graphs reducible
  . In some cases Spec# generates (assume ... h1[n1] == h2[n2]...) which
    gets 'fixed' in old mode by adding a generic on procedure/implementation.
    Is this a problem?
- . Test if errors are reported correctly in old mode.
  . Get someone to review the code.
- . Implement the 'transform' (desugar) function in the parser.
-   This makes sure there is exactly one command in each block
-   and simplifies later steps.
+ . Release 0.9.
  . Change the grammar so it doesn't use syntactic predicates. NOTE:
    You may need to return tuples.
  . Check (during type-check) that I never assign to a constant.
- . Incorporate MapType into UserType, and allow for an arbitrary
-   number of type arguments (besides the name).
  . There is some duplication between VarCollector and ReadWriteSetFinder.
    Probably only one should remain.
- . Update my ViM configuration so it stops inserting // in Java mode
-   (see :h 'comments')
+ . Release 0.10.
  . Don't allow assignments to input parameters.
  . Make the latest Boogie.exe from MSR work on Linux.
  . Performance: get rid of the exception in
      freeboogie.tc.Specializer.prepareTypeList.
+ . Release 0.11
  . Performance: Clear your hashes instead of initializing new ones.
  . Performance: Set the initial size of hashes appropriately.
- . Most transformations during VC generation treat ignore generics
-   completely. This should be fine in Boogie 2, but not when
-   explicit specialization is allowed.
  . Migrate to Google Code. First, patch svndumpfilter so that it
    works correctly, at least for extracting FreeBoogie from
    mobius.ucd.ie.
+ . Release 0.12.
  . Desugar where clauses too in SpecDesugarer.
- . Implement an IdCleaner that maps all ids to a, b, ..., z, aa, ab, ...
- . Implement an (almost) topological sorter for blocks to make things
-   easier to read.
- . Implement type synonyms.
+ . Introduce an option to topologically sort blocks.
  . There is lots of code shared by various desugarers. Find a way
    to write it only once.
- . Move Desugareres in VcGenerator, out of the main loop.
+ . Release 0.13.
  . Make sure collection objects are reused when processing multiple
    files. That means, for example, that you instantiate VcGenerator
    only once per run (not once per file) from freeboogie.Main.
  . Performance: It should work with a stack of 64MB and a heap of
    64MB. Right now it eats too much memory.
  . Make TermOfExpr (more) sorted. And test it more extensively.
+ . Release 0.14.
  . Use the Z3 API, if possible on Linux.
  . Target the SMTLIB format.
  . Report the location of the implementation being checked.
- . Allow easy redirection of output.
+ . Release 0.15.
  . Add a parser for SMT so that you can provide a piece of text to
    build an SmtTerm.
- . Maybe an abstract class for ast_gen should be one that is not inherited
-   from, instead of one that doesn't have members.
+ . Releas 0.16.
 
 vim:spell:ts=3:sw=3:fdm=manual:
