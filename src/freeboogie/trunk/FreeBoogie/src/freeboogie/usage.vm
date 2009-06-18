@@ -24,14 +24,13 @@ public final class FbCliUtil {
       }
       for (String line : format(description, 70))
         System.out.println("     " + line);
-      System.out.println();
     }
 
     // TODO: perhaps move this in genericutils
     // Splits into lines a text, trying to minimize sum(x^2), where
     // x is the slack. The slack on the last line is ignored. Also,
     // the text is justified (fills the line).
-    public List<String> format(String text, int width) {
+    public static List<String> format(String text, int width) {
       ArrayList<String> words = Lists.newArrayList();
       Scanner s = new Scanner(text);
       while (s.hasNext()) {
@@ -113,8 +112,11 @@ public final class FbCliUtil {
     options.add(newOption);
 #end
 
-    // TODO: sort the options from the groups info
-
-    for (Option o : options) o.print();
+    for (String line : Option.format("$info.getDescription()", 75))
+      System.out.println(line);
+    for (Option o : options) {
+      System.out.println();
+      o.print();
+    }
   }
 }
