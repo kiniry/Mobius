@@ -205,8 +205,8 @@ public abstract class BCClassRepresentation {
    *   is found not to be correct
    */
   public void addField(final Field f) throws ReadAttributeException {
-    jc.addField(f);
-    bml_fmodifiers.add(jc.getFields().length - 1, getFreshFieldMod(f));
+    getJC().addField(f);
+    bml_fmodifiers.add(getJC().getFields().length - 1, getFreshFieldMod(f));
   }
 
   /**
@@ -267,7 +267,7 @@ public abstract class BCClassRepresentation {
    * @return BCEL's {@link ClassGen}
    */
   public ClassGen getBCELClass() {
-    return this.jc;
+    return this.getJC();
   }
 
   /**
@@ -403,11 +403,11 @@ public abstract class BCClassRepresentation {
    *     or <b>-1</b> if this class has no fields of given name.
    */
   public int getFieldIndex(final String fieldName) { // O(n)
-    final Field[] ftab = this.jc.getFields();
+    final Field[] ftab = this.getJC().getFields();
     for (int i = 0; i  <  ftab.length; i++) {
       if (fieldName.equals(ftab[i].getName())) {
         final int ni = ftab[i].getNameIndex();
-        final ConstantPoolGen cpg = this.jc.getConstantPool();
+        final ConstantPoolGen cpg = this.getJC().getConstantPool();
         for (int j = 0; j  <  cpg.getSize(); j++) {
           final Constant cnst = cpg.getConstant(j); 
           if (cnst instanceof ConstantNameAndType) {
@@ -514,12 +514,12 @@ public abstract class BCClassRepresentation {
    * BML attributes into it.
    */
   public JavaClass saveJC() {
-    final JavaClass ajc = this.jc.getJavaClass();
+    final JavaClass ajc = this.getJC().getJavaClass();
     final Method[] marr = generateMethodsToSave();
     ajc.setMethods(marr);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "  saving class attributes");
     final AttributeWriter aw = new AttributeWriter(this);
-    Attribute[] attrs = removeBMLAttributes(this.jc.getAttributes());
+    Attribute[] attrs = removeBMLAttributes(this.getJC().getAttributes());
     ajc.setAttributes(attrs);
     MLog.putMsg(MessageLog.LEVEL_PPROGRESS, "   saving second constant pool");
     attrs = ajc.getAttributes();
@@ -760,5 +760,10 @@ public abstract class BCClassRepresentation {
         package_name = cname.substring(0, index);
     }
     return package_name;
+  }
+
+
+  public ClassGen getJC() {
+    return jc;
   }
 }
