@@ -7,5 +7,5 @@ for lib in `ls $HERE/lib/*.jar`; do
   CP=$CP:$lib
 done
 #java -agentlib:hprof=cpu=samples,depth=5 $JFLAGS -cp $CP $*
-java $JFLAGS -cp $CP $*
+java $JFLAGS -cp $CP "$@"
 

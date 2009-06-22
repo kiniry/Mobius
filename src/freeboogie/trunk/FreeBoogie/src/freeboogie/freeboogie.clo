@@ -129,7 +129,8 @@ OVERRIDES::
     ProverCommandLine := {"z3 -si"};
   {!$(Passivate).toLowerCase().equals("none")} -> 
     CutLoops := {true},
-    HavocLoopVariables := {true};
+    HavocLoopVariables := {true},
+    DesugarHavoc := {true};
   {$(CutLoops?)} -> 
     HavocLoopVariables := {true};
   {$(Verify?)} ->

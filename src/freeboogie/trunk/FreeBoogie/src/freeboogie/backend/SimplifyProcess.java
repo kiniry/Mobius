@@ -32,10 +32,10 @@ public class SimplifyProcess {
    */
   public SimplifyProcess(String[] cmd) throws ProverException {
     try {
-      // NOTE: This should be changed to a ProcessBuilder in Java >= 5.
-      simplify = Runtime.getRuntime().exec(cmd);
+      ProcessBuilder pb = new ProcessBuilder(cmd);
+      simplify = pb.start();
       in = new BufferedReader(new InputStreamReader(simplify.getInputStream()));
-      out = new PrintStream(simplify.getOutputStream());
+      out = new PrintStream(simplify.getOutputStream(), true);
     } catch (Exception e) {
       if (simplify != null) stopProver();
       throw new ProverException("I can't run the prover.", e);

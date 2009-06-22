@@ -6,6 +6,7 @@
  . Add axioms for %. (It it NOT built in in "z3 -si".)
  . Configure the new categories/levels for logging/output.
    (Search for "log-categ" to see places that must be fixed.)
+ . Process triggers.
  . Release 0.3.
  . Reorganize the code for turning on/off various phases.
  . Add null-by-default switch to bml2bpl.
