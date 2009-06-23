@@ -102,7 +102,7 @@ public class Exsure {
    * @return String representation of this excondition.
    */
   public String printCode(final BMLConfig conf) {
-    final String prefix = "(" + this.excType.printCode(conf) + ")";
+    final String prefix = "(" + this.excType.printCode2(conf) + ")";
     return this.postcondition.printLine(conf, prefix);
   }
 

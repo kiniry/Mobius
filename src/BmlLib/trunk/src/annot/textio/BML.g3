@@ -65,6 +65,7 @@ options {
   private ModifyList modif;
   private AbstractFormula postc;
   private Vector<Exsure> exc;
+  private Vector<JavaReferenceType> sonly;
   private AbstractFormula inv;
   private AbstractIntExpression dec;
   private BCField afield;
@@ -290,9 +291,19 @@ implements_clause :
   IMPLEMENTS name_list
   {syso("implements_clause");};
 
-name_list :
-  typename ( COMMA typename )*
-  {syso("name_list");};
+name_list returns [Vector<JavaReferenceType> vect]:
+  (  name=typename v=name_list
+     {
+       $v.vect.add(new JavaReferenceType($name.name));
+       $vect = $v.vect;
+     }
+   | name=typename 
+     {
+       Vector<JavaReferenceType> fv = new Vector<JavaReferenceType>();
+       fv.add(new JavaReferenceType($name.name));
+       $vect = fv;
+     }
+  ) {syso("name_list");};
 
 typebody :
   (staticsection)?
@@ -319,7 +330,7 @@ staticsection :
   };
 
 staticfields :
-  (staticfield EOL)* EOL*
+  (staticfield EOL)* (EOL)*
   {
      syso("static fields");
   };
@@ -438,7 +449,7 @@ objectfields :
          bcc.updateFields(afield);
        }
     }
-  )* EOL*
+  )* (EOL)*
   {
      syso("object fields");
   };
@@ -811,11 +822,12 @@ specCase returns [SpecificationCase ast] :
       modif = null;
       postc = null;
       exc = new Vector<Exsure>();
+      sonly = null;
    }
    (MODIFIES ml=modifyList {modif = $ml.ast;} EOL)?
    (ENSURES f2=formula {postc = $f2.ast;} EOL)?
-   (EXSURES 
-     (i=exname COLON f3=formula EOL 
+   ((EXSURES | SIGNALS) 
+     (PAR_LEFT i=exname PAR_RIGHT f3=formula EOL 
       {
         if (($i.name != null) && ($f3.ast != null)) {
           JavaReferenceType jrt = new JavaReferenceType($i.name);
@@ -823,10 +835,17 @@ specCase returns [SpecificationCase ast] :
           exc.add(ex);
         }
       }
-     )+ 
-   )?
-   (SIGNALS PAR_LEFT typename PAR_RIGHT formula EOL)*
-   (SIGNALSONLY ( NOTHING | name_list ) EOL)?
+     ) 
+   )*
+   (SIGNALSONLY ( NOTHING
+                   {
+                     sonly = new Vector<JavaReferenceType>();
+                   }
+                 | v=name_list
+                   {
+                     sonly = $v.vect;
+                   }
+                 ) EOL)?
   ) en=BML_END EOL
     {
       bml_positions.add(new PosInCode($st.getLine(),
@@ -834,7 +853,7 @@ specCase returns [SpecificationCase ast] :
       bml_positions.add(new PosInCode($en.getLine(),
                                       $en.getCharPositionInLine()+3));
       if (prec != null)
-        $ast = new SpecificationCase(m, prec, modif, postc, exc);
+        $ast = new SpecificationCase(m, prec, modif, postc, exc, sonly);
     };
 
 inCodeAnnot returns [InCodeAnnotation ast] :

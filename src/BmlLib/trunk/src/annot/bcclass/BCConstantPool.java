@@ -188,6 +188,8 @@ public class BCConstantPool extends BCCConstantPrinting
                                    final ConstantPoolGen cpg) {
     for (int i = cpg.getSize() - 1; i > 0; i--) { // null in 0 always
       final Constant cnst = cpg.getConstant(i);
+      if (cnst == null) continue; //this is possible in case Long or similar
+                                  //constants are used
       switch (cnst.getTag()) { //reindexing
         case Constants.CONSTANT_Class:
           final ConstantClass ccnst = (ConstantClass) cnst;

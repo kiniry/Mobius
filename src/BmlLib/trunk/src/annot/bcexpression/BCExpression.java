@@ -497,7 +497,7 @@ public abstract class BCExpression {
    * @return String representation of expression, without
    *     line-breaking.
    */
-  private String printCode2(final BMLConfig conf) {
+  public String printCode2(final BMLConfig conf) {
     final int rp = conf.getRoot_pri();
     if (this.priority != Priorities.PRI_TRANSPARENT) {
       conf.setRoot_pri(this.priority);

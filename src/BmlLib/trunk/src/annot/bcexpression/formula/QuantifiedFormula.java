@@ -35,7 +35,7 @@ public class QuantifiedFormula extends AbstractFormula {
   private static final String FORALL_KEYWORD_TEXT = "\\forall";
 
   /**
-   * Vector of bound variables
+   * Vector of bound variables.
    */
   private Vector < BoundVar >  vars;
 

@@ -89,7 +89,8 @@ public class SpecificationCase {
   }
 
   /**
-   * A standard constructor.
+   * A constructor which generates the default signals and signals_only
+   * cases.
    *
    * @param m - a method this specificationCase specifies.
    * @param aprecnd - a precondition of the specification case
@@ -118,6 +119,44 @@ public class SpecificationCase {
       this.excondition = anexsures;
     }
     createInitialSignalsOnly(m);
+  }
+
+  /**
+   * A constructor which takes all the ingredients.
+   *
+   * @param m - a method this specificationCase specifies.
+   * @param aprecnd - a precondition of the specification case
+   * @param amodifies - a modifies clause for the specification case
+   * @param apostcondition - a postcondition for the specification case
+   * @param anexsures - exceptional ensures for the specification case
+   * @param asonly - the signals_only exceptions
+   */
+  public SpecificationCase(final BCMethod m,
+                           final AbstractFormula aprecnd,
+                           final ModifyList amodifies,
+                           final AbstractFormula apostcondition,
+                           final Vector < Exsure >  anexsures,
+                           final Vector < JavaReferenceType > asonly) {
+    this.method = m;
+    this.precondition = (aprecnd == null) ?
+      new ExpressionRoot < AbstractFormula > (this, new Predicate0Ar(true)) :
+      new ExpressionRoot < AbstractFormula > (this, aprecnd);
+    final ModifyList mmod = (amodifies == null) ? new ModifyList() : amodifies;
+    this.modifies = new ExpressionRoot < ModifyList > (this, mmod);
+    final AbstractFormula mpostcondition = (apostcondition == null) ?
+        new Predicate0Ar(true) : apostcondition;
+    this.postcondition = new ExpressionRoot < AbstractFormula > (this,
+                                                             mpostcondition);
+    if (anexsures == null || anexsures.size() == 0) {
+      createInitialExcondition();
+    } else {
+      this.excondition = anexsures;
+    }
+    if (asonly == null) {
+      createInitialSignalsOnly(m);
+    } else {
+      this.signalsonly = asonly;
+    }
   }
 
   /**
@@ -286,17 +325,13 @@ public class SpecificationCase {
     code.append(conf.getIndent()).append(DisplayStyle.SIGNALS_ONLY_KWD);
     if (this.signalsonly.size() == 0) {
       code.append(" ").append(DisplayStyle.NOTHING_KWD);
-    } else if (this.signalsonly.size() == 1) {
-      code.append(" ").append(this.signalsonly.get(0).printCode(conf));
-    } else if (this.signalsonly.size() > 1) {
+    } else {
       final Iterator < JavaReferenceType >  iter = this.signalsonly.iterator();
+      code.append(" ").append(iter.next().getSignature());
       while (iter.hasNext()) {
-        code.append(conf.newLine());
-        code.append(iter.next().printCode(conf));
+        code.append(", ");
+        code.append(iter.next().getSignature());
       }
-      conf.decInd();
-      code.append(conf.newLine());
-      conf.incInd();
     }
   }
 
@@ -343,7 +378,9 @@ public class SpecificationCase {
     final Iterator < JavaReferenceType >  itera = this.signalsonly.iterator();
     while (itera.hasNext()) {
       final JavaReferenceType tp = itera.next();
-      tp.write(aw);
+      final String sig = tp.getSignature().replace('.', '/');
+      final int idx = method.getBcc().getCp().getCoombinedCP().lookupUtf8(sig);
+      aw.writeShort(idx);
     }
   }
 
