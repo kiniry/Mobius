@@ -72,6 +72,9 @@
 			</manifest>
 			<include name="**/*" />
 		</jar>
+		<copy includeemptydirs="false" todir="${dist.dir}">
+			<fileset dir="${lib.dir}" includes="**/*.jar" />
+		</copy>
 	</target>
 
 	<!-- Create directories required for testing. -->

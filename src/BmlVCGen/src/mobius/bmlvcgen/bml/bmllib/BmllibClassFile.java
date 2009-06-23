@@ -35,7 +35,7 @@ public class BmllibClassFile implements ClassFile {
   public BmllibClassFile(final BCClass clazz) {
     this.clazz = clazz;
     invWrapper = new InvExprWrapper();
-    jc = clazz.getJC();
+    jc = clazz.getJC().getJavaClass();
   }
 
   /** {@inheritDoc} */
