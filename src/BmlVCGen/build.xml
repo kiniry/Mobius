@@ -69,8 +69,10 @@
 			 basedir="${build.dir}/classes">
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
+				<attribute name="Class-Path" value="bcel-5.2.jar bmllib.jar DirectVCGen.jar" />
 			</manifest>
 			<include name="**/*" />
+			 
 		</jar>
 		<copy includeemptydirs="false" todir="${dist.dir}">
 			<fileset dir="${lib.dir}" includes="**/*.jar" />
