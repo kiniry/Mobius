@@ -7,12 +7,12 @@ Require-Bundle: org.eclipse.core.runtime,
  mobius.freeboogie,
  mobius.b2bpl,
  bcel.plugin;bundle-version="5.2.0",
- org.junit4;bundle-version="4.3.1"
+ org.junit4
 Bundle-ClassPath: .,
  lib/antlr-3.0.1.jar,
  lib/antlr-runtime-3.0.jar,
  translation/
-Bundle-Vendor: Mobious & Warsaw University
+Bundle-Vendor: Mobius & Warsaw University
 Export-Package: annot.attributes,
  annot.attributes.clazz,
  annot.attributes.field,

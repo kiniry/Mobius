@@ -1,0 +1,40 @@
+<project name="Bmllib" default="dist">
+  <property name="dist"  location="dist"/>
+  <property name="lib"  location="lib"/>
+  <property name="src" location="src"/>
+  <property name="src2" location="antlr3-generated"/>
+  <property name="build" location="bin"/>
+  <property name="jar-name" value="bmllib.jar" />
+	
+  <path id="runtime.path">
+ 	 <filelist dir="${lib}" files="antlr-runtime-3.0.jar bcel-5.2.jar"/>
+ 	 
+  </path>
+	
+  <target name="init" depends="clean-build">
+    <echo message="Creating timestamp"/>
+    <tstamp/>
+    <mkdir dir="${build}"/>
+  </target>
+	
+  <target name="build" depends="init">
+	<javac debug="true" destdir="${build}">
+	    <src path="${src}"/>
+	    <src path="${src2}"/>
+		<classpath refid="runtime.path" />
+	</javac>
+  </target>
+	
+  <target name="dist" depends="build">
+  	<mkdir dir="${dist}" />
+  	<delete file="${dist}/${jar-name}" />
+  	<jar destfile="${dist}/${jar-name}" 
+  		 basedir="${build}">
+  		<include name="**/*" />
+  	</jar>
+  </target>
+  <target name="clean-build" description="Clean up the build">
+	 <delete dir="${build}"/>
+	 <delete dir="${dist}"/>
+  </target>
+</project>
