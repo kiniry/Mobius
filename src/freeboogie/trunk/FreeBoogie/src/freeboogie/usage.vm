@@ -54,7 +54,7 @@ public final class FbCliUtil {
 #end
 
     Terminal t = Terminal.setupTerminal();
-    int w = t.getTerminalWidth();
+    int w = t.getTerminalWidth() - 5;
     for (String line : StringUtil.format("$info.getDescription()", w))
       System.out.println(line);
     for (Option o : options) {
