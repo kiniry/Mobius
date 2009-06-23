@@ -46,8 +46,6 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import umbra.UmbraPlugin;
 import umbra.editor.actions.BytecodeRefreshAction;
 import umbra.instructions.DummyGenerator;
-import umbra.instructions.Preparsing;
-import umbra.instructions.errors.BytecodeError;
 import umbra.instructions.errors.ErrorReport;
 import umbra.lib.BMLParsing;
 import umbra.lib.ClassFileOperations;

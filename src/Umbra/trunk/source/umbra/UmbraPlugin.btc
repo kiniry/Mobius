@@ -1,0 +1,142 @@
+package umbra
+
+Constant pool:
+  const #1 = Class #2;
+  const #2 = Utf8 "umbra/UmbraPlugin";
+  const #3 = Class #4;
+  const #4 = Utf8 "org/eclipse/ui/plugin/AbstractUIPlugin";
+  const #5 = Utf8 "LOG";
+  const #6 = Utf8 "Ljava/io/PrintStream;";
+  const #7 = Utf8 "plugin";
+  const #8 = Utf8 "Lumbra/UmbraPlugin;";
+  const #9 = Utf8 "<clinit>";
+  const #10 = Utf8 "()V";
+  const #11 = Utf8 "Code";
+  const #12 = Fieldref #13.#15;
+  const #13 = Class #14;
+  const #14 = Utf8 "java/lang/System";
+  const #15 = NameAndType #16:#6;
+  const #16 = Utf8 "out";
+  const #17 = Fieldref #1.#18;
+  const #18 = NameAndType #5:#6;
+  const #19 = Utf8 "LineNumberTable";
+  const #20 = Utf8 "LocalVariableTable";
+  const #21 = Utf8 "<init>";
+  const #22 = Methodref #3.#23;
+  const #23 = NameAndType #21:#10;
+  const #24 = Fieldref #1.#25;
+  const #25 = NameAndType #7:#8;
+  const #26 = Utf8 "this";
+  const #27 = Utf8 "start";
+  const #28 = Utf8 "(Lorg/osgi/framework/BundleContext;)V";
+  const #29 = Utf8 "Exceptions";
+  const #30 = Class #31;
+  const #31 = Utf8 "java/lang/Exception";
+  const #32 = Methodref #3.#33;
+  const #33 = NameAndType #27:#28;
+  const #34 = Utf8 "a_context";
+  const #35 = Utf8 "Lorg/osgi/framework/BundleContext;";
+  const #36 = Utf8 "stop";
+  const #37 = Methodref #3.#38;
+  const #38 = NameAndType #36:#28;
+  const #39 = Utf8 "getDefault";
+  const #40 = Utf8 "()Lumbra/UmbraPlugin;";
+  const #41 = Utf8 "getImageDescriptor";
+  const #42 = Utf8 "(Ljava/lang/String;)Lorg/eclipse/jface/resource/ImageDescriptor;";
+  const #43 = String #44;
+  const #44 = Utf8 "umbra";
+  const #45 = Methodref #3.#46;
+  const #46 = NameAndType #47:#48;
+  const #47 = Utf8 "imageDescriptorFromPlugin";
+  const #48 = Utf8 "(Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/jface/resource/ImageDescriptor;";
+  const #49 = Utf8 "a_path";
+  const #50 = Utf8 "Ljava/lang/String;";
+  const #51 = Utf8 "messagelog";
+  const #52 = Utf8 "(Ljava/lang/String;)V";
+  const #53 = Methodref #54.#56;
+  const #54 = Class #55;
+  const #55 = Utf8 "java/io/PrintStream";
+  const #56 = NameAndType #57:#52;
+  const #57 = Utf8 "println";
+  const #58 = Utf8 "a_string";
+  const #59 = Utf8 "SourceFile";
+  const #60 = Utf8 "UmbraPlugin.java";
+  const #61 = Utf8 "int";
+  const #62 = Utf8 "org.bmlspecs.AssertTable";
+  const #63 = Utf8 "org.bmlspecs.Invariants";
+  const #64 = Utf8 "org.bmlspecs.MethodSpecification";
+  const #65 = Utf8 "org.bmlspecs.SecondConstantPool";
+  const #66 = Utf8 "org.bmlspecs.LoopSpecificationTable";
+  const #67 = Utf8 "org.bmlspecs.FieldModifiers";
+  const #68 = Utf8 "org.bmlspecs.GhostFields";
+
+class umbra.UmbraPlugin extends org.eclipse.ui.plugin.AbstractUIPlugin
+
+static public final java.io.PrintStream LOG;
+static private umbra.UmbraPlugin plugin;
+
+
+/*@
+  @
+  @*/
+static void <clinit>()
+0:    getstatic		java.lang.System.out Ljava/io/PrintStream; (12)
+3:    putstatic		umbra.UmbraPlugin.LOG Ljava/io/PrintStream; (17)
+6:    return
+
+/*@
+  @
+  @*/
+public void <init>()
+0:    aload_0
+1:    invokespecial	org.eclipse.ui.plugin.AbstractUIPlugin.<init> ()V (22)
+4:    aload_0
+5:    putstatic		umbra.UmbraPlugin.plugin Lumbra/UmbraPlugin; (24)
+8:    return
+
+/*@
+  @
+  @*/
+public final void start(org.osgi.framework.BundleContext a_context)
+      throws java/lang/Exception
+0:    aload_0
+1:    aload_1
+2:    invokespecial	org.eclipse.ui.plugin.AbstractUIPlugin.start (Lorg/osgi/framework/BundleContext;)V (32)
+5:    return
+
+/*@
+  @
+  @*/
+public final void stop(org.osgi.framework.BundleContext a_context)
+      throws java/lang/Exception
+0:    aload_0
+1:    aload_1
+2:    invokespecial	org.eclipse.ui.plugin.AbstractUIPlugin.stop (Lorg/osgi/framework/BundleContext;)V (37)
+5:    aconst_null
+6:    putstatic		umbra.UmbraPlugin.plugin Lumbra/UmbraPlugin; (24)
+9:    return
+
+/*@
+  @
+  @*/
+public static umbra.UmbraPlugin getDefault()
+0:    getstatic		umbra.UmbraPlugin.plugin Lumbra/UmbraPlugin; (24)
+3:    areturn
+
+/*@
+  @
+  @*/
+public static org.eclipse.jface.resource.ImageDescriptor getImageDescriptor(String a_path)
+0:    ldc		"umbra" (43)
+2:    aload_0
+3:    invokestatic	org.eclipse.ui.plugin.AbstractUIPlugin.imageDescriptorFromPlugin (Ljava/lang/String;Ljava/lang/String;)Lorg/eclipse/jface/resource/ImageDescriptor; (45)
+6:    areturn
+
+/*@
+  @
+  @*/
+public static void messagelog(String a_string)
+0:    getstatic		umbra.UmbraPlugin.LOG Ljava/io/PrintStream; (17)
+3:    aload_0
+4:    invokevirtual	java.io.PrintStream.println (Ljava/lang/String;)V (53)
+7:    return

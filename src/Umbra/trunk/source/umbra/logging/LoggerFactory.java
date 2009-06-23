@@ -30,7 +30,7 @@ public final class LoggerFactory {
   /**
    *
    */
-  private static Mode my_mode = Mode.DEVELOPMENT;
+  private static Mode my_mode = Mode.PRODUCTION;
 
   /**
    *
