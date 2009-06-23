@@ -180,7 +180,7 @@ public class SymbolsBuilder extends
       throw new Jml2BmlException("Modal field not translated: " + node.getName());
     } else { //this is a quantified variable in an invariant or sth. similar 
       //TODO: currently we interpret this as a ghost field
-      ConstantPoolHelper.addGhostField(type, node.getName().toString(), cl);
+      //ConstantPoolHelper.addGhostField(type, node.getName().toString(), cl);
     }
     s.put(node.name.toString(), new Variable((FieldRef) null, node));
   }

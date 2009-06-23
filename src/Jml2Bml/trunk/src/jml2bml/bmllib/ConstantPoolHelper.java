@@ -233,10 +233,13 @@ public final class ConstantPoolHelper {
       }
     }
     cp.addConstant(cl, true, null);
+    String clname = ((ConstantUtf8) cp.getConstant(cl.getNameIndex())).getBytes().replace('.', '/');
     for (int i = cp.getSize() - 1; i >= 0; i--) {
       if (cp.getConstant(i) instanceof ConstantClass) {
         final ConstantClass tmp = (ConstantClass) cp.getConstant(i);
-        if (tmp.getNameIndex() == cl.getNameIndex()) {
+        String tmpname = ((ConstantUtf8) cp.getConstant(tmp.getNameIndex())).getBytes();
+        if (tmp.getNameIndex() == cl.getNameIndex()  ||
+            tmpname.equals(clname)) {
           return i;
         }
       }

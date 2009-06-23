@@ -55,7 +55,7 @@ public final class JCUtils {
   }
 
   /**
-   * Checks if the variable is model.
+   * Checks if the variable is a model variable.
    * @param node variable declaration to check
    * @return if the variable is declared 'model'
    */

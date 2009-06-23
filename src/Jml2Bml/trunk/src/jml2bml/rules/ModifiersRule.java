@@ -6,7 +6,10 @@
  */
 package jml2bml.rules;
 
+import java.util.Set;
+
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 
 import jml2bml.bytecode.TypeSignature;
 import jml2bml.exceptions.Jml2BmlException;
@@ -19,9 +22,11 @@ import annot.bcclass.BCClass;
 import annot.bcclass.BCField;
 import annot.bcclass.BMLModifiersFlags;
 
+import com.sun.org.apache.bcel.internal.Constants;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
 
 /**
@@ -33,6 +38,7 @@ import com.sun.tools.javac.util.Context;
 public class ModifiersRule extends TranslationRule < String, Symbols > {
   private class ModifiersBuilder extends TranslationRule < String, Symbols > {
     public int modifiers = 0;
+    public int jmodifiers = 0;
     public int kind = BCField.JAVA_FIELD;
     @Override
     public String visitModifiers(final ModifiersTree node, final Symbols symb) {
@@ -49,6 +55,32 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
           kind = BCField.MODEL_FIELD;
         } else
           throw new Jml2BmlException("Unknown annotation:"+annotation);
+      }
+      for (Modifier modif: node.getFlags()){
+        if (modif.equals(Modifier.ABSTRACT)){
+          jmodifiers = jmodifiers | Constants.ACC_ABSTRACT;
+        } else if (modif.equals(Modifier.FINAL)){
+          jmodifiers = jmodifiers | Constants.ACC_FINAL;
+        } else if (modif.equals(Modifier.NATIVE)){
+          jmodifiers = jmodifiers | Constants.ACC_NATIVE;
+        } else if (modif.equals(Modifier.PRIVATE)){
+          jmodifiers = jmodifiers | Constants.ACC_PRIVATE;
+        } else if (modif.equals(Modifier.PROTECTED)){
+          jmodifiers = jmodifiers | Constants.ACC_PROTECTED;
+        } else if (modif.equals(Modifier.PUBLIC)){
+          jmodifiers = jmodifiers | Constants.ACC_PUBLIC;
+        } else if (modif.equals(Modifier.STATIC)){
+          jmodifiers = jmodifiers | Constants.ACC_STATIC;
+        } else if (modif.equals(Modifier.STRICTFP)){
+          jmodifiers = jmodifiers | Constants.ACC_STRICT;
+        } else if (modif.equals(Modifier.SYNCHRONIZED)){
+          jmodifiers = jmodifiers | Constants.ACC_SYNCHRONIZED;
+        } else if (modif.equals(Modifier.TRANSIENT)){
+          jmodifiers = jmodifiers | Constants.ACC_TRANSIENT;
+        } else if (modif.equals(Modifier.VOLATILE)){
+          jmodifiers = jmodifiers | Constants.ACC_VOLATILE;
+        } else
+          throw new Jml2BmlException("Unknown Java flag:"+modif);
       }
       return "";
     }
@@ -81,11 +113,12 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
         field.setBMLFlags(builder.modifiers);
         String typeSignature = TypeSignature.getSignature(varSymbol.asType());
         field.setType(Type.getType(typeSignature));
+        field.setAccessFlags(builder.jmodifiers);
         bcClazz.updateFields(field);
       } else {
         throw new Jml2BmlException("Unknown variable kind:" + node.sym.kind);
       }
-    }    
+    }
     return "";
   }
 }
