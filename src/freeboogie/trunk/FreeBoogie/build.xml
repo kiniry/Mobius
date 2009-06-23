@@ -16,7 +16,7 @@
 
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
-  <property name="version" value="0.1"/>
+  <property name="version" value="0.2"/>
   <property name="genericutils-jar" value="genericutils-0.1.jar"/>
   <property name="antlr-jar" value="antlr-runtime-3.1.3.jar" />
   <property name="astgen-jar" value="astgen-0.1.jar"/>
@@ -64,7 +64,7 @@
 
   <target name="generate_cli_parser">
     <mkdir dir="src/freeboogie/cli" />
-    <java fork="yes" classname="ie.ucd.clops.dsl.Main">
+    <java fork="yes" classname="ie.ucd.clops.dsl.Main" output="clops.log">
       <assertions><enable/></assertions>
       <classpath refid="classpath"/>
       <arg value="-o=src/freeboogie/cli"/>
@@ -191,6 +191,7 @@
     <delete dir="dist" />
     <delete dir="docs/api" />
     <delete dir="src/freeboogie/cli" />
+    <delete file="clops.log"/>
     <delete>
       <!-- ANTLR generated files -->
       <fileset dir="src/freeboogie/parser" includes="FbParser.java" />

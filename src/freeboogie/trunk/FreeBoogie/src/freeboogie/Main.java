@@ -12,6 +12,7 @@ import org.antlr.runtime.CommonTokenStream;
 
 import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
+import freeboogie.astutil.Boogie2Printer;
 import freeboogie.backend.*;
 import freeboogie.cli.FbCliOptionsInterface;
 import freeboogie.cli.FbCliParser;
@@ -77,6 +78,7 @@ public class Main {
 
   private PrintWriter pwriter;
   private PrettyPrinter pp;
+  private Boogie2Printer pb2;
   private FlowGraphDumper fgd;
   private TcInterface tc;
   private Program program; // the program being processed
@@ -89,6 +91,7 @@ public class Main {
   public Main() {
     pwriter = new PrintWriter(System.out);
     pp = new PrettyPrinter(pwriter);
+    pb2 = new Boogie2Printer(pwriter);
     fgd = new FlowGraphDumper();
     vcgen = new VcGenerator<SmtTerm>();
   }
@@ -303,6 +306,7 @@ public class Main {
         } else verify();
         if (opt.isPrintFlowgraphsSet()) fgd.process(program.ast, tc);
         if (opt.isPrettyPrintSet()) program.ast.eval(pp);
+        if (opt.isPrintBoogie2Set()) program.ast.eval(pb2);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (ProverException e) {

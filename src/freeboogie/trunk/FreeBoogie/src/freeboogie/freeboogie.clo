@@ -26,6 +26,8 @@ ARGS::
     :"Print the transformed Boogie program. Even if no transformation
       is specified explicitly on the command line, a certain amount of
       desugaring is done during parsing."
+  PrintBoogie2 :{"--print-boogie2"}
+    :"Temporary switch used during the transition to Boogie 2."
   PrintSymbolTable :{"--print-symbol-table"}
     :"Print the symbol table of the transformed program. The symbol
       table is a list of definitions, each linked to all the uses of
@@ -111,7 +113,7 @@ WHERE::
     ConfigOption;
 
   OutputOption: LogFile | LogCategories | LogLevel | ReportOn | ReportLevel;
-  PrintOption: PrettyPrint | PrintSymbolTable | PrintFlowgraphs;
+  PrintOption: PrettyPrint | PrintSymbolTable | PrintFlowgraphs | PrintBoogie2;
   PhaseOption: 
     Passivate |
     DesugarSpecs |
