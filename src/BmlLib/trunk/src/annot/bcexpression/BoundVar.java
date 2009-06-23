@@ -40,7 +40,7 @@ public class BoundVar extends BCExpression {
   /**
    * Declared type of variable.
    */
-  private final JavaBasicType type;
+  private final JavaType type;
 
   /**
    * variable name.
