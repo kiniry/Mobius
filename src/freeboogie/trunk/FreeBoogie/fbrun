@@ -1,11 +1,17 @@
 #!/bin/bash
 JFLAGS="-Xss64m -Xms128m -Xmx128m -ea"
-SCRIPT=`which $0`
-HERE=`dirname $SCRIPT`
+if [[ "$OSTYPE" -eq cygwin ]]; then
+  JFLAGS="$JFLAGS -Djline.terminal=jline.UnixTerminal"
+fi
+SCRIPT=`which "$0"`
+HERE=`dirname "$SCRIPT"`
 CP=$HERE/classes
 for lib in `ls $HERE/lib/*.jar`; do
   CP=$CP:$lib
 done
+if [[ "$OSTYPE" -eq cygwin ]]; then
+  CP=`cygpath -wp $CP`
+fi
 #java -agentlib:hprof=cpu=samples,depth=5 $JFLAGS -cp $CP $*
 java $JFLAGS -cp $CP "$@"
 
