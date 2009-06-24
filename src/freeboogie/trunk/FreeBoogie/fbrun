@@ -5,13 +5,15 @@ if [[ "$OSTYPE" -eq cygwin ]]; then
 fi
 SCRIPT=`which "$0"`
 HERE=`dirname "$SCRIPT"`
-CP=$HERE/classes
-for lib in `ls $HERE/lib/*.jar`; do
-  CP=$CP:$lib
+CP="$HERE/classes"
+IFS="#"
+for lib in "$HERE"/lib/*.jar; do
+  CP=$CP:"$lib"
 done
 if [[ "$OSTYPE" -eq cygwin ]]; then
   CP=`cygpath -wp $CP`
 fi
+IFS=" "
 #java -agentlib:hprof=cpu=samples,depth=5 $JFLAGS -cp $CP $*
-java $JFLAGS -cp $CP "$@"
+java $JFLAGS -cp "$CP" "$@"
 
