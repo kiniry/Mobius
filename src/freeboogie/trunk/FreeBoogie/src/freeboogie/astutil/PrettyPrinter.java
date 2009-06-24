@@ -5,6 +5,8 @@ import java.io.Writer;
 import java.math.BigInteger;
 import java.util.HashMap;
 
+import com.google.common.collect.Maps;
+
 import freeboogie.ast.*;
 import genericutils.Err;
 
@@ -15,7 +17,7 @@ import genericutils.Err;
  */
 @SuppressWarnings("unused") // lots of unused parameters
 public class PrettyPrinter extends Transformer {
-  private static final int indent = 2; // indentation spaces
+  private int indent = 2; // indentation spaces
   
   private Writer writer; // where the output is sent
   
@@ -31,22 +33,37 @@ public class PrettyPrinter extends Transformer {
   private boolean prefixByBq;
   
   // ready made strings to be printed for enums
-  private static final HashMap<AssertAssumeCmd.CmdType,String> cmdRep 
-    = new HashMap<AssertAssumeCmd.CmdType,String>(5);
-  private static final HashMap<AtomLit.AtomType,String> atomRep
-    = new HashMap<AtomLit.AtomType,String>(5);
-  private static final HashMap<AtomQuant.QuantType,String> quantRep
-    = new HashMap<AtomQuant.QuantType,String>(5);
-  private static final HashMap<BinaryOp.Op,String> binRep
-    = new HashMap<BinaryOp.Op,String>(29);
-  private static final HashMap<PrimitiveType.Ptype,String> typeRep
-    = new HashMap<PrimitiveType.Ptype,String>(11);
-  private static final HashMap<Specification.SpecType,String> specRep
-    = new HashMap<Specification.SpecType,String>(5);
-  private static final HashMap<UnaryOp.Op,String> unRep
-    = new HashMap<UnaryOp.Op,String>(5);
+  protected HashMap<AssertAssumeCmd.CmdType,String> cmdRep ;
+  protected HashMap<AtomLit.AtomType,String> atomRep;
+  protected HashMap<AtomQuant.QuantType,String> quantRep;
+  protected HashMap<BinaryOp.Op,String> binRep;
+  protected HashMap<PrimitiveType.Ptype,String> typeRep;
+  protected HashMap<Specification.SpecType,String> specRep;
+  protected HashMap<UnaryOp.Op,String> unRep;
   
-  static {
+  private void initConstants() {
+  }
+  
+  /**
+   * Initialize the pretty printer with a writer.
+   * @param w the writer
+   */
+  public PrettyPrinter(Writer w) {
+    assert w != null;
+    writer = w;
+    indent = 2;
+    indentLevel = 0;
+    skipVar = 0;
+    prefixByBq = false;
+  
+    cmdRep = Maps.newHashMap();
+    atomRep = Maps.newHashMap();
+    quantRep = Maps.newHashMap();
+    binRep = Maps.newHashMap();
+    typeRep = Maps.newHashMap();
+    specRep = Maps.newHashMap();
+    unRep = Maps.newHashMap();
+
     cmdRep.put(AssertAssumeCmd.CmdType.ASSERT, "assert ");
     cmdRep.put(AssertAssumeCmd.CmdType.ASSUME, "assume ");
     atomRep.put(AtomLit.AtomType.FALSE, "false");
@@ -83,20 +100,8 @@ public class PrettyPrinter extends Transformer {
     unRep.put(UnaryOp.Op.NOT, "!");
   }
   
-  /**
-   * Initialize the pretty printer with a writer.
-   * @param w the writer
-   */
-  public PrettyPrinter(Writer w) {
-    assert w != null;
-    writer = w;
-    indentLevel = 0;
-    skipVar = 0;
-    prefixByBq = false;
-  }
-  
   /** Swallow exceptions. */
-  private void say(String s) {
+  protected void say(String s) {
     try {
       writer.write(s);
     } catch (IOException e) {
@@ -105,13 +110,13 @@ public class PrettyPrinter extends Transformer {
   }
   
   /** Send a newline to the writer. */
-  private void nl() {
+  protected void nl() {
     say("\n"); // TODO: handle Windows?
     for (int i = indent * indentLevel; i > 0; --i) say(" ");
   }
   
   /** End command. */
-  private void semi() {
+  protected void semi() {
     say(";"); nl();
   }
   

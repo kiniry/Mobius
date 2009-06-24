@@ -1,7 +1,6 @@
 #!/bin/bash
 JFLAGS="-Xss64m -Xms128m -Xmx128m -ea"
 if [[ "$OSTYPE" == cygwin ]]; then
-  echo Oops
   JFLAGS="$JFLAGS -Djline.terminal=jline.UnixTerminal"
 fi
 SCRIPT=`which "$0"`

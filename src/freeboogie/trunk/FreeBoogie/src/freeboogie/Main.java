@@ -306,7 +306,7 @@ public class Main {
         } else verify();
         if (opt.isPrintFlowgraphsSet()) fgd.process(program.ast, tc);
         if (opt.isPrettyPrintSet()) program.ast.eval(pp);
-        if (opt.isPrintBoogie2Set()) program.ast.eval(pb2);
+        if (opt.isPrintBoogie2Set()) pb2.process(program.ast);
       } catch (FileNotFoundException e) {
         Err.error("I couldn't read from " + file + ". Nevermind.");
       } catch (ProverException e) {
