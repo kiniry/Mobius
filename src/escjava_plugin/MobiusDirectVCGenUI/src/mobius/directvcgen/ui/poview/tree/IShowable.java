@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview.tree;
+package mobius.directvcgen.ui.poview.tree;
 
 /**
  * An interface to trigger a show action. It makes the element showable. 

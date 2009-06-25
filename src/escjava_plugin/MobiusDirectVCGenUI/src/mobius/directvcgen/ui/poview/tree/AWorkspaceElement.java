@@ -1,11 +1,11 @@
-package mobius.directVCGen.ui.poview.tree;
+package mobius.directvcgen.ui.poview.tree;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
+import mobius.directvcgen.ui.poview.util.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -105,7 +105,7 @@ public abstract class AWorkspaceElement  {
   /**
    * Returns the image representing the node.
    * @return An image of the enum 
-   * {@link mobius.directVCGen.ui.poview.util.ImagesUtils.EImages}
+   * {@link mobius.directvcgen.ui.poview.util.ImagesUtils.EImages}
    */
   public Image getImage () {
     return EImages.DEFAULT.getImg();

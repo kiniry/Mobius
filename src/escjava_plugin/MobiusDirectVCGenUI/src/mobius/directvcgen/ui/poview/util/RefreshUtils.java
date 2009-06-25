@@ -1,6 +1,6 @@
-package mobius.directVCGen.ui.poview.util;
+package mobius.directvcgen.ui.poview.util;
 
-import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directvcgen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;

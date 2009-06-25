@@ -1,6 +1,6 @@
 package mobius.directvcgen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
+import mobius.directvcgen.ui.poview.tree.AWorkspaceElement;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
@@ -8,7 +8,7 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * A label provider for elements that subclass the class 
- * {@link mobius.directVCGen.ui.poview.tree.AWorkspaceElement}.
+ * {@link mobius.directvcgen.ui.poview.tree.AWorkspaceElement}.
  * @author J. Charles (julien.charles@inria.fr)
  */
 public class POsLabelProvider implements ILabelProvider {

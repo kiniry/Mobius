@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview.tree;
+package mobius.directvcgen.ui.poview.tree;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;

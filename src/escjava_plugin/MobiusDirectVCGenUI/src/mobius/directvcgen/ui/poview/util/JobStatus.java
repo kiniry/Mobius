@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview.util;
+package mobius.directvcgen.ui.poview.util;
 
 
 import org.eclipse.core.runtime.IStatus;

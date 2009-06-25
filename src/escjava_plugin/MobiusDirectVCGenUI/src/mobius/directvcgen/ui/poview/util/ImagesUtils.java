@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview.util;
+package mobius.directvcgen.ui.poview.util;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,8 +1,8 @@
 package mobius.directvcgen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
-import mobius.directVCGen.ui.poview.tree.Project;
-import mobius.directVCGen.ui.poview.util.RefreshUtils;
+import mobius.directvcgen.ui.poview.tree.AWorkspaceElement;
+import mobius.directvcgen.ui.poview.tree.Project;
+import mobius.directvcgen.ui.poview.util.RefreshUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -22,7 +22,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * A content provider for the tree view.
  * It is a content provider to use with the  
- * {@link mobius.directVCGen.ui.poview.tree.AWorkspaceElement}.
+ * {@link mobius.directvcgen.ui.poview.tree.AWorkspaceElement}.
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */

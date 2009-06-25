@@ -1,10 +1,10 @@
-package mobius.directVCGen.ui.poview.util;
+package mobius.directvcgen.ui.poview.util;
 
 import java.io.IOException;
 import java.io.PrintStream;
 
-import mobius.directVCGen.ui.poview.util.ImagesUtils.EImages;
-import mobius.directVCGen.ui.poview.util.ImagesUtils.StreamConnection;
+import mobius.directvcgen.ui.poview.util.ImagesUtils.EImages;
+import mobius.directvcgen.ui.poview.util.ImagesUtils.StreamConnection;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

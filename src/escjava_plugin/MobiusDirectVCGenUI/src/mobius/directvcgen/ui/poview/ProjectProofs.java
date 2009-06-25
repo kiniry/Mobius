@@ -1,8 +1,8 @@
 package mobius.directvcgen.ui.poview;
 
-import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
-import mobius.directVCGen.ui.poview.tree.IShowable;
-import mobius.directVCGen.ui.poview.util.ImagesUtils;
+import mobius.directvcgen.ui.poview.tree.AWorkspaceElement;
+import mobius.directvcgen.ui.poview.tree.IShowable;
+import mobius.directvcgen.ui.poview.util.ImagesUtils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

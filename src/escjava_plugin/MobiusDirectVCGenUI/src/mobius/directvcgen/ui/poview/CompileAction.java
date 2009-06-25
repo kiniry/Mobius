@@ -6,8 +6,8 @@ import java.net.URL;
 import mobius.bicolano.BicolanoUtil;
 import mobius.directVCGen.Main;
 import mobius.directVCGen.clops.DirectVCGenMain;
-import mobius.directVCGen.ui.poview.util.RefreshUtils;
-import mobius.directVCGen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
+import mobius.directvcgen.ui.poview.util.RefreshUtils;
+import mobius.directvcgen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
