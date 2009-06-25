@@ -1,4 +1,3 @@
- . Fix the mess with genericutils versions.
  . Convert the BPLs in the test suite to Boogie 2.
  . Add a "for all types" construct. (?)
  . Move to Boogie 2.

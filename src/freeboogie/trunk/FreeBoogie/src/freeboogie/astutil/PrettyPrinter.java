@@ -25,9 +25,9 @@ public class PrettyPrinter extends Transformer {
    * The nesting level:
    * Should be zero when I start and when I finish printing.
    */ 
-  private int indentLevel;
+  protected int indentLevel;
   
-  private int skipVar; // if >0 then skip "var "
+  protected int skipVar; // if >0 then skip "var "
 
   // should types in a TupleType be prefixed by "`"?
   private boolean prefixByBq;

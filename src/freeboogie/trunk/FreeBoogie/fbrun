@@ -14,6 +14,6 @@ if [[ "$OSTYPE" == cygwin ]]; then
   CP=`cygpath -wp $CP`
 fi
 IFS=" "
-java -verbose:gc -agentlib:hprof=cpu=samples,depth=1 $JFLAGS -cp "$CP" "$@"
-#java $JFLAGS -cp "$CP" "$@"
+#java -verbose:gc -agentlib:hprof=cpu=samples,depth=1 $JFLAGS -cp "$CP" "$@"
+java $JFLAGS -cp "$CP" "$@"
 
