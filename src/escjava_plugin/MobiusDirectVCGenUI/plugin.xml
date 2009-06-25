@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="mobius.directVCGen.ui.poview.ProjectProofs"
+            class="mobius.directvcgen.ui.poview.ProjectProofs"
             icon="icons/tool.gif"
             id="CoqMobiusUI.view"
             name="POsExplorer"/>
@@ -16,7 +16,7 @@
             label="DirectVCGenUI"
             visible="true">
          <action
-               class="mobius.directVCGen.ui.poview.CompileAction"
+               class="mobius.directvcgen.ui.poview.CompileAction"
                enablesFor="1"
                icon="icons/Hammer.gif"
                id="MobiusDirectVCGenUI.compile"
@@ -29,7 +29,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="mobius.directVCGen.ui.poview.PerspectiveFactory"
+            class="mobius.directvcgen.ui.poview.PerspectiveFactory"
             icon="icons/mobius_logo_sm.gif"
             id="MobiusDirectVCGenUI.perspective1"
             name="Mobius">

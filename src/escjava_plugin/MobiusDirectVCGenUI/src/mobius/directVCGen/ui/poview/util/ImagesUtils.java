@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
-import mobius.directVCGen.ui.poview.Activator;
+import mobius.directvcgen.ui.poview.Activator;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;

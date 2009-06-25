@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview;
+package mobius.directvcgen.ui.poview;
 
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IFolderLayout;

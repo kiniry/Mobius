@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview;
+package mobius.directvcgen.ui.poview;
 
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;

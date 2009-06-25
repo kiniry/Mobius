@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Status;
 public final class JobStatus {
   /** the plugin id, used for the return status of the job. */
   private static final String PLUGIN_ID = 
-    mobius.directVCGen.ui.poview.Activator.PLUGIN_ID;
+    mobius.directvcgen.ui.poview.Activator.PLUGIN_ID;
   
   
   /** */

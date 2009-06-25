@@ -1,4 +1,4 @@
-package mobius.directVCGen.ui.poview;
+package mobius.directvcgen.ui.poview;
 
 import mobius.directVCGen.ui.poview.tree.AWorkspaceElement;
 

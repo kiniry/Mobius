@@ -1,9 +1,11 @@
-package mobius.directVCGen.ui.poview;
+package mobius.directvcgen.ui.poview;
 
 import java.io.IOException;
 import java.net.URL;
 
+import mobius.bicolano.BicolanoUtil;
 import mobius.directVCGen.Main;
+import mobius.directVCGen.clops.DirectVCGenMain;
 import mobius.directVCGen.ui.poview.util.RefreshUtils;
 import mobius.directVCGen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
 
@@ -47,7 +49,7 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
       wrapper.wrap();
       final String [] args = computeArgs();      
       try {
-        Main.main(args);
+        DirectVCGenMain.main(args);
       }  
       catch (IllegalArgumentException e) {
         e.printStackTrace();
@@ -72,14 +74,10 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
   private String[] computeArgs() {
     
     try { // computing the arguments
-     
       final IPath path = fSel.getCorrespondingResource().getProject().getLocation();
-
-      final URL url = Activator.getDefault().getBundle().getResource("/lib/bicolano.jar");
-      final String bico = FileLocator.toFileURL(url).getPath();
- 
+      
+      final String bico = BicolanoUtil.getBicolanoPath();
       String[] classPath = null;
-
       classPath = JavaRuntime.computeDefaultRuntimeClassPath(fSel.getJavaProject());
       String res = "";
       for (String s: classPath) {
@@ -94,9 +92,6 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
       };
       //System.out.println(res);
       return args;
-    }
-    catch (IOException e) {
-      e.printStackTrace();
     }
     catch (JavaModelException e) {
       e.printStackTrace();
