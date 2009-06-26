@@ -39,25 +39,21 @@ public final class LoggingClassVisitor implements ClassVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitVersion(final int major, final int minor) {
     logger.debug("Classfile version: %1$d.%2$d", major, minor);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
     logger.debug("Access flags: %1$s", StringUtil.join(flags, ", "));
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitName(final String name) {
     logger.debug("Class name: %1$s", name);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitSuperName(final String name) {
     if (name != null) {
       logger.debug("Superclass name: %1$s", name);
@@ -65,31 +61,26 @@ public final class LoggingClassVisitor implements ClassVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginInterfaces() {
     // do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitInterface(final String name) {
     logger.debug("Implements interface: %1$s", name);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endInterfaces() {
     // do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginInvariants() {
     // do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitInvariant(
        final Visibility visibility, 
        final Visitable<? super InvExprVisitor> inv) {
@@ -100,43 +91,36 @@ public final class LoggingClassVisitor implements ClassVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endInvariants() {
     // do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginFields() {
     // do nothing.
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitField(final Field field) {
     field.accept(fieldVisitor);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endFields() {
     // do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginMethods() {
     // do nothing.
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitMethod(final Method method) {
     method.accept(methodVisitor);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endMethods() {
     // do nothing.
   }

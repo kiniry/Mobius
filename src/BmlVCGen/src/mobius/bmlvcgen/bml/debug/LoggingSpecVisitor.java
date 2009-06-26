@@ -30,7 +30,6 @@ public class LoggingSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitPrecondition(
       final Visitable<? super PreExprVisitor> pre) {
     prePrinter.clear();
@@ -40,7 +39,6 @@ public class LoggingSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitPostcondition(
       final Visitable<? super PostExprVisitor> post) {
     postPrinter.clear();
@@ -49,7 +47,6 @@ public class LoggingSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitSignals(
     final String exc, 
     final Visitable<? super PostExprVisitor> expr) {

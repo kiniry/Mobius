@@ -46,14 +46,12 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
     builder.delete(0, builder.length());
     builder.append(StringUtil.join(flags, " "));
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitName(final MethodName name) {
     name.accept(namePrinter);
     if (builder.length() > 0) {
@@ -63,31 +61,26 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginSpecs() {
     // EMPTY
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitSpecification(final MethodSpec spec) {
     spec.accept(specPrinter);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endSpecs() {
     //
   }
 
   /** {@inheritDoc} */
-  @Override
   public void beginAssertions() {
     // 
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitAssertion(final int i, 
       final AssertType type,
       final Visitable<? super AssertExprVisitor> expr) {
@@ -108,13 +101,11 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endAssertions() {
     //
   }
 
   /** {@inheritDoc} */
-  @Override
   public void beginLocals(final int maxLocals) {
     // Print method name.
     logger.debug(builder.toString());
@@ -122,7 +113,6 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitLocal(
       final mobius.bmlvcgen.bml.LocalVariable var) {
     var.getType().accept(typePrinter);
@@ -134,7 +124,6 @@ public final class LoggingMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endLocals() {
     logger.debug("END LOCALS");
   }

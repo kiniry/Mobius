@@ -28,14 +28,12 @@ public final class MethodNamePrinter implements MethodNameVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitName(final String name) {
     builder.delete(0, builder.length());
     lastName = name;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitResultType(final ResultType t) {
     t.accept(typePrinter);
     builder.append(typePrinter.getExternalName());
@@ -44,14 +42,12 @@ public final class MethodNamePrinter implements MethodNameVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void beginArgs() {
     builder.append("(");
     argFlag = false;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitArg(final Type t, final String name) {
     if (argFlag) {
       builder.append(", ");
@@ -67,7 +63,6 @@ public final class MethodNamePrinter implements MethodNameVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void endArgs() {
     builder.append(")");
   }

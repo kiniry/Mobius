@@ -30,7 +30,6 @@ public class AssertExprPrinter
   }
 
   /** {@inheritDoc} */
-  @Override
   public void local(final int i, final String name, 
                   final Type type) {
     if (name == null) {
@@ -41,7 +40,6 @@ public class AssertExprPrinter
   }
   
   /** {@inheritDoc} */
-  @Override
   public <Expr extends Visitable<? super PreExprVisitor>>
   void aold(final Expr expr) {
     prePrinter.clear();

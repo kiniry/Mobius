@@ -28,7 +28,6 @@ public class PostExprPrinter
   }
 
   /** {@inheritDoc} */
-  @Override
   public void arg(final int i, final String name, 
                   final Type type) {
     if (name == null) {
@@ -39,7 +38,6 @@ public class PostExprPrinter
   }
 
   /** {@inheritDoc} */
-  @Override
   public <Expr extends Visitable<? super PreExprVisitor>>
   void old(final Expr expr) {
     //
@@ -51,7 +49,6 @@ public class PostExprPrinter
   }
 
   /** {@inheritDoc} */
-  @Override
   public void result() {
     append("\\result");
   }

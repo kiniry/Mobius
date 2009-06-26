@@ -34,19 +34,16 @@ public final class LoggingFieldVisitor implements FieldVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
     lastFlags = StringUtil.join(flags, ", ");
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitName(final String name) {
     lastName = name;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitType(final Type t) {
     t.accept(typePrinter);
     logger.debug("Visited field: %1$s %2$s %3$s", 
