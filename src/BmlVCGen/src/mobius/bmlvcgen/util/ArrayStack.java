@@ -1,6 +1,5 @@
 package mobius.bmlvcgen.util;
 
-import java.util.Arrays;
 
 /**
  * A simple stack implementation.
@@ -23,13 +22,11 @@ public final class ArrayStack<E> implements Stack<E> {
   }
 
   /** {@inheritDoc} */  
-  @Override
   public E peek() {
     return elements[elements.length - 1];
   }
 
   /** {@inheritDoc} */
-  @Override
   public E pop() {
     final E result = elements[elements.length - 1];
     count = count - 1;
@@ -40,7 +37,6 @@ public final class ArrayStack<E> implements Stack<E> {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void push(final E elem) {
     while (count >= elements.length) {
       grow();
@@ -49,17 +45,23 @@ public final class ArrayStack<E> implements Stack<E> {
   }
   
   /** {@inheritDoc} */
-  @Override
   public boolean isEmpty() {
     return count == 0;
   }
   
+  @SuppressWarnings("unchecked")
   private void grow() {
-    elements = Arrays.copyOf(elements, 2 * elements.length + 1);
+    final int len = 2 * elements.length + 1;
+    final E[] newArr = (E[]) new Object[len];
+    System.arraycopy(elements, 0, newArr, 0, elements.length);
+    elements = newArr;
   }
   
   private void shrink() {
-    elements = Arrays.copyOf(elements, elements.length / 2);
+    final int len = 2 * elements.length / 2;
+    final E[] newArr = (E[]) new Object[len];
+    System.arraycopy(elements, 0, newArr, 0, len);
+    elements = newArr;
   }
   
 }

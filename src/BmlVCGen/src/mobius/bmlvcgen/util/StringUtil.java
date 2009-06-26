@@ -44,9 +44,9 @@ public final class StringUtil {
    */
   public static String concatPaths(final String path1, final String path2) {
     final String separator = System.getProperty("path.separator", "");
-    if (path1.trim().isEmpty()) {
+    if (path1.trim().equals("")) {
       return path2;
-    } else if (path2.trim().isEmpty()) {
+    } else if (path2.trim().equals("")) {
       return path1;
     } else {
       return path1 + separator + path2;
