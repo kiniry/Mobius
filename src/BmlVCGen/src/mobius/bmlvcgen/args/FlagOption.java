@@ -50,7 +50,6 @@ public class FlagOption extends AbstractOption {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setValue(final String value) {
     assert (value == null);
     flag.setValue(this.value);

@@ -80,7 +80,6 @@ public class SetterOption extends AbstractOption {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setValue(final String value) {
     final Class<?>[] params = method.getParameterTypes();
     if (params.length == 1) {

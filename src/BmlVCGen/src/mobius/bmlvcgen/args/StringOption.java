@@ -36,7 +36,6 @@ public class StringOption extends AbstractOption {
    * Set option value.
    * @param value Value.
    */
-  @Override
   public void setValue(final String value) {
     this.value = value;
   }

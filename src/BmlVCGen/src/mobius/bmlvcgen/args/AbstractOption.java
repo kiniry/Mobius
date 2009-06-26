@@ -61,19 +61,16 @@ public abstract class AbstractOption implements Option {
   }
 
   /** {@inheritDoc} */
-  @Override
   public Arity getArity() {
     return arity;
   }
 
   /** {@inheritDoc} */
-  @Override
   public Character getShortName() {
     return shortName;
   }
 
   /** {@inheritDoc} */
-  @Override
   public String getLongName() {
     return longName;
   }

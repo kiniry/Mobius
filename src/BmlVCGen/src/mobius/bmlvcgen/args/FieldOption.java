@@ -78,7 +78,6 @@ public class FieldOption extends AbstractOption {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setValue(final String value) {
     final Object converted;
     if (value == null) {

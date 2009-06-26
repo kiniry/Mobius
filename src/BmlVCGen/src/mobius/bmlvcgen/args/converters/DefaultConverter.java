@@ -8,7 +8,6 @@ package mobius.bmlvcgen.args.converters;
 public class DefaultConverter implements Converter {
 
   /** {@inheritDoc} */
-  @Override
   public boolean canConvertTo(final Class<?> clazz) {
     return Integer.class.equals(clazz) || 
            int.class.equals(clazz) ||
@@ -18,7 +17,6 @@ public class DefaultConverter implements Converter {
   }
 
   /** {@inheritDoc} */
-  @Override
   public Object convert(final Class<?> clazz, final String v) {
     Object result;
     
