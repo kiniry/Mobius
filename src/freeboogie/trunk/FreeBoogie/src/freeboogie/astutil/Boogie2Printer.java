@@ -10,35 +10,32 @@ import freeboogie.ast.*;
 /** Prints in the Boogie2 format. */
 public class Boogie2Printer extends PrettyPrinter {
   private HashSet<String> newKeywords;
-  private int indexedTypeCnt;
+  private Evaluator<Boolean> anyFinder;
 
   public Boogie2Printer(PrintWriter pw) {
     super(pw);
 
-    indexedTypeCnt = 0;
+    anyFinder = new AnyFinder();
 
     newKeywords = Sets.newHashSet();
     newKeywords.add("else");
     newKeywords.add("end");
     newKeywords.add("then");
 
-    typeRep.put(PrimitiveType.Ptype.ANY, "Any");
-    typeRep.put(PrimitiveType.Ptype.NAME, "Name");
-    typeRep.put(PrimitiveType.Ptype.REF, "Ref");
+    quantRep.put(AtomQuant.QuantType.FORALL, "forall<any> ");
   }
 
   public void process(Declaration ast) {
     printPrelude();
+    ast.eval(anyFinder);
     ast.eval(this);
   }
 
   private void printPrelude() {
-    say("type Any"); semi();
-    say("type Name _"); semi();
-    say("type Ref"); semi();
-    say("type UnitType"); semi();
+    say("type name"); semi();
+    say("type ref"); semi();
 
-    say("const unique null : Ref"); semi();
+    say("const unique null : ref"); semi();
   }
 
   // This handles both block names and identifiers.
@@ -66,6 +63,31 @@ public class Boogie2Printer extends PrettyPrinter {
   }
 
   @Override
+  public void see(
+    AtomQuant atomQuant, 
+    AtomQuant.QuantType quant, 
+    Declaration vars, 
+    Trigger trig, 
+    Expr e
+  ) {
+    ++skipVar;
+    say("(");
+    if (quant == AtomQuant.QuantType.FORALL) {
+      say("forall");
+      if (anyFinder.get(vars)) {
+        say("<"); say("any"); say(">");
+      }
+    } else say("exists");
+    say(" ");
+    vars.eval(this);
+    say(" :: ");
+    if (trig != null) trig.eval(this);
+    e.eval(this);
+    say(")");
+    --skipVar;
+  }
+
+  @Override
   public void see(AtomId atomId, String id, TupleType types) {
     say(id);
   }
@@ -78,7 +100,6 @@ public class Boogie2Printer extends PrettyPrinter {
     Expr expr, 
     Declaration tail
   ) {
-    // TODO: continue here
     say("axiom");
     say(" ");
     expr.eval(this);
@@ -93,11 +114,31 @@ public class Boogie2Printer extends PrettyPrinter {
 
   @Override
   public void see(IndexedType genericType, Type param, Type type) {
-    ++indexedTypeCnt;
     type.eval(this);
-    --indexedTypeCnt;
-    say(" ");
-    say("("); param.eval(this); say(")");
+  }
+
+  @Override
+  public void see(
+    Signature signature, 
+    String name, 
+    Declaration args, 
+    Declaration results, 
+    Identifiers typeVars
+  ) {
+    ++skipVar;
+    say(name);
+    if (anyFinder.get(signature)) {
+      say("<"); say("any"); say(">");
+    }
+    say("(");
+    if (args != null) args.eval(this);
+    say(")");
+    if (results != null) {
+      say(" returns (");
+      results.eval(this);
+      say(")");
+    }
+    --skipVar;
   }
 
   @Override
@@ -114,13 +155,6 @@ public class Boogie2Printer extends PrettyPrinter {
     expr.eval(this);
     semi();
     if (tail != null) tail.eval(this);
-  }
-
-  @Override
-  public void see(PrimitiveType primitiveType, PrimitiveType.Ptype ptype) {
-    say(typeRep.get(ptype));
-    if (ptype == PrimitiveType.Ptype.NAME && indexedTypeCnt == 0)
-      say(" UnitType");
   }
 
   @Override
