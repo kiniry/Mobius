@@ -19,7 +19,6 @@ public class CompositeLogger implements Logger {
   }
 
   /** {@inheritDoc}} */
-  @Override
   public void debug(final String fmt, final Object... args) {
     for (final Logger logger : loggers) {
       logger.debug(fmt, args);
@@ -27,7 +26,6 @@ public class CompositeLogger implements Logger {
   }
 
   /** {@inheritDoc}} */
-  @Override
   public void error(final String fmt, final Object... args) {
     for (final Logger logger : loggers) {
       logger.error(fmt, args);
@@ -35,7 +33,6 @@ public class CompositeLogger implements Logger {
   }
 
   /** {@inheritDoc}} */
-  @Override
   public void info(final String fmt, final Object... args) {
     for (final Logger logger : loggers) {
       logger.info(fmt, args);
@@ -43,7 +40,6 @@ public class CompositeLogger implements Logger {
   }
 
   /** {@inheritDoc}} */
-  @Override
   public void warn(final String fmt, final Object... args) {
     for (final Logger logger : loggers) {
       logger.warn(fmt, args);
@@ -51,7 +47,6 @@ public class CompositeLogger implements Logger {
   }
   
   /** {@inheritDoc}} */
-  @Override
   public void exception(final Throwable e) {
     for (final Logger logger : loggers) {
       logger.exception(e);

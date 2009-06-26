@@ -57,7 +57,6 @@ public class DefaultLoggerFactory implements LoggerFactory {
    * @param clazz Ignored.
    * @return Logger instance.
    */
-  @Override
   public Logger getLogger(final Class<?> clazz) {
     return loggerInstance;
   }

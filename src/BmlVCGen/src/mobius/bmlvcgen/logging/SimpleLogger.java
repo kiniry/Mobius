@@ -53,31 +53,26 @@ public class SimpleLogger implements Logger {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void debug(final String fmt, final Object... args) {
     log(Logger.Level.DEBUG, fmt, args);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void error(final String fmt, final Object... args) {
     log(Logger.Level.ERROR, fmt, args);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void info(final String fmt, final Object... args) {
     log(Logger.Level.INFO, fmt, args);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void warn(final String fmt, final Object... args) {
     log(Logger.Level.WARN, fmt, args);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void exception(final Throwable e) {
     if (minLevel.value <= Level.ERROR.value) {
       e.printStackTrace(outputStream);
