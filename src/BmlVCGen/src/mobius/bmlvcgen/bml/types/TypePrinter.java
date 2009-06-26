@@ -28,77 +28,66 @@ public class TypePrinter implements ResultTypeVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitVoid() {
     internalName = "V";
     externalName = "void";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitBoolean() {
     internalName = "Z";
     externalName = "boolean";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitByte() {
     internalName = "B";
     externalName = "byte";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitChar() {
     internalName = "C";
     externalName = "char";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitDouble() {
     internalName = "D";
     externalName = "double";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitFloat() {
     internalName = "F";
     externalName = "float";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitInt() {
     internalName = "I";
     externalName = "int";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitLong() {
     internalName = "J";
     externalName = "long";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitShort() {
     internalName = "S";
     externalName = "short";
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitRefType(final String clazz) {
     internalName = "L" + clazz.replace('.', '/') + ";";
     externalName = clazz;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitArray(final Type t) {
     t.accept(this);
     internalName = "[" + internalName;
