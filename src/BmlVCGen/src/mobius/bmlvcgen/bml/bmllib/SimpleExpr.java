@@ -74,7 +74,6 @@ public class SimpleExpr<V extends ExprVisitor<V>>
 
   //CHECKSTYLE:OFF
   /** {@inheritDoc} */
-  @Override
   public void accept(final V visitor) {
     switch (expr.getConnector()) {
       case AND:

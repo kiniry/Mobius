@@ -33,7 +33,6 @@ public class FieldAccessExpr<V extends ExprVisitor<V>>
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final V visitor) {
     visitor.getField(left, name, type);
   }

@@ -43,7 +43,6 @@ public class BcelType implements mobius.bmlvcgen.bml.types.Type {
   
   //CHECKSTYLE:OFF
   /** {@inheritDoc} */
-  @Override
   public void accept(final TypeVisitor v) {
     switch (type.getType()) {
       case Constants.T_BOOLEAN: v.visitBoolean(); break;

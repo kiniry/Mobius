@@ -36,7 +36,6 @@ public class QuantifiedExpr<V extends ExprVisitor<V>>
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final V visitor) {
     final BoundVar bv = expr.getVar(var);
     final Visitable<V> subExpr;

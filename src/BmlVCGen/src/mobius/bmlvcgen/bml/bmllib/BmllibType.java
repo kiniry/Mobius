@@ -34,7 +34,6 @@ public class BmllibType implements Type {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final TypeVisitor v) {
     if (type instanceof JavaBasicType) {
       processBasicType(v);

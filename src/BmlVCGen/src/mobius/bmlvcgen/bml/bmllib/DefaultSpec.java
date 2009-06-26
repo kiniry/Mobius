@@ -10,7 +10,6 @@ import mobius.bmlvcgen.bml.MethodSpecVisitor;
  */
 public class DefaultSpec implements MethodSpec {
   /** {@inheritDoc} */
-  @Override
   public void accept(final MethodSpecVisitor visitor) {
     visitor.visitPostcondition(new True());
     visitor.visitPrecondition(new True());

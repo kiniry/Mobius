@@ -29,7 +29,6 @@ public class PostArgExpr
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final PostExprVisitor visitor) {
     visitor.arg(index, name, type);
   }

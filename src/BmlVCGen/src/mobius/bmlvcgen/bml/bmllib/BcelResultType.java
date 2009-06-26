@@ -30,7 +30,6 @@ public class BcelResultType extends BcelType implements ResultType {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final ResultTypeVisitor v) {
     if (getType().getType() == Constants.T_VOID) { // :-(
       v.visitVoid();

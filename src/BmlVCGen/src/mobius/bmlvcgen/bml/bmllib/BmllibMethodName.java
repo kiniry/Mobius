@@ -34,7 +34,6 @@ public class BmllibMethodName implements MethodName {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final MethodNameVisitor v) {
     v.visitName(method.getName());
     v.visitResultType(

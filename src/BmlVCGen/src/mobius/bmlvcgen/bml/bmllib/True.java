@@ -12,7 +12,6 @@ public class True implements Visitable<ExprVisitor<?>> {
    * Call visitor.boolTrue().
    * @param visitor Visitor.
    **/
-  @Override
   public void accept(final ExprVisitor<?> visitor) {
     visitor.boolConst(true);
   }

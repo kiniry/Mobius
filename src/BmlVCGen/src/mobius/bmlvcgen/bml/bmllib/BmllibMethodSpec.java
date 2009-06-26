@@ -32,7 +32,6 @@ public class BmllibMethodSpec implements MethodSpec {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final MethodSpecVisitor v) {
     v.visitPrecondition(pre);
     v.visitPostcondition(post);

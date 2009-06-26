@@ -29,7 +29,6 @@ public class LocalExpr
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final AssertExprVisitor visitor) {
     visitor.local(index, name, type);
   }

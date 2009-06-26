@@ -21,7 +21,6 @@ public class BmllibField implements Field {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final FieldVisitor v) {
     v.visitFlags(AccessFlag.fromMask(field.getAccessFlags()));
     v.visitName(field.getName());

@@ -76,7 +76,6 @@ public class ExprWrapper<V extends ExprVisitor<V>>
   
   //CHECKSTYLE:OFF
   /** {@inheritDoc} */
-  @Override
   public Visitable<V> wrap(final BCExpression expression) {
     final BCExpression expr = unpack(expression);
     switch (expr.getConnector()) {

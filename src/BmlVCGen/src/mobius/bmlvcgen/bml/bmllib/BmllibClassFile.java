@@ -39,7 +39,6 @@ public class BmllibClassFile implements ClassFile {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final ClassVisitor v) {
     v.visitVersion(jc.getMajor(), jc.getMinor());
     v.visitFlags(AccessFlag.fromMask(jc.getAccessFlags()));

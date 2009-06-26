@@ -10,7 +10,6 @@ import mobius.bmlvcgen.util.Visitable;
 public class ResultExpr implements Visitable<PostExprVisitor> {
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final PostExprVisitor visitor) {
     visitor.result();
   }

@@ -32,7 +32,6 @@ public class BmllibMethod implements Method {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final MethodVisitor v) {
     final MethodGen jm = method.getBcelMethod();
     v.visitFlags(AccessFlag.fromMask(jm.getAccessFlags()));

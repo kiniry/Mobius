@@ -29,7 +29,6 @@ public class ArgExpr
   }
 
   /** {@inheritDoc} */
-  @Override
   public void accept(final PreExprVisitor visitor) {
     visitor.arg(index, name, type);
   }

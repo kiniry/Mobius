@@ -20,7 +20,6 @@ public class OldExpr implements Visitable<PostExprVisitor> {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void accept(final PostExprVisitor visitor) {
     visitor.old(arg);
   }
