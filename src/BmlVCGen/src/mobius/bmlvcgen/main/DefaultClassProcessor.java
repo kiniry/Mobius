@@ -40,7 +40,6 @@ public class DefaultClassProcessor implements ClassProcessor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public boolean processClass(final String name, 
                               final ClassFile clazz) {
     Lookup.clear(annotGenerator);
