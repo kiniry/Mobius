@@ -10,7 +10,6 @@ import javax.lang.model.type.TypeKind;
 
 import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bmllib.BmlLibUtils;
-import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
 import jml2bml.bytecode.TypeSignature;
 import jml2bml.exceptions.Jml2BmlException;
@@ -19,7 +18,6 @@ import jml2bml.symbols.Symbols;
 import jml2bml.symbols.Variable;
 import jml2bml.utils.Constants;
 import jml2bml.utils.JCUtils;
-import jml2bml.utils.UniqueIndexGenerator;
 
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.jmlspecs.openjml.JmlToken;
@@ -31,7 +29,6 @@ import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
 
 import annot.bcclass.BCClass;
-import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
@@ -68,11 +65,9 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.Name;
 
 /**
  * Rule for translating JML expressions.
@@ -249,8 +244,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     final Symbols symbols = new Symbols(p);
     for (JCVariableDecl var: node.decls) {
       final JavaBasicType type = (JavaBasicType) scan(var.getType(), p);
-      final Name name = var.getName();
-      final BoundVar bvar = new BoundVar(type, UniqueIndexGenerator.getNext(),
+      final String name = var.getName().toString();
+      final int nameAndTypeIdx = p.findClass().getCp().getCoombinedCP().addNameAndType(name, TypeSignature.getSignature(var.type));
+      final BoundVar bvar = new BoundVar(type, nameAndTypeIdx,
                                         formula, name.toString());
       formula.addVariable(bvar);
       symbols.put(name.toString(), new Variable(bvar, node));

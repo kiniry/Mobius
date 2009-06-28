@@ -110,29 +110,6 @@ public final class ConstantPoolHelper {
   }
 
   /**
-   * Searches the given constant pool for ConstantNameAndType
-   * for given nameIndex.
-   * @param nameIndex index of the (field) name
-   * @param cp constant pool
-   * @return List of indexes of the ConstantNameAndTypes
-   */
-  private static List < Integer > getConstantNameAndTypeForNameIndex(
-                                                                     final int nameIndex,
-                                                                     final BCConstantPool cp) {
-    final int size = cp.getSize();
-    final List < Integer > res = new LinkedList < Integer >();
-    for (int i = 0; i < size; i++) {
-      final Constant c = cp.getConstant(i);
-      if (c instanceof ConstantNameAndType) {
-        if (((ConstantNameAndType) c).getNameIndex() == nameIndex) {
-          res.add(i);
-        }
-      }
-    }
-    return res;
-  }
-
-  /**
    * Finds the ConstantFieldref for given classIndex and nameAndTypeindex.
    * @param classIndex index in the constant pool of a ConstantClass
    * @param nameAndTypeindex index in the constant pool of a ConstantNameAndType
