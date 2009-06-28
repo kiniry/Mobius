@@ -36,9 +36,7 @@ import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.NumberLiteral;
-import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
-import annot.bcexpression.modifies.ModifyList;
 
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;

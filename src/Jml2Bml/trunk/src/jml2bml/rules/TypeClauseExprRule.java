@@ -20,7 +20,6 @@ import annot.attributes.clazz.ClassInvariant;
 import annot.bcclass.BCClass;
 import annot.bcexpression.formula.AbstractFormula;
 
-import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
 
 /**

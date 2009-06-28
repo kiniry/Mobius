@@ -11,7 +11,6 @@ import org.apache.bcel.classfile.ConstantClass;
 import org.apache.bcel.classfile.ConstantFieldref;
 import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantUtf8;
-import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.FieldOrMethod;
 
 import annot.bcclass.BCClass;
@@ -86,42 +85,6 @@ public final class ConstantPoolHelper {
     
     final int nameAndTypeIndex = cp.findNATConstant(field.getNameIndex(), field.getSignatureIndex());
     return getConstantFieldRefForClassAndNameAndType(classIndex, nameAndTypeIndex, cp);
-  }
-
-  /**
-   * Finds the corresponding ConstantFieldRef for given className and
-   * fieldName (for <code>object.field</code>).
-   * @param type - the type of the class where the field is declared
-   * @param fieldName - name of the <code> field </code>
-   * @param symbols - symbol table (to find the corresponding BCClass)
-   * @return the index in the constantPool, or -1, when no entry found.
-   */
-  public static int findFieldInConstantPool(final Type type,
-                                            final String fieldName,
-                                            final BCClass clazz) {
-    final BCConstantPool cp = clazz.getCp();
-    //a little bit hacked: the className is Lpackage/name;
-    //we want only package/name
-    String className = TypeSignature.getSignature(type);
-    System.out.println("to tu: " + className + " " + fieldName);
-    final String trimmedClassName = trimClassName(className);
-    final int fieldNameIndex = cp.findConstant(fieldName);
-    final int classNameIndex = cp.findConstant(trimmedClassName);
-    final int classIndex = getConstantClassForNameIndex(classNameIndex, cp);
-    final List < Integer > nameAndTypeIndexes = getConstantNameAndTypeForNameIndex(
-                                                                                   fieldNameIndex,
-                                                                                   cp);
-    for (Integer nameAndTypeIndex : nameAndTypeIndexes) {
-      final int constantFieldrefIndex = getConstantFieldRefForClassAndNameAndType(
-                                                                                  classIndex,
-                                                                                  nameAndTypeIndex,
-                                                                                  cp);
-      if (constantFieldrefIndex != -1) {
-        return constantFieldrefIndex;
-      }
-
-    }
-    return -1;
   }
 
   /**

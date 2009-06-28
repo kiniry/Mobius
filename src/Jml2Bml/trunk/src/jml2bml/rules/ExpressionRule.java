@@ -12,6 +12,7 @@ import jml2bml.ast.TreeNodeFinder;
 import jml2bml.bmllib.BmlLibUtils;
 import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.bytecode.BytecodeUtil;
+import jml2bml.bytecode.TypeSignature;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
@@ -20,6 +21,7 @@ import jml2bml.utils.Constants;
 import jml2bml.utils.JCUtils;
 import jml2bml.utils.UniqueIndexGenerator;
 
+import org.apache.bcel.generic.ConstantPoolGen;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
@@ -29,6 +31,7 @@ import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlSingleton;
 
 import annot.bcclass.BCClass;
+import annot.bcclass.BCConstantPool;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.ArithmeticExpression;
 import annot.bcexpression.ArrayAccess;
@@ -311,20 +314,10 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     if (type.getKind() == TypeKind.ARRAY && Constants.ARRAY_LENGTH.equals(identifier))
         return new ArrayLength(expr);
     //simplest case - there exist also in java code the same field access
-    int fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(ctype, identifier, p.findClass());
-    if (fieldRefIndex != -1) {
-      return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
-          .createFieldRef(fieldRefIndex, p.findClass()));
-    }
-    //hardest case: we have to extend the constant pool.
-    JCFieldAccess t = (JCFieldAccess) node;
-    ConstantPoolHelper.extendConstantPool(type, identifier, p.findClass(), t.sym);
-    fieldRefIndex = ConstantPoolHelper.findFieldInConstantPool(type, identifier, p.findClass());
-    if (fieldRefIndex != -1) {
-      return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
-          .createFieldRef(fieldRefIndex, p.findClass()));
-    }
-    throw new Jml2BmlException("Unresolved field access in type " + type + " to field " + identifier);
+    final ConstantPoolGen cp = p.findClass().getCp().getCoombinedCP();
+    final int fieldRefIndex = cp.addFieldref(ctype.toString(), identifier, TypeSignature.getSignature(ctype));
+    return new FieldAccess(Code.FIELD_ACCESS, expr, BmlLibUtils
+                           .createFieldRef(fieldRefIndex, p.findClass()));
   }
 
   /**
