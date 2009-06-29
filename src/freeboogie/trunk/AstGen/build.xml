@@ -10,7 +10,7 @@
   <!-- set global properties for this build -->
   <property name="debug" value="yes" />
   <property name="version" value="0.2"/>
-  <property name="genericutils-jar" value="genericutils-0.0.jar"/>
+  <property name="genericutils-jar" value="genericutils-0.1.jar"/>
   <property name="gcollect-jar" value="google-collect-1.0-rc1.jar"/>
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
