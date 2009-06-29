@@ -23,10 +23,10 @@ import javafe.ast.WhileStmt;
 import javafe.tc.TypeSig;
 import mobius.bico.dico.MethodHandler;
 import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.vcgen.DirectVCGen;
-import mobius.directVCGen.vcgen.struct.ExcpPost;
-import mobius.directVCGen.vcgen.struct.Post;
-import mobius.directVCGen.vcgen.struct.VCEntry;
+import mobius.directvcgen.vcgen.DirectVCGen;
+import mobius.directvcgen.vcgen.struct.ExcpPost;
+import mobius.directvcgen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.VCEntry;
 
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.GotoInstruction;

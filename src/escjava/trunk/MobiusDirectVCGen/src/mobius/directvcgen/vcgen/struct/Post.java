@@ -1,5 +1,5 @@
 
-package mobius.directVCGen.vcgen.struct;
+package mobius.directvcgen.vcgen.struct;
 
 import mobius.directVCGen.formula.Bool;
 import mobius.directVCGen.formula.Heap;

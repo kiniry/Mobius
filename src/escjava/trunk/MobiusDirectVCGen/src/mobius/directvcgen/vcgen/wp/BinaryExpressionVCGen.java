@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.wp;
+package mobius.directvcgen.vcgen.wp;
 
 import javafe.ast.ArrayRefExpr;
 import javafe.ast.BinaryExpr;
@@ -14,8 +14,8 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.vcgen.struct.Post;
-import mobius.directVCGen.vcgen.struct.VCEntry;
+import mobius.directvcgen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.VCEntry;
 import escjava.ast.TagConstants;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;

@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.formula.PositionHint.MethodHint;
-import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.Post;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.MethodGen;

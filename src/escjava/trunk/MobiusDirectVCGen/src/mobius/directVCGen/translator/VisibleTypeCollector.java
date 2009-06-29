@@ -8,6 +8,7 @@ import javafe.ast.BinaryExpr;
 import javafe.ast.ClassDecl;
 import javafe.ast.FieldAccess;
 import javafe.ast.MethodInvocation;
+import javafe.ast.ModifierPragmaVec;
 import javafe.ast.PrimitiveType;
 import javafe.ast.RoutineDecl;
 import javafe.ast.Type;
@@ -16,7 +17,7 @@ import javafe.ast.UnaryExpr;
 import javafe.ast.VariableAccess;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.vcgen.ABasicVisitor;
+import mobius.directvcgen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ObjectType;
@@ -71,9 +72,14 @@ final class VisibleTypeCollector extends ABasicVisitor {
   public /*@non_null*/ Object visitMethodInvocation(
                                             final /*@non_null*/ MethodInvocation x, 
                                             final Object o) {
-    //add assignable pragma types to fTypeSet   
-    for (int i = 0; i < x.decl.pmodifiers.size(); i++) {
-      if (x.decl.pmodifiers.elementAt(i).getTag() == TagConstants.MODIFIESGROUPPRAGMA) {
+    //add assignable pragma types to fTypeSet  
+    final ModifierPragmaVec modz = x.decl.pmodifiers;
+    if (modz == null) {
+      fEverything = true; 
+      return null;
+    }
+    for (int i = 0; i < modz.size(); i++) {
+      if (modz.elementAt(i).getTag() == TagConstants.MODIFIESGROUPPRAGMA) {
         final ModifiesGroupPragma modi = (ModifiesGroupPragma) x.decl.pmodifiers.elementAt(i);
         CondExprModifierPragma assigPragma = null;
         for (int j = 0; j < modi.items.size(); j++) {

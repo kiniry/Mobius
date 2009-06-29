@@ -1,6 +1,6 @@
 package mobius.directVCGen.translator;
 
-import mobius.directVCGen.vcgen.ABasicVisitor;
+import mobius.directvcgen.vcgen.ABasicVisitor;
 import escjava.ast.AnOverview;
 import escjava.ast.ArrayRangeRefExpr;
 import escjava.ast.Condition;

@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.wp;
+package mobius.directvcgen.vcgen.wp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,11 +52,11 @@ import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.annotation.AAnnotation;
 import mobius.directVCGen.formula.annotation.AnnotationDecoration;
 import mobius.directVCGen.formula.annotation.Set.Assignment;
-import mobius.directVCGen.vcgen.MethodVisitor;
-import mobius.directVCGen.vcgen.VarCorrDecoration;
-import mobius.directVCGen.vcgen.struct.ExcpPost;
-import mobius.directVCGen.vcgen.struct.Post;
-import mobius.directVCGen.vcgen.struct.VCEntry;
+import mobius.directvcgen.vcgen.MethodVisitor;
+import mobius.directvcgen.vcgen.VarCorrDecoration;
+import mobius.directvcgen.vcgen.struct.ExcpPost;
+import mobius.directvcgen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.VCEntry;
 
 import org.apache.bcel.generic.MethodGen;
 

@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen.struct;
+package mobius.directvcgen.vcgen.struct;
 
 import escjava.sortedProver.Lifter.Term;
 

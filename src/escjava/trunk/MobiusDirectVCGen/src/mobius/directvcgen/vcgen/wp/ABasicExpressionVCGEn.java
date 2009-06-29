@@ -1,8 +1,8 @@
-package mobius.directVCGen.vcgen.wp;
+package mobius.directvcgen.vcgen.wp;
 
 import javafe.ast.ASTNode;
-import mobius.directVCGen.vcgen.struct.Post;
-import mobius.directVCGen.vcgen.struct.VCEntry;
+import mobius.directvcgen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.VCEntry;
 
 /**
  * This visitor gives the basic functionnality of the expression vc gen(s).

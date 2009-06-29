@@ -23,7 +23,7 @@ import escjava.tc.TypeCheck;
  * inside the Mobius tool (hopefully).
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class BicoMain extends mobius.directVCGen.Main {
+public class BicoMain extends mobius.directvcgen.Main {
   public static final String BAD_USAGE_MSG = 
     "Bad usage!\n" +
     "(try java -jar DirectVCGen.jar -help)";

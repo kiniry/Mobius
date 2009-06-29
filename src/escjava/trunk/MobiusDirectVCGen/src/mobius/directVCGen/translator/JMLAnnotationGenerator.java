@@ -64,7 +64,7 @@ public class JMLAnnotationGenerator implements IAnnotationGenerator {
   }
 
   /** {@inheritDoc} */
-  @Override
+
   public List<String> getArgumentsName(final MethodGen mg) {
     final RoutineDecl rd = Translator.getInst().get(mg);
     final List<String> v = new ArrayList<String>();

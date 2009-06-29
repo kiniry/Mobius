@@ -1,4 +1,4 @@
-package mobius.directVCGen;
+package mobius.directvcgen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.translator.JMLAnnotationGenerator;
-import mobius.directVCGen.vcgen.DirectVCGen;
+import mobius.directvcgen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;
 import escjava.translate.NoWarn;

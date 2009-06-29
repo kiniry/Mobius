@@ -8,9 +8,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import mobius.directVCGen.Main;
 import mobius.directVCGen.clops.dvcg.DirectVCGenOptionsInterface;
 import mobius.directVCGen.clops.dvcg.DirectVCGenParser;
+import mobius.directvcgen.Main;
 
 import javafe.util.AssertionFailureException;
 

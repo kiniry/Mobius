@@ -13,7 +13,7 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Translator;
 import mobius.directVCGen.translator.struct.MethodProperties;
-import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.Post;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
 

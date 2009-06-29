@@ -1,4 +1,4 @@
-package mobius.directVCGen.vcgen;
+package mobius.directvcgen.vcgen;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,9 +21,9 @@ import mobius.directVCGen.formula.Util;
 import mobius.directVCGen.formula.coq.BcCoqFile;
 import mobius.directVCGen.formula.coq.CoqFile;
 import mobius.directVCGen.formula.coq.EquivCoqFile;
-import mobius.directVCGen.vcgen.struct.Post;
-import mobius.directVCGen.vcgen.struct.VCEntry;
-import mobius.directVCGen.vcgen.wp.StmtVCGen;
+import mobius.directvcgen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.VCEntry;
+import mobius.directvcgen.vcgen.wp.StmtVCGen;
 
 import org.apache.bcel.generic.MethodGen;
 

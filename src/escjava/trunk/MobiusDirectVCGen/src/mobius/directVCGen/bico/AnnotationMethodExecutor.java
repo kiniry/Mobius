@@ -10,7 +10,7 @@ import mobius.directVCGen.formula.Formula;
 import mobius.directVCGen.formula.Heap;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.Post;
 
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ClassGen;

@@ -10,7 +10,7 @@ import javafe.ast.RoutineDecl;
 import javafe.tc.OutsideEnv;
 import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.PositionHint.MethodHint;
-import mobius.directVCGen.vcgen.ABasicVisitor;
+import mobius.directvcgen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.Method;
