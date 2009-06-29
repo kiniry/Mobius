@@ -265,11 +265,17 @@ public class PrettyPrinter extends Transformer {
     Declaration tail
   ) {
     say("axiom");
-    say (" "); say(name); say(": ");
+    if (Main.opt.getBoogieVersion() == FbCliOptionsInterface.BoogieVersion.TWO) {
+      say(" ");
+      say(name);
+    }
     if (typeArgs != null) {
       say("<");
       typeArgs.eval(this);
       say(">");
+    }
+    if (Main.opt.getBoogieVersion() == FbCliOptionsInterface.BoogieVersion.TWO) {
+      say(":");
     }
     say(" ");
     expr.eval(this); semi();

@@ -80,7 +80,7 @@ ARGS::
     :"Configure the command line used to start a prover. The default
       depends on the selected prover."
   BoogieVersion :{"--boogie-version", "-bv"} :{enum}
-    :[choices="one(ONE),two(TWO)", default="two"]
+    :[choices="1(ONE),2(TWO)", default="2"]
     :"Configure the version of the Boogie language."
   ReportOn :{"--report-on", "--out-categories", "-oc"} :{enum-list}
     :[choices="foo"]

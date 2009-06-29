@@ -1,2 +1,11 @@
-line 4:4 no viable alternative at input 'old'
-line 4:9 mismatched input ')' expecting ':'
+boogie_B-noinfer.bpl:13:3: Block then is unreachable.
+boogie_B-noinfer.bpl:33:3: Block then is unreachable.
+boogie_B-noinfer.bpl:53:3: Block then is unreachable.
+boogie_B-noinfer.bpl:72:3: Block then is unreachable.
+boogie_Passification-noinfer.bpl:57:1: Block notReached is unreachable.
+boogie_Passification-noinfer.bpl:59:1: Block reallyNeverReached is unreachable.
+boogie_UnreachableBlocks-vc_nested.bpl:10:1: Block B is unreachable.
+boogie_UnreachableBlocks-vc_nested.bpl:26:1: Block A is unreachable.
+boogie_UnreachableBlocks-vc_nested.bpl:34:1: Block A is unreachable.
+boogie_UnreachableBlocks-vc_nested.bpl:36:1: Block B is unreachable.
+boogie_UnreachableBlocks-vc_nested.bpl:38:1: Block C is unreachable.

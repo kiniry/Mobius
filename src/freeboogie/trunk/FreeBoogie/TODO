@@ -1,4 +1,4 @@
- . Fix tests so they all pass again.
+ . Add hand-crafted tests for the Boogie 2 parser.
  . Parser for Boogie 2.
  . Desugar 'while'.
  . Type checker for Boogie 2.
