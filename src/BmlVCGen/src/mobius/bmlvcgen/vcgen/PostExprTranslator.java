@@ -51,7 +51,6 @@ public class PostExprTranslator
   }
 
   /** {@inheritDoc} */
-  @Override
   public void arg(final int i, 
                   final String name, 
                   final mobius.bmlvcgen.bml.types.Type type) {
@@ -66,7 +65,6 @@ public class PostExprTranslator
   }
 
   /** {@inheritDoc} */
-  @Override
   public <Expr extends Visitable<? super PreExprVisitor>> 
   void old(final Expr expr) {
     expr.accept(preTrans);
@@ -75,7 +73,6 @@ public class PostExprTranslator
   }
 
   /** {@inheritDoc} */
-  @Override
   public void result() {
     setLastExpr(Expression.rvar(resultVar));
     setLastType(resultType);

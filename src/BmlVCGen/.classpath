@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests/src"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="tests/lib/junit-4.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/MobiusDirectVCGen"/>
@@ -16,5 +15,6 @@
 	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/bcel-5.2.jar" sourcepath="/MobiusDirectVCGen/bcel-5.2-src.zip"/>
 	<classpathentry kind="lib" path="/MobiusDirectVCGen/lib/javac.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bico"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

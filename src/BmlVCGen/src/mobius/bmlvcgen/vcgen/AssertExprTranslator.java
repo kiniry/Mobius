@@ -39,7 +39,6 @@ public class AssertExprTranslator
   }
 
   /** {@inheritDoc} */
-  @Override
   public <Expr extends Visitable<? super PreExprVisitor>> 
   void aold(final Expr expr) {
     expr.accept(preTrans);
@@ -48,7 +47,6 @@ public class AssertExprTranslator
   }
   
   /** {@inheritDoc} */
-  @Override
   public void local(final int i, 
                   final String name, 
                   final mobius.bmlvcgen.bml.types.Type type) {

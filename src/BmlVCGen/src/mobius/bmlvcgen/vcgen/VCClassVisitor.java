@@ -68,91 +68,76 @@ public class VCClassVisitor implements ClassVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitVersion(final int major, final int minor) {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitName(final String name) {
     // Do nothing.
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitSuperName(final String name) {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginInterfaces() {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitInterface(final String name) {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endInterfaces() {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void beginFields() {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitField(final Field field) {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endFields() {
     // Do nothing.
   }  
   
   /** {@inheritDoc} */
-  @Override
   public void beginMethods() {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitMethod(final Method method) {
     method.accept(methodVisitor);
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endMethods() {
     // Do nothing.
   }
  
   /** {@inheritDoc} */
-  @Override
   public void beginInvariants() {
     // Do nothing.
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitInvariant(
       final Visibility visibility,
       final Visitable<? super InvExprVisitor> inv) {
@@ -163,7 +148,6 @@ public class VCClassVisitor implements ClassVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void endInvariants() {
     // Create a default invariant if necessary. 
     if (!hasInvariants) {

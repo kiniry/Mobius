@@ -13,27 +13,22 @@ public class GetMethodResult implements MethodNameVisitor {
   private ResultType resultType;
 
   /** {@inheritDoc} */
-  @Override
   public void beginArgs() {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void endArgs() {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitArg(final Type t, final String name) {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitName(final String name) {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitResultType(final ResultType t) {
     resultType = t;
   }

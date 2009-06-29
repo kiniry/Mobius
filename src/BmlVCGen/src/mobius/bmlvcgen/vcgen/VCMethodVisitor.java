@@ -86,13 +86,11 @@ public class VCMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */
-  @Override
   public void visitFlags(final EnumSet<AccessFlag> flags) {
     // TODO: Parse flags.
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitName(final MethodName name) {
     final GetMethodResult gmr = new GetMethodResult();
     name.accept(gmr);
@@ -113,14 +111,12 @@ public class VCMethodVisitor implements MethodVisitor {
     }
   }
 
-  /** {@inheritDoc} */  
-  @Override
+  /** {@inheritDoc} */
   public void beginSpecs() {
 
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitSpecification(final MethodSpec spec) {
     final VCSpecVisitor visitor = 
       new VCSpecVisitor(env, lookup, self, method, resultSort);
@@ -129,7 +125,6 @@ public class VCMethodVisitor implements MethodVisitor {
   }
 
   /** {@inheritDoc} */ 
-  @Override
   public void endSpecs() {
     final File buildDir = 
       new File(env.getArgs().getOutputDir());
@@ -161,14 +156,12 @@ public class VCMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */ 
-  @Override
   public void beginAssertions() {
     // EMPTY
     
   }
 
   /** {@inheritDoc} */ 
-  @Override
   public void visitAssertion(final int i, 
       final AssertType type,
       final Visitable<? super AssertExprVisitor> expr) {
@@ -283,25 +276,21 @@ public class VCMethodVisitor implements MethodVisitor {
   }
   
   /** {@inheritDoc} */ 
-  @Override
   public void endAssertions() {
     // EMPTY
   }
 
   /** {@inheritDoc} */ 
-  @Override
   public void beginLocals(final int maxLocals) {
     locals = new VariableMap(maxLocals);
   }
 
   /** {@inheritDoc} */ 
-  @Override
   public void visitLocal(final LocalVariable var) {
     locals.add(var);
   }
   
   /** {@inheritDoc} */ 
-  @Override
   public void endLocals() {
     // EMPTY
   }

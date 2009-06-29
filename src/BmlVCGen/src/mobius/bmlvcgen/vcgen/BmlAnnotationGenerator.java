@@ -68,7 +68,6 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
    * @param clzz Class name.
    * @return True, unless an error occurred.
    */
-  @Override
   public boolean annotateClass(final Repository repos, 
                                final ClassGen clzz) {
     classVisitor = 
@@ -95,7 +94,6 @@ public class BmlAnnotationGenerator implements IAnnotationGenerator {
    * @param mg Method name and type.
    * @return List of argument names.
    */
-  @Override
   public List<String> getArgumentsName(final MethodGen mg) {
     return getArgumentNames(mg);
   }

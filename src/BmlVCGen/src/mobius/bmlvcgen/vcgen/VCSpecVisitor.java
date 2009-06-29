@@ -13,7 +13,7 @@ import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
 import mobius.directVCGen.formula.Expression;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directvcgen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
@@ -74,7 +74,6 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitPostcondition(
       final Visitable<? super PostExprVisitor> post) {
     post.accept(postTranslator);
@@ -97,7 +96,6 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitPrecondition(final 
       Visitable<? super PreExprVisitor> pre) {
     // TODO : HOW to specify multiple spec cases in directvcgen?!?!?
@@ -119,7 +117,6 @@ public class VCSpecVisitor implements MethodSpecVisitor {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void visitSignals(
                final String exc, 
                final Visitable<? super PostExprVisitor> expr) {

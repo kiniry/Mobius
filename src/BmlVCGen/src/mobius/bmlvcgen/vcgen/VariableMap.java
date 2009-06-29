@@ -81,7 +81,6 @@ public final class VariableMap {
     implements Comparator<LocalVariable> {
 
     /** {@inheritDoc} */
-    @Override
     public int compare(final LocalVariable v1, 
                        final LocalVariable v2) {
       final int v1start = v1.getStart();
@@ -101,7 +100,6 @@ public final class VariableMap {
     implements Comparator<LocalVariable> {
 
     /** {@inheritDoc} */
-    @Override
     public int compare(final LocalVariable v1, 
                        final LocalVariable v2) {
       final int v1index = v1.getIndex();
