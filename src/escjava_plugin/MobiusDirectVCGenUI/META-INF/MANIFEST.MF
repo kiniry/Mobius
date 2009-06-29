@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.ui,
  prover.editor,
  mobius.directvcgen,
  mobius.bicolano,
+ ClopsRuntime,
  org.eclipse.ui.console,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
@@ -24,6 +25,6 @@ Export-Package:
  mobius.directvcgen.ui.poview,
  mobius.directvcgen.ui.poview.tree,
  mobius.directvcgen.ui.poview.util
-Bundle-ClassPath: .,
- lib/junit.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ClassPath: .
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+

@@ -158,18 +158,15 @@ public class ProjectProofs extends ViewPart
   public void widgetDefaultSelected(final SelectionEvent e) { }
 
   /** {@inheritDoc} */
-  @Override
   public void pageActivated(final IWorkbenchPage page) {
     page.addSelectionListener(new MySelListener(page.getSelection()));
   }
 
   /** {@inheritDoc} */
-  @Override
   public void pageClosed(final IWorkbenchPage page) {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void pageOpened(final IWorkbenchPage page) {
   }
 
@@ -239,7 +236,6 @@ public class ProjectProofs extends ViewPart
     }
     
     /** {@inheritDoc} */
-    @Override
     public void selectionChanged(final IWorkbenchPart part, final ISelection selection) {
       selectionChanged(selection);
     }

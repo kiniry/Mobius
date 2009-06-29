@@ -1,16 +1,13 @@
 package mobius.directvcgen.ui.poview;
 
-import java.io.IOException;
-import java.net.URL;
+import java.io.File;
 
 import mobius.bicolano.BicolanoUtil;
-import mobius.directVCGen.Main;
 import mobius.directVCGen.clops.DirectVCGenMain;
 import mobius.directvcgen.ui.poview.util.RefreshUtils;
 import mobius.directvcgen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
@@ -32,15 +29,12 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
   private ICompilationUnit fSel;
   
   /** {@inheritDoc} */
-  @Override
   public void dispose() { }
 
   /** {@inheritDoc} */
-  @Override
   public void init(final IWorkbenchWindow window) { }
 
   /** {@inheritDoc} */
-  @Override
   public void run(final IAction action) {
     
     if (fSel != null) {
@@ -83,8 +77,11 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
       for (String s: classPath) {
         res += ":" + s;
       }
+      final File mobiusPath = new File(path.toString(), "mobius");
+      mobiusPath.mkdirs();
       final String[] args = new String[] {
-        path.toString(), bico, 
+        mobiusPath.getAbsolutePath(), 
+        bico, 
         fSel.getTypes()[0].getFullyQualifiedName(),
         "-cp", res.substring(1), 
         "-SourcePath", 
@@ -103,7 +100,6 @@ public class CompileAction implements IWorkbenchWindowActionDelegate {
   }
 
   /** {@inheritDoc} */
-  @Override
   public void selectionChanged(final IAction action, final ISelection s) {
     if (!s.isEmpty()) {
       if (s instanceof IStructuredSelection) {

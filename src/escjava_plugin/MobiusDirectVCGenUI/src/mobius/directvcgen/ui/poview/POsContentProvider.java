@@ -135,7 +135,6 @@ public class POsContentProvider implements ITreeContentProvider {
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean visit(final IResourceDelta delta) throws CoreException {
       final IResource res = delta.getResource();
 

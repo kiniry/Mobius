@@ -15,7 +15,6 @@ public class PerspectiveFactory implements IPerspectiveFactory {
   /** represents the number two third (2/3). */
   private static final float twoThird = 0.66f;
   /** {@inheritDoc} */
-  @Override
   public void createInitialLayout(final IPageLayout layout) {
     // Get the editor area.
     final String editorArea = layout.getEditorArea();
