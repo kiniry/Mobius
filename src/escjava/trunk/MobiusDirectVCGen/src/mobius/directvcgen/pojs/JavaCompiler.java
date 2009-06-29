@@ -1,4 +1,4 @@
-package mobius.directVCGen.pojs;
+package mobius.directvcgen.pojs;
 
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JavacFileManager;

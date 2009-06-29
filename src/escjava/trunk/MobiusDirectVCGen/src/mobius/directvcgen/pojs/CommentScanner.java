@@ -1,4 +1,4 @@
-package mobius.directVCGen.pojs;
+package mobius.directvcgen.pojs;
 
 import static com.sun.tools.javac.util.LayoutCharacters.CR;
 import static com.sun.tools.javac.util.LayoutCharacters.FF;
