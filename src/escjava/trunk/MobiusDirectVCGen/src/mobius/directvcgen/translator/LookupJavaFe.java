@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator;
+package mobius.directvcgen.translator;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +12,7 @@ import javafe.tc.TypeSig;
 import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Translator;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directvcgen.translator.struct.MethodProperties;
 import mobius.directvcgen.vcgen.struct.Post;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;

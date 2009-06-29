@@ -14,7 +14,7 @@ import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.clops.bico.BicoPlusOptionsInterface;
 import mobius.directVCGen.clops.bico.BicoPlusParser;
 import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.translator.JMLAnnotationGenerator;
+import mobius.directvcgen.translator.JMLAnnotationGenerator;
 import escjava.tc.TypeCheck;
 
 /**

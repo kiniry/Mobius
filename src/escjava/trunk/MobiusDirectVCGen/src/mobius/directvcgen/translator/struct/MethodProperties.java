@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator.struct;
+package mobius.directvcgen.translator.struct;
 
 import java.util.ArrayList;
 import java.util.Collection;

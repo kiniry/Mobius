@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator;
+package mobius.directvcgen.translator;
 
 import java.util.ArrayList;
 import java.util.List;

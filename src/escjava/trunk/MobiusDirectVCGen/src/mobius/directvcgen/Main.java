@@ -20,7 +20,7 @@ import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.bico.Unarchiver;
 import mobius.directVCGen.formula.Lookup;
 import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.translator.JMLAnnotationGenerator;
+import mobius.directvcgen.translator.JMLAnnotationGenerator;
 import mobius.directvcgen.vcgen.DirectVCGen;
 import escjava.ast.EscPrettyPrint;
 import escjava.tc.TypeCheck;

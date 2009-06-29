@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator;
+package mobius.directvcgen.translator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ import mobius.directVCGen.formula.Logic;
 import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.translator.struct.ContextProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directvcgen.translator.struct.ContextProperties;
+import mobius.directvcgen.translator.struct.MethodProperties;
 import escjava.ast.NaryExpr;
 import escjava.ast.QuantifiedExpr;
 import escjava.ast.ResExpr;

@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator;
+package mobius.directvcgen.translator;
 
 import javafe.ast.BinaryExpr;
 import javafe.ast.FieldAccess;
@@ -18,8 +18,8 @@ import mobius.directVCGen.formula.Num;
 import mobius.directVCGen.formula.Ref;
 import mobius.directVCGen.formula.Type;
 import mobius.directVCGen.formula.annotation.Set;
-import mobius.directVCGen.translator.struct.ContextProperties;
-import mobius.directVCGen.translator.struct.MethodProperties;
+import mobius.directvcgen.translator.struct.ContextProperties;
+import mobius.directvcgen.translator.struct.MethodProperties;
 import mobius.directvcgen.vcgen.struct.Post;
 import escjava.ast.ExprDeclPragma;
 import escjava.ast.ExprModifierPragma;

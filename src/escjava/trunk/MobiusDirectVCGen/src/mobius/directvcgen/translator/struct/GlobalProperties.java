@@ -1,4 +1,4 @@
-package mobius.directVCGen.translator.struct;
+package mobius.directvcgen.translator.struct;
 
 import java.util.HashSet;
 import java.util.Set;
