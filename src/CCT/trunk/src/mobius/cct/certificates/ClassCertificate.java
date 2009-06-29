@@ -1,6 +1,5 @@
 package mobius.cct.certificates;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -35,7 +34,10 @@ public final class ClassCertificate extends Certificate {
                           final String[] imports,
                           final byte[] data) {
     super(type, version, data);
-    fImports = Arrays.copyOf(imports, imports.length);
+    fImports = new String[imports.length];
+    for (int i = 0; i < imports.length; i++) {
+      fImports[i] = imports[i];
+    }
   }
   
   /**

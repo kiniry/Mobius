@@ -31,7 +31,7 @@ public class InvalidFormatException extends IOException {
    * @param cause Cause.
    */
   public InvalidFormatException(final Throwable cause) {
-    super(cause);
+    super(cause.getLocalizedMessage()); //super(cause); not java1.5 compat.
   }
   
   /**
@@ -41,7 +41,7 @@ public class InvalidFormatException extends IOException {
    */
   public InvalidFormatException(final String msg, 
                                 final Throwable cause) {
-    super(msg, cause);
+    super(msg); //super(msg, cause); not java1.5 compat.
   }
   
 }
