@@ -1,11 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: bico
-Bundle-SymbolicName: bico
+Bundle-Name: mobius.bico
+Bundle-SymbolicName: mobius.bico
 Bundle-Version: 1.0.1
 Bundle-ClassPath: bico.jar
 Bundle-Localization: 
-Export-Package: mobius.bico
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: mobius.bico,
+ mobius.bico.bicolano,
+ mobius.bico.bicolano.coq,
+ mobius.bico.clops,
+ mobius.bico.dico,
+ mobius.bico.executors,
+ mobius.bico.implem,
+ mobius.bico.visitors
 Require-Bundle: bcel.plugin;bundle-version="5.2.0",
- ClopsRuntime;bundle-version="0.2.1"
+ ClopsRuntime
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
