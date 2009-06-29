@@ -1,3 +1,7 @@
+ . Fix tests so they all pass again.
+ . Parser for Boogie 2.
+ . Desugar 'while'.
+ . Type checker for Boogie 2.
  . Move to Boogie 2.
  . Add a "for all types" construct. (?)
  . Release 0.2.
