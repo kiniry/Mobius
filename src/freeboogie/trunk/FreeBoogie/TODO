@@ -1,7 +1,5 @@
- . Convert boogie_AddMethod.bpl to Boogie 2.
- . Convert the BPLs in the test suite to Boogie 2.
- . Add a "for all types" construct. (?)
  . Move to Boogie 2.
+ . Add a "for all types" construct. (?)
  . Release 0.2.
  . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
  . Add axioms for %. (It it NOT built in in "z3 -si".)

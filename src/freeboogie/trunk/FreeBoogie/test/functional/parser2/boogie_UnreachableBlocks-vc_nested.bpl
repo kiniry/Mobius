@@ -1,40 +1,34 @@
-// In the following program, block "A" has no dominator, which would cause Boogie
-// to crash if Boogie didn't first remove unreachable blocks.  That is essentially
-// what this test tests
-procedure P()
-{
-entry:
-  goto A;
-A:
-  return;
-B:
-  goto A;
+type name;
+type ref;
+const unique null : ref;
+procedure P();
+implementation P() {
+  entry: goto A;
+  A: return;
+  B: goto A;
+  
 }
 
-procedure Q()
-{
-entry:
-  goto entry, A;
-A:
-  return;
+procedure Q();
+implementation Q() {
+  entry: goto entry, A;
+  A: return;
+  
 }
 
-procedure R()
-{
-entry:
-  return;
-A:
-  goto A;
+procedure R();
+implementation R() {
+  entry: return;
+  A: goto A;
+  
 }
 
-procedure S()
-{
-entry:
-  return;
-A:
-  goto C;
-B:
-  goto C;
-C:  // C has no dominator
-  return;
+procedure S();
+implementation S() {
+  entry: return;
+  A: goto C;
+  B: goto C;
+  C: return;
+  
 }
+

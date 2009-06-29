@@ -1,24 +1,22 @@
-// equiv7.bpl
-//
-// Test congruence closure.
-
-function $f (int) returns (int);
-var x : int, y : int, z : int;
-
-procedure M(this : ref)
+type name;
+type ref;
+const unique null : ref;
+function $f($$unnamed~a : int) returns ($$unnamed~b : int);
+var x : int;
+var y : int;
+var z : int;
+procedure M(this : ref);
   modifies z;
-{
-  start:
-    z := $f(x);
-    z := $f(y);
-    z := 3;
-    assume x == y;
-    assume z == $f(x);
-    goto StartCheck, Return;
-  StartCheck:
-    assert y == x && z == 3 && z == $f(y);
-    return;
+  
 
-  Return:
-    return;
+implementation M(this : ref) {
+  start: z := $f(x); goto $$start~d;
+  $$start~d: z := $f(y); goto $$start~c;
+  $$start~c: z := 3; goto $$start~b;
+  $$start~b: assume (x == y); goto $$start~a;
+  $$start~a: assume (z == $f(x)); goto StartCheck, Return;
+  StartCheck: assert (((y == x) && (z == 3)) && (z == $f(y))); return;
+  Return: return;
+  
 }
+

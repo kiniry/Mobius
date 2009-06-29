@@ -1,1714 +1,938 @@
-// Spec# Program Verifier Version 0.80, Copyright (c) 2003-2006, Microsoft.
-// Command Line Options: -nologo /prover:blank /print:boogie_tmp.@TIME@.bpl /proverLog:boogie_tmp.@TIME@.simplify /infer:eh loopinv1.dll
-
+type name;
+type ref;
+const unique null : ref;
 type real;
-
 type elements;
-
 type struct;
-
 type exposeVersionType;
-
-var $Heap: [ref,<x>name]x where IsHeap($Heap);
-
-function IsHeap(h: [ref,<x>name]x) returns (bool);
-
-const $allocated: <bool>name;
-
-const $elements: <elements>name;
-
-const $inv: <name>name;
-
-const $localinv: <name>name;
-
-const $exposeVersion: <exposeVersionType>name;
-
-axiom DeclType($exposeVersion) == System.Object;
-
-const $sharingMode: name;
-
-const $SharingMode_Unshared: name;
-
-const $SharingMode_LockProtected: name;
-
-const $ownerRef: <ref>name;
-
-const $ownerFrame: <name>name;
-
-const $PeerGroupPlaceholder: name;
-
-function ClassRepr(class: name) returns (ref);
-
-axiom (forall c0: name, c1: name :: { ClassRepr(c0), ClassRepr(c1) } c0 != c1 ==> ClassRepr(c0) != ClassRepr(c1));
-
-axiom (forall T: name :: !($typeof(ClassRepr(T)) <: System.Object));
-
-axiom (forall T: name :: ClassRepr(T) != null);
-
-axiom (forall T: name, h: [ref,<x>name]x :: { h[ClassRepr(T), $ownerFrame] } IsHeap(h) ==> h[ClassRepr(T), $ownerFrame] == $PeerGroupPlaceholder);
-
-function IsDirectlyModifiableField(f: name) returns (bool);
-
+var $Heap : <x>[ref, name]x where IsHeap($Heap);
+function IsHeap(h : <x>[ref, name]x) returns ($$unnamed~a : bool);
+const $allocated : name;
+const $elements : name;
+const $inv : name;
+const $localinv : name;
+const $exposeVersion : name;
+axiom (DeclType($exposeVersion) == System.Object);
+const $sharingMode : name;
+const $SharingMode_Unshared : name;
+const $SharingMode_LockProtected : name;
+const $ownerRef : name;
+const $ownerFrame : name;
+const $PeerGroupPlaceholder : name;
+function ClassRepr(class : name) returns ($$unnamed~b : ref);
+axiom (forall c0 : name, c1 : name :: {ClassRepr(c0), ClassRepr(c1)} ((c0 != c1) ==> (ClassRepr(c0) != ClassRepr(c1))));
+axiom (forall T : name :: !($typeof(ClassRepr(T)) <: System.Object));
+axiom (forall T : name :: (ClassRepr(T) != null));
+axiom (forall T : name, h : <x>[ref, name]x :: {h[ClassRepr(T), $ownerFrame]} (IsHeap(h) ==> (h[ClassRepr(T), $ownerFrame] == $PeerGroupPlaceholder)));
+function IsDirectlyModifiableField(f : name) returns ($$unnamed~c : bool);
 axiom !IsDirectlyModifiableField($allocated);
-
 axiom IsDirectlyModifiableField($elements);
-
 axiom !IsDirectlyModifiableField($inv);
-
 axiom !IsDirectlyModifiableField($localinv);
-
 axiom !IsDirectlyModifiableField($ownerRef);
-
 axiom !IsDirectlyModifiableField($ownerFrame);
-
 axiom !IsDirectlyModifiableField($exposeVersion);
-
-function IsStaticField(f: name) returns (bool);
-
+function IsStaticField(f : name) returns ($$unnamed~d : bool);
 axiom !IsStaticField($allocated);
-
 axiom !IsStaticField($elements);
-
 axiom !IsStaticField($inv);
-
 axiom !IsStaticField($localinv);
-
 axiom !IsStaticField($exposeVersion);
-
-function ValueArrayGet(elements, int) returns (any);
-
-function ValueArraySet(elements, int, any) returns (elements);
-
-function RefArrayGet(elements, int) returns (ref);
-
-function RefArraySet(elements, int, ref) returns (elements);
-
-axiom (forall A: elements, i: int, x: any :: ValueArrayGet(ValueArraySet(A, i, x), i) == x);
-
-axiom (forall A: elements, i: int, j: int, x: any :: i != j ==> ValueArrayGet(ValueArraySet(A, i, x), j) == ValueArrayGet(A, j));
-
-axiom (forall A: elements, i: int, x: ref :: RefArrayGet(RefArraySet(A, i, x), i) == x);
-
-axiom (forall A: elements, i: int, j: int, x: ref :: i != j ==> RefArrayGet(RefArraySet(A, i, x), j) == RefArrayGet(A, j));
-
-function ArrayIndex(arr: ref, dim: int, indexAtDim: int, remainingIndexContribution: int) returns (int);
-
-axiom (forall a: ref, d: int, x: int, y: int, x': int, y': int :: { ArrayIndex(a, d, x, y), ArrayIndex(a, d, x', y') } ArrayIndex(a, d, x, y) == ArrayIndex(a, d, x', y') ==> x == x' && y == y');
-
-axiom (forall a: ref, T: name, i: int, r: int, heap: [ref,<x>name]x :: { $typeof(a) <: RefArray(T, r), RefArrayGet(heap[a, $elements], i) } IsHeap(heap) && $typeof(a) <: RefArray(T, r) ==> $Is(RefArrayGet(heap[a, $elements], i), T));
-
-axiom (forall a: ref, T: name, i: int, r: int, heap: [ref,<x>name]x :: { $typeof(a) <: NonNullRefArray(T, r), RefArrayGet(heap[a, $elements], i) } IsHeap(heap) && $typeof(a) <: NonNullRefArray(T, r) ==> $IsNotNull(RefArrayGet(heap[a, $elements], i), T));
-
-function $Rank(ref) returns (int);
-
-axiom (forall a: ref :: 1 <= $Rank(a));
-
-axiom (forall a: ref, T: name, r: int :: { $typeof(a) <: RefArray(T, r) } a != null && $typeof(a) <: RefArray(T, r) ==> $Rank(a) == r);
-
-axiom (forall a: ref, T: name, r: int :: { $typeof(a) <: NonNullRefArray(T, r) } a != null && $typeof(a) <: NonNullRefArray(T, r) ==> $Rank(a) == r);
-
-axiom (forall a: ref, T: name, r: int :: { $typeof(a) <: ValueArray(T, r) } a != null && $typeof(a) <: ValueArray(T, r) ==> $Rank(a) == r);
-
-function $Length(ref) returns (int);
-
-axiom (forall a: ref :: { $Length(a) } 0 <= $Length(a));
-
-function $DimLength(ref, int) returns (int);
-
-axiom (forall a: ref, i: int :: 0 <= $DimLength(a, i));
-
-axiom (forall a: ref :: { $DimLength(a, 0) } $Rank(a) == 1 ==> $DimLength(a, 0) == $Length(a));
-
-function $LBound(ref, int) returns (int);
-
-function $UBound(ref, int) returns (int);
-
-axiom (forall a: ref, i: int :: { $LBound(a, i) } $LBound(a, i) == 0);
-
-axiom (forall a: ref, i: int :: { $UBound(a, i) } $UBound(a, i) == $DimLength(a, i) - 1);
-
-const $ArrayCategoryValue: name;
-
-const $ArrayCategoryRef: name;
-
-const $ArrayCategoryNonNullRef: name;
-
-function $ArrayCategory(arrayType: name) returns (arrayCategory: name);
-
-axiom (forall T: name, ET: name, r: int :: { T <: ValueArray(ET, r) } T <: ValueArray(ET, r) ==> $ArrayCategory(T) == $ArrayCategoryValue);
-
-axiom (forall T: name, ET: name, r: int :: { T <: RefArray(ET, r) } T <: RefArray(ET, r) ==> $ArrayCategory(T) == $ArrayCategoryRef);
-
-axiom (forall T: name, ET: name, r: int :: { T <: NonNullRefArray(ET, r) } T <: NonNullRefArray(ET, r) ==> $ArrayCategory(T) == $ArrayCategoryNonNullRef);
-
-const System.Array: name;
-
-axiom System.Array <: System.Object;
-
-function $ElementType(name) returns (name);
-
-function ValueArray(elementType: name, rank: int) returns (name);
-
-axiom (forall T: name, r: int :: { ValueArray(T, r) } ValueArray(T, r) <: System.Array);
-
-function RefArray(elementType: name, rank: int) returns (name);
-
-axiom (forall T: name, r: int :: { RefArray(T, r) } RefArray(T, r) <: System.Array);
-
-function NonNullRefArray(elementType: name, rank: int) returns (name);
-
-axiom (forall T: name, r: int :: { NonNullRefArray(T, r) } NonNullRefArray(T, r) <: System.Array);
-
-axiom (forall T: name, U: name, r: int :: U <: T ==> RefArray(U, r) <: RefArray(T, r));
-
-axiom (forall T: name, U: name, r: int :: U <: T ==> NonNullRefArray(U, r) <: NonNullRefArray(T, r));
-
-axiom (forall A: name, r: int :: $ElementType(ValueArray(A, r)) == A);
-
-axiom (forall A: name, r: int :: $ElementType(RefArray(A, r)) == A);
-
-axiom (forall A: name, r: int :: $ElementType(NonNullRefArray(A, r)) == A);
-
-axiom (forall A: name, r: int, T: name :: { T <: RefArray(A, r) } T <: RefArray(A, r) ==> T == RefArray($ElementType(T), r) && $ElementType(T) <: A);
-
-axiom (forall A: name, r: int, T: name :: { T <: NonNullRefArray(A, r) } T <: NonNullRefArray(A, r) ==> T == NonNullRefArray($ElementType(T), r) && $ElementType(T) <: A);
-
-axiom (forall A: name, r: int, T: name :: { T <: ValueArray(A, r) } T <: ValueArray(A, r) ==> T == ValueArray(A, r));
-
-axiom (forall A: name, r: int, T: name :: RefArray(A, r) <: T ==> System.Array <: T || (T == RefArray($ElementType(T), r) && A <: $ElementType(T)));
-
-axiom (forall A: name, r: int, T: name :: NonNullRefArray(A, r) <: T ==> System.Array <: T || (T == NonNullRefArray($ElementType(T), r) && A <: $ElementType(T)));
-
-axiom (forall A: name, r: int, T: name :: ValueArray(A, r) <: T ==> System.Array <: T || T == ValueArray(A, r));
-
-function $ArrayPtr(elementType: name) returns (name);
-
-function $StructGet(struct, name) returns (any);
-
-function $StructSet(struct, name, any) returns (struct);
-
-axiom (forall s: struct, f: name, x: any :: $StructGet($StructSet(s, f, x), f) == x);
-
-axiom (forall s: struct, f: name, f': name, x: any :: f != f' ==> $StructGet($StructSet(s, f, x), f') == $StructGet(s, f'));
-
-function ZeroInit(s: struct, typ: name) returns (bool);
-
-function $typeof(ref) returns (name);
-
-function $BaseClass(sub: name) returns (base: name);
-
-function AsDirectSubClass(sub: name, base: name) returns (sub': name);
-
-function OneClassDown(sub: name, base: name) returns (directSub: name);
-
-axiom (forall A: name, B: name, C: name :: { C <: AsDirectSubClass(B, A) } C <: AsDirectSubClass(B, A) ==> OneClassDown(C, A) == B);
-
-function $IsValueType(name) returns (bool);
-
-axiom (forall T: name :: $IsValueType(T) ==> (forall U: name :: T <: U ==> T == U) && (forall U: name :: U <: T ==> T == U));
-
-const System.Object: name;
-
-function $IsTokenForType(struct, name) returns (bool);
-
-function TypeObject(name) returns (ref);
-
-const System.Type: name;
-
-axiom System.Type <: System.Object;
-
-axiom (forall T: name :: { TypeObject(T) } $IsNotNull(TypeObject(T), System.Type));
-
-function TypeName(ref) returns (name);
-
-axiom (forall T: name :: { TypeObject(T) } TypeName(TypeObject(T)) == T);
-
-function $Is(ref, name) returns (bool);
-
-axiom (forall o: ref, T: name :: { $Is(o, T) } $Is(o, T) <==> o == null || $typeof(o) <: T);
-
-function $IsNotNull(ref, name) returns (bool);
-
-axiom (forall o: ref, T: name :: { $IsNotNull(o, T) } $IsNotNull(o, T) <==> o != null && $Is(o, T));
-
-function $As(ref, name) returns (ref);
-
-axiom (forall o: ref, T: name :: $Is(o, T) ==> $As(o, T) == o);
-
-axiom (forall o: ref, T: name :: !$Is(o, T) ==> $As(o, T) == null);
-
-axiom (forall h: [ref,<x>name]x, o: ref :: { $typeof(o) <: System.Array, h[o, $inv] } IsHeap(h) && o != null && $typeof(o) <: System.Array ==> h[o, $inv] == $typeof(o) && h[o, $localinv] == $typeof(o));
-
-function IsAllocated(h: [ref,<x>name]x, o: any) returns (bool);
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: name :: { IsAllocated(h, h[o, f]) } IsHeap(h) && h[o, $allocated] ==> IsAllocated(h, h[o, f]));
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <ref>name :: { h[h[o, f], $allocated] } IsHeap(h) && h[o, $allocated] ==> h[h[o, f], $allocated]);
-
-axiom (forall h: [ref,<x>name]x, s: struct, f: name :: { IsAllocated(h, $StructGet(s, f)) } IsAllocated(h, s) ==> IsAllocated(h, $StructGet(s, f)));
-
-axiom (forall h: [ref,<x>name]x, e: elements, i: int :: { IsAllocated(h, RefArrayGet(e, i)) } IsAllocated(h, e) ==> IsAllocated(h, RefArrayGet(e, i)));
-
-axiom (forall h: [ref,<x>name]x, e: elements, i: int :: { IsAllocated(h, ValueArrayGet(e, i)) } IsAllocated(h, e) ==> IsAllocated(h, ValueArrayGet(e, i)));
-
-axiom (forall h: [ref,<x>name]x, o: ref :: { h[o, $allocated] } IsAllocated(h, o) ==> h[o, $allocated]);
-
-axiom (forall h: [ref,<x>name]x, c: name :: { h[ClassRepr(c), $allocated] } IsHeap(h) ==> h[ClassRepr(c), $allocated]);
-
-const $BeingConstructed: ref;
-
-const $NonNullFieldsAreInitialized: <bool>name;
-
-function DeclType(field: name) returns (class: name);
-
-function AsNonNullRefField(field: <ref>name, T: name) returns (f: <ref>name);
-
-function AsRefField(field: <ref>name, T: name) returns (f: <ref>name);
-
-function AsRangeField(field: <int>name, T: name) returns (f: <int>name);
-
-axiom (forall f: <ref>name, T: name :: { AsNonNullRefField(f, T) } AsNonNullRefField(f, T) == f ==> AsRefField(f, T) == f);
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <ref>name, T: name :: { h[o, AsRefField(f, T)] } IsHeap(h) ==> $Is(h[o, AsRefField(f, T)], T));
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <ref>name, T: name :: { h[o, AsNonNullRefField(f, T)] } IsHeap(h) && o != null && (o != $BeingConstructed || h[$BeingConstructed, $NonNullFieldsAreInitialized] == true) ==> h[o, AsNonNullRefField(f, T)] != null);
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <int>name, T: name :: { h[o, AsRangeField(f, T)] } IsHeap(h) ==> InRange(h[o, AsRangeField(f, T)], T));
-
-function $IsMemberlessType(name) returns (bool);
-
-axiom (forall o: ref :: { $IsMemberlessType($typeof(o)) } !$IsMemberlessType($typeof(o)));
-
-function $IsImmutable(T: name) returns (bool);
-
+function ValueArrayGet<any>($$unnamed~f : elements, $$unnamed~e : int) returns ($$unnamed~g : any);
+function ValueArraySet<any>($$unnamed~j : elements, $$unnamed~i : int, $$unnamed~h : any) returns ($$unnamed~k : elements);
+function RefArrayGet($$unnamed~m : elements, $$unnamed~l : int) returns ($$unnamed~n : ref);
+function RefArraySet($$unnamed~q : elements, $$unnamed~p : int, $$unnamed~o : ref) returns ($$unnamed~r : elements);
+axiom (forall<any> A : elements, i : int, x : any :: (ValueArrayGet(ValueArraySet(A, i, x), i) == x));
+axiom (forall<any> A : elements, i : int, j : int, x : any :: ((i != j) ==> (ValueArrayGet(ValueArraySet(A, i, x), j) == ValueArrayGet(A, j))));
+axiom (forall A : elements, i : int, x : ref :: (RefArrayGet(RefArraySet(A, i, x), i) == x));
+axiom (forall A : elements, i : int, j : int, x : ref :: ((i != j) ==> (RefArrayGet(RefArraySet(A, i, x), j) == RefArrayGet(A, j))));
+function ArrayIndex(arr : ref, dim : int, indexAtDim : int, remainingIndexContribution : int) returns ($$unnamed~s : int);
+axiom (forall a : ref, d : int, x : int, y : int, x' : int, y' : int :: {ArrayIndex(a, d, x, y), ArrayIndex(a, d, x', y')} ((ArrayIndex(a, d, x, y) == ArrayIndex(a, d, x', y')) ==> ((x == x') && (y == y'))));
+axiom (forall a : ref, T : name, i : int, r : int, heap : <x>[ref, name]x :: {($typeof(a) <: RefArray(T, r)), RefArrayGet(heap[a, $elements], i)} ((IsHeap(heap) && ($typeof(a) <: RefArray(T, r))) ==> $Is(RefArrayGet(heap[a, $elements], i), T)));
+axiom (forall a : ref, T : name, i : int, r : int, heap : <x>[ref, name]x :: {($typeof(a) <: NonNullRefArray(T, r)), RefArrayGet(heap[a, $elements], i)} ((IsHeap(heap) && ($typeof(a) <: NonNullRefArray(T, r))) ==> $IsNotNull(RefArrayGet(heap[a, $elements], i), T)));
+function $Rank($$unnamed~t : ref) returns ($$unnamed~u : int);
+axiom (forall a : ref :: (1 <= $Rank(a)));
+axiom (forall a : ref, T : name, r : int :: {($typeof(a) <: RefArray(T, r))} (((a != null) && ($typeof(a) <: RefArray(T, r))) ==> ($Rank(a) == r)));
+axiom (forall a : ref, T : name, r : int :: {($typeof(a) <: NonNullRefArray(T, r))} (((a != null) && ($typeof(a) <: NonNullRefArray(T, r))) ==> ($Rank(a) == r)));
+axiom (forall a : ref, T : name, r : int :: {($typeof(a) <: ValueArray(T, r))} (((a != null) && ($typeof(a) <: ValueArray(T, r))) ==> ($Rank(a) == r)));
+function $Length($$unnamed~v : ref) returns ($$unnamed~w : int);
+axiom (forall a : ref :: {$Length(a)} (0 <= $Length(a)));
+function $DimLength($$unnamed~y : ref, $$unnamed~x : int) returns ($$unnamed~z : int);
+axiom (forall a : ref, i : int :: (0 <= $DimLength(a, i)));
+axiom (forall a : ref :: {$DimLength(a, 0)} (($Rank(a) == 1) ==> ($DimLength(a, 0) == $Length(a))));
+function $LBound($$unnamed~ab : ref, $$unnamed~aa : int) returns ($$unnamed~ac : int);
+function $UBound($$unnamed~ae : ref, $$unnamed~ad : int) returns ($$unnamed~af : int);
+axiom (forall a : ref, i : int :: {$LBound(a, i)} ($LBound(a, i) == 0));
+axiom (forall a : ref, i : int :: {$UBound(a, i)} ($UBound(a, i) == ($DimLength(a, i) - 1)));
+const $ArrayCategoryValue : name;
+const $ArrayCategoryRef : name;
+const $ArrayCategoryNonNullRef : name;
+function $ArrayCategory(arrayType : name) returns (arrayCategory : name);
+axiom (forall T : name, ET : name, r : int :: {(T <: ValueArray(ET, r))} ((T <: ValueArray(ET, r)) ==> ($ArrayCategory(T) == $ArrayCategoryValue)));
+axiom (forall T : name, ET : name, r : int :: {(T <: RefArray(ET, r))} ((T <: RefArray(ET, r)) ==> ($ArrayCategory(T) == $ArrayCategoryRef)));
+axiom (forall T : name, ET : name, r : int :: {(T <: NonNullRefArray(ET, r))} ((T <: NonNullRefArray(ET, r)) ==> ($ArrayCategory(T) == $ArrayCategoryNonNullRef)));
+const System.Array : name;
+axiom (System.Array <: System.Object);
+function $ElementType($$unnamed~ag : name) returns ($$unnamed~ah : name);
+function ValueArray(elementType : name, rank : int) returns ($$unnamed~ai : name);
+axiom (forall T : name, r : int :: {ValueArray(T, r)} (ValueArray(T, r) <: System.Array));
+function RefArray(elementType : name, rank : int) returns ($$unnamed~aj : name);
+axiom (forall T : name, r : int :: {RefArray(T, r)} (RefArray(T, r) <: System.Array));
+function NonNullRefArray(elementType : name, rank : int) returns ($$unnamed~ak : name);
+axiom (forall T : name, r : int :: {NonNullRefArray(T, r)} (NonNullRefArray(T, r) <: System.Array));
+axiom (forall T : name, U : name, r : int :: ((U <: T) ==> (RefArray(U, r) <: RefArray(T, r))));
+axiom (forall T : name, U : name, r : int :: ((U <: T) ==> (NonNullRefArray(U, r) <: NonNullRefArray(T, r))));
+axiom (forall A : name, r : int :: ($ElementType(ValueArray(A, r)) == A));
+axiom (forall A : name, r : int :: ($ElementType(RefArray(A, r)) == A));
+axiom (forall A : name, r : int :: ($ElementType(NonNullRefArray(A, r)) == A));
+axiom (forall A : name, r : int, T : name :: {(T <: RefArray(A, r))} ((T <: RefArray(A, r)) ==> ((T == RefArray($ElementType(T), r)) && ($ElementType(T) <: A))));
+axiom (forall A : name, r : int, T : name :: {(T <: NonNullRefArray(A, r))} ((T <: NonNullRefArray(A, r)) ==> ((T == NonNullRefArray($ElementType(T), r)) && ($ElementType(T) <: A))));
+axiom (forall A : name, r : int, T : name :: {(T <: ValueArray(A, r))} ((T <: ValueArray(A, r)) ==> (T == ValueArray(A, r))));
+axiom (forall A : name, r : int, T : name :: ((RefArray(A, r) <: T) ==> ((System.Array <: T) || ((T == RefArray($ElementType(T), r)) && (A <: $ElementType(T))))));
+axiom (forall A : name, r : int, T : name :: ((NonNullRefArray(A, r) <: T) ==> ((System.Array <: T) || ((T == NonNullRefArray($ElementType(T), r)) && (A <: $ElementType(T))))));
+axiom (forall A : name, r : int, T : name :: ((ValueArray(A, r) <: T) ==> ((System.Array <: T) || (T == ValueArray(A, r)))));
+function $ArrayPtr(elementType : name) returns ($$unnamed~al : name);
+function $StructGet<any>($$unnamed~an : struct, $$unnamed~am : name) returns ($$unnamed~ao : any);
+function $StructSet<any>($$unnamed~ar : struct, $$unnamed~aq : name, $$unnamed~ap : any) returns ($$unnamed~as : struct);
+axiom (forall<any> s : struct, f : name, x : any :: ($StructGet($StructSet(s, f, x), f) == x));
+axiom (forall<any> s : struct, f : name, f' : name, x : any :: ((f != f') ==> ($StructGet($StructSet(s, f, x), f') == $StructGet(s, f'))));
+function ZeroInit(s : struct, typ : name) returns ($$unnamed~at : bool);
+function $typeof($$unnamed~au : ref) returns ($$unnamed~av : name);
+function $BaseClass(sub : name) returns (base : name);
+function AsDirectSubClass(sub : name, base : name) returns (sub' : name);
+function OneClassDown(sub : name, base : name) returns (directSub : name);
+axiom (forall A : name, B : name, C : name :: {(C <: AsDirectSubClass(B, A))} ((C <: AsDirectSubClass(B, A)) ==> (OneClassDown(C, A) == B)));
+function $IsValueType($$unnamed~aw : name) returns ($$unnamed~ax : bool);
+axiom (forall T : name :: ($IsValueType(T) ==> ((forall U : name :: ((T <: U) ==> (T == U))) && (forall U : name :: ((U <: T) ==> (T == U))))));
+const System.Object : name;
+function $IsTokenForType($$unnamed~az : struct, $$unnamed~ay : name) returns ($$unnamed~ba : bool);
+function TypeObject($$unnamed~bb : name) returns ($$unnamed~bc : ref);
+const System.Type : name;
+axiom (System.Type <: System.Object);
+axiom (forall T : name :: {TypeObject(T)} $IsNotNull(TypeObject(T), System.Type));
+function TypeName($$unnamed~bd : ref) returns ($$unnamed~be : name);
+axiom (forall T : name :: {TypeObject(T)} (TypeName(TypeObject(T)) == T));
+function $Is($$unnamed~bg : ref, $$unnamed~bf : name) returns ($$unnamed~bh : bool);
+axiom (forall o : ref, T : name :: {$Is(o, T)} ($Is(o, T) <==> ((o == null) || ($typeof(o) <: T))));
+function $IsNotNull($$unnamed~bj : ref, $$unnamed~bi : name) returns ($$unnamed~bk : bool);
+axiom (forall o : ref, T : name :: {$IsNotNull(o, T)} ($IsNotNull(o, T) <==> ((o != null) && $Is(o, T))));
+function $As($$unnamed~bm : ref, $$unnamed~bl : name) returns ($$unnamed~bn : ref);
+axiom (forall o : ref, T : name :: ($Is(o, T) ==> ($As(o, T) == o)));
+axiom (forall o : ref, T : name :: (!$Is(o, T) ==> ($As(o, T) == null)));
+axiom (forall h : <x>[ref, name]x, o : ref :: {($typeof(o) <: System.Array), h[o, $inv]} (((IsHeap(h) && (o != null)) && ($typeof(o) <: System.Array)) ==> ((h[o, $inv] == $typeof(o)) && (h[o, $localinv] == $typeof(o)))));
+function IsAllocated<any>(h : <x>[ref, name]x, o : any) returns ($$unnamed~bo : bool);
+axiom (forall h : <x>[ref, name]x, o : ref, f : name :: {IsAllocated(h, h[o, f])} ((IsHeap(h) && h[o, $allocated]) ==> IsAllocated(h, h[o, f])));
+axiom (forall h : <x>[ref, name]x, o : ref, f : name :: {h[h[o, f], $allocated]} ((IsHeap(h) && h[o, $allocated]) ==> h[h[o, f], $allocated]));
+axiom (forall h : <x>[ref, name]x, s : struct, f : name :: {IsAllocated(h, $StructGet(s, f))} (IsAllocated(h, s) ==> IsAllocated(h, $StructGet(s, f))));
+axiom (forall h : <x>[ref, name]x, e : elements, i : int :: {IsAllocated(h, RefArrayGet(e, i))} (IsAllocated(h, e) ==> IsAllocated(h, RefArrayGet(e, i))));
+axiom (forall h : <x>[ref, name]x, e : elements, i : int :: {IsAllocated(h, ValueArrayGet(e, i))} (IsAllocated(h, e) ==> IsAllocated(h, ValueArrayGet(e, i))));
+axiom (forall h : <x>[ref, name]x, o : ref :: {h[o, $allocated]} (IsAllocated(h, o) ==> h[o, $allocated]));
+axiom (forall h : <x>[ref, name]x, c : name :: {h[ClassRepr(c), $allocated]} (IsHeap(h) ==> h[ClassRepr(c), $allocated]));
+const $BeingConstructed : ref;
+const $NonNullFieldsAreInitialized : name;
+function DeclType(field : name) returns (class : name);
+function AsNonNullRefField(field : name, T : name) returns (f : name);
+function AsRefField(field : name, T : name) returns (f : name);
+function AsRangeField(field : name, T : name) returns (f : name);
+axiom (forall f : name, T : name :: {AsNonNullRefField(f, T)} ((AsNonNullRefField(f, T) == f) ==> (AsRefField(f, T) == f)));
+axiom (forall h : <x>[ref, name]x, o : ref, f : name, T : name :: {h[o, AsRefField(f, T)]} (IsHeap(h) ==> $Is(h[o, AsRefField(f, T)], T)));
+axiom (forall h : <x>[ref, name]x, o : ref, f : name, T : name :: {h[o, AsNonNullRefField(f, T)]} (((IsHeap(h) && (o != null)) && ((o != $BeingConstructed) || (h[$BeingConstructed, $NonNullFieldsAreInitialized] == true))) ==> (h[o, AsNonNullRefField(f, T)] != null)));
+axiom (forall h : <x>[ref, name]x, o : ref, f : name, T : name :: {h[o, AsRangeField(f, T)]} (IsHeap(h) ==> InRange(h[o, AsRangeField(f, T)], T)));
+function $IsMemberlessType($$unnamed~bp : name) returns ($$unnamed~bq : bool);
+axiom (forall o : ref :: {$IsMemberlessType($typeof(o))} !$IsMemberlessType($typeof(o)));
+function $IsImmutable(T : name) returns ($$unnamed~br : bool);
 axiom !$IsImmutable(System.Object);
-
-function $AsImmutable(T: name) returns (theType: name);
-
-function $AsMutable(T: name) returns (theType: name);
-
-axiom (forall T: name, U: name :: { U <: $AsImmutable(T) } U <: $AsImmutable(T) ==> $IsImmutable(U) && $AsImmutable(U) == U);
-
-axiom (forall T: name, U: name :: { U <: $AsMutable(T) } U <: $AsMutable(T) ==> !$IsImmutable(U) && $AsMutable(U) == U);
-
-function AsOwner(string: ref, owner: ref) returns (theString: ref);
-
-axiom (forall o: ref, T: name :: { $typeof(o) <: $AsImmutable(T) } o != null && o != $BeingConstructed && $typeof(o) <: $AsImmutable(T) ==> (forall h: [ref,<x>name]x :: { IsHeap(h) } IsHeap(h) ==> h[o, $inv] == $typeof(o) && h[o, $localinv] == $typeof(o) && h[o, $ownerFrame] == $PeerGroupPlaceholder && AsOwner(o, h[o, $ownerRef]) == o && (forall t: ref :: { AsOwner(o, h[t, $ownerRef]) } AsOwner(o, h[t, $ownerRef]) == o ==> t == o || h[t, $ownerFrame] != $PeerGroupPlaceholder)));
-
-const System.String: name;
-
-function $StringLength(ref) returns (int);
-
-axiom (forall s: ref :: { $StringLength(s) } 0 <= $StringLength(s));
-
-function AsRepField(f: <ref>name, declaringType: name) returns (theField: <ref>name);
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <ref>name, T: name :: { h[o, AsRepField(f, T)] } IsHeap(h) && h[o, AsRepField(f, T)] != null ==> h[h[o, AsRepField(f, T)], $ownerRef] == o && h[h[o, AsRepField(f, T)], $ownerFrame] == T);
-
-function AsPeerField(f: <ref>name) returns (theField: <ref>name);
-
-axiom (forall h: [ref,<x>name]x, o: ref, f: <ref>name :: { h[o, AsPeerField(f)] } IsHeap(h) && h[o, AsPeerField(f)] != null ==> h[h[o, AsPeerField(f)], $ownerRef] == h[o, $ownerRef] && h[h[o, AsPeerField(f)], $ownerFrame] == h[o, $ownerFrame]);
-
-axiom (forall h: [ref,<x>name]x, o: ref :: { h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame] } IsHeap(h) && h[o, $ownerFrame] != $PeerGroupPlaceholder && h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame] && h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]) ==> h[o, $inv] == $typeof(o) && h[o, $localinv] == $typeof(o));
-
-procedure $SetOwner(o: ref, ow: ref, fr: name);
+function $AsImmutable(T : name) returns (theType : name);
+function $AsMutable(T : name) returns (theType : name);
+axiom (forall T : name, U : name :: {(U <: $AsImmutable(T))} ((U <: $AsImmutable(T)) ==> ($IsImmutable(U) && ($AsImmutable(U) == U))));
+axiom (forall T : name, U : name :: {(U <: $AsMutable(T))} ((U <: $AsMutable(T)) ==> (!$IsImmutable(U) && ($AsMutable(U) == U))));
+function AsOwner(string : ref, owner : ref) returns (theString : ref);
+axiom (forall o : ref, T : name :: {($typeof(o) <: $AsImmutable(T))} ((((o != null) && (o != $BeingConstructed)) && ($typeof(o) <: $AsImmutable(T))) ==> (forall h : <x>[ref, name]x :: {IsHeap(h)} (IsHeap(h) ==> (((((h[o, $inv] == $typeof(o)) && (h[o, $localinv] == $typeof(o))) && (h[o, $ownerFrame] == $PeerGroupPlaceholder)) && (AsOwner(o, h[o, $ownerRef]) == o)) && (forall t : ref :: {AsOwner(o, h[t, $ownerRef])} ((AsOwner(o, h[t, $ownerRef]) == o) ==> ((t == o) || (h[t, $ownerFrame] != $PeerGroupPlaceholder)))))))));
+const System.String : name;
+function $StringLength($$unnamed~bs : ref) returns ($$unnamed~bt : int);
+axiom (forall s : ref :: {$StringLength(s)} (0 <= $StringLength(s)));
+function AsRepField(f : name, declaringType : name) returns (theField : name);
+axiom (forall h : <x>[ref, name]x, o : ref, f : name, T : name :: {h[o, AsRepField(f, T)]} ((IsHeap(h) && (h[o, AsRepField(f, T)] != null)) ==> ((h[h[o, AsRepField(f, T)], $ownerRef] == o) && (h[h[o, AsRepField(f, T)], $ownerFrame] == T))));
+function AsPeerField(f : name) returns (theField : name);
+axiom (forall h : <x>[ref, name]x, o : ref, f : name :: {h[o, AsPeerField(f)]} ((IsHeap(h) && (h[o, AsPeerField(f)] != null)) ==> ((h[h[o, AsPeerField(f)], $ownerRef] == h[o, $ownerRef]) && (h[h[o, AsPeerField(f)], $ownerFrame] == h[o, $ownerFrame]))));
+axiom (forall h : <x>[ref, name]x, o : ref :: {(h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame])} ((((IsHeap(h) && (h[o, $ownerFrame] != $PeerGroupPlaceholder)) && (h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame])) && (h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]))) ==> ((h[o, $inv] == $typeof(o)) && (h[o, $localinv] == $typeof(o)))));
+procedure $SetOwner(o : ref, ow : ref, fr : name);
   modifies $Heap;
-  ensures (forall p: ref, F: name :: { $Heap[p, F] } (F != $ownerRef && F != $ownerFrame) || old($Heap[p, $ownerRef] != $Heap[o, $ownerRef]) || old($Heap[p, $ownerFrame] != $Heap[o, $ownerFrame]) ==> old($Heap[p, F]) == $Heap[p, F]);
-  ensures (forall p: ref :: { $Heap[p, $ownerRef] } { $Heap[p, $ownerFrame] } old($Heap[p, $ownerRef] == $Heap[o, $ownerRef]) && old($Heap[p, $ownerFrame] == $Heap[o, $ownerFrame]) ==> $Heap[p, $ownerRef] == ow && $Heap[p, $ownerFrame] == fr);
+  ensures (forall p : ref, F : name :: {$Heap[p, F]} (((((F != $ownerRef) && (F != $ownerFrame)) || old(($Heap[p, $ownerRef] != $Heap[o, $ownerRef]))) || old(($Heap[p, $ownerFrame] != $Heap[o, $ownerFrame]))) ==> (old($Heap[p, F]) == $Heap[p, F])));
+  ensures (forall p : ref :: {$Heap[p, $ownerRef]} {$Heap[p, $ownerFrame]} ((old(($Heap[p, $ownerRef] == $Heap[o, $ownerRef])) && old(($Heap[p, $ownerFrame] == $Heap[o, $ownerFrame]))) ==> (($Heap[p, $ownerRef] == ow) && ($Heap[p, $ownerFrame] == fr))));
+  
 
-
-
-procedure $UpdateOwnersForRep(o: ref, T: name, e: ref);
+procedure $UpdateOwnersForRep(o : ref, T : name, e : ref);
   modifies $Heap;
-  ensures (forall p: ref, F: name :: { $Heap[p, F] } (F != $ownerRef && F != $ownerFrame) || old($Heap[p, $ownerRef] != $Heap[e, $ownerRef]) || old($Heap[p, $ownerFrame] != $Heap[e, $ownerFrame]) ==> old($Heap[p, F]) == $Heap[p, F]);
-  ensures e == null ==> $Heap == old($Heap);
-  ensures e != null ==> (forall p: ref :: { $Heap[p, $ownerRef] } { $Heap[p, $ownerFrame] } old($Heap[p, $ownerRef] == $Heap[e, $ownerRef]) && old($Heap[p, $ownerFrame] == $Heap[e, $ownerFrame]) ==> $Heap[p, $ownerRef] == o && $Heap[p, $ownerFrame] == T);
+  ensures (forall p : ref, F : name :: {$Heap[p, F]} (((((F != $ownerRef) && (F != $ownerFrame)) || old(($Heap[p, $ownerRef] != $Heap[e, $ownerRef]))) || old(($Heap[p, $ownerFrame] != $Heap[e, $ownerFrame]))) ==> (old($Heap[p, F]) == $Heap[p, F])));
+  ensures ((e == null) ==> ($Heap == old($Heap)));
+  ensures ((e != null) ==> (forall p : ref :: {$Heap[p, $ownerRef]} {$Heap[p, $ownerFrame]} ((old(($Heap[p, $ownerRef] == $Heap[e, $ownerRef])) && old(($Heap[p, $ownerFrame] == $Heap[e, $ownerFrame]))) ==> (($Heap[p, $ownerRef] == o) && ($Heap[p, $ownerFrame] == T)))));
+  
 
-
-
-procedure $UpdateOwnersForPeer(c: ref, d: ref);
+procedure $UpdateOwnersForPeer(c : ref, d : ref);
   modifies $Heap;
-  ensures (forall p: ref, F: name :: { $Heap[p, F] } (F != $ownerRef && F != $ownerFrame) || old(($Heap[p, $ownerRef] != $Heap[c, $ownerRef] || $Heap[p, $ownerFrame] != $Heap[c, $ownerFrame]) && ($Heap[p, $ownerRef] != $Heap[d, $ownerRef] || $Heap[p, $ownerFrame] != $Heap[d, $ownerFrame])) ==> old($Heap[p, F]) == $Heap[p, F]);
-  ensures d == null ==> $Heap == old($Heap);
-  ensures d != null ==> (forall p: ref :: { $Heap[p, $ownerRef] } { $Heap[p, $ownerFrame] } (old($Heap[p, $ownerRef] == $Heap[c, $ownerRef]) && old($Heap[p, $ownerFrame] == $Heap[c, $ownerFrame])) || (old($Heap[p, $ownerRef] == $Heap[d, $ownerRef]) && old($Heap[p, $ownerFrame] == $Heap[d, $ownerFrame])) ==> (old($Heap)[d, $ownerFrame] == $PeerGroupPlaceholder && $Heap[p, $ownerRef] == old($Heap)[c, $ownerRef] && $Heap[p, $ownerFrame] == old($Heap)[c, $ownerFrame]) || (old($Heap)[d, $ownerFrame] != $PeerGroupPlaceholder && $Heap[p, $ownerRef] == old($Heap)[d, $ownerRef] && $Heap[p, $ownerFrame] == old($Heap)[d, $ownerFrame]));
+  ensures (forall p : ref, F : name :: {$Heap[p, F]} ((((F != $ownerRef) && (F != $ownerFrame)) || old(((($Heap[p, $ownerRef] != $Heap[c, $ownerRef]) || ($Heap[p, $ownerFrame] != $Heap[c, $ownerFrame])) && (($Heap[p, $ownerRef] != $Heap[d, $ownerRef]) || ($Heap[p, $ownerFrame] != $Heap[d, $ownerFrame]))))) ==> (old($Heap[p, F]) == $Heap[p, F])));
+  ensures ((d == null) ==> ($Heap == old($Heap)));
+  ensures ((d != null) ==> (forall p : ref :: {$Heap[p, $ownerRef]} {$Heap[p, $ownerFrame]} (((old(($Heap[p, $ownerRef] == $Heap[c, $ownerRef])) && old(($Heap[p, $ownerFrame] == $Heap[c, $ownerFrame]))) || (old(($Heap[p, $ownerRef] == $Heap[d, $ownerRef])) && old(($Heap[p, $ownerFrame] == $Heap[d, $ownerFrame])))) ==> ((((old($Heap)[d, $ownerFrame] == $PeerGroupPlaceholder) && ($Heap[p, $ownerRef] == old($Heap)[c, $ownerRef])) && ($Heap[p, $ownerFrame] == old($Heap)[c, $ownerFrame])) || (((old($Heap)[d, $ownerFrame] != $PeerGroupPlaceholder) && ($Heap[p, $ownerRef] == old($Heap)[d, $ownerRef])) && ($Heap[p, $ownerFrame] == old($Heap)[d, $ownerFrame]))))));
+  
 
-
-
-const $FirstConsistentOwner: <ref>name;
-
-function $AsPureObject(ref) returns (ref);
-
-function ##FieldDependsOnFCO(o: ref, f: name, ev: exposeVersionType) returns (value: any);
-
-axiom (forall o: ref, f: name, h: [ref,<x>name]x :: { h[$AsPureObject(o), f] } IsHeap(h) && o != null && h[o, $allocated] == true && h[o, $ownerFrame] != $PeerGroupPlaceholder && h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame] && h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]) ==> h[o, f] == ##FieldDependsOnFCO(o, f, h[h[o, $FirstConsistentOwner], $exposeVersion]));
-
-axiom (forall o: ref, h: [ref,<x>name]x :: { h[o, $FirstConsistentOwner] } IsHeap(h) && o != null && h[o, $allocated] == true && h[o, $ownerFrame] != $PeerGroupPlaceholder && h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame] && h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]) ==> h[o, $FirstConsistentOwner] != null && h[h[o, $FirstConsistentOwner], $allocated] == true && (h[h[o, $FirstConsistentOwner], $ownerFrame] == $PeerGroupPlaceholder || !(h[h[h[o, $FirstConsistentOwner], $ownerRef], $inv] <: h[h[o, $FirstConsistentOwner], $ownerFrame]) || h[h[h[o, $FirstConsistentOwner], $ownerRef], $localinv] == $BaseClass(h[h[o, $FirstConsistentOwner], $ownerFrame])));
-
-function Box(any, ref) returns (ref);
-
-function Unbox(ref) returns (any);
-
-axiom (forall x: any, p: ref :: { Unbox(Box(x, p)) } Unbox(Box(x, p)) == x);
-
-function UnboxedType(ref) returns (name);
-
-axiom (forall p: ref :: { $IsValueType(UnboxedType(p)) } $IsValueType(UnboxedType(p)) ==> (forall heap: [ref,<x>name]x, x: any :: { heap[Box(x, p), $inv] } IsHeap(heap) ==> heap[Box(x, p), $inv] == $typeof(Box(x, p)) && heap[Box(x, p), $localinv] == $typeof(Box(x, p))));
-
-axiom (forall x: any, p: ref :: { UnboxedType(Box(x, p)) <: System.Object } UnboxedType(Box(x, p)) <: System.Object && Box(x, p) == p ==> x == p);
-
-function BoxTester(p: ref, typ: name) returns (ref);
-
-axiom (forall p: ref, typ: name :: { BoxTester(p, typ) } UnboxedType(p) == typ <==> BoxTester(p, typ) != null);
-
-const System.SByte: name;
-
+const $FirstConsistentOwner : name;
+function $AsPureObject($$unnamed~bu : ref) returns ($$unnamed~bv : ref);
+function ##FieldDependsOnFCO<any>(o : ref, f : name, ev : exposeVersionType) returns (value : any);
+axiom (forall o : ref, f : name, h : <x>[ref, name]x :: {h[$AsPureObject(o), f]} ((((((IsHeap(h) && (o != null)) && (h[o, $allocated] == true)) && (h[o, $ownerFrame] != $PeerGroupPlaceholder)) && (h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame])) && (h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]))) ==> (h[o, f] == ##FieldDependsOnFCO(o, f, h[h[o, $FirstConsistentOwner], $exposeVersion]))));
+axiom (forall o : ref, h : <x>[ref, name]x :: {h[o, $FirstConsistentOwner]} ((((((IsHeap(h) && (o != null)) && (h[o, $allocated] == true)) && (h[o, $ownerFrame] != $PeerGroupPlaceholder)) && (h[h[o, $ownerRef], $inv] <: h[o, $ownerFrame])) && (h[h[o, $ownerRef], $localinv] != $BaseClass(h[o, $ownerFrame]))) ==> (((h[o, $FirstConsistentOwner] != null) && (h[h[o, $FirstConsistentOwner], $allocated] == true)) && (((h[h[o, $FirstConsistentOwner], $ownerFrame] == $PeerGroupPlaceholder) || !(h[h[h[o, $FirstConsistentOwner], $ownerRef], $inv] <: h[h[o, $FirstConsistentOwner], $ownerFrame])) || (h[h[h[o, $FirstConsistentOwner], $ownerRef], $localinv] == $BaseClass(h[h[o, $FirstConsistentOwner], $ownerFrame]))))));
+function Box<any>($$unnamed~bx : any, $$unnamed~bw : ref) returns ($$unnamed~by : ref);
+function Unbox<any>($$unnamed~bz : ref) returns ($$unnamed~ca : any);
+axiom (forall<any> x : any, p : ref :: {Unbox(Box(x, p))} (Unbox(Box(x, p)) == x));
+function UnboxedType($$unnamed~cb : ref) returns ($$unnamed~cc : name);
+axiom (forall p : ref :: {$IsValueType(UnboxedType(p))} ($IsValueType(UnboxedType(p)) ==> (forall<any> heap : <x>[ref, name]x, x : any :: {heap[Box(x, p), $inv]} (IsHeap(heap) ==> ((heap[Box(x, p), $inv] == $typeof(Box(x, p))) && (heap[Box(x, p), $localinv] == $typeof(Box(x, p))))))));
+axiom (forall<any> x : any, p : ref :: {(UnboxedType(Box(x, p)) <: System.Object)} (((UnboxedType(Box(x, p)) <: System.Object) && (Box(x, p) == p)) ==> (x == p)));
+function BoxTester(p : ref, typ : name) returns ($$unnamed~cd : ref);
+axiom (forall p : ref, typ : name :: {BoxTester(p, typ)} ((UnboxedType(p) == typ) <==> (BoxTester(p, typ) != null)));
+const System.SByte : name;
 axiom $IsValueType(System.SByte);
-
-const System.Byte: name;
-
+const System.Byte : name;
 axiom $IsValueType(System.Byte);
-
-const System.Int16: name;
-
+const System.Int16 : name;
 axiom $IsValueType(System.Int16);
-
-const System.UInt16: name;
-
+const System.UInt16 : name;
 axiom $IsValueType(System.UInt16);
-
-const System.Int32: name;
-
+const System.Int32 : name;
 axiom $IsValueType(System.Int32);
-
-const System.UInt32: name;
-
+const System.UInt32 : name;
 axiom $IsValueType(System.UInt32);
-
-const System.Int64: name;
-
+const System.Int64 : name;
 axiom $IsValueType(System.Int64);
-
-const System.UInt64: name;
-
+const System.UInt64 : name;
 axiom $IsValueType(System.UInt64);
-
-const System.Char: name;
-
+const System.Char : name;
 axiom $IsValueType(System.Char);
-
-const int#m2147483648: int;
-
-const int#2147483647: int;
-
-const int#4294967295: int;
-
-const int#m9223372036854775808: int;
-
-const int#9223372036854775807: int;
-
-const int#18446744073709551615: int;
-
-axiom int#m9223372036854775808 < int#m2147483648;
-
-axiom int#m2147483648 < 0 - 100000;
-
-axiom 100000 < int#2147483647;
-
-axiom int#2147483647 < int#4294967295;
-
-axiom int#4294967295 < int#9223372036854775807;
-
-axiom int#9223372036854775807 < int#18446744073709551615;
-
-function InRange(i: int, T: name) returns (bool);
-
-axiom (forall i: int :: InRange(i, System.SByte) <==> 0 - 128 <= i && i < 128);
-
-axiom (forall i: int :: InRange(i, System.Byte) <==> 0 <= i && i < 256);
-
-axiom (forall i: int :: InRange(i, System.Int16) <==> 0 - 32768 <= i && i < 32768);
-
-axiom (forall i: int :: InRange(i, System.UInt16) <==> 0 <= i && i < 65536);
-
-axiom (forall i: int :: InRange(i, System.Int32) <==> int#m2147483648 <= i && i <= int#2147483647);
-
-axiom (forall i: int :: InRange(i, System.UInt32) <==> 0 <= i && i <= int#4294967295);
-
-axiom (forall i: int :: InRange(i, System.Int64) <==> int#m9223372036854775808 <= i && i <= int#9223372036854775807);
-
-axiom (forall i: int :: InRange(i, System.UInt64) <==> 0 <= i && i <= int#18446744073709551615);
-
-axiom (forall i: int :: InRange(i, System.Char) <==> 0 <= i && i < 65536);
-
-function $IntToInt(val: int, fromType: name, toType: name) returns (int);
-
-function $IntToReal(int, fromType: name, toType: name) returns (real);
-
-function $RealToInt(real, fromType: name, toType: name) returns (int);
-
-function $RealToReal(val: real, fromType: name, toType: name) returns (real);
-
-function $SizeIs(name, int) returns (bool);
-
-function $IfThenElse(bool, any, any) returns (any);
-
-axiom (forall b: bool, x: any, y: any :: { $IfThenElse(b, x, y) } b ==> $IfThenElse(b, x, y) == x);
-
-axiom (forall b: bool, x: any, y: any :: { $IfThenElse(b, x, y) } !b ==> $IfThenElse(b, x, y) == y);
-
-function #neg(int) returns (int);
-
-function #and(int, int) returns (int);
-
-function #or(int, int) returns (int);
-
-function #xor(int, int) returns (int);
-
-function #shl(int, int) returns (int);
-
-function #shr(int, int) returns (int);
-
-function #rneg(real) returns (real);
-
-function #radd(real, real) returns (real);
-
-function #rsub(real, real) returns (real);
-
-function #rmul(real, real) returns (real);
-
-function #rdiv(real, real) returns (real);
-
-function #rmod(real, real) returns (real);
-
-function #rLess(real, real) returns (bool);
-
-function #rAtmost(real, real) returns (bool);
-
-function #rEq(real, real) returns (bool);
-
-function #rNeq(real, real) returns (bool);
-
-function #rAtleast(real, real) returns (bool);
-
-function #rGreater(real, real) returns (bool);
-
-axiom (forall x: int, y: int :: { x % y } { x / y } x % y == x - x / y * y);
-
-axiom (forall x: int, y: int :: { x % y } 0 <= x && 0 < y ==> 0 <= x % y && x % y < y);
-
-axiom (forall x: int, y: int :: { x % y } 0 <= x && y < 0 ==> 0 <= x % y && x % y < 0 - y);
-
-axiom (forall x: int, y: int :: { x % y } x <= 0 && 0 < y ==> 0 - y < x % y && x % y <= 0);
-
-axiom (forall x: int, y: int :: { x % y } x <= 0 && y < 0 ==> y < x % y && x % y <= 0);
-
-axiom (forall x: int, y: int :: { (x + y) % y } 0 <= x && 0 <= y ==> (x + y) % y == x % y);
-
-axiom (forall x: int, y: int :: { (y + x) % y } 0 <= x && 0 <= y ==> (y + x) % y == x % y);
-
-axiom (forall x: int, y: int :: { (x - y) % y } 0 <= x - y && 0 <= y ==> (x - y) % y == x % y);
-
-axiom (forall a: int, b: int, d: int :: { a % d, b % d } 2 <= d && a % d == b % d && a < b ==> a + d <= b);
-
-axiom (forall x: int, y: int :: { #and(x, y) } 0 <= x || 0 <= y ==> 0 <= #and(x, y));
-
-axiom (forall x: int, y: int :: { #or(x, y) } 0 <= x && 0 <= y ==> 0 <= #or(x, y) && #or(x, y) <= x + y);
-
-axiom (forall i: int :: { #shl(i, 0) } #shl(i, 0) == i);
-
-axiom (forall i: int, j: int :: 0 <= j ==> #shl(i, j + 1) == #shl(i, j) * 2);
-
-axiom (forall i: int :: { #shr(i, 0) } #shr(i, 0) == i);
-
-axiom (forall i: int, j: int :: 0 <= j ==> #shr(i, j + 1) == #shr(i, j) / 2);
-
-function #System.String.IsInterned$System.String$notnull(ref) returns (ref);
-
-function #System.String.Equals$System.String(ref, ref) returns (bool);
-
-function #System.String.Equals$System.String$System.String(ref, ref) returns (bool);
-
-axiom (forall a: ref, b: ref :: { #System.String.Equals$System.String(a, b) } #System.String.Equals$System.String(a, b) == #System.String.Equals$System.String$System.String(a, b));
-
-axiom (forall a: ref, b: ref :: { #System.String.Equals$System.String$System.String(a, b) } #System.String.Equals$System.String$System.String(a, b) == #System.String.Equals$System.String$System.String(b, a));
-
-axiom (forall a: ref, b: ref :: { #System.String.Equals$System.String$System.String(a, b) } a != null && b != null && #System.String.Equals$System.String$System.String(a, b) ==> #System.String.IsInterned$System.String$notnull(a) == #System.String.IsInterned$System.String$notnull(b));
-
-const $UnknownRef: ref;
-
-const LoopInv1.field: <ref>name;
-
-const F.X: <int>name;
-
-const System.Reflection.ICustomAttributeProvider: name;
-
-const System.IConvertible: name;
-
-const System.Runtime.InteropServices._MemberInfo: name;
-
-const System.IComparable: name;
-
-const System.Reflection.IReflect: name;
-
-const System.IComparable`1...System.String: name;
-
-const System.Collections.IEnumerable: name;
-
-const System.Runtime.InteropServices._Type: name;
-
-const System.Reflection.MemberInfo: name;
-
-const System.Collections.Generic.IEnumerable`1...System.Char: name;
-
-const F: name;
-
-const System.IEquatable`1...System.String: name;
-
-const System.ICloneable: name;
-
-const LoopInv1: name;
-
+const int#m2147483648 : int;
+const int#2147483647 : int;
+const int#4294967295 : int;
+const int#m9223372036854775808 : int;
+const int#9223372036854775807 : int;
+const int#18446744073709551615 : int;
+axiom (int#m9223372036854775808 < int#m2147483648);
+axiom (int#m2147483648 < (0 - 100000));
+axiom (100000 < int#2147483647);
+axiom (int#2147483647 < int#4294967295);
+axiom (int#4294967295 < int#9223372036854775807);
+axiom (int#9223372036854775807 < int#18446744073709551615);
+function InRange(i : int, T : name) returns ($$unnamed~ce : bool);
+axiom (forall i : int :: (InRange(i, System.SByte) <==> (((0 - 128) <= i) && (i < 128))));
+axiom (forall i : int :: (InRange(i, System.Byte) <==> ((0 <= i) && (i < 256))));
+axiom (forall i : int :: (InRange(i, System.Int16) <==> (((0 - 32768) <= i) && (i < 32768))));
+axiom (forall i : int :: (InRange(i, System.UInt16) <==> ((0 <= i) && (i < 65536))));
+axiom (forall i : int :: (InRange(i, System.Int32) <==> ((int#m2147483648 <= i) && (i <= int#2147483647))));
+axiom (forall i : int :: (InRange(i, System.UInt32) <==> ((0 <= i) && (i <= int#4294967295))));
+axiom (forall i : int :: (InRange(i, System.Int64) <==> ((int#m9223372036854775808 <= i) && (i <= int#9223372036854775807))));
+axiom (forall i : int :: (InRange(i, System.UInt64) <==> ((0 <= i) && (i <= int#18446744073709551615))));
+axiom (forall i : int :: (InRange(i, System.Char) <==> ((0 <= i) && (i < 65536))));
+function $IntToInt(val : int, fromType : name, toType : name) returns ($$unnamed~cf : int);
+function $IntToReal($$unnamed~cg : int, fromType : name, toType : name) returns ($$unnamed~ch : real);
+function $RealToInt($$unnamed~ci : real, fromType : name, toType : name) returns ($$unnamed~cj : int);
+function $RealToReal(val : real, fromType : name, toType : name) returns ($$unnamed~ck : real);
+function $SizeIs($$unnamed~cm : name, $$unnamed~cl : int) returns ($$unnamed~cn : bool);
+function $IfThenElse<any>($$unnamed~cq : bool, $$unnamed~cp : any, $$unnamed~co : any) returns ($$unnamed~cr : any);
+axiom (forall<any> b : bool, x : any, y : any :: {$IfThenElse(b, x, y)} (b ==> ($IfThenElse(b, x, y) == x)));
+axiom (forall<any> b : bool, x : any, y : any :: {$IfThenElse(b, x, y)} (!b ==> ($IfThenElse(b, x, y) == y)));
+function #neg($$unnamed~cs : int) returns ($$unnamed~ct : int);
+function #and($$unnamed~cv : int, $$unnamed~cu : int) returns ($$unnamed~cw : int);
+function #or($$unnamed~cy : int, $$unnamed~cx : int) returns ($$unnamed~cz : int);
+function #xor($$unnamed~db : int, $$unnamed~da : int) returns ($$unnamed~dc : int);
+function #shl($$unnamed~de : int, $$unnamed~dd : int) returns ($$unnamed~df : int);
+function #shr($$unnamed~dh : int, $$unnamed~dg : int) returns ($$unnamed~di : int);
+function #rneg($$unnamed~dj : real) returns ($$unnamed~dk : real);
+function #radd($$unnamed~dm : real, $$unnamed~dl : real) returns ($$unnamed~dn : real);
+function #rsub($$unnamed~dp : real, $$unnamed~do : real) returns ($$unnamed~dq : real);
+function #rmul($$unnamed~ds : real, $$unnamed~dr : real) returns ($$unnamed~dt : real);
+function #rdiv($$unnamed~dv : real, $$unnamed~du : real) returns ($$unnamed~dw : real);
+function #rmod($$unnamed~dy : real, $$unnamed~dx : real) returns ($$unnamed~dz : real);
+function #rLess($$unnamed~eb : real, $$unnamed~ea : real) returns ($$unnamed~ec : bool);
+function #rAtmost($$unnamed~ee : real, $$unnamed~ed : real) returns ($$unnamed~ef : bool);
+function #rEq($$unnamed~eh : real, $$unnamed~eg : real) returns ($$unnamed~ei : bool);
+function #rNeq($$unnamed~ek : real, $$unnamed~ej : real) returns ($$unnamed~el : bool);
+function #rAtleast($$unnamed~en : real, $$unnamed~em : real) returns ($$unnamed~eo : bool);
+function #rGreater($$unnamed~eq : real, $$unnamed~ep : real) returns ($$unnamed~er : bool);
+axiom (forall x : int, y : int :: {(x % y)} {(x / y)} ((x % y) == (x - ((x / y) * y))));
+axiom (forall x : int, y : int :: {(x % y)} (((0 <= x) && (0 < y)) ==> ((0 <= (x % y)) && ((x % y) < y))));
+axiom (forall x : int, y : int :: {(x % y)} (((0 <= x) && (y < 0)) ==> ((0 <= (x % y)) && ((x % y) < (0 - y)))));
+axiom (forall x : int, y : int :: {(x % y)} (((x <= 0) && (0 < y)) ==> (((0 - y) < (x % y)) && ((x % y) <= 0))));
+axiom (forall x : int, y : int :: {(x % y)} (((x <= 0) && (y < 0)) ==> ((y < (x % y)) && ((x % y) <= 0))));
+axiom (forall x : int, y : int :: {((x + y) % y)} (((0 <= x) && (0 <= y)) ==> (((x + y) % y) == (x % y))));
+axiom (forall x : int, y : int :: {((y + x) % y)} (((0 <= x) && (0 <= y)) ==> (((y + x) % y) == (x % y))));
+axiom (forall x : int, y : int :: {((x - y) % y)} (((0 <= (x - y)) && (0 <= y)) ==> (((x - y) % y) == (x % y))));
+axiom (forall a : int, b : int, d : int :: {(a % d), (b % d)} ((((2 <= d) && ((a % d) == (b % d))) && (a < b)) ==> ((a + d) <= b)));
+axiom (forall x : int, y : int :: {#and(x, y)} (((0 <= x) || (0 <= y)) ==> (0 <= #and(x, y))));
+axiom (forall x : int, y : int :: {#or(x, y)} (((0 <= x) && (0 <= y)) ==> ((0 <= #or(x, y)) && (#or(x, y) <= (x + y)))));
+axiom (forall i : int :: {#shl(i, 0)} (#shl(i, 0) == i));
+axiom (forall i : int, j : int :: ((0 <= j) ==> (#shl(i, (j + 1)) == (#shl(i, j) * 2))));
+axiom (forall i : int :: {#shr(i, 0)} (#shr(i, 0) == i));
+axiom (forall i : int, j : int :: ((0 <= j) ==> (#shr(i, (j + 1)) == (#shr(i, j) / 2))));
+function #System.String.IsInterned$System.String$notnull($$unnamed~es : ref) returns ($$unnamed~et : ref);
+function #System.String.Equals$System.String($$unnamed~ev : ref, $$unnamed~eu : ref) returns ($$unnamed~ew : bool);
+function #System.String.Equals$System.String$System.String($$unnamed~ey : ref, $$unnamed~ex : ref) returns ($$unnamed~ez : bool);
+axiom (forall a : ref, b : ref :: {#System.String.Equals$System.String(a, b)} (#System.String.Equals$System.String(a, b) == #System.String.Equals$System.String$System.String(a, b)));
+axiom (forall a : ref, b : ref :: {#System.String.Equals$System.String$System.String(a, b)} (#System.String.Equals$System.String$System.String(a, b) == #System.String.Equals$System.String$System.String(b, a)));
+axiom (forall a : ref, b : ref :: {#System.String.Equals$System.String$System.String(a, b)} ((((a != null) && (b != null)) && #System.String.Equals$System.String$System.String(a, b)) ==> (#System.String.IsInterned$System.String$notnull(a) == #System.String.IsInterned$System.String$notnull(b))));
+const $UnknownRef : ref;
+const LoopInv1.field : name;
+const F.X : name;
+const System.Reflection.ICustomAttributeProvider : name;
+const System.IConvertible : name;
+const System.Runtime.InteropServices._MemberInfo : name;
+const System.IComparable : name;
+const System.Reflection.IReflect : name;
+const System.IComparable`1...System.String : name;
+const System.Collections.IEnumerable : name;
+const System.Runtime.InteropServices._Type : name;
+const System.Reflection.MemberInfo : name;
+const System.Collections.Generic.IEnumerable`1...System.Char : name;
+const F : name;
+const System.IEquatable`1...System.String : name;
+const System.ICloneable : name;
+const LoopInv1 : name;
 axiom !IsStaticField(F.X);
-
 axiom IsDirectlyModifiableField(F.X);
-
-axiom DeclType(F.X) == F;
-
-axiom AsRangeField(F.X, System.Int32) == F.X;
-
+axiom (DeclType(F.X) == F);
+axiom (AsRangeField(F.X, System.Int32) == F.X);
 axiom !IsStaticField(LoopInv1.field);
-
 axiom IsDirectlyModifiableField(LoopInv1.field);
-
-axiom DeclType(LoopInv1.field) == LoopInv1;
-
-axiom AsRefField(LoopInv1.field, F) == LoopInv1.field;
-
-axiom F <: F;
-
-axiom $BaseClass(F) == System.Object;
-
-axiom F <: $BaseClass(F) && AsDirectSubClass(F, $BaseClass(F)) == F;
-
-axiom !$IsImmutable(F) && $AsMutable(F) == F;
-
-axiom (forall $U: name :: { $U <: F } $U <: F ==> $U == F);
-
-procedure F.M(this: ref);
-  requires ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  free requires $BeingConstructed == null;
+axiom (DeclType(LoopInv1.field) == LoopInv1);
+axiom (AsRefField(LoopInv1.field, F) == LoopInv1.field);
+axiom (F <: F);
+axiom ($BaseClass(F) == System.Object);
+axiom ((F <: $BaseClass(F)) && (AsDirectSubClass(F, $BaseClass(F)) == F));
+axiom (!$IsImmutable(F) && ($AsMutable(F) == F));
+axiom (forall $U : name :: {($U <: F)} (($U <: F) ==> ($U == F)));
+procedure F.M(this : ref);
+  requires (((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old($o != this || !(F <: DeclType($f))) && old($o != this || $f != $exposeVersion) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old((($o != this) || !(F <: DeclType($f))))) && old((($o != this) || ($f != $exposeVersion)))) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation F.M(this: ref)
-{
-  var local0: ref where $Is(local0, F), stack0o: ref, stack1s: struct, stack1o: ref, temp0: exposeVersionType, stack0i: int;
-
-  entry:
-    assume $IsNotNull(this, F);
-    assume $Heap[this, $allocated] == true;
-    goto block1581;
-
-  block1581:
-    goto block1649;
-
-  block1649:
-    // ----- copy  ----- loopinv1.ssc(9,12)
-    local0 := this;
-    // ----- copy  ----- loopinv1.ssc(9,12)
-    stack0o := local0;
-    // ----- load token  ----- loopinv1.ssc(9,12)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(9,12)
-    stack1o := TypeObject(F);
-    // ----- local unpack  ----- loopinv1.ssc(9,12)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: F && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp0;
-    $Heap[stack0o, $exposeVersion] := temp0;
-    assume IsHeap($Heap);
-    goto block1666;
-
-  block1666:
-    // ----- load constant 4  ----- loopinv1.ssc(9,20)
-    stack0i := 4;
-    // ----- store field  ----- loopinv1.ssc(9,20)
-    assert this != null;
-    assert !($Heap[this, $inv] <: F) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, F.X] := stack0i;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block1717;
-
-  block1717:
-    // ----- copy  ----- loopinv1.ssc(9,27)
-    stack0o := local0;
-    // ----- load token  ----- loopinv1.ssc(9,27)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(9,27)
-    stack1o := TypeObject(F);
-    // ----- local pack  ----- loopinv1.ssc(9,27)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == F ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block1683;
-
-  block1683:
-    // ----- return  ----- loopinv1.ssc(9,29)
-    return;
-
+implementation F.M(this : ref) {
+  var local0 : ref where $Is(local0, F);
+  var stack0o : ref;
+  var stack1s : struct;
+  var stack1o : ref;
+  var temp0 : exposeVersionType;
+  var stack0i : int;
+  entry: assume $IsNotNull(this, F); goto $$entry~a;
+  $$entry~a: assume ($Heap[this, $allocated] == true); goto block1581;
+  block1581: goto block1649;
+  block1649: local0 := this; goto $$block1649~j;
+  $$block1649~j: stack0o := local0; goto $$block1649~i;
+  $$block1649~i: havoc stack1s; goto $$block1649~h;
+  $$block1649~h: assume $IsTokenForType(stack1s, F); goto $$block1649~g;
+  $$block1649~g: stack1o := TypeObject(F); goto $$block1649~f;
+  $$block1649~f: assert (stack0o != null); goto $$block1649~e;
+  $$block1649~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: F)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block1649~d;
+  $$block1649~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block1649~c;
+  $$block1649~c: havoc temp0; goto $$block1649~b;
+  $$block1649~b: $Heap := $Heap[stack0o, $exposeVersion := temp0]; goto $$block1649~a;
+  $$block1649~a: assume IsHeap($Heap); goto block1666;
+  block1666: stack0i := 4; goto $$block1666~d;
+  $$block1666~d: assert (this != null); goto $$block1666~c;
+  $$block1666~c: assert (!($Heap[this, $inv] <: F) || ($Heap[this, $localinv] == System.Object)); goto $$block1666~b;
+  $$block1666~b: $Heap := $Heap[this, F.X := stack0i]; goto $$block1666~a;
+  $$block1666~a: assume IsHeap($Heap); goto block1717;
+  block1717: stack0o := local0; goto $$block1717~h;
+  $$block1717~h: havoc stack1s; goto $$block1717~g;
+  $$block1717~g: assume $IsTokenForType(stack1s, F); goto $$block1717~f;
+  $$block1717~f: stack1o := TypeObject(F); goto $$block1717~e;
+  $$block1717~e: assert (stack0o != null); goto $$block1717~d;
+  $$block1717~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block1717~c;
+  $$block1717~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == F)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block1717~b;
+  $$block1717~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block1717~a;
+  $$block1717~a: assume IsHeap($Heap); goto block1683;
+  block1683: return;
+  
 }
 
-
-
-axiom System.Type <: System.Type;
-
-axiom System.Reflection.MemberInfo <: System.Reflection.MemberInfo;
-
-axiom $BaseClass(System.Reflection.MemberInfo) == System.Object;
-
-axiom System.Reflection.MemberInfo <: $BaseClass(System.Reflection.MemberInfo) && AsDirectSubClass(System.Reflection.MemberInfo, $BaseClass(System.Reflection.MemberInfo)) == System.Reflection.MemberInfo;
-
-axiom $IsImmutable(System.Reflection.MemberInfo) && $AsImmutable(System.Reflection.MemberInfo) == System.Reflection.MemberInfo;
-
-axiom System.Reflection.ICustomAttributeProvider <: System.Object;
-
+axiom (System.Type <: System.Type);
+axiom (System.Reflection.MemberInfo <: System.Reflection.MemberInfo);
+axiom ($BaseClass(System.Reflection.MemberInfo) == System.Object);
+axiom ((System.Reflection.MemberInfo <: $BaseClass(System.Reflection.MemberInfo)) && (AsDirectSubClass(System.Reflection.MemberInfo, $BaseClass(System.Reflection.MemberInfo)) == System.Reflection.MemberInfo));
+axiom ($IsImmutable(System.Reflection.MemberInfo) && ($AsImmutable(System.Reflection.MemberInfo) == System.Reflection.MemberInfo));
+axiom (System.Reflection.ICustomAttributeProvider <: System.Object);
 axiom $IsMemberlessType(System.Reflection.ICustomAttributeProvider);
-
-axiom System.Reflection.MemberInfo <: System.Reflection.ICustomAttributeProvider;
-
-axiom System.Runtime.InteropServices._MemberInfo <: System.Object;
-
+axiom (System.Reflection.MemberInfo <: System.Reflection.ICustomAttributeProvider);
+axiom (System.Runtime.InteropServices._MemberInfo <: System.Object);
 axiom $IsMemberlessType(System.Runtime.InteropServices._MemberInfo);
-
-axiom System.Reflection.MemberInfo <: System.Runtime.InteropServices._MemberInfo;
-
+axiom (System.Reflection.MemberInfo <: System.Runtime.InteropServices._MemberInfo);
 axiom $IsMemberlessType(System.Reflection.MemberInfo);
-
-axiom $BaseClass(System.Type) == System.Reflection.MemberInfo;
-
-axiom System.Type <: $BaseClass(System.Type) && AsDirectSubClass(System.Type, $BaseClass(System.Type)) == System.Type;
-
-axiom $IsImmutable(System.Type) && $AsImmutable(System.Type) == System.Type;
-
-axiom System.Runtime.InteropServices._Type <: System.Object;
-
+axiom ($BaseClass(System.Type) == System.Reflection.MemberInfo);
+axiom ((System.Type <: $BaseClass(System.Type)) && (AsDirectSubClass(System.Type, $BaseClass(System.Type)) == System.Type));
+axiom ($IsImmutable(System.Type) && ($AsImmutable(System.Type) == System.Type));
+axiom (System.Runtime.InteropServices._Type <: System.Object);
 axiom $IsMemberlessType(System.Runtime.InteropServices._Type);
-
-axiom System.Type <: System.Runtime.InteropServices._Type;
-
-axiom System.Reflection.IReflect <: System.Object;
-
+axiom (System.Type <: System.Runtime.InteropServices._Type);
+axiom (System.Reflection.IReflect <: System.Object);
 axiom $IsMemberlessType(System.Reflection.IReflect);
-
-axiom System.Type <: System.Reflection.IReflect;
-
+axiom (System.Type <: System.Reflection.IReflect);
 axiom $IsMemberlessType(System.Type);
-
-procedure F.NoOp(this: ref);
-  requires (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  // parameter of a pure method
-  free requires $AsPureObject(this) == this;
-  free requires $BeingConstructed == null;
+procedure F.NoOp(this : ref);
+  requires (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc)))));
+  free requires ($AsPureObject(this) == this);
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  free ensures $Heap == old($Heap);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old(true) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures ($Heap == old($Heap));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} ((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old(true)) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation F.NoOp(this: ref)
-{
-
-  entry:
-    assume $IsNotNull(this, F);
-    assume $Heap[this, $allocated] == true;
-    goto block2108;
-
-  block2108:
-    goto block2125;
-
-  block2125:
-    // ----- return  ----- loopinv1.ssc(12,24)
-    return;
-
+implementation F.NoOp(this : ref) {
+  entry: assume $IsNotNull(this, F); goto $$entry~b;
+  $$entry~b: assume ($Heap[this, $allocated] == true); goto block2108;
+  block2108: goto block2125;
+  block2125: return;
+  
 }
 
-
-
-procedure F..ctor(this: ref);
-  // nothing is owned by [this,*]
-  free requires (forall $o: ref :: $o != this ==> $Heap[$o, $ownerRef] != this);
-  // 'this' is alone in its own peer group
-  free requires $Heap[this, $ownerRef] == this && $Heap[this, $ownerFrame] == $PeerGroupPlaceholder;
-  free requires (forall $o: ref :: $Heap[$o, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame] ==> $o == this);
-  free requires $BeingConstructed == this;
+procedure F..ctor(this : ref);
+  free requires (forall $o : ref :: (($o != this) ==> ($Heap[$o, $ownerRef] != this)));
+  free requires (($Heap[this, $ownerRef] == this) && ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder));
+  free requires (forall $o : ref :: ((($Heap[$o, $ownerRef] == $Heap[this, $ownerRef]) && ($Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame])) ==> ($o == this)));
+  free requires ($BeingConstructed == this);
   modifies $Heap;
-  ensures ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == F && $Heap[this, $localinv] == $typeof(this);
-  ensures $Heap[this, $ownerRef] == old($Heap)[this, $ownerRef] && $Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame];
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && ($o != this || !(F <: DeclType($f))) && old(true) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == F)) && ($Heap[this, $localinv] == $typeof(this)));
+  ensures (($Heap[this, $ownerRef] == old($Heap)[this, $ownerRef]) && ($Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame]));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && (($o != this) || !(F <: DeclType($f)))) && old(true)) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv]))) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  
 
-
-
-implementation F..ctor(this: ref)
-{
-  var stack0i: int;
-
-  entry:
-    assume $IsNotNull(this, F);
-    assume $Heap[this, $allocated] == true;
-    assume ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == System.Object && $Heap[this, $localinv] == $typeof(this);
-    assume $Heap[this, F.X] == 0;
-    goto block2278;
-
-  block2278:
-    goto block2295;
-
-  block2295:
-    // ----- load constant 0  ----- loopinv1.ssc(6,3)
-    stack0i := 0;
-    // ----- store field  ----- loopinv1.ssc(6,3)
-    assert this != null;
-    assert !($Heap[this, $inv] <: F) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, F.X] := stack0i;
-    assume IsHeap($Heap);
-    // ----- call  ----- loopinv1.ssc(4,21)
-    assert this != null;
-    call System.Object..ctor(this);
-    // ----- return
-    assert this != null;
-    assert $Heap[this, $inv] == System.Object && $Heap[this, $localinv] == $typeof(this);
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == this && $Heap[$p, $ownerFrame] == F ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[this, $inv] := F;
-    assume IsHeap($Heap);
-    return;
-
+implementation F..ctor(this : ref) {
+  var stack0i : int;
+  entry: assume $IsNotNull(this, F); goto $$entry~e;
+  $$entry~e: assume ($Heap[this, $allocated] == true); goto $$entry~d;
+  $$entry~d: assume ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == System.Object)) && ($Heap[this, $localinv] == $typeof(this))); goto $$entry~c;
+  $$entry~c: assume ($Heap[this, F.X] == 0); goto block2278;
+  block2278: goto block2295;
+  block2295: stack0i := 0; goto $$block2295~k;
+  $$block2295~k: assert (this != null); goto $$block2295~j;
+  $$block2295~j: assert (!($Heap[this, $inv] <: F) || ($Heap[this, $localinv] == System.Object)); goto $$block2295~i;
+  $$block2295~i: $Heap := $Heap[this, F.X := stack0i]; goto $$block2295~h;
+  $$block2295~h: assume IsHeap($Heap); goto $$block2295~g;
+  $$block2295~g: assert (this != null); goto $$block2295~f;
+  $$block2295~f: call System.Object..ctor(this); goto $$block2295~e;
+  $$block2295~e: assert (this != null); goto $$block2295~d;
+  $$block2295~d: assert (($Heap[this, $inv] == System.Object) && ($Heap[this, $localinv] == $typeof(this))); goto $$block2295~c;
+  $$block2295~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == this)) && ($Heap[$p, $ownerFrame] == F)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block2295~b;
+  $$block2295~b: $Heap := $Heap[this, $inv := F]; goto $$block2295~a;
+  $$block2295~a: assume IsHeap($Heap); return;
+  
 }
 
-
-
-procedure System.Object..ctor(this: ref);
-  // nothing is owned by [this,*]
-  free requires (forall $o: ref :: $o != this ==> $Heap[$o, $ownerRef] != this);
-  // 'this' is alone in its own peer group
-  free requires $Heap[this, $ownerRef] == this && $Heap[this, $ownerFrame] == $PeerGroupPlaceholder;
-  free requires (forall $o: ref :: $Heap[$o, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame] ==> $o == this);
-  free requires $BeingConstructed == this;
+procedure System.Object..ctor(this : ref);
+  free requires (forall $o : ref :: (($o != this) ==> ($Heap[$o, $ownerRef] != this)));
+  free requires (($Heap[this, $ownerRef] == this) && ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder));
+  free requires (forall $o : ref :: ((($Heap[$o, $ownerRef] == $Heap[this, $ownerRef]) && ($Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame])) ==> ($o == this)));
+  free requires ($BeingConstructed == this);
   modifies $Heap;
-  ensures ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == System.Object && $Heap[this, $localinv] == $typeof(this);
-  ensures $Heap[this, $ownerRef] == old($Heap)[this, $ownerRef] && $Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame];
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && ($o != this || !(System.Object <: DeclType($f))) && old(true) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == System.Object)) && ($Heap[this, $localinv] == $typeof(this)));
+  ensures (($Heap[this, $ownerRef] == old($Heap)[this, $ownerRef]) && ($Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame]));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && (($o != this) || !(System.Object <: DeclType($f)))) && old(true)) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv]))) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  
 
-
-
-axiom LoopInv1 <: LoopInv1;
-
-axiom $BaseClass(LoopInv1) == System.Object;
-
-axiom LoopInv1 <: $BaseClass(LoopInv1) && AsDirectSubClass(LoopInv1, $BaseClass(LoopInv1)) == LoopInv1;
-
-axiom !$IsImmutable(LoopInv1) && $AsMutable(LoopInv1) == LoopInv1;
-
-axiom (forall $U: name :: { $U <: LoopInv1 } $U <: LoopInv1 ==> $U == LoopInv1);
-
-procedure LoopInv1.Test0a$F$notnull(this: ref, other$in: ref where $IsNotNull(other$in, F));
-  free requires $Heap[other$in, $allocated] == true;
-  // user-declared preconditions
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && $Heap[other$in, $inv] == F && $Heap[other$in, $localinv] == $typeof(other$in);
-  requires ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  free requires $BeingConstructed == null;
+axiom (LoopInv1 <: LoopInv1);
+axiom ($BaseClass(LoopInv1) == System.Object);
+axiom ((LoopInv1 <: $BaseClass(LoopInv1)) && (AsDirectSubClass(LoopInv1, $BaseClass(LoopInv1)) == LoopInv1));
+axiom (!$IsImmutable(LoopInv1) && ($AsMutable(LoopInv1) == LoopInv1));
+axiom (forall $U : name :: {($U <: LoopInv1)} (($U <: LoopInv1) ==> ($U == LoopInv1)));
+procedure LoopInv1.Test0a$F$notnull(this : ref, other$in : ref where $IsNotNull(other$in, F));
+  free requires ($Heap[other$in, $allocated] == true);
+  requires ((((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && ($Heap[other$in, $inv] == F)) && ($Heap[other$in, $localinv] == $typeof(other$in)));
+  requires (((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  requires (((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // user-declared postconditions
-  ensures $Heap[this, LoopInv1.field] != null;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old(($o != this || !(LoopInv1 <: DeclType($f))) && ($o != other$in || !($typeof(other$in) <: DeclType($f)))) && old($o != this || $f != $exposeVersion) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ($Heap[this, LoopInv1.field] != null);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old(((($o != this) || !(LoopInv1 <: DeclType($f))) && (($o != other$in) || !($typeof(other$in) <: DeclType($f)))))) && old((($o != this) || ($f != $exposeVersion)))) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation LoopInv1.Test0a$F$notnull(this: ref, other$in: ref)
-{
-  var other: ref where $IsNotNull(other, F), local1: ref where $Is(local1, LoopInv1), stack0o: ref, stack1s: struct, stack1o: ref, temp0: exposeVersionType, stack50000o: ref, i: int where InRange(i, System.Int32), stack0i: int, stack0b: bool, local4: int where InRange(local4, System.Int32), $Heap$block3111$LoopPreheader: [ref,<x>name]x;
-
-  entry:
-    assume $IsNotNull(this, LoopInv1);
-    assume $Heap[this, $allocated] == true;
-    other := other$in;
-    goto block2907;
-
-  block2907:
-    goto block3060;
-
-  block3060:
-    // ----- nop
-    // ----- copy  ----- loopinv1.ssc(24,15)
-    local1 := this;
-    // ----- copy  ----- loopinv1.ssc(24,15)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(24,15)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(24,15)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local unpack  ----- loopinv1.ssc(24,15)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: LoopInv1 && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp0;
-    $Heap[stack0o, $exposeVersion] := temp0;
-    assume IsHeap($Heap);
-    goto block3077;
-
-  block3077:
-    // ----- new object  ----- loopinv1.ssc(26,9)
-    havoc stack50000o;
-    assume $Heap[stack50000o, $allocated] == false && stack50000o != null && $typeof(stack50000o) == F;
-    assume $Heap[stack50000o, $ownerRef] == stack50000o && $Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder;
-    $Heap[stack50000o, $allocated] := true;
-    // ----- call  ----- loopinv1.ssc(26,9)
-    assert stack50000o != null;
-    call F..ctor(stack50000o);
-    // ----- copy  ----- loopinv1.ssc(26,9)
-    stack0o := stack50000o;
-    // ----- store field  ----- loopinv1.ssc(26,9)
-    assert this != null;
-    assert !($Heap[this, $inv] <: LoopInv1) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, LoopInv1.field] := stack0o;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block3383;
-
-  block3383:
-    // ----- copy  ----- loopinv1.ssc(27,7)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(27,7)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(27,7)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local pack  ----- loopinv1.ssc(27,7)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == LoopInv1 ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block3094;
-
-  block3094:
-    // ----- load constant 0  ----- loopinv1.ssc(29,12)
-    i := 0;
-    goto block3111$LoopPreheader;
-
-  block3111:
-    // ----- default loop invariant: allocation and ownership are stable  ----- loopinv1.ssc(32,25)
-    assume (forall $o: ref :: $Heap$block3111$LoopPreheader[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: $Heap$block3111$LoopPreheader[$ot, $allocated] == true && $Heap$block3111$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == $Heap$block3111$LoopPreheader[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == $Heap$block3111$LoopPreheader[$ot, $ownerFrame]) && $Heap$block3111$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-    // ----- default loop invariant: $inv field  ----- loopinv1.ssc(32,25)
-    assume (forall $o: ref :: ($Heap$block3111$LoopPreheader[$o, $inv] == $Heap[$o, $inv] && $Heap$block3111$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv]) || $Heap$block3111$LoopPreheader[$o, $allocated] != true);
-    assume (forall $o: ref :: $Heap$block3111$LoopPreheader[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-    // ----- default loop invariant: $ownerRef and $ownerFrame fields  ----- loopinv1.ssc(32,25)
-    assert (forall $o: ref :: $o != null && $Heap$block3111$LoopPreheader[$o, $allocated] == true ==> $Heap$block3111$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef] && $Heap$block3111$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-    // ----- serialized LoopInvariant  ----- loopinv1.ssc(32,25)
-    assert ($Heap[other, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame]) || $Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame])) && $Heap[other, $inv] == F && $Heap[other, $localinv] == $typeof(other);
-    // ----- serialized LoopInvariant  ----- loopinv1.ssc(33,24)
-    assert ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == LoopInv1 && $Heap[this, $localinv] == $typeof(this);
-    goto block3230;
-
-  block3230:
-    // ----- nop
-    // ----- load constant 10  ----- loopinv1.ssc(29,23)
-    stack0i := 10;
-    // ----- binary operator  ----- loopinv1.ssc(29,23)
-    // ----- branch  ----- loopinv1.ssc(29,23)
-    goto true3230to3264, false3230to3247;
-
-  true3230to3264:
-    assume i >= stack0i;
-    goto block3264;
-
-  false3230to3247:
-    assume i < stack0i;
-    goto block3247;
-
-  block3264:
-    goto block3349;
-
-  block3247:
-    // ----- call  ----- loopinv1.ssc(35,9)
-    assert other != null;
-    call F.M(other);
-    // ----- copy  ----- loopinv1.ssc(29,31)
-    local4 := i;
-    // ----- load constant 1  ----- loopinv1.ssc(29,31)
-    stack0i := 1;
-    // ----- binary operator  ----- loopinv1.ssc(29,31)
-    stack0i := local4 + stack0i;
-    // ----- copy  ----- loopinv1.ssc(29,31)
-    i := stack0i;
-    // ----- copy
-    stack0i := local4;
-    // ----- branch
-    goto block3111;
-
-  block3349:
-    // ----- nop
-    // ----- return
-    return;
-
-  block3111$LoopPreheader:
-    $Heap$block3111$LoopPreheader := $Heap;
-    goto block3111;
-
+implementation LoopInv1.Test0a$F$notnull(this : ref, other$in : ref) {
+  var other : ref where $IsNotNull(other, F);
+  var local1 : ref where $Is(local1, LoopInv1);
+  var stack0o : ref;
+  var stack1s : struct;
+  var stack1o : ref;
+  var temp0 : exposeVersionType;
+  var stack50000o : ref;
+  var i : int where InRange(i, System.Int32);
+  var stack0i : int;
+  var stack0b : bool;
+  var local4 : int where InRange(local4, System.Int32);
+  var $Heap$block3111$LoopPreheader : <x>[ref, name]x;
+  entry: assume $IsNotNull(this, LoopInv1); goto $$entry~g;
+  $$entry~g: assume ($Heap[this, $allocated] == true); goto $$entry~f;
+  $$entry~f: other := other$in; goto block2907;
+  block2907: goto block3060;
+  block3060: local1 := this; goto $$block3060~j;
+  $$block3060~j: stack0o := local1; goto $$block3060~i;
+  $$block3060~i: havoc stack1s; goto $$block3060~h;
+  $$block3060~h: assume $IsTokenForType(stack1s, LoopInv1); goto $$block3060~g;
+  $$block3060~g: stack1o := TypeObject(LoopInv1); goto $$block3060~f;
+  $$block3060~f: assert (stack0o != null); goto $$block3060~e;
+  $$block3060~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: LoopInv1)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block3060~d;
+  $$block3060~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block3060~c;
+  $$block3060~c: havoc temp0; goto $$block3060~b;
+  $$block3060~b: $Heap := $Heap[stack0o, $exposeVersion := temp0]; goto $$block3060~a;
+  $$block3060~a: assume IsHeap($Heap); goto block3077;
+  block3077: havoc stack50000o; goto $$block3077~j;
+  $$block3077~j: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == F)); goto $$block3077~i;
+  $$block3077~i: assume (($Heap[stack50000o, $ownerRef] == stack50000o) && ($Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder)); goto $$block3077~h;
+  $$block3077~h: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block3077~g;
+  $$block3077~g: assert (stack50000o != null); goto $$block3077~f;
+  $$block3077~f: call F..ctor(stack50000o); goto $$block3077~e;
+  $$block3077~e: stack0o := stack50000o; goto $$block3077~d;
+  $$block3077~d: assert (this != null); goto $$block3077~c;
+  $$block3077~c: assert (!($Heap[this, $inv] <: LoopInv1) || ($Heap[this, $localinv] == System.Object)); goto $$block3077~b;
+  $$block3077~b: $Heap := $Heap[this, LoopInv1.field := stack0o]; goto $$block3077~a;
+  $$block3077~a: assume IsHeap($Heap); goto block3383;
+  block3383: stack0o := local1; goto $$block3383~h;
+  $$block3383~h: havoc stack1s; goto $$block3383~g;
+  $$block3383~g: assume $IsTokenForType(stack1s, LoopInv1); goto $$block3383~f;
+  $$block3383~f: stack1o := TypeObject(LoopInv1); goto $$block3383~e;
+  $$block3383~e: assert (stack0o != null); goto $$block3383~d;
+  $$block3383~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block3383~c;
+  $$block3383~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == LoopInv1)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block3383~b;
+  $$block3383~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block3383~a;
+  $$block3383~a: assume IsHeap($Heap); goto block3094;
+  block3094: i := 0; goto block3111$LoopPreheader;
+  block3111: assume (((forall $o : ref :: (($Heap$block3111$LoopPreheader[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: ((($Heap$block3111$LoopPreheader[$ot, $allocated] == true) && ($Heap$block3111$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == $Heap$block3111$LoopPreheader[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == $Heap$block3111$LoopPreheader[$ot, $ownerFrame]))))) && ($Heap$block3111$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized])); goto $$block3111~e;
+  $$block3111~e: assume (forall $o : ref :: ((($Heap$block3111$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) && ($Heap$block3111$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv])) || ($Heap$block3111$LoopPreheader[$o, $allocated] != true))); goto $$block3111~d;
+  $$block3111~d: assume (forall $o : ref :: ((($Heap$block3111$LoopPreheader[$o, $allocated] != true) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o))))); goto $$block3111~c;
+  $$block3111~c: assert (forall $o : ref :: ((($o != null) && ($Heap$block3111$LoopPreheader[$o, $allocated] == true)) ==> (($Heap$block3111$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef]) && ($Heap$block3111$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame])))); goto $$block3111~b;
+  $$block3111~b: assert ((((($Heap[other, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame])) || ($Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame]))) && ($Heap[other, $inv] == F)) && ($Heap[other, $localinv] == $typeof(other))); goto $$block3111~a;
+  $$block3111~a: assert ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == LoopInv1)) && ($Heap[this, $localinv] == $typeof(this))); goto block3230;
+  block3230: stack0i := 10; goto true3230to3264, false3230to3247;
+  true3230to3264: assume (i >= stack0i); goto block3264;
+  false3230to3247: assume (i < stack0i); goto block3247;
+  block3264: goto block3349;
+  block3247: assert (other != null); goto $$block3247~f;
+  $$block3247~f: call F.M(other); goto $$block3247~e;
+  $$block3247~e: local4 := i; goto $$block3247~d;
+  $$block3247~d: stack0i := 1; goto $$block3247~c;
+  $$block3247~c: stack0i := (local4 + stack0i); goto $$block3247~b;
+  $$block3247~b: i := stack0i; goto $$block3247~a;
+  $$block3247~a: stack0i := local4; goto block3111;
+  block3349: return;
+  block3111$LoopPreheader: $Heap$block3111$LoopPreheader := $Heap; goto block3111;
+  
 }
 
-
-
-axiom System.String <: System.String;
-
-axiom $BaseClass(System.String) == System.Object;
-
-axiom System.String <: $BaseClass(System.String) && AsDirectSubClass(System.String, $BaseClass(System.String)) == System.String;
-
-axiom $IsImmutable(System.String) && $AsImmutable(System.String) == System.String;
-
-axiom System.IComparable <: System.Object;
-
+axiom (System.String <: System.String);
+axiom ($BaseClass(System.String) == System.Object);
+axiom ((System.String <: $BaseClass(System.String)) && (AsDirectSubClass(System.String, $BaseClass(System.String)) == System.String));
+axiom ($IsImmutable(System.String) && ($AsImmutable(System.String) == System.String));
+axiom (System.IComparable <: System.Object);
 axiom $IsMemberlessType(System.IComparable);
-
-axiom System.String <: System.IComparable;
-
-axiom System.ICloneable <: System.Object;
-
+axiom (System.String <: System.IComparable);
+axiom (System.ICloneable <: System.Object);
 axiom $IsMemberlessType(System.ICloneable);
-
-axiom System.String <: System.ICloneable;
-
-axiom System.IConvertible <: System.Object;
-
+axiom (System.String <: System.ICloneable);
+axiom (System.IConvertible <: System.Object);
 axiom $IsMemberlessType(System.IConvertible);
-
-axiom System.String <: System.IConvertible;
-
-axiom System.IComparable`1...System.String <: System.Object;
-
+axiom (System.String <: System.IConvertible);
+axiom (System.IComparable`1...System.String <: System.Object);
 axiom $IsMemberlessType(System.IComparable`1...System.String);
-
-axiom System.String <: System.IComparable`1...System.String;
-
-axiom System.Collections.Generic.IEnumerable`1...System.Char <: System.Object;
-
-axiom System.Collections.IEnumerable <: System.Object;
-
+axiom (System.String <: System.IComparable`1...System.String);
+axiom (System.Collections.Generic.IEnumerable`1...System.Char <: System.Object);
+axiom (System.Collections.IEnumerable <: System.Object);
 axiom $IsMemberlessType(System.Collections.IEnumerable);
-
-axiom System.Collections.Generic.IEnumerable`1...System.Char <: System.Collections.IEnumerable;
-
+axiom (System.Collections.Generic.IEnumerable`1...System.Char <: System.Collections.IEnumerable);
 axiom $IsMemberlessType(System.Collections.Generic.IEnumerable`1...System.Char);
-
-axiom System.String <: System.Collections.Generic.IEnumerable`1...System.Char;
-
-axiom System.String <: System.Collections.IEnumerable;
-
-axiom System.IEquatable`1...System.String <: System.Object;
-
+axiom (System.String <: System.Collections.Generic.IEnumerable`1...System.Char);
+axiom (System.String <: System.Collections.IEnumerable);
+axiom (System.IEquatable`1...System.String <: System.Object);
 axiom $IsMemberlessType(System.IEquatable`1...System.String);
-
-axiom System.String <: System.IEquatable`1...System.String;
-
-axiom (forall $U: name :: { $U <: System.String } $U <: System.String ==> $U == System.String);
-
-procedure LoopInv1.Test0b$F$notnull(this: ref, other$in: ref where $IsNotNull(other$in, F));
-  free requires $Heap[other$in, $allocated] == true;
-  // user-declared preconditions
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && $Heap[other$in, $inv] == F && $Heap[other$in, $localinv] == $typeof(other$in);
-  requires ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  free requires $BeingConstructed == null;
+axiom (System.String <: System.IEquatable`1...System.String);
+axiom (forall $U : name :: {($U <: System.String)} (($U <: System.String) ==> ($U == System.String)));
+procedure LoopInv1.Test0b$F$notnull(this : ref, other$in : ref where $IsNotNull(other$in, F));
+  free requires ($Heap[other$in, $allocated] == true);
+  requires ((((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && ($Heap[other$in, $inv] == F)) && ($Heap[other$in, $localinv] == $typeof(other$in)));
+  requires (((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  requires (((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // user-declared postconditions
-  ensures $Heap[this, LoopInv1.field] != null;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old(($o != this || !(LoopInv1 <: DeclType($f))) && ($o != other$in || !($typeof(other$in) <: DeclType($f)))) && old($o != this || $f != $exposeVersion) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ($Heap[this, LoopInv1.field] != null);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old(((($o != this) || !(LoopInv1 <: DeclType($f))) && (($o != other$in) || !($typeof(other$in) <: DeclType($f)))))) && old((($o != this) || ($f != $exposeVersion)))) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation LoopInv1.Test0b$F$notnull(this: ref, other$in: ref)
-{
-  var other: ref where $IsNotNull(other, F), local1: ref where $Is(local1, LoopInv1), stack0o: ref, stack1s: struct, stack1o: ref, temp0: exposeVersionType, stack50000o: ref, save: ref where $Is(save, F), i: int where InRange(i, System.Int32), stack0i: int, stack0b: bool, local5: int where InRange(local5, System.Int32), $Heap$block4777$LoopPreheader: [ref,<x>name]x;
-
-  entry:
-    assume $IsNotNull(this, LoopInv1);
-    assume $Heap[this, $allocated] == true;
-    other := other$in;
-    goto block4573;
-
-  block4573:
-    goto block4726;
-
-  block4726:
-    // ----- nop
-    // ----- copy  ----- loopinv1.ssc(44,15)
-    local1 := this;
-    // ----- copy  ----- loopinv1.ssc(44,15)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(44,15)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(44,15)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local unpack  ----- loopinv1.ssc(44,15)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: LoopInv1 && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp0;
-    $Heap[stack0o, $exposeVersion] := temp0;
-    assume IsHeap($Heap);
-    goto block4743;
-
-  block4743:
-    // ----- new object  ----- loopinv1.ssc(46,9)
-    havoc stack50000o;
-    assume $Heap[stack50000o, $allocated] == false && stack50000o != null && $typeof(stack50000o) == F;
-    assume $Heap[stack50000o, $ownerRef] == stack50000o && $Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder;
-    $Heap[stack50000o, $allocated] := true;
-    // ----- call  ----- loopinv1.ssc(46,9)
-    assert stack50000o != null;
-    call F..ctor(stack50000o);
-    // ----- copy  ----- loopinv1.ssc(46,9)
-    stack0o := stack50000o;
-    // ----- store field  ----- loopinv1.ssc(46,9)
-    assert this != null;
-    assert !($Heap[this, $inv] <: LoopInv1) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, LoopInv1.field] := stack0o;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block5015;
-
-  block5015:
-    // ----- copy  ----- loopinv1.ssc(47,7)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(47,7)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(47,7)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local pack  ----- loopinv1.ssc(47,7)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == LoopInv1 ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block4760;
-
-  block4760:
-    // ----- load field  ----- loopinv1.ssc(49,7)
-    assert this != null;
-    save := $Heap[this, LoopInv1.field];
-    // ----- call  ----- loopinv1.ssc(50,7)
-    assert save != null;
-    call F.NoOp(save);
-    // ----- load constant 0  ----- loopinv1.ssc(51,12)
-    i := 0;
-    goto block4777$LoopPreheader;
-
-  block4777:
-    // ----- default loop invariant: allocation and ownership are stable  ----- loopinv1.ssc(54,25)
-    assume (forall $o: ref :: $Heap$block4777$LoopPreheader[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: $Heap$block4777$LoopPreheader[$ot, $allocated] == true && $Heap$block4777$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == $Heap$block4777$LoopPreheader[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == $Heap$block4777$LoopPreheader[$ot, $ownerFrame]) && $Heap$block4777$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-    // ----- default loop invariant: $inv field  ----- loopinv1.ssc(54,25)
-    assume (forall $o: ref :: ($Heap$block4777$LoopPreheader[$o, $inv] == $Heap[$o, $inv] && $Heap$block4777$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv]) || $Heap$block4777$LoopPreheader[$o, $allocated] != true);
-    assume (forall $o: ref :: $Heap$block4777$LoopPreheader[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-    // ----- default loop invariant: $ownerRef and $ownerFrame fields  ----- loopinv1.ssc(54,25)
-    assert (forall $o: ref :: $o != null && $Heap$block4777$LoopPreheader[$o, $allocated] == true ==> $Heap$block4777$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef] && $Heap$block4777$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-    // ----- serialized LoopInvariant  ----- loopinv1.ssc(54,25)
-    assert ($Heap[other, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame]) || $Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame])) && $Heap[other, $inv] == F && $Heap[other, $localinv] == $typeof(other);
-    goto block4862;
-
-  block4862:
-    // ----- nop
-    // ----- load constant 10  ----- loopinv1.ssc(51,23)
-    stack0i := 10;
-    // ----- binary operator  ----- loopinv1.ssc(51,23)
-    // ----- branch  ----- loopinv1.ssc(51,23)
-    goto true4862to4896, false4862to4879;
-
-  true4862to4896:
-    assume i >= stack0i;
-    goto block4896;
-
-  false4862to4879:
-    assume i < stack0i;
-    goto block4879;
-
-  block4896:
-    goto block4981;
-
-  block4879:
-    // ----- call  ----- loopinv1.ssc(56,9)
-    assert other != null;
-    call F.M(other);
-    // ----- copy  ----- loopinv1.ssc(51,31)
-    local5 := i;
-    // ----- load constant 1  ----- loopinv1.ssc(51,31)
-    stack0i := 1;
-    // ----- binary operator  ----- loopinv1.ssc(51,31)
-    stack0i := local5 + stack0i;
-    // ----- copy  ----- loopinv1.ssc(51,31)
-    i := stack0i;
-    // ----- copy
-    stack0i := local5;
-    // ----- branch
-    goto block4777;
-
-  block4981:
-    // ----- nop
-    // ----- return
-    return;
-
-  block4777$LoopPreheader:
-    $Heap$block4777$LoopPreheader := $Heap;
-    goto block4777;
-
+implementation LoopInv1.Test0b$F$notnull(this : ref, other$in : ref) {
+  var other : ref where $IsNotNull(other, F);
+  var local1 : ref where $Is(local1, LoopInv1);
+  var stack0o : ref;
+  var stack1s : struct;
+  var stack1o : ref;
+  var temp0 : exposeVersionType;
+  var stack50000o : ref;
+  var save : ref where $Is(save, F);
+  var i : int where InRange(i, System.Int32);
+  var stack0i : int;
+  var stack0b : bool;
+  var local5 : int where InRange(local5, System.Int32);
+  var $Heap$block4777$LoopPreheader : <x>[ref, name]x;
+  entry: assume $IsNotNull(this, LoopInv1); goto $$entry~i;
+  $$entry~i: assume ($Heap[this, $allocated] == true); goto $$entry~h;
+  $$entry~h: other := other$in; goto block4573;
+  block4573: goto block4726;
+  block4726: local1 := this; goto $$block4726~j;
+  $$block4726~j: stack0o := local1; goto $$block4726~i;
+  $$block4726~i: havoc stack1s; goto $$block4726~h;
+  $$block4726~h: assume $IsTokenForType(stack1s, LoopInv1); goto $$block4726~g;
+  $$block4726~g: stack1o := TypeObject(LoopInv1); goto $$block4726~f;
+  $$block4726~f: assert (stack0o != null); goto $$block4726~e;
+  $$block4726~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: LoopInv1)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block4726~d;
+  $$block4726~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block4726~c;
+  $$block4726~c: havoc temp0; goto $$block4726~b;
+  $$block4726~b: $Heap := $Heap[stack0o, $exposeVersion := temp0]; goto $$block4726~a;
+  $$block4726~a: assume IsHeap($Heap); goto block4743;
+  block4743: havoc stack50000o; goto $$block4743~j;
+  $$block4743~j: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == F)); goto $$block4743~i;
+  $$block4743~i: assume (($Heap[stack50000o, $ownerRef] == stack50000o) && ($Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder)); goto $$block4743~h;
+  $$block4743~h: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block4743~g;
+  $$block4743~g: assert (stack50000o != null); goto $$block4743~f;
+  $$block4743~f: call F..ctor(stack50000o); goto $$block4743~e;
+  $$block4743~e: stack0o := stack50000o; goto $$block4743~d;
+  $$block4743~d: assert (this != null); goto $$block4743~c;
+  $$block4743~c: assert (!($Heap[this, $inv] <: LoopInv1) || ($Heap[this, $localinv] == System.Object)); goto $$block4743~b;
+  $$block4743~b: $Heap := $Heap[this, LoopInv1.field := stack0o]; goto $$block4743~a;
+  $$block4743~a: assume IsHeap($Heap); goto block5015;
+  block5015: stack0o := local1; goto $$block5015~h;
+  $$block5015~h: havoc stack1s; goto $$block5015~g;
+  $$block5015~g: assume $IsTokenForType(stack1s, LoopInv1); goto $$block5015~f;
+  $$block5015~f: stack1o := TypeObject(LoopInv1); goto $$block5015~e;
+  $$block5015~e: assert (stack0o != null); goto $$block5015~d;
+  $$block5015~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block5015~c;
+  $$block5015~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == LoopInv1)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block5015~b;
+  $$block5015~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block5015~a;
+  $$block5015~a: assume IsHeap($Heap); goto block4760;
+  block4760: assert (this != null); goto $$block4760~d;
+  $$block4760~d: save := $Heap[this, LoopInv1.field]; goto $$block4760~c;
+  $$block4760~c: assert (save != null); goto $$block4760~b;
+  $$block4760~b: call F.NoOp(save); goto $$block4760~a;
+  $$block4760~a: i := 0; goto block4777$LoopPreheader;
+  block4777: assume (((forall $o : ref :: (($Heap$block4777$LoopPreheader[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: ((($Heap$block4777$LoopPreheader[$ot, $allocated] == true) && ($Heap$block4777$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == $Heap$block4777$LoopPreheader[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == $Heap$block4777$LoopPreheader[$ot, $ownerFrame]))))) && ($Heap$block4777$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized])); goto $$block4777~d;
+  $$block4777~d: assume (forall $o : ref :: ((($Heap$block4777$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) && ($Heap$block4777$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv])) || ($Heap$block4777$LoopPreheader[$o, $allocated] != true))); goto $$block4777~c;
+  $$block4777~c: assume (forall $o : ref :: ((($Heap$block4777$LoopPreheader[$o, $allocated] != true) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o))))); goto $$block4777~b;
+  $$block4777~b: assert (forall $o : ref :: ((($o != null) && ($Heap$block4777$LoopPreheader[$o, $allocated] == true)) ==> (($Heap$block4777$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef]) && ($Heap$block4777$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame])))); goto $$block4777~a;
+  $$block4777~a: assert ((((($Heap[other, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame])) || ($Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame]))) && ($Heap[other, $inv] == F)) && ($Heap[other, $localinv] == $typeof(other))); goto block4862;
+  block4862: stack0i := 10; goto true4862to4896, false4862to4879;
+  true4862to4896: assume (i >= stack0i); goto block4896;
+  false4862to4879: assume (i < stack0i); goto block4879;
+  block4896: goto block4981;
+  block4879: assert (other != null); goto $$block4879~f;
+  $$block4879~f: call F.M(other); goto $$block4879~e;
+  $$block4879~e: local5 := i; goto $$block4879~d;
+  $$block4879~d: stack0i := 1; goto $$block4879~c;
+  $$block4879~c: stack0i := (local5 + stack0i); goto $$block4879~b;
+  $$block4879~b: i := stack0i; goto $$block4879~a;
+  $$block4879~a: stack0i := local5; goto block4777;
+  block4981: return;
+  block4777$LoopPreheader: $Heap$block4777$LoopPreheader := $Heap; goto block4777;
+  
 }
 
-
-
-procedure LoopInv1.Test1a$F$notnull(this: ref, other$in: ref where $IsNotNull(other$in, F));
-  free requires $Heap[other$in, $allocated] == true;
-  // user-declared preconditions
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && $Heap[other$in, $inv] == F && $Heap[other$in, $localinv] == $typeof(other$in);
-  requires ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  free requires $BeingConstructed == null;
+procedure LoopInv1.Test1a$F$notnull(this : ref, other$in : ref where $IsNotNull(other$in, F));
+  free requires ($Heap[other$in, $allocated] == true);
+  requires ((((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && ($Heap[other$in, $inv] == F)) && ($Heap[other$in, $localinv] == $typeof(other$in)));
+  requires (((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  requires (((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // user-declared postconditions
-  ensures $Heap[this, LoopInv1.field] != null;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old(($o != this || !(LoopInv1 <: DeclType($f))) && ($o != other$in || !($typeof(other$in) <: DeclType($f)))) && old($o != this || $f != $exposeVersion) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ($Heap[this, LoopInv1.field] != null);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old(((($o != this) || !(LoopInv1 <: DeclType($f))) && (($o != other$in) || !($typeof(other$in) <: DeclType($f)))))) && old((($o != this) || ($f != $exposeVersion)))) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation LoopInv1.Test1a$F$notnull(this: ref, other$in: ref)
-{
-  var other: ref where $IsNotNull(other, F), local1: ref where $Is(local1, LoopInv1), stack0o: ref, stack1s: struct, stack1o: ref, temp0: exposeVersionType, stack50000o: ref, i: int where InRange(i, System.Int32), stack0i: int, stack0b: bool, local4: ref where $Is(local4, F), temp1: exposeVersionType, local5: int where InRange(local5, System.Int32), $Heap$block6477$LoopPreheader: [ref,<x>name]x;
-
-  entry:
-    assume $IsNotNull(this, LoopInv1);
-    assume $Heap[this, $allocated] == true;
-    other := other$in;
-    goto block6273;
-
-  block6273:
-    goto block6426;
-
-  block6426:
-    // ----- nop
-    // ----- copy  ----- loopinv1.ssc(66,15)
-    local1 := this;
-    // ----- copy  ----- loopinv1.ssc(66,15)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(66,15)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(66,15)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local unpack  ----- loopinv1.ssc(66,15)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: LoopInv1 && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp0;
-    $Heap[stack0o, $exposeVersion] := temp0;
-    assume IsHeap($Heap);
-    goto block6443;
-
-  block6443:
-    // ----- new object  ----- loopinv1.ssc(68,9)
-    havoc stack50000o;
-    assume $Heap[stack50000o, $allocated] == false && stack50000o != null && $typeof(stack50000o) == F;
-    assume $Heap[stack50000o, $ownerRef] == stack50000o && $Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder;
-    $Heap[stack50000o, $allocated] := true;
-    // ----- call  ----- loopinv1.ssc(68,9)
-    assert stack50000o != null;
-    call F..ctor(stack50000o);
-    // ----- copy  ----- loopinv1.ssc(68,9)
-    stack0o := stack50000o;
-    // ----- store field  ----- loopinv1.ssc(68,9)
-    assert this != null;
-    assert !($Heap[this, $inv] <: LoopInv1) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, LoopInv1.field] := stack0o;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block6749;
-
-  block6749:
-    // ----- copy  ----- loopinv1.ssc(69,7)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(69,7)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(69,7)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local pack  ----- loopinv1.ssc(69,7)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == LoopInv1 ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block6460;
-
-  block6460:
-    // ----- load constant 0  ----- loopinv1.ssc(71,12)
-    i := 0;
-    goto block6477$LoopPreheader;
-
-  block6477:
-    // ----- default loop invariant: allocation and ownership are stable  ----- loopinv1.ssc(74,25)
-    assume (forall $o: ref :: $Heap$block6477$LoopPreheader[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: $Heap$block6477$LoopPreheader[$ot, $allocated] == true && $Heap$block6477$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == $Heap$block6477$LoopPreheader[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == $Heap$block6477$LoopPreheader[$ot, $ownerFrame]) && $Heap$block6477$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-    // ----- default loop invariant: $inv field  ----- loopinv1.ssc(74,25)
-    assume (forall $o: ref :: ($Heap$block6477$LoopPreheader[$o, $inv] == $Heap[$o, $inv] && $Heap$block6477$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv]) || $Heap$block6477$LoopPreheader[$o, $allocated] != true);
-    assume (forall $o: ref :: $Heap$block6477$LoopPreheader[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-    // ----- default loop invariant: $ownerRef and $ownerFrame fields  ----- loopinv1.ssc(74,25)
-    assert (forall $o: ref :: $o != null && $Heap$block6477$LoopPreheader[$o, $allocated] == true ==> $Heap$block6477$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef] && $Heap$block6477$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-    // ----- serialized LoopInvariant  ----- loopinv1.ssc(74,25)
-    assert ($Heap[other, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame]) || $Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame])) && $Heap[other, $inv] == F && $Heap[other, $localinv] == $typeof(other);
-    goto block6562;
-
-  block6562:
-    // ----- nop
-    // ----- load constant 10  ----- loopinv1.ssc(71,23)
-    stack0i := 10;
-    // ----- binary operator  ----- loopinv1.ssc(71,23)
-    // ----- branch  ----- loopinv1.ssc(71,23)
-    goto true6562to6630, false6562to6579;
-
-  true6562to6630:
-    assume i >= stack0i;
-    goto block6630;
-
-  false6562to6579:
-    assume i < stack0i;
-    goto block6579;
-
-  block6630:
-    goto block6715;
-
-  block6579:
-    // ----- copy  ----- loopinv1.ssc(76,17)
-    local4 := other;
-    // ----- copy  ----- loopinv1.ssc(76,17)
-    stack0o := local4;
-    // ----- load token  ----- loopinv1.ssc(76,17)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(76,17)
-    stack1o := TypeObject(F);
-    // ----- local unpack  ----- loopinv1.ssc(76,17)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: F && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp1;
-    $Heap[stack0o, $exposeVersion] := temp1;
-    assume IsHeap($Heap);
-    goto block6596;
-
-  block6715:
-    // ----- nop
-    // ----- return
-    return;
-
-  block6596:
-    // ----- load constant 4  ----- loopinv1.ssc(76,26)
-    stack0i := 4;
-    // ----- store field  ----- loopinv1.ssc(76,26)
-    assert other != null;
-    assert !($Heap[other, $inv] <: F) || $Heap[other, $localinv] == System.Object;
-    $Heap[other, F.X] := stack0i;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block6766;
-
-  block6766:
-    // ----- copy  ----- loopinv1.ssc(76,39)
-    stack0o := local4;
-    // ----- load token  ----- loopinv1.ssc(76,39)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(76,39)
-    stack1o := TypeObject(F);
-    // ----- local pack  ----- loopinv1.ssc(76,39)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == F ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block6613;
-
-  block6613:
-    // ----- copy  ----- loopinv1.ssc(71,31)
-    local5 := i;
-    // ----- load constant 1  ----- loopinv1.ssc(71,31)
-    stack0i := 1;
-    // ----- binary operator  ----- loopinv1.ssc(71,31)
-    stack0i := local5 + stack0i;
-    // ----- copy  ----- loopinv1.ssc(71,31)
-    i := stack0i;
-    // ----- copy
-    stack0i := local5;
-    // ----- branch
-    goto block6477;
-
-  block6477$LoopPreheader:
-    $Heap$block6477$LoopPreheader := $Heap;
-    goto block6477;
-
+implementation LoopInv1.Test1a$F$notnull(this : ref, other$in : ref) {
+  var other : ref where $IsNotNull(other, F);
+  var local1 : ref where $Is(local1, LoopInv1);
+  var stack0o : ref;
+  var stack1s : struct;
+  var stack1o : ref;
+  var temp0 : exposeVersionType;
+  var stack50000o : ref;
+  var i : int where InRange(i, System.Int32);
+  var stack0i : int;
+  var stack0b : bool;
+  var local4 : ref where $Is(local4, F);
+  var temp1 : exposeVersionType;
+  var local5 : int where InRange(local5, System.Int32);
+  var $Heap$block6477$LoopPreheader : <x>[ref, name]x;
+  entry: assume $IsNotNull(this, LoopInv1); goto $$entry~k;
+  $$entry~k: assume ($Heap[this, $allocated] == true); goto $$entry~j;
+  $$entry~j: other := other$in; goto block6273;
+  block6273: goto block6426;
+  block6426: local1 := this; goto $$block6426~j;
+  $$block6426~j: stack0o := local1; goto $$block6426~i;
+  $$block6426~i: havoc stack1s; goto $$block6426~h;
+  $$block6426~h: assume $IsTokenForType(stack1s, LoopInv1); goto $$block6426~g;
+  $$block6426~g: stack1o := TypeObject(LoopInv1); goto $$block6426~f;
+  $$block6426~f: assert (stack0o != null); goto $$block6426~e;
+  $$block6426~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: LoopInv1)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block6426~d;
+  $$block6426~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block6426~c;
+  $$block6426~c: havoc temp0; goto $$block6426~b;
+  $$block6426~b: $Heap := $Heap[stack0o, $exposeVersion := temp0]; goto $$block6426~a;
+  $$block6426~a: assume IsHeap($Heap); goto block6443;
+  block6443: havoc stack50000o; goto $$block6443~j;
+  $$block6443~j: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == F)); goto $$block6443~i;
+  $$block6443~i: assume (($Heap[stack50000o, $ownerRef] == stack50000o) && ($Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder)); goto $$block6443~h;
+  $$block6443~h: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block6443~g;
+  $$block6443~g: assert (stack50000o != null); goto $$block6443~f;
+  $$block6443~f: call F..ctor(stack50000o); goto $$block6443~e;
+  $$block6443~e: stack0o := stack50000o; goto $$block6443~d;
+  $$block6443~d: assert (this != null); goto $$block6443~c;
+  $$block6443~c: assert (!($Heap[this, $inv] <: LoopInv1) || ($Heap[this, $localinv] == System.Object)); goto $$block6443~b;
+  $$block6443~b: $Heap := $Heap[this, LoopInv1.field := stack0o]; goto $$block6443~a;
+  $$block6443~a: assume IsHeap($Heap); goto block6749;
+  block6749: stack0o := local1; goto $$block6749~h;
+  $$block6749~h: havoc stack1s; goto $$block6749~g;
+  $$block6749~g: assume $IsTokenForType(stack1s, LoopInv1); goto $$block6749~f;
+  $$block6749~f: stack1o := TypeObject(LoopInv1); goto $$block6749~e;
+  $$block6749~e: assert (stack0o != null); goto $$block6749~d;
+  $$block6749~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block6749~c;
+  $$block6749~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == LoopInv1)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block6749~b;
+  $$block6749~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block6749~a;
+  $$block6749~a: assume IsHeap($Heap); goto block6460;
+  block6460: i := 0; goto block6477$LoopPreheader;
+  block6477: assume (((forall $o : ref :: (($Heap$block6477$LoopPreheader[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: ((($Heap$block6477$LoopPreheader[$ot, $allocated] == true) && ($Heap$block6477$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == $Heap$block6477$LoopPreheader[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == $Heap$block6477$LoopPreheader[$ot, $ownerFrame]))))) && ($Heap$block6477$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized])); goto $$block6477~d;
+  $$block6477~d: assume (forall $o : ref :: ((($Heap$block6477$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) && ($Heap$block6477$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv])) || ($Heap$block6477$LoopPreheader[$o, $allocated] != true))); goto $$block6477~c;
+  $$block6477~c: assume (forall $o : ref :: ((($Heap$block6477$LoopPreheader[$o, $allocated] != true) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o))))); goto $$block6477~b;
+  $$block6477~b: assert (forall $o : ref :: ((($o != null) && ($Heap$block6477$LoopPreheader[$o, $allocated] == true)) ==> (($Heap$block6477$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef]) && ($Heap$block6477$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame])))); goto $$block6477~a;
+  $$block6477~a: assert ((((($Heap[other, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame])) || ($Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame]))) && ($Heap[other, $inv] == F)) && ($Heap[other, $localinv] == $typeof(other))); goto block6562;
+  block6562: stack0i := 10; goto true6562to6630, false6562to6579;
+  true6562to6630: assume (i >= stack0i); goto block6630;
+  false6562to6579: assume (i < stack0i); goto block6579;
+  block6630: goto block6715;
+  block6579: local4 := other; goto $$block6579~j;
+  $$block6579~j: stack0o := local4; goto $$block6579~i;
+  $$block6579~i: havoc stack1s; goto $$block6579~h;
+  $$block6579~h: assume $IsTokenForType(stack1s, F); goto $$block6579~g;
+  $$block6579~g: stack1o := TypeObject(F); goto $$block6579~f;
+  $$block6579~f: assert (stack0o != null); goto $$block6579~e;
+  $$block6579~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: F)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block6579~d;
+  $$block6579~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block6579~c;
+  $$block6579~c: havoc temp1; goto $$block6579~b;
+  $$block6579~b: $Heap := $Heap[stack0o, $exposeVersion := temp1]; goto $$block6579~a;
+  $$block6579~a: assume IsHeap($Heap); goto block6596;
+  block6715: return;
+  block6596: stack0i := 4; goto $$block6596~d;
+  $$block6596~d: assert (other != null); goto $$block6596~c;
+  $$block6596~c: assert (!($Heap[other, $inv] <: F) || ($Heap[other, $localinv] == System.Object)); goto $$block6596~b;
+  $$block6596~b: $Heap := $Heap[other, F.X := stack0i]; goto $$block6596~a;
+  $$block6596~a: assume IsHeap($Heap); goto block6766;
+  block6766: stack0o := local4; goto $$block6766~h;
+  $$block6766~h: havoc stack1s; goto $$block6766~g;
+  $$block6766~g: assume $IsTokenForType(stack1s, F); goto $$block6766~f;
+  $$block6766~f: stack1o := TypeObject(F); goto $$block6766~e;
+  $$block6766~e: assert (stack0o != null); goto $$block6766~d;
+  $$block6766~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block6766~c;
+  $$block6766~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == F)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block6766~b;
+  $$block6766~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block6766~a;
+  $$block6766~a: assume IsHeap($Heap); goto block6613;
+  block6613: local5 := i; goto $$block6613~d;
+  $$block6613~d: stack0i := 1; goto $$block6613~c;
+  $$block6613~c: stack0i := (local5 + stack0i); goto $$block6613~b;
+  $$block6613~b: i := stack0i; goto $$block6613~a;
+  $$block6613~a: stack0i := local5; goto block6477;
+  block6477$LoopPreheader: $Heap$block6477$LoopPreheader := $Heap; goto block6477;
+  
 }
 
-
-
-procedure LoopInv1.Test1b$F$notnull(this: ref, other$in: ref where $IsNotNull(other$in, F));
-  free requires $Heap[other$in, $allocated] == true;
-  // user-declared preconditions
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && $Heap[other$in, $inv] == F && $Heap[other$in, $localinv] == $typeof(other$in);
-  requires ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  requires ($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame]) || $Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame])) && (forall $pc: ref :: $pc != null && $Heap[$pc, $allocated] == true && $Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef] && $Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame] ==> $Heap[$pc, $inv] == $typeof($pc) && $Heap[$pc, $localinv] == $typeof($pc));
-  free requires $BeingConstructed == null;
+procedure LoopInv1.Test1b$F$notnull(this : ref, other$in : ref where $IsNotNull(other$in, F));
+  free requires ($Heap[other$in, $allocated] == true);
+  requires ((((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && ($Heap[other$in, $inv] == F)) && ($Heap[other$in, $localinv] == $typeof(other$in)));
+  requires (((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[this, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[this, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  requires (((($Heap[other$in, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other$in, $ownerRef], $inv] <: $Heap[other$in, $ownerFrame])) || ($Heap[$Heap[other$in, $ownerRef], $localinv] == $BaseClass($Heap[other$in, $ownerFrame]))) && (forall $pc : ref :: ((((($pc != null) && ($Heap[$pc, $allocated] == true)) && ($Heap[$pc, $ownerRef] == $Heap[other$in, $ownerRef])) && ($Heap[$pc, $ownerFrame] == $Heap[other$in, $ownerFrame])) ==> (($Heap[$pc, $inv] == $typeof($pc)) && ($Heap[$pc, $localinv] == $typeof($pc))))));
+  free requires ($BeingConstructed == null);
   modifies $Heap;
-  // user-declared postconditions
-  ensures $Heap[this, LoopInv1.field] != null;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && old($o != this || !(LoopInv1 <: DeclType($f))) && old($o != this || $f != $exposeVersion) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ($Heap[this, LoopInv1.field] != null);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && old((($o != this) || !(LoopInv1 <: DeclType($f))))) && old((($o != this) || ($f != $exposeVersion)))) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: (((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation LoopInv1.Test1b$F$notnull(this: ref, other$in: ref)
-{
-  var other: ref where $IsNotNull(other, F), local1: ref where $Is(local1, LoopInv1), stack0o: ref, stack1s: struct, stack1o: ref, temp0: exposeVersionType, stack50000o: ref, save: ref where $Is(save, F), i: int where InRange(i, System.Int32), stack0i: int, stack0b: bool, local5: ref where $Is(local5, F), temp1: exposeVersionType, local6: int where InRange(local6, System.Int32), $Heap$block8483$LoopPreheader: [ref,<x>name]x;
-
-  entry:
-    assume $IsNotNull(this, LoopInv1);
-    assume $Heap[this, $allocated] == true;
-    other := other$in;
-    goto block8279;
-
-  block8279:
-    goto block8432;
-
-  block8432:
-    // ----- nop
-    // ----- copy  ----- loopinv1.ssc(85,15)
-    local1 := this;
-    // ----- copy  ----- loopinv1.ssc(85,15)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(85,15)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(85,15)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local unpack  ----- loopinv1.ssc(85,15)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: LoopInv1 && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp0;
-    $Heap[stack0o, $exposeVersion] := temp0;
-    assume IsHeap($Heap);
-    goto block8449;
-
-  block8449:
-    // ----- new object  ----- loopinv1.ssc(87,9)
-    havoc stack50000o;
-    assume $Heap[stack50000o, $allocated] == false && stack50000o != null && $typeof(stack50000o) == F;
-    assume $Heap[stack50000o, $ownerRef] == stack50000o && $Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder;
-    $Heap[stack50000o, $allocated] := true;
-    // ----- call  ----- loopinv1.ssc(87,9)
-    assert stack50000o != null;
-    call F..ctor(stack50000o);
-    // ----- copy  ----- loopinv1.ssc(87,9)
-    stack0o := stack50000o;
-    // ----- store field  ----- loopinv1.ssc(87,9)
-    assert this != null;
-    assert !($Heap[this, $inv] <: LoopInv1) || $Heap[this, $localinv] == System.Object;
-    $Heap[this, LoopInv1.field] := stack0o;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block8755;
-
-  block8755:
-    // ----- copy  ----- loopinv1.ssc(88,7)
-    stack0o := local1;
-    // ----- load token  ----- loopinv1.ssc(88,7)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, LoopInv1);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(88,7)
-    stack1o := TypeObject(LoopInv1);
-    // ----- local pack  ----- loopinv1.ssc(88,7)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == LoopInv1 ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block8466;
-
-  block8466:
-    // ----- load field  ----- loopinv1.ssc(90,7)
-    assert this != null;
-    save := $Heap[this, LoopInv1.field];
-    // ----- call  ----- loopinv1.ssc(91,7)
-    assert save != null;
-    call F.NoOp(save);
-    // ----- load constant 0  ----- loopinv1.ssc(92,12)
-    i := 0;
-    goto block8483$LoopPreheader;
-
-  block8483:
-    // ----- default loop invariant: allocation and ownership are stable  ----- loopinv1.ssc(95,25)
-    assume (forall $o: ref :: $Heap$block8483$LoopPreheader[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: $Heap$block8483$LoopPreheader[$ot, $allocated] == true && $Heap$block8483$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == $Heap$block8483$LoopPreheader[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == $Heap$block8483$LoopPreheader[$ot, $ownerFrame]) && $Heap$block8483$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-    // ----- default loop invariant: $inv field  ----- loopinv1.ssc(95,25)
-    assume (forall $o: ref :: ($Heap$block8483$LoopPreheader[$o, $inv] == $Heap[$o, $inv] && $Heap$block8483$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv]) || $Heap$block8483$LoopPreheader[$o, $allocated] != true);
-    assume (forall $o: ref :: $Heap$block8483$LoopPreheader[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-    // ----- default loop invariant: $ownerRef and $ownerFrame fields  ----- loopinv1.ssc(95,25)
-    assert (forall $o: ref :: $o != null && $Heap$block8483$LoopPreheader[$o, $allocated] == true ==> $Heap$block8483$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef] && $Heap$block8483$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-    // ----- serialized LoopInvariant  ----- loopinv1.ssc(95,25)
-    assert ($Heap[other, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame]) || $Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame])) && $Heap[other, $inv] == F && $Heap[other, $localinv] == $typeof(other);
-    goto block8568;
-
-  block8568:
-    // ----- nop
-    // ----- load constant 10  ----- loopinv1.ssc(92,23)
-    stack0i := 10;
-    // ----- binary operator  ----- loopinv1.ssc(92,23)
-    // ----- branch  ----- loopinv1.ssc(92,23)
-    goto true8568to8636, false8568to8585;
-
-  true8568to8636:
-    assume i >= stack0i;
-    goto block8636;
-
-  false8568to8585:
-    assume i < stack0i;
-    goto block8585;
-
-  block8636:
-    goto block8721;
-
-  block8585:
-    // ----- copy  ----- loopinv1.ssc(97,17)
-    local5 := other;
-    // ----- copy  ----- loopinv1.ssc(97,17)
-    stack0o := local5;
-    // ----- load token  ----- loopinv1.ssc(97,17)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(97,17)
-    stack1o := TypeObject(F);
-    // ----- local unpack  ----- loopinv1.ssc(97,17)
-    assert stack0o != null;
-    assert ($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame]) || $Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame])) && $Heap[stack0o, $inv] <: F && $Heap[stack0o, $localinv] == $typeof(stack0o);
-    $Heap[stack0o, $localinv] := System.Object;
-    havoc temp1;
-    $Heap[stack0o, $exposeVersion] := temp1;
-    assume IsHeap($Heap);
-    goto block8602;
-
-  block8721:
-    // ----- nop
-    // ----- return
-    return;
-
-  block8602:
-    // ----- load constant 4  ----- loopinv1.ssc(97,26)
-    stack0i := 4;
-    // ----- store field  ----- loopinv1.ssc(97,26)
-    assert other != null;
-    assert !($Heap[other, $inv] <: F) || $Heap[other, $localinv] == System.Object;
-    $Heap[other, F.X] := stack0i;
-    assume IsHeap($Heap);
-    // ----- branch
-    goto block8772;
-
-  block8772:
-    // ----- copy  ----- loopinv1.ssc(97,39)
-    stack0o := local5;
-    // ----- load token  ----- loopinv1.ssc(97,39)
-    havoc stack1s;
-    assume $IsTokenForType(stack1s, F);
-    // ----- statically resolved GetTypeFromHandle call  ----- loopinv1.ssc(97,39)
-    stack1o := TypeObject(F);
-    // ----- local pack  ----- loopinv1.ssc(97,39)
-    assert stack0o != null;
-    assert $Heap[stack0o, $localinv] == System.Object;
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == stack0o && $Heap[$p, $ownerFrame] == F ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[stack0o, $localinv] := $typeof(stack0o);
-    assume IsHeap($Heap);
-    // ----- nop
-    // ----- branch
-    goto block8619;
-
-  block8619:
-    // ----- copy  ----- loopinv1.ssc(92,31)
-    local6 := i;
-    // ----- load constant 1  ----- loopinv1.ssc(92,31)
-    stack0i := 1;
-    // ----- binary operator  ----- loopinv1.ssc(92,31)
-    stack0i := local6 + stack0i;
-    // ----- copy  ----- loopinv1.ssc(92,31)
-    i := stack0i;
-    // ----- copy
-    stack0i := local6;
-    // ----- branch
-    goto block8483;
-
-  block8483$LoopPreheader:
-    $Heap$block8483$LoopPreheader := $Heap;
-    goto block8483;
-
+implementation LoopInv1.Test1b$F$notnull(this : ref, other$in : ref) {
+  var other : ref where $IsNotNull(other, F);
+  var local1 : ref where $Is(local1, LoopInv1);
+  var stack0o : ref;
+  var stack1s : struct;
+  var stack1o : ref;
+  var temp0 : exposeVersionType;
+  var stack50000o : ref;
+  var save : ref where $Is(save, F);
+  var i : int where InRange(i, System.Int32);
+  var stack0i : int;
+  var stack0b : bool;
+  var local5 : ref where $Is(local5, F);
+  var temp1 : exposeVersionType;
+  var local6 : int where InRange(local6, System.Int32);
+  var $Heap$block8483$LoopPreheader : <x>[ref, name]x;
+  entry: assume $IsNotNull(this, LoopInv1); goto $$entry~m;
+  $$entry~m: assume ($Heap[this, $allocated] == true); goto $$entry~l;
+  $$entry~l: other := other$in; goto block8279;
+  block8279: goto block8432;
+  block8432: local1 := this; goto $$block8432~j;
+  $$block8432~j: stack0o := local1; goto $$block8432~i;
+  $$block8432~i: havoc stack1s; goto $$block8432~h;
+  $$block8432~h: assume $IsTokenForType(stack1s, LoopInv1); goto $$block8432~g;
+  $$block8432~g: stack1o := TypeObject(LoopInv1); goto $$block8432~f;
+  $$block8432~f: assert (stack0o != null); goto $$block8432~e;
+  $$block8432~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: LoopInv1)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block8432~d;
+  $$block8432~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block8432~c;
+  $$block8432~c: havoc temp0; goto $$block8432~b;
+  $$block8432~b: $Heap := $Heap[stack0o, $exposeVersion := temp0]; goto $$block8432~a;
+  $$block8432~a: assume IsHeap($Heap); goto block8449;
+  block8449: havoc stack50000o; goto $$block8449~j;
+  $$block8449~j: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == F)); goto $$block8449~i;
+  $$block8449~i: assume (($Heap[stack50000o, $ownerRef] == stack50000o) && ($Heap[stack50000o, $ownerFrame] == $PeerGroupPlaceholder)); goto $$block8449~h;
+  $$block8449~h: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block8449~g;
+  $$block8449~g: assert (stack50000o != null); goto $$block8449~f;
+  $$block8449~f: call F..ctor(stack50000o); goto $$block8449~e;
+  $$block8449~e: stack0o := stack50000o; goto $$block8449~d;
+  $$block8449~d: assert (this != null); goto $$block8449~c;
+  $$block8449~c: assert (!($Heap[this, $inv] <: LoopInv1) || ($Heap[this, $localinv] == System.Object)); goto $$block8449~b;
+  $$block8449~b: $Heap := $Heap[this, LoopInv1.field := stack0o]; goto $$block8449~a;
+  $$block8449~a: assume IsHeap($Heap); goto block8755;
+  block8755: stack0o := local1; goto $$block8755~h;
+  $$block8755~h: havoc stack1s; goto $$block8755~g;
+  $$block8755~g: assume $IsTokenForType(stack1s, LoopInv1); goto $$block8755~f;
+  $$block8755~f: stack1o := TypeObject(LoopInv1); goto $$block8755~e;
+  $$block8755~e: assert (stack0o != null); goto $$block8755~d;
+  $$block8755~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block8755~c;
+  $$block8755~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == LoopInv1)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block8755~b;
+  $$block8755~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block8755~a;
+  $$block8755~a: assume IsHeap($Heap); goto block8466;
+  block8466: assert (this != null); goto $$block8466~d;
+  $$block8466~d: save := $Heap[this, LoopInv1.field]; goto $$block8466~c;
+  $$block8466~c: assert (save != null); goto $$block8466~b;
+  $$block8466~b: call F.NoOp(save); goto $$block8466~a;
+  $$block8466~a: i := 0; goto block8483$LoopPreheader;
+  block8483: assume (((forall $o : ref :: (($Heap$block8483$LoopPreheader[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: ((($Heap$block8483$LoopPreheader[$ot, $allocated] == true) && ($Heap$block8483$LoopPreheader[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == $Heap$block8483$LoopPreheader[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == $Heap$block8483$LoopPreheader[$ot, $ownerFrame]))))) && ($Heap$block8483$LoopPreheader[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized])); goto $$block8483~d;
+  $$block8483~d: assume (forall $o : ref :: ((($Heap$block8483$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) && ($Heap$block8483$LoopPreheader[$o, $localinv] == $Heap[$o, $localinv])) || ($Heap$block8483$LoopPreheader[$o, $allocated] != true))); goto $$block8483~c;
+  $$block8483~c: assume (forall $o : ref :: ((($Heap$block8483$LoopPreheader[$o, $allocated] != true) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o))))); goto $$block8483~b;
+  $$block8483~b: assert (forall $o : ref :: ((($o != null) && ($Heap$block8483$LoopPreheader[$o, $allocated] == true)) ==> (($Heap$block8483$LoopPreheader[$o, $ownerRef] == $Heap[$o, $ownerRef]) && ($Heap$block8483$LoopPreheader[$o, $ownerFrame] == $Heap[$o, $ownerFrame])))); goto $$block8483~a;
+  $$block8483~a: assert ((((($Heap[other, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[other, $ownerRef], $inv] <: $Heap[other, $ownerFrame])) || ($Heap[$Heap[other, $ownerRef], $localinv] == $BaseClass($Heap[other, $ownerFrame]))) && ($Heap[other, $inv] == F)) && ($Heap[other, $localinv] == $typeof(other))); goto block8568;
+  block8568: stack0i := 10; goto true8568to8636, false8568to8585;
+  true8568to8636: assume (i >= stack0i); goto block8636;
+  false8568to8585: assume (i < stack0i); goto block8585;
+  block8636: goto block8721;
+  block8585: local5 := other; goto $$block8585~j;
+  $$block8585~j: stack0o := local5; goto $$block8585~i;
+  $$block8585~i: havoc stack1s; goto $$block8585~h;
+  $$block8585~h: assume $IsTokenForType(stack1s, F); goto $$block8585~g;
+  $$block8585~g: stack1o := TypeObject(F); goto $$block8585~f;
+  $$block8585~f: assert (stack0o != null); goto $$block8585~e;
+  $$block8585~e: assert ((((($Heap[stack0o, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[stack0o, $ownerRef], $inv] <: $Heap[stack0o, $ownerFrame])) || ($Heap[$Heap[stack0o, $ownerRef], $localinv] == $BaseClass($Heap[stack0o, $ownerFrame]))) && ($Heap[stack0o, $inv] <: F)) && ($Heap[stack0o, $localinv] == $typeof(stack0o))); goto $$block8585~d;
+  $$block8585~d: $Heap := $Heap[stack0o, $localinv := System.Object]; goto $$block8585~c;
+  $$block8585~c: havoc temp1; goto $$block8585~b;
+  $$block8585~b: $Heap := $Heap[stack0o, $exposeVersion := temp1]; goto $$block8585~a;
+  $$block8585~a: assume IsHeap($Heap); goto block8602;
+  block8721: return;
+  block8602: stack0i := 4; goto $$block8602~d;
+  $$block8602~d: assert (other != null); goto $$block8602~c;
+  $$block8602~c: assert (!($Heap[other, $inv] <: F) || ($Heap[other, $localinv] == System.Object)); goto $$block8602~b;
+  $$block8602~b: $Heap := $Heap[other, F.X := stack0i]; goto $$block8602~a;
+  $$block8602~a: assume IsHeap($Heap); goto block8772;
+  block8772: stack0o := local5; goto $$block8772~h;
+  $$block8772~h: havoc stack1s; goto $$block8772~g;
+  $$block8772~g: assume $IsTokenForType(stack1s, F); goto $$block8772~f;
+  $$block8772~f: stack1o := TypeObject(F); goto $$block8772~e;
+  $$block8772~e: assert (stack0o != null); goto $$block8772~d;
+  $$block8772~d: assert ($Heap[stack0o, $localinv] == System.Object); goto $$block8772~c;
+  $$block8772~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == stack0o)) && ($Heap[$p, $ownerFrame] == F)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block8772~b;
+  $$block8772~b: $Heap := $Heap[stack0o, $localinv := $typeof(stack0o)]; goto $$block8772~a;
+  $$block8772~a: assume IsHeap($Heap); goto block8619;
+  block8619: local6 := i; goto $$block8619~d;
+  $$block8619~d: stack0i := 1; goto $$block8619~c;
+  $$block8619~c: stack0i := (local6 + stack0i); goto $$block8619~b;
+  $$block8619~b: i := stack0i; goto $$block8619~a;
+  $$block8619~a: stack0i := local6; goto block8483;
+  block8483$LoopPreheader: $Heap$block8483$LoopPreheader := $Heap; goto block8483;
+  
 }
 
-
-
-procedure LoopInv1..ctor(this: ref);
-  // nothing is owned by [this,*]
-  free requires (forall $o: ref :: $o != this ==> $Heap[$o, $ownerRef] != this);
-  // 'this' is alone in its own peer group
-  free requires $Heap[this, $ownerRef] == this && $Heap[this, $ownerFrame] == $PeerGroupPlaceholder;
-  free requires (forall $o: ref :: $Heap[$o, $ownerRef] == $Heap[this, $ownerRef] && $Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame] ==> $o == this);
-  free requires $BeingConstructed == this;
+procedure LoopInv1..ctor(this : ref);
+  free requires (forall $o : ref :: (($o != this) ==> ($Heap[$o, $ownerRef] != this)));
+  free requires (($Heap[this, $ownerRef] == this) && ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder));
+  free requires (forall $o : ref :: ((($Heap[$o, $ownerRef] == $Heap[this, $ownerRef]) && ($Heap[$o, $ownerFrame] == $Heap[this, $ownerFrame])) ==> ($o == this)));
+  free requires ($BeingConstructed == this);
   modifies $Heap;
-  ensures ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == LoopInv1 && $Heap[this, $localinv] == $typeof(this);
-  ensures $Heap[this, $ownerRef] == old($Heap)[this, $ownerRef] && $Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame];
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
-  // newly allocated objects are fully valid
-  free ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] != true && $Heap[$o, $allocated] == true ==> $Heap[$o, $inv] == $typeof($o) && $Heap[$o, $localinv] == $typeof($o));
-  // first consistent owner unchanged if its exposeVersion is
-  free ensures (forall $o: ref :: { $Heap[$o, $FirstConsistentOwner] } old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] ==> old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner]);
-  // only captured parameters may change their owners
-  ensures (forall $o: ref :: $o != null && old($Heap)[$o, $allocated] == true ==> old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef] && old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]);
-  // frame condition
-  free ensures (forall $o: ref, $f: name :: { $Heap[$o, $f] } $f != $inv && $f != $localinv && $f != $FirstConsistentOwner && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && $o != null && old($Heap)[$o, $allocated] == true && (old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame]) || old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])) && ($o != this || !(LoopInv1 <: DeclType($f))) && old(true) ==> old($Heap)[$o, $f] == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || (old($Heap)[$o, $inv] == $Heap[$o, $inv] && old($Heap)[$o, $localinv] == $Heap[$o, $localinv]) || old($Heap)[$o, $allocated] != true);
-  free ensures (forall $o: ref :: old($Heap)[$o, $allocated] == true ==> $Heap[$o, $allocated] == true) && (forall $ot: ref :: old($Heap)[$ot, $allocated] == true && old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder ==> $Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef] && $Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]) && old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized];
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  ensures ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == LoopInv1)) && ($Heap[this, $localinv] == $typeof(this)));
+  ensures (($Heap[this, $ownerRef] == old($Heap)[this, $ownerRef]) && ($Heap[this, $ownerFrame] == old($Heap)[this, $ownerFrame]));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  free ensures (forall $o : ref :: (((($o != null) && (old($Heap)[$o, $allocated] != true)) && ($Heap[$o, $allocated] == true)) ==> (($Heap[$o, $inv] == $typeof($o)) && ($Heap[$o, $localinv] == $typeof($o)))));
+  free ensures (forall $o : ref :: {$Heap[$o, $FirstConsistentOwner]} ((old($Heap)[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion] == $Heap[old($Heap)[$o, $FirstConsistentOwner], $exposeVersion]) ==> (old($Heap)[$o, $FirstConsistentOwner] == $Heap[$o, $FirstConsistentOwner])));
+  ensures (forall $o : ref :: ((($o != null) && (old($Heap)[$o, $allocated] == true)) ==> ((old($Heap)[$o, $ownerRef] == $Heap[$o, $ownerRef]) && (old($Heap)[$o, $ownerFrame] == $Heap[$o, $ownerFrame]))));
+  free ensures (forall $o : ref, $f : name :: {$Heap[$o, $f]} (((((((((($f != $inv) && ($f != $localinv)) && ($f != $FirstConsistentOwner)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (((old($Heap)[$o, $ownerFrame] == $PeerGroupPlaceholder) || !(old($Heap)[old($Heap)[$o, $ownerRef], $inv] <: old($Heap)[$o, $ownerFrame])) || (old($Heap)[old($Heap)[$o, $ownerRef], $localinv] == $BaseClass(old($Heap)[$o, $ownerFrame])))) && (($o != this) || !(LoopInv1 <: DeclType($f)))) && old(true)) ==> (old($Heap)[$o, $f] == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) && (old($Heap)[$o, $localinv] == $Heap[$o, $localinv]))) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (((forall $o : ref :: ((old($Heap)[$o, $allocated] == true) ==> ($Heap[$o, $allocated] == true))) && (forall $ot : ref :: (((old($Heap)[$ot, $allocated] == true) && (old($Heap)[$ot, $ownerFrame] != $PeerGroupPlaceholder)) ==> (($Heap[$ot, $ownerRef] == old($Heap)[$ot, $ownerRef]) && ($Heap[$ot, $ownerFrame] == old($Heap)[$ot, $ownerFrame]))))) && (old($Heap)[$BeingConstructed, $NonNullFieldsAreInitialized] == $Heap[$BeingConstructed, $NonNullFieldsAreInitialized]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  
 
-
-
-implementation LoopInv1..ctor(this: ref)
-{
-
-  entry:
-    assume $IsNotNull(this, LoopInv1);
-    assume $Heap[this, $allocated] == true;
-    assume ($Heap[this, $ownerFrame] == $PeerGroupPlaceholder || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame]) || $Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame])) && $Heap[this, $inv] == System.Object && $Heap[this, $localinv] == $typeof(this);
-    assume $Heap[this, LoopInv1.field] == null;
-    goto block9877;
-
-  block9877:
-    goto block9894;
-
-  block9894:
-    // ----- call  ----- loopinv1.ssc(15,21)
-    assert this != null;
-    call System.Object..ctor(this);
-    // ----- return
-    assert this != null;
-    assert $Heap[this, $inv] == System.Object && $Heap[this, $localinv] == $typeof(this);
-    assert (forall $p: ref :: $p != null && $Heap[$p, $allocated] == true && $Heap[$p, $ownerRef] == this && $Heap[$p, $ownerFrame] == LoopInv1 ==> $Heap[$p, $inv] == $typeof($p) && $Heap[$p, $localinv] == $typeof($p));
-    $Heap[this, $inv] := LoopInv1;
-    assume IsHeap($Heap);
-    return;
-
+implementation LoopInv1..ctor(this : ref) {
+  entry: assume $IsNotNull(this, LoopInv1); goto $$entry~p;
+  $$entry~p: assume ($Heap[this, $allocated] == true); goto $$entry~o;
+  $$entry~o: assume ((((($Heap[this, $ownerFrame] == $PeerGroupPlaceholder) || !($Heap[$Heap[this, $ownerRef], $inv] <: $Heap[this, $ownerFrame])) || ($Heap[$Heap[this, $ownerRef], $localinv] == $BaseClass($Heap[this, $ownerFrame]))) && ($Heap[this, $inv] == System.Object)) && ($Heap[this, $localinv] == $typeof(this))); goto $$entry~n;
+  $$entry~n: assume ($Heap[this, LoopInv1.field] == null); goto block9877;
+  block9877: goto block9894;
+  block9894: assert (this != null); goto $$block9894~f;
+  $$block9894~f: call System.Object..ctor(this); goto $$block9894~e;
+  $$block9894~e: assert (this != null); goto $$block9894~d;
+  $$block9894~d: assert (($Heap[this, $inv] == System.Object) && ($Heap[this, $localinv] == $typeof(this))); goto $$block9894~c;
+  $$block9894~c: assert (forall $p : ref :: ((((($p != null) && ($Heap[$p, $allocated] == true)) && ($Heap[$p, $ownerRef] == this)) && ($Heap[$p, $ownerFrame] == LoopInv1)) ==> (($Heap[$p, $inv] == $typeof($p)) && ($Heap[$p, $localinv] == $typeof($p))))); goto $$block9894~b;
+  $$block9894~b: $Heap := $Heap[this, $inv := LoopInv1]; goto $$block9894~a;
+  $$block9894~a: assume IsHeap($Heap); return;
+  
 }
-
 

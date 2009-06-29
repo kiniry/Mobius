@@ -1,68 +1,40 @@
-// equiv5.bpl
-
-function $f (int) returns (int);
-var x : int, y : int;
-
-procedure M(this : ref)
+type name;
+type ref;
+const unique null : ref;
+function $f($$unnamed~a : int) returns ($$unnamed~b : int);
+var x : int;
+var y : int;
+procedure M(this : ref);
   modifies x;
-{
-  start:
-    x := 3;
-    goto StartCheck, then, else;
-  StartCheck:
-    assert x == 3;
-    return;
+  
 
-  then:
-    x := $f(x);
-    assume x == 3;
-    goto ThenCheck, join;
-  ThenCheck:
-    assert x == 3 && x == $f(3);
-    return;
-
-  else:
-    x := $f($f(x));
-    assume x == 3;
-    goto join, ElseCheck;
-  ElseCheck:
-    assert x == 3 && x == $f($f(3));
-    return;
-
-  join:
-    // should find: x == $f($f(x)), but not: x == $f(x)
-    assert x == 3 && x == $f($f(x));
-    return;
+implementation M(this : ref) {
+  start: x := 3; goto StartCheck, id$then, id$else;
+  StartCheck: assert (x == 3); return;
+  id$then: x := $f(x); goto $$then~a;
+  $$then~a: assume (x == 3); goto ThenCheck, join;
+  ThenCheck: assert ((x == 3) && (x == $f(3))); return;
+  id$else: x := $f($f(x)); goto $$else~a;
+  $$else~a: assume (x == 3); goto join, ElseCheck;
+  ElseCheck: assert ((x == 3) && (x == $f($f(3)))); return;
+  join: assert ((x == 3) && (x == $f($f(x)))); return;
+  
 }
 
-procedure MPrime(this : ref)
+procedure MPrime(this : ref);
   modifies x;
-{
-  start:
-    x := 3;
-    goto StartCheck, then, else;
-  StartCheck:
-    assert x == 3;
-    return;
+  
 
-  then:
-    x := $f(x);
-    assume x == 3;
-    goto ThenCheck, join;
-  ThenCheck:
-    assert x == 3 && x == $f(3);
-    return;
-
-  else:
-    x := $f($f(x));
-    assume x == 3;
-    goto join, ElseCheck;
-  ElseCheck:
-    assert x == 3 && x == $f($f(3));
-    return;
-
-  join:
-    // should find: x == $f($f(x)), but not: x == $f(x)
-    assert x == $f(x);  // error
-    return;
+implementation MPrime(this : ref) {
+  start: x := 3; goto StartCheck, id$then, id$else;
+  StartCheck: assert (x == 3); return;
+  id$then: x := $f(x); goto $$then~b;
+  $$then~b: assume (x == 3); goto ThenCheck, join;
+  ThenCheck: assert ((x == 3) && (x == $f(3))); return;
+  id$else: x := $f($f(x)); goto $$else~b;
+  $$else~b: assume (x == 3); goto join, ElseCheck;
+  ElseCheck: assert ((x == 3) && (x == $f($f(3)))); return;
+  join: assert (x == $f(x)); return;
+  
 }
+

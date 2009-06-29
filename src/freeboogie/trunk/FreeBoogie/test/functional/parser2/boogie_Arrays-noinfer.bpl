@@ -1,178 +1,151 @@
-// --------------------  1-dimensional arrays  --------------------
-
-var A: [ref]int;
-
-procedure P0(o: ref, q: ref, y: int)
-  requires o != q;
+type name;
+type ref;
+const unique null : ref;
+var A : [ref]int;
+procedure P0(o : ref, q : ref, y : int);
+  requires (o != q);
   modifies A;
-  ensures A[o] == old(A[o]) + y;
-  ensures (forall p: ref :: A[p] == old(A[p]) || p == o);
-{
-  var k: int;
+  ensures (A[o] == (old(A[o]) + y));
+  ensures (forall p : ref :: ((A[p] == old(A[p])) || (p == o)));
+  
 
-  start:
-    k := A[q];
-    A[o] := y + A[o];
-    A[q] := k;
-    return;
+implementation P0(o : ref, q : ref, y : int) {
+  var k : int;
+  start: k := A[q]; goto $$start~b;
+  $$start~b: A := A[o := (y + A[o])]; goto $$start~a;
+  $$start~a: A := A[q := k]; return;
+  
 }
 
-procedure P1(o: ref, q: ref, y: int)
-  // This procedure does not have the assumption that o != q.
+procedure P1(o : ref, q : ref, y : int);
   modifies A;
-  // It also does not ensures anything about A[o]
-  ensures (forall p: ref :: A[p] == old(A[p]) || p == o);
-{
-  var k: int;
+  ensures (forall p : ref :: ((A[p] == old(A[p])) || (p == o)));
+  
 
-  start:
-    k := A[q];
-    A[o] := y + A[o];
-    A[q] := k;
-    return;
+implementation P1(o : ref, q : ref, y : int) {
+  var k : int;
+  start: k := A[q]; goto $$start~d;
+  $$start~d: A := A[o := (y + A[o])]; goto $$start~c;
+  $$start~c: A := A[q := k]; return;
+  
 }
 
-procedure P2(o: ref, q: ref, y: int)
-  // This procedure does not have the assumption that o != q.
+procedure P2(o : ref, q : ref, y : int);
   modifies A;
-  ensures A[o] == old(A[o]) + y;
-{
-  var k: int;
+  ensures (A[o] == (old(A[o]) + y));
+  
 
-  start:
-    k := A[q];
-    A[o] := y + A[o];
-    A[q] := k;
-    return;
-}  // error: postcondition violated (if o == q)
+implementation P2(o : ref, q : ref, y : int) {
+  var k : int;
+  start: k := A[q]; goto $$start~f;
+  $$start~f: A := A[o := (y + A[o])]; goto $$start~e;
+  $$start~e: A := A[q := k]; return;
+  
+}
 
-// --------------------  2-dimensional arrays  --------------------
-
-var B: [ref,name]int;
-const F: name;
-
-procedure Q0(o: ref, q: ref, y: int, G: name)
-  requires o != q && F != G;
+var B : [ref, name]int;
+const F : name;
+procedure Q0(o : ref, q : ref, y : int, G : name);
+  requires ((o != q) && (F != G));
   modifies B;
-  ensures B[o,F] == old(B[o,F]) + y;
-  ensures (forall p: ref, f: name :: B[p,f] == old(B[p,f]) ||
-                                     (p == o && f == F));
-{
-  var k: int;
+  ensures (B[o, F] == (old(B[o, F]) + y));
+  ensures (forall p : ref, f : name :: ((B[p, f] == old(B[p, f])) || ((p == o) && (f == F))));
+  
 
-  start:
-    k := B[q,G];
-    B[o,F] := y + B[o,F];
-    B[q,G] := k;
-    return;
+implementation Q0(o : ref, q : ref, y : int, G : name) {
+  var k : int;
+  start: k := B[q, G]; goto $$start~h;
+  $$start~h: B := B[o, F := (y + B[o, F])]; goto $$start~g;
+  $$start~g: B := B[q, G := k]; return;
+  
 }
 
-procedure Q1(o: ref, q: ref, y: int, G: name)
-  // This procedure does not have the assumption that o != q && F != G.
+procedure Q1(o : ref, q : ref, y : int, G : name);
   modifies B;
-  // It also does not ensures anything about B[o,F]
-  ensures (forall p: ref, f: name :: B[p,f] == old(B[p,f]) ||
-                                     (p == o && f == F));
-{
-  var k: int;
+  ensures (forall p : ref, f : name :: ((B[p, f] == old(B[p, f])) || ((p == o) && (f == F))));
+  
 
-  start:
-    k := B[q,G];
-    B[o,F] := y + B[o,F];
-    B[q,G] := k;
-    return;
+implementation Q1(o : ref, q : ref, y : int, G : name) {
+  var k : int;
+  start: k := B[q, G]; goto $$start~j;
+  $$start~j: B := B[o, F := (y + B[o, F])]; goto $$start~i;
+  $$start~i: B := B[q, G := k]; return;
+  
 }
 
-procedure Q2(o: ref, q: ref, y: int, G: name)
-  requires F != G;
-  // This procedure does not have the assumption that o != q.
+procedure Q2(o : ref, q : ref, y : int, G : name);
+  requires (F != G);
   modifies B;
-  ensures B[o,F] == old(B[o,F]) + y;
-{
-  var k: int;
+  ensures (B[o, F] == (old(B[o, F]) + y));
+  
 
-  start:
-    k := B[q,G];
-    B[o,F] := y + B[o,F];
-    B[q,G] := k;
-    return;
+implementation Q2(o : ref, q : ref, y : int, G : name) {
+  var k : int;
+  start: k := B[q, G]; goto $$start~l;
+  $$start~l: B := B[o, F := (y + B[o, F])]; goto $$start~k;
+  $$start~k: B := B[q, G := k]; return;
+  
 }
 
-procedure Q3(o: ref, q: ref, y: int, G: name)
-  requires o != q;
-  // This procedure does not have the assumption that F != G.
+procedure Q3(o : ref, q : ref, y : int, G : name);
+  requires (o != q);
   modifies B;
-  ensures B[o,F] == old(B[o,F]) + y;
-{
-  var k: int;
+  ensures (B[o, F] == (old(B[o, F]) + y));
+  
 
-  start:
-    k := B[q,G];
-    B[o,F] := y + B[o,F];
-    B[q,G] := k;
-    return;
+implementation Q3(o : ref, q : ref, y : int, G : name) {
+  var k : int;
+  start: k := B[q, G]; goto $$start~n;
+  $$start~n: B := B[o, F := (y + B[o, F])]; goto $$start~m;
+  $$start~m: B := B[q, G := k]; return;
+  
 }
 
-procedure Q4(o: ref, q: ref, y: int, G: name)
-  // This procedure does not have either of the assumptions o != q and F != G.
+procedure Q4(o : ref, q : ref, y : int, G : name);
   modifies B;
-  ensures B[o,F] == old(B[o,F]) + y;
-{
-  var k: int;
+  ensures (B[o, F] == (old(B[o, F]) + y));
+  
 
-  start:
-    k := B[q,G];
-    B[o,F] := y + B[o,F];
-    B[q,G] := k;
-    return;
-}  // error: postcondition violated
-
-// --------------------  more tests  --------------------
-
-procedure Skip0(o: ref, q: ref, G: name, H: name)
-  modifies A,B;
-  ensures (forall p: ref :: A[p] == old(A[p]));
-  ensures (forall p: ref, g: name :: B[p,g] == old(B[p,g]));
-{
-  start:
-    return;
+implementation Q4(o : ref, q : ref, y : int, G : name) {
+  var k : int;
+  start: k := B[q, G]; goto $$start~p;
+  $$start~p: B := B[o, F := (y + B[o, F])]; goto $$start~o;
+  $$start~o: B := B[q, G := k]; return;
+  
 }
 
-procedure Skip1(o: ref, q: ref, G: name, H: name)
-  modifies A,B;
-  ensures (forall p: ref :: A[p] == old(A[p]));
-  ensures (forall p: ref, g: name :: B[p,g] == old(B[p,g]));
-{
-  var k: int;
-  var l: int;
+procedure Skip0(o : ref, q : ref, G : name, H : name);
+  modifies B, A;
+  ensures (forall p : ref :: (A[p] == old(A[p])));
+  ensures (forall p : ref, g : name :: (B[p, g] == old(B[p, g])));
+  
 
-  start:
-    k := A[o];
-    l := A[q];
-    goto oneWay, theOtherWay;
-
-  oneWay:
-    A[o] := k;
-    A[q] := l;
-    goto next;
-
-  theOtherWay:
-    A[q] := l;
-    A[o] := k;
-    goto next;
-
-  next:
-    k := B[o,G];
-    l := B[q,H];
-    goto Lx, Ly;
-
-  Lx:
-    B[o,G] := k;
-    B[q,H] := l;
-    return;
-
-  Ly:
-    B[q,H] := l;
-    B[o,G] := k;
-    return;
+implementation Skip0(o : ref, q : ref, G : name, H : name) {
+  start: return;
+  
 }
+
+procedure Skip1(o : ref, q : ref, G : name, H : name);
+  modifies B, A;
+  ensures (forall p : ref :: (A[p] == old(A[p])));
+  ensures (forall p : ref, g : name :: (B[p, g] == old(B[p, g])));
+  
+
+implementation Skip1(o : ref, q : ref, G : name, H : name) {
+  var k : int;
+  var l : int;
+  start: k := A[o]; goto $$start~q;
+  $$start~q: l := A[q]; goto oneWay, theOtherWay;
+  oneWay: A := A[o := k]; goto $$oneWay~a;
+  $$oneWay~a: A := A[q := l]; goto next;
+  theOtherWay: A := A[q := l]; goto $$theOtherWay~a;
+  $$theOtherWay~a: A := A[o := k]; goto next;
+  next: k := B[o, G]; goto $$next~a;
+  $$next~a: l := B[q, H]; goto Lx, Ly;
+  Lx: B := B[o, G := k]; goto $$Lx~a;
+  $$Lx~a: B := B[q, H := l]; return;
+  Ly: B := B[q, H := l]; goto $$Ly~a;
+  $$Ly~a: B := B[o, G := k]; return;
+  
+}
+

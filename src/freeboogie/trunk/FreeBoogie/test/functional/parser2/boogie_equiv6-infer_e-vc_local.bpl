@@ -1,117 +1,81 @@
-// equiv6.bpl
-
+type name;
+type ref;
+const unique null : ref;
 var Heap : [ref, name]int;
 const FIELD : name;
-var x : int, y : int, z : int;
+var x : int;
+var y : int;
+var z : int;
+procedure M(this : ref);
+  modifies z, y, x;
+  
 
-procedure M(this : ref)
-  modifies x, y, z;
-{
-  start:
-    x := Heap[this, FIELD];
-    y := Heap[this, FIELD];
-    goto then,StartCheck,else;
-  StartCheck:
-    assert x == y && x == Heap[this, FIELD];
-    return;
-
-  then:
-    y := 3;
-    z := x;
-    goto join,ThenCheck;
-  ThenCheck:
-    assert 3 == y && x == z && x == Heap[this, FIELD];
-    return;
-
-  else:
-    z := Heap[this, FIELD];
-    goto ElseCheck,join;
-  ElseCheck:
-    assert x == y && y == z && x == Heap[this, FIELD];
-    return;
-
-  join:
-    // should not find: y==3 or: x==y or: x==z or: z==y
-    assume x == z && x == Heap[this, FIELD];
-    return;
+implementation M(this : ref) {
+  start: x := Heap[this, FIELD]; goto $$start~a;
+  $$start~a: y := Heap[this, FIELD]; goto id$then, StartCheck, id$else;
+  StartCheck: assert ((x == y) && (x == Heap[this, FIELD])); return;
+  id$then: y := 3; goto $$then~a;
+  $$then~a: z := x; goto join, ThenCheck;
+  ThenCheck: assert (((3 == y) && (x == z)) && (x == Heap[this, FIELD])); return;
+  id$else: z := Heap[this, FIELD]; goto ElseCheck, join;
+  ElseCheck: assert (((x == y) && (y == z)) && (x == Heap[this, FIELD])); return;
+  join: assume ((x == z) && (x == Heap[this, FIELD])); return;
+  
 }
 
-procedure M0(this : ref)
-  modifies x, y, z;
-{
-  start:
-    x := Heap[this, FIELD];
-    y := Heap[this, FIELD];
-    goto then,else;
-  then:
-    y := 3;
-    z := x;
-    goto join;
-  else:
-    z := Heap[this, FIELD];
-    goto join;
-  join:
-    // should not find: y==3 or: x==y or: x==z or: z==y
-    assert y==3; // error
-    return;
+procedure M0(this : ref);
+  modifies z, y, x;
+  
+
+implementation M0(this : ref) {
+  start: x := Heap[this, FIELD]; goto $$start~b;
+  $$start~b: y := Heap[this, FIELD]; goto id$then, id$else;
+  id$then: y := 3; goto $$then~b;
+  $$then~b: z := x; goto join;
+  id$else: z := Heap[this, FIELD]; goto join;
+  join: assert (y == 3); return;
+  
 }
 
-procedure M1(this : ref)
-  modifies x, y, z;
-{
-  start:
-    x := Heap[this, FIELD];
-    y := Heap[this, FIELD];
-    goto then,else;
-  then:
-    y := 3;
-    z := x;
-    goto join;
-  else:
-    z := Heap[this, FIELD];
-    goto join;
-  join:
-    // should not find: y==3 or: x==y or: x==z or: z==y
-    assert x==y; // error
-    return;
+procedure M1(this : ref);
+  modifies z, y, x;
+  
+
+implementation M1(this : ref) {
+  start: x := Heap[this, FIELD]; goto $$start~c;
+  $$start~c: y := Heap[this, FIELD]; goto id$then, id$else;
+  id$then: y := 3; goto $$then~c;
+  $$then~c: z := x; goto join;
+  id$else: z := Heap[this, FIELD]; goto join;
+  join: assert (x == y); return;
+  
 }
 
-procedure M2(this : ref)
-  modifies x, y, z;
-{
-  start:
-    x := Heap[this, FIELD];
-    y := Heap[this, FIELD];
-    goto then,else;
-  then:
-    y := 3;
-    z := x;
-    goto join;
-  else:
-    z := Heap[this, FIELD];
-    goto join;
-  join:
-    // should not find: y==3 or: x==y or: x==z or: z==y
-    assert x==z; // error
-    return;
+procedure M2(this : ref);
+  modifies z, y, x;
+  
+
+implementation M2(this : ref) {
+  start: x := Heap[this, FIELD]; goto $$start~d;
+  $$start~d: y := Heap[this, FIELD]; goto id$then, id$else;
+  id$then: y := 3; goto $$then~d;
+  $$then~d: z := x; goto join;
+  id$else: z := Heap[this, FIELD]; goto join;
+  join: assert (x == z); return;
+  
 }
 
-procedure M3(this : ref)
-  modifies x, y, z;
-{
-  start:
-    x := Heap[this, FIELD];
-    y := Heap[this, FIELD];
-    goto then,else;
-  then:
-    y := 3;
-    z := x;
-    goto join;
-  else:
-    z := Heap[this, FIELD];
-    goto join;
-  join:
-    // should not find: y==3 or: x==y or: x==z or: z==y
-    assert z==y; // error
-    return;
+procedure M3(this : ref);
+  modifies z, y, x;
+  
+
+implementation M3(this : ref) {
+  start: x := Heap[this, FIELD]; goto $$start~e;
+  $$start~e: y := Heap[this, FIELD]; goto id$then, id$else;
+  id$then: y := 3; goto $$then~e;
+  $$then~e: z := x; goto join;
+  id$else: z := Heap[this, FIELD]; goto join;
+  join: assert (z == y); return;
+  
 }
+

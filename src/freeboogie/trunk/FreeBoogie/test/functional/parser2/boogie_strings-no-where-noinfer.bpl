@@ -1,992 +1,548 @@
+type name;
+type ref;
+const unique null : ref;
 type real;
-
 type elements;
-
 type struct;
-
-var $Heap: [ref,name]any;
-
-function IsHeap(h: [ref,name]any) returns (bool);
-
-const $allocated: name;
-
-const $elements: name;
-
-const $inv: name;
-
-const $writable: name;
-
-const $sharingMode: name;
-
-const $SharingMode_Unshared: name;
-
-const $SharingMode_LockProtected: name;
-
-function ClassRepr(class: name) returns (ref);
-
-axiom (forall c0: name, c1: name :: c0 != c1 ==> ClassRepr(c0) != ClassRepr(c1));
-
-axiom (forall T: name :: !($typeof(ClassRepr(T)) <: System.Object));
-
-axiom (forall T: name :: ClassRepr(T) != null);
-
-axiom (forall T: name, h: [ref,name]any :: { h[ClassRepr(T), $writable] } IsHeap(h) ==> cast(h[ClassRepr(T), $writable],bool));
-
-function IsDirectlyModifiableField(f: name) returns (bool);
-
+var $Heap : [ref, name]any;
+function IsHeap<any>(h : [ref, name]any) returns ($$unnamed~a : bool);
+const $allocated : name;
+const $elements : name;
+const $inv : name;
+const $writable : name;
+const $sharingMode : name;
+const $SharingMode_Unshared : name;
+const $SharingMode_LockProtected : name;
+function ClassRepr(class : name) returns ($$unnamed~b : ref);
+axiom (forall c0 : name, c1 : name :: ((c0 != c1) ==> (ClassRepr(c0) != ClassRepr(c1))));
+axiom (forall T : name :: !($typeof(ClassRepr(T)) <: System.Object));
+axiom (forall T : name :: (ClassRepr(T) != null));
+axiom (forall<any> T : name, h : [ref, name]any :: {h[ClassRepr(T), $writable]} (IsHeap(h) ==> h[ClassRepr(T), $writable]));
+function IsDirectlyModifiableField(f : name) returns ($$unnamed~c : bool);
 axiom !IsDirectlyModifiableField($allocated);
-
 axiom IsDirectlyModifiableField($elements);
-
 axiom !IsDirectlyModifiableField($inv);
-
 axiom !IsDirectlyModifiableField($writable);
-
-function IsStaticField(f: name) returns (bool);
-
+function IsStaticField(f : name) returns ($$unnamed~d : bool);
 axiom !IsStaticField($allocated);
-
 axiom !IsStaticField($elements);
-
 axiom !IsStaticField($inv);
-
 axiom !IsStaticField($writable);
-
-function ValueArrayGet(elements, int) returns (any);
-
-function ValueArraySet(elements, int, any) returns (elements);
-
-function RefArrayGet(elements, int) returns (ref);
-
-function RefArraySet(elements, int, ref) returns (elements);
-
-axiom (forall A: elements, i: int, x: any :: ValueArrayGet(ValueArraySet(A, i, x), i) == x);
-
-axiom (forall A: elements, i: int, j: int, x: any :: i != j ==> ValueArrayGet(ValueArraySet(A, i, x), j) == ValueArrayGet(A, j));
-
-axiom (forall A: elements, i: int, x: ref :: RefArrayGet(RefArraySet(A, i, x), i) == x);
-
-axiom (forall A: elements, i: int, j: int, x: ref :: i != j ==> RefArrayGet(RefArraySet(A, i, x), j) == RefArrayGet(A, j));
-
-function ArrayIndex(arr: ref, dim: int, indexAtDim: int, remainingIndexContribution: int) returns (int);
-
-axiom (forall a: ref, d: int, x: int, y: int, x': int, y': int :: ArrayIndex(a, d, x, y) == ArrayIndex(a, d, x', y') ==> x == x' && y == y');
-
-axiom (forall a: ref, T: name, i: int, r: int, heap: [ref,name]any :: $typeof(a) <: RefArray(T, r) ==> $Is(RefArrayGet(cast(heap[a, $elements],elements), i), T));
-
-function $Rank(ref) returns (int);
-
-axiom (forall a: ref :: 1 <= $Rank(a));
-
-axiom (forall a: ref, T: name, r: int :: { $Is(a, ValueArray(T, r)) } $Is(a, ValueArray(T, r)) ==> $Rank(a) == r);
-
-axiom (forall a: ref, T: name, r: int :: { $Is(a, RefArray(T, r)) } $Is(a, RefArray(T, r)) ==> $Rank(a) == r);
-
-function $Length(ref) returns (int);
-
-axiom (forall a: ref :: { $Length(a) } 0 <= $Length(a));
-
-function $DimLength(ref, int) returns (int);
-
-axiom (forall a: ref, i: int :: 0 <= $DimLength(a, i));
-
-axiom (forall a: ref :: $Rank(a) == 1 ==> $DimLength(a, 0) == $Length(a));
-
-function $LBound(ref, int) returns (int);
-
-function $UBound(ref, int) returns (int);
-
-axiom (forall a: ref, i: int :: { $LBound(a, i) } $LBound(a, i) == 0);
-
-axiom (forall a: ref, i: int :: { $UBound(a, i) } $UBound(a, i) == $DimLength(a, i) - 1);
-
-const System.Array: name;
-
+function ValueArrayGet<any>($$unnamed~f : elements, $$unnamed~e : int) returns ($$unnamed~g : any);
+function ValueArraySet<any>($$unnamed~j : elements, $$unnamed~i : int, $$unnamed~h : any) returns ($$unnamed~k : elements);
+function RefArrayGet($$unnamed~m : elements, $$unnamed~l : int) returns ($$unnamed~n : ref);
+function RefArraySet($$unnamed~q : elements, $$unnamed~p : int, $$unnamed~o : ref) returns ($$unnamed~r : elements);
+axiom (forall<any> A : elements, i : int, x : any :: (ValueArrayGet(ValueArraySet(A, i, x), i) == x));
+axiom (forall<any> A : elements, i : int, j : int, x : any :: ((i != j) ==> (ValueArrayGet(ValueArraySet(A, i, x), j) == ValueArrayGet(A, j))));
+axiom (forall A : elements, i : int, x : ref :: (RefArrayGet(RefArraySet(A, i, x), i) == x));
+axiom (forall A : elements, i : int, j : int, x : ref :: ((i != j) ==> (RefArrayGet(RefArraySet(A, i, x), j) == RefArrayGet(A, j))));
+function ArrayIndex(arr : ref, dim : int, indexAtDim : int, remainingIndexContribution : int) returns ($$unnamed~s : int);
+axiom (forall a : ref, d : int, x : int, y : int, x' : int, y' : int :: ((ArrayIndex(a, d, x, y) == ArrayIndex(a, d, x', y')) ==> ((x == x') && (y == y'))));
+axiom (forall<any> a : ref, T : name, i : int, r : int, heap : [ref, name]any :: (($typeof(a) <: RefArray(T, r)) ==> $Is(RefArrayGet(heap[a, $elements], i), T)));
+function $Rank($$unnamed~t : ref) returns ($$unnamed~u : int);
+axiom (forall a : ref :: (1 <= $Rank(a)));
+axiom (forall a : ref, T : name, r : int :: {$Is(a, ValueArray(T, r))} ($Is(a, ValueArray(T, r)) ==> ($Rank(a) == r)));
+axiom (forall a : ref, T : name, r : int :: {$Is(a, RefArray(T, r))} ($Is(a, RefArray(T, r)) ==> ($Rank(a) == r)));
+function $Length($$unnamed~v : ref) returns ($$unnamed~w : int);
+axiom (forall a : ref :: {$Length(a)} (0 <= $Length(a)));
+function $DimLength($$unnamed~y : ref, $$unnamed~x : int) returns ($$unnamed~z : int);
+axiom (forall a : ref, i : int :: (0 <= $DimLength(a, i)));
+axiom (forall a : ref :: (($Rank(a) == 1) ==> ($DimLength(a, 0) == $Length(a))));
+function $LBound($$unnamed~ab : ref, $$unnamed~aa : int) returns ($$unnamed~ac : int);
+function $UBound($$unnamed~ae : ref, $$unnamed~ad : int) returns ($$unnamed~af : int);
+axiom (forall a : ref, i : int :: {$LBound(a, i)} ($LBound(a, i) == 0));
+axiom (forall a : ref, i : int :: {$UBound(a, i)} ($UBound(a, i) == ($DimLength(a, i) - 1)));
+const System.Array : name;
 axiom $IsClass(System.Array);
-
-axiom System.Array <: System.Object;
-
-function $ElementType(name) returns (name);
-
-function ValueArray(elementType: name, rank: int) returns (name);
-
-axiom (forall T: name, r: int :: { ValueArray(T, r) } ValueArray(T, r) <: System.Array);
-
-function RefArray(elementType: name, rank: int) returns (name);
-
-axiom (forall T: name, r: int :: { RefArray(T, r) } RefArray(T, r) <: System.Array);
-
-axiom (forall T: name, U: name, r: int :: U <: T ==> RefArray(U, r) <: RefArray(T, r));
-
-axiom (forall A: name, r: int :: $ElementType(ValueArray(A, r)) == A);
-
-axiom (forall A: name, r: int :: $ElementType(RefArray(A, r)) == A);
-
-axiom (forall A: name, r: int, T: name :: { T <: RefArray(A, r) } T <: RefArray(A, r) ==> T == RefArray($ElementType(T), r) && $ElementType(T) <: A);
-
-axiom (forall A: name, r: int, T: name :: { T <: ValueArray(A, r) } T <: ValueArray(A, r) ==> T == ValueArray(A, r));
-
-axiom (forall A: name, r: int, T: name :: RefArray(A, r) <: T ==> System.Array <: T || (T == RefArray($ElementType(T), r) && A <: $ElementType(T)));
-
-axiom (forall A: name, r: int, T: name :: ValueArray(A, r) <: T ==> System.Array <: T || T == ValueArray(A, r));
-
-function $ArrayPtr(elementType: name) returns (name);
-
-function $StructGet(struct, name) returns (any);
-
-function $StructSet(struct, name, any) returns (struct);
-
-axiom (forall s: struct, f: name, x: any :: $StructGet($StructSet(s, f, x), f) == x);
-
-axiom (forall s: struct, f: name, f': name, x: any :: f != f' ==> $StructGet($StructSet(s, f, x), f') == $StructGet(s, f'));
-
-function ZeroInit(s: struct, typ: name) returns (bool);
-
-function $typeof(ref) returns (name);
-
-function Implements(class: name, interface: name) returns (bool);
-
-axiom (forall T: name, J: name :: { Implements(T, J) } Implements(T, J) ==> T <: J);
-
-function InterfaceExtends(subIntf: name, superIntf: name) returns (bool);
-
-axiom (forall J: name, K: name :: { InterfaceExtends(J, K) } InterfaceExtends(J, K) ==> J <: K);
-
-function $IsClass(name) returns (bool);
-
-axiom (forall C: name :: { $IsClass(C) } $IsClass(C) ==> C <: C);
-
-function AsDirectSubClass(sub: name, base: name) returns (sub': name);
-
-function OneClassDown(sub: name, base: name) returns (directSub: name);
-
-axiom (forall A: name, B: name, C: name :: { C <: AsDirectSubClass(B, A) } C <: AsDirectSubClass(B, A) ==> OneClassDown(C, A) == B);
-
-function $IsInterface(name) returns (bool);
-
-axiom (forall J: name :: { $IsInterface(J) } $IsInterface(J) ==> J <: System.Object);
-
-function $IsValueType(name) returns (bool);
-
-axiom (forall T: name :: $IsValueType(T) ==> (forall U: name :: T <: U ==> T == U) && (forall U: name :: U <: T ==> T == U));
-
-const System.Object: name;
-
+axiom (System.Array <: System.Object);
+function $ElementType($$unnamed~ag : name) returns ($$unnamed~ah : name);
+function ValueArray(elementType : name, rank : int) returns ($$unnamed~ai : name);
+axiom (forall T : name, r : int :: {ValueArray(T, r)} (ValueArray(T, r) <: System.Array));
+function RefArray(elementType : name, rank : int) returns ($$unnamed~aj : name);
+axiom (forall T : name, r : int :: {RefArray(T, r)} (RefArray(T, r) <: System.Array));
+axiom (forall T : name, U : name, r : int :: ((U <: T) ==> (RefArray(U, r) <: RefArray(T, r))));
+axiom (forall A : name, r : int :: ($ElementType(ValueArray(A, r)) == A));
+axiom (forall A : name, r : int :: ($ElementType(RefArray(A, r)) == A));
+axiom (forall A : name, r : int, T : name :: {(T <: RefArray(A, r))} ((T <: RefArray(A, r)) ==> ((T == RefArray($ElementType(T), r)) && ($ElementType(T) <: A))));
+axiom (forall A : name, r : int, T : name :: {(T <: ValueArray(A, r))} ((T <: ValueArray(A, r)) ==> (T == ValueArray(A, r))));
+axiom (forall A : name, r : int, T : name :: ((RefArray(A, r) <: T) ==> ((System.Array <: T) || ((T == RefArray($ElementType(T), r)) && (A <: $ElementType(T))))));
+axiom (forall A : name, r : int, T : name :: ((ValueArray(A, r) <: T) ==> ((System.Array <: T) || (T == ValueArray(A, r)))));
+function $ArrayPtr(elementType : name) returns ($$unnamed~ak : name);
+function $StructGet<any>($$unnamed~am : struct, $$unnamed~al : name) returns ($$unnamed~an : any);
+function $StructSet<any>($$unnamed~aq : struct, $$unnamed~ap : name, $$unnamed~ao : any) returns ($$unnamed~ar : struct);
+axiom (forall<any> s : struct, f : name, x : any :: ($StructGet($StructSet(s, f, x), f) == x));
+axiom (forall<any> s : struct, f : name, f' : name, x : any :: ((f != f') ==> ($StructGet($StructSet(s, f, x), f') == $StructGet(s, f'))));
+function ZeroInit(s : struct, typ : name) returns ($$unnamed~as : bool);
+function $typeof($$unnamed~at : ref) returns ($$unnamed~au : name);
+function Implements(class : name, interface : name) returns ($$unnamed~av : bool);
+axiom (forall T : name, J : name :: {Implements(T, J)} (Implements(T, J) ==> (T <: J)));
+function InterfaceExtends(subIntf : name, superIntf : name) returns ($$unnamed~aw : bool);
+axiom (forall J : name, K : name :: {InterfaceExtends(J, K)} (InterfaceExtends(J, K) ==> (J <: K)));
+function $IsClass($$unnamed~ax : name) returns ($$unnamed~ay : bool);
+axiom (forall C : name :: {$IsClass(C)} ($IsClass(C) ==> (C <: C)));
+function AsDirectSubClass(sub : name, base : name) returns (sub' : name);
+function OneClassDown(sub : name, base : name) returns (directSub : name);
+axiom (forall A : name, B : name, C : name :: {(C <: AsDirectSubClass(B, A))} ((C <: AsDirectSubClass(B, A)) ==> (OneClassDown(C, A) == B)));
+function $IsInterface($$unnamed~az : name) returns ($$unnamed~ba : bool);
+axiom (forall J : name :: {$IsInterface(J)} ($IsInterface(J) ==> (J <: System.Object)));
+function $IsValueType($$unnamed~bb : name) returns ($$unnamed~bc : bool);
+axiom (forall T : name :: ($IsValueType(T) ==> ((forall U : name :: ((T <: U) ==> (T == U))) && (forall U : name :: ((U <: T) ==> (T == U))))));
+const System.Object : name;
 axiom $IsClass(System.Object);
-
-function $IsTokenForType(struct, name) returns (bool);
-
-function TypeObject(name) returns (ref);
-
-const System.Type: name;
-
-axiom System.Type <: System.Object;
-
-axiom (forall T: name :: { TypeObject(T) } $IsNotNull(TypeObject(T), System.Type));
-
-function $Is(ref, name) returns (bool);
-
-axiom (forall o: ref, T: name :: { $Is(o, T) } $Is(o, T) <==> o == null || $typeof(o) <: T);
-
-function $IsNotNull(ref, name) returns (bool);
-
-axiom (forall o: ref, T: name :: { $IsNotNull(o, T) } $IsNotNull(o, T) <==> o != null && $Is(o, T));
-
-function $As(ref, name) returns (ref);
-
-axiom (forall o: ref, T: name :: $Is(o, T) ==> $As(o, T) == o);
-
-axiom (forall o: ref, T: name :: !$Is(o, T) ==> $As(o, T) == null);
-
-axiom (forall heap: [ref,name]any, o: ref, A: name, r: int :: $Is(o, RefArray(A, r)) ==> heap[o, $inv] == $typeof(o));
-
-axiom (forall heap: [ref,name]any, o: ref, A: name, r: int :: $Is(o, ValueArray(A, r)) ==> heap[o, $inv] == $typeof(o));
-
-function IsAllocated(h: [ref,name]any, o: any) returns (bool);
-
-axiom (forall h: [ref,name]any, o: ref, f: name :: { IsAllocated(h, h[o, f]) } IsHeap(h) ==> IsAllocated(h, h[o, f]));
-
-axiom (forall h: [ref,name]any, s: struct, f: name :: { IsAllocated(h, $StructGet(s, f)) } IsAllocated(h, s) ==> IsAllocated(h, $StructGet(s, f)));
-
-axiom (forall h: [ref,name]any, e: elements, i: int :: { IsAllocated(h, RefArrayGet(e, i)) } IsAllocated(h, e) ==> IsAllocated(h, RefArrayGet(e, i)));
-
-axiom (forall h: [ref,name]any, o: ref :: { h[o, $allocated] } IsAllocated(h, o) ==> cast(h[o, $allocated],bool));
-
-axiom (forall h: [ref,name]any, c: name :: { h[ClassRepr(c), $allocated] } IsHeap(h) ==> cast(h[ClassRepr(c), $allocated],bool));
-
-function DeclType(field: name) returns (class: name);
-
-function AsNonNullRefField(field: name, T: name) returns (f: name);
-
-function AsRefField(field: name, T: name) returns (f: name);
-
-function AsRangeField(field: name, T: name) returns (f: name);
-
-axiom (forall f: name, T: name :: { AsNonNullRefField(f, T) } AsNonNullRefField(f, T) == f ==> AsRefField(f, T) == f);
-
-axiom (forall h: [ref,name]any, o: ref, f: name, T: name :: { h[o, AsRefField(f, T)] } IsHeap(h) ==> $Is(cast(h[o, AsRefField(f, T)],ref), T));
-
-axiom (forall h: [ref,name]any, o: ref, f: name, T: name :: { h[o, AsNonNullRefField(f, T)] } IsHeap(h) ==> cast(h[o, AsNonNullRefField(f, T)],ref) != null);
-
-axiom (forall h: [ref,name]any, o: ref, f: name, T: name :: { h[o, AsRangeField(f, T)] } IsHeap(h) ==> InRange(cast(h[o, AsRangeField(f, T)],int), T));
-
-const System.String: name;
-
-axiom (forall h: [ref,name]any, s: ref :: IsHeap(h) && $typeof(s) == System.String ==> h[s, $inv] == $typeof(s) && cast(h[s, $writable],bool));
-
-function AsOwnedField(f: name) returns (name);
-
-axiom (forall h: [ref,name]any, o: ref, f: name :: { h[o, AsOwnedField(f)] } IsHeap(h) && cast(h[o, $inv],name) <: DeclType(AsOwnedField(f)) ==> cast(h[o, AsOwnedField(f)],ref) == null || $typeof(cast(h[o, AsOwnedField(f)],ref)) == System.String || !cast(h[cast(h[o, AsOwnedField(f)],ref), $writable],bool));
-
-axiom (forall h: [ref,name]any, o: ref :: { h[o, $writable] } IsHeap(h) && !cast(h[o, $writable],bool) ==> cast(h[o, $inv],name) == $typeof(o));
-
-function Box(any, ref) returns (ref);
-
-function Unbox(ref) returns (any);
-
-axiom (forall x: any, p: ref :: { Unbox(Box(x, p)) } Unbox(Box(x, p)) == x);
-
-axiom (forall heap: [ref,name]any, x: any, p: ref :: { heap[Box(x, p), $inv] } IsHeap(heap) ==> heap[Box(x, p), $inv] == $typeof(Box(x, p)));
-
-function UnboxedType(ref) returns (name);
-
-function BoxTester(p: ref, typ: name) returns (ref);
-
-axiom (forall p: ref, typ: name :: { BoxTester(p, typ) } UnboxedType(p) == typ <==> BoxTester(p, typ) != null);
-
-const System.Int16: name;
-
+function $IsTokenForType($$unnamed~be : struct, $$unnamed~bd : name) returns ($$unnamed~bf : bool);
+function TypeObject($$unnamed~bg : name) returns ($$unnamed~bh : ref);
+const System.Type : name;
+axiom (System.Type <: System.Object);
+axiom (forall T : name :: {TypeObject(T)} $IsNotNull(TypeObject(T), System.Type));
+function $Is($$unnamed~bj : ref, $$unnamed~bi : name) returns ($$unnamed~bk : bool);
+axiom (forall o : ref, T : name :: {$Is(o, T)} ($Is(o, T) <==> ((o == null) || ($typeof(o) <: T))));
+function $IsNotNull($$unnamed~bm : ref, $$unnamed~bl : name) returns ($$unnamed~bn : bool);
+axiom (forall o : ref, T : name :: {$IsNotNull(o, T)} ($IsNotNull(o, T) <==> ((o != null) && $Is(o, T))));
+function $As($$unnamed~bp : ref, $$unnamed~bo : name) returns ($$unnamed~bq : ref);
+axiom (forall o : ref, T : name :: ($Is(o, T) ==> ($As(o, T) == o)));
+axiom (forall o : ref, T : name :: (!$Is(o, T) ==> ($As(o, T) == null)));
+axiom (forall<any> heap : [ref, name]any, o : ref, A : name, r : int :: ($Is(o, RefArray(A, r)) ==> (heap[o, $inv] == $typeof(o))));
+axiom (forall<any> heap : [ref, name]any, o : ref, A : name, r : int :: ($Is(o, ValueArray(A, r)) ==> (heap[o, $inv] == $typeof(o))));
+function IsAllocated<any>(h : [ref, name]any, o : any) returns ($$unnamed~br : bool);
+axiom (forall<any> h : [ref, name]any, o : ref, f : name :: {IsAllocated(h, h[o, f])} (IsHeap(h) ==> IsAllocated(h, h[o, f])));
+axiom (forall<any> h : [ref, name]any, s : struct, f : name :: {IsAllocated(h, $StructGet(s, f))} (IsAllocated(h, s) ==> IsAllocated(h, $StructGet(s, f))));
+axiom (forall<any> h : [ref, name]any, e : elements, i : int :: {IsAllocated(h, RefArrayGet(e, i))} (IsAllocated(h, e) ==> IsAllocated(h, RefArrayGet(e, i))));
+axiom (forall<any> h : [ref, name]any, o : ref :: {h[o, $allocated]} (IsAllocated(h, o) ==> h[o, $allocated]));
+axiom (forall<any> h : [ref, name]any, c : name :: {h[ClassRepr(c), $allocated]} (IsHeap(h) ==> h[ClassRepr(c), $allocated]));
+function DeclType(field : name) returns (class : name);
+function AsNonNullRefField(field : name, T : name) returns (f : name);
+function AsRefField(field : name, T : name) returns (f : name);
+function AsRangeField(field : name, T : name) returns (f : name);
+axiom (forall f : name, T : name :: {AsNonNullRefField(f, T)} ((AsNonNullRefField(f, T) == f) ==> (AsRefField(f, T) == f)));
+axiom (forall<any> h : [ref, name]any, o : ref, f : name, T : name :: {h[o, AsRefField(f, T)]} (IsHeap(h) ==> $Is(h[o, AsRefField(f, T)], T)));
+axiom (forall<any> h : [ref, name]any, o : ref, f : name, T : name :: {h[o, AsNonNullRefField(f, T)]} (IsHeap(h) ==> (h[o, AsNonNullRefField(f, T)] != null)));
+axiom (forall<any> h : [ref, name]any, o : ref, f : name, T : name :: {h[o, AsRangeField(f, T)]} (IsHeap(h) ==> InRange(h[o, AsRangeField(f, T)], T)));
+const System.String : name;
+axiom (forall<any> h : [ref, name]any, s : ref :: ((IsHeap(h) && ($typeof(s) == System.String)) ==> ((h[s, $inv] == $typeof(s)) && h[s, $writable])));
+function AsOwnedField(f : name) returns ($$unnamed~bs : name);
+axiom (forall<any> h : [ref, name]any, o : ref, f : name :: {h[o, AsOwnedField(f)]} ((IsHeap(h) && (h[o, $inv] <: DeclType(AsOwnedField(f)))) ==> (((h[o, AsOwnedField(f)] == null) || ($typeof(h[o, AsOwnedField(f)]) == System.String)) || !h[h[o, AsOwnedField(f)], $writable])));
+axiom (forall<any> h : [ref, name]any, o : ref :: {h[o, $writable]} ((IsHeap(h) && !h[o, $writable]) ==> (h[o, $inv] == $typeof(o))));
+function Box<any>($$unnamed~bu : any, $$unnamed~bt : ref) returns ($$unnamed~bv : ref);
+function Unbox<any>($$unnamed~bw : ref) returns ($$unnamed~bx : any);
+axiom (forall<any> x : any, p : ref :: {Unbox(Box(x, p))} (Unbox(Box(x, p)) == x));
+axiom (forall<any> heap : [ref, name]any, x : any, p : ref :: {heap[Box(x, p), $inv]} (IsHeap(heap) ==> (heap[Box(x, p), $inv] == $typeof(Box(x, p)))));
+function UnboxedType($$unnamed~by : ref) returns ($$unnamed~bz : name);
+function BoxTester(p : ref, typ : name) returns ($$unnamed~ca : ref);
+axiom (forall p : ref, typ : name :: {BoxTester(p, typ)} ((UnboxedType(p) == typ) <==> (BoxTester(p, typ) != null)));
+const System.Int16 : name;
 axiom $IsValueType(System.Int16);
-
-const System.Int32: name;
-
+const System.Int32 : name;
 axiom $IsValueType(System.Int32);
-
-const System.Int64: name;
-
+const System.Int64 : name;
 axiom $IsValueType(System.Int64);
-
-const System.Byte: name;
-
+const System.Byte : name;
 axiom $IsValueType(System.Byte);
-
-const System.Int16.MinValue: int;
-
-const System.Int16.MaxValue: int;
-
-const System.Int32.MinValue: int;
-
-const System.Int32.MaxValue: int;
-
-const System.Int64.MinValue: int;
-
-const System.Int64.MaxValue: int;
-
-axiom System.Int64.MinValue < System.Int32.MinValue;
-
-axiom System.Int32.MinValue < System.Int16.MinValue;
-
-axiom System.Int16.MinValue < System.Int16.MaxValue;
-
-axiom System.Int16.MaxValue < System.Int32.MaxValue;
-
-axiom System.Int32.MaxValue < System.Int64.MaxValue;
-
-function InRange(i: int, T: name) returns (bool);
-
-axiom (forall i: int :: InRange(i, System.Int16) <==> System.Int16.MinValue <= i && i <= System.Int16.MaxValue);
-
-axiom (forall i: int :: InRange(i, System.Int32) <==> System.Int32.MinValue <= i && i <= System.Int32.MaxValue);
-
-axiom (forall i: int :: InRange(i, System.Int64) <==> System.Int64.MinValue <= i && i <= System.Int64.MaxValue);
-
-axiom (forall i: int :: { InRange(i, System.Byte) } InRange(i, System.Byte) <==> 0 <= i && i < 256);
-
-function $RealToInt(real) returns (int);
-
-function $IntToReal(int) returns (real);
-
-function $SizeIs(name, int) returns (bool);
-
-function $IfThenElse(bool, any, any) returns (any);
-
-axiom (forall b: bool, x: any, y: any :: { $IfThenElse(b, x, y) } b ==> $IfThenElse(b, x, y) == x);
-
-axiom (forall b: bool, x: any, y: any :: { $IfThenElse(b, x, y) } !b ==> $IfThenElse(b, x, y) == y);
-
-function #neg(int) returns (int);
-
-function #rneg(real) returns (real);
-
-function #rdiv(real, real) returns (real);
-
-function #and(int, int) returns (int);
-
-function #or(int, int) returns (int);
-
-function #xor(int, int) returns (int);
-
-function #shl(int, int) returns (int);
-
-function #shr(int, int) returns (int);
-
-axiom (forall x: int, y: int :: { x % y } { x / y } x % y == x - x / y * y);
-
-axiom (forall x: int, y: int :: { x % y } 0 <= x && 0 < y ==> 0 <= x % y && x % y < y);
-
-axiom (forall x: int, y: int :: { x % y } 0 <= x && y < 0 ==> 0 <= x % y && x % y < 0 - y);
-
-axiom (forall x: int, y: int :: { x % y } x <= 0 && 0 < y ==> 0 - y < x % y && x % y <= 0);
-
-axiom (forall x: int, y: int :: { x % y } x <= 0 && y < 0 ==> y < x % y && x % y <= 0);
-
-axiom (forall x: int, y: int :: { (x + y) % y } 0 <= x && 0 <= y ==> (x + y) % y == x % y);
-
-axiom (forall x: int, y: int :: { (y + x) % y } 0 <= x && 0 <= y ==> (y + x) % y == x % y);
-
-axiom (forall x: int, y: int :: { (x - y) % y } 0 <= x - y && 0 <= y ==> (x - y) % y == x % y);
-
-axiom (forall a: int, b: int, d: int :: { a % d,b % d } 2 <= d && a % d == b % d && a < b ==> a + d <= b);
-
-axiom (forall i: int :: { #shl(i, 0) } #shl(i, 0) == i);
-
-axiom (forall i: int, j: int :: 0 <= j ==> #shl(i, j + 1) == #shl(i, j) * 2);
-
-axiom (forall i: int :: { #shr(i, 0) } #shr(i, 0) == i);
-
-axiom (forall i: int, j: int :: 0 <= j ==> #shr(i, j + 1) == #shr(i, j) / 2);
-
-const $UnknownRef: ref;
-
-const System.IComparable: name;
-
-const Microsoft.Singularity.Applications.ThreadTest: name;
-
-const System.Threading.Thread: name;
-
-const System.Collections.IEnumerable: name;
-
-const System.Threading.ThreadStart: name;
-
-const System.ICloneable: name;
-
-const System.MulticastDelegate: name;
-
-const System.Delegate: name;
-
-const $stringLiteral0: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral0, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral0, $allocated],bool)) && $IsNotNull($stringLiteral0, System.String) && $Length($stringLiteral0) == 13;
-
-const $stringLiteral1: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral1, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral1, $allocated],bool)) && $IsNotNull($stringLiteral1, System.String) && $Length($stringLiteral1) == 14;
-
-const $stringLiteral2: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral2, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral2, $allocated],bool)) && $IsNotNull($stringLiteral2, System.String) && $Length($stringLiteral2) == 11;
-
-const $stringLiteral3: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral3, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral3, $allocated],bool)) && $IsNotNull($stringLiteral3, System.String) && $Length($stringLiteral3) == 18;
-
-const $stringLiteral4: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral4, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral4, $allocated],bool)) && $IsNotNull($stringLiteral4, System.String) && $Length($stringLiteral4) == 19;
-
-const $stringLiteral5: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral5, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral5, $allocated],bool)) && $IsNotNull($stringLiteral5, System.String) && $Length($stringLiteral5) == 14;
-
-const $stringLiteral6: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral6, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral6, $allocated],bool)) && $IsNotNull($stringLiteral6, System.String) && $Length($stringLiteral6) == 15;
-
-const $stringLiteral7: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral7, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral7, $allocated],bool)) && $IsNotNull($stringLiteral7, System.String) && $Length($stringLiteral7) == 11;
-
-const $stringLiteral8: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral8, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral8, $allocated],bool)) && $IsNotNull($stringLiteral8, System.String) && $Length($stringLiteral8) == 19;
-
-const $stringLiteral9: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral9, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral9, $allocated],bool)) && $IsNotNull($stringLiteral9, System.String) && $Length($stringLiteral9) == 20;
-
-const $stringLiteral10: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral10, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral10, $allocated],bool)) && $IsNotNull($stringLiteral10, System.String) && $Length($stringLiteral10) == 22;
-
-const $stringLiteral11: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral11, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral11, $allocated],bool)) && $IsNotNull($stringLiteral11, System.String) && $Length($stringLiteral11) == 21;
-
-const $stringLiteral12: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral12, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral12, $allocated],bool)) && $IsNotNull($stringLiteral12, System.String) && $Length($stringLiteral12) == 23;
-
-const $stringLiteral13: ref;
-
-axiom (forall heap: [ref,name]any :: { cast(heap[$stringLiteral13, $allocated],bool) } IsHeap(heap) ==> cast(heap[$stringLiteral13, $allocated],bool)) && $IsNotNull($stringLiteral13, System.String) && $Length($stringLiteral13) == 22;
-
+const System.Int16.MinValue : int;
+const System.Int16.MaxValue : int;
+const System.Int32.MinValue : int;
+const System.Int32.MaxValue : int;
+const System.Int64.MinValue : int;
+const System.Int64.MaxValue : int;
+axiom (System.Int64.MinValue < System.Int32.MinValue);
+axiom (System.Int32.MinValue < System.Int16.MinValue);
+axiom (System.Int16.MinValue < System.Int16.MaxValue);
+axiom (System.Int16.MaxValue < System.Int32.MaxValue);
+axiom (System.Int32.MaxValue < System.Int64.MaxValue);
+function InRange(i : int, T : name) returns ($$unnamed~cb : bool);
+axiom (forall i : int :: (InRange(i, System.Int16) <==> ((System.Int16.MinValue <= i) && (i <= System.Int16.MaxValue))));
+axiom (forall i : int :: (InRange(i, System.Int32) <==> ((System.Int32.MinValue <= i) && (i <= System.Int32.MaxValue))));
+axiom (forall i : int :: (InRange(i, System.Int64) <==> ((System.Int64.MinValue <= i) && (i <= System.Int64.MaxValue))));
+axiom (forall i : int :: {InRange(i, System.Byte)} (InRange(i, System.Byte) <==> ((0 <= i) && (i < 256))));
+function $RealToInt($$unnamed~cc : real) returns ($$unnamed~cd : int);
+function $IntToReal($$unnamed~ce : int) returns ($$unnamed~cf : real);
+function $SizeIs($$unnamed~ch : name, $$unnamed~cg : int) returns ($$unnamed~ci : bool);
+function $IfThenElse<any>($$unnamed~cl : bool, $$unnamed~ck : any, $$unnamed~cj : any) returns ($$unnamed~cm : any);
+axiom (forall<any> b : bool, x : any, y : any :: {$IfThenElse(b, x, y)} (b ==> ($IfThenElse(b, x, y) == x)));
+axiom (forall<any> b : bool, x : any, y : any :: {$IfThenElse(b, x, y)} (!b ==> ($IfThenElse(b, x, y) == y)));
+function #neg($$unnamed~cn : int) returns ($$unnamed~co : int);
+function #rneg($$unnamed~cp : real) returns ($$unnamed~cq : real);
+function #rdiv($$unnamed~cs : real, $$unnamed~cr : real) returns ($$unnamed~ct : real);
+function #and($$unnamed~cv : int, $$unnamed~cu : int) returns ($$unnamed~cw : int);
+function #or($$unnamed~cy : int, $$unnamed~cx : int) returns ($$unnamed~cz : int);
+function #xor($$unnamed~db : int, $$unnamed~da : int) returns ($$unnamed~dc : int);
+function #shl($$unnamed~de : int, $$unnamed~dd : int) returns ($$unnamed~df : int);
+function #shr($$unnamed~dh : int, $$unnamed~dg : int) returns ($$unnamed~di : int);
+axiom (forall x : int, y : int :: {(x % y)} {(x / y)} ((x % y) == (x - ((x / y) * y))));
+axiom (forall x : int, y : int :: {(x % y)} (((0 <= x) && (0 < y)) ==> ((0 <= (x % y)) && ((x % y) < y))));
+axiom (forall x : int, y : int :: {(x % y)} (((0 <= x) && (y < 0)) ==> ((0 <= (x % y)) && ((x % y) < (0 - y)))));
+axiom (forall x : int, y : int :: {(x % y)} (((x <= 0) && (0 < y)) ==> (((0 - y) < (x % y)) && ((x % y) <= 0))));
+axiom (forall x : int, y : int :: {(x % y)} (((x <= 0) && (y < 0)) ==> ((y < (x % y)) && ((x % y) <= 0))));
+axiom (forall x : int, y : int :: {((x + y) % y)} (((0 <= x) && (0 <= y)) ==> (((x + y) % y) == (x % y))));
+axiom (forall x : int, y : int :: {((y + x) % y)} (((0 <= x) && (0 <= y)) ==> (((y + x) % y) == (x % y))));
+axiom (forall x : int, y : int :: {((x - y) % y)} (((0 <= (x - y)) && (0 <= y)) ==> (((x - y) % y) == (x % y))));
+axiom (forall a : int, b : int, d : int :: {(a % d), (b % d)} ((((2 <= d) && ((a % d) == (b % d))) && (a < b)) ==> ((a + d) <= b)));
+axiom (forall i : int :: {#shl(i, 0)} (#shl(i, 0) == i));
+axiom (forall i : int, j : int :: ((0 <= j) ==> (#shl(i, (j + 1)) == (#shl(i, j) * 2))));
+axiom (forall i : int :: {#shr(i, 0)} (#shr(i, 0) == i));
+axiom (forall i : int, j : int :: ((0 <= j) ==> (#shr(i, (j + 1)) == (#shr(i, j) / 2))));
+const $UnknownRef : ref;
+const System.IComparable : name;
+const Microsoft.Singularity.Applications.ThreadTest : name;
+const System.Threading.Thread : name;
+const System.Collections.IEnumerable : name;
+const System.Threading.ThreadStart : name;
+const System.ICloneable : name;
+const System.MulticastDelegate : name;
+const System.Delegate : name;
+const $stringLiteral0 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral0, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral0, $allocated])) && $IsNotNull($stringLiteral0, System.String)) && ($Length($stringLiteral0) == 13));
+const $stringLiteral1 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral1, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral1, $allocated])) && $IsNotNull($stringLiteral1, System.String)) && ($Length($stringLiteral1) == 14));
+const $stringLiteral2 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral2, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral2, $allocated])) && $IsNotNull($stringLiteral2, System.String)) && ($Length($stringLiteral2) == 11));
+const $stringLiteral3 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral3, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral3, $allocated])) && $IsNotNull($stringLiteral3, System.String)) && ($Length($stringLiteral3) == 18));
+const $stringLiteral4 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral4, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral4, $allocated])) && $IsNotNull($stringLiteral4, System.String)) && ($Length($stringLiteral4) == 19));
+const $stringLiteral5 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral5, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral5, $allocated])) && $IsNotNull($stringLiteral5, System.String)) && ($Length($stringLiteral5) == 14));
+const $stringLiteral6 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral6, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral6, $allocated])) && $IsNotNull($stringLiteral6, System.String)) && ($Length($stringLiteral6) == 15));
+const $stringLiteral7 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral7, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral7, $allocated])) && $IsNotNull($stringLiteral7, System.String)) && ($Length($stringLiteral7) == 11));
+const $stringLiteral8 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral8, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral8, $allocated])) && $IsNotNull($stringLiteral8, System.String)) && ($Length($stringLiteral8) == 19));
+const $stringLiteral9 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral9, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral9, $allocated])) && $IsNotNull($stringLiteral9, System.String)) && ($Length($stringLiteral9) == 20));
+const $stringLiteral10 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral10, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral10, $allocated])) && $IsNotNull($stringLiteral10, System.String)) && ($Length($stringLiteral10) == 22));
+const $stringLiteral11 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral11, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral11, $allocated])) && $IsNotNull($stringLiteral11, System.String)) && ($Length($stringLiteral11) == 21));
+const $stringLiteral12 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral12, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral12, $allocated])) && $IsNotNull($stringLiteral12, System.String)) && ($Length($stringLiteral12) == 23));
+const $stringLiteral13 : ref;
+axiom (((forall<any> heap : [ref, name]any :: {heap[$stringLiteral13, $allocated]} (IsHeap(heap) ==> heap[$stringLiteral13, $allocated])) && $IsNotNull($stringLiteral13, System.String)) && ($Length($stringLiteral13) == 22));
 axiom $IsClass(Microsoft.Singularity.Applications.ThreadTest);
-
-axiom Microsoft.Singularity.Applications.ThreadTest <: System.Object && AsDirectSubClass(Microsoft.Singularity.Applications.ThreadTest, System.Object) == Microsoft.Singularity.Applications.ThreadTest;
-
-axiom (forall $K: name :: { Microsoft.Singularity.Applications.ThreadTest <: $K } Microsoft.Singularity.Applications.ThreadTest <: $K <==> Microsoft.Singularity.Applications.ThreadTest == $K || System.Object <: $K);
-
-function Inv_Microsoft.Singularity.Applications.ThreadTest(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_Microsoft.Singularity.Applications.ThreadTest(this, heap) } Inv_Microsoft.Singularity.Applications.ThreadTest(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: Microsoft.Singularity.Applications.ThreadTest } { Inv_Microsoft.Singularity.Applications.ThreadTest($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: Microsoft.Singularity.Applications.ThreadTest ==> Inv_Microsoft.Singularity.Applications.ThreadTest($o, heap));
-
+axiom ((Microsoft.Singularity.Applications.ThreadTest <: System.Object) && (AsDirectSubClass(Microsoft.Singularity.Applications.ThreadTest, System.Object) == Microsoft.Singularity.Applications.ThreadTest));
+axiom (forall $K : name :: {(Microsoft.Singularity.Applications.ThreadTest <: $K)} ((Microsoft.Singularity.Applications.ThreadTest <: $K) <==> ((Microsoft.Singularity.Applications.ThreadTest == $K) || (System.Object <: $K))));
+function Inv_Microsoft.Singularity.Applications.ThreadTest<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_Microsoft.Singularity.Applications.ThreadTest(this, heap)} (Inv_Microsoft.Singularity.Applications.ThreadTest(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: Microsoft.Singularity.Applications.ThreadTest)} {Inv_Microsoft.Singularity.Applications.ThreadTest($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: Microsoft.Singularity.Applications.ThreadTest)) ==> Inv_Microsoft.Singularity.Applications.ThreadTest($o, heap)));
 procedure Microsoft.Singularity.Applications.ThreadTest.FirstThreadMethod();
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation Microsoft.Singularity.Applications.ThreadTest.FirstThreadMethod()
-{
-  var stack0o: ref, i: int, stack0i: int, stack0b: bool, local1: int, $Heap$block1513$LoopPreheader: [ref,name]any;
-
-  entry:
-    assume IsHeap($Heap);
-    goto block1479;
-
-  block1479:
-    goto block1496;
-
-  block1496:
-    // ----- load constant First thread!  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(21,13)
-    stack0o := $stringLiteral0;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(21,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant First thread!   ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(22,13)
-    stack0o := $stringLiteral1;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(22,13)
-    call Microsoft.Singularity.DebugStub.Print$System.String(stack0o);
-    // ----- load constant 0  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,18)
-    i := 0;
-    goto block1513$LoopPreheader;
-
-  block1513:
-    // ----- default loop invariant: $inv field  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,29)
-    assert (forall $o: ref :: $Heap$block1513$LoopPreheader[$o, $inv] == $Heap[$o, $inv] || cast($Heap$block1513$LoopPreheader[$o, $allocated],bool) != true);
-    assert (forall $o: ref :: cast($Heap$block1513$LoopPreheader[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-    // ----- load constant 10  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,29)
-    stack0i := 10;
-    // ----- binary operator  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,29)
-    stack0b := i >= stack0i;
-    // ----- branch  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,29)
-    goto true1513to1547, false1513to1530;
-
-  true1513to1547:
-    assume stack0b == true;
-    goto block1547;
-
-  false1513to1530:
-    assume stack0b == false;
-    goto block1530;
-
-  block1547:
-    // ----- load constant First thread done!  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(29,13)
-    stack0o := $stringLiteral3;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(29,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant First thread done!   ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(30,13)
-    stack0o := $stringLiteral4;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(30,13)
-    call Microsoft.Singularity.DebugStub.Print$System.String(stack0o);
-    // ----- return  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(31,10)
-    return;
-
-  block1530:
-    // ----- load constant [0] ...      ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(25,17)
-    stack0o := $stringLiteral2;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(25,17)
-    // Commented out, to avoid problems with the theorem prover nondeterministically choosing this error over the one 12 lines above: call System.Console.WriteLine$System.String(stack0o);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(26,17)
-    call System.Threading.Thread.Yield();
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(24,37)
-    local1 := i;
-    // ----- load constant 1
-    stack0i := 1;
-    // ----- binary operator
-    stack0i := local1 + stack0i;
-    // ----- copy
-    i := stack0i;
-    // ----- copy
-    stack0i := local1;
-    // ----- branch
-    goto block1513;
-
-  block1513$LoopPreheader:
-    $Heap$block1513$LoopPreheader := $Heap;
-    goto block1513;
-
+implementation Microsoft.Singularity.Applications.ThreadTest.FirstThreadMethod() {
+  var stack0o : ref;
+  var i : int;
+  var stack0i : int;
+  var stack0b : bool;
+  var local1 : int;
+  var $Heap$block1513$LoopPreheader : [ref, name]any;
+  entry: assume IsHeap($Heap); goto block1479;
+  block1479: goto block1496;
+  block1496: stack0o := $stringLiteral0; goto $$block1496~d;
+  $$block1496~d: call System.Console.WriteLine$System.String(stack0o); goto $$block1496~c;
+  $$block1496~c: stack0o := $stringLiteral1; goto $$block1496~b;
+  $$block1496~b: call Microsoft.Singularity.DebugStub.Print$System.String(stack0o); goto $$block1496~a;
+  $$block1496~a: i := 0; goto block1513$LoopPreheader;
+  block1513: assert (forall $o : ref :: (($Heap$block1513$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) || ($Heap$block1513$LoopPreheader[$o, $allocated] != true))); goto $$block1513~c;
+  $$block1513~c: assert (forall $o : ref :: ($Heap$block1513$LoopPreheader[$o, $allocated] ==> $Heap[$o, $allocated])); goto $$block1513~b;
+  $$block1513~b: stack0i := 10; goto $$block1513~a;
+  $$block1513~a: stack0b := (i >= stack0i); goto true1513to1547, false1513to1530;
+  true1513to1547: assume (stack0b == true); goto block1547;
+  false1513to1530: assume (stack0b == false); goto block1530;
+  block1547: stack0o := $stringLiteral3; goto $$block1547~c;
+  $$block1547~c: call System.Console.WriteLine$System.String(stack0o); goto $$block1547~b;
+  $$block1547~b: stack0o := $stringLiteral4; goto $$block1547~a;
+  $$block1547~a: call Microsoft.Singularity.DebugStub.Print$System.String(stack0o); return;
+  block1530: stack0o := $stringLiteral2; goto $$block1530~f;
+  $$block1530~f: call System.Threading.Thread.Yield(); goto $$block1530~e;
+  $$block1530~e: local1 := i; goto $$block1530~d;
+  $$block1530~d: stack0i := 1; goto $$block1530~c;
+  $$block1530~c: stack0i := (local1 + stack0i); goto $$block1530~b;
+  $$block1530~b: i := stack0i; goto $$block1530~a;
+  $$block1530~a: stack0i := local1; goto block1513;
+  block1513$LoopPreheader: $Heap$block1513$LoopPreheader := $Heap; goto block1513;
+  
 }
 
-
-
 axiom $IsClass(System.String);
-
-axiom System.String <: System.Object && AsDirectSubClass(System.String, System.Object) == System.String;
-
+axiom ((System.String <: System.Object) && (AsDirectSubClass(System.String, System.Object) == System.String));
 axiom $IsInterface(System.IComparable);
-
-axiom (forall $K: name :: { System.IComparable <: $K } System.IComparable <: $K <==> System.IComparable == $K || System.Object == $K);
-
+axiom (forall $K : name :: {(System.IComparable <: $K)} ((System.IComparable <: $K) <==> ((System.IComparable == $K) || (System.Object == $K))));
 axiom Implements(System.String, System.IComparable);
-
 axiom $IsInterface(System.ICloneable);
-
-axiom (forall $K: name :: { System.ICloneable <: $K } System.ICloneable <: $K <==> System.ICloneable == $K || System.Object == $K);
-
+axiom (forall $K : name :: {(System.ICloneable <: $K)} ((System.ICloneable <: $K) <==> ((System.ICloneable == $K) || (System.Object == $K))));
 axiom Implements(System.String, System.ICloneable);
-
 axiom $IsInterface(System.Collections.IEnumerable);
-
-axiom (forall $K: name :: { System.Collections.IEnumerable <: $K } System.Collections.IEnumerable <: $K <==> System.Collections.IEnumerable == $K || System.Object == $K);
-
+axiom (forall $K : name :: {(System.Collections.IEnumerable <: $K)} ((System.Collections.IEnumerable <: $K) <==> ((System.Collections.IEnumerable == $K) || (System.Object == $K))));
 axiom Implements(System.String, System.Collections.IEnumerable);
-
-axiom (forall $K: name :: { System.String <: $K } System.String <: $K <==> System.String == $K || System.Object <: $K || System.IComparable <: $K || System.ICloneable <: $K || System.Collections.IEnumerable <: $K);
-
-axiom (forall $U: name :: { $U <: System.String } $U <: System.String ==> $U == System.String);
-
-function Inv_System.String(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_System.String(this, heap) } Inv_System.String(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: System.String } { Inv_System.String($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: System.String ==> Inv_System.String($o, heap));
-
-procedure System.Console.WriteLine$System.String(value$in: ref);
-  requires value$in == null || (cast($Heap[value$in, $writable],bool) == true && cast($Heap[value$in, $inv],name) == $typeof(value$in));
+axiom (forall $K : name :: {(System.String <: $K)} ((System.String <: $K) <==> (((((System.String == $K) || (System.Object <: $K)) || (System.IComparable <: $K)) || (System.ICloneable <: $K)) || (System.Collections.IEnumerable <: $K))));
+axiom (forall $U : name :: {($U <: System.String)} (($U <: System.String) ==> ($U == System.String)));
+function Inv_System.String<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_System.String(this, heap)} (Inv_System.String(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: System.String)} {Inv_System.String($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: System.String)) ==> Inv_System.String($o, heap)));
+procedure System.Console.WriteLine$System.String(value$in : ref);
+  requires ((value$in == null) || (($Heap[value$in, $writable] == true) && ($Heap[value$in, $inv] == $typeof(value$in))));
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-procedure Microsoft.Singularity.DebugStub.Print$System.String(value$in: ref);
-  requires value$in == null || (cast($Heap[value$in, $writable],bool) == true && cast($Heap[value$in, $inv],name) == $typeof(value$in));
+procedure Microsoft.Singularity.DebugStub.Print$System.String(value$in : ref);
+  requires ((value$in == null) || (($Heap[value$in, $writable] == true) && ($Heap[value$in, $inv] == $typeof(value$in))));
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-
-
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
 procedure System.Threading.Thread.Yield();
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-
-
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
 procedure Microsoft.Singularity.Applications.ThreadTest.SecondThreadMethod();
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation Microsoft.Singularity.Applications.ThreadTest.SecondThreadMethod()
-{
-  var stack0o: ref, i: int, stack0i: int, stack0b: bool, local1: int, $Heap$block2516$LoopPreheader: [ref,name]any;
-
-  entry:
-    assume IsHeap($Heap);
-    goto block2482;
-
-  block2482:
-    goto block2499;
-
-  block2499:
-    // ----- load constant Second thread!  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(35,13)
-    stack0o := $stringLiteral5;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(35,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant Second thread!   ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(36,13)
-    stack0o := $stringLiteral6;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(36,13)
-    call Microsoft.Singularity.DebugStub.Print$System.String(stack0o);
-    // ----- load constant 0  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,18)
-    i := 0;
-    goto block2516$LoopPreheader;
-
-  block2516:
-    // ----- default loop invariant: $inv field  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,29)
-    assert (forall $o: ref :: $Heap$block2516$LoopPreheader[$o, $inv] == $Heap[$o, $inv] || cast($Heap$block2516$LoopPreheader[$o, $allocated],bool) != true);
-    assert (forall $o: ref :: cast($Heap$block2516$LoopPreheader[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-    // ----- load constant 10  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,29)
-    stack0i := 10;
-    // ----- binary operator  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,29)
-    stack0b := i >= stack0i;
-    // ----- branch  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,29)
-    goto true2516to2550, false2516to2533;
-
-  true2516to2550:
-    assume stack0b == true;
-    goto block2550;
-
-  false2516to2533:
-    assume stack0b == false;
-    goto block2533;
-
-  block2550:
-    // ----- load constant Second thread done!  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(44,13)
-    stack0o := $stringLiteral8;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(44,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant Second thread done!   ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(45,13)
-    stack0o := $stringLiteral9;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(45,13)
-    call Microsoft.Singularity.DebugStub.Print$System.String(stack0o);
-    // ----- return  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(46,10)
-    return;
-
-  block2533:
-    // ----- load constant     ... [1]  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(40,17)
-    stack0o := $stringLiteral7;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(40,17)
-    // Commented out, to avoid problems with the theorem prover nondeterministically choosing this error over the one 12 lines above: call System.Console.WriteLine$System.String(stack0o);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(41,17)
-    call System.Threading.Thread.Yield();
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(38,37)
-    local1 := i;
-    // ----- load constant 1
-    stack0i := 1;
-    // ----- binary operator
-    stack0i := local1 + stack0i;
-    // ----- copy
-    i := stack0i;
-    // ----- copy
-    stack0i := local1;
-    // ----- branch
-    goto block2516;
-
-  block2516$LoopPreheader:
-    $Heap$block2516$LoopPreheader := $Heap;
-    goto block2516;
-
+implementation Microsoft.Singularity.Applications.ThreadTest.SecondThreadMethod() {
+  var stack0o : ref;
+  var i : int;
+  var stack0i : int;
+  var stack0b : bool;
+  var local1 : int;
+  var $Heap$block2516$LoopPreheader : [ref, name]any;
+  entry: assume IsHeap($Heap); goto block2482;
+  block2482: goto block2499;
+  block2499: stack0o := $stringLiteral5; goto $$block2499~d;
+  $$block2499~d: call System.Console.WriteLine$System.String(stack0o); goto $$block2499~c;
+  $$block2499~c: stack0o := $stringLiteral6; goto $$block2499~b;
+  $$block2499~b: call Microsoft.Singularity.DebugStub.Print$System.String(stack0o); goto $$block2499~a;
+  $$block2499~a: i := 0; goto block2516$LoopPreheader;
+  block2516: assert (forall $o : ref :: (($Heap$block2516$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) || ($Heap$block2516$LoopPreheader[$o, $allocated] != true))); goto $$block2516~c;
+  $$block2516~c: assert (forall $o : ref :: ($Heap$block2516$LoopPreheader[$o, $allocated] ==> $Heap[$o, $allocated])); goto $$block2516~b;
+  $$block2516~b: stack0i := 10; goto $$block2516~a;
+  $$block2516~a: stack0b := (i >= stack0i); goto true2516to2550, false2516to2533;
+  true2516to2550: assume (stack0b == true); goto block2550;
+  false2516to2533: assume (stack0b == false); goto block2533;
+  block2550: stack0o := $stringLiteral8; goto $$block2550~c;
+  $$block2550~c: call System.Console.WriteLine$System.String(stack0o); goto $$block2550~b;
+  $$block2550~b: stack0o := $stringLiteral9; goto $$block2550~a;
+  $$block2550~a: call Microsoft.Singularity.DebugStub.Print$System.String(stack0o); return;
+  block2533: stack0o := $stringLiteral7; goto $$block2533~f;
+  $$block2533~f: call System.Threading.Thread.Yield(); goto $$block2533~e;
+  $$block2533~e: local1 := i; goto $$block2533~d;
+  $$block2533~d: stack0i := 1; goto $$block2533~c;
+  $$block2533~c: stack0i := (local1 + stack0i); goto $$block2533~b;
+  $$block2533~b: i := stack0i; goto $$block2533~a;
+  $$block2533~a: stack0i := local1; goto block2516;
+  block2516$LoopPreheader: $Heap$block2516$LoopPreheader := $Heap; goto block2516;
+  
 }
 
-
-
-procedure Microsoft.Singularity.Applications.ThreadTest.Main$System.String.array(args$in: ref) returns ($result: int);
-  requires args$in == null || (cast($Heap[args$in, $writable],bool) == true && cast($Heap[args$in, $inv],name) == $typeof(args$in));
+procedure Microsoft.Singularity.Applications.ThreadTest.Main$System.String.array(args$in : ref) returns ($result : int);
+  requires ((args$in == null) || (($Heap[args$in, $writable] == true) && ($Heap[args$in, $inv] == $typeof(args$in))));
   modifies $Heap;
   free ensures IsHeap($Heap);
   free ensures IsAllocated($Heap, $result);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.array(args$in: ref) returns ($result: int)
-{
-  var args: ref, stack0o: ref, stack1o: ref, stack50000o: ref, t1: ref, t2: ref, i: int, stack0i: int, stack0b: bool, local3: int, return.value: int, SS$Display.Return.Local: int, $Heap$block3825$LoopPreheader: [ref,name]any;
-
-  entry:
-    assume IsHeap($Heap);
-    args := args$in;
-    assume $Is(args, RefArray(System.String, 1));
-    assume cast($Heap[args$in, $allocated],bool) == true;
-    goto block3791;
-
-  block3791:
-    goto block3808;
-
-  block3808:
-    stack0o := null;
-    // ----- load function  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    havoc stack1o;
-    // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    havoc stack50000o;
-    assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.ThreadStart;
-    $Heap[stack50000o, $allocated] := cast(true,any);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    assert stack50000o != null;
-    call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o);
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    stack0o := stack50000o;
-    // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    havoc stack50000o;
-    assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.Thread;
-    $Heap[stack50000o, $allocated] := cast(true,any);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    assert stack50000o != null;
-    call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o);
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    stack0o := stack50000o;
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(51,13)
-    t1 := stack0o;
-    stack0o := null;
-    // ----- load function  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    havoc stack1o;
-    // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    havoc stack50000o;
-    assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.ThreadStart;
-    $Heap[stack50000o, $allocated] := cast(true,any);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    assert stack50000o != null;
-    call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o);
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    stack0o := stack50000o;
-    // ----- new object  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    havoc stack50000o;
-    assume cast($Heap[stack50000o, $allocated],bool) == false && stack50000o != null && $typeof(stack50000o) == System.Threading.Thread;
-    $Heap[stack50000o, $allocated] := cast(true,any);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    assert stack50000o != null;
-    call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o);
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    stack0o := stack50000o;
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(52,13)
-    t2 := stack0o;
-    // ----- load constant Starting first thread.  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(54,13)
-    stack0o := $stringLiteral10;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(54,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(55,13)
-    assert t1 != null;
-    call System.Threading.Thread.Start(t1);
-    // ----- load constant Started first thread.  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(56,13)
-    stack0o := $stringLiteral11;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(56,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant Starting second thread.  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(58,13)
-    stack0o := $stringLiteral12;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(58,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(59,13)
-    assert t2 != null;
-    call System.Threading.Thread.Start(t2);
-    // ----- load constant Started second thread.  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(60,13)
-    stack0o := $stringLiteral13;
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(60,13)
-    call System.Console.WriteLine$System.String(stack0o);
-    // ----- load constant 0  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,18)
-    i := 0;
-    goto block3825$LoopPreheader;
-
-  block3825:
-    // ----- default loop invariant: $inv field  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,29)
-    assert (forall $o: ref :: $Heap$block3825$LoopPreheader[$o, $inv] == $Heap[$o, $inv] || cast($Heap$block3825$LoopPreheader[$o, $allocated],bool) != true);
-    assert (forall $o: ref :: cast($Heap$block3825$LoopPreheader[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-    // ----- load constant 30  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,29)
-    stack0i := 30;
-    // ----- binary operator  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,29)
-    stack0b := i >= stack0i;
-    // ----- branch  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,29)
-    goto true3825to3859, false3825to3842;
-
-  true3825to3859:
-    assume stack0b == true;
-    goto block3859;
-
-  false3825to3842:
-    assume stack0b == false;
-    goto block3842;
-
-  block3859:
-    // ----- load constant 0  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(66,13)
-    return.value := 0;
-    // ----- branch
-    goto block3876;
-
-  block3842:
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(64,17)
-    call System.Threading.Thread.Yield();
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(62,37)
-    local3 := i;
-    // ----- load constant 1
-    stack0i := 1;
-    // ----- binary operator
-    stack0i := local3 + stack0i;
-    // ----- copy
-    i := stack0i;
-    // ----- copy
-    stack0i := local3;
-    // ----- branch
-    goto block3825;
-
-  block3876:
-    // ----- copy
-    SS$Display.Return.Local := return.value;
-    // ----- copy  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(67,10)
-    stack0i := return.value;
-    // ----- return  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(67,10)
-    $result := stack0i;
-    return;
-
-  block3825$LoopPreheader:
-    $Heap$block3825$LoopPreheader := $Heap;
-    goto block3825;
-
+implementation Microsoft.Singularity.Applications.ThreadTest.Main$System.String.array(args$in : ref) returns ($result : int) {
+  var args : ref;
+  var stack0o : ref;
+  var stack1o : ref;
+  var stack50000o : ref;
+  var t1 : ref;
+  var t2 : ref;
+  var i : int;
+  var stack0i : int;
+  var stack0b : bool;
+  var local3 : int;
+  var return.value : int;
+  var SS$Display.Return.Local : int;
+  var $Heap$block3825$LoopPreheader : [ref, name]any;
+  entry: assume IsHeap($Heap); goto $$entry~c;
+  $$entry~c: args := args$in; goto $$entry~b;
+  $$entry~b: assume $Is(args, RefArray(System.String, 1)); goto $$entry~a;
+  $$entry~a: assume ($Heap[args$in, $allocated] == true); goto block3791;
+  block3791: goto block3808;
+  block3808: stack0o := null; goto $$block3808~ap;
+  $$block3808~ap: havoc stack1o; goto $$block3808~ao;
+  $$block3808~ao: havoc stack50000o; goto $$block3808~an;
+  $$block3808~an: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == System.Threading.ThreadStart)); goto $$block3808~am;
+  $$block3808~am: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block3808~al;
+  $$block3808~al: assert (stack50000o != null); goto $$block3808~ak;
+  $$block3808~ak: call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o); goto $$block3808~aj;
+  $$block3808~aj: stack0o := stack50000o; goto $$block3808~ai;
+  $$block3808~ai: havoc stack50000o; goto $$block3808~ah;
+  $$block3808~ah: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == System.Threading.Thread)); goto $$block3808~ag;
+  $$block3808~ag: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block3808~af;
+  $$block3808~af: assert (stack50000o != null); goto $$block3808~ae;
+  $$block3808~ae: call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o); goto $$block3808~ad;
+  $$block3808~ad: stack0o := stack50000o; goto $$block3808~ac;
+  $$block3808~ac: t1 := stack0o; goto $$block3808~ab;
+  $$block3808~ab: stack0o := null; goto $$block3808~aa;
+  $$block3808~aa: havoc stack1o; goto $$block3808~z;
+  $$block3808~z: havoc stack50000o; goto $$block3808~y;
+  $$block3808~y: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == System.Threading.ThreadStart)); goto $$block3808~x;
+  $$block3808~x: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block3808~w;
+  $$block3808~w: assert (stack50000o != null); goto $$block3808~v;
+  $$block3808~v: call System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(stack50000o, stack0o, stack1o); goto $$block3808~u;
+  $$block3808~u: stack0o := stack50000o; goto $$block3808~t;
+  $$block3808~t: havoc stack50000o; goto $$block3808~s;
+  $$block3808~s: assume ((($Heap[stack50000o, $allocated] == false) && (stack50000o != null)) && ($typeof(stack50000o) == System.Threading.Thread)); goto $$block3808~r;
+  $$block3808~r: $Heap := $Heap[stack50000o, $allocated := true]; goto $$block3808~q;
+  $$block3808~q: assert (stack50000o != null); goto $$block3808~p;
+  $$block3808~p: call System.Threading.Thread..ctor$System.Threading.ThreadStart(stack50000o, stack0o); goto $$block3808~o;
+  $$block3808~o: stack0o := stack50000o; goto $$block3808~n;
+  $$block3808~n: t2 := stack0o; goto $$block3808~m;
+  $$block3808~m: stack0o := $stringLiteral10; goto $$block3808~l;
+  $$block3808~l: call System.Console.WriteLine$System.String(stack0o); goto $$block3808~k;
+  $$block3808~k: assert (t1 != null); goto $$block3808~j;
+  $$block3808~j: call System.Threading.Thread.Start(t1); goto $$block3808~i;
+  $$block3808~i: stack0o := $stringLiteral11; goto $$block3808~h;
+  $$block3808~h: call System.Console.WriteLine$System.String(stack0o); goto $$block3808~g;
+  $$block3808~g: stack0o := $stringLiteral12; goto $$block3808~f;
+  $$block3808~f: call System.Console.WriteLine$System.String(stack0o); goto $$block3808~e;
+  $$block3808~e: assert (t2 != null); goto $$block3808~d;
+  $$block3808~d: call System.Threading.Thread.Start(t2); goto $$block3808~c;
+  $$block3808~c: stack0o := $stringLiteral13; goto $$block3808~b;
+  $$block3808~b: call System.Console.WriteLine$System.String(stack0o); goto $$block3808~a;
+  $$block3808~a: i := 0; goto block3825$LoopPreheader;
+  block3825: assert (forall $o : ref :: (($Heap$block3825$LoopPreheader[$o, $inv] == $Heap[$o, $inv]) || ($Heap$block3825$LoopPreheader[$o, $allocated] != true))); goto $$block3825~c;
+  $$block3825~c: assert (forall $o : ref :: ($Heap$block3825$LoopPreheader[$o, $allocated] ==> $Heap[$o, $allocated])); goto $$block3825~b;
+  $$block3825~b: stack0i := 30; goto $$block3825~a;
+  $$block3825~a: stack0b := (i >= stack0i); goto true3825to3859, false3825to3842;
+  true3825to3859: assume (stack0b == true); goto block3859;
+  false3825to3842: assume (stack0b == false); goto block3842;
+  block3859: return.value := 0; goto block3876;
+  block3842: call System.Threading.Thread.Yield(); goto $$block3842~e;
+  $$block3842~e: local3 := i; goto $$block3842~d;
+  $$block3842~d: stack0i := 1; goto $$block3842~c;
+  $$block3842~c: stack0i := (local3 + stack0i); goto $$block3842~b;
+  $$block3842~b: i := stack0i; goto $$block3842~a;
+  $$block3842~a: stack0i := local3; goto block3825;
+  block3876: SS$Display.Return.Local := return.value; goto $$block3876~b;
+  $$block3876~b: stack0i := return.value; goto $$block3876~a;
+  $$block3876~a: $result := stack0i; return;
+  block3825$LoopPreheader: $Heap$block3825$LoopPreheader := $Heap; goto block3825;
+  
 }
-
-
 
 axiom $IsClass(System.Threading.ThreadStart);
-
 axiom $IsClass(System.MulticastDelegate);
-
 axiom $IsClass(System.Delegate);
-
-axiom System.Delegate <: System.Object && AsDirectSubClass(System.Delegate, System.Object) == System.Delegate;
-
+axiom ((System.Delegate <: System.Object) && (AsDirectSubClass(System.Delegate, System.Object) == System.Delegate));
 axiom Implements(System.Delegate, System.ICloneable);
-
-axiom (forall $K: name :: { System.Delegate <: $K } System.Delegate <: $K <==> System.Delegate == $K || System.Object <: $K || System.ICloneable <: $K);
-
-function Inv_System.Delegate(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_System.Delegate(this, heap) } Inv_System.Delegate(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: System.Delegate } { Inv_System.Delegate($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: System.Delegate ==> Inv_System.Delegate($o, heap));
-
-axiom System.MulticastDelegate <: System.Delegate && AsDirectSubClass(System.MulticastDelegate, System.Delegate) == System.MulticastDelegate;
-
-axiom (forall $K: name :: { System.MulticastDelegate <: $K } System.MulticastDelegate <: $K <==> System.MulticastDelegate == $K || System.Delegate <: $K);
-
-function Inv_System.MulticastDelegate(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_System.MulticastDelegate(this, heap) } Inv_System.MulticastDelegate(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: System.MulticastDelegate } { Inv_System.MulticastDelegate($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: System.MulticastDelegate ==> Inv_System.MulticastDelegate($o, heap));
-
-axiom System.Threading.ThreadStart <: System.MulticastDelegate && AsDirectSubClass(System.Threading.ThreadStart, System.MulticastDelegate) == System.Threading.ThreadStart;
-
-axiom (forall $K: name :: { System.Threading.ThreadStart <: $K } System.Threading.ThreadStart <: $K <==> System.Threading.ThreadStart == $K || System.MulticastDelegate <: $K);
-
-axiom (forall $U: name :: { $U <: System.Threading.ThreadStart } $U <: System.Threading.ThreadStart ==> $U == System.Threading.ThreadStart);
-
-function Inv_System.Threading.ThreadStart(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_System.Threading.ThreadStart(this, heap) } Inv_System.Threading.ThreadStart(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: System.Threading.ThreadStart } { Inv_System.Threading.ThreadStart($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: System.Threading.ThreadStart ==> Inv_System.Threading.ThreadStart($o, heap));
-
-procedure System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(this: ref, object$in: ref, method$in: ref);
+axiom (forall $K : name :: {(System.Delegate <: $K)} ((System.Delegate <: $K) <==> (((System.Delegate == $K) || (System.Object <: $K)) || (System.ICloneable <: $K))));
+function Inv_System.Delegate<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_System.Delegate(this, heap)} (Inv_System.Delegate(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: System.Delegate)} {Inv_System.Delegate($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: System.Delegate)) ==> Inv_System.Delegate($o, heap)));
+axiom ((System.MulticastDelegate <: System.Delegate) && (AsDirectSubClass(System.MulticastDelegate, System.Delegate) == System.MulticastDelegate));
+axiom (forall $K : name :: {(System.MulticastDelegate <: $K)} ((System.MulticastDelegate <: $K) <==> ((System.MulticastDelegate == $K) || (System.Delegate <: $K))));
+function Inv_System.MulticastDelegate<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_System.MulticastDelegate(this, heap)} (Inv_System.MulticastDelegate(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: System.MulticastDelegate)} {Inv_System.MulticastDelegate($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: System.MulticastDelegate)) ==> Inv_System.MulticastDelegate($o, heap)));
+axiom ((System.Threading.ThreadStart <: System.MulticastDelegate) && (AsDirectSubClass(System.Threading.ThreadStart, System.MulticastDelegate) == System.Threading.ThreadStart));
+axiom (forall $K : name :: {(System.Threading.ThreadStart <: $K)} ((System.Threading.ThreadStart <: $K) <==> ((System.Threading.ThreadStart == $K) || (System.MulticastDelegate <: $K))));
+axiom (forall $U : name :: {($U <: System.Threading.ThreadStart)} (($U <: System.Threading.ThreadStart) ==> ($U == System.Threading.ThreadStart)));
+function Inv_System.Threading.ThreadStart<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_System.Threading.ThreadStart(this, heap)} (Inv_System.Threading.ThreadStart(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: System.Threading.ThreadStart)} {Inv_System.Threading.ThreadStart($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: System.Threading.ThreadStart)) ==> Inv_System.Threading.ThreadStart($o, heap)));
+procedure System.Threading.ThreadStart..ctor$System.Object$System.IntPtr(this : ref, object$in : ref, method$in : ref);
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-  ensures cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Threading.ThreadStart;
-
-
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  ensures (($Heap[this, $writable] == true) && ($Heap[this, $inv] == System.Threading.ThreadStart));
+  
 
 axiom $IsClass(System.Threading.Thread);
-
-axiom System.Threading.Thread <: System.Object && AsDirectSubClass(System.Threading.Thread, System.Object) == System.Threading.Thread;
-
-axiom (forall $K: name :: { System.Threading.Thread <: $K } System.Threading.Thread <: $K <==> System.Threading.Thread == $K || System.Object <: $K);
-
-axiom (forall $U: name :: { $U <: System.Threading.Thread } $U <: System.Threading.Thread ==> $U == System.Threading.Thread);
-
-function Inv_System.Threading.Thread(object: ref, heap: [ref,name]any) returns (result: bool);
-
-axiom (forall this: ref, heap: [ref,name]any :: { Inv_System.Threading.Thread(this, heap) } Inv_System.Threading.Thread(this, heap) <==> true);
-
-axiom (forall $o: ref, heap: [ref,name]any :: { cast(heap[$o, $inv],name) <: System.Threading.Thread } { Inv_System.Threading.Thread($o, heap) } IsHeap(heap) && cast(heap[$o, $inv],name) <: System.Threading.Thread ==> Inv_System.Threading.Thread($o, heap));
-
-procedure System.Threading.Thread..ctor$System.Threading.ThreadStart(this: ref, start$in: ref);
-  requires start$in == null || (cast($Heap[start$in, $writable],bool) == true && cast($Heap[start$in, $inv],name) == $typeof(start$in));
+axiom ((System.Threading.Thread <: System.Object) && (AsDirectSubClass(System.Threading.Thread, System.Object) == System.Threading.Thread));
+axiom (forall $K : name :: {(System.Threading.Thread <: $K)} ((System.Threading.Thread <: $K) <==> ((System.Threading.Thread == $K) || (System.Object <: $K))));
+axiom (forall $U : name :: {($U <: System.Threading.Thread)} (($U <: System.Threading.Thread) ==> ($U == System.Threading.Thread)));
+function Inv_System.Threading.Thread<any>(object : ref, heap : [ref, name]any) returns (result : bool);
+axiom (forall<any> this : ref, heap : [ref, name]any :: {Inv_System.Threading.Thread(this, heap)} (Inv_System.Threading.Thread(this, heap) <==> true));
+axiom (forall<any> $o : ref, heap : [ref, name]any :: {(heap[$o, $inv] <: System.Threading.Thread)} {Inv_System.Threading.Thread($o, heap)} ((IsHeap(heap) && (heap[$o, $inv] <: System.Threading.Thread)) ==> Inv_System.Threading.Thread($o, heap)));
+procedure System.Threading.Thread..ctor$System.Threading.ThreadStart(this : ref, start$in : ref);
+  requires ((start$in == null) || (($Heap[start$in, $writable] == true) && ($Heap[start$in, $inv] == $typeof(start$in))));
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && ($o != this || !(System.Threading.Thread <: DeclType($f))) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-  ensures cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Threading.Thread;
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
+  free ensures (forall $o : ref, $f : name :: ((((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && (($o != this) || !(System.Threading.Thread <: DeclType($f)))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || (old($Heap)[$o, $inv] == $Heap[$o, $inv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  ensures (($Heap[this, $writable] == true) && ($Heap[this, $inv] == System.Threading.Thread));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  
 
-
-
-procedure System.Threading.Thread.Start(this: ref);
-  requires cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == $typeof(this);
+procedure System.Threading.Thread.Start(this : ref);
+  requires (($Heap[this, $writable] == true) && ($Heap[this, $inv] == $typeof(this)));
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
+  free ensures (forall $o : ref, $f : name :: (((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((old($Heap)[$o, $inv] == $Heap[$o, $inv]) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]));
+  
 
-
-
-procedure Microsoft.Singularity.Applications.ThreadTest..ctor(this: ref);
+procedure Microsoft.Singularity.Applications.ThreadTest..ctor(this : ref);
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && ($o != this || !(Microsoft.Singularity.Applications.ThreadTest <: DeclType($f))) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-  ensures cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == Microsoft.Singularity.Applications.ThreadTest;
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
+  free ensures (forall $o : ref, $f : name :: ((((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && (($o != this) || !(Microsoft.Singularity.Applications.ThreadTest <: DeclType($f)))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || (old($Heap)[$o, $inv] == $Heap[$o, $inv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  ensures (($Heap[this, $writable] == true) && ($Heap[this, $inv] == Microsoft.Singularity.Applications.ThreadTest));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  
 
-
-
-implementation Microsoft.Singularity.Applications.ThreadTest..ctor(this: ref)
-{
-
-  entry:
-    assume IsHeap($Heap);
-    assume $IsNotNull(this, Microsoft.Singularity.Applications.ThreadTest);
-    assume cast($Heap[this, $allocated],bool) == true;
-    assume cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Object;
-    goto block4777;
-
-  block4777:
-    goto block4794;
-
-  block4794:
-    // ----- call  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(17,18)
-    assert this != null;
-    call System.Object..ctor(this);
-    // ----- return  ----- C:\Maf\Singularity\base\Applications\Tests\ThreadTest\ThreadTest.cs(17,28)
-    assert this != null;
-    assert cast($Heap[this, $writable],bool) == true && System.Object <: cast($Heap[this, $inv],name);
-    assert cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Object;
-    assert Inv_Microsoft.Singularity.Applications.ThreadTest(this, $Heap);
-    $Heap[this, $inv] := cast(Microsoft.Singularity.Applications.ThreadTest,any);
-    return;
-
+implementation Microsoft.Singularity.Applications.ThreadTest..ctor(this : ref) {
+  entry: assume IsHeap($Heap); goto $$entry~f;
+  $$entry~f: assume $IsNotNull(this, Microsoft.Singularity.Applications.ThreadTest); goto $$entry~e;
+  $$entry~e: assume ($Heap[this, $allocated] == true); goto $$entry~d;
+  $$entry~d: assume (($Heap[this, $writable] == true) && ($Heap[this, $inv] == System.Object)); goto block4777;
+  block4777: goto block4794;
+  block4794: assert (this != null); goto $$block4794~f;
+  $$block4794~f: call System.Object..ctor(this); goto $$block4794~e;
+  $$block4794~e: assert (this != null); goto $$block4794~d;
+  $$block4794~d: assert (($Heap[this, $writable] == true) && (System.Object <: $Heap[this, $inv])); goto $$block4794~c;
+  $$block4794~c: assert (($Heap[this, $writable] == true) && ($Heap[this, $inv] == System.Object)); goto $$block4794~b;
+  $$block4794~b: assert Inv_Microsoft.Singularity.Applications.ThreadTest(this, $Heap); goto $$block4794~a;
+  $$block4794~a: $Heap := $Heap[this, $inv := Microsoft.Singularity.Applications.ThreadTest]; return;
+  
 }
 
-
-
-procedure System.Object..ctor(this: ref);
+procedure System.Object..ctor(this : ref);
   modifies $Heap;
   free ensures IsHeap($Heap);
-  free ensures (forall $o: ref, $f: name :: $f != $inv && $o != null && cast(old($Heap)[$o, $allocated],bool) == true && cast(old($Heap)[$o, $writable],bool) == true && (!IsStaticField($f) || !IsDirectlyModifiableField($f)) && ($o != this || !(System.Object <: DeclType($f))) ==> old($Heap[$o, $f]) == $Heap[$o, $f]);
-  free ensures (forall $o: ref :: $o == this || old($Heap)[$o, $inv] == $Heap[$o, $inv] || cast(old($Heap)[$o, $allocated],bool) != true);
-  free ensures (forall $o: ref :: cast(old($Heap)[$o, $allocated],bool) ==> cast($Heap[$o, $allocated],bool));
-  free ensures (forall $o: ref :: $o == this || old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode]);
-  ensures cast($Heap[this, $writable],bool) == true && cast($Heap[this, $inv],name) == System.Object;
-  ensures $Heap[this, $sharingMode] == $SharingMode_Unshared;
-
+  free ensures (forall $o : ref, $f : name :: ((((((($f != $inv) && ($o != null)) && (old($Heap)[$o, $allocated] == true)) && (old($Heap)[$o, $writable] == true)) && (!IsStaticField($f) || !IsDirectlyModifiableField($f))) && (($o != this) || !(System.Object <: DeclType($f)))) ==> (old($Heap[$o, $f]) == $Heap[$o, $f])));
+  free ensures (forall $o : ref :: ((($o == this) || (old($Heap)[$o, $inv] == $Heap[$o, $inv])) || (old($Heap)[$o, $allocated] != true)));
+  free ensures (forall $o : ref :: (old($Heap)[$o, $allocated] ==> $Heap[$o, $allocated]));
+  free ensures (forall $o : ref :: (($o == this) || (old($Heap[$o, $sharingMode]) == $Heap[$o, $sharingMode])));
+  ensures (($Heap[this, $writable] == true) && ($Heap[this, $inv] == System.Object));
+  ensures ($Heap[this, $sharingMode] == $SharingMode_Unshared);
+  
 
