@@ -51,7 +51,6 @@ public class ClasspathRepository<C extends ClassFile>
    * @throws NotFoundException if the class cannot be found.
    * @throws IOException if it is thrown during class reading.
    */
-  @Override
   public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException {
     return fPath.getClassFile(name, fReader);
@@ -63,7 +62,6 @@ public class ClasspathRepository<C extends ClassFile>
    * @return ClassFile object or null (if certificate cannot be found).
    * @throws IOException if it is thrown during class reading.
    */
-  @Override
   public C getCertFile(final ClassName name) 
     throws IOException { 
     try {

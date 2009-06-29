@@ -17,7 +17,6 @@ public class DefaultFactory implements ConstantPoolFactory {
    * @param entries Array of entries.
    * @return Pool.
    */
-  @Override
   public ConstantPool create(final Entry[] entries) {
     return new DefaultPool(entries);
   }
@@ -30,7 +29,6 @@ public class DefaultFactory implements ConstantPoolFactory {
    * @throws UnknownConstantException If a constant type not described
    * in JSR-202 is encountered.
    */
-  @Override
   public ConstantPool read(final InputStream is) 
     throws IOException, UnknownConstantException {
     final int size;

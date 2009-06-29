@@ -21,7 +21,6 @@ public final class MethodrefEntry extends RefEntry {
    * Get entry type.
    * @return CONSTANT_Methodref.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Methodref;
   }

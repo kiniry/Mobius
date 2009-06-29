@@ -24,7 +24,6 @@ public final class IntegerEntry implements Entry {
    * Get entry type.
    * @return CONSTANT_Integer.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Integer;
   }
@@ -33,7 +32,6 @@ public final class IntegerEntry implements Entry {
    * Get size.
    * @return 1.
    */
-  @Override
   public int getSize() {
     return 1;
   }
@@ -43,7 +41,6 @@ public final class IntegerEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeInt(fValue);

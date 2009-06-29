@@ -185,7 +185,6 @@ public final class CertificateFileWriter
    * Does not have to be called.
    * @param cls Class name.
    */
-  @Override
   public void begin(final ClassName cls) {    
   }
 
@@ -193,7 +192,6 @@ public final class CertificateFileWriter
    * Write certificate file to output stream.
    * @throws VisitorException .
    */
-  @Override
   public void end() throws VisitorException {
     final int classFlags = 
       DefaultClassFile.ACC_ABSTRACT | DefaultClassFile.ACC_SUPER;
@@ -233,7 +231,6 @@ public final class CertificateFileWriter
    * Add class certificate.
    * @param cert Certificate.
    */
-  @Override
   public void visitClassCert(final ClassCertificate cert) {
     fClassCerts.add(cert);
   }
@@ -243,7 +240,6 @@ public final class CertificateFileWriter
    * @param m Method name.
    * @return Visitor which can be used to add method certificates.
    */
-  @Override
   public MethodCertificateVisitor visitMethod(final MethodName m) {
     return new MethodWriter();
   }
@@ -263,7 +259,6 @@ public final class CertificateFileWriter
      * Begin visiting method.
      * @param m Method name.
      */
-    @Override
     public void begin(final MethodName m) {
       fList = fMethodCerts.get(m);
       if (fList == null) {
@@ -275,7 +270,6 @@ public final class CertificateFileWriter
     /**
      * end().
      */
-    @Override
     public void end() {
     }
 
@@ -283,7 +277,6 @@ public final class CertificateFileWriter
      * Add method certificate.
      * @param cert Method certificate.
      */
-    @Override
     public void visitMethodCert(final MethodCertificate cert) {
       fList.add(cert);
     }

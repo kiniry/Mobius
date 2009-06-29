@@ -42,7 +42,6 @@ public class DefaultEnvironment implements Environment {
    * Get arguments.
    * @return Arguments.
    */
-  @Override
   public String[] getArgs() {
     return fArgs;
   }
@@ -51,7 +50,6 @@ public class DefaultEnvironment implements Environment {
    * Get error stream.
    * @return System.err.
    */
-  @Override
   public PrintStream getErr() {
     return System.err;
   }
@@ -61,7 +59,6 @@ public class DefaultEnvironment implements Environment {
    * Get input stream.
    * @return System.in.
    */
-  @Override
   public InputStream getInput() {
     return System.in;
   }
@@ -70,7 +67,6 @@ public class DefaultEnvironment implements Environment {
    * Get output stream.
    * @return System.out.
    */
-  @Override
   public PrintStream getOutput() {
     return System.out;
   }
@@ -79,7 +75,6 @@ public class DefaultEnvironment implements Environment {
    * Get locale.
    * @return System locale.
    */
-  @Override
   public Locale getLocale() {
     return fLocale;
   }

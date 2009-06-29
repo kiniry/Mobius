@@ -126,7 +126,6 @@ public final class InfoTool extends AbstractTool {
    * Entry point.
    * @param env Environment.
    */
-  @Override
   public void main(final Environment env) {
     if (env.getArgs().length != EXPECTED_ARGS) {
       printUsage(env);
@@ -168,7 +167,6 @@ public final class InfoTool extends AbstractTool {
      * Print class name.
      * @param cls Class name.
      */
-    @Override
     public void begin(final ClassName cls) {
       fOutput.println(getMessage("info.certs.begin", 
                                  fEnv, 
@@ -178,7 +176,6 @@ public final class InfoTool extends AbstractTool {
     /**
      * end().
      */
-    @Override
     public void end() {
       fOutput.println(getMessage("info.certs.end", fEnv));
     }
@@ -187,7 +184,6 @@ public final class InfoTool extends AbstractTool {
      * Print information about a certificate.
      * @param cert Certificate.
      */
-    @Override
     public void visitClassCert(final ClassCertificate cert) {
       fOutput.println(getMessage("info.cert.begin", fEnv));
       fOutput.println(getMessage("info.cert.type", 
@@ -215,7 +211,6 @@ public final class InfoTool extends AbstractTool {
      * @param m Method name.
      * @return Method visitor.
      */
-    @Override
     public MethodCertificateVisitor 
     visitMethod(final MethodName m) {
       return new MethodCertVisitor();
@@ -233,7 +228,6 @@ public final class InfoTool extends AbstractTool {
        * Print method name.
        * @param m Method name.
        */
-      @Override
       public void begin(final MethodName m) {
         fOutput.println(getMessage("info.method.name", 
                                    fEnv, 
@@ -243,7 +237,6 @@ public final class InfoTool extends AbstractTool {
       /**
        * End().
        */
-      @Override
       public void end() {
         fOutput.println(getMessage("info.method.certs.end", fEnv));
       }
@@ -252,7 +245,6 @@ public final class InfoTool extends AbstractTool {
        * Print information about a method certificate.
        * @param cert Certificate.
        */
-      @Override
       public void visitMethodCert(final MethodCertificate cert) {
         fOutput.println(getMessage("info.method.cert.begin", fEnv));
         fOutput.println(getMessage("info.method.cert.type", 

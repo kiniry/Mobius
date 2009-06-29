@@ -11,7 +11,6 @@ public class DefaultLogger implements Logger {
    * Log tracing message.
    * @param msg Message text.
    */
-  @Override
   public void trace(final String msg) {
     System.err.println("TRACE: " + msg);
   }
@@ -20,7 +19,6 @@ public class DefaultLogger implements Logger {
    * Log debug message.
    * @param msg Message text.
    */
-  @Override
   public void debug(final String msg) {
     System.err.println("DEBUG: " + msg);
   }
@@ -29,7 +27,6 @@ public class DefaultLogger implements Logger {
    * Log informational message.
    * @param msg Message text.
    */
-  @Override
   public void info(final String msg) {
     System.err.println("INFO: " + msg);
   }
@@ -38,7 +35,6 @@ public class DefaultLogger implements Logger {
    * Log warning message.
    * @param msg Message text.
    */
-  @Override
   public void warn(final String msg) {
     System.err.println("WARNING: " + msg);
   }
@@ -47,7 +43,6 @@ public class DefaultLogger implements Logger {
    * Log error message.
    * @param msg Message text.
    */
-  @Override
   public void error(final String msg) {
     System.err.println("ERROR: " + msg);
   }
@@ -56,7 +51,6 @@ public class DefaultLogger implements Logger {
    * Log fatal error message.
    * @param msg Message text.
    */
-  @Override
   public void fatal(final String msg) {
     System.err.println("FATAL: " + msg);
   }

@@ -16,7 +16,6 @@ public class DefaultClassReader
    * @return ClassFile object.
    * @throws IOException if an error occurs during reading.
    */
-  @Override
   public DefaultClassFile read(final InputStream is) 
     throws IOException {
     return new DefaultClassFile(is);

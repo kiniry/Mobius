@@ -31,7 +31,6 @@ public class HelpTool extends AbstractTool {
    * Entry point.
    * @param env Environment.
    */
-  @Override
   public void main(final Environment env) {
     final PrintStream stdout = env.getOutput();
     final String[] names = new String[fTools.size()];

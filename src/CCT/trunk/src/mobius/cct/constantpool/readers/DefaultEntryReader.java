@@ -36,7 +36,6 @@ public class DefaultEntryReader implements EntryReader {
    * not supported.
    * @throws IOException .
    */
-  @Override
   public Entry read(final InputStream is, 
                     final int t) throws IOException,
   UnknownConstantException {

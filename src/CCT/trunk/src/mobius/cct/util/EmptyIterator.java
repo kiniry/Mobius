@@ -13,7 +13,6 @@ public class EmptyIterator<E> implements Iterator<E> {
    * Return false.
    * @return false.
    */
-  @Override
   public boolean hasNext() {
     return false;
   }
@@ -22,7 +21,6 @@ public class EmptyIterator<E> implements Iterator<E> {
    * Throw NoSuchElementException.
    * @return Throws an exception.
    */
-  @Override
   public E next() {
     throw new NoSuchElementException();
   }
@@ -30,7 +28,6 @@ public class EmptyIterator<E> implements Iterator<E> {
   /**
    * Throws IllegalStateException.
    */
-  @Override
   public void remove() {
     throw new IllegalStateException();
   }

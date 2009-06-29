@@ -56,7 +56,6 @@ public class FlattenIterator<T> implements Iterator<T> {
    * Return true if there is at least one more element in this iterator.
    * @return True if the iterator has more elements.
    */
-  @Override
   public boolean hasNext() {
     findNext();
     return fCurrent != null;
@@ -66,7 +65,6 @@ public class FlattenIterator<T> implements Iterator<T> {
    * Return next element.
    * @return Next element.
    */
-  @Override
   public T next() {
     findNext();
     if (fCurrent == null) {
@@ -80,7 +78,6 @@ public class FlattenIterator<T> implements Iterator<T> {
   /**
    * Delegated to iterator from which current element was taken.
    */
-  @Override
   public void remove() {
     if (fLast == null) {
       throw new IllegalStateException();

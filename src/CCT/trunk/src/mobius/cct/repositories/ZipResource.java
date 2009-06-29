@@ -35,7 +35,6 @@ public class ZipResource implements Resource {
    * @return InputStrem from which file contents can be read.
    * @throws IOException .
    */
-  @Override
   public InputStream open() throws IOException {
     return fFile.getInputStream(fEntry);
   }

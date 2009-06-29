@@ -51,7 +51,6 @@ public final class ZipEntry implements ClassPathEntry {
    * @return Class (as a <code>Resource</code>).
    * @throws NotFoundException Cannot read requested file.
    */
-  @Override
   public Resource getClassFile(final ClassName name)
     throws NotFoundException {
     final char sep = System.getProperty("file.separator", "/").charAt(0);
@@ -71,7 +70,6 @@ public final class ZipEntry implements ClassPathEntry {
    * @return Resource which contains the class.
    * @throws NotFoundException Cannot read requested file.
    */
-  @Override
   public Resource getCertFile(final ClassName name)
     throws NotFoundException {
     final char sep = 

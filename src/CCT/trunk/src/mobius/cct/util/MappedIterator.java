@@ -35,7 +35,6 @@ public class MappedIterator<O, R> implements Iterator<R> {
    * Delegated to the source iterator.
    * @return True iff there is at least one more element in the iterator.
    */
-  @Override
   public boolean hasNext() {
     return fSource.hasNext();
   }
@@ -45,7 +44,6 @@ public class MappedIterator<O, R> implements Iterator<R> {
    * operator and processed by the mapping function.
    * @return Next element.
    */
-  @Override
   public R next() {
     return fMapping.call(fSource.next());
   }
@@ -53,7 +51,6 @@ public class MappedIterator<O, R> implements Iterator<R> {
   /**
    * Delegated to the source iterator.
    */
-  @Override
   public void remove() {
     fSource.remove();
   }

@@ -123,7 +123,6 @@ public final class MethodName implements Comparable<MethodName> {
    * @param m Method name.
    * @return .
    */
-  @Override
   public int compareTo(final MethodName m) {
     return internalForm().compareTo(m.internalForm());
   }

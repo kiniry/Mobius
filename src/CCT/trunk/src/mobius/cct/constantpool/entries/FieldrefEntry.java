@@ -22,7 +22,6 @@ public final class FieldrefEntry extends RefEntry {
    * Get entry type.
    * @return CONSTANT_Fieldref.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Fieldref;
   }

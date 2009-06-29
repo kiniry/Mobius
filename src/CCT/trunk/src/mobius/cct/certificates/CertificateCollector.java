@@ -236,7 +236,6 @@ public class CertificateCollector<C extends ClassFile> {
      * begin().
      * @param cls Class name.
      */
-    @Override
     public void begin(final ClassName cls) {
       fBuilders = 
         new HashMap<CertificateSignature, CertificatePackBuilder>();
@@ -245,7 +244,6 @@ public class CertificateCollector<C extends ClassFile> {
     /**
      * end().
      */
-    @Override
     public void end() {
       final Iterator<CertificatePackBuilder> i = 
         fBuilders.values().iterator();
@@ -259,7 +257,6 @@ public class CertificateCollector<C extends ClassFile> {
      * Visit class certificate.
      * @param cert Certificate.
      */
-    @Override
     public void visitClassCert(final ClassCertificate cert) {
       final CertificateSignature sig = cert.getSignature();
       if (fBuilders.containsKey(sig)) {
@@ -274,7 +271,6 @@ public class CertificateCollector<C extends ClassFile> {
      * @param m Method name.
      * @return Visitor used to collect method certificates.
      */
-    @Override
     public MethodCertificateVisitor visitMethod(final MethodName m) {
       return new MethodCertVisitor();
     }
@@ -289,14 +285,12 @@ public class CertificateCollector<C extends ClassFile> {
        * begin().
        * @param m Method name.
        */
-      @Override
       public void begin(final MethodName m) {
       }
 
       /**
        * end().
        */
-      @Override
       public void end() {
       }
 
@@ -304,7 +298,6 @@ public class CertificateCollector<C extends ClassFile> {
        * Visit method certificate.
        * @param cert Method certificate.
        */
-      @Override
       public void visitMethodCert(final MethodCertificate cert) {
         final CertificateSignature sig = cert.getSignature();
         if (!fBuilders.containsKey(sig)) {

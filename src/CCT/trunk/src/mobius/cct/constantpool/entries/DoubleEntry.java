@@ -24,7 +24,6 @@ public final class DoubleEntry implements Entry {
    * Get entry type.
    * @return CONSTANT_Double.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Double;
   }
@@ -33,7 +32,6 @@ public final class DoubleEntry implements Entry {
    * Get size.
    * @return 2.
    */
-  @Override
   public int getSize() {
     return 2;
   }
@@ -43,7 +41,6 @@ public final class DoubleEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeDouble(fValue);

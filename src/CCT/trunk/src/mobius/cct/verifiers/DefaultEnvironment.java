@@ -157,7 +157,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * @throws IOException If thrown during class reading.
    * @throws NotFoundException If class was not in the repository.
    */
-  @Override
   public C getClassFile(final ClassName name) 
     throws NotFoundException, IOException {
     return fRepo.getClassFile(name);
@@ -171,7 +170,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * @return ClassFile object or null.
    * @throws IOException If thrown during class reading.
    */
-  @Override
   public C getCertificateFile(final ClassName name) 
     throws IOException {
     return fRepo.getCertFile(name);
@@ -193,7 +191,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * certificate is valid.
    * @throws VerificationException .
    */
-  @Override
   public boolean verify(final ClassName name, final String spec)  
     throws VerificationException {
     if ((name == null) || (spec == null)) {
@@ -265,7 +262,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * verified.
    * @throws VerificationException .
    */
-  @Override
   public boolean verify(final ClassName[] name, final String[] spec)  
     throws VerificationException {
     for (int i = 0; i < name.length; i++) {
@@ -280,7 +276,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * Get logger used by this environment.
    * @return Logger.
    */
-  @Override
   public Logger getLogger() {
     return fLogger;
   }
@@ -321,7 +316,6 @@ public class DefaultEnvironment<C extends ClassFile>
    * @throws IOException If thrown during class reading.
    * @throws NotFoundException If class was not in the repository.
    */
-  @Override
   public Iterator<CertificatePack> 
   getCertificate(final ClassName name, final String type) 
     throws NotFoundException, IOException {

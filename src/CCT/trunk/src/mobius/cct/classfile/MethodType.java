@@ -151,7 +151,6 @@ public final class MethodType implements Comparable<MethodType> {
    * @param t Method type.
    * @return .
    */
-  @Override
   public int compareTo(final MethodType t) {
     return internalForm().compareTo(t.internalForm());
   }

@@ -55,7 +55,6 @@ public class DefaultAttribute implements Attribute {
    * Get attribute name.
    * @return Name.
    */
-  @Override
   public String getName() {
     return fName;
   }
@@ -65,7 +64,6 @@ public class DefaultAttribute implements Attribute {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void writeData(final OutputStream os) 
     throws IOException {
     os.write(fData);

@@ -86,7 +86,6 @@ public class MockClassVisitor implements ClassVisitor {
     }
   }
   
-  @Override
   public void begin(ClassName cls) throws VisitorException {
     fUnexpected.clear();
     for (int i = 0; i < fFound.length; i++) {
@@ -94,11 +93,9 @@ public class MockClassVisitor implements ClassVisitor {
     }
   }
 
-  @Override
   public void end() throws VisitorException {
   }
 
-  @Override
   public void visitAttribute(Attribute attr) throws VisitorException {
     final List<Integer> list = fClassAttrs.get(attr.getName());
     if (list != null) {
@@ -116,7 +113,6 @@ public class MockClassVisitor implements ClassVisitor {
     fUnexpected.add(attr.getName());
   }
 
-  @Override
   public MethodVisitor visitMethod(MethodName m) 
     throws VisitorException {
     return new MockMethodVisitor();
@@ -131,7 +127,6 @@ public class MockClassVisitor implements ClassVisitor {
 
     private String fMethod;
     
-    @Override
     public void begin(MethodName m) throws VisitorException {
       if (fMethodAttrs.containsKey(m)) {
         fMap = fMethodAttrs.get(m);
@@ -141,11 +136,9 @@ public class MockClassVisitor implements ClassVisitor {
       fMethod = m.internalForm();
     }
 
-    @Override
     public void end() throws VisitorException {
     }
 
-    @Override
     public void visitAttribute(Attribute attr) throws VisitorException {
       final List<Integer> list = fMap.get(attr.getName());
       if (list != null) {
@@ -170,15 +163,12 @@ public class MockClassVisitor implements ClassVisitor {
    */
   private final class AttributeCollector implements ClassVisitor {
 
-    @Override
     public void begin(ClassName cls) throws VisitorException {
     }
 
-    @Override
     public void end() throws VisitorException {
     }
 
-    @Override
     public void visitAttribute(final Attribute attr) 
       throws VisitorException {
       
@@ -193,7 +183,6 @@ public class MockClassVisitor implements ClassVisitor {
       fAttributes.add(attr);
     }
 
-    @Override
     public MethodVisitor visitMethod(MethodName m) {
       return new MethodAttrCollector();
     }
@@ -205,7 +194,6 @@ public class MockClassVisitor implements ClassVisitor {
 
       private Map<String, List<Integer>> fMap;
       
-      @Override
       public void begin(MethodName m) throws VisitorException {
         if (fMethodAttrs.containsKey(m)) {
           fMap = fMethodAttrs.get(m);
@@ -215,11 +203,9 @@ public class MockClassVisitor implements ClassVisitor {
         }
       }
 
-      @Override
       public void end() throws VisitorException {
       }
 
-      @Override
       public void visitAttribute(Attribute attr) throws VisitorException {
         final List<Integer> list;
         if (fMap.containsKey(attr.getName())) {

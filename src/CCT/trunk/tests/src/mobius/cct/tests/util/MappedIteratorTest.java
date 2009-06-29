@@ -27,7 +27,6 @@ public class MappedIteratorTest {
     l.add(26);
     Function<Integer, Integer> f = new Function<Integer, Integer>() {
 
-      @Override
       public Integer call(Integer args) {
         return args + 42;
       }

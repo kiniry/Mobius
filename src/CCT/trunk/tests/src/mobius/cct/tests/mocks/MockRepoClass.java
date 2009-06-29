@@ -54,7 +54,6 @@ public class MockRepoClass implements ClassFile {
     return fName;
   }
   
-  @Override
   public void visit(ClassVisitor v) throws VisitorException {
     // Not implemented...
   }

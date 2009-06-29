@@ -16,7 +16,6 @@ public class GetIterator<T> implements
    * @param args Source collection.
    * @return Iterator.
    */
-  @Override
   public Iterator<T> call(final Collection<T> args) {
     return args.iterator();
   }

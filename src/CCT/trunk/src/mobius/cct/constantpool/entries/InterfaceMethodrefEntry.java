@@ -21,7 +21,6 @@ public final class InterfaceMethodrefEntry extends RefEntry {
    * Get entry type.
    * @return CONSTANT_InterfaceMethodref.
    */
-  @Override
   public byte getType() {
     return CONSTANT_InterfaceMethodref;
   }

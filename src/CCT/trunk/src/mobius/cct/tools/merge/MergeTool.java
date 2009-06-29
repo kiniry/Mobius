@@ -139,7 +139,6 @@ public class MergeTool extends AbstractTool {
    * Entry point.
    * @param env Environment.
    */
-  @Override
   public void main(final Environment env) {
     final PrintStream stderr = env.getErr();
     if (env.getArgs().length != EXPECTED_ARGS) {

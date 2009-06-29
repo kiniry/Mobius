@@ -80,7 +80,6 @@ public final class Version implements Comparable<Version> {
    * @return Result.
    */
   // CHECKSTYLE:OFF
-  @Override
   public int compareTo(final Version v) {
     if (fMajor > v.getMajor()) {
       return 1;

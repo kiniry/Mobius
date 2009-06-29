@@ -88,7 +88,6 @@ public final class CertificateSignature
    * @param c Certificate signature.
    * @return Result.
    */
-  @Override
   public int compareTo(final CertificateSignature c) {
     final int r = fVersion.compareTo(c.getVersion());
     if (r == 0) {

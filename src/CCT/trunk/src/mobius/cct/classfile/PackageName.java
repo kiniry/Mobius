@@ -129,7 +129,7 @@ public final class PackageName {
   public static PackageName parseInternal(final String name) {
     final int sep = name.lastIndexOf('/');
     if (sep == -1) {
-      if (name.isEmpty()) {
+      if (name.equals("")) {
         return root();
       } else {
         return getPackage(root(), name);

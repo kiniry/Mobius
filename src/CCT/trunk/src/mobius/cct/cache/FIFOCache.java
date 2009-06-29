@@ -42,7 +42,6 @@ public class FIFOCache<C> implements Cache<C> {
    * @param key Key.
    * @param object Object to be stored.
    */
-  @Override
   public void update(final String key, final C object) {
     if ((key == null) || (object == null)) {
       throw new NullPointerException();
@@ -61,7 +60,6 @@ public class FIFOCache<C> implements Cache<C> {
    * Remove binding for given key from cache (if present).
    * @param key Key. Does not have to be bound.
    */
-  @Override
   public void remove(final String key) {
     fMap.remove(key);
     fKeys.remove(key);
@@ -73,7 +71,6 @@ public class FIFOCache<C> implements Cache<C> {
    * @return Retrieved value or {@code null} (if the key
    * is not bound in cache).
    */
-  @Override
   public C lookup(final String key) {
     return fMap.get(key);
   }
@@ -83,7 +80,6 @@ public class FIFOCache<C> implements Cache<C> {
    * @param key Key
    * @return {@code true} iff key is bound in the cache.
    */
-  @Override
   public boolean hasKey(final String key) {
     return fMap.containsKey(key);
   }

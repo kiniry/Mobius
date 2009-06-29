@@ -47,12 +47,10 @@ public class MockRepository implements Repository<MockRepoClass> {
     fCerts.put(name, file);
   }
   
-  @Override
   public MockRepoClass getCertFile(ClassName name) throws IOException {
     return fCerts.get(name.internalForm());
   }
 
-  @Override
   public MockRepoClass getClassFile(ClassName name) 
     throws NotFoundException, IOException {
     final MockRepoClass result = fClasses.get(name.internalForm());

@@ -24,7 +24,6 @@ public final class LongEntry implements Entry {
    * Get entry type.
    * @return CONSTANT_Long.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Long;
   }
@@ -33,7 +32,6 @@ public final class LongEntry implements Entry {
    * Get size.
    * @return 2.
    */
-  @Override
   public int getSize() {
     return 2;
   }
@@ -43,7 +41,6 @@ public final class LongEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeLong(fValue);

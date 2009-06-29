@@ -64,7 +64,6 @@ public final class ArrayQueue<T> implements Queue<T> {
      * Check if there are any more elements to be returned by this iterator.
      * @return true iff there is at least one more element to be returned.
      */
-    @Override
     public boolean hasNext() {
       if (fTime != fCreationTime) {
         throw new ConcurrentModificationException();
@@ -76,7 +75,6 @@ public final class ArrayQueue<T> implements Queue<T> {
      * Fetch next element.
      * @return Next element.
      */
-    @Override
     public T next() {
       if (fTime != fCreationTime) {
         throw new ConcurrentModificationException();
@@ -93,7 +91,6 @@ public final class ArrayQueue<T> implements Queue<T> {
     /**
      * Remove current element.
      */
-    @Override
     public void remove() {
       if (fTime != fCreationTime) {
         throw new ConcurrentModificationException();
@@ -191,7 +188,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param e Element to be added.
    * @return true.
    */
-  @Override
   public boolean add(final T e) {
     if (e == null) {
       throw new NullPointerException();
@@ -210,7 +206,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Returned element is not removed from the queue.
    * @return Queue head.
    */
-  @Override
   public T element() {
     if (fLength > 0) {
       return fElements[fHead];
@@ -224,7 +219,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param e Element to be added.
    * @return true.
    */
-  @Override
   public boolean offer(final T e) {
     add(e);
     return true;
@@ -235,7 +229,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * null is returned. Returned element is not removed from the queue.
    * @return Queue head or null.
    */
-  @Override
   public T peek() {
     if (fLength > 0) {
       return fElements[fHead];
@@ -249,7 +242,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * If the queue is empty, null is returned.
    * @return Queue head or null.
    */
-  @Override
   public T poll() {
     if (fLength > 0) {
       final T result = fElements[fHead];
@@ -267,7 +259,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * If the queue is empty, {@link NoSuchElementException} is thrown.
    * @return Queue head.
    */
-  @Override
   public T remove() {
     if (fLength > 0) {
       final T result = fElements[fHead];
@@ -284,7 +275,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param c Collection.
    * @return true.
    */
-  @Override
   public boolean addAll(final Collection<? extends T> c) {
     if (c == null) { throw new NullPointerException(); }
     final Iterator<? extends T> i = c.iterator();
@@ -297,7 +287,6 @@ public final class ArrayQueue<T> implements Queue<T> {
   /**
    * Remove all elements from queue.
    */
-  @Override
   @SuppressWarnings("unchecked")
   public void clear() {
     fElements = (T[])new Object[0];
@@ -311,7 +300,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param o Requested object.
    * @return true iff the queue contains requested element.
    */
-  @Override
   public boolean contains(final Object o) {
     if (o == null) { return false; }
     for (int i = 0; i < fLength; i++) {
@@ -327,7 +315,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param c Collection to search for.
    * @return true iff the queue contains all elements in collection.
    */
-  @Override
   public boolean containsAll(final Collection<?> c) {
     if (c == null) { throw new NullPointerException(); }
     final Iterator<?> i = c.iterator();
@@ -343,7 +330,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Check if the queue is empty.
    * @return true iff the queue is empty.
    */
-  @Override
   public boolean isEmpty() {
     return fLength == 0;
   }
@@ -352,7 +338,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Iterate over elements in queue (starting from head).
    * @return Iterator.
    */
-  @Override
   public Iterator<T> iterator() {
     return new QueueIterator();
   }
@@ -363,7 +348,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param o Element to be removed.
    * @return true iff the element was in the queue.
    */
-  @Override
   public boolean remove(final Object o) {
     if (o == null) { return false; }
     for (int i = 0; i < fLength; i++) {
@@ -380,7 +364,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param c Collection of elements to be removed.
    * @return true iff the queue was changed.
    */
-  @Override
   public boolean removeAll(final Collection<?> c) {
     boolean result = false;
     
@@ -400,7 +383,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param c Collection of elements to be retained.
    * @return true iff the queue was changed.
    */
-  @Override
   public boolean retainAll(final Collection<?> c) {
     boolean result = false;
     
@@ -424,7 +406,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * Return number of elements in queue.
    * @return Size.
    */
-  @Override
   public int size() {
     return fLength;
   }
@@ -434,7 +415,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * do affect the queue in any way.
    * @return Array with queue elements.
    */
-  @Override
   public Object[] toArray() {
     final Object[] result = new Object[fLength];
     for (int i = 0; i < fLength; i++) {
@@ -452,7 +432,6 @@ public final class ArrayQueue<T> implements Queue<T> {
    * @param a Array used to determine result type.
    * @return Array with queue elements.
    */
-  @Override
   @SuppressWarnings("unchecked")
   public <X> X[] toArray(final X[] a) {
     if (a.getClass().getComponentType()

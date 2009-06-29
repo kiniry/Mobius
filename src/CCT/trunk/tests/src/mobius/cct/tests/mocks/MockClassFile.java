@@ -81,7 +81,6 @@ public class MockClassFile implements MutableClassFile {
    * @param v Visitor.
    * @throws VisitorException .
    */
-  @Override
   public void visit(final ClassVisitor v) 
     throws VisitorException {
     
@@ -118,7 +117,6 @@ public class MockClassFile implements MutableClassFile {
    * Get writer.
    * @return Writer.
    */
-  @Override
   public ClassVisitor getWriter(OutputStream os) {
     return fWriter;
   }

@@ -27,7 +27,6 @@ public final class ClassEntry implements Entry {
    * Get entry type.
    * @return CONSTANT_Class.
    */
-  @Override
   public byte getType() {
     return CONSTANT_Class;
   }
@@ -36,7 +35,6 @@ public final class ClassEntry implements Entry {
    * Get size.
    * @return 1.
    */
-  @Override
   public int getSize() {
     return 1;
   }
@@ -46,7 +44,6 @@ public final class ClassEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeShort(fName);

@@ -17,7 +17,6 @@ public class GetMapValues<K, V> implements
    * @param args Source collection.
    * @return Iterator.
    */
-  @Override
   public Iterator<V> call(final Map<K, V> args) {
     return args.values().iterator();
   }

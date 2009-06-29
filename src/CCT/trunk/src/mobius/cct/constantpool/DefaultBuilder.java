@@ -64,7 +64,6 @@ public class DefaultBuilder extends AbstractBuilder {
    * @param factory Factory to be used.
    * @return Constant pool.
    */
-  @Override
   public ConstantPool toConstantPool(final ConstantPoolFactory factory) {
     return factory.create(fEntries.toArray(new Entry[fEntries.size()]));
   }
@@ -74,7 +73,6 @@ public class DefaultBuilder extends AbstractBuilder {
    * @param e Entry.
    * @return Index.
    */
-  @Override
   public int newEntry(final Entry e) {
     int i, r;
     

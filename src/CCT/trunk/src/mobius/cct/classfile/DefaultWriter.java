@@ -71,7 +71,6 @@ public class DefaultWriter implements ClassVisitor {
    * @param cls Class name.
    * @throws VisitorException .
    */
-  @Override
   public void begin(final ClassName cls) throws VisitorException {
   }
 
@@ -79,7 +78,6 @@ public class DefaultWriter implements ClassVisitor {
    * Write collected information to the output stream.
    * @throws VisitorException .
    */
-  @Override
   public void end() throws VisitorException {
     try {
       write();
@@ -92,7 +90,6 @@ public class DefaultWriter implements ClassVisitor {
    * Visit attribute.
    * @param attr Attribute.
    */
-  @Override
   public void visitAttribute(final Attribute attr) {
     fAttributes.add(attr);
     fConstantPool.newUtf8(attr.getName());
@@ -103,7 +100,6 @@ public class DefaultWriter implements ClassVisitor {
    * @param m Method name.
    * @return Method visitor.
    */
-  @Override
   public MethodVisitor visitMethod(final MethodName m) {
     return new MethodWriter();
   }
@@ -123,7 +119,6 @@ public class DefaultWriter implements ClassVisitor {
      * @param m Method name.
      * @throws VisitorException .
      */
-    @Override
     public void begin(final MethodName m) throws VisitorException {
       fAttrs = fMethodAttrs.get(m);
       if (fAttrs == null) {
@@ -134,7 +129,6 @@ public class DefaultWriter implements ClassVisitor {
     /**
      * end().
      */
-    @Override
     public void end() {
     }
 
@@ -142,7 +136,6 @@ public class DefaultWriter implements ClassVisitor {
      * Visit method attribute.
      * @param attr Attribute.
      */
-    @Override
     public void visitAttribute(final Attribute attr) {
       fAttrs.add(attr);
       fConstantPool.newUtf8(attr.getName());

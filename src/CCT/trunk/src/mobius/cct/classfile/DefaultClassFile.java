@@ -277,7 +277,6 @@ public class DefaultClassFile implements MutableClassFile {
    * @param v Visitor.
    * @throws VisitorException .
    */
-  @Override
   public void visit(final ClassVisitor v) throws VisitorException {
     v.begin(fName);
     final Iterator<Attribute> ia = fAttributes.iterator();

@@ -34,7 +34,6 @@ public abstract class RefEntry implements Entry {
    * be changed in a subclass.
    * @return Entry size.
    */
-  @Override
   public int getSize() {
     return 1;
   }
@@ -44,7 +43,6 @@ public abstract class RefEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeShort(fClassName);

@@ -75,7 +75,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
    * Does not have to be called.
    * @param cls Class name.
    */
-  @Override
   public void begin(final ClassName cls) {
   }
 
@@ -83,7 +82,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
    * Write class with new certificates.
    * @throws VisitorException .
    */
-  @Override
   public void end() throws VisitorException {
     fBase.visit(new ClassFilter());
   }
@@ -92,7 +90,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
    * Add class certificate.
    * @param cert Certficate.
    */
-  @Override
   public void visitClassCert(final ClassCertificate cert) {
     fClassCerts.add(cert);
   }
@@ -103,7 +100,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
    * @return MethodCertificateVisitor which can be used to add
    * method certificates.
    */
-  @Override
   public MethodCertificateVisitor visitMethod(final MethodName m) {
     return new MethodWriter();
   }
@@ -122,7 +118,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * begin().
      * @param m Method name.
      */
-    @Override
     public void begin(final MethodName m) {
       fList = fMethodCerts.get(m);
       if (fList == null) {
@@ -135,7 +130,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * end().
      * Does not have to be called.
      */
-    @Override
     public void end() {
     }
 
@@ -143,7 +137,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * Add method certificate.
      * @param cert Certificate.
      */
-    @Override
     public void visitMethodCert(final MethodCertificate cert) {
       fList.add(cert);
     }
@@ -161,7 +154,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * @param cls Class name.
      * @throws VisitorException .
      */
-    @Override
     public void begin(final ClassName cls) 
       throws VisitorException {
       fWriter.begin(cls);
@@ -171,7 +163,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * end().
      * @throws VisitorException .
      */
-    @Override
     public void end() throws VisitorException {
       if (fSCP == null) {
         fSCP = new DefaultBuilder();
@@ -194,7 +185,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * @param attr Attribute.
      * @throws VisitorException .
      */
-    @Override
     public void visitAttribute(final Attribute attr) 
       throws VisitorException {
       
@@ -223,7 +213,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * @return Method visitor.
      * @throws VisitorException .
      */
-    @Override
     public MethodVisitor visitMethod(final MethodName m) 
       throws VisitorException {
       return new MethodAttributeFilter();
@@ -275,7 +264,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * @param m Method name.
      * @throws VisitorException .
      */
-    @Override
     public void begin(final MethodName m) throws VisitorException {
       if (fSCP == null) {
         fSCP = new DefaultBuilder();
@@ -293,7 +281,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * Finished reading method - write certificates.
      * @throws VisitorException .
      */
-    @Override
     public void end() throws VisitorException {
       if (!fMethodCerts.containsKey(fMethod)) { return; }
       final Iterator<MethodCertificate> i = 
@@ -311,7 +298,6 @@ public class CertificateWriter implements ClassCertificateVisitor {
      * @param attr Attribute.
      * @throws VisitorException .
      */
-    @Override
     public void visitAttribute(final Attribute attr) 
       throws VisitorException {
       if (!MethodCertificate.ATTR.equals(attr.getName())) {

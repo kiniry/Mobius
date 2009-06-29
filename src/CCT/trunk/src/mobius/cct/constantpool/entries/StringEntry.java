@@ -26,7 +26,6 @@ public class StringEntry implements Entry {
    * Get entry type.
    * @return CONSTANT_String.
    */
-  @Override
   public byte getType() {
     return CONSTANT_String;
   }
@@ -35,7 +34,6 @@ public class StringEntry implements Entry {
    * Get size.
    * @return 1.
    */
-  @Override
   public int getSize() {
     return 1;
   }
@@ -45,7 +43,6 @@ public class StringEntry implements Entry {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeShort(fValue);

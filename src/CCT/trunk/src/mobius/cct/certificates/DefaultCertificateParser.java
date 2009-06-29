@@ -114,7 +114,6 @@ final class Visitor implements ClassVisitor {
    * @param cls Class name.
    * @throws VisitorException .
    */
-  @Override
   public void begin(final ClassName cls) throws VisitorException {
     fVisitor.begin(cls);
   }
@@ -123,7 +122,6 @@ final class Visitor implements ClassVisitor {
    * End visit.
    * @throws VisitorException .
    */
-  @Override
   public void end() throws VisitorException {
     if ((fSecondConstantPool == null) && (!fBuffer.isEmpty())) {
       throw new VisitorException(
@@ -140,7 +138,6 @@ final class Visitor implements ClassVisitor {
    * @param attr Attribute.
    * @throws VisitorException .
    */
-  @Override
   public void visitAttribute(final Attribute attr) 
     throws VisitorException {
     try {
@@ -172,7 +169,6 @@ final class Visitor implements ClassVisitor {
    * @return Method visitor.
    * @throws VisitorException .
    */
-  @Override
   public MethodVisitor visitMethod(final MethodName m) 
     throws VisitorException {
     if (fSecondConstantPool == null) {
@@ -295,7 +291,6 @@ final class MVisitor implements MethodVisitor {
    * @param m Method name.
    * @throws VisitorException .
    */
-  @Override
   public void begin(final MethodName m) throws VisitorException {
     fVisitor.begin(m);
   }
@@ -304,7 +299,6 @@ final class MVisitor implements MethodVisitor {
    * end().
    * @throws VisitorException .
    */
-  @Override
   public void end() throws VisitorException {
     fVisitor.end();
   }
@@ -314,7 +308,6 @@ final class MVisitor implements MethodVisitor {
    * @param attr Attribute.
    * @throws VisitorException .
    */
-  @Override
   public void visitAttribute(final Attribute attr) 
     throws VisitorException {
     try {

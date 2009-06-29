@@ -82,7 +82,6 @@ public class ArrayIterator<T> implements Iterator<T> {
    * hasNext().
    * @return .
    */
-  @Override
   public boolean hasNext() {
     return fCurrent < fBound;
   }
@@ -91,7 +90,6 @@ public class ArrayIterator<T> implements Iterator<T> {
    * next().
    * @return .
    */
-  @Override
   public T next() {
     if (fCurrent < fBound) {
       return fArray[fCurrent++];
@@ -103,7 +101,6 @@ public class ArrayIterator<T> implements Iterator<T> {
   /**
    * Element removal is not supported.
    */
-  @Override
   public void remove() {
     throw new UnsupportedOperationException();
   }

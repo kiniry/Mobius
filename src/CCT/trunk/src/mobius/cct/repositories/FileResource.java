@@ -28,7 +28,6 @@ public class FileResource implements Resource {
    * @return FileInputStream from which the file can be read.
    * @throws IOException if an error occurs.
    */
-  @Override
   public InputStream open() throws IOException {
     return new FileInputStream(fFile);
   }

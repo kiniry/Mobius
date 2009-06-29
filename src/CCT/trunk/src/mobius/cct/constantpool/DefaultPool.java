@@ -83,7 +83,6 @@ public class DefaultPool implements ConstantPool {
    * @return Entry.
    * @throws IllegalIndexException .
    */
-  @Override
   public Entry getEntry(final int index) 
     throws IllegalIndexException {
     final Entry entry;
@@ -102,7 +101,6 @@ public class DefaultPool implements ConstantPool {
    * Return constant pool size (number of valid indices).
    * @return Size.
    */
-  @Override
   public int getSize() {
     return fEntries.length;
   }
@@ -112,7 +110,6 @@ public class DefaultPool implements ConstantPool {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) throws IOException {
     int i;
     Entry entry;

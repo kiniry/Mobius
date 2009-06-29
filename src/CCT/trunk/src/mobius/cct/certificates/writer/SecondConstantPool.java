@@ -38,7 +38,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * @return Entry.
    * @throws IllegalIndexException .
    */
-  @Override
   public Entry getEntry(final int index) 
     throws IllegalIndexException {
     return fSource.getEntry(index);
@@ -48,7 +47,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * Get size.
    * @return size.
    */
-  @Override
   public int getSize() {
     return fSource.getSize();
   }
@@ -57,7 +55,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * Get entries.
    * @return Iterator.
    */
-  @Override
   public Iterator<Entry> iterator() {
     return fSource.iterator();
   }
@@ -67,7 +64,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void write(final OutputStream os) 
     throws IOException {
     fSource.write(os);
@@ -77,7 +73,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * Get attribute name.
    * @return "org.bmlspecs.SecondConstantPool".
    */
-  @Override
   public String getName() {
     return ATTR;
   }
@@ -87,7 +82,6 @@ public class SecondConstantPool implements ConstantPool, Attribute {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void writeData(final OutputStream os) throws IOException {
     fSource.write(os);
   }

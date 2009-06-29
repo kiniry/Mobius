@@ -25,7 +25,6 @@ public class InfiniteCache<C> implements Cache<C> {
    * @param key Key (non-null).
    * @param object Object to be stored. Cannot be {@code null}. 
    */
-  @Override
   public void update(final String key, final C object) {
     if ((key == null) || (object == null)) {
       throw new NullPointerException();
@@ -37,7 +36,6 @@ public class InfiniteCache<C> implements Cache<C> {
    * Remove binding for given key from cache.
    * @param key Key. Does not have to be bound.
    */
-  @Override
   public void remove(final String key) {
     fMap.remove(key);
   }
@@ -48,7 +46,6 @@ public class InfiniteCache<C> implements Cache<C> {
    * @return Retrieved value or {@code null} (if the key
    * is not bound in cache).
    */
-  @Override
   public C lookup(final String key) {
     return fMap.get(key);
   }
@@ -58,7 +55,6 @@ public class InfiniteCache<C> implements Cache<C> {
    * @param key Key (possibly null).
    * @return {@code true} iff key is bound in the cache.
    */
-  @Override
   public boolean hasKey(final String key) {
     return fMap.containsKey(key);
   }
@@ -67,7 +63,6 @@ public class InfiniteCache<C> implements Cache<C> {
    * Get number of objects in the cache.
    * @return cache size.
    */
-  @Override
   public int size() {
     return fMap.size();
   }

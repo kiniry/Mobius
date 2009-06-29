@@ -39,7 +39,6 @@ public class ClassCertificateAttribute implements Attribute {
    * Get attribute name.
    * @return ClassCertificate.ATTR.
    */
-  @Override
   public String getName() {
     return ClassCertificate.ATTR;
   }
@@ -49,7 +48,6 @@ public class ClassCertificateAttribute implements Attribute {
    * @param os Output stream.
    * @throws IOException .
    */
-  @Override
   public void writeData(final OutputStream os) throws IOException {
     final DataOutputStream ds = new DataOutputStream(os);
     ds.writeShort(fSCP.newUtf8(fCert.getType()));

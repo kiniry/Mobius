@@ -37,7 +37,6 @@ public class MockClassReader
    * Return a mock class file.
    * @param is Input stream (ignored).
    */
-  @Override
   public MockRepoClass read(InputStream is) throws IOException {
     return fClassFile;
   }

@@ -70,7 +70,6 @@ public class MockCertVisitor implements ClassCertificateVisitor {
     assertTrue(fBeginCalled);
   }
   
-  @Override
   public void begin(ClassName cls) throws VisitorException {
     fBeginCalled = true;
     for (int i = 0; i < fCerts.size(); i++) {
@@ -79,12 +78,10 @@ public class MockCertVisitor implements ClassCertificateVisitor {
     fUnexpected = false;
   }
 
-  @Override
   public void end() throws VisitorException {
     fEndCalled = true;
   }
   
-  @Override
   public void visitClassCert(ClassCertificate cert) throws VisitorException {
     for (int i = 0; i < fCerts.size(); i++) {
       if ((!fFound[i]) &&
@@ -102,22 +99,18 @@ public class MockCertVisitor implements ClassCertificateVisitor {
     fUnexpected = true;
   }
 
-  @Override
   public MethodCertificateVisitor visitMethod(MethodName m)
       throws VisitorException {
     return new MethodVisitor();
   }
   
   private final class MethodVisitor implements MethodCertificateVisitor {    
-    @Override
     public void begin(MethodName m) {
     }
 
-    @Override
     public void end() {
     }
 
-    @Override
     public void visitMethodCert(MethodCertificate cert) {
       for (int i = 0; i < fCerts.size(); i++) {
         if ((!fFound[i]) && 

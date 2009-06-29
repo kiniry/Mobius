@@ -14,27 +14,22 @@ import mobius.cct.verifiers.Verifier;
  * @author Tadeusz Sznuk (ts209501@gmail.com)
  */
 public class CyclicVerifier implements Verifier<MockRepoClass> {
-    @Override
     public String getCertificateType() {
       return "mobius.cct.testcert";
     }
 
-    @Override
     public String getSpecificationType() {
       return "mobius.cct.testspec";
     }
     
-    @Override
     public Version getMaxVersion() {
       return new Version(1, 0);
     }
 
-    @Override
     public Version getMinVersion() {
       return new Version(0, 0);
     }
 
-    @Override
     public boolean verify(ClassName name, String spec, 
                           CertificatePack cert,
                           Environment<MockRepoClass> env) {

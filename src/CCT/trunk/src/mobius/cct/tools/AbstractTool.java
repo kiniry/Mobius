@@ -44,7 +44,6 @@ public abstract class AbstractTool implements Tool {
    * @param env Environment;
    * @return Description.
    */
-  @Override
   public String getDescription(final Environment env) {
     return getMessage("tool.description", env);
   }
