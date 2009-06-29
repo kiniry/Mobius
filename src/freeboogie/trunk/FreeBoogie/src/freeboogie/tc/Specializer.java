@@ -9,9 +9,6 @@ import freeboogie.ast.*;
 //DBG import java.io.PrintWriter;
 //DBG import freeboogie.astutil.PrettyPrinter;
 
-@SuppressWarnings("serial")
-class UnknownSpecialization extends Exception {}
-
 /**
  * Makes sure that all (eligible) IDs have explicit specializations
  * attached. The information used to achieve this consists of
@@ -32,6 +29,9 @@ class UnknownSpecialization extends Exception {}
  * @author rgrig
  */
 public class Specializer extends Transformer {
+
+  // used for control flow by {@code prepareTypeList()}
+  private boolean unknownSpec;
 
   // used to look up variable, functions, and procedures
   private SymbolTable st;
@@ -81,6 +81,7 @@ public class Specializer extends Transformer {
 
     for (Expr e : errors.keySet()) assert desired.containsKey(e);
 
+    unknownSpec = false;
     return (Declaration)ast.eval(this);
   }
 
@@ -120,11 +121,8 @@ public class Specializer extends Transformer {
     Declaration d = st.ids.def(atomId);
     if (!(d instanceof VariableDecl)) return atomId;
     VariableDecl vd = (VariableDecl)d;
-    try {
-      types = prepareTypeList(vd.getTypeArgs());
-    } catch (UnknownSpecialization e) {
-      return atomId;
-    }
+    types = prepareTypeList(vd.getTypeArgs());
+    if (unknownSpec) return atomId;
     return AtomId.mk(id, types, atomId.loc());
   }
 
@@ -132,9 +130,7 @@ public class Specializer extends Transformer {
   public AtomFun eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
     if (args != null) args = (Exprs)args.eval(this);
     Signature sig = st.funcs.def(atomFun).getSig();
-    try { 
-      types = prepareTypeList(sig.getTypeArgs());
-    } catch (UnknownSpecialization e) { /* used for control flow */ }
+    types = prepareTypeList(sig.getTypeArgs());
     return AtomFun.mk(function, types, args, atomFun.loc());
   }
 
@@ -143,22 +139,28 @@ public class Specializer extends Transformer {
     if (results != null) results = (Identifiers)results.eval(this);
     if (args != null) args = (Exprs)args.eval(this);
     Signature sig = st.procs.def(callCmd).getSig();
-    try {
-      types = prepareTypeList(sig.getTypeArgs());
-    } catch (UnknownSpecialization e) { /* used for control flow */ }
+    types = prepareTypeList(sig.getTypeArgs());
     return CallCmd.mk(procedure, types, results, args);
   }
 
   
   // === helpers ===
 
-  private TupleType prepareTypeList(Identifiers ids) 
-  throws UnknownSpecialization {
+  private TupleType prepareTypeList(Identifiers ids) {
+    unknownSpec = false;
+    return recPrepareTypeList(ids);
+  }
+
+  private TupleType recPrepareTypeList(Identifiers ids) {
     if (ids == null) return null;
     AtomId ai = ids.getId();
     Type t = specialisations.get(ai);
-    if (t == null) throw new UnknownSpecialization();
-    return TupleType.mk(t.clone(), prepareTypeList(ids.getTail()));
+    if (t == null) {
+      unknownSpec = true;
+      return null;
+    }
+    TupleType newTail = recPrepareTypeList(ids.getTail());
+    if (unknownSpec) return null;
+    return TupleType.mk(t.clone(), newTail);
   }
-
 }
