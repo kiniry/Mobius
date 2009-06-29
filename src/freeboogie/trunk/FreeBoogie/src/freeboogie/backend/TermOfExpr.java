@@ -205,7 +205,13 @@ public class TermOfExpr<T extends Term<T>> extends Evaluator<T> {
   }
 
   @Override
-  public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public T eval(
+    AtomQuant atomQuant, 
+    AtomQuant.QuantType quant, 
+    Declaration vars, 
+    Attribute attr, 
+    Expr e
+  ) {
     // TODO can this be done without HOL?
     Err.internal("Quantifiers are not supported in this position.");
     return null;

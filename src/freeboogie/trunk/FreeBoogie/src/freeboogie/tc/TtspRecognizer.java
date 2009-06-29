@@ -8,14 +8,7 @@ import com.google.common.collect.Sets;
 import genericutils.Closure;
 import genericutils.SimpleGraph;
 
-import freeboogie.ast.Block;
-import freeboogie.ast.Body;
-import freeboogie.ast.Declaration;
-import freeboogie.ast.Evaluator;
-import freeboogie.ast.Implementation;
-import freeboogie.ast.Program;
-import freeboogie.ast.Signature;
-import freeboogie.ast.Transformer;
+import freeboogie.ast.*;
 
 /**
  * A recognizer for TTSP multidigraphs. See "The recognition
@@ -108,8 +101,13 @@ private static void print(HashMap<Integer,HashSet<Integer>> h) {
   public static void check(final Program program, final TcInterface tc) {
     program.ast.eval(new Transformer() {
       @Override
-      public void see(Implementation impl, Signature sig, 
-                          Body body, Declaration tail) {
+      public void see(
+        Implementation impl,
+        Attribute attr,
+        Signature sig, 
+        Body body,
+        Declaration tail
+      ) {
         System.out.print(this + " " + impl.loc() + ": Implementation " + 
           sig.getName() + " SPG check...");
         SimpleGraph<Block> currentFG = tc.getFlowGraph(impl);

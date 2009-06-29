@@ -116,10 +116,10 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     assert new TreeChecker().isTree(ast);
 
     tvLevel = 0; // DBG
-    boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
-    intType = PrimitiveType.mk(PrimitiveType.Ptype.INT);
-    refType = PrimitiveType.mk(PrimitiveType.Ptype.REF);
-    errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR);
+    boolType = PrimitiveType.mk(PrimitiveType.Ptype.BOOL, -1);
+    intType = PrimitiveType.mk(PrimitiveType.Ptype.INT, -1);
+    refType = PrimitiveType.mk(PrimitiveType.Ptype.REF, -1);
+    errType = PrimitiveType.mk(PrimitiveType.Ptype.ERROR, -1);
     
     typeOf = new HashMap<Expr, Type>();
     typeVar = new StackedHashMap<AtomId, Type>();
@@ -220,7 +220,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   private Type subst(Type t, String a, String b) {
     if (t instanceof UserType) {
       UserType tt = (UserType)t;
-      if (tt.getName().equals(a)) return UserType.mk(b, tt.loc());
+      if (tt.getName().equals(a)) return UserType.mk(b, null, tt.loc());
       return t;
     } else if (t instanceof MapType) {
       MapType tt = (MapType)t;
@@ -531,7 +531,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     if (d instanceof VariableDecl) {
       VariableDecl vd = (VariableDecl)d;
       typeVarEnter(atomId);
-      mapExplicitGenerics(vd.getTypeVars(), types);
+      mapExplicitGenerics(vd.getTypeArgs(), types);
       t = checkRealType(vd.getType(), atomId);
       typeVarExit(atomId);
     } else if (d instanceof ConstDecl) {
@@ -572,7 +572,13 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public PrimitiveType eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public PrimitiveType eval(
+    AtomQuant atomQuant,
+    AtomQuant.QuantType quant,
+    Declaration vars,
+    Attribute attr,
+    Expr e
+  ) {
     Type t = e.eval(this);
     check(t, boolType, e);
     typeOf.put(atomQuant, boolType);
@@ -586,7 +592,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     Declaration fargs = sig.getArgs();
     
     typeVarEnter(atomFun);
-    mapExplicitGenerics(sig.getTypeVars(), types);
+    mapExplicitGenerics(sig.getTypeArgs(), types);
     Type at = strip(args == null? null : (TupleType)args.eval(this));
     Type fat = strip(tupleTypeOfDecl(fargs));
    
@@ -741,7 +747,14 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
+  public Type eval(
+    Axiom axiom,
+    Attribute attr, 
+    String name,
+    Identifiers typeVars,
+    Expr expr,
+    Declaration tail
+  ) {
     enclosingTypeVar.push();
     collectEnclosingTypeVars(typeVars);
     Type t = expr.eval(this);
@@ -753,21 +766,39 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   // === keep track of formal generics (see also eval(Axiom...) and eval(AssertAssumeCmd...)) ===
   @Override
-  public Type eval(Function function, Signature sig, Declaration tail) {
+  public Type eval(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     if (tail != null) tail.eval(this);
     return null;
   }
 
   @Override
-  public Type eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public Type eval(
+    VariableDecl variableDecl,
+    Attribute attr, 
+    String name,
+    Type type,
+    Identifiers typeVars,
+    Declaration tail
+  ) {
     if (tail != null) tail.eval(this);
     return null;
   }
 
   @Override
-  public Type eval(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+  public Type eval(
+    Procedure procedure,
+    Attribute attr, 
+    Signature sig,
+    Specification spec,
+    Declaration tail
+  ) {
     enclosingTypeVar.push();
-    collectEnclosingTypeVars(sig.getTypeVars());
+    collectEnclosingTypeVars(sig.getTypeArgs());
     if (spec != null) spec.eval(this);
     enclosingTypeVar.pop();
     if (tail != null) tail.eval(this);
@@ -775,9 +806,15 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   }
 
   @Override
-  public Type eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public Type eval(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     enclosingTypeVar.push();
-    collectEnclosingTypeVars(sig.getTypeVars());
+    collectEnclosingTypeVars(sig.getTypeArgs());
     body.eval(this);
     enclosingTypeVar.pop();
     if (tail != null) tail.eval(this);

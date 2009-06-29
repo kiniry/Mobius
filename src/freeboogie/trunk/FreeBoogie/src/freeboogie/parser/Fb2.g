@@ -1,4 +1,4 @@
-grammar Fb;
+grammar Fb2;
 
 @header {
   package freeboogie.parser; 

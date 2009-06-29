@@ -111,7 +111,7 @@ public class ForgivingStb extends Transformer implements StbInterface {
 
   // === identify problematic places ===
   @Override
-  public void see(UserType userType, String name) {
+  public void see(UserType userType, String name, TupleType typeArgs) {
     if (!undeclIds.contains(userType)) return;
     assert name != null;
     if (!toIntroduce.isEmpty()) {
@@ -122,62 +122,82 @@ public class ForgivingStb extends Transformer implements StbInterface {
   
   // === do corrections, if needed ===
   @Override
-  public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public VariableDecl eval(
+    VariableDecl variableDecl,
+    Attribute attr,
+    String name,
+    Type type,
+    Identifiers typeArgs,
+    Declaration tail
+  ) {
     toIntroduce.addFirst(new HashSet<String>());
     type = (Type)type.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
-      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      typeArgs = Identifiers.mk(AtomId.mk(ti, null), typeArgs);
       log.fine("Introducing " + ti + " as a generic on var " + name);
     }
     if (tail != null) tail = (Declaration)tail.eval(this);
-    return VariableDecl.mk(name, type, typeVars, tail, variableDecl.loc());
+    return VariableDecl.mk(null, name, type, typeArgs, tail, variableDecl.loc());
   }
 
   @Override
-  public Axiom eval(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
+  public Axiom eval(
+    Axiom axiom,
+    Attribute attr,
+    String name,
+    Identifiers typeArgs,
+    Expr expr,
+    Declaration tail
+  ) {
     toIntroduce.addFirst(new HashSet<String>());
     expr = (Expr)expr.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
-      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      typeArgs = Identifiers.mk(AtomId.mk(ti, null), typeArgs);
       log.fine("Introducing " + ti + " as a generic on axiom at " + axiom.loc());
     }
     if (tail != null) tail = (Declaration)tail.eval(this);
-    return Axiom.mk(name, typeVars, expr, tail, axiom.loc());
+    return Axiom.mk(null, name, typeArgs, expr, tail, axiom.loc());
   }
 
   @Override
-  public Signature eval(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
+  public Signature eval(
+    Signature signature,
+    String name,
+    Identifiers typeArgs,
+    Declaration args,
+    Declaration results
+  ) {
     toIntroduce.addFirst(new HashSet<String>());
     if (args != null) args = (Declaration)args.eval(this);
     if (results != null) results = (Declaration)results.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
-      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      typeArgs = Identifiers.mk(AtomId.mk(ti, null), typeArgs);
       log.fine("Introducing " + ti + " as a generic on sig " + name);
     }
-    return Signature.mk(name, args, results, typeVars, signature.loc());
+    return Signature.mk(name, typeArgs, args, results, signature.loc());
   }
 
   @Override
-  public Specification eval(Specification specification, Identifiers typeVars, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
+  public Specification eval(Specification specification, Identifiers typeArgs, Specification.SpecType type, Expr expr, boolean free, Specification tail) {
     toIntroduce.addFirst(new HashSet<String>());
     expr = (Expr)expr.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
-      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      typeArgs = Identifiers.mk(AtomId.mk(ti, null), typeArgs);
       log.fine("Introducing " + ti + " as a generic to spec at " + specification.loc());
     }
     if (tail != null) tail = (Specification)tail.eval(this);
-    return Specification.mk(typeVars, type, expr, free, tail, specification.loc());
+    return Specification.mk(typeArgs, type, expr, free, tail, specification.loc());
   }
 
   @Override
-  public AssertAssumeCmd eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeVars, Expr expr) {
+  public AssertAssumeCmd eval(AssertAssumeCmd assertAssumeCmd, AssertAssumeCmd.CmdType type, Identifiers typeArgs, Expr expr) {
     toIntroduce.addFirst(new HashSet<String>());
     expr = (Expr)expr.eval(this);
     for (String ti : toIntroduce.removeFirst()) {
-      typeVars = Identifiers.mk(AtomId.mk(ti, null), typeVars);
+      typeArgs = Identifiers.mk(AtomId.mk(ti, null), typeArgs);
       log.fine("Introducing " + ti + " as a generic on assert/assume at " + assertAssumeCmd.loc());
     }
-    return AssertAssumeCmd.mk(type, typeVars, expr, assertAssumeCmd.loc());
+    return AssertAssumeCmd.mk(type, typeArgs, expr, assertAssumeCmd.loc());
   }
 
 }

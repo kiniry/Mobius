@@ -36,7 +36,13 @@ public class FlowGraphDumper extends Transformer {
   }
 
   @Override
-  public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public void see(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     SimpleGraph<Block> fg = tc.getFlowGraph(implementation);
     System.out.println("digraph \"" + implementation.getSig().getName() + "@" + implementation.loc() + "\" {");
     if (body.getBlocks() != null)

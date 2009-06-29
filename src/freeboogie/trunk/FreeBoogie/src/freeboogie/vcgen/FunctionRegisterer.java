@@ -35,7 +35,12 @@ public class FunctionRegisterer extends Transformer {
   }
 
   @Override
-  public void see(Function function, Signature sig, Declaration tail) {
+  public void see(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     argSorts.clear();
     getArgSorts(sig.getArgs());
     Sort[] asa = argSorts.toArray(sortArray);

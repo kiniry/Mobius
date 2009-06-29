@@ -79,6 +79,9 @@ ARGS::
   ProverCommandLine :{"--prover-command-line", "-pcl"} :{string}
     :"Configure the command line used to start a prover. The default
       depends on the selected prover."
+  BoogieVersion :{"--boogie-version", "-bv"} :{enum}
+    :[choices="one(ONE),two(TWO)", default="two"]
+    :"Configure the version of the Boogie language."
   ReportOn :{"--report-on", "--out-categories", "-oc"} :{enum-list}
     :[choices="foo"]
     :"Configure what type of information should go to stdout.
@@ -124,7 +127,12 @@ WHERE::
     DesugarMaps |
     UnshareVc;
   ActionOption: Verify | SeriesParallelCheck;
-  ConfigOption: BackwardCompatible | ProverCommandLine | Prover | VcMethod;
+  ConfigOption:
+    BackwardCompatible |
+    BoogieVersion |
+    ProverCommandLine |
+    Prover | 
+    VcMethod;
 
 OVERRIDES::
   {$(Prover).toLowerCase().equals("simplify") && !$(ProverCommandLine?)} -> 

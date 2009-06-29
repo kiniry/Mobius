@@ -121,7 +121,7 @@ public class Specializer extends Transformer {
     if (!(d instanceof VariableDecl)) return atomId;
     VariableDecl vd = (VariableDecl)d;
     try {
-      types = prepareTypeList(vd.getTypeVars());
+      types = prepareTypeList(vd.getTypeArgs());
     } catch (UnknownSpecialization e) {
       return atomId;
     }
@@ -133,7 +133,7 @@ public class Specializer extends Transformer {
     if (args != null) args = (Exprs)args.eval(this);
     Signature sig = st.funcs.def(atomFun).getSig();
     try { 
-      types = prepareTypeList(sig.getTypeVars());
+      types = prepareTypeList(sig.getTypeArgs());
     } catch (UnknownSpecialization e) { /* used for control flow */ }
     return AtomFun.mk(function, types, args, atomFun.loc());
   }
@@ -144,7 +144,7 @@ public class Specializer extends Transformer {
     if (args != null) args = (Exprs)args.eval(this);
     Signature sig = st.procs.def(callCmd).getSig();
     try {
-      types = prepareTypeList(sig.getTypeVars());
+      types = prepareTypeList(sig.getTypeArgs());
     } catch (UnknownSpecialization e) { /* used for control flow */ }
     return CallCmd.mk(procedure, types, results, args);
   }

@@ -1,34 +1,14 @@
 package freeboogie.vcgen;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.Map.Entry;
 
 import genericutils.Err;
 import genericutils.Id;
 import genericutils.SimpleGraph;
 
-import freeboogie.ast.AssertAssumeCmd;
-import freeboogie.ast.AssignmentCmd;
-import freeboogie.ast.Ast;
-import freeboogie.ast.AtomId;
-import freeboogie.ast.AtomOld;
-import freeboogie.ast.Block;
-import freeboogie.ast.Body;
-import freeboogie.ast.Command;
-import freeboogie.ast.Declaration;
-import freeboogie.ast.Expr;
-import freeboogie.ast.Identifiers;
-import freeboogie.ast.Implementation;
-import freeboogie.ast.Program;
-import freeboogie.ast.Signature;
-import freeboogie.ast.TupleType;
-import freeboogie.ast.Type;
-import freeboogie.ast.VariableDecl;
+import freeboogie.ast.*;
 import freeboogie.astutil.PrettyPrinter;
 import freeboogie.tc.TtspRecognizer;
 import freeboogie.tc.TcInterface;
@@ -85,24 +65,41 @@ public class Passificator extends ABasicPassifier {
   }
   
   @Override
-  public Ast eval(VariableDecl decl, String name, 
-                  Type type, Identifiers typeVars, Declaration tail) {
+  public Ast eval(
+    VariableDecl decl,
+    Attribute attr,
+    String name, 
+    Type type,
+    Identifiers typeVars,
+    Declaration tail
+  ) {
     fEnv.addGlobal(decl);
     Declaration newTail = tail != null?(Declaration)tail.eval(this) : null; 
 
-    return VariableDecl.mk(name, type, typeVars, newTail);
+    return VariableDecl.mk(null, name, type, typeVars, newTail);
   }
   
   @Override
-  public Ast eval(Signature signature, String name, 
-                  Declaration args, Declaration results, Identifiers typeVars)  {
+  public Ast eval(
+    Signature signature,
+    String name, 
+    Identifiers typeVars,
+    Declaration args,
+    Declaration results
+  )  {
     return signature;
   }
   /**
    * Handles one implementation.
    */
   @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body oldBody, Declaration tail) {
+  public Implementation eval(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body oldBody,
+    Declaration tail
+  ) {
     SimpleGraph<Block> currentFG = getTypeChecker().getFlowGraph(implementation);
     TtspRecognizer<Block> recog = new TtspRecognizer<Block>(currentFG, oldBody.getBlocks());
     Body body = oldBody;
@@ -123,9 +120,9 @@ public class Passificator extends ABasicPassifier {
         sig);
       sig = Signature.mk(
         sig.getName(), 
+        sig.getTypeArgs(), 
         sig.getArgs(),
         bp.getResult(),
-        sig.getTypeVars(), 
         sig.loc());
       body = bp.getBody();
       fEnv.updateGlobalWith(bp.getEnvironment());
@@ -135,7 +132,7 @@ public class Passificator extends ABasicPassifier {
     if (tail != null) {
       tail = (Declaration)tail.eval(this);
     }
-    return Implementation.mk(sig, body, tail);
+    return Implementation.mk(attr, sig, body, tail);
   }
 
   

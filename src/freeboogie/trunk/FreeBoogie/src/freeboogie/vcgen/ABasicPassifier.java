@@ -67,9 +67,10 @@ public abstract class ABasicPassifier extends Transformer {
       name += "$$" + idx;
     }
     return VariableDecl.mk(
+      null,
       name,
       TypeUtils.stripDep(old.getType()).clone(),
-      old.getTypeVars() == null? null :old.getTypeVars().clone(),
+      old.getTypeArgs() == null? null : old.getTypeArgs().clone(),
       next);
   }
 

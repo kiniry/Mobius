@@ -22,20 +22,35 @@ public class AnyFinder extends AssociativeEvaluator<Boolean> {
   }
 
   @Override
-  public Boolean eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public Boolean eval(
+    AtomQuant atomQuant, 
+    AtomQuant.QuantType quant, 
+    Declaration vars, 
+    Attribute attr, 
+    Expr e
+  ) {
     if (vars != null) vars.eval(this);
     e.eval(this);
     return memo(atomQuant, false);
   }
 
   @Override
-  public Boolean eval(Function function, Signature sig, Declaration tail) {
+  public Boolean eval(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     if (tail != null) tail.eval(this);
     return memo(function, sig.eval(this));
   }
 
   @Override
-  public Boolean eval(PrimitiveType primitiveType, PrimitiveType.Ptype ptype) {
+  public Boolean eval(
+    PrimitiveType primitiveType,
+    PrimitiveType.Ptype ptype,
+    int bits
+  ) {
     return ptype == PrimitiveType.Ptype.ANY;
   }
 }

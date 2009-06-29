@@ -101,7 +101,7 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   // === visit methods ===
   
   @Override
-  public void see(UserType userType, String name) {
+  public void see(UserType userType, String name, TupleType typeArgs) {
     AtomId tv = typeVarDecl.get(name);
     if (tv != null)
       symbolTable.typeVars.put(userType, tv);
@@ -132,7 +132,14 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
 
   // === collect info from local scopes ===
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public void see(
+    VariableDecl variableDecl,
+    Attribute attr,
+    String name,
+    Type type,
+    Identifiers typeVars,
+    Declaration tail
+  ) {
     symbolTable.ids.seenDef(variableDecl);
     typeVarDecl.push();
     collectTypeVars(typeVarDecl.peek(), typeVars);
@@ -151,15 +158,28 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
+  public void see(
+    ConstDecl constDecl,
+    Attribute attr,
+    String id,
+    Type type,
+    boolean uniq,
+    Declaration tail
+  ) {
     symbolTable.ids.seenDef(constDecl);
     type.eval(this);
     if (tail != null) tail.eval(this);
   }
   
   @Override
-  public void see(Signature signature, String name, Declaration args, Declaration results, Identifiers typeVars) {
-    collectTypeVars(typeVarDecl.peek(), typeVars);
+  public void see(
+    Signature signature,
+    String name,
+    Identifiers typeArgs,
+    Declaration args,
+    Declaration results
+  ) {
+    collectTypeVars(typeVarDecl.peek(), typeArgs);
     if (args != null) args.eval(this);
     if (results != null) results.eval(this);
   }
@@ -167,7 +187,13 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   
   // === keep track of local scopes ===
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+  public void see(
+    Procedure procedure,
+    Attribute attr,
+    Signature sig,
+    Specification spec,
+    Declaration tail
+  ) {
     symbolTable.procs.seenDef(procedure);
     localVarDecl.push();
     typeVarDecl.push();
@@ -179,7 +205,13 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
 
   @Override
-  public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public void see(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     localVarDecl.push();
     typeVarDecl.push();
     sig.eval(this);
@@ -190,7 +222,12 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
 
   @Override
-  public void see(Function function, Signature sig, Declaration tail) {
+  public void see(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     symbolTable.funcs.seenDef(function);
     typeVarDecl.push();
     sig.eval(this);
@@ -199,18 +236,31 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
   }
   
   @Override
-  public void see(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public void see(
+    AtomQuant atomQuant,
+    AtomQuant.QuantType quant,
+    Declaration vars,
+    Attribute attr,
+    Expr e
+  ) {
     localVarDecl.push();
     vars.eval(this);
-    if (trig != null) trig.eval(this);
+    if (attr != null) attr.eval(this);
     e.eval(this);
     localVarDecl.pop();
   }
   
   @Override
-  public void see(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(
+    Axiom axiom,
+    Attribute attr, 
+    String name,
+    Identifiers typeArgs,
+    Expr expr,
+    Declaration tail
+  ) {
     typeVarDecl.push();
-    collectTypeVars(typeVarDecl.peek(), typeVars);
+    collectTypeVars(typeVarDecl.peek(), typeArgs);
     expr.eval(this);
     typeVarDecl.pop();
     if (tail != null) tail.eval(this);

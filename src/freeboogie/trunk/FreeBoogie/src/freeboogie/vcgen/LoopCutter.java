@@ -38,7 +38,13 @@ public class LoopCutter extends Transformer {
   // === transformer methods ===
 
   @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public Implementation eval(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     currentFG = tc.getFlowGraph(implementation);
     seen.clear(); done.clear(); toRemove.clear();
@@ -46,7 +52,7 @@ public class LoopCutter extends Transformer {
     hasStuck = false;
     Body newBody = (Body)body.eval(this);
     if (newBody != body || newTail != tail)
-      implementation = Implementation.mk(sig, newBody, newTail);
+      implementation = Implementation.mk(attr, sig, newBody, newTail);
     return implementation;
   }
 

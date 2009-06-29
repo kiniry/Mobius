@@ -51,9 +51,9 @@ public class Inferrer extends Transformer {
   private final Random rand = new Random(123);
 
   private static final PrimitiveType intType = 
-    PrimitiveType.mk(PrimitiveType.Ptype.INT);
+    PrimitiveType.mk(PrimitiveType.Ptype.INT, -1);
   private static final PrimitiveType boolType = 
-    PrimitiveType.mk(PrimitiveType.Ptype.BOOL);
+    PrimitiveType.mk(PrimitiveType.Ptype.BOOL, -1);
 
   // === public interface ===
   
@@ -153,7 +153,7 @@ public class Inferrer extends Transformer {
   }
  
   private UserType freshTv() {
-    return UserType.mk(Id.get("tv"));
+    return UserType.mk(Id.get("tv"), null);
   }
 
   private void mkEqual(Type a, Type b) {

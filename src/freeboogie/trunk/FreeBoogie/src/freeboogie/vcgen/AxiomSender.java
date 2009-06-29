@@ -35,7 +35,14 @@ public class AxiomSender<T extends Term<T>> extends Transformer {
   }
 
   @Override
-  public void see(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(
+    Axiom axiom,
+    Attribute attr,
+    String name,
+    Identifiers typeArgs,
+    Expr expr,
+    Declaration tail
+  ) {
     T a = term.of(expr);
     axioms.add(a);
     a.collectAxioms(axioms);
@@ -43,7 +50,14 @@ public class AxiomSender<T extends Term<T>> extends Transformer {
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
+  public void see(
+    ConstDecl constDecl, 
+    Attribute attr, 
+    String id,
+    Type type,
+    boolean uniq,
+    Declaration tail
+  ) {
     if (uniq) uniqConst.add(id);
     if (tail != null) tail.eval(this);
   }

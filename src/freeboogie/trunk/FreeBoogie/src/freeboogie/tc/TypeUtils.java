@@ -67,9 +67,10 @@ public final class TypeUtils {
     if (!(a instanceof VariableDecl)) return a;
     VariableDecl va = (VariableDecl)a;
     return VariableDecl.mk(
+        null,
         va.getName(), 
         stripDep(va.getType()),
-        va.getTypeVars(),
+        va.getTypeArgs(),
         stripDep(va.getTail()), 
         va.loc());
   }
@@ -83,9 +84,9 @@ public final class TypeUtils {
   public static Signature stripDep(Signature s) {
     return Signature.mk(
         s.getName(),
+        s.getTypeArgs(),
         stripDep(s.getArgs()), 
         stripDep(s.getResults()),
-        s.getTypeVars(),
         s.loc());
   }
   

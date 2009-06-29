@@ -67,7 +67,7 @@ public class Boogie2Printer extends PrettyPrinter {
     AtomQuant atomQuant, 
     AtomQuant.QuantType quant, 
     Declaration vars, 
-    Trigger trig, 
+    Attribute attr, 
     Expr e
   ) {
     ++skipVar;
@@ -81,7 +81,7 @@ public class Boogie2Printer extends PrettyPrinter {
     say(" ");
     vars.eval(this);
     say(" :: ");
-    if (trig != null) trig.eval(this);
+    if (attr != null) attr.eval(this);
     e.eval(this);
     say(")");
     --skipVar;
@@ -95,13 +95,13 @@ public class Boogie2Printer extends PrettyPrinter {
   @Override
   public void see(
     Axiom axiom, 
+    Attribute attr,
     String name,
     Identifiers typeVars, 
     Expr expr, 
     Declaration tail
   ) {
-    say("axiom");
-    say(" ");
+    say("axiom ");
     expr.eval(this);
     semi();
     if (tail != null) tail.eval(this);
@@ -121,9 +121,9 @@ public class Boogie2Printer extends PrettyPrinter {
   public void see(
     Signature signature, 
     String name, 
+    Identifiers typeArgs,
     Declaration args, 
-    Declaration results, 
-    Identifiers typeVars
+    Declaration results
   ) {
     ++skipVar;
     say(name);
@@ -160,17 +160,18 @@ public class Boogie2Printer extends PrettyPrinter {
   @Override
   public void see(
     VariableDecl variableDecl, 
+    Attribute attr,
     String name, 
     Type type, 
-    Identifiers typeVars, 
+    Identifiers typeArgs, 
     Declaration tail
   ) {
     if (skipVar==0) say("var ");
     say(name);
     say(" : ");
-    if (typeVars != null) {
+    if (typeArgs != null) {
       say("<");
-      typeVars.eval(this);
+      typeArgs.eval(this);
       say(">");
     }
     type.eval(this);

@@ -7,7 +7,9 @@ import java.util.HashMap;
 
 import com.google.common.collect.Maps;
 
+import freeboogie.Main;
 import freeboogie.ast.*;
+import freeboogie.cli.FbCliOptionsInterface;
 import genericutils.Err;
 
 /**
@@ -239,7 +241,7 @@ public class PrettyPrinter extends Transformer {
     AtomQuant atomQuant, 
     AtomQuant.QuantType quant, 
     Declaration vars, 
-    Trigger trig, 
+    Attribute attr, 
     Expr e
   ) {
     ++skipVar;
@@ -247,7 +249,7 @@ public class PrettyPrinter extends Transformer {
     say(quantRep.get(quant));
     vars.eval(this);
     say(" :: ");
-    if (trig != null) trig.eval(this);
+    if (attr != null) attr.eval(this);
     e.eval(this);
     say(")");
     --skipVar;
@@ -256,21 +258,21 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(
     Axiom axiom, 
+    Attribute attr,
     String name,
-    Identifiers typeVars, 
+    Identifiers typeArgs, 
     Expr expr, 
     Declaration tail
   ) {
     say("axiom");
     say (" "); say(name); say(": ");
-    if (typeVars != null) {
+    if (typeArgs != null) {
       say("<");
-      typeVars.eval(this);
+      typeArgs.eval(this);
       say(">");
     }
     say(" ");
-    expr.eval(this);
-    semi();
+    expr.eval(this); semi();
     if (tail != null) tail.eval(this);
   }
 
@@ -349,12 +351,17 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(
     ConstDecl constDecl, 
+    Attribute attr,
     String id, 
     Type type, 
     boolean uniq, 
     Declaration tail
   ) {
     say("const ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
     if (uniq) say("unique ");
     say(id);
     say(" : ");
@@ -380,8 +387,17 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(Function function, Signature sig, Declaration tail) {
+  public void see(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     say("function ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
     sig.eval(this);
     semi();
     if (tail != null) tail.eval(this);
@@ -414,11 +430,16 @@ public class PrettyPrinter extends Transformer {
   @Override
   public void see(
     Implementation implementation, 
+    Attribute attr,
     Signature sig, 
     Body body, 
     Declaration tail
   ) {
     say("implementation ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
     sig.eval(this);
     body.eval(this);
     nl();
@@ -426,18 +447,27 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(PrimitiveType primitiveType, PrimitiveType.Ptype ptype) {
+  public void see(
+    PrimitiveType primitiveType,
+    PrimitiveType.Ptype ptype,
+    int bits
+  ) {
     say(typeRep.get(ptype));
   }
 
   @Override
   public void see(
     Procedure procedure, 
+    Attribute attr,
     Signature sig, 
     Specification spec, 
     Declaration tail
   ) {
     say("procedure ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
     sig.eval(this);
     say(";");
     if (spec != null) {
@@ -453,15 +483,15 @@ public class PrettyPrinter extends Transformer {
   public void see(
     Signature signature, 
     String name, 
+    Identifiers typeArgs,
     Declaration args, 
-    Declaration results, 
-    Identifiers typeVars
+    Declaration results 
   ) {
     ++skipVar;
     say(name);
-    if (typeVars != null) {
+    if (typeArgs != null) {
       say("<");
-      typeVars.eval(this);
+      typeArgs.eval(this);
       say(">");
     }
     say("(");
@@ -507,9 +537,30 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(TypeDecl typeDecl, String name, Declaration tail) {
+  public void see(
+    TypeDecl typeDecl,
+    Attribute attr,
+    String name,
+    Identifiers typeArgs,
+    boolean finite,
+    Type type,
+    Declaration tail
+  ) {
     say("type ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
+    if (finite && 
+      Main.opt.getBoogieVersion() == FbCliOptionsInterface.BoogieVersion.TWO) {
+      say("finite ");
+    }
     say(name);
+    // TODO: print space-separated typeArgs
+    if (type != null) {
+      say(" = ");
+      type.eval(this);
+    }
     semi();
     tail.eval(this);
   }
@@ -521,19 +572,25 @@ public class PrettyPrinter extends Transformer {
   }
 
   @Override
-  public void see(UserType userType, String name) {
+  public void see(UserType userType, String name, TupleType typeArgs) {
     say(name);
+    // TODO: print space-separated typeArgs
   }
 
   @Override
   public void see(
     VariableDecl variableDecl, 
+    Attribute attr,
     String name, 
     Type type, 
     Identifiers typeVars, 
     Declaration tail
   ) {
     if (skipVar==0) say("var ");
+    if (attr != null) {
+      attr.eval(this);
+      say(" ");
+    }
     say(name);
     if (typeVars != null) {
       say("<");
@@ -549,16 +606,12 @@ public class PrettyPrinter extends Transformer {
   }
   
   @Override
-  public void see(Trigger trigger, String label, Exprs exprs, Trigger tail) {
+  public void see(Attribute trigger, String type, Exprs exprs, Attribute tail) {
     say("{");
-    if (label != null) {
-      say(":");
-      say(label);
-      say(" ");
-    }
+    say(":"); say(type);
+    say(" ");
     if (exprs != null) exprs.eval(this);
     say("} ");
     if (tail != null) tail.eval(this);
   }
-
 }

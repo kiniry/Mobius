@@ -87,9 +87,10 @@ public class Passivator extends Transformer {
     ast = (Declaration)ast.eval(this);
     for (Map.Entry<VariableDecl, Integer> e : newVarsCnt.entrySet()) {
       for (int i = 1; i <= e.getValue(); ++i) {
-        Identifiers ntv = e.getKey().getTypeVars();
+        Identifiers ntv = e.getKey().getTypeArgs();
         if (ntv != null) ntv = ntv.clone();
         ast = VariableDecl.mk(
+          null,
           e.getKey().getName()+"$$"+i, 
           TypeUtils.stripDep(e.getKey().getType()).clone(), 
           ntv, 
@@ -112,14 +113,19 @@ public class Passivator extends Transformer {
   // === (block) transformers ===
 
   @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
-    
+  public Implementation eval(
+    Implementation implementation,
+    Attribute attr, 
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     currentFG = tc.getFlowGraph(implementation);
     if (currentFG.hasCycle()) {
       Err.warning("" + implementation.loc() + ": Implementation " + 
         sig.getName() + " has cycles. I'm not passivating it.");
       if (tail != null) tail = (Declaration)tail.eval(this);
-      return Implementation.mk(sig, body, tail);
+      return Implementation.mk(attr, sig, body, tail);
     }
     
     // collect all variables that are assigned to
@@ -157,15 +163,15 @@ public class Passivator extends Transformer {
 
     sig = Signature.mk(
       sig.getName(), 
+      sig.getTypeArgs(),
       sig.getArgs(),
       newResults((VariableDecl)sig.getResults()),
-      sig.getTypeVars(),
       sig.loc());
     body = Body.mk(newLocals, body.getBlocks());
 
     // process the rest of the program
     if (tail != null) tail = (Declaration)tail.eval(this);
-    return Implementation.mk(sig, body, tail);
+    return Implementation.mk(attr, sig, body, tail);
   }
 
 
@@ -288,7 +294,14 @@ public class Passivator extends Transformer {
   }
 
   @Override
-  public VariableDecl eval(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public VariableDecl eval(
+    VariableDecl variableDecl,
+    Attribute attr,
+    String name,
+    Type type,
+    Identifiers typeArgs,
+    Declaration tail
+  ) {
     int last = newVarsCnt.containsKey(variableDecl) ? newVarsCnt.get(variableDecl) : 0;
     if (false) { // TODO log-categ
       toReport.put(variableDecl, last);
@@ -297,17 +310,19 @@ public class Passivator extends Transformer {
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     if (newTail != tail) {
       variableDecl = VariableDecl.mk(
+        null,
         name, 
         TypeUtils.stripDep(type).clone(), 
-        typeVars == null? null : typeVars.clone(),
+        typeArgs == null? null : typeArgs.clone(),
         newTail, 
         variableDecl.loc());
     }
     for (int i = 1; i <= last; ++i) {
       variableDecl = VariableDecl.mk(
+        null,
         name+"$$"+i, 
         TypeUtils.stripDep(type).clone(), 
-        typeVars == null? null : typeVars.clone(), 
+        typeArgs == null? null : typeArgs.clone(), 
         variableDecl);
     }
     return variableDecl;
@@ -332,21 +347,24 @@ public class Passivator extends Transformer {
     if (last != null) {
       for (int i = 1; i < last; ++i) {
         newLocals = VariableDecl.mk(
+          null,
           old.getName() + "$$" + i,
           TypeUtils.stripDep(old.getType()).clone(),
-          old.getTypeVars() == null? null :old.getTypeVars().clone(),
+          old.getTypeArgs() == null? null :old.getTypeArgs().clone(),
           newLocals);
       }
       newLocals = VariableDecl.mk(
+        null,
         old.getName(),
         TypeUtils.stripDep(old.getType()).clone(),
-        old.getTypeVars() == null? null : old.getTypeVars().clone(),
+        old.getTypeArgs() == null? null : old.getTypeArgs().clone(),
         newLocals);
     }
     return VariableDecl.mk(
+      null,
       old.getName() + (last != null && last > 0? "$$" + last : ""),
       TypeUtils.stripDep(old.getType()).clone(),
-      old.getTypeVars() == null? null : old.getTypeVars().clone(),
+      old.getTypeArgs() == null? null : old.getTypeArgs().clone(),
       newResults((VariableDecl)old.getTail()));
   }
 }

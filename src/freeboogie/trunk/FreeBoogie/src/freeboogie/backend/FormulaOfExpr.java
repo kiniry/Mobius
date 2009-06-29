@@ -82,7 +82,13 @@ public class FormulaOfExpr<T extends Term<T>> extends Evaluator<T> {
   }
 
   @Override
-  public T eval(AtomQuant atomQuant, AtomQuant.QuantType quant, Declaration vars, Trigger trig, Expr e) {
+  public T eval(
+    AtomQuant atomQuant,
+    AtomQuant.QuantType quant,
+    Declaration vars,
+    Attribute attr,
+    Expr e
+  ) {
     T result = e.eval(this);
     while (vars != null) {
       VariableDecl vd = (VariableDecl) vars;      

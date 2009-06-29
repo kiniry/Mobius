@@ -83,7 +83,13 @@ public class SpecDesugarer extends Transformer {
   }
 
   @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public Implementation eval(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body, 
+    Declaration tail
+  ) {
     // prepare substitutions to be applied to preconditions and postconditions
     toSubstitute.clear();
     VariableDecl pd; // parameter declaration
@@ -115,7 +121,7 @@ public class SpecDesugarer extends Transformer {
     Body newBody = (Body)body.eval(this);
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
     if (newBody != body || newTail != tail)
-      implementation = Implementation.mk(sig, newBody, newTail, implementation.loc());
+      implementation = Implementation.mk(attr, sig, newBody, newTail, implementation.loc());
     return implementation;
   }
 

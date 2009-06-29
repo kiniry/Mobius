@@ -115,9 +115,10 @@ public class HavocDesugarer extends Transformer {
         e = BinaryOp.mk(BinaryOp.Op.AND, e, (Expr)p.eval(this).clone(), p.loc());
       }
       newVars = VariableDecl.mk(
+        null,
         fresh.getId(),
         TypeUtils.stripDep(vd.getType()).clone(),
-        vd.getTypeVars() == null? null : vd.getTypeVars().clone(),
+        vd.getTypeArgs() == null? null : vd.getTypeArgs().clone(),
         newVars);
       ids = ids.getTail();
     }

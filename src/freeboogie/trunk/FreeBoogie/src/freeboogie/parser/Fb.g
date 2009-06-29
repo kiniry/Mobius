@@ -48,32 +48,34 @@ declarations returns [Declaration v]:
 
 type_decl_tail returns [Declaration v]:
     ID (
-    (';' t1=declarations { if(ok) $v=TypeDecl.mk($ID.text,$t1.v,tokLoc($ID));})
-  | (',' t2=type_decl_tail { if(ok) $v=TypeDecl.mk($ID.text,$t2.v,tokLoc($ID)); }))
+    (';' t1=declarations { if(ok) $v=TypeDecl.mk(null,$ID.text,null,true,null,$t1.v,tokLoc($ID));})
+  | (',' t2=type_decl_tail { if(ok) $v=TypeDecl.mk(null,$ID.text,null,true,null,$t2.v,tokLoc($ID)); }))
 ;
 
 const_decl_tail returns [Declaration v]:
     (u='unique')? ID ':' type (
     (';' t1=declarations    
-      { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$u!=null,$t1.v,tokLoc($ID)); })
+      { if(ok) $v=ConstDecl.mk(null,$ID.text,$type.v,$u!=null,$t1.v,tokLoc($ID)); })
   | (',' t2=const_decl_tail 
-      { if(ok) $v=ConstDecl.mk($ID.text,$type.v,$u!=null,$t2.v,tokLoc($ID)); }))
+      { if(ok) $v=ConstDecl.mk(null,$ID.text,$type.v,$u!=null,$t2.v,tokLoc($ID)); }))
 ;
 
 function_decl_tail returns [Declaration v]:
   s=signature ';' declarations
-    { if(ok) $v=Function.mk($s.v,$declarations.v,fileLoc($s.v)); }
+    { if(ok) $v=Function.mk(null,$s.v,$declarations.v,fileLoc($s.v)); }
 ;
 
 axiom_tail returns [Declaration v]:
   ('<' tv=id_list '>')? e=expr ';' declarations 
-    { if(ok) $v=Axiom.mk(Id.get("axiom"),$tv.v,$e.v,$declarations.v,fileLoc($e.v)); }
+    { if(ok) $v=Axiom.mk(null,Id.get("axiom"),$tv.v,$e.v,$declarations.v,fileLoc($e.v)); }
 ;
 
 global_decl_tail returns [Declaration v]:
     ID ('<' tv=id_list '>')? ':' type (
-    (';' t1=declarations     { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$tv.v,$t1.v,tokLoc($ID)); })
-  | (',' t2=global_decl_tail { if(ok) $v=VariableDecl.mk($ID.text,$type.v,$tv.v,$t2.v,tokLoc($ID)); }))
+    (';' t1=declarations     
+      { if(ok) $v=VariableDecl.mk(null,$ID.text,$type.v,$tv.v,$t1.v,tokLoc($ID)); })
+  | (',' t2=global_decl_tail 
+      { if(ok) $v=VariableDecl.mk(null,$ID.text,$type.v,$tv.v,$t2.v,tokLoc($ID)); }))
 ;
 
 procedure_decl_tail returns [Declaration v]:
@@ -81,20 +83,20 @@ procedure_decl_tail returns [Declaration v]:
     { if(ok) {
         Declaration proc_tail = $t.v;
         if ($body.v != null)
-          proc_tail = Implementation.mk(TypeUtils.stripDep($s.v).clone(),$body.v,proc_tail,fileLoc($s.v));
-        $v=Procedure.mk($s.v,$spec_list.v,proc_tail,fileLoc($s.v)); 
+          proc_tail = Implementation.mk(null,TypeUtils.stripDep($s.v).clone(),$body.v,proc_tail,fileLoc($s.v));
+        $v=Procedure.mk(null,$s.v,$spec_list.v,proc_tail,fileLoc($s.v)); 
     }}
 ;
 	
 implementation_decl_tail returns [Declaration v]:
   s=signature body t=declarations
-    { if(ok) $v = Implementation.mk($s.v,$body.v,$t.v,fileLoc($s.v)); }
+    { if(ok) $v = Implementation.mk(null,$s.v,$body.v,$t.v,fileLoc($s.v)); }
 ;
 
 signature returns [Signature v]:
   ID ('<' tv=id_list '>')? '(' (a=opt_id_type_list)? ')' 
   ('returns' '(' (b=opt_id_type_list)? ')')?
-    { if(ok) $v = Signature.mk($ID.text,$a.v,$b.v,$tv.v,tokLoc($ID)); }
+    { if(ok) $v = Signature.mk($ID.text,$tv.v,$a.v,$b.v,tokLoc($ID)); }
 ;
 
 spec_list returns [Specification v]:
@@ -287,7 +289,7 @@ atom returns [Atom v]:
               { if(ok) $v = AtomOld.mk($expr.v,tokLoc($t)); }
   | t='cast' '(' expr ',' type ')'
               { if(ok) $v = AtomCast.mk($expr.v, $type.v,tokLoc($t)); }
-  | t='(' a=quant_op b=id_type_list '::' c=triggers d=expr ')'
+  | t='(' a=quant_op b=id_type_list '::' c=attributes d=expr ')'
               { if(ok) $v = AtomQuant.mk($a.v,$b.v,$c.v,$d.v,tokLoc($t)); }
 ;
 
@@ -303,10 +305,10 @@ quant_op returns [AtomQuant.QuantType v]:
   | 'exists' { $v = AtomQuant.QuantType.EXISTS; }
 ;
 
-triggers returns [Trigger v]:
+attributes returns [Attribute v]:
     { $v=null; }
-  | a='{' (':' ID)? c=expr_list '}' d=triggers
-      { if(ok) $v=Trigger.mk($ID==null?null:$ID.text,$c.v,$d.v,tokLoc($a)); }
+  | a='{' (':' ID)? c=expr_list '}' d=attributes
+      { if(ok) $v=Attribute.mk($ID==null?"trigger":$ID.text,$c.v,$d.v,tokLoc($a)); }
 ;
 
 
@@ -332,18 +334,18 @@ simple_type_list returns [TupleType v]:
 
 opt_id_type_list returns [Declaration v]:
   (hi=ID ('<' tv=id_list '>')? ':')? ht=type (',' t=opt_id_type_list)? 
-    { if(ok) $v = VariableDecl.mk($hi==null?Id.get("unnamed"):$hi.text, $ht.v, $tv.v,$t.v,fileLoc($ht.v)); }
+    { if(ok) $v = VariableDecl.mk(null,$hi==null?Id.get("unnamed"):$hi.text, $ht.v, $tv.v,$t.v,fileLoc($ht.v)); }
 ;
 
 id_type_list returns [Declaration v]:
   hi=ID ('<' tv=id_list '>')? ':' ht=type (',' t=id_type_list)? 
-    { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
+    { if(ok) $v = VariableDecl.mk(null,$hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
 ;
 
 var_id_type_list returns [Declaration v]:
     ';' { $v = null; }
   | hi=ID ('<' tv=id_list '>')? ':' ht=type (','|';' 'var')? t=var_id_type_list
-      { if(ok) $v = VariableDecl.mk($hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
+      { if(ok) $v = VariableDecl.mk(null,$hi.text, $ht.v,$tv.v,$t.v,tokLoc($ID)); }
 ;
 
 command_list returns [ArrayList<Command> v]:
@@ -360,12 +362,12 @@ index_list returns [ArrayList<Exprs> v]:
 
 
 simple_type returns [Type v]:
-    t='bool' { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.BOOL,tokLoc($t)); }
-  | t='int'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.INT,tokLoc($t)); }
-  | t='ref'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.REF,tokLoc($t)); }
-  | t='name' { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.NAME,tokLoc($t)); }
-  | t='any'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.ANY,tokLoc($t)); }
-  | t=ID     { if(ok) $v = UserType.mk($ID.text,tokLoc($t)); }
+    t='bool' { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.BOOL,-1,tokLoc($t)); }
+  | t='int'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.INT,-1,tokLoc($t)); }
+  | t='ref'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.REF,-1,tokLoc($t)); }
+  | t='name' { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.NAME,-1,tokLoc($t)); }
+  | t='any'  { if(ok) $v = PrimitiveType.mk(PrimitiveType.Ptype.ANY,-1,tokLoc($t)); }
+  | t=ID     { if(ok) $v = UserType.mk($ID.text,null,tokLoc($t)); }
   | t='[' it=simple_type_list ']' et=simple_type
              { if(ok) $v = MapType.mk($it.v,$et.v,tokLoc($t)); }
   | t='<' p=simple_type '>' st=simple_type

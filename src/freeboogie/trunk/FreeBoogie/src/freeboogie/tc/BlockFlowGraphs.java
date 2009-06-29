@@ -85,7 +85,13 @@ public class BlockFlowGraphs extends Transformer {
   // === visiting methods ===
   
   @Override
-  public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public void see(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     // initialize graph
     currentFlowGraph = new SimpleGraph<Block>();
     flowGraphs.put(implementation.getBody(), currentFlowGraph);

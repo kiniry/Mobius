@@ -20,6 +20,7 @@ AtomMapUpdate.java
 AtomNum.java
 AtomOld.java
 AtomQuant.java
+Attribute.java
 Axiom.java
 BinaryOp.java
 Block.java
@@ -36,17 +37,18 @@ HavocCmd.java
 Identifiers.java
 Implementation.java
 IndexedType.java
+LoopInvariant.java
 MapType.java
 PrimitiveType.java
 Procedure.java
 Signature.java
 Specification.java
-Trigger.java
 TupleType.java
 Type.java
 TypeDecl.java
 UnaryOp.java
 UserType.java
 VariableDecl.java
+WhileCmd.java
 
 

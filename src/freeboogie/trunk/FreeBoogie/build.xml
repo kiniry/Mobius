@@ -88,7 +88,7 @@
     </javac>
   </target>
 
-  <target name="compile_parser" depends="generate_parser,compile_ast"
+  <target name="compile_parser" depends="generate_parser,compile_ast,generate_cli_parser"
           description="compiles the parser with warnings turned off">
     <javac srcdir="${parser-dir}" sourcepath="src" destdir="classes" 
            optimize="yes" debug="no">

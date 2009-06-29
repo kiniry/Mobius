@@ -52,7 +52,13 @@ public class HavocMaker extends Transformer {
   }
 
   @Override
-  public Implementation eval(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public Implementation eval(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     Declaration newTail = tail == null? null : (Declaration)tail.eval(this);
 
     flowGraph = tc.getFlowGraph(implementation);
@@ -73,7 +79,7 @@ public class HavocMaker extends Transformer {
 
     Body newBody = (Body)body.eval(this);
     if (newTail != tail || newBody != body)
-      implementation = Implementation.mk(sig, newBody, newTail);
+      implementation = Implementation.mk(attr, sig, newBody, newTail);
     return implementation;
   }
 

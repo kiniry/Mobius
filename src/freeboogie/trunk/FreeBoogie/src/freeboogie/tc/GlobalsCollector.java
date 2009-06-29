@@ -149,31 +149,64 @@ public class GlobalsCollector extends Transformer {
   
   // === the visiting functions ===
   @Override
-  public void see(TypeDecl typeDecl, String name, Declaration tail) {
+  public void see(
+    TypeDecl typeDecl,
+    Attribute attr,
+    String name,
+    Identifiers typeArgs,
+    boolean finite,
+    Type type,
+    Declaration tail
+  ) {
     addTypeDef(name, typeDecl);
     if (tail != null) tail.eval(this);
   }
 
   @Override
-  public void see(ConstDecl constDecl, String id, Type type, boolean uniq, Declaration tail) {
+  public void see(
+    ConstDecl constDecl,
+    Attribute attr, 
+    String id,
+    Type type,
+    boolean uniq,
+    Declaration tail
+  ) {
     addConstDef(id, constDecl);
     if (tail != null) tail.eval(this);
   }
 
   @Override
-  public void see(Function function, Signature sig, Declaration tail) {
+  public void see(
+    Function function,
+    Attribute attr,
+    Signature sig,
+    Declaration tail
+  ) {
     addFunDef(sig.getName(), function);
     if (tail != null) tail.eval(this);
   }
 
   @Override
-  public void see(VariableDecl variableDecl, String name, Type type, Identifiers typeVars, Declaration tail) {
+  public void see(
+    VariableDecl variableDecl,
+    Attribute attr,
+    String name,
+    Type type,
+    Identifiers typeArgs,
+    Declaration tail
+  ) {
     addVarDef(name, variableDecl);
     if (tail != null) tail.eval(this);
   }
 
   @Override
-  public void see(Procedure procedure, Signature sig, Specification spec, Declaration tail) {
+  public void see(
+    Procedure procedure,
+    Attribute attr,
+    Signature sig,
+    Specification spec,
+    Declaration tail
+  ) {
     addProcDef(sig.getName(), procedure);
     if (tail != null) tail.eval(this);
   }
@@ -181,13 +214,25 @@ public class GlobalsCollector extends Transformer {
   // === visit methods that skip places that might contain local variable decls ===
 
   @Override
-  public void see(Axiom axiom, String name, Identifiers typeVars, Expr expr, Declaration tail) {
+  public void see(
+    Axiom axiom,
+    Attribute attr,
+    String name,
+    Identifiers typeVars,
+    Expr expr,
+    Declaration tail
+  ) {
     if (tail != null) tail.eval(this);
   }
 
   @Override
-  public void see(Implementation implementation, Signature sig, Body body, Declaration tail) {
+  public void see(
+    Implementation implementation,
+    Attribute attr,
+    Signature sig,
+    Body body,
+    Declaration tail
+  ) {
     if (tail != null) tail.eval(this);
   }
-  
 }
