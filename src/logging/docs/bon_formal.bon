@@ -1,0 +1,29 @@
+static_diagram LOGGING
+component
+  cluster EVENTS
+  component
+    class ASSERTION
+    class EVENT
+    class LEVEL
+    class LOG
+    class MESSAGE
+    class STATISTIC
+    class TYPE
+  end
+
+  cluster PROCESSING
+  component
+    class CHECKER
+    feature
+      valid: VOID
+        -> assertion: BOOLEAN
+    end
+
+    class COLLECTOR
+
+    class LOGGER
+
+    class TUNER
+
+  end
+end
