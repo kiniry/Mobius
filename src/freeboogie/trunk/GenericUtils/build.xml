@@ -4,7 +4,7 @@
   <!-- set global properties for this build -->
   <property name="gcollect-jar" value="google-collect-1.0-rc1.jar"/>
   <property name="debug" value="yes" />
-  <property name="version" value="0.2"/>
+  <property name="version" value="0.1"/>
   <path id="classpath">
     <fileset dir="lib" includes="*.jar" />
     <pathelement path="${build}"  />

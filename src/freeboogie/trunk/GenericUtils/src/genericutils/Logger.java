@@ -16,35 +16,38 @@ import com.google.common.base.Supplier;
   @param <L> the type of the levels
   @param <C> the type of the categories
  */
-public class Logger<L extends Enum<L>, C extends Enum<C>> {
+public class Logger<C extends Enum<C>, L extends Enum<L>> {
   private static HashMap<String, Logger> instances = Maps.newHashMap();
   private PrintWriter sink;
   private L thresholdLevel;
   private EnumSet<C> enabledCategories;
+  private boolean verbose;
 
   private Logger() {
-    sink = new PrintWriter(System.out, true);
+    verbose = false;
   }
 
-  public static <L,C> Logger get(String name) {
-    Logger r = instances.get(name);
+  public static <C extends Enum<C>,L extends Enum<L>>
+  Logger<C,L> get(String name) {
+    @SuppressWarnings("unchecked") // TODO: put some checks
+    Logger<C,L> r = instances.get(name);
     if (r == null) {
-      r = new Logger();
+      r = new Logger<C,L>();
       instances.put(name, r);
     }
     return r;
   }
 
   // The main sink setter, plus convenience ones.
-  public void sink(PrintWriter sink) throws IOException {
+  public void sink(PrintWriter sink) {
     this.sink = sink; 
   }
 
-  public void sink(OutputStream sink) throws IOException { 
+  public void sink(OutputStream sink) { 
     sink(new PrintWriter(sink, true)); 
   }
 
-  public void sink(Writer sink) throws IOException { 
+  public void sink(Writer sink) { 
     sink(new PrintWriter(sink, true)); 
   }
 
@@ -57,6 +60,10 @@ public class Logger<L extends Enum<L>, C extends Enum<C>> {
   }
 
   // === Methods for setting up the behavior of this class ===
+  public void verbose(boolean verbose) {
+    this.verbose = verbose;
+  }
+
   public void level(L thresholdLevel) {
     this.thresholdLevel = thresholdLevel;
   }
@@ -76,18 +83,23 @@ public class Logger<L extends Enum<L>, C extends Enum<C>> {
   // === Main methods for using this class ===
 
   /** To be used when computing the log message is time consuming. */
-  public void log(C c, L l, Supplier<String> s) {
-    if (isWritable(c, l)) internalLog(s.get());
+  public void say(C c, L l, Supplier<String> s) {
+    if (isWritable(c, l)) internalLog(c, l, s.get());
   }
 
-  public void log(C c, L l, String m) {
-    if (isWritable(c, l)) internalLog(m);
+  public void say(C c, L l, String m) {
+    if (isWritable(c, l)) internalLog(c, l, m);
   }
 
+  public void say(String m) {
+    if (sink != null) sink.println(m);
+  }
 
   // === Helpers ===
-  private void internalLog(String m) {
-    sink.println(m);
+  private void internalLog(C c, L l, String m) {
+    if (verbose) 
+      m = "" + c + " " + l + " " + System.currentTimeMillis() + " " + m;
+    say(m);
   }
 
   private boolean isWritable(C c, L l) {
