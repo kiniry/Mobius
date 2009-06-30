@@ -1,13 +1,8 @@
-<!-- 
-  When modifying this file please make sure that:
-   - All generated files are removed by the "clean" target.
-   - Do *not* use tabs.
--->
-
 <project name="GenericUtils" default="dist" basedir=".">
   <description>General purpose data structures algorithms</description>
 
   <!-- set global properties for this build -->
+  <property name="gcollect-jar" value="google-collect-1.0-rc1.jar"/>
   <property name="debug" value="yes" />
   <property name="version" value="0.2"/>
   <path id="classpath">
@@ -20,6 +15,7 @@
     <javac srcdir="src" destdir="build"
         deprecation="yes" optimize="yes" debug="${debug}">
       <compilerarg value="-Xlint:all" />
+      <classpath refid="classpath"/>
     </javac>
   </target>
 
@@ -36,7 +32,11 @@
     <mkdir dir="dist"/>
     <jar destfile="dist/genericutils-${version}.jar" 
          basedir="build">
+      <manifest>
+        <attribute name="Class-Path" value="${gcollect-jar}"/>
+      </manifest>
     </jar>
+    <copy file="lib/${gcollect-jar}" todir="dist"/>
   </target>
 
 
