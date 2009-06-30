@@ -2,11 +2,11 @@
  . Parser for Boogie 2.
  . Desugar 'while'.
  . Type checker for Boogie 2.
- . Move to Boogie 2.
  . Add a "for all types" construct. (?)
+ . Move to Boogie 2.
  . Release 0.2.
  . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
- . Add axioms for %. (It it NOT built in in "z3 -si".)
+ . Add axioms for %. (They aren't built into "z3 -si".)
  . Configure the new categories/levels for logging/output.
    (Search for "log-categ" to see places that must be fixed.)
  . Process triggers.
