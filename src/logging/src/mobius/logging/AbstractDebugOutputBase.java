@@ -67,7 +67,7 @@ public abstract class AbstractDebugOutputBase
    * <p> The <code>Debug</code> object associated with this output
    * object. </p>
    */
-  protected Debug my_debug;
+  protected /*@ spec_public @*/ Debug my_debug;
 
   // Inherited Classes
   // Constructors
@@ -77,7 +77,7 @@ public abstract class AbstractDebugOutputBase
    * @return What is my debugging object?
    */
   //@ ensures \result == my_debug;
-  public /*@ pure spec_public @*/ Debug getDebug() {
+  public /*@ pure @*/ Debug getDebug() {
     return my_debug;
   }
 
@@ -86,9 +86,11 @@ public abstract class AbstractDebugOutputBase
    *
    * @param the_debug the new debugging object.
    */
-  //@ modifies my_debug;
-  //@ ensures my_debug == the_debug;
-  //@ ensures my_debug != null;
+  /*@ public normal_behavior
+    @   modifies my_debug;
+    @   ensures my_debug == the_debug;
+    @   ensures my_debug != null;
+    @*/
   public void setDebug(/*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
   }
@@ -159,7 +161,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_message The debugging message to print.
    */
   //@ also
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   public final boolean print(final /*@ non_null @*/ String the_category, final String the_message) {
     if (isValidCategory(the_category)) {
       printMsg(the_category, the_message);
@@ -175,7 +177,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_object The object to print.
    */
   //@ also
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   public final boolean print(final /*@ non_null @*/  String the_category, final Object the_object) {
     return print(the_category, (the_object != null) ? the_object.toString() : "null");
   }
@@ -188,7 +190,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_object The object to print.
    */
   //@ also
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   public final boolean println(final /*@ non_null @*/ String the_category, final Object the_object) {
     return println(the_category, (the_object != null) ? the_object.toString() : "null");
   }
@@ -202,7 +204,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_message The debugging message to print.
    */
   //@ also
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   public final boolean println(final /*@ non_null @*/ String the_category, final String the_message) {
     return print(the_category, the_message + "\n");
   }
@@ -251,7 +253,7 @@ public abstract class AbstractDebugOutputBase
    * @see Context
    */
   //@ also
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   public final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
     if (my_debug == null)
       return false;

@@ -86,7 +86,7 @@ public abstract class AbstractCollect {
    * <p> A <code>Map</code> used to track statistics
    * definitions. </p>
    */
-  private /*@ non_null spec_public @*/ Map my_statistics;
+  private /*@ non_null spec_public @*/ Map my_statistics; //@ in objectState;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -95,7 +95,7 @@ public abstract class AbstractCollect {
    * @modifies SINGLE-ASSIGNMENT
    */
   //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
-  private /*@ spec_public @*/ Debug my_debug;
+  private /*@ spec_public @*/ Debug my_debug; //@ in objectState;
   
   // Inherited Methods
   // Constructors
@@ -136,10 +136,12 @@ public abstract class AbstractCollect {
    * @param a_debug the debug object associated with this <code>Collect</code>
    * object.
    */
-  //@ requires checkDebugCollectRef(a_debug);
-  //@ requires my_debug == null;
-  //@ assignable my_debug;
-  //@ ensures my_debug == a_debug;
+  /*@ public normal_behavior
+        requires checkDebugCollectRef(a_debug);
+        requires my_debug == null;
+        assignable my_debug;
+        ensures my_debug == a_debug;
+   */
   public final void setDebug(/*@ non_null @*/ final Debug a_debug) {
     my_debug = a_debug;
   }
@@ -150,8 +152,11 @@ public abstract class AbstractCollect {
    * @concurrency CONCURRENT
    * @param a_statistic the statistic to register.
    */
-  //@ requires checkStatisticID(a_statistic);
-  //@ ensures isRegistered(a_statistic);
+  /*@ public normal_behavior
+        requires checkStatisticID(a_statistic);
+        assignable my_statistics.objectState;
+        ensures isRegistered(a_statistic);
+   */
   public void register(/*@ non_null @*/ final Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
@@ -197,7 +202,7 @@ public abstract class AbstractCollect {
    * @modifies QUERY
    */
   //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
-  public /*@ pure @*/ boolean isRegistered(Statistic a_statistic) {
+  public /*@ pure @*/ boolean isRegistered(/*@ non_null @*/ Statistic a_statistic) {
     return (my_statistics.get(a_statistic) == a_statistic);
   }
 
@@ -207,7 +212,7 @@ public abstract class AbstractCollect {
    * @param a_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-  public abstract double currentValue(Statistic a_statistic);
+  public abstract double currentValue(/*@ non_null @*/ Statistic a_statistic);
 
   /**
    * <p> Report on a particular statistic. </p>
@@ -217,7 +222,7 @@ public abstract class AbstractCollect {
    * of <code>Report</code> object or just a simple <code>String</code>
    * textual report.
    */
-  public abstract Object report(Statistic a_statistic);
+  public abstract Object report(/*@ non_null @*/ Statistic a_statistic);
 
   /**
    * <p> Report on all statistics. </p>
@@ -234,7 +239,7 @@ public abstract class AbstractCollect {
    * @param the_value the amount to increment the statistic.
    * @return the old value of the statistic.
    */
-  public abstract double increment(Statistic the_statistic, double the_value);
+  public abstract double increment(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
   /**
    * <p> Increment a statistic by the default value. </p>
@@ -242,7 +247,7 @@ public abstract class AbstractCollect {
    * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-  public abstract double increment(Statistic the_statistic);
+  public abstract double increment(/*@ non_null @*/ Statistic the_statistic);
 
   /**
    * <p> Decrement a statistic by a specified value. </p>
@@ -251,7 +256,7 @@ public abstract class AbstractCollect {
    * @param the_value the amount to decrement the statistic.
    * @return the old value of the statistic.
    */
-  public abstract double decrement(Statistic the_statistic, double the_value);
+  public abstract double decrement(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
   /**
    * <p> Decrement a statistic by the default value. </p>
@@ -259,7 +264,7 @@ public abstract class AbstractCollect {
    * @param the_statistic the statistic being modified.
    * @return the old value of the statistic.
    */
-  public abstract double decrement(Statistic the_statistic);
+  public abstract double decrement(/*@ non_null @*/ Statistic the_statistic);
 
   /**
    * <p> Reset a statistic to the default start value. </p>
@@ -267,7 +272,7 @@ public abstract class AbstractCollect {
    * @param the_statistic the statistic to reset.
    * @return the old value of the statistic.
    */
-  public abstract double reset(Statistic the_statistic);
+  public abstract double reset(/*@ non_null @*/ Statistic the_statistic);
 
   /**
    * <p> Set a statistic to a specific value. </p>
@@ -276,7 +281,7 @@ public abstract class AbstractCollect {
    * @param the_value the new value of the statistic.
    * @return the old value of the statistic.
    */
-  public abstract double set(Statistic the_statistic, double the_value);
+  public abstract double set(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
   // Protected Methods
 
@@ -291,7 +296,7 @@ public abstract class AbstractCollect {
    * @see Context
    * @modifies QUERY
    */
-  //@ requires the_category.length() > 0;
+  //@ requires 0 < the_category.length();
   //@ requires my_debug != null;
   protected final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
     return my_debug.my_debug_utilities.categoryTest(the_category);

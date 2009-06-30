@@ -66,7 +66,7 @@ import java.io.Serializable;
  * after, construction time.
  */
 //+@ nullable_by_default
-public class Statistic
+public /*-@ immutable @*/ class Statistic
   implements Serializable {
   // Attributes
   

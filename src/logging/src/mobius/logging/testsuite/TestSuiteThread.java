@@ -57,7 +57,7 @@ public class TestSuiteThread extends Thread {
   /** A flag used to track the success or failure of all tests in this class. */
   private boolean my_success = true;
   /** Which test mode are we in? */
-  private String my_test_mode;
+  private /*@ spec_public @*/ String my_test_mode;
 
   // Constructors
 

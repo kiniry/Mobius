@@ -166,9 +166,8 @@ class Utilities {
    * @param the_level The debugging level of this message.
    * @return true iff the current debug context warrants output.
    */
-
   //@ requires my_debug != null;
-  synchronized boolean levelTest(final int the_level) {
+  synchronized /*@ pure @*/ boolean levelTest(final int the_level) {
     // Get the current thread.
     final Thread currentThread = Thread.currentThread();
 
@@ -275,9 +274,10 @@ class Utilities {
    */
 
   // XXX @ modifies \nothing;
-  // Can't use modifies \nothing since Throwable.printStactTrace has
+  // Can't use modifies \nothing since Throwable.printStackTrace has
   // assignable \not_specified
-  synchronized /* obs pure */ boolean sourceClassValid() {
+  // @REVIEW Should be obs_pure, not just pure.
+  synchronized /*@ pure @*/ boolean sourceClassValid() {
     int index, startIndex, parenIndex;
     Throwable throwable;
     StringWriter stringWriter;

@@ -85,13 +85,13 @@ public class WindowOutput extends AbstractDebugOutputBase
 
   // Constructors
 
-  //@ assignable my_debug;
-  //@ ensures my_debug == the_debug;
   /**
    * Construct a new WindowOutput class.
    *
    * @param the_debug the Debug class associated with this WindowOutput.
    */
+  //@ assignable my_debug, \everything;
+  //@ ensures my_debug == the_debug;
   public WindowOutput(final /*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
 

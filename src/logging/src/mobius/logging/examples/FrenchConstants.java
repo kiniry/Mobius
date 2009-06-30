@@ -167,7 +167,7 @@ public interface FrenchConstants extends DebugConstants {
 
   // Public Methods
 
-  void initCategories(Map the_categories_map);
+  void initCategories(/*@ non_null @*/ Map the_categories_map);
 
 } // end of interface FrenchConstants
 

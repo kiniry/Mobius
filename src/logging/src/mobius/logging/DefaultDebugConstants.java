@@ -56,7 +56,6 @@ public class DefaultDebugConstants
   // Inherited Methods
   // Constructors
   // Public Methods
-	
 
   public /*@ pure @*/ int getLevelMin() {
 	return LEVEL_MIN;
@@ -140,8 +139,9 @@ public class DefaultDebugConstants
    * Associated declaration is "./mobius/logging/DefaultDebugConstants.java", line 139, col 6:
    */
   //@ also
-  //@ ensures the_categories_map.size() >= 6;
-  public void initCategories(/*@ non_null @*/ Map the_categories_map) {
+  //@   assignable the_categories_map.objectState;
+  //@   ensures the_categories_map.size() >= 6;
+  public final void initCategories(/*@ non_null @*/ Map the_categories_map) {
 	  the_categories_map.clear();
     the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
     the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
@@ -152,11 +152,13 @@ public class DefaultDebugConstants
   }
 
   /**
+   * @
    * @param the_level the level to check.
    * @return a boolean indicating if the passed level is valid.
    */
-
-  public boolean checkLevel(int the_level) {
+  //@ also
+  //@ ensures \result <==> (LEVEL_MIN <= the_level) & (the_level <= LEVEL_MAX);
+  public /*@ pure @*/ boolean checkLevel(int the_level) {
     return ((LEVEL_MIN <= the_level) && (the_level <= LEVEL_MAX));
   }
 

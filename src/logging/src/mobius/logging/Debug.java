@@ -317,7 +317,7 @@ public class Debug implements Cloneable {
    * global debugging messages will use this interface for output.
    * </p>
    */
-  protected transient DebugOutput my_debug_output_interface;
+  protected transient /*@ spec_public @*/ DebugOutput my_debug_output_interface;
 
   // Constructors
 
@@ -814,8 +814,8 @@ public class Debug implements Cloneable {
    *         range.
    */
   public synchronized boolean setLevel(int level) {
-    if ((level >= my_debug_constants.LEVEL_MIN) &&
-        (level <= my_debug_constants.LEVEL_MAX)) {
+    if ((level >= DebugConstants.LEVEL_MIN) &&
+        (level <= DebugConstants.LEVEL_MAX)) {
       this.my_level = level;
       return true;
     } else

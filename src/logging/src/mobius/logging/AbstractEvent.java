@@ -67,6 +67,8 @@ public abstract class AbstractEvent extends Object
   implements Event, Serializable, Cloneable {
   // Attributes
 
+  static final long serialVersionUID = 1L;
+
   /**
    * The source host for this event.
    *

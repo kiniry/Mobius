@@ -226,7 +226,7 @@ public class Context
     my_class_map.put("*", Boolean.TRUE);
     my_debug_constants = some_debug_constants;
     my_debug_constants.initCategories(my_category_map);
-    my_level = my_debug_constants.LEVEL_MIN;
+    my_level = DebugConstants.LEVEL_MIN;
     my_debug_output_interface = a_debug_output;
     my_thread = Thread.currentThread();
   }
@@ -538,8 +538,8 @@ public class Context
     @		&& (a_level <= my_debug_constants.LEVEL_MAX));
     @*/
   public /*@ pure @*/ boolean validLevel(int a_level) {
-    return ((a_level >= my_debug_constants.LEVEL_MIN) &&
-            (a_level <= my_debug_constants.LEVEL_MAX));
+    return ((a_level >= DebugConstants.LEVEL_MIN) &&
+            (a_level <= DebugConstants.LEVEL_MAX));
   }
 
   // Protected Methods
