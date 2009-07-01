@@ -8,9 +8,6 @@ import freeboogie.cli.FbCliParser;
 import freeboogie.cli.FbCliUtil;
 
 import static freeboogie.cli.FbCliOptionsInterface.*;
-//import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
-//import static freeboogie.cli.FbCliOptionsInterface.ReportLevel;
-//import static freeboogie.cli.FbCliOptionsInterface.ReportOn;
 
 /**
   Handles the main pipeline of the application. The input/output

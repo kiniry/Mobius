@@ -65,7 +65,10 @@ class Printer<U extends Ast, D extends Ast> extends Closure<D> {
  * @author rgrig 
  */
 public class Main {
-  private static Logger log = Logger.getLogger("freeboogie"); 
+  // NOTE: the long names are temporary: this file and java.util.logging
+  // will go away soon
+  private static java.util.logging.Logger log = 
+    java.util.logging.Logger.getLogger("freeboogie"); 
   public static FbCliOptionsInterface opt;
   
   /**
