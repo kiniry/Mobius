@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.pve"
-      label="Mobius PVE Feature"
-      version="0.0.7"
+      label="Mobius PVE"
+      version="0.0.8"
       plugin="mobius">
 
    <description>
-      Mobius PVE
+      Mobius PVE bundle, which groups all the plugins of the Program Verification Environment.
    </description>
 
    <copyright>
@@ -53,6 +53,10 @@
 
    <includes
          id="mobius.jml"
+         version="0.0.0"/>
+
+   <includes
+         id="mobius.atp"
          version="0.0.0"/>
 
    <requires>
