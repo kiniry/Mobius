@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.esc"
-      label="ExtendedStaticChecking"
-      version="2.0.20"
+      label="Extended Static Checking"
+      version="2.0.21"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
@@ -769,12 +769,6 @@ limitations under the License.
 
    <plugin
          id="mobius.javafe.plugin"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="mobius.simplify.plugin"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
