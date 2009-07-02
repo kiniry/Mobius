@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.jml"
-      label="JMLFeature Feature"
-      version="1.0.1">
+      label="JML"
+      version="1.0.2">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
