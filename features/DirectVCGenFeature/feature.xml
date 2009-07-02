@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="mobius.directvcgen"
-      label="DirectVCGen Feature"
-      version="1.0.4">
+      label="Direct VCGen"
+      version="1.0.7">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -29,13 +29,27 @@
    </requires>
 
    <plugin
-         id="bico"
+         id="mobius.bico"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="MobiusDirectVCGenUI"
+         id="mobius.bicolano"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.directvcgen"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.directvcgen.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
