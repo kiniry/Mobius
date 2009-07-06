@@ -51,78 +51,78 @@ import java.util.Map;
  */
 //+@ nullable_by_default
 public class DefaultDebugConstants
-  implements DebugConstants {
+implements DebugConstants {
   // Attributes
   // Inherited Methods
   // Constructors
   // Public Methods
 
   public /*@ pure @*/ int getLevelMin() {
-	return LEVEL_MIN;
+    return LEVEL_MIN;
   }
-  
+
   public /*@ pure @*/ int getLevelMax() {
-	return LEVEL_MAX;
+    return LEVEL_MAX;
   }
-  
+
   public /*@ pure @*/ String getErrorString() {
     return ERROR_STRING;  
   }
-  
+
   public /*@ pure @*/ String getFailedAssertionString() {
-	return FAILED_ASSERTION_STRING;  
+    return FAILED_ASSERTION_STRING;  
   }
-  
+
   public /*@ pure @*/ int getAssertionLevel() {
-	return ASSERTION_LEVEL;
+    return ASSERTION_LEVEL;
   }
-  
+
   public /*@ pure @*/ int getFailureLevel() {
-	return FAILURE_LEVEL;  
+    return FAILURE_LEVEL;  
   }
-  
+
   public /*@ pure @*/ int getCriticalLevel() {
-	return CRITICAL_LEVEL;
+    return CRITICAL_LEVEL;
   }
-  
+
   public /*@ pure @*/ int getErrorLevel() {
-	return ERROR_LEVEL;
+    return ERROR_LEVEL;
   }
-  
+
   public /*@ pure @*/ int getWarningLevel() {
-	return WARNING_LEVEL;  
+    return WARNING_LEVEL;  
   }
-  
+
   public /*@ pure @*/ int getNoticeLevel() {
-	return NOTICE_LEVEL;  
+    return NOTICE_LEVEL;  
   }
-  
+
   public /*@ pure @*/ String getAssertion() {
-	return ASSERTION;  
+    return ASSERTION;  
   }
-  
+
   public /*@ pure @*/ String getFailure() {
-	return FAILURE;  
+    return FAILURE;  
   }
-  
+
   public /*@ pure @*/ String getCritical() {
-	return CRITICAL;  
+    return CRITICAL;  
   }
-  
+
   public /*@ pure @*/ String getError() {
-	return ERROR;  
+    return ERROR;  
   }
-  
+
   public /*@ pure @*/ String getWarning() {
-	return WARNING;
+    return WARNING;
   }
-  
+
   public /*@ pure @*/ String getNotice() {
     return NOTICE;  
   }
-  
+
   public /*@ pure @*/ int getInvalidThread() {
-	return INVALID_THREAD;
+    return INVALID_THREAD;
   }
 
   /**
@@ -142,7 +142,7 @@ public class DefaultDebugConstants
   //@   assignable the_categories_map.objectState;
   //@   ensures the_categories_map.size() >= 6;
   public final void initCategories(/*@ non_null @*/ Map the_categories_map) {
-	  the_categories_map.clear();
+    the_categories_map.clear();
     the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
     the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
     the_categories_map.put(CRITICAL, Integer.valueOf(CRITICAL_LEVEL));

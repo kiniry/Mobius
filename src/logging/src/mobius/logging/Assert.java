@@ -42,8 +42,6 @@
 
 package mobius.logging;
 
-
-
 /**
  * <p> The core interface to making assertions. </p>
  *
