@@ -44,12 +44,12 @@ import java.io.Writer;
 
 /**
  * <p> The abstract class from which all classes providing output methods
- * used to send debugging messages to various types of devices must
- * inherit. All final output methods use the <code>printMsg</code> as their
- * final "output destinations", thus only they need to be overridden. </p>
+ * used to send logging messages to various types of devices must
+ * inherit.  All final output methods use the <code>printMsg</code> as their
+ * final "output destinations," thus only they need to be overridden. </p>
  *
  * @history Changed visibility of isValidCategory and isValidLevel methods
- * to accomodate specification of subclasses.
+ * to accommodate specification of subclasses.
  *
  * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
@@ -119,8 +119,7 @@ public abstract class AbstractDebugOutputBase
   public abstract void printMsg(String the_message);
 
   /**
-   * <p> Print out a debugging message if the debugging context
-   * warrants. </p>
+   * <p> Print out a debugging message if the debugging context warrants. </p>
    *
    * @return a boolean indicating if the message was printed.
    * @param the_level The debugging level of this message.
