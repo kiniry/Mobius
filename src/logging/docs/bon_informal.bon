@@ -6,10 +6,10 @@ system_chart MONITORING_SYSTEM
     about:        "This system facilitates the assertion, collection, archival, and reporting of assertions, logging messages, and statistics.";
     title:        "Monitoring system";
     author:       "Joseph Kiniry";
-    copyright:    "no info";
-    organisation: "no info";
-    date:         "no info";
-    version:      "no info";
+    copyright:    "Copyright (C) 1998-2009 Joseph R. Kiniry";
+    organisation: "Caltech, Radboud University Nijmegen, UCD";
+    date:         "1 July 2009";
+    version:      "2.0";
   cluster EVENTS description "Facilities for registering an interest in, \
     \ and recording of, important events (errors, warnings, or just \
     \ informational) that occur during the operation of the system/framework \
@@ -33,12 +33,12 @@ cluster_chart EVENTS
     \ application built on top of it."
   class MESSAGE description "Represents a single textual message that needs \
     \ to be displayed or recorded."
-  class STATISTIC description "This class represents a statistic that can be \
-    \ monitored in the monitoring system. Each statistic has its own unique \
+  class STATISTIC description "Represents a statistic that can be \
+    \ monitored in the monitoring system.  Each statistic has its own unique \
     \ ID (node-unique, not necessarily globally unique), a description, units, \
     \ and other useful information that is represented in this class."
   class TYPE description "Represents the type of a particular event. The set \
-    \ of core event types each have such a name and a description."
+    \ of core event types each have a name and a description."
 end
 
 cluster_chart PROCESSING
@@ -61,24 +61,19 @@ class_chart ASSERTION
 indexing
   incluster: "EVENTS";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: ASSERTION.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $"
 explanation
   "Represents a single type of important predicate that the system should \
  \ validate.  Assertion failures result in everything from messages or \
  \ statistics being logged to system failure."
-part "1/1 "
 end
-
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart EVENT
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-07-06 Joseph Kiniry";
-  revised: "$Id: EVENT.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $"
 explanation
   "Represents a single important event of any kind. The event includes a \
  \ source, description, importance, and time, among other things."
-part "1/1 "
 query
   "What is the source system of this event?", 
   "What is the source component of this event?",
@@ -97,16 +92,13 @@ constraint
        \ have identical values.",
   "Events cannot be cloned."
 end
-
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart LEVEL
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-09-19 Joseph Kiniry";
-  revised: "$Id: LEVEL.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $"
 explanation
   "Represents the importance level of a particular event."
-part "1/1 "
 query
   "What is the level set to?", 
   "What is the minimum/maximum level?"
@@ -120,19 +112,16 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart LOG
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: LOG.html,v 1.1.1.1 2002/12/29 12:36:03 kiniry Exp $"
 explanation
   "Manages the storage and retrieval of events that are reported by \
  \ various parts of the system framework and/or the application built \
  \ on top of it."
-part "1/1 "
 query
   "Which events meet a specified criteria?", 
   "What is the list of all event sources?"
 command
-  "Create event.", 
   "Store event.", 
   "Delete event.", 
   "Clear event log.", 
@@ -143,12 +132,10 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart MESSAGE
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: MESSAGE.html,v 1.1.1.1 2002/12/29 12:36:03 kiniry Exp $"
 explanation
   "Represents a single textual message that needs to be displayed or recorded."
-part "1/1 "
 query
   "What textual message does this message contain?"
 command
@@ -159,22 +146,20 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart STATISTIC
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-07-06 Joseph Kiniry";
-  revised: "$Id: STATISTIC.html,v 1.1.1.1 2002/12/29 12:36:04 kiniry Exp $"
 explanation
   "This class represents a statistic that can be monitored in the \
  \ monitoring system. Each statistic has its own unique ID (node-unique, \
  \ not necessarily globally unique), a description, units, and other \
  \ useful information that is represented in this class."
-part "1/1 "
 query
   "What is the unique ID of this statistic?", 
   "What are its units?", 
   "What is its default scaling factor?", 
   "What is its default start value?", 
   "What is its default increment?", 
-  "What is its default decrement? "
+  "What is its default decrement?"
 command
   "Create a new statistic by specifying its units, scaling factor, \
  \ default start value, default increment and default decrement."
@@ -186,51 +171,48 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart TYPE
 indexing
-  incluster: "EVENTS" ;
+  incluster: "EVENTS";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: TYPE.html,v 1.1.1.1 2002/12/29 12:36:05 kiniry Exp $"
 explanation
   "Represents the type of a particular event. The set of core event types \
  \ each have such a name and a description."
-part "1/1 " 
 query
-  "What is this types current value? ",
-   "Is this type equivalent to another one?"
+  "What is this types current value?",
+  "Is this type equivalent to another one?"
 command
   "Set the value of this type."
 constraint
   "Types must have some legal value."
 end
+
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Classes in Cluster PROCESSING
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart CHECKER
 indexing
-  incluster: "PROCESSING" ;
+  incluster: "PROCESSING";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: CHECKER.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $"
 explanation
   "Checks the state of the system for validity against particular assertions."
-part "1/1 "
 query
   "Is this assertion valid?"
 end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart COLLECTOR
 indexing
-  incluster: "PROCESSING" ;
+  incluster: "PROCESSING";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: COLLECTOR.html,v 1.1.1.1 2002/12/29 12:36:02 kiniry Exp $"
 explanation
   "Performs the collection of particular statistics during the operation of \
  \ a program.  Individual statistics can be registered for collection, and \
  \ may be activated or deactivated. The collector can cache statistic \
  \ collection in memory, and can also write statistics and logging information \
  \ to a long-term storage device for subsequent analysis."
-part "1/1 "
 query
-  "What is the current value for specific statistic?"
+  "What is the current value for specific statistic?",
+  "Is this statistic active?"
 command
   "Report on a particular statistic.",
   "Report on all statistics.", 
@@ -240,6 +222,9 @@ command
   "Decrement a statistic by the default value.", 
   "Reset a statistic to the default start value.", 
   "Set a statistic to a specific value.",
+  "Register this statistic.",
+  "Activate this statistic.",
+  "Deactive this statistic"
 constraint
   "A newly registered statistic is deactivated by default.",
   "No two statistics can be registered with the same unique ID."
@@ -247,16 +232,11 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart LOGGER
 indexing
-  incluster: "PROCESSING" ;
+  incluster: "PROCESSING";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: LOGGER.html,v 1.1.1.1 2002/12/29 12:36:03 kiniry Exp $"
 explanation
-  "Performs the collection of particular statistics during the operation of \
- \ a program. Individual statistics can be registered for collection, and \
- \ may be activated or deactivated. The collector can cache statistic \
- \ collection in memory, and can also write statistics and logging \
- \ information to a long-term storage device for subsequent analysis."
-part "1/1 "
+  "Performs the collection of logging messages (events) during the operation \
+ \ of a program."
 query
   "What is the complete current log?", 
   "What was the last message logged?"
@@ -270,13 +250,11 @@ end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart TUNER
 indexing
-  incluster: "PROCESSING" ;
+  incluster: "PROCESSING";
   created: "2000-07-19 Joseph Kiniry";
-  revised: "$Id: TUNER.html,v 1.1.1.1 2002/12/29 12:36:05 kiniry Exp $"
 explanation
   "'Tune' the monitoring system to collect specific types and levels of \
  \ system statistics, messages, and assertions."
-part "1/1 "
 query
   "Is a certain level enabled/disabled?", 
   "Is a certain type enabled/disabled?",
@@ -289,6 +267,3 @@ constraint
   "All level assignments must be within the specified range.",
   "Event types must be well-defined strings."
 end
-
-
- 
