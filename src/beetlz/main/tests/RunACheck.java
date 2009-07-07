@@ -8,6 +8,7 @@ public class RunACheck {
 	 */
 	public static void main(String[] args) {		
 		String current = System.getProperty("java.class.path");
+		
 		String[] parts = current.split("[:;]");
 		
 		String path = parts[0];
@@ -15,7 +16,7 @@ public class RunACheck {
 		System.out.println("This is a regression test. First run should not produce any errors.\n" +
 				"The second run produces 3 Java errors, 1 Java warnings, 6 JML errors and 5 JML warnings.");
 		
-		if(path.endsWith("/bin")) {
+		if(path.endsWith("/bin")|| path.endsWith("\\bin")) {
 			path = path.substring(0, path.length()-3);
 			{
 				String[] my_args = {	                

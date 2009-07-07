@@ -11,7 +11,7 @@ public class RunATest {
 		String[] parts = current.split("[:;]");
 		
 		String path = parts[0];
-		if(path.endsWith("/bin")) {
+		if(path.endsWith("/bin")|| path.endsWith("\\bin")) {
 			path = path.substring(0, path.length()-3);
 			
 			String[] my_args = {
