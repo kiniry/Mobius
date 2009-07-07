@@ -76,18 +76,19 @@ import java.io.Writer;
   // Inherited Methods
 
   /** {@inheritDoc} */
-  public synchronized void printMsg(/*@ non_null */ String category, String message) {
-    System.err.print("<" + category + ">: " + message);
+  public synchronized void printMsg(/*@ non_null */ final String a_category,
+                                    final String a_message) {
+    System.err.print("<" + a_category + ">: " + a_message);
   }
 
   /** {@inheritDoc} */
-  public synchronized void printMsg(int level, String message) {
-    System.err.print("[" + level + "]: " + message);
+  public synchronized void printMsg(final int a_level, final String a_message) {
+    System.err.print("[" + a_level + "]: " + a_message);
   }
 
   /** {@inheritDoc} */
-  public synchronized void printMsg(String message) {
-    System.err.print(message);
+  public synchronized void printMsg(final String a_message) {
+    System.err.print(a_message);
   }
 
   /** {@inheritDoc} */

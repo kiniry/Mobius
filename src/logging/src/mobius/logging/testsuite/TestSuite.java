@@ -83,9 +83,11 @@ package mobius.logging.testsuite;
  * @note The top-level class of the IDebug test suite.
  */
 //@ non_null_by_default
-public class TestSuite {
+public final class TestSuite {
   // Attributes
   // Constructors
+
+  /** Disallow constrution of this object. */
   private TestSuite() {
     assert false;
   }
@@ -164,10 +166,8 @@ public class TestSuite {
    * @postcondition (("--version" in argv) implies show version info)
    * @postcondition (Result == ("--version" in argv))
    */
-  private static boolean showVersion(String [] the_arguments) {
-    if (the_arguments == null)
-      return false;
-    if (the_arguments.length == 0)
+  private static boolean showVersion(final String [] the_arguments) {
+    if ((the_arguments == null) || (the_arguments.length == 0))
       return false;
 
     for (int i = 0; i < the_arguments.length; i++) {
@@ -197,14 +197,12 @@ public class TestSuite {
    * @postcondition (("--help" in argv) implies show help)
    * @postcondition (Result == ("--help" in argv))
    */
-  private static boolean showHelp(String [] the_arguments) {
-    if (the_arguments == null)
-      return false;
-    if (the_arguments.length == 0)
+  private static boolean showHelp(final String [] the_arguments) {
+    if ((the_arguments == null) || (the_arguments.length == 0))
       return false;
 
     for (int i = 0; i < the_arguments.length; i++) {
-      if (the_arguments[i] == "--help") {
+      if (the_arguments[i].equals("--help")) {
         System.out.println("Usage: TestSuite [TESTOPTION]...");
         System.out.println("Test the IDebug debugging framework according to TESTOPTION.");
         System.out.println("Example: java idebughc.testsuite.TestSuite --window\n");

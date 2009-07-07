@@ -67,6 +67,7 @@ public abstract class AbstractEvent extends Object
   implements Event, Serializable, Cloneable {
   // Attributes
 
+  /** Standard serial version ID. */
   static final long serialVersionUID = 1L;
 
   /**
@@ -186,16 +187,16 @@ public abstract class AbstractEvent extends Object
   /**
    * <p> Is this event equal to another one? </p>
    *
-   * @param obj the event with which to compare.
+   * @param an_object the event with which to compare.
    * @return if two AbstractEvents are equal.
    * @ensures (Result == true) iff
    *          (for_all attributes of Event : attributes of the objects
    *          being compared have identical values)
    * @overrides java.lang.Object.equals()
    */
-  public boolean equals(Object obj) {
-    if (obj instanceof AbstractEvent) {
-      final AbstractEvent an_event = (AbstractEvent)obj;
+  public boolean equals(final Object an_object) {
+    if (an_object instanceof AbstractEvent) {
+      final AbstractEvent an_event = (AbstractEvent)an_object;
       return (my_source_host.equals(an_event.getSourceHost()) &&
        my_source_component.equals(an_event.getSourceComponent()) &&
        my_creation_date.equals(an_event.getCreationDate()) &&
@@ -227,7 +228,7 @@ public abstract class AbstractEvent extends Object
 
   /** {@inheritDoc} */
   public /*@ pure @*/ Date getCreationDate() {
-    return my_creation_date;
+    return (Date)(my_creation_date.clone());
   }
 
   /** {@inheritDoc} */

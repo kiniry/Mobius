@@ -62,7 +62,8 @@ public class WriterOutput extends AbstractDebugOutputBase
    * <p> The output channel used by this <code>WriterOutput</code>
    * object. </p>
    */
-  private transient /*@ non_null spec_public @*/ PrintWriter my_print_writer = new PrintWriter(System.err);
+  private transient /*@ non_null spec_public @*/ PrintWriter my_print_writer =
+    new PrintWriter(System.err);
 
   // Constructors
 
@@ -112,8 +113,10 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(final /*@ non_null */ String a_category, final String a_message) {
-    my_print_writer.print("<" + a_category + ">: " + ((a_message != null) ? a_message : "null"));
+  public synchronized void printMsg(final /*@ non_null */ String a_category,
+                                    final String a_message) {
+    my_print_writer.print("<" + a_category + ">: " +
+                          ((a_message != null) ? a_message : "null"));
     my_print_writer.flush();
   }
 
@@ -121,7 +124,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(int a_level, String a_message) {
+  public synchronized void printMsg(final int a_level, final String a_message) {
     my_print_writer.print("[" + a_level + "]: " + ((a_message != null) ? a_message : "null"));
     my_print_writer.flush();
   }
@@ -130,7 +133,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * {@inheritDoc}
    * @modifies QUERY
    */
-  public synchronized void printMsg(String a_message) {
+  public synchronized void printMsg(final String a_message) {
     my_print_writer.print((a_message != null) ? a_message : "null");
     my_print_writer.flush();
   }

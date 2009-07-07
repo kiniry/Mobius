@@ -144,29 +144,43 @@ public interface FrenchConstants extends DebugConstants {
   // The default debugging levels are pre-defined to simplify the use
   // of the print() and println() functions for simple debugging.
 
+  /** The level of an assertion. */
   int ASSERTION_LEVEL = 90;
+  /** The level of an failure. */
   int FAILURE_LEVEL = 90;
+  /** The level of an critical. */
   int CRITICAL_LEVEL = 70;
+  /** The level of an error. */
   int ERROR_LEVEL = 50;
+  /** The level of an warning. */
   int WARNING_LEVEL = 30;
+  /** The level of an notice. */
   int NOTICE_LEVEL = 10;
 
   // The default debugging categories are pre-defined to simplify the
   // use of the print() and println() functions for simple debugging.
 
+  /** The French translation of 'assertion'. */
   String ASSERTION = "AFFIRMATION";
+  /** The French translation of 'failure'. */
   String FAILURE = "PANNE";
+  /** The French translation of 'critical'. */
   String CRITICAL = "CRITIQUE";
+  /** The French translation of 'error'. */
   String ERROR = "ERREUR";
+  /** The French translation of 'warning'. */
   String WARNING = "AVERTISSEMENT";
+  /** The French translation of 'notification'. */
   String NOTICE = "NOTIFICATION";
 
   // Error conditions for the Debug class.
 
+  /** Indicates that an invalid thread was used. */
   int INVALID_THREAD = -1;
 
   // Public Methods
 
+  /** {@inheritDoc} */
   void initCategories(/*@ non_null @*/ Map the_categories_map);
 
 } // end of interface FrenchConstants

@@ -242,17 +242,17 @@ public class Context
    * @throws CloneNotSupportedException never.
    */
   public /*@ non_null @*/ Object clone() throws CloneNotSupportedException {
-    Context contextClone = null;
+    Context a_context_clone = null;
     try {
-      contextClone = (Context)super.clone();
-      //@ assume \fresh(contextClone);
+      a_context_clone = (Context)super.clone();
+      //@ assume \fresh(a_context_clone);
     } catch (CloneNotSupportedException cnse) {
       throw new RuntimeException(cnse.getMessage(), cnse);
     }
-    contextClone.my_thread = Thread.currentThread();
-    contextClone.my_debug_output_interface = my_debug_output_interface;
+    a_context_clone.my_thread = Thread.currentThread();
+    a_context_clone.my_debug_output_interface = my_debug_output_interface;
 
-    return contextClone;
+    return a_context_clone;
   }
 
   /**
@@ -314,26 +314,26 @@ public class Context
    *
    * @concurrency GUARDED
    * @modifies categoryMap
-   * @param category the category to add to the global set of categories.
-   * @param level the debugging level associated with the passed category.
+   * @param a_category the category to add to the global set of categories.
+   * @param a_level the debugging level associated with the passed category.
    * @return a boolean indicating if the category was successfully added to
    * the database.  A false indicates either the category was already in
    * the database at a different level or the parameters were invalid.
    */
-  //@ requires category.length() > 0;
-  //@ requires validLevel(level);
-  //@ ensures containsCategory(category);
-  public synchronized boolean addCategory(/*@ non_null @*/ String category,
-                                          int level) {
+  //@ requires a_category.length() > 0;
+  //@ requires validLevel(a_level);
+  //@ ensures containsCategory(a_category);
+  public synchronized boolean addCategory(final /*@ non_null @*/ String a_category,
+                                          final int a_level) {
     // See if an entry for the passed category exists.
-    if (my_category_map.containsKey(category)) {
-      Integer aLevel = (Integer)my_category_map.get(category);
-      //@ assume aLevel != null;
-      return aLevel.intValue() == level;
+    if (my_category_map.containsKey(a_category)) {
+      final Integer a_Level = (Integer)my_category_map.get(a_category);
+      //@ assume a_Level != null;
+      return a_Level.intValue() == a_level;
     }
 
     // Add a new entry for the passed category.
-    my_category_map.put(category, Integer.valueOf(level));
+    my_category_map.put(a_category, Integer.valueOf(a_level));
 
     return true;
   }
@@ -350,7 +350,7 @@ public class Context
    */
   //@ requires a_category.length() > 0;
   //@ ensures !containsCategory(a_category);
-  public synchronized boolean removeCategory(/*@ non_null @*/ String a_category) {
+  public synchronized boolean removeCategory(final /*@ non_null @*/ String a_category) {
     // If it is in the map, remove it.
     if (my_category_map.containsKey(a_category)) {
       my_category_map.remove(a_category);
@@ -367,7 +367,7 @@ public class Context
    */
   //@ requires a_category.length() > 0;
   public synchronized /*@ pure @*/ boolean
-  containsCategory(/*@ non_null @*/ String a_category) {
+  containsCategory(final /*@ non_null @*/ String a_category) {
     return (my_category_map.containsKey(a_category));
   }
 
@@ -380,7 +380,7 @@ public class Context
    */
   //@ requires a_category.length() > 0;
   //@ requires containsCategory(a_category);
-  public synchronized /*@ pure @*/ int getCategoryLevel(/*@ non_null @*/ String a_category) {
+  public synchronized /*@ pure @*/ int getCategoryLevel(final /*@ non_null @*/ String a_category) {
     return ((Integer)(my_category_map.get(a_category))).intValue();
   }
 
@@ -402,12 +402,12 @@ public class Context
    *
    * @modifies QUERY
    * @concurrency GUARDED
-   * @param className the name of the class to check.
+   * @param the_class_name the name of the class to check.
    */
-  //@ requires className.length() > 0;
+  //@ requires 0 < the_class_name.length();
   public synchronized /*@ pure @*/ boolean
-  containsClass(final /*@ non_null @*/ String className) {
-    return my_class_map.containsKey(className);
+  containsClass(final /*@ non_null @*/ String the_class_name) {
+    return my_class_map.containsKey(the_class_name);
   }
 
   /**
@@ -416,12 +416,12 @@ public class Context
    *
    * @modifies QUERY
    * @concurrency GUARDED
-   * @param classRef the class to check.
+   * @param the_class_ref the class to check.
    */
-  //@ requires classRef.getName().length() > 0;
+  //@ requires 0 < the_class_ref.getName().length();
   public synchronized /*@ pure @*/ boolean
-  containsClass(final /*@ non_null @*/ Class classRef) {
-    return containsClass(classRef.getName());
+  containsClass(final /*@ non_null @*/ Class the_class_ref) {
+    return containsClass(the_class_ref.getName());
   }
 
   /**
@@ -475,7 +475,7 @@ public class Context
    * classes that have debugging enabled.
    */
   //@ requires a_class_name.length() > 0;
-  public synchronized void removeClass(/*@ non_null @*/ String a_class_name) {
+  public synchronized void removeClass(final /*@ non_null @*/ String a_class_name) {
     Utilities.removeClassFromMap(my_class_map, a_class_name);
   }
 
@@ -504,7 +504,7 @@ public class Context
   //@ assignable my_level;
   //@ ensures getLevel() == the_new_level;
   //@ ensures validLevel(my_level);
-  public synchronized void setLevel(int the_new_level) {
+  public synchronized void setLevel(final int the_new_level) {
     my_level = the_new_level;
   }
 
@@ -534,10 +534,9 @@ public class Context
    * @return a flag indicating if the provided level is valid.
    * @param a_level the level to check.
    */
-  /*@ ensures \result == ((a_level >= my_debug_constants.LEVEL_MIN)
-    @		&& (a_level <= my_debug_constants.LEVEL_MAX));
-    @*/
-  public /*@ pure @*/ boolean validLevel(int a_level) {
+  //@ ensures \result == ((a_level >= my_debug_constants.LEVEL_MIN)
+  //@   && (a_level <= my_debug_constants.LEVEL_MAX));
+  public /*@ pure @*/ boolean validLevel(final int a_level) {
     return ((a_level >= DebugConstants.LEVEL_MIN) &&
             (a_level <= DebugConstants.LEVEL_MAX));
   }

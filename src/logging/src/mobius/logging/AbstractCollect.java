@@ -53,25 +53,8 @@ import java.util.HashMap;
  * the protected methods.  The simplest means to collect statistics are to
  * use a map keyed on statistic (since their key is valid) and store Double
  * objects corresponding to the current value of that statistic.  See
- * <code>mobius.logging.SimpleCollect</code> for an example of this
+ * {@link SimpleCollect} for an example of this
  * implementation which you can reuse. </p>
- *
- * @idea Alternative implementations that have some or all of the following
- * characteristics are encouraged.  Ideas include collectors that:
- * <ul>
- * <li> send logging information at certain time intervals or trigger
- * values. </li>
- * <li> log statistic trace sets to do data analysis over long time
- * intervals. </li>
- * <li> compute means and variances so that accurate characterization of
- * the data is available. </li>
- * <li> detect significant changes in system behavior or performance and
- * can initiate early warning systems or preventive maintenence. </li>
- * <li> utilize system debugging context to log certain statistics and not
- * others (using the level and type of <code>Event</code> and the
- * <code>isValidCategory()</code> and <code>isValidLevel()</code> methods
- * herein). </li>
- * </ul>
  *
  * @version alpha-1
  * @author Joseph R. Kiniry (kiniry@acm.org)
@@ -79,7 +62,7 @@ import java.util.HashMap;
  * @see mobius.logging.examples.SimpleCollect
  */
 //+@ nullable_by_default
-/*#thread_shared*/ public abstract class AbstractCollect {
+/*#thread_shared*/ public abstract class AbstractCollect implements Collector {
   // Attributes
 
   /**
@@ -94,9 +77,10 @@ import java.util.HashMap;
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
+  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==>
+  //@                    (my_debug == \old(my_debug));
   private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in objectState;
-  
+
   // Inherited Methods
   // Constructors
 
@@ -111,67 +95,28 @@ import java.util.HashMap;
 
   // Public Methods
 
-  /**
-   * <p> Checks a debug instance to make sure its <code>collect</code>
-   * attribute references this <code>Collect</code> object. </p>
-   *
-   * @concurrency CONCURRENT
-   * @modifies QUERY
-   * @param a_debug the debug instance to check.
-   * @return true iff <code>a_debug</code>'s collect field references
-   * <code>this</code>.
-   */
-  //@ ensures \result <==> (a_debug.getCollect() == this);
-  public /*@ pure @*/ boolean checkDebugCollectRef(/*@ non_null @*/ Debug a_debug) {
+  /** {@inheritDoc} */
+  public /*@ pure @*/ boolean checkDebugCollectRef(final /*@ non_null @*/ Debug a_debug) {
     return (a_debug.getCollect() == this);
   }
 
-  /**
-   * <p> Set the debug instance associated with this collect instance.
-   * This method <strong>must</strong> be called with the correct debug
-   * instance prior to using <strong>any</strong> of the methods of this
-   * <code>Collect</code> instance. </p>
-   *
-   * @concurrency CONCURRENT
-   * @param a_debug the debug object associated with this <code>Collect</code>
-   * object.
-   */
-  /*@ public normal_behavior
-        requires checkDebugCollectRef(a_debug);
-        requires my_debug == null;
-        assignable my_debug;
-        ensures my_debug == a_debug;
-   */
-  public synchronized final void setDebug(/*@ non_null @*/ final Debug a_debug) {
+  /** {@inheritDoc} */
+  //@ also
+  //@ public normal_behavior
+  //@   requires my_debug == null;
+  //@  assignable my_debug;
+  //@  ensures my_debug == a_debug;
+  public final void setDebug(final /*@ non_null @*/ Debug a_debug) {
     my_debug = a_debug;
   }
 
-  /**
-   * <p> Register a statistic with the collector. </p>
-   *
-   * @concurrency CONCURRENT
-   * @param a_statistic the statistic to register.
-   */
-  /*@ public normal_behavior
-        requires checkStatisticID(a_statistic);
-        assignable my_statistics.objectState;
-        ensures isRegistered(a_statistic);
-   */
-  public synchronized void register(/*@ non_null @*/ final Statistic a_statistic) {
+  /** {@inheritDoc} */
+  public void register(final /*@ non_null @*/ Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
 
-  /**
-   * <p> Check the ID of a statistic and make sure that it hasn't changed
-   * since it was registered. </p>
-   *
-   * @concurrency CONCURRENT
-   * @modifies QUERY
-   * @param a_statistic the statistic to check.
-   * @return a boolean indicating if the value of the statistic
-   * <code>a_statistic</code> has changed at all.
-   */
-  public synchronized /*@ pure @*/ boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
+  /** {@inheritDoc} */
+  public /*@ pure @*/ boolean checkStatisticID(final /*@ non_null @*/ Statistic a_statistic) {
     final Object the_old_value = my_statistics.get(a_statistic);
     if (the_old_value != null) {
       // make sure value hasn't changed.
@@ -180,107 +125,42 @@ import java.util.HashMap;
     return true;
   }
 
-  /**
-   * <p> Unregister a statistic with the collector. </p>
-   *
-   * @concurrency CONCURRENT
-   * @param a_statistic the statistic to unregister.
-   */
-  //@ ensures !isRegistered(a_statistic);
+  /** {@inheritDoc} */
   public synchronized void unregister(final /*@ non_null @*/ Statistic a_statistic) {
     //@ assume \typeof(my_statistics) == \type(HashMap);
     my_statistics.remove(a_statistic);
   }
 
-  /**
-   * <p> Check to see if a statistic is registered yet. </p>
-   *
-   * @param a_statistic the statistic to check.
-   * @return whether or not <code>a_statistic</code> has been registered.
-   * @postcondition (Result == true) iff register(statistic) took place at
-   * some point in time in the execution trace of this collect instance.
-   * @modifies QUERY
-   */
-  //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
-  public synchronized /*@ pure @*/ boolean isRegistered(/*@ non_null @*/ Statistic a_statistic) {
+  /** {@inheritDoc} */
+  public /*@ pure @*/ boolean isRegistered(final /*@ non_null @*/ Statistic a_statistic) {
     return (my_statistics.get(a_statistic) == a_statistic);
   }
 
-  /**
-   * <p> What is the current value for specific statistic? </p>
-   *
-   * @param a_statistic the statistic being modified.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double currentValue(/*@ non_null @*/ Statistic a_statistic);
 
-  /**
-   * <p> Report on a particular statistic. </p>
-   *
-   * @param a_statistic the statistic being reported on.
-   * @return a report on the statistic, typically encapsulated in some type
-   * of <code>Report</code> object or just a simple <code>String</code>
-   * textual report.
-   */
+  /** {@inheritDoc} */
   public abstract Object report(/*@ non_null @*/ Statistic a_statistic);
 
-  /**
-   * <p> Report on all statistics. </p>
-   *
-   * @return a report on all statistics, typically encapsulated in some
-   * type of Report object or just a simple String textual report.
-   */
+  /** {@inheritDoc} */
   public abstract Object reportAll();
 
-  /**
-   * <p> Increment a statistic by a specified value. </p>
-   *
-   * @param the_statistic the statistic being modified.
-   * @param the_value the amount to increment the statistic.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double increment(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
-  /**
-   * <p> Increment a statistic by the default value. </p>
-   *
-   * @param the_statistic the statistic being modified.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double increment(/*@ non_null @*/ Statistic the_statistic);
 
-  /**
-   * <p> Decrement a statistic by a specified value. </p>
-   *
-   * @param the_statistic the statistic being modified.
-   * @param the_value the amount to decrement the statistic.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double decrement(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
-  /**
-   * <p> Decrement a statistic by the default value. </p>
-   *
-   * @param the_statistic the statistic being modified.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double decrement(/*@ non_null @*/ Statistic the_statistic);
 
-  /**
-   * <p> Reset a statistic to the default start value. </p>
-   *
-   * @param the_statistic the statistic to reset.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double reset(/*@ non_null @*/ Statistic the_statistic);
 
-  /**
-   * <p> Set a statistic to a specific value. </p>
-   *
-   * @param the_statistic the statistic being modified.
-   * @param the_value the new value of the statistic.
-   * @return the old value of the statistic.
-   */
+  /** {@inheritDoc} */
   public abstract double set(/*@ non_null @*/ Statistic the_statistic, double the_value);
 
   // Protected Methods
@@ -308,7 +188,7 @@ import java.util.HashMap;
    * <p> Tests to see if the current debug context is interested in a given
    * level. </p>
    *
-   * @param level the level to inspect.
+   * @param a_level the level to inspect.
    * @return a boolean indicating if the level in question is valid at this
    * time for this context (i.e. debugging framework state, thread, class
    * invoking the method, etc.)
@@ -316,9 +196,9 @@ import java.util.HashMap;
    */
   //@ requires my_debug != null;
   //@ requires my_debug.my_debug_utilities != null;
-  protected synchronized final boolean isValidLevel(int level) {
+  protected synchronized final boolean isValidLevel(final int a_level) {
     synchronized (my_debug) { /*#no_warn*/
-      return my_debug.my_debug_utilities.levelTest(level);
+      return my_debug.my_debug_utilities.levelTest(a_level);
     }
   }
 

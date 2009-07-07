@@ -278,21 +278,21 @@ class Utilities {
   // assignable \not_specified
   // @REVIEW Should be obs_pure, not just pure.
   synchronized /*@ pure @*/ boolean sourceClassValid() {
-    int index, startIndex, parenIndex;
+    int an_index, the_start_index, the_paren_index;
     Throwable throwable;
-    StringWriter stringWriter;
-    PrintWriter printWriter;
-    StringBuffer stringBuffer;
-    String string, matchString, className;
-    Map classMap;
+    StringWriter a_string_writer;
+    PrintWriter a_print_writer;
+    StringBuffer a_string_buffer;
+    String a_string, a_match_string, a_class_name;
+    Map the_class_map;
 
     // Create a new Throwable object so that we can get a snapshot of
     // the current execution stack.  Snapshot the stack into a
     // StringBuffer that we can parse.
     throwable = new Throwable();
-    stringWriter = new StringWriter();
-    printWriter = new PrintWriter(stringWriter);
-    throwable.printStackTrace(printWriter);
+    a_string_writer = new StringWriter();
+    a_print_writer = new PrintWriter(a_string_writer);
+    throwable.printStackTrace(a_print_writer);
 
     // Now stringWriter contains a textual snapshot of the current
     // execution stack.  We need to pull lines out of it until we find
@@ -302,34 +302,34 @@ class Utilities {
     // compare it with the database of classes that have debugging
     // enabled.
 
-    stringBuffer = stringWriter.getBuffer();
-    string = stringBuffer.toString();
+    a_string_buffer = a_string_writer.getBuffer();
+    a_string = a_string_buffer.toString();
     // Match to the last occurence of a Mobius logging stack frame.
-    matchString = "mobius.logging";
-    index = string.lastIndexOf(matchString);
+    a_match_string = "mobius.logging";
+    an_index = a_string.lastIndexOf(a_match_string);
     // Bump the index past the matched string.
-    startIndex = index + matchString.length() + 1;
+    the_start_index = an_index + a_match_string.length() + 1;
     // Match forward to the beginning of the classname for the next
     // stack frame (the object that called a logging method).
     final String at = "at "; // NOPMD
-    index = string.indexOf(at, startIndex);
+    an_index = a_string.indexOf(at, the_start_index);
     // Bump up the index past the "at ".
-    index += at.length();
+    an_index += at.length();
     // Grab out the class name of the next stack frame.
-    parenIndex = string.indexOf('(', index);
+    the_paren_index = a_string.indexOf('(', an_index);
 
     // We relay on the output layout of printStackTrace.
-    //@ assume parenIndex != -1;
+    //@ assume the_paren_index != -1;
 
     // So, everything between index and parenIndex is the class name
     // that we are interested in.
-    className = string.substring(index, parenIndex);
+    a_class_name = a_string.substring(an_index, the_paren_index);
     // Strip off the last part past the last ".", it is a method name.
-    index = className.lastIndexOf('.');
+    an_index = a_class_name.lastIndexOf('.');
 
     // We relay on the output layout of printStackTrace.
-    //@ assume index != -1;
-    className = className.substring(0, index);
+    //@ assume an_index != -1;
+    a_class_name = a_class_name.substring(0, an_index);
 
     // Now, we have the name of the class that called the debugging
     // routine.  It is stored in className.
@@ -338,7 +338,7 @@ class Utilities {
     if (my_debug.isOn()) {
       // It is, so see if this class is included in the list of
       // classes that have debugging enabled.
-      classMap =
+      the_class_map =
         (Map)(my_debug.my_thread_map.get("GLOBAL_CLASSES"));
 
       // If "*" is in the map, then we are testing for reductive
@@ -349,11 +349,9 @@ class Utilities {
       // possibility that per-thread context will specify that output
       // should appear.
 
-      if ((classMap.containsKey("*")) &&
-          (!classMap.containsKey(className)))
-        return true;
-      else
-        if (classMap.containsKey(className))
+      if (((the_class_map.containsKey("*")) &&
+          (!the_class_map.containsKey(a_class_name))) ||
+          (the_class_map.containsKey(a_class_name)))
           return true;
     }
 
@@ -382,9 +380,9 @@ class Utilities {
     // above to see if the calling class should output debugging
     // information.  This time, if we fail, we fail.
     if (debugContext.containsClass("*")) {
-      return !debugContext.containsClass(className);
+      return !debugContext.containsClass(a_class_name);
     } else {
-      return debugContext.containsClass(className);
+      return debugContext.containsClass(a_class_name);
     }
   }
 

@@ -70,10 +70,9 @@ package mobius.logging;
    *
    * @param the_debug the debugging interface associated with this assertion interface.
    */
-  /*@ private normal_behavior
-    @   assignable my_debug;
-    @   ensures my_debug == the_debug;
-    @*/
+  //@ private normal_behavior
+  //@   assignable my_debug;
+  //@   ensures my_debug == the_debug;
   Assert(final /*@ non_null @*/ Debug the_debug) {
     my_debug = the_debug;
   }
@@ -91,16 +90,15 @@ package mobius.logging;
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  /*@ public normal_behavior
-    @   requires the_assertion;
-    @   assignable \nothing;
-    @ also
-    @ public exceptional_behavior
-    @   requires !the_assertion;
-    @   assignable \everything;
-    @   signals_only FailedAssertionException;
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
+  //@ public normal_behavior
+  //@   requires the_assertion;
+  //@   assignable \nothing;
+  //@ also
+  //@ public exceptional_behavior
+  //@   requires !the_assertion;
+  //@   assignable \everything;
+  //@   signals_only FailedAssertionException;
+  //@   signals (FailedAssertionException) !the_assertion;
   public static synchronized void assertTrue(final boolean the_assertion) {
     if (!the_assertion) {
       Utilities.dumpStackSafe();
@@ -119,23 +117,22 @@ package mobius.logging;
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  /*@ public normal_behavior
-    @   requires the_assertion;
-    @   assignable \nothing;
-    @ also
-    @ public exceptional_behavior
-    @   requires !the_assertion;
-    @   assignable \everything;
-    @   signals_only FailedAssertionException;
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
+  //@ public normal_behavior
+  //@   requires the_assertion;
+  //@   assignable \nothing;
+  //@ also
+  //@ public exceptional_behavior
+  //@   requires !the_assertion;
+  //@   assignable \everything;
+  //@   signals_only FailedAssertionException;
+  //@   signals (FailedAssertionException) !the_assertion;
   public final synchronized void assertTrue(final boolean the_assertion,
-                                                         final String the_assertion_text) {
+                                            final String the_assertion_text) {
     if (!the_assertion) {
       final String output = my_debug.getDebugConstants().getFailedAssertionString() +
         " `" + the_assertion_text + "'\n";
       if (my_debug.getOutputInterface() != null)
-	      my_debug.getOutputInterface().printMsg(output);
+        my_debug.getOutputInterface().printMsg(output);
       Utilities.dumpStackSafe();
       throw new FailedAssertionException(output);
     }
@@ -155,16 +152,15 @@ package mobius.logging;
    * @concurrency GUARDED
    * @modifies QUERY
    */
-  /*@ public normal_behavior
-    @   requires the_assertion;
-    @   assignable \nothing;
-    @ also
-    @ public exceptional_behavior
-    @   requires !the_assertion;
-    @   assignable \everything;
-    @   signals_only FailedAssertionException;
-    @   signals (FailedAssertionException) !the_assertion;
-    @*/
+  //@ public normal_behavior
+  //@   requires the_assertion;
+  //@   assignable \nothing;
+  //@ also
+  //@ public exceptional_behavior
+  //@   requires !the_assertion;
+  //@   assignable \everything;
+  //@   signals_only FailedAssertionException;
+  //@   signals (FailedAssertionException) !the_assertion;
   public final synchronized void
   assertTrue(final boolean the_assertion,
              final String the_assertion_text,
@@ -173,7 +169,7 @@ package mobius.logging;
       final String output = my_debug.getDebugConstants().getFailedAssertionString() +
         " `" + the_assertion_text + "': " + the_assertion_message.toString() + "\n";
       if (my_debug.getOutputInterface() != null)
-	      my_debug.getOutputInterface().printMsg(output);
+        my_debug.getOutputInterface().printMsg(output);
       Utilities.dumpStackSafe();
       throw new FailedAssertionException(output);
     }

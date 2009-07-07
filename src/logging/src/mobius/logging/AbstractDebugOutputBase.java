@@ -58,7 +58,7 @@ import java.io.Writer;
  * @see WindowOutput
  * @see WriterOutput
  */
-/*+@ nullable_by_default */
+//+@ nullable_by_default
 public abstract class AbstractDebugOutputBase
   implements DebugOutput {
   // Attributes
@@ -86,12 +86,11 @@ public abstract class AbstractDebugOutputBase
    *
    * @param the_debug the new debugging object.
    */
-  /*@ public normal_behavior
-    @   modifies my_debug;
-    @   ensures my_debug == the_debug;
-    @   ensures my_debug != null;
-    @*/
-  public synchronized void setDebug(/*@ non_null @*/ Debug the_debug) {
+  //@ public normal_behavior
+  //@   modifies my_debug;
+  //@   ensures my_debug == the_debug;
+  //@   ensures my_debug != null;
+  public void setDebug(final /*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
   }
 
@@ -101,7 +100,8 @@ public abstract class AbstractDebugOutputBase
    * @param the_category is the category of this message.
    * @param the_message is the debugging message to print.
    */
-  public abstract void printMsg(final /*@ non_null @*/ String the_category, String the_message);
+  public abstract void printMsg(final /*@ non_null @*/ String the_category,
+                                String the_message);
 
   /**
    * <p> Print out the debugging message, no questions asked. </p>
@@ -126,12 +126,10 @@ public abstract class AbstractDebugOutputBase
    * @param the_message The debugging message to print.
    */
   public final synchronized boolean print(final int the_level, final String the_message) {
-    if (my_debug == null)
-      return false;
-
-    // If the level is outside of the valid range, return false.
-    if ((the_level < my_debug.getDebugConstants().getLevelMin()) ||
-        (the_level > my_debug.getDebugConstants().getLevelMax()))
+    // If we have no context or the level is outside of the valid range, return false.
+    if ((my_debug == null) ||
+      ((the_level < my_debug.getDebugConstants().getLevelMin()) ||
+        (the_level > my_debug.getDebugConstants().getLevelMax())))
       return false;
 
     if (isValidLevel(the_level)) {
@@ -161,7 +159,8 @@ public abstract class AbstractDebugOutputBase
    */
   //@ also
   //@ requires 0 < the_category.length();
-  public final boolean print(final /*@ non_null @*/ String the_category, final String the_message) {
+  public final boolean print(final /*@ non_null @*/ String the_category,
+                             final String the_message) {
     if (isValidCategory(the_category)) {
       printMsg(the_category, the_message);
       return true;
@@ -177,7 +176,8 @@ public abstract class AbstractDebugOutputBase
    */
   //@ also
   //@ requires 0 < the_category.length();
-  public final boolean print(final /*@ non_null @*/  String the_category, final Object the_object) {
+  public final boolean print(final /*@ non_null @*/  String the_category,
+                             final Object the_object) {
     return print(the_category, (the_object != null) ? the_object.toString() : "null");
   }
 
@@ -190,7 +190,8 @@ public abstract class AbstractDebugOutputBase
    */
   //@ also
   //@ requires 0 < the_category.length();
-  public final boolean println(final /*@ non_null @*/ String the_category, final Object the_object) {
+  public final boolean println(final /*@ non_null @*/ String the_category,
+                               final Object the_object) {
     return println(the_category, (the_object != null) ? the_object.toString() : "null");
   }
 
@@ -204,7 +205,8 @@ public abstract class AbstractDebugOutputBase
    */
   //@ also
   //@ requires 0 < the_category.length();
-  public final boolean println(final /*@ non_null @*/ String the_category, final String the_message) {
+  public final boolean println(final /*@ non_null @*/ String the_category,
+                               final String the_message) {
     return print(the_category, the_message + "\n");
   }
 

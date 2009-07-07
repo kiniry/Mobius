@@ -104,7 +104,8 @@ public class WindowOutput extends AbstractDebugOutputBase
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(final /*@ non_null */ String the_category, final String the_message) {
+  public synchronized void printMsg(final /*@ non_null */ String the_category,
+                                    final String the_message) {
     my_text_area.append("<" + the_category + ">: " + the_message);
   }
 
@@ -190,27 +191,29 @@ public class WindowOutput extends AbstractDebugOutputBase
           if (result == JFileChooser.APPROVE_OPTION) {
             file = fileChooser.getSelectedFile();
           }
-          final String filename = file.getAbsolutePath();
-          if (file.isDirectory()) {
-            JOptionPane.showMessageDialog(null,
-                        filename + " is not a file!",
-                        "IDebug Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }
-          if (file.exists() && !file.canWrite()) {
-            JOptionPane.showMessageDialog(null,
-                        filename + " is not a writable file!",
-                        "IDebug Error", JOptionPane.ERROR_MESSAGE);
-            return;
-          }
-          try {
-            final FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(my_text_area.getText());
-            fileWriter.close();
-          } catch (IOException ioe) {
-            JOptionPane.showMessageDialog(null,
-                  "Error while writing debug log to file " + filename,
-                  "IDebug Error", JOptionPane.ERROR_MESSAGE);
+          if (file != null) {
+            final String filename = file.getAbsolutePath();
+            if (file.isDirectory()) {
+              JOptionPane.showMessageDialog(null,
+                                            filename + " is not a file!",
+                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+              return;
+            }
+            if (file.exists() && !file.canWrite()) {
+              JOptionPane.showMessageDialog(null,
+                                            filename + " is not a writable file!",
+                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+              return;
+            }
+            try {
+              final FileWriter fileWriter = new FileWriter(file);
+              fileWriter.write(my_text_area.getText());
+              fileWriter.close();
+            } catch (IOException ioe) {
+              JOptionPane.showMessageDialog(null,
+                                            "Error while writing debug log to file " + filename,
+                                            "IDebug Error", JOptionPane.ERROR_MESSAGE);
+            }
           }
         }
       });

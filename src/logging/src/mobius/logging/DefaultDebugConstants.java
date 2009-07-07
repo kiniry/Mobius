@@ -50,77 +50,93 @@ import java.util.Map;
  * @author Joseph R. Kiniry (kiniry@acm.org)
  */
 //+@ nullable_by_default
-public class DefaultDebugConstants
-implements DebugConstants {
+public class DefaultDebugConstants implements DebugConstants {
   // Attributes
   // Inherited Methods
   // Constructors
   // Public Methods
 
+   /** {@inheritDoc} */
   public /*@ pure @*/ int getLevelMin() {
     return LEVEL_MIN;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getLevelMax() {
     return LEVEL_MAX;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getErrorString() {
-    return ERROR_STRING;  
+    return ERROR_STRING;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getFailedAssertionString() {
-    return FAILED_ASSERTION_STRING;  
+    return FAILED_ASSERTION_STRING;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getAssertionLevel() {
     return ASSERTION_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getFailureLevel() {
-    return FAILURE_LEVEL;  
+    return FAILURE_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getCriticalLevel() {
     return CRITICAL_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getErrorLevel() {
     return ERROR_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getWarningLevel() {
-    return WARNING_LEVEL;  
+    return WARNING_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getNoticeLevel() {
-    return NOTICE_LEVEL;  
+    return NOTICE_LEVEL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getAssertion() {
-    return ASSERTION;  
+    return ASSERTION;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getFailure() {
-    return FAILURE;  
+    return FAILURE;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getCritical() {
-    return CRITICAL;  
+    return CRITICAL;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getError() {
-    return ERROR;  
+    return ERROR;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getWarning() {
     return WARNING;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ String getNotice() {
-    return NOTICE;  
+    return NOTICE;
   }
 
+  /** {@inheritDoc} */
   public /*@ pure @*/ int getInvalidThread() {
     return INVALID_THREAD;
   }
@@ -133,15 +149,15 @@ implements DebugConstants {
    *
    * @see DebugConstants The default debug categories are documented in
    * DebugConstants.
-   */
-  /* TODO
+   *
+   * @review
    * Warning: Postcondition possibly not established (Post)
    * Associated declaration is "./mobius/logging/DefaultDebugConstants.java", line 139, col 6:
    */
   //@ also
   //@   assignable the_categories_map.objectState;
   //@   ensures the_categories_map.size() >= 6;
-  public final void initCategories(/*@ non_null @*/ Map the_categories_map) {
+  public final void initCategories(final /*@ non_null @*/ Map the_categories_map) {
     the_categories_map.clear();
     the_categories_map.put(ASSERTION, Integer.valueOf(ASSERTION_LEVEL));
     the_categories_map.put(FAILURE, Integer.valueOf(FAILURE_LEVEL));
@@ -158,7 +174,7 @@ implements DebugConstants {
    */
   //@ also
   //@ ensures \result <==> (LEVEL_MIN <= the_level) & (the_level <= LEVEL_MAX);
-  public /*@ pure @*/ boolean checkLevel(int the_level) {
+  public /*@ pure @*/ boolean checkLevel(final int the_level) {
     return ((LEVEL_MIN <= the_level) && (the_level <= LEVEL_MAX));
   }
 

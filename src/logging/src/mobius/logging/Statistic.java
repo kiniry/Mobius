@@ -69,10 +69,10 @@ import java.io.Serializable;
 /*-@ immutable @*/ /*#thread_shared*/ public class Statistic
   implements Serializable {
   // Attributes
-  
+
 
   //@ public represents theHashCode <- my_unique_ID;
-  
+
   /** Placeholder serialVersionUID. */
   private static final long serialVersionUID = 1L;
 
@@ -189,9 +189,9 @@ import java.io.Serializable;
   }
 
   /** {@inheritDoc} */
-  public boolean equals(Object obj) {
+  public boolean equals(final Object an_object) {
     // TODO Auto-generated method stub
-    return super.equals(obj);
+    return super.equals(an_object);
   }
 
   // Public Methods
