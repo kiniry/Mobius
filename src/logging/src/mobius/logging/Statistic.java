@@ -66,7 +66,7 @@ import java.io.Serializable;
  * after, construction time.
  */
 //+@ nullable_by_default
-public /*-@ immutable @*/ class Statistic
+/*-@ immutable @*/ /*#thread_shared*/ public class Statistic
   implements Serializable {
   // Attributes
   
@@ -82,7 +82,7 @@ public /*-@ immutable @*/ class Statistic
    *
    * @see Statistic
    */
-  private static /*@ spec_public @*/ volatile int my_current_ID;
+  private static /*@ spec_public @*/ volatile int my_current_ID /*#guarded_by this */;
 
   /**
    * <p> The unique ID for this statistic. </p>

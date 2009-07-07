@@ -48,7 +48,7 @@ package mobius.logging;
  * @see Assert
  */
 //+@ nullable_by_default
-public class FailedAssertionException extends RuntimeException {
+/*#thread_local*/ public class FailedAssertionException extends RuntimeException {
   // Attributes
   // Constructors
 

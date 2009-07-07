@@ -58,7 +58,7 @@ import javax.servlet.*;
  * @concurrency (GUARDED) All methods are synchronized.
  */
 //+@ nullable_by_default
-public class ServletLogOutput extends AbstractDebugOutputBase
+/*#thread_shared*/ public class ServletLogOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable {
   // Attributes
 

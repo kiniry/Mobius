@@ -41,7 +41,7 @@
 package mobius.logging;
 
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -148,7 +148,7 @@ public class Context
    * print(), but for the query and state change functions (like
    * isOn(), turnOn(), etc.), are short-circuited and do nothing.
    */
-  private /*@ spec_public @*/ boolean my_is_on;
+  private /*@ spec_public @*/ boolean my_is_on /*#guarded_by this*/;
 
   /**
    * @serial The current debug level of this context.
@@ -159,25 +159,25 @@ public class Context
    * this behavior by subtyping DebugConstants and installing the new
    * constant during the construction of a Context.
    */
-  private /*@ spec_public @*/ int my_level;
+  private /*@ spec_public @*/ int my_level /*#guarded_by this*/;
   //@ invariant validLevel(my_level);
 
   /**
    * @serial A map that binds category keys (Strings) to levels
    * (Integers).
    */
-  private /*@ non_null spec_public @*/ Map my_category_map;
+  private /*@ non_null spec_public @*/ Map my_category_map /*#guarded_by this*/;
 
   /**
    * @serial A map that binds class names (Strings) to enable flags
    * (Booleans).
    */
-  private /*@ non_null spec_public @*/ Map my_class_map;
+  private /*@ non_null spec_public @*/ Map my_class_map /*#guarded_by this*/;
 
   /**
    * The thread that owns this context.
    */
-  private transient /*@ spec_public @*/ Thread my_thread;
+  private transient /*@ spec_public @*/ Thread my_thread /*#guarded_by this*/;
 
   /**
    * <p> The object used by this thread to control debugging output device.
@@ -217,10 +217,10 @@ public class Context
                  final /*@ non_null @*/ DebugOutput a_debug_output) {
     super();
     my_is_on = false;
-    my_category_map = new ConcurrentHashMap();
+    my_category_map = new HashMap();
     //@ set my_category_map.keyType = \type(String);
     //@ set my_category_map.elementType = \type(Integer);
-    my_class_map = new ConcurrentHashMap();
+    my_class_map = new HashMap();
     //@ set my_class_map.keyType = \type(String);
     //@ set my_class_map.elementType = \type(boolean);
     my_class_map.put("*", Boolean.TRUE);

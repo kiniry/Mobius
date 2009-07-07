@@ -51,7 +51,7 @@ package mobius.logging;
  * @see Context
  */
 //+@ nullable_by_default
-public class Assert
+/*#thread_shared*/ public class Assert
   implements Cloneable {
   // Attributes
 
@@ -61,7 +61,7 @@ public class Assert
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  private /*@ non_null @*/ Debug my_debug;
+  private /*@ non_null @*/ Debug my_debug /*#guarded_by this*/;
 
   // Constructors
 

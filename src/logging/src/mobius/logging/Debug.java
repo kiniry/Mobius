@@ -41,8 +41,8 @@
 package mobius.logging;
 
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -204,7 +204,7 @@ import java.util.Map;
  *       if not, return the global output interface?
  */
 //+@ nullable_by_default
-public class Debug implements Cloneable {
+/*#thread_shared*/public class Debug implements Cloneable {
   // Attributes
 
   /**
@@ -235,7 +235,7 @@ public class Debug implements Cloneable {
    * specification of classes.
    * </p>
    */
-  protected /*@ non_null @*/ Map my_thread_map;
+  protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
 
   /**
    * <p>
@@ -246,7 +246,7 @@ public class Debug implements Cloneable {
    */
   /*@ constraint \old(my_debug_constants) == my_debug_constants;
    */
-  protected /*@ non_null @*/ DebugConstants my_debug_constants;
+  protected /*@ non_null @*/ DebugConstants my_debug_constants /*#guarded_by this*/;
 
   /**
    * <p>
@@ -257,7 +257,7 @@ public class Debug implements Cloneable {
    * <code>turnOn()</code>, etc.) are short-circuited and do nothing.
    * </p>
    */
-  protected /*@ spec_public @*/ boolean my_is_on;
+  protected /*@ spec_public @*/ boolean my_is_on /*#guarded_by this*/;
 
   /**
    * <p>
@@ -279,7 +279,7 @@ public class Debug implements Cloneable {
   /*@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <=
 	  @ my_debug_constants.LEVEL_MAX;
    */
-  protected int my_level;
+  protected int my_level /*#guarded_by this*/;
 
   /**
    * <p>
@@ -289,7 +289,7 @@ public class Debug implements Cloneable {
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  protected /*@ non_null @*/ Assert my_assert;
+  protected /*@ non_null @*/ Assert my_assert /*#guarded_by this*/;
 
   /**
    * <p>
@@ -299,7 +299,7 @@ public class Debug implements Cloneable {
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  protected AbstractCollect my_collect;
+  protected AbstractCollect /*#{this}*/ my_collect /*#guarded_by this*/;
 
   /**
    * <p>
@@ -309,7 +309,7 @@ public class Debug implements Cloneable {
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  protected /*@ non_null @*/ Utilities my_debug_utilities;
+  protected /*@ non_null @*/ Utilities my_debug_utilities /*#guarded_by this*/;
 
   /**
    * <p>
@@ -317,7 +317,7 @@ public class Debug implements Cloneable {
    * global debugging messages will use this interface for output.
    * </p>
    */
-  protected transient /*@ spec_public @*/ DebugOutput my_debug_output_interface;
+  protected transient /*@ spec_public @*/ DebugOutput my_debug_output_interface /*#guarded_by this*/;
 
   // Constructors
 
@@ -377,7 +377,7 @@ public class Debug implements Cloneable {
    *            the new output interface.
    */
   //@ ensures my_debug_output_interface == the_new_debug_output;
-  public void setOutputInterface(final DebugOutput the_new_debug_output) {
+  public synchronized void setOutputInterface(final DebugOutput the_new_debug_output) {
     this.my_debug_output_interface = the_new_debug_output;
   }
 
@@ -409,7 +409,7 @@ public class Debug implements Cloneable {
    *         thread or, if that thread has no interface, the global output
    *         interface.
    */
-  public /*@ pure @*/ DebugOutput getOutputInterface() {
+  public synchronized /*@ pure @*/ DebugOutput getOutputInterface() {
     final Thread currentThread = Thread.currentThread();
 
     if (my_thread_map.containsKey(currentThread)) {
@@ -881,16 +881,16 @@ public class Debug implements Cloneable {
   //@ nowarn Exception;
   private /*@ helper @*/ void init(/*@ non_null @*/ DebugConstants the_debug_constants,
                                    AbstractCollect the_collect) {
-    my_thread_map = new ConcurrentHashMap();
+    my_thread_map = new HashMap();
     //@ set my_thread_map.keyType = \type(Thread);
     //@ set my_thread_map.elementType = \type(Context);
-    final Map categoryMap = new ConcurrentHashMap();
+    final Map categoryMap = new HashMap();
     my_thread_map.put("GLOBAL_CATEGORIES", categoryMap); //@nowarn Exception;
 
     my_debug_constants = the_debug_constants;
     my_debug_constants.initCategories(categoryMap);
 
-    final Map classMap = new ConcurrentHashMap();
+    final Map classMap = new HashMap();
     my_thread_map.put("GLOBAL_CLASSES", classMap); //@ nowarn Exception;
     classMap.put("*", Boolean.TRUE);
 

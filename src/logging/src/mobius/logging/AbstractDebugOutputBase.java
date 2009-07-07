@@ -67,7 +67,7 @@ public abstract class AbstractDebugOutputBase
    * <p> The <code>Debug</code> object associated with this output
    * object. </p>
    */
-  protected /*@ spec_public @*/ Debug my_debug;
+  protected /*@ spec_public @*/ Debug my_debug /*#guarded_by this*/;
 
   // Inherited Classes
   // Constructors
@@ -77,7 +77,7 @@ public abstract class AbstractDebugOutputBase
    * @return What is my debugging object?
    */
   //@ ensures \result == my_debug;
-  public /*@ pure @*/ Debug getDebug() {
+  public synchronized /*@ pure @*/ Debug getDebug() {
     return my_debug;
   }
 
@@ -91,7 +91,7 @@ public abstract class AbstractDebugOutputBase
     @   ensures my_debug == the_debug;
     @   ensures my_debug != null;
     @*/
-  public void setDebug(/*@ non_null @*/ Debug the_debug) {
+  public synchronized void setDebug(/*@ non_null @*/ Debug the_debug) {
     this.my_debug = the_debug;
   }
 
@@ -125,7 +125,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_level The debugging level of this message.
    * @param the_message The debugging message to print.
    */
-  public final boolean print(final int the_level, final String the_message) {
+  public final synchronized boolean print(final int the_level, final String the_message) {
     if (my_debug == null)
       return false;
 
@@ -253,10 +253,12 @@ public abstract class AbstractDebugOutputBase
    */
   //@ also
   //@ requires 0 < the_category.length();
-  public final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
+  public synchronized final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
     if (my_debug == null)
       return false;
-    return my_debug.my_debug_utilities.categoryTest(the_category);
+    synchronized (my_debug) { /*#no_warn*/
+      return my_debug.my_debug_utilities.categoryTest(the_category);
+    }
   }
 
   /**
@@ -269,10 +271,12 @@ public abstract class AbstractDebugOutputBase
    * invoking the method, etc.)
    * @see Context
    */
-  public /*@ pure @*/ final boolean isValidLevel(final int a_level) {
+  public /*@ pure @*/ final synchronized boolean isValidLevel(final int a_level) {
     if (my_debug == null)
       return false;
-    return my_debug.my_debug_utilities.levelTest(a_level);
+    synchronized (my_debug) { /*#no_warn*/
+      return my_debug.my_debug_utilities.levelTest(a_level);
+    }
   }
 
   // Protected Methods

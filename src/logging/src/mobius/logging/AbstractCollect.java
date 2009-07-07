@@ -42,8 +42,8 @@
 
 package mobius.logging;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * <p> The core interface to gathering statistics. </p>
@@ -79,14 +79,14 @@ import java.util.Map;
  * @see mobius.logging.examples.SimpleCollect
  */
 //+@ nullable_by_default
-public abstract class AbstractCollect {
+/*#thread_shared*/ public abstract class AbstractCollect {
   // Attributes
 
   /**
    * <p> A <code>Map</code> used to track statistics
    * definitions. </p>
    */
-  private /*@ non_null spec_public @*/ Map my_statistics; //@ in objectState;
+  private /*@ non_null spec_public @*/ Map my_statistics /*#guarded_by this*/; //@ in objectState;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -95,7 +95,7 @@ public abstract class AbstractCollect {
    * @modifies SINGLE-ASSIGNMENT
    */
   //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
-  private /*@ spec_public @*/ Debug my_debug; //@ in objectState;
+  private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in objectState;
   
   // Inherited Methods
   // Constructors
@@ -104,8 +104,8 @@ public abstract class AbstractCollect {
    * <p> Construct a new <code>Collect</code> class. </p>
    */
   public AbstractCollect() {
-    this.my_statistics = new ConcurrentHashMap();
-    //  @ set my_statistics.elementType = CuncurrentHashMap; XXX
+    this.my_statistics = new HashMap();
+    // @ set my_statistics.elementType = CuncurrentHashMap; XXX
     // @ set my_statistics.containsNull = false; XXX
   }
 
@@ -142,7 +142,7 @@ public abstract class AbstractCollect {
         assignable my_debug;
         ensures my_debug == a_debug;
    */
-  public final void setDebug(/*@ non_null @*/ final Debug a_debug) {
+  public synchronized final void setDebug(/*@ non_null @*/ final Debug a_debug) {
     my_debug = a_debug;
   }
 
@@ -157,7 +157,7 @@ public abstract class AbstractCollect {
         assignable my_statistics.objectState;
         ensures isRegistered(a_statistic);
    */
-  public void register(/*@ non_null @*/ final Statistic a_statistic) {
+  public synchronized void register(/*@ non_null @*/ final Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
 
@@ -171,7 +171,7 @@ public abstract class AbstractCollect {
    * @return a boolean indicating if the value of the statistic
    * <code>a_statistic</code> has changed at all.
    */
-  public /*@ pure @*/ boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
+  public synchronized /*@ pure @*/ boolean checkStatisticID(/*@ non_null @*/ Statistic a_statistic) {
     final Object the_old_value = my_statistics.get(a_statistic);
     if (the_old_value != null) {
       // make sure value hasn't changed.
@@ -187,8 +187,8 @@ public abstract class AbstractCollect {
    * @param a_statistic the statistic to unregister.
    */
   //@ ensures !isRegistered(a_statistic);
-  public void unregister(final /*@ non_null @*/ Statistic a_statistic) {
-    //@ assume \typeof(my_statistics) == \type(ConcurrentHashMap);
+  public synchronized void unregister(final /*@ non_null @*/ Statistic a_statistic) {
+    //@ assume \typeof(my_statistics) == \type(HashMap);
     my_statistics.remove(a_statistic);
   }
 
@@ -202,7 +202,7 @@ public abstract class AbstractCollect {
    * @modifies QUERY
    */
   //@ ensures \result <==> my_statistics.get(a_statistic) == a_statistic;
-  public /*@ pure @*/ boolean isRegistered(/*@ non_null @*/ Statistic a_statistic) {
+  public synchronized /*@ pure @*/ boolean isRegistered(/*@ non_null @*/ Statistic a_statistic) {
     return (my_statistics.get(a_statistic) == a_statistic);
   }
 
@@ -298,8 +298,10 @@ public abstract class AbstractCollect {
    */
   //@ requires 0 < the_category.length();
   //@ requires my_debug != null;
-  protected final boolean isValidCategory(final /*@ non_null @*/ String the_category) {
-    return my_debug.my_debug_utilities.categoryTest(the_category);
+  protected final synchronized boolean isValidCategory(final /*@ non_null @*/ String the_category) {
+    synchronized (my_debug) { /*#no_warn*/
+      return my_debug.my_debug_utilities.categoryTest(the_category);
+    }
   }
 
   /**
@@ -314,8 +316,10 @@ public abstract class AbstractCollect {
    */
   //@ requires my_debug != null;
   //@ requires my_debug.my_debug_utilities != null;
-  protected final boolean isValidLevel(int level) {
-    return my_debug.my_debug_utilities.levelTest(level);
+  protected synchronized final boolean isValidLevel(int level) {
+    synchronized (my_debug) { /*#no_warn*/
+      return my_debug.my_debug_utilities.levelTest(level);
+    }
   }
 
   // Package Methods

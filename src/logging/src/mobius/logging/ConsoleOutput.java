@@ -54,7 +54,7 @@ import java.io.Writer;
  * @see Debug
  */
 //+@ nullable_by_default
-public class ConsoleOutput extends AbstractDebugOutputBase
+/*#thread_shared*/ public class ConsoleOutput extends AbstractDebugOutputBase
   implements DebugOutput, Cloneable
 {
   // Attributes
