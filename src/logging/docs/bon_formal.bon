@@ -1,47 +1,61 @@
 static_diagram BUILTIN
 component
   class VALUE
-  feature
-    infix "<": BOOLEAN -> VALUE -> VALUE
-    infix "<=": BOOLEAN -> VALUE -> VALUE
-    infix ">": BOOLEAN -> VALUE -> VALUE
-    infix ">=": BOOLEAN -> VALUE -> VALUE
-    infix "=": BOOLEAN -> VALUE -> VALUE
-    infix "/=": BOOLEAN -> VALUE -> VALUE
+--  feature
+--    infix "<:": BOOLEAN -> VALUE
+--    <=: BOOLEAN -> VALUE
+--    >: BOOLEAN -> VALUE
+--    >=: BOOLEAN -> VALUE
+--    =: BOOLEAN -> VALUE
+--    /=: BOOLEAN -> VALUE
   class STRING
-  feature
-    substring: BOOLEAN -> VALUE
-    string_suffix: BOOLEAN -> VALUE
-    string_prefix: BOOLEAN -> VALUE
+    feature
+      substring: BOOLEAN -> VALUE
+      string_prefix: BOOLEAN -> VALUE
+      string_suffix: BOOLEAN -> VALUE
+  end
+
   class NUMERIC
   class INTEGER
   class REAL
-  feature
-    floor: INTEGER
-    ceiling: INTEGER
-    round: INTEGER
+    feature
+      floor: INTEGER
+      ceiling: INTEGER
+      round: INTEGER
+  end
+
   class CONTAINER[T]
-  feature
-    in: BOOLEAN -> T
-    count: INTEGER
+    feature
+      in: BOOLEAN -> T
+      count: INTEGER
+  end
+
   class SET[T]
-  feature
-    union: SET[T] -> SET[T]
-    intersect: SET[T] -> SET[T]
+    feature
+      union: SET[T] -> SET[T]
+      intersect: SET[T] -> SET[T]
+  end
   class BAG[T]
-  feature
-    merge: BAG[T] -> BAG[T]
+    feature
+      merge: BAG[T] -> BAG[T]
+  end
+
   class SEQUENCE[T]
-  feature
-    concatenate: SEQUENCE[T] -> SEQUENCE[T]
+    feature
+      concatenate: SEQUENCE[T] -> SEQUENCE[T]
+  end
+
   class TABLE[K, V]
-  feature
-    key: BOOLEAN -> K
-    value: V -> K
+    feature
+      key: BOOLEAN -> K
+      value: V -> K
+  end
+
   class STACK[T]
-  feature
-    top: T
-    pop: STACK[T]
+    feature
+      top: T
+      pop: STACK[T]
+  end
 
   NUMERIC inherit VALUE
   INTEGER inherit NUMERIC
@@ -66,17 +80,19 @@ component
     class SET reused
 
     LEVEL inherit VALUE
-    LOG inherit SET[EVENT]
+    --LOG inherit SET[EVENT]
+    LOG inherit SET
     MESSAGE inherit STRING
     TYPE inherit VALUE
 
     EVENT client LEVEL
     EVENT client TYPE
-    EVENT cilent MESSAGE
+    EVENT client MESSAGE
 
     ASSERTION inherit EVENT
     STATISTIC inherit EVENT
   end
+  
   cluster PROCESSING
   component
     class CHECKER interfaced
@@ -85,8 +101,10 @@ component
     class TUNER persistent interfaced
     class SET reused
 
-    COLLECTOR inherit SET[STATISTIC]
-    LOGGER inherit SET[LOG]
+    --COLLECTOR inherit SET[STATISTIC]
+    COLLECTOR inherit SET
+    --LOGGER inherit SET[LOG]
+    LOGGER inherit SET
 
     CHECKER client EVENT
     COLLECTOR client EVENT
@@ -104,32 +122,37 @@ component
     class EVENT
     feature
       system: STRING
-      component: STRING
+      the_component: STRING
       type: TYPE
       timestamp: DATE
-      description: STRING
+      the_description: STRING
       level: LEVEL
       printable_representation: STRING
       valid: BOOLEAN -> STRING
       legal: BOOLEAN -> TYPE
-      legal: BOOLEAN -> LEVEL
+      --legal: BOOLEAN -> LEVEL
       equals: BOOLEAN -> other: EVENT
-        requires other /= Void
-        ensures Result <-> system=other.system and component=other.component and
+        require other /= Void;
+        ensure Result <-> system=other.system and the_component=other.the_component and
                            type=other.type and timestamp=other.timestamp and
-                           level=other.level
+                           level=other.level;
+        end
       create: EVENT
-        -> system: STRING -> component: STRING -> type: TYPE ->
-           description: STRING -> level: LEVEL
-        requires valid(system)
-                 valid(component)
-                 legal(type)
-                 legal(level)
+        -> system: STRING -> the_component: STRING -> type: TYPE
+        -> the_description: STRING -> level: LEVEL
+        require 
+          valid(system);
+          valid(the_component);
+          legal(type);
+          legal(level);
+        end
+
       invariant
-        valid(system)
-        valid(component)
-        TYPE.legal(type)
-        LEVEL.legal(level)
+        valid(system);
+        valid(the_component);
+        TYPE.legal(type);
+        LEVEL.legal(level);
+    end
 
     class LEVEL
     feature
@@ -137,48 +160,60 @@ component
       maximum: VALUE
       current: VALUE
       set_value: VOID -> new_value: VALUE
-        requires
-          minimum <= new_value
-          new_value <= maximum
-        ensures
-          current = new_value
+        require
+          minimum <= new_value;
+          new_value <= maximum;
+        ensure
+          current = new_value;
+        end
       legal: BOOLEAN -> v: VALUE
-        ensures
-          Result <-> minimum <= v and v <= maximum
+        ensure
+          Result <-> minimum <= v;
+          v <= maximum;
+        end
       invariant
-        minimum <= maximum
+        minimum <= maximum;
+    end
       
     class LOG
-      events: SET[EVENT] -> EVENT_DESCRIPTION
-      sources: LIST[STRING]
-      store: VOID -> EVENT
-      delete: VOID -> EVENT
-      delete: VOID -> EVENT_DESCRIPTION
-      export: VOID -> file: FILE
-      import: VOID -> file: FILE
+      feature
+        events: SET[EVENT] -> EVENT_DESCRIPTION
+        sources: LIST[STRING]
+        store: VOID -> EVENT
+        delete: VOID -> EVENT
+        --delete: VOID -> EVENT_DESCRIPTION
+        export: VOID -> file: FILE
+        import: VOID -> file: FILE
+    end
 
     class STATISTIC
-      id: VALUE
-      units: STRING
-      scalar: VALUE
-      start: VALUE
-      increment: VALUE
-      decrement: VALUE
-      create: STATISTIC
-        -> units: STRING -> scalar: VALUE -> start: VALUE, 
-           increment: VALUE -> decrement: VALUE
-        ensures
-          Result.units = units
-          Result.scalar = scalar
-          Result.start = start
-          Result.increment = increment
-          Result.decrement = decrement
+      feature
+        id: VALUE
+        units: STRING
+        scalar: VALUE
+        start: VALUE
+        increment: VALUE
+        decrement: VALUE
+        create: STATISTIC
+          -> units: STRING -> scalar: VALUE -> start: VALUE 
+          -> increment: VALUE -> decrement: VALUE
+          ensure
+            Result.units = units;
+            Result.scalar = scalar;
+            Result.start = start;
+            Result.increment = increment;
+            Result.decrement = decrement;
+          end
+    end
 
     class TYPE
-      legal_types: SET[TYPE]
-      legal: BOOLEAN -> t: TYPE
-        ensures
-          Result <-> t member_of legal_types
+      feature
+        legal_types: SET[TYPE]
+        legal: BOOLEAN -> t: TYPE
+          ensure
+            Result <-> t member_of legal_types;
+          end
+    end
   end
 
   cluster PROCESSING
@@ -195,35 +230,41 @@ component
       active: BOOLEAN -> STATISTIC
 
       report: VOID -> STATISTIC
-      report: VOID
+      --report: VOID
       increment: VOID -> STATISTIC -> VALUE
-      increment: VOID -> STATISTIC
+      --increment: VOID -> STATISTIC
       decrement: VOID -> STATISTIC -> VALUE
-      decrement: VOID -> STATISTIC
+      --decrement: VOID -> STATISTIC
+
       reset: VOID -> STATISTIC
       set: VOID -> STATISTIC -> VALUE
       register: VOID -> s: STATISTIC
-        requires
-          not s member_of Current
-        ensures
-          not active(s)
+        require
+          not (s member_of Current);
+        ensure
+          not active(s);
+        end
       activate: VOID -> STATISTIC
       deactivate: VOID -> STATISTIC
+    end
 
     class LOGGER
-    feature
-      log: SET[LOG]
-      last: EVENT
-      clear: VOID
-      save: VOID -> f: FILE
-      close: VOID
+      feature
+        log: SET[LOG]
+        last: EVENT
+        clear: VOID
+        save: VOID -> f: FILE
+        close: VOID
+    end
 
     class TUNER
-      enabled: BOOLEAN -> LEVEL
-      enabled: BOOLEAN -> TYPE
-      types: SET[TYPE]
-      enable: VOID -> TYPE
-      disable: VOID -> TYPE
-      level: VOID -> l: LEVEL
+      feature
+        enabled: BOOLEAN -> LEVEL
+        --enabled: BOOLEAN -> TYPE
+        types: SET[TYPE]
+        enable: VOID -> TYPE
+        disable: VOID -> TYPE
+        level: VOID -> l: LEVEL
+    end
   end
 end
