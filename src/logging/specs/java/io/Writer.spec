@@ -22,17 +22,16 @@ public class Writer
 	public void write( /*@ non_null @*/ char[] cbuf)
 			throws java.io.IOException;
 	
-	/*@ requires off >= 0;
-	  @ requires len >= 0;
-	  @*/
+	//@ requires 0 <= off;
+	//@ requires 0 <= len;
 	public abstract void write( /*@ non_null @*/ char[] cbuf, int off, int len)
 			throws java.io.IOException;
 
 	public void write( /*@ non_null @*/ String str)
 			throws java.io.IOException;
 	
-	/*@ requires off >= 0;
-	  @ requires len >= 0;
+	/*@ requires 0 <= off;
+	  @ requires 0 <= len;
 	  @*/
 	public void write( /*@ non_null @*/ String str, int off, int len)
 			throws java.io.IOException;

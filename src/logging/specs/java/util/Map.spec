@@ -26,6 +26,7 @@ package java.util;
  * @author Viliam Holub
  */
 public interface Map {
+    //@ public model instance JMLDataGroup objectState;
     //@ public model instance JMLDataGroup localState; in objectState;
 
     /*@ public normal_behavior
@@ -175,7 +176,7 @@ public interface Map {
           @     requires !(o instanceof Entry);
           @     ensures \result == false;
           @*/
-        /*@ pure @*/ boolean equals(Object o);
+        /*@ pure @*/ boolean equals(/*@ nullable @*/ Object o);
 
         /*@ pure @*/ int hashCode();
 
@@ -394,7 +395,7 @@ public interface Map {
       @    requires !(o instanceof Map);
       @    ensures !\result;
       @*/
-    /*@ pure @*/ boolean equals(Object o);
+    /*@ pure @*/ boolean equals(/*@ nullable @*/ Object o);
 	
     /*@ pure @*/ int hashCode();
 }

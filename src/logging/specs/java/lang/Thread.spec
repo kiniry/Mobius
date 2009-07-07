@@ -6,10 +6,8 @@ package java.lang;
 //-@ immutable 
 public final class Thread
 {
-    /*@ public normal_behavior @*/
     public static /*@ pure non_null @*/ Thread currentThread();
 
-    /* dumpStack() is not pure since it writes to output.
-    /*@ public normal_behavior @*/
+    /* dumpStack() is not pure since it writes to output. */
     public static void dumpStack();
 }
