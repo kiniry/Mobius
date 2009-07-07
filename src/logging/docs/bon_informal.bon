@@ -100,14 +100,14 @@ indexing
 explanation
   "Represents the importance level of a particular event."
 query
-  "What is the level set to?", 
+  "What is the level set to?",
   "What is the minimum/maximum level?"
 command
   "Set the level to a value.", 
   "How does this level compare with another?"
 constraint
   "Levels have upper and lower bounds, thus all level assignments must be \
-       \ bounded appropriately."
+ \ bounded appropriately."
 end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class_chart LOG
