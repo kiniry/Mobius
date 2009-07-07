@@ -63,6 +63,7 @@ public abstract class AbstractDebugOutputBase
   implements DebugOutput {
   // Attributes
 
+  private static final String NULL = "null";
   /**
    * <p> The <code>Debug</code> object associated with this output
    * object. </p>
@@ -146,7 +147,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_object The object to print.
    */
   public final boolean print(final int the_level, final Object the_object) {
-    return print(the_level, (the_object != null) ? the_object.toString() : "null");
+    return print(the_level, (the_object == null) ? NULL : the_object.toString());
   }
 
   /**
@@ -178,7 +179,7 @@ public abstract class AbstractDebugOutputBase
   //@ requires 0 < the_category.length();
   public final boolean print(final /*@ non_null @*/  String the_category,
                              final Object the_object) {
-    return print(the_category, (the_object != null) ? the_object.toString() : "null");
+    return print(the_category, (the_object == null) ? NULL : the_object.toString());
   }
 
   /**
@@ -192,7 +193,7 @@ public abstract class AbstractDebugOutputBase
   //@ requires 0 < the_category.length();
   public final boolean println(final /*@ non_null @*/ String the_category,
                                final Object the_object) {
-    return println(the_category, (the_object != null) ? the_object.toString() : "null");
+    return println(the_category, (the_object == null) ? NULL : the_object.toString());
   }
 
   /**
@@ -218,7 +219,7 @@ public abstract class AbstractDebugOutputBase
    * @param the_object The object to print.
    */
   public final boolean println(final int the_level, final Object the_object) {
-    return println(the_level, (the_object != null) ? the_object.toString() : "null");
+    return println(the_level, (the_object == null) ? NULL : the_object.toString());
   }
 
   /**

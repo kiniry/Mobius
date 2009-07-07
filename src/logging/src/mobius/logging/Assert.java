@@ -61,7 +61,7 @@ package mobius.logging;
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  private /*@ non_null @*/ Debug my_debug /*#guarded_by this*/;
+  private final /*@ non_null @*/ Debug my_debug /*#guarded_by this*/;
 
   // Constructors
 

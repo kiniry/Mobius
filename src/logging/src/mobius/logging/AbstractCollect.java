@@ -69,7 +69,8 @@ import java.util.HashMap;
    * <p> A <code>Map</code> used to track statistics
    * definitions. </p>
    */
-  private /*@ non_null spec_public @*/ Map my_statistics /*#guarded_by this*/; //@ in objectState;
+  private final /*@ non_null spec_public @*/
+  Map my_statistics /*#guarded_by this*/; //@ in collectorObjectState;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -79,7 +80,7 @@ import java.util.HashMap;
    */
   //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==>
   //@                    (my_debug == \old(my_debug));
-  private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in objectState;
+  private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in collectorObjectState;
 
   // Inherited Methods
   // Constructors

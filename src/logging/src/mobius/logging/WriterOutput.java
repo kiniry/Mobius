@@ -75,6 +75,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    */
   //@ ensures my_debug == a_debug;
   public WriterOutput(final /*@ non_null @*/ Debug a_debug) {
+    super();
     my_debug = a_debug;
   }
 
@@ -90,6 +91,7 @@ public class WriterOutput extends AbstractDebugOutputBase
   //@ ensures my_print_writer == a_print_writer;
   public WriterOutput(final /*@ non_null @*/ Debug a_debug,
                       final /*@ non_null @*/ PrintWriter a_print_writer) {
+    super();
     my_debug = a_debug;
     my_print_writer = a_print_writer;
   }
@@ -116,7 +118,7 @@ public class WriterOutput extends AbstractDebugOutputBase
   public synchronized void printMsg(final /*@ non_null */ String a_category,
                                     final String a_message) {
     my_print_writer.print("<" + a_category + ">: " +
-                          ((a_message != null) ? a_message : "null"));
+                          ((a_message == null) ? "null" : a_message));
     my_print_writer.flush();
   }
 
@@ -125,7 +127,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @modifies QUERY
    */
   public synchronized void printMsg(final int a_level, final String a_message) {
-    my_print_writer.print("[" + a_level + "]: " + ((a_message != null) ? a_message : "null"));
+    my_print_writer.print("[" + a_level + "]: " + ((a_message == null) ? "null" : a_message));
     my_print_writer.flush();
   }
 
@@ -134,7 +136,7 @@ public class WriterOutput extends AbstractDebugOutputBase
    * @modifies QUERY
    */
   public synchronized void printMsg(final String a_message) {
-    my_print_writer.print((a_message != null) ? a_message : "null");
+    my_print_writer.print((a_message == null) ? "null" : a_message);
     my_print_writer.flush();
   }
 

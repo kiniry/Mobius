@@ -66,8 +66,7 @@ import javax.servlet.*;
    * <p> The <code>ServletContext</code> instance associated with this
    * instance of ServletLogOutput. </p>
    */
-
-  private /*@ non_null spec_public @*/ ServletContext my_servlet_context;
+  private transient final /*@ non_null spec_public @*/ ServletContext my_servlet_context;
 
   // Constructors
 
@@ -82,6 +81,7 @@ import javax.servlet.*;
   //@ ensures my_servlet_context != null;
   //@ ensures my_debug == the_debug;
   public ServletLogOutput(final /*@ non_null @*/ Debug the_debug) {
+    super();
     my_debug = the_debug;
     my_servlet_context = new DummyServletContext();
   }
@@ -99,6 +99,7 @@ import javax.servlet.*;
   public
   ServletLogOutput(final /*@ non_null @*/ Debug the_debug,
                    final /*@ non_null @*/ ServletContext the_servlet_context) {
+    super();
     my_debug = the_debug;
     my_servlet_context = the_servlet_context;
   }
@@ -119,22 +120,23 @@ import javax.servlet.*;
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(/*@ non_null */ String a_category, String a_message) {
+  public synchronized void printMsg(final /*@ non_null */ String a_category,
+                                    final String a_message) {
     my_servlet_context.log("<" + a_category + ">: " + a_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(int a_level, String a_message) {
+  public synchronized void printMsg(final int a_level, final String a_message) {
     my_servlet_context.log("[" + a_level + "]: " + a_message);
   }
 
   /**
    * {@inheritDoc}
    */
-  public synchronized void printMsg(String a_message) {
-    my_servlet_context.log(a_message != null ? a_message : "null");
+  public synchronized void printMsg(final String a_message) {
+    my_servlet_context.log(a_message == null ? "null" : a_message);
   }
 
   /**
@@ -159,13 +161,13 @@ import javax.servlet.*;
    *
    * @history This class comes from the Jiki.
    */
-  private class DummyServletContext implements ServletContext {
+  private static class DummyServletContext implements ServletContext {
     /** A default empty constructor. */
     DummyServletContext() {
       super();
     }
     /** {@inheritDoc} */
-    public Servlet getServlet(String name) throws ServletException {
+    public Servlet getServlet(final String a_servlet_name) throws ServletException {
       return null;
     }
     /** {@inheritDoc} */
@@ -177,21 +179,21 @@ import javax.servlet.*;
       return null;
     }
     /** {@inheritDoc} */
-    public void log(String msg) {
-      System.err.print(msg);
+    public void log(final String a_msg) {
+      System.err.print(a_msg);
     }
     /** {@inheritDoc} */
-    public void log(Exception exception, String msg) {
-      System.err.print(msg);
-      if (exception != null)
-	      exception.printStackTrace(System.err);
+    public void log(final Exception an_exception, final String a_msg) {
+      System.err.print(a_msg);
+      if (an_exception != null)
+        an_exception.printStackTrace(System.err);
     }
     /** {@inheritDoc} */
-    public String getRealPath(String path) {
-      return path;
+    public String getRealPath(final String a_path) {
+      return a_path;
     }
     /** {@inheritDoc} */
-    public String getMimeType(String file) {
+    public String getMimeType(final String a_file) {
       return null;
     }
     /** {@inheritDoc} */
@@ -200,7 +202,7 @@ import javax.servlet.*;
         "- http://www.jiki.org/.";
     }
     /** {@inheritDoc} */
-    public Object getAttribute(String name) {
+    public Object getAttribute(final String a_name) {
       return null;
     }
     /** {@inheritDoc} */
@@ -209,12 +211,12 @@ import javax.servlet.*;
       return null;
     }
     /** {@inheritDoc} */
-    public ServletContext getContext(String arg0) {
+    public ServletContext getContext(final String the_context_name) {
       // todo Auto-generated method stub
       return null;
     }
     /** {@inheritDoc} */
-    public String getInitParameter(String arg0) {
+    public String getInitParameter(final String the_parameter_name) {
       // todo Auto-generated method stub
       return null;
     }
@@ -234,27 +236,27 @@ import javax.servlet.*;
       return 0;
     }
     /** {@inheritDoc} */
-    public RequestDispatcher getNamedDispatcher(String arg0) {
+    public RequestDispatcher getNamedDispatcher(final String the_dispatcher_name) {
       // todo Auto-generated method stub
       return null;
     }
     /** {@inheritDoc} */
-    public RequestDispatcher getRequestDispatcher(String arg0) {
+    public RequestDispatcher getRequestDispatcher(final String the_dispatcher_name) {
       // todo Auto-generated method stub
       return null;
     }
     /** {@inheritDoc} */
-    public URL getResource(String arg0) throws MalformedURLException {
+    public URL getResource(final String the_resource_name) throws MalformedURLException {
       // todo Auto-generated method stub
       return null;
     }
     /** {@inheritDoc} */
-    public InputStream getResourceAsStream(String arg0) {
+    public InputStream getResourceAsStream(final String the_resource_name) {
       // todo Auto-generated method stub
       return null;
     }
     /** {@inheritDoc} */
-    public Set getResourcePaths(String arg0) {
+    public Set getResourcePaths(final String the_resource_name) {
       // todo Auto-generated method stub
       return null;
     }
@@ -264,15 +266,15 @@ import javax.servlet.*;
       return null;
     }
     /** {@inheritDoc} */
-    public void log(String arg0, Throwable arg1) {
+    public void log(final String the_message, final Throwable a_throwable) {
       // todo Auto-generated method stub
     }
     /** {@inheritDoc} */
-    public void removeAttribute(String arg0) {
+    public void removeAttribute(final String the_attribute) {
       // todo Auto-generated method stub
     }
     /** {@inheritDoc} */
-    public void setAttribute(String arg0, Object arg1) {
+    public void setAttribute(final String the_attribute, final Object a_value) {
       // todo Auto-generated method stub
     }
   }

@@ -36,8 +36,8 @@ package mobius.logging;
  */
 //+@ nullable_by_default
 interface Collector {
-
-  //@ public instance model Debug the_debug_model; in objectState;
+  //@ public model instance JMLDataGroup collectorObjectState;
+  //@ public instance model Debug the_debug_model; in collectorObjectState;
 
   /**
    * <p> Checks a debug instance to make sure its <code>collect</code>

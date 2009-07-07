@@ -93,8 +93,8 @@ public class WindowOutput extends AbstractDebugOutputBase
   //@ assignable my_debug, \everything;
   //@ ensures my_debug == the_debug;
   public WindowOutput(final /*@ non_null @*/ Debug the_debug) {
+    super();
     this.my_debug = the_debug;
-
     // set up swing components.
     createUI();
   }

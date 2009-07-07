@@ -140,7 +140,7 @@ public class Context
   /**
    * @serial The debugging constants for this class.
    */
-  private final /*@ spec_public @*/ DebugConstants my_debug_constants;
+  private transient final /*@ spec_public @*/ DebugConstants my_debug_constants;
 
   /**
    * @serial A flag indicating if debugging is enabled for this
@@ -166,13 +166,13 @@ public class Context
    * @serial A map that binds category keys (Strings) to levels
    * (Integers).
    */
-  private /*@ non_null spec_public @*/ Map my_category_map /*#guarded_by this*/;
+  private final /*@ non_null spec_public @*/ Map my_category_map /*#guarded_by this*/;
 
   /**
    * @serial A map that binds class names (Strings) to enable flags
    * (Booleans).
    */
-  private /*@ non_null spec_public @*/ Map my_class_map /*#guarded_by this*/;
+  private final /*@ non_null spec_public @*/ Map my_class_map /*#guarded_by this*/;
 
   /**
    * The thread that owns this context.
@@ -368,7 +368,7 @@ public class Context
   //@ requires a_category.length() > 0;
   public synchronized /*@ pure @*/ boolean
   containsCategory(final /*@ non_null @*/ String a_category) {
-    return (my_category_map.containsKey(a_category));
+    return my_category_map.containsKey(a_category);
   }
 
   /**
@@ -393,7 +393,7 @@ public class Context
    * are no categories defined in the database as of yet.
    */
   public synchronized Iterator listCategories() {
-    return (my_category_map.values().iterator());
+    return my_category_map.values().iterator();
   }
 
   /**
@@ -491,7 +491,7 @@ public class Context
    * are no enabled classes.
    */
   public synchronized /*@ pure @*/ Iterator listClasses() {
-    return (my_class_map.values().iterator());
+    return my_class_map.values().iterator();
   }
 
   /**

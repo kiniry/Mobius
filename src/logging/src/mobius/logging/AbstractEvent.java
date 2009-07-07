@@ -68,7 +68,7 @@ public abstract class AbstractEvent extends Object
   // Attributes
 
   /** Standard serial version ID. */
-  static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
   /**
    * The source host for this event.

@@ -54,10 +54,13 @@ import mobius.logging.*;
 public class TestSuiteThread extends Thread {
   // Attributes
 
+  private static final String SUCCESS = "SUCCESS";
+  private static final String PASSED = "PASSED";
+  private static final String FAILED = "FAILED";
   /** A flag used to track the success or failure of all tests in this class. */
-  private boolean my_success = true;
+  private transient boolean my_success = true;
   /** Which test mode are we in? */
-  private /*@ spec_public @*/ String my_test_mode;
+  private transient final /*@ spec_public @*/ String my_test_mode;
 
   // Constructors
 
@@ -117,22 +120,22 @@ public class TestSuiteThread extends Thread {
     // Class-global testing.
 
     // Test 0
-    my_success &= (!the_debug_output.println(the_debug_constants.getAssertionLevel(), "FAILED"));
+    my_success &= (!the_debug_output.println(the_debug_constants.getAssertionLevel(), FAILED));
     if (!my_success)
       System.err.println("FALURE #0");
     // Test 1
-    my_success &= (!the_debug_output.println(the_debug_constants.getAssertion(), "FAILED"));
+    my_success &= (!the_debug_output.println(the_debug_constants.getAssertion(), FAILED));
     if (!my_success)
       System.err.println("FALURE #1");
 
     the_debug.turnOn();
     // Test 2
-    my_success &= the_debug_output.println(the_debug_constants.getFailureLevel(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getFailureLevel(), PASSED);
     if (!my_success)
       System.err.println("FALURE #2");
 
     // Test 3
-    my_success &= the_debug_output.println(the_debug_constants.getFailure(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getFailure(), PASSED);
     if (!my_success)
       System.err.println("FALURE #3");
 
@@ -145,42 +148,42 @@ public class TestSuiteThread extends Thread {
     the_debug.setLevel(the_debug_constants.getErrorLevel());
 
     // Test 5
-    my_success &= (!the_debug_output.println(the_debug_constants.getErrorLevel() - 1, "FAILED"));
+    my_success &= (!the_debug_output.println(the_debug_constants.getErrorLevel() - 1, FAILED));
     if (!my_success)
       System.err.println("FALURE #5");
 
     // Test 6
-    my_success &= (!the_debug_output.println(the_debug_constants.getWarning(), "FAILED"));
+    my_success &= (!the_debug_output.println(the_debug_constants.getWarning(), FAILED));
     if (!my_success)
       System.err.println("FALURE #6");
 
     // Test 7
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel(), PASSED);
     if (!my_success)
       System.err.println("FALURE #7");
 
     // Test 8
-    my_success &= the_debug_output.println(the_debug_constants.getError(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getError(), PASSED);
     if (!my_success)
       System.err.println("FALURE #8");
 
     // Test 9
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, PASSED);
     if (!my_success)
       System.err.println("FALURE #9");
 
     // Test 10
-    my_success &= the_debug_output.println(the_debug_constants.getCritical(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getCritical(), PASSED);
     if (!my_success)
       System.err.println("FALURE #10");
 
     // Test 11
-    my_success &= the_debug_output.println(the_debug_constants.getAssertionLevel(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getAssertionLevel(), PASSED);
     if (!my_success)
       System.err.println("FALURE #11");
 
     // Test 12
-    my_success &= the_debug_output.println(the_debug_constants.getAssertion(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getAssertion(), PASSED);
     if (!my_success)
       System.err.println("FALURE #12");
 
@@ -193,27 +196,27 @@ public class TestSuiteThread extends Thread {
     the_debug.setLevel(0);
 
     // Test 14
-    my_success &= the_debug_output.println(0, "PASSED");
+    my_success &= the_debug_output.println(0, PASSED);
     if (!my_success)
       System.err.println("FALURE #14");
 
     // Test 15
-    my_success &= the_debug_output.println(the_debug_constants.getNoticeLevel(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getNoticeLevel(), PASSED);
     if (!my_success)
       System.err.println("FALURE #15");
 
     // Test 16
-    my_success &= the_debug_output.println(the_debug_constants.getNotice(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getNotice(), PASSED);
     if (!my_success)
       System.err.println("FALURE #16");
 
     // Test 17
-    my_success &= the_debug_output.println(the_debug_constants.getAssertionLevel(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getAssertionLevel(), PASSED);
     if (!my_success)
       System.err.println("FALURE #17");
 
     // Test 18
-    my_success &= the_debug_output.println(the_debug_constants.getAssertion(), "PASSED");
+    my_success &= the_debug_output.println(the_debug_constants.getAssertion(), PASSED);
     if (!my_success)
       System.err.println("FALURE #18");
 
@@ -240,22 +243,22 @@ public class TestSuiteThread extends Thread {
     // System.err.println("FALURE #22");
 
     // Test 23
-    my_success &= the_debug_output.println(network_five_level, "PASSED");
+    my_success &= the_debug_output.println(network_five_level, PASSED);
     if (!my_success)
       System.err.println("FALURE #23");
 
     // Test 24
-    my_success &= the_debug_output.println("NETWORK_5", "PASSED");
+    my_success &= the_debug_output.println("NETWORK_5", PASSED);
     if (!my_success)
       System.err.println("FALURE #24");
 
     // Test 25
-    my_success &= (!the_debug_output.println("NETWORK_4", "FAILED"));
+    my_success &= (!the_debug_output.println("NETWORK_4", FAILED));
     if (!my_success)
       System.err.println("FALURE #25");
 
     // Test 26
-    my_success &= the_debug_output.println("NETWORK_6", "PASSED");
+    my_success &= the_debug_output.println("NETWORK_6", PASSED);
     if (!my_success)
       System.err.println("FALURE #26");
 
@@ -265,17 +268,17 @@ public class TestSuiteThread extends Thread {
       System.err.println("FALURE #27");
 
     // Test 28
-    my_success &= (!the_debug_output.println("NETWORK_5", "FAILED"));
+    my_success &= (!the_debug_output.println("NETWORK_5", FAILED));
     if (!my_success)
       System.err.println("FALURE #28");
 
     // Test 29
-    my_success &= !the_debug_output.println(the_debug_constants.getLevelMin() - 1, "FAILED");
+    my_success &= !the_debug_output.println(the_debug_constants.getLevelMin() - 1, FAILED);
     if (!my_success)
       System.err.println("FALURE #29");
 
     // Test 30
-    my_success &= !the_debug_output.println(the_debug_constants.getLevelMax() + 1, "FAILED");
+    my_success &= !the_debug_output.println(the_debug_constants.getLevelMax() + 1, FAILED);
     if (!my_success)
       System.err.println("FALURE #30");
 
@@ -316,12 +319,12 @@ public class TestSuiteThread extends Thread {
     the_debug.addContext(the_debug_context);
 
     // Test 33
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel(), "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel(), SUCCESS);
     if (!my_success)
       System.err.println("FALURE #33");
 
     // Test 34
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, SUCCESS);
     if (!my_success)
       System.err.println("FALURE #34");
 
@@ -336,7 +339,7 @@ public class TestSuiteThread extends Thread {
       System.err.println("FALURE #36");
 
     // Test 37
-    my_success &= the_debug_output.println("PERTHREAD+1", "SUCCESS");
+    my_success &= the_debug_output.println("PERTHREAD+1", SUCCESS);
     if (!my_success)
       System.err.println("FALURE #37");
 
@@ -345,22 +348,22 @@ public class TestSuiteThread extends Thread {
     // System.err.println("FALURE #38");
 
     // Test 39
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() + 1, SUCCESS);
     if (!my_success)
       System.err.println("FALURE #39");
 
     // Test 40
-    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() - 1, "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getErrorLevel() - 1, SUCCESS);
     if (!my_success)
       System.err.println("FALURE #40");
 
     // Test 41
-    my_success &= the_debug_output.println("PERTHREAD-1", "SUCCESS");
+    my_success &= the_debug_output.println("PERTHREAD-1", SUCCESS);
     if (!my_success)
       System.err.println("FALURE #41");
 
     // Test 42
-    my_success &= the_debug_output.println("PERTHREAD+1", "SUCCESS");
+    my_success &= the_debug_output.println("PERTHREAD+1", SUCCESS);
     if (!my_success)
       System.err.println("FALURE #42");
 
@@ -378,7 +381,7 @@ public class TestSuiteThread extends Thread {
     the_debug_context.setLevel(the_debug_constants.getCriticalLevel());
 
     // Test 43
-    my_success &= the_debug_output.println(the_debug_constants.getCritical(), "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getCritical(), SUCCESS);
     if (!my_success)
       System.err.println("FALURE #43");
 
@@ -389,12 +392,12 @@ public class TestSuiteThread extends Thread {
 
     // Test 45
     // This should succeed because the global level is getErrorLevel().
-    my_success &= the_debug_output.println(the_debug_constants.getError(), "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getError(), SUCCESS);
     if (!my_success)
       System.err.println("FALURE #45");
 
     // Test 46
-    my_success &= the_debug_output.println(the_debug_constants.getFailure(), "SUCCESS");
+    my_success &= the_debug_output.println(the_debug_constants.getFailure(), SUCCESS);
     if (!my_success)
       System.err.println("FALURE #46");
 
@@ -404,7 +407,7 @@ public class TestSuiteThread extends Thread {
     final int end_of_test_pause_time_in_milliseconds = 30000;
     if (my_success) {
       System.out.println("Debugging tests succeeded!\n\n");
-      if (my_test_mode.equals("window"))
+      if ("window".equals(my_test_mode))
         try {
           Thread.sleep(end_of_test_pause_time_in_milliseconds);
         } catch (InterruptedException ie) {

@@ -597,7 +597,7 @@ import java.util.HashMap;
     //@ assume map != null;
 
     // If entry exists, return a true; otherwise return a false.
-    return (map.containsKey(a_category));
+    return map.containsKey(a_category);
   }
 
   /**
@@ -617,7 +617,7 @@ import java.util.HashMap;
     final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
     //@ assume map != null;
 
-    return (map.values().iterator());
+    return map.values().iterator();
   }
 
   /**
@@ -791,7 +791,7 @@ import java.util.HashMap;
     final Map map = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
     //@ assume map != null;
 
-    return (map.values().iterator());
+    return map.values().iterator();
   }
 
   /**
@@ -920,9 +920,9 @@ import java.util.HashMap;
                                                 final int a_level) {
     // See if an entry for the passed category exists.
     if (the_map.containsKey(a_category)) {
-      final Integer i = (Integer) the_map.get(a_category);
-      //@ assume i != null;
-      return i.intValue() == a_level;
+      final Integer an_existing_level = (Integer) the_map.get(a_category);
+      //@ assume an_existing_level != null;
+      return an_existing_level.intValue() == a_level;
     }
 
     // Add a new entry for the passed category.

@@ -127,7 +127,7 @@ import java.io.Serializable;
    * @see #getIncrement
    * @see AbstractCollect#increment(Statistic)
    */
-  private /*@ spec_public @*/ double my_default_increment;
+  private final /*@ spec_public @*/ double my_default_increment;
 
   /**
    * <p> Default decrement value for statistic. </p>
@@ -166,7 +166,7 @@ import java.io.Serializable;
   public Statistic(final String the_units,
                                 final double the_scale, final float the_start,
                                 final float the_increment, final float the_decrement) {
-    synchronized (this) {
+    synchronized (Statistic.class) {
       my_unique_ID = my_current_ID;
       my_current_ID++;
     }
@@ -186,12 +186,6 @@ import java.io.Serializable;
    */
   public int hashCode() {
     return my_unique_ID;
-  }
-
-  /** {@inheritDoc} */
-  public boolean equals(final Object an_object) {
-    // TODO Auto-generated method stub
-    return super.equals(an_object);
   }
 
   // Public Methods

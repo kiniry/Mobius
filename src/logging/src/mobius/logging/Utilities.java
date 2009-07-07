@@ -59,7 +59,7 @@ class Utilities {
   /**
    * <p> The Debug object associated with this object. </p>
    */
-  private /*@ non_null spec_public @*/ Debug my_debug /*#guarded_by this*/;
+  private final /*@ non_null spec_public @*/ Debug my_debug /*#guarded_by this*/;
 
   // Inherited Methods
   // Constructors
@@ -120,7 +120,7 @@ class Utilities {
                                          final /*@ non_null @*/ String the_class_name) {
     // If we are adding "*", the tabled should be cleared and the "*"
     // should be inserted.
-    if (the_class_name.equals("*")) {
+    if ("*".equals(the_class_name)) {
       the_map.clear();
       the_map.put("*", Boolean.TRUE);
     } else
@@ -151,7 +151,7 @@ class Utilities {
   static synchronized void removeClassFromMap(final /*@ non_null @*/ Map the_map,
                                               final /*@ non_null @*/ String the_class_name) {
     // If we are removing the class "*", just clear the map.
-    if (the_class_name.equals("*")) {
+    if ("*".equals(the_class_name)) {
       the_map.clear();
     } else
       // If entry is in the map, remove it.

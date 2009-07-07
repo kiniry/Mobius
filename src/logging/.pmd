@@ -124,22 +124,6 @@
             <ruleset>Basic Rules</ruleset>
         </rule>
         <rule>
-            <name>ForLoopsMustUseBraces</name>
-            <ruleset>Braces Rules</ruleset>
-        </rule>
-        <rule>
-            <name>IfElseStmtsMustUseBraces</name>
-            <ruleset>Braces Rules</ruleset>
-        </rule>
-        <rule>
-            <name>IfStmtsMustUseBraces</name>
-            <ruleset>Braces Rules</ruleset>
-        </rule>
-        <rule>
-            <name>WhileLoopsMustUseBraces</name>
-            <ruleset>Braces Rules</ruleset>
-        </rule>
-        <rule>
             <name>CloneThrowsCloneNotSupportedException</name>
             <ruleset>Clone Implementation Rules</ruleset>
         </rule>
@@ -273,10 +257,6 @@
         </rule>
         <rule>
             <name>AvoidReassigningParameters</name>
-            <ruleset>Design Rules</ruleset>
-        </rule>
-        <rule>
-            <name>AvoidSynchronizedAtMethodLevel</name>
             <ruleset>Design Rules</ruleset>
         </rule>
         <rule>
@@ -450,50 +430,6 @@
         <rule>
             <name>ImportFromSamePackage</name>
             <ruleset>Import Statement Rules</ruleset>
-        </rule>
-        <rule>
-            <name>LocalHomeNamingConvention</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>LocalInterfaceSessionNamingConvention</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>MDBAndSessionBeanNamingConvention</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>RemoteInterfaceNamingConvention</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>RemoteSessionInterfaceNamingConvention</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>UseProperClassLoader</name>
-            <ruleset>J2EE Rules</ruleset>
-        </rule>
-        <rule>
-            <name>ProperLogger</name>
-            <ruleset>Jakarta Commons Logging Rules</ruleset>
-        </rule>
-        <rule>
-            <name>UseCorrectExceptionLogging</name>
-            <ruleset>Jakarta Commons Logging Rules</ruleset>
-        </rule>
-        <rule>
-            <name>LoggerIsNotStaticFinal</name>
-            <ruleset>Java Logging Rules</ruleset>
-        </rule>
-        <rule>
-            <name>MoreThanOneLogger</name>
-            <ruleset>Java Logging Rules</ruleset>
-        </rule>
-        <rule>
-            <name>BeanMembersShouldSerialize</name>
-            <ruleset>JavaBean Rules</ruleset>
         </rule>
         <rule>
             <name>MissingSerialVersionUID</name>
@@ -813,4 +749,5 @@
         </rule>
     </rules>
     <includeDerivedFiles>false</includeDerivedFiles>
+    <violationsAsErrors>true</violationsAsErrors>
 </pmd>

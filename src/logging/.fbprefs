@@ -1,5 +1,5 @@
 #FindBugs User Preferences
-#Tue Jul 07 14:03:43 IST 2009
+#Tue Jul 07 17:50:02 IST 2009
 detectorAppendingToAnObjectOutputStream=AppendingToAnObjectOutputStream|true
 detectorBadAppletConstructor=BadAppletConstructor|false
 detectorBadResultSetAccess=BadResultSetAccess|true
@@ -122,4 +122,4 @@ detector_threshold=2
 effort=max
 filter_settings=Medium|BAD_PRACTICE,CORRECTNESS,EXPERIMENTAL,I18N,MALICIOUS_CODE,MT_CORRECTNESS,PERFORMANCE,SECURITY,STYLE|false
 filter_settings_neg=NOISE|
-run_at_full_build=false
+run_at_full_build=true
