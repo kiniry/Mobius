@@ -31,7 +31,11 @@ public class NullIgnoringList<E> extends ForwardingList<E> {
 
   @Override
   public boolean addAll(Collection<? extends E> collection) {
-    return list.addAll(Collections2.filter(collection, Predicates.notNull()));
+    if (collection == null) {
+      return false;
+    } else {
+      return list.addAll(Collections2.filter(collection, Predicates.notNull()));
+    }
   }
 
   @Override
