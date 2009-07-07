@@ -60,6 +60,7 @@ public class Beetlz {
    * @version beta-1
    */
   private class BONFilter implements FilenameFilter {
+	  //TODO: remove BONFilter
     /**
      * Should the file be accepted.
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
@@ -79,6 +80,7 @@ public class Beetlz {
    * @version beta-1
    */
   private class JavaFilter implements FilenameFilter {
+	  //TODO: remove JavaFilter
     /**
      * Should the file be accepted.
      * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
@@ -97,6 +99,7 @@ public class Beetlz {
     /** Status. */
     HELP, OPTIONS_OK, PARSING_OK, PARSING_PROBLEM, STARTED
   }
+  
   /** Where to print errors. */
   private static PrintStream errorStream;
   /** Command line option. */
@@ -193,6 +196,8 @@ public class Beetlz {
     my_bonfile = new BonFile();
     my_records_waiting = new Vector < CCLogRecord > ();
 
+    
+    
     //***************  Set up Logger  ***************
     final StreamHandler errorHandler = new StreamHandler(an_error_stream,
                                                          new CCLogFormatter());
@@ -203,6 +208,8 @@ public class Beetlz {
     JAVA_LOGGER.setUseParentHandlers(false);
     JAVA_LOGGER.setLevel(Level.FINEST);
 
+    
+    
     //***************  Parse options ***************
     my_options_ok = true;
     my_profile = processOptions(some_args);
@@ -210,12 +217,18 @@ public class Beetlz {
       my_options_ok = false;
       my_status = Status.HELP;
       JAVA_LOGGER.severe(getUsage());
+      
+      
+      
     //*************** Options OK ***************
     } else {
       my_status = Status.OPTIONS_OK;
       if (my_profile.getCustomSettingFile() != null) {
         SettingIO.readSettings(my_profile, my_profile.getCustomSettingFile());
       }
+      
+      
+      
       //*************** Set up rest ***************
       SmartString.setDictionary(my_profile.getBasicDictionary());
       FeatureSmartString.setPrefixes(my_profile.getPrefixes());
@@ -232,6 +245,8 @@ public class Beetlz {
       outputHandler.setFilter(outputfilter);
       JAVA_LOGGER.addHandler(outputHandler);
 
+      
+      
       //*************** Parse files ***************
       JAVA_LOGGER.config(my_labels.getString("Beetlz.goingToParse")); //$NON-NLS-1$
       if (my_options_ok) {

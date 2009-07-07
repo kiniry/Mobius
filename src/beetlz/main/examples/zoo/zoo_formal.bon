@@ -342,9 +342,8 @@ component
 	end
 	
 	end
-end
-
-root class ZOO_CLASS
+	
+	root class ZOO_CLASS
 	feature
 		zooName: STRING
 		animalOfTheMonth: ANIMAL
@@ -352,4 +351,7 @@ root class ZOO_CLASS
 		-> newNumber: INTEGER
 		giveInformation: STRING  
 	end 
+end
+
+
 end

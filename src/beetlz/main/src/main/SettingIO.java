@@ -14,6 +14,7 @@ import utils.BConst;
  * want it and how we want it.
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
+ * TODO: maybe do this with a properties file and resource bundle (test feasibility)
  */
 public final class SettingIO {
 

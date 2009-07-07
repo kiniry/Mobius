@@ -34,6 +34,7 @@ import utils.smart.SmartString;
  * Prints pretty printed BON model code.
  * @author Eva Darulova (edarulova@googlemail.com)
  * @version beta-1
+ * TODO: print AST
  */
 public class BonPretty {
   /** Tab. */

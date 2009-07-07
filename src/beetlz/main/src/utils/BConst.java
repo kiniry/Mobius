@@ -58,6 +58,8 @@ public final class BConst {
   /** Old keyword. */
   public static final String OLD = "old"; //$NON-NLS-1$
 
+  
+  
   /**
    * Constructor.
    */
