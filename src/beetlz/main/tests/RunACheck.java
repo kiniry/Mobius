@@ -1,6 +1,11 @@
 import main.Beetlz;
 
-
+/**
+ * Class specialised for testing with the example code inside the project in Eclipse.
+ * This will do a sort of 'regression' test. The first run should be without errors,
+ * there will be plenty in the second run.
+ * It will determine the location of the test code based on the classpath.
+ */
 public class RunACheck {
 
 	/**

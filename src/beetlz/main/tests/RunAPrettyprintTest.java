@@ -1,6 +1,11 @@
 import main.Beetlz;
 
-
+/**
+ * Class specialised for testing with the example code inside the project in Eclipse.
+ * It will determine the location of the test code based on the classpath.
+ * You will need to refresh the workspace. It will create the skeleton code in the
+ * 'tests/skeleton' folder.s
+ */
 public class RunAPrettyprintTest {
 
 	/**
