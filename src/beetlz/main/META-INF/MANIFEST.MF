@@ -2,11 +2,10 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beetlz
 Bundle-SymbolicName: Beetlz
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.2
 Bundle-ClassPath: Beetlz.jar,
  lib/junit-4.5.jar,
  lib/openjml.jar,
- lib/CommandlineParser.jar,
  lib/antlr-3.1.3.jar,
  lib/bonc2.jar,
  lib/clops.jar
@@ -20,3 +19,4 @@ Export-Package: check,
  structure,
  utils,
  utils.smart
+Bundle-Vendor: Evka Darulova et al.
