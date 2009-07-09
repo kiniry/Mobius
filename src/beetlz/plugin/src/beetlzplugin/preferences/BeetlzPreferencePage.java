@@ -1,14 +1,5 @@
 package beetlzplugin.preferences;
 
-import java.io.IOException;
-import java.net.URL;
-
-import main.Beetlz;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -20,7 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.osgi.framework.Bundle;
 
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
@@ -67,31 +57,7 @@ implements IWorkbenchPreferencePage {
     setDescription(Messages.getString("BeetlzPreferencePage.preferencesTitle")); //$NON-NLS-1$
   }
 
-  /**
-   * Get a default value for the jml-specs path.
-   * Use the openjml.jar specs that are included with the Beetlz plugin.
-   * @return a path to the built-in jml specs, if possible.
-   */
-  private String attemptToGetJMLSpecsPath() {
-    
-    Bundle bundle = Platform.getBundle(Beetlz.PLUGIN_ID);
-    
-    IPath p = new Path(Beetlz.JMLSPECS_PATH);
-    URL url = FileLocator.find(bundle, p, null);
-
-    try {
-      URL resolvedURL = FileLocator.resolve(url);
-      String filePath = resolvedURL.getPath();
-      Path resourcePath = new Path(filePath);
-      p = resourcePath.makeAbsolute();
-      String s = p.toOSString();
-      return s;
-    } catch (IOException e) {
-      //Not found.
-      System.out.println("Didn't find built-in specs jar");
-      return "";
-    }
-  }
+  
   
   /**
    * Create the fields.
@@ -103,7 +69,6 @@ implements IWorkbenchPreferencePage {
         getFieldEditorParent()); //$NON-NLS-1$
 
     jmlFile.setEmptyStringAllowed(false);
-    jmlFile.setStringValue(attemptToGetJMLSpecsPath());
     addField(jmlFile);
 
     userSettingFile = new FileFieldEditor(PreferenceConstants.USER_SETTING_PATH,

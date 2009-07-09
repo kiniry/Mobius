@@ -1,7 +1,17 @@
 package beetlzplugin.preferences;
 
+import java.io.IOException;
+import java.net.URL;
+
+import main.Beetlz;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.osgi.framework.Bundle;
 
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
@@ -18,7 +28,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
   @Override
   public void initializeDefaultPreferences() {
     final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-    store.setDefault(PreferenceConstants.SPEC_PATH, Messages.getString("PreferenceInitializer.pleaseEnterValidSpecPath")); //$NON-NLS-1$
+    
+    String jmlSpecPath = attemptToGetJMLSpecsPath();
+    if (jmlSpecPath.equals("")) {
+      store.setDefault(PreferenceConstants.SPEC_PATH, Messages.getString("PreferenceInitializer.pleaseEnterValidSpecPath")); //$NON-NLS-1$
+    } else {
+      store.setDefault(PreferenceConstants.SPEC_PATH, jmlSpecPath);
+    }    
     store.setDefault(PreferenceConstants.USER_SETTING_PATH, ""); //$NON-NLS-1$
     store.setDefault(PreferenceConstants.SKELETON_PATH, ""); //$NON-NLS-1$
     store.setDefault(PreferenceConstants.USE_BASICS_OPTION, true);
@@ -32,4 +48,30 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     store.setDefault(PreferenceConstants.VERBOSE_OPTION, false);
   }
 
+  /**
+   * Get a default value for the jml-specs path.
+   * Use the openjml.jar specs that are included with the Beetlz plugin.
+   * @return a path to the built-in jml specs, if possible.
+   */
+  private String attemptToGetJMLSpecsPath() {
+    
+    Bundle bundle = Platform.getBundle(Beetlz.PLUGIN_ID);
+    
+    IPath p = new Path(Beetlz.JMLSPECS_PATH);
+    URL url = FileLocator.find(bundle, p, null);
+
+    try {
+      URL resolvedURL = FileLocator.resolve(url);
+      String filePath = resolvedURL.getPath();
+      Path resourcePath = new Path(filePath);
+      p = resourcePath.makeAbsolute();
+      String s = p.toOSString();
+      return s;
+    } catch (IOException e) {
+      //Not found.
+      System.out.println("Didn't find built-in specs jar");
+      return "";
+    }
+  }
+  
 }
