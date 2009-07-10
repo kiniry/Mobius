@@ -11,7 +11,7 @@ component
 --    /=: BOOLEAN -> VALUE
   class STRING
     feature
-      substring: BOOLEAN -> VALUE
+      substring: BOOLEAN -> STRING
       string_prefix: BOOLEAN -> VALUE
       string_suffix: BOOLEAN -> VALUE
   end

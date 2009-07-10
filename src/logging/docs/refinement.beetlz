@@ -2,13 +2,12 @@
 -- cluster_mapping EVENTS mobius.logging;
 -- cluster_mapping PROCESSING mobius.logging;
 
-class_mapping ANY java.lang.Object;
+-- class_mapping ANY java.lang.Object;
 
 class_mapping MESSAGE java.lang.String;
 class_mapping LOG mobius.logging.AbstractCollect;
 class_mapping CHECKER mobius.logging.Assert;
 class_mapping ASSERTION mobius.logging.Assert;
-class_mapping ANY mobius.logging.Context;
 class_mapping COLLECTOR mobius.logging.Debug;
 class_mapping TUNER mobius.logging.Debug;
 class_mapping LEVEL mobius.logging.DebugConstants;
@@ -22,6 +21,7 @@ ignore_classes
   {mobius.logging.AbstractDebugOutputBase,
    mobius.logging.AbstractEvent,
    mobius.logging.ConsoleOutput,
+   mobius.logging.Context,
    mobius.logging.DefaultDebugConstants,
    mobius.logging.FailedAssertionException,
    mobius.logging.ServletLogOutput,
