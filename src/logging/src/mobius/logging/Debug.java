@@ -272,11 +272,9 @@ import java.util.HashMap;
    *         and installing the new constant set when constructing
    *         <code>Debug</code>.
    *
-   * @values (my_debug_constants.LEVEL_MIN <= level <=
-   *         my_debug_constants.LEVEL_MAX)
+   * @values (my_debug_constants.LEVEL_MIN <= level <= my_debug_constants.LEVEL_MAX)
    */
-  //@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <=
-  //@           my_debug_constants.LEVEL_MAX;
+  //@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <= my_debug_constants.LEVEL_MAX;
   protected int my_level /*#guarded_by this*/;
 
   /**

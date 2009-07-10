@@ -90,7 +90,7 @@ public class WindowOutput extends AbstractDebugOutputBase
    *
    * @param the_debug the Debug class associated with this WindowOutput.
    */
-  //@ assignable my_debug, \everything;
+  // assignable my_debug, \everything;
   //@ ensures my_debug == the_debug;
   public WindowOutput(final /*@ non_null @*/ Debug the_debug) {
     super();

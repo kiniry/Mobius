@@ -534,8 +534,7 @@ public class Context
    * @return a flag indicating if the provided level is valid.
    * @param a_level the level to check.
    */
-  //@ ensures \result == ((a_level >= my_debug_constants.LEVEL_MIN)
-  //@   && (a_level <= my_debug_constants.LEVEL_MAX));
+  //@ ensures \result == ((a_level >= my_debug_constants.LEVEL_MIN) && (a_level <= my_debug_constants.LEVEL_MAX));
   public /*@ pure @*/ boolean validLevel(final int a_level) {
     return ((a_level >= DebugConstants.LEVEL_MIN) &&
             (a_level <= DebugConstants.LEVEL_MAX));

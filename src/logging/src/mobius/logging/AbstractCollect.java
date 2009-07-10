@@ -78,8 +78,7 @@ import java.util.HashMap;
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==>
-  //@                    (my_debug == \old(my_debug));
+  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
   private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in collectorObjectState;
 
   // Inherited Methods
