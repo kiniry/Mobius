@@ -1,5 +1,6 @@
 static_diagram BUILTIN
 component
+  class ANY
   class VALUE
 --  feature
 --    infix "<:": BOOLEAN -> VALUE
@@ -35,6 +36,7 @@ component
       union: SET[T] -> SET[T]
       intersect: SET[T] -> SET[T]
   end
+
   class BAG[T]
     feature
       merge: BAG[T] -> BAG[T]
@@ -57,6 +59,8 @@ component
       pop: STACK[T]
   end
 
+  VALUE inherit ANY
+  CONTAINER inherit ANY
   NUMERIC inherit VALUE
   INTEGER inherit NUMERIC
   REAL inherit NUMERIC
@@ -64,60 +68,61 @@ component
   LIST inherit CONTAINER
   BAG inherit CONTAINER
   SEQUENCE inherit CONTAINER
+  TABLE inherit CONTAINER
 end
 
-static_diagram KEY_RELATIONS
-component
-  cluster EVENTS
-  component
-    class ASSERTION persistent
-    deferred class EVENT persistent
-    class LEVEL persistent
-    class LOG persistent
-    class MESSAGE persistent
-    class STATISTIC persistent
-    class TYPE persistent
-    class SET reused
+-- static_diagram KEY_RELATIONS
+-- component
+--   cluster EVENTS
+--   component
+--     class ASSERTION persistent
+--     deferred class EVENT persistent
+--     class LEVEL persistent
+--     class LOG persistent
+--     class MESSAGE persistent
+--     class STATISTIC persistent
+--     class TYPE persistent
 
-    LEVEL inherit VALUE
+--     LEVEL inherit VALUE
     --LOG inherit SET[EVENT]
-    LOG inherit SET
-    MESSAGE inherit STRING
-    TYPE inherit VALUE
+--     LOG inherit SET
+--     MESSAGE inherit STRING
+--     TYPE inherit VALUE
 
-    EVENT client LEVEL
-    EVENT client TYPE
-    EVENT client MESSAGE
+--     EVENT client LEVEL
+--     EVENT client TYPE
+--     EVENT client MESSAGE
 
-    ASSERTION inherit EVENT
-    STATISTIC inherit EVENT
-  end
+--     ASSERTION inherit EVENT
+--     STATISTIC inherit EVENT
+--   end
   
-  cluster PROCESSING
-  component
-    class CHECKER interfaced
-    class COLLECTOR interfaced
-    class LOGGER interfaced
-    class TUNER persistent interfaced
-    class SET reused
+--   cluster PROCESSING
+--   component
+--     class CHECKER interfaced
+--     class COLLECTOR interfaced
+--     class LOGGER interfaced
+--     class TUNER persistent interfaced
 
     --COLLECTOR inherit SET[STATISTIC]
-    COLLECTOR inherit SET
+--     COLLECTOR inherit SET
     --LOGGER inherit SET[LOG]
-    LOGGER inherit SET
+--     LOGGER inherit SET
 
-    CHECKER client EVENT
-    COLLECTOR client EVENT
-    LOGGER client EVENT
-    LOGGER client LOG
-  end
-end
+--     CHECKER client EVENT
+--     COLLECTOR client EVENT
+--     LOGGER client EVENT
+--     LOGGER client LOG
+--   end
+-- end
 
 static_diagram LOGGING
 component
   cluster EVENTS
   component
     class ASSERTION
+    
+    class MESSAGE inherit STRING
 
     class EVENT
     feature
@@ -137,7 +142,7 @@ component
                            type=other.type and timestamp=other.timestamp and
                            level=other.level;
         end
-      create: EVENT
+      make: EVENT
         -> system: STRING -> the_component: STRING -> type: TYPE
         -> the_description: STRING -> level: LEVEL
         require 

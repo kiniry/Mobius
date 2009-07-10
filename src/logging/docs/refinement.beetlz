@@ -1,0 +1,34 @@
+-- BON<->JML refinement
+-- cluster_mapping EVENTS mobius.logging;
+-- cluster_mapping PROCESSING mobius.logging;
+
+class_mapping ANY java.lang.Object;
+
+class_mapping MESSAGE java.lang.String;
+class_mapping LOG mobius.logging.AbstractCollect;
+class_mapping CHECKER mobius.logging.Assert;
+class_mapping ASSERTION mobius.logging.Assert;
+class_mapping ANY mobius.logging.Context;
+class_mapping COLLECTOR mobius.logging.Debug;
+class_mapping TUNER mobius.logging.Debug;
+class_mapping LEVEL mobius.logging.DebugConstants;
+class_mapping TYPE mobius.logging.DebugConstants;
+class_mapping LOGGER mobius.logging.DebugOutput;
+class_mapping EVENT mobius.logging.Event;
+class_mapping STATISTIC mobius.logging.Statistic;
+
+ignore_classes
+  {}
+  {mobius.logging.AbstractDebugOutputBase,
+   mobius.logging.AbstractEvent,
+   mobius.logging.ConsoleOutput,
+   mobius.logging.DefaultDebugConstants,
+   mobius.logging.FailedAssertionException,
+   mobius.logging.ServletLogOutput,
+   mobius.logging.Utilities,
+   mobius.logging.WindowOutput,
+   mobius.logging.WriterOutput,
+   mobius.logging.examples.FrenchConstants,
+   mobius.logging.examples.SimpleCollect,
+   mobius.logging.testsuite.TestSuite,
+   mobius.logging.testsuite.TestSuiteThread};
