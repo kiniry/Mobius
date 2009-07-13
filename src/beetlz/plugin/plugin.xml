@@ -6,18 +6,8 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="true"
-            icon="src/beetl.jpg"
-            id="BeetlzPlugin.contribution1"
+            id="BeetlzPlugin.menuGroup"
             objectClass="org.eclipse.core.resources.IResource">
-         <action
-               class="beetlzplugin.popup.actions.BeetlzCheck"
-               enablesFor="*"
-               icon="src/beetl.jpg"
-               id="BeetlzPlugin.resourceAction"
-               label="%checkFiles"
-               menubarPath="BeetlzPlugin.menu1/groupMarker1"
-               tooltip="%checkAllFiles">
-         </action>
          <menu
                id="BeetlzPlugin.menu1"
                label="Beetlz"
@@ -26,11 +16,17 @@
                   name="BeetlzPlugin.groupMarker1">
             </groupMarker>
          </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            icon="src/beetl.jpg"
+            id="BeetlzPlugin.alwaysPresentMenu"
+            objectClass="org.eclipse.core.resources.IResource">
          <action
                class="beetlzplugin.popup.actions.RemoveMarkerAction"
                enablesFor="*"
                icon="src/trash.gif"
-               id="BeetlzPlugin.removeresourceAction"
+               id="BeetlzPlugin.removeMarkersAction"
                label="%removeMarker"
                menubarPath="BeetlzPlugin.menu1/groupMarker1"
                tooltip="%removeAllMarker">
@@ -39,11 +35,58 @@
                class="beetlzplugin.popup.actions.BeetlzSkeleton"
                enablesFor="*"
                icon="src/skull_icon.jpg"
-               id="BeetlzPlugin.resourceAction"
+               id="BeetlzPlugin.generateSkeletonAction"
                label="%generateSkeleton"
                menubarPath="BeetlzPlugin.menu1/groupMarker1"
                tooltip="%generatesSkeletonCode">
          </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="BeetlzPlugin.doesNotHaveNatureMenu"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="beetlzplugin.popup.actions.BeetlzCheck"
+               enablesFor="*"
+               icon="src/beetl.jpg"
+               id="BeetlzPlugin.checkFilesAction"
+               label="%checkFiles"
+               menubarPath="BeetlzPlugin.menu1/groupMarker1"
+               tooltip="%checkAllFiles">
+         </action>
+         <action
+               class="beetlzplugin.builder.ToggleNatureAction"
+               enablesFor="+"
+               id="BeetlzPlugin.addNatureAction"
+               label="%addNature"
+               menubarPath="BeetlzPlugin.menu1/groupMarker1"
+               tooltip="%addNatureTip">
+         </action>
+         <visibility>
+            <not>
+               <objectState
+                     name="nature"
+                     value="BeetlzPlugin.beetlzNature">
+               </objectState>
+            </not></visibility>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="BeetlzPlugin.hasNatureMenu"
+            objectClass="org.eclipse.core.resources.IResource">
+         <action
+               class="beetlzplugin.builder.ToggleNatureAction"
+               enablesFor="+"
+               id="BeetlzPlugin.removeNatureAction"
+               label="%removeNature"
+               menubarPath="BeetlzPlugin.menu1/groupMarker1"
+               tooltip="%removeNatureTip">
+         </action>
+         <visibility>
+            <objectState
+                  name="nature"
+                  value="BeetlzPlugin.beetlzNature">
+            </objectState></visibility>
       </objectContribution>
    </extension>
    
@@ -145,6 +188,52 @@
       <persistent
             value="true">
       </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="beetlzplugin.preferences.BeetlzProjectPreferencePage"
+            id="beetlzplugin.preferences.BeetlzProjectPreferencePage"
+            name="Beetlz">
+         <enabledWhen>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.jdt.core.IJavaProject">
+               </instanceof>
+            </or>
+         </enabledWhen>
+         <filter
+               name="nature"
+               value="BeetlzPlugin.beetlzNature">
+         </filter>
+      </page>
+   </extension>
+   <extension
+         id="beetlzBuilder"
+         name="Beetlz Consistency Checker"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="beetlzplugin.builder.BeetlzBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="beetlzNature"
+         name="Beetlz Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="beetlzplugin.builder.BeetlzNature">
+         </run>
+      </runtime>
+      <builder
+            id="BeetlzPlugin.beetlzBuilder">
+      </builder>
    </extension>
    
 </plugin>

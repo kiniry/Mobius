@@ -22,9 +22,9 @@ import main.Beetlz.Status;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -136,16 +136,12 @@ public class BeetlzCheck implements IObjectActionDelegate {
     //Set console , redirected System.out (need for OpenJML errors)
     setConsole();
     try {
-      my_project.getWorkspace().getRoot().
-      deleteMarkers(JAVA_ERROR_MARKER_ID, false, IResource.DEPTH_INFINITE);
-      my_project.getWorkspace().getRoot().
-      deleteMarkers(JAVA_WARNING_MARKER_ID, false, IResource.DEPTH_INFINITE);
-      my_project.getWorkspace().getRoot().
-      deleteMarkers(JML_ERROR_MARKER_ID, false, IResource.DEPTH_INFINITE);
-      my_project.getWorkspace().getRoot().
-      deleteMarkers(JML_WARNING_MARKER_ID, false, IResource.DEPTH_INFINITE);
-      my_project.getWorkspace().getRoot().
-      deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
+      IWorkspaceRoot root = my_project.getWorkspace().getRoot();
+      root.deleteMarkers(JAVA_ERROR_MARKER_ID, false, IResource.DEPTH_INFINITE);
+      root.deleteMarkers(JAVA_WARNING_MARKER_ID, false, IResource.DEPTH_INFINITE);
+      root.deleteMarkers(JML_ERROR_MARKER_ID, false, IResource.DEPTH_INFINITE);
+      root.deleteMarkers(JML_WARNING_MARKER_ID, false, IResource.DEPTH_INFINITE);
+      root.deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
     } catch (final Exception e){}
     //Get options
     final List < String > args = new Vector < String > ();
@@ -169,14 +165,15 @@ public class BeetlzCheck implements IObjectActionDelegate {
           err.flush(); 
           out.flush();
           if (err.size() > 0) {
-            MessageDialog.openError(
-                my_shell, Messages.getString("BeetlzCheck.parsingError"), //$NON-NLS-1$
-                err.toString());
+//            MessageDialog.openError(
+//                my_shell, Messages.getString("BeetlzCheck.parsingError"), //$NON-NLS-1$
+//                err.toString());
           }
           if (Beetlz.getWaitingRecords().size() > 0) {
-            MessageDialog.
-            openError(my_shell, Messages.getString("BeetlzCheck.errors"), //$NON-NLS-1$
-                Beetlz.getWaitingRecords().toString());
+//            MessageDialog.
+//            openError(my_shell, Messages.getString("BeetlzCheck.errors"), //$NON-NLS-1$
+//                Beetlz.getWaitingRecords().toString());
+            my_console.println(Beetlz.getWaitingRecords().toString());
           }
           my_console.println(err.toString());
           my_console.println(out.toString());
@@ -187,13 +184,15 @@ public class BeetlzCheck implements IObjectActionDelegate {
 
         my_project.refreshLocal(IResource.DEPTH_INFINITE, null);
       } catch (final IOException e) {
-        MessageDialog.openError(
-            my_shell, "Beetlz Plug-in", //$NON-NLS-1$
-            Messages.getString("BeetlzCheck.problemsOutput")); //$NON-NLS-1$
+//        MessageDialog.openError(
+//            my_shell, "Beetlz Plug-in", //$NON-NLS-1$
+//            Messages.getString("BeetlzCheck.problemsOutput")); //$NON-NLS-1$
+        my_console.println(Messages.getString("BeetlzCheck.problemsOutput"));
       } catch (final CoreException e) {
-        MessageDialog.openError(
-            my_shell, "Beetlz Plug-in", //$NON-NLS-1$
-            Messages.getString("BeetlzCheck.couldNotRefresh")); //$NON-NLS-1$
+//        MessageDialog.openError(
+//            my_shell, "Beetlz Plug-in", //$NON-NLS-1$
+//            Messages.getString("BeetlzCheck.couldNotRefresh")); //$NON-NLS-1$
+        my_console.println(Messages.getString("BeetlzCheck.couldNotRefresh"));
       }
     }
   }
@@ -206,7 +205,7 @@ public class BeetlzCheck implements IObjectActionDelegate {
     
     if (lastUsedSpecsPath == null || !lastUsedSpecsPath.equals(pathToAdd)) {
       System.out.println("Old classpath: " + System.getProperty("java.class.path"));
-      List<String> cpParts = Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator));
+      List<String> cpParts = new ArrayList<String>(Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator)));
       if (lastUsedSpecsPath != null) {
         cpParts.remove(lastUsedSpecsPath);
       }
@@ -299,9 +298,10 @@ public class BeetlzCheck implements IObjectActionDelegate {
   private void doOutput(final Beetlz c) {
     my_console.println(err.toString());
     if (err.toString().length() > 0) {
-      MessageDialog.openInformation(
-          my_shell, "Beetlz Plug-in", //$NON-NLS-1$
-          err.toString());
+//      MessageDialog.openInformation(
+//          my_shell, "Beetlz Plug-in", //$NON-NLS-1$
+//          err.toString());
+      //TODO what should happen here?
     }
     my_console.println(out.toString());
 

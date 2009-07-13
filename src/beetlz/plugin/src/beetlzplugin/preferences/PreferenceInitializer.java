@@ -28,7 +28,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
   @Override
   public void initializeDefaultPreferences() {
     final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-    
+    initializeDefaultPreferences(store);    
+  }
+
+  public static void initializeDefaultPreferences(IPreferenceStore store) {
     String jmlSpecPath = attemptToGetJMLSpecsPath();
     if (jmlSpecPath.equals("")) {
       store.setDefault(PreferenceConstants.SPEC_PATH, Messages.getString("PreferenceInitializer.pleaseEnterValidSpecPath")); //$NON-NLS-1$
@@ -47,13 +50,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     store.setDefault(PreferenceConstants.SOURCE_OPTION, "default"); //$NON-NLS-1$
     store.setDefault(PreferenceConstants.VERBOSE_OPTION, false);
   }
-
+  
   /**
    * Get a default value for the jml-specs path.
    * Use the openjml.jar specs that are included with the Beetlz plugin.
    * @return a path to the built-in jml specs, if possible.
    */
-  private String attemptToGetJMLSpecsPath() {
+  private static String attemptToGetJMLSpecsPath() {
     
     Bundle bundle = Platform.getBundle(Beetlz.PLUGIN_ID);
     
