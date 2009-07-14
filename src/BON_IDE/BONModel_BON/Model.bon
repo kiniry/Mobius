@@ -1,0 +1,220 @@
+indexing
+  about:        "BON metamodel definition";
+  title:        "BON metamodel";
+  author:       "rskinner";
+  copyright:    "none";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "May 2009";
+  version:      "Revision: 1";
+  
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- BONMETAMODEL cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram BONMETAMODEL       
+-- a test zoo.
+component 
+
+class MODEL	
+indexing
+	about: "BON metamodel, instances of which are BON models."
+feature
+   	relationships: SET[RELATIONSHIP] 
+   	closure: SET[INHERITANCE]
+   	--covariant(f1,f2:FEATURE):BObject-orientedLEAN
+end -- of MODEL
+end -- of component
+
+
+
+
+
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- RELATIONSHIPS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram RELATIONSHIPS       
+-- Details the BON relationships and type contraints on their use
+component 
+
+deferred class RELATIONSHIP	
+indexing
+	about: "Base class for all relationships."
+feature
+   	source, target: ABSTRACTION   	
+end -- of RELATIONSHIP
+
+
+deferred class STATIC_RELATIONSHIP
+inherit
+	RELATIONSHIP
+indexing
+	about: "Base class for static relationsips."
+feature
+   	redefined source, target: STATIC_ABSTRACTION   	
+end -- of STATIC_RELATIONSHIP
+
+effective class INHERITANCE
+inherit
+	STATIC_RELATIONSHIP
+indexing
+	about: "Object-oriented inheritance relationship."
+invariant
+	source /= target; -- class cannot inherit from itself
+end -- of INHERITANCE
+
+deferred class CLIENT_SUPPLIER
+inherit
+	STATIC_RELATIONSHIP
+indexing
+	about: "Base class for Object-oriented client-supplier relationships."
+feature
+   	label: STRING
+end -- of CLIENT_SUPPLIER
+
+effective class AGGREGATION
+inherit
+	CLIENT_SUPPLIER
+indexing
+	about: "Object-oriented aggregation relationship."
+invariant
+	source /= target; -- class cannot contain itself
+end -- of AGGREGATION
+
+effective class ASSOCIATION
+inherit
+	CLIENT_SUPPLIER
+indexing
+	about: "Object-oriented association relationship."
+end -- of ASSOCIATION
+
+effective class MESSAGE
+inherit
+	RELATIONSHIP
+indexing
+	about: ""
+feature
+	redefined source, target: DYNAMIC_ABSTRACTION   	
+end -- of MESSAGE
+ 
+end -- of component
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ABSTRACTIONS cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ABSTRACTIONS       
+-- Details the allowed abstractions in a BON model
+component 
+
+deferred class ABSTRACTION	
+indexing
+	about: "Base class for all abstractions."
+feature
+   	relationships: SET[RELATIONSHIP] 
+   	deferred contents: SET[ABSTRACTION]
+invariant
+	source_is_current 				-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+									-- every relationship in this classes' set of relationships must 
+									-- have this class as the source of the relationship, i.e.	                  				 
+									-- for_all r member_of relationships it_holds r.source = Current
+	                  				-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	                  					                  				   	
+end -- of ABSTRACTION
+
+deferred class STATIC_ABSTRACTION	
+inherit
+	ABSTRACTION	
+indexing
+	about: ""
+feature
+   	redefined relationships: SET[STATIC_RELATIONSHIP]    		                  					                  				   
+end -- of STATIC_ABSTRACTION
+
+
+effective class CLUSTER
+inherit
+	STATIC_ABSTRACTION	 		
+indexing
+	about: ""
+feature
+   	effective contents: SET[ABSTRACTION]
+invariant
+	-- no_self_containment: a cluster cannot contain itself
+	Current not member_of contents
+									                					                  				  
+end -- of CLUSTER
+
+
+effective class CLASS
+inherit
+	STATIC_ABSTRACTION	 		
+indexing
+	about: ""
+feature
+   	effective contents: SET[ABSTRACTION]
+   	-- invariant?
+   	-- calls in in variant?
+   	renamings: SET[RENAMING]
+   	rename_class -- ? no parameters?	
+   		ensure    			
+   			for_all f member_of features it_holds   		
+   			(exists r member_of renamings 
+   			such_that r.old_name = old f.name 
+   			it_holds f.name = r.new_name)	
+   	parents: SET[CLASS]
+   	super(f:FEATURE):FEATURE 
+   	is_deferred, is_effective, is_persistent, is_external, is-root: BOOLEAN
+   	redefinitions: SET[FEATURE]
+   	all_names: SET[STRING]
+   		ensures   		
+   			Result = {s:STRING such_that exists f member_of features it_holds s = f.name} 
+   	client_features, features: SET[FEATURES]
+   	
+invariant
+    -- feature_unique_names: feature names in a class must be unique
+    for_all f1, f2 member_of features it_holds (f1.name = f2.name implies f1 = f2)
+	
+	-- no_name_clashes: the intersection of the set of feature names in a class and the set of 
+	-- feature names of all parent classes (including parent renamings) should be empty
+	{n:STRING such_that (exists f member_of features it_holds f.name = n and not f.is_redefined)} union
+		{n:STRING such_that (exists p member_of parents it_holds 
+			exists f member_of p.features it_holds 
+			exists r member_of renamings such_that 
+			r.old_name = f.name and r.new_name = n)
+		}
+	= Void
+		
+	-- valid_class_inv: all features calls made from class invariants have appropriate access	
+	for_all call member_of calls_in_inv such_that call.f:QUERY and call.is_valid(Current)
+	
+	-- is_deferred_class: a class may be deferred or effective, but not both
+	(deferred <-> exists f member_of features such_that f.is_deferred) and deferred /= effective
+	
+	-- valid_static_relationships: three components for validity
+	-- 1. for inheritance, the relationship target must be a parent of the source
+	for_all p member_of parents it_holds exists i:INHERITANCE such_that i.target = p it_holds i member_of relationships
+	-- 2. for association, there must be a feature corresponding to the association
+	for_all f member_of features such_that f:QUERY it_holds exists a:ASSOCIATION such_that a.target = f.Result it_holds a member_of relationships 
+	-- 3. for aggregation, there must be a subobject corresponding to the relationship
+	for_all a member_of relationships such_that a:AGGREGATION and a.source = Current it_holds
+		exists f:QUERY such_that a.target = f.Result and 
+		f.parameters.count = 0 and
+		f.no_contract it_holds
+		f member_of features
+		
+	-- add_client_features: two parts
+	-- 1. each client-supplier relationship either generates a query in the source class of the relationship 
+	-- (when the source is a class), or it generates a query in some source class of the relationship (when the source is a cluster)
+	for_all cs member_of relationships such_that cs:CLIENT_SUPPLIER it_holds
+		exists q member_of client_features such_that q:QUERY it_holds q.name = cs.label and
+		(cs.target:CLASS -> q.Result = cs.target and cs.target:CLUSTER cs.target:CLUSTER implies 
+		exists ca member_of cs.target.contents such_that ca:CLASS it_holds q.Result = ca)
+		
+	-- 2. 
+	client_features  features 
+		
+				
+	
+									                					                  				   
+end -- of CLASS
+
+end -- of component
