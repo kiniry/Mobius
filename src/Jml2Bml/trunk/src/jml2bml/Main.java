@@ -6,11 +6,11 @@
  */
 package jml2bml;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-
-import javax.tools.JavaFileManager;
+import java.util.List;
 
 import jml2bml.ast.PrettyPrinter;
 import jml2bml.ast.TreeNodeFinder;
@@ -21,12 +21,8 @@ import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import jml2bml.utils.Logger;
 
-import org.apache.bcel.util.ClassPath;
-import org.jmlspecs.openjml.JmlCompiler;
-import org.jmlspecs.openjml.JmlPretty;
-import org.jmlspecs.openjml.JmlSpecs;
-import org.jmlspecs.openjml.JmlTree;
-import org.jmlspecs.openjml.Utils;
+import org.jmlspecs.openjml.API;
+import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -35,22 +31,8 @@ import org.kohsuke.args4j.Option;
 import annot.io.ReadAttributeException;
 
 import com.sun.source.tree.LineMap;
-import com.sun.tools.javac.comp.JmlAttr;
-import com.sun.tools.javac.comp.JmlEnter;
-import com.sun.tools.javac.comp.JmlFlow;
-import com.sun.tools.javac.comp.JmlMemberEnter;
-import com.sun.tools.javac.comp.JmlResolve;
-import com.sun.tools.javac.file.JavacFileManager;
-import com.sun.tools.javac.main.JavaCompiler;
-import com.sun.tools.javac.main.OptionName;
-import com.sun.tools.javac.parser.JmlParser;
-import com.sun.tools.javac.parser.JmlScanner;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
-import com.sun.tools.javac.util.JavacMessages;
-import com.sun.tools.javac.util.List;
-import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Options;
 
 /*
  * @author Jedrek
@@ -121,23 +103,23 @@ public class Main {
                       final String classPath,
                       final PrintWriter printWriter)
       throws ClassNotFoundException, ReadAttributeException,
-      NotTranslatedException, IOException {   
-    final Context context = createContext(printWriter);
-    context.put(ClassPath.class, new ClassPath(classPath));
+      NotTranslatedException, IOException {
+    API api = new API(printWriter,null, "-cp", classPath);
+    
+//  final Context context = createContext(printWriter);
+    
+    final Context context = api.context();
+//    context.put(ClassPath.class, new ClassPath(classPath));
     BCClassManager manager = new BCClassManager(binLocationDir, outLocationDir);
     context.put(BCClassManager.class, manager);
+    
 
-    JavacFileManager fileManager = (JavacFileManager) context
-        .get(JavaFileManager.class);
-
-    final JavaCompiler compiler = JavaCompiler.instance(context);
-
-    List < JCCompilationUnit > files = compiler.parseFiles(List.of(fileManager
-        .getFileForInput(sourceFile)));
-    //    final JCCompilationUnit tree = compiler.parseFiles(List.of(fileManager.getFileForInput(sourceFile))).head;
-    compiler.enterTrees(files);
-    compiler.attribute(compiler.todo);
-    final JCCompilationUnit tree = files.head;
+    List < JmlCompilationUnit > files = api.parseFiles(new File(sourceFile));
+    api.enterAndCheck(files);
+    
+    final JmlCompilationUnit tree = files.get(0);
+    
+//    final JCCompilationUnit tree = files.head;
     //    final JCCompilationUnit tree = compiler
     //        .parse(getJavaFileObject(context, sourceFile));
     //
@@ -179,44 +161,44 @@ public class Main {
     System.out.println("Written to: " + out);
   }
 
-  /**
-   * Creates the application context and registers main components.
-   * @return created application context.
-   */
-  private Context createContext(PrintWriter printWriter) {
-    final Context context = new Context();
-    context.put(Log.outKey, printWriter);
-    JavacMessages.instance(context).add(Utils.messagesJML);// registering an additional source of JML-specific error messages
-
-    JmlSpecs.preRegister(context); // registering the specifications repository
-    JmlParser.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlParsers
-    JmlScanner.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlScanners
-    JmlTree.Maker.preRegister(context); // registering a JML-aware factory for generating JmlTree nodes
-    JmlCompiler.preRegister(context);
-    JmlEnter.preRegister(context);
-    JmlResolve.preRegister(context);
-    JmlMemberEnter.preRegister(context);
-    JmlFlow.preRegister(context);
-    JmlAttr.preRegister(context); // registering a JML-aware type checker
-    JmlPretty.preRegister(context);
-
-    //    
-    //    JmlSpecs.preRegister(context);
-    //    JmlParser.JmlFactory.preRegister(context);
-    //    JmlScanner.JmlFactory.preRegister(context);
-    //    JmlTree.Maker.preRegister(context);
-    //    JmlEnter.preRegister(context);
-    //    JmlResolve.preRegister(context);
-    //    JmlMemberEnter.preRegister(context);
-    //    JmlFlow.preRegister(context);
-    //    JmlAttr.preRegister(context);
-    JavacFileManager.preRegister(context);
-    final Options opts = Options.instance(context);
-    //
-    opts.put(OptionName.XJCOV.optionName, "true");
-
-    JmlSpecs.instance(context).initializeSpecsPath();
-    return context;
-  }
+//  /**
+//   * Creates the application context and registers main components.
+//   * @return created application context.
+//   */
+//  private Context createContext(PrintWriter printWriter) {
+//    final Context context = new Context();
+//    context.put(Log.outKey, printWriter);
+//    JavacMessages.instance(context).add(Utils.messagesJML);// registering an additional source of JML-specific error messages
+//
+//    JmlSpecs.preRegister(context); // registering the specifications repository
+//    JmlParser.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlParsers
+//    JmlScanner.JmlFactory.preRegister(context); // registering a Jml-specific factory from which to generate JmlScanners
+//    JmlTree.Maker.preRegister(context); // registering a JML-aware factory for generating JmlTree nodes
+//    JmlCompiler.preRegister(context);
+//    JmlEnter.preRegister(context);
+//    JmlResolve.preRegister(context);
+//    JmlMemberEnter.preRegister(context);
+//    JmlFlow.preRegister(context);
+//    JmlAttr.preRegister(context); // registering a JML-aware type checker
+//    JmlPretty.preRegister(context);
+//
+//    //    
+//    //    JmlSpecs.preRegister(context);
+//    //    JmlParser.JmlFactory.preRegister(context);
+//    //    JmlScanner.JmlFactory.preRegister(context);
+//    //    JmlTree.Maker.preRegister(context);
+//    //    JmlEnter.preRegister(context);
+//    //    JmlResolve.preRegister(context);
+//    //    JmlMemberEnter.preRegister(context);
+//    //    JmlFlow.preRegister(context);
+//    //    JmlAttr.preRegister(context);
+//    JavacFileManager.preRegister(context);
+//    final Options opts = Options.instance(context);
+//    //
+//    opts.put(OptionName.XJCOV.optionName, "true");
+//
+//    JmlSpecs.instance(context).initializeSpecsPath();
+//    return context;
+//  }
 
 }

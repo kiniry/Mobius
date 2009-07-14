@@ -934,7 +934,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    */
   public R visitJmlMethodDecl(final JmlMethodDecl node, final P p) {
     final P tmpP = preVisit(node, p);
-    R r = scan(node.methodSpecs, tmpP);
+    R r = scan(node.cases, tmpP);
     return super.visitMethod(node, tmpP);
   }
 

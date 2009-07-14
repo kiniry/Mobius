@@ -150,7 +150,7 @@ public class Jml2BmlPlugin extends Plugin {
       bundleClassPath = "";
     }
     
-    writer.println("BUNDLE CLASSPATH:"+bundleClassPath);
+//    writer.println("BUNDLE CLASSPATH:"+bundleClassPath);
     
     String projectClassPath;
     try {
@@ -161,13 +161,15 @@ public class Jml2BmlPlugin extends Plugin {
       projectClassPath = "";
     }
     
-    writer.println("PROJECT CLASSPATH:"+projectClassPath);
+//    writer.println("PROJECT CLASSPATH:"+projectClassPath);
     String oldPath = System.getProperty("java.class.path");
     String oldCPath = System.getProperty("env.class.path");
     try {
       // TODO: hack to use internal jmlspecs!!
       System.setProperty("java.class.path", bundleClassPath);
+      writer.println("java.class.path = " + System.getProperty("java.class.path"));
       System.setProperty("env.class.path", projectClassPath+java.io.File.pathSeparator+bundleClassPath);
+      writer.println("env.class.path = "+ System.getProperty("env.class.path"));
       new Main().compile(a_jfile.getLocation().toOSString(), outputLocation, outputLocation, projectClassPath, writer);
     } catch (NotTranslatedException e2) {
       throw new jml2bml.plugin.NotTranslatedException(e2);
