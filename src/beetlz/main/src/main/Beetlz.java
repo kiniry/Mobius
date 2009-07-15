@@ -337,6 +337,13 @@ public class Beetlz {
 
     } else if (my_parse_ok) {
       startComparison();
+      
+      //check the other way?
+      if(my_profile.checkBothWays()) {
+        my_profile.setSource(false);
+        startComparison();
+      }
+      
       for (final CCLogRecord r : my_logger.getErrors()) {
         JAVA_LOGGER.log(r);
       }
@@ -506,6 +513,7 @@ public class Beetlz {
     boolean no_jml = false;
     boolean verbose = false;
     String source = null;
+    boolean check_both = false;
     boolean pure_bon = false;
     boolean no_basics = true;
     boolean skeleton = false;
@@ -546,6 +554,10 @@ public class Beetlz {
       } else if (arg.equals(SOURCE_OPTION)) {
         if (i < the_args.length) {
           source = the_args[i++];
+          if (source == "both") { //$NON-NLS-1$
+            check_both = true;
+        	source = "java";//$NON-NLS-1$
+          }
         } else {
           JAVA_LOGGER.severe(my_labels.getString("Beetlz.sourceNeedsArgument")); //$NON-NLS-1$
           return null;
@@ -604,7 +616,7 @@ public class Beetlz {
     } //end for
 
     final UserProfile profile = new UserProfile(no_error, no_warning, no_jml,
-                                                no_java, verbose, source,
+                                                no_java, verbose, source, check_both,
                                                 pure_bon, skeleton, skel_dir,
                                                 skel_one_file, check_null,
                                                 javaFiles, bonFiles,

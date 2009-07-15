@@ -19,12 +19,14 @@ public class RunACheck {
 		String path = parts[0];
 		
 		System.out.println("This is a regression test. First run should not produce any errors.\n" +
-				"The second run produces 3 Java errors, 1 Java warnings, 6 JML errors and 5 JML warnings.");
+				"The second run produces 25 Java errors, 2 Java warnings, 9 JML errors and 9 JML warnings." +
+				"It runs the check both ways.");
 		
 		if(path.endsWith("/bin")|| path.endsWith("\\bin")) {
 			path = path.substring(0, path.length()-3);
 			{
-				String[] my_args = {	                
+				String[] my_args = {
+						"-source", "both",
 		                "-userSettings", path + "examples/zoo/custom_zoo.txt",
 		                "-files", path + "examples/zoo"
 		                };
@@ -36,7 +38,8 @@ public class RunACheck {
 			
 			
 			{
-				String[] my_args = {	                
+				String[] my_args = {
+						"-source","both",
 		                "-userSettings", path + "examples/zoo_faults/custom_zoo.txt",
 		                "-files", path + "examples/zoo_faults"
 		                };

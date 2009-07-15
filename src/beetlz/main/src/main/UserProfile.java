@@ -32,7 +32,10 @@ public class UserProfile {
 
   /** Java files source files? */
   private boolean my_java_is_source;
-
+  
+  /** Run check both ways? */
+  private boolean my_check_both_ways;
+  
   /** Stores the original input by the user. */
   private final String my_original_source;
 
@@ -109,6 +112,7 @@ public class UserProfile {
   public UserProfile(final boolean a_no_error, final boolean a_no_warning,
                      final boolean a_no_jml, final boolean a_no_java,
                      final boolean a_verbose, final String the_source,
+                     final boolean a_check_both_ways,
                      final boolean a_pure_bon, final boolean a_skeleton,
                      final/*@ nullable @*/String the_skeleton_dir,
                      final boolean a_skeleton_one_file, final boolean a_check_null,
@@ -139,7 +143,8 @@ public class UserProfile {
     my_ignore_bon = new TreeSet < String > ();
     my_ignore_java = new TreeSet < String > ();
     my_prefixes = new Vector < String > ();
-
+    my_check_both_ways = a_check_both_ways;
+    
     if (the_source == null) {
       my_java_is_source = false;
     } else if (the_source.equals("bon")) { //$NON-NLS-1$
@@ -528,6 +533,15 @@ public class UserProfile {
    */
   public final boolean javaIsSource() {
     return my_java_is_source;
+  }
+  
+  
+  /**
+   * Do we perform check both ways.
+   * @return true if check is to be done both ways
+   */
+  public final boolean checkBothWays() {
+    return my_check_both_ways;
   }
 
   /**
