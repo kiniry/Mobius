@@ -19,13 +19,12 @@
       </objectContribution>
       <objectContribution
             adaptable="true"
-            icon="src/beetl.jpg"
             id="BeetlzPlugin.alwaysPresentMenu"
             objectClass="org.eclipse.core.resources.IResource">
          <action
                class="beetlzplugin.popup.actions.RemoveMarkerAction"
                enablesFor="*"
-               icon="src/trash.gif"
+               icon="icons/trash.gif"
                id="BeetlzPlugin.removeMarkersAction"
                label="%removeMarker"
                menubarPath="BeetlzPlugin.menu1/groupMarker1"
@@ -34,7 +33,7 @@
          <action
                class="beetlzplugin.popup.actions.BeetlzSkeleton"
                enablesFor="*"
-               icon="src/skull_icon.jpg"
+               icon="icons/skull_icon.jpg"
                id="BeetlzPlugin.generateSkeletonAction"
                label="%generateSkeleton"
                menubarPath="BeetlzPlugin.menu1/groupMarker1"
@@ -48,7 +47,7 @@
          <action
                class="beetlzplugin.popup.actions.BeetlzCheck"
                enablesFor="*"
-               icon="src/beetl.jpg"
+               icon="icons/beetl.jpg"
                id="BeetlzPlugin.checkFilesAction"
                label="%checkFiles"
                menubarPath="BeetlzPlugin.menu1/groupMarker1"
@@ -93,7 +92,6 @@
    <extension
          id="beetlzjavaerrormarker"
          name="Beetlz Java error"
-         icon="icons/sample.gif" 
          point="org.eclipse.core.resources.markers">
       <super
             type="org.eclipse.core.resources.problemmarker">
