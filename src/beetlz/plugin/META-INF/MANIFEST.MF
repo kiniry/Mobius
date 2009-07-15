@@ -13,4 +13,5 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- Beetlz;bundle-version="1.0.2"
+ Beetlz;bundle-version="1.0.2",
+ org.eclipse.jdt.core

@@ -1,9 +1,11 @@
 package beetlzplugin.preferences;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -11,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
@@ -53,12 +56,15 @@ implements IWorkbenchPreferencePage {
    */
   public BeetlzPreferencePage() {
     super(GRID);
+
+    IPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(), Activator.PLUGIN_ID);
+    PreferenceInitializer.initializeDefaultPreferences(store);
+    setPreferenceStore(store);
     setPreferenceStore(Activator.getDefault().getPreferenceStore());
+
     setDescription(Messages.getString("BeetlzPreferencePage.preferencesTitle")); //$NON-NLS-1$
   }
 
-  
-  
   /**
    * Create the fields.
    */
@@ -86,9 +92,9 @@ implements IWorkbenchPreferencePage {
     sourceField = new RadioGroupFieldEditor( PreferenceConstants.SOURCE_OPTION,
         Messages.getString("BeetlzPreferencePage.sourceIs"), 1, //$NON-NLS-1$ 
         new String[][] { { Messages.getString("BeetlzPreferencePage.default"), //$NON-NLS-1$ 
-          "default" }, //$NON-NLS-1$ 
-      {"BON", "bon" }, { "Java", "java"} },  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      getFieldEditorParent(), true);
+        "default" }, //$NON-NLS-1$ 
+        {"BON", "bon" }, { "Java", "java"} },  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        getFieldEditorParent(), true);
     sourceField.fillIntoGrid(getFieldEditorParent(), 3);
     addField(sourceField);
 
@@ -176,7 +182,7 @@ implements IWorkbenchPreferencePage {
         .getLayoutData()).horizontalSpan = 1;
     ((GridData) skeletonFile.getTextControl(getFieldEditorParent()).
         getLayoutData()).widthHint = 20;
-    
+
   }
 
 

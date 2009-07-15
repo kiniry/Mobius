@@ -1,18 +1,24 @@
 package beetlzplugin.preferences;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.PreferenceStore;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
+import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
 
 /**
@@ -23,14 +29,10 @@ import beetlzplugin.popup.actions.Messages;
  *
  */
 public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
-    implements IWorkbenchPropertyPage {
-
-  /** The name of the file to store the project-specific settings in. */
-  public static final String PROJECT_CONFIG_FILE = ".beetlz";
-  
+implements IWorkbenchPropertyPage {
   /** The element. */
   private IAdaptable element;
-  
+
   /** Field on preference page. */
   private FileFieldEditor jmlFile;
   /** Field on preference page. */
@@ -55,21 +57,36 @@ public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
   private BooleanFieldEditor noWarningField;
   /** Field on preference page. */
   private BooleanFieldEditor noBasicsField;
-  
+
   /**
    * Create new page and set title.
    */
   public BeetlzProjectPreferencePage() {
     super(GRID);
-    
-    //Initialise store, set defaults
-    PreferenceStore store = new PreferenceStore(PROJECT_CONFIG_FILE);
-    PreferenceInitializer.initializeDefaultPreferences(store);
-    setPreferenceStore(store);
-    
+
     setDescription(Messages.getString("BeetlzPreferencePage.projectPreferencesTitle")); //$NON-NLS-1$
   }
-  
+
+  private void setupPreferenceStore(IAdaptable element) {
+    
+    IProject project = null;
+    
+    if (element instanceof IResource) {
+      final IResource resource = (IResource)element;
+      project = resource.getProject();
+    } else if (element instanceof IJavaProject) {
+      final IJavaProject jProject = (IJavaProject)element;
+      project = jProject.getProject();
+    }
+    
+    if (project != null) {
+      IPreferenceStore store = new ScopedPreferenceStore(new ProjectScope(project), Activator.PLUGIN_ID);
+      PreferenceInitializer.initializeDefaultPreferences(store);
+      setPreferenceStore(store);
+
+    }
+  }
+
   /**
    * Create the fields.
    */
@@ -97,9 +114,9 @@ public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
     sourceField = new RadioGroupFieldEditor( PreferenceConstants.SOURCE_OPTION,
         Messages.getString("BeetlzPreferencePage.sourceIs"), 1, //$NON-NLS-1$ 
         new String[][] { { Messages.getString("BeetlzPreferencePage.default"), //$NON-NLS-1$ 
-          "default" }, //$NON-NLS-1$ 
-      {"BON", "bon" }, { "Java", "java"} },  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      getFieldEditorParent(), true);
+        "default" }, //$NON-NLS-1$ 
+        {"BON", "bon" }, { "Java", "java"} },  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        getFieldEditorParent(), true);
     sourceField.fillIntoGrid(getFieldEditorParent(), 3);
     addField(sourceField);
 
@@ -187,7 +204,7 @@ public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
         .getLayoutData()).horizontalSpan = 1;
     ((GridData) skeletonFile.getTextControl(getFieldEditorParent()).
         getLayoutData()).widthHint = 20;
-    
+
   }
 
   /*
@@ -195,7 +212,7 @@ public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
    * @see org.eclipse.ui.IWorkbenchPropertyPage#getElement()
    */
   public IAdaptable getElement() {
-      return element;
+    return element;
   }
 
   /**
@@ -205,9 +222,10 @@ public class BeetlzProjectPreferencePage extends FieldEditorPreferencePage
    *            the element
    */
   public void setElement(IAdaptable element) {
-      this.element = element;
+    this.element = element;
+    setupPreferenceStore(element);
   }
 
-  
+
 
 }

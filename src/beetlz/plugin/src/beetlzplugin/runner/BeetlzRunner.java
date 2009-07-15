@@ -21,7 +21,10 @@ import main.Beetlz.Status;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.preferences.IScopeContext;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IActionDelegate;
@@ -31,6 +34,7 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import utils.SourceLocation;
 import beetlzplugin.Activator;
@@ -178,14 +182,23 @@ public class BeetlzRunner {
   /** User option. */
   protected String source;
 
+  private static IPreferenceStore getPreferenceStore(final IProject project) {
+    ProjectScope projectScope = new ProjectScope(project);
+    InstanceScope instanceScope = new InstanceScope();
+    ScopedPreferenceStore store = new ScopedPreferenceStore(new ProjectScope(project), Activator.PLUGIN_ID);
+    store.setSearchContexts(new IScopeContext[] { projectScope, instanceScope });
+    
+    return store;
+  }
+  
   /**
    * Get options the user selected on preference page and ask again
    * with gui.
    * @param args arguments list to fill in
    * @return successful and continue?
    */
-  private boolean getUserOptions(final List < String > args) {
-    final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+  private boolean getUserOptions(final List <String> args, final IProject project) {
+    final IPreferenceStore store = getPreferenceStore(project);
     final String fileName = store.getString(PreferenceConstants.SPEC_PATH);
     final String userFile = store.getString(PreferenceConstants.USER_SETTING_PATH);
 
@@ -247,7 +260,7 @@ public class BeetlzRunner {
 
     //Get options
     final List < String > args = new Vector < String > ();
-    final boolean success = getUserOptions(args);
+    final boolean success = getUserOptions(args, project);
 
     //Get files
     args.add("-files"); //$NON-NLS-1$
