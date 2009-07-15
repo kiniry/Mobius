@@ -4,7 +4,10 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="BONModel"
     nsURI="BONModel" nsPrefix="BONModel">
   <eClassifiers xsi:type="ecore:EClass" name="Model">
-    <eOperations name="covariant"/>
+    <eOperations name="covariant" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject">
+      <eParameters name="featureOne" eType="#//Feature"/>
+      <eParameters name="featureTwo" eType="#//Feature"/>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="relationships" upperBound="-1"
         eType="#//Relationship"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="closure" upperBound="-1"
@@ -55,7 +58,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="allNames" upperBound="-1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Call" abstract="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Call" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="arguments" upperBound="-1"
+        eType="#//Parameter"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Feature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDeferred" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isEffective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -69,6 +75,8 @@
         eType="#//Call"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="callsInPostcondition" upperBound="-1"
         eType="#//Call"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="frame" upperBound="-1"
+        eType="#//Query"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Renaming"/>
   <eClassifiers xsi:type="ecore:EClass" name="DynamicAbstraction" eSuperTypes="#//Abstraction"/>
@@ -84,5 +92,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="result" eType="#//Class"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="noContract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parameter"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Class"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DirectCall" eSuperTypes="#//Call"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ChainedCall" eSuperTypes="#//Call"/>
 </ecore:EPackage>
