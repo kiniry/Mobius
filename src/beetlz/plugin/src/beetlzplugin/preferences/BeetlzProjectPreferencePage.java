@@ -7,10 +7,12 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,6 +35,8 @@ implements IWorkbenchPropertyPage {
   /** The element. */
   private IAdaptable element;
 
+  /** Field to enable/disable project-specific settings. */
+  private BooleanFieldEditor useProjectSpecific;
   /** Field on preference page. */
   private FileFieldEditor jmlFile;
   /** Field on preference page. */
@@ -57,6 +61,8 @@ implements IWorkbenchPropertyPage {
   private BooleanFieldEditor noWarningField;
   /** Field on preference page. */
   private BooleanFieldEditor noBasicsField;
+  
+  private FieldEditor[] allProjectSpecificFields;
 
   /**
    * Create new page and set title.
@@ -92,13 +98,19 @@ implements IWorkbenchPropertyPage {
    */
   @Override
   public void createFieldEditors() {
+    
+    useProjectSpecific = new BooleanFieldEditor(PreferenceConstants.USE_PROJECT_SPECIFIC, 
+        Messages.getString("BeetlzPreferencePage.useProjectSpecific"), getFieldEditorParent());
+    useProjectSpecific.fillIntoGrid(getFieldEditorParent(), 3);
+    addField(useProjectSpecific);
+    
     jmlFile = new FileFieldEditor(PreferenceConstants.SPEC_PATH,
         Messages.getString("BeetlzPreferencePage.jmlSpecsFolder"),
         getFieldEditorParent()); //$NON-NLS-1$
 
     jmlFile.setEmptyStringAllowed(false);
     addField(jmlFile);
-
+    
     userSettingFile = new FileFieldEditor(PreferenceConstants.USER_SETTING_PATH,
         Messages.getString("BeetlzPreferencePage.userSettingFile"),
         getFieldEditorParent()); //$NON-NLS-1$
@@ -169,7 +181,10 @@ implements IWorkbenchPropertyPage {
     noBasicsField.fillIntoGrid(getFieldEditorParent(), 3);
     addField(noBasicsField);
 
-
+    allProjectSpecificFields = new FieldEditor[] { 
+        jmlFile, userSettingFile, skeletonFile, pureBonField, nonNullField, sourceField, 
+        verboseField, noJmlField, noJavaField, noErrorField, noWarningField, noBasicsField
+    };
   }
 
   /**
@@ -208,6 +223,32 @@ implements IWorkbenchPropertyPage {
 
   }
 
+  @Override
+  public void propertyChange(PropertyChangeEvent event) {
+    super.propertyChange(event);
+    
+    if (event.getSource() == useProjectSpecific) {
+      updateEnabledness();
+    }
+  }
+
+  @Override
+  protected void initialize() {
+    super.initialize();
+    
+    updateEnabledness();
+  }
+
+  private void updateEnabledness() {
+    boolean enabled = useProjectSpecific.getBooleanValue();
+    System.out.println("Updating enabledness to " + enabled);
+    if (allProjectSpecificFields != null) {
+      for (FieldEditor field : allProjectSpecificFields) {
+        field.setEnabled(enabled, getFieldEditorParent());
+      }
+    }
+  }
+  
   /*
    *  (non-Javadoc)
    * @see org.eclipse.ui.IWorkbenchPropertyPage#getElement()

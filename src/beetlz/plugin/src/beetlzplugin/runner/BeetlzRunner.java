@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.Vector;
 import java.util.logging.Level;
 
 import log.CCLevel;
@@ -21,12 +20,8 @@ import main.Beetlz.Status;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
@@ -34,13 +29,11 @@ import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import utils.SourceLocation;
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
 import beetlzplugin.popup.actions.ResourceVisitor;
-import beetlzplugin.preferences.PreferenceConstants;
 
 public class BeetlzRunner {
 
@@ -77,18 +70,18 @@ public class BeetlzRunner {
 
   /**
    * Prepend the provided path to the start of the system class path, unless it is already present.
-   * @param pathToAdd the path to add to the system class path.
+   * @param specsPath the path to add to the system class path.
    */
-  private static void updateClassPath(String pathToAdd) {
+  private static void updateClassPath(String specsPath) {
 
-    if (lastUsedSpecsPath == null || !lastUsedSpecsPath.equals(pathToAdd)) {
+    if (lastUsedSpecsPath == null || !lastUsedSpecsPath.equals(specsPath)) {
       System.out.println("Old classpath: " + System.getProperty("java.class.path"));
       List<String> cpParts = new ArrayList<String>(Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator)));
       if (lastUsedSpecsPath != null) {
         cpParts.remove(lastUsedSpecsPath);
       }
       List<String> newCPParts = new ArrayList<String>(cpParts.size()+1);
-      newCPParts.add(pathToAdd);
+      newCPParts.add(specsPath);
       newCPParts.addAll(cpParts);
       StringBuilder newPath = new StringBuilder(File.pathSeparator);
       for (String path : newCPParts) {
@@ -100,7 +93,7 @@ public class BeetlzRunner {
       System.setProperty("java.class.path",  //$NON-NLS-1$
           newPath.toString());
       System.out.println("New classpath: " + System.getProperty("java.class.path"));
-      lastUsedSpecsPath = pathToAdd;
+      lastUsedSpecsPath = specsPath;
     }
 
   }
@@ -163,88 +156,6 @@ public class BeetlzRunner {
     System.setErr(errStream);
   }
 
-  /** User option. */
-  protected boolean useJml;
-  /** User option. */
-  protected boolean useJava;
-  /** User option. */
-  protected boolean printError;
-  /** User option. */
-  protected boolean printWarning;
-  /** User option. */
-  protected boolean verbose;
-  /** User option. */
-  protected boolean pureBon;
-  /** User option. */
-  protected boolean nullCheck;
-  /** User option. */
-  protected boolean useBasics;
-  /** User option. */
-  protected String source;
-
-  private static IPreferenceStore getPreferenceStore(final IProject project) {
-    ProjectScope projectScope = new ProjectScope(project);
-    InstanceScope instanceScope = new InstanceScope();
-    ScopedPreferenceStore store = new ScopedPreferenceStore(new ProjectScope(project), Activator.PLUGIN_ID);
-    store.setSearchContexts(new IScopeContext[] { projectScope, instanceScope });
-    
-    return store;
-  }
-  
-  /**
-   * Get options the user selected on preference page and ask again
-   * with gui.
-   * @param args arguments list to fill in
-   * @return successful and continue?
-   */
-  private boolean getUserOptions(final List <String> args, final IProject project) {
-    final IPreferenceStore store = getPreferenceStore(project);
-    final String fileName = store.getString(PreferenceConstants.SPEC_PATH);
-    final String userFile = store.getString(PreferenceConstants.USER_SETTING_PATH);
-
-    updateClassPath(fileName);
-
-    if (userFile != null && userFile.length() > 0) {
-      args.add(Beetlz.USERSET_OPTION); //$NON-NLS-1$
-      args.add(userFile);
-    }
-
-    useJml = store.getBoolean(PreferenceConstants.USE_JML_OPTION);
-    useJava = store.getBoolean(PreferenceConstants.USE_JAVA_OPTION);
-    printError = store.getBoolean(PreferenceConstants.PRINT_ERROR_OPTION);
-    printWarning = store.getBoolean(PreferenceConstants.PRINT_WARNING_OPTION);
-    verbose = store.getBoolean(PreferenceConstants.VERBOSE_OPTION);
-    pureBon = store.getBoolean(PreferenceConstants.PURE_BON);
-    nullCheck = store.getBoolean(PreferenceConstants.NULL_CHECK_OPTION);
-    useBasics = store.getBoolean(PreferenceConstants.USE_BASICS_OPTION);
-    source = store.getString(PreferenceConstants.SOURCE_OPTION);
-
-    args.add(Beetlz.SPECS_OPTION);
-    args.add(fileName);
-
-    if (!useJml) args.add(Beetlz.NO_JML_OPTION);
-    if (!useJava) args.add(Beetlz.NO_JAVA_OPTION);
-    if (!printError) args.add(Beetlz.NO_ERROR_OPTION);
-    if (!printWarning) args.add(Beetlz.NO_WARNING_OPTION);
-    if (verbose) args.add(Beetlz.VERBOSE_OPTION);
-    if (pureBon) args.add(Beetlz.PUREBON_OPTION);
-    if (!nullCheck) args.add(Beetlz.NON_NULL_OPTION);
-    if (!useBasics) args.add(Beetlz.NO_BASICS_OPTION);
-    if (source.equals("java")) { //$NON-NLS-1$
-      args.add(Beetlz.SOURCE_OPTION);
-      args.add("java"); //$NON-NLS-1$
-    } else if (source.equals("bon")) { //$NON-NLS-1$
-      args.add(Beetlz.SOURCE_OPTION);
-      args.add("bon"); //$NON-NLS-1$
-    } else if (source.equals("both")) {
-      args.add(Beetlz.SOURCE_OPTION);
-      args.add("both"); //$NON-NLS-1$
-    }
-
-    //my_console.println(System.getProperty("java.class.path"));
-    return true;
-  }
-
   /**
    * The actual action happens here.
    * Get necessary settings and selected file information,
@@ -262,8 +173,10 @@ public class BeetlzRunner {
     } catch (final Exception e) { }
 
     //Get options
-    final List < String > args = new Vector < String > ();
-    final boolean success = getUserOptions(args, project);
+    UserSettings settings = new UserSettings(project);
+    final boolean success = settings.isValid();
+    updateClassPath(settings.getSpecsPath());    
+    final List<String> args = settings.getUserOptionsAsArgs(); 
 
     //Get files
     args.add("-files"); //$NON-NLS-1$
@@ -384,7 +297,6 @@ public class BeetlzRunner {
       args.add(javaPath.getAbsolutePath());
       pathResourceMap.put(javaPath.getAbsolutePath(), r);
     }
-    System.out.println("Files: " + args);
     return args;
   }
 
