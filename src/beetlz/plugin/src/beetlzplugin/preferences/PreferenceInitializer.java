@@ -47,7 +47,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     store.setDefault(PreferenceConstants.NULL_CHECK_OPTION, true);
     store.setDefault(PreferenceConstants.PRINT_WARNING_OPTION, true);
     store.setDefault(PreferenceConstants.PURE_BON, false);
-    store.setDefault(PreferenceConstants.SOURCE_OPTION, "default"); //$NON-NLS-1$
+    store.setDefault(PreferenceConstants.SOURCE_OPTION, "both"); //$NON-NLS-1$
     store.setDefault(PreferenceConstants.VERBOSE_OPTION, false);
   }
   

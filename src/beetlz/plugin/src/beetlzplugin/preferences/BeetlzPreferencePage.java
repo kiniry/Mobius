@@ -93,6 +93,7 @@ implements IWorkbenchPreferencePage {
         Messages.getString("BeetlzPreferencePage.sourceIs"), 1, //$NON-NLS-1$ 
         new String[][] { { Messages.getString("BeetlzPreferencePage.default"), //$NON-NLS-1$ 
         "default" }, //$NON-NLS-1$ 
+        {"both", "both"}, //$NON-NLS-1$ //$NON-NLS-2$
         {"BON", "bon" }, { "Java", "java"} },  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         getFieldEditorParent(), true);
     sourceField.fillIntoGrid(getFieldEditorParent(), 3);

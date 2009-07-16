@@ -236,6 +236,9 @@ public class BeetlzRunner {
     } else if (source.equals("bon")) { //$NON-NLS-1$
       args.add(Beetlz.SOURCE_OPTION);
       args.add("bon"); //$NON-NLS-1$
+    } else if (source.equals("both")) {
+      args.add(Beetlz.SOURCE_OPTION);
+      args.add("both"); //$NON-NLS-1$
     }
 
     //my_console.println(System.getProperty("java.class.path"));
@@ -381,6 +384,7 @@ public class BeetlzRunner {
       args.add(javaPath.getAbsolutePath());
       pathResourceMap.put(javaPath.getAbsolutePath(), r);
     }
+    System.out.println("Files: " + args);
     return args;
   }
 
