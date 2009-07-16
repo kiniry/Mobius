@@ -1,0 +1,52 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.prove_example1</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;prove_example1()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\nprove_example1\n"</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_context&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;uninterpreted&nbsp;type.&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;u_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"U"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;u&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_uninterpreted_sort&nbsp;ctx&nbsp;u_name&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;declare&nbsp;function&nbsp;g&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;g_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"g"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;g&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_func_decl&nbsp;ctx&nbsp;g_name&nbsp;[|u|]&nbsp;u&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;x&nbsp;and&nbsp;y&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"x"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"y"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_const&nbsp;ctx&nbsp;x_name&nbsp;u&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_const&nbsp;ctx&nbsp;y_name&nbsp;u&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;g(x),&nbsp;g(y)&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;gx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;g&nbsp;x&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;gy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;g&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;assert&nbsp;x&nbsp;=&nbsp;y&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;eq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;x&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;eq;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;g(x)&nbsp;=&nbsp;g(y)&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;gx&nbsp;gy&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;x&nbsp;=&nbsp;y&nbsp;implies&nbsp;g(x)&nbsp;=&nbsp;g(y)\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;f&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;g(g(x))&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ggx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;g&nbsp;gx&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;disprove&nbsp;g(g(x))&nbsp;=&nbsp;g(y)&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;ggx&nbsp;gy&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"disprove:&nbsp;x&nbsp;=&nbsp;y&nbsp;implies&nbsp;g(g(x))&nbsp;=&nbsp;g(y)\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;f&nbsp;<span class="keyword">false</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

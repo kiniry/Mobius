@@ -1,0 +1,38 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.display_sort</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;<span class="keyword">rec</span>&nbsp;display_sort&nbsp;c&nbsp;out&nbsp;ty&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">match</span>&nbsp;<span class="constructor">Z3</span>.sort_refine&nbsp;c&nbsp;ty&nbsp;<span class="keyword">with</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_uninterpreted</span>&nbsp;s&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;display_symbol&nbsp;c&nbsp;out&nbsp;s;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_bool</span>&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"bool"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_int</span>&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"int"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_real</span>&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"real"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_bv</span>&nbsp;sz&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"bv%d"</span>&nbsp;sz;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_array</span>&nbsp;(domain,&nbsp;range)&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"["</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_sort&nbsp;c&nbsp;out&nbsp;domain;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"-&gt;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_sort&nbsp;c&nbsp;out&nbsp;range;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"]"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_datatype</span>&nbsp;cons&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Array</span>.iter&nbsp;(<span class="keyword">fun</span>&nbsp;(dt_con&nbsp;:&nbsp;<span class="constructor">Z3</span>.datatype_constructor_refined)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;fields&nbsp;=&nbsp;dt_con.<span class="constructor">Z3</span>.accessors&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"("</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;i&nbsp;v&nbsp;=&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;i&gt;0&nbsp;<span class="keyword">then</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">",&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_sort&nbsp;c&nbsp;out&nbsp;(<span class="constructor">Z3</span>.get_range&nbsp;c&nbsp;v);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">in</span>&nbsp;<span class="constructor">Array</span>.iteri&nbsp;f&nbsp;fields;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">")"</span>)&nbsp;cons<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Z3</span>.<span class="constructor">Sort_unknown</span>&nbsp;s&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"unknown["</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_symbol&nbsp;c&nbsp;out&nbsp;s;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"unknown]"</span>;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

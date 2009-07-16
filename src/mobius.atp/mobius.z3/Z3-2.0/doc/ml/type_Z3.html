@@ -1,0 +1,781 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Z3</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span><br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;config<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;context<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;sort<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;func_decl<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;ast<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;app<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;pattern<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;symbol<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;parameter<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;model<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;literals<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;constructor<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;constructor_list<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_1&nbsp;=&nbsp;<span class="constructor">L_FALSE</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">L_UNDEF</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">L_TRUE</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;lbool&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_1<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_2&nbsp;=&nbsp;<span class="constructor">INT_SYMBOL</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">STRING_SYMBOL</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;symbol_kind&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_2<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_3&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">PARAMETER_INT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_DOUBLE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_RATIONAL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_SYMBOL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_AST</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PARAMETER_FUNC_DECL</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;parameter_kind&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_3<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_4&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">UNINTERPRETED_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">BOOL_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">INT_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">REAL_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">BV_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">ARRAY_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">DATATYPE_SORT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">UNKNOWN_SORT</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;sort_kind&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_4<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_5&nbsp;=&nbsp;<span class="constructor">NUMERAL_AST</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">APP_AST</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">VAR_AST</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">QUANTIFIER_AST</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">UNKNOWN_AST</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;ast_kind&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_5<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_6&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">OP_TRUE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_FALSE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_EQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_DISTINCT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ITE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_AND</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_OR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_IFF</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_XOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_NOT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_IMPLIES</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_OEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ANUM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_LE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_GE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_LT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_GT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ADD</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SUB</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_UMINUS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_MUL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_DIV</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_IDIV</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_REM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_MOD</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_TO_REAL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_STORE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SELECT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_CONST_ARRAY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ARRAY_MAP</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ARRAY_DEFAULT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SET_UNION</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SET_INTERSECT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SET_DIFFERENCE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SET_COMPLEMENT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SET_SUBSET</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BNUM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BIT1</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BIT0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BNEG</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BADD</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSUB</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BMUL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSDIV</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BUDIV</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSREM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BUREM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSMOD</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSDIV0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BUDIV0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSREM0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BUREM0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSMOD0</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ULEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SLEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_UGEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SGEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ULT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SLT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_UGT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SGT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BAND</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BNOT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BXOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BNAND</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BNOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BXNOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_CONCAT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_SIGN_EXT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ZERO_EXT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_EXTRACT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_REPEAT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BREDOR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BREDAND</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BCOMP</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BSHL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BLSHR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BASHR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ROTATE_LEFT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_ROTATE_RIGHT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_INT2BV</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_BV2INT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_UNDEF</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_TRUE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_ASSERTED</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_GOAL</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_MODUS_PONENS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_REFLEXIVITY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_SYMMETRY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_TRANSITIVITY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_TRANSITIVITY_STAR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_MONOTONICITY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_QUANT_INTRO</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_DISTRIBUTIVITY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_AND_ELIM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_NOT_OR_ELIM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_REWRITE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_REWRITE_STAR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_PULL_QUANT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_PULL_QUANT_STAR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_PUSH_QUANT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_ELIM_UNUSED_VARS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_DER</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_QUANT_INST</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_HYPOTHESIS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_LEMMA</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_UNIT_RESOLUTION</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_IFF_TRUE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_IFF_FALSE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_COMMUTATIVITY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_DEF_AXIOM</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_DEF_INTRO</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_APPLY_DEF</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_IFF_OEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_NNF_POS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_NNF_NEG</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_NNF_STAR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_CNF_STAR</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_SKOLEMIZE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_MODUS_PONENS_OEQ</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_PR_TH_LEMMA</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">OP_UNINTERPRETED</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;decl_kind&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_6<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_7&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">NO_FAILURE</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">UNKNOWN</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">TIMEOUT</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">MEMOUT_WATERMARK</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">CANCELED</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">NUM_CONFLICTS</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">THEORY</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">QUANTIFIERS</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;search_failure&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_7<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;enum_8&nbsp;=&nbsp;<span class="constructor">PRINT_SMTLIB_FULL</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">PRINT_LOW_LEVEL</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;ast_print_mode&nbsp;=&nbsp;<span class="constructor">Z3</span>.enum_8<br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_config&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.config&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_config"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_config&nbsp;:&nbsp;<span class="constructor">Z3</span>.config&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_config"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;set_param_value&nbsp;:&nbsp;<span class="constructor">Z3</span>.config&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_set_param_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_context&nbsp;:&nbsp;<span class="constructor">Z3</span>.config&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.context&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_context"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_context&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_context"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;trace_to_file&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_trace_to_file"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;trace_to_stderr&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_trace_to_stderr"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;trace_to_stdout&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_trace_to_stdout"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;trace_off&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_trace_off"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_int_symbol&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_int_symbol"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_string_symbol&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_string_symbol"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_eq_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_is_eq_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_uninterpreted_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_uninterpreted_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bool_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bool_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_int_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_int_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_real_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_real_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bv_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bv_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_array_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_array_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_tuple_sort&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_tuple_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_enumeration_sort&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_enumeration_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_list_sort&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_list_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_constructor&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_constructor_bytecode"</span>&nbsp;<span class="string">"camlidl_z3_Z3_mk_constructor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;query_constructor&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.constructor&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_query_constructor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_constructor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_constructor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_datatype&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.constructor&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_datatype"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_constructor_list&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor_list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_constructor_list"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_constructor_list&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.constructor_list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_constructor_list"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_datatypes&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.constructor_list&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.constructor_list&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_datatypes"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_injective_function&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_injective_function"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_eq_ast&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_is_eq_ast"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_func_decl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_func_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_app&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_app"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_const&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_const"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_label&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_label"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_fresh_func_decl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_fresh_func_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_fresh_const&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_fresh_const"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_true&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_true"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_false&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_false"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_eq&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_eq"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_distinct&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_distinct"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_not&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_not"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_ite&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_ite"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_iff&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_iff"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_implies&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_implies"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_xor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_xor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_and&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_and"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_or&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_or"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_add&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_add"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_mul&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_mul"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_sub&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_sub"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_unary_minus&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_unary_minus"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_div&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_div"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_mod&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_mod"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_rem&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_rem"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_lt&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_lt"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_le&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_le"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_gt&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_gt"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_ge&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_ge"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_int2real&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_int2real"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvnot&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvnot"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvand&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvand"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvxor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvxor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvnand&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvnand"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvnor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvnor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvxnor&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvxnor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvneg&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvneg"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvadd&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvadd"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsub&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsub"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvmul&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvmul"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvudiv&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvudiv"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsdiv&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsdiv"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvurem&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvurem"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsrem&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsrem"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsmod&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsmod"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvult&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvult"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvslt&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvslt"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvule&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvule"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsle&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsle"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvuge&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvuge"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsge&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsge"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvugt&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvugt"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsgt&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsgt"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_concat&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_concat"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_extract&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_extract"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_sign_ext&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_sign_ext"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_zero_ext&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_zero_ext"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvshl&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvshl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvlshr&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvlshr"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvashr&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvashr"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_rotate_left&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_rotate_left"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_rotate_right&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_rotate_right"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_int2bv&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_int2bv"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bv2int&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bv2int"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvadd_no_overflow&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvadd_no_overflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvadd_no_underflow&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvadd_no_underflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsub_no_overflow&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsub_no_overflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsub_no_underflow&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsub_no_underflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvsdiv_no_overflow&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvsdiv_no_overflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvneg_no_overflow&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvneg_no_overflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvmul_no_overflow&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvmul_no_overflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bvmul_no_underflow&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bvmul_no_underflow"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_select&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_select"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_store&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_store"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_const_array&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_const_array"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_map&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_map"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_array_default&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_array_default"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_numeral&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_numeral"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_real&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_real"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_int&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_int"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_unsigned_int&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_unsigned_int"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_pattern&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_pattern"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_bound&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_bound"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_forall&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_forall_bytecode"</span>&nbsp;<span class="string">"camlidl_z3_Z3_mk_forall"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_exists&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_exists_bytecode"</span>&nbsp;<span class="string">"camlidl_z3_Z3_mk_exists"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_quantifier&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_quantifier_bytecode"</span>&nbsp;<span class="string">"camlidl_z3_Z3_mk_quantifier"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_forall_const&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_forall_const_bytecode"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"camlidl_z3_Z3_mk_forall_const"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;mk_exists_const&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_mk_exists_const_bytecode"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"camlidl_z3_Z3_mk_exists_const"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_symbol_kind&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol_kind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_symbol_kind"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_symbol_int&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_symbol_int"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_symbol_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_symbol_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_ast_kind&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast_kind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_ast_kind"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_numeral_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_numeral_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_numeral_small&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;int64&nbsp;*&nbsp;int64<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_numeral_small"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_numeral_int&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_numeral_int"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_numeral_uint&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_numeral_uint"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_bool_value&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.lbool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_bool_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_app_decl&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_app_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_app_num_args&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_app_num_args"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_app_arg&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_app_arg"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_index_value&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_index_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_quantifier_forall&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_is_quantifier_forall"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_weight&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_weight"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_num_patterns&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_num_patterns"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_pattern_ast&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_pattern_ast"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_bound_name&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_bound_name"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_bound_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_bound_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_body&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_body"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_quantifier_num_bound&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_quantifier_num_bound"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_name&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_name"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_num_parameters&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_num_parameters"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_parameter_kind&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.parameter_kind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_parameter_kind"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_int_parameter&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_int_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_double_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_double_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_symbol_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_symbol_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_sort_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_sort_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_ast_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_ast_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_func_decl_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_func_decl_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_rational_parameter&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_rational_parameter"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_sort_name&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_sort_name"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_sort"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_domain_size&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_domain_size"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_domain&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_domain"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_range&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_range"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_sort_kind&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort_kind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_sort_kind"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_bv_sort_size&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_bv_sort_size"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_array_sort_domain&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_array_sort_domain"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_array_sort_range&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_array_sort_range"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_tuple_sort_mk_decl&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_tuple_sort_mk_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_decl_kind&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.decl_kind<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_decl_kind"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_tuple_sort_num_fields&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_tuple_sort_num_fields"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_tuple_sort_field_decl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_tuple_sort_field_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_datatype_sort_num_constructors&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_datatype_sort_num_constructors"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_datatype_sort_constructor&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_datatype_sort_constructor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_datatype_sort_recognizer&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_datatype_sort_recognizer"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_datatype_sort_constructor_accessor&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_datatype_sort_constructor_accessor"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_pattern_num_terms&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_pattern_num_terms"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_pattern&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_pattern"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;simplify&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_simplify"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;app_to_ast&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_app_to_ast"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;to_app&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_to_app"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;push&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_push"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;pop&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_pop"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;persist_ast&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_persist_ast"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;assert_cnstr&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_assert_cnstr"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;check_and_get_model&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.lbool&nbsp;*&nbsp;<span class="constructor">Z3</span>.model<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_check_and_get_model"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;check&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.lbool&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_check"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;check_assumptions&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.lbool&nbsp;*&nbsp;<span class="constructor">Z3</span>.model&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;*&nbsp;int&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_check_assumptions"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_model&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_model"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;soft_check_cancel&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_soft_check_cancel"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_search_failure&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.search_failure<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_search_failure"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_relevant_labels&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_relevant_labels"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_relevant_literals&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_relevant_literals"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_guessed_literals&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_guessed_literals"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;del_literals&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_del_literals"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_num_literals&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_num_literals"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_label_symbol&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_label_symbol"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_literal&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_literal"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;disable_literal&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_disable_literal"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;block_literals&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.literals&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_block_literals"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_num_constants&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_num_constants"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_constant&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_constant"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;eval_func_decl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_eval_func_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;is_array_value&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_is_array_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_array_value&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_array_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_num_funcs&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_num_funcs"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_decl&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_else&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_else"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_num_entries&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_num_entries"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_entry_num_args&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_entry_num_args"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_entry_arg&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_entry_arg"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_model_func_entry_value&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_model_func_entry_value"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;eval&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_eval"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;open_log&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;bool&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_open_log"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;close_log&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_close_log"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;set_ast_print_mode&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast_print_mode&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_set_ast_print_mode"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;ast_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_ast_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;pattern_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.pattern&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_pattern_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;sort_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_sort_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;func_decl_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_func_decl_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;model_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_model_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;benchmark_to_smtlib_string&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_benchmark_to_smtlib_string_bytecode"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"camlidl_z3_Z3_benchmark_to_smtlib_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;context_to_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_context_to_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_context_assignment&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_context_assignment"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;parse_smtlib_string&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_parse_smtlib_string_bytecode"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"camlidl_z3_Z3_parse_smtlib_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;parse_smtlib_file&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_parse_smtlib_file_bytecode"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"camlidl_z3_Z3_parse_smtlib_file"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_num_formulas&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_num_formulas"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_formula&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_formula"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_num_assumptions&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_num_assumptions"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_assumption&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_assumption"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_num_decls&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_num_decls"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_smtlib_decl&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_smtlib_decl"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;parse_z3_string&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_parse_z3_string"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;parse_z3_file&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_parse_z3_file"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;get_version&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_get_version"</span><br>
+&nbsp;&nbsp;<span class="keyword">external</span>&nbsp;reset_memory&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit&nbsp;=&nbsp;<span class="string">"camlidl_z3_Z3_reset_memory"</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mk_context_x&nbsp;:&nbsp;(string&nbsp;*&nbsp;string)&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.context<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_app_args&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.app&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_domains&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_array_sort&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_tuple_sort&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;datatype_constructor_refined&nbsp;=&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;constructor&nbsp;:&nbsp;<span class="constructor">Z3</span>.func_decl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;recognizer&nbsp;:&nbsp;<span class="constructor">Z3</span>.func_decl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;accessors&nbsp;:&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array;<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_datatype_sort&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.datatype_constructor_refined&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_model_constants&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_model_func_entry&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_model_func_entries&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast)&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_model_funcs&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.model&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(<span class="constructor">Z3</span>.symbol&nbsp;*&nbsp;(<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast)&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast)&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_smtlib_formulas&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_smtlib_assumptions&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_smtlib_decls&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_smtlib_parse_results&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_smtlib_string_formula&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_smtlib_file_formula&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_smtlib_string_x&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_smtlib_file_x&nbsp;:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.sort&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;array<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;symbol_refined&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Symbol_int</span>&nbsp;<span class="keyword">of</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Symbol_string</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Symbol_unknown</span><br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;symbol_refine&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.symbol_refined<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;sort_refined&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Sort_uninterpreted</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_bool</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_int</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_real</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_bv</span>&nbsp;<span class="keyword">of</span>&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_array</span>&nbsp;<span class="keyword">of</span>&nbsp;(<span class="constructor">Z3</span>.sort&nbsp;*&nbsp;<span class="constructor">Z3</span>.sort)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_datatype</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.datatype_constructor_refined&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Sort_unknown</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.symbol<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;sort_refine&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.sort_refined<br>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;binder_type&nbsp;=&nbsp;<span class="constructor">Forall</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Exists</span><br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;numeral_refined&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Numeral_small</span>&nbsp;<span class="keyword">of</span>&nbsp;int64&nbsp;*&nbsp;int64<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Numeral_large</span>&nbsp;<span class="keyword">of</span>&nbsp;string<br>
+&nbsp;&nbsp;<span class="keyword">and</span>&nbsp;term_refined&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Term_app</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.decl_kind&nbsp;*&nbsp;<span class="constructor">Z3</span>.func_decl&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Term_quantifier</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.binder_type&nbsp;*&nbsp;int&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast&nbsp;array&nbsp;array&nbsp;*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="constructor">Z3</span>.symbol&nbsp;*&nbsp;<span class="constructor">Z3</span>.sort)&nbsp;array&nbsp;*&nbsp;<span class="constructor">Z3</span>.ast<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Term_numeral</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">Z3</span>.numeral_refined&nbsp;*&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">Term_var</span>&nbsp;<span class="keyword">of</span>&nbsp;int&nbsp;*&nbsp;<span class="constructor">Z3</span>.sort<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;term_refine&nbsp;:&nbsp;<span class="constructor">Z3</span>.context&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.ast&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Z3</span>.term_refined<br>
+<span class="keyword">end</span></code></body></html>

@@ -1,0 +1,36 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.display_function_interpretations</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;display_function_interpretations&nbsp;c&nbsp;out&nbsp;m&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"function&nbsp;interpretations:\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;display_function&nbsp;(name,&nbsp;entries,&nbsp;func_else)&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_symbol&nbsp;c&nbsp;out&nbsp;name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"&nbsp;=&nbsp;{"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;display_entry&nbsp;j&nbsp;(args,valu)&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;j&nbsp;&gt;&nbsp;0&nbsp;<span class="keyword">then</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">",&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"("</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;k&nbsp;arg&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;k&nbsp;&gt;&nbsp;0&nbsp;<span class="keyword">then</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">",&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_ast&nbsp;c&nbsp;out&nbsp;arg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">in</span>&nbsp;<span class="constructor">Array</span>.iteri&nbsp;f&nbsp;args;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"|-&gt;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_ast&nbsp;c&nbsp;out&nbsp;valu;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">")"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">in</span>&nbsp;<span class="constructor">Array</span>.iteri&nbsp;display_entry&nbsp;entries;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span>&nbsp;<span class="constructor">Array</span>.length&nbsp;entries&nbsp;&gt;&nbsp;0&nbsp;<span class="keyword">then</span>&nbsp;fprintf&nbsp;out&nbsp;<span class="string">",&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"(else|-&gt;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_ast&nbsp;c&nbsp;out&nbsp;func_else;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">")}\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Array</span>.iter&nbsp;display_function&nbsp;(<span class="constructor">Z3</span>.get_model_funcs&nbsp;c&nbsp;m);<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

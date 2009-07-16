@@ -1,0 +1,53 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.array_example1</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;array_example1()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\narray_example1\n"</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;=&nbsp;mk_context&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;int_sort&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_int_sort&nbsp;ctx&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;array_sort&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_array_sort&nbsp;ctx&nbsp;int_sort&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;a1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"a1"</span>&nbsp;array_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;a2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"a2"</span>&nbsp;array_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;i1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"i1"</span>&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;i2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"i2"</span>&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;i3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"i3"</span>&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;v1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"v1"</span>&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;v2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"v2"</span>&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;st1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_store&nbsp;ctx&nbsp;a1&nbsp;i1&nbsp;v1&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;st2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_store&nbsp;ctx&nbsp;a2&nbsp;i2&nbsp;v2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;sel1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_select&nbsp;ctx&nbsp;a1&nbsp;i3&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;sel2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_select&nbsp;ctx&nbsp;a2&nbsp;i3&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;antecedent&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedent&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;st1&nbsp;st2&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;consequent:&nbsp;i1&nbsp;=&nbsp;i3&nbsp;or&nbsp;&nbsp;i2&nbsp;=&nbsp;i3&nbsp;or&nbsp;select(a1,&nbsp;i3)&nbsp;=&nbsp;select(a2,&nbsp;i3)&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ds&nbsp;=&nbsp;[|<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;i1&nbsp;i3;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;i2&nbsp;i3;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;sel1&nbsp;sel2;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;consequent&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;ds&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;store(a1,&nbsp;i1,&nbsp;v1)&nbsp;=&nbsp;store(a2,&nbsp;i2,&nbsp;v2)&nbsp;implies&nbsp;(i1&nbsp;=&nbsp;i3&nbsp;or&nbsp;i2&nbsp;=&nbsp;i3&nbsp;or&nbsp;select(a1,&nbsp;i3)&nbsp;=&nbsp;select(a2,&nbsp;i3))&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;antecedent&nbsp;consequent&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;store(a1,&nbsp;i1,&nbsp;v1)&nbsp;=&nbsp;store(a2,&nbsp;i2,&nbsp;v2)&nbsp;implies&nbsp;(i1&nbsp;=&nbsp;i3&nbsp;or&nbsp;i2&nbsp;=&nbsp;i3&nbsp;or&nbsp;select(a1,&nbsp;i3)&nbsp;=&nbsp;select(a2,&nbsp;i3))\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"%s\n"</span>&nbsp;(<span class="constructor">Z3</span>.ast_to_string&nbsp;ctx&nbsp;thm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

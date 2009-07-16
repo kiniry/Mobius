@@ -1,0 +1,101 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.tuple_example1</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;tuple_example1()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\ntuple_example1\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_context&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;real_sort&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_real_sort&nbsp;ctx&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;Create&nbsp;pair&nbsp;(tuple)&nbsp;type&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;mk_tuple_name&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"mk_pair"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;proj_names_0&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"get_x"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;proj_names_1&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"get_y"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;proj_names&nbsp;=&nbsp;[|proj_names_0;&nbsp;proj_names_1|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;proj_sorts&nbsp;=&nbsp;[|real_sort;real_sort|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;Z3_mk_tuple_sort&nbsp;will&nbsp;set&nbsp;mk_tuple_decl&nbsp;and&nbsp;proj_decls&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;(pair_sort,mk_tuple_decl,proj_decls)&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_tuple_sort&nbsp;ctx&nbsp;mk_tuple_name&nbsp;proj_names&nbsp;proj_sorts&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;get_x_decl&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;proj_decls.(0)&nbsp;<span class="keyword">in</span>&nbsp;<span class="comment">(*&nbsp;function&nbsp;that&nbsp;extracts&nbsp;the&nbsp;first&nbsp;element&nbsp;of&nbsp;a&nbsp;tuple.&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;get_y_decl&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;proj_decls.(1)&nbsp;<span class="keyword">in</span>&nbsp;<span class="comment">(*&nbsp;function&nbsp;that&nbsp;extracts&nbsp;the&nbsp;second&nbsp;element&nbsp;of&nbsp;a&nbsp;tuple.&nbsp;*)</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"tuple_type:&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;display_sort&nbsp;ctx&nbsp;stdout&nbsp;pair_sort;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\n"</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;that&nbsp;get_x(mk_pair(x,y))&nbsp;==&nbsp;1&nbsp;implies&nbsp;x&nbsp;=&nbsp;1*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_real_var&nbsp;ctx&nbsp;<span class="string">"x"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_real_var&nbsp;ctx&nbsp;<span class="string">"y"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;app1&nbsp;=&nbsp;mk_binary_app&nbsp;ctx&nbsp;mk_tuple_decl&nbsp;x&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;app2&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_x_decl&nbsp;app1&nbsp;<span class="keyword">in</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;one&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_numeral&nbsp;ctx&nbsp;<span class="string">"1"</span>&nbsp;real_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;eq1&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;app2&nbsp;one&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;eq2&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;x&nbsp;one&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;eq1&nbsp;eq2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;get_x(mk_pair(x,&nbsp;y))&nbsp;=&nbsp;1&nbsp;implies&nbsp;x&nbsp;=&nbsp;1\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;disprove&nbsp;that&nbsp;get_x(mk_pair(x,y))&nbsp;==&nbsp;1&nbsp;implies&nbsp;y&nbsp;=&nbsp;1*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;eq3&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;y&nbsp;one&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;eq1&nbsp;eq3&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"disprove:&nbsp;get_x(mk_pair(x,&nbsp;y))&nbsp;=&nbsp;1&nbsp;implies&nbsp;y&nbsp;=&nbsp;1\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">false</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;that&nbsp;get_x(p1)&nbsp;=&nbsp;get_x(p2)&nbsp;and&nbsp;get_y(p1)&nbsp;=&nbsp;get_y(p2)&nbsp;implies&nbsp;p1&nbsp;=&nbsp;p2&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"p1"</span>&nbsp;pair_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"p2"</span>&nbsp;pair_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_x_decl&nbsp;p1&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_y_decl&nbsp;p1&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_x_decl&nbsp;p2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_y_decl&nbsp;p2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedents_0&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;x1&nbsp;x2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedents_1&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;y1&nbsp;y2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedents&nbsp;=&nbsp;[|antecedents_0;&nbsp;antecedents_1|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedent&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_and&nbsp;ctx&nbsp;antecedents&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;consequent&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;p1&nbsp;p2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;antecedent&nbsp;consequent&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;get_x(p1)&nbsp;=&nbsp;get_x(p2)&nbsp;and&nbsp;get_y(p1)&nbsp;=&nbsp;get_y(p2)&nbsp;implies&nbsp;p1&nbsp;=&nbsp;p2\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;disprove&nbsp;that&nbsp;get_x(p1)&nbsp;=&nbsp;get_x(p2)&nbsp;implies&nbsp;p1&nbsp;=&nbsp;p2&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;(antecedents.(0))&nbsp;consequent&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"disprove:&nbsp;get_x(p1)&nbsp;=&nbsp;get_x(p2)&nbsp;implies&nbsp;p1&nbsp;=&nbsp;p2\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">false</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;demonstrate&nbsp;how&nbsp;to&nbsp;use&nbsp;the&nbsp;mk_tuple_update&nbsp;function&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;that&nbsp;p2&nbsp;=&nbsp;update(p1,&nbsp;0,&nbsp;10)&nbsp;implies&nbsp;get_x(p2)&nbsp;=&nbsp;10&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"p1"</span>&nbsp;pair_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"p2"</span>&nbsp;pair_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;one&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_numeral&nbsp;ctx&nbsp;<span class="string">"1"</span>&nbsp;real_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ten&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_numeral&nbsp;ctx&nbsp;<span class="string">"10"</span>&nbsp;real_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;updt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_tuple_update&nbsp;ctx&nbsp;p1&nbsp;0&nbsp;ten&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;antecedent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;p2&nbsp;updt&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_x_decl&nbsp;p2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;consequent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;x&nbsp;ten&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;antecedent&nbsp;consequent&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;p2&nbsp;=&nbsp;update(p1,&nbsp;0,&nbsp;10)&nbsp;implies&nbsp;get_x(p2)&nbsp;=&nbsp;10\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;disprove&nbsp;that&nbsp;p2&nbsp;=&nbsp;update(p1,&nbsp;0,&nbsp;10)&nbsp;implies&nbsp;get_y(p2)&nbsp;=&nbsp;10&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_unary_app&nbsp;ctx&nbsp;get_y_decl&nbsp;p2&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;consequent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;y&nbsp;ten&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;thm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_implies&nbsp;ctx&nbsp;antecedent&nbsp;consequent&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"disprove:&nbsp;p2&nbsp;=&nbsp;update(p1,&nbsp;0,&nbsp;10)&nbsp;implies&nbsp;get_y(p2)&nbsp;=&nbsp;10\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;thm&nbsp;<span class="keyword">false</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">end</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

@@ -1,0 +1,28 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.bitvector_example2</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;bitvector_example2()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\nbitvector_example2\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_context&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;construct&nbsp;x&nbsp;^&nbsp;y&nbsp;-&nbsp;103&nbsp;==&nbsp;x&nbsp;*&nbsp;y&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;bv_sort&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_bv_sort&nbsp;ctx&nbsp;32&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"x"</span>&nbsp;bv_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_var&nbsp;ctx&nbsp;<span class="string">"y"</span>&nbsp;bv_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x_xor_y&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_bvxor&nbsp;ctx&nbsp;x&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;c103&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_numeral&nbsp;ctx&nbsp;<span class="string">"103"</span>&nbsp;bv_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;lhs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_bvsub&nbsp;ctx&nbsp;x_xor_y&nbsp;c103&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;rhs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_bvmul&nbsp;ctx&nbsp;x&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;lhs&nbsp;rhs&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"find&nbsp;values&nbsp;of&nbsp;x&nbsp;and&nbsp;y,&nbsp;such&nbsp;that&nbsp;x&nbsp;^&nbsp;y&nbsp;-&nbsp;103&nbsp;==&nbsp;x&nbsp;*&nbsp;y\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;ctr;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;check&nbsp;ctx&nbsp;<span class="constructor">Z3</span>.<span class="constructor">L_TRUE</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

@@ -1,0 +1,28 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.parser_example4</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;parser_example4()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\nparser_example4\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_context&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;str&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="string">"(benchmark&nbsp;tst&nbsp;:extrafuns&nbsp;((x&nbsp;Int)&nbsp;(y&nbsp;Int))&nbsp;:assumption&nbsp;(=&nbsp;x&nbsp;20)&nbsp;:formula&nbsp;(&gt;&nbsp;x&nbsp;y)&nbsp;:formula&nbsp;(&gt;&nbsp;x&nbsp;0))"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;arithmetic&nbsp;theory&nbsp;is&nbsp;automatically&nbsp;initialized,&nbsp;when&nbsp;an<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int/real&nbsp;variable&nbsp;or&nbsp;arith&nbsp;operation&nbsp;is&nbsp;created&nbsp;using&nbsp;the&nbsp;API.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Since&nbsp;no&nbsp;such&nbsp;function&nbsp;is&nbsp;invoked&nbsp;in&nbsp;this&nbsp;example,&nbsp;we&nbsp;should&nbsp;do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;that&nbsp;manually.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;(formulas,&nbsp;assumptions,&nbsp;decls)&nbsp;=&nbsp;<span class="constructor">Z3</span>.parse_smtlib_string_x&nbsp;ctx&nbsp;str&nbsp;[||]&nbsp;[||]&nbsp;[||]&nbsp;[||]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;prefix&nbsp;i&nbsp;n&nbsp;=&nbsp;printf&nbsp;<span class="string">"%s&nbsp;%d:&nbsp;%s\n"</span>&nbsp;prefix&nbsp;i&nbsp;(<span class="constructor">Z3</span>.ast_to_string&nbsp;ctx&nbsp;n)&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Array</span>.iteri&nbsp;(<span class="keyword">fun</span>&nbsp;i&nbsp;n&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;printf&nbsp;<span class="string">"declaration&nbsp;%d:&nbsp;%s\n"</span>&nbsp;i&nbsp;(<span class="constructor">Z3</span>.func_decl_to_string&nbsp;ctx&nbsp;n))&nbsp;decls;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Array</span>.iteri&nbsp;(f&nbsp;<span class="string">"assumption"</span>)&nbsp;assumptions;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Array</span>.iteri&nbsp;(f&nbsp;<span class="string">"formula"</span>)&nbsp;formulas;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

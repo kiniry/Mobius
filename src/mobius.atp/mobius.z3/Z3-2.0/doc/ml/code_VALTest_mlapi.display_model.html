@@ -1,0 +1,23 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.display_model</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;display_model&nbsp;c&nbsp;out&nbsp;m&nbsp;=&nbsp;<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;constants=<span class="constructor">Z3</span>.get_model_constants&nbsp;c&nbsp;m&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;i&nbsp;e&nbsp;=<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;name&nbsp;=&nbsp;<span class="constructor">Z3</span>.get_decl_name&nbsp;c&nbsp;e&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;(ok,&nbsp;v)&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.eval_func_decl&nbsp;c&nbsp;m&nbsp;e&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_symbol&nbsp;c&nbsp;out&nbsp;name;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"&nbsp;=&nbsp;"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;display_ast&nbsp;c&nbsp;out&nbsp;v;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fprintf&nbsp;out&nbsp;<span class="string">"\n"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">in</span>&nbsp;<span class="constructor">Array</span>.iteri&nbsp;f&nbsp;constants;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;display_function_interpretations&nbsp;c&nbsp;out&nbsp;m;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

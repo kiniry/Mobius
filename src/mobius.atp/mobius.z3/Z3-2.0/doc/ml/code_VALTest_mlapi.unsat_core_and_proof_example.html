@@ -1,0 +1,47 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.unsat_core_and_proof_example</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;unsat_core_and_proof_example()&nbsp;=&nbsp;<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\nunsat_core_and_proof_example\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;=&nbsp;mk_context&nbsp;[|&nbsp;(<span class="string">"PROOF_MODE"</span>,<span class="string">"2"</span>)&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;pa&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"PredA"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;pb&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"PredB"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;pc&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"PredC"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;pd&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"PredD"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p1&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"P1"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p2&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"P2"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p3&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"P3"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p4&nbsp;=&nbsp;mk_bool_var&nbsp;ctx&nbsp;<span class="string">"P4"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;assumptions&nbsp;=&nbsp;[|&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;p1;&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;p2;&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;p3;&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;p4&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f1&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_and&nbsp;ctx&nbsp;[|&nbsp;pa;&nbsp;pb;&nbsp;pc&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f2&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_and&nbsp;ctx&nbsp;[|&nbsp;pa;&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;pc;&nbsp;pb&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f3&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;[|&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;pa;&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;pc&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f4&nbsp;=&nbsp;pd&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;core_dummy&nbsp;=&nbsp;[|&nbsp;pa;&nbsp;pa;&nbsp;pa;&nbsp;pa&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;(<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;[|&nbsp;f1;&nbsp;p1&nbsp;|]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;(<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;[|&nbsp;f2;&nbsp;p2&nbsp;|]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;(<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;[|&nbsp;f3;&nbsp;p3&nbsp;|]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;(<span class="constructor">Z3</span>.mk_or&nbsp;ctx&nbsp;[|&nbsp;f4;&nbsp;p4&nbsp;|]);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;result&nbsp;=&nbsp;<span class="constructor">Z3</span>.check_assumptions&nbsp;ctx&nbsp;assumptions&nbsp;4&nbsp;core_dummy&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">match</span>&nbsp;result&nbsp;<span class="keyword">with</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;(<span class="constructor">Z3</span>.<span class="constructor">L_FALSE</span>,&nbsp;_,&nbsp;proof,&nbsp;core_size,&nbsp;core)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"unsat\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"proof:&nbsp;%s\n"</span>&nbsp;(<span class="constructor">Z3</span>.ast_to_string&nbsp;ctx&nbsp;proof);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(<span class="string">"\ncore:\n"</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span>&nbsp;i&nbsp;=&nbsp;0&nbsp;<span class="keyword">to</span>&nbsp;core_size&nbsp;-&nbsp;1&nbsp;<span class="keyword">do</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"%s\n"</span>&nbsp;(<span class="constructor">Z3</span>.ast_to_string&nbsp;ctx&nbsp;(core.(i)));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">done</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(<span class="string">"\n"</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;_&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keyword">assert</span>&nbsp;<span class="keyword">false</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;delete&nbsp;logical&nbsp;context&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context(ctx);<br>
+&nbsp;<span class="keyword">end</span></code></body></html>

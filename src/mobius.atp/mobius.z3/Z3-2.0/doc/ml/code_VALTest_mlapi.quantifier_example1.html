@@ -1,0 +1,60 @@
+<html><head>
+<link rel="stylesheet" href="z3_ml.css" type="text/css">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Test_mlapi" rel="Chapter" href="Test_mlapi.html">
+<link title="Z3" rel="Chapter" href="Z3.html"><title>Test_mlapi.quantifier_example1</title>
+</head>
+<body>
+<code class="code"><span class="keyword">let</span>&nbsp;quantifier_example1()&nbsp;=<br>
+&nbsp;&nbsp;<span class="keyword">begin</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"\nquantifier_example1\n"</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;If&nbsp;quantified&nbsp;formulas&nbsp;are&nbsp;asserted&nbsp;in&nbsp;a&nbsp;logical&nbsp;context,&nbsp;then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;model&nbsp;produced&nbsp;by&nbsp;Z3&nbsp;should&nbsp;be&nbsp;viewed&nbsp;as&nbsp;a&nbsp;potential&nbsp;model.<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;ctx&nbsp;=&nbsp;mk_context&nbsp;[|&nbsp;|]&nbsp;<span class="keyword">in</span><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;declare&nbsp;function&nbsp;f&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;int_sort&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_int_sort&nbsp;ctx&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f_name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_string_symbol&nbsp;ctx&nbsp;<span class="string">"f"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;f&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_func_decl&nbsp;ctx&nbsp;f_name&nbsp;[|int_sort;&nbsp;int_sort|]&nbsp;int_sort&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;assert&nbsp;that&nbsp;f&nbsp;is&nbsp;injective&nbsp;in&nbsp;the&nbsp;second&nbsp;argument.&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;assert_inj_axiom&nbsp;ctx&nbsp;f&nbsp;1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;create&nbsp;x,&nbsp;y,&nbsp;v,&nbsp;w,&nbsp;fxy,&nbsp;fwv&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;x&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_int_var&nbsp;ctx&nbsp;<span class="string">"x"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;y&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_int_var&nbsp;ctx&nbsp;<span class="string">"y"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_int_var&nbsp;ctx&nbsp;<span class="string">"v"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;w&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_int_var&nbsp;ctx&nbsp;<span class="string">"w"</span>&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;fxy&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_binary_app&nbsp;ctx&nbsp;f&nbsp;x&nbsp;y&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;fwv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;mk_binary_app&nbsp;ctx&nbsp;f&nbsp;w&nbsp;v&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;assert&nbsp;f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;fxy&nbsp;fwv&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;p1;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;prove&nbsp;f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;implies&nbsp;y&nbsp;=&nbsp;v&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;y&nbsp;v&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"prove:&nbsp;f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;implies&nbsp;y&nbsp;=&nbsp;v\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;prove&nbsp;ctx&nbsp;p2&nbsp;<span class="keyword">true</span>;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;disprove&nbsp;f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;implies&nbsp;x&nbsp;=&nbsp;w&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">(*&nbsp;using&nbsp;check2&nbsp;instead&nbsp;of&nbsp;prove&nbsp;*)</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;p3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_eq&nbsp;ctx&nbsp;x&nbsp;w&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">let</span>&nbsp;not_p3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&nbsp;<span class="constructor">Z3</span>.mk_not&nbsp;ctx&nbsp;p3&nbsp;<span class="keyword">in</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.assert_cnstr&nbsp;ctx&nbsp;not_p3;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"disprove:&nbsp;f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;implies&nbsp;x&nbsp;=&nbsp;w\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printf&nbsp;<span class="string">"that&nbsp;is:&nbsp;not(f(x,&nbsp;y)&nbsp;=&nbsp;f(w,&nbsp;v)&nbsp;implies&nbsp;x&nbsp;=&nbsp;w)&nbsp;is&nbsp;satisfiable\n"</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;check2&nbsp;ctx&nbsp;<span class="constructor">Z3</span>.<span class="constructor">L_UNDEF</span>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Printf</span>.printf<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="string">"reason&nbsp;for&nbsp;last&nbsp;failure:&nbsp;%d&nbsp;(7&nbsp;=&nbsp;quantifiers)\n"</span>&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<span class="keyword">if</span>&nbsp;<span class="constructor">Z3</span>.get_search_failure(ctx)&nbsp;=&nbsp;<span class="constructor">Z3</span>.<span class="constructor">QUANTIFIERS</span>&nbsp;<span class="keyword">then</span>&nbsp;7&nbsp;<span class="keyword">else</span>&nbsp;-1);<br>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Z3</span>.del_context&nbsp;ctx;<br>
+&nbsp;&nbsp;<span class="keyword">end</span></code></body></html>

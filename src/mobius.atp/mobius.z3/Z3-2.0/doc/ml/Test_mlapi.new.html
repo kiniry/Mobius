@@ -1,0 +1,196 @@
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALexitf"></a><a href="code_VALTest_mlapi.exitf.html">exitf</a> : <code class="type">string -> 'a</code></div><div class="info">
+Exit gracefully in case of error.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_context"></a><a href="code_VALTest_mlapi.mk_context.html">mk_context</a> : <code class="type">(string * string) array -> <a href="Z3.html#TYPEcontext">Z3.context</a></code></div><div class="info">
+Create a logical context.  Enable model construction.
+   Also enable tracing to stderr.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_var"></a><a href="code_VALTest_mlapi.mk_var.html">mk_var</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> string -> <a href="Z3.html#TYPEsort">Z3.sort</a> -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create a variable using the given name and type.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_bool_var"></a><a href="code_VALTest_mlapi.mk_bool_var.html">mk_bool_var</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> string -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create a boolean variable using the given name.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_int_var"></a><a href="code_VALTest_mlapi.mk_int_var.html">mk_int_var</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> string -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create an integer variable using the given name.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_int"></a><a href="code_VALTest_mlapi.mk_int.html">mk_int</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> int -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create a Z3 integer node using a C int.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_real_var"></a><a href="code_VALTest_mlapi.mk_real_var.html">mk_real_var</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> string -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create a real variable using the given name.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_unary_app"></a><a href="code_VALTest_mlapi.mk_unary_app.html">mk_unary_app</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEfunc_decl">Z3.func_decl</a> -> <a href="Z3.html#TYPEast">Z3.ast</a> -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create the unary function application: <em>(f x) </em>.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_binary_app"></a><a href="code_VALTest_mlapi.mk_binary_app.html">mk_binary_app</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEfunc_decl">Z3.func_decl</a> -> <a href="Z3.html#TYPEast">Z3.ast</a> -> <a href="Z3.html#TYPEast">Z3.ast</a> -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Create the binary function application: <em>(f x y) </em>.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALequal_sorts"></a><a href="code_VALTest_mlapi.equal_sorts.html">equal_sorts</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEsort">Z3.sort</a> -> <a href="Z3.html#TYPEsort">Z3.sort</a> -> bool</code></div><div class="info">
+Auxiliary function to check whether two Z3 types are equal or not.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALcheck"></a><a href="code_VALTest_mlapi.check.html">check</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPElbool">Z3.lbool</a> -> unit</code></div><div class="info">
+Check whether the logical context is satisfiable, and compare the result with the expected result.
+   If the context is satisfiable, then display the model.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALprove"></a><a href="code_VALTest_mlapi.prove.html">prove</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEast">Z3.ast</a> -> bool -> unit</code></div><div class="info">
+Prove that the constraints already asserted into the logical
+   context implies the given formula.  The result of the proof is
+   displayed.
+   Z3 is a satisfiability checker. So, one can prove <em>f </em> by showing
+   that <em>(not f) </em> is unsatisfiable.
+   The context <em>ctx </em> is not modified by this function.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALassert_inj_axiom"></a><a href="code_VALTest_mlapi.assert_inj_axiom.html">assert_inj_axiom</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEfunc_decl">Z3.func_decl</a> -> int -> unit</code></div><div class="info">
+Assert the axiom: function f is injective in the i-th argument.
+<p>
+
+   The following axiom is asserted into the logical context:
+<p>
+
+   forall (x_1, ..., x_n) finv(f(x_1, ..., x_i, ..., x_n)) = x_i
+<p>
+
+   Where, <em>finv </em> is a fresh function declaration.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALassert_comm_axiom"></a><a href="code_VALTest_mlapi.assert_comm_axiom.html">assert_comm_axiom</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEfunc_decl">Z3.func_decl</a> -> unit</code></div><div class="info">
+Assert the axiom: function f is commutative. 
+<p>
+
+   This example uses the SMT-LIB parser to simplify the axiom construction.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALmk_tuple_update"></a><a href="code_VALTest_mlapi.mk_tuple_update.html">mk_tuple_update</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPEast">Z3.ast</a> -> int -> <a href="Z3.html#TYPEast">Z3.ast</a> -> <a href="Z3.html#TYPEast">Z3.ast</a></code></div><div class="info">
+Z3 does not support explicitly tuple updates. They can be easily implemented 
+   as macros. The argument <em>t </em> must have tuple type. 
+   A tuple update is a new tuple where field <em>i </em> has value <em>new_val </em>, and all
+   other fields have the value of the respective field of <em>t </em>.
+<p>
+
+   <em>update(t, i, new_val) </em> is equivalent to
+   <em>mk_tuple(proj_0(t), ..., new_val, ..., proj_n(t)) </em><br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALdisplay_symbol"></a><a href="code_VALTest_mlapi.display_symbol.html">display_symbol</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> Pervasives.out_channel -> <a href="Z3.html#TYPEsymbol">Z3.symbol</a> -> unit</code></div><div class="info">
+Display a symbol in the given output stream.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALdisplay_sort"></a><a href="code_VALTest_mlapi.display_sort.html">display_sort</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> Pervasives.out_channel -> <a href="Z3.html#TYPEsort">Z3.sort</a> -> unit</code></div><div class="info">
+Display the given type.<br>
+</div>
+<br>
+Custom ast pretty printer. 
+<p>
+
+   This function demonstrates how to use the API to navigate terms.<br><br>
+<div class="function"><span class="keyword">val</span> <a name="VALdisplay_numeral"></a><a href="code_VALTest_mlapi.display_numeral.html">display_numeral</a> : <code class="type">'a -> Pervasives.out_channel -> <a href="Z3.html#TYPEnumeral_refined">Z3.numeral_refined</a> -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALdisplay_ast"></a><a href="code_VALTest_mlapi.display_ast.html">display_ast</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> Pervasives.out_channel -> <a href="Z3.html#TYPEast">Z3.ast</a> -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALdisplay_function_interpretations"></a><a href="code_VALTest_mlapi.display_function_interpretations.html">display_function_interpretations</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> Pervasives.out_channel -> <a href="Z3.html#TYPEmodel">Z3.model</a> -> unit</code></div><div class="info">
+Custom function interpretations pretty printer.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALdisplay_model"></a><a href="code_VALTest_mlapi.display_model.html">display_model</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> Pervasives.out_channel -> <a href="Z3.html#TYPEmodel">Z3.model</a> -> unit</code></div><div class="info">
+Custom model pretty printer.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALcheck2"></a><a href="code_VALTest_mlapi.check2.html">check2</a> : <code class="type"><a href="Z3.html#TYPEcontext">Z3.context</a> -> <a href="Z3.html#TYPElbool">Z3.lbool</a> -> unit</code></div><div class="info">
+Similar to #check, but uses #display_model instead of #Z3_model_to_string.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALdisplay_version"></a><a href="code_VALTest_mlapi.display_version.html">display_version</a> : <code class="type">unit -> unit</code></div><div class="info">
+Display Z3 version in the standard output.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALsimple_example"></a><a href="code_VALTest_mlapi.simple_example.html">simple_example</a> : <code class="type">unit -> unit</code></div><div class="info">
+"Hello world" example: create a Z3 logical context, and delete it.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALdemorgan"></a><a href="code_VALTest_mlapi.demorgan.html">demorgan</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstration of how Z3 can be used to prove validity of
+  De Morgan's Duality Law: <em>not(x and y) &lt;-&gt; (not x) or ( not y) </em><br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALfind_model_example1"></a><a href="code_VALTest_mlapi.find_model_example1.html">find_model_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Find a model for <em>x xor y </em>.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALfind_model_example2"></a><a href="code_VALTest_mlapi.find_model_example2.html">find_model_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Find a model for <em>x &lt; y + 1, x &gt; 2 </em>.
+   Then, assert <em>not(x = y) </em>, and find another model.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALprove_example1"></a><a href="code_VALTest_mlapi.prove_example1.html">prove_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Prove <em>x = y implies g(x) = g(y) </em>, and
+   disprove <em>x = y implies g(g(x)) = g(y) </em>.
+<p>
+
+   This function demonstrates how to create uninterpreted types and
+   functions.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALprove_example2"></a><a href="code_VALTest_mlapi.prove_example2.html">prove_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Prove <em>not(g(g(x) - g(y)) = g(z)), x + z &lt;= y &lt;= x implies z &lt; 0  </em>.
+   Then, show that <em>z &lt; -1 </em> is not implied.
+<p>
+
+   This example demonstrates how to combine uninterpreted functions and arithmetic.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALpush_pop_example1"></a><a href="code_VALTest_mlapi.push_pop_example1.html">push_pop_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Show how push &amp; pop can be used to create "backtracking"
+   points.
+<p>
+
+   This example also demonstrates how big numbers can be created in Z3.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALquantifier_example1"></a><a href="code_VALTest_mlapi.quantifier_example1.html">quantifier_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Prove that <em>f(x, y) = f(w, v) implies y = v </em> when 
+   <em>f </em> is injective in the second argument.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALarray_example1"></a><a href="code_VALTest_mlapi.array_example1.html">array_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Prove <em>store(a1, i1, v1) = store(a2, i2, v2) implies (i1 = i3 or i2 = i3 or select(a1, i3) = select(a2, i3)) </em>.
+<p>
+
+   This example demonstrates how to use the array theory.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALarray_example2"></a><a href="code_VALTest_mlapi.array_example2.html">array_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Show that <em>distinct(a_0, ... , a_n) </em> is
+   unsatisfiable when <em>a_i's </em> are arrays from boolean to
+   boolean and n &gt; 4.
+<p>
+
+   This example also shows how to use the <em>distinct </em> construct.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALarray_example3"></a><a href="code_VALTest_mlapi.array_example3.html">array_example3</a> : <code class="type">unit -> unit</code></div><div class="info">
+Simple array type construction/deconstruction example.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALtuple_example1"></a><a href="code_VALTest_mlapi.tuple_example1.html">tuple_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Simple tuple type example. It creates a tuple that is a pair of real numbers.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALbitvector_example1"></a><a href="code_VALTest_mlapi.bitvector_example1.html">bitvector_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Simple bit-vector example. This example disproves that x - 10 &lt;= 0 IFF x &lt;= 10 for (32-bit) machine integers<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALbitvector_example2"></a><a href="code_VALTest_mlapi.bitvector_example2.html">bitvector_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Find x and y such that: x ^ y - 103 == x * y<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALeval_example1"></a><a href="code_VALTest_mlapi.eval_example1.html">eval_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrate how to use #Z3_eval.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALtwo_contexts_example1"></a><a href="code_VALTest_mlapi.two_contexts_example1.html">two_contexts_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Several logical context can be used simultaneously.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALerror_code_example1"></a><a href="code_VALTest_mlapi.error_code_example1.html">error_code_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how error codes can be read insted of registering an error handler.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALerror_code_example2"></a><a href="code_VALTest_mlapi.error_code_example2.html">error_code_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how Z3 exceptions can be used.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALparser_example1"></a><a href="code_VALTest_mlapi.parser_example1.html">parser_example1</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how to use the SMTLIB parser.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALparser_example2"></a><a href="code_VALTest_mlapi.parser_example2.html">parser_example2</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how to initialize the parser symbol table.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALparser_example3"></a><a href="code_VALTest_mlapi.parser_example3.html">parser_example3</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how to initialize the parser symbol table.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALparser_example4"></a><a href="code_VALTest_mlapi.parser_example4.html">parser_example4</a> : <code class="type">unit -> unit</code></div><div class="info">
+Display the declarations, assumptions and formulas in a SMT-LIB string.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALparser_example5"></a><a href="code_VALTest_mlapi.parser_example5.html">parser_example5</a> : <code class="type">unit -> unit</code></div><div class="info">
+Demonstrates how to handle parser errors using Z3 exceptions.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALite_example"></a><a href="code_VALTest_mlapi.ite_example.html">ite_example</a> : <code class="type">unit -> unit</code></div><div class="info">
+Example for creating an if-then-else expression.<br>
+</div>
+<div class="function"><span class="keyword">val</span> <a name="VALunsat_core_and_proof_example"></a><a href="code_VALTest_mlapi.unsat_core_and_proof_example.html">unsat_core_and_proof_example</a> : <code class="type">unit -> unit</code></div><div class="info">
+Example for extracting unsatisfiable core and proof.
+  The example uses the function check_assumptions which allows passing in additional 
+  hypotheses. The unsatisfiable core is a subset of these additional hypotheses.<br>
+</div>
