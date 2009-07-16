@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simplify Plug-in
-Bundle-SymbolicName: mobius.simplify.plugin;singleton:=true
+Bundle-SymbolicName: mobius.atp.simplify;singleton:=true
 Bundle-Version: 1.5.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: David R. Cok and EU Project "Mobius" (IST-159050)
