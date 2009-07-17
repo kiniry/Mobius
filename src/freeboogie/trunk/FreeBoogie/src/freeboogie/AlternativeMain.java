@@ -1,5 +1,8 @@
 package freeboogie;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 import genericutils.Logger;
 
@@ -8,6 +11,8 @@ import freeboogie.cli.FbCliParser;
 import freeboogie.cli.FbCliUtil;
 
 import static freeboogie.cli.FbCliOptionsInterface.*;
+import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
+import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
 
 /**
   Handles the main pipeline of the application. The input/output
@@ -25,8 +30,8 @@ import static freeboogie.cli.FbCliOptionsInterface.*;
  */
 public class AlternativeMain {
 
-  private Logger<ReportOn,ReportLevel> out;
-  private Logger<LogCategories,LogLevel> log;
+  private Logger<ReportOn, ReportLevel> out;
+  private Logger<LogCategories, LogLevel> log;
 
   /** Process the command line and call {@code run()}. */
   public static void main(String[] args) throws Exception {
@@ -42,17 +47,26 @@ public class AlternativeMain {
       FbCliUtil.printUsage();
       return;
     }
-    if (opt.getFiles().isEmpty()) {
-    }
 
     // Setup logging and outputting.
-    out = Logger.<ReportOn,ReportLevel>get("out");
-    log = Logger.<LogCategories,LogLevel>get("log");
-    out.sink(System.out);
-
-    assert false : "todo";
+    out = Logger.<ReportOn, ReportLevel>get("out");
+    log = Logger.<LogCategories, LogLevel>get("log");
+    out.sink(System.out); 
+    out.level(opt.getReportLevel());
+    for (ReportOn c : opt.getReportOn()) out.enable(c);
+    try { log.sink(opt.getLogFile()); }
+    catch (IOException e) { 
+      out.say(
+        ReportOn.MAIN,
+        ReportLevel.VERBOSE, 
+        "Can't write to log file " + opt.getLogFile() + ".");
+    }
+    log.level(opt.getLogLevel());
+    for (LogCategories c : opt.getLogCategories()) log.enable(c);
 
     // Initialize required stages (parser, transformers, vc generator, backend).
+    if (opt.getFiles().isEmpty())
+      out.say(ReportOn.MAIN, ReportLevel.NORMAL, "Nothing to do. Try --help.");
 
     // For each file in the input.
       // Parse it.

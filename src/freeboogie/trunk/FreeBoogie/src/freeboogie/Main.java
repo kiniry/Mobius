@@ -266,10 +266,6 @@ public class Main {
       case SEVERE: log.setLevel(Level.SEVERE); break;
       case WARNING: log.setLevel(Level.WARNING); break;
       case INFO: log.setLevel(Level.INFO); break;
-      case CONFIG: log.setLevel(Level.CONFIG); break;
-      case FINE: log.setLevel(Level.FINE); break;
-      case FINER: log.setLevel(Level.FINER); break;
-      case FINEST: log.setLevel(Level.FINEST); break;
       default: assert false : "Internal error";
       }
     }
