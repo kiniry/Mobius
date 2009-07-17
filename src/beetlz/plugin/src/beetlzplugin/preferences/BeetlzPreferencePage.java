@@ -7,6 +7,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -26,8 +27,12 @@ import beetlzplugin.popup.actions.Messages;
 public class BeetlzPreferencePage extends FieldEditorPreferencePage
 implements IWorkbenchPreferencePage {
 
+  public static final int FILE_FIELD_WIDTH = 100;
+  
   /** Field on preference page. */
   private FileFieldEditor jmlFile;
+  /** Field on preference page. */
+  private BooleanFieldEditor useBuiltInSpecs;
   /** Field on preference page. */
   private FileFieldEditor userSettingFile;
   /** Field on preference page. */
@@ -73,10 +78,14 @@ implements IWorkbenchPreferencePage {
     jmlFile = new FileFieldEditor(PreferenceConstants.SPEC_PATH,
         Messages.getString("BeetlzPreferencePage.jmlSpecsFolder"),
         getFieldEditorParent()); //$NON-NLS-1$
-
     jmlFile.setEmptyStringAllowed(false);
     addField(jmlFile);
 
+    useBuiltInSpecs = new BooleanFieldEditor(PreferenceConstants.BUILT_IN_SPEC_PATH, 
+        Messages.getString("BeetlzPreferencePage.builtInJmlSpecsFolder"), getFieldEditorParent());
+    useBuiltInSpecs.fillIntoGrid(getFieldEditorParent(), 3);
+    addField(useBuiltInSpecs);
+    
     userSettingFile = new FileFieldEditor(PreferenceConstants.USER_SETTING_PATH,
         Messages.getString("BeetlzPreferencePage.userSettingFile"),
         getFieldEditorParent()); //$NON-NLS-1$
@@ -186,6 +195,29 @@ implements IWorkbenchPreferencePage {
 
   }
 
+  @Override
+  public void propertyChange(PropertyChangeEvent event) {
+    super.propertyChange(event);
+    
+    if (event.getSource() == useBuiltInSpecs) {
+      updateEnabledness();
+    }
+  }
+  
+  private void updateEnabledness() {
+    boolean builtIn = useBuiltInSpecs.getBooleanValue();
+    if (builtIn) {
+      jmlFile.setStringValue(PreferenceInitializer.attemptToGetJMLSpecsPath());
+    }
+    jmlFile.setEnabled(!builtIn, getFieldEditorParent());
+  }
+  
+  @Override
+  protected void initialize() {
+    super.initialize();
+    
+    updateEnabledness();
+  }
 
   public void init(final IWorkbench workbench) {
   }

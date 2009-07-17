@@ -49,6 +49,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     store.setDefault(PreferenceConstants.PURE_BON, false);
     store.setDefault(PreferenceConstants.SOURCE_OPTION, "both"); //$NON-NLS-1$
     store.setDefault(PreferenceConstants.VERBOSE_OPTION, false);
+    store.setDefault(PreferenceConstants.BUILT_IN_SPEC_PATH, true);
+    store.setDefault(PreferenceConstants.USE_PROJECT_SPECIFIC, false);
   }
   
   /**
@@ -56,7 +58,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
    * Use the openjml.jar specs that are included with the Beetlz plugin.
    * @return a path to the built-in jml specs, if possible.
    */
-  private static String attemptToGetJMLSpecsPath() {
+  public static String attemptToGetJMLSpecsPath() {
     
     Bundle bundle = Platform.getBundle(Beetlz.PLUGIN_ID);
     

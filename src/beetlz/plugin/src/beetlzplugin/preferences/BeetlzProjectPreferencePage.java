@@ -40,6 +40,8 @@ implements IWorkbenchPropertyPage {
   /** Field on preference page. */
   private FileFieldEditor jmlFile;
   /** Field on preference page. */
+  private BooleanFieldEditor useBuiltInSpecs;
+  /** Field on preference page. */
   private FileFieldEditor userSettingFile;
   /** Field on preference page. */
   private DirectoryFieldEditor skeletonFile;
@@ -107,9 +109,13 @@ implements IWorkbenchPropertyPage {
     jmlFile = new FileFieldEditor(PreferenceConstants.SPEC_PATH,
         Messages.getString("BeetlzPreferencePage.jmlSpecsFolder"),
         getFieldEditorParent()); //$NON-NLS-1$
-
     jmlFile.setEmptyStringAllowed(false);
     addField(jmlFile);
+    
+    useBuiltInSpecs = new BooleanFieldEditor(PreferenceConstants.BUILT_IN_SPEC_PATH, 
+        Messages.getString("BeetlzPreferencePage.builtInJmlSpecsFolder"), getFieldEditorParent());
+    useBuiltInSpecs.fillIntoGrid(getFieldEditorParent(), 3);
+    addField(useBuiltInSpecs);
     
     userSettingFile = new FileFieldEditor(PreferenceConstants.USER_SETTING_PATH,
         Messages.getString("BeetlzPreferencePage.userSettingFile"),
@@ -182,7 +188,7 @@ implements IWorkbenchPropertyPage {
     addField(noBasicsField);
 
     allProjectSpecificFields = new FieldEditor[] { 
-        jmlFile, userSettingFile, skeletonFile, pureBonField, nonNullField, sourceField, 
+        jmlFile, useBuiltInSpecs, userSettingFile, skeletonFile, pureBonField, nonNullField, sourceField, 
         verboseField, noJmlField, noJavaField, noErrorField, noWarningField, noBasicsField
     };
   }
@@ -227,7 +233,7 @@ implements IWorkbenchPropertyPage {
   public void propertyChange(PropertyChangeEvent event) {
     super.propertyChange(event);
     
-    if (event.getSource() == useProjectSpecific) {
+    if (event.getSource() == useProjectSpecific || event.getSource() == useBuiltInSpecs) {
       updateEnabledness();
     }
   }
@@ -240,13 +246,20 @@ implements IWorkbenchPropertyPage {
   }
 
   private void updateEnabledness() {
-    boolean enabled = useProjectSpecific.getBooleanValue();
-    System.out.println("Updating enabledness to " + enabled);
+    boolean builtIn = useBuiltInSpecs.getBooleanValue();
+    if (builtIn) {
+      jmlFile.setStringValue(PreferenceInitializer.attemptToGetJMLSpecsPath());
+    }
+    
+    boolean projectSpecificEnabled = useProjectSpecific.getBooleanValue();
+    
     if (allProjectSpecificFields != null) {
       for (FieldEditor field : allProjectSpecificFields) {
-        field.setEnabled(enabled, getFieldEditorParent());
+        field.setEnabled(projectSpecificEnabled, getFieldEditorParent());
       }
     }
+    
+    jmlFile.setEnabled(projectSpecificEnabled && !builtIn, getFieldEditorParent());
   }
   
   /*
