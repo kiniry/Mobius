@@ -166,7 +166,10 @@
    </target>
 
   <target name="functional_test" depends="compile" description="run functional tests">
-    <exec executable="test/functional/test" dir="test/functional" resolveexecutable="true" />
+    <exec executable="test/functional/test" 
+          dir="test/functional"
+          resolveexecutable="true"
+          failonerror="true"/>
   </target>
 
   <target name="test" depends="junit_test,functional_test" description="run all tests"></target>

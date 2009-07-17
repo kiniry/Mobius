@@ -71,6 +71,6 @@
  . Release 0.15.
  . Add a parser for SMT so that you can provide a piece of text to
    build an SmtTerm.
- . Releas 0.16.
+ . Release 0.16.
 
 vim:spell:ts=3:sw=3:fdm=manual:

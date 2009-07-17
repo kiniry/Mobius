@@ -27,12 +27,12 @@ public class Logger<C extends Enum<C>, L extends Enum<L>> {
     verbose = false;
   }
 
-  public static <C extends Enum<C>,L extends Enum<L>>
-  Logger<C,L> get(String name) {
+  public static <C extends Enum<C>, L extends Enum<L>>
+  Logger<C, L> get(String name) {
     @SuppressWarnings("unchecked") // TODO: put some checks
-    Logger<C,L> r = instances.get(name);
+    Logger<C, L> r = instances.get(name);
     if (r == null) {
-      r = new Logger<C,L>();
+      r = new Logger<C, L>();
       instances.put(name, r);
     }
     return r;
