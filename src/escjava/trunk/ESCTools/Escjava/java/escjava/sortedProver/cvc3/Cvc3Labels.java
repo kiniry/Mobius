@@ -96,6 +96,7 @@ public class Cvc3Labels {
 	    registerLabel((Cvc3Label) pred, new ArrayList(path));
 	}
 	
+        // :TODO: we do not look inside quantified expressions ...
 	Iterator i = pred.getChildren().iterator();
 	while (i.hasNext()) {
 	    computeLabelContexts((Cvc3Pred)i.next(), path);

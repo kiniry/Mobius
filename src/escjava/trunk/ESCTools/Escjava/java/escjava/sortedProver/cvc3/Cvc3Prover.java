@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -114,6 +115,14 @@ public class Cvc3Prover extends SortedProver {
     // use cvc3's builtin transitivity functionality
     private boolean optBuiltinTrans = true;
 
+    // use the symbol classLiteral, or just drop it
+    private boolean optUseClassLiteral = true;
+
+    // use an inductive datatype to represent java types -
+    // this is the major divergence from the original background predicate
+    // as used by Simplify
+    private boolean optUseDatatype = false;
+
     // use cvc preprocessing
     // enabling this might remove labeled expressions from the query,
     // thus making counterexample generation fail.
@@ -128,9 +137,23 @@ public class Cvc3Prover extends SortedProver {
     // each dump is a copy of dumpLog up to the current query,
     // i.e. it contains the previous queries as well.
     private String optDumpExt = "";
+    // when true, append the current time stamp to the dumped file
+    // (before the extension)
+    // rational:
+    // if EscJava is called on several files containing classes and methods
+    // with overlapping names, getDumpFile will return the same name for those.
+    // that is, dumping will in this case overwrite earlier vcs with newer ones.
+    // this tends to happen quite a few times in the EscJava test suite
+    // (Escjava/test/escjava/test/).
+    private boolean optDumpUnique = false;
+
 
     // lazy assertion of axioms
     //private boolean optLazyAxiomatization = false;
+
+
+    // generic flag for testing purposes
+    private boolean optTest = false;
 
 
     public Cvc3Prover() {
@@ -142,22 +165,16 @@ public class Cvc3Prover extends SortedProver {
         return name.replace('$', '_');
     }
 
-    // if EscJava is called on several files containing classes and methods
-    // with overlapping names, getDumpFile will return the same name for those.
-    // that is, dumping will in this case overwrite earlier vcs with newer ones.
-    // this tends to happen quite a few times in the EscJava test suite
-    // (Escjava/test/escjava/test/).
-    // using the file name as well as part of the dump name can mitigate this,
-    // but for that there would need to be an easy way to get the name of
-    // the file from which the current vc stems.
-    // furthermore, the EscJava test set sometimes calls EscJava several times
-    // on the same files, but with different arguments.
-    // in this case even adding the file name is not enough to get a unique
-    // name for the dump file.
-    // so in the end, we just do with the simple approach
-    // and take only the class and method name into consideration.
     private String getDumpFile(Properties properties) {
-	return quote(properties.getProperty("ProblemName") + "." + optDumpExt);
+        String unique = "";
+
+        if (optDumpUnique) {
+            unique = "_" + new Date().getTime(); 
+       }
+
+        String name = quote(properties.getProperty("ProblemName") + unique + "." + optDumpExt);
+
+        return name;
     }
 
 
@@ -191,13 +208,13 @@ public class Cvc3Prover extends SortedProver {
                 //flags.setFlag("stimeout", (int) (9.8 * optTimeOut));
 
 		// non-dags do sometimes take too much memory
-		flags.setFlag("dagify-exprs", false);
+		flags.setFlag("dagify-exprs", true);
 		// make cvc log all queries to this prover instance
 		if (optDumpExt != "") {
 		//flags.setFlag("dump-trace", "cvc." + logCounter + ".trace");
 		    flags.setFlag("dump-log", dumpLog);
                     // dumping may sometimes only works without dags
-                    //flags.setFlag("dagify-exprs", true);
+                    flags.setFlag("dagify-exprs", false);
 		}
 		
 		//flags.setFlag("trace", "ALL", true);
@@ -222,7 +239,9 @@ public class Cvc3Prover extends SortedProver {
 
 		nodeBuilder = new Cvc3NodeBuilder(prover, this,
                                                   optMultiTriggers, optManualTriggers,
-                                                  optNonnullelements, optIsallocated, optBuiltinTrans);
+                                                  optNonnullelements, optIsallocated, optBuiltinTrans,
+                                                  optUseClassLiteral, optUseDatatype,
+                                                  optTest);
 	    } catch (cvc3.Cvc3Exception e) {
 		ErrorSet.fatal("Could not create cvc3: " + e);
 		// to silence javac complaining that prover might not be initialized,
@@ -244,11 +263,15 @@ public class Cvc3Prover extends SortedProver {
 	System.out.println("%% MultiTriggers  : " + optMultiTriggers);
 	System.out.println("%% InstAll        : " + optInstAll);
 	System.out.println("%% Nonnullelements: " + optNonnullelements);
-	System.out.println("%% Isallocate     : " + optIsallocated);
+	System.out.println("%% Isallocated    : " + optIsallocated);
 	System.out.println("%% BuiltinTrans   : " + optBuiltinTrans);
+	System.out.println("%% UseClassLiteral: " + optUseClassLiteral);
+	System.out.println("%% UseDatatType   : " + optUseDatatype);
 	System.out.println("%% Preprocess     : " + optPreprocess);
 	//System.out.println("%% LazyAxioms     : " + optLazyAxiomatization);
 	System.out.println("%% DumpExt        : " + optDumpExt);
+	System.out.println("%% DumpUnique     : " + optDumpUnique);
+	System.out.println("%% Test           : " + optTest);
     }
 
     public int stackLevel() {
@@ -364,14 +387,28 @@ public class Cvc3Prover extends SortedProver {
 	    optIsallocated = Boolean.valueOf(properties.getProperty("Isallocated",
 								       String.valueOf(optIsallocated))).booleanValue();
 	} catch (NumberFormatException e) {
-	    ErrorSet.fatal("Invalid input for option " + "Nonnullelements" + " : " + e);
+	    ErrorSet.fatal("Invalid input for option " + "Isallocate" + " : " + e);
 	    return fail;
 	}
 	try {
 	    optBuiltinTrans = Boolean.valueOf(properties.getProperty("BuiltinTrans",
 								       String.valueOf(optBuiltinTrans))).booleanValue();
 	} catch (NumberFormatException e) {
-	    ErrorSet.fatal("Invalid input for option " + "Nonnullelements" + " : " + e);
+	    ErrorSet.fatal("Invalid input for option " + "BuiltinTrans" + " : " + e);
+	    return fail;
+	}
+	try {
+	    optUseClassLiteral = Boolean.valueOf(properties.getProperty("UseClassLiteral",
+								       String.valueOf(optUseClassLiteral))).booleanValue();
+	} catch (NumberFormatException e) {
+	    ErrorSet.fatal("Invalid input for option " + "UseClassLiteral" + " : " + e);
+	    return fail;
+	}
+	try {
+	    optUseDatatype = Boolean.valueOf(properties.getProperty("UseDatatype",
+								       String.valueOf(optUseDatatype))).booleanValue();
+	} catch (NumberFormatException e) {
+	    ErrorSet.fatal("Invalid input for option " + "UseDatatype" + " : " + e);
 	    return fail;
 	}
 	try {
@@ -379,6 +416,20 @@ public class Cvc3Prover extends SortedProver {
 								       String.valueOf(optPreprocess))).booleanValue();
 	} catch (NumberFormatException e) {
 	    ErrorSet.fatal("Invalid input for option " + "Preprocess" + " : " + e);
+	    return fail;
+	}
+	try {
+	    optDumpUnique = Boolean.valueOf(properties.getProperty("DumpUnique",
+								       String.valueOf(optDumpUnique))).booleanValue();
+	} catch (NumberFormatException e) {
+	    ErrorSet.fatal("Invalid input for option " + "DumpUnique" + " : " + e);
+	    return fail;
+	}
+	try {
+	    optTest = Boolean.valueOf(properties.getProperty("Test",
+								       String.valueOf(optTest))).booleanValue();
+	} catch (NumberFormatException e) {
+	    ErrorSet.fatal("Invalid input for option " + "Test" + " : " + e);
 	    return fail;
 	}
 	/*try {
@@ -467,6 +518,8 @@ public class Cvc3Prover extends SortedProver {
 	try {
 	    if (printQuery) System.out.println("%% Query:");
 	    Cvc3Pred vc = (Cvc3Pred) formula;
+
+            vc = ((Cvc3NodeBuilder)getNodeBuilder()).guard(vc);
 
 	    //if (printQuery) System.out.println(vc.getExpr());
 	    if (printQuery) vc.getExpr().print(false);

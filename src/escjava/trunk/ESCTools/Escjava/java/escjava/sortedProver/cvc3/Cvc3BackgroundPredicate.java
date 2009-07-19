@@ -134,16 +134,16 @@ public class Cvc3BackgroundPredicate {
 	//(DEFPRED (<: t0 t1))
 	//
 
+        // removed the pattern, as it doesn't seem to make any sense
+        //
 	//; <: reflexive
 	//(BG_PUSH 
 	//  (FORALL (t)
 	//    (PATS (<: t t))
 	//    (<: t t)))
 	p0 = builder.buildPredCall(builder.symTypeLE, new SAny[] { builder.buildQVarRef(v0), builder.buildQVarRef(v0) });
-	pats = new STerm[1][];
-	pats[0] = new STerm[] { p0 };
 	vars0 = new QuantVar[] { v0 };
-	p = builder.buildForAll(vars0, p0, pats, null);
+	p = builder.buildForAll(vars0, p0, null, null);
 	prover.declareAxiom(p);
 
 	//; a special case, for which the above may not fire
@@ -222,7 +222,7 @@ public class Cvc3BackgroundPredicate {
 	//	(IMPLIES (<: t |T_void|) (EQ t |T_void|))))
 	sendBPSubTypingPrimitive(prover, builder, builder.symTVoid);
 
-	// :ALEX: already handled above
+	// already handled above
 
 	//; (New as of 12 Dec 2000)
 	//; primitive types have no proper supertypes
@@ -282,10 +282,12 @@ public class Cvc3BackgroundPredicate {
 
 	QuantVar v0 = builder.registerQuantifiedVariable("t0", builder.sortType);
 	QuantVar v1 = builder.registerQuantifiedVariable("t1", builder.sortType);
+	QuantVar va = builder.registerQuantifiedVariable("a", builder.sortArray);
+	QuantVar ve = builder.registerQuantifiedVariable("e", builder.sortElems);
 	SAny t0, t1, t2;
 	QuantVar[] vars0;
 	STerm[][] pats;
-	SPred p, p0, p1, p2;
+	SPred p, p0, p1, p2, p3;
 	//; new
 	//
 	//(BG_PUSH 
@@ -312,14 +314,17 @@ public class Cvc3BackgroundPredicate {
 	//  (FORALL (t)
 	//    (PATS (elemtype (|_array| t)))
 	//    (EQ (elemtype (|_array| t)) t)))
-	t0 = builder.buildFnCall(builder.symArray, new SAny[] { builder.buildQVarRef(v0) });
-	t1 = builder.buildFnCall(builder.symElemType, new SAny[] { t0 });
-	p0 = builder.buildAnyEQ(t1, builder.buildQVarRef(v0));
-	pats = new STerm[1][];
-	pats[0] = new STerm[] { t1 };
-	vars0 = new QuantVar[] { v0 };
-	p = builder.buildForAll(vars0, p0, pats, null);
-	prover.declareAxiom(p);
+        // :TODO:
+        if (!builder.optUseDatatype) {
+            t0 = builder.buildFnCall(builder.symArray, new SAny[] { builder.buildQVarRef(v0) });
+            t1 = builder.buildFnCall(builder.symElemType, new SAny[] { t0 });
+            p0 = builder.buildAnyEQ(t1, builder.buildQVarRef(v0));
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { t1 };
+            vars0 = new QuantVar[] { v0 };
+            p = builder.buildForAll(vars0, p0, pats, null);
+            prover.declareAxiom(p);
+        }
 	//
 	//(BG_PUSH
 	//  (FORALL (t0 t1) 
@@ -334,10 +339,72 @@ public class Cvc3BackgroundPredicate {
 	p0 = builder.buildPredCall(builder.symTypeLE, new SAny[] { builder.buildQVarRef(v0), t0 });
 	p1 = builder.buildAnyEQ(builder.buildQVarRef(v0), t2);
 	p2 = builder.buildPredCall(builder.symTypeLE, new SAny[] { t1, builder.buildQVarRef(v1) });
+        if (builder.optUseDatatype) {
+            p3 = builder.buildAnd(builder.buildPredCall(builder.symIsArrayType, new SAny[] { builder.buildQVarRef(v0) }), p2);
+        } else {
+            p3 = builder.buildAnd(p1, p2);
+        }
 	pats = new STerm[1][];
 	pats[0] = new STerm[] { p0 };
 	vars0 = new QuantVar[] { v0, v1 };
-	p = builder.buildForAll(vars0, builder.buildIff(p0, builder.buildAnd(p1, p2)), pats, null);
+	p = builder.buildForAll(vars0, builder.buildIff(p0, p3), pats, null);
+	prover.declareAxiom(p);
+
+        //ASSERT (FORALL (t0: JavaType) % (PATTERN : is_subtype(t0, T_java_D_lang_D_Object)) :
+        // : is_subtype(t0, T_java_D_lang_D_Object) => (is_classType(t0) OR is_arrayType(t0)));
+        if (builder.optUseDatatype) {
+            p0 = builder.buildPredCall(builder.symTypeLE, new SAny[] { builder.buildQVarRef(v0), builder.buildFnCall(builder.symTObject, new SAny[] {}) });
+            p1 = builder.buildPredCall(builder.symIsClassType, new SAny[] { builder.buildQVarRef(v0) });
+            p2 = builder.buildPredCall(builder.symIsArrayType, new SAny[] { builder.buildQVarRef(v0) });
+            p3 = builder.buildImplies(p0, builder.buildOr(p1, p2));
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { p0 };
+            vars0 = new QuantVar[] { v0 };
+            p = builder.buildForAll(vars0, p3, pats, null);
+            prover.declareAxiom(p);
+        }
+
+
+        /* :TODO: remove, rubbish
+        // (FORALL (e a)
+        // (PATS (asElems e))
+        // (IMPLIES (EQ e (asElems e)) (is_arrayType (typeof (select e a))))
+        if (builder.optUseDatatype) {
+            t0 = builder.buildFnCall(builder.symAsElems, new SAny[] { builder.buildQVarRef(ve) });
+            t1 = builder.buildSelect((SMap)builder.buildQVarRef(ve), (SValue)builder.buildQVarRef(va));
+            t2 = builder.buildFnCall(builder.symTypeOf, new SAny[] { t1 });
+            p0 = builder.buildAnyEQ(builder.buildQVarRef(ve), t0);
+            p1 = builder.buildPredCall(builder.symIsArrayType, new SAny[] { t2 });
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { t0 };
+            vars0 = new QuantVar[] { ve, va };
+            p = builder.buildForAll(vars0, builder.buildIff(p0, p1), pats, null);
+            prover.declareAxiom(p);
+        }
+        */
+    }
+
+    // make sure to have proper tester guards for value datatype terms
+    public static void sendBPCastingTesters(Cvc3Prover prover, Cvc3NodeBuilder builder, FnSymbol type, PredSymbol tester) throws Cvc3Exception {
+        // (FORALL (x t) (PATS (is x |T_bool|)) ((is x |T_bool|) => (is_javaBool x)))
+        QuantVar x;
+	SAny t0;
+	QuantVar[] vars0;
+	STerm[][] pats;
+	SPred p, p0, p1, p2;
+
+	x = builder.registerQuantifiedVariable("x", builder.sortValue);
+
+        t0 = builder.buildFnCall(type, new SAny[] { });
+
+        p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(x), t0 });
+        p1 = builder.buildPredCall(tester, new SAny[] { builder.buildQVarRef(x) });
+        p2 = builder.buildImplies(p0, p1);
+
+	pats = new STerm[1][];
+	pats[0] = new STerm[] { p0 };
+	vars0 = new QuantVar[] { x };
+	p = builder.buildForAll(vars0, p2, pats, null);
 	prover.declareAxiom(p);
     }
 
@@ -377,6 +444,22 @@ public class Cvc3BackgroundPredicate {
 	vars0 = new QuantVar[] { v0, v1 };
 	p = builder.buildForAll(vars0, builder.buildImplies(p0, p1), pats, null);
 	prover.declareAxiom(p);
+
+        if (builder.optUseDatatype) {
+            sendBPCastingTesters(prover, builder, builder.symTBoolean, builder.symIsBoolValue);
+            /*
+            sendBPCastingTesters(prover, builder, builder.symTChar, builder.symIsIntValue);
+            sendBPCastingTesters(prover, builder, builder.symTByte, builder.symIsIntValue);
+            sendBPCastingTesters(prover, builder, builder.symTShort, builder.symIsIntValue);
+            sendBPCastingTesters(prover, builder, builder.symTInt, builder.symIsIntValue);
+            sendBPCastingTesters(prover, builder, builder.symTLong, builder.symIsIntValue);
+            */
+            sendBPCastingTesters(prover, builder, builder.symTFloat, builder.symIsRealValue);
+            sendBPCastingTesters(prover, builder, builder.symTDouble, builder.symIsRealValue);
+            // :TODO: what is type void anyways?
+            //sendBPCastingTesters(prover, builder, builder.symTVoid, builder.symIsVoidValue);
+            sendBPCastingTesters(prover, builder, builder.symTObject, builder.symIsRefValue);
+        }
     }
 
     public static void sendBPTypeBool(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
@@ -388,24 +471,150 @@ public class Cvc3BackgroundPredicate {
 
     public static void sendBPTypeInt(Cvc3Prover prover, Cvc3NodeBuilder builder, FnSymbol type, SInt lb, SInt ub) throws Cvc3Exception {
 	//; === ESCJ 8: Section 2.2.1
+        QuantVar v0;
+        Cvc3Int i0;
+        QuantVar[] vars0;
+        STerm[][] pats;
+        SPred p, p0, p1, p2, p3, p4;
 
-	QuantVar v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
-	Cvc3Int i0 = (Cvc3Int) builder.wrapExpr(((Cvc3Any)builder.buildQVarRef(v0)).getExpr(), builder.sortInt);
-	QuantVar[] vars0;
-	STerm[][] pats;
-	SPred p, p0, p1, p2;
+        // :TODO: guard seems to be more efficient than to specialize x from Value to Int
+        if (false && builder.optUseDatatype) {
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortInt);
+            i0 = (Cvc3Int) builder.buildQVarRef(v0);
+        } else {
+            //v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            //i0 = (Cvc3Int) builder.wrapExpr(((Cvc3Any)builder.buildQVarRef(v0)).getExpr(), builder.sortInt);
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            i0 = (Cvc3Int) builder.buildValueConversion(builder.sortValue, builder.sortInt, (SValue)builder.buildQVarRef(v0));
+        }
 
-	//(BG_PUSH (FORALL (x) 
-	//	   (PATS (is x %type%)) 
-	//	   (IFF (is x %type%) (AND (<= %lb% x) (<= x %ub%)))))
-	p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildFnCall(type, new SAny[] {}) });
-	p1 = builder.buildIntPred(builder.predLE, lb, i0);
-	p2 = builder.buildIntPred(builder.predLE, i0, ub);
-	pats = new STerm[1][];
-	pats[0] = new STerm[] { p0 };
-	vars0 = new QuantVar[] { v0 };
-	p = builder.buildForAll(vars0, builder.buildIff(p0, builder.buildAnd(p1, p2)), pats, null);
-	prover.declareAxiom(p);
+        //(BG_PUSH (FORALL (x) 
+        //	   (PATS (is x %type%)) 
+        //	   (IFF (is x %type%) (AND (<= %lb% x) (<= x %ub%)))))
+        //p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildFnCall(type, new SAny[] {}) });
+        p0 = builder.buildPredCall(builder.symIs, new SAny[] { i0, builder.buildFnCall(type, new SAny[] {}) });
+        p1 = builder.buildIntPred(builder.predLE, lb, i0);
+        p2 = builder.buildIntPred(builder.predLE, i0, ub);
+        p3 = builder.buildAnd(p1, p2);
+        if (builder.optUseDatatype) {
+            //SPred p3a = builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) });
+            //SPred p3b = builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) });
+            //p3 = builder.buildAnd(builder.buildOr(p3a, p3b), p3);
+            //p3 = builder.buildImplies(builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) }), p3);
+            p3 = builder.buildAnd(builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) }), p3);
+        }
+        p4 = builder.buildIff(p0, p3);
+        if (false && builder.optUseDatatype) {
+            //SPred p3a = builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) });
+            //SPred p3b = builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) });
+            //p3 = builder.buildAnd(builder.buildOr(p3a, p3b), p3);
+            p4 = builder.buildImplies(builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) }), p4);
+        }
+
+        pats = new STerm[1][];
+        pats[0] = new STerm[] { p0 };
+        vars0 = new QuantVar[] { v0 };
+        p = builder.buildForAll(vars0, p4, pats, null);
+        prover.declareAxiom(p);
+    }
+
+
+    public static void sendBPTypeInt2(Cvc3Prover prover, Cvc3NodeBuilder builder, FnSymbol type, SInt lb, SInt ub) throws Cvc3Exception {
+	//; === ESCJ 8: Section 2.2.1
+        QuantVar v0;
+        Cvc3Int i0;
+        QuantVar[] vars0;
+        STerm[][] pats;
+        SPred p, p0, p1, p2, p3, p4;
+
+        // :TODO: guard seems to be more efficient than to specialize x from Value to Int
+        if (false && builder.optUseDatatype) {
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortInt);
+            i0 = (Cvc3Int) builder.buildQVarRef(v0);
+        } else {
+            //v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            //i0 = (Cvc3Int) builder.wrapExpr(((Cvc3Any)builder.buildQVarRef(v0)).getExpr(), builder.sortInt);
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            i0 = (Cvc3Int) builder.buildValueConversion(builder.sortValue, builder.sortInt, (SValue)builder.buildQVarRef(v0));
+        }
+
+        //(BG_PUSH (FORALL (x) 
+        //	   (PATS (is x %type%)) 
+        //         (AND
+        //	   (IMPLIES (is x %type%) (IMPLIES (is_IntValue x) ((<= %lb% x) (<= x %ub%))))))
+        //	   (IMPLIES (AND (is_IntValue x) (<= %lb% x) (<= x %ub%)) (is x %type%)))))
+        //p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildFnCall(type, new SAny[] {}) });
+        p0 = builder.buildPredCall(builder.symIs, new SAny[] { i0, builder.buildFnCall(type, new SAny[] {}) });
+        p1 = builder.buildIntPred(builder.predLE, lb, i0);
+        p2 = builder.buildIntPred(builder.predLE, i0, ub);
+        p3 = builder.buildAnd(p1, p2);
+        if (false && builder.optUseDatatype) {
+            //SPred p3a = builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) });
+            //SPred p3b = builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) });
+            //p3 = builder.buildAnd(builder.buildOr(p3a, p3b), p3);
+            p3 = builder.buildImplies(builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) }), p3);
+        }
+        p4 = builder.buildIff(p0, p3);
+        if (builder.optUseDatatype) {
+            //SPred p3a = builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) });
+            //SPred p3b = builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) });
+            //p3 = builder.buildAnd(builder.buildOr(p3a, p3b), p3);
+            p4 = builder.buildImplies(builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) }), p3);
+        }
+
+        pats = new STerm[1][];
+        pats[0] = new STerm[] { p0 };
+        vars0 = new QuantVar[] { v0 };
+        p = builder.buildForAll(vars0, p4, pats, null);
+        prover.declareAxiom(p);
+    }
+
+
+    public static void sendBPTypeReal(Cvc3Prover prover, Cvc3NodeBuilder builder, FnSymbol type, SInt lb, SInt ub) throws Cvc3Exception {
+	//; === ESCJ 8: Section 2.2.1
+        QuantVar v0;
+        Cvc3Real i0;
+        QuantVar[] vars0;
+        STerm[][] pats;
+        SPred p, p0, p1, p2, p3, p4;
+
+        // :TODO: guard seems to be more efficient than to specialize x from Value to Int
+        if (false && builder.optUseDatatype) {
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortReal);
+            i0 = (Cvc3Real) builder.buildQVarRef(v0);
+        } else {
+            //v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            //i0 = (Cvc3Int) builder.wrapExpr(((Cvc3Any)builder.buildQVarRef(v0)).getExpr(), builder.sortInt);
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            i0 = (Cvc3Real) builder.buildValueConversion(builder.sortValue, builder.sortReal, (SValue)builder.buildQVarRef(v0));
+        }
+
+        //(BG_PUSH (FORALL (x) 
+        //	   (PATS (is x %type%)) 
+        //	   (IFF (is x %type%) (AND (<= %lb% x) (<= x %ub%)))))
+        //p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildFnCall(type, new SAny[] {}) });
+        p0 = builder.buildPredCall(builder.symIs, new SAny[] { i0, builder.buildFnCall(type, new SAny[] {}) });
+        p1 = builder.buildArithPred(builder.predLE, lb, i0);
+        p2 = builder.buildArithPred(builder.predLE, i0, ub);
+        p3 = builder.buildAnd(p1, p2);
+        if (builder.optUseDatatype) {
+            //SPred p3a = builder.buildPredCall(builder.symIsIntValue, new SAny[] { builder.buildQVarRef(v0) });
+            //SPred p3b = builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) });
+            //p3 = builder.buildAnd(builder.buildOr(p3a, p3b), p3);
+            p3 = builder.buildImplies(builder.buildPredCall(builder.symIsRealValue, new SAny[] { builder.buildQVarRef(v0) }), p3);
+        }
+        p4 = builder.buildIff(p0, p3);
+
+        pats = new STerm[1][];
+        pats[0] = new STerm[] { p0 };
+        vars0 = new QuantVar[] { v0 };
+        p = builder.buildForAll(vars0, p4, pats, null);
+        prover.declareAxiom(p);
+    }
+
+    public static void sendBPTypeNumeral(Cvc3Prover prover, Cvc3NodeBuilder builder, FnSymbol type, SInt lb, SInt ub) throws Cvc3Exception {
+	sendBPTypeInt(prover, builder, type, lb, ub);
+	//sendBPTypeReal(prover, builder, type, lb, ub);
     }
 
     public static void sendBPTypeInt(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
@@ -419,25 +628,25 @@ public class Cvc3BackgroundPredicate {
 	//(BG_PUSH (FORALL (x) 
 	//	   (PATS (is x |T_char|)) 
 	//	   (IFF (is x |T_char|) (AND (<= 0 x) (<= x 65535)))))
-	sendBPTypeInt(prover, builder, builder.symTChar, builder.buildInt(0), builder.buildInt(65535));
+	sendBPTypeNumeral(prover, builder, builder.symTChar, builder.buildInt(0), builder.buildInt(65535));
 	//(BG_PUSH (FORALL (x)
 	//	   (PATS (is x |T_byte|))
 	//	   (IFF (is x |T_byte|) (AND (<= -128 x) (<= x 127)))))
-	sendBPTypeInt(prover, builder, builder.symTByte, builder.buildInt(Byte.MIN_VALUE), builder.buildInt(Byte.MAX_VALUE));
+	sendBPTypeNumeral(prover, builder, builder.symTByte, builder.buildInt(Byte.MIN_VALUE), builder.buildInt(Byte.MAX_VALUE));
 	//(BG_PUSH (FORALL (x) 
 	//	   (PATS (is x |T_short|))
 	//	   (IFF (is x |T_short|) (AND (<= -32768 x) (<= x 32767)))))
-	sendBPTypeInt(prover, builder, builder.symTShort, builder.buildInt(Short.MIN_VALUE), builder.buildInt(Short.MAX_VALUE));
+	sendBPTypeNumeral(prover, builder, builder.symTShort, builder.buildInt(Short.MIN_VALUE), builder.buildInt(Short.MAX_VALUE));
 	//(BG_PUSH (FORALL (x) 
 	//	   (PATS (is x |T_int|))
 	//	   (IFF (is x |T_int|) (AND (<= intFirst x) (<= x intLast)))))
-	//	sendBPTypeInt(prover, builder.symTInt, builder.buildInt(intFirst), builder.buildInt(intLast));
-	sendBPTypeInt(prover, builder, builder.symTInt, builder.buildInt(Integer.MIN_VALUE), builder.buildInt(Integer.MAX_VALUE));
+	//	sendBPTypeNumeral(prover, builder.symTInt, builder.buildInt(intFirst), builder.buildInt(intLast));
+	sendBPTypeNumeral(prover, builder, builder.symTInt, builder.buildInt(Integer.MIN_VALUE), builder.buildInt(Integer.MAX_VALUE));
 	//(BG_PUSH (FORALL (x) 
 	//	   (PATS (is x |T_long|))
 	//	   (IFF (is x |T_long|) (AND (<= longFirst x) (<= x longLast)))))
-	//	sendBPTypeInt(prover, builder.symTLong, builder.buildInt(longFirst), builder.buildInt(longLast));
-	sendBPTypeInt(prover, builder, builder.symTLong, builder.buildInt(Long.MIN_VALUE), builder.buildInt(Long.MAX_VALUE));
+	//	sendBPTypeNumeral(prover, builder.symTLong, builder.buildInt(longFirst), builder.buildInt(longLast));
+	sendBPTypeNumeral(prover, builder, builder.symTLong, builder.buildInt(Long.MIN_VALUE), builder.buildInt(Long.MAX_VALUE));
 	//(BG_PUSH (< longFirst intFirst))
 	//(BG_PUSH (< intFirst -1000000))
 	//(BG_PUSH (< 1000000 intLast))
@@ -526,24 +735,132 @@ public class Cvc3BackgroundPredicate {
 	//	 (IMPLIES (<: t |T_java.lang.Object|)
 	//		  (IFF (is x t)
 	//		       (OR (EQ x null) (<: (typeof x) t))))))
-	QuantVar v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
-	QuantVar v1 = builder.registerQuantifiedVariable("t0", builder.sortType);
-	SAny t0 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(v0) });
-	SPred p0 = builder.buildPredCall(builder.symTypeLE, new SAny[] { builder.buildQVarRef(v1), builder.buildFnCall(builder.symTObject, new SAny[] {}) });
-	SPred p1 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildQVarRef(v1) });
-	SPred p2 = builder.buildAnyEQ(builder.buildQVarRef(v0), builder.buildNull());
-	SPred p3 = builder.buildPredCall(builder.symTypeLE, new SAny[] { t0, builder.buildQVarRef(v1) });
-	
-	// :TODO: this multi-trigger not effective in cvc3, use single trigger in addition
-	// p0 can not be used, as it doesn't refer to all quantified variables
-	STerm[][] pats = new STerm[2][];
-	pats[0] = new STerm[] { p0, p1 };
-	pats[1] = new STerm[] { p1 };
+        QuantVar v0;// = builder.registerQuantifiedVariable("x0", builder.sortValue);
+        
+        // :TODO: guard seems to be more efficient than to specialize x from Value to Ref
+        if (false && builder.optUseDatatype) {
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortRef);
+        } else {
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+        }
+        
 
-	QuantVar[] vars0 = new QuantVar[] { v0, v1 };
-	SPred p = builder.buildForAll(vars0, builder.buildImplies(p0, builder.buildIff(p1, builder.buildOr(p2, p3))), pats, null);
-	prover.declareAxiom(p);
+        QuantVar v1 = builder.registerQuantifiedVariable("t0", builder.sortType);
+        SAny t0 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(v0) });
+        SPred p0 = builder.buildPredCall(builder.symTypeLE, new SAny[] { builder.buildQVarRef(v1), builder.buildFnCall(builder.symTObject, new SAny[] {}) });
+        SPred p1 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildQVarRef(v1) });
+        SPred p1a = p1;
+        if (false && builder.optUseDatatype) {
+            p1a = builder.buildAnd(builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) }), p1);
+        }
+        SPred p2 = builder.buildAnyEQ(builder.buildQVarRef(v0), builder.buildNull());
+        SPred p3 = builder.buildPredCall(builder.symTypeLE, new SAny[] { t0, builder.buildQVarRef(v1) });
+        SPred p3a = builder.buildOr(p2, p3);
+        if (builder.optUseDatatype) {
+            p3a = builder.buildAnd(builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) }), p3a);
+        }
+        if (false && builder.optUseDatatype) {
+            p3a = builder.buildImplies(p3a, p1a);
+        } else {
+            p3a = builder.buildIff(p1a, p3a);
+        }
+        if (false && builder.optUseDatatype) {
+            p3a = builder.buildImplies(builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) }), p3a);
+        }
+        SPred p4 = builder.buildImplies(p0, p3a);
+        if (false && builder.optUseDatatype) {
+            p4 = builder.buildImplies(builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) }), p4);
+        }
+        
+        // :TODO: this multi-trigger not effective in cvc3, use single trigger in addition
+        // p0 can not be used, as it doesn't refer to all quantified variables
+        STerm[][] pats = new STerm[2][];
+        pats[0] = new STerm[] { p0, p1 };
+        pats[1] = new STerm[] { p1 };
+        
+        QuantVar[] vars0 = new QuantVar[] { v0, v1 };
+        SPred p = builder.buildForAll(vars0, p4, pats, null);
+        prover.declareAxiom(p);
+
+        // :NOTE:
+        // it seems that the java method Object.getClass,
+        // which shows up in verification conditions,
+        // has the same semantics as typeOf,
+        // except that it has a different signature
+        // and returns a reference instead of a type.
+        //
+        // we should consider adding this axiom:
+        // ASSERT (FORALL (x: Ref) (PATTERN : getClass(x)) :
+        //  refToType(getClass(x)) = typeof(x))
+
+
+        if (false && builder.optUseDatatype) {
+            //%ASSERT (FORALL (x0: JavaValue, t0: JavaType) (PATTERN : is(x0, arrayType(t0))) :
+            //%              is(x0, arrayType(t0)) => is_javaRef(x0));
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            v1 = builder.registerQuantifiedVariable("t0", builder.sortType);
+            t0 = builder.buildFnCall(builder.symArray, new SAny[] { builder.buildQVarRef(v1) });
+            p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), t0 });
+            p1 = builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) });
+            p2 = builder.buildImplies(p0, p1);
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { p0 };
+            vars0 = new QuantVar[] { v0, v1 };
+            p = builder.buildForAll(vars0, p2, pats, null);
+            prover.declareAxiom(p);
+        
+            //%ASSERT (FORALL (x0: JavaValue, i0: Int) (PATTERN : is(x0, classType(i0))) :
+            //%              is(x0, classType(i0)) => is_javaRef(x0));
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            v1 = builder.registerQuantifiedVariable("i0", builder.sortInt);
+            t0 = builder.buildFnCall(builder.symClassType, new SAny[] { builder.buildQVarRef(v1) });
+            p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), t0 });
+            p1 = builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) });
+            p2 = builder.buildImplies(p0, p1);
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { p0 };
+            vars0 = new QuantVar[] { v0, v1 };
+            p = builder.buildForAll(vars0, p2, pats, null);
+            prover.declareAxiom(p);
+
+            //%ASSERT (FORALL (x: Ref, t0: JavaType) 
+            //%        (PATTERN : is(javaRef(x), t0)) :
+            //%        is(javaRef(x), t0) => (x0 = null OR is_subtype(typeof(x), t0)));
+            /*
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortRef);
+            v1 = builder.registerQuantifiedVariable("t0", builder.sortType);
+            t0 = builder.buildFnCall(builder.symRefValue, new SAny[] { builder.buildQVarRef(v0) });
+            SAny t1 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(v0) });
+            p0 = builder.buildPredCall(builder.symIs, new SAny[] { t0, builder.buildQVarRef(v1) });
+            p1 = builder.buildAnyEQ(builder.buildQVarRef(v0), builder.buildNull());
+            p2 = builder.buildPredCall(builder.symTypeLE, new SAny[] { t1, builder.buildQVarRef(v1) });
+            p3 = builder.buildImplies(p0, builder.buildOr(p1, p2));
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { p0 };
+            vars0 = new QuantVar[] { v0, v1 };
+            p = builder.buildForAll(vars0, p3, pats, null);
+            prover.declareAxiom(p);
+            */
+
+            //%ASSERT (FORALL (x: JavaValue, t0: JavaType) 
+            //%        (PATTERN : is(x, t0)) :
+            //%        is_javaRef x => is(x, t0) => (x0 = null OR is_subtype(typeof(valueToRef(x)), t0)));
+            v0 = builder.registerQuantifiedVariable("x0", builder.sortValue);
+            v1 = builder.registerQuantifiedVariable("t0", builder.sortType);
+            t0 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(v0) });
+            p0 = builder.buildPredCall(builder.symIs, new SAny[] { builder.buildQVarRef(v0), builder.buildQVarRef(v1) });
+            p1 = builder.buildAnyEQ(builder.buildQVarRef(v0), builder.buildNull());
+            p2 = builder.buildPredCall(builder.symTypeLE, new SAny[] { t0, builder.buildQVarRef(v1) });
+            p3 = builder.buildPredCall(builder.symIsRefValue, new SAny[] { builder.buildQVarRef(v0) });
+            p4 = builder.buildImplies(p3, builder.buildImplies(p0, builder.buildOr(p1, p2)));
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { p0 };
+            vars0 = new QuantVar[] { v0, v1 };
+            p = builder.buildForAll(vars0, p4, pats, null);
+            prover.declareAxiom(p);
+        }
     }
+
 
     public static void sendBPTypeFieldX(Cvc3Prover prover, Cvc3NodeBuilder builder, Sort field) throws Cvc3Exception {
 	QuantVar vf = builder.registerQuantifiedVariable("f0", field);
@@ -591,11 +908,61 @@ public class Cvc3BackgroundPredicate {
 	SAny t3 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(va) });
 	SAny t4 = builder.buildFnCall(builder.symElemType, new SAny[] { t3 });
 	SPred p0 = builder.buildPredCall(builder.symIs, new SAny[] { t2, t4 });
+        if (builder.optUseDatatype) {
+            p0 = builder.buildImplies(builder.buildPredCall(builder.symIsArrayType, new SAny[] { t3 }), p0);
+        }
 	STerm[][] pats = new STerm[1][];
 	pats[0] = new STerm[] { t2 };
 	QuantVar[] vars0 = new QuantVar[] { ve, va, vi };
 	SPred p = builder.buildForAll(vars0, p0, pats, null);
 	prover.declareAxiom(p);
+
+        /* :TODO: remove, rubbish
+        // (FORALL (e a) (PATS (select (asElems e) a)) (is_arrayType (select e a)))
+        if (builder.optUseDatatype) {
+            ve = builder.registerQuantifiedVariable("e0", builder.sortElems);
+            va = builder.registerQuantifiedVariable("a0", builder.sortRef);
+            t0 = (SMap) builder.buildFnCall(builder.symAsElems, new SAny[] { builder.buildQVarRef(ve) });
+            t1 = (SMap) builder.buildSelect((SMap)builder.buildQVarRef(ve), (SValue)builder.buildQVarRef(va));
+            p0 = builder.buildPredCall(builder.symIsArrayType, new SAny[] { t1 });
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { t1 };
+            vars0 = new QuantVar[] { ve, va };
+            p = builder.buildForAll(vars0, p0, pats, null);
+            prover.declareAxiom(p);
+        }
+        */
+        // (FORALL (e a) (PATS (select (asElems e) a)) (is_arrayType (typeOf a)))
+        // WRONG
+        if (false && builder.optUseDatatype) {
+            ve = builder.registerQuantifiedVariable("e0", builder.sortElems);
+            va = builder.registerQuantifiedVariable("a0", builder.sortRef);
+            t0 = (SMap) builder.buildFnCall(builder.symAsElems, new SAny[] { builder.buildQVarRef(ve) });
+            t1 = (SMap) builder.buildSelect(t0, (SValue)builder.buildQVarRef(va));
+            t2 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(va) });
+            p0 = builder.buildPredCall(builder.symIsArrayType, new SAny[] { t2 });
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { t1 };
+            vars0 = new QuantVar[] { ve, va };
+            p = builder.buildForAll(vars0, p0, pats, null);
+            prover.declareAxiom(p);
+        }
+
+        // (FORALL (e a) (PATS (MPAT ((asElems e) (select e a))) (is_arrayType (typeOf a)))
+        // WRONG
+        if (false && builder.optUseDatatype) {
+            ve = builder.registerQuantifiedVariable("e0", builder.sortElems);
+            va = builder.registerQuantifiedVariable("a0", builder.sortRef);
+            t0 = (SMap) builder.buildFnCall(builder.symAsElems, new SAny[] { builder.buildQVarRef(ve) });
+            t1 = (SMap) builder.buildSelect((SMap)builder.buildQVarRef(ve), (SValue)builder.buildQVarRef(va));
+            t2 = builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(va) });
+            p0 = builder.buildPredCall(builder.symIsArrayType, new SAny[] { t2 });
+            pats = new STerm[1][];
+            pats[0] = new STerm[] { t0, t1 };
+            vars0 = new QuantVar[] { ve, va };
+            p = builder.buildForAll(vars0, p0, pats, null);
+            prover.declareAxiom(p);
+        }
     }
 
     public static void sendBPAllocation(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
@@ -610,14 +977,14 @@ public class Cvc3BackgroundPredicate {
 	QuantVar[] vars0;
 	STerm[][] pats;
 	SAny t0, t1, t2;
-	SPred p, p0, p1, p2;
+	SPred p, p0, p1, p2, p3;
 
 	//(DEFPRED (isAllocated x a0) (< (vAllocTime x) a0))
         if (!builder.optIsallocated) {
 
             t0 = builder.buildFnCall(builder.symvAllocTime, new SAny[] { builder.buildQVarRef(vx) });
             p0 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { builder.buildQVarRef(vx), builder.buildQVarRef(va0) });
-            p1 = builder.buildIntPred(builder.predLT, (SInt)t0, (SInt)builder.buildQVarRef(va0));
+            p1 = builder.buildArithPred(builder.predLT, (SValue)t0, (SValue)builder.buildQVarRef(va0));
             vars0 = new QuantVar[] { vx, va0 };
             p = builder.buildForAll(vars0, builder.buildIff(p0, p1), null, null);
             prover.declareAxiom(p);
@@ -640,7 +1007,7 @@ public class Cvc3BackgroundPredicate {
 	// sendBPFClosedTimeX(prover, builder, builder.sortRefField);
 	t0 = builder.buildFnCall(builder.symFClosedTime, new SAny[] { builder.buildQVarRef(vf) });
 	t1 = builder.buildSelect((SMap)builder.buildQVarRef(vf), (SValue)builder.buildQVarRef(vx));
-	p0 = builder.buildIntPred(builder.predLT, (SInt)t0, (SInt)builder.buildQVarRef(va0));
+	p0 = builder.buildArithPred(builder.predLT, (SValue)t0, (SValue)builder.buildQVarRef(va0));
 	p1 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { builder.buildQVarRef(vx), builder.buildQVarRef(va0) });
 	p2 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { t1, builder.buildQVarRef(va0) });
 	pats = new STerm[1][];
@@ -656,17 +1023,24 @@ public class Cvc3BackgroundPredicate {
 	//	 (IMPLIES (AND (< (eClosedTime e) a0)
 	//		       (isAllocated a a0))
 	//		  (isAllocated (select (select e a) i) a0))))
+        //
+        // :TODO: this e is elems, so make its type tighter
 	t0 = builder.buildFnCall(builder.symEClosedTime, new SAny[] { builder.buildQVarRef(ve) });
 	t1 = builder.buildSelect((SMap)builder.buildQVarRef(ve), (SValue)builder.buildQVarRef(vx));
 	t2 = builder.buildSelect((SMap)t1, (SValue)builder.buildQVarRef(vi));
-	p0 = builder.buildIntPred(builder.predLT, (SInt)t0, (SInt)builder.buildQVarRef(va0));
+	p0 = builder.buildArithPred(builder.predLT, (SValue)t0, (SValue)builder.buildQVarRef(va0));
 	p1 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { builder.buildQVarRef(vx), builder.buildQVarRef(va0) });
 	p2 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { t2, builder.buildQVarRef(va0) });
+        p3 = builder.buildImplies(builder.buildAnd(p0, p1), p2);
+        if (builder.optUseDatatype) {
+            p3 = builder.buildImplies(builder.buildPredCall(builder.symIsRefValue, new SAny[] { t2 }), p3);
+        }
+
 	pats = new STerm[1][];
 	pats[0] = new STerm[] { p2 };
 	vars0 = new QuantVar[] { vx, ve, vi, va0 };
-	p = builder.buildForAll(vars0, builder.buildImplies(builder.buildAnd(p0, p1), p2), pats, null);
-	prover.declareAxiom(p);
+        p = builder.buildForAll(vars0, p3, pats, null);
+        prover.declareAxiom(p);
     }
 
     public static void sendBPLocking(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
@@ -674,10 +1048,33 @@ public class Cvc3BackgroundPredicate {
 	//; === ESCJ 8: Section 4 
 	QuantVar vs = builder.registerQuantifiedVariable("s", builder.sortLockSet);
 	QuantVar vl = builder.registerQuantifiedVariable("l", builder.sortLock);
+	QuantVar vl1 = builder.registerQuantifiedVariable("l1", builder.sortLock);
+	QuantVar vl2 = builder.registerQuantifiedVariable("l2", builder.sortLock);
 	QuantVar[] vars0;
 	STerm[][] pats;
 	SAny t0, t1, t2;
 	SPred p, p0, p1, p2, p3, p4;
+
+        // ; cvc3: introduce symLockPrec to inject locks into reals
+        //
+        // ; injective:
+        // (FORALL (l1 l2)
+        //   (PATS (MPAT (lockPrec l1) (lockPrec l2)))
+        //   (IMPLIES
+        //     (EQ (lockPrec l1) (lockPrec l2))
+        //     (EQ l1 l2)
+        //   )
+	t0 = builder.buildFnCall(builder.symLockPrec, new SAny[] { builder.buildQVarRef(vl1) });
+	t1 = builder.buildFnCall(builder.symLockPrec, new SAny[] { builder.buildQVarRef(vl2) });
+	p0 = builder.buildAnyEQ(t0, t1);
+	p1 = builder.buildAnyEQ(builder.buildQVarRef(vl1), builder.buildQVarRef(vl2));
+        p2 = builder.buildImplies(p0, p1);
+	pats = new STerm[1][];
+	pats[0] = new STerm[] { t0, t1 };
+	vars0 = new QuantVar[] { vl1, vl2 };
+	p = builder.buildForAll(vars0, p2, pats, null);
+	prover.declareAxiom(p);
+
 	//
 	//; max(lockset) is in lockset
 	//
@@ -696,6 +1093,7 @@ public class Cvc3BackgroundPredicate {
 	vars0 = new QuantVar[] { vs };
 	p = builder.buildForAll(vars0, p0, pats, null);
 	prover.declareAxiom(p);
+
 	//
 	//; null is in lockset (not in ESCJ 8)
 	//
@@ -775,7 +1173,7 @@ public class Cvc3BackgroundPredicate {
 	QuantVar[] vars0;
 	STerm[][] pats;
 	SAny t0, t1, t2, t3, t4;
-	SPred p, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9;
+	SPred p, p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
 	//
 	//(BG_PUSH
 	// (FORALL (a) 
@@ -819,7 +1217,7 @@ public class Cvc3BackgroundPredicate {
 	p0 = builder.buildPredCall(builder.symArrayFresh, new SAny[]
 	    { builder.buildQVarRef(va), builder.buildQVarRef(va0), builder.buildQVarRef(vb0), builder.buildQVarRef(ve),
 	      t0, builder.buildQVarRef(vt), builder.buildQVarRef(vv) });
-	p1 = builder.buildIntPred(builder.predLE, (SInt)builder.buildQVarRef(va0), (SInt)t1);
+	p1 = builder.buildArithPred(builder.predLE, (SValue)builder.buildQVarRef(va0), (SValue)t1);
 	p2 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { builder.buildQVarRef(va), builder.buildQVarRef(vb0) });
 	p3 = builder.buildAnyNE(builder.buildQVarRef(va), builder.buildNull());
 	p4 = builder.buildAnyEQ(builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(va) }), builder.buildQVarRef(vt));
@@ -832,10 +1230,18 @@ public class Cvc3BackgroundPredicate {
 	pats = new STerm[1][];
 	pats[0] = new STerm[] { t3 };
 	vars0 = new QuantVar[] { vi };
-	p9 = builder.buildForAll(vars0, builder.buildAnd(new SPred[] { p6, p7, p8 } ), pats, null);
+	p9 = builder.buildAnd(new SPred[] { p6, p7, p8 } );
+        if (builder.optUseDatatype) {
+            //            p9 = builder.buildImplies(builder.buildPredCall(builder.symIsRefValue, new SAny[] { t3 }), p9);
+            //            p9 = builder.buildImplies(builder.buildPredCall(builder.symIsArrayType, new SAny[] { builder.buildQVarRef(vt) }), p9);
+            p9 = builder.buildAnd(builder.buildPredCall(builder.symIsRefValue, new SAny[] { t3 }), p9);
+            p9 = builder.buildAnd(builder.buildPredCall(builder.symIsArrayType, new SAny[] { builder.buildQVarRef(vt) }), p9);
+        }
+	p10 = builder.buildForAll(vars0, p9, pats, null);
 	pats[0] = new STerm[] { p0 };
 	vars0 = new QuantVar[] { va, va0, vb0, ve, vn, vs, vt, vv };
-	p = builder.buildForAll(vars0, builder.buildIff(p0, builder.buildAnd(new SPred[] { p1, p2, p3, p4, p5, p9 })), pats, null);
+        p = builder.buildForAll(vars0, builder.buildIff(p0, builder.buildAnd(new SPred[] { p1, p2, p3, p4, p5, p10 })), pats, null);
+
 	prover.declareAxiom(p);
 	//
 	//(BG_PUSH
@@ -860,7 +1266,7 @@ public class Cvc3BackgroundPredicate {
 	p0 = builder.buildPredCall(builder.symArrayFresh, new SAny[]
 	    { builder.buildQVarRef(va), builder.buildQVarRef(va0), builder.buildQVarRef(vb0), builder.buildQVarRef(ve),
 	      t0, builder.buildQVarRef(vt), builder.buildQVarRef(vv) });
-	p1 = builder.buildIntPred(builder.predLE, (SInt)builder.buildQVarRef(va0), (SInt)t1);
+	p1 = builder.buildArithPred(builder.predLE, (SValue)builder.buildQVarRef(va0), (SValue)t1);
 	p2 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { builder.buildQVarRef(va), builder.buildQVarRef(vb0) });
 	p3 = builder.buildAnyNE(builder.buildQVarRef(va), builder.buildNull());
 	p4 = builder.buildAnyEQ(builder.buildFnCall(builder.symTypeOf, new SAny[] { builder.buildQVarRef(va) }), builder.buildQVarRef(vt));
@@ -1025,7 +1431,7 @@ public class Cvc3BackgroundPredicate {
 
 	p1 = builder.buildIntPred(builder.predLE, builder.buildInt(0), qvi);
 	p2 = builder.buildIntPred(builder.predLE, builder.buildInt(0), t0);
-	p3 = builder.buildImplies(p2, p3);
+	p3 = builder.buildImplies(p1, p2);
 
 	p4 = builder.buildImplies(p0, p3);
 
@@ -1047,7 +1453,7 @@ public class Cvc3BackgroundPredicate {
 
 	p1 = builder.buildIntPred(builder.predLE, qvi, builder.buildInt(0));
 	p2 = builder.buildIntPred(builder.predLE, t0, builder.buildInt(0));
-	p3 = builder.buildImplies(p2, p3);
+	p3 = builder.buildImplies(p1, p2);
 
 	p4 = builder.buildImplies(p0, p3);
 
@@ -1321,7 +1727,7 @@ public class Cvc3BackgroundPredicate {
 	p1 = builder.buildAnyNE(tr, builder.buildNull());
         p2 = builder.buildPredCall(builder.symIsAllocated, new SAny[] { tr, ta1 } );
         p3 = builder.buildNot(builder.buildPredCall(builder.symIsAllocated, new SAny[] { tr, ta0 } ));
-        p4 = builder.buildIntPred(builder.predLT, (SInt) ta0, (SInt) ta1);
+        p4 = builder.buildArithPred(builder.predLT, (SValue) ta0, (SValue) ta1);
         p5 = builder.buildAnyEQ(t0, t1);
 	p6 = builder.buildImplies(p0, builder.buildAnd(new SPred[] { p1, p2, p3, p4, p5 } ));
 	pats = new STerm[1][];
@@ -1416,7 +1822,7 @@ public class Cvc3BackgroundPredicate {
     }
 
     public static void sendBPArrayNonNull(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
-        if (builder.optNonnullelements) return;
+        if (true || builder.optNonnullelements) return;
 
 	if (printQuery) System.out.println("%% Cvc3BackgroundPredicate.sendBPArrayNonNull:");
 	//; === Implementation of nonnullelements; not in ESCJ 8 (yet?):
@@ -1452,6 +1858,9 @@ public class Cvc3BackgroundPredicate {
 	SPred p4 = builder.buildAnyNE(t2, builder.buildNull());
 	SPred p5 = builder.buildAnd(p2, p3);
 	SPred p6 = builder.buildImplies(p5, p4);
+        if (builder.optUseDatatype) {
+            p6 = builder.buildImplies(builder.buildPredCall(builder.symIsRefValue, new SAny[] { t2 }), p6);
+        }
 	//SPred p7 = builder.buildForAll(vars1, p6, null, null);
 	SPred p7 = p6;
 
@@ -1495,10 +1904,29 @@ public class Cvc3BackgroundPredicate {
 	//	 (PATS (classLiteral t))
 	//	 (EQ (classLiteral t) t)
 	//))
-	t3 = builder.buildValueConversion(builder.sortType, builder.sortRef, (SValue)builder.buildQVarRef(vt));
-        p0 = builder.buildAnyEQ(t0, t3);
-	p = builder.buildForAll(vars0, p0, pats, null);
-	prover.declareAxiom(p);
+        //
+        // :NOTE:
+        // classLiteral has signature Type -> Ref,
+        // so when type the above axiom becomes:
+        //
+        // ASSERT (FORALL (t: JavaType) (PATTERN : classLiteral(t)) :
+        //   (classLiteral(t) = typeToRef(t)));
+        //
+        // alternatively, we could use the axiom:
+        //
+        // ASSERT (classLiteral : = typeToRef)
+        //
+        // this way classLiteral disappears from the query.
+        // on the one, this makes the query simpler,
+        // but on the other hand, the above axiom now uses typeToRef
+        // instead of classLiteral in its trigger,
+        // which potentially fires more often.
+        if (builder.optUseClassLiteral) {
+            t3 = builder.buildValueConversion(builder.sortType, builder.sortRef, (SValue)builder.buildQVarRef(vt));
+            p0 = builder.buildAnyEQ(t0, t3);
+            p = builder.buildForAll(vars0, p0, pats, null);
+            prover.declareAxiom(p);
+        }
     }
 
     public static void sendBPArithMore(Cvc3Prover prover, Cvc3NodeBuilder builder) throws Cvc3Exception {
@@ -1730,6 +2158,21 @@ public class Cvc3BackgroundPredicate {
 	//  (IMPLIES
 	//   (AND (<= 0 n) (< n 31))
 	//   (<= 1 (intShiftL 1 n)))))
+        vx = builder.registerQuantifiedVariable("n", builder.sortInt);
+	t0 = builder.buildIntFun(builder.funSL32, (SInt)builder.buildInt(1), (SInt)builder.buildQVarRef(vx));
+
+	p0 = builder.buildIntPred(builder.predLE, (SInt)builder.buildInt(0), (SInt)builder.buildQVarRef(vx));
+	p1 = builder.buildIntPred(builder.predLT, (SInt)builder.buildQVarRef(vx), (SInt)builder.buildInt(31));
+	p2 = builder.buildIntPred(builder.predLE, (SInt)builder.buildInt(1), t0);
+        p3 = builder.buildAnd(p0, p1);
+        p4 = builder.buildImplies(p3, p2);
+
+	pats = new STerm[1][];
+	pats[0] = new STerm[] { t0 };
+	vars0 = new QuantVar[] { vx };
+	p = builder.buildForAll(vars0, p4, pats, null);
+	prover.declareAxiom(p);
+
 	//
 	//(BG_PUSH
 	// (FORALL (n)
@@ -1738,12 +2181,26 @@ public class Cvc3BackgroundPredicate {
 	//   (AND (<= 0 n) (< n 63))
 	//   (<= 1 (longShiftL 1 n)))))
 	//
+	vx = builder.registerQuantifiedVariable("n", builder.sortInt);
+	t0 = builder.buildIntFun(builder.funSL64, (SInt)builder.buildInt(1), (SInt)builder.buildQVarRef(vx));
+
+	p0 = builder.buildIntPred(builder.predLE, (SInt)builder.buildInt(0), (SInt)builder.buildQVarRef(vx));
+	p1 = builder.buildIntPred(builder.predLT, (SInt)builder.buildQVarRef(vx), (SInt)builder.buildInt(63));
+	p2 = builder.buildIntPred(builder.predLE, (SInt)builder.buildInt(1), t0);
+        p3 = builder.buildAnd(p0, p1);
+        p4 = builder.buildImplies(p3, p2);
+
+	pats = new STerm[1][];
+	pats[0] = new STerm[] { t0 };
+	vars0 = new QuantVar[] { vx };
+	p = builder.buildForAll(vars0, p4, pats, null);
+	prover.declareAxiom(p);
 
 	//; === A few floating point axioms - DRCok
 	//;; FIXME - floatingLT etc are predicates here, but are functions in ESC/java - is that a problem?
 	//;; FIXME - have to include NaN and infinity
 
-	// LIA ones maked to builder arith functions
+	// LIA ones turned into to builder arith functions
 
 	//
 	//;; Order axioms

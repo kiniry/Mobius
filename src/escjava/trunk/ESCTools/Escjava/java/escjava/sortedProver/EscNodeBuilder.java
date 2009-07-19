@@ -50,7 +50,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	// Dynamic types
 	public PredSymbol symIs = registerPredSymbol("is", new Sort[] { sortValue, sortType }, TagConstants.IS);
 	public FnSymbol symCast = registerFnSymbol("cast", new Sort[] { sortValue, sortType }, sortValue, TagConstants.CAST);
-	public FnSymbol symTypeOf = registerFnSymbol("typeof", new Sort[] { sortValue }, sortType, TagConstants.TYPEOF);	
+	public FnSymbol symTypeOf = registerFnSymbol("typeof", new Sort[] { sortRef }, sortType, TagConstants.TYPEOF);	
 	// Allocation status
 	public PredSymbol symIsAllocated = registerPredSymbol("isAllocated", new Sort[] { sortRef, sortTime }, TagConstants.ISALLOCATED);
 	public FnSymbol symEClosedTime = registerFnSymbol("eClosedTime", new Sort[] { sortElems }, sortTime, TagConstants.ECLOSEDTIME); 

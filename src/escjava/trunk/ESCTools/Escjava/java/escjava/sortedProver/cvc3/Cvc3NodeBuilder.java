@@ -4,6 +4,7 @@ package escjava.sortedProver.cvc3;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,11 +29,14 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
     final static private boolean printQuery = false;
 
 
-    boolean optMultiTriggers = true;
-    boolean optManualTriggers = true;
-    public boolean optNonnullelements = true;
-    public boolean optIsallocated = false;
-    public boolean optBuiltinTrans = true;
+    public final boolean optMultiTriggers;
+    public final boolean optManualTriggers;
+    public final boolean optNonnullelements;
+    public final boolean optIsallocated;
+    public final boolean optBuiltinTrans;
+    public final boolean optUseClassLiteral;
+    public final boolean optUseDatatype;
+    public final boolean optTest;
 
     //
     /// debug
@@ -73,6 +77,8 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
     final public Type typeReal;
     final public Type typeRef;
     final public Type typeString;
+    final public Op isClassType;
+    final public Op isArrayType;
 
     final public Type typeShape;
     final public Type typeTime;
@@ -103,6 +109,10 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
     final public Op intToValue;
     final public Op realToValue;
     final public Op refToValue;
+    final public Op isBoolValue;
+    final public Op isIntValue;
+    final public Op isRealValue;
+    final public Op isRefValue;
     /*
     final public Op fieldToBoolField;
     final public Op fieldToIntField;
@@ -158,24 +168,60 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
     //:TODO: not as hard-coded string - but how?
     final public FnSymbol symTObject = registerConstant("T_java.lang.Object", sortType);
     final public FnSymbol symTClass = registerConstant("T_java.lang.Class", sortType);
+    final public FnSymbol symTException = registerConstant("T_java.lang.Exception", sortType);
+    final public FnSymbol symTThrowable = registerConstant("T_java.lang.Throwable", sortType);
     final public FnSymbol symTCloneable = registerConstant("T_java.lang.Cloneable", sortType);
+    final public FnSymbol symTComparable = registerConstant("T_java.lang.Comparable", sortType);
+    final public FnSymbol symTSerializable = registerConstant("T_java.io.Serializable", sortType);
     final public FnSymbol symTString = registerConstant("T_java.lang.String", sortType);
+    final public FnSymbol symTCharSequence = registerConstant("T_java.lang.CharSequence", sortType);
+
     final public FnSymbol symAlloc = registerConstant("alloc", sortTime);
     final public FnSymbol symvAllocTime = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.VALLOCTIME),
 							   new Sort[] { sortRef }, sortTime, TagConstants.VALLOCTIME);
 
-    final public FnSymbol symIntegralDIV = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTEGRALDIV),
+    final public FnSymbol symLockPrec = registerFnSymbol("lprec", new Sort[] { sortRef }, sortReal, 0);
+    final public FnSymbol symIntegralDiv = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTEGRALDIV),
 							    new Sort[] { sortInt, sortInt }, sortInt,
 							    TagConstants.INTEGRALDIV);
-    final public FnSymbol symIntegralMOD = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTEGRALMOD),
+    final public FnSymbol symIntegralMod = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTEGRALMOD),
 							    new Sort[] { sortInt, sortInt }, sortInt,
 							    TagConstants.INTEGRALMOD);
-    final public FnSymbol symFloatingDIV = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.FLOATINGDIV),
+    final public FnSymbol symFloatingDiv = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.FLOATINGDIV),
 							    new Sort[] { sortInt, sortInt }, sortInt,
 							    TagConstants.FLOATINGDIV);
-    final public FnSymbol symFloatingMOD = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.FLOATINGMOD),
+    final public FnSymbol symFloatingMod = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.FLOATINGMOD),
 							    new Sort[] { sortInt, sortInt }, sortInt,
 							    TagConstants.FLOATINGMOD);
+    final public FnSymbol symASR32 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTSHIFTR),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.INTSHIFTR);
+    final public FnSymbol symSL32 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTSHIFTL),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.INTSHIFTL);
+    final public FnSymbol symUSR32 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.INTSHIFTRU),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.INTSHIFTRU);
+    final public FnSymbol symASR64 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.LONGSHIFTR),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.LONGSHIFTR);
+    final public FnSymbol symSL64 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.LONGSHIFTL),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.LONGSHIFTL);
+    final public FnSymbol symUSR64 = registerFnSymbol(escjava.ast.TagConstants.toString(TagConstants.LONGSHIFTRU),
+							    new Sort[] { sortInt, sortInt }, sortInt,
+							    TagConstants.LONGSHIFTRU);
+
+    // only created for simplicity, to be used in Cvc3BackgroundPredicate
+    // instead of the Ops of the same name create above
+    final public FnSymbol symClassType = registerFnSymbol("__cvc3_classType", new Sort[] { sortInt }, sortType, 0);
+    final public FnSymbol symRefValue = registerFnSymbol("__cvc3_refValue", new Sort[] { sortRef }, sortValue, 0);
+    final public PredSymbol symIsClassType = registerPredSymbol("__cvc3_isClassType", new Sort[] { sortType }, 0);
+    final public PredSymbol symIsArrayType = registerPredSymbol("__cvc3_isArrayType", new Sort[] { sortType }, 0);
+    final public PredSymbol symIsBoolValue = registerPredSymbol("__cvc3_isBoolValue", new Sort[] { sortBool }, 0);
+    final public PredSymbol symIsIntValue = registerPredSymbol("__cvc3_isIntValue", new Sort[] { sortInt }, 0);
+    final public PredSymbol symIsRealValue = registerPredSymbol("__cvc3_isRealValue", new Sort[] { sortReal }, 0);
+    final public PredSymbol symIsRefValue = registerPredSymbol("__cvc3_isRefValue", new Sort[] { sortRef }, 0);
 
     //
     // registries / mappings (for memoization)
@@ -193,6 +239,13 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
     // cvc expr <-> EscJava node (STerm, SValue, SRef, ...)
     // 
     final private HashMap escMap = new HashMap();
+    final private HashMap exprMap = new HashMap();
+
+    // predefined mapping of symbol names to cvc3 names
+    final private HashMap predefinedNames = new HashMap();
+
+    // counter for java types introduced for java classes
+    private int classId = 0;
 
 
     //
@@ -202,7 +255,8 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 
     public Cvc3NodeBuilder(cvc3.ValidityChecker prover, Cvc3Prover cvcProver,
                            boolean multiTriggers, boolean manualTriggers,
-                           boolean nonnullelements, boolean isallocated, boolean builtinTrans)
+                           boolean nonnullelements, boolean isallocated, boolean builtinTrans,
+                           boolean useClassLiteral, boolean useDatatype, boolean test)
 	throws cvc3.Cvc3Exception {
 
 	this.prover = prover;
@@ -212,21 +266,159 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
         this.optIsallocated = isallocated;
         this.optBuiltinTrans = builtinTrans;
 	this.optManualTriggers = manualTriggers;
+        this.optUseClassLiteral = useClassLiteral;
+        this.optUseDatatype = useDatatype;
+        this.optTest = test;
 
+	
 	// sorts
 	typeError = prover.createType("error");
 	typePred = prover.boolType();
-	typeValue = prover.createType("Value");
 	typeBool = prover.bitvecType(1);
 	typeInt = prover.intType();
 	typeReal = prover.realType();
 	typeRef = prover.createType("Ref");
+	//typeRef = prover.createType("Ref", typeInt);
 	typeString = typeRef;
-	
 	typeShape = prover.createType("Shape");
+        // optional: model time as real,
+        // but, surprisingly, less efficient in practice
+	//typeTime = typeReal;
 	typeTime = typeInt;
-	typeType = prover.createType("JavaType");
 	typeLock = typeRef;
+
+
+	// expressions
+	escNull = new Cvc3Ref(prover.varExpr("null", typeRef));
+	//escNull = new Cvc3Ref(prover.varExpr("null", typeRef, prover.ratExpr(0, 1)));
+	escTrue = new Cvc3Pred(prover.trueExpr());
+	escFalse = new Cvc3Pred(prover.falseExpr());
+	escBTrue = new Cvc3Bool(prover.newBVConstExpr("1"));
+	escBFalse = new Cvc3Bool(prover.newBVConstExpr("0"));
+
+        if (optUseDatatype) {
+            // set up JavaType as an inductive datatype
+            String name = "JavaType";
+
+            String[] constructors = new String[]
+                { "boolType", "charType", "byteType", "shortType", "intType",
+                  "longType", "floatType", "doubleType", "voidType",
+                  "classType", "arrayType" };
+
+            String[][] selectors = new String[11][];
+            selectors[0] = new String[0];
+            selectors[1] = new String[0];
+            selectors[2] = new String[0];
+            selectors[3] = new String[0];
+            selectors[4] = new String[0];
+            selectors[5] = new String[0];
+            selectors[6] = new String[0];
+            selectors[7] = new String[0];
+            selectors[8] = new String[0];
+            selectors[9] = new String[] { "classId" };
+            selectors[10] = new String[] { "elemType" };
+
+            Expr[][] types = new Expr[11][];
+            types[0] = new Expr[0];
+            types[1] = new Expr[0];
+            types[2] = new Expr[0];
+            types[3] = new Expr[0];
+            types[4] = new Expr[0];
+            types[5] = new Expr[0];
+            types[6] = new Expr[0];
+            types[7] = new Expr[0];
+            types[8] = new Expr[0];
+            types[9] = new Expr[] { typeInt.getExpr() };
+            types[10] = new Expr[] { prover.stringExpr(name) };
+
+            typeType = prover.dataType(name, constructors, selectors, types);
+
+            // hack to get arrayType constructor/selector
+            // :TODO: unify with setupSymbols segment
+            List args = new ArrayList();
+            args.add(prover.ratExpr(0));
+            Expr expr = prover.datatypeConsExpr("classType", args);
+            isClassType = prover.datatypeTestExpr("classType", expr).getOp();
+
+            args = new ArrayList();
+            args.add(prover.datatypeConsExpr("boolType", new ArrayList()));
+            expr = prover.datatypeConsExpr("arrayType", args);
+            isArrayType = prover.datatypeTestExpr("arrayType", expr).getOp();
+        } else {
+            typeType = prover.createType("JavaType");
+
+            isClassType = null;
+            isArrayType = null;
+        }
+
+        if (optUseDatatype) {
+            // set up JavaValue as an inductive datatype
+            String name = "JavaValue";
+
+            String[] constructors = new String[]
+                { "javaBool", "javaInt", "javaReal", "javaRef" };
+
+            String[][] selectors = new String[4][];
+            selectors[0] = new String[] { "valueToBool" };
+            selectors[1] = new String[] { "valueToInt" };
+            selectors[2] = new String[] { "valueToReal" };
+            selectors[3] = new String[] { "valueToRef" };
+
+            Expr[][] types = new Expr[4][];
+            types[0] = new Expr[] { typeBool.getExpr() };
+            types[1] = new Expr[] { typeInt.getExpr() };
+            types[2] = new Expr[] { typeReal.getExpr() };
+            types[3] = new Expr[] { typeRef.getExpr() };
+
+            typeValue = prover.dataType(name, constructors, selectors, types);
+
+            // hacks to get constructors, selectors, testers ...
+            List args = new ArrayList();
+            args.add(prover.newBVConstExpr("0"));
+            Expr expr = prover.datatypeConsExpr("javaBool", args);
+            boolToValue = expr.getOp();
+            valueToBool = prover.datatypeSelExpr("valueToBool", expr).getOp();
+            isBoolValue = prover.datatypeTestExpr("javaBool", expr).getOp();
+
+            args = new ArrayList();
+            args.add(prover.ratExpr(0));
+            expr = prover.datatypeConsExpr("javaInt", args);
+            intToValue = expr.getOp();
+            valueToInt = prover.datatypeSelExpr("valueToInt", expr).getOp();
+            isIntValue = prover.datatypeTestExpr("javaInt", expr).getOp();
+
+            args = new ArrayList();
+            args.add(prover.ratExpr(0));
+            expr = prover.datatypeConsExpr("javaReal", args);
+            realToValue = expr.getOp();
+            valueToReal = prover.datatypeSelExpr("valueToReal", expr).getOp();
+            isRealValue = prover.datatypeTestExpr("javaReal", expr).getOp();
+
+            args = new ArrayList();
+            args.add(escNull.getExpr());
+            expr = prover.datatypeConsExpr("javaRef", args);
+            refToValue = expr.getOp();
+            valueToRef = prover.datatypeSelExpr("valueToRef", expr).getOp();
+            isRefValue = prover.datatypeTestExpr("javaRef", expr).getOp();
+        } else {
+            typeValue = prover.createType("JavaValue");
+
+            boolToValue = prover.createOp("javaBool", prover.funType(typeBool, typeValue));  
+            intToValue = prover.createOp("javaInt", prover.funType(typeInt, typeValue));  
+            realToValue = prover.createOp("javaReal", prover.funType(typeReal, typeValue));  
+            refToValue = prover.createOp("javaRef", prover.funType(typeRef, typeValue));
+            valueToBool = prover.createOp("valueToBool", prover.funType(typeValue, typeBool));  
+            valueToInt = prover.createOp("valueToInt", prover.funType(typeValue, typeInt));
+            valueToReal = prover.createOp("valueToReal", prover.funType(typeValue, typeReal));
+            valueToRef = prover.createOp("valueToRef", prover.funType(typeValue, typeRef));
+            isBoolValue = null;
+            isIntValue = null;
+            isRealValue = null;
+            isRefValue = null;
+        }
+
+        refToType = prover.createOp("refToClassType", prover.funType(typeRef, typeType));
+        typeToRef = prover.createOp("classTypeToRef", prover.funType(typeType, typeRef));
 
 	typeField = prover.createType("Field");
 	//typeField = prover.arrayType(typeValue, typeValue);
@@ -239,21 +431,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	typeElems = prover.arrayType(typeRef, typeArray);
 	typeLockSet = prover.arrayType(typeLock, typeBool);
 	
-	// operators
-	//	intToReal = prover.createOp("intToReal", prover.funType(typeInt, typeReal));
-	//	realToInt = prover.createOp("realToInt", prover.funType(typeReal, typeInt));
 
-	refToType = prover.createOp("refToType", prover.funType(typeRef, typeType));
-	typeToRef = prover.createOp("typeToRef", prover.funType(typeType, typeRef));
-
-	valueToBool = prover.createOp("valueToBool", prover.funType(typeValue, typeBool));  
-	valueToInt = prover.createOp("valueToInt", prover.funType(typeValue, typeInt));
-	valueToReal = prover.createOp("valueToReal", prover.funType(typeValue, typeReal));
-	valueToRef = prover.createOp("valueToRef", prover.funType(typeValue, typeRef));
-	boolToValue = prover.createOp("boolToValue", prover.funType(typeBool, typeValue));  
-	intToValue = prover.createOp("intToValue", prover.funType(typeInt, typeValue));  
-	realToValue = prover.createOp("realToValue", prover.funType(typeReal, typeValue));  
-	refToValue = prover.createOp("refToValue", prover.funType(typeRef, typeValue));  
 	/*
 	fieldToBoolField = prover.createOp("fieldToBoolField", prover.funType(typeField, typeBoolField));
 	fieldToIntField = prover.createOp("fieldToIntField", prover.funType(typeField, typeIntField));
@@ -284,17 +462,13 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    //fieldToBoolField, fieldToIntField, fieldToRealField, fieldToRefField,
 	    //boolFieldToField, intFieldToField, realFieldToField, refFieldToField
 	};
-	
-	// expressions
-	escNull = new Cvc3Ref(prover.varExpr("null", typeRef));
-	escTrue = new Cvc3Pred(prover.trueExpr());
-	escFalse = new Cvc3Pred(prover.falseExpr());
-	escBTrue = new Cvc3Bool(prover.newBVConstExpr("1"));
-	escBFalse = new Cvc3Bool(prover.newBVConstExpr("0"));
     }
 
     public void setup() throws cvc3.Cvc3Exception {
+        setupPredefinedNames();
 	setupTypes();
+        // setupSymbols must come after setupPredefinedNames
+        // due to redefinition of symFClosedTime
 	setupSymbols();
     }
 
@@ -366,11 +540,11 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	Expr vfr = prover.varExpr("fr", typeRealField);
 	Expr vfref = prover.varExpr("fref", typeRefField);
 	*/
-	Expr vt = prover.boundVarExpr("t", "t_" + typeType.toString(), typeType);
-	Expr vv = prover.boundVarExpr("v", "v_" + typeValue.toString(), typeValue);
-	Expr vb = prover.boundVarExpr("b", "b_" + typeBool.toString(), typeBool);
-	Expr vi = prover.boundVarExpr("i", "i_" + typeInt.toString(), typeInt);
-	Expr vr = prover.boundVarExpr("r", "r_" + typeReal.toString(), typeReal);
+        Expr vt = prover.boundVarExpr("t", "t_" + typeType.toString(), typeType);
+        Expr vv = prover.boundVarExpr("v", "v_" + typeValue.toString(), typeValue);
+        Expr vb = prover.boundVarExpr("b", "b_" + typeBool.toString(), typeBool);
+        Expr vi = prover.boundVarExpr("i", "i_" + typeInt.toString(), typeInt);
+        Expr vr = prover.boundVarExpr("r", "r_" + typeReal.toString(), typeReal);
 	Expr vref = prover.boundVarExpr("ref", "ref_" + typeRef.toString(), typeRef);
 	/*
 	Expr vf = prover.boundVarExpr("f", "f_" + typeField.toString(), typeField);
@@ -380,11 +554,12 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	Expr vfref = prover.boundVarExpr("fref", "fref_" + typeRefField.toString(), typeRefField);
 	*/
 	setupCast(refToType, typeToRef, vref, vt);
-
-	setupCast(valueToBool, boolToValue, vv, vb);
-	setupCast(valueToInt, intToValue, vv, vi);
-	setupCast(valueToReal, realToValue, vv, vr);
-	setupCast(valueToRef, refToValue, vv, vref);
+        if (!optUseDatatype) {
+            setupCast(valueToBool, boolToValue, vv, vb);
+            setupCast(valueToInt, intToValue, vv, vi);
+            setupCast(valueToReal, realToValue, vv, vr);
+            setupCast(valueToRef, refToValue, vv, vref);
+        }
 	/*
 	setupCast(fieldToBoolField, boolFieldToField, vf, vfb);
 	setupCast(fieldToIntField, intFieldToField, vf, vfi);
@@ -393,22 +568,202 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	*/
     }
 
+    // declare a fresh class classType(n),
+    // using the datatype representation of JavaType
+    protected Expr declareFreshClass(String name) throws cvc3.Cvc3Exception {
+        assert (optUseDatatype);
+        List args = new ArrayList();
+        args.add(prover.ratExpr(classId++));
+        Expr def = prover.datatypeConsExpr("classType", args);
+        return prover.varExpr(name, typeType, def);
+    }
+
     // special predefined symbols
     protected void setupSymbols() throws cvc3.Cvc3Exception {
 	setupCast();
 
-	// make sure that fCloseTime is applied to ref fields only,
+	// make sure that fClosedTime is applied to ref fields only,
 	// not general fields, to avoid casting
 	String nameFClosedTime = uniqueName(symFClosedTime);
 	symbolMap.put(nameFClosedTime,
 	  prover.createOp(nameFClosedTime, prover.funType(typeRefField, typeTime)));
+
+        symbolMap.put(uniqueName(symRefValue), refToValue);
+
+        // setup datatype constructors/selectors to avoid
+        // their automatic creation as standard functions
+        if (optUseDatatype) {
+            Expr expr = null;
+            List args = null;
+
+            symbolMap.put("boolType", prover.datatypeConsExpr("boolType", new ArrayList()));
+            symbolMap.put("charType", prover.datatypeConsExpr("charType", new ArrayList()));
+            symbolMap.put("byteType", prover.datatypeConsExpr("byteType", new ArrayList()));
+            symbolMap.put("shortType", prover.datatypeConsExpr("shortType", new ArrayList()));
+            symbolMap.put("intType", prover.datatypeConsExpr("intType", new ArrayList()));
+            symbolMap.put("longType", prover.datatypeConsExpr("longType", new ArrayList()));
+            // :TODO: currently bigInt is defined as a synomym for long in the background predicate,
+            // so we have to map it to the same constructor here
+            symbolMap.put("bigIntType", prover.datatypeConsExpr("longType", new ArrayList()));
+            symbolMap.put("floatType", prover.datatypeConsExpr("floatType", new ArrayList()));
+            symbolMap.put("doubleType", prover.datatypeConsExpr("doubleType", new ArrayList()));
+            symbolMap.put("voidType", prover.datatypeConsExpr("voidType", new ArrayList()));
+
+            // hack to get classType constructor/selector
+            args = new ArrayList();
+            args.add(prover.ratExpr(0));
+            expr = prover.datatypeConsExpr("classType", args);
+            symbolMap.put(
+              "classType",
+              expr.getOp()
+            );
+            symbolMap.put(
+              "classId",
+              prover.datatypeSelExpr("classId", expr).getOp()
+            );
+
+            // hack to get arrayType constructor/selector
+            args = new ArrayList();
+            args.add(prover.datatypeConsExpr("boolType", new ArrayList()));
+            expr = prover.datatypeConsExpr("arrayType", args);
+            symbolMap.put(
+              "arrayType",
+              expr.getOp()
+            );
+            symbolMap.put(
+              "elemType",
+              prover.datatypeSelExpr("elemType", expr).getOp()
+            );
+
+            // for convenience, fix the class ids of common types
+            symbolMap.put(uniqueName(symTObject), declareFreshClass(uniqueName(symTObject)));
+            symbolMap.put(uniqueName(symTClass), declareFreshClass(uniqueName(symTClass)));
+            symbolMap.put(uniqueName(symTException), declareFreshClass(uniqueName(symTException)));
+            symbolMap.put(uniqueName(symTThrowable), declareFreshClass(uniqueName(symTThrowable)));
+            symbolMap.put(uniqueName(symTCloneable), declareFreshClass(uniqueName(symTCloneable)));
+            symbolMap.put(uniqueName(symTComparable), declareFreshClass(uniqueName(symTComparable)));
+            symbolMap.put(uniqueName(symTSerializable), declareFreshClass(uniqueName(symTSerializable)));
+            symbolMap.put(uniqueName(symTString), declareFreshClass(uniqueName(symTString)));
+            symbolMap.put(uniqueName(symTCharSequence), declareFreshClass(uniqueName(symTCharSequence)));
+
+            symbolMap.put(uniqueName(symIsClassType), isClassType);
+            symbolMap.put(uniqueName(symIsArrayType), isArrayType);
+        }
+
+        if (optUseDatatype) {
+            symbolMap.put(uniqueName(symIsBoolValue), isBoolValue);
+            symbolMap.put(uniqueName(symIsIntValue), isIntValue);
+            symbolMap.put(uniqueName(symIsRealValue), isRealValue);
+            symbolMap.put(uniqueName(symIsRefValue), isRefValue);
+        }
+
+        // typeOf is applied to Ref only, so change its type appropriately
+        // :UPDATE:
+        // moved change  to definition in EscNodeBuilder to improve type inference)
+	//String nameTypeOf = uniqueName(symTypeOf);
+	//symbolMap.put(nameTypeOf,
+	//  prover.createOp(nameTypeOf, prover.funType(typeRef, typeType)));
     }
+
+    // setup predefined names to avoid name mangling by uniqueName
+    protected void setupPredefinedNames() {
+        // doesn't work: predefinedNames.put(symTType.name, "Type");
+        // :TODO: what is this good for?
+        // seems to be declared in vcs but then never used
+        //predefinedNames.put("TYPE", "TYPE");
+        // :TODO: is this ever used anywhere?
+        //predefinedNames.put(symTArray.name, "arrayType");
+        predefinedNames.put(symTBoolean.name, "boolType");
+        predefinedNames.put(symTChar.name, "charType");
+        predefinedNames.put(symTByte.name, "byteType");
+        predefinedNames.put(symTShort.name, "shortType");
+        predefinedNames.put(symTInt.name, "intType");
+        predefinedNames.put(symTLong.name, "longType");
+        predefinedNames.put(symTFloat.name, "floatType");
+        predefinedNames.put(symTDouble.name, "doubleType");
+        predefinedNames.put(symTBigInt.name, "bigIntType");
+        predefinedNames.put(symTVoid.name, "voidType");
+        predefinedNames.put(symClassType.name, "classType");
+        predefinedNames.put(symRefValue.name, "javaRef");
+
+        predefinedNames.put(symTObject.name, "T_java_lang_Object");
+        predefinedNames.put(symTClass.name, "T_java_lang_Class");
+        predefinedNames.put(symTException.name, "T_java_lang_Exception");
+        predefinedNames.put(symTThrowable.name, "T_java_lang_Throwable");
+        predefinedNames.put(symTCloneable.name, "T_java_lang_Cloneable");
+        predefinedNames.put(symTComparable.name, "T_java_lang_Comparable");
+        predefinedNames.put(symTSerializable.name, "T_java_io_Serializable");
+        predefinedNames.put(symTString.name, "T_java_lang_String");
+        predefinedNames.put(symTCharSequence.name, "T_java_lang_CharSequence");
+
+        predefinedNames.put(symRefEQ.name, "refEQ");
+        predefinedNames.put(symRefNE.name, "refNE");
+        predefinedNames.put(symAllocLT.name, "allocLT");
+        predefinedNames.put(symAllocLE.name, "allocLE");
+        predefinedNames.put(symLockLT.name, "lockLT");
+        predefinedNames.put(symLockLE.name, "lockLE");
+        predefinedNames.put(symTypeEQ.name, "typeEQ");
+        predefinedNames.put(symTypeNE.name, "typeNE");
+        predefinedNames.put(symTypeLE.name, "isSubtype");
+        predefinedNames.put(symIs.name, "is");
+        predefinedNames.put(symCast.name, "cast");
+        predefinedNames.put(symTypeOf.name, "typeOf");
+        predefinedNames.put(symIsAllocated.name, "isAllocated");
+        predefinedNames.put(symEClosedTime.name, "eClosedTime");
+        predefinedNames.put(symFClosedTime.name, "fClosedTime");
+        predefinedNames.put(symAsChild.name, "asChild");
+        predefinedNames.put(symClassDown.name, "classDown");
+        predefinedNames.put(symAsElems.name, "asElems");
+        predefinedNames.put(symAsField.name, "asField");
+        predefinedNames.put(symAsLockSet.name, "asLockSet");
+        predefinedNames.put(symArrayLength.name, "arrayLength");
+        predefinedNames.put(symArrayShapeOne.name, "arrayShapeOne");
+        predefinedNames.put(symArrayShapeMore.name, "arrayShapeMore");
+        predefinedNames.put(symArrayParent.name, "arrayParent");
+        predefinedNames.put(symArrayPosition.name, "arrayPosition");
+        predefinedNames.put(symArrayFresh.name, "arrayFresh");
+        predefinedNames.put(symArray.name, "arrayType");
+        predefinedNames.put(symUnset.name, "unset");
+        predefinedNames.put(symIsNewArray.name, "isNewArray");
+        predefinedNames.put(symIntern.name, "intern");
+        predefinedNames.put(symInterned.name, "interned");
+        predefinedNames.put(symStringCat.name, "stringCat");
+        predefinedNames.put(symStringCatP.name, "stringCatP");
+        predefinedNames.put(symNonNullElems.name, "nonnullelems");
+        predefinedNames.put(symElemType.name, "elemType");
+        predefinedNames.put(symMax.name, "max");
+        predefinedNames.put(symArrayMake.name, "arrayMake");
+        predefinedNames.put(symClassLiteral.name, "classLiteral");
+
+        predefinedNames.put(symAlloc.name, "alloc");
+        predefinedNames.put(symvAllocTime.name, "vAllocTime");
+        predefinedNames.put(symLockPrec.name, "lockPrec");
+        predefinedNames.put(symIntegralDiv.name, "integralDiv");
+        predefinedNames.put(symIntegralMod.name, "integralMod");
+        predefinedNames.put(symFloatingDiv.name, "floatingDiv");
+        predefinedNames.put(symFloatingMod.name, "floatingMod");
+        predefinedNames.put(symSL32.name, "intShiftL");
+        predefinedNames.put(symSL64.name, "longShiftL");
+
+        predefinedNames.put("getClass#", "getClass");
+        //        predefinedNames.put("ecReturn", "ecReturn");
+        //        predefinedNames.put("ecThrow", "ecThrow");
+    }
+
 
 
     // escjava might use the same name with different types
     // in different queries using one prover instance
     // as cvc can't handle this, make the names unique by encoding their type
     public String uniqueName(FnSymbol fn) {
+        // :TODO: is symTArray ever used?
+        assert (fn != symTArray);
+
+        String predefinedName = (String) predefinedNames.get(fn.name);
+        if (predefinedName != null) {
+            return predefinedName;
+        }
+
 	StringBuffer name = new StringBuffer(fn.name + ":");
 	for (int i = 0; i < fn.argumentTypes.length; ++i) {
 	    name.append("_" + fn.argumentTypes[i]);
@@ -549,10 +904,25 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	Cvc3Prover.print("mapValSymbol: " + symbol.name);
 	assert(symbol.argumentTypes.length == 0);
 	String name = uniqueName(symbol);
+
 	if (symbolMap.containsKey(name)) {
 	    return (Expr) symbolMap.get(name);
 	} else {
-	    Expr var = prover.varExpr(name, mapValSort(symbol.retType));
+            Type type = mapValSort(symbol.retType);
+	    Expr var = null;
+            if (optUseDatatype && type.equals(typeType)) {
+                /*
+                if (!name.startsWith("T_")) {
+                    System.out.println(" mapJavaType: UNEXPECTED TYPE NAME: " + name);
+                }
+                */
+                // datatype: make this a unique class,
+                // thus ensuring it being distinct from all other types
+                var = declareFreshClass(name);
+            } else {
+                // just make it a JavaType
+                var = prover.varExpr(name, type);
+            }
 	    symbolMap.put(name, var);
 	    return var;
 	}
@@ -565,7 +935,64 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	if (symbolMap.containsKey(name)) {
 	    return (Op) symbolMap.get(name);
 	} else {
-	    Op op = prover.createOp(name, mapFunSort(symbol));
+            Op op;
+
+            // drop classLiteral (and implicitly replace it by typeToRef),
+            // for it's doing nothing but providing a hint for triggers,
+            // which doesn't seem to be needed in practice
+            if (!optNonnullelements && symbol == symNonNullElems) {
+                //(DEFPRED (nonnullelements x e)
+                //   (AND (NEQ x null)
+                //	(FORALL (i)
+                //	   (IMPLIES (AND (<= 0 i)
+                //			 (< i (arrayLength x)))
+                //		    (NEQ (select (select e x) i) null)))))
+                Expr x = prover.boundVarExpr("x", "x_" + typeRef.toString(), typeRef);
+                Expr e = prover.boundVarExpr("elems", "elems_" + typeElems.toString(), typeElems);
+                Expr i = prover.boundVarExpr("i", "i_" + typeInt.toString(), typeInt);
+                Expr t0 = prover.funExpr(mapFunSymbol(symArrayLength), x);
+                Expr t1 = prover.readExpr(e, x);
+                Expr t2 = prover.readExpr(t1, i);
+                Expr p0 = prover.leExpr(prover.ratExpr(0), i);
+                Expr p1 = prover.ltExpr(i, t0);
+                Expr p2 = prover.notExpr(prover.eqExpr(t2, cast(escNull.getExpr(), typeValue)));
+                Expr p3 = prover.andExpr (p0, p1);
+                Expr p4 = prover.impliesExpr(p3, p2);
+                Expr p5 = prover.forallExpr(Arrays.asList (new Expr[] { i } ), p4);
+                Expr p6 = prover.notExpr(prover.eqExpr(x, escNull.getExpr()));
+                Expr p7 = prover.andExpr(p6, p5);
+
+                Op lambda = prover.lambdaExpr(Arrays.asList(new Expr[] { x, e }), p7);
+                op = prover.createOp(name, mapFunSort(symbol), lambda.getExpr());
+            }
+
+            else if (false && !optIsallocated && symbol == symIsAllocated) {
+                //(DEFPRED (isAllocated x a0) (< (vAllocTime x) a0))
+                Expr x = prover.boundVarExpr("x", "x_" + typeRef.toString(), typeRef);
+                Expr a0 = prover.boundVarExpr("a0", "a0_" + typeTime.toString(), typeTime);
+                Expr t0 = prover.funExpr(mapFunSymbol(symvAllocTime), x);
+                Expr p0 = prover.ltExpr(t0, a0);
+                Op lambda = prover.lambdaExpr(Arrays.asList(new Expr[] { x, a0 }), p0);
+                op = prover.createOp(name, mapFunSort(symbol), lambda.getExpr());
+            }
+
+            // drop classLiteral (and implicitly replace it by typeToRef),
+            // for it's doing nothing but providing a hint for triggers,
+            // which doesn't seem to be needed in practice
+            else if (!optUseClassLiteral && symbol == symClassLiteral) {
+                /* classLiteral as synonym of typeToRef not effective in patterns
+                Expr v = prover.boundVarExpr("v", "v_" + typeType.toString(), typeType);
+                List vars = Arrays.asList(new Expr[] { v });
+                Expr def = prover.funExpr(typeToRef, v);
+                Op lambda = prover.lambdaExpr(vars, def);
+                op = prover.createOp(name, mapFunSort(symbol), lambda.getExpr());
+                */
+                op = typeToRef;
+            }
+
+            else {
+                op = prover.createOp(name, mapFunSort(symbol));
+            }
             
             // special treatment for builtin transitivity
             if (optBuiltinTrans && symbol == symTypeLE) {
@@ -619,17 +1046,20 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Pred node = transferLabels(p, (Cvc3Pred) buildTrue());
 		assert(!escMap.containsKey(key));
 		escMap.put(key, node);
+		exprMap.put(node.getExpr(), node);
 		assert(escMap.containsKey(key));
 		return node;
 	    } else if (prover.simplify(e).equals(prover.falseExpr())) {
 		Cvc3Pred node = transferLabels(p, (Cvc3Pred) buildFalse());
 		assert(!escMap.containsKey(key));
 		escMap.put(key, node);
+		exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	}
 	// no simplification
 	escMap.put(key, p);
+        exprMap.put(p.getExpr(), p);
 	return p;
     }
 
@@ -1104,6 +1534,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    
 	    Cvc3Any node = (Cvc3Any) wrapExpr(expr, fn.retType);
 	    escMap.put(key, node);
+            exprMap.put(node.getExpr(), node);
 	    return node;
 
 	} catch (cvc3.Cvc3Exception e) {
@@ -1163,23 +1594,26 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	if (optIsallocated && fn == symIsAllocated) {
 	    assert(args.length == 2);
 	    SAny t = buildFnCall(symvAllocTime, new SAny[] { args[0] });
-	    return buildArithPred(predLT, (SInt)t, (SInt)args[1]);
+	    return buildArithPred(predLT, (SValue)t, (SValue)args[1]);
         }
 
 	if (fn == symAllocLE) {
-	    assert(args.length == 2);
-	    return buildArithPred(
-	      predLE,
-	      buildValueConversion(sortRef, sortValue, (SValue)args[0]),
-	      buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+            //assert (false);
+	    //assert(args.length == 2);
+	    //return buildArithPred(
+	    //  predLE,
+	    //  buildValueConversion(sortRef, sortValue, (SValue)args[0]),
+	    //  buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+	    return buildArithPred(predLE, (SValue)args[0], (SValue)args[1]);
 	}
-	//(DEFPRED (lockLT x y) (< x y))
 	if (fn == symAllocLT) {
-	    assert(args.length == 2);
-	    return buildArithPred(
-	      predLT,
-	      buildValueConversion(sortRef, sortValue, (SValue)args[0]),
-	      buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+            //            assert (false);
+	    //assert(args.length == 2);
+	    //return buildArithPred(
+	    //  predLT,
+	    //  buildValueConversion(sortRef, sortValue, (SValue)args[0]),
+	    //  buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+	    return buildArithPred(predLT, (SValue)args[0], (SValue)args[1]);
 	}
 
 	//:TODO: replacing orderings over locks (i.e. sortRef) by
@@ -1188,18 +1622,20 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	//(DEFPRED (lockLE x y) (<= x y))
 	if (fn == symLockLE) {
 	    assert(args.length == 2);
-	    return buildArithPred(
-	      predLE,
-	      buildValueConversion(sortRef, sortValue, (SValue)args[0]),
-	      buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+	    SReal t0 = (SReal) buildFnCall(symLockPrec, new SAny[] { args[0] });
+	    SReal t1 = (SReal) buildFnCall(symLockPrec, new SAny[] { args[1] });
+	    return buildArithPred(predLE, t0, t1);
+            //buildValueConversion(sortRef, sortValue, (SValue)args[0]),
+	    //buildValueConversion(sortRef, sortValue, (SValue)args[1]));
 	}
 	//(DEFPRED (lockLT x y) (< x y))
 	if (fn == symLockLT) {
 	    assert(args.length == 2);
-	    return buildArithPred(
-	      predLT,
-	      buildValueConversion(sortRef, sortValue, (SValue)args[0]),
-	      buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+	    SReal t0 = (SReal) buildFnCall(symLockPrec, new SAny[] { args[0] });
+	    SReal t1 = (SReal) buildFnCall(symLockPrec, new SAny[] { args[1] });
+	    //buildValueConversion(sortRef, sortValue, (SValue)args[0]),
+            //buildValueConversion(sortRef, sortValue, (SValue)args[1]));
+	    return buildArithPred(predLT, t0, t1);
 	}
 	//(DEFPRED (nonnullelements x e)
 	//   (AND (NEQ x null)
@@ -1221,6 +1657,9 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    SPred p3 = buildAnyNE(t2, buildNull());
 	    SPred p4 = buildAnd(new SPred[] { p1, p2 } );
 	    SPred p5 = buildImplies(p4, p3);
+            if (optUseDatatype) {
+                p5 = buildImplies(buildPredCall(symIsRefValue, new SAny[] { t2 }), p5);
+            }
 	    QuantVar[] vars0 = new QuantVar[] { vi };
 	    SPred p6 = buildForAll(vars0, p5, null, null);
 	    SPred p7 = buildAnd(new SPred[] { p0, p6 } );
@@ -1350,6 +1789,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		    //node = transferLabels(omitted, node);
 		}
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1405,6 +1845,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		if (!rewritten) {
 		    List children = new ArrayList();
 		    List childrenExpr = new ArrayList();
+                    // :TODO: consider omitted for label relevance
 		    List omitted = new ArrayList();
 		    for (int i = 0; i < args.length; ++i) {
 			Expr ci = ((Cvc3Pred)args[i]).getExpr();
@@ -1436,6 +1877,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		    //node = transferLabels(omitted, node, false);
 		}
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1496,6 +1938,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		    node.addChild(arg);
 		}
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1520,6 +1963,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    Cvc3Prover.print("  " + terms[i]);
 	}
 
+        /*
 	List key = Arrays.asList(new Object[] { "buildDistinct", terms });
 	if (escMap.containsKey(key)) {
 	    return (Cvc3Pred) escMap.get(key);
@@ -1535,8 +1979,33 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    
 	    Cvc3Pred node = (Cvc3Pred) buildAnd(pairs);
 	    escMap.put(key, node);
+            exprMap.put(node.getExpr(), node);
 	    return node;
-	}
+        }
+        */
+
+        try {
+            // with an inductive datatype all java types are distinct
+            if (optUseDatatype) {
+                if (terms.length > 0
+                    && ((Cvc3Any) terms[0]).getExpr().getType().equals(typeType)
+                    )
+                {
+                    return buildTrue ();
+                }
+            }
+
+
+            List children = new LinkedList();
+            for (int i = 0; i < terms.length; ++i) {
+                children.add(((Cvc3Any) terms[i]).getExpr());
+            }
+            Expr distinct = prover.distinctExpr(children);
+            return (Cvc3Pred) wrapExpr(distinct);
+        } catch (cvc3.Cvc3Exception e) {
+            ErrorSet.fatal(e.toString());
+            throw new Error(e);
+        }
     }
 
     public SPred buildLabel(boolean pos, String name, SPred _pred) {
@@ -1561,6 +2030,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		    node = new Cvc3Label(pos, name, pred);
 		}
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
         } catch (cvc3.Cvc3Exception e) {
@@ -1581,7 +2051,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		return (Cvc3Value) escMap.get(key);
 	    } else {
 		// :TODO: labels not supported within ITE
-		assert(!cond.isLabeled());
+		//assert(!cond.isLabeled());
 
 		Cvc3Value node = null;
 		if (rewrite && cond.getExpr().equals(prover.trueExpr())) {
@@ -1596,6 +2066,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 						       cast(else_part.getExpr(), t)));
 		}
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	    
@@ -1657,6 +2128,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Pred node = new Cvc3Pred(e);
 		node.addChild(body);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1681,6 +2153,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Pred node = new Cvc3Pred(prover.existsExpr(varExprs, body.getExpr()));
 		node.addChild(body);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1702,10 +2175,8 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    if (escMap.containsKey(key)) {
 		return (Cvc3Pred) escMap.get(key);
 	    } else {
-		// :TODO: should need cast only if arg is value -
-		// but is this already automatically done in the vc?
-		Expr e1 = cast(arg1.getExpr(), typeReal); 
-		Expr e2 = cast(arg2.getExpr(), typeReal);
+                Expr e1 = cast(arg1.getExpr(), typeReal); 
+                Expr e2 = cast(arg2.getExpr(), typeReal);
 
 		/* never happens
 		while (sameCast(e1, e2) && isArithType(e1.getChild(0))) {
@@ -1763,6 +2234,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Pred p = (Cvc3Pred) buildArithPred(arithPredTag, arg1, arg2);
 		Cvc3Bool node = (Cvc3Bool) wrapExpr(cast(p.getExpr(), sortBool));
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1812,16 +2284,38 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    case funADD: return prover.plusExpr(e1, e2);
 	    case funSUB: return prover.minusExpr(e1, e2);
 	    case funMUL: return prover.multExpr(e1, e2);
-            case funDIV:
-	    case funASR32:
-	    case funSL32:
-	    case funUSR32:
-	    case funASR64:
-	    case funSL64:
-	    case funUSR64:
+                /*            case funDIV:
+                System.out.println("Unsupported: funDiv");
 		throw new UnsupportedOperationException();
+	    case funASR32:
+                System.out.println("Unsupported: funASR32");
+		throw new UnsupportedOperationException();
+	    case funSL32:
+                System.out.println("Unsupported: funSL32");
+		throw new UnsupportedOperationException();
+	    case funUSR32:
+                System.out.println("Unsupported: funUSR32");
+		throw new UnsupportedOperationException();
+	    case funASR64:
+                System.out.println("Unsupported: funASR64");
+		throw new UnsupportedOperationException();
+	    case funSL64:
+                System.out.println("Unsupported: funSL64");
+		throw new UnsupportedOperationException();
+	    case funUSR64:
+                System.out.println("Unsupported: funUSR64");
+		throw new UnsupportedOperationException();
+*/
+                
+            case funASR32: return prover.funExpr(mapFunSymbol(symASR32), e1, e2);
+            case funSL32: return prover.funExpr(mapFunSymbol(symSL32), e1, e2);
+            case funUSR32: return prover.funExpr(mapFunSymbol(symUSR32), e1, e2);
+            case funASR64: return prover.funExpr(mapFunSymbol(symASR64), e1, e2);
+            case funSL64: return prover.funExpr(mapFunSymbol(symSL64), e1, e2);
+            case funUSR64: return prover.funExpr(mapFunSymbol(symUSR64), e1, e2);
+                
 	    default:
-		ErrorSet.fatal("buildArithFun"); assert(false);
+		//ErrorSet.fatal("buildArithFun"); assert(false);
 		throw new Error("buildArithFun");
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1843,18 +2337,19 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		case funDIV: {
 		    Expr exp1 = ((Cvc3Int) arg1).getExpr();
 		    Expr exp2 = ((Cvc3Int) arg2).getExpr();
-		    result = prover.funExpr(mapFunSymbol(symIntegralDIV), exp1, exp2);
+                    result = prover.funExpr(mapFunSymbol(symIntegralDiv), exp1, exp2);
 		    break; }
 		case funMOD: {
 		    Expr exp1 = ((Cvc3Int) arg1).getExpr();
 		    Expr exp2 = ((Cvc3Int) arg2).getExpr();
-		    result = prover.funExpr(mapFunSymbol(symIntegralMOD), exp1, exp2);
+		    result = prover.funExpr(mapFunSymbol(symIntegralMod), exp1, exp2);
 		    break; }
 		default:
 		    result = buildArithFun(intFunTag, arg1, arg2);
 		}
 		Cvc3Int node = new Cvc3Int(result);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1876,18 +2371,20 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		case funDIV: {
 		    Expr exp1 = ((Cvc3Real) arg1).getExpr();
 		    Expr exp2 = ((Cvc3Real) arg2).getExpr();
-		    result = prover.funExpr(mapFunSymbol(symFloatingDIV), exp1, exp2);
+		    result = prover.funExpr(mapFunSymbol(symFloatingDiv), exp1, exp2);
+		    // :TODO: result = prover.divideExpr(exp1, exp2);
 		    break; }
 		case funMOD: {
 		    Expr exp1 = ((Cvc3Real) arg1).getExpr();
 		    Expr exp2 = ((Cvc3Real) arg2).getExpr();
-		    result = prover.funExpr(mapFunSymbol(symFloatingMOD), exp1, exp2);
+		    result = prover.funExpr(mapFunSymbol(symFloatingMod), exp1, exp2);
 		    break; }
 		default:
 		    result = buildArithFun(realFunTag, arg1, arg2);
 		}
 		Cvc3Real node = new Cvc3Real(result);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1922,6 +2419,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
         } else {
             Cvc3Int node = new Cvc3Int(buildArithFun(intFunTag, arg1));
             escMap.put(key, node);
+            exprMap.put(node.getExpr(), node);
             return node;
         }
     }
@@ -1935,6 +2433,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
         } else {
             Cvc3Real node = new Cvc3Real(buildArithFun(realFunTag, arg1));
             escMap.put(key, node);
+            exprMap.put(node.getExpr(), node);
             return node;
         }
     }
@@ -1960,6 +2459,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    } else {
 		Cvc3Int i = new Cvc3Int(prover.ratExpr(Long.toString(n)));
 		escMap.put(key, i);
+                exprMap.put(i.getExpr(), i);
 		return i;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -1978,6 +2478,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Real r = new Cvc3Real(cast(prover.ratExpr(Double.toString(f)), typeReal));
 		assert(!escMap.containsKey(key));
 		escMap.put(key, r);
+                exprMap.put(r.getExpr(), r);
 		return r;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -2010,6 +2511,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 		Cvc3Value node = (Cvc3Value) wrapExpr(expr);
 		//Cvc3Value node = (Cvc3Value) wrapAnyExpr(expr, map.sort???);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -2038,6 +2540,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 				   cast(idx.getExpr(), tIndex),
 				   cast(val.getExpr(), tValue)));
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -2118,6 +2621,7 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
 	    } else {
 		Cvc3Value node = (Cvc3Value) wrapExpr(cast(value.getExpr(), to), to);
 		escMap.put(key, node);
+                exprMap.put(node.getExpr(), node);
 		return node;
 	    }
 	} catch (cvc3.Cvc3Exception e) {
@@ -2239,7 +2743,216 @@ public class Cvc3NodeBuilder extends EscNodeBuilder {
         return to;
     }
 
-    public Cvc3Pred transferLabels(Cvc3Pred from, Cvc3Pred to) throws Cvc3Exception  {
+    public Cvc3Pred transferLabels(Cvc3Pred from, Cvc3Pred to) throws Cvc3Exception {
         return transferLabels(from, to, false);
     }
+
+
+
+    // when using inductive datatypes,
+    // guard all occurrences of valueToX(elems[a][i])
+    // by is_javaX AND
+    class Pair {
+        Pair(Object fst, Object snd) {
+            this.fst = fst;
+            this.snd = snd;
+        }
+        public Object fst;
+        public Object snd;
+    }
+
+
+
+    void getUnboundQuantifiedVars(List vars, Expr expr) throws Cvc3Exception {
+        if (expr.isBoundVar()) {
+            vars.add(expr);
+        }
+
+        if (expr.isClosure()) {
+            getUnboundQuantifiedVars(vars, expr.getBody());
+            List bound = expr.getVars();
+            Iterator i = bound.iterator();
+            while (i.hasNext()) {
+                vars.remove(i.next());
+            }
+        } else {
+            for (int i = 0; i < expr.arity(); ++i) {
+                getUnboundQuantifiedVars(vars, expr.getChild(i));
+            }
+        }
+        
+    }
+
+    protected Expr guardTraverse(Expr expr_, HashMap cache, List guards) throws Cvc3Exception {
+        Expr expr = expr_;
+        if (cache.containsKey(expr)) {
+            return (Expr) cache.get(expr);
+        }
+
+        if (expr.isTerm()) {
+            cache.put(expr, expr);
+            return expr;
+        }
+
+        // traverse subexpressions
+        if (expr.isClosure()) {
+            Expr body = guardTraverse(expr.getBody(), cache, guards);
+            if (!body.equals(expr.getBody())) {
+                if (expr.isExists()) {
+                    expr = prover.existsExpr(expr.getVars(), body);
+                } else if (expr.isForall()) {
+                    expr = prover.forallExpr(expr.getVars(), body);
+                } else if (expr.isLambda()) {
+                    expr = prover.funExpr(expr.getOp(), body);
+                } else {
+                    assert (false);
+                }
+
+                // must use EscJava term structure to get labels right
+                Cvc3Pred pred = new Cvc3Pred(expr);
+                Cvc3Term child = (Cvc3Term) exprMap.get(body);
+                assert (child != null);
+                if (child instanceof Cvc3Pred) {
+                    pred.addChild((Cvc3Pred) child);
+                }
+                exprMap.put(pred.getExpr(), pred);
+            }
+            
+        } else {
+            //if (expr.isBoolConnective() || expr.isApply()) {
+            List children = new LinkedList();
+            boolean changed = false;
+            for (int i = 0; i < expr.arity(); ++i) {
+                Expr guarded = guardTraverse(expr.getChild(i), cache, guards);
+                children.add(guarded);
+                changed = changed || !guarded.equals(expr.getChild(i));
+            }
+            if (changed) {
+                //System.out.println("FUN:");
+                //System.out.println("EXPR: " + expr.toString());
+
+                expr = prover.funExpr(expr.getOp(), children);
+
+                // must use EscJava term structure to get labels right
+                Cvc3Pred pred = new Cvc3Pred(expr);
+                Iterator i = children.iterator();
+                while (i.hasNext()) {
+                    Cvc3Term child = (Cvc3Term) exprMap.get(i.next());
+                    assert (child != null);
+                    if (child instanceof Cvc3Pred) {
+                        pred.addChild((Cvc3Pred) child);
+                    }
+                }
+                exprMap.put(pred.getExpr(), pred);
+            }
+        }
+
+        // check if expression needs to be guarded
+	if (expr.isApply()) {
+            Op op = expr.getOp();
+            if (op.equals(valueToBool) || op.equals(valueToInt)
+                || op.equals(valueToReal) || op.equals(valueToRef)) {
+
+                // ? elems[a][i]
+                assert (expr.arity() == 1);
+                Expr child = expr.getChild(0);
+                //System.out.println(child);
+                if (child.isRead()) {
+                    assert (expr.arity() == 1);
+                    child = child.getChild(0);
+                    //System.out.println(child);
+                    if (child.isRead()) {
+                        assert (expr.arity() == 1);
+                        if (child.getChild(0).getType().equals(typeElems)) {
+                            List unboundQuantifiedVars = new LinkedList();
+                            getUnboundQuantifiedVars(unboundQuantifiedVars, expr);
+
+                            String tester = null;
+                            if (op.equals(valueToBool)) {
+                                tester = "javaBool";
+                            } else if (op.equals(valueToInt)) {
+                                tester = "javaInt";
+                            } else if (op.equals(valueToReal)) {
+                                tester = "javaReal";
+                            } else if (op.equals(valueToRef)) {
+                                tester = "javaRef";
+                            }
+
+                            Expr guard = prover.datatypeTestExpr(tester, expr.getChild(0));
+
+                            guards.add(new Pair(unboundQuantifiedVars, guard));
+                        }
+                    }
+                }
+            }
+        }
+
+        // add guard
+        if (expr.isQuantifier()) {
+            List boundVars = expr.getVars();
+            Iterator i = boundVars.iterator();
+            while (i.hasNext()) {
+                Expr v = (Expr) i.next();
+
+                Iterator j = guards.iterator();
+                while (j.hasNext()) {
+                    Pair guard_pair = (Pair) j.next();
+                    List vars = (List) guard_pair.fst;
+                    if (vars.contains(v)) {
+                        guards.remove(guard_pair);
+
+                        // must use EscJava term structure to get labels right
+                        Cvc3Pred guard = (Cvc3Pred) exprMap.get((Expr)guard_pair.snd);
+                        assert (guard != null);
+                        Cvc3Pred body = (Cvc3Pred) exprMap.get(expr.getBody());
+                        assert (body != null);
+                        Cvc3Pred guarded = (Cvc3Pred) buildImplies(guard, body);
+
+                        if (expr.isExists()) {
+                            expr = prover.existsExpr(boundVars, guarded.getExpr());
+                        } else if (expr.isForall()) {
+                            expr = prover.forallExpr(boundVars, guarded.getExpr());
+                        } else {
+                            assert (false);
+                        }
+
+                        Cvc3Pred pred = new Cvc3Pred(expr);
+                        pred.addChild(guarded);
+                        exprMap.put(pred.getExpr(), pred);
+                    }
+                }
+            }
+        }
+
+        cache.put(expr, expr);
+        return expr;
+    }
+
+
+    // when using inductive datatypes,
+    // guard all occurrences of valueToX(elems[a][i])
+    // by is_javaX AND
+    public Cvc3Pred guard(Cvc3Pred pred) throws Cvc3Exception {
+        if (!optUseDatatype) {
+            return pred;
+        }
+
+        Expr expr = pred.getExpr();
+        HashMap cache = new HashMap();
+        List guards = new LinkedList();
+        Cvc3Pred guarded = (Cvc3Pred) exprMap.get(guardTraverse(expr, cache, guards));
+        assert (guarded != null);
+
+        Iterator i = guards.iterator();
+        while (false && i.hasNext()) {
+            Pair guard_pair = (Pair) i.next();
+            assert (((List)guard_pair.fst).isEmpty());
+            Cvc3Pred guard = (Cvc3Pred) exprMap.get((Expr)guard_pair.snd);
+            assert (guard != null);
+            guarded = (Cvc3Pred) buildImplies(guard, guarded);
+        }
+
+        return guarded;
+    }
+
 }
