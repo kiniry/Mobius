@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.channels.FileChannel;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -45,6 +46,9 @@ public class SimplifyProver extends SortedProver
 
     // dump query to file with this extension
     private String optDumpExt;
+    // when true, append the current time stamp to the dumped file
+    // (before the extension)
+    private boolean optDumpUnique = false;
     // dump all queries to this file
     private String dumpLog;
     // stream for dumpLog
@@ -80,6 +84,14 @@ public class SimplifyProver extends SortedProver
 	}
 
 	public SortedProverResponse setProverResourceFlags(Properties properties)	{
+            try {
+                optDumpUnique = Boolean.valueOf(properties.getProperty("DumpUnique",
+                                                                          String.valueOf(optDumpUnique))).booleanValue();
+            } catch (NumberFormatException e) {
+                ErrorSet.fatal("Invalid input for option " + "DumpUnique" + " : " + e);
+                return fail;
+            }
+
 	    optDumpExt = properties.getProperty("DumpExt", optDumpExt);
 	    
 	    return ok;
@@ -88,6 +100,10 @@ public class SimplifyProver extends SortedProver
 	public SortedProverResponse sendBackgroundPredicate()	{
 		backgroundPredicateSent = true;
 		backPred.genUnivBackPred(simpl.out());
+                if (optDumpExt != "") {
+                    getDumpStream().flush();
+                    backPred.genUnivBackPred(dumpStream);
+                }
     try {
   		simpl.sendCommand("");
 	  	return ok;
@@ -196,7 +212,15 @@ public class SimplifyProver extends SortedProver
     }
 
     private String getDumpFile(Properties properties) {
-	return quote(properties.getProperty("ProblemName") + "." + optDumpExt);
+        String unique = "";
+
+        if (optDumpUnique) {
+            unique = "_" + new Date().getTime();
+        }
+
+        String name = quote(properties.getProperty("ProblemName") + unique + "." + optDumpExt);
+
+        return name;
     }
 
     public PrintStream getDumpStream() {
