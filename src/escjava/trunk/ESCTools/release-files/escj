@@ -182,7 +182,7 @@ fi
 ############ Setting CVC3, if necessary
 
 if [ -z "$CVC3_LIB" ]; then
-  export CVC3_LIB=${ESCTOOLS_ROOT}/Utils/libcvc3.jar
+  export CVC3_LIB=${ESCTOOLS_ROOT}/Utils/libcvc3-20090718.jar
   warn "Guessing CVC3_LIB=$CVC3_lIB"
 fi
 
