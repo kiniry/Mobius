@@ -26,7 +26,6 @@ import java.util.GregorianCalendar;
 
 import org.antlr.runtime.RecognitionException;
 import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.stringtemplate.StringTemplateGroup;
 
 /**
  * 
@@ -130,9 +129,9 @@ public final class Printer {
   }
 
   private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final Print printingOption, final PrintingTracker printingTracker) throws RecognitionException {
-    try {
-      StringTemplateGroup templates = new StringTemplateGroup(stFile);
-      stFile.close();
+//    try {
+//      StringTemplateGroup templates = new StringTemplateGroup(stFile);
+//      stFile.close();
       //TODO fix!
       return "";
 //      CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
@@ -145,10 +144,10 @@ public final class Printer {
 //      StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
 //      return output.toString();
 
-    } catch (IOException ioe) {
-      System.out.println("An error occurred whilst reading templateFile " + stFile);
-      return null;
-    }
+//    } catch (IOException ioe) {
+//      System.out.println("An error occurred whilst reading templateFile " + stFile);
+//      return null;
+//    }
   }
 
   public static String printGeneratedClassDictionaryToString(final ParsingTracker tracker) {

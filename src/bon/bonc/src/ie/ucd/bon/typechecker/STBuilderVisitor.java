@@ -58,9 +58,7 @@ import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
 
@@ -118,20 +116,25 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
         st.classClusterGraph.put(name.getName(), context.clusterStack.peek());
       }
       
-      Map<String,FormalGeneric> genericIdsMap = new HashMap<String,FormalGeneric>();
-      for (FormalGeneric generic : generics) {
-        FormalGeneric other = genericIdsMap.get(generic.getIdentifier());
-        if (other == null) {
-          genericIdsMap.put(generic.getIdentifier(), generic);
-        } else {
-          problems.addProblem(new DuplicateFormalGenericNameError(generic.getLocation(), generic.getIdentifier()));
-        }
-      }
+      st.genericsMap.put(context.clazz, generics);
+      
+      visitAll(generics);
       
       context.clazz = node;
       visitNode(classInterface);
       context.clazz = null;      
 
+    }
+  }
+
+  @Override
+  public void visitFormalGeneric(FormalGeneric node, String identifier,
+      Type type, SourceLocation loc) {
+    FormalGeneric other = st.genericNamesMap.get(context.clazz, identifier);
+    if (other == null) {
+      st.genericNamesMap.put(context.clazz, identifier, node);
+    } else {
+      problems.addProblem(new DuplicateFormalGenericNameError(loc, identifier));
     }
   }
 
@@ -295,174 +298,7 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
     st.clientRelations.add(node);
   }
 
-  @Override
-  public void visitContractClause(ContractClause node,
-      List<Expression> preconditions, List<Expression> postconditions,
-      SourceLocation loc) {
-    visitAll(preconditions);
-    visitAll(postconditions);
-  }
 
-  @Override
-  public void visitIntegerConstant(IntegerConstant node, Integer value,
-      SourceLocation loc) {
-    st.typeMap.put(node, BONType.mk("INTEGER"));
-  }
-
-  @Override
-  public void visitKeywordConstant(KeywordConstant node, Constant constant,
-      SourceLocation loc) {
-    switch(constant) {
-    case CURRENT:
-      //TODO node has type of current class
-      break;
-    case RESULT:
-      //TODO Check inside postcondition - done by typechecker
-      break;
-    case VOID:
-      //TODO type void for this node
-      break;
-    }
-  }
-
-  @Override
-  public void visitRealConstant(RealConstant node, Double value, SourceLocation loc) {
-    st.typeMap.put(node, BONType.mk("REAL"));
-  }
-
-  @Override
-  public void visitCharacterConstant(CharacterConstant node, Character value, SourceLocation loc) {
-    st.typeMap.put(node, BONType.mk("CHARACTER"));
-  }
-
-  @Override
-  public void visitQuantification(Quantification node, Quantifier quantifier,
-      List<VariableRange> variableRanges, Expression restriction,
-      Expression proposition, SourceLocation loc) {
-    //TODO has type bool
-  }
-
-  @Override
-  public void visitBooleanConstant(BooleanConstant node, Boolean value,
-      SourceLocation loc) {
-    st.typeMap.put(node, BONType.mk("BOOLEAN"));
-  }
-
-  @Override
-  public void visitBinaryExp(BinaryExp node, Op op, Expression left,
-      Expression right, SourceLocation loc) {
-    visitNode(left);
-    visitNode(right);
-  
-    switch(op) {
-    case ADD:
-    case POW:
-    case SUB:
-    case MUL:
-      st.typeMap.put(node, arithmeticExpressionType(left, right));
-      break;
-      
-    case DIV:
-      st.typeMap.put(node, BONType.mk("REAL"));
-      break;
-    
-    case MOD:
-    case INTDIV:
-      st.typeMap.put(node, BONType.mk("INTEGER"));
-      break;
-    
-    case HASTYPE:
-    case MEMBEROF:
-    case NOTMEMBEROF:
-      st.typeMap.put(node, BONType.mk("BOOLEAN"));
-      break;
-      
-    case AND:
-    case OR:
-    case EQ:  
-    case LE:
-    case NEQ:
-    case LT:
-    case XOR:
-    case GT:
-    case GE:
-    case EQUIV:
-    case IMPLIES:
-      st.typeMap.put(node, BONType.mk("BOOLEAN"));
-      break;  
-    }
-    
-  }
-  
-  private Type arithmeticExpressionType(Expression left, Expression right) {
-    Type leftType = st.typeMap.get(left);
-    Type rightType = st.typeMap.get(right);
-    Type intType = BONType.mk("INTEGER");
-    Type realType = BONType.mk("REAL");
-    
-    boolean isLeftInt = st.isSubtypeOrEqual(leftType, intType);
-    boolean isRightInt = st.isSubtypeOrEqual(rightType, intType);
-    boolean isLeftReal = st.isSubtypeOrEqual(leftType, realType);
-    boolean isRightReal = st.isSubtypeOrEqual(rightType, realType);
-    
-    if (!(isLeftInt || isLeftReal) || !(isRightInt || isRightReal)) {
-      //Typing error, will be picked up in type checker
-      return null;
-    } else {
-      if (isLeftReal || isRightReal) {
-        return realType;
-      } else {
-        return intType;
-      }
-    }
-  }
-
-  @Override
-  public void visitUnaryExp(UnaryExp node, ie.ucd.bon.ast.UnaryExp.Op op,
-      Expression expression, SourceLocation loc) {
-    visitNode(expression);
-  
-    switch(op) {
-    case ADD:
-    case SUB:
-      //It's the type contained within. Typechecker will report if it is not an INTEGER or REAL
-      st.typeMap.put(node, st.typeMap.get(expression));
-      break;
-    case DELTA:
-      //No type
-      break;
-    case OLD:
-      st.typeMap.put(node, st.typeMap.get(expression));
-      break;
-    case NOT:  
-      st.typeMap.put(node, BONType.mk("BOOLEAN"));
-      break;
-    }
-  }
-  
-  @Override
-  public void visitCallExp(CallExp node, Expression qualifier,
-      List<UnqualifiedCall> callChain, SourceLocation loc) {
-    visitNode(qualifier);
-    
-    if (qualifier == null) {
-      context.callQualifier = BONType.mk(context.clazz.getName().getName());
-    } else {
-      context.callQualifier = st.typeMap.get(qualifier);
-    }
-    for (UnqualifiedCall call : callChain) {
-      visitNode(call);
-      context.callQualifier = st.typeMap.get(call);
-    }
-  }
-
-  @Override
-  public void visitUnqualifiedCall(UnqualifiedCall node, String id,
-      List<Expression> args, SourceLocation loc) {
-    //TODO, we need feature types in a previous pass...
-    Type qualifier = context.callQualifier;
-    //Type is the type of feature id for the qualifier type
-  }
 
   private void indexing(AstNode node, Indexing indexing) {
     if (indexing != null) {

@@ -9,7 +9,8 @@ import ie.ucd.bon.source.SourceLocation;
 
 public abstract class TypeCheckingError extends BONError {
   
-  public TypeCheckingError(SourceLocation loc) {
-    super(loc);
+  public TypeCheckingError(SourceLocation sourceLoc) {
+    super(sourceLoc);
   }
+  
 }

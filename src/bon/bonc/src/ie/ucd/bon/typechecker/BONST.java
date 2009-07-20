@@ -8,6 +8,7 @@ import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureSpecification;
+import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.graph.Graph;
@@ -30,6 +31,9 @@ public class BONST {
   
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
   public final Map<FeatureSpecification,List<ClassName>> selectiveExportMap = new HashMap<FeatureSpecification,List<ClassName>>();
+  
+  public final Map<Clazz,List<FormalGeneric>> genericsMap = new HashMap<Clazz,List<FormalGeneric>>();
+  public final TwoDimensionalMap<Clazz, String, FormalGeneric> genericNamesMap = new TwoDimensionalMap<Clazz, String, FormalGeneric>();
   
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
   public final Collection<ClientRelation> clientRelations = new ArrayList<ClientRelation>();  
