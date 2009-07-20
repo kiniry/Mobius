@@ -98,21 +98,10 @@ errors and reruns STB to double-check. A similar approach is used
 for type-checking.
 
 
-[17 July 2009] [TODO] I started rewriting the Main class because
-(1) there was no clear boundary between its responsibilities and
-those of the VcGenerator class and (2) the code for selecting the
-stages to apply was written once for the case when verification
-was not requested and once for the case when verification was
-requested. It seems much better to have one place where it is
-clear that the main stages of processing a Boogie file are (1)
-parsing and typechecking, (2) transforming boogie, (3) vcgen, (4)
-transforming vc, and (5) asking the theorem prover. This led to
-the need of having a stronger interface for Boogie transformers:
-there should be a method that either returns the transformed
-program or throws an exception that wraps a list of errors.
-
-
-
+[20 July 2009] Debug output is printed (if it's printed) to files
+after each phase. This way the output is more detailed and, being
+organized in directories and files, it's easy to run tools like
+dot on them directly.
 
 
 vim:spell:fdm=manual:

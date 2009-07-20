@@ -46,8 +46,6 @@ import freeboogie.tc.TcInterface;
 public class CallDesugarer extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
-  private TcInterface tc;
-
   private HashMap<VariableDecl, Expr> toSubstitute;
   private ArrayList<Expr> preconditions;
   private ArrayList<Expr> postconditions;
@@ -60,21 +58,6 @@ public class CallDesugarer extends Transformer {
     postconditions = new ArrayList<Expr>(23);
     havocs = new ArrayList<Identifiers>(23);
     equivCmds = new ArrayList<Command>(23);
-  }
-
-  public Declaration process(Declaration ast, TcInterface tc) {
-    this.tc = tc;
-    ast = (Declaration)ast.eval(this);
-    List<FbError> errors = tc.process(ast);
-    if (!errors.isEmpty()) {
-      FbError.reportAll(errors);
-      PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
-      ast.eval(pp);
-      pw.flush();
-      Err.internal("CallDesugarer produced invalid Boogie.");
-    }
-    return tc.getAST();
   }
 
   // === transformer methods ===

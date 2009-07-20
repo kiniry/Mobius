@@ -9,9 +9,7 @@ NAME::
 ARGS::
   Files :{} :{file-list} :[mustExist,canBeDir="false",between=""]
     :"Configure the list of files to check."
-  Verify :{"--verify","-v"}
-    :[allowArg="false"]
-    :"Verifies that each implementation is correct."
+
   SeriesParallelCheck :{"--series-parallel-check", "-spc"}
     :[allowArg="false"]
     :"Checks if the flowgraphs of the given implementations are 
@@ -41,6 +39,20 @@ ARGS::
       by dot (from graphviz). You will need to split the output into
       different files yourself (if there was more than one implementation
       in the input)."
+  
+  SkipHavocLoopVariables :{"--skip-havoc", "-sh"} :[allowArg="false"]
+    :"Do not havoc variables changed in a loop upon entering the loop.
+      This is unsound if loops are cut later."
+  SkipAskProver :{"--skip-prover", "-sp"} :[allowArg="false"]
+    :"Do not ask the prover if the VC is valid."
+  RunToHavocLoopVariables :{"--do-havoc", "-dh"} :[allowArg="false"]
+    :"Skip all the phases after havocking loop variables."
+  RunToCutLoops :{"--do-cut-loops", "--do-cut", "-dc"} : [allowArg="false"]
+    :"Skip all the phases after cutting backedges in the flowgraph."
+  CheckOnly :{"--check-only"}: {string}
+    :"Check only the procedures whose name match the given regular
+      expression."
+
   HavocLoopVariables :{"--havoc-loop-variables", "-hlv"}
     :[allowArg="false"]
     :"Havocs variables modified by a loop on entering that loop. If
@@ -67,21 +79,22 @@ ARGS::
     :[allowArg="false"]
     :"Transform preconditions into assumptions and postconditions
       into assertions. (The typechecker takes care of modifies clauses.)"
-  Passivate :{"--passivate"} :{enum}
-    :[choices="NONE,OPTIM,ESCJAVA", default="NONE"]
-    :"Transform assignments into assumptions. Implies --cut-loops."
   DesugarMaps :{"--desugar-maps", "-dm"}
     :[allowArg="false"]
     :"Transform map accesses into explicit uses of the functions
       'select' and 'update', which are added to the program."
-  VcMethod :{"--vc-method", "-vm"} :{enum}
-    :[choices="wp(WP),wpno(WPNO),sp(SP)", default="wp"]
-    :"Configure which method should be used for building a VC from the
-      transformed Boogie."
   DontUnshareVc :{"--dont-unshare-vc", "-duv"}
     :[allowArg="false"]
     :"This option will print common parts of the VC multiple size,
       thereby possibly resulting in exponential size."
+
+  Passivate :{"--passivate"} :{enum}
+    :[choices="optim(OPTIM),escjava(ESCJAVA)", default="optim"]
+    :"Transform assignments into assumptions. Implies --cut-loops."
+  VcMethod :{"--vc-method", "-vm"} :{enum}
+    :[choices="wp(WP),wpno(WPNO),sp(SP)", default="wp"]
+    :"Configure which method should be used for building a VC from the
+      transformed Boogie."
   Prover :{"--prover", "-p"} :{enum} 
     :[choices="simplify(SIMPLIFY),yesman(YESMAN)", default="simplify"]
     :"Configure which prover to use. The prover 'yes' can be useful
@@ -137,7 +150,7 @@ WHERE::
     CutLoops |
     DesugarMaps |
     UnshareVc;
-  ActionOption: Verify | SeriesParallelCheck;
+  ActionOption: SeriesParallelCheck;
   ConfigOption:
     BackwardCompatible |
     BoogieVersion |
@@ -154,13 +167,3 @@ OVERRIDES::
     DesugarHavoc := {true};
   {$(CutLoops?)} -> 
     HavocLoopVariables := {true};
-  {$(Verify?)} ->  // stuff that can't be turned off when verifying
-    HavocLoopVariables := {true},
-    CutLoops := {true},
-    DesugarCalls := {true},
-    DesugarHavoc := {true},
-    DesugarSpecs := {true},
-    DesugarMaps := {true};
-
-  {$(Verify?) && $(Passivate).toLowerCase().equals("none") } ->
-    Passivate := {"optim"};

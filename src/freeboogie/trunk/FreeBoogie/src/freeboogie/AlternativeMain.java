@@ -3,7 +3,9 @@ package freeboogie;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import genericutils.Logger;
 import ie.ucd.clops.runtime.options.InvalidOptionValueException;
 import org.antlr.runtime.ANTLRFileStream;
@@ -11,11 +13,17 @@ import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.RecognitionException;
 
 import freeboogie.ast.Program;
+import freeboogie.ast.Transformer;
+import freeboogie.backend.ProverException;
 import freeboogie.cli.FbCliOptionsInterface;
 import freeboogie.cli.FbCliParser;
 import freeboogie.cli.FbCliUtil;
 import freeboogie.parser.FbLexer;
 import freeboogie.parser.FbParser;
+import freeboogie.tc.TcInterface;
+import freeboogie.tc.ForgivingTc;
+import freeboogie.tc.TypeChecker;
+import freeboogie.vcgen.*;
 
 import static freeboogie.cli.FbCliOptionsInterface.*;
 import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
@@ -26,7 +34,7 @@ import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
   data for various stages is one of: (1) a stream in the
   Boogie language format, (2) AST for representing Boogie, (3)
   s-expressions, (4) list of errors. The parser takes (1) as
-  input and prouces (2). Then there are a few stages that take
+  input and produces (2). Then there are a few stages that take
   (2) as input and produce (2). The VC generation phase takes
   (2) as input and produces (3) as output. There are then a
   few stages that take (3) as input an produce (3) as output.
@@ -41,6 +49,15 @@ public class AlternativeMain {
   private Logger<ReportOn, ReportLevel> out;
   private Logger<LogCategories, LogLevel> log;
   private Program boogie;
+
+  private TcInterface tc;
+  private HavocMaker havocMaker;
+  private LoopCutter loopCutter;
+  private CallDesugarer callDesugarer;
+  private HavocDesugarer havocDesugarer;
+  private SpecDesugarer specDesugarer;
+  private Passivator passivator;
+  private VcGenerator vcgen;
 
   /** Process the command line and call {@code run()}. */
   public static void main(String[] args) throws Exception {
@@ -61,16 +78,18 @@ public class AlternativeMain {
     initStages();
 
     if (opt.getFiles().isEmpty())
-      out.say(ReportOn.MAIN, ReportLevel.NORMAL, "Nothing to do. Try --help.");
+      normal("Nothing to do. Try --help.");
     for (File f : opt.getFiles()) {
-      out.say(ReportOn.MAIN, ReportLevel.VERBOSE, "Processing " + f.getPath());
+      verbose("Processing " + f.getPath());
       parse(f);
       if (boogie.ast == null || !typecheck())
         continue; // parse error or empty input
       transformBoogie();
-      vcgen();
-      transformVc();
-      askProver();
+      try {
+        vcgen.process(boogie.ast, tc); // process implementations one by one
+      } catch (ProverException e) {
+        assert false: "todo: handle in vcgenerator";
+      }
     }
   }
 
@@ -82,10 +101,7 @@ public class AlternativeMain {
     for (ReportOn c : opt.getReportOn()) out.enable(c);
     try { log.sink(opt.getLogFile()); }
     catch (IOException e) { 
-      out.say(
-        ReportOn.MAIN,
-        ReportLevel.VERBOSE, 
-        "Can't write to log file " + opt.getLogFile() + ".");
+      verbose("Can't write to log file " + opt.getLogFile() + ".");
     }
     log.level(opt.getLogLevel());
     for (LogCategories c : opt.getLogCategories()) log.enable(c);
@@ -93,7 +109,10 @@ public class AlternativeMain {
   }
 
   private void initStages() {
-    assert false : "todo";
+    switch (opt.getBoogieVersion()) {
+      case ONE: tc = new ForgivingTc(); break;
+      default: tc = new TypeChecker(); break;
+    }
   }
 
   private void parse(File f) {
@@ -104,39 +123,37 @@ public class AlternativeMain {
       parser.fileName = f.getName();
       boogie = new Program(parser.program(), parser.fileName);
     } catch (IOException e) {
-      out.say(
-        ReportOn.MAIN,
-        ReportLevel.NORMAL,
-        "Can't read " + f.getName() + ": " + e.getMessage());
+      normal("Can't read " + f.getName() + ": " + e.getMessage());
       boogie = new Program(null, null);
     } catch (RecognitionException e) {
-      out.say(
-        ReportOn.MAIN,
-        ReportLevel.VERBOSE,
-        "Can't parse " + f.getName() + ": " + e.getMessage());
+      verbose("Can't parse " + f.getName() + ": " + e.getMessage());
       boogie = new Program(null, null);
     }
   }
 
   private boolean typecheck() {
-    assert false : "todo";
+    try {
+      boogie = tc.process(boogie);
+    } catch (ErrorsFoundException e) {
+      e.report();
+      return true;
+    }
     return false;
   }
 
   private void transformBoogie() {
+    List<Transformer> phases = Lists.newArrayList();
+    boogie = havocMaker.process(boogie, tc);
+
     assert false : "todo";
   }
 
-  private void vcgen() {
-    assert false : "todo";
+  private void normal(String s) {
+    out.say(ReportOn.MAIN, ReportLevel.NORMAL, s);
   }
 
-  private void transformVc() {
-    assert false : "todo";
-  }
-
-  private void askProver() {
-    assert false : "todo";
+  private void verbose(String s) {
+    out.say(ReportOn.MAIN, ReportLevel.VERBOSE, s);
   }
 
   public static void badUsage() {

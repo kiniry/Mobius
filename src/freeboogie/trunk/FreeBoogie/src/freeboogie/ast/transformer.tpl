@@ -8,6 +8,9 @@ import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import freeboogie.tc.TcInterface;
+import freeboogie.tc.TypeUtils;
+
 /**
   Intended to be used as a base class by visitors that either only inspect
   the AST or transform the AST. If you want to inspect nodes of type X into
@@ -22,6 +25,17 @@ import java.util.Deque;
 public class Transformer extends Evaluator<Ast> {
   private final Ast NULL = AtomId.mk("<NULL>",null);
   private Deque<Ast> result = new ArrayDeque<Ast>();
+  protected TcInterface tc;
+
+  public Program process(Program p, TcInterface tc) {
+    return new Program(process(p.ast, tc), p.fileName);
+  }
+
+  public Declaration process(Declaration ast, TcInterface tc) {
+    this.tc = tc;
+    return TypeUtils.internalTypecheck((Declaration)ast.eval(this), tc);
+  }
+
 \normal_classes{
 
   public void see(

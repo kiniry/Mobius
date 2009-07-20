@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import genericutils.SimpleGraph;
 
+import freeboogie.ErrorsFoundException;
 import freeboogie.ast.*;
 
 //DBG import java.io.PrintWriter;
@@ -36,6 +37,12 @@ public class ForgivingTc extends Transformer implements TcInterface {
   }
 
   @Override public Declaration getAST() { return tc.getAST(); }
+
+  @Override public Program process(Program p) throws ErrorsFoundException {
+    List<FbError> errors = process(p.ast);
+    if (!errors.isEmpty()) throw new ErrorsFoundException(errors);
+    return new Program(getAST(), p.fileName);
+  }
 
   @Override
   public List<FbError> process(Declaration ast) {

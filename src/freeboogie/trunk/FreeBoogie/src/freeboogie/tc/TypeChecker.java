@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import genericutils.*;
 
+import freeboogie.ErrorsFoundException;
 import freeboogie.ast.*;
 import freeboogie.astutil.TreeChecker;
 
@@ -110,6 +111,12 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
     return implicitSpec;
   }
   
+  // TODO: This appears verbatim in ForgivingTc.
+  @Override public Program process(Program p) throws ErrorsFoundException {
+    List<FbError> errors = process(p.ast);
+    if (!errors.isEmpty()) throw new ErrorsFoundException(errors);
+    return new Program(getAST(), p.fileName);
+  }
 
   @Override
   public List<FbError> process(Declaration ast) {

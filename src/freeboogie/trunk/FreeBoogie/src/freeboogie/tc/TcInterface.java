@@ -1,8 +1,11 @@
 package freeboogie.tc;
 
 import java.util.*;
-import freeboogie.ast.*;
+
 import genericutils.SimpleGraph;
+
+import freeboogie.ErrorsFoundException;
+import freeboogie.ast.*;
 
 /**
  * Interface for type-checkers.
@@ -26,6 +29,7 @@ public interface TcInterface {
    */
   List<FbError> process(Declaration ast);
 
+  Program process(Program p) throws ErrorsFoundException;
 
   /**
    * Returns the flow graph of {@code impl}.

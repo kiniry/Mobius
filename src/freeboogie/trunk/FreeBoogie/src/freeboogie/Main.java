@@ -233,6 +233,7 @@ public class Main {
 
   public void run(String[] args) 
   throws InvalidOptionPropertyValueException, AutomatonException {
+/*
     // parse command line arguments
     FbCliParser cliParser = new FbCliParser();
     try { if (!cliParser.parse(args)) badCli(); }
@@ -327,5 +328,6 @@ public class Main {
         pwriter.flush();
       }
     }
+*/
   }
 }

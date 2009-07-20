@@ -39,10 +39,10 @@ public class HavocMaker extends Transformer {
   private ArrayList<Block> dfs2order = new ArrayList<Block>();
 
   private SimpleGraph<Block> flowGraph;
-  private TcInterface tc;
 
   private ReadWriteSetFinder rw;
 
+  @Override
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
     rw = new ReadWriteSetFinder(tc.getST());

@@ -47,7 +47,6 @@ import freeboogie.tc.*;
 public class SpecDesugarer extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
-  private TcInterface tc;
   private UsageToDefMap<Implementation, Procedure> implProc;
   private UsageToDefMap<VariableDecl, VariableDecl> paramMap;
   private Map<VariableDecl, AtomId> toSubstitute;
@@ -63,23 +62,12 @@ public class SpecDesugarer extends Transformer {
   }
 
   /** Transforms the {@code ast} and updates the typechecker. */
+  @Override
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc; 
     implProc = tc.getImplProc();
     paramMap = tc.getParamMap();
-
-    ast = (Declaration)ast.eval(this);
-    log.info("Start to typecheck after spec desugaring.");
-    List<FbError> errors = tc.process(ast);
-    if (!errors.isEmpty()) {
-      FbError.reportAll(errors);
-      PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
-      ast.eval(pp);
-      pw.flush();
-      Err.internal("SpecDesugarer produced invalid Boogie.");
-    }
-    return tc.getAST();
+    return TypeUtils.internalTypecheck(ast, tc);
   }
 
   @Override

@@ -16,7 +16,6 @@ import freeboogie.tc.TypeUtils;
 public class LoopCutter extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
-  private TcInterface tc;
   private SimpleGraph<Block> currentFG;
 
   private HashSet<Block> seen, done;
@@ -28,11 +27,6 @@ public class LoopCutter extends Transformer {
     seen = new HashSet<Block>(1009);
     done = new HashSet<Block>(1009);
     toRemove = new HashSet<Pair<Block, String>>(1009);
-  }
-
-  public Declaration process(Declaration ast, TcInterface tc) {
-    this.tc = tc;
-    return TypeUtils.internalTypecheck((Declaration)ast.eval(this), tc);
   }
 
   // === transformer methods ===

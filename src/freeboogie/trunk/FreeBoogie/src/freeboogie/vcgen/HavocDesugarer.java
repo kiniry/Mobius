@@ -45,8 +45,6 @@ import freeboogie.tc.TypeUtils;
 public class HavocDesugarer extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
-  private TcInterface tc;
-
   private ArrayList<Command> equivCmds;
   private HashMap<VariableDecl, AtomId> toSubstitute;
   private Declaration newVars;
@@ -54,11 +52,6 @@ public class HavocDesugarer extends Transformer {
   public HavocDesugarer() {
     equivCmds = new ArrayList<Command>(23);
     toSubstitute = new HashMap<VariableDecl, AtomId>(23);
-  }
-
-  public Declaration process(Declaration ast, TcInterface tc) {
-    this.tc = tc;
-    return TypeUtils.internalTypecheck((Declaration)ast.eval(this), tc);
   }
 
   // === transformer methods ===

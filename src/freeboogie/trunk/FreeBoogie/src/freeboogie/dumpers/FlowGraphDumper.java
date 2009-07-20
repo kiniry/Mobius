@@ -15,19 +15,6 @@ import freeboogie.tc.TcInterface;
  */
 @SuppressWarnings("unused") // unused parameters
 public class FlowGraphDumper extends Transformer {
-  private TcInterface tc; // used to get the flowgraphs for implementations
-  
-  /**
-   * Print to standard output the flowgraphs for the implementations in
-   * {@code ast}, by using the {@code t} to get the flowgraphs.
-   * @param ast
-   * @param t
-   */
-  public void process(Declaration ast, TcInterface t) {
-    tc = t;
-    ast.eval(this);
-  }
-
   private String cmdToString(Command c) {
     StringWriter sw = new StringWriter();
     PrettyPrinter pp = new PrettyPrinter(sw);

@@ -78,28 +78,49 @@
     </java>
   </target>
 
+  <target
+      name="generate_code"
+      depends="generate_ast,generate_parser,generate_cli_parser"/>
+
   <!-- Compilation and documentation targets -->
-  <target name="compile_ast" depends="generate_ast"
-          description="compiles the AST">
-    <javac srcdir="${ast-dir}" destdir="classes"
-           optimize="yes" debug="${debug}">
+  <target
+      name="compile_ast"
+      depends="generate_code"
+      description="compiles the AST">
+    <javac
+        srcdir="${ast-dir}" 
+        sourcepath="src"
+        destdir="classes"
+        optimize="yes" 
+        debug="${debug}">
       <classpath refid="classpath" />
       <compilerarg value="-Xlint:all" />
     </javac>
   </target>
 
-  <target name="compile_parser" depends="generate_parser,compile_ast,generate_cli_parser"
-          description="compiles the parser with warnings turned off">
-    <javac srcdir="${parser-dir}" sourcepath="src" destdir="classes" 
-           optimize="yes" debug="no">
+  <target
+      name="compile_parser"
+      depends="compile_ast,generate_code"
+      description="compiles the parser with warnings turned off">
+    <javac 
+        srcdir="${parser-dir}" 
+        sourcepath="src" 
+        destdir="classes" 
+        optimize="yes" 
+        debug="no">
       <classpath refid="classpath" /> 
     </javac>
   </target>
 
-  <target name="compile" depends="compile_parser,generate_cli_parser"
-    description="compile the source ">
-    <javac srcdir="src" destdir="classes" 
-           optimize="yes" debug="${debug}">
+  <target
+      name="compile"
+      depends="compile_parser,compile_ast,generate_code"
+      description="compile the source ">
+    <javac 
+        srcdir="src"
+        destdir="classes" 
+        optimize="yes"
+        debug="${debug}">
       <classpath refid="classpath" /> 
       <compilerarg value="-Xlint:all" />
     </javac>
@@ -114,7 +135,6 @@
   </target>
 
   <!-- Distribution -->
-
   <target
       name="dist"
       depends="compile"

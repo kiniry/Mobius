@@ -15,6 +15,7 @@ public class MapRemover extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
   private HashSet<Integer> arities = new HashSet<Integer>(7);
 
+  @Override
   public Declaration process(Declaration ast, TcInterface tc) {
     arities.clear();
     ast = (Declaration)ast.eval(this);

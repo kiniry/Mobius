@@ -6,6 +6,7 @@
  . Add a "for all types" construct. (?)
  . Move to Boogie 2.
  . Release 0.2.
+ . Move to new logging.
  . Add a switch on the command line to use the Coq generation (generate the nodes to a file)
  . Add axioms for %. (They aren't built into "z3 -si".)
  . Configure the new categories/levels for logging/output.

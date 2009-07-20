@@ -50,7 +50,6 @@ public class Passivator extends Transformer {
   private static final Logger log = Logger.getLogger("freeboogie.vcgen");
 
   private String fileName;
-  private TcInterface tc;
   private HashMap<VariableDecl, HashMap<Block, Integer>> readIdx;
   private HashMap<VariableDecl, HashMap<Block, Integer>> writeIdx;
   private HashMap<VariableDecl, Integer> newVarsCnt;
@@ -75,7 +74,8 @@ public class Passivator extends Transformer {
     fileName = program.fileName;
     return new Program(process(program.ast, tc), fileName);
   }
-
+  
+  @Override
   public Declaration process(Declaration ast, TcInterface tc) {
     this.tc = tc;
     readIdx = new LinkedHashMap<VariableDecl, HashMap<Block, Integer>>();

@@ -29,9 +29,11 @@ public class FunctionRegisterer extends Transformer {
     this.builder = builder;
   }
 
-  public void process(Declaration ast, TcInterface tc) {
+  @Override
+  public Declaration process(Declaration ast, TcInterface tc) {
     st = tc.getST();
     ast.eval(this);
+    return ast;
   }
 
   @Override
