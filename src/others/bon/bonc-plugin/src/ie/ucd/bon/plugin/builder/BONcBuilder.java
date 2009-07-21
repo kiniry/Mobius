@@ -30,10 +30,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BONcBuilder extends IncrementalProjectBuilder {
 
+  private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
+  
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder";
   private static final String MARKER_ID = BONPlugin.PLUGIN_ID + ".bonclocproblemmarker";
   private static final String NO_LOC_MARKER_ID = BONPlugin.PLUGIN_ID + ".boncproblemmarker";
 
+  @SuppressWarnings("unchecked")
   protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor)
   throws CoreException {
 
@@ -61,7 +64,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       //System.out.println("Full build");
     } else if (kind == INCREMENTAL_BUILD || kind == AUTO_BUILD) {
       //System.out.println("Incremental Build");
-      
+
       IResourceDelta delta = getDelta(getProject());
       if (delta != null) {
         BONResourceDeltaVisitor changeVisitor = new BONResourceDeltaVisitor();
@@ -72,14 +75,14 @@ public class BONcBuilder extends IncrementalProjectBuilder {
           return;
         }
       }
-      
+
     }
 
     BONResourceVisitor visitor = new BONResourceVisitor();
     getProject().accept(visitor);
 
     List<IResource> bonResources = visitor.getBONResources();
-    
+
     if (bonResources.size() == 0) {
       //No .bon files, don't run BONc
       return;
@@ -111,7 +114,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     }
     Problems problems = Main.getProblems();
     SortedSet<BONProblem> actualProblems = problems.getProblems();
-    
+
 
     try {
       for (BONProblem bonProblem : actualProblems) {
@@ -123,11 +126,11 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
         //Adjusting for different counting of line-ending characters between eclipse and antlr
-        if (lineNumber != -1) {
+        if (IS_WINDOWS && lineNumber != -1) {
           charPositionStart += (lineNumber -1);
           charPositionEnd += (lineNumber -1);
         }
-        
+
         //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
 
         if (file != null && lineNumber > 0 && charPositionStart >= 0 && charPositionEnd >= 0) {
@@ -164,7 +167,6 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       System.out.println("Exception: " + e);
     }
   }
-
 
   public static void addBuilderToProject(IProject project) {    
     // Cannot modify closed projects. 

@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.plugin"
       label="BONc Feature"
-      version="0.2.1"
+      version="0.2.2"
       provider-name="Fintan Fairmichael, University College Dublin">
 
    <description url="http://kind.ucd.ie/products/opensource/BONc/">
@@ -39,7 +39,7 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA
          id="ie.ucd.bon.plugin"
          download-size="0"
          install-size="0"
-         version="0.2.1"
+         version="0.0.0"
          unpack="false"/>
 
 </feature>
