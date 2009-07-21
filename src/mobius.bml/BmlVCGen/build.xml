@@ -15,11 +15,14 @@
 	         classpath="${tools.dir}/${checkstyle.jar}"/>
 
 	<!-- Create classpaths. -->
-	<path id="BmlVCGen.classpath">
-		<pathelement location="${build.dir}/classes" />
+	<path id="BmlVCGen.libs">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar" />
 		</fileset>
+	</path>   
+	<path id="BmlVCGen.classpath">
+		<pathelement location="${build.dir}/classes" />
+		<path refid="BmlVCGen.libs" />
 	</path>
 	<path id="BmlVCGen.tests.classpath">
 		<pathelement location="${tests.build.dir}/classes" />
@@ -29,8 +32,10 @@
 		<path refid="BmlVCGen.classpath" />
 	</path>
    <pathconvert property="BmlVCGen.classpath.str" 
-                refid="BmlVCGen.classpath" 
-                pathsep=" " dirsep="/" />
+                refid="BmlVCGen.libs" 
+                pathsep=" " dirsep="/">
+        <flattenmapper />            
+    </pathconvert>
 
 	<!-- Create required directories. -->
 	<target name="mkdirs">
