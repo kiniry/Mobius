@@ -8,10 +8,10 @@ Bundle-Vendor: Evka Darulova et al.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
-Import-Package: org.eclipse.ui.console
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- Beetlz;bundle-version="1.0.2",
- org.eclipse.jdt.core
+ Beetlz;bundle-version="1.1.0",
+ org.eclipse.jdt.core,
+ org.eclipse.ui.console
