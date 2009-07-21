@@ -1,4 +1,4 @@
-package mobius.directVCGen.clops;
+package mobius.directvcgen.clops;
 
 import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
@@ -10,8 +10,8 @@ import java.io.IOException;
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
-import mobius.directVCGen.clops.bico.BicoPlusOptionsInterface;
-import mobius.directVCGen.clops.bico.BicoPlusParser;
+import mobius.directvcgen.clops.bico.BicoPlusOptionsInterface;
+import mobius.directvcgen.clops.bico.BicoPlusParser;
 import mobius.directvcgen.bico.IAnnotationGenerator;
 import mobius.directvcgen.formula.Lookup;
 import mobius.directvcgen.translator.JMLAnnotationGenerator;

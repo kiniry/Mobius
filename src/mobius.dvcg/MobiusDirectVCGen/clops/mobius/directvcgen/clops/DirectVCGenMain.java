@@ -1,4 +1,4 @@
-package mobius.directVCGen.clops;
+package mobius.directvcgen.clops;
 
 import ie.ucd.clops.runtime.automaton.AutomatonException;
 import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import mobius.directVCGen.clops.dvcg.DirectVCGenOptionsInterface;
-import mobius.directVCGen.clops.dvcg.DirectVCGenParser;
+import mobius.directvcgen.clops.dvcg.DirectVCGenOptionsInterface;
+import mobius.directvcgen.clops.dvcg.DirectVCGenParser;
 import mobius.directvcgen.Main;
 
 import javafe.util.AssertionFailureException;

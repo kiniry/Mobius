@@ -21,13 +21,13 @@
 	
   <!-- Clops related stuff -->
   <property name="clops-bico+-file" location="clops/bico+.clops"/>
-  <property name="clops-bico+-target" location="clops/mobius/directVCGen/clops/bico"/>
-  <property name="clops-bico+-pkg" value="mobius.directVCGen.clops.bico"/>
+  <property name="clops-bico+-target" location="clops/mobius/directvcgen/clops/bico"/>
+  <property name="clops-bico+-pkg" value="mobius.directvcgen.clops.bico"/>
   <property name="clops-bico+-html-output" location="clops/bico+.html"/>
 
   <property name="clops-dvcg-file" location="clops/dvcg.clops"/>
-  <property name="clops-dvcg-target" location="clops/mobius/directVCGen/clops/dvcg"/>
-  <property name="clops-dvcg-pkg" value="mobius.directVCGen.clops.dvcg"/>
+  <property name="clops-dvcg-target" location="clops/mobius/directvcgen/clops/dvcg"/>
+  <property name="clops-dvcg-pkg" value="mobius.directvcgen.clops.dvcg"/>
   <property name="clops-dvcg-html-output" location="clops/dvcg.html"/>
 	
   <property name="clops-src" location="clops"/>
