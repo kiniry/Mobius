@@ -1,10 +1,10 @@
 
 package mobius.directvcgen.vcgen.struct;
 
-import mobius.directVCGen.formula.Bool;
-import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Ref;
+import mobius.directvcgen.formula.Bool;
+import mobius.directvcgen.formula.Heap;
+import mobius.directvcgen.formula.Logic;
+import mobius.directvcgen.formula.Ref;
 import escjava.sortedProver.Lifter.QuantVariable;
 import escjava.sortedProver.Lifter.QuantVariableRef;
 import escjava.sortedProver.Lifter.Term;
@@ -133,7 +133,7 @@ public class Post {
    * first. The result is of this form 
    * <code>{p1.var, (p1.post /\ p2.post[p2.var \ p1.var])}</code>.
    * The and used is the one presented in the 
-   * {@link mobius.directVCGen.formula.Logic#and(Term, Term)} method.
+   * {@link mobius.directvcgen.formula.Logic#and(Term, Term)} method.
    * @param p1 the left part of the <code>and</code>
    * @param p2 the right part of the <code>and</code>
    * @return a new Post object with the properties mentionned above or p1 or p2
@@ -157,7 +157,7 @@ public class Post {
    * first. The result is of this form 
    * <code>{p.var, (p.post /\ term)}</code>.
    * The and used is the one presented in the 
-   * {@link mobius.directVCGen.formula.Logic#and(Term, Term)} method.
+   * {@link mobius.directvcgen.formula.Logic#and(Term, Term)} method.
    * @param p the left part of the <code>and</code>
    * @param term the right part of the <code>and</code>
    * @return a new Post object with the properties mentionned above or p or term

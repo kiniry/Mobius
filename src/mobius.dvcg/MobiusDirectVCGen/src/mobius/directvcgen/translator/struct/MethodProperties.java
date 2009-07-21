@@ -9,10 +9,10 @@ import java.util.Set;
 
 import javafe.ast.ConstructorDecl;
 import javafe.ast.RoutineDecl;
-import mobius.directVCGen.formula.ILocalVars;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Translator;
-import mobius.directVCGen.formula.Util;
+import mobius.directvcgen.formula.ILocalVars;
+import mobius.directvcgen.formula.Lookup;
+import mobius.directvcgen.formula.Translator;
+import mobius.directvcgen.formula.Util;
 
 import org.apache.bcel.generic.MethodGen;
 

@@ -9,7 +9,7 @@ import javafe.ast.MethodDecl;
 import javafe.ast.Type;
 import javafe.ast.Visitor;
 import escjava.tc.TypeSig;
-import mobius.directVCGen.formula.Util;
+import mobius.directvcgen.formula.Util;
 
 /**
  * The main entry point of the VCGen. 

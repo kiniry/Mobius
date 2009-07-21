@@ -7,8 +7,8 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.FormalParaDeclVec;
 import javafe.ast.RoutineDecl;
 import javafe.tc.TypeSig;
-import mobius.directVCGen.bico.IAnnotationGenerator;
-import mobius.directVCGen.formula.Translator;
+import mobius.directvcgen.bico.IAnnotationGenerator;
+import mobius.directvcgen.formula.Translator;
 
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.MethodGen;

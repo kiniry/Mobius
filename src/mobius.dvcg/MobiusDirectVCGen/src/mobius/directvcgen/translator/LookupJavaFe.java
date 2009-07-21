@@ -9,9 +9,9 @@ import org.apache.bcel.generic.MethodGen;
 import javafe.ast.RoutineDecl;
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Translator;
+import mobius.directvcgen.formula.Logic;
+import mobius.directvcgen.formula.Lookup;
+import mobius.directvcgen.formula.Translator;
 import mobius.directvcgen.translator.struct.MethodProperties;
 import mobius.directvcgen.vcgen.struct.Post;
 import escjava.sortedProver.Lifter.QuantVariableRef;
@@ -21,7 +21,7 @@ import escjava.sortedProver.Lifter.Term;
 /**
  * A lookup class specific to JavaFE; using specific JavaFE structures.
  * 
- * @see mobius.directVCGen.formula.Lookup
+ * @see mobius.directvcgen.formula.Lookup
  * @author J. Charles (julien.charles@inria.fr)
  */
 class LookupJavaFe {

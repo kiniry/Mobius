@@ -10,8 +10,8 @@ import javafe.ast.FormalParaDecl;
 import javafe.ast.RoutineDecl;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.Visitor;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Ref;
+import mobius.directvcgen.formula.Expression;
+import mobius.directvcgen.formula.Ref;
 
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;

@@ -10,10 +10,10 @@ import java.io.IOException;
 import javafe.ast.TypeDecl;
 import javafe.tc.TypeSig;
 import javafe.util.ErrorSet;
-import mobius.directVCGen.bico.IAnnotationGenerator;
 import mobius.directVCGen.clops.bico.BicoPlusOptionsInterface;
 import mobius.directVCGen.clops.bico.BicoPlusParser;
-import mobius.directVCGen.formula.Lookup;
+import mobius.directvcgen.bico.IAnnotationGenerator;
+import mobius.directvcgen.formula.Lookup;
 import mobius.directvcgen.translator.JMLAnnotationGenerator;
 import escjava.tc.TypeCheck;
 

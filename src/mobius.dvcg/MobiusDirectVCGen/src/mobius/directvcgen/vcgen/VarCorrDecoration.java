@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import mobius.directVCGen.formula.ADecoration;
-import mobius.directVCGen.formula.PositionHint;
+import mobius.directvcgen.formula.ADecoration;
+import mobius.directvcgen.formula.PositionHint;
 
 import org.apache.bcel.generic.LocalVariableGen;
 import org.apache.bcel.generic.MethodGen;

@@ -40,18 +40,18 @@ import javafe.ast.TryFinallyStmt;
 import javafe.ast.VarDeclStmt;
 import javafe.ast.VarInit;
 import javafe.ast.WhileStmt;
-import mobius.directVCGen.formula.Bool;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.formula.Translator;
-import mobius.directVCGen.formula.Ref;
-import mobius.directVCGen.formula.Type;
-import mobius.directVCGen.formula.Util;
-import mobius.directVCGen.formula.annotation.AAnnotation;
-import mobius.directVCGen.formula.annotation.AnnotationDecoration;
-import mobius.directVCGen.formula.annotation.Set.Assignment;
+import mobius.directvcgen.formula.Bool;
+import mobius.directvcgen.formula.Expression;
+import mobius.directvcgen.formula.Heap;
+import mobius.directvcgen.formula.Logic;
+import mobius.directvcgen.formula.Lookup;
+import mobius.directvcgen.formula.Ref;
+import mobius.directvcgen.formula.Translator;
+import mobius.directvcgen.formula.Type;
+import mobius.directvcgen.formula.Util;
+import mobius.directvcgen.formula.annotation.AAnnotation;
+import mobius.directvcgen.formula.annotation.AnnotationDecoration;
+import mobius.directvcgen.formula.annotation.Set.Assignment;
 import mobius.directvcgen.vcgen.MethodVisitor;
 import mobius.directvcgen.vcgen.VarCorrDecoration;
 import mobius.directvcgen.vcgen.struct.ExcpPost;
@@ -127,8 +127,8 @@ public class StmtVCGen extends ExpressionVisitor {
           post = Post.implies(aa.getFormula(), vce.getPost());
           break;
         case AAnnotation.annotSet: {
-          final mobius.directVCGen.formula.annotation.Set s = 
-            (mobius.directVCGen.formula.annotation.Set) aa;
+          final mobius.directvcgen.formula.annotation.Set s = 
+            (mobius.directvcgen.formula.annotation.Set) aa;
           Term p = vce.getPost().getPost();
           if (s.getAssignment() != null) {
             final Assignment ass = s.getAssignment();

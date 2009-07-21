@@ -16,7 +16,7 @@ import javafe.ast.TypeName;
 import javafe.ast.UnaryExpr;
 import javafe.ast.VariableAccess;
 import javafe.tc.TypeSig;
-import mobius.directVCGen.formula.Util;
+import mobius.directvcgen.formula.Util;
 import mobius.directvcgen.vcgen.ABasicVisitor;
 
 import org.apache.bcel.classfile.JavaClass;
@@ -166,7 +166,7 @@ final class VisibleTypeCollector extends ABasicVisitor {
         sig = (TypeSig) t;
       }
       if (t != null) {
-        JavaClass jc = mobius.directVCGen.formula.Translator.getInst().translate((TypeSig)t);
+        JavaClass jc = mobius.directvcgen.formula.Translator.getInst().translate((TypeSig)t);
         ret.add(new ObjectType(jc.getClassName()));
       }
       
