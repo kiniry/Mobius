@@ -28,6 +28,9 @@
 		</fileset>
 		<path refid="BmlVCGen.classpath" />
 	</path>
+   <pathconvert property="BmlVCGen.classpath.str" 
+                refid="BmlVCGen.classpath" 
+                pathsep=" " dirsep="/" />
 
 	<!-- Create required directories. -->
 	<target name="mkdirs">
@@ -69,10 +72,9 @@
 			 basedir="${build.dir}/classes">
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}" />
-				<attribute name="Class-Path" value="bcel-5.2.jar bmllib.jar DirectVCGen.jar" />
+				<attribute name="Class-Path" value="${BmlVCGen.classpath.str}" />
 			</manifest>
 			<include name="**/*" />
-			 
 		</jar>
 		<copy includeemptydirs="false" todir="${dist.dir}">
 			<fileset dir="${lib.dir}" includes="**/*.jar" />
@@ -98,6 +100,7 @@
 	<!-- Prepare environment for building tests. -->
 	<target name="tests.init" depends="tests.mkdirs,tests.copyfiles" />
 
+   <!-- Build tests -->
 	<target name="tests.build" depends="build,tests.init">
 		<javac debug="true" destdir="${tests.build.dir}/classes" 
 			source="${source.level}" target="${target.level}">
@@ -106,6 +109,7 @@
 		</javac>
 	</target>
 
+   <!-- Run tests and create xml report. -->
 	<target name="tests.run" depends="tests.build">
 		<junit>
 			<classpath refid="BmlVCGen.tests.classpath" />
@@ -119,7 +123,8 @@
 			</batchtest>
 		</junit>
 	</target>
-
+ 
+   <!-- Create HTML report with test results. -->
 	<target name="tests.report" depends="tests.run">
 		<junitreport todir="${tests.output}">
 			<fileset dir="${tests.output}">
@@ -129,6 +134,7 @@
 		</junitreport>
 	</target>
 
+   <!-- Run checkstyle. -->
 	<target name="checkstyle">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${checkstyle.report}" />
@@ -143,18 +149,20 @@
 			  style="${tools.dir}/${checkstyle.xsl}" />
 	</target>
 
+   <!-- Run javadoc tool. -->
 	<target name="doc">
 		<mkdir dir="${doc.dir}" />
 		<javadoc sourcepath="${src.dir}"
 			     overview="${src.dir}/overview.html"
 			     classpathref="BmlVCGen.classpath"
 			     defaultexcludes="yes" 
-		         destdir="${doc.dir}"
+              destdir="${doc.dir}"
 			     author="true"
 			     use="true"
 		/>
 	</target>
 
+   <!-- Delete generated files. -->
 	<target name="clean">
 		<delete dir="${build.dir}"/>
 		<delete dir="${dist.dir}"/>
