@@ -9,8 +9,8 @@ import mobius.bmlvcgen.finder.exceptions.FinderException;
 import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
-import mobius.directVCGen.bico.IAnnotationGenerator;
-import mobius.directVCGen.formula.Lookup;
+import mobius.directvcgen.bico.IAnnotationGenerator;
+import mobius.directvcgen.formula.Lookup;
 
 import org.apache.bcel.generic.ClassGen;
 import org.apache.bcel.generic.LocalVariableGen;

@@ -1,7 +1,7 @@
 package mobius.bmlvcgen.vcgen;
 
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Heap;
+import mobius.directvcgen.formula.Expression;
+import mobius.directvcgen.formula.Heap;
 
 import org.apache.bcel.generic.ObjectType;
 

@@ -13,8 +13,8 @@ import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
+import mobius.directvcgen.formula.Logic;
+import mobius.directvcgen.formula.Lookup;
 
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ObjectType;

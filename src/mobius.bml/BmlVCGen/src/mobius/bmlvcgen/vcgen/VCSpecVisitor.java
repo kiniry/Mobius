@@ -10,10 +10,10 @@ import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.main.Env;
 import mobius.bmlvcgen.util.Visitable;
 import mobius.bmlvcgen.vcgen.exceptions.TranslationException;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Logic;
-import mobius.directVCGen.formula.Lookup;
-import mobius.directVCGen.vcgen.struct.Post;
+import mobius.directvcgen.formula.Expression;
+import mobius.directvcgen.formula.Logic;
+import mobius.directvcgen.formula.Lookup;
+import mobius.directvcgen.vcgen.struct.Post;
 
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;

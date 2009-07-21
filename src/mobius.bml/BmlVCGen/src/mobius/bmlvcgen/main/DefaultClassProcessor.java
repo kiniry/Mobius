@@ -6,8 +6,8 @@ import mobius.bmlvcgen.bml.ClassFile;
 import mobius.bmlvcgen.logging.Logger;
 import mobius.bmlvcgen.util.StringUtil;
 import mobius.bmlvcgen.vcgen.BmlAnnotationGenerator;
-import mobius.directVCGen.bico.AnnotationCompiler;
-import mobius.directVCGen.formula.Lookup;
+import mobius.directvcgen.bico.AnnotationCompiler;
+import mobius.directvcgen.formula.Lookup;
 
 /**
  * Default implementation of a class processor.

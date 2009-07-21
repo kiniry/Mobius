@@ -3,8 +3,8 @@ package mobius.bmlvcgen.vcgen;
 import mobius.bmlvcgen.bml.AssertExprVisitor;
 import mobius.bmlvcgen.bml.PreExprVisitor;
 import mobius.bmlvcgen.util.Visitable;
-import mobius.directVCGen.formula.Expression;
-import mobius.directVCGen.formula.Type;
+import mobius.directvcgen.formula.Expression;
+import mobius.directvcgen.formula.Type;
 
 import org.apache.bcel.generic.ObjectType;
 
