@@ -54,6 +54,9 @@ import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.TypeMismatchError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
 
+import static ie.ucd.bon.ast.FeatureSpecification.Modifier.DEFERRED;
+
+import java.util.Collection;
 import java.util.List;
 
 public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
@@ -189,27 +192,48 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
 
-    //TODO reference against table produced with Joe and Alex.
-    switch(modifier) {
-    case DEFERRED:
-    case NONE:
-      //If parent has feature with same name check compatible type
-      checkParentCompatible(node, false, false);
-      break;
-    case EFFECTIVE:
-      //If parent has feature with same name check compatible type
-      
-      break;
-    case REDEFINED:
-      
-      break;
+    for (String name : featureNames) {
+      //TODO reference against table produced with Joe and Alex.
+      switch(modifier) {
+      case DEFERRED:
+      case NONE:
+        //If parent has feature with same name check compatible type
+        checkParentFeatureCompatible(node, name, false, false);
+        break;
+      case EFFECTIVE:
+        //If parent has feature with same name check compatible type
+
+        break;
+      case REDEFINED:
+
+        break;
+      }
     }
     
     visitNode(contracts);
   }
   
-  private void checkParentCompatible(FeatureSpecification node, boolean parentFeatureMustExist, boolean parentFeatureMustBeDeferred) {
+  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist, boolean parentFeatureMustBeDeferred) {
+    FeatureSpecification parentFeature = findParentFeatureWithName(context.clazz.getName().getName(), featureName);
     
+    if (parentFeature == null) {
+      if (parentFeatureMustExist) {
+        //TODO error, no parent feature with this name
+      }
+    } else {
+      if (parentFeatureMustBeDeferred && parentFeature.getModifier() != DEFERRED) {
+        //TODO error, parent feature is not deferred
+      }
+      
+      //TODO check return type and arguments are type-compatible
+    }
+  }
+  
+  private FeatureSpecification findParentFeatureWithName(String className, String featureName) {
+    Collection<String> parents = st.simpleClassInheritanceGraph.get(featureName);
+    
+    //No such feature
+    return null;
   }
 
   @Override
