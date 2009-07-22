@@ -26,6 +26,7 @@ public class KeyPair<A, B> {
     return (a.hashCode() << SHIFT_FACTOR_A) + (b.hashCode() << SHIFT_FACTOR_B);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof KeyPair) {

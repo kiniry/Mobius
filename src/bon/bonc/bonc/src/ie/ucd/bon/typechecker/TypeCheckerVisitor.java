@@ -189,7 +189,27 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
 
+    //TODO reference against table produced with Joe and Alex.
+    switch(modifier) {
+    case DEFERRED:
+    case NONE:
+      //If parent has feature with same name check compatible type
+      checkParentCompatible(node, false, false);
+      break;
+    case EFFECTIVE:
+      //If parent has feature with same name check compatible type
+      
+      break;
+    case REDEFINED:
+      
+      break;
+    }
+    
     visitNode(contracts);
+  }
+  
+  private void checkParentCompatible(FeatureSpecification node, boolean parentFeatureMustExist, boolean parentFeatureMustBeDeferred) {
+    
   }
 
   @Override
