@@ -11,10 +11,10 @@ import ie.ucd.bon.source.SourceLocation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IMarker;
@@ -113,7 +113,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       e.printStackTrace();
     }
     Problems problems = Main.getProblems();
-    SortedSet<BONProblem> actualProblems = problems.getProblems();
+    Collection<BONProblem> actualProblems = problems.getProblems();
 
 
     try {
