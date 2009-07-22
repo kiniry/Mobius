@@ -907,7 +907,7 @@ feature_arguments returns [List<FeatureArgument> args] :
 ;
                    
 feature_argument returns [List<FeatureArgument> args] :
-  '->' 
+  ( '->' | '<-' ) 
   (  
      ( identifier_list ':' t1=type 
        { List<String> ids = $identifier_list.list; $args = new ArrayList<FeatureArgument>(ids.size()); for (String id : $identifier_list.list) $args.add(FeatureArgument.mk(id, $t1.type, getSLoc($identifier_list.start, $t1.stop))); }   
