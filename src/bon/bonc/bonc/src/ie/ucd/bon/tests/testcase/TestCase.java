@@ -98,6 +98,11 @@ public class TestCase {
     //TODO It would probably be even faster to have a NullPrintStream here
     System.setOut(out);
     System.setErr(err);
+    System.out.println();
+    System.out.print("Test #" + testNumber);
+    if (testName != null) {
+      System.out.println(" (" + testName + ")");
+    }    
 
     String runStringS = runString.toString().trim();
     if (runStringS.equals("")) {
@@ -121,6 +126,11 @@ public class TestCase {
         desiredProblems.addProblem(problem);
       } 
     }
+    
+//    System.out.println("Found:");
+//    System.out.println(foundProblems);
+//    System.out.println("Desired");
+//    System.out.println(desiredProblems);
 
     boolean passed = foundProblems.testEquality(desiredProblems, System.out);
     if (!passed) {

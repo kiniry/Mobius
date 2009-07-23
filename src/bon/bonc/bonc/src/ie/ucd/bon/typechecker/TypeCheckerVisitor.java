@@ -47,6 +47,7 @@ import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
+import ie.ucd.bon.typechecker.errors.DeferredFeatureInNonDeferredClassError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
@@ -86,7 +87,6 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
 
     visitAll(components);    
   }
-
 
 
   @Override
@@ -192,20 +192,22 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
 
+    if (modifier == DEFERRED && context.clazz.getMod() != Clazz.Mod.DEFERRED) {
+      problems.addProblem(new DeferredFeatureInNonDeferredClassError(loc, featureNames, context.clazz.getName().getName()));
+    }
+    
     for (String name : featureNames) {
       //TODO reference against table produced with Joe and Alex.
       switch(modifier) {
       case DEFERRED:
       case NONE:
-        //If parent has feature with same name check compatible type
-        checkParentFeatureCompatible(node, name, false, false);
+        checkParentFeatureCompatible(node, name, false, false, false);
         break;
       case EFFECTIVE:
-        //If parent has feature with same name check compatible type
-
+        checkParentFeatureCompatible(node, name, true, true, false);
         break;
       case REDEFINED:
-
+        checkParentFeatureCompatible(node, name, true, false, true);
         break;
       }
     }
@@ -213,7 +215,8 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
     visitNode(contracts);
   }
   
-  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist, boolean parentFeatureMustBeDeferred) {
+  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist, 
+      boolean parentFeatureMustBeDeferred, boolean parentFeatureMustBeNonDeferred) {
     FeatureSpecification parentFeature = findParentFeatureWithName(context.clazz.getName().getName(), featureName);
     
     if (parentFeature == null) {
@@ -225,12 +228,32 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
         //TODO error, parent feature is not deferred
       }
       
+      if (parentFeatureMustBeNonDeferred && parentFeature.getModifier() == DEFERRED) {
+        //TODO error, redefining a deferred feature
+      }
+      
       //TODO check return type and arguments are type-compatible
     }
   }
   
   private FeatureSpecification findParentFeatureWithName(String className, String featureName) {
     Collection<String> parents = st.simpleClassInheritanceGraph.get(featureName);
+    
+    for (String parent : parents) {
+      Clazz parentClass = st.classes.get(parent);
+      if (parentClass != null) {
+        //Look for feature for this class
+        FeatureSpecification featureSpec = st.featuresMap.get(parentClass, featureName);
+        if (featureSpec != null) {
+          return featureSpec;
+        }
+        //Look in parent classes
+        featureSpec = findParentFeatureWithName(parent, featureName);
+        if (featureSpec != null) {
+          return featureSpec;
+        }
+      }
+    }
     
     //No such feature
     return null;

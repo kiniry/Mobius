@@ -113,7 +113,8 @@ public class TestOutput {
       //((BONProblem)instance).print(System.out);
       return (BONProblem)instance;
     } catch (IllegalArgumentException e) {
-      //We give it incorrect arguments
+      //We gave it incorrect arguments
+      System.out.println("Illegal arguments: " + e);
     } catch (InstantiationException e) {
       //Should not happen, all Error constructors are public
     } catch (IllegalAccessException e) {

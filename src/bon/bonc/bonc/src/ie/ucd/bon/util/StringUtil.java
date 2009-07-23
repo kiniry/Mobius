@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.util;
 
+import java.util.Collection;
+
 
 public class StringUtil {
 
@@ -66,6 +68,18 @@ public class StringUtil {
     } else {
       return staticRef.substring(staticRef.lastIndexOf("."));
     }
+  }
+  
+  public static String appendWithSeparator(Collection<?> items, String sep) {
+    StringBuilder sb = new StringBuilder();
+    for (Object o : items) {
+      sb.append(o.toString());
+      sb.append(sep);
+    }
+    if (sb.length() > 0) {
+      sb.delete(sb.length()-sep.length(), sb.length());
+    }
+    return sb.toString();
   }
 
 }

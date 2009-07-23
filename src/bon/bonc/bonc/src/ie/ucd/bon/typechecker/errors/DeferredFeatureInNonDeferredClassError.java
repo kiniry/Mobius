@@ -5,29 +5,41 @@
 package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
+
+import java.util.List;
 
 public class DeferredFeatureInNonDeferredClassError extends TypeCheckingError {
 
-  private static final String message = "Deferred feature %s declared in non-deferred class %s";
+  private static final String message1 = "Deferred feature %s declared in non-deferred class %s";
   private static final String message2 = "Deferred features %s declared in non-deferred class %s";
   
-  private final String featureNames;
-  private final String className;
+  private final String message;
   
   public DeferredFeatureInNonDeferredClassError(SourceLocation loc,
-      String featureNames, String className) {
+      String featureNames, boolean moreThanOneFeature, String className) {
     super(loc);
-    this.featureNames = featureNames;
-    this.className = className;
+    
+    this.message = moreThanOneFeature ? 
+        String.format(message2, featureNames, className) 
+      : String.format(message1, featureNames, className);
   }
+  
+  public DeferredFeatureInNonDeferredClassError(SourceLocation loc,
+      List<String> featureNames, String className) {
+    super(loc);
+    
+    if (featureNames.size() == 1) {
+      this.message = String.format(message1, featureNames.get(0), className);
+    } else {
+      this.message = String.format(message2, StringUtil.appendWithSeparator(featureNames, ", "), className);
+    } 
+  }
+  
 
   @Override
   public String getMessage() {
-    if (featureNames.contains(",")) {
-      return String.format(message2, featureNames, className);
-    } else {
-      return String.format(message, featureNames, className);
-    }
+    return message;
   }
 
 }

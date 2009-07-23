@@ -118,9 +118,8 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
       
       st.genericsMap.put(context.clazz, generics);
       
-      visitAll(generics);
-      
       context.clazz = node;
+      visitAll(generics);
       visitNode(classInterface);
       context.clazz = null;      
 
