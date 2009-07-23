@@ -20,7 +20,7 @@ public class Method {
    */
   public static final int ACC_PUBLIC = 0x0001; 
   /** 
-   *  Declared private; accessible only within the deﬁning class.
+   *  Declared private; accessible only within the defining class.
    */
   public static final int ACC_PRIVATE = 0x0002; 
   /** 
