@@ -17,8 +17,31 @@
     <mkdir dir="${build}"/>
   </target>
 	
-  <target name="build" depends="init">
-	<javac debug="true" destdir="${build}">
+   <target name="check.grammar">
+      <uptodate property="grammar.uptodate"
+                srcfile="src/annot/textio/BML.g3"
+                targetfile="antlr3-generated/annot/textio/BML.tokens">
+      </uptodate>
+   </target>
+   
+	<target name="build.grammar" 
+           depends="check.grammar" 
+           unless="grammar.uptodate">
+		<java classname="org.antlr.Tool"
+			fork="true"
+			dir="src"
+			maxmemory="1024m">
+			<arg line="-o ../antlr3-generated annot/textio/BML.g3"/>
+			<classpath>
+				<pathelement location="lib/stringtemplate-3.1b1.jar"/>
+				<pathelement location="lib/antlr-3.0.1.jar"/>
+				<pathelement location="lib/antlr-2.7.7.jar"/>
+			</classpath>			
+		</java>			
+	</target>
+   
+  <target name="build" depends="init,build.grammar">
+	<javac debug="true" destdir="${build}" target="1.5">
 	    <src path="${src}"/>
 	    <src path="${src2}"/>
 		<classpath refid="runtime.path" />
