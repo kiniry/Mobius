@@ -12,7 +12,7 @@ if (WScript.Arguments.length != 3) {
 var java = WScript.Arguments.Item(0);
 var bonHome = WScript.Arguments.Item(1);
 
-var jars = new Array("BON.jar", "antlr-runtime-3.0.1.jar", "clops-runtime.jar", "prefuse.jar", "google-collect-1.0-rc2.jar");
+var jars = new Array("BON.jar", "antlr-runtime-3.0.1.jar", "clops-0.2.2-runtime.jar", "prefuse.jar", "google-collect-1.0-rc2.jar");
 var classPath = ".";
 
 for (var i=0; i < jars.length; i++) {

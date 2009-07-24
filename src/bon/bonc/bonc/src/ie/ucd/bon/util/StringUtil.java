@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Collection;
 
 
@@ -80,6 +82,17 @@ public class StringUtil {
       sb.delete(sb.length()-sep.length(), sb.length());
     }
     return sb.toString();
+  }
+  
+  public static String timeString(final long timeInNano) {
+    return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
+  }
+  
+  public static String exceptionStackTraceAsString(Exception e) {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    PrintStream ps = new PrintStream(baos);
+    e.printStackTrace(ps);
+    return baos.toString();
   }
 
 }

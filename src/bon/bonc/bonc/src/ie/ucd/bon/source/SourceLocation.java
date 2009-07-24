@@ -13,12 +13,14 @@ import org.antlr.runtime.Token;
 
 public class SourceLocation implements Comparable<SourceLocation> {
 
-	public static final int GENERAL_PROBLEM = -1;
+  public static final int GENERAL_PROBLEM = -1;
 	public static final int FILE_PROBLEM = -2;
 	public static final int UNKNOWN_LINE = -3;
 	public static final int EOF_LINE = -4;
 	public static final int UNKNOWN_CHAR_POSITION = -5;
 
+	public static final SourceLocation NO_LOCATION = new SourceLocation(null, UNKNOWN_LINE, UNKNOWN_CHAR_POSITION, UNKNOWN_CHAR_POSITION, UNKNOWN_CHAR_POSITION);
+	
 	public static final String STDIN_TEXT = "<stdin>";
 
 	private final File sourceFile;

@@ -105,16 +105,16 @@ public class TestCase {
     }    
 
     String runStringS = runString.toString().trim();
+    Problems foundProblems;
     if (runStringS.equals("")) {
-      Main.main2(new String[0], false);
+      foundProblems = Main.main2(new String[0], false);
     } else {
-      Main.main2(runStringS.split("\\s+"), false);
+      foundProblems = Main.main2(runStringS.split("\\s+"), false);
     }
 
     System.setOut(oldOut);
     System.setErr(oldErr);
     
-    Problems foundProblems = Main.getProblems();
     if (foundProblems == null) {
       //Avoid NPE
       foundProblems = new Problems("Test(Found)");

@@ -8,6 +8,7 @@ import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.typechecker.BONST;
 
+import java.io.File;
 import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,7 +52,7 @@ public class ParsingTracker {
     return parsesMap.get(fileName);
   }
   
-  public void addParse(String fileName, ParseResult parse) {
+  public void addParse(String fileName, File file, ParseResult parse) {
     parses.add(parse);
     parsesMap.put(fileName, parse);
     
@@ -68,36 +69,15 @@ public class ParsingTracker {
   public void addProblems(Problems newProblems) {
     problems.addProblems(newProblems);
   }
-  
-  public Problems getProblems() {
-    return problems;
-  }
 
   public void setFinalMessage(String finalMessage) {
     this.finalMessage = finalMessage;
   }
   
-  public Problems getErrorsAndWarnings(boolean checkInformal, boolean checkFormal, boolean checkConsistency) {
-    //TODO provide filter level and filter...
-    
+  public Problems getErrorsAndWarnings() {
+    //TODO provide filter level and filter...    
     Problems probs = new Problems("Return");
     probs.addProblems(this.problems);
-    
-//    probs.addProblems(typingInformation.getProblems());
-    
-//    probs.addProblems(typingInformation.informal().getProblems());
-    
-//    if (checkInformal && itc != null) {
-//      probs.addProblems(itc.getProblems());
-//    }
-//    
-//    if (checkFormal && ftc != null) {
-//      probs.addProblems(ftc.getProblems());
-//    }
-//    
-//    if (checkConsistency && ftc != null) {
-//      probs.addProblems(ftc.getConsistencyProblems());
-//    }
     
     for (ParseResult parse : parses) {
       probs.addProblems(parse.getParseProblems());

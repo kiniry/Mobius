@@ -22,8 +22,8 @@ public interface BONcOptionsInterface {
   /**
    * The enumeration type used to represent the string enum option.
    */
-  enum  Print {
-    SYSO("SYSO"),    IIG("IIG"),    HTML("HTML"),    PICG("PICG"),    DOT("DOT"),    DIC("DIC"),    TXT("TXT"),    PIIG("PIIG"),    CL("CL"),    ICG("ICG");
+  static enum  Print {
+    SYSO("SYSO"),    TXT("TXT"),    DOT("DOT"),    HTML("HTML"),    DIC("DIC"),    IIG("IIG"),    ICG("ICG"),    CL("CL"),    PICG("PICG"),    PIIG("PIIG");
     private final String[] matchStrings;
     private Print(final String... s) {
       matchStrings = s;
@@ -33,7 +33,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [{SYSO="SYSO", IIG="IIG", HTML="HTML", PICG="PICG", DOT="DOT", DIC="DIC", TXT="TXT", PIIG="PIIG", CL="CL", ICG="ICG"}]
+     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@3ee05ad6, ie.ucd.clops.util.Pair@7b6bb7d9, ie.ucd.clops.util.Pair@5cf346dc, ie.ucd.clops.util.Pair@67b14530, ie.ucd.clops.util.Pair@2735877f, ie.ucd.clops.util.Pair@2b52b6f5, ie.ucd.clops.util.Pair@4369a50b, ie.ucd.clops.util.Pair@4cd297c0, ie.ucd.clops.util.Pair@15e8e5a7, ie.ucd.clops.util.Pair@6d3d422d]]
      * @return a valid Print member.
      */
     public static Print get(final String s) {
@@ -339,8 +339,8 @@ public interface BONcOptionsInterface {
   /**
    * The enumeration type used to represent the string enum option.
    */
-  enum  Graph {
-    IIG("IIG"),    ICG("ICG");
+  static enum  Graph {
+    ICG("ICG"),    IIG("IIG");
     private final String[] matchStrings;
     private Graph(final String... s) {
       matchStrings = s;
@@ -350,7 +350,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [{IIG="IIG", ICG="ICG"}]
+     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@25f7d3f, ie.ucd.clops.util.Pair@4b17b450]]
      * @return a valid Graph member.
      */
     public static Graph get(final String s) {

@@ -15,6 +15,7 @@ import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
 import ie.ucd.bon.util.FileUtil;
+import ie.ucd.bon.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -216,7 +217,7 @@ public final class Printer {
               long startTime = System.nanoTime();
               printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
               long endTime = System.nanoTime();
-              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingType) + " took: " + Main.timeString(endTime - startTime));
+              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingType) + " took: " + StringUtil.timeString(endTime - startTime));
             } else {
               printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
             }

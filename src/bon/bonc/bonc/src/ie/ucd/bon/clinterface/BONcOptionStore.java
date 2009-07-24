@@ -3,7 +3,7 @@ package ie.ucd.bon.clinterface;
 import ie.ucd.clops.runtime.options.CLOPSErrorOption;
 import ie.ucd.clops.runtime.options.OptionGroup;
 import ie.ucd.clops.runtime.options.OptionStore;
-import ie.ucd.clops.runtime.options.InvalidOptionPropertyValueException;
+import ie.ucd.clops.runtime.options.exception.InvalidOptionPropertyValueException;
 import java.util.List;
 import java.io.File;
 import ie.ucd.clops.runtime.options.EnumOption;

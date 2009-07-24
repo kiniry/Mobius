@@ -4,12 +4,11 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.typechecker.PreliminaryChecker;
 import ie.ucd.bon.typechecker.TypeCheckerVisitor;
-
-import org.antlr.runtime.RecognitionException;
 
 
 public final class TypeChecker {
@@ -17,7 +16,7 @@ public final class TypeChecker {
   /** Prevent instantiation of TypeChecker. */
   private TypeChecker() { }
 
-  public static void typeCheck(final ParsingTracker tracker, final boolean typeCheck, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) throws RecognitionException {
+  public static Problems typeCheck(final ParsingTracker tracker, final boolean typeCheck, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency) {
     //TODO fix!
 //    InformalTypeChecker itc = tracker.getInformalTypeChecker();
 //    FormalTypeChecker ftc = tracker.getFormalTypeChecker();
@@ -48,13 +47,13 @@ public final class TypeChecker {
     
     PreliminaryChecker preCheck = new PreliminaryChecker(tracker.getSymbolTable());
     preCheck.runChecks(checkFormal, checkInformal);
-    tracker.addProblems(preCheck.getProblems());
+    //tracker.addProblems(preCheck.getProblems());
     
     TypeCheckerVisitor visitor = new TypeCheckerVisitor(tracker.getSymbolTable());
     for (ParseResult parse : tracker.getParses()) {
       parse.getParse().accept(visitor);
     }
-    tracker.addProblems(visitor.getProblems());
+    return visitor.getProblems().addProblems(preCheck.getProblems());
   }
   
 //  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {

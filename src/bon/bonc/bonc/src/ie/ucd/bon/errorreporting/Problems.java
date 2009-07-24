@@ -24,19 +24,21 @@ public class Problems {
     this.id = id;
   }
   
-  public void addProblem(BONProblem problem) {
+  public Problems addProblem(BONProblem problem) {
     //In time filter here...
     problems.add(problem);
     countProblem(problem);
+    return this;
   }
   
-  public void addProblems(Problems newProblems) {
+  public Problems addProblems(Problems newProblems) {
 //    System.out.println("Adding " + newProblems.id + " to " + this.id);
     //In time filter here
     this.problems.addAll(newProblems.problems);
     for (BONProblem problem : newProblems.getProblems()) {
       countProblem(problem);
     }
+    return this;
   }
   
   private void countProblem(BONProblem problem) {
