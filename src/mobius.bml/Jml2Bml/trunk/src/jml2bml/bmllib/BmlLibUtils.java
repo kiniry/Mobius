@@ -55,7 +55,7 @@ public final class BmlLibUtils {
   
   public static int translateUnaryOperator(final Kind kind) {
     if (kind == Kind.LOGICAL_COMPLEMENT)
-      return Code.NEG;
+      return Code.NOT;
     throw new Jml2BmlException("Not implemented unary operator: " + kind);    
   }
 
