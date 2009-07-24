@@ -93,8 +93,14 @@ public class Code {
 
   public static final int MULT = 0x22;
 
+  /**
+   * Arithmetic negation unary operator (i.e. -).
+   */
   public static final int NEG = 0x25;
 
+  /**
+   * Logical negation unary operator (i.e. !). 
+   */
   public static final int NOT = 0x05;
 
   public static final int NOTEQ = 0x17;

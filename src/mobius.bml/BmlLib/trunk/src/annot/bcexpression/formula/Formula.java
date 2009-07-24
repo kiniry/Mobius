@@ -18,6 +18,16 @@ import annot.textio.BMLConfig;
 public class Formula extends AbstractFormula {
 
   /**
+   * The number of arguments of unary logical operator (i.e. !)
+   */
+  private static final int UNARY_FORMULA_NOOFARGS = 1;
+
+  /**
+   * The number of arguments of innary logical operator (eg. &&, || etc.)
+   */
+  private static final int BINARY_FORMULA_NOOFARGS = 2;
+
+  /**
    * A constructor from AttributeReader.
    *
    * @param ar - stream to load from,
@@ -108,22 +118,33 @@ public class Formula extends AbstractFormula {
    * @return String representation of formula's connector.
    */
   private String printRoot(final BMLConfig conf) {
+    String res = "";
+    String surr = " ";
     switch (getConnector()) {
       case Code.AND:
-        return " && ";
+        res = "&&";
+        break;
       case Code.OR:
-        return " || ";
+        res = "||";
+        break;
       case Code.IMPLIES:
-        return " ==> ";
+        res = "==>";
+        break;
       case Code.NOT:
-        return "!";
+        res = "!";
+        surr = "";
+        break;
       case Code.EQUIV:
-        return "  <==>  ";
+        res = "<==>";
+        break;
       case Code.NOTEQUIV:
-        return "  <=!=>  ";
+        res = "<=!=>";
+        break;
       default:
-        return "??";
+        res = "??";
+        break;
     }
+    return surr + res + surr;
   }
 
   /**
@@ -140,10 +161,10 @@ public class Formula extends AbstractFormula {
   protected void read(final AttributeReader ar, final int root)
     throws ReadAttributeException {
     if (root == Code.NOT) {
-      setSubExprCount(1);
+      setSubExprCount(UNARY_FORMULA_NOOFARGS);
       setSubExpr(0, ar.readExpression());
     } else {
-      setSubExprCount(2);
+      setSubExprCount(BINARY_FORMULA_NOOFARGS);
       setSubExpr(0, ar.readExpression());
       setSubExpr(1, ar.readExpression());
     }
