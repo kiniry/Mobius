@@ -142,17 +142,34 @@ public class VCMethodVisitor implements MethodVisitor {
     }
   }
   
+  /**
+   * Get path to directory in which vcs for given
+   * method should be generated.
+   * @param className Class name (java.lang.Object).
+   * @param methodName Method name (<init>).
+   * @param methodSig Method argument types (VILjava/lang/Object;).
+   * @return Path, relative to the to vcs/ dir.
+   */
+  public static String getVCDir(final String className,
+                                final String methodName,
+                                final String methodSig) {
+    return
+      className.replace('.', '/') + "/" + 
+      fix(methodName) + fix(methodSig);    
+  }
+  
   // Get directory in which VCs should be placed.
   private String getVCDir() {
     return
-      env.getArgs().getOutputDir() + "/vcs/" + 
-      self.getClassName().replace('.', '/') + "/" + 
-      fix(method.getName()) + fix(method.getSignature());
+      env.getArgs().getOutputDir() + 
+         "/vcs/" + getVCDir(self.getClassName(), 
+                            method.getName(), 
+                            method.getSignature());
   }
 
   // Fix file/directory name by removing unfriendly chars.
-  private String fix(final String d) {
-    return d.replaceAll("<|>|\\(|\\)|\\$|;", "_");
+  private static String fix(final String d) {
+    return d.replaceAll("<|>|\\(|\\)|\\$|;|/", "_");
   }
   
   /** {@inheritDoc} */ 
