@@ -36,12 +36,11 @@ import annot.attributes.method.SingleLoopSpecification;
 import annot.bcclass.BCClass;
 import annot.bcclass.BCMethod;
 import annot.bcexpression.BCExpression;
+import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.ExpressionRoot;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Predicate0Ar;
-import annot.bcexpression.formula.Predicate2Ar;
-import annot.io.Code;
 
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.LineMap;
@@ -410,16 +409,14 @@ public class LoopInvariantRule extends TranslationRule < String, Symbols > {
     BCExpression invariant = null;
     BCExpression decreases = null;
     if (node.token == JmlToken.LOOP_INVARIANT) {
-      invariant = node.expression.accept(RulesFactory.getExpressionRule(myContext), newSymbols);
-      //TODO: this is hack for BmlLib
-      if (!(invariant instanceof AbstractFormula) && node.expression.type.getKind() == TypeKind.BOOLEAN) {
-        invariant = new Predicate2Ar(Code.EQ, invariant, new Predicate0Ar(true));
+      invariant = node.expression.accept(
+        RulesFactory.getExpressionRule(myContext), newSymbols);
+      //in case invariant is an expression we have to convert it to a formula
+      if (!(invariant instanceof AbstractFormula) &&
+          node.expression.type.getKind() == TypeKind.BOOLEAN) {
+        invariant = new BooleanExpression(invariant);
       }
-    }
-    
-//      invariant = TranslationUtil.getFormula(node.expression, newSymbols,
-//                                             myContext);
-    else if (node.token == JmlToken.DECREASES)
+    } else if (node.token == JmlToken.DECREASES)
       decreases = node.expression.accept(RulesFactory
           .getExpressionRule(myContext), newSymbols);
     else
