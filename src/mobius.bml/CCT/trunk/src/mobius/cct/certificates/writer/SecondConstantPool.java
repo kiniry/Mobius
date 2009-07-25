@@ -17,7 +17,7 @@ public class SecondConstantPool implements ConstantPool, Attribute {
   /**
    * Attribute name.
    */
-  public static final String ATTR = "org.bmlspecs.SecondConstantPool";
+  public static final String ATTR = "org.bmlspecs.ThirdConstantPool";
   
   /**
    * Source constant pool.
@@ -71,7 +71,7 @@ public class SecondConstantPool implements ConstantPool, Attribute {
 
   /**
    * Get attribute name.
-   * @return "org.bmlspecs.SecondConstantPool".
+   * @return "org.bmlspecs.ThirdConstantPool".
    */
   public String getName() {
     return ATTR;

@@ -170,7 +170,7 @@ public class CertificateParserTest {
   }
   private MockClassFile makeTest2() {
     final MockClassFile result = new MockClassFile(ClassName.parseInternal("mobius.cct.testdata.Test2"));
-    final String cattr0type = "org.bmlspecs.SecondConstantPool";
+    final String cattr0type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata0 = new byte[]{0, 1, 0, 1, 0, 16, 84, 101, 115, 116, 84, 101, 115, 116, 84, 101, 115, 116, 84, 101, 115, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
@@ -196,7 +196,7 @@ public class CertificateParserTest {
   }
   private MockClassFile makeTest4() {
     final MockClassFile result = new MockClassFile(ClassName.parseInternal("mobius.cct.testdata.Test4"));
-    final String cattr0type = "org.bmlspecs.SecondConstantPool";
+    final String cattr0type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata0 = new byte[]{0, 1, 0, 1, 0, 15, 109, 111, 98, 105, 117, 115, 46, 116, 101, 115, 116, 99, 101, 114, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
@@ -217,7 +217,7 @@ public class CertificateParserTest {
     final byte[] cdata0 = new byte[]{0, 42, 1, 0, 0, 0, 0, 0, 0, 24, 84, 101, 115, 116, 32, 99, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 32, 99, 111, 110, 116, 101, 110, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
-    final String cattr1type = "org.bmlspecs.SecondConstantPool";
+    final String cattr1type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata1 = new byte[]{0, 1, 0, 1, 0, 15, 109, 111, 98, 105, 117, 115, 46, 116, 101, 115, 116, 99, 101, 114, 116};
     final Attribute cattr1 = new DefaultAttribute(cattr1type, cdata1);
     result.addAttribute(cattr1);
@@ -234,7 +234,7 @@ public class CertificateParserTest {
     final byte[] cdata0 = new byte[]{0, 2, 1, 0, 0, 0, 0, 0, 0, 24, 84, 101, 115, 116, 32, 99, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 32, 99, 111, 110, 116, 101, 110, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
-    final String cattr1type = "org.bmlspecs.SecondConstantPool";
+    final String cattr1type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata1 = new byte[]{0, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 42};
     final Attribute cattr1 = new DefaultAttribute(cattr1type, cdata1);
     result.addAttribute(cattr1);
@@ -251,7 +251,7 @@ public class CertificateParserTest {
     final byte[] cdata0 = new byte[]{0, 1, 1, 0, 0, 0, 0, 0, 0, 24, 84, 101, 115, 116, 32, 99, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 32, 99, 111, 110, 116, 101, 110, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
-    final String cattr1type = "org.bmlspecs.SecondConstantPool";
+    final String cattr1type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata1 = new byte[]{0, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 42};
     final Attribute cattr1 = new DefaultAttribute(cattr1type, cdata1);
     result.addAttribute(cattr1);
@@ -268,7 +268,7 @@ public class CertificateParserTest {
     final byte[] cdata0 = new byte[]{0, 1, 1, 0, 0, 0, 0, 0, 0, 21, 84, 101, 115, 116, 32, 99, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 32, 99, 111, 110, 116, 101, 110, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
-    final String cattr1type = "org.bmlspecs.SecondConstantPool";
+    final String cattr1type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata1 = new byte[]{0, 1, 0, 1, 0, 15, 109, 111, 98, 105, 117, 115, 46, 116, 101, 115, 116, 99, 101, 114, 116};
     final Attribute cattr1 = new DefaultAttribute(cattr1type, cdata1);
     result.addAttribute(cattr1);
@@ -285,7 +285,7 @@ public class CertificateParserTest {
     final byte[] cdata0 = new byte[]{0, 1, 1, 0, 0, 0, 0, 0, 0, 24, 84, 101, 115, 116, 32, 99, 101, 114, 116, 105, 102, 105, 99, 97, 116, 101, 32, 99, 111, 110, 116, 101, 110, 116};
     final Attribute cattr0 = new DefaultAttribute(cattr0type, cdata0);
     result.addAttribute(cattr0);
-    final String cattr1type = "org.bmlspecs.SecondConstantPool";
+    final String cattr1type = "org.bmlspecs.ThirdConstantPool";
     final byte[] cdata1 = new byte[]{0, 2, 1, 0, 15, 109, 111, 98, 105, 117, 115, 46, 116, 101, 115, 116, 99, 101, 114, 116};
     final Attribute cattr1 = new DefaultAttribute(cattr1type, cdata1);
     result.addAttribute(cattr1);

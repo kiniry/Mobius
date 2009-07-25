@@ -13,7 +13,7 @@ public interface MutableClassFile extends ClassFile {
    * in a class file. Other data (methods, fields, ...)
    * is taken from the source class file.
    * @param os Stream to which the classfile will
-   * be written by the returns writer.
+   * be written by the returned writer.
    * @return Writer.
    */
   ClassVisitor getWriter(OutputStream os);

@@ -62,6 +62,7 @@ public class ClassPath {
     final ClassPath result = new ClassPath();
     result.appendPath(System.getProperty("sun.boot.class.path", ""));
     result.appendPath(System.getProperty("java.class.path", ""));
+    result.appendPath(".");
     return result;
   }
 
