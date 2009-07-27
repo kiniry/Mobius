@@ -65,6 +65,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
@@ -302,6 +303,10 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
   @Override
   public BCExpression visitMemberSelect(final MemberSelectTree node,
                                         final Symbols p) {
+    BCExpression constant = TranslationUtil.handleConstant(((JCFieldAccess) node).sym);
+    if (constant != null)
+      return constant;
+    
     //FIXME no function calls supported
     final BCExpression expr = scan(node.getExpression(), p);
     final Type type = ((JCTree) node).type;

@@ -14,8 +14,12 @@ import jml2bml.exceptions.NotTranslatedRuntimeException;
 import jml2bml.symbols.Symbols;
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BooleanExpression;
+import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.AbstractFormula;
 
+import com.sun.tools.javac.code.Kinds;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Context;
 
@@ -57,5 +61,29 @@ public final class TranslationUtil {
       throw new NotTranslatedRuntimeException(
                                               "Cannot create formula from node:" +
                                                   expression);
+  }
+  
+  /**
+   * Generate a constant expression (compile time constant) from symbol. 
+   * If it is not a constant - return null.
+   * 
+   * @param sym symbol
+   * @return constant expression or null if symbol is not constant
+   */
+  public static BCExpression handleConstant(final Symbol sym){
+    if (sym.kind != Kinds.VAR)
+      return null;
+    
+    VarSymbol var = (VarSymbol)sym;
+    Object constValue = var.getConstantValue();
+    if (constValue == null)
+      return null;
+    System.out.println(constValue);
+    if (constValue instanceof Integer) {
+      final int value = (Integer) constValue;
+//      addInteger();
+      return new NumberLiteral(value);
+    } else
+      throw new NotTranslatedRuntimeException("Not translated constant type: "+var+":"+constValue);
   }
 }
