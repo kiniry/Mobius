@@ -13,7 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import jml2bml.bmllib.ConstantPoolHelper;
 import jml2bml.exceptions.Jml2BmlException;
 import jml2bml.exceptions.NotTranslatedRuntimeException;
 
@@ -139,7 +138,8 @@ public final class BytecodeUtil {
       constantValue = ((BCField)field).getConstantValue();
     }
     if (constantValue==null) {
-      return new FieldRef(clazz.getCp(), ConstantPoolHelper.findFieldInConstantPool(className, field, clazz));
+      final int idx = clazz.getCp().getCoombinedCP().addFieldref(className, field.getName(), field.getSignature());
+      return new FieldRef(clazz.getCp(), idx);
     } else {
       final Constant constant = constantValue.getConstantPool().getConstant(constantValue.getConstantValueIndex());
       if (constant instanceof ConstantInteger) {

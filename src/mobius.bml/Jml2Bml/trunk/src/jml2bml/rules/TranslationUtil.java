@@ -80,9 +80,8 @@ public final class TranslationUtil {
       return null;
     System.out.println(constValue);
     if (constValue instanceof Integer) {
-      final int value = (Integer) constValue;
-//      addInteger();
-      return new NumberLiteral(value);
+//      TODO: add to constant pool??
+      return new NumberLiteral((Integer) constValue);
     } else
       throw new NotTranslatedRuntimeException("Not translated constant type: "+var+":"+constValue);
   }
