@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
 
+import mobius.cct.bmllib.BmlClassFile;
+import mobius.cct.bmllib.BmlClassReader;
 import mobius.cct.certificates.ClassCertificate;
 import mobius.cct.certificates.ClassCertificateVisitor;
 import mobius.cct.certificates.DefaultCertificateParser;
@@ -42,9 +44,9 @@ public final class InfoTool extends AbstractTool {
    * @param env Environment.
    * @return Parsed class file or null.
    */
-  private DefaultClassFile readInput(final Environment env) {
+  private BmlClassFile readInput(final Environment env) {
     final PrintStream stderr = env.getErr();
-    final DefaultClassReader reader = new DefaultClassReader();
+    final BmlClassReader reader = new BmlClassReader();
     final String inputName = env.getArgs()[INPUT_ARG];
     try {
       return reader.read(new FileInputStream(inputName));
@@ -74,32 +76,10 @@ public final class InfoTool extends AbstractTool {
    * @param f Class file.
    * @param env Environment.
    */
-  private void printInfo(final DefaultClassFile f,
+  private void printInfo(final BmlClassFile f,
                          final Environment env) {
     final PrintStream stdout = env.getOutput();
     
-    stdout.println(getMessage("info.class.major",
-                              env,
-                              f.getVersion().getMajor()));
-    stdout.println(getMessage("info.class.minor",
-                              env,
-                              f.getVersion().getMinor()));
-    stdout.println(getMessage("info.class.name",
-                              env,
-                              f.getName().externalForm()));
-    final ClassName superName = f.getSuperName();
-    if (superName != null) {
-      stdout.println(getMessage("info.super.name",
-                                env, superName.externalForm()));
-    }
-    
-    final Iterator<ClassName> i = f.getInterfaces();
-    if (i.hasNext()) {
-      stdout.println(getMessage("info.class.interfaces", env));
-      while (i.hasNext()) {
-        stdout.println("> " + i.next().externalForm());
-      }
-    }
     printCerts(f, env);
   }
 
@@ -108,12 +88,12 @@ public final class InfoTool extends AbstractTool {
    * @param f Class file.
    * @param env Environment.
    */
-  private void printCerts(final DefaultClassFile f,
+  private void printCerts(final BmlClassFile f,
                           final Environment env) {
     final PrintStream stderr = env.getErr();
     try {
-      final DefaultCertificateParser<DefaultClassFile> p = 
-        new DefaultCertificateParser<DefaultClassFile>();
+      final DefaultCertificateParser<BmlClassFile> p = 
+        new DefaultCertificateParser<BmlClassFile>();
       p.parse(f, new CertVisitor(env));
     } catch (VisitorException e) {
       stderr.println(getMessage("info.error.visit", env));
@@ -131,7 +111,7 @@ public final class InfoTool extends AbstractTool {
       printUsage(env);
       return;
     }
-    final DefaultClassFile f = readInput(env);
+    final BmlClassFile f = readInput(env);
     if (f != null) {
       printInfo(f, env);
     }

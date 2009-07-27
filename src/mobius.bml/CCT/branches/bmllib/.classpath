@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="tests/src"/>
 	<classpathentry kind="lib" path="tests/lib/junit-4.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/BmlLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bcel-5.2"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
