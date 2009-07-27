@@ -1,0 +1,8 @@
+- Write more tests.
+- Refactor old tests.
+- Create more command line tools.
+- Better option parsing for command line tools.
+- Create immutable maps and multimaps
+  in util package, modify code to use them.
+- ...
+

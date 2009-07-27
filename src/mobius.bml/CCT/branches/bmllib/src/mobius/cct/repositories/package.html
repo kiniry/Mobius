@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.repositories docs</title>
+</head>
+<body>
+<p>This package contains classes related to repositories - objects used 
+to read class and certificate files.</p>
+
+<h2>Repositories</h2>
+<p>A repository is a class which implements the 
+{@link mobius.cct.repositories.Repository Repository} interface. 
+This interface is very simple and has only two methods - one for reading
+classes and another for reading separate certificate files. 
+Default implementation 
+({@link mobius.cct.repositories.DefaultRepository DefaultRepository}) 
+loads all files from the system classpath. It also uses a cache to avoid reading 
+the same file again. It is possible to add this feature to a custom 
+{@link mobius.cct.repositories.Repository Repository} by using
+class {@link mobius.cct.repositories.CachedRepository CachedRepository}.</p>
+
+</body>
+</html>

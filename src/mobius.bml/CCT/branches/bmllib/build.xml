@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================                                                      
+
+     CCT    
+     Ant buildfile for CCT.
+                                                              
+     ====================================================================== -->
+<project name="CCT" default="dist">
+	<property file="CCT.properties" />
+	<property name="jar.file" value="${app.name}.jar" />
+
+	<taskdef resource="checkstyletask.properties"
+	         classpath="${tools.dir}/${checkstyle.jar}"/>
+
+	<path id="CCT.classpath">
+		<pathelement location="${build.dir}/classes" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<path id="CCT.tests.classpath">
+		<pathelement location="${tests.build.dir}/classes" />
+		<fileset dir="${tests.lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<path refid="CCT.classpath" />
+	</path>
+
+	<target name="init">
+		<mkdir dir="${src.dir}" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/classes" />
+		<mkdir dir="${dist.dir}" />
+		<copy includeemptydirs="false" todir="${build.dir}/classes">
+			<fileset dir="${src.dir}" excludes="**/*.launch, **/*.java, **/package.html" />
+		</copy>
+	</target>
+
+	<target name="build" depends="init">
+		<javac debug="true" destdir="${build.dir}/classes" source="${source.level}" target="${target.level}">
+			<src path="${src.dir}" />
+			<classpath refid="CCT.classpath" />
+		</javac>
+	</target>
+
+	<target name="dist" depends="build">
+		<mkdir dir="${dist.dir}" />
+		<delete file="${dist.dir}/${jar.file}" />
+		<jar destfile="${dist.dir}/${jar.file}" 
+			 basedir="${build.dir}/classes"
+			 manifest="MANIFEST.MF">
+			<include name="**/*" />
+		</jar>
+	</target>
+
+	<target name="tests.init" depends="build">
+		<mkdir dir="${tests.src.dir}" />
+		<mkdir dir="${tests.build.dir}" />
+		<mkdir dir="${tests.build.dir}/classes" />
+		<mkdir dir="${tests.output}" />
+		<mkdir dir="${tests.report}" />
+		<copy includeemptydirs="false" todir="${tests.build.dir}/classes">
+			<fileset dir="${tests.src.dir}" excludes="**/*.launch, **/*.java, **/package.html" />
+		</copy>
+	</target>
+
+	<target name="tests.build" depends="tests.init">
+		<javac debug="true" destdir="${tests.build.dir}/classes" source="${source.level}" target="${target.level}">
+			<src path="${tests.src.dir}" />
+			<classpath refid="CCT.tests.classpath" />
+		</javac>
+	</target>
+
+	<target name="tests.run" depends="tests.build">
+		<junit>
+			<classpath refid="CCT.tests.classpath" />
+			<formatter type="xml" />
+			<batchtest fork="yes" todir="${tests.output}">
+				<fileset dir="${tests.build.dir}/classes">
+					<include name="**/*Test*.class" />
+					<exclude name="**/Abstract*" />
+					<exclude name="**/*$*" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="tests.report" depends="tests.run">
+		<junitreport todir="${tests.output}">
+			<fileset dir="${tests.output}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${tests.report}" />
+		</junitreport>
+	</target>
+
+	<target name="checkstyle">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${checkstyle.report}" />
+		<checkstyle config="${checkstyle.config}">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<classpath refid="CCT.classpath" />
+			<formatter type="plain"/>
+			<formatter type="xml" tofile="${build.dir}/${checkstyle.output}"/>
+		</checkstyle>
+		<xslt in="${build.dir}/${checkstyle.output}" 
+			  out="${checkstyle.report}/index.html" 
+			  style="${tools.dir}/${checkstyle.xsl}" />
+	</target>
+
+	<target name="doc">
+		<mkdir dir="${doc.dir}" />
+		<javadoc sourcepath="${src.dir}"
+			     overview="${src.dir}/overview.html"
+			     classpathref="CCT.classpath"
+			     defaultexcludes="yes" 
+		         destdir="${doc.dir}"
+			     author="true"
+			     use="true"
+		/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${tests.build.dir}"/>
+		<delete dir="${tests.output}"/>
+		<delete dir="${tests.report}"/>
+		<delete dir="${doc.dir}"/>
+        <delete dir="${checkstyle.report}"/>
+	</target>
+
+</project>

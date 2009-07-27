@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.verifiers docs</title>
+</head>
+<body>
+<p>
+This package contains verifiers framework and built-in verifiers.
+</p>
+<h2>Certificates and specifications</h2>
+<p>
+Certificates and specifications are two fundamental concepts in
+the verification framework presented below. A certificate is stored
+in <tt>.class</tt> file as an attribute. That attribute contains 
+certificate type (a string and version number). Each certificate
+proves one or more specifications. The specifications also have a 
+type, but there is no standardized way to store them in a 
+<tt>.class</tt> file. They may be embedded in certificates, 
+represented by separate attributes or inferred from bytecode.
+To find out which types of specification exist in a class file
+one has to read all its certificates, find verification plugins 
+and query the plugins (using 
+{@link mobius.cct.verifiers.Verifier#getSpecificationType()}
+
+} method).
+</p>
+<h2>Plugins</h2>
+<p>
+An object that can be used to verify correctness of a certificate
+is called a plugin. All plugins implement the 
+{@link mobius.cct.verifiers.Verifier} interface. Each plugin 
+must declare type of certificates which can be verified
+by it. It should be able to check correctness of all certificates
+of this type and know the type of specifications proved by them.
+</p>
+<h2>Environments</h2>
+<p>
+Environments (objects implementing the 
+{@link mobius.cct.verifiers.Environment Environment} interface)
+are used to manage the verification process. They implement the 
+{@link mobius.cct.verifiers.Environment#verify(ClassName, String) verify()} 
+method,  which can be used to verify a specification of a class. 
+This method is responsible for locating the class, finding a certificate
+that can be used to prove the requested specification and running
+a plugin to verify it. The environment is also used to give plugins
+the ability to load classes and verify specifications required by
+the certificate which is being checked. It can also provide some
+other services, such as {@link mobius.cct.verifiers.logging logging}.
+</p>
+
+<h2>Trusted classes</h2>
+<p>
+System library classes usually do not need to be verified. However,
+other classes are likely to depend on them, so the environment is
+often requested to validate their specifications. For this reason
+default implementation of environment 
+({@link mobius.cct.verifiers.DefaultEnvironment DefaultEnvironment})
+maintains a list of trusted classes. Verification of such a class is
+always successful and does not require locating, loading and parsing
+it.
+</p>
+
+</body>
+</html>

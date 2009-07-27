@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.certificates docs</title>
+</head>
+<body>
+<h2>Certificates</h2>
+<p>
+Class and method certificates are represented by objects of classes 
+{@link mobius.cct.certificates.ClassCertificate ClassCertificate} and 
+{@link mobius.cct.certificates.MethodCertificate MethodCertificate}. 
+All certificates have the following properties:
+<ul>
+<li>Type (String)</li>
+<li>Major and minor version numbers</li>
+<li>Data (represented as a byte array)</li>
+</ul>
+Class certificates also contain a list of names of imported certificates.
+</p>
+
+<p>
+Objects of class 
+{@link mobius.cct.certificates.CertificatePack CertificatePack} contain 
+a single class-level certificate and a collection of method certificates 
+which hava a common type and version. 
+{@link mobius.cct.certificates.CertificatePack CertificatePacks}
+ may be created by using 
+{@link mobius.cct.certificates.CertificatePackBuilder CertificatePackBuilders}.
+</p>
+
+<h2>Reading certificates</h2>
+<p>Certificates are read from the 
+{@link mobius.cct.classfile.ClassFile ClassFile} 
+ by objects implementing the 
+ {@link mobius.cct.certificates.CertificateParser CertificateParser} 
+interface. A default implementation is provided in class
+t{@link mobius.cct.certificates.DefaultCertificateParser DefaultCertificateParser}.
+Parsed certificates are exposed using a visitor API similar to that used to
+access class attributes in a {@link mobius.cct.classfile.ClassFile ClassFile}.
+</p>
+
+<h2>Writing certificates</h2>
+<p>Certified classes can be written using classes from package
+{@link mobius.cct.certificates.writer mobius.cct.certificates.writer} 
+</p>
+</body>
+</html>

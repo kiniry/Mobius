@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.classfile docs</title>
+</head>
+<body>
+<h2>Class files</h2>
+<p>Classes are represented as objects implementing the 
+{@link mobius.cct.classfile.ClassFile ClassFile} interface. 
+A default implementation 
+({@link mobius.cct.classfile.DefaultClassFile} DefaultClassFile), 
+which does not depend on any external library, is provided. 
+However, is some cases it might be better to use ClassFiles based on 
+a library like BCEL or ASM. For this reason most repository classes are 
+generics parameterized with type of ClassFiles.</p>
+
+<p>If an implementation of class file can be used to modify and write classes, 
+it should implement the {@link mobius.cct.classfile.MutableClassFile MutableClassFile}
+interface.</p>
+
+<h2>Visitors</h2>
+<p>Class files expose their attributes by calling appropriate methods of a 
+{@link mobius.cct.classfile.ClassVisitor ClassVisitor} object. This interface 
+is similar to that used by ASM bytecode library or SAX API for XML. All visitor 
+methods may throw an exception of type VisitorException, which is usually used
+to wrap another type of exception.</p>
+<p>Mutable class files can create a visitor which can be used to set their
+attributes and save resulting class to a stream.</p>
+
+<h2>Parsing class files</h2>
+<p>Generic {@link mobius.cct.repositories.Repository Repository} 
+implementations (able to read any type of 
+{@link mobius.cct.classfile.ClassFile ClassFile}) must be 
+supplied with an object which can be used to parse a byte stream and 
+create right kind of {@link mobius.cct.classfile.ClassFile ClassFile}. 
+{@link mobius.cct.classfile.ClassReader ClassReader} is the interface 
+of such objects. Their input is given as a 
+{@link mobius.cct.repositories.Resource Resource} object. Resources are simply
+byte streams which can be opened and closed.</p>
+
+<h2>Certificate files</h2>
+<p>Separate certificates are represented as class files with
+structure similar to the file they certify. They can store not
+only certificates, but also other information, such as BML or
+other type of specification not contained in the certificate.
+</p>
+
+</body>
+</html>

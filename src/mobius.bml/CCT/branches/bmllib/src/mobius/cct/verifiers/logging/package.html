@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>mobius.cct.verifiers.logging docs</title>
+</head>
+<body>
+<p>This package contains classes related to logging.
+Logging is performed using objects implementing
+{@link mobius.cct.verifiers.logging.Logger Logger} interface.
+That interface contains methods used to log messages of
+various levels (errors, warnings, debug messages...).
+Default implementation 
+({@link mobius.cct.verifiers.logging.DefaultLogger DefaultLogger})
+simply prints all messages to standard output stream, prefxing them
+with their levels. Most applications should probably create 
+customized implementations of {@link mobius.cct.verifiers.logging.Logger Logger}
+integrated with their own logging mechanism.
+</p>
+</body>
+</html>
