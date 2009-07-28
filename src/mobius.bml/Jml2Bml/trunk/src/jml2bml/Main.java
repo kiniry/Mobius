@@ -116,9 +116,6 @@ public class Main {
 
     List < JmlCompilationUnit > files = api.parseFiles(new File(sourceFile));
     final int errorsCount = api.enterAndCheck(files);
-    
-    if (errorsCount > 0)
-      throw new NotTranslatedException("There were compilation errors - see log for details");
     final JmlCompilationUnit tree = files.get(0);
     
 //    final JCCompilationUnit tree = files.head;
@@ -161,6 +158,7 @@ public class Main {
     
     manager.saveAll();
     System.out.println("Written to: " + out);
+
   }
 
 //  /**
