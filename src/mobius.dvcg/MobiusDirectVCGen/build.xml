@@ -124,7 +124,7 @@
     <jar jarfile="${dist}/DirectVCGen.jar">
       <fileset dir="${build}" includes="mobius/**"/>
       <manifest>
-      	<attribute name="Main-Class" value="mobius.directVCGen.Main" />
+      	<attribute name="Main-Class" value="mobius.directvcgen.clops.DirectVCGenMain" />
         <attribute name="Class-Path" value="${deps-bico} ${deps-escj}" />
       </manifest>
     </jar> 	
@@ -134,7 +134,7 @@
     <jar jarfile="${dist}/bico+.jar">
       <fileset dir="${build}" includes="mobius/**"/>
       <manifest>
-      	<attribute name="Main-Class" value="mobius.directVCGen.bico.Main" />
+      	<attribute name="Main-Class" value="mobius.directvcgen.clops.BicoMain" />
         <attribute name="Class-Path" value="${deps-bico} ${deps-escj}" />
       </manifest>
     </jar> 	
