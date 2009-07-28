@@ -16,6 +16,8 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.BooleanExpression;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.formula.AbstractFormula;
+import annot.bcexpression.javatype.JavaBasicType;
+import annot.bcexpression.javatype.JavaType;
 
 import com.sun.tools.javac.code.Kinds;
 import com.sun.tools.javac.code.Symbol;
@@ -53,7 +55,8 @@ public final class TranslationUtil {
     final BCExpression expr = expression.accept(RulesFactory
         .getExpressionRule(context), symb);
     //in case invariant is an expression we have to convert it to a formula
-    if (expr instanceof AbstractFormula) {
+    if (JavaBasicType.JAVA_BOOLEAN_TYPE.compareTypes(expr.getType1()) !=
+        JavaType.TYPES_EQUAL) {
       return (AbstractFormula) expr;
     } else if (expression.type.getKind() == TypeKind.BOOLEAN) {
       return new BooleanExpression(expr);

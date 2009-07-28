@@ -6,6 +6,8 @@
  */
 package jml2bml.rules;
 
+import java.util.List;
+
 import javax.lang.model.type.TypeKind;
 
 import jml2bml.ast.TreeNodeFinder;
@@ -37,11 +39,13 @@ import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
+import annot.bcexpression.NONNULLELEMENTS;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
 import annot.bcexpression.RESULT;
 import annot.bcexpression.THIS;
+import annot.bcexpression.TYPEsmall;
 import annot.bcexpression.formula.Formula;
 import annot.bcexpression.formula.Predicate0Ar;
 import annot.bcexpression.formula.Predicate2Ar;
@@ -61,6 +65,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
@@ -347,7 +352,15 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
     if (node.token == JmlToken.BSOLD){
       final BCExpression expr = scan(node.getArguments(), p);
       return new OLD(expr);
+    } else if (node.token == JmlToken.BSTYPELC) {
+      List l = node.getTypeArguments();
+      final BCExpression expr = scan(l, p);
+      return new TYPEsmall(expr);
+    } else if (node.token == JmlToken.BSNONNULLELEMENTS) {
+      final BCExpression expr = scan(node.getArguments(), p);
+      return new NONNULLELEMENTS(expr);
     }
+    
     throw new NotTranslatedRuntimeException("Method invocation not supported!"+node);
   }
 
