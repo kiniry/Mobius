@@ -78,20 +78,20 @@ public class Formula extends AbstractFormula {
 
   /**
    * Checks if all subexpressions have correct types
-   * and return type of this formula (JavaBool).
+   * and return type of this formula (JAVA_BOOLEAN_TYPE).
    *
-   * @return JavaBool, or null if this formula is invalid
+   * @return JAVA_BOOLEAN_TYPE, or null if this formula is invalid
    *     (if one of it's  subexpression have wrong type
    *     or is invalid).
    */
   @Override
   protected JavaType checkType1() {
     for (int i = 0; i  <  getSubExprCount(); i++) {
-      if (getSubExpr(i).getType() != JavaBasicType.JavaBool) {
+      if (getSubExpr(i).getType() != JavaBasicType.JAVA_BOOLEAN_TYPE) {
         return null;
       }
     }
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
   /**

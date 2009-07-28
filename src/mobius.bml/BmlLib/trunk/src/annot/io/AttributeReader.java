@@ -413,7 +413,7 @@ public class AttributeReader {
       final AbstractFormula af = (AbstractFormula) expr;
       return af;
     }
-    if (expr.checkType() == JavaBasicType.JavaBool) {
+    if (expr.checkType() == JavaBasicType.JAVA_BOOLEAN_TYPE) {
       return new BooleanExpression(expr);
     }
     throw new ReadAttributeException("Formula expected");

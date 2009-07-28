@@ -3,6 +3,7 @@ package annot.bcexpression;
 import annot.bcexpression.javatype.JavaBasicType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.AttributeReader;
+import annot.io.Code;
 import annot.io.ReadAttributeException;
 import annot.textio.BMLConfig;
 
@@ -12,7 +13,7 @@ import annot.textio.BMLConfig;
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class UnaryArithmeticExpression extends ArithmeticExpression {
+public class UnaryArithmeticExpression extends UnaryExpression {
 
   /**
    * A constructor from AttributeReader, used for loading
@@ -34,8 +35,7 @@ public class UnaryArithmeticExpression extends ArithmeticExpression {
   /**
    * A standard constructor.
    *
-   * @param connector - type of exrpession, should be
-   *     {@link Code#NEG},
+   * @param connector - type of expression
    * @param subExpr - subexpression.
    */
   public UnaryArithmeticExpression(final int connector,
@@ -45,10 +45,10 @@ public class UnaryArithmeticExpression extends ArithmeticExpression {
 
   @Override
   protected JavaType checkType1() {
-    if (getSubExpr(0).getType() != JavaBasicType.JavaInt) {
+    if (getSubExpr(0).getType() != JavaBasicType.JAVA_INT_TYPE) {
       return null;
     }
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   @Override
@@ -57,16 +57,28 @@ public class UnaryArithmeticExpression extends ArithmeticExpression {
   }
 
   @Override
-  protected void read(final AttributeReader ar, final int root)
-    throws ReadAttributeException {
-    setSubExprCount(1);
-    final BCExpression sub = ar.readExpression();
-    setSubExpr(0, sub);
+  public String toString() {
+    return printRoot() + getSubExpr(0).toString();
   }
 
   @Override
-  public String toString() {
-    return printRoot() + getSubExpr(0).toString();
+  public JavaType getType1() {
+    return JavaBasicType.JAVA_INT_TYPE;
+  }
+
+  /**
+   * @return string representation of expression's root
+   */
+  private String printRoot() {
+    switch (getConnector()) {
+      case Code.BITWISENOT:
+        return " ~ ";
+      case Code.NEG:
+        return " -";
+      default:
+        throw new RuntimeException("unknown unary opcode: " +
+                                   getConnector());
+    }
   }
 
 }

@@ -88,16 +88,16 @@ public class QuantifiedFormula extends AbstractFormula {
    * Checks if subexpression has correct type
    * and return type of this expression.
    *
-   * @return JavaBool or null if it's invalid
+   * @return JAVA_BOOLEAN_TYPE or null if it's invalid
    *     (if it's subexpression have wrong type
    *     or is invalid).
    */
   @Override
   protected JavaType checkType1() {
-    if (getSubExpr(0).getType() != JavaBasicType.JavaBool) {
+    if (getSubExpr(0).getType() != JavaBasicType.JAVA_BOOLEAN_TYPE) {
       return null;
     }
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
   /**

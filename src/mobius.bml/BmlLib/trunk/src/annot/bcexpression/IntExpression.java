@@ -30,10 +30,10 @@ public class IntExpression extends AbstractIntExpression {
   @Override
   protected JavaType checkType1() {
     final JavaType type = getSubExpr(0).getType();
-    if (type != JavaBasicType.JavaInt) {
+    if (type != JavaBasicType.JAVA_INT_TYPE) {
       return null;
     }
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   @Override

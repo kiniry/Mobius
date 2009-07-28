@@ -36,7 +36,7 @@ public class ArrayAccess extends BCExpression {
 
   @Override
   protected JavaType checkType1() {
-    if (getSubExpr(1).getType() != JavaBasicType.JavaInt) {
+    if (getSubExpr(1).getType() != JavaBasicType.JAVA_INT_TYPE) {
       return null;
     }
     final JavaType t = getSubExpr(0).getType();

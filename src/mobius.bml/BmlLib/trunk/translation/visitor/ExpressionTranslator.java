@@ -135,7 +135,7 @@ public class ExpressionTranslator  {
     }
     if (type instanceof JavaBasicType) {
       JavaBasicType bt = (JavaBasicType) type;
-      if (bt.compareTypes(JavaBasicType.JavaBool) == JavaBasicType.TYPES_EQUAL)
+      if (bt.compareTypes(JavaBasicType.JAVA_BOOLEAN_TYPE) == JavaBasicType.TYPES_EQUAL)
         rtype = JBaseType.BOOLEAN;
       else
         rtype = JBaseType.INT;

@@ -42,11 +42,11 @@ public class Predicate0Ar extends AbstractFormula {
   }
 
   /**
-   * @return JavaType of this predicate, that is, JavaBool.
+   * @return JavaType of this predicate, that is, JAVA_BOOLEAN_TYPE.
    */
   @Override
   protected JavaType checkType1() {
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
   /**

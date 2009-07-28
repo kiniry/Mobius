@@ -9,18 +9,20 @@ import annot.bcclass.MessageLog;
 import annot.bcexpression.BCExpression;
 import annot.io.Code;
 import annot.io.ReadAttributeException;
+import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
 /**
  * This class represents return type of an expression.
  * The constructor is protected, so use static factories
- * {@link #getJavaType(String)}
- * or {@link #getJavaBasicType(String)} instead.
+ * {@link #getJavaType(String)} or {@link #getJavaBasicType(String)} instead.
+ * This class represents also the \TYPE type declaration.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
-public abstract class JavaType extends BCExpression {
+public class JavaType extends BCExpression {
 
   // type comparation results:
 
@@ -35,7 +37,7 @@ public abstract class JavaType extends BCExpression {
   public static final int IS_SUPERTYPE = 2;
 
   /**
-   * types are equal.
+   * The types are equal.
    */
   public static final int TYPES_EQUAL = 3;
 
@@ -44,6 +46,11 @@ public abstract class JavaType extends BCExpression {
    * of the other).
    */
   public static final int TYPES_UNRELATED = 0;
+
+  /**
+   * The upper bound for all types in JML and BML i.e. \TYPE.
+   */
+  private static final JavaType TYPE = new JavaType();
 
   /**
    * A standard constructor for subclasses.
@@ -55,10 +62,10 @@ public abstract class JavaType extends BCExpression {
   @Deprecated
   public static JavaType convert(final Type t) {
     if (t == Type.BOOLEAN) {
-      return JavaBasicType.JavaBool;
+      return JavaBasicType.JAVA_BOOLEAN_TYPE;
     }
     if (t == Type.BYTE || t == Type.SHORT || t == Type.INT || t == Type.LONG) {
-      return JavaBasicType.JavaInt;
+      return JavaBasicType.JAVA_INT_TYPE;
     }
     if (t instanceof ArrayType) {
       return new JavaArrayType(t.getSignature());
@@ -78,10 +85,10 @@ public abstract class JavaType extends BCExpression {
   public static JavaBasicType getJavaBasicType(final String name)
     throws ReadAttributeException {
     if (DisplayStyle.JT_INT.equals(name)) {
-      return JavaBasicType.JavaInt;
+      return JavaBasicType.JAVA_INT_TYPE;
     }
     if (DisplayStyle.JT_BOOLEAN.equals(name)) {
-      return JavaBasicType.JavaBool;
+      return JavaBasicType.JAVA_BOOLEAN_TYPE;
     }
     throw new ReadAttributeException("Unknown java type");
   }
@@ -95,10 +102,13 @@ public abstract class JavaType extends BCExpression {
    */
   public static JavaType getJavaType(final String name) {
     if (DisplayStyle.JT_INT.equals(name) || "I".equals(name)) {
-      return JavaBasicType.JavaInt;
+      return JavaBasicType.JAVA_INT_TYPE;
     }
     if (DisplayStyle.JT_BOOLEAN.equals(name) || "B".equals(name)) {
-      return JavaBasicType.JavaBool;
+      return JavaBasicType.JAVA_BOOLEAN_TYPE;
+    }
+    if (DisplayStyle.TYPE_KWD.equals(name)) {
+      return JavaType.TYPE;
     }
     try {
       if (Type.getType(name) instanceof ArrayType) {
@@ -113,17 +123,15 @@ public abstract class JavaType extends BCExpression {
   }
 
   /**
-   * @return type of JavaType, that is,
-   *     {@link JavaBasicType#JavaType}.
+   * @return type of JavaType, that is, {@link JavaBasicType#JavaType}.
    */
-  @Override
   protected JavaType checkType1() {
     return JavaBasicType.JavaType;
   }
 
   /**
    * Compares this type with given type.<br>
-   * //TODO checking for subtypes currently unsupported!
+   * //TODO checking for subtypes currently not supported except \TYPE.
    *
    * @param type - type to compare to.
    * @return <b>{@link #TYPES_UNRELATED}</b> - if neither
@@ -136,7 +144,13 @@ public abstract class JavaType extends BCExpression {
    *     <b>{@link #TYPES_EQUAL}</b> - if this type
    *     is equal to given type.
    */
-  public abstract int compareTypes(JavaType type);
+  public int compareTypes(final JavaType type) {
+    if (type != this) {
+      return IS_SUBTYPE;
+    } else {
+      return TYPES_EQUAL;
+    }
+  }
 
   /**
    * @return type of JavaType, that is,
@@ -145,6 +159,24 @@ public abstract class JavaType extends BCExpression {
   @Override
   public JavaType getType1() {
     return JavaBasicType.JavaType;
+  }
+
+  /**
+   * Returns the string representation of the \TYPE expression.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return {@link DisplayStyle#RESULT_KWD}
+   */
+  protected String printCode1(BMLConfig conf) {
+    return DisplayStyle.TYPE_KWD;
+  }
+
+  /**
+   * @return simple String representation of this
+   *     expression, for debugging only.
+   */
+  public String toString() {
+    return DisplayStyle.TYPE_KWD;
   }
 
 }

@@ -11,7 +11,7 @@ import annot.textio.Priorities;
  * This ugly class converts an expression
  * to {@link AbstractFormula}. It should be used when
  * we have an boolean expression (that is, it's checkType()
- * method evaluates to {@link JavaBasicType#JavaBool}),
+ * method evaluates to {@link JavaBasicType#JAVA_BOOLEAN_TYPE}),
  * but it is'n an {@link AbstractFormula}'s subclass.
  * It can happen, for example, in attribute: "\assert b",
  * where b is a boolean local variable. Assert's formula
@@ -41,10 +41,10 @@ public class BooleanExpression extends AbstractFormula {
   @Override
   protected JavaType checkType1() {
     final JavaType type = getSubExpr(0).getType();
-    if (type != JavaBasicType.JavaBool) {
+    if (type != JavaBasicType.JAVA_BOOLEAN_TYPE) {
       return null;
     }
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
   @Override

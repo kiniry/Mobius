@@ -761,7 +761,7 @@ public class BMLParserTest {
    * Test method for {@link annot.textio.BMLParser#type_spec()}.
    */
   @Test
-  public void testArr_type() {
+  public void testType_spec() {
     String[] paramdecls = { "int",
                             "java.lang.Object",
                             "java.lang.Object[]",
@@ -778,11 +778,11 @@ public class BMLParserTest {
       final BMLLexer lex = new BMLLexer(chstr);
       final CommonTokenStream tokens = new CommonTokenStream(lex);
       BMLParser parser = new BMLParser(tokens);
-      BMLParser.arr_type_return ret;
+      BMLParser.type_spec_return ret;
       try {
-        ret = parser.arr_type();
+        ret = parser.type_spec();
         String res =  ret.tree.toStringTree();
-        assertEquals("arr_type: " + i, ret.tree.toStringTree(),
+        assertEquals("type_spec: " + i, ret.tree.toStringTree(),
                      answers[i]);
       } catch (RecognitionException e) {
         // TODO Auto-generated catch block

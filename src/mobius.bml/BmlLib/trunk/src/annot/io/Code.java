@@ -107,9 +107,7 @@ public class Code {
 
   public static final int NOTEQUIV = 0x09;
 
-  public static final int NULL = 0x72;
-
-  public static final int OLD = 0x99;
+  public static final int NULL = 0x72;  
 
   public static final int OR = 0x03;
 
@@ -132,4 +130,18 @@ public class Code {
 
   public static final int USHR = 0x34;
 
+  /**
+   * The \old expression.
+   */
+  public static final int OLD = 0x99;
+
+  /**
+   * The \type expression.
+   */
+  public static final int TYPE_SMALL = 0x9A;
+  
+  /**
+   * The \nonnullelements expression.
+   */
+  public static final int NONNULLELEMENTS = 0x9A;
 }

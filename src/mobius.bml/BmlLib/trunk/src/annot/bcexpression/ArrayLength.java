@@ -45,22 +45,22 @@ public class ArrayLength extends BCExpression {
   /**
    * This method returns the type of this expression provided that all
    * the subexpressions have correct types. In this case, this is
-   * "int" ({@link JavaBasicType#JavaInt}).
+   * "int" ({@link JavaBasicType#JAVA_INT_TYPE}).
    *
-   * @return "int" ({@link JavaBasicType#JavaInt})
+   * @return "int" ({@link JavaBasicType#JAVA_INT_TYPE})
    */
   protected JavaType checkType1() {
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   /**
    * This method returns the type of this expression. In this case, this is
-   * "int" ({@link JavaBasicType#JavaInt}).
+   * "int" ({@link JavaBasicType#JAVA_INT_TYPE}).
    *
-   * @return "int" ({@link JavaBasicType#JavaInt})
+   * @return "int" ({@link JavaBasicType#JAVA_INT_TYPE})
    */
   public JavaType getType1() {
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   /**

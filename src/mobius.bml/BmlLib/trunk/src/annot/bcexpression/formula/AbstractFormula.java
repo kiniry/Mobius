@@ -66,7 +66,7 @@ public abstract class AbstractFormula extends BCExpression {
 
   @Override
   public JavaType getType1() {
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
 }

@@ -16,15 +16,15 @@ import annot.textio.DisplayStyle;
 public final class JavaBasicType extends JavaType {
 
   /**
-   * boolean type.
+   * The boolean type.
    */
-  public static final JavaBasicType JavaBool =
+  public static final JavaBasicType JAVA_BOOLEAN_TYPE =
     new JavaBasicType(DisplayStyle.JT_BOOLEAN);
 
   /**
-   * int type.
+   * The int type.
    */
-  public static final JavaBasicType JavaInt =
+  public static final JavaBasicType JAVA_INT_TYPE =
     new JavaBasicType(DisplayStyle.JT_INT);
 
   /**
@@ -32,7 +32,10 @@ public final class JavaBasicType extends JavaType {
    */
   public static final JavaBasicType JavaType = new JavaBasicType(null);
 
-  public static final JavaBasicType ModifyExpressionType =
+  /**
+   * The type of modifies expressions.
+   */
+  public static final JavaBasicType MODIFIES_TYPE =
     new JavaBasicType(null);
 
   /**

@@ -18,7 +18,7 @@ import annot.textio.BMLConfig;
 public class NumberLiteral extends AbstractIntExpression {
 
   /**
-   * Expression's value
+   * The value of the current literal expression.
    */
   private int value;
 
@@ -39,7 +39,7 @@ public class NumberLiteral extends AbstractIntExpression {
   /**
    * A standard constructor, used eg. by the parser.
    *
-   * @param literal
+   * @param literal the value of the expression
    */
   public NumberLiteral(final int literal) {
     super(Code.INT_LITERAL);
@@ -47,15 +47,16 @@ public class NumberLiteral extends AbstractIntExpression {
   }
 
   /**
-   * @return JavaType of this expression, that is, JavaInt.
+   * @return JavaType of this expression, that is, JAVA_INT_TYPE.
    */
   @Override
   protected JavaType checkType1() {
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   /**
-   * @return String representation of it's value.
+   * @param conf - see {@link BMLConfig}
+   * @return String representation of the value of the number
    */
   @Override
   protected String printCode1(final BMLConfig conf) {
@@ -96,6 +97,9 @@ public class NumberLiteral extends AbstractIntExpression {
     aw.writeInt(this.value);
   }
 
+  /**
+   * @return the value of the literal expression.
+   */
   public int getValue() {
     return this.value;
   }

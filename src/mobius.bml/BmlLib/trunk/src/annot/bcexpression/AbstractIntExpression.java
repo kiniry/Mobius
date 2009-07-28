@@ -66,7 +66,7 @@ public abstract class AbstractIntExpression extends BCExpression {
 
   @Override
   public JavaType getType1() {
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
 }

@@ -47,7 +47,7 @@ public class ModifyList extends BCExpression {
 
   @Override
   protected JavaType checkType1() {
-    return JavaBasicType.ModifyExpressionType;
+    return JavaBasicType.MODIFIES_TYPE;
   }
 
   @Override
@@ -57,7 +57,7 @@ public class ModifyList extends BCExpression {
 
   @Override
   public JavaType getType1() {
-    return JavaBasicType.ModifyExpressionType;
+    return JavaBasicType.MODIFIES_TYPE;
   }
 
   public boolean isEmpty() {

@@ -350,7 +350,7 @@ staticfield :
   };
 
 field returns [BCField bcf]:
-  (nsfieldmodifier[afield])* typ=arr_type nm=ident smcol=SEMICOLON
+  (nsfieldmodifier[afield])* typ=type_spec nm=ident smcol=SEMICOLON
   {
      if ($nm.name != null && $typ.typ != null && $smcol.type == BMLLexer.SEMICOLON) {
                //may be null in case of syntax error
@@ -504,7 +504,7 @@ method :
       } else {
         syso("empty method attribute");
       }
-    }) methodmodifiers arr_type? methodheader
+    }) methodmodifiers type_spec? methodheader
         {
           if (clr) {
             syso("clearing method attributes");
@@ -563,22 +563,35 @@ methodmodifier :
    | VOLATILE
    | STRICTFP) {syso("method modifier");};  
 
-arr_type returns [Type typ]:
-    {
-      fsig = "";
-    }
-    nm=type (dims)? 
-    {
-      if ($nm.name != null) {
-        try {
-          $typ = Type.getType(fsig);
-        } catch (ClassFormatException e) {
-          //not signature type
-          $typ = Type.getType("Lsome/unrecognised/type;"); //TODO stupid default
-        }
-      }
-      syso("arr_type");
-    };
+type_spec returns [Type typ]:
+     {
+       fsig = "";
+     }
+     nm=type (dims)? 
+     {
+       if ($nm.name != null) {
+         try {
+           $typ = Type.getType(fsig);
+         } catch (ClassFormatException e) {
+           //not signature type
+           $typ = Type.getType("Lsome/unrecognised/type;"); //TODO stupid default
+         }
+       }
+       syso("type_spec");
+     }
+   | {
+       fsig = "";
+     }
+     TYPE (dims)?
+     {
+       try {
+         $typ = Type.getType("Ljava/lang/Class;" + fsig);
+       } catch (ClassFormatException e) {
+         //not signature type
+         $typ = Type.getType("Lsome/unrecognised/type;"); //TODO stupid default
+       }
+       syso("type_spec");
+     };
 
 type returns [String name] :
     rname=reference_type { $name = $rname.name; }
@@ -663,7 +676,7 @@ param_declaration_list : {syso("started param_declaration_list");}
   | param_declaration_noname (COMMA param_declaration_noname)*;
 
 param_declaration :
-  param_modifier? arr_type (i=IDENT
+  param_modifier? type_spec (i=IDENT
     {
        syso("IDENT=" + $i.getText());
     } | exponent_indicator | float_type_suffix)
@@ -673,7 +686,7 @@ param_declaration :
     };
 
 param_declaration_noname :
-  param_modifier? arr_type 
+  param_modifier? type_spec 
     {
        syso("noname ident");
     } 
@@ -947,7 +960,7 @@ formula returns [AbstractFormula ast] :
       reportError(new RecognitionException(input));
     } else {
       JavaType jt = $e.ast.checkType();
-      if (jt != JavaBasicType.JavaBool) {
+      if (jt != JavaBasicType.JAVA_BOOLEAN_TYPE) {
         syso("*** error ***");
         syso("wrong type error");
         reportError(new RecognitionException(input));
@@ -969,7 +982,7 @@ expression returns [AbstractIntExpression ast] :
       syso("no unchecked expression error");
       reportError(null);
     } else {
-      if ($e.ast.getType() != JavaBasicType.JavaInt) {
+      if ($e.ast.getType() != JavaBasicType.JAVA_INT_TYPE) {
         syso("*** error ***");
         syso("wrong type error");
         reportError(null);
@@ -1154,6 +1167,8 @@ primaryExpr returns [BCExpression ast] :
   | NULL {$ast = new NULL();}
   | THIS {$ast = new THIS(bcc);}
   | OLD PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new OLD($e1.ast);}
+  | TYPE_SMALL PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new TYPEsmall($e1.ast);}
+  | NONNULLELEMENTS PAR_LEFT e1=uncheckedExpression PAR_RIGHT {$ast = new NONNULLELEMENTS($e1.ast);}
   | PAR_LEFT e=uncheckedExpression PAR_RIGHT {$ast = $e.ast;}
   | LENGTH PAR_LEFT  e1=uncheckedExpression PAR_RIGHT {$ast = new ArrayLength($e1.ast);}
   ;
@@ -1306,6 +1321,9 @@ DOT2: '..';
 DOT: '.';
 OLD: '\\old';
 LENGTH: '\\length';
+TYPE: '\\TYPE';
+TYPE_SMALL: '\type';
+NONNULLELEMENTS: '\nonnullelements';
 BML_ONE_LINE_START: '//@';
 ONE_LINE_COMMENT: '//';
 BML_START: '/*@';

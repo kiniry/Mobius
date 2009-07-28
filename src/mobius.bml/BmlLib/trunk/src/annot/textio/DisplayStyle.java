@@ -183,6 +183,21 @@ public class DisplayStyle {
   public static final String OLD_KWD = "\\old";
 
   /**
+   * BML "\type" keyword.
+   */
+  public static final String TYPE_SMALL_KWD = "\\type";
+
+  /**
+   * BML "\TYPE" keyword.
+   */
+  public static final String TYPE_KWD = "\\TYPE";
+
+  /**
+   * BML "\nonnullelements" keyword.
+   */
+  public static final String NONNULLELEMENTS_KWD = "\\nonnullelements";
+
+  /**
    * BML "assert" keyword.
    */
   public static final String ASSERT_KWD = "assert";
@@ -242,6 +257,11 @@ public class DisplayStyle {
    * Java keyword for "null" value.
    */
   public static final String NULL_KWD = "null";
+
+  /**
+   * Java keyword for "this" identifier.
+   */
+  public static final String THIS_KWD = "this";
 
   /**
    * BML keyword for "ghost" modifier.

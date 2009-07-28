@@ -101,7 +101,8 @@ public class BCConstantPool extends BCCConstantPrinting
    * @param toSecondCP - <code>true</code> in case the constant should be
    *   added to the second constant pool, <code>false</code> in case this
    *   should be added to the first one
-   * @param constantPoolGen in which the new constant is interpreted
+   * @param constantPoolGen in which the new constant is interpreted; if
+   *   this is <code>null</code> then the current constant pool is used
    */
   public void addConstant(final Constant c,
                           final boolean toSecondCP,

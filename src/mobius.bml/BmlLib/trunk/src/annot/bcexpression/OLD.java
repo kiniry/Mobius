@@ -8,15 +8,16 @@ import annot.textio.BMLConfig;
 import annot.textio.DisplayStyle;
 
 /**
- * This class represents an <code>OLD</code> expression.
+ * This class represents an <code>\old</code> expression.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
  * @version a-01
  */
-public class OLD extends BCExpression {
+public class OLD extends UnaryExpression {
 
   /**
-   * A constructor from AttributeReader.
+   * A constructor which reads in the content of the
+   * expression from the given {@link AttributeReader}.
    *
    * @param ar - input stream to load from.
    * @param root - type of expression (last byte read from
@@ -31,46 +32,50 @@ public class OLD extends BCExpression {
   }
 
   /**
-   * A standard constructor.
+   * A standard constructor with subexpression.
    *
-   * @param subExpr - it's subexpression.
+   * @param subExpr the argument of \old.
    */
   public OLD(final BCExpression subExpr) {
     super(Code.OLD, subExpr);
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression provided that all
+   * the subexpressions have correct types. In this case, this is
+   * the type of the expression in the argument.
+   *
+   * @return the type of the old expression
+   */
   protected JavaType checkType1() {
     return getSubExpr(0).checkType1();
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression. In this case, this is
+   * the type of its argument.
+   *
+   * @return the type of the old expression
+   */
   public JavaType getType1() {
     return getSubExpr(0).getType();
   }
 
-  @Override
+  /**
+   * Returns the string representation of the expression which is
+   * the old keyword followed by the subexpression in ().
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return {@link DisplayStyle#RESULT_KWD}
+   */
   protected String printCode1(final BMLConfig conf) {
     return DisplayStyle.OLD_KWD + "(" + getSubExpr(0).printCode(conf) + ")";
   }
 
   /**
-   * Reads the subexpression from an AttributeReader (except
-   * connector, that has been already read and set).
-   *
-   * @param ar - stream to load from,
-   * @param root - connentor.
-   * @throws ReadAttributeException - if connector + stream
-   *     in <code>ar</code> doesn't represent any
-   *     expression from calling subclass.
+   * @return simple String representation of this
+   *     expression, for debugging only.
    */
-  protected void read(final AttributeReader ar, final int root)
-    throws ReadAttributeException {
-    setSubExprCount(1);
-    setSubExpr(0, ar.readExpression());
-  }
-
-  @Override
   public String toString() {
     return DisplayStyle.OLD_KWD + "(...)";
   }

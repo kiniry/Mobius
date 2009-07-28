@@ -5,11 +5,13 @@ import annot.bcexpression.javatype.JavaReferenceType;
 import annot.bcexpression.javatype.JavaType;
 import annot.io.Code;
 import annot.textio.BMLConfig;
+import annot.textio.DisplayStyle;
 
 /**
- * This class represents <code>'this'</code> expression.
+ * This class represents <code>this</code> expression.
  *
  * @author Tomasz Batkiewicz (tb209231@students.mimuw.edu.pl)
+ * @author Aleksy Schubert (alx@mimuw.edu.pl)
  * @version a-01
  */
 public class THIS extends BCExpression {
@@ -22,7 +24,6 @@ public class THIS extends BCExpression {
   /**
    * A standard constructor.
    *
-   * @param isOld - whether it should be OLD_THIS or THIS,
    * @param classRepresentation - initializing class.
    */
   public THIS(final BCClass classRepresentation) {
@@ -30,9 +31,16 @@ public class THIS extends BCExpression {
     this.bcc = classRepresentation;
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression provided that all
+   * the subexpressions have correct types. In this case, this is
+   * the type of the object in which the identifier <code>this</code> is used
+   * and no subexpressions are checked.
+   *
+   * @return the type of the object in which the identifier is used.
+   */
   protected JavaType checkType1() {
-    return getType();
+    return getType1();
   }
 
   /**
@@ -42,19 +50,33 @@ public class THIS extends BCExpression {
     return this.bcc;
   }
 
-  @Override
+  /**
+   * This method returns the type of this expression. In this case, this is
+   * the type of the object in which the identifier <code>this</code> is used.
+   *
+   * @return the type of the method with this result
+   */
   public JavaType getType1() {
     return JavaReferenceType.ANY;
   }
 
-  @Override
+  /**
+   * Returns the string representation of the expression which is
+   * contained in {@link DisplayStyle#THIS_KWD}.
+   *
+   * @param conf - see {@link BMLConfig}.
+   * @return {@link DisplayStyle#THIS_KWD}
+   */
   protected String printCode1(final BMLConfig conf) {
-    return "this";
+    return DisplayStyle.THIS_KWD;
   }
 
-  @Override
+  /**
+   * @return simple String representation of this
+   *     expression, for debugging only.
+   */
   public String toString() {
-    return "this";
+    return DisplayStyle.THIS_KWD;
   }
 
 }

@@ -61,11 +61,11 @@ public class ArithmeticExpression extends AbstractIntExpression {
 
   @Override
   protected JavaType checkType1() {
-    if (getSubExpr(0).getType() != JavaBasicType.JavaInt ||
-        getSubExpr(1).getType() != JavaBasicType.JavaInt) {
+    if (getSubExpr(0).getType() != JavaBasicType.JAVA_INT_TYPE ||
+        getSubExpr(1).getType() != JavaBasicType.JAVA_INT_TYPE) {
       return null;
     }
-    return JavaBasicType.JavaInt;
+    return JavaBasicType.JAVA_INT_TYPE;
   }
 
   @Override

@@ -48,7 +48,7 @@ public class Predicate2Ar extends AbstractFormula {
    * Checks if all subexpressions have correct types
    * and return type of this predicate.
    *
-   * @return JavaBool, or null if it's invalid
+   * @return JAVA_BOOLEAN_TYPE, or null if it's invalid
    *     (if one of it's subexpression have wrong type
    *     or is invalid).
    */
@@ -59,11 +59,11 @@ public class Predicate2Ar extends AbstractFormula {
       return null;
     }
     if (getConnector() != Code.EQ && getConnector() != Code.NOTEQ) {
-      if (getSubExpr(0).getType() != JavaBasicType.JavaInt) {
+      if (getSubExpr(0).getType() != JavaBasicType.JAVA_INT_TYPE) {
         return null;
       }
     }
-    return JavaBasicType.JavaBool;
+    return JavaBasicType.JAVA_BOOLEAN_TYPE;
   }
 
   /**
