@@ -106,15 +106,9 @@ public class BONcBuilder extends IncrementalProjectBuilder {
     getProject().deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
 
     System.out.println("Bonc args: " + boncArgs.toString());
-    try {
-      Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
-    } catch (Exception e) {
-      System.out.println("Exception whilst running BONc: " + e);
-      e.printStackTrace();
-    }
-    Problems problems = Main.getProblems();
-    Collection<BONProblem> actualProblems = problems.getProblems();
 
+    Problems problems = Main.main2(boncArgs.toArray(new String[boncArgs.size()]), false);
+    Collection<BONProblem> actualProblems = problems.getProblems();
 
     try {
       for (BONProblem bonProblem : actualProblems) {
@@ -165,6 +159,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       }
     } catch (Exception e) {
       System.out.println("Exception: " + e);
+      e.printStackTrace();
     }
   }
 
