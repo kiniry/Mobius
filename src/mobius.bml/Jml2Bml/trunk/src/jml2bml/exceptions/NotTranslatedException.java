@@ -9,4 +9,8 @@ public class NotTranslatedException extends Exception {
   public NotTranslatedException(final Exception exc) {
     super(exc);
   }
+
+  public NotTranslatedException(final String message) {
+    super(message);
+  }
 }
