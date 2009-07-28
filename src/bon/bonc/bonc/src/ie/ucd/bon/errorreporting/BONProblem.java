@@ -55,10 +55,10 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   /**
    * Returns a String which simply contains a caret character to indicate the location of
    * the error.
-   * @param re The RecognitionException representing the error.
+   * @param caretPosition The character position of the error.
    * @return A String to indicate the position of the error.
    */
-  private String getErrorPosition(int caretPosition) {
+  private static String getErrorPosition(int caretPosition) {
     StringBuilder sb = new StringBuilder();
     for (int i=0; i < caretPosition; i++) {
       sb.append(' ');

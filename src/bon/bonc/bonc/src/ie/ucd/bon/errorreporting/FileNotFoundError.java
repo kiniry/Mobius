@@ -16,15 +16,7 @@ public class FileNotFoundError extends ParsingError {
   
   public FileNotFoundError(File sourceFile) {
     //super(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
-    super(new SourceLocation(
-                sourceFile, 
-                SourceLocation.FILE_PROBLEM, 
-                SourceLocation.UNKNOWN_CHAR_POSITION,
-                SourceLocation.UNKNOWN_CHAR_POSITION,
-                SourceLocation.UNKNOWN_CHAR_POSITION
-        ),
-        true
-        );
+    super(SourceLocation.NO_LOCATION, true);
   }
 
   public void printStart(PrintStream ps) {
