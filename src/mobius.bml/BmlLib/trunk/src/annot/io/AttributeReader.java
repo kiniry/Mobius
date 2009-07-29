@@ -254,19 +254,24 @@ public class AttributeReader {
           MLog.putMsg(MessageLog.LEVEL_PINFO, "    reading attribute: " +
                       AttributeNames.BML_ATTRIBUTE_NAMES[i]);
           attributeHandlers[i].load(this);
-          return;
+          if (this.pos == this.length) {
+            return;
+          } else {
+            MLog.putMsg(MessageLog.LEVEL_PTODO,
+                        this.length - this.pos + " of " +
+                        this.length + " bytes unread!");
+            throw new ReadAttributeException(this.length - this.pos + " of " +
+                                             this.length + " bytes unread!");
+          }
         } else {
           MLog.putMsg(MessageLog.LEVEL_PTODO,
                       "    unexpected attribute: " + aname);
+          throw new ReadAttributeException("Unexpected attribute: " + aname);
         }
       }
     }
     MLog.putMsg(MessageLog.LEVEL_PTODO,
                 "    unrecognized attribute: " + aname);
-    if (this.pos != this.length) {
-      throw new ReadAttributeException(this.length - this.pos + " of " +
-                                       this.length + " bytes unread!");
-    }
   }
 
   /**
