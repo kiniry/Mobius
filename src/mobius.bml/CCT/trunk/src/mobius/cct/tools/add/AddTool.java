@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import mobius.cct.bmllib.BmlClassFile;
+import mobius.cct.bmllib.BmlClassReader;
 import mobius.cct.certificates.CertificateCollector;
 import mobius.cct.certificates.CertificatePack;
 import mobius.cct.certificates.ClassCertificate;
@@ -18,8 +20,6 @@ import mobius.cct.certificates.DefaultCertificateParser;
 import mobius.cct.certificates.MethodCertificate;
 import mobius.cct.certificates.writer.CertificateWriter;
 import mobius.cct.classfile.ClassFile;
-import mobius.cct.classfile.DefaultClassFile;
-import mobius.cct.classfile.DefaultClassReader;
 import mobius.cct.classfile.MethodName;
 import mobius.cct.tools.AbstractTool;
 import mobius.cct.tools.Environment;
@@ -92,9 +92,9 @@ public final class AddTool extends AbstractTool {
    * @param env Environment.
    * @return Parsed class file or null.
    */
-  private DefaultClassFile readInput(final Environment env) {
+  private BmlClassFile readInput(final Environment env) {
     final PrintStream stderr = env.getErr();
-    final DefaultClassReader reader = new DefaultClassReader();
+    final BmlClassReader reader = new BmlClassReader();
     final String inputName = env.getArgs()[INPUT_ARG];
     try {
       return reader.read(new FileInputStream(inputName));
@@ -116,7 +116,7 @@ public final class AddTool extends AbstractTool {
    * @return Certificate packs.
    */
   private CertificateCollector<ClassFile> 
-  getCertificates(final DefaultClassFile f, final Environment env) {
+  getCertificates(final BmlClassFile f, final Environment env) {
     final PrintStream stderr = env.getErr();
     final CertificateCollector<ClassFile> result = 
       new CertificateCollector<ClassFile>();
@@ -139,7 +139,7 @@ public final class AddTool extends AbstractTool {
    * @param c Modified certificates.
    * @param env Environment.
    */
-  private void writeCerts(final DefaultClassFile f,
+  private void writeCerts(final BmlClassFile f,
                           final OutputStream o,
                           final CertificateCollector<ClassFile> c,
                           final Environment env) {
@@ -339,7 +339,7 @@ public final class AddTool extends AbstractTool {
    */
   public void addClassCertificate(final Environment env) {
     final ClassCertificate c = createCert(env);
-    final DefaultClassFile f = readInput(env);
+    final BmlClassFile f = readInput(env);
     if ((c != null) && (f != null)) {
       final CertificateCollector<ClassFile> certs = 
         getCertificates(f, env);
@@ -360,7 +360,7 @@ public final class AddTool extends AbstractTool {
    */
   public void addMethodCertificate(final Environment env) {
     final MethodCertificate c = createMCert(env);
-    final DefaultClassFile f = readInput(env);
+    final BmlClassFile f = readInput(env);
     if ((c != null) && (f != null)) {
       final CertificateCollector<ClassFile> certs = 
         getCertificates(f, env);

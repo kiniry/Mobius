@@ -12,11 +12,14 @@
 	<taskdef resource="checkstyletask.properties"
 	         classpath="${tools.dir}/${checkstyle.jar}"/>
 
+	 <path id="CCT.libs">
+	    <fileset dir="${lib.dir}">
+	      <include name="**/*.jar" />
+	    </fileset>
+	  </path>
 	<path id="CCT.classpath">
 		<pathelement location="${build.dir}/classes" />
-		<fileset dir="${lib.dir}">
-			<include name="**/*.jar" />
-		</fileset>
+    <path refid="CCT.libs" />
 	</path>
 	<path id="CCT.tests.classpath">
 		<pathelement location="${tests.build.dir}/classes" />
@@ -25,7 +28,14 @@
 		</fileset>
 		<path refid="CCT.classpath" />
 	</path>
-
+  <pathconvert 
+     property="CCT.classpath.str" 
+     refid="CCT.libs" 
+     pathsep=" " dirsep="/">
+     <flattenmapper />            
+   </pathconvert>
+	
+	
 	<target name="init">
 		<mkdir dir="${src.dir}" />
 		<mkdir dir="${build.dir}" />
@@ -47,10 +57,16 @@
 		<mkdir dir="${dist.dir}" />
 		<delete file="${dist.dir}/${jar.file}" />
 		<jar destfile="${dist.dir}/${jar.file}" 
-			 basedir="${build.dir}/classes"
-			 manifest="MANIFEST.MF">
+			   basedir="${build.dir}/classes">
+	     <manifest>
+	        <attribute name="Main-Class" value="${main.class}" />
+	        <attribute name="Class-Path" value="${CCT.classpath.str}" />
+	      </manifest>
 			<include name="**/*" />
 		</jar>
+    <copy includeemptydirs="false" todir="${dist.dir}">
+      <fileset dir="${lib.dir}" includes="**/*.jar" />
+    </copy>
 	</target>
 
 	<target name="tests.init" depends="build">

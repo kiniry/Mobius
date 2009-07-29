@@ -28,13 +28,14 @@ public class BmlClassFile implements MutableClassFile {
   public BmlClassFile(final BCClass clazz) {
     this.clazz = clazz;
   }
-  
+
+  /** {@inheritDoc} */
   @Override
   public ClassVisitor getWriter(final OutputStream os) {
-    // TODO: Implement.
-    return null;
+    return new BmlWriter(clazz, os);
   }
 
+  /** {@inheritDoc} */
   @Override
   public void visit(final ClassVisitor v) 
     throws VisitorException {
@@ -51,5 +52,15 @@ public class BmlClassFile implements MutableClassFile {
       final MethodVisitor mv = v.visitMethod(meth.getName());
       meth.accept(mv);
     }
+    v.end();
+  }
+  
+  /**
+   * Get class name.
+   * @return Class name.
+   */
+  public ClassName getName() {
+    return ClassName.parseInternal(
+             clazz.getJC().getClassName().replace('.', '/'));
   }
 }

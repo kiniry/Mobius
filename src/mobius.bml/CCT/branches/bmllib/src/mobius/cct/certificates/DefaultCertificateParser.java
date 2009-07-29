@@ -141,6 +141,7 @@ final class Visitor implements ClassVisitor {
   public void visitAttribute(final Attribute attr) 
     throws VisitorException {
     try {
+      System.err.println(attr.getName());
       if (SecondConstantPool.ATTR.equals(attr.getName())) {
         if (fSecondConstantPool == null) {
           fSecondConstantPool = DefaultCertificateParser.parseSCP(attr);
@@ -210,7 +211,7 @@ final class Visitor implements ClassVisitor {
       final byte[] data = readData(ds);
       return new ClassCertificate(type, version, imports, data);
     } catch (IOException e) {
-      throw new InvalidFormatException(e.getMessage());
+      throw new InvalidFormatException(e);
     }
   }
   

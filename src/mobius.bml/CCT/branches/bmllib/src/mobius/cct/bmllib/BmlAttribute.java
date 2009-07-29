@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.bcel.Constants;
 import org.apache.bcel.classfile.ConstantUtf8;
 
 import mobius.cct.classfile.Attribute;
