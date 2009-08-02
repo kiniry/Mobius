@@ -24,6 +24,7 @@ public interface BONcOptionsInterface {
    */
   static enum  Print {
     SYSO("SYSO"),    TXT("TXT"),    DOT("DOT"),    HTML("HTML"),    DIC("DIC"),    IIG("IIG"),    ICG("ICG"),    CL("CL"),    PICG("PICG"),    PIIG("PIIG");
+
     private final String[] matchStrings;
     private Print(final String... s) {
       matchStrings = s;
@@ -33,7 +34,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@3ee05ad6, ie.ucd.clops.util.Pair@7b6bb7d9, ie.ucd.clops.util.Pair@5cf346dc, ie.ucd.clops.util.Pair@67b14530, ie.ucd.clops.util.Pair@2735877f, ie.ucd.clops.util.Pair@2b52b6f5, ie.ucd.clops.util.Pair@4369a50b, ie.ucd.clops.util.Pair@4cd297c0, ie.ucd.clops.util.Pair@15e8e5a7, ie.ucd.clops.util.Pair@6d3d422d]]
+     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@67a5fb5a, ie.ucd.clops.util.Pair@421906df, ie.ucd.clops.util.Pair@79123c5f, ie.ucd.clops.util.Pair@1c39bf12, ie.ucd.clops.util.Pair@132f4538, ie.ucd.clops.util.Pair@469695f, ie.ucd.clops.util.Pair@2484de3c, ie.ucd.clops.util.Pair@f1a47df, ie.ucd.clops.util.Pair@6648938, ie.ucd.clops.util.Pair@326cbecf]]
      * @return a valid Print member.
      */
     public static Print get(final String s) {
@@ -341,6 +342,7 @@ public interface BONcOptionsInterface {
    */
   static enum  Graph {
     ICG("ICG"),    IIG("IIG");
+
     private final String[] matchStrings;
     private Graph(final String... s) {
       matchStrings = s;
@@ -350,7 +352,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@25f7d3f, ie.ucd.clops.util.Pair@4b17b450]]
+     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@14cee41f, ie.ucd.clops.util.Pair@1ae2b9e5]]
      * @return a valid Graph member.
      */
     public static Graph get(final String s) {

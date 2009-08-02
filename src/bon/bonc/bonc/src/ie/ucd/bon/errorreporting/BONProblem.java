@@ -74,7 +74,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
   }
 
   protected void printStart(PrintStream ps) {
-    if (location != null) {
+    if (location != null && location != SourceLocation.NO_LOCATION) {
       ps.print(location.getSourceFilePath());
       ps.print(':');
 

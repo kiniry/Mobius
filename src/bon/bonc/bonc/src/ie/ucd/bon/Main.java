@@ -12,6 +12,7 @@ import ie.ucd.bon.clinterface.InvalidArgumentsError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.util.FileUtil;
+import ie.ucd.clops.runtime.errors.ParseResult;
 import ie.ucd.clops.util.OptionUtil;
 
 import java.io.File;
@@ -76,7 +77,8 @@ public final class Main {
       //CLOLogger.setLogLevel(Level.FINE);
       BONcParser clParser = new BONcParser();
 
-      if (clParser.parse(args)) {
+      ParseResult clParseResult = clParser.parse(args);
+      if (clParseResult.successfulParse()) {
         BONcOptionStore options = clParser.getOptionStore();
 
         debug = options.isDebugSet() && options.getDebug(); 
@@ -111,10 +113,13 @@ public final class Main {
             return problems;
           }
         }
-      }
-      //TODO print usage  
+      } 
+      
+      //Invalid command line parse
       overallProblems.addProblem(new InvalidArgumentsError("Invalid arguments."));
-      API.printResults(overallProblems, System.out);
+      overallProblems.printProblems(System.out);
+      clParseResult.printErrorsAndWarnings(System.out);
+      //TODO print usage  
       if (exitOnFailure) {
         System.exit(1);
       }
@@ -133,7 +138,7 @@ public final class Main {
 
   public static Problems run(final List<File> files, final BONcOptionsInterface so) {
     Problems totalProblems = new Problems("Total problems");
-    
+
     //Timing info?
     boolean printTiming = so.getTime();
     boolean readFromStdIn = so.getReadFromStdin();
@@ -141,14 +146,14 @@ public final class Main {
     ParsingTracker tracker = API.parse(files, readFromStdIn, printTiming);
     Problems parseProblems = tracker.getErrorsAndWarnings();
     totalProblems.addProblems(parseProblems);
-    
+
     if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
       Problems typeCheckProblems = API.typeCheck(tracker, so, printTiming);
       totalProblems.addProblems(typeCheckProblems);
     } else {
       tracker.setFinalMessage("Not typechecking due to parse errors.");
     }
-    
+
     API.printResults(totalProblems, tracker, System.out);    
 
     if (so.isPrintSet()) {
