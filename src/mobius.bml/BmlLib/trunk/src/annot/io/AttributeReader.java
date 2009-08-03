@@ -30,6 +30,7 @@ import annot.bcexpression.OLD;
 import annot.bcexpression.RESULT;
 import annot.bcexpression.SingleOccurence;
 import annot.bcexpression.THIS;
+import annot.bcexpression.TYPEsmall;
 import annot.bcexpression.UnaryArithmeticExpression;
 import annot.bcexpression.formula.AbstractFormula;
 import annot.bcexpression.formula.Formula;
@@ -400,6 +401,8 @@ public class AttributeReader {
         }
         final String name = ((ConstantUtf8) c).getBytes();
         return JavaType.getJavaType(name);
+      case Code.TYPE_SMALL:
+        return new TYPEsmall(this, b);
       default:
         throw new ReadAttributeException("Unknown expression code: " + b);
     }

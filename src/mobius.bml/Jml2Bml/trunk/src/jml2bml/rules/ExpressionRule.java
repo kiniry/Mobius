@@ -6,8 +6,6 @@
  */
 package jml2bml.rules;
 
-import java.util.List;
-
 import javax.lang.model.type.TypeKind;
 
 import jml2bml.ast.TreeNodeFinder;
@@ -65,10 +63,10 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -353,9 +351,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       final BCExpression expr = scan(node.getArguments(), p);
       return new OLD(expr);
     } else if (node.token == JmlToken.BSTYPELC) {
-      List l = node.getTypeArguments();
-      final BCExpression expr = scan(l, p);
-      return new TYPEsmall(expr);
+      JCIdent expr = (JCIdent)node.getArguments().head;
+      JavaType type = JavaType.getJavaType(TypeSignature.getSignature(((TypeSymbol) expr.sym).type));
+      return new TYPEsmall(type);
     } else if (node.token == JmlToken.BSNONNULLELEMENTS) {
       final BCExpression expr = scan(node.getArguments(), p);
       return new NONNULLELEMENTS(expr);

@@ -6,8 +6,6 @@
  */
 package jml2bml.rules;
 
-import java.util.Set;
-
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -26,7 +24,6 @@ import com.sun.org.apache.bcel.internal.Constants;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.tree.JCTree.JCModifiers;
 import com.sun.tools.javac.util.Context;
 
 /**
