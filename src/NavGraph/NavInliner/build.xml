@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="inliner" default="makejar" basedir=".">
+
+	<target name ="makejar" description="Create a jar">
+		<jar jarfile="inliner.jar">
+			<fileset dir="bin"/>
+		</jar>
+	</target>
+	
+	<target name="cleanjar" description="Remove jar">
+		<delete file="inliner.jar"/>
+	</target>
+
+</project>
