@@ -1,0 +1,5 @@
+#!/bin/bash
+matos-v2 -d lcdui -o sortie.xml $*
+java -classpath bin: navmid.ui.Main sortie.xml
+dot -Tps sortie.dot > sortie.ps
+gv sortie.ps

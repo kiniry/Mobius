@@ -1,0 +1,265 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE matres SYSTEM "http://rd.francetelecom.com/matres.dtd" []>
+<root>
+<midlet name="Traffic">
+<commandAction class="Traffic" method="startApp" extends="javax.microedition.midlet.MIDlet">
+<action id="1">
+<path start="0"> </path>
+</action>
+<action id="0">
+<path start="-1"> </path>
+</action>
+</commandAction>
+<commandAction class="Traffic" method="pauseApp" extends="javax.microedition.midlet.MIDlet">
+<action id="0">
+<path start="0"> </path>
+</action>
+</commandAction>
+<commandAction class="Traffic" method="destroyApp" extends="javax.microedition.midlet.MIDlet">
+<action id="0">
+<path start="0"> </path>
+</action>
+</commandAction>
+<commandAction class="com.francetelecom.rd.fakemidp.EventScheduler" method="run" extends="java.lang.Runnable">
+<action id="0">
+</action>
+</commandAction>
+<commandAction class="java.lang.Thread" method="run" extends="java.lang.Runnable">
+<action id="0">
+<path start="0"> </path>
+</action>
+</commandAction>
+<commandAction class="navmark.CommPrinter" method="run" extends="java.lang.Runnable">
+<action id="0">
+</action>
+</commandAction>
+<commandAction class="com.francetelecom.rd.fakemidp.DisplayableImplem$DisplayableRunner" method="run" extends="java.lang.Runnable">
+<action id="0">
+<path start="0"> </path>
+</action>
+</commandAction>
+<commandAction class="Traffic" method="commandAction" extends="javax.microedition.lcdui.CommandListener">
+<action id="2">
+<path start="0"> <branchref id="2" pos="Y"/> </path>
+</action>
+<action id="1">
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="Y"/> <branchref id="4" pos="Y"/> </path>
+</action>
+<action id="3">
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="Y"/> <branchref id="4" pos="N"/> <branchref id="5" pos="Y"/> </path>
+</action>
+<action id="4">
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="Y"/> <branchref id="4" pos="N"/> <branchref id="5" pos="N"/> </path>
+</action>
+<action id="3">
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="N"/> <branchref id="6" pos="Y"/> </path>
+</action>
+<action id="5">
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="N"/> <branchref id="6" pos="N"/> <branchref id="7" pos="Y"/> </path>
+</action>
+<action id="0">
+<path start="2"> </path>
+<path start="0"> <branchref id="2" pos="N"/> <branchref id="3" pos="N"/> <branchref id="6" pos="N"/> <branchref id="7" pos="N"/> </path>
+</action>
+</commandAction>
+<node id="1">
+  <class name="Traffic"/>
+  <interface name="javax.microedition.lcdui.CommandListener"/>
+  <class name="javax.microedition.midlet.MIDlet"/>
+  <class name="com.francetelecom.rd.fakemidp.MIDletImplem"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="18">
+  <class name="javax.microedition.lcdui.Ticker"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="65">
+  <class name="javax.microedition.lcdui.Display"/>
+  <class name="com.francetelecom.rd.fakemidp.DisplayImplem"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="20">
+  <class name="javax.microedition.lcdui.Command"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="22">
+  <class name="javax.microedition.lcdui.Command"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="24">
+  <class name="javax.microedition.lcdui.List"/>
+  <interface name="javax.microedition.lcdui.Choice"/>
+  <class name="javax.microedition.lcdui.Screen"/>
+  <class name="javax.microedition.lcdui.Displayable"/>
+  <class name="com.francetelecom.rd.fakemidp.DisplayableImplem"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="26">
+  <class name="javax.microedition.lcdui.List"/>
+  <interface name="javax.microedition.lcdui.Choice"/>
+  <class name="javax.microedition.lcdui.Screen"/>
+  <class name="javax.microedition.lcdui.Displayable"/>
+  <class name="com.francetelecom.rd.fakemidp.DisplayableImplem"/>
+  <class name="java.lang.Object"/>
+</node>
+<node id="28">
+  <class name="javax.microedition.lcdui.List"/>
+  <interface name="javax.microedition.lcdui.Choice"/>
+  <class name="javax.microedition.lcdui.Screen"/>
+  <class name="javax.microedition.lcdui.Displayable"/>
+  <class name="com.francetelecom.rd.fakemidp.DisplayableImplem"/>
+  <class name="java.lang.Object"/>
+</node>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="159" target="addCommand">
+  <and><refnode id="26"/><refnode id="22"/></and>
+</args>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="78" target="addCommand">
+  <and><refnode id="24"/><refnode id="22"/></and>
+</args>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildTimes()V&gt;" offset="156" target="addCommand">
+  <and><refnode id="28"/><refnode id="22"/></and>
+</args>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildTimes()V&gt;" offset="127" target="addCommand">
+  <and><refnode id="28"/><refnode id="20"/></and>
+</args>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="130" target="addCommand">
+  <and><refnode id="26"/><refnode id="20"/></and>
+</args>
+<args id="DISPLAYABLE_ADD_COMMAND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="52" target="addCommand">
+  <and><refnode id="24"/><refnode id="20"/></and>
+</args>
+<args id="MIDLET_DESTROY" orig="&lt;Traffic: commandAction(Ljavax/microedition/lcdui/Command;Ljavax/microedition/lcdui/Displayable;)V&gt;" offset="78" target="notifyDestroyed" lcdui="4">
+  <and><refnode id="1"/></and>
+</args>
+<args id="MIDLET_DESTROY" orig="&lt;Traffic: commandAction(Ljavax/microedition/lcdui/Command;Ljavax/microedition/lcdui/Displayable;)V&gt;" offset="20" target="notifyDestroyed" lcdui="2">
+  <and><refnode id="1"/></and>
+</args>
+<args id="CONNECTOR_OPEN_1" orig="&lt;Traffic: getData(Ljava/lang/String;Ljavax/microedition/lcdui/List;)V&gt;" offset="15" target="open" crit="2">
+  <and><unop function="Traffic_getData_1"><and><binop function="+"><binop function="+"><binop function="+"><binop function="+"><binop function="+"><string value=""/> <string value="http://magnum.ondemandinformation.com/chicago/servlet/TrafficServlet?method=listTimes"/></binop> <string value="&amp;street="/></binop> <unop function="java.lang.String.replace"><constant value="' '" type="char"/></unop></binop> <string value="&amp;direction="/></binop> <unop function="Traffic_direction"><or><constant value="null" type="null_type"/><unop function="javax.microedition.lcdui.List.getString"><unknown value="($r13,i1)"/></unop><constant value="null" type="null_type"/></or></unop></binop></and></unop></and>
+</args>
+<args id="CONNECTOR_OPEN_1" orig="&lt;navmark.CommPrinter: run()V&gt;" offset="5" target="open" crit="1">
+  <and><unop function="navmark.CommPrinter_address"><binop function="+"><string value="comm:"/> <or><unop function="java.lang.System.getProperty"><unknown value="(&quot;microedition.commports&quot;)"/></unop><unop function="java.lang.String.substring"><constant value="0" type="int"/></unop></or></binop></unop></and>
+</args>
+<args id="ALERT_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildTimes()V&gt;" offset="182" target="setCommandListener">
+  <and><refnode id="28"/><refnode id="1"/></and>
+</args>
+<args id="ALERT_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="185" target="setCommandListener">
+  <and><refnode id="26"/><refnode id="1"/></and>
+</args>
+<args id="ALERT_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="104" target="setCommandListener">
+  <and><refnode id="24"/><refnode id="1"/></and>
+</args>
+<args id="COMMAND_NEW_1" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="59" target="&lt;init&gt;">
+  <and><refnode id="20"/><string value="Exit"/><constant value="7" type="int"/><constant value="2" type="int"/></and>
+</args>
+<args id="COMMAND_NEW_1" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="101" target="&lt;init&gt;">
+  <and><refnode id="22"/><string value="Back"/><constant value="2" type="int"/><constant value="1" type="int"/></and>
+</args>
+<args id="TICKER_NEW" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="37" target="&lt;init&gt;">
+  <and><refnode id="18"/><string value="www.ondemandinformation.com"/></and>
+</args>
+<args id="DISPLAY_SET_CURRENT_1" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="131" target="setCurrent" lcdui="3">
+  <and><refnode id="65"/><refnode id="24"/></and>
+</args>
+<args id="DISPLAY_SET_CURRENT_1" orig="&lt;Traffic: buildTimes()V&gt;" offset="209" target="setCurrent" lcdui="5">
+  <and><refnode id="65"/><refnode id="28"/></and>
+</args>
+<args id="DISPLAY_SET_CURRENT_1" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="212" target="setCurrent" lcdui="1">
+  <and><refnode id="65"/><refnode id="26"/></and>
+</args>
+<args id="DISPLAYABLE_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="185" target="setCommandListener">
+  <and><refnode id="26"/><refnode id="1"/></and>
+</args>
+<args id="DISPLAYABLE_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildTimes()V&gt;" offset="182" target="setCommandListener">
+  <and><refnode id="28"/><refnode id="1"/></and>
+</args>
+<args id="DISPLAYABLE_SET_COMMAND_LISTENER" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="104" target="setCommandListener">
+  <and><refnode id="24"/><refnode id="1"/></and>
+</args>
+<args id="LIST_APPEND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="24"/><string value="Outbound"/></and>
+</args>
+<args id="LIST_APPEND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="24"/><string value="Inbound"/></and>
+</args>
+<args id="LIST_APPEND" orig="&lt;Traffic: getData(Ljava/lang/String;Ljavax/microedition/lcdui/List;)V&gt;" offset="null" target="append">
+  <and><refnode id="28"/><unop function="*"><binop function="+"><string value=""/> <unop function="java.io.InputStream.read"><unknown value="(r4,)"/></unop></binop></unop></and>
+</args>
+<args id="LIST_APPEND" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="26"/><or><string value="Edens"/><string value="Dan Ryan"/><string value="Stevenson"/><string value="Kingery"/><string value="LakeShore Drive S."/><string value="Eisenhower"/><string value="Bishop Ford"/><string value="Lakeshore Drive N."/><string value="I-57"/><string value="Kennedy"/></or></and>
+</args>
+<args id="CHOICE_DELETE" orig="&lt;Traffic: buildTimes()V&gt;" offset="77" target="delete">
+  <and><refnode id="28"/><constant value="0" type="int"/></and>
+</args>
+<args id="CHOICE_APPEND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="24"/><string value="Outbound"/><constant value="null" type="null_type"/></and>
+</args>
+<args id="CHOICE_APPEND" orig="&lt;Traffic: getData(Ljava/lang/String;Ljavax/microedition/lcdui/List;)V&gt;" offset="null" target="append">
+  <and><refnode id="28"/><unop function="*"><binop function="+"><string value=""/> <unop function="java.io.InputStream.read"><unknown value="(r4,)"/></unop></binop></unop><constant value="null" type="null_type"/></and>
+</args>
+<args id="CHOICE_APPEND" orig="&lt;Traffic: buildStreetsMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="26"/><or><string value="Kennedy"/><string value="Edens"/><string value="Dan Ryan"/><string value="Kingery"/><string value="Eisenhower"/><string value="LakeShore Drive S."/><string value="Stevenson"/><string value="Lakeshore Drive N."/><string value="Bishop Ford"/><string value="I-57"/></or><constant value="null" type="null_type"/></and>
+</args>
+<args id="CHOICE_APPEND" orig="&lt;Traffic: buildDirectionMenu()V&gt;" offset="null" target="append">
+  <and><refnode id="24"/><string value="Inbound"/><constant value="null" type="null_type"/></and>
+</args>
+<args id="LIST_NEW_1" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="175" target="&lt;init&gt;">
+  <and><refnode id="26"/><string value="Chicago Roads"/><constant value="3" type="int"/></and>
+</args>
+<args id="LIST_NEW_1" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="212" target="&lt;init&gt;">
+  <and><refnode id="28"/><string value="Travel Times"/><constant value="3" type="int"/></and>
+</args>
+<args id="LIST_NEW_1" orig="&lt;Traffic: &lt;init&gt;()V&gt;" offset="138" target="&lt;init&gt;">
+  <and><refnode id="24"/><string value="Direction?"/><constant value="3" type="int"/></and>
+</args>
+<return id="RETURN_IMAGE_CREATE_1" signature="&lt;javax.microedition.lcdui.Image: javax.microedition.lcdui.Image createImage(int,int)&gt;">
+</return>
+<return id="RETURN_IMAGE_CREATE_2" signature="&lt;javax.microedition.lcdui.Image: javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image)&gt;">
+</return>
+<return id="RETURN_IMAGE_CREATE_5" signature="&lt;javax.microedition.lcdui.Image: javax.microedition.lcdui.Image createImage(javax.microedition.lcdui.Image,int,int,int,int,int)&gt;">
+</return>
+<return id="RETURN_IMAGE_CREATE_3" signature="&lt;javax.microedition.lcdui.Image: javax.microedition.lcdui.Image createImage(java.lang.String)&gt;">
+</return>
+<return id="RETURN_IMAGE_CREATE_4" signature="&lt;javax.microedition.lcdui.Image: javax.microedition.lcdui.Image createImage(byte[],int,int)&gt;">
+</return>
+<return id="RETURN_FONT_DEFAULT" signature="&lt;javax.microedition.lcdui.Font: javax.microedition.lcdui.Font getDefaultFont()&gt;">
+</return>
+<branch id="1">
+  <unknown><binop function="=="><unop function="java.util.Vector.size"><unknown value="($r10,)"/></unop> <constant value="0" type="int"/></binop></unknown>
+</branch>
+<branch id="2">
+  <test id="!=">
+    <parameter pos="1"/>
+    <refnode id="20"/>
+  </test>
+</branch>
+<branch id="3">
+  <test id="!=">
+    <parameter pos="1"/>
+    <refnode id="22"/>
+  </test>
+</branch>
+<branch id="4">
+  <unknown><binop function="=="><binop function="equals"><or><string value="times"/><string value="direction"/><string value="streets"/></or> <constant value="&quot;direction&quot;" type="java.lang.Object"/></binop> <constant value="0" type="int"/></binop></unknown>
+</branch>
+<branch id="5">
+  <unknown><binop function="=="><binop function="equals"><or><string value="times"/><string value="streets"/><string value="direction"/></or> <constant value="&quot;times&quot;" type="java.lang.Object"/></binop> <constant value="0" type="int"/></binop></unknown>
+</branch>
+<branch id="6">
+  <unknown><binop function="=="><binop function="equals"><or><string value="direction"/><string value="streets"/><string value="times"/></or> <constant value="&quot;streets&quot;" type="java.lang.Object"/></binop> <constant value="0" type="int"/></binop></unknown>
+</branch>
+<branch id="7">
+  <unknown><binop function="=="><binop function="equals"><or><string value="direction"/><string value="times"/><string value="streets"/></or> <constant value="&quot;direction&quot;" type="java.lang.Object"/></binop> <constant value="0" type="int"/></binop></unknown>
+</branch>
+<lcdui>
+<marked caller="navmark.CommPrinter: void run()" callee="javax.microedition.io.Connector: javax.microedition.io.Connection open(java.lang.String)" tag="1"/>
+<marked caller="Traffic: void commandAction(javax.microedition.lcdui.Command,javax.microedition.lcdui.Displayable)" callee="Traffic: void buildTimes()" tag="-1"/>
+<marked caller="Traffic: void getData(java.lang.String,javax.microedition.lcdui.List)" callee="javax.microedition.io.Connector: javax.microedition.io.Connection open(java.lang.String)" tag="2"/>
+<translation id="-1">
+<equiv id="2" arity="1"/>
+</translation>
+</lcdui>
+</midlet>
+
+</root>
+
