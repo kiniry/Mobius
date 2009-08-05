@@ -1,0 +1,49 @@
+<!--  DTD for static rules -->
+
+<!ELEMENT navstatic (call|constructor|callback|tracked|option)*>
+<!ATTLIST navstatic
+    name CDATA #REQUIRED
+    description CDATA #IMPLIED
+    version CDATA #IMPLIED
+>
+
+<!ELEMENT option (description?)>
+<!ATTLIST option
+    name CDATA #REQUIRED
+    value CDATA #REQUIRED
+>
+
+<!ELEMENT callback EMPTY>
+<!ATTLIST callback
+    method CDATA #REQUIRED
+>
+
+<!ELEMENT tracked EMPTY>
+<!ATTLIST tracked
+    method CDATA #REQUIRED
+>
+
+<!ELEMENT setter EMPTY>
+<!ATTLIST setter
+    method CDATA #REQUIRED
+>
+
+<!ELEMENT constructor EMPTY>
+<!ATTLIST constructor
+   name  CDATA #REQUIRED
+   class CDATA #REQUIRED
+>
+
+<!ELEMENT call (argument)*>
+<!ATTLIST call
+   name  CDATA #REQUIRED
+   method CDATA #REQUIRED
+>
+
+<!ELEMENT argument EMPTY>
+<!ATTLIST argument
+  position CDATA #REQUIRED
+>
+
+<!ELEMENT description (%content;)>
+
