@@ -121,7 +121,7 @@ public class Context
    * on all classes that have debugging enabled or disabled in this
    * context.  A key of this map is the <code>String</code>
    * representation of a class (<code>Class.getName()</code>), while a data
-   * value is a <code>Boolean</code> indicating if a the given class has
+   * value is a <code>Boolean</code> indicating if the given class has
    * debugging enabled. </li>
    * </ol>
    * </p>
