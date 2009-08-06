@@ -556,7 +556,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Removes a category to the database of legal debugging categories.
+   * Removes a category from the database of legal debugging categories.
    * </p>
    *
    * @concurrency GUARDED
@@ -620,7 +620,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Adds a class the the class-global database of classes that have debugging
+   * Adds a class to the class-global database of classes that have debugging
    * enabled.
    * </p>
    *
@@ -640,7 +640,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Adds a class the the class-global database of classes that have debugging
+   * Adds a class to the class-global database of classes that have debugging
    * enabled. Note that a class of "*" means that all classes will now have
    * debugging enabled. There is no way to "undo" such a command short of
    * manually adding the individual classes back to the database. (Or,
@@ -663,7 +663,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Removes a class the the class-global database of classes that have
+   * Removes a class from the class-global database of classes that have
    * debugging enabled.
    * </p>
    *
@@ -682,7 +682,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Removes a class the the class-global database of classes that have
+   * Removes a class from the class-global database of classes that have
    * debugging enabled. Removes a class from a database of debugging-enabled
    * classes. Note that a class of "*" means that all classes will be removed
    * and debugging disabled. There is no way to "undo" such a command.
@@ -724,7 +724,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Adds a context to the the class-global database of threads that have
+   * Adds a context to the class-global database of threads that have
    * debugging context.
    * </p>
    *
@@ -748,7 +748,7 @@ import java.util.HashMap;
 
   /**
    * <p>
-   * Removes a context from the the class-global database of threads that have
+   * Removes a context from the class-global database of threads that have
    * debugging context.
    * </p>
    *
