@@ -62,7 +62,7 @@ const_decl_tail returns [Declaration v]:
 
 function_decl_tail returns [Declaration v]:
   s=signature ';' declarations
-    { if(ok) $v=Function.mk(null,$s.v,$declarations.v,fileLoc($s.v)); }
+    { if(ok) $v=FunctionDecl.mk(null,$s.v,$declarations.v,fileLoc($s.v)); }
 ;
 
 axiom_tail returns [Declaration v]:

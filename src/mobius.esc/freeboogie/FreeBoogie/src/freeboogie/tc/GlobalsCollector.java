@@ -18,7 +18,7 @@ public class GlobalsCollector extends Transformer {
   
   // the namespace of procedures and functions
   private HashMap<String, Procedure> procs;
-  private HashMap<String, Function> funcs;
+  private HashMap<String, FunctionDecl> funcs;
   
   // the namespace of constants and global variables
   private HashMap<String, ConstDecl> consts;
@@ -30,7 +30,7 @@ public class GlobalsCollector extends Transformer {
   private void reset() {
     types = new HashMap<String, TypeDecl>();
     procs = new HashMap<String, Procedure>();
-    funcs = new HashMap<String, Function>();
+    funcs = new HashMap<String, FunctionDecl>();
     consts = new HashMap<String, ConstDecl>();
     vars = new HashMap<String, VariableDecl>();
     errors = new ArrayList<FbError>();
@@ -72,7 +72,7 @@ public class GlobalsCollector extends Transformer {
    * @param s the name of the function
    * @return the definition of the function, or {@code null} if not found
    */
-  public Function funDef(String s) {
+  public FunctionDecl funDef(String s) {
     return funcs.get(s);
   }
   
@@ -108,7 +108,7 @@ public class GlobalsCollector extends Transformer {
     procs.put(s, d);
   }
   
-  private void addFunDef(String s, Function d) {
+  private void addFunDef(String s, FunctionDecl d) {
     check(procs, s, d);
     check(funcs, s, d);
     funcs.put(s, d);
@@ -177,7 +177,7 @@ public class GlobalsCollector extends Transformer {
 
   @Override
   public void see(
-    Function function,
+    FunctionDecl function,
     Attribute attr,
     Signature sig,
     Declaration tail

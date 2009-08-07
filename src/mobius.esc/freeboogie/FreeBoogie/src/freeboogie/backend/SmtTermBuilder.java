@@ -2,7 +2,6 @@ package freeboogie.backend;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 /**
  * Builds a term tree, which looks like an S-expression.
@@ -10,7 +9,6 @@ import java.util.logging.Logger;
  * @author rgrig 
  */
 public class SmtTermBuilder extends TermBuilder<SmtTerm> {
-  private static final Logger log = Logger.getLogger("freeboogie.backend");
   private HashMap<String, SmtTerm> axioms = new HashMap<String, SmtTerm>();
 
   @Override

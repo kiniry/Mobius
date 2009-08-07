@@ -38,7 +38,7 @@ public class FunctionRegisterer extends Transformer {
 
   @Override
   public void see(
-    Function function,
+    FunctionDecl function,
     Attribute attr,
     Signature sig,
     Declaration tail

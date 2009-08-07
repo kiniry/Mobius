@@ -2,8 +2,12 @@
  . Add hand-crafted tests for the Boogie 2 parser.
  . Parser for Boogie 2.
  . Desugar 'while'.
+ . AST: Put different type of global declarations in different lists.
+ . AST: Switch to immutable lists instead of the functional ones.
+   Reason: The Java virtual machine is (and will be) bad with tail 
+   recursive code.
+ . Update quantifiers with type variables.
  . Type checker for Boogie 2.
- . Add a "for all types" construct. (?)
  . Move to Boogie 2.
  . Release 0.2.
  . Move to new logging.
@@ -15,7 +19,6 @@
  . Release 0.3.
  . Reorganize the code for turning on/off various phases.
  . Add null-by-default switch to bml2bpl.
- . Move astgen tests to astgen.
  . Release 0.4.
  . Simple interface to parse from strings.
  . Re-think what goes in TermBuilder and what goes in SmtTermBuilder.
@@ -74,5 +77,11 @@
  . Add a parser for SMT so that you can provide a piece of text to
    build an SmtTerm.
  . Release 0.16.
+ . Rename Passificator as EscjavaPasivator and review the code.
+ . AST: Treat constants like functions with 0 arguments.
+ . Replacing "assert X" by "assert X; assume X", perhaps selectively,
+   should be done by a transformer. There's no need for the ugly boolean
+   in ACalculus.
+ . Release 0.17.
 
 vim:spell:ts=3:sw=3:fdm=manual:

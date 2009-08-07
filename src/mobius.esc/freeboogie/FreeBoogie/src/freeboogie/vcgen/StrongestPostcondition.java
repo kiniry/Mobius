@@ -61,29 +61,6 @@ import freeboogie.tc.TcInterface;
  * @author rgrig
  */
 public class StrongestPostcondition<T extends Term<T>> extends ACalculus<T> {
-
-  /** Treat assert _also_ as assumes. */
-  private boolean aaa;
-  
-
-  public StrongestPostcondition(TcInterface tc) {
-    super(tc);
-  }
-
-
-
-  /**
-   * Controls whether we should generate bigger VCs by trying to
-   * guide the theorem prover by giving assertions as lemmas.
-   * (That statement is informal, not precise.) I won't crash
-   * if you change your mind in the middle but I don't promise
-   * anything about the terms I produce, other than they should
-   * be correct, strictly speaking.
-   */
-  public void setAssertAsAssume(boolean aaa) {
-    this.aaa = aaa;
-  }
-
   /**
    * Returns the precondition of {@code b}, which must be in
    * the last set flow graph.
@@ -106,7 +83,7 @@ public class StrongestPostcondition<T extends Term<T>> extends ACalculus<T> {
     T r = postCache.get(b);
     if (r != null) return r;
     r = pre(b);
-    if (aaa || isAssume(b))
+    if (assumeAsserts || isAssume(b))
       r = term.mk("and", r, term(b));
     postCache.put(b, r);
     return r;

@@ -144,7 +144,8 @@ public final class TypeUtils {
   public static String typeToString(Type t) {
     if (t == null) return "()";
     StringWriter sw = new StringWriter();
-    PrettyPrinter pp = new PrettyPrinter(sw);
+    PrettyPrinter pp = new PrettyPrinter();
+    pp.writer(sw);
     t.eval(pp);
     if (t instanceof TupleType)
       return "(" + sw + ")";
@@ -178,7 +179,8 @@ public final class TypeUtils {
   public static Declaration internalTypecheck(Declaration ast, TcInterface tc) {
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
+      PrettyPrinter pp = new PrettyPrinter();
+      pp.writer(pw);
       ast.eval(pp);
       pw.flush();
       Err.internal("Invalid Boogie produced.");

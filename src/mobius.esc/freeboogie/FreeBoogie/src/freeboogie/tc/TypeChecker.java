@@ -594,7 +594,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
 
   @Override
   public Type eval(AtomFun atomFun, String function, TupleType types, Exprs args) {
-    Function d = st.funcs.def(atomFun);
+    FunctionDecl d = st.funcs.def(atomFun);
     Signature sig = d.getSig();
     Declaration fargs = sig.getArgs();
     
@@ -774,7 +774,7 @@ public class TypeChecker extends Evaluator<Type> implements TcInterface {
   // === keep track of formal generics (see also eval(Axiom...) and eval(AssertAssumeCmd...)) ===
   @Override
   public Type eval(
-    Function function,
+    FunctionDecl function,
     Attribute attr,
     Signature sig,
     Declaration tail

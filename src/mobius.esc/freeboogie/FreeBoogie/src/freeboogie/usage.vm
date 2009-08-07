@@ -27,8 +27,6 @@ public final class FbCliUtil {
       for (String line : StringUtil.format(description, width - 5))
         System.out.println("     " + line);
     }
-
-    // TODO: perhaps move this in genericutils
   }
 
   public static void printUsage() {
@@ -43,14 +41,14 @@ public final class FbCliUtil {
     newOption.aliasData = "<$option.getType().getTypeDescriptionString()>";
     if (newOption.aliasData.startsWith("<enum")) {
       String x = "[" + "$!option.getPropertyValue("choices")" + "]";
-      x = x.replace(',','|').replaceAll("\\([^)]*\\)","");
+      x = x.replace(',','|').replaceAll("\\([^)]*\\)","").toLowerCase();
       if (newOption.aliasData.endsWith("-list>")) x += "*";
       String d = "$!option.getPropertyValue("default")";
       if (!d.equals("")) x += "  (default: " + d + ")";
       newOption.aliasData = x;
     }
-    newOption.description = "$option.getDescription()";
-    options.add(newOption);
+    newOption.description = "$!option.getDescription()";
+    if (!"".equals(newOption.description)) options.add(newOption);
 #end
 
     Terminal t = Terminal.setupTerminal();

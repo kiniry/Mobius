@@ -1,0 +1,7 @@
+Shoudn'd (const h) and (const i) in section 2.1 fail because of
+the same reason?
+
+In section 4.3 it's not clear if old(x) affects input argments x.
+(The text suggests 'no', but why not?)
+
+The last equation in 4.4 is should have 'exists', not 'forall'.

@@ -3,9 +3,6 @@ a value. As a convenience, the object is also deconstructed
 in the class. The original object is sent nevertheless because
 we may want to use it.
 
-TODO: Consider having a base class for this which is parametrized
-by the return type for each type of node.
-
 \file{Evaluator.java}
 /** 
   This file is generated from evaluator.tpl. Do not edit.

@@ -2,13 +2,16 @@ package freeboogie.backend;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import genericutils.Err;
+import genericutils.Logger;
 import genericutils.StackedHashMap;
 
 import freeboogie.ast.Expr;
 import freeboogie.tc.TcInterface;
+
+import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
+import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
 
 /**
  * This class is responsible for sort-checking. The subclasses
@@ -23,7 +26,8 @@ import freeboogie.tc.TcInterface;
  * @author rgrig 
  */
 public abstract class TermBuilder<T extends Term<T>> {
-  private static Logger log = Logger.getLogger("freeboogie.backend");
+  private Logger<LogCategories, LogLevel> log =
+    Logger.<LogCategories, LogLevel>get("log");
 
   protected FormulaOfExpr<T> term;
 
@@ -107,7 +111,7 @@ public abstract class TermBuilder<T extends Term<T>> {
 
     term = new FormulaOfExpr<T>(new TermOfExpr<T>());
     term.setBuilder(this);
-    log.info("prepared term builder");
+    log.say(LogCategories.BACKEND, LogLevel.INFO, "TermBuilder ready.");
   }
   
   /** 

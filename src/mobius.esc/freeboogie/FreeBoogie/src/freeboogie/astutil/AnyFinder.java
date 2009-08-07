@@ -36,7 +36,7 @@ public class AnyFinder extends AssociativeEvaluator<Boolean> {
 
   @Override
   public Boolean eval(
-    Function function,
+    FunctionDecl function,
     Attribute attr,
     Signature sig,
     Declaration tail

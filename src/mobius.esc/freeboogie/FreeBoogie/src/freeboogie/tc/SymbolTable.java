@@ -17,8 +17,8 @@ public class SymbolTable {
     = new UsageToDefMap<CallCmd, Procedure>();
   
   /** Functions. */
-  public UsageToDefMap<AtomFun, Function> funcs
-    = new UsageToDefMap<AtomFun, Function>();
+  public UsageToDefMap<AtomFun, FunctionDecl> funcs
+    = new UsageToDefMap<AtomFun, FunctionDecl>();
   
   /**
    * Identifiers. The declarations might only be {@code ConstDecl} and

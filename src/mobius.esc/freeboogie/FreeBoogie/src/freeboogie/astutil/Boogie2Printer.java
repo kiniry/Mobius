@@ -13,7 +13,7 @@ public class Boogie2Printer extends PrettyPrinter {
   private Evaluator<Boolean> anyFinder;
 
   public Boogie2Printer(PrintWriter pw) {
-    super(pw);
+    writer(pw);
 
     anyFinder = new AnyFinder();
 

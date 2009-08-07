@@ -1,8 +1,8 @@
 package freeboogie.vcgen;
 
 import java.util.HashMap;
-import java.util.logging.Logger;
 
+import genericutils.Logger;
 import genericutils.SimpleGraph;
 
 import freeboogie.Main;
@@ -14,14 +14,17 @@ import freeboogie.backend.Term;
 import freeboogie.backend.TermBuilder;
 import freeboogie.tc.TcInterface;
 
+import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
+import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
+
 /**
  * Base class for weakest precondition and strongest postcondition
  * implementations.
  * @param <T> the type of terms
  */
 public abstract class ACalculus<T extends Term<T>> {
-  /** Used mainly for debugging. */
-  protected static final Logger log = Logger.getLogger("freeboogie.vcgen");
+  protected Logger<LogCategories, LogLevel> log = 
+    Logger.<LogCategories, LogLevel>get("log");
 
   /** the preconditions of each command. */
   protected final HashMap<Block, T> preCache = new HashMap<Block, T>();
@@ -37,21 +40,22 @@ public abstract class ACalculus<T extends Term<T>> {
   
   /** the control flow graph currently being processed. */
   protected SimpleGraph<Block> flow;
+
+  protected boolean assumeAsserts;
   
   /** the current body which is being inspected. */
   private Body currentBody;
 
 
-  private final TcInterface tc;
-  
-  public ACalculus(TcInterface tc) {
-    this.tc = tc;
-  }
-  
-  
+  private TcInterface tc;
+ 
   public void setBuilder(TermBuilder<T> term) { 
     this.term = term; 
     trueTerm = term.mk("literal_formula", Boolean.valueOf(true));
+  }
+
+  public void typeChecker(TcInterface tc) {
+    this.tc = tc;
   }
   
   public void resetCache() {
@@ -65,11 +69,8 @@ public abstract class ACalculus<T extends Term<T>> {
    * assumes that {@code flow} won't be changed.
    */
   public void setCurrentBody(Body bdy) {
-    log.info("prepare to compute sp on a new flow graph");
     flow = tc.getFlowGraph(bdy);
-    if (false) { // TODO: log-categ
-      System.out.println("Flow graph size " + flow.nodesInTopologicalOrder().size());
-    }
+    log.say(LogCategories.STATS, LogLevel.INFO, "cfg_size " + flow.nodeCount());
     currentBody = bdy;
     assert flow.isFrozen();
     assert !flow.hasCycle(); // please cut loops first
@@ -112,5 +113,9 @@ public abstract class ACalculus<T extends Term<T>> {
 
   public TcInterface getTypeChecker() {
     return tc;
+  }
+
+  public void assumeAsserts(boolean assumeAsserts) {
+    this.assumeAsserts = assumeAsserts;
   }
 }

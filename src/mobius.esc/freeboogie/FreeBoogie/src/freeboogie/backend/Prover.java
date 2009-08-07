@@ -1,9 +1,13 @@
 package freeboogie.backend;
 
 import java.util.*;
-import java.util.logging.*;
 
+import com.google.common.base.Supplier;
 import genericutils.FramedStack;
+import genericutils.Logger;
+
+import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
+import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
 
 /**
  * A prover can be used to check if a formula is valid.
@@ -38,7 +42,14 @@ public abstract class Prover<T extends Term<T>> {
   protected FramedStack<T> assumptions;
 
   protected TermBuilder<T> builder;
-  protected static final Logger log = Logger.getLogger("freeboogie.backend");
+  protected Logger<LogCategories, LogLevel> log =
+    Logger.<LogCategories, LogLevel>get("log");
+  protected void log(Supplier<String> s) {
+    log.say(LogCategories.PROVER, LogLevel.INFO, s);
+  }
+  protected void log(String s) {
+    log.say(LogCategories.PROVER, LogLevel.INFO, s);
+  }
 
   public Prover() {
     assumptions = new FramedStack<T>();

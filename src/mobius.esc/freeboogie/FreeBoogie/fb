@@ -1,4 +1,2 @@
 #!/bin/bash
-#fbrun freeboogie.Main "$@"
-fbrun freeboogie.AlternativeMain "$@"
-
+fbrun freeboogie.Main "$@"

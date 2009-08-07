@@ -6,7 +6,7 @@ Declaration :>
   TypeDecl, 
   ConstDecl, 
   Axiom,
-  Function, 
+  FunctionDecl, 
   VariableDecl, 
   Procedure, 
   Implementation;
@@ -32,7 +32,7 @@ Axiom =
   Identifiers typeArgs,
   Expr! expr,
   Declaration tail;
-Function = Attribute attr, Signature! sig, Declaration tail;
+FunctionDecl = Attribute attr, Signature! sig, Declaration tail;
 VariableDecl =
   Attribute attr,
   String! name,

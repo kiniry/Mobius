@@ -1,13 +1,9 @@
 NAME::
   FbCli
-  :"FreeBoogie is a verifier for Boogie programs. Typically you would
-    give a list of files and the option -v (verify). 
-    Some options take an argument from a finite set. 
-    A star (*) means that a list of comma separated arguments can be
-    given."
+  :"FreeBoogie is a verifier for Boogie programs. The valid options are:"
 
 ARGS::
-  Files :{} :{file-list} :[mustExist,canBeDir="false",between=""]
+  Files :{} :{file-list} :[mustExist,canBeDir="false",between="",allowMultiple="false"]
     :"Configure the list of files to check."
 
   SeriesParallelCheck :{"--series-parallel-check", "-spc"}
@@ -18,28 +14,7 @@ ARGS::
       the parallel composition of two series--parallel graphs. For the
       purposes of this check a unique exit node is added to the graph,
       and all the real exit nodes go to this one."
-  BackwardCompatible :{"--backward-compatible", "-bc"}
-    :[allowArg="false"]
-    :"Transform the program by adding type variable definitions wherever
-      an undefined identifier is encountered. This enables the processing
-      of the Boogie PL programs in the Boogie benchmark from MSR."
-  PrettyPrint :{"--pretty-print", "-pp"} :{file}
-    :"Print the transformed Boogie program. Even if no transformation
-      is specified explicitly on the command line, a certain amount of
-      desugaring is done during parsing."
-  PrintBoogie2 :{"--print-boogie2", "-pb2"} :{file}
-    :[canBeDir="false"]
-    :"Temporary switch used during the transition to Boogie 2."
-  PrintSymbolTable :{"--print-symbol-table", "-pst"} :{file}
-    :"Print the symbol table of the transformed program. The symbol
-      table is a list of definitions, each linked to all the uses of
-      that identifier."
-  PrintFlowgraphs :{"--print-flowgraphs", "-pf"} :{file}
-    :"Print the flowgraph of each implementation in a format understood
-      by dot (from graphviz). You will need to split the output into
-      different files yourself (if there was more than one implementation
-      in the input)."
-  
+ 
   SkipHavocLoopVariables :{"--skip-havoc", "-sh"} :[allowArg="false"]
     :"Do not havoc variables changed in a loop upon entering the loop.
       This is unsound if loops are cut later."
@@ -53,57 +28,26 @@ ARGS::
     :"Check only the procedures whose name match the given regular
       expression."
 
-  HavocLoopVariables :{"--havoc-loop-variables", "-hlv"}
-    :[allowArg="false"]
-    :"Havocs variables modified by a loop on entering that loop. If
-      back-edges are removed later on then the verification is still
-      sound. It is desirable to insert loop invariants to ensure
-      completeness, but this is not done at the moment. On the bright
-      side, this phase handles irreducible flow-graphs. The exact
-      rules are: for each entry in a strongly connected component of
-      the flowgraph there will be a havoc introduced for all the
-      variables that are assigned in the component."
-  CutLoops :{"--cut-loops", "-cl"}
-    :[allowArg="false"]
-    :"Transform the flowgraph into a dag by cutting back-edges
-      with respect to some arbitrary depth-first traversal."
-  DesugarCalls :{"--desugar-calls", "-dc"}
-    :[allowArg="false"]
-    :"Transform calls into assertions, havocs, and assumptions for the
-      preconditions, modifies clauses, and, respectively, postconditions
-      of the called procedure."
-  DesugarHavoc :{"--desugar-havoc", "-dh"}
-    :[allowArg="false"]
-    :"Transform havoc statements into assignments from fresh variables."
-  DesugarSpecs :{"--desugar-specs", "-ds"}
-    :[allowArg="false"]
-    :"Transform preconditions into assumptions and postconditions
-      into assertions. (The typechecker takes care of modifies clauses.)"
-  DesugarMaps :{"--desugar-maps", "-dm"}
-    :[allowArg="false"]
-    :"Transform map accesses into explicit uses of the functions
-      'select' and 'update', which are added to the program."
-  DontUnshareVc :{"--dont-unshare-vc", "-duv"}
-    :[allowArg="false"]
-    :"This option will print common parts of the VC multiple size,
-      thereby possibly resulting in exponential size."
-
-  Passivate :{"--passivate"} :{enum}
-    :[choices="optim(OPTIM),escjava(ESCJAVA)", default="optim"]
-    :"Transform assignments into assumptions. Implies --cut-loops."
-  VcMethod :{"--vc-method", "-vm"} :{enum}
-    :[choices="wp(WP),wpno(WPNO),sp(SP)", default="wp"]
+  PassivatorOpt :{"--passivator"} :{enum}
+    :[choices="OPTIM,ESCJAVA", default="optim"]
+    :"The optim passivator introduces a minimum number of new
+      variables. The escjava algorithm can be selected for doing
+      performance measurements: It should always be worse."
+  VcMethodOpt :{"--vc-method", "-vm"} :{enum}
+    :[choices="wp(WP),sp(SP)", default="wp"]
     :"Configure which method should be used for building a VC from the
       transformed Boogie."
-  Prover :{"--prover", "-p"} :{enum} 
-    :[choices="simplify(SIMPLIFY),yesman(YESMAN)", default="simplify"]
+  AssumeAsserts :{"--assume-asserts", "-aa"}
+    :"If set, then 'assert X' is treated as 'assert X; assume X'."
+  ProverOpt :{"--prover", "-p"} :{enum} 
+    :[choices="SIMPLIFY,YESMAN", default="simplify"]
     :"Configure which prover to use. The prover 'yes' can be useful
       for debugging (and for doing demos) because it always says that
       the code is OK."
-  ProverCommandLine :{"--prover-command-line", "-pcl"} :{string}
+  ProverCommandLineOpt :{"--prover-command-line", "-pcl"} :{string}
     :"Configure the command line used to start a prover. The default
       depends on the selected prover."
-  BoogieVersion :{"--boogie-version", "-bv"} :{enum}
+  BoogieVersionOpt :{"--boogie-version", "-bv"} :{enum}
     :[choices="1(ONE),2(TWO)", default="2"]
     :"Configure the version of the Boogie language."
 
@@ -112,58 +56,69 @@ ARGS::
     :"Configure what type of information should go to stdout.
       By default all categories are disabled. Errors go to stderr."
   ReportLevel :{"--report-level", "--out-level", "-ol"} :{enum}
-    :[choices="QUIET,NORMAL,VERBOSE,DEBUG", default="NORMAL"]
+    :[choices="DEBUG,VERBOSE,NORMAL,QUIET", default="normal"]
     :"Configure how much information goes to stdout."
   LogFile :{"--log-file", "-lf"} :{file} 
     :[canBeDir="false",default="freeboogie.log"]
     :"Configure where logging should be done. If the file does not exist
       it is created; if the file does exist the new log messages are appended."
   LogCategories :{"--log-categories", "-lc"} :{enum-list} 
-    :[choices="MAIN"]
+    :[choices="MAIN,VCGEN,PROVER,STATS,BACKEND"]
     :"Configure what type of information should go in the log file. 
       By default all categories are disabled."
   LogLevel :{"--log-level", "-ll"} :{enum} 
-    :[choices="SEVERE,WARNING,INFO", default="WARNING"]
+    :[choices="INFO,WARNING,ERROR", default="warning"]
     :"Configure how much information should be logged."
+  DumpIntermediateStages :{"--dump-intermediate-stages", "-dis"} :{file}
+    :[canExist="false"]
+    :"Specify a directory where to dump the result of each transformation.
+      The dump includes a Boogie program, its symbol table, and its
+      flowgraphs."
+
   Help :{"--help", "-h"}
     :"Display this message."
+
+  // These cannot appear on the command line.
+  MakeHavoc :{} :[default="true"]
+  CutLoops :{} :[default="true"]
+  DesugarCalls :{} :[default="true"]
+  DesugarHavoc :{} :[default="true"]
+  DesugarSpec :{} :[default="true"]
+  Passivate :{} :[default="true"]
+  DoVcGen :{} :[default="true"]
 
 FORMAT::
   (Option | Files)* | Help;
 
 WHERE::
   Option:
-    OutputOption |
-    PrintOption |
-    PhaseOption |
     ActionOption |
-    ConfigOption;
+    StageOption |
+    ConfigOption |
+    OutputOption;
 
-  OutputOption: LogFile | LogCategories | LogLevel | ReportOn | ReportLevel;
-  PrintOption: PrettyPrint | PrintSymbolTable | PrintFlowgraphs | PrintBoogie2;
-  PhaseOption: 
-    Passivate |
-    DesugarSpecs |
-    DesugarCalls |
-    DesugarHavoc |
-    HavocLoopVariables |
-    CutLoops |
-    DesugarMaps |
-    UnshareVc;
   ActionOption: SeriesParallelCheck;
+  StageOption:
+    SkipHavocLoopVariables |
+    SkipAskProver |
+    RunToHavocLoopVariables |
+    RunToCutLoops |
+    CheckOnly;
   ConfigOption:
-    BackwardCompatible |
-    BoogieVersion |
-    ProverCommandLine |
-    Prover | 
-    VcMethod;
+    PassivatorOpt |
+    VcMethodOpt |
+    AssumeAsserts |
+    ProverOpt |
+    ProverCommandLineOpt |
+    BoogieVersionOpt;
+  OutputOption: 
+    LogFile |
+    LogCategories |
+    LogLevel |
+    ReportOn |
+    ReportLevel |
+    DumpIntermediateStages;
 
 OVERRIDES::
-  {$(Prover).toLowerCase().equals("simplify") && !$(ProverCommandLine?)} -> 
-    ProverCommandLine := {"z3 -si"};
-  {!$(Passivate).toLowerCase().equals("none")} -> 
-    CutLoops := {true},
-    HavocLoopVariables := {true},
-    DesugarHavoc := {true};
-  {$(CutLoops?)} -> 
-    HavocLoopVariables := {true};
+  {$(ProverOpt).toLowerCase().equals("simplify") && !$(ProverCommandLineOpt?)} -> 
+    ProverCommandLineOpt := {"z3 -si"};

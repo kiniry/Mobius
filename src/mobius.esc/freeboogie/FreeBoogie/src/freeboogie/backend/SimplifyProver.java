@@ -2,11 +2,11 @@ package freeboogie.backend;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.logging.*;
 
 import genericutils.Err;
 
-import freeboogie.Main;
+import static freeboogie.cli.FbCliOptionsInterface.LogCategories;
+import static freeboogie.cli.FbCliOptionsInterface.LogLevel;
 
 /**
  * Used to interact with Simplify and Z3 (when run in Simplify
@@ -26,10 +26,6 @@ import freeboogie.Main;
  * @author rgrig 
  */
 public class SimplifyProver extends Prover<SmtTerm> {
-  // TODO Perhaps stop building the strings to save memory if logging
-  //      is not enabled.
-  private static final Logger log = Logger.getLogger("freeboogie.backend");
-
   private SimplifyProcess simplify;
   private StringBuilder strBuilder;
   
@@ -124,13 +120,13 @@ public class SimplifyProver extends Prover<SmtTerm> {
     printTerm(t, strBuilder);
     strBuilder.append(")");
     simplify.sendCommand(strBuilder.toString());
-    log.info("simplify: " + strBuilder);
+    log(strBuilder.toString());
   }
 
   @Override
   protected void sendRetract() throws ProverException {
     simplify.sendCommand("(BG_POP)");
-    log.info("simplify: (BG_POP)");
+    log("(BG_POP)");
   }
   
   @Override
@@ -138,14 +134,15 @@ public class SimplifyProver extends Prover<SmtTerm> {
     t = SmtTerms.eliminateSharing(t, builder);
     strBuilder.setLength(0);
     printTerm(t, strBuilder);
-    log.info("simplify: " + strBuilder);
+    log(strBuilder.toString());
     long startTime = System.nanoTime();
     boolean r = simplify.isValid(strBuilder.toString());
     long endTime = System.nanoTime();
     long time = endTime - startTime;
-    if (false) { // TODO log-categ
-      System.out.println("Provertime " + time);
-    }
+    log.say(
+        LogCategories.STATS,
+        LogLevel.INFO,
+        String.format("provertime %.3fs", 1e-9*time));
     return r;
   }
 
@@ -157,7 +154,7 @@ public class SimplifyProver extends Prover<SmtTerm> {
   @Override
   public void terminate() {
     simplify.stopProver();
-    log.info("I tried to kill the prover. Hope it's dead.");
+    log("I tried to kill the prover. Hope it's dead.");
   }
   
   /**
@@ -166,18 +163,6 @@ public class SimplifyProver extends Prover<SmtTerm> {
    * @throws Exception thrown if something goes wrong
    */
   public static void main(String[] args) throws Exception {
-    try {
-      FileHandler logh = new FileHandler("simplify.log");
-      logh.setFormatter(new SimpleFormatter());
-      log.addHandler(logh);
-      log.setUseParentHandlers(false);
-      //log.setLevel(Level.WARNING); // for release
-      log.setLevel(Level.ALL); // for debug
-    } catch (IOException e) {
-      Err.warning("Can't create log file. Nevermind.");
-      log.setLevel(Level.OFF);
-    }
-    
     Prover<SmtTerm> p = new SimplifyProver(args);
     TermBuilder<SmtTerm> b = p.getBuilder();
     SmtTerm x = b.mk("var_pred", "x");

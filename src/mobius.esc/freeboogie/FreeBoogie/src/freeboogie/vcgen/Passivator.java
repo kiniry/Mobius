@@ -102,7 +102,8 @@ public class Passivator extends Transformer {
     }
     if (!tc.process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
+      PrettyPrinter pp = new PrettyPrinter();
+      pp.writer(pw);
       ast.eval(pp);
       pw.flush();
       Err.internal("Passivator produced invalid Boogie.");

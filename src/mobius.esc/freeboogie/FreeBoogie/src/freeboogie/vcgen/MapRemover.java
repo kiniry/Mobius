@@ -23,7 +23,7 @@ public class MapRemover extends Transformer {
       // add "function $$selectN<TV, T1, ..., TN>
       //        (map : [T1, ..., TN]TV, x1 : T1, ..., xN : TN)
       //        returns (result : TV);"
-      ast = Function.mk(
+      ast = FunctionDecl.mk(
         null,
         Signature.mk(
           "$$select" + n,
@@ -48,7 +48,7 @@ public class MapRemover extends Transformer {
       // add "function $$updateN<TV, T1, ..., TN>
       //        (val : TV, map : [T1, ..., TN]TV, x1 : T1, ..., xN : TN)
       //        returns (result : [T1, ..., TN]TV);"
-      ast = Function.mk(
+      ast = FunctionDecl.mk(
         null,
         Signature.mk(
           "$$update" + n,

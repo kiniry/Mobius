@@ -16,24 +16,13 @@ import freeboogie.tc.TcInterface;
  * @param <T> the type of the terms
  */
 public class WeakestPrecondition<T extends Term<T>> extends StrongestPostcondition<T> {
-  
-  private boolean assertAssume = true;
-
-  /**
-   * Creates a calculus to compute weakest precondition.
-   * @param tc
-   */
-  public WeakestPrecondition(final TcInterface tc) {
-    super(tc);
-  }
-
   private T pre(Block b) {
     T r = preCache.get(b);
     if (r != null) return r;
     
     r = post(b);
     if (isAssert(b)) {
-      if (assertAssume) {
+      if (assumeAsserts) {
        r = term.mk("and", term(b), term.mk("implies", term(b), r));
       } else {
         r = term.mk("and", term(b), r);
@@ -66,14 +55,5 @@ public class WeakestPrecondition<T extends Term<T>> extends StrongestPostconditi
   public T vc() {
     Body bdy = getCurrentBody();
     return pre(bdy.getBlocks());
-  }
-
-  /**
-   * If true, generates a vc of the form P /\ (P => Q) instead
-   * of P /\ Q for the assert construct.
-   * @param assertAssume sets the assert assume property
-   */
-  public void setAssertAsAssertAssume(boolean assertAssume) {
-    this.assertAssume = assertAssume;
   }
 }

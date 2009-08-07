@@ -23,25 +23,12 @@ import freeboogie.tc.TcInterface;
  * @author J. Charles (julien.charles@gmail.com)
  */
 public class Passificator extends ABasicPassifier {
-
-
-
   /** the main global environment. */
   private Environment fEnv;
 
-
-
-  
-  /**
-   * Construct a passificator, relating to the current instance of the type checker.
-   * @param tc the current system type checker
-   * @param verbose triggers the statistics printing
-   */
-  public Passificator(TcInterface tc) {
-    super(tc);
-  }
-
-  public Program process(Program program) {
+  @Override
+  public Program process(Program program, TcInterface tc) {
+    setTypeChecker(tc);
     return new Program(
         process(program.ast, program.fileName), program.fileName);
   }
@@ -160,7 +147,8 @@ public class Passificator extends ABasicPassifier {
   private boolean verifyAst(Declaration ast) {
     if (!getTypeChecker().process(ast).isEmpty()) {
       PrintWriter pw = new PrintWriter(System.out);
-      PrettyPrinter pp = new PrettyPrinter(pw);
+      PrettyPrinter pp = new PrettyPrinter();
+      pp.writer(pw);
       ast.eval(pp);
       pw.flush();
       Err.internal(this + " produced invalid Boogie.");
@@ -203,7 +191,7 @@ public class Passificator extends ABasicPassifier {
       Environment globalEnv,
       final Signature sig
     ) {
-      super(typeChecker);
+      setTypeChecker(typeChecker);
       freshEnv = new Environment(sig.loc() + " " + sig.getName());
       fResults = (VariableDecl) sig.getResults();
       freshEnv.putAll(globalEnv);
@@ -384,7 +372,7 @@ public class Passificator extends ABasicPassifier {
       int belowOld = 0;
       
       public CommandEvaluator(TcInterface tc, Environment env) {
-        super (tc);
+        setTypeChecker(tc);
         this.env = env;
       }
 

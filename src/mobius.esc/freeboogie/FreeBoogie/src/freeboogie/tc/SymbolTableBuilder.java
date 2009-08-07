@@ -223,7 +223,7 @@ public class SymbolTableBuilder extends Transformer implements StbInterface {
 
   @Override
   public void see(
-    Function function,
+    FunctionDecl function,
     Attribute attr,
     Signature sig,
     Declaration tail

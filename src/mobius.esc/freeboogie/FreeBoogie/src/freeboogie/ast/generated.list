@@ -32,7 +32,7 @@ Declaration.java
 DepType.java
 Expr.java
 Exprs.java
-Function.java
+FunctionDecl.java
 HavocCmd.java
 Identifiers.java
 Implementation.java

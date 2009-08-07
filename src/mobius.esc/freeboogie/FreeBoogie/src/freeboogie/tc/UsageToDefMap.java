@@ -66,7 +66,7 @@ public class UsageToDefMap<U, D> {
    public Set<U> usages(D d) {
      return defToUsage.get(d);
    }
-   
+
    /**
     * Returns the number of definitions.
     * @return the number of definitions

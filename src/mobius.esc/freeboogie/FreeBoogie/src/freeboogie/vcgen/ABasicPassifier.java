@@ -20,10 +20,8 @@ import freeboogie.tc.TypeUtils;
  */
 public abstract class ABasicPassifier extends Transformer {
 
-  private final TcInterface fTypeChecker;
-  public ABasicPassifier (TcInterface tc) {
-    fTypeChecker = tc;
-  }
+  private TcInterface fTypeChecker;
+
   /**
    * Returns the variable declaration corresponding to the given id.
    * @param id the id to check for
@@ -39,6 +37,10 @@ public abstract class ABasicPassifier extends Transformer {
   public TcInterface getTypeChecker() {
     return fTypeChecker;
   }  
+
+  public void setTypeChecker(TcInterface tc) {
+    fTypeChecker = tc;
+  }
   
   public static AssertAssumeCmd mkAssumeEQ(Expr left, Expr right) {
     return AssertAssumeCmd.mk(AssertAssumeCmd.CmdType.ASSUME, null,
