@@ -1,0 +1,161 @@
+##################################################
+# Project-specific Makefile for including in each
+# module
+##################################################
+
+#Inputs: MODULE, SRC, HEADERS, EXECUTABLE/LIBRARY
+#Optional inputs: CXXFLAGS, INCLUDE_DIR, LD_LIB_DIR, LD_LIBS, EXE_DIR
+
+##################################################
+# Configuration options
+##################################################
+
+#Whether to build static libraries and executable
+STATIC = 0
+
+#Whether to optimize
+OPTIMIZED = 1
+
+#Whether to build for gcov
+GCOV = 0
+
+#Whether to build for gprof
+GPROF = 0
+
+empty:=
+space:= $(empty) $(empty)
+path_escape = $(subst $(space),\$(space),$(1))
+
+#Path to top directory
+ifndef TOP
+  TOP = $(call path_escape,/home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730)
+endif
+
+#CXX
+CXX = g++
+
+#LD
+LD = $(CXX)
+
+#AR
+AR = ar
+
+#CXXFLAGS
+CXXFLAGS :=  -m32
+
+#CPPFLAGS
+CPPFLAGS := 
+
+#LDFLAGS
+LDFLAGS = 
+
+#LIBS
+LD_LIBS += -lgmp 
+
+#Whether to build individual shared libraries
+BUILD_SHARED_LIB = 0
+
+LIB_MAJOR_VERSION= 1
+LIB_MINOR_VERSION= 0
+LIB_TEENY_VERSION= 0
+LIB_COMPAT_VERSION= $(LIB_MAJOR_VERSION).$(LIB_MINOR_VERSION)
+LIB_VERSION= $(LIB_COMPAT_VERSION).$(LIB_TEENY_VERSION)
+
+#Whether to build the Java interface
+BUILD_JAVA = 1
+
+# Java compilers and compiler flags
+JAVAC    = javac
+JAVAH    = javah
+JAR      = jar
+JAVA     = java
+JFLAGS   := 
+JREFLAGS :=  -d32 
+JAVA_INCLUDES  = -I/home/jcharles/java/current/include -I/home/jcharles/java/current/include/linux
+
+
+#Installation directories
+datarootdir = @datarootdir@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+bindir=${exec_prefix}/bin
+mandir=${prefix}/man
+incdir=$(prefix)/include/$(PROJECTNAME)
+javadir=${exec_prefix}/java
+
+##################################################
+# Platform-specific definitions
+##################################################
+
+HOST_OS = linux-gnu
+HOST_CPU = i686
+EXEEXT=
+
+#Name of platform
+ifndef PLATFORM
+  PLATFORM := $(HOST_CPU)-$(HOST_OS)
+endif
+
+ifeq ($(STATIC),0)
+  CXXFLAGS += -fPIC
+endif
+
+#Install
+INSTALL = /usr/bin/install
+INSTALL_FLAGS = 
+
+#Shared/Static libraries
+SHARED = -shared
+STATIC_FLAG = -static
+DYNAMIC_FLAG = 
+STATIC_LIB_SUFFIX = a
+SHARED_LIB_SUFFIX = so
+
+ifeq ($(patsubst darwin%,,$(HOST_OS)),)
+  MAC_OSX = 1
+endif
+ 
+
+#Etags/Ebrowse
+ETAGS=etags
+EBROWSE=ebrowse
+
+#lex
+LEX = flex
+LFLAGS = # -i  use this for a case-insensitive scanner
+
+#yacc
+YACC = bison
+YFLAGS = -d -y
+
+##################################################
+# Project-specific definitions
+##################################################
+
+#Name of project library
+PROJECTNAME = cvc3
+
+#Where to look for include files
+INCLUDE_DIR += -I. -I$(TOP)/src/include
+
+#Where to look for lib files
+LD_LIB_DIR =  -L$(LIB_DIR)
+
+VERSION = 20090730
+WEBDIR = /usr/httpd/htdocs_cs/acsys/cvc3
+
+RATIONAL_FLAGS = -DRATIONAL_GMP
+ifeq ($(RATIONAL_FLAGS),-DRATIONAL_NATIVE)
+  PLATFORM := $(PLATFORM)-native-arith
+endif
+
+DPLL_BASIC = 
+EXTRA_SAT_CPP = 
+EXTRA_SAT_HEADERS = 
+
+##################################################
+# Include generic Makefile
+##################################################
+
+include $(TOP)/Makefile.std

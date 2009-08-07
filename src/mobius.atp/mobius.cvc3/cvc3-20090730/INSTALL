@@ -1,0 +1,239 @@
+/*!\page INSTALL INSTALL
+
+<h2>
+Quick Start
+</h2>
+
+To build CVC3, do the following in the root directory of the CVC3
+distribution:
+
+<pre>
+   ./configure
+   make
+</pre>
+
+If this fails, read the next section for more information.
+
+A successful make creates a library libcvc3 in the lib directory and an
+executable cvc3 in the bin directory (these are actually links to
+the actual files which are stored in architecture and configuration-dependent
+subdirectories).
+
+By default, make creates optimized code, static libraries, and a static
+executable.  To build the "debug" version (much slower but more error checking)
+use:
+
+<pre>
+   ./configure --with-build=debug
+</pre>
+
+To build shared libraries (and thus a much smaller executable), use:
+
+<pre>
+  ./configure --enable-dynamic
+</pre>
+
+Be sure to set LD_LIBRARY_PATH to &lt;cvc3dir&gt;/lib when using shared libraries.
+
+Alternatively, these and other options can be changed by editing the
+Makefile.local file after running configure.  However, be aware that re-running
+configure will overwrite any changes you have made to Makefile.local.
+
+The subdirectory test contains an example program using the library
+libcvc3.  To try it out, do the following:
+
+<pre>
+   cd test
+   make
+   bin/test
+</pre>
+
+<h2>
+Advanced Configuration
+</h2>
+
+The configure script checks for the components needed to build CVC3.  If for
+some reason, the configure script is missing or doesn't run on your platform,
+you can recreate it from configure.ac by running autoconf.
+
+As the configure script runs, if something is not found, it complains.
+configure looks for components in standard locations and also uses several
+environment variables that you can set to help it find things.  In particular,
+you can set CPPFLAGS to -I<I>includeDir</I> if you have headers in a
+nonstandard directory and LDFLAGS to -L<I>libDir</I> if you have libraries in a
+nonstandard directory.  Run ./configure --help for a list of all such
+environment variables.
+
+<h3>
+GMP
+</h3>
+
+One of the components CVC3 depends on is the GNU Multiple Precision (GMP)
+library.  Many Unix-like distributions include gmp packages.
+
+If you do not have GMP installed or your installation does not work, we
+recommend that you install it manually:
+
+1. Download the GMP source code from http://swox.com/gmp/
+
+2. Unpack the sources, and from the root-directory of the GMP source code, run
+
+<pre>
+   ./configure 
+   make
+</pre>
+
+   On some Solaris machines, you may need to configure GMP with
+  
+<pre>
+   ./configure ABI=32
+</pre>
+
+   to make the resulting GMP library compatible with the CVC3
+   libraries.  The reason for this is that the default ABI that gcc
+   chooses in CVC3 compilation is not necessarily the default ABI
+   that the GMP configure script selects, and one of them may need to be
+   adjusted.
+
+3. Now, either install GMP system-wide (make install), or supply the
+   appropriate values for CPPFLAGS and LDFLAGS to the CVC3 configure script.
+
+If for some reason, you do not want to use GMP, you can configure CVC3 to use
+native arithmetic by running:
+
+<pre>
+   ./configure --with-arith=native
+</pre>
+
+If you compile CVC3 with native arithmetic, it is possible that CVC3 may fail
+as the result of arithmetic overflow.  If an overflow occurs, you will get
+an error message and CVC3 will abort.
+
+<h3>
+Platforms
+</h3>
+
+CVC3 should run on most Unix-like platforms including Linux, MacOS, and
+Cygwin.  Some platform-specific issues are documented here.
+
+<h4>
+Mac OS
+</h4>
+
+If you want to build shared libraries on Mac OS, you may need to set
+MACOSX_DEPLOYMENT_TARGET to 10.3 or higher.
+
+<h4>
+Cygwin
+</h4>
+
+In order to use GMP on Cygwin, make sure the following packages are installed:
+gmp, libgmp-devel, and libgmp3.
+
+
+<h3>
+Other Configuration Options
+</h3>
+
+Other configuration options include where to install the results of "make
+install" (see below), what type of build to use (optimized, debug, gprof, or
+gcov), and whether to use static or dynamic libraries.  For help on these
+options, type
+
+<pre>
+   ./configure --help
+</pre>
+
+configure creates the file Makefile.local which stores all of the configuration
+information.  If you want to customize your build without rerunning configure,
+or if you want to customize it in a way that configure does not allow, you can
+do it by editing Makefile.local.  For example, you can build a debug, gprof
+version by editing Makefile.local and setting OPTIMIZED to 0 and GPROF to 1 (by
+default, gprof runs with an optimized executable).  Note that for most
+configuration options, the objects, libraries, and executables are stored in a
+configuration-dependent directory, with only symbolic links being stored in the
+main bin and lib directories.  This allows you to easily maintain multiple
+configurations and multiple platforms using the same source tree.
+
+<h4>
+Additional make options:
+</h4>
+
+To rebuild dependencies, type:
+
+<pre>
+   make depend
+</pre>
+
+To remove just the executable or libraries in the current configuration, type:
+
+<pre>
+   make spotty
+</pre>
+
+To remove in addition all object files and makefile dependencies for the
+current configuration, type:
+
+<pre>
+   make clean
+</pre>
+
+To remove all files that are not part of the distribution (including all
+object, library, and executables built for any configuration or platform),
+type:
+
+<pre>
+   make distclean
+</pre>
+
+To build a tarball distribution of the currenct source tree, type:
+
+<pre>
+   make dist
+</pre>
+
+
+<h2>
+Installing CVC3
+</h2>
+
+To install CVC3 system-wide, (assuming you have already run configure) run:
+
+<pre>
+
+   make install
+
+</pre>
+
+Installation depends on two configuration options: prefix and exec_prefix.  By
+default, both are set to /usr/local, but these can be overridden by specifying
+the correct arguments to configure or by editing Makefile.local.
+
+Installation copies all necessary header files to &lt;prefix&gt;/include/cvc3.  It
+installs the library libcvc3 in &lt;exec_prefix&gt;/lib and the executable cvc3 in
+&lt;exec_prefix&gt;/bin.  By default, a static library and executable are installed.
+If you want to install shared library versions, configure for shared librareis as
+described above.
+
+<h2>
+Documentation
+</h2>
+
+To build HTML documentation, run
+
+<pre>
+
+   make doc
+
+</pre>
+
+Then open doc/html/index.html in your favorite browser.
+
+<h2>
+Getting help
+</h2>
+
+If you find a problem with the instructions in this installation guide, please
+send email to cvc-bugs@cs.nyu.edu.
+
+*/

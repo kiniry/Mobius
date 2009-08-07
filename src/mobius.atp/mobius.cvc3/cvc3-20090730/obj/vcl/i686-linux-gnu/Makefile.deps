@@ -1,0 +1,331 @@
+# Dependencies for C++ files
+
+/home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/obj/vcl/i686-linux-gnu/vcl.o: vcl.cpp /usr/include/c++/4.3/fstream /usr/include/c++/4.3/istream \
+  /usr/include/c++/4.3/ios /usr/include/c++/4.3/iosfwd \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++config.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/os_defines.h \
+  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+  /usr/include/gnu/stubs-32.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/cpu_defines.h \
+  /usr/include/c++/4.3/bits/stringfwd.h \
+  /usr/include/c++/4.3/bits/postypes.h /usr/include/c++/4.3/cwchar \
+  /usr/include/c++/4.3/cstddef \
+  /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stddef.h /usr/include/wchar.h \
+  /usr/include/stdio.h /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stdarg.h \
+  /usr/include/bits/wchar.h /usr/include/xlocale.h \
+  /usr/include/bits/wchar2.h /usr/include/stdint.h \
+  /usr/include/c++/4.3/exception /usr/include/c++/4.3/bits/char_traits.h \
+  /usr/include/c++/4.3/bits/stl_algobase.h \
+  /usr/include/c++/4.3/bits/functexcept.h \
+  /usr/include/c++/4.3/exception_defines.h \
+  /usr/include/c++/4.3/bits/cpp_type_traits.h \
+  /usr/include/c++/4.3/ext/type_traits.h \
+  /usr/include/c++/4.3/ext/numeric_traits.h \
+  /usr/include/c++/4.3/bits/stl_pair.h \
+  /usr/include/c++/4.3/bits/stl_move.h \
+  /usr/include/c++/4.3/bits/concept_check.h \
+  /usr/include/c++/4.3/bits/stl_iterator_base_types.h \
+  /usr/include/c++/4.3/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/4.3/bits/stl_iterator.h \
+  /usr/include/c++/4.3/debug/debug.h /usr/include/c++/4.3/cstdio \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/libio.h /usr/include/_G_config.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
+  /usr/include/c++/4.3/bits/localefwd.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++locale.h \
+  /usr/include/c++/4.3/clocale /usr/include/locale.h \
+  /usr/include/bits/locale.h /usr/include/c++/4.3/cctype \
+  /usr/include/ctype.h /usr/include/endian.h /usr/include/bits/endian.h \
+  /usr/include/bits/byteswap.h /usr/include/c++/4.3/bits/ios_base.h \
+  /usr/include/c++/4.3/ext/atomicity.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/gthr.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/gthr-default.h \
+  /usr/include/pthread.h /usr/include/sched.h /usr/include/time.h \
+  /usr/include/bits/sched.h /usr/include/bits/time.h \
+  /usr/include/signal.h /usr/include/bits/sigset.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/bits/setjmp.h \
+  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+  /usr/include/bits/environments.h /usr/include/bits/confname.h \
+  /usr/include/getopt.h /usr/include/bits/unistd.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/atomic_word.h \
+  /usr/include/c++/4.3/bits/locale_classes.h /usr/include/c++/4.3/string \
+  /usr/include/c++/4.3/bits/allocator.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++allocator.h \
+  /usr/include/c++/4.3/ext/new_allocator.h /usr/include/c++/4.3/new \
+  /usr/include/c++/4.3/bits/ostream_insert.h \
+  /usr/include/c++/4.3/cxxabi-forced.h \
+  /usr/include/c++/4.3/bits/stl_function.h \
+  /usr/include/c++/4.3/backward/binders.h \
+  /usr/include/c++/4.3/bits/basic_string.h \
+  /usr/include/c++/4.3/bits/basic_string.tcc \
+  /usr/include/c++/4.3/bits/locale_classes.tcc \
+  /usr/include/c++/4.3/streambuf /usr/include/c++/4.3/bits/streambuf.tcc \
+  /usr/include/c++/4.3/bits/basic_ios.h \
+  /usr/include/c++/4.3/bits/locale_facets.h /usr/include/c++/4.3/cwctype \
+  /usr/include/wctype.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/ctype_base.h \
+  /usr/include/c++/4.3/bits/streambuf_iterator.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/ctype_inline.h \
+  /usr/include/c++/4.3/bits/locale_facets.tcc \
+  /usr/include/c++/4.3/bits/basic_ios.tcc /usr/include/c++/4.3/ostream \
+  /usr/include/c++/4.3/bits/ostream.tcc \
+  /usr/include/c++/4.3/bits/istream.tcc \
+  /usr/include/c++/4.3/bits/codecvt.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/basic_file.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++io.h \
+  /usr/include/c++/4.3/bits/fstream.tcc \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/os.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/vcl.h \
+  /usr/include/c++/4.3/queue /usr/include/c++/4.3/deque \
+  /usr/include/c++/4.3/bits/stl_construct.h \
+  /usr/include/c++/4.3/bits/stl_uninitialized.h \
+  /usr/include/c++/4.3/bits/stl_deque.h \
+  /usr/include/c++/4.3/bits/deque.tcc /usr/include/c++/4.3/vector \
+  /usr/include/c++/4.3/bits/stl_vector.h \
+  /usr/include/c++/4.3/bits/stl_bvector.h \
+  /usr/include/c++/4.3/bits/vector.tcc \
+  /usr/include/c++/4.3/bits/stl_heap.h \
+  /usr/include/c++/4.3/bits/stl_queue.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/vc.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/os.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/queryresult.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/sys/types.h \
+  /usr/include/sys/select.h /usr/include/bits/select.h \
+  /usr/include/sys/sysmacros.h /usr/include/alloca.h \
+  /usr/include/bits/stdlib.h /usr/include/c++/4.3/sstream \
+  /usr/include/c++/4.3/bits/sstream.tcc /usr/include/c++/4.3/set \
+  /usr/include/c++/4.3/bits/stl_tree.h \
+  /usr/include/c++/4.3/bits/stl_set.h \
+  /usr/include/c++/4.3/bits/stl_multiset.h \
+  /usr/include/c++/4.3/functional /usr/include/c++/4.3/iterator \
+  /usr/include/c++/4.3/bits/stream_iterator.h /usr/include/c++/4.3/map \
+  /usr/include/c++/4.3/bits/stl_map.h \
+  /usr/include/c++/4.3/bits/stl_multimap.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/compat_hash_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_fun.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_table.h \
+  /usr/include/c++/4.3/algorithm /usr/include/c++/4.3/bits/stl_algo.h \
+  /usr/include/c++/4.3/cstdlib /usr/include/c++/4.3/bits/algorithmfwd.h \
+  /usr/include/c++/4.3/bits/stl_tempbuf.h /usr/include/c++/4.3/utility \
+  /usr/include/c++/4.3/bits/stl_relops.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/compat_hash_set.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_set.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/rational.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/debug.h \
+  /usr/include/c++/4.3/iostream \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cvc_util.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/kinds.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdo.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/context.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/memory_manager_context.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/memory_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdflags.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/lang.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_op.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_hash.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_value.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theorem.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/proof.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/type.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/formula_value.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/command_line_flags.h \
+  /usr/include/c++/4.3/cstring /usr/include/string.h \
+  /usr/include/bits/string3.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/command_line_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/statistics.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdmap.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdlist.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/parser.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/vc_cmd.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/search_simple.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/search_impl_base.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/search.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_core.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_stream.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/common_proof_rules.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/notifylist.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/variable.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/clause.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/search_fast.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/circuit.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/smartcdo.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/search_sat.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cnf_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cnf.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/dpllt.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_core.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_uf.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_arith_old.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_arith.h \
+  /usr/include/c++/4.3/list /usr/include/c++/4.3/bits/stl_list.h \
+  /usr/include/c++/4.3/bits/list.tcc \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_arith_new.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_fun.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/queryresult.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_arith3.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_bitvector.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_array.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_quant.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_records.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_simulate.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_datatype.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_datatype_lazy.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theory_datatype.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/translator.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/typecheck_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/eval_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_transform.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theorem_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/assumptions.h
+/home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/obj/vcl/i686-linux-gnu/vc_cmd.o: vc_cmd.cpp /usr/include/c++/4.3/fstream \
+  /usr/include/c++/4.3/istream /usr/include/c++/4.3/ios \
+  /usr/include/c++/4.3/iosfwd \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++config.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/os_defines.h \
+  /usr/include/features.h /usr/include/sys/cdefs.h \
+  /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+  /usr/include/gnu/stubs-32.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/cpu_defines.h \
+  /usr/include/c++/4.3/bits/stringfwd.h \
+  /usr/include/c++/4.3/bits/postypes.h /usr/include/c++/4.3/cwchar \
+  /usr/include/c++/4.3/cstddef \
+  /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stddef.h /usr/include/wchar.h \
+  /usr/include/stdio.h /usr/lib/gcc/i486-linux-gnu/4.3.3/include/stdarg.h \
+  /usr/include/bits/wchar.h /usr/include/xlocale.h \
+  /usr/include/bits/wchar2.h /usr/include/stdint.h \
+  /usr/include/c++/4.3/exception /usr/include/c++/4.3/bits/char_traits.h \
+  /usr/include/c++/4.3/bits/stl_algobase.h \
+  /usr/include/c++/4.3/bits/functexcept.h \
+  /usr/include/c++/4.3/exception_defines.h \
+  /usr/include/c++/4.3/bits/cpp_type_traits.h \
+  /usr/include/c++/4.3/ext/type_traits.h \
+  /usr/include/c++/4.3/ext/numeric_traits.h \
+  /usr/include/c++/4.3/bits/stl_pair.h \
+  /usr/include/c++/4.3/bits/stl_move.h \
+  /usr/include/c++/4.3/bits/concept_check.h \
+  /usr/include/c++/4.3/bits/stl_iterator_base_types.h \
+  /usr/include/c++/4.3/bits/stl_iterator_base_funcs.h \
+  /usr/include/c++/4.3/bits/stl_iterator.h \
+  /usr/include/c++/4.3/debug/debug.h /usr/include/c++/4.3/cstdio \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/libio.h /usr/include/_G_config.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/bits/stdio.h /usr/include/bits/stdio2.h \
+  /usr/include/c++/4.3/bits/localefwd.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++locale.h \
+  /usr/include/c++/4.3/clocale /usr/include/locale.h \
+  /usr/include/bits/locale.h /usr/include/c++/4.3/cctype \
+  /usr/include/ctype.h /usr/include/endian.h /usr/include/bits/endian.h \
+  /usr/include/bits/byteswap.h /usr/include/c++/4.3/bits/ios_base.h \
+  /usr/include/c++/4.3/ext/atomicity.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/gthr.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/gthr-default.h \
+  /usr/include/pthread.h /usr/include/sched.h /usr/include/time.h \
+  /usr/include/bits/sched.h /usr/include/bits/time.h \
+  /usr/include/signal.h /usr/include/bits/sigset.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/bits/setjmp.h \
+  /usr/include/unistd.h /usr/include/bits/posix_opt.h \
+  /usr/include/bits/environments.h /usr/include/bits/confname.h \
+  /usr/include/getopt.h /usr/include/bits/unistd.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/atomic_word.h \
+  /usr/include/c++/4.3/bits/locale_classes.h /usr/include/c++/4.3/string \
+  /usr/include/c++/4.3/bits/allocator.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++allocator.h \
+  /usr/include/c++/4.3/ext/new_allocator.h /usr/include/c++/4.3/new \
+  /usr/include/c++/4.3/bits/ostream_insert.h \
+  /usr/include/c++/4.3/cxxabi-forced.h \
+  /usr/include/c++/4.3/bits/stl_function.h \
+  /usr/include/c++/4.3/backward/binders.h \
+  /usr/include/c++/4.3/bits/basic_string.h \
+  /usr/include/c++/4.3/bits/basic_string.tcc \
+  /usr/include/c++/4.3/bits/locale_classes.tcc \
+  /usr/include/c++/4.3/streambuf /usr/include/c++/4.3/bits/streambuf.tcc \
+  /usr/include/c++/4.3/bits/basic_ios.h \
+  /usr/include/c++/4.3/bits/locale_facets.h /usr/include/c++/4.3/cwctype \
+  /usr/include/wctype.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/ctype_base.h \
+  /usr/include/c++/4.3/bits/streambuf_iterator.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/ctype_inline.h \
+  /usr/include/c++/4.3/bits/locale_facets.tcc \
+  /usr/include/c++/4.3/bits/basic_ios.tcc /usr/include/c++/4.3/ostream \
+  /usr/include/c++/4.3/bits/ostream.tcc \
+  /usr/include/c++/4.3/bits/istream.tcc \
+  /usr/include/c++/4.3/bits/codecvt.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/basic_file.h \
+  /usr/include/c++/4.3/i486-linux-gnu/bits/c++io.h \
+  /usr/include/c++/4.3/bits/fstream.tcc \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/vc_cmd.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/compat_hash_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_fun.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_table.h \
+  /usr/include/c++/4.3/vector /usr/include/c++/4.3/bits/stl_construct.h \
+  /usr/include/c++/4.3/bits/stl_uninitialized.h \
+  /usr/include/c++/4.3/bits/stl_vector.h \
+  /usr/include/c++/4.3/bits/stl_bvector.h \
+  /usr/include/c++/4.3/bits/vector.tcc /usr/include/c++/4.3/functional \
+  /usr/include/c++/4.3/algorithm /usr/include/c++/4.3/bits/stl_algo.h \
+  /usr/include/c++/4.3/cstdlib /usr/include/stdlib.h \
+  /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+  /usr/include/sys/types.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/sys/sysmacros.h \
+  /usr/include/alloca.h /usr/include/bits/stdlib.h \
+  /usr/include/c++/4.3/bits/algorithmfwd.h \
+  /usr/include/c++/4.3/bits/stl_heap.h \
+  /usr/include/c++/4.3/bits/stl_tempbuf.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/os.h \
+  /usr/include/c++/4.3/utility /usr/include/c++/4.3/bits/stl_relops.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/exception.h \
+  /usr/include/c++/4.3/iostream \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/queryresult.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/vc.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr.h \
+  /usr/include/c++/4.3/sstream /usr/include/c++/4.3/bits/sstream.tcc \
+  /usr/include/c++/4.3/set /usr/include/c++/4.3/bits/stl_tree.h \
+  /usr/include/c++/4.3/bits/stl_set.h \
+  /usr/include/c++/4.3/bits/stl_multiset.h /usr/include/c++/4.3/iterator \
+  /usr/include/c++/4.3/bits/stream_iterator.h /usr/include/c++/4.3/map \
+  /usr/include/c++/4.3/bits/stl_map.h \
+  /usr/include/c++/4.3/bits/stl_multimap.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/compat_hash_set.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/hash_set.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/rational.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/debug.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cvc_util.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/kinds.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdo.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/context.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/memory_manager_context.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/memory_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/cdflags.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/lang.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_op.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_manager.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_map.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_hash.h \
+  /usr/include/c++/4.3/deque /usr/include/c++/4.3/bits/stl_deque.h \
+  /usr/include/c++/4.3/bits/deque.tcc \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_value.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/theorem.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/proof.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/type.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/formula_value.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/parser.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/eval_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/typecheck_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/command_line_flags.h \
+  /usr/include/c++/4.3/cstring /usr/include/string.h \
+  /usr/include/bits/string3.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/command_line_exception.h \
+  /home/jcharles/workspaces/Mobius/mobius.cvc3/cvc3-20090730/src/include/expr_stream.h
+

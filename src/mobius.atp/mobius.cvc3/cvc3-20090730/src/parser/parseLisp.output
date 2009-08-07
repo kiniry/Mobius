@@ -1,0 +1,240 @@
+Grammar
+
+    0 $accept: cmd $end
+
+    1 cmd: Expr
+
+    2 Expr: Identifier
+    3     | StringLiteral
+    4     | Numeral
+    5     | Binary
+    6     | Hex
+    7     | '(' Exprs ')'
+    8     | DONE_TOK
+
+    9 Identifier: ID_TOK
+
+   10 StringLiteral: STRINGLIT_TOK
+
+   11 Numeral: NUMERAL_TOK
+
+   12 Binary: "0b" NUMERAL_TOK
+
+   13 Hex: "0x" NUMERAL_TOK
+
+   14 Exprs: /* empty */
+   15      | Exprs Expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 7
+')' (41) 7
+error (256)
+"0b" (258) 12
+"0x" (259) 13
+DONE_TOK (260) 8
+ID_TOK (261) 9
+STRINGLIT_TOK (262) 10
+NUMERAL_TOK (263) 11 12 13
+
+
+Nonterminals, with rules where they appear
+
+$accept (11)
+    on left: 0
+cmd (12)
+    on left: 1, on right: 0
+Expr (13)
+    on left: 2 3 4 5 6 7 8, on right: 1 15
+Identifier (14)
+    on left: 9, on right: 2
+StringLiteral (15)
+    on left: 10, on right: 3
+Numeral (16)
+    on left: 11, on right: 4
+Binary (17)
+    on left: 12, on right: 5
+Hex (18)
+    on left: 13, on right: 6
+Exprs (19)
+    on left: 14 15, on right: 7 15
+
+
+state 0
+
+    0 $accept: . cmd $end
+
+    "0b"           shift, and go to state 1
+    "0x"           shift, and go to state 2
+    DONE_TOK       shift, and go to state 3
+    ID_TOK         shift, and go to state 4
+    STRINGLIT_TOK  shift, and go to state 5
+    NUMERAL_TOK    shift, and go to state 6
+    '('            shift, and go to state 7
+
+    cmd            go to state 8
+    Expr           go to state 9
+    Identifier     go to state 10
+    StringLiteral  go to state 11
+    Numeral        go to state 12
+    Binary         go to state 13
+    Hex            go to state 14
+
+
+state 1
+
+   12 Binary: "0b" . NUMERAL_TOK
+
+    NUMERAL_TOK  shift, and go to state 15
+
+
+state 2
+
+   13 Hex: "0x" . NUMERAL_TOK
+
+    NUMERAL_TOK  shift, and go to state 16
+
+
+state 3
+
+    8 Expr: DONE_TOK .
+
+    $default  reduce using rule 8 (Expr)
+
+
+state 4
+
+    9 Identifier: ID_TOK .
+
+    $default  reduce using rule 9 (Identifier)
+
+
+state 5
+
+   10 StringLiteral: STRINGLIT_TOK .
+
+    $default  reduce using rule 10 (StringLiteral)
+
+
+state 6
+
+   11 Numeral: NUMERAL_TOK .
+
+    $default  reduce using rule 11 (Numeral)
+
+
+state 7
+
+    7 Expr: '(' . Exprs ')'
+
+    $default  reduce using rule 14 (Exprs)
+
+    Exprs  go to state 17
+
+
+state 8
+
+    0 $accept: cmd . $end
+
+    $end  shift, and go to state 18
+
+
+state 9
+
+    1 cmd: Expr .
+
+    $default  reduce using rule 1 (cmd)
+
+
+state 10
+
+    2 Expr: Identifier .
+
+    $default  reduce using rule 2 (Expr)
+
+
+state 11
+
+    3 Expr: StringLiteral .
+
+    $default  reduce using rule 3 (Expr)
+
+
+state 12
+
+    4 Expr: Numeral .
+
+    $default  reduce using rule 4 (Expr)
+
+
+state 13
+
+    5 Expr: Binary .
+
+    $default  reduce using rule 5 (Expr)
+
+
+state 14
+
+    6 Expr: Hex .
+
+    $default  reduce using rule 6 (Expr)
+
+
+state 15
+
+   12 Binary: "0b" NUMERAL_TOK .
+
+    $default  reduce using rule 12 (Binary)
+
+
+state 16
+
+   13 Hex: "0x" NUMERAL_TOK .
+
+    $default  reduce using rule 13 (Hex)
+
+
+state 17
+
+    7 Expr: '(' Exprs . ')'
+   15 Exprs: Exprs . Expr
+
+    "0b"           shift, and go to state 1
+    "0x"           shift, and go to state 2
+    DONE_TOK       shift, and go to state 3
+    ID_TOK         shift, and go to state 4
+    STRINGLIT_TOK  shift, and go to state 5
+    NUMERAL_TOK    shift, and go to state 6
+    '('            shift, and go to state 7
+    ')'            shift, and go to state 19
+
+    Expr           go to state 20
+    Identifier     go to state 10
+    StringLiteral  go to state 11
+    Numeral        go to state 12
+    Binary         go to state 13
+    Hex            go to state 14
+
+
+state 18
+
+    0 $accept: cmd $end .
+
+    $default  accept
+
+
+state 19
+
+    7 Expr: '(' Exprs ')' .
+
+    $default  reduce using rule 7 (Expr)
+
+
+state 20
+
+   15 Exprs: Exprs Expr .
+
+    $default  reduce using rule 15 (Exprs)
