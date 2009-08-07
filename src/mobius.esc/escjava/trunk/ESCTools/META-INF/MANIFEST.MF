@@ -27,7 +27,7 @@ Export-Package:
  escjava.reader,
  escjava.sortedProver,
  escjava.sortedProver.auflia,
- escjava.sortedProver.cvc,
+ escjava.sortedProver.cvc3,
  escjava.sortedProver.fx7,
  escjava.sortedProver.fx7pg,
  escjava.sortedProver.simplify,
