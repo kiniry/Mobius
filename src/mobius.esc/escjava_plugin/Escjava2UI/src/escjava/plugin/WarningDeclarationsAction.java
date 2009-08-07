@@ -188,11 +188,11 @@ public class WarningDeclarationsAction implements
     if (jk == -1) {
       IFile[] files = Utils.getRoot().findFilesForLocation(p);
       //System.out.println("FOUND " + files.length + " FOR " + p);
-      for (int j = 0; j < files.length; ++j) {
+      if (0 < files.length) {
         if (line == -1)
-          IDE.openEditor(page, files[j]);
+          IDE.openEditor(page, files[0]);
         else {
-          IMarker marker = files[j].createMarker(IMarker.TEXT);
+          IMarker marker = files[0].createMarker(IMarker.TEXT);
           marker.setAttribute(IMarker.LINE_NUMBER, line);
           IDE.openEditor(page, marker);
           marker.delete();
