@@ -139,9 +139,9 @@ public class Code {
    * The \type expression.
    */
   public static final int TYPE_SMALL = 0x9A;
-  
+
   /**
    * The \nonnullelements expression.
    */
-  public static final int NONNULLELEMENTS = 0x9A;
+  public static final int NONNULLELEMENTS = 0x9B;
 }

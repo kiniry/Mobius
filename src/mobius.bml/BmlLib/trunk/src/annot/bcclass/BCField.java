@@ -17,7 +17,6 @@ import java.util.Vector;
 
 import org.apache.bcel.classfile.Attribute;
 import org.apache.bcel.classfile.ClassFormatException;
-import org.apache.bcel.classfile.ConstantNameAndType;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.ConstantUtf8;
 import org.apache.bcel.classfile.ConstantValue;
@@ -43,6 +42,11 @@ import annot.io.ReadAttributeException;
 public class BCField extends FieldOrMethod {
 
   /**
+   * Serial version uid.
+   */
+  private static final long serialVersionUID = -4439716425203525886L;
+
+  /**
    * A constant representing the information that the field is a normal Java
    * field.
    */
@@ -59,11 +63,6 @@ public class BCField extends FieldOrMethod {
    * field.
    */
   public static final int MODEL_FIELD = 2;
-
-  /**
-   * Serial version UID.
-   */
-  private static final long serialVersionUID = 1L;
 
   /**
    * The BML access flags for the variable.
@@ -195,8 +194,8 @@ public class BCField extends FieldOrMethod {
    * @return the type of the current field
    */
   public Type getType() {
-    final String tname = ((ConstantUtf8)bcc.getCp().getConstant(getSignatureIndex())).
-              getBytes();
+    final String tname = 
+      ((ConstantUtf8)bcc.getCp().getConstant(getSignatureIndex())).getBytes();
     return Type.getType(tname);
   }
 

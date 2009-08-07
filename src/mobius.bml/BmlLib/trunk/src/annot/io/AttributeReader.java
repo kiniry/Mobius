@@ -24,6 +24,7 @@ import annot.bcexpression.ConditionalExpression;
 import annot.bcexpression.FieldAccess;
 import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
+import annot.bcexpression.NONNULLELEMENTS;
 import annot.bcexpression.NULL;
 import annot.bcexpression.NumberLiteral;
 import annot.bcexpression.OLD;
@@ -403,6 +404,8 @@ public class AttributeReader {
         return JavaType.getJavaType(name);
       case Code.TYPE_SMALL:
         return new TYPEsmall(this, b);
+      case Code.NONNULLELEMENTS:
+        return new NONNULLELEMENTS(this, b);
       default:
         throw new ReadAttributeException("Unknown expression code: " + b);
     }

@@ -169,8 +169,7 @@ public abstract class BCClassRepresentation {
   }
 
   /**
-   * @return constant pool (from this library, not
-   * BCEL's one)
+   * @return the BML (combined) constant pool
    */
   public BCConstantPool getCp() {
     return this.cp;

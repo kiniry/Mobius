@@ -55,9 +55,11 @@ public class BCConstantPool extends BCCConstantPrinting
   private ConstantPoolGen combinedcp;
 
   /**
-   * Number of constants in the first constant pool.
+   * Number of constant positions in the first constant pool which is the
+   * number of the last constant pool (or the number + 1 in case the
+   * last constant is Long or any other two-entries constant).
    */
-  private int initialSize;
+  private int positionsBase;
 
   /**
    * JavaClass related with it's primary constantPool,
@@ -88,7 +90,7 @@ public class BCConstantPool extends BCCConstantPrinting
     this.bcc = classRepresentation;
     addStandardConstants(ajc.getConstantPool());
     final ConstantPoolGen cp = ajc.getConstantPool();
-    this.initialSize = cp.getSize();
+    this.positionsBase = cp.getSize() - 1;
     this.combinedcp = new ConstantPoolGen(cp.getFinalConstantPool());
   }
 
@@ -111,7 +113,7 @@ public class BCConstantPool extends BCCConstantPrinting
       this.combinedcp.addConstant(c,
         constantPoolGen != null ? constantPoolGen : combinedcp);
     } else {
-      addConstantAfter(c, initialSize - 1);
+      addConstantAfter(c, positionsBase);
     }
   }
 
@@ -129,8 +131,8 @@ public class BCConstantPool extends BCCConstantPrinting
     reindexConstantPool(an_index + 1, combinedcp); //this reindexes the cp in jc
                                                    //as well
     addNoReindexing(an_index, c, combinedcp);
-    if (an_index + 1 <= initialSize) {
-      initialSize++;
+    if (an_index <= positionsBase) {
+      positionsBase++;
       final ConstantPoolGen cpg = jc.getConstantPool();
       addNoReindexing(an_index, c, cpg);
     }
@@ -234,16 +236,6 @@ public class BCConstantPool extends BCCConstantPrinting
   }
 
   /**
-   * Removes all entries from constant pool.
-   * @author Tomasz Olejniczak (to236111@students.mimuw.edu.pl)
-   */
-  public void clearConstantPool() {
-    //constants.clear();
-    initialSize = 0;
-    //addConstant(null, false);
-  }
-
-  /**
    * Adds standard constants (eg. attribute names) to the
    * primary (BCEL) constant pool. This should be called only
    * between loading primary and secondary constant pool.
@@ -304,9 +296,10 @@ public class BCConstantPool extends BCCConstantPrinting
   /**
    * Gives a constant from constant pool. Constants from
    * second constant pool have indexes starting with
-   * <code>initialSize</code>, while constants from primary
-   * constant pool have indexes from 0 to initialSize - 1.
-   * Can be used in loading from file only.
+   * <code>positionsBase + 1</code>, while constants from primary
+   * constant pool have indexes from 0 to positionsBase.
+   * Can be used in loading from file only. (Note that the index 0
+   * is used only for internal purposes of {@link ConstantPoolGen}).
    *
    * @param i - constant index
    * @return i-th constant.
@@ -327,15 +320,15 @@ public class BCConstantPool extends BCCConstantPrinting
    */
   public StringBuffer printCode(final StringBuffer a_code) {
     a_code.append(DisplayStyle.CONSTANT_POOL_KWD + "\n");
-    for (int i = 0; i  <  this.initialSize; i++) {
+    for (int i = 0; i  <=  this.positionsBase; i++) {
       a_code.append(printElement(i));
     }
-    final int n = this.combinedcp.getSize();
-    if (n == this.initialSize) {
+    final int n = this.combinedcp.getSize() - 1;
+    if (n == this.positionsBase) {
       return a_code;
     }
     a_code.append("\n" + DisplayStyle.SECOND_CONSTANT_POOL_KWD + "\n");
-    for (int i = this.initialSize; i  <  n; i++) {
+    for (int i = this.positionsBase + 1; i  <=  n; i++) {
       a_code.append(printElement(i));
     }
     return a_code;
@@ -363,7 +356,15 @@ public class BCConstantPool extends BCCConstantPrinting
   /**
    * Saves both constant pools to given JavaClass
    * (primary as an ordinary constant pool and secondary
-   * as an "second constant pool" class attribute).
+   * as an "SecondConstantPool" class attribute). The format
+   * of the saved attribute is:
+   * SecondConstantPool_attribute {
+   *   u2 attribute_name_index;
+   *   u4 attribute_length;
+   *   u2 first_cp_count;
+   *   u2 second_cp_count;
+   *   cp_info second_cp[second_cp_count];
+   * }
    *
    * @param ajc - JavaClass to save to.
    */
@@ -372,8 +373,9 @@ public class BCConstantPool extends BCCConstantPrinting
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
     final DataOutputStream file = new DataOutputStream(baos);
     try {
-      file.writeShort(combinedcp.getSize() - this.initialSize);
-      for (int i = this.initialSize; i  <  combinedcp.getSize(); i++) {
+      file.writeShort(this.positionsBase);
+      file.writeShort(combinedcp.getSize() - this.positionsBase - 1);
+      for (int i = this.positionsBase + 1; i  <  combinedcp.getSize(); i++) {
         this.combinedcp.getConstant(i).dump(file);
       }
     } catch (final IOException e) {
@@ -424,7 +426,7 @@ public class BCConstantPool extends BCCConstantPrinting
    *   <code>false</code> when the index is to the original constant pool
    */
   public boolean isSecondConstantPoolIndex(final int i) {
-    return (i >= initialSize);
+    return (i > positionsBase);
   }
 
   /**
@@ -436,6 +438,7 @@ public class BCConstantPool extends BCCConstantPrinting
    * SecondConstantPool_attribute {
    *   u2 attribute_name_index;
    *   u4 attribute_length;
+   *   u2 first_cp_count;
    *   u2 second_cp_count;
    *   cp_info second_cp[second_cp_count];
    * }
@@ -447,6 +450,7 @@ public class BCConstantPool extends BCCConstantPrinting
    */
   public void load(final AttributeReader attributeReader)
     throws ReadAttributeException {
+    this.positionsBase = attributeReader.readShort();
     final int size = attributeReader.readShort();
     for (int i = 0; i  <  size; i++) {
       final Constant c = ConstantPoolReader.readConstant(attributeReader);
@@ -471,7 +475,7 @@ public class BCConstantPool extends BCCConstantPrinting
    * @return the number of constants in first constant pool
    */
   public int getInitialSize() {
-    return initialSize;
+    return positionsBase;
   }
 
   /**
@@ -528,7 +532,7 @@ public class BCConstantPool extends BCCConstantPrinting
     if (apos < fcp.getSize()) {
       final ConstantPoolGen nfcp = justRemoveConstantFromCPG(fcp, apos);
       jc.setConstantPool(nfcp);
-      initialSize--;
+      positionsBase--;
       final int numm = bcc.getMethodCount();
       for (int i = 0; i < numm; i++) {
         final BCMethod bcm = bcc.getMethod(i);
@@ -568,8 +572,9 @@ public class BCConstantPool extends BCCConstantPrinting
    * @param a_new a new constant
    */
   public void replaceConstant(final int an_old_index, final Constant a_new) {
-    if (an_old_index < initialSize) {
+    if (an_old_index <= positionsBase) {
       jc.getConstantPool().setConstant(an_old_index, a_new);
+      // TODO this won't work for Longs
     } // we update both cpgs
     if (an_old_index < combinedcp.getSize()) {
       combinedcp.setConstant(an_old_index, a_new);
