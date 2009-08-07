@@ -47,9 +47,9 @@ public class BmllibType implements Type {
   
   // accept() for primitive types.
   private void processBasicType(final TypeVisitor v) {
-    if (type == JavaBasicType.JavaInt) {
+    if (type == JavaBasicType.JAVA_INT_TYPE) {
       v.visitInt();
-    } else if (type == JavaBasicType.JavaBool) {
+    } else if (type == JavaBasicType.JAVA_BOOLEAN_TYPE) {
       v.visitBoolean();
     } else {
       throw new UnsupportedOperationException(
