@@ -60,9 +60,7 @@ public class AddNatureAction implements IObjectActionDelegate {
 
 	/**
 	 * Adds nature to a project
-	 * 
-	 * @param project
-	 *            to have sample nature added or removed
+	 * @param project to have sample nature added or removed
 	 */
 	private void addNature(IProject project) {
 		try {

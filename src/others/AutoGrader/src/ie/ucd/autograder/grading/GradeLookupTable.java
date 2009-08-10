@@ -22,7 +22,6 @@ public class GradeLookupTable {
 
     for (MarkGradePair boundary : gradeBoundaries) {
       if (mark >= boundary.getFirst()) {
-//        System.out.println("Found, mark: " + mark + ", grade: " + boundary.getSecond());
         return boundary.getSecond();
       }
     }

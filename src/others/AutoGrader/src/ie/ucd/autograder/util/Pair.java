@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Pair <A,B> {
 
-  private final A first;
-  private final B second;
+  public final A first;
+  public final B second;
   
   public Pair(A first, B second) {
     this.first = first;

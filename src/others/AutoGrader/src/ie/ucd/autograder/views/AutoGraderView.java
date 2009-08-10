@@ -1,6 +1,5 @@
 package ie.ucd.autograder.views;
 
-
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.DefaultBodyConfig;
 import net.sourceforge.nattable.config.DefaultColumnHeaderConfig;
@@ -69,8 +68,7 @@ public class AutoGraderView extends ViewPart {
       IProject project = ((IResource)actual).getProject();
       updateSelectedProject(project);
     } else {
-      //      System.out.println("Not IJavaElement or IResource " + actual.getClass());
-
+      //System.out.println("Not IJavaElement or IResource " + actual.getClass());
     }
   }
 
@@ -110,8 +108,6 @@ public class AutoGraderView extends ViewPart {
         updateView(selection);
       }
     });
-    
-    
   }
 
   /**
@@ -136,6 +132,7 @@ public class AutoGraderView extends ViewPart {
       return sizeConfig;
     }    
   }
+  
   private static final class AutoGraderBodyConfig extends DefaultBodyConfig {
     private final SizeConfig width;
     private final SizeConfig height;
@@ -152,7 +149,6 @@ public class AutoGraderView extends ViewPart {
     public SizeConfig getRowHeightConfig() {
       return height;
     }
-    
-    
   }
+  
 }

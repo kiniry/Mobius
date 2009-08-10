@@ -59,7 +59,6 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
       for (AggregateData data : projectData) {
         if (data.getName().equals(GraderBuilder.TOTAL_NAME)) continue;
         int size = data.getData().size();
-//        size *= data.getName().equals(GraderBuilder.TOTAL_NAME) ? 2 : 3;
         size *= 3;
         if (size > numRows) {
           numRows = size;

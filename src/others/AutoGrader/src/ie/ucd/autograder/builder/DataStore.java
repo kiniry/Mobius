@@ -40,7 +40,6 @@ public final class DataStore {
   
   private DataStore() {
     projectDataMap = new HashMap<IProject,List<AggregateData>>();
-    
   }
   
   public List<AggregateData> getDataForProject(IProject project) {

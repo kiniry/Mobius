@@ -8,8 +8,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.swt.graphics.Color;
-
 public enum Grade {
 
   
@@ -94,10 +92,6 @@ public enum Grade {
       totalWeight += grade.getSecond();
       total += grade.getFirst().getMark() * grade.getSecond();
     }
-    //    System.out.println("Doing weighted mean");
-    //    System.out.println("Grades: " + grades);
-    //    System.out.println("total:" + total);
-    //    System.out.println("totalWeight:" + totalWeight);
     return total / totalWeight;
   }
 }

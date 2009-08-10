@@ -138,6 +138,8 @@ public class GraderBuilder extends IncrementalProjectBuilder {
           MetricHolder holder = new MetricHolder(idName, metric, averagePerPackage, maxPerPackage, averagePerClass, maxPerClass, averagePerMethod, maxPerMethod);
           metricMap.put(name, holder);
         }
+      } else {
+        //Missing data, return null
       }
     }
     return metricMap;

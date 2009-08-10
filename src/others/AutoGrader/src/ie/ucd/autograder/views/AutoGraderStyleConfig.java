@@ -40,13 +40,11 @@ public class AutoGraderStyleConfig extends DefaultStyleConfig {
 
   @Override
   public Color getForegroundColor(int row, int col) {
-    // TODO Auto-generated method stub
     return super.getForegroundColor(row, col);
   }
 
   @Override
   public Image getImage(int row, int col) {
-    // TODO Auto-generated method stub
     return super.getImage(row, col);
   }
   
