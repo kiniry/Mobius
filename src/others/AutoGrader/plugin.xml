@@ -76,7 +76,6 @@
       </category>
       <view
             name="Auto-Grader"
-            icon="icons/sample.gif"
             category="AutoGrader"
             class="ie.ucd.autograder.views.AutoGraderView"
             id="markeraccessor.views.AutoGraderView">
@@ -93,12 +92,6 @@
                id="markeraccessor.views.AutoGraderView">
          </view>
       </perspectiveExtension>
-   </extension>
-   <extension
-         point="org.eclipse.help.contexts">
-      <contexts
-            file="contexts.xml">
-      </contexts>
    </extension>
 
 </plugin>
