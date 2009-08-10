@@ -42,13 +42,13 @@ public class ModifiersRule extends TranslationRule < String, Symbols > {
 
       for(AnnotationTree annot: node.getAnnotations()){
         String annotation = annot.getAnnotationType().toString();
-        if (annotation.equals("org.jmlspecs.annotations.NonNull")){
+        if (annotation.equals("org.jmlspecs.annotation.NonNull")){
           modifiers = modifiers | BMLModifiersFlags.BML_NON_NULL;
-        } else if (annotation.equals("org.jmlspecs.annotations.SpecPublic")){
+        } else if (annotation.equals("org.jmlspecs.annotation.SpecPublic")){
           modifiers = modifiers | BMLModifiersFlags.BML_SPEC_PUBLIC;
-        } else if (annotation.equals("org.jmlspecs.annotations.Ghost")){
+        } else if (annotation.equals("org.jmlspecs.annotation.Ghost")){
           kind = BCField.GHOST_FIELD;
-        } else if (annotation.equals("org.jmlspecs.annotations.Model")){
+        } else if (annotation.equals("org.jmlspecs.annotation.Model")){
           kind = BCField.MODEL_FIELD;
         } else
           throw new Jml2BmlException("Unknown annotation:"+annotation);

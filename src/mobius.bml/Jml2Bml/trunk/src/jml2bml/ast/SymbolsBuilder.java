@@ -12,7 +12,6 @@ import jml2bml.symbols.Variable;
 import jml2bml.utils.JCUtils;
 
 import org.apache.bcel.generic.LocalVariableGen;
-import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
@@ -24,7 +23,6 @@ import annot.bcexpression.LocalVariable;
 
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Context;
 
@@ -142,7 +140,7 @@ public class SymbolsBuilder extends
           .getBcelMethod().getArgumentType(aindex - 1), null, null);
       var = new LocalVariable(m, aindex, node.getName().toString(), lvGen);
     }
-    s.put(node.name.toString(), new Variable(var, node));
+    s.put(node.name.toString(), new Variable(var));
   }
 
   private int getIndex(final BCMethod m, final String name) {
@@ -182,7 +180,7 @@ public class SymbolsBuilder extends
       //TODO: currently we interpret this as a ghost field
       //ConstantPoolHelper.addGhostField(type, node.getName().toString(), cl);
     }
-    s.put(node.name.toString(), new Variable((FieldRef) null, node));
+    s.put(node.name.toString(), new Variable((FieldRef) null));
   }
 
   /**

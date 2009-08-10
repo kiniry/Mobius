@@ -10,6 +10,7 @@ import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
+import org.jmlspecs.openjml.JmlTree.JmlConstraintMethodSig;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
@@ -20,12 +21,13 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseConditional;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignalsOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseStoreRef;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlModelProgramStatement;
 import org.jmlspecs.openjml.JmlTree.JmlPrimitiveTypeTree;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlRefines;
@@ -876,7 +878,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
    */
   public R visitJmlMethodClauseDecl(final JmlMethodClauseDecl node, final P p) {
     final P tmpP = preVisit(node, p);
-    return scan(node.stats, tmpP);
+    return scan(node.decls, tmpP);
   }
 
   /**
@@ -903,12 +905,12 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
   }
 
   /**
-   * Visiting JmlMethodClauseSigOnly node.
+   * Visiting JmlMethodClauseSignalsOnly node.
    * @param node - node to visit.
    * @param p - additional data that might be useful while visiting the node.
    * @return just the result of corresponding method from the superclass.
    */
-  public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSigOnly node,
+  public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSignalsOnly node,
                                        final P p) {
     final P tmpP = preVisit(node, p);
     return scan(node.list, tmpP);
@@ -970,7 +972,7 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
     final P tmpP = preVisit(node, p);
     R r = scan(node.decls, tmpP);
     r = scanAndReduce(node.range, tmpP, r);
-    return scanAndReduce(node.predicate, tmpP, r);
+    return scanAndReduce(node.value, tmpP, r);
   }
 
   /**
@@ -1272,5 +1274,23 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
     r = scanAndReduce(node.getMethodSelect(), tmpP, r);
     r = scanAndReduce(node.getArguments(), tmpP, r);    
     return r;
+  }
+
+  @Override
+  public R visitJmlConstraintMethodSig(JmlConstraintMethodSig that, P p) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public R visitJmlMethodClauseStoreRef(JmlMethodClauseStoreRef that, P p) {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public R visitJmlModelProgramStatement(JmlModelProgramStatement that, P p) {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

@@ -253,9 +253,9 @@ public class ExpressionRule extends TranslationRule < BCExpression, Symbols > {
       final BoundVar bvar = new BoundVar(type, nameAndTypeIdx,
                                         formula, name.toString());
       formula.addVariable(bvar);
-      symbols.put(name.toString(), new Variable(bvar, node));
+      symbols.put(name.toString(), new Variable(bvar));
     }
-    final BCExpression predicate = scan(node.predicate, symbols);
+    final BCExpression predicate = scan(node.value, symbols);
     formula.setFormula(predicate);
     return formula;
   }

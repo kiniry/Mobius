@@ -6,14 +6,10 @@
  */
 package jml2bml.symbols;
 
-import org.jmlspecs.openjml.JmlTree.JmlVariableDecl;
-
 import annot.bcexpression.BCExpression;
 import annot.bcexpression.BoundVar;
 import annot.bcexpression.FieldRef;
 import annot.bcexpression.LocalVariable;
-
-import com.sun.source.tree.Tree;
 
 public class Variable {
 
@@ -25,23 +21,18 @@ public class Variable {
 
   private BCExpression var;
 
-  private Tree jmlNode;
-
-  public Variable(final BoundVar avar, final Tree ajmlNode) {
+  public Variable(final BoundVar avar) {
     this.var = avar;
-    this.jmlNode = ajmlNode;
     this.isBoundVariable = true;
   }
 
-  public Variable(final LocalVariable avar, final Tree ajmlNode) {
+  public Variable(final LocalVariable avar) {
     this.var = avar;
-    this.jmlNode = ajmlNode;
     this.isLocalVariable = true;
   }
 
-  public Variable(final FieldRef avar, final JmlVariableDecl node) {
+  public Variable(final FieldRef avar) {
     this.var = avar;
-    this.jmlNode = node;
     this.isField = true;
   }
 
@@ -59,9 +50,5 @@ public class Variable {
 
   public BCExpression getVariable() {
     return var;
-  }
-
-  public Tree getJmlNode() {
-    return jmlNode;
   }
 }

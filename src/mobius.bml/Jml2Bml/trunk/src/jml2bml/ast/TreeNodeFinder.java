@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.jmlspecs.openjml.JmlTree;
-
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -33,12 +31,6 @@ public class TreeNodeFinder {
    *
    */
   private class ParentFinder extends ExtendedJmlTreeScanner < Tree, Tree > {
-    /** Informs if the ParentFinder is in Jml comment. */
-    private boolean isInJmlComment = false;
-
-    /** Jml visitor to check if node is a Jml node. */
-    private IsJml isJmlVisitor = new IsJml();
-
     /**
      * Overriden scan method sets a node parent in {@code parents} structure.
      *
@@ -48,14 +40,10 @@ public class TreeNodeFinder {
      */
     @Override
     public Tree scan(final Tree node, final Tree parent) {
-      final boolean isInJmlCommentCopy = isInJmlComment;
       if (node != null) {
         parents.put(node, parent);
-        isInJmlComment = isInJmlComment || node.accept(isJmlVisitor, null);
-        isJml.put(node, isInJmlComment);
       }
       final Tree result = super.scan(node, node);
-      isInJmlComment = isInJmlCommentCopy;
       return result;
     }
 
@@ -93,9 +81,6 @@ public class TreeNodeFinder {
   /** Maps a tree node to next sibling in a tree. */
   private Map < Tree, Tree > nextSiblingMap;
 
-  /** Maps a tree node to inforamtion if it is in jml comment. */
-  private Map < Tree, Boolean > isJml;
-
   /**
    * The constructor.
    * @param tree tree on which we want perform find operations.
@@ -103,7 +88,6 @@ public class TreeNodeFinder {
   public TreeNodeFinder(final Tree tree) {
     parents = new HashMap < Tree, Tree >();
     nextSiblingMap = new HashMap < Tree, Tree >();
-    isJml = new HashMap < Tree, Boolean >();
     tree.accept(new ParentFinder(), tree);
   }
 
@@ -169,14 +153,5 @@ public class TreeNodeFinder {
    */
   public Tree getNextSibling(final Tree tree) {
     return nextSiblingMap.get(tree);
-  }
-
-  /**
-   * Returns if the given node is in a JML comment.
-   * @param tree node to check
-   * @return if the node is in JML comment.
-   */
-  public boolean isInJmlComment(final Tree tree) {
-    return isJml.get(tree);
   }
 }

@@ -4,6 +4,7 @@ import org.jmlspecs.openjml.JmlTreeVisitor;
 import org.jmlspecs.openjml.JmlTree.JmlBinary;
 import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
+import org.jmlspecs.openjml.JmlTree.JmlConstraintMethodSig;
 import org.jmlspecs.openjml.JmlTree.JmlDoWhileLoop;
 import org.jmlspecs.openjml.JmlTree.JmlEnhancedForLoop;
 import org.jmlspecs.openjml.JmlTree.JmlForLoop;
@@ -14,12 +15,13 @@ import org.jmlspecs.openjml.JmlTree.JmlMethodClauseConditional;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseExpr;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseGroup;
-import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSigOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignals;
+import org.jmlspecs.openjml.JmlTree.JmlMethodClauseSignalsOnly;
 import org.jmlspecs.openjml.JmlTree.JmlMethodClauseStoreRef;
 import org.jmlspecs.openjml.JmlTree.JmlMethodDecl;
 import org.jmlspecs.openjml.JmlTree.JmlMethodInvocation;
 import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlModelProgramStatement;
 import org.jmlspecs.openjml.JmlTree.JmlPrimitiveTypeTree;
 import org.jmlspecs.openjml.JmlTree.JmlQuantifiedExpr;
 import org.jmlspecs.openjml.JmlTree.JmlRefines;
@@ -96,7 +98,7 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 import com.sun.source.util.TreeScanner;
 
-public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
+public class TranslationRule<R, P> extends TreeScanner<R, P>
     implements JmlTreeVisitor<R, P> {
 
   protected R preVisit(final Tree node, final P p) {
@@ -407,7 +409,7 @@ public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
     return preVisit(node, p);
   }
 
-  public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSigOnly node,
+  public R visitJmlMethodClauseSigOnly(final JmlMethodClauseSignalsOnly node,
                                        final P p) {
     return preVisit(node, p);
   }
@@ -535,6 +537,18 @@ public abstract class TranslationRule<R, P> extends TreeScanner<R, P>
   }
 
   public R visitJmlMethodInvocation(final JmlMethodInvocation node, final P p) {
+    return preVisit(node, p);
+  }
+
+  public R visitJmlConstraintMethodSig(final JmlConstraintMethodSig node, final P p) {
+    return preVisit(node, p);
+  }
+
+  public R visitJmlMethodClauseStoreRef(final JmlMethodClauseStoreRef node, final P p) {
+    return preVisit(node, p);
+  }
+
+  public R visitJmlModelProgramStatement(final JmlModelProgramStatement node, final P p) {
     return preVisit(node, p);
   }
 }
