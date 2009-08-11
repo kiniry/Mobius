@@ -1276,19 +1276,16 @@ public class ExtendedJmlTreeScanner<R, P> extends TreeScanner < R, P >
     return r;
   }
 
-  @Override
   public R visitJmlConstraintMethodSig(JmlConstraintMethodSig that, P p) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
   public R visitJmlMethodClauseStoreRef(JmlMethodClauseStoreRef that, P p) {
     // TODO Auto-generated method stub
     return null;
   }
 
-  @Override
   public R visitJmlModelProgramStatement(JmlModelProgramStatement that, P p) {
     // TODO Auto-generated method stub
     return null;
