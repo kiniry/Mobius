@@ -1,11 +1,7 @@
 package ie.ucd.autograder.views;
 
 import net.sourceforge.nattable.NatTable;
-import net.sourceforge.nattable.config.DefaultBodyConfig;
-import net.sourceforge.nattable.config.DefaultColumnHeaderConfig;
-import net.sourceforge.nattable.config.SizeConfig;
-import net.sourceforge.nattable.data.IDataProvider;
-import net.sourceforge.nattable.model.DefaultNatTableModel;
+import net.sourceforge.nattable.layer.DataLayer;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -38,8 +34,8 @@ public class AutoGraderView extends ViewPart {
   public static final Color GRADE_OK = new Color(display, new RGB(124,252,0)); //Green
 
   private NatTable table;
-  private DefaultBodyConfig bodyConfig;
-  private DefaultNatTableModel model;
+//  private DefaultBodyConfig bodyConfig;
+//  private DefaultNatTableModel model;
 
   /**
    * The constructor.
@@ -93,13 +89,16 @@ public class AutoGraderView extends ViewPart {
    * to create the viewer and initialise it.
    */
   public void createPartControl(Composite parent) {
-    model = new DefaultNatTableModel();
-    bodyConfig = new AutoGraderBodyConfig(AutoGraderDataProvider.getInstance());
-    bodyConfig.setCellRenderer(new AutoGraderCellRenderer(AutoGraderDataProvider.getInstance()));
-    model.setBodyConfig(bodyConfig);
-    model.setColumnHeaderConfig(new AutoGraderColumnHeaderConfig());
-    table = new NatTable(parent, SWT.H_SCROLL | SWT.V_SCROLL, model);
+//    model = new DefaultNatTableModel();
+//    bodyConfig = new AutoGraderBodyConfig(AutoGraderDataProvider.getInstance());
+//    bodyConfig.setCellRenderer(new AutoGraderCellRenderer(AutoGraderDataProvider.getInstance()));
+//    model.setBodyConfig(bodyConfig);
+//    model.setColumnHeaderConfig(new AutoGraderColumnHeaderConfig());
+//    table = new NatTable(parent, SWT.H_SCROLL | SWT.V_SCROLL, model);
 
+    table = new NatTable(parent, new DataLayer(AutoGraderDataProvider.getInstance()));
+    
+    
     //Register this view to receive selection changes.
     ISelectionService service = getSite().getWorkbenchWindow().getSelectionService();
     service.addSelectionListener("org.eclipse.jdt.ui.PackageExplorer",
@@ -117,38 +116,40 @@ public class AutoGraderView extends ViewPart {
     table.setFocus();
   }
 
-  private static final class AutoGraderColumnHeaderConfig extends DefaultColumnHeaderConfig {
-    private final SizeConfig sizeConfig;
-    public AutoGraderColumnHeaderConfig() {
-      super(AutoGraderDataProvider.getInstance());
-      this.sizeConfig = new SizeConfig(20);
-    }
-    @Override
-    public int getColumnHeaderRowCount() {
-      return AutoGraderDataProvider.getInstance().shouldShowColumnHeader() ? 1 : 0;
-    }
-    @Override
-    public SizeConfig getColumnHeaderRowHeightConfig() {
-      return sizeConfig;
-    }    
-  }
-  
-  private static final class AutoGraderBodyConfig extends DefaultBodyConfig {
-    private final SizeConfig width;
-    private final SizeConfig height;
-    public AutoGraderBodyConfig(IDataProvider dataProvider) {
-      super(dataProvider);
-      this.width = new SizeConfig(150);
-      this.height = new SizeConfig(20);
-    }
-    @Override
-    public SizeConfig getColumnWidthConfig() {
-      return width;
-    }
-    @Override
-    public SizeConfig getRowHeightConfig() {
-      return height;
-    }
-  }
+//  private static final class AutoGraderColumnHeaderConfig extends DefaultColumnHeaderStyleConfiguration {
+//    private final SizeConfig sizeConfig;
+//    public AutoGraderColumnHeaderConfig() {
+//      super();
+      //super(AutoGraderDataProvider.getInstance());
+//      this.sizeConfig = new SizeConfig(20);
+//    }
+    
+//    @Override
+//    public int getColumnHeaderRowCount() {
+//      return AutoGraderDataProvider.getInstance().shouldShowColumnHeader() ? 1 : 0;
+//    }
+//    @Override
+//    public SizeConfig getColumnHeaderRowHeightConfig() {
+//      return sizeConfig;
+//    }    
+//  }
+//  
+//  private static final class AutoGraderBodyConfig extends DefaultBodyConfig {
+//    private final SizeConfig width;
+//    private final SizeConfig height;
+//    public AutoGraderBodyConfig(IDataProvider dataProvider) {
+//      super(dataProvider);
+//      this.width = new SizeConfig(150);
+//      this.height = new SizeConfig(20);
+//    }
+//    @Override
+//    public SizeConfig getColumnWidthConfig() {
+//      return width;
+//    }
+//    @Override
+//    public SizeConfig getRowHeightConfig() {
+//      return height;
+//    }
+//  }
   
 }

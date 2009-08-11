@@ -28,8 +28,6 @@ public class Pair <A,B> {
     return "<" + getFirst() + "," + getSecond() + ">";
   }
 
-
-
   public static class MarkGradePair extends Pair<Double,Grade> {
     public MarkGradePair(Double first, Grade second) {
       super(first, second);

@@ -12,12 +12,11 @@ import ie.ucd.autograder.util.Pair;
 
 import java.util.List;
 
-import net.sourceforge.nattable.data.IColumnHeaderLabelProvider;
 import net.sourceforge.nattable.data.IDataProvider;
 
 import org.eclipse.core.resources.IProject;
 
-public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabelProvider {
+public class AutoGraderDataProvider implements IDataProvider {
 
   private IProject selectedProject;
   private List<AggregateData> projectData;
@@ -71,7 +70,7 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
   }
 
   //TODO cache results, clear cache after change in data...
-  public Object getValue(int row, int col) {
+  public Object getDataValue(int row, int col) {
     if (selectedProject != null) {
       if (projectData != null) {
 
@@ -141,14 +140,10 @@ public class AutoGraderDataProvider implements IDataProvider, IColumnHeaderLabel
     }
   }
 
-  public String getColumnHeaderLabel(int col) {
-    if (selectedProject != null && projectData != null) {
-      return projectData.get(col).getName();
-    } else {
-      return "";
-    }
+  public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
+    //Do nothing, not editable
   }
-  
+
   public boolean shouldShowColumnHeader() {
     return selectedProject != null && projectData != null;
   }
