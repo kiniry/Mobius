@@ -151,10 +151,12 @@ public class AutoGraderDataProvider implements IDataProvider {
   private static class StringHolder {
     public final String string;
     public StringHolder(String string) { this.string = string; }
+    public String toString() { return string; }
   }
   
   public static class TitleString extends StringHolder {
     public TitleString(String string) { super(string); }
+    public String toString() { return string + ":"; }
   }
   
   public static class MeasureString extends StringHolder {
@@ -164,6 +166,7 @@ public class AutoGraderDataProvider implements IDataProvider {
   public static class GradeHolder {
     public final Grade grade;
     public GradeHolder(Grade g) { grade = g; }
+    public String toString() { return "Grade: " + grade; }
   }
   
   public static class ItemGrade extends GradeHolder {

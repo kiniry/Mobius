@@ -4,13 +4,14 @@ import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.views.AutoGraderDataProvider.GradeHolder;
 import ie.ucd.autograder.views.AutoGraderDataProvider.MeasureString;
 import ie.ucd.autograder.views.AutoGraderDataProvider.TitleString;
-import net.sourceforge.nattable.typeconfig.style.DefaultStyleConfig;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 
-public class AutoGraderStyleConfig extends DefaultStyleConfig {
+public class AutoGraderStyleConfig 
+//extends DefaultStyleConfig 
+{
   private static final long serialVersionUID = 8946047618955230840L;
 
   private final AutoGraderDataProvider dataProvider;
@@ -19,9 +20,9 @@ public class AutoGraderStyleConfig extends DefaultStyleConfig {
     this.dataProvider = dataProvider;
   }
 
-  @Override
+  //@Override
   public Color getBackgroundColor(int row, int col) {
-    Object value = dataProvider.getValue(row, col);
+    Object value = null; //dataProvider.getValue(row, col);
     if (value instanceof GradeHolder) {
       return gradeToColour(((GradeHolder)value).grade);
     } else if (value instanceof TitleString) {
@@ -29,23 +30,27 @@ public class AutoGraderStyleConfig extends DefaultStyleConfig {
     } else if (value instanceof MeasureString) {
       return AutoGraderView.MEASURE_COLOR;
     } else {
-      return super.getBackgroundColor(row, col);
+      //return super.getBackgroundColor(row, col);
+      return null;
     }
   }
 
-  @Override
+//  @Override
   public Font getFont(int row, int col) {
-    return super.getFont(row, col);
+//    return super.getFont(row, col);
+    return null;
   }
 
-  @Override
+//  @Override
   public Color getForegroundColor(int row, int col) {
-    return super.getForegroundColor(row, col);
+//    return super.getForegroundColor(row, col);
+    return null;
   }
 
-  @Override
+//  @Override
   public Image getImage(int row, int col) {
-    return super.getImage(row, col);
+//    return super.getImage(row, col);
+    return null;
   }
   
   public static Color gradeToColour(Grade grade) {

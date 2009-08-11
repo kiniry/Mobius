@@ -1,7 +1,15 @@
 package ie.ucd.autograder.views;
 
 import net.sourceforge.nattable.NatTable;
+import net.sourceforge.nattable.config.DefaultNatTableStyleConfiguration;
+import net.sourceforge.nattable.grid.layer.config.DefaultRowStyleConfiguration;
 import net.sourceforge.nattable.layer.DataLayer;
+import net.sourceforge.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
+import net.sourceforge.nattable.painter.cell.TextPainter;
+import net.sourceforge.nattable.painter.cell.decorator.PaddingDecorator;
+import net.sourceforge.nattable.style.HorizontalAlignmentEnum;
+import net.sourceforge.nattable.style.VerticalAlignmentEnum;
+import net.sourceforge.nattable.util.GUIHelper;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -96,7 +104,8 @@ public class AutoGraderView extends ViewPart {
 //    model.setColumnHeaderConfig(new AutoGraderColumnHeaderConfig());
 //    table = new NatTable(parent, SWT.H_SCROLL | SWT.V_SCROLL, model);
 
-    table = new NatTable(parent, new DataLayer(AutoGraderDataProvider.getInstance()));
+    table = new NatTable(parent, new DataLayer(AutoGraderDataProvider.getInstance()), false);
+    configureTable(table);
     
     
     //Register this view to receive selection changes.
@@ -114,6 +123,30 @@ public class AutoGraderView extends ViewPart {
    */
   public void setFocus() {
     table.setFocus();
+  }
+  
+  private void configureTable(NatTable table) {
+    DefaultNatTableStyleConfiguration natTableConfiguration = new DefaultNatTableStyleConfiguration();
+    natTableConfiguration.bgColor = GUIHelper.COLOR_WHITE;
+    natTableConfiguration.fgColor = GUIHelper.COLOR_BLACK;
+    natTableConfiguration.hAlign = HorizontalAlignmentEnum.LEFT;
+    natTableConfiguration.vAlign = VerticalAlignmentEnum.TOP;
+    natTableConfiguration.cellPainter = new PaddingDecorator(new TextPainter(), 1);
+
+   // Setup even odd row colors - row colors override the NatTable default colors
+    DefaultRowStyleConfiguration rowStyleConfiguration = new DefaultRowStyleConfiguration();
+    rowStyleConfiguration.oddRowBgColor = GUIHelper.getColor(254, 251, 243);
+    rowStyleConfiguration.evenRowBgColor = GUIHelper.COLOR_WHITE;
+   
+    // Setup Column header style
+//    DefaultColumnHeaderStyleConfiguration columnHeaderStyle = new DefaultColumnHeaderStyleConfiguration();
+//    columnHeaderStyle.bgColor = GUIHelper.getColor(76, 124, 50);
+//    columnHeaderStyle.fgColor = GUIHelper.COLOR_BLACK;
+//    columnHeaderStyle.hAlign = HorizontalAlignmentEnum.CENTER;
+    
+    table.addConfiguration(natTableConfiguration);
+    table.addConfiguration(rowStyleConfiguration);
+    table.configure();
   }
 
 //  private static final class AutoGraderColumnHeaderConfig extends DefaultColumnHeaderStyleConfiguration {

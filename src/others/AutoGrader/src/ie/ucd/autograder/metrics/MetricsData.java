@@ -28,16 +28,22 @@ public class MetricsData extends AggregateData {
     clearInputData();
     // TLOC
     MetricHolder tlocMetric = metricsMap.get(MetricsConstants.TotalLinesOfCode.id);
-    tloc = tlocMetric.getMetric();
-    addInputData(new InputData("TLOC", Grade.getNALookup()).setMeasure(tloc), TLOC_WEIGHT);
+    if (tlocMetric != null) {
+      tloc = tlocMetric.getMetric();
+      addInputData(new InputData("TLOC", Grade.getNALookup()).setMeasure(tloc), TLOC_WEIGHT);
+    }
     
     // TLOC/Method
     MetricHolder mlocMetric = metricsMap.get(MetricsConstants.MethodLinesOfCode.id);
-    addInputData(new InputData("Average method LOC", GradeLookupTable.METRICS_METHOD_LOC_LOOKUP).setMeasure(mlocMetric.getAvgPerMethod()), METHOD_AVG_LOC_WEIGHT);
-
+    if (mlocMetric != null) {
+      addInputData(new InputData("Average method LOC", GradeLookupTable.METRICS_METHOD_LOC_LOOKUP).setMeasure(mlocMetric.getAvgPerMethod()), METHOD_AVG_LOC_WEIGHT);
+    }
+    
     // CC/Method
     MetricHolder ccMetric = metricsMap.get(MetricsConstants.McCabeCyclomaticComplexity.id);
-    addInputData(new InputData("Average method CC", GradeLookupTable.METRICS_METHOD_CC_LOOKUP).setMeasure(ccMetric.getAvgPerMethod()), METHOD_AVG_CC_WEIGHT);
+    if (ccMetric != null) {
+      addInputData(new InputData("Average method CC", GradeLookupTable.METRICS_METHOD_CC_LOOKUP).setMeasure(ccMetric.getAvgPerMethod()), METHOD_AVG_CC_WEIGHT);
+    }
   }
 
   public double getTLOC() {
