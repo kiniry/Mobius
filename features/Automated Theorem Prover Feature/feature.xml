@@ -2,7 +2,7 @@
 <feature
       id="mobius.atp"
       label="Automated Theorem Provers"
-      version="1.0.0">
+      version="0.2.0">
 
    <description>
       This feature contains Mobius related automated theorem prover like Simplify.
@@ -21,5 +21,26 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="mobius.atp.cvc3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.atp.yices"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.atp.z3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
