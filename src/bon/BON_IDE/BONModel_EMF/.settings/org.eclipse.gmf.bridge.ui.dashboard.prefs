@@ -1,0 +1,8 @@
+#Thu Jul 23 09:58:08 BST 2009
+eclipse.preferences.version=1
+gmf_dashboard/domainGenerationModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.genmodel
+gmf_dashboard/domainModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.ecore
+gmf_dashboard/generationModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.gmfgen
+gmf_dashboard/graphicalDefinitionModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.gmfgraph
+gmf_dashboard/mappingModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.gmfmap
+gmf_dashboard/toolingDefinitionModel=platform\:/resource/BONModel_EMF/model/BONModel_EMF.gmftool

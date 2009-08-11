@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/BONModel_EMF/src"
+    modelPluginID="BONModel_EMF" modelName="BONModel_EMF" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="5.0" copyrightFields="false">
+  <foreignModel>BONModel_EMF.ecore</foreignModel>
+  <genPackages prefix="BONModel" disposableProviderFactory="true" ecorePackage="BONModel_EMF.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="BONModel_EMF.ecore#//RelationshipType">
+      <genEnumLiterals ecoreEnumLiteral="BONModel_EMF.ecore#//RelationshipType/Inheritance"/>
+      <genEnumLiterals ecoreEnumLiteral="BONModel_EMF.ecore#//RelationshipType/Association"/>
+      <genEnumLiterals ecoreEnumLiteral="BONModel_EMF.ecore#//RelationshipType/Aggregation"/>
+    </genEnums>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Model">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Model/closure"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Model/abstractions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Model/relationships"/>
+      <genOperations ecoreOperation="BONModel_EMF.ecore#//Model/covariant">
+        <genParameters ecoreParameter="BONModel_EMF.ecore#//Model/covariant/featureOne"/>
+        <genParameters ecoreParameter="BONModel_EMF.ecore#//Model/covariant/featureTwo"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//Relationship">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Relationship/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Relationship/target"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//Abstraction">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Abstraction/relationships"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Abstraction/contains"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//StaticRelationship"/>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//StaticAbstraction">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//StaticAbstraction/name"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Inheritance"/>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//ClientSupplier">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//ClientSupplier/label"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Aggregation"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Association"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Message"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Cluster">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Cluster/contents"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Class">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/callsInInvariants"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/clientFeatures"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/renamings"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/renameClassParents"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/isDeferred"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/isEffective"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/isPersistent"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/isExternal"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/isRoot"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/redefined"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Class/allNames"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/invariant"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Class/features"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//Call">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Call/arguments"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Call/feature"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Call/entity"/>
+      <genOperations ecoreOperation="BONModel_EMF.ecore#//Call/isValid">
+        <genParameters ecoreParameter="BONModel_EMF.ecore#//Call/isValid/aClass"/>
+      </genOperations>
+    </genClasses>
+    <genClasses image="false" ecoreClass="BONModel_EMF.ecore#//Feature">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/isDeferred"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/isEffective"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/isRedefined"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/comment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/accessors"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/callsInPrecondition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/callsInPostcondition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/frame"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/postCondition"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/preCondition"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Feature/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/preConditionString"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Feature/postConditionString"/>
+      <genOperations ecoreOperation="BONModel_EMF.ecore#//Feature/rename">
+        <genParameters ecoreParameter="BONModel_EMF.ecore#//Feature/rename/newName"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Renaming"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//DynamicAbstraction"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Object">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Object/class"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//ObjectCluster">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//ObjectCluster/contents"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Command"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Query">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Query/result"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Query/noContract"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Parameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Parameter/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Parameter/type"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//DirectCall"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//ChainedCall">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//ChainedCall/chain"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Expression">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference BONModel_EMF.ecore#//Expression/resultType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute BONModel_EMF.ecore#//Expression/contents"/>
+    </genClasses>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//BooleanExpression"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Assertion"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//SingleStateAssertion"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//DoubleStateAssertion"/>
+    <genClasses ecoreClass="BONModel_EMF.ecore#//Entity"/>
+  </genPackages>
+</genmodel:GenModel>
