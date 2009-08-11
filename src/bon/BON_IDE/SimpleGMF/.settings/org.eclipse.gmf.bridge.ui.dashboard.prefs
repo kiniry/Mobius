@@ -1,0 +1,8 @@
+#Thu Aug 06 08:11:06 BST 2009
+eclipse.preferences.version=1
+gmf_dashboard/domainGenerationModel=platform\:/resource/SimpleGMF/model/SimpleGMF.genmodel
+gmf_dashboard/domainModel=platform\:/resource/SimpleGMF/model/SimpleGMF.ecore
+gmf_dashboard/generationModel=platform\:/resource/SimpleGMF/model/SimpleGMF.gmfgen
+gmf_dashboard/graphicalDefinitionModel=platform\:/resource/SimpleGMF/model/SimpleGMF.gmfgraph
+gmf_dashboard/mappingModel=platform\:/resource/SimpleGMF/model/SimpleGMF.gmfmap
+gmf_dashboard/toolingDefinitionModel=platform\:/resource/SimpleGMF/model/SimpleGMF.gmftool

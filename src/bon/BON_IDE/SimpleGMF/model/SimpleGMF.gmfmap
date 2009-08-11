@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmfmap:Mapping xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:gmfmap="http://www.eclipse.org/gmf/2008/mappings"
+    xmlns:gmftool="http://www.eclipse.org/gmf/2005/ToolDefinition">
+  <nodes>
+    <containmentFeature
+        href="SimpleGMF.ecore#//Model/classes"/>
+    <ownedChild>
+      <domainMetaElement
+          href="SimpleGMF.ecore#//SimpleClass"/>
+      <labelMappings
+          xsi:type="gmfmap:FeatureLabelMapping">
+        <diagramLabel
+            href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/SimpleGMF/model/SimpleGMF.gmfgraph#SimpleClassClassName"/>
+        <features
+            href="SimpleGMF.ecore#//SimpleClass/className"/>
+      </labelMappings>
+      <tool
+          xsi:type="gmftool:CreationTool"
+          href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/SimpleGMF/model/SimpleGMF.gmftool#//@palette/@tools.0/@tools.0"/>
+      <diagramNode
+          href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/SimpleGMF/model/SimpleGMF.gmfgraph#SimpleClass"/>
+    </ownedChild>
+  </nodes>
+  <diagram>
+    <diagramCanvas
+        href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/SimpleGMF/model/SimpleGMF.gmfgraph#SimpleGMF"/>
+    <domainModel
+        href="SimpleGMF.ecore#/"/>
+    <domainMetaElement
+        href="SimpleGMF.ecore#//Model"/>
+    <palette
+        href="file:/C:/Documents%20and%20Settings/ralph/My%20Documents/UCD/Thesis/Software/SimpleGMF/model/SimpleGMF.gmftool#//@palette"/>
+  </diagram>
+</gmfmap:Mapping>

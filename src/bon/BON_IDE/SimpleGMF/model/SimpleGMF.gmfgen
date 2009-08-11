@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmfgen:GenEditorGenerator xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gmfgen="http://www.eclipse.org/gmf/2008/GenModel">
+  <diagram visualID="79" editPartClassName="ModelEditPart" itemSemanticEditPolicyClassName="ModelItemSemanticEditPolicy" notationViewFactoryClassName="ModelViewFactory" canonicalEditPolicyClassName="ModelCanonicalEditPolicy" iconProviderPriority="Low" validationProviderPriority="Low">
+    <diagramRunTimeClass href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Diagram"/>
+    <elementType xsi:type="gmfgen:MetamodelType" editHelperClassName="ModelEditHelper"/>
+    <viewmap xsi:type="gmfgen:FigureViewmap" figureQualifiedClassName="org.eclipse.draw2d.FreeformLayer"/>
+    <domainDiagramElement href="SimpleGMF.genmodel#//SimpleGMF/Model"/>
+    <topLevelNodes visualID="1001" editPartClassName="SimpleClassEditPart" itemSemanticEditPolicyClassName="SimpleClassItemSemanticEditPolicy" notationViewFactoryClassName="SimpleClassViewFactory" canonicalEditPolicyClassName="SimpleClassCanonicalEditPolicy" graphicalNodeEditPolicyClassName="SimpleClassGraphicalNodeEditPolicy" createCommandClassName="SimpleClassCreateCommand">
+      <diagramRunTimeClass href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+      <elementType xsi:type="gmfgen:MetamodelType" editHelperClassName="SimpleClassEditHelper"/>
+      <viewmap xsi:type="gmfgen:InnerClassViewmap" layoutType="FLOW_LAYOUT" className="SimpleClassFigure" classBody="&#xA;/**&#xA; * @generated&#xA; */&#xA;public class SimpleClassFigure extends org.eclipse.draw2d.RectangleFigure {&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fFigureSimpleClassClassNameFigure; &#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public SimpleClassFigure() {&#xA;&#x9;&#x9;&#xA;&#x9;org.eclipse.draw2d.FlowLayout layoutThis = new org.eclipse.draw2d.FlowLayout();&#xA;&#x9;layoutThis.setStretchMinorAxis(false);&#xA;&#x9;layoutThis.setMinorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#xA;&#x9;layoutThis.setMajorAlignment(org.eclipse.draw2d.FlowLayout.ALIGN_LEFTTOP&#xA;);&#xA;&#x9;layoutThis.setMajorSpacing(5);&#xA;&#x9;layoutThis.setMinorSpacing(5);&#xA;&#x9;layoutThis.setHorizontal(true);&#xA;&#xA;&#x9;this.setLayoutManager(layoutThis);&#xA;&#xA;&#x9;&#x9;&#x9;this.setForegroundColor(THIS_FORE&#xA;);&#xA;&#x9;&#x9;createContents();&#xA;&#x9;}&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private void createContents(){&#xA;&#xA;&#xA;fFigureSimpleClassClassNameFigure = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();&#xA;fFigureSimpleClassClassNameFigure.setText(&quot;&lt;...>&quot;);&#xA;&#xA;this.add(fFigureSimpleClassClassNameFigure);&#xA;&#xA;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;private boolean myUseLocalCoordinates = false;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected boolean useLocalCoordinates() {&#xA;&#x9;&#x9;return myUseLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;protected void setUseLocalCoordinates(boolean useLocalCoordinates) {&#xA;&#x9;&#x9;myUseLocalCoordinates = useLocalCoordinates;&#xA;&#x9;}&#xA;&#xA;&#xA;&#xA;&#x9;/**&#xA;&#x9; * @generated&#xA;&#x9; */&#xA;&#x9;public org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureSimpleClassClassNameFigure() {&#xA;&#x9;&#x9;return fFigureSimpleClassClassNameFigure;&#xA;&#x9;}&#xA;&#xA;&#xA;}&#xA;&#xA;/**&#xA; * @generated&#xA; */&#xA;static final org.eclipse.swt.graphics.Color THIS_FORE = new org.eclipse.swt.graphics.Color(null, 255, 0, 0);&#xA;&#xA;">
+        <attributes xsi:type="gmfgen:StyleAttributes" fixedForeground="true"/>
+        <requiredPluginIDs>org.eclipse.gmf.runtime.draw2d.ui</requiredPluginIDs>
+      </viewmap>
+      <modelFacet>
+        <metaClass href="SimpleGMF.genmodel#//SimpleGMF/SimpleClass"/>
+        <containmentMetaFeature href="SimpleGMF.genmodel#//SimpleGMF/Model/classes"/>
+        <childMetaFeature href="SimpleGMF.genmodel#//SimpleGMF/Model/classes"/>
+      </modelFacet>
+      <labels visualID="4001" editPartClassName="SimpleClassClassNameEditPart" itemSemanticEditPolicyClassName="SimpleClassClassNameItemSemanticEditPolicy" notationViewFactoryClassName="SimpleClassClassNameViewFactory" elementIcon="true">
+        <diagramRunTimeClass href="../../../plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation/Node"/>
+        <viewmap xsi:type="gmfgen:ParentAssignedViewmap" getterName="getFigureSimpleClassClassNameFigure" figureQualifiedClassName="org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel"/>
+        <modelFacet xsi:type="gmfgen:FeatureLabelModelFacet">
+          <metaFeatures href="SimpleGMF.genmodel#//SimpleGMF/SimpleClass/className"/>
+        </modelFacet>
+      </labels>
+    </topLevelNodes>
+    <palette>
+      <groups title="SimpleGMF">
+        <entries xsi:type="gmfgen:ToolEntry" title="SimpleClass" description="Create new SimpleClass" genNodes="//@diagram/@topLevelNodes.0"/>
+      </groups>
+    </palette>
+    <preferencePages xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.general" name="SimpleGMF Diagram">
+      <children xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.appearance" name="Appearance" kind="Appearance"/>
+      <children xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.connections" name="Connections" kind="Connections"/>
+      <children xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.printing" name="Printing" kind="Printing"/>
+      <children xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.rulersAndGrid" name="Rulers And Grid" kind="RulersAndGrid"/>
+      <children xsi:type="gmfgen:GenStandardPreferencePage" iD="SimpleGMF.diagram.pathmaps" name="Pathmaps" kind="Pathmaps"/>
+    </preferencePages>
+  </diagram>
+  <plugin/>
+  <editor/>
+  <navigator>
+    <childReferences child="//@diagram"/>
+    <childReferences parent="//@diagram" child="//@diagram/@topLevelNodes.0"/>
+  </navigator>
+  <diagramUpdater/>
+  <propertySheet>
+    <tabs xsi:type="gmfgen:GenStandardPropertyTab" iD="appearance"/>
+    <tabs xsi:type="gmfgen:GenStandardPropertyTab" iD="diagram"/>
+    <tabs xsi:type="gmfgen:GenCustomPropertyTab" iD="domain" label="Core">
+      <filter xsi:type="gmfgen:TypeTabFilter">
+        <types>org.eclipse.gmf.runtime.notation.View</types>
+        <types>org.eclipse.gef.EditPart</types>
+        <generatedTypes>abstractNavigatorItem</generatedTypes>
+      </filter>
+    </tabs>
+  </propertySheet>
+  <domainGenModel href="SimpleGMF.genmodel#/"/>
+</gmfgen:GenEditorGenerator>
