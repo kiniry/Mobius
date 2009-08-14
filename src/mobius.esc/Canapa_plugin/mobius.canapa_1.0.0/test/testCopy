@@ -1,0 +1,12 @@
+#! /bin/sh
+#
+# Usage: test files
+#        Check whether the Java parser produces output identical to the input
+#        for each of the files given on the command line.  Non-Java files will
+#        cause strange and probably incorrect things to happen, as will Java
+#        files with syntax errors.
+
+for file do
+    echo Testing $file
+    java test.JavaCopy $file | diff -u $file -
+done

@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Canapa Plug-in
+Bundle-SymbolicName: mobius.canapa; singleton=true
+Bundle-Version: 1.0.0
+Bundle-Activator: canapa.CanapaPlugin 
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.console,
+ org.eclipse.core.resources,
+ org.eclipse.jdt.core
+Eclipse-LazyStart: true
+Bundle-ClassPath: .,
+ libs/esctools2.jar,
+ libs/bcel-5.2.jar,
+ libs/Javafe2.0.5b.jar,
+ libs/antlr-2.7.5.jar,
+ bin/
+

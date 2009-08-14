@@ -1,0 +1,10 @@
+2004-04-01  Jerry James  <james@eecs.ku.edu>
+
+	* all: Update my address, the copyright information, and upgrade
+	to j2sdk1.4 and ANTLR 2.7.3.
+
+2000-11-10  Jerry James  <james@eecs.ukans.edu>
+
+	* expr/MethodCallAST.java (getVarList): Don't crash if `object' is
+	null.  Reported by Michael Ruflin <michael@ruflin.ch>.
+
