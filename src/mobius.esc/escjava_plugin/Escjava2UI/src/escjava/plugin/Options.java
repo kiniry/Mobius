@@ -8,6 +8,8 @@ package escjava.plugin;
 
 import java.util.List;
 
+import mobius.atp.SimplifyActivator;
+
 import pluginlib.AbstractPreference;
 import pluginlib.Utils;
 
@@ -81,17 +83,14 @@ public class Options {
 					"MacOSX", "Solaris" }, 0, "Internal Simplify Version",
 			"The choice of internal version of Simplify (pick the host platform)");
 
-	/**
-	 * ID for plugin that has Simplify executables
-	 */
-	public static final String SIMPLIFY_PLUGINID = "mobius.simplify.plugin";
+
 
 
 	/**
 	 * The Simplify executable to use (a value is required).
 	 */
 	static final public AbstractPreference.StringOption simplify = new AbstractPreference.StringOption(
-			(SIMPLIFY_PLUGINID + "simplify"), 
+			(SimplifyActivator.PLUGIN_ID + "simplify"), 
 			"", 
 			"External Simplify executable to use",
 			"The static checker needs a version of the Simplify executable for" + Utils.eol +

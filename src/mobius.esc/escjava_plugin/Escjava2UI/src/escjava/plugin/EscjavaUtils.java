@@ -8,6 +8,8 @@ package escjava.plugin;
 
 import java.util.Iterator;
 
+import mobius.atp.SimplifyActivator;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -32,8 +34,6 @@ import pluginlib.Utils;
  *
  */
 public class EscjavaUtils {
-	
-	public static final String SIMPLIFY_PLUGIN_ID = "mobius.simplify.plugin";
 
 	/** The ordered list of standard JML suffixes to search for the
 	 *  most refined specification file, omitting prefixed '.'s.
@@ -334,7 +334,7 @@ public class EscjavaUtils {
 	  String suffix = getSimplifySuffix(os);
 	  if (suffix == null) return null;
 	  String name = "Simplify-1.5." + suffix;
-	  name = Utils.findPluginResource(EscjavaUtils.SIMPLIFY_PLUGIN_ID,name);
+	  name = Utils.findPluginResource(SimplifyActivator.PLUGIN_ID, name);
 		return name;
 	}
 		
