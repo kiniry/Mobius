@@ -11,7 +11,7 @@ import org.osgi.framework.BundleContext;
 public class SimplifyActivator extends AbstractUIPlugin {
 
   /** The plug-in ID. */
-  public static final String PLUGIN_ID = "mobius.directvcgen.ui";
+  public static final String PLUGIN_ID = "mobius.atp.simplify";
 
   /** The shared instance. */
   private static SimplifyActivator plugin;
