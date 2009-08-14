@@ -96,7 +96,7 @@ abstract public class ESC extends EscjavaAction {
 		Display.getDefault().syncExec(new java.lang.Runnable() {
       public void run() {
         PlatformUI.getWorkbench().getDecoratorManager().update(
-          EscjavaPlugin.UI_PLUGIN_ID + ".ESCDecorator");
+          EscjavaPlugin.PLUGIN_ID + ".ESCDecorator");
       }
     });
 		touch = null;

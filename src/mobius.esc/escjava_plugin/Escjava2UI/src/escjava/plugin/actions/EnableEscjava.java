@@ -36,7 +36,7 @@ public class EnableEscjava extends EscjavaAction {
 			Display.getDefault().syncExec(new java.lang.Runnable() {
 			  public void run() {
 			    PlatformUI.getWorkbench().getDecoratorManager().update(
-			      EscjavaPlugin.UI_PLUGIN_ID + ".ESCDecoratorA");
+			      EscjavaPlugin.PLUGIN_ID + ".ESCDecoratorA");
 			  }
 			});
 		} catch (Exception e) {

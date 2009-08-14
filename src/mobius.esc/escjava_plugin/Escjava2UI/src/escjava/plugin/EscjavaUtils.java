@@ -9,6 +9,7 @@ package escjava.plugin;
 import java.util.Iterator;
 
 import mobius.atp.SimplifyActivator;
+import mobius.escjava2.EscToolsActivator;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -98,14 +99,14 @@ public class EscjavaUtils {
 		String pluginResource = null;
 		try {
 	        pluginResource = Utils.findPluginResource(
-		        EscjavaPlugin.TOOLS_PLUGIN_ID, specLocation);
+		        EscToolsActivator.PLUGIN_ID, specLocation);
 		}
 		
 		// Log useful information if specification cannot be found
 		catch (Exception ex) {
 			Log.errorlog("Failed to locate specifications at: " + 
 					specLocation + " in plugin " + 
-					EscjavaPlugin.TOOLS_PLUGIN_ID, ex);
+					EscToolsActivator.PLUGIN_ID, ex);
 		}
 		
 		return pluginResource;

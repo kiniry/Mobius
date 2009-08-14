@@ -37,7 +37,7 @@ public class Options {
 	public static final String JAVA_1_3 = "1.3";
 
 	/** A copy of the plugin's id */
-	final private static String PLUGINID = EscjavaPlugin.UI_PLUGIN_ID + ".";
+	final private static String PLUGINID = EscjavaPlugin.PLUGIN_ID + ".";
 	
 	/** The option button corresponding to Eclipse logging. */
 	static public AbstractPreference.BooleanOption logging = new AbstractPreference.BooleanOption(
@@ -90,7 +90,7 @@ public class Options {
 	 * The Simplify executable to use (a value is required).
 	 */
 	static final public AbstractPreference.StringOption simplify = new AbstractPreference.StringOption(
-			(SimplifyActivator.PLUGIN_ID + "simplify"), 
+			(SimplifyActivator.PLUGIN_ID + "." + "simplify"), 
 			"", 
 			"External Simplify executable to use",
 			"The static checker needs a version of the Simplify executable for" + Utils.eol +
@@ -232,7 +232,7 @@ public class Options {
 		for (int i=0; i<n; ++i) {
 			boolean def = !(wnames[i].equals("Deadlock"));
 			warningOptions[i] = new AbstractPreference.BooleanOption(
-					(EscjavaPlugin.UI_PLUGIN_ID + ".EscjavaWarning-" + wnames[i]),
+					(EscjavaPlugin.PLUGIN_ID + ".EscjavaWarning-" + wnames[i]),
 					def,
 					wnames[i],
 					""); // FIXME - tooltip
