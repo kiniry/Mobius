@@ -12,11 +12,9 @@ import ie.ucd.autograder.util.Pair;
 
 import java.util.List;
 
-import net.sourceforge.nattable.data.IDataProvider;
-
 import org.eclipse.core.resources.IProject;
 
-public class AutoGraderDataProvider implements IDataProvider {
+public class AutoGraderDataProvider {
 
   private IProject selectedProject;
   private List<AggregateData> projectData;
@@ -31,29 +29,27 @@ public class AutoGraderDataProvider implements IDataProvider {
 
   public void setSelectedProject(IProject project) {
     selectedProject = project;
+    numberOfRows = 1;
     updateData();
   }
 
   public void updateData() {
     projectData = selectedProject == null ? null : DataStore.getInstance(selectedProject, true).getDataForProject(selectedProject);
+    //System.out.println("Updated data. Project data: " + projectData);
+    //System.out.println("selectedProject: " + selectedProject);
+    updateRowCount();
   }
 
   public int getColumnCount() {
-    if (selectedProject != null && projectData != null) {
-      return projectData.size();
-    } else {
-      return 1;
-    }
+    return (selectedProject != null && projectData != null) ? projectData.size() : 1;
   }
 
-  public int getRowCount() {
-    numberOfRows = calculateRowCount();
-    return numberOfRows;
+  public int getBodyRowCount() {
+    return (selectedProject != null && projectData != null) ? numberOfRows : 1;
   }
 
-  public int calculateRowCount() {
+  public void updateRowCount() {
     if (selectedProject != null && projectData != null) {
-
       int numRows = 0;
       for (AggregateData data : projectData) {
         if (data.getName().equals(GraderBuilder.TOTAL_NAME)) continue;
@@ -63,14 +59,26 @@ public class AutoGraderDataProvider implements IDataProvider {
           numRows = size;
         }
       }
-      return numRows + 2; //Plus summary
+      numberOfRows = numRows + 2; //Plus summary 
     } else {
-      return 1;
+      numberOfRows = 1;
     }
   }
 
+  public Object getColumnHeader(int columnIndex) {
+    if (selectedProject == null || projectData == null) {
+      return new TitleString(""); 
+    }
+    AggregateData data = columnIndex < projectData.size() ? projectData.get(columnIndex) : null;
+    if (data == null) {
+      return new TitleString("");
+    } else {
+      return new TitleString(data.getName());
+    }
+  }
+  
   //TODO cache results, clear cache after change in data...
-  public Object getDataValue(int row, int col) {
+  public Object getBodyDataValue(int row, int col) {
     if (selectedProject != null) {
       if (projectData != null) {
 
@@ -139,16 +147,8 @@ public class AutoGraderDataProvider implements IDataProvider {
       return "No data for selection.";
     }
   }
-
-  public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    //Do nothing, not editable
-  }
-
-  public boolean shouldShowColumnHeader() {
-    return selectedProject != null && projectData != null;
-  }
  
-  private static class StringHolder {
+  public static class StringHolder {
     public final String string;
     public StringHolder(String string) { this.string = string; }
     public String toString() { return string; }

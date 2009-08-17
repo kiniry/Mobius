@@ -10,8 +10,6 @@ import java.util.List;
 
 public enum Grade {
 
-  
-  
   A_PLUS("A+", 78.33), A("A", 75), A_MINUS("A-", 71.66),
   B_PLUS("B+", 68.33), B("B", 65), B_MINUS("B-", 61.66),
   C_PLUS("C+", 58.33), C("C", 55), C_MINUS("C-", 51.66),
@@ -88,10 +86,17 @@ public enum Grade {
   public static double weightedMeanAsDouble(Collection<GradeWeightPair> grades) {
     double totalWeight = 0;
     double total = 0;
+    
     for (GradeWeightPair grade : grades) {
+//      System.out.println("GradeWeightPair: " + grade);
       totalWeight += grade.getSecond();
-      total += grade.getFirst().getMark() * grade.getSecond();
     }
+    
+    if (total == 0) {
+//      System.out.println("Total is zero");
+      return 0;
+    }
+    
     return total / totalWeight;
   }
 }

@@ -25,7 +25,8 @@ public class GradeLookupTable {
         return boundary.getSecond();
       }
     }
-    System.out.println("No grade found!");
+    System.out.println("No grade found for mark " + mark + "!");
+    System.out.println("Boundaries: " + gradeBoundaries);
     assert false; //Final boundary should always have a mark of zero!
     return null;
   }

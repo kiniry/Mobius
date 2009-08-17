@@ -23,6 +23,33 @@ public class Pair <A,B> {
     return second;
   }
   
+  @SuppressWarnings("unchecked")
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Pair) {
+      Pair<?,?> pair = (Pair<?,?>)obj;
+      Object obj1 = pair.getFirst();
+      Object obj2 = pair.getSecond();
+      if (first == null && obj1 != null) {
+        return false;
+      }
+      if (second == null && obj2 != null) {
+        return false;
+      }
+      return first.equals(obj1) && second.equals(obj2);
+    } else {
+      return false;
+    }
+    
+  }
+
+  @Override
+  public int hashCode() {
+    int hash1 = first == null ? 1 : first.hashCode();
+    int hash2 = second == null ? 1 : second.hashCode();
+    return hash1 * hash2;
+  }
+
   @Override
   public String toString() {
     return "<" + getFirst() + "," + getSecond() + ">";

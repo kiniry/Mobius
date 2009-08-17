@@ -59,8 +59,11 @@ public class GraderBuilder extends IncrementalProjectBuilder {
    */
   @SuppressWarnings("unchecked")
   protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
-  throws CoreException {
+  throws CoreException {    
     IProject project = getProject();
+    
+    System.out.println("Running AutoGrader builder on project " + project);
+    
     List<AggregateData> projectData = collectProjectData(project, collectors);
     if (projectData != null) {
       DataStore.getInstance(project, false).setDataForProject(project, projectData);

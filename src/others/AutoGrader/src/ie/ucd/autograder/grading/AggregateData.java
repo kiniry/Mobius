@@ -27,6 +27,8 @@ public class AggregateData extends InputData {
   public Grade getGrade() {
     List<GradeWeightPair> aggregateGrades = new ArrayList<GradeWeightPair>(data.size());
     for (Pair<InputData,Double> item : data) {
+//      System.out.println("Grade for gradeweightpair: " + item.getFirst().getGrade());
+//      System.out.println(item.getFirst().getClass());
       GradeWeightPair pair = new GradeWeightPair(item.getFirst().getGrade(),item.getSecond());
       aggregateGrades.add(pair);
     }
