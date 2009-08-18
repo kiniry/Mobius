@@ -3,9 +3,6 @@ package ie.ucd.autograder.views;
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.config.DefaultNatTableStyleConfiguration;
 import net.sourceforge.nattable.data.IDataProvider;
-import net.sourceforge.nattable.grid.data.DefaultCornerDataProvider;
-import net.sourceforge.nattable.grid.data.DefaultRowHeaderDataProvider;
-import net.sourceforge.nattable.grid.data.DummyColumnHeaderDataProvider;
 import net.sourceforge.nattable.grid.layer.DefaultGridLayer;
 import net.sourceforge.nattable.grid.layer.config.DefaultRowStyleConfiguration;
 import net.sourceforge.nattable.painter.cell.TextPainter;
@@ -32,7 +29,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class AutoGraderView extends ViewPart {
 
-  private static final Display display = Display.getCurrent();
+  private static final Display display = Display.getDefault();
   public static final Color ENTRY_TITLE_COLOR = display.getSystemColor(SWT.COLOR_INFO_BACKGROUND);
   public static final Color SUB_GRADE_COLOR = display.getSystemColor(SWT.COLOR_LIST_SELECTION);
   public static final Color GRADE_COLOR = display.getSystemColor(SWT.COLOR_GREEN);
@@ -45,8 +42,6 @@ public class AutoGraderView extends ViewPart {
   public static final Color GRADE_OK = new Color(display, new RGB(124,252,0)); //Green
 
   private NatTable table;
-  //  private DefaultBodyConfig bodyConfig;
-  //  private DefaultNatTableModel model;
 
   /**
    * The constructor.
@@ -61,7 +56,7 @@ public class AutoGraderView extends ViewPart {
   }
 
   private void updateView(ISelection selection) {
-    //    System.out.println("Updating view");
+//        System.out.println("Updating view");
     Object actual = selection;
     //Get the first element if more than one are selected.
     if (selection instanceof IStructuredSelection) {
@@ -92,9 +87,7 @@ public class AutoGraderView extends ViewPart {
 
   private void updateSelectedProject(IProject project) {
     AutoGraderDataProvider.getInstance().setSelectedProject(project);
-    
     updateTable();
-    
     table.updateResize();
   }
 
@@ -102,14 +95,15 @@ public class AutoGraderView extends ViewPart {
     AutoGraderDataProvider data = AutoGraderDataProvider.getInstance();
     IDataProvider bodyProvider = new AutoGraderBodyDataProvider(data);
     IDataProvider columnHeaderProvider = new AutoGraderColumnHeaderDataProvider(data);
-    //IDataProvider columnHeaderProvider = new DummyColumnHeaderDataProvider(bodyProvider);
     IDataProvider rowHeaderProvider = new EmptyDataProvider();
-    //IDataProvider rowHeaderProvider = new DefaultRowHeaderDataProvider(bodyProvider);
     IDataProvider cornerProvider = new EmptyDataProvider();
-    //IDataProvider cornerProvider = new DefaultCornerDataProvider(columnHeaderProvider, rowHeaderProvider);
-
-    table.setLayer(new DefaultGridLayer(bodyProvider, columnHeaderProvider, rowHeaderProvider, cornerProvider));
+    
+    DefaultGridLayer grid = new DefaultGridLayer(bodyProvider, columnHeaderProvider, rowHeaderProvider, cornerProvider);
+    table.setLayer(grid);
+    
+    grid.getBodyLayer().setConfigLabelAccumulator(data);
     configureTable(table);
+//    AutoGraderStyleConfig.applyStylings(table.getConfigRegistry());
   }
   
   /**
@@ -117,16 +111,7 @@ public class AutoGraderView extends ViewPart {
    * to create the viewer and initialise it.
    */
   public void createPartControl(Composite parent) {
-    //    model = new DefaultNatTableModel();
-    //    bodyConfig = new AutoGraderBodyConfig(AutoGraderDataProvider.getInstance());
-    //    bodyConfig.setCellRenderer(new AutoGraderCellRenderer(AutoGraderDataProvider.getInstance()));
-    //    model.setBodyConfig(bodyConfig);
-    //    model.setColumnHeaderConfig(new AutoGraderColumnHeaderConfig());
-    //    table = new NatTable(parent, SWT.H_SCROLL | SWT.V_SCROLL, model);
-
     table = new NatTable(parent, false);
-//    table = new NatTable(parent, new DefaultGridLayer(bodyProvider, columnHeaderProvider), false);
-    //table = new NatTable(parent, new DataLayer(bodyProvider), false);
     updateTable();
 
     //Register this view to receive selection changes.
@@ -137,6 +122,7 @@ public class AutoGraderView extends ViewPart {
         updateView(selection);
       }
     });
+//    System.out.println("Registered selection listener");
   }
 
   /**
@@ -155,55 +141,13 @@ public class AutoGraderView extends ViewPart {
     natTableConfiguration.cellPainter = new PaddingDecorator(new TextPainter(), 1);
 
     // Setup even odd row colors - row colors override the NatTable default colors
-    DefaultRowStyleConfiguration rowStyleConfiguration = new DefaultRowStyleConfiguration();
-    rowStyleConfiguration.oddRowBgColor = GUIHelper.getColor(254, 251, 243);
-    rowStyleConfiguration.evenRowBgColor = GUIHelper.COLOR_WHITE;
-
-    // Setup Column header style
-    //    DefaultColumnHeaderStyleConfiguration columnHeaderStyle = new DefaultColumnHeaderStyleConfiguration();
-    //    columnHeaderStyle.bgColor = GUIHelper.getColor(76, 124, 50);
-    //    columnHeaderStyle.fgColor = GUIHelper.COLOR_BLACK;
-    //    columnHeaderStyle.hAlign = HorizontalAlignmentEnum.CENTER;
+//    DefaultRowStyleConfiguration rowStyleConfiguration = new DefaultRowStyleConfiguration();
+//    rowStyleConfiguration.oddRowBgColor = GUIHelper.getColor(254, 251, 243);
+//    rowStyleConfiguration.evenRowBgColor = GUIHelper.COLOR_WHITE;
 
     table.addConfiguration(natTableConfiguration);
-    table.addConfiguration(rowStyleConfiguration);
+//    table.addConfiguration(rowStyleConfiguration);
+    table.addConfiguration(new AutoGraderStyleConfig());
     table.configure();
   }
-
-  //  private static final class AutoGraderColumnHeaderConfig extends DefaultColumnHeaderStyleConfiguration {
-  //    private final SizeConfig sizeConfig;
-  //    public AutoGraderColumnHeaderConfig() {
-  //      super();
-  //super(AutoGraderDataProvider.getInstance());
-  //      this.sizeConfig = new SizeConfig(20);
-  //    }
-
-  //    @Override
-  //    public int getColumnHeaderRowCount() {
-  //      return AutoGraderDataProvider.getInstance().shouldShowColumnHeader() ? 1 : 0;
-  //    }
-  //    @Override
-  //    public SizeConfig getColumnHeaderRowHeightConfig() {
-  //      return sizeConfig;
-  //    }    
-  //  }
-  //  
-  //  private static final class AutoGraderBodyConfig extends DefaultBodyConfig {
-  //    private final SizeConfig width;
-  //    private final SizeConfig height;
-  //    public AutoGraderBodyConfig(IDataProvider dataProvider) {
-  //      super(dataProvider);
-  //      this.width = new SizeConfig(150);
-  //      this.height = new SizeConfig(20);
-  //    }
-  //    @Override
-  //    public SizeConfig getColumnWidthConfig() {
-  //      return width;
-  //    }
-  //    @Override
-  //    public SizeConfig getRowHeightConfig() {
-  //      return height;
-  //    }
-  //  }
-
 }

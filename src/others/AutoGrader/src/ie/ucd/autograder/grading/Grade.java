@@ -80,6 +80,9 @@ public enum Grade {
   }
 
   public static Grade weightedMean(Collection<GradeWeightPair> grades) {
+//    System.out.println("Grades: " + grades);
+//    System.out.println("Mean: " + weightedMeanAsDouble(grades));
+//    System.out.println("Mean grade: " + getPercentageLookup().toGrade(weightedMeanAsDouble(grades)));
     return getPercentageLookup().toGrade(weightedMeanAsDouble(grades));
   }
 
@@ -89,11 +92,12 @@ public enum Grade {
     
     for (GradeWeightPair grade : grades) {
 //      System.out.println("GradeWeightPair: " + grade);
+      total += grade.getFirst().getMark() * grade.getSecond();
       totalWeight += grade.getSecond();
     }
     
-    if (total == 0) {
-//      System.out.println("Total is zero");
+    if (totalWeight == 0) {
+//      System.out.println("Total weight is zero");
       return 0;
     }
     
