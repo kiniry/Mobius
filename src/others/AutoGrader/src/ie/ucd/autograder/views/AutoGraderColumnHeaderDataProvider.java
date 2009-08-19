@@ -22,11 +22,11 @@ public class AutoGraderColumnHeaderDataProvider implements IDataProvider {
 
   public int getRowCount() {
 //    System.out.println("Getting column header row count (1)");
-    return 1;
+    return dataProvider.validData() ? 1 : 0;
   }
 
   public void setDataValue(int columnIndex, int rowIndex, Object newValue) {
-    //Do nothing.
+    throw new UnsupportedOperationException();
   }
 
 }

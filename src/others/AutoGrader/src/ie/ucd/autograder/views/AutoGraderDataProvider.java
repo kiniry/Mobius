@@ -23,7 +23,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   private IProject selectedProject;
   private List<AggregateData> projectData;
   private int numberOfRows;
-  
+
   Object[][] cellData;
 
   private AutoGraderDataProvider() {}
@@ -34,7 +34,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   }
 
   public void setSelectedProject(IProject project) {
-//    System.out.println("Changed selected project to " + project);
+    //    System.out.println("Changed selected project to " + project);
     selectedProject = project;
     numberOfRows = 1;
     updateData();
@@ -42,10 +42,10 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
 
   public void updateData() {
     projectData = selectedProject == null ? null : DataStore.getInstance(selectedProject, true).getDataForProject(selectedProject);
-//    System.out.println("Updated data. Project data: " + projectData);
-//    System.out.println("selectedProject: " + selectedProject);
+    //    System.out.println("Updated data. Project data: " + projectData);
+    //    System.out.println("selectedProject: " + selectedProject);
     updateRowCount();
-    
+
     if (selectedProject != null && projectData != null) {
       cellData = new Object[numberOfRows][projectData.size()];
       for (int i=0; i < cellData.length; i++) {
@@ -56,40 +56,48 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     }
   }
 
+  public boolean validData() {
+    return selectedProject != null && projectData != null;
+  }
+
   public int getColumnCount() {
-    return (selectedProject != null && projectData != null) ? projectData.size() : 1;
+    return validData() ? projectData.size() : 1;
   }
 
   public int getBodyRowCount() {
-    return (selectedProject != null && projectData != null) ? numberOfRows : 1;
+    return validData() ? numberOfRows : 1;
   }
 
   public void updateRowCount() {
-    if (selectedProject != null && projectData != null) {
+    if (validData()) {
       int numRows = 0;
       for (AggregateData data : projectData) {
-        if (data.getName().equals(GraderBuilder.TOTAL_NAME)) continue;
-        int size = data.getData().size();
-        size *= 3;
+        int size = 0;
+        if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
+          //size = data.getData().size() * 2;
+
+        } else {
+          size = data.getData().size() * 3;
+        }
         if (size > numRows) {
           numRows = size;
         }
       }
-      numberOfRows = numRows + 2; //Plus summary 
+      numberOfRows = numRows + 3; //Plus spacer and summary 
     } else {
       numberOfRows = 1;
     }
   }
 
   public Object getColumnHeader(int columnIndex) {
-    if (selectedProject == null || projectData == null) {
-      return new TitleString(""); 
+    if (!validData()) {
+      return BlankCellData.instance; 
     }
     AggregateData data = columnIndex < projectData.size() ? projectData.get(columnIndex) : null;
     if (data == null) {
-      return new TitleString("");
+      return new ColumnHeaderString("");
     } else {
-      return new TitleString(data.getName());
+      return new ColumnHeaderString(data.getName());
     }
   }
 
@@ -108,7 +116,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
       return "No data for selection.";
     }
   }
-  
+
   private Object internalBodyDataValue(int row, int col) {
     if (selectedProject != null) {
       if (projectData != null) {
@@ -117,7 +125,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
         if (data != null) {
           return internalGetBodyDataValue(data, row, col);
         } else {
-          return "";
+          return BlankCellData.instance;
         }
       } else {
         return "No data for " + selectedProject.getName();
@@ -130,7 +138,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   private Object internalGetBodyDataValue(AggregateData data, int row, int col) {
     if (row == numberOfRows - 2) {
       if (data.getName().equals(GraderBuilder.TOTAL_NAME)) {
-        return new TitleString("Overall");
+        return OverallTitleString.instance;
       } else {
         return new TitleString("Total");
       }
@@ -152,26 +160,27 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
       }       
     }
   }
-  
+
   private Object getTotalColumnCell(List<Pair<InputData,Double>> subData, int row, int col) {
-    if ((subData.size()*2) <= row) {
-      return "";
-    } else {
-      int itemIndex = row/2;
-      InputData iData = subData.get(itemIndex).getFirst();
-      if (row % 2 == 0) {
-        //Input name
-        return new TitleString(iData.getName());
-      } else {
-        //Grade
-        return new SubGrade(iData.getGrade());
-      }
-    }
+    //    if ((subData.size()*2) <= row) {
+    //      return "";
+    //    } else {
+    //      int itemIndex = row/2;
+    //      InputData iData = subData.get(itemIndex).getFirst();
+    //      if (row % 2 == 0) {
+    //        //Input name
+    //        return new TitleString(iData.getName());
+    //      } else {
+    //        //Grade
+    //        return new SubGrade(iData.getGrade());
+    //      }
+    //    }
+    return BlankCellData.instance;
   }
-  
+
   private Object getNormalColumnCell(List<Pair<InputData,Double>> subData, int row, int col) {
     if ((subData.size()*3) <= row) {
-      return "";
+      return BlankCellData.instance;
     } else {
       int itemIndex = row/3;
       InputData iData = subData.get(itemIndex).getFirst();
@@ -189,13 +198,13 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   }
 
   public void accumulateConfigLabels(LabelStack configLabels, int columnPosition, int rowPosition) {
-//    System.out.println("Labels for (" + columnPosition + "," + rowPosition + ")");
+    //    System.out.println("Labels for (" + columnPosition + "," + rowPosition + ")");
     if (cellData != null && rowPosition < cellData.length && columnPosition < cellData[0].length) {
       Object cell = cellData[rowPosition][columnPosition];
       if (cell instanceof CellData) {
-//        System.out.println("(" + columnPosition + "," + rowPosition + ") is a CellData, class: " + cell.getClass());
+        //        System.out.println("(" + columnPosition + "," + rowPosition + ") is a CellData, class: " + cell.getClass());
         for (String label : ((CellData)cell).getLabels()) {
-//          System.out.println("Adding label " + label);
+          //          System.out.println("Adding label " + label);
           configLabels.addLabel(label);
         }
       }
@@ -205,10 +214,24 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
   public static abstract class CellData {
     public abstract List<String> getLabels();
   }
-  
+
+  public static class BlankCellData {
+    public static final String BLANK_CELL = "BLANK_CELL";
+    private static final BlankCellData instance = new BlankCellData();
+    private List<String> labels;
+    public List<String> getLabels() { 
+      if (labels == null) {
+        labels = new ArrayList<String>();
+        labels.add(BLANK_CELL);
+      }
+      return labels;
+    }
+    public String toString() { return ""; }
+  }
+
   public static class StringHolder extends CellData {
     public static final String STRING_CELL = "STRING_CELL";
-    
+
     public final String string;
     public StringHolder(String string) { this.string = string; }
     public String toString() { return string; }
@@ -223,21 +246,47 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     }
   }
 
+  public static class ColumnHeaderString extends StringHolder {
+    public static final String COLUMN_HEADER = "COLUMN_HEADER";
+
+    public ColumnHeaderString(String string) { super(string); }
+    private List<String> labels;
+    public List<String> getLabels() {
+      if (labels == null) {
+        labels = super.getLabels();
+        labels.add(COLUMN_HEADER);
+      }
+      return labels;
+    }
+  }
+
   public static class TitleString extends StringHolder {
     public static final String TITLE_CELL = "TITLE_CELL";
     public TitleString(String string) { super(string); }
     public String toString() { return string + ":"; }
-    
+
     private List<String> labels;
     public List<String> getLabels() {
       if (labels == null) {
-        labels = new ArrayList<String>();
-        labels.addAll(super.getLabels());
+        labels = super.getLabels();
         labels.add(TITLE_CELL);
       }
       return labels;
     }
-    
+  }
+  
+  public static class OverallTitleString extends TitleString {
+    public static final String OVERALL_TITLE_CELL = "OVERALL_TITLE_CELL";
+    public static OverallTitleString instance = new OverallTitleString("Overall");
+    private OverallTitleString(String string) { super(string); }
+    private List<String> labels;
+    public List<String> getLabels() {
+      if (labels == null) {
+        labels = super.getLabels();
+        labels.add(OVERALL_TITLE_CELL);
+      }
+      return labels;
+    }
   }
 
   public static class MeasureString extends StringHolder {
@@ -246,8 +295,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     private List<String> labels;
     public List<String> getLabels() {
       if (labels == null) {
-        labels = new ArrayList<String>();
-        labels.addAll(super.getLabels());
+        labels = super.getLabels();
         labels.add(MEASURE_CELL);
       }
       return labels;
@@ -277,8 +325,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     private List<String> labels;
     public List<String> getLabels() {
       if (labels == null) {
-        labels = new ArrayList<String>();
-        labels.addAll(super.getLabels());
+        labels = super.getLabels();
         labels.add(ITEM_GRADE_CELL);
       }
       return labels;
@@ -291,8 +338,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     private List<String> labels;
     public List<String> getLabels() {
       if (labels == null) {
-        labels = new ArrayList<String>();
-        labels.addAll(super.getLabels());
+        labels = super.getLabels();
         labels.add(OVERALL_GRADE_CELL);
       }
       return labels;
@@ -305,8 +351,7 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
     private List<String> labels;
     public List<String> getLabels() {
       if (labels == null) {
-        labels = new ArrayList<String>();
-        labels.addAll(super.getLabels());
+        labels = super.getLabels();
         labels.add(SUB_GRADE_CELL);
       }
       return labels;

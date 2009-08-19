@@ -67,9 +67,13 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     List<AggregateData> projectData = collectProjectData(project, collectors);
     if (projectData != null) {
       DataStore.getInstance(project, false).setDataForProject(project, projectData);
-      AutoGraderView view = AutoGraderView.getInstance();
-      if (view != null) {
-        view.update();
+      try {
+        AutoGraderView view = AutoGraderView.getInstance();
+        if (view != null) {
+          view.update();
+        }
+      } catch (Exception e) {
+        //Do nothing, view not initialised yet
       }
     }
     return new IProject[0];
