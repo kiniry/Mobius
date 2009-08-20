@@ -19,7 +19,7 @@ public class GradeLookupTable {
     this.gradeBoundaries = gradeBoundaries;
     Collections.sort(gradeBoundaries, new Comparator<MarkGradePair>() {
       public int compare(MarkGradePair o1, MarkGradePair o2) {
-        return o1.getFirst().compareTo(o2.getFirst());
+        return o2.getFirst().compareTo(o1.getFirst());
       }
     });
     
