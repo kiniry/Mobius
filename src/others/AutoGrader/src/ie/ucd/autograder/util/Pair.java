@@ -56,20 +56,20 @@ public class Pair <A,B> {
   }
 
   public static class MarkGradePair extends Pair<Double,Grade> {
-    public MarkGradePair(Double first, Grade second) {
-      super(first, second);
+    public MarkGradePair(Double mark, Grade grade) {
+      super(mark, grade);
     }
   }
   
   public static class GradeWeightPair extends Pair<Grade,Double> {
-    public GradeWeightPair(Grade first, Double second) {
-      super(first, second);
+    public GradeWeightPair(Grade grade, Double weight) {
+      super(grade, weight);
     }
   }
   
   public static class NameProjectDataPair extends Pair<String,List<AggregateData>> {
-    public NameProjectDataPair(String first, List<AggregateData> second) {
-      super(first, second);
+    public NameProjectDataPair(String name, List<AggregateData> projectData) {
+      super(name, projectData);
     }
   }
 }

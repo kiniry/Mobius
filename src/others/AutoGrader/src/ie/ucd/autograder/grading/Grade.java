@@ -24,6 +24,16 @@ public enum Grade {
     this.grade = grade;
     this.mark = mark;
   }
+  
+  public static Grade gradeFromStringName(String name) {
+    for (Grade grade : Grade.values()) {
+      if (grade.grade.equals(name)) {
+        return grade;
+      }
+    }
+    //TODO throw exception?
+    return NA;
+  }
 
   @Override
   public String toString() {
