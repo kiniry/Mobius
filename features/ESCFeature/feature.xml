@@ -2,7 +2,7 @@
 <feature
       id="mobius.esc"
       label="Extended Static Checking"
-      version="2.0.25"
+      version="2.0.26"
       provider-name="MOBIUS">
 
    <description url="http://www.example.com/description">
@@ -788,6 +788,13 @@ limitations under the License.
 
    <plugin
          id="mobius.rcc.plugin"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.canapa"
          download-size="0"
          install-size="0"
          version="0.0.0"
