@@ -3,7 +3,6 @@ package mobius.prover.simplify;
 import mobius.prover.gui.editor.BasicTextAttribute;
 import mobius.prover.gui.editor.IColorConstants;
 import mobius.prover.gui.editor.detector.ExprDetector;
-import mobius.prover.gui.editor.detector.ParenDetector;
 import mobius.prover.gui.editor.detector.WordDetector;
 import mobius.prover.plugins.AProverTranslator;
 
