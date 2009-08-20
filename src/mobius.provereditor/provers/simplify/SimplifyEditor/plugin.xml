@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="prover.editor.prover">
+      <language
+            extension="ax"
+            name="Simplify"
+            provertoplevel="mobius.prover.simplify.TopLevel"
+            translator="mobius.prover.simplify.ProverTranslator">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="mobius.prover.gui.editor.ProverEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            extensions="ax"
+            id="simplify.editor"
+            name="simplify.editor">
+      </editor>
+   </extension>
+
+</plugin>
