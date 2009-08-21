@@ -25,9 +25,9 @@ import org.osgi.framework.BundleContext;
  */
 public class ProverEditorPlugin extends AbstractUIPlugin {
   /** the number of minor version. */
-  public static final int SUBVERSION = 6;
+  public static final int SUBVERSION = 8;
   /** the number of version. */
-  public static final int VERSION = 1;
+  public static final int VERSION = 9;
   /** the number of the major version. */
   public static final int MAJORVERSION = 0;
   
