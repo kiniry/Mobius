@@ -3,11 +3,11 @@ package mobius.prover.gui.preference;
 import mobius.prover.Prover;
 import mobius.prover.gui.preference.AProverPreferenceNode.IProverPreferencePage;
 
-import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -29,7 +29,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
   private final String fProverGracetime;
 
   /** the string representing the property to store the top level location. */
-  private final String fProverTop;
+  private final String fProverTopLevel;
 
   /** the current preference store. */
   private IPreferenceStore fPrefs;
@@ -39,7 +39,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
   /** the field to specify the grace time. */
   private FieldEditor fGraceField;
   /** the field to specify the top level. */
-  private FieldEditor fToplevField;
+  private FileComboFieldEditor fToplevField;
 
   
   
@@ -53,9 +53,8 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
     fProver = prover;
     String lang = prover.getName();
     fProverGracetime = lang + "Editor.gracetime";
-    fProverTop = lang + "Editor.top";
+    fProverTopLevel = lang + "Editor.top";
     setTitle(lang);
-    setDescription("Preferences for " + lang);
   }
   
   
@@ -66,24 +65,28 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
    * restore itself.
    */
   public void createFieldEditors() {
+    
     String [][] values = translate(fProver.getTranslator().getBuiltInProvers());
-    fToplevField =    new ComboFieldEditor(
-           fProverTop,
-           fProver.getName() + " executable:",
-           values,
-           getFieldEditorParent());
- 
+    Composite parent = getFieldEditorParent();
+    FileComboFieldEditor fToplevField = 
+      new FileComboFieldEditor(parent,  fProverTopLevel,
+                               fProver.getName() + " executable:",
+                               "Custom executable:",
+                               values);
+
     fGraceField = new IntegerFieldEditor(
                      fProverGracetime, 
                      fProver.getName() + " grace time:", 
-           getFieldEditorParent(), GRACE_DIGIT_NUMS);
+                     parent, GRACE_DIGIT_NUMS);
+    
     addField(fToplevField);
     addField(fGraceField);
   }
   
   private String[][] translate(ProverPath[] builtInProvers) {
-    String [][] res = new String [builtInProvers.length][]; 
-    for (int i = 0; i < builtInProvers.length; i++) {
+    final String [][] res = new String [builtInProvers.length][]; 
+    int i = 0;
+    for (i = 0; i < builtInProvers.length; i++) {
       ProverPath pp = builtInProvers[i];
       res[i] = new String [] {pp.getName(), pp.getPath()};
     }
@@ -98,7 +101,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
   public void setDefault(final IPreferenceStore prefs) {
     fPrefs = prefs; 
     fPrefs.setDefault(fProverGracetime, 10);
-    fPrefs.setDefault(fProverTop, "top");
+    fPrefs.setDefault(fProverTopLevel, "top");
   }
   
   
@@ -109,7 +112,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
    * @return A string representing a file selected by the user
    */
   public String getTop() {
-    return fPrefs.getString(fProverTop);
+    return fPrefs.getString(fProverTopLevel);
   }
 
   
@@ -130,5 +133,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
   protected IPreferenceStore doGetPreferenceStore() {
     return fPrefs;
   }
+  
+
 }
 
