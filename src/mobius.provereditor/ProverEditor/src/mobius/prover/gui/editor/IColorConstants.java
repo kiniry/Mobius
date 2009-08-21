@@ -38,5 +38,7 @@ public interface IColorConstants {
   Color GREY = new Color(Display.getCurrent(), new RGB(100, 100, 100));
   /** the color violet 100, 0, 100.*/
   Color VIOLET = new Color(Display.getCurrent(), new RGB(100, 0, 100));
+  /** the color violet 200, 0, 200.*/
+  Color PINK = new Color(Display.getCurrent(), new RGB(200, 0, 200));
 
 }

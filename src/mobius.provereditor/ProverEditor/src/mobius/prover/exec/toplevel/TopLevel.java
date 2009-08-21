@@ -168,12 +168,17 @@ public class TopLevel implements ITopLevel {
     final StringBuffer str = new StringBuffer();
     try {
       waitForInput(fErr, str);
-      fErrBuffer.append(str);
+      fErrBuffer.append(fErr.getBuffer());
     }
     catch (IOException e) {
       fIsWorking = false;
       e.printStackTrace();
     }
+  }
+  
+  /** {@inheritDoc} */
+  public void getErrorInput() throws ToplevelException {
+    fErrBuffer.append(fErr.getBuffer());
   }
   
   
@@ -233,7 +238,7 @@ public class TopLevel implements ITopLevel {
     fIn.println(command);
     try {
       waitForStandardInput();
-      waitForErrorInput();
+      getErrorInput(); // we shouldn't wait after the prompt has came back
     } 
     catch (ProverException ec) {
       fIsWorking = false;
