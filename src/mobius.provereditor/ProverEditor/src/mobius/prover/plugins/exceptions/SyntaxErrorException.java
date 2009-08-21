@@ -23,4 +23,7 @@ public class SyntaxErrorException extends ProverException {
     super(description);
   }
 
+  public String toString() {
+    return "Syntax Error: " + getMessage();
+  }
 }
