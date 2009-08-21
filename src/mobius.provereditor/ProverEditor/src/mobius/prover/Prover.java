@@ -4,6 +4,8 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import mobius.prover.gui.editor.LimitRuleScanner;
+import mobius.prover.gui.preference.AProverPreferenceNode;
+import mobius.prover.gui.preference.AutomatedProverPreferenceNode;
 import mobius.prover.gui.preference.ProverPreferenceNode;
 import mobius.prover.plugins.AProverTranslator;
 import mobius.prover.plugins.IProverTopLevel;
@@ -40,7 +42,7 @@ public class Prover {
   private String fExtension;
   
   /** the preference page for the prover. */
-  private ProverPreferenceNode fPreference;
+  private AProverPreferenceNode fPreference;
   
   /** the translator class for the prover. */
   private AProverTranslator fTranslator;
@@ -68,11 +70,15 @@ public class Prover {
       e.printStackTrace();
     }
     
-    final ProverPreferenceNode pn = new ProverPreferenceNode(fName, prefs);
-    PlatformUI.getWorkbench().getPreferenceManager().addTo("ProverEditor.page",  pn);
-    fPreference = pn;
-    
     fProverSet.put(fName, this);
+    if (fTranslator.isAutomaticTheoremProver()) {
+      fPreference = new AutomatedProverPreferenceNode(this, prefs); 
+    }
+    else {
+      fPreference = new ProverPreferenceNode(this, prefs);  
+    }    
+    PlatformUI.getWorkbench().getPreferenceManager().addTo("ProverEditor.page",  
+                                                           fPreference);
   }
 
   /**

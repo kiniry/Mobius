@@ -3,13 +3,15 @@ package mobius.prover.gui.preference;
 import mobius.prover.Prover;
 import mobius.prover.gui.preference.AProverPreferenceNode.IProverPreferencePage;
 
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import pluginlib.Utils.ProverPath;
 
 /**
  * The prover preference page. For each prover a prover preference
@@ -18,33 +20,26 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * 
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class ProverPreferencePage extends FieldEditorPreferencePage 
+public class AutomatedProverPreferencePage extends FieldEditorPreferencePage 
   implements IWorkbenchPreferencePage, IProverPreferencePage {
 
   /** the number of digits the grace time should have at most. */
   private static final int GRACE_DIGIT_NUMS = 3;
   /** the string representing the property to store the grace time. */
   private final String fProverGracetime;
-  /** the string representing the property to store the ide location. */
-  private final String fProverIde;
+
   /** the string representing the property to store the top level location. */
   private final String fProverTop;
-  /** the string representing the property to store the compiler location. */
-  private final String fProverComp;
 
   /** the current preference store. */
   private IPreferenceStore fPrefs;
-  /** the current language associated with the preference page. */
-  private final String fLanguage;
+  /** the current prover associated with the preference page. */
+  private final Prover fProver;
   
-  /** the field to specify the compiler. */
-  private FieldEditor fCompilerField;
   /** the field to specify the grace time. */
   private FieldEditor fGraceField;
   /** the field to specify the top level. */
   private FieldEditor fToplevField;
-  /** the field to specify the ide. */
-  private FieldEditor fIdeField;
 
   
   
@@ -53,15 +48,14 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * @param prover the language for whiche the preference page
    * have to be created
    */  
-  public ProverPreferencePage(final Prover prover) {
+  public AutomatedProverPreferencePage(final Prover prover) {
     super(GRID);
-    fLanguage = prover.getName();
-    fProverGracetime = fLanguage + "Editor.gracetime";
-    fProverIde = fLanguage + "Editor.ide";
-    fProverTop = fLanguage + "Editor.top";
-    fProverComp = fLanguage + "Editor.compiler";
-    setTitle(fLanguage);
-    setDescription("Preferences for " + fLanguage);
+    fProver = prover;
+    String lang = prover.getName();
+    fProverGracetime = lang + "Editor.gracetime";
+    fProverTop = lang + "Editor.top";
+    setTitle(lang);
+    setDescription("Preferences for " + lang);
   }
   
   
@@ -72,34 +66,31 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
    * restore itself.
    */
   public void createFieldEditors() {
-    fIdeField = new FileFieldEditor(
-        fProverIde,
-        fLanguage + " ide path:",
-        true,
-        getFieldEditorParent()) {
-      public boolean checkState() {
-        return true;
-      }
-    }; 
-    fToplevField =    new FileFieldEditor(
+    String [][] values = translate(fProver.getTranslator().getBuiltInProvers());
+    fToplevField =    new ComboFieldEditor(
            fProverTop,
-           fLanguage + " toplevel path:",
-           true,
+           fProver.getName() + " executable:",
+           values,
            getFieldEditorParent());
-    fCompilerField = new FileFieldEditor(
-           fProverComp,
-           fLanguage + " compiler path:",
-           true,
-           getFieldEditorParent());
-    fGraceField = new IntegerFieldEditor(fProverGracetime, 
-              fLanguage + " toplevel grace time:", 
+ 
+    fGraceField = new IntegerFieldEditor(
+                     fProverGracetime, 
+                     fProver.getName() + " grace time:", 
            getFieldEditorParent(), GRACE_DIGIT_NUMS);
-    addField(fIdeField);
     addField(fToplevField);
-    addField(fCompilerField);
     addField(fGraceField);
   }
   
+  private String[][] translate(ProverPath[] builtInProvers) {
+    String [][] res = new String [builtInProvers.length][]; 
+    for (int i = 0; i < builtInProvers.length; i++) {
+      ProverPath pp = builtInProvers[i];
+      res[i] = new String [] {pp.getName(), pp.getPath()};
+    }
+    return res;
+  }
+
+
   /**
    * Sets the preference store.
    * @param prefs the new preference store.
@@ -107,20 +98,10 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
   public void setDefault(final IPreferenceStore prefs) {
     fPrefs = prefs; 
     fPrefs.setDefault(fProverGracetime, 10);
-    fPrefs.setDefault(fProverIde, "ide");
     fPrefs.setDefault(fProverTop, "top");
-    fPrefs.setDefault(fProverComp, "comp");
   }
   
   
-  /**
-   * Returns the ide selected by the value
-   * or the default value.
-   * @return A string representing a file selected by the user
-   */
-  public String getIde() {
-    return fPrefs.getString(fProverIde);
-  }
   
   /**
    * Returns the top level selected by the user
@@ -130,15 +111,7 @@ public class ProverPreferencePage extends FieldEditorPreferencePage
   public String getTop() {
     return fPrefs.getString(fProverTop);
   }
-  
-  /**
-   * Returns the compiler selected by the user
-   * or a default value.
-   * @return A string representing a file selected by the user
-   */
-  public String getCompiler() {
-    return fPrefs.getString(fProverComp);
-  }
+
   
   /**
    * Returns the grace time selected by the user

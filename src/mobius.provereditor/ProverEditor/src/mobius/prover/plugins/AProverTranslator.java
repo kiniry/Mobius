@@ -10,6 +10,8 @@ import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
+import pluginlib.Utils.ProverPath;
+
 
 /**
  * This class is the main class to implement by a plugin
@@ -151,4 +153,12 @@ public abstract class AProverTranslator {
     return new Pattern[0][0];
   }
 
+  public boolean isAutomaticTheoremProver() {
+    return false;
+  }
+  
+  public ProverPath [] getBuiltInProvers() {
+    return new ProverPath [] {};
+  }
+  
 }

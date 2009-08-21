@@ -10,25 +10,19 @@ import org.eclipse.jface.preference.IPreferenceStore;
  *  
  * @author J. Charles (julien.charles@inria.fr)
  */
-public class ProverPreferenceNode extends AProverPreferenceNode {
+public class AutomatedProverPreferenceNode extends AProverPreferenceNode {
 
-  private ProverPreferencePage fPage;
+  private AutomatedProverPreferencePage fPage;
   
   /**
    * Create a new preference node as well as an internal preference
    * page inside of it.
-   * @param prover the language to have a preference page for
+   * @param language the language to have a preference page for
    * @param prefs the current preference store
    */
-  public ProverPreferenceNode(final Prover prover, 
+  public AutomatedProverPreferenceNode(final Prover prover, 
                               final IPreferenceStore prefs) {
     super(prover, prefs);
-  }
-  
-  /** {@inheritDoc}  */
-  @Override
-  public String getIde() {
-    return fPage.getIde();
   }
 
   /** {@inheritDoc}  */
@@ -36,24 +30,30 @@ public class ProverPreferenceNode extends AProverPreferenceNode {
   public String getTop() {
     return fPage.getTop();
   }
-  
-  /** {@inheritDoc}  */
-  @Override
-  public String getCompiler() {
-    return fPage.getCompiler();
-  }
 
   /** {@inheritDoc}  */
   @Override
   public int getGraceTime() {
     return fPage.getGraceTime();
   }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public String getCompiler() {
+    return null;
+  }
+  
+  /** {@inheritDoc}  */
+  @Override
+  public String getIde() {
+    return null;
+  }
 
   /** {@inheritDoc}  */
   @Override
   protected IProverPreferencePage getPreferencePage(final Prover prover) {
-    fPage = new ProverPreferencePage(prover);
+    fPage = new AutomatedProverPreferencePage(prover);
     return fPage;
   }
-  
+
 }

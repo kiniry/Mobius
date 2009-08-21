@@ -13,7 +13,6 @@ import mobius.prover.gui.editor.BasicRuleScanner;
 import mobius.prover.gui.editor.LimitRuleScanner;
 import mobius.prover.gui.jobs.AppendJob;
 import mobius.prover.gui.jobs.ColorAppendJob;
-import mobius.prover.gui.jobs.ToplevelStyleRange;
 import mobius.prover.gui.popup.AddToLoadPath;
 import mobius.prover.gui.preference.PreferencePage;
 import mobius.prover.plugins.AProverTranslator;
