@@ -1,5 +1,6 @@
 package mobius.prover.simplify;
 
+import mobius.atp.SimplifyActivator;
 import mobius.prover.gui.editor.BasicTextAttribute;
 import mobius.prover.gui.editor.IColorConstants;
 import mobius.prover.gui.editor.detector.WordDetector;
@@ -13,6 +14,8 @@ import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+
+import pluginlib.Utils.ProverPath;
 
 public class ProverTranslator extends AProverTranslator implements IColorConstants {
 
@@ -111,5 +114,14 @@ public class ProverTranslator extends AProverTranslator implements IColorConstan
   @Override
   public String [][] getReplacements() {
     return replacements;
+  }
+  
+  @Override
+  public boolean isAutomaticTheoremProver() {
+    return true;
+  }
+  
+  public ProverPath [] getBuiltInProvers() {
+    return SimplifyActivator.getSimplifyList();
   }
 }
