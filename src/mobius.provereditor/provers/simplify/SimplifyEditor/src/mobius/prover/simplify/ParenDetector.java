@@ -8,12 +8,11 @@ import org.eclipse.jface.text.rules.IWordDetector;
  */
 public class ParenDetector implements IWordDetector {
 
-  int par; 
-  
+  private int par; 
+
   /** {@inheritDoc} */
   public boolean isWordStart(final char c) {
     if (c == '(') {
-      System.out.println("word start");
       if (par == 0) { 
         par = 1;
       }
@@ -25,7 +24,6 @@ public class ParenDetector implements IWordDetector {
  
   /** {@inheritDoc} */
   public boolean isWordPart(final char c) {
-    System.out.println("within " + c);
     boolean res = true;
     if (par == 0 && !Character.isWhitespace(c)) {
       res = false;

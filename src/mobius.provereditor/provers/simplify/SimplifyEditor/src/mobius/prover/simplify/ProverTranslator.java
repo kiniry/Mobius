@@ -2,15 +2,12 @@ package mobius.prover.simplify;
 
 import mobius.prover.gui.editor.BasicTextAttribute;
 import mobius.prover.gui.editor.IColorConstants;
-import mobius.prover.gui.editor.detector.ExprDetector;
 import mobius.prover.gui.editor.detector.WordDetector;
 import mobius.prover.plugins.AProverTranslator;
 
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.MultiLineRule;
-import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Color;
@@ -20,16 +17,14 @@ import org.eclipse.swt.widgets.Display;
 public class ProverTranslator extends AProverTranslator implements IColorConstants {
 
   // Colors...
-  Color TAG_COLOR = 
-    new Color(Display.getCurrent(), new RGB(100, 0, 100));
-  Color STRING_COLOR = 
-    new Color(Display.getCurrent(), new RGB(0, 0, 200));
   Color COMMENT_COLOR = 
     new Color(Display.getCurrent(), new RGB(0, 100, 0));
-  Color LEMMA_COLOR = 
-    new Color(Display.getCurrent(), new RGB(200, 30, 30));
-  Color LIGHTGREY = 
-    new Color(Display.getCurrent(), new RGB(230, 230, 230));
+  
+  /** the replacements for given strings. */
+  public static final String [][] replacements = {
+    {">\t", ""}
+  }; 
+  
   // Some tokens
   IToken instr = new Token(new BasicTextAttribute(BLUE));
   IToken command = new Token(new BasicTextAttribute(DARKRED));
@@ -110,8 +105,11 @@ public class ProverTranslator extends AProverTranslator implements IColorConstan
 
   @Override
   public boolean isErrorMsg(String s) {
-    // TODO Auto-generated method stub
-    return false;
+    return TopLevel.isErrorMsg(s);
   }
-
+  /** {@inheritDoc} */
+  @Override
+  public String [][] getReplacements() {
+    return replacements;
+  }
 }

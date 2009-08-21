@@ -16,8 +16,8 @@
             class="mobius.prover.gui.editor.ProverEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             extensions="ax"
-            id="simplify.editor"
-            name="simplify.editor">
+            id="simplify.SimplifyEditor"
+            name="SimplifyEditor">
       </editor>
    </extension>
 
