@@ -1,5 +1,7 @@
 package mobius.prover.simplify;
 
+import mobius.prover.Prover;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -46,5 +48,8 @@ public class SimplifyEditor extends AbstractUIPlugin {
 	public static SimplifyEditor getDefault() {
 		return plugin;
 	}
-
+	public static String getSimplifyLocation() {
+	  Prover p = Prover.get("Simplify");
+	  return p.getTop();
+	}
 }
