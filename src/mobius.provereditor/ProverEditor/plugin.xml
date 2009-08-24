@@ -8,7 +8,7 @@
       <actionSet
             id="ProverEditor.actions"
             label="Prover Editor"
-            visible="true">
+            visible="false">
          <action
                class="mobius.prover.gui.actions.BreakAction"
                icon="icons/dead.gif"
@@ -200,7 +200,6 @@
    <extension
          point="org.eclipse.ui.views">
       <view
-            category="Prover"
             class="mobius.prover.gui.TopLevelManager"
             icon="icons/icon_lego_gray.gif"
             id="ProverEditor.topview"
@@ -241,4 +240,28 @@
             id="ProverEditor.project.image"
             natureId="prover.editor.nature"/>
    </extension>
+   
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.prover.gui.PerspectiveFactory"
+            icon="icons/perspective.png"
+            id="ProverEditor.perspective"
+            name="Proving">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="ProverEditor.perspective">
+      <actionSet id="ProverEditor.actions"/>
+    </perspectiveExtension>
+   </extension>
+   <extension point="org.eclipse.ui.actionSetPartAssociations">
+	<actionSetPartAssociation 
+		targetID="ProverEditor.actions">
+		<part id="ProverEditor.perspective"/>
+		<part id="ProverEditor.topview" />
+    </actionSetPartAssociation>
+   </extension>
+   
 </plugin>
