@@ -49,7 +49,6 @@ public class TopLevel implements IProverTopLevel {
   }
 
   public static boolean isErrorMsg(String s) {
-    System.out.println(s);
     return s.startsWith("Bad input:") || s.trim().endsWith("Invalid.");
   }
 }
