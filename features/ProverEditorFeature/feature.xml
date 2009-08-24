@@ -2,7 +2,7 @@
 <feature
       id="mobius.provereditor"
       label="Prover Editor"
-      version="1.0.3"
+      version="1.0.4"
       provider-name="MOBIUS and Julien Charles">
 
    <description>
@@ -701,6 +701,13 @@ END OF TERMS AND CONDITIONS
 
    <plugin
          id="prover.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="simplify.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
