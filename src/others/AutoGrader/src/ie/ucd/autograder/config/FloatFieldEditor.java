@@ -1,6 +1,8 @@
 package ie.ucd.autograder.config;
 
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
@@ -10,6 +12,8 @@ public class FloatFieldEditor extends StringFieldEditor {
 
   public static final int DEFAULT_TEXT_LIMIT = 5;
 
+  private final int textLimit;
+  
   private float minValidValue = Float.MIN_VALUE;
   private float maxValidValue = Float.MAX_VALUE;
   private boolean rangeSet;
@@ -22,6 +26,7 @@ public class FloatFieldEditor extends StringFieldEditor {
     init(name, labelText);
     rangeSet = false;
     setTextLimit(textWidth);
+    this.textLimit = textWidth;
     setEmptyStringAllowed(false);
     setErrorMessage("Not a valid float number.");
     createControl(parent);
@@ -122,9 +127,22 @@ public class FloatFieldEditor extends StringFieldEditor {
       doFillIntoGrid(parent, getNumberOfControls());
     }
   }
-  
-  public void setLabelStyle() {
-    
+
+  @Override
+  public Text getTextControl(Composite parent) {
+    final Text text = super.getTextControl(parent);
+    text.addKeyListener(new KeyAdapter() {
+      public void keyReleased(KeyEvent e) {
+        String s = text.getText();
+        if (s.length() > textLimit) {
+          text.setText(s.substring(0,textLimit));
+        }
+      }
+    });
+    return text;
   }
+
+  
+  
 
 }
