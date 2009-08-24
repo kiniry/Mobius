@@ -93,5 +93,27 @@
          </view>
       </perspectiveExtension>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="ie.ucd.autograder.config.ProjectConfigurationPropertyPage"
+            id="ie.ucd.autograder.config.ProjectConfigurationPropertyPage"
+            name="AutoGrader">
+         <enabledWhen>
+            <or>
+               <instanceof
+                     value="org.eclipse.jdt.core.IJavaProject">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+            </or>
+         </enabledWhen>
+         <filter
+               name="nature"
+               value="AutoGrader.nature">
+         </filter>
+      </page>
+   </extension>
 
 </plugin>
