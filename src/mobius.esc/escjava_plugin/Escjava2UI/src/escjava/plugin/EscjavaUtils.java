@@ -322,36 +322,8 @@ public class EscjavaUtils {
 		}
 	}
 	
-	/**
-	 * Finds the simplify executable that is part of the the plugin.
-	 * @param os The name of the OS
-	 * @return The location of the simplify executable as an absolute file system path.
-	 * @throws Exception
-	 */
-	public static String findInternalSimplify(String os) throws Exception {
-		if (os == null || os.length() == 0) {
-			os = System.getProperty("os.name");
-		}
-	  String suffix = getSimplifySuffix(os);
-	  if (suffix == null) return null;
-	  String name = "Simplify-1.5." + suffix;
-	  name = Utils.findPluginResource(SimplifyActivator.PLUGIN_ID, name);
-		return name;
-	}
 		
-  public static String getSimplifySuffix(String osname) {
-		String suffix = null;
-		if (osname.startsWith("Windows")) suffix = "4.exe";
-		else if (osname.equals("linux")||
-		         osname.equals("Linux")) suffix = "4.linux";
-		else if (osname.equals("darwin")||
-		         osname.equals("MacOSX")||
-		         osname.equals("Mac OS X")) suffix = "5.macosx";
-		else if (osname.equals("solaris")||
-		         osname.equals("Solaris")) suffix = "4.solaris";
-		else Log.log("Unexpected OS: " + osname);
-		return suffix;
-  }
+
 
 /**
  * Remove jmlspecs dependencies

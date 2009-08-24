@@ -13,6 +13,9 @@ import java.util.List;
 import javafe.genericfile.GenericFile;
 import javafe.util.Location;
 
+import mobius.atp.SimplifyActivator;
+import mobius.prover.simplify.SimplifyEditor;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
@@ -184,26 +187,14 @@ public class EscjavaChecker extends escjava.Main
 	  
 	  // FIXME - can avoid getting simplify if we are not doing any static checking
 	  
-	  String loc;
-	  try {
-	    if (Options.internalSimplify.getValue()) {
-	      String os = Options.os.getStringValue();
-	      loc = EscjavaUtils.findInternalSimplify(os);
-	      if (loc == null) {
-	        Utils.showMessageInUI(null, "Esc/Java",
-	        "Could not locate a Simplify executable - see error log");
-	        Log.errorlog(
-	            "Could not locate a Simplify executable in the plugin: os = "
-	            + System.getProperty("os.name"), null);
-	        return false;
-	      }
-	    } else {
-	      loc = Options.simplify.getValue();
-	    }
-	  } catch (Exception e) {
-	    Utils.showMessageInUI(null,"Esc/Java",
-	      "Could not locate a Simplify executable - see error log");
-	    Log.errorlog("Could not locate a Simplify executable in the plugin",e);
+	  String loc = SimplifyEditor.getSimplifyLocation();
+	
+	  if (loc == null) {
+	    Utils.showMessageInUI(null, "Esc/Java",
+	    "Could not locate a Simplify executable - see error log");
+	    Log.errorlog(
+	                 "Could not locate a Simplify executable in the plugin: os = "
+	                 + System.getProperty("os.name"), null);
 	    return false;
 	  }
 	  inputs.add("-simplify");

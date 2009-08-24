@@ -24,18 +24,7 @@ import pluginlib.Widgets;
  * This class implements the preference page for the plugin
  */
 public class PreferencePage extends pluginlib.PreferencePage {
-  
-  static final public PreferenceWidget.BooleanWidget internalSimplify =
-    new PreferenceWidget.BooleanWidget(Options.internalSimplify);
-
-  static final public PreferenceWidget.ChoiceWidget osSimplify =
-    new PreferenceWidget.ChoiceWidget(Options.os);
-
-  /**
-   * The Simplify executable to use (a value is required).
-   */
-  static final public PreferenceWidget.FileWidget simplify = new PreferenceWidget.FileWidget(
-      Options.simplify);
+ 
 
   /**
    * The option button corresponding to the Quiet option, but in the reverse
@@ -108,9 +97,9 @@ public class PreferencePage extends pluginlib.PreferencePage {
    * An array of the ESCJava option widgets.
    */
   static final private PreferenceWidget[] widgets = {
-                                                 internalSimplify,
-                                                 osSimplify,
-                                                 simplify,
+//                                                 internalSimplify,
+//                                                 osSimplify,
+//                                                 simplify,
                                                  new PreferenceWidget.Label(
                                                      "Syntax and semantics checks"),
                                                  typeCheckOnly,
@@ -170,8 +159,6 @@ public class PreferencePage extends pluginlib.PreferencePage {
 
     new Widgets.LabeledSeparator(composite1, "Options for ESC/Java2-Eclipse");
     addWidgets(eclipseOptions, composite1);
-    new Widgets.LabeledSeparator(composite1,
-        "Options that control ESC/Java2 checking");
     addWidgets(widgets, composite1);
     
     // FIXME - -quiet, nowarn noredundancy loop loopsafe plainwarning pgc ppvc f

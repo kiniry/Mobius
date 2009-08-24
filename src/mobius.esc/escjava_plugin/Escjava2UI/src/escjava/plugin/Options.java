@@ -8,8 +8,6 @@ package escjava.plugin;
 
 import java.util.List;
 
-import mobius.atp.SimplifyActivator;
-
 import pluginlib.AbstractPreference;
 import pluginlib.Utils;
 
@@ -66,36 +64,10 @@ public class Options {
 			"recorded in the system log file (along with error message) if" + Utils.eol +
 			"this choice is enabled.");
 
-	/**
-	 * Whether to use the internal simplify.
-	 * @see https://mobius.ucd.ie/trac/ticket/515
-	 */
-	static final public AbstractPreference.BooleanOption internalSimplify =
-	  new AbstractPreference.BooleanOption(
-	      PLUGINID + "internalSimplify",
-	      true,
-	      "Use Internal Version",
-	      "Use the Simplify executable internal to the plug-in"
-	      );
-
-	static final public AbstractPreference.ChoiceOption os = new AbstractPreference.ChoiceOption(
-			(PLUGINID + "osname"), new String[] { "", "Windows", "Linux",
-					"MacOSX", "Solaris" }, 0, "Internal Simplify Version",
-			"The choice of internal version of Simplify (pick the host platform)");
 
 
 
 
-	/**
-	 * The Simplify executable to use (a value is required).
-	 */
-	static final public AbstractPreference.StringOption simplify = new AbstractPreference.StringOption(
-			(SimplifyActivator.PLUGIN_ID + "." + "simplify"), 
-			"", 
-			"External Simplify executable to use",
-			"The static checker needs a version of the Simplify executable for" + Utils.eol +
-			"this platform; it must be obtained indepenedently from either the" + Utils.eol +
-			"Mobius website or the HP Labs website");
 	/**
 	 * The option button corresponding to the Quiet option,
 	 * but in the reverse sense.
@@ -269,18 +241,5 @@ public class Options {
 		}
 	}
 	
-	static {
-	  if (os.getIndexValue() == 0) {
-	    String osname = System.getProperty("os.name");
-			if (osname.startsWith("Windows")) osname = "Windows";
-			else if (osname.equals("linux")||
-			         osname.equals("Linux")) osname = "Linux";
-			else if (osname.equals("darwin")||
-			         osname.equals("MacOSX")||
-			         osname.equals("Mac OS X")) osname = "MacOSX";
-			else if (osname.equals("solaris")||
-			         osname.equals("Solaris")) osname = "Solaris";
-	    os.setValue(osname);
-	  }
-	}
+
 }
