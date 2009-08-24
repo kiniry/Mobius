@@ -7,6 +7,9 @@ import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -49,7 +52,7 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
    * have to be created
    */  
   public AutomatedProverPreferencePage(final Prover prover) {
-    super(GRID);
+    super(FLAT);
     fProver = prover;
     String lang = prover.getName();
     fProverGracetime = lang + "Editor.gracetime";
@@ -68,19 +71,25 @@ public class AutomatedProverPreferencePage extends FieldEditorPreferencePage
     
     String [][] values = translate(fProver.getTranslator().getBuiltInProvers());
     Composite parent = getFieldEditorParent();
-    FileComboFieldEditor fToplevField = 
+    
+    fToplevField = 
       new FileComboFieldEditor(parent,  fProverTopLevel,
                                fProver.getName() + " executable:",
                                "Custom executable:",
                                values);
 
+    Composite c = new Composite(parent, SWT.NONE);
     fGraceField = new IntegerFieldEditor(
                      fProverGracetime, 
                      fProver.getName() + " grace time:", 
-                     parent, GRACE_DIGIT_NUMS);
-    
+                     c, GRACE_DIGIT_NUMS);
+
+
     addField(fToplevField);
     addField(fGraceField);
+
+    parent.setLayout(new GridLayout(1, false));
+    
   }
   
   private String[][] translate(ProverPath[] builtInProvers) {
