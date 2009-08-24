@@ -1,0 +1,28 @@
+The AutoGrader
+contributors: Fintan Fairmichael, Joe Kiniry, Dermot Cochran
+programming: Fintan Fairmichael
+idea and design: Joe Kiniry
+
+Abstract
+
+An abstract.
+
+Description
+
+A one page description.
+
+Requirements
+
+Requirements for the AutoGrader are written as scenarios in our BON specification.
+See docs/bon for more information.
+
+References
+
+- Metrics
+- BONc
+- CheckStyle
+- ESC/Java2
+- FindBugs
+- PMD
+- jUnit
+- JML

@@ -1,0 +1,22 @@
+-- ===================================================================
+-- Static Diagrams
+-- ===================================================================
+static_diagram BUILT_IN_BON_TYPES
+  component
+    effective class BAG reused
+    effective class BOOLEAN reused
+    effective class FUNCTION reused
+    effective class INTEGER reused
+    effective class REAL reused
+    effective class RELATION reused
+    effective class SEQUENCE reused
+    effective class SET reused
+    effective class STRING reused
+    effective class TUPLE reused
+    effective class VALUE reused
+end
+
+static_diagram AUTOGRADER
+  -- A summarization of all "is-a" and "has-a" relations on classes in this system.
+  component
+end

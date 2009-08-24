@@ -1,0 +1,62 @@
+-- ===================================================================
+-- Cluster Charts
+-- ===================================================================
+
+-- ===================================================================
+-- Built-in BON types
+-- ===================================================================
+
+cluster_chart BUILT_IN_TYPES
+  explanation
+    "The built-in types of EBON."
+  class TUPLE
+    description "A tuple of typed values."
+  class BOOLEAN
+    description "The boolean type."
+  class VALUE
+    description "A generic value type that is comparable."
+  class INTEGER
+    description "The integer type."
+  class REAL
+    description "The real type."
+  class STRING
+    description "The string type."
+  class SEQUENCE
+    description "The sequence type."
+  class SET
+    description "The set type."
+  class BAG
+    description "The bag type."
+  class RELATION
+    description "A typed mathematical relation."
+  class FUNCTION
+    description "A typed mathematical function."
+end
+
+cluster_chart BUILDER
+  explanation
+    "An Eclipse builder."
+  class GRADER_BUILDER
+    description "An Eclipse builder for the AutoGrader."
+end
+
+cluster_chart MARKERS
+    explanation "Collecting and interpreting Eclipse markers."
+end
+
+cluster_chart GRADING
+  explanation "Translating markers into grades."
+end
+
+cluster_chart METRICS
+  explanation "Measuring properties of the system being graded."
+end
+
+cluster_chart UTIL
+  explanation "Supporting classes."
+end
+
+cluster_chart VIEWS
+  explanation "Presenting grades for the user in an Eclipse view."
+end
+  

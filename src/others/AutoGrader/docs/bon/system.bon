@@ -1,0 +1,27 @@
+-- ===================================================================
+-- System Chart
+-- ===================================================================
+system_chart AUTOGRADER
+  indexing
+    author: "Fintan Fairmichael <fintanf@gmail.com>";
+    supervisor: "Joseph Kiniry <kiniry@acm.org>";
+    creation_date: "August 2009";
+    last_updated_date: "August 2009";
+    keywords: "grading", "static checking";
+  explanation "An Eclipse plugin that automatically grades Java programs based upon \
+             \ the results of several kinds of static and dynamic analysis."
+  cluster BUILT_IN_TYPES
+    description "BON's built-in types."
+  cluster BUILDER
+    description "An Eclipse builder."
+  cluster MARKERS
+    description "Collecting and interpreting Eclipse markers."
+  cluster GRADING
+    description "Translating markers into grades."
+  cluster METRICS
+    description "Measuring properties of the system being graded."
+  cluster UTIL
+    description "Supporting classes."
+  cluster VIEWS
+    description "Presenting grades for the user in an Eclipse view."
+end

@@ -1,0 +1,44 @@
+-- ===================================================================
+-- Built-in BON types
+-- ===================================================================
+
+class_chart TUPLE
+end
+
+class_chart BOOLEAN
+end
+
+class_chart VALUE
+end
+
+class_chart INTEGER
+end
+
+class_chart REAL
+end
+
+class_chart STRING
+end
+
+class_chart SEQUENCE
+end
+
+class_chart SET
+end
+
+class_chart BAG
+end
+
+class_chart RELATION
+end
+
+class_chart FUNCTION
+end
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- BUILDER cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+class_chart GRADER_BUILDER
+
+end

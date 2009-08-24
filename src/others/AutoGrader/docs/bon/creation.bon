@@ -1,0 +1,8 @@
+creation_chart AUTOGRADER
+indexing
+  author: "Joseph Kiniry";
+  created: "August 2009";
+  revised: "24 August 2009"
+explanation
+  "List of classes creating objects in the system."
+end

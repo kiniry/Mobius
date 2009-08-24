@@ -1,0 +1,12 @@
+event_chart AUTOGRADER
+outgoing
+indexing
+  author: "Joseph Kiniry";
+  created: "August 2009";
+  revised: "24 August 2009"
+explanation
+  "Selected internal events triggering system responses leaving the \
+  \system."
+part
+  "1/2"
+end

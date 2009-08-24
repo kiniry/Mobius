@@ -1,0 +1,60 @@
+scenario_chart AUTOGRADER
+indexing
+  author: "Joseph Kiniry";
+  created: "August 2009";
+  revised: "24 August 2009"
+explanation
+  "The mandatory requirments on the first public release of the AutoGrader system."
+scenario
+  "M0: Enable Builder"
+description
+  "Enable builder for project."
+scenario
+  "M1: Disable Builder"
+description
+  "Disable builder for project."
+scenario
+  "M2: Define Grade Component"
+description
+  "Define a new grade component via a marker name and its (regexp-based) description."
+scenario
+  "M3: Define Grade Scale"
+description
+  "Define a grading scale mapping percentages to letter grades."
+scenario
+  "M4: Define Component Grade Scale"
+description
+  "Define a component grade scale mapping error marker count and warning marker count to percentages."
+scenario
+  "M5: Enable Component"
+description
+  "Enable a component for a project."
+scenario
+  "M6: Disable Component"
+description
+  "Disable a component for a project."
+scenario
+  "M7: Evaluate Project"
+description
+  "Compute the component and aggregate evalution for a project."
+scenario
+  "M8: Render Component Evaluation"
+description
+  "Render a component evalution."
+scenario 
+  "M9: Render Evalutions"
+description
+  "Render all enabled component marker counts, percentages, and/or grades."
+scenario
+  "M10: Configure Summary Window"
+description
+  "Configure what output will be rendered into the AutoGrader summary window."
+scenario
+  "M11: Project Preferences"
+description
+  "Configure project-level preferences."
+scenario
+  "M12: Eclipse Preferences"
+description
+  "Configure Eclipse-level preferences."
+end
