@@ -2,9 +2,9 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ProverEditor Plug-in
 Bundle-SymbolicName: prover.editor; singleton:=true
-Bundle-Version: 0.9.8
+Bundle-Version: 0.9.9
 Bundle-Activator: mobius.prover.ProverEditorPlugin
-Bundle-Vendor: Inria - Everest Team
+Bundle-Vendor: Mobius Project
 Require-Bundle: org.eclipse.ui.console,
  org.eclipse.ui,
  org.eclipse.jdt.ui,
