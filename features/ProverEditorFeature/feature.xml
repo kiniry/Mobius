@@ -2,7 +2,7 @@
 <feature
       id="mobius.provereditor"
       label="Prover Editor"
-      version="1.0.2"
+      version="1.0.3"
       provider-name="MOBIUS and Julien Charles">
 
    <description>
