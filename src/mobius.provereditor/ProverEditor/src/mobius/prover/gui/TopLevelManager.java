@@ -309,8 +309,8 @@ public class TopLevelManager extends ABaseTopLevelManager  {
     fStateScan = new LimitRuleScanner(fTranslator.getProverStateRules());
     fParser.setRules(fTranslator.getParsingRules());
     
-    new ColorAppendJob(getTxtPresentation(), "\nEditing file: \n" + 
-                       path.getName() + "\n", DARKRED).prepare();
+    new ColorAppendJob(getTxtPresentation(), "\nEditing file: " + 
+                       path.getName() + ", \nUsing: " + fProver.getTop() + "\n", DARKRED).prepare();
     
     try {
       fTopLevel = new TopLevel(fProver.getName(), getLoadPath(path));

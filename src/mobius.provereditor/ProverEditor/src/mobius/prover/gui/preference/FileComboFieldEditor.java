@@ -173,6 +173,7 @@ public class FileComboFieldEditor extends FieldEditor {
      */
     protected void doLoad() {
       updateComboForValue(getPreferenceStore().getString(getPreferenceName()));
+      
     }
 
     /* (non-Javadoc)
@@ -268,6 +269,7 @@ public class FileComboFieldEditor extends FieldEditor {
       if (fEntryNamesAndValues.length > 0) {
         fValue = customEntry[1];
         fCombo.setText(customEntry[0]);
+        fFid.doLoad();
         fFid.setEnabled(true, parent);
       }
       
@@ -435,7 +437,13 @@ public class FileComboFieldEditor extends FieldEditor {
 
         return null;
     }
-    public void doStore() {
+    protected void doLoadDefault() {
+      super.doLoadDefault();
+    }
+    protected void doLoad() {
+      super.doLoad();
+    }
+    protected void doStore() {
       super.doStore();
     }
     /**
