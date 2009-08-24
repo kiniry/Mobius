@@ -24,15 +24,21 @@ public class TopLevel implements IProverTopLevel {
   }
 
   public void sendCommand(ITopLevel itl, String cmd) throws AProverException {
-    String mainCmd = cmd.substring(cmd.lastIndexOf('(')).trim();
-    if (!mainCmd.equals("(PROMPT_OFF)")) {
-      itl.sendToProver(cmd);
-    }
-    String res = itl.getStdBuffer().trim();
-    if (isErrorMsg(itl.getStdBuffer().trim())) {
-      if (res.endsWith(">")) {
-        res = res.substring(0, res.length() - 1);
+    int idx = cmd.lastIndexOf('(');
+    if (idx != -1) {
+      String mainCmd = cmd.substring(idx).trim();
+      if (mainCmd.equals("(PROMPT_OFF)")) {
+        return;
       }
+    }
+    itl.sendToProver(cmd);
+    
+    String res = itl.getStdBuffer().trim();
+    if (res.endsWith(">")) {
+      res = res.substring(0, res.length() - 1);
+    }
+    res = res.trim();
+    if (isErrorMsg(res)) {
       throw new SyntaxErrorException(res);
     }
   }
@@ -43,6 +49,7 @@ public class TopLevel implements IProverTopLevel {
   }
 
   public static boolean isErrorMsg(String s) {
-    return s.startsWith("Bad input:");
+    System.out.println(s);
+    return s.startsWith("Bad input:") || s.trim().endsWith("Invalid.");
   }
 }

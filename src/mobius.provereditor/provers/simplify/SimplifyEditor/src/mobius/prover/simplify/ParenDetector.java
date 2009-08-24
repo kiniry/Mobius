@@ -8,14 +8,21 @@ import org.eclipse.jface.text.rules.IWordDetector;
  */
 public class ParenDetector implements IWordDetector {
 
-  private int par; 
+  private int par;
+  private boolean isAtom;
 
   /** {@inheritDoc} */
   public boolean isWordStart(final char c) {
+   
     if (c == '(') {
       if (par == 0) { 
         par = 1;
       }
+      isAtom = false;
+      return true;
+    }
+    else if (!Character.isWhitespace(c)) {
+      isAtom = true;
       return true;
     }
     return false;
@@ -24,17 +31,25 @@ public class ParenDetector implements IWordDetector {
  
   /** {@inheritDoc} */
   public boolean isWordPart(final char c) {
-    boolean res = true;
-    if (par == 0 && !Character.isWhitespace(c)) {
-      res = false;
+    if (!isAtom) {
+      boolean res = true;
+      if (par == 0 && !Character.isWhitespace(c)) {
+        res = false;
+      }
+      if (c == '(') {
+        par++;
+      }
+      else if (c == ')') {
+        par--;
+      }
+      return res;
     }
-    if (c == '(') {
-      par++;
+    else {
+      if (Character.isWhitespace(c)) {
+        return false;
+      }
+      return true;
     }
-    else if (c == ')') {
-      par--;
-    }
-    return res;
   }
 
 }

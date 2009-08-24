@@ -4,7 +4,7 @@
    <extension
          point="prover.editor.prover">
       <language
-            extension="ax"
+            extension="sx"
             name="Simplify"
             provertoplevel="mobius.prover.simplify.TopLevel"
             translator="mobius.prover.simplify.ProverTranslator">
@@ -15,7 +15,7 @@
       <editor
             class="mobius.prover.gui.editor.ProverEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
-            extensions="ax"
+            extensions="sx"
             id="simplify.SimplifyEditor"
             name="SimplifyEditor">
       </editor>
