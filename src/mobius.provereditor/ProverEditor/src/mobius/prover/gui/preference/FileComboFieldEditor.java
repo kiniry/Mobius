@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -57,19 +58,17 @@ public class FileComboFieldEditor extends FieldEditor {
 
   @Override
   protected void doLoad() {
-    // TODO Auto-generated method stub
-    
+    fCombo.doLoad();
   }
 
   @Override
   protected void doLoadDefault() {
-    
+    fCombo.doLoadDefault();
   }
 
   @Override
   protected void doStore() {
-    // TODO Auto-generated method stub
-    
+    fCombo.doStore();
   }
 
   @Override
@@ -77,9 +76,15 @@ public class FileComboFieldEditor extends FieldEditor {
     return 3;
   }
   
+  public void setPreferenceStore(IPreferenceStore store) {
+    super.setPreferenceStore(store);
+    fCombo.setPreferenceStore(store);
+    fFileField.setPreferenceStore(store);
+  }
   
   public static class ComboFieldEditor extends FieldEditor {
 
+    public final static String[] customEntry = {"Custom...", "Custom"}; 
     /**
      * The <code>Combo</code> widget.
      */
@@ -97,6 +102,7 @@ public class FileComboFieldEditor extends FieldEditor {
     private String[][] fEntryNamesAndValues;
 
     private FileFieldEditor fFid;
+    private Composite parent;
 
     /**
      * Create the combo box field editor.
@@ -111,7 +117,9 @@ public class FileComboFieldEditor extends FieldEditor {
                             Composite parent) {
       init(name, labelText);
       fEntryNamesAndValues = entryNamesAndValues;
+      this.parent = parent;
       createControl(parent);    
+      
     }
 
 
@@ -182,7 +190,12 @@ public class FileComboFieldEditor extends FieldEditor {
         getPreferenceStore().setToDefault(getPreferenceName());
         return;
       }
-      getPreferenceStore().setValue(getPreferenceName(), fValue);
+      if (fValue.equals(customEntry[1])) {
+       fFid.doStore();
+      }
+      else {
+        getPreferenceStore().setValue(getPreferenceName(), fValue);
+      }
     }
 
     /* (non-Javadoc)
@@ -202,14 +215,14 @@ public class FileComboFieldEditor extends FieldEditor {
         for (int i = 0; i < fEntryNamesAndValues.length; i++) {
           fCombo.add(fEntryNamesAndValues[i][0], i);
         }
-        fCombo.add("Custom...");
+        fCombo.add(customEntry[0]);
         
         fCombo.addSelectionListener(new SelectionAdapter() {
           public void widgetSelected(SelectionEvent evt) {
-            String oldValue = fValue;
-            String name = fCombo.getText();
-            if (name.equals("Custom...")) {
-              fValue = "Custom";
+            final String oldValue = fValue;
+            final String name = fCombo.getText();
+            if (name.equals(customEntry[0])) {
+              fValue = customEntry[1];
               fFid.setEnabled(true, parent);
             }
             else {
@@ -236,7 +249,7 @@ public class FileComboFieldEditor extends FieldEditor {
           return entry[1];
         }
       }
-      return fEntryNamesAndValues[0][0];
+      return customEntry[0];
     }
     
     /*
@@ -247,13 +260,17 @@ public class FileComboFieldEditor extends FieldEditor {
       for (int i = 0; i < fEntryNamesAndValues.length; i++) {
         if (value.equals(fEntryNamesAndValues[i][1])) {
           fCombo.setText(fEntryNamesAndValues[i][0]);
+          fFid.setEnabled(false, parent);
           return;
         }
       }
+      
       if (fEntryNamesAndValues.length > 0) {
-        fValue = fEntryNamesAndValues[0][1];
-        fCombo.setText(fEntryNamesAndValues[0][0]);
+        fValue = customEntry[1];
+        fCombo.setText(customEntry[0]);
+        fFid.setEnabled(true, parent);
       }
+      
     }
 
     /*
@@ -418,7 +435,9 @@ public class FileComboFieldEditor extends FieldEditor {
 
         return null;
     }
-
+    public void doStore() {
+      super.doStore();
+    }
     /**
      * Sets this file field editor's file extension filter.
      *
