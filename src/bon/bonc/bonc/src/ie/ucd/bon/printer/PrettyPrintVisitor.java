@@ -13,29 +13,48 @@ import ie.ucd.bon.ast.ClassEntry;
 import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.ClientEntity;
+import ie.ucd.bon.ast.ClientEntityExpression;
+import ie.ucd.bon.ast.ClientEntityList;
+import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.ClusterEntry;
 import ie.ucd.bon.ast.DictionaryEntry;
 import ie.ucd.bon.ast.EnumerationElement;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.FormalGeneric;
+import ie.ucd.bon.ast.GenericIndirection;
 import ie.ucd.bon.ast.HasType;
 import ie.ucd.bon.ast.IVisitor;
 import ie.ucd.bon.ast.IndexClause;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.IndirectionElement;
+import ie.ucd.bon.ast.IndirectionFeaturePart;
+import ie.ucd.bon.ast.InheritanceRelation;
+import ie.ucd.bon.ast.IntegerConstant;
+import ie.ucd.bon.ast.IntegerInterval;
 import ie.ucd.bon.ast.KeywordConstant;
+import ie.ucd.bon.ast.LabelledAction;
+import ie.ucd.bon.ast.MemberRange;
+import ie.ucd.bon.ast.Multiplicity;
+import ie.ucd.bon.ast.NamedIndirection;
 import ie.ucd.bon.ast.Quantification;
 import ie.ucd.bon.ast.RealConstant;
 import ie.ucd.bon.ast.SetConstant;
 import ie.ucd.bon.ast.SpecificationElement;
+import ie.ucd.bon.ast.StaticRef;
 import ie.ucd.bon.ast.StringConstant;
+import ie.ucd.bon.ast.SupplierIndirection;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
+import ie.ucd.bon.ast.TypeRange;
 import ie.ucd.bon.ast.UnaryExp;
 import ie.ucd.bon.ast.VariableRange;
 import ie.ucd.bon.ast.BinaryExp.Op;
 import ie.ucd.bon.ast.Clazz.Mod;
+import ie.ucd.bon.ast.KeywordConstant.Constant;
 import ie.ucd.bon.ast.Quantification.Quantifier;
+import ie.ucd.bon.ast.TypeMark.Mark;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.util.StringUtil;
 
@@ -271,7 +290,133 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     tp.print(description);
     tp.printLine();
   }
+
+  @Override
+  public void visitClientEntityList(ClientEntityList node, List<ClientEntity> entities, SourceLocation loc) {
+    visitAllPrintingSeparator(entities, ", ", false);
+  }
+
+  @Override
+  public void visitIntegerConstant(IntegerConstant node, Integer value, SourceLocation loc) {
+    tp.print(value);
+  }
+
+  @Override
+  public void visitIntegerInterval(IntegerInterval node, Integer start, Integer stop, SourceLocation loc) {
+    tp.print(start);
+    tp.print("..");
+    tp.print(stop);
+  }
+
+  @Override
+  public void visitKeywordConstant(KeywordConstant node, Constant constant, SourceLocation loc) {
+    switch(constant) {
+    case CURRENT:
+      tp.print("Current");
+      break;
+    case RESULT:
+      tp.print("Result");
+      break;
+    case VOID:
+      tp.print("Void");
+      break;
+    }
+  }
+
+  @Override
+  public void visitMultiplicity(Multiplicity node, Integer multiplicity, SourceLocation loc) {
+    tp.print('{');
+    tp.print(multiplicity);
+    tp.print("} ");
+  }
+
+  @Override
+  public void visitType(Type node, String identifier, List<Type> actualGenerics, String fullString, SourceLocation loc) {
+    tp.print(identifier);
+    if (!actualGenerics.isEmpty()) {
+      tp.print('[');
+      visitAllPrintingSeparator(actualGenerics, ", ", false);
+      tp.print(']');
+    }
+  }
+
+  @Override
+  public void visitTypeMark(TypeMark node, Mark mark, Integer multiplicity, SourceLocation loc) {
+    switch(mark) {
+    case AGGREGATE:
+      tp.print(":{");
+      break;
+    case HASTYPE:
+      tp.print(':');
+      break;
+    case NONE:
+      break;
+    case SHAREDMARK:
+      tp.print(":(");
+      tp.print(multiplicity);
+      tp.print(')');
+      break;
+    }
+  }  
+
+  @Override
+  public void visitTypeRange(TypeRange node, List<String> identifiers, Type type, SourceLocation loc) {
+    tp.print(StringUtil.appendWithSeparator(identifiers, ", "));
+    tp.print(':');
+    type.accept(this);
+  }
+
+  @Override
+  public void visitClientRelation(ClientRelation node, StaticRef client,
+      StaticRef supplier, ClientEntityExpression clientEntities,
+      TypeMark typeMark, String semanticLabel, SourceLocation loc) {
+    client.accept(this);
+    tp.print(" client ");
+    visitNodeIfNonNull(clientEntities);
+    typeMark.accept(this);
+    supplier.accept(this);
+    printSemanticLabel(semanticLabel);
+    tp.printLine();
+  }
+
+  @Override
+  public void visitInheritanceRelation(InheritanceRelation node,
+      StaticRef child, StaticRef parent, Multiplicity multiplicity,
+      String semanticLabel, SourceLocation loc) {
+    child.accept(this);
+    tp.print(" inherit ");
+    visitNodeIfNonNull(multiplicity);
+    parent.accept(this);
+    printSemanticLabel(semanticLabel);
+    tp.printLine();
+  }
+
+  @Override
+  public void visitSupplierIndirection(SupplierIndirection node,
+      IndirectionFeaturePart indirectionFeaturePart,
+      GenericIndirection genericIndirection, SourceLocation loc) {
+    if (indirectionFeaturePart != null) {
+      indirectionFeaturePart.accept(this);
+      tp.print(" : ");
+    }
+    genericIndirection.accept(this);
+  }
   
+  @Override
+  public void visitLabelledAction(LabelledAction node, String label,
+      String description, SourceLocation loc) {
+    tp.print(label);
+    tp.printSpace();
+    tp.print(description);
+  }
+
+  @Override
+  public void visitMemberRange(MemberRange node, List<String> identifiers,
+      Expression expression, SourceLocation loc) {
+    tp.print(StringUtil.appendWithSeparator(identifiers, ", "));
+    tp.print(" member_of ");
+    expression.accept(this);
+  }
 
   @Override
   public void visitRealConstant(RealConstant node, Double value, SourceLocation loc) {
@@ -481,5 +626,12 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
   protected void printDescription(String description) {
     tp.print(" description ");
     tp.print(description);
+  }
+  
+  protected void printSemanticLabel(String label) {
+    if (label != null) {
+      tp.printSpace();
+      tp.print(label);
+    }
   }
 }

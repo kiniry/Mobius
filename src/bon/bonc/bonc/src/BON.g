@@ -635,7 +635,7 @@ supplier_indirection  :
   (indirection_feature_part ':')? generic_indirection 
 ;
                       
-indirection_feature_part  :
+indirection_feature_part returns :
    feature_name 
  | indirection_feature_list 
 ;	
