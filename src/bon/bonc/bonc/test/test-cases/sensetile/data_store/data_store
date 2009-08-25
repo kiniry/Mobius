@@ -1,0 +1,27 @@
+cluster_chart DATA_STORE
+indexing
+  author: "Vieri del Bianco";
+  keywords:
+    "bandwidth", 
+    "data base", 
+    "failure", 
+    "failover", 
+    "file", 
+    "file system", 
+    "format", 
+    "history", 
+    "latency", 
+    "local", 
+    "metadata", 
+    "performance", 
+    "persistance", 
+    "remote", 
+    "rule manager", 
+    "rule", 
+    "security", 
+    "size", 
+    "storage", 
+    "view", 
+    "volume"
+
+end

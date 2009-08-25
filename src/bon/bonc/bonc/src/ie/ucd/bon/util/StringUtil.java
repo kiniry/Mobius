@@ -6,6 +6,7 @@ package ie.ucd.bon.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Collection;
 
 
@@ -72,18 +73,6 @@ public class StringUtil {
     }
   }
   
-  public static String appendWithSeparator(Collection<?> items, String sep) {
-    StringBuilder sb = new StringBuilder();
-    for (Object o : items) {
-      sb.append(o.toString());
-      sb.append(sep);
-    }
-    if (sb.length() > 0) {
-      sb.delete(sb.length()-sep.length(), sb.length());
-    }
-    return sb.toString();
-  }
-  
   public static String timeString(final long timeInNano) {
     return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
   }
@@ -93,6 +82,26 @@ public class StringUtil {
     PrintStream ps = new PrintStream(baos);
     e.printStackTrace(ps);
     return baos.toString();
+  }
+  
+  public static String appendWithSeparator(Collection<?> items, String sep) {
+    return appendWithSeparator(items, sep, false);
+  }
+  
+  public static String appendWithSeparator(Collection<?> items, String sep, boolean separatorAtEnd) {
+    StringBuilder sb = new StringBuilder();
+    for (Object o : items) {
+      sb.append(o.toString());
+      sb.append(sep);
+    }
+    if (sb.length() > 0 && !separatorAtEnd) {
+      sb.delete(sb.length()-sep.length(), sb.length());
+    }
+    return sb.toString();
+  }
+  
+  public static String appendWithSeparator(String[] items, String sep, boolean separatorAtEnd) {
+    return appendWithSeparator(Arrays.asList(items), sep, separatorAtEnd);
   }
 
 }

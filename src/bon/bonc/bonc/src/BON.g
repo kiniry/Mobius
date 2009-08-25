@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
 
@@ -1495,7 +1495,12 @@ mod_pow_expression returns [Expression exp] :
 
 lowest_expression returns [Expression exp] :
     (constant)=> constant
-    { $exp = $constant.constant; }
+    ( ('.' cc=call_chain
+       { $exp = CallExp.mk($constant.constant, $cc.calls, getSLoc($constant.start,$cc.stop)); }
+      )
+     | //Just a constant
+      { $exp = $constant.constant; }  
+    )    
  |	unary le=lowest_expression
     { $exp = UnaryExp.mk($unary.op, $le.exp, getSLoc($unary.start,$le.stop)); }
  | s='(' e=expression ')'  

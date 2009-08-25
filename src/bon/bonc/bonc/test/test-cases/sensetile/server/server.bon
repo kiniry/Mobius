@@ -1,0 +1,35 @@
+cluster_chart SERVER
+indexing
+  author: "Vieri del Bianco";
+  keywords:
+    "Hudson", 
+    "administration", 
+    "batch", 
+    "cluster", 
+    "core", 
+    "gridengine",
+    "build farm", 
+    "build management", 
+    "build system",
+    "data store", 
+    "data stream", 
+    "data", 
+    "file", 
+    "group",  
+    "job", 
+    "job management",
+    "load", 
+    "memory", 
+    "operative system", 
+    "process", 
+    "processor",
+    "role", 
+    "rule manager", 
+    "rule", 
+    "server", 
+    "scientist", 
+    "system image", 
+    "trigger", 
+    "user"
+
+end

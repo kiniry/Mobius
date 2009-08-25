@@ -202,3 +202,7 @@
 @Location { ./ }
 @Input { zoo_formal.bon }
 @Output { < SystemNotDefinedError > }
+
+@Test-name: "Sensetile system."
+@Location { sensetile/ }
+@Input { sensetile.bon, processor_unit/processor_unit.bon, processor_unit/sensor_metadata.bon, st_board/channel/channel-formal.bon, st_board/sensor/sensors-formal.bon, processor_unit/sensor_board_driver.bon, server/server.bon, st_board/sensor/sensor_board.bon }

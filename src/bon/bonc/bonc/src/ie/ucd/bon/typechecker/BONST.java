@@ -60,6 +60,10 @@ public class BONST {
   
   
   public boolean isSubtypeOrEqual(Type type1, Type type2) {
+    if (type1 == null && type2 == null) {
+      //TODO should we definitely return true here?
+      return true;
+    }
     //If one type is null
     if ((type1 == null && type2 != null) || (type2 == null && type1 != null)) {
       return false;

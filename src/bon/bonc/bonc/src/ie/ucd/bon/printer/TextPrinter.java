@@ -14,37 +14,56 @@ public class TextPrinter {
     spacesPerIndent = 2;
   }
   
-  public void printLines(int number) {
-    for (int i=0; i < number; i++) {
-      printLine(false);
-    }
+  public void increaseIndentation() {
+    indentation++;
+  }
+  
+  public void decreaseIndentation() {
+    indentation--;
+  }
+
+  public void startLine() {
     printIndentation();
   }
   
-  public void printLine() {
-    printLine(true);
+  public void printLines(int number) {
+    for (int i=0; i < number; i++) {
+      printLine();
+    }
   }
   
-  public void printLine(boolean printIndent) {
+  public void printLine() {
     ps.println();
-    if (printIndent) {
-      printIndentation();
-    }
   }
   
   public void printLine(String line) {
     ps.println(line);
-    printIndentation();
   }
   
   public void printIndentation() {
-    for (int i=0; i < indentation*spacesPerIndent; i++) {
-      ps.println(' ');
-    }
+    printSpaces(indentation*spacesPerIndent);
   }
   
   public void print(String s) {
     ps.print(s);
+  }
+  
+  public void print(Object o) {
+    ps.print(o.toString());
+  }
+  
+  public void print(char c) {
+    ps.print(c);
+  }
+  
+  public void printSpace() {
+    ps.print(' ');
+  }
+  
+  public void printSpaces(int num) {
+    for (int i=0; i < num; i++) {
+      printSpace();
+    }
   }
   
 }

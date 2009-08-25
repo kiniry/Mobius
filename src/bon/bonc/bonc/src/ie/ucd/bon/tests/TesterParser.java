@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Mar 18, 2009 10:09:25 Tester.g 2009-06-09 13:52:18
+// $ANTLR 3.1.3 Mar 18, 2009 10:09:25 Tester.g 2009-08-25 14:21:04
 
   package ie.ucd.bon.tests;
   
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
 public class TesterParser extends AbstractTesterParser {

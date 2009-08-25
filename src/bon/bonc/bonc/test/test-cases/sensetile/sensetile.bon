@@ -1,0 +1,46 @@
+system_chart SENSETILE_SYSTEM
+indexing
+  author: "Dragan Stosic & Vieri del Bianco & Joe Kiniry";
+  keywords: "sensor","data stream","data","collect","node","process","experiment","scientist"
+explanation
+  "The SenseTile system enable scientists to run experiments on \
+  \heterogeneus sensors networks. It can deploy applications on  \
+  \sensors nodes and processor nodes, it can collect data coming from sensors \
+  \it can run experiments on collected data."
+
+cluster SENSOR_BOARD
+description
+  "The sensor board is a custom made hardware board dedicated to collect data \
+  \from a set of heterogeneous sensors.\
+  \The sensor board communicates with a processor unit via an usb channel, \
+  \supporting a bidirectional serial data stream communication."
+
+cluster PROCESSOR_UNIT
+description
+  "The processor unit is a small size complete pc dedicated to collect data \
+  \from sensor board and other sensor sources, process data, and provide data \
+  \stream to the server nodes."
+
+cluster SERVER
+description
+  "The server node collect data coming from processor units, manage the data \ 
+  \store, process data according to the various experiments the scientists \ 
+  \ wants to run."
+
+cluster DATA_STORE
+description
+  "The data store passively stores processed data."
+
+cluster SCIENTIST
+description
+  "Scientists deploy experiments into server nodes, processor boards and \
+  \sensor boards which store processed data into data store. \
+  \Scientists run experiments on stored data."
+
+cluster SECURITY
+description
+  "Security manage security requirements, as identity, authenitcation and \
+  \authorization."
+end
+
+
