@@ -3,7 +3,6 @@ package ie.ucd.autograder.views;
 import ie.ucd.autograder.grading.Grade;
 import net.sourceforge.nattable.config.AbstractRegistryConfiguration;
 import net.sourceforge.nattable.config.CellConfigAttributes;
-import net.sourceforge.nattable.config.ConfigRegistry;
 import net.sourceforge.nattable.config.IConfigRegistry;
 import net.sourceforge.nattable.data.convert.DefaultDisplayConverter;
 import net.sourceforge.nattable.painter.cell.TextPainter;
@@ -30,7 +29,7 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
   private static final BorderStyle borderStyle = null;  
   private static final Font font = GUIHelper.DEFAULT_FONT;
 
-  public void configureRegistry(ConfigRegistry configRegistry) {
+  public void configureRegistry(IConfigRegistry configRegistry) {
     applyBlankStylings(configRegistry);
     applyTitleStylings(configRegistry);
     applyMeasureStylings(configRegistry);
@@ -71,7 +70,7 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, measureStyle, DisplayMode.NORMAL, AutoGraderDataProvider.MeasureString.MEASURE_CELL);
   }
 
-  private static void applyBasicStylings(ConfigRegistry config) {
+  private static void applyBasicStylings(IConfigRegistry config) {
     config.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, new PaddingDecorator(new TextPainter(), 1));
 
     Style cellStyle = new Style();
