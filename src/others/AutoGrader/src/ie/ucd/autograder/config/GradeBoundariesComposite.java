@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
@@ -21,14 +22,14 @@ import org.eclipse.swt.widgets.Label;
 public class GradeBoundariesComposite extends Composite {
 
   private final List<FieldEditor> fieldEditors;
-  private final List<Pair<BooleanFieldEditor,FloatFieldEditor>> fieldEditorPairs;
+  private final List<Pair<BooleanFieldEditor,List<FieldEditor>>> fieldEditorPairs;
   private final static int GRID_WIDTH = 6;
   
   
   public GradeBoundariesComposite(Composite parent, PreferencePage prefPage) {
     super(parent, SWT.NULL);
     fieldEditors = new ArrayList<FieldEditor>();
-    fieldEditorPairs = new ArrayList<Pair<BooleanFieldEditor,FloatFieldEditor>>();
+    fieldEditorPairs = new ArrayList<Pair<BooleanFieldEditor,List<FieldEditor>>>();
     
     GridLayout layout = new GridLayout();
     layout.marginWidth = 3;
@@ -40,7 +41,6 @@ public class GradeBoundariesComposite extends Composite {
   }
 
   private void createFormItems(PreferencePage prefPage) {
-    final GradeBoundariesComposite thisObj = this;
     for (Grade grade : Grade.values()) {
       Label label = new Label(this, SWT.NONE);
       label.setText("Grade " + grade.toString());
@@ -55,13 +55,19 @@ public class GradeBoundariesComposite extends Composite {
       gradeValue.setPage(prefPage);
       fieldEditors.add(gradeValue);
       gradeValue.setValidRange(0, 100);
+      ColorFieldEditor colourChooser = new ColorFieldEditor("gradeboundaries." + grade.name() + ".colour", "colour", this);
+      colourChooser.setPage(prefPage);
+      fieldEditors.add(colourChooser);
       
-      fieldEditorPairs.add(new Pair<BooleanFieldEditor,FloatFieldEditor>(enabled, gradeValue));
+      List<FieldEditor> enableList = new ArrayList<FieldEditor>(2);
+      enableList.add(gradeValue);
+      enableList.add(colourChooser);
+      fieldEditorPairs.add(new Pair<BooleanFieldEditor,List<FieldEditor>>(enabled, enableList));
       
-      gradeValue.setEnabled(enabled.getBooleanValue(), thisObj);
+      gradeValue.setEnabled(enabled.getBooleanValue(), this);
       enabled.setPropertyChangeListener(new IPropertyChangeListener() {
         public void propertyChange(PropertyChangeEvent event) {
-          gradeValue.setEnabled(enabled.getBooleanValue(), thisObj);
+          updateEnabledness();
         }
       });
       
@@ -98,8 +104,11 @@ public class GradeBoundariesComposite extends Composite {
   }
   
   public void updateEnabledness() {
-    for (Pair<BooleanFieldEditor,FloatFieldEditor> pair : fieldEditorPairs) {
-      pair.second.setEnabled(pair.first.getBooleanValue(), this);
+    for (Pair<BooleanFieldEditor,List<FieldEditor>> pair : fieldEditorPairs) {
+      boolean enabled = pair.getFirst().getBooleanValue();
+      for (FieldEditor editor : pair.getSecond()) {
+        editor.setEnabled(enabled, this);
+      }
     }
   }
   

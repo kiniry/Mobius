@@ -47,8 +47,6 @@ public class ProjectConfigurationPropertyPage extends PropertyPage {
 
   public boolean performOk() {
     boolean boundariesOk = boundaries.performOk(getPreferenceStore());
-    //TODO validate and store the values in the page's fields.
-    System.out.println("Form ok? " + boundariesOk);
     return boundariesOk;
   }
 
