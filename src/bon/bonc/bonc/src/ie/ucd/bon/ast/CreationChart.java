@@ -43,7 +43,7 @@ public class CreationChart extends InformalChart {
   public String getPart() { return part; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitCreationChart(this, name, entries, indexing, explanation, part, getLocation());
   }
 

@@ -34,7 +34,7 @@ public class EventEntry extends AstNode {
   public List<String> getInvolved() { return involved; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitEventEntry(this, name, involved, getLocation());
   }
 

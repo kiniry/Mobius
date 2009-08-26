@@ -43,7 +43,7 @@ public class ObjectGroup extends DynamicComponent {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitObjectGroup(this, nameless, name, components, comment, getLocation());
   }
 

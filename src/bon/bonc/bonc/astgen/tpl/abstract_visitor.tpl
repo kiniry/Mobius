@@ -11,7 +11,7 @@ import java.util.List;
 
 import ie.ucd.bon.source.SourceLocation;
 
-public abstract class AbstractVisitor implements IVisitor {
+public abstract class AbstractVisitor implements IVisitorWithAdditions {
 
 \normal_classes{
   public void visit\ClassName(\ClassName node,\members[,]{ \if_primitive{\if_enum{\ClassName.}{}\Membertype}{\MemberType} \memberName}, SourceLocation loc) {

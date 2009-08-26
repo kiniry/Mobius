@@ -40,7 +40,7 @@ public class Cluster extends StaticComponent {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitCluster(this, name, components, reused, comment, getLocation());
   }
 

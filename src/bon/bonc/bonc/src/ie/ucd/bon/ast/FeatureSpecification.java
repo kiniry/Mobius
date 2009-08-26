@@ -21,13 +21,13 @@ public class FeatureSpecification extends AstNode {
   private final RenameClause renaming;
 
   private final Modifier modifier;
-  private final List<String> featureNames;
+  private final List<FeatureName> featureNames;
   private final List<FeatureArgument> arguments;
   private final String comment;
 
 
   // === Constructors and Factories ===
-  protected FeatureSpecification(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
+  protected FeatureSpecification(Modifier modifier, List<FeatureName> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
     super(location);
     this.modifier = modifier; 
     this.featureNames = featureNames; assert featureNames != null;
@@ -39,14 +39,14 @@ public class FeatureSpecification extends AstNode {
     
   }
   
-  public static FeatureSpecification mk(Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
+  public static FeatureSpecification mk(Modifier modifier, List<FeatureName> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
     return new FeatureSpecification(modifier, featureNames, arguments, contracts, hasType, renaming, comment, location);
   }
 
   // === Accessors ===
 
   public Modifier getModifier() { return modifier; }
-  public List<String> getFeatureNames() { return featureNames; }
+  public List<FeatureName> getFeatureNames() { return featureNames; }
   public List<FeatureArgument> getArguments() { return arguments; }
   public ContractClause getContracts() { return contracts; }
   public HasType getHasType() { return hasType; }
@@ -54,7 +54,7 @@ public class FeatureSpecification extends AstNode {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitFeatureSpecification(this, modifier, featureNames, arguments, contracts, hasType, renaming, comment, getLocation());
   }
 
@@ -62,7 +62,7 @@ public class FeatureSpecification extends AstNode {
   @Override
   public FeatureSpecification clone() {
     Modifier newModifier = modifier;
-    List<String> newFeatureNames = featureNames;
+    List<FeatureName> newFeatureNames = featureNames;
     List<FeatureArgument> newArguments = arguments;
     ContractClause newContracts = contracts == null ? null : contracts.clone();
     HasType newHasType = hasType == null ? null : hasType.clone();

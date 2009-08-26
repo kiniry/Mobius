@@ -11,37 +11,37 @@ import ie.ucd.bon.source.SourceLocation;
 public class NamedIndirection extends IndirectionElement {
 
 
+  private final ClassName className;
 
-  private final String className;
   private final List<IndirectionElement> indirectionElements;
 
 
   // === Constructors and Factories ===
-  protected NamedIndirection(String className, List<IndirectionElement> indirectionElements, SourceLocation location) {
+  protected NamedIndirection(ClassName className, List<IndirectionElement> indirectionElements, SourceLocation location) {
     super(location);
     this.className = className; assert className != null;
     this.indirectionElements = indirectionElements; assert indirectionElements != null;
     
   }
   
-  public static NamedIndirection mk(String className, List<IndirectionElement> indirectionElements, SourceLocation location) {
+  public static NamedIndirection mk(ClassName className, List<IndirectionElement> indirectionElements, SourceLocation location) {
     return new NamedIndirection(className, indirectionElements, location);
   }
 
   // === Accessors ===
 
-  public String getClassName() { return className; }
+  public ClassName getClassName() { return className; }
   public List<IndirectionElement> getIndirectionElements() { return indirectionElements; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitNamedIndirection(this, className, indirectionElements, getLocation());
   }
 
   // === Others ===
   @Override
   public NamedIndirection clone() {
-    String newClassName = className;
+    ClassName newClassName = className == null ? null : className.clone();
     List<IndirectionElement> newIndirectionElements = indirectionElements;
     
     return NamedIndirection.mk(newClassName, newIndirectionElements, getLocation());

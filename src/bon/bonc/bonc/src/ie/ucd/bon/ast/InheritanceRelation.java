@@ -40,7 +40,7 @@ public class InheritanceRelation extends StaticRelation {
   public String getSemanticLabel() { return semanticLabel; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitInheritanceRelation(this, child, parent, multiplicity, semanticLabel, getLocation());
   }
 

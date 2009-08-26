@@ -18,7 +18,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   // === Constructors and Factories ===
   protected IndirectionFeatureList(List<FeatureName> featureNames, SourceLocation location) {
     super(location);
-    this.featureNames = featureNames; 
+    this.featureNames = featureNames; assert featureNames != null;
     
   }
   
@@ -31,7 +31,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   public List<FeatureName> getFeatureNames() { return featureNames; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitIndirectionFeatureList(this, featureNames, getLocation());
   }
 

@@ -63,11 +63,13 @@ public interface IVisitor {
 
   void visitFeatureArgument(FeatureArgument node, String identifier , Type type , SourceLocation loc);
 
-  void visitFeatureSpecification(FeatureSpecification node, FeatureSpecification.Modifier modifier , List<String> featureNames , List<FeatureArgument> arguments , ContractClause contracts , HasType hasType , RenameClause renaming , String comment , SourceLocation loc);
+  void visitFeatureName(FeatureName node, String name , SourceLocation loc);
+
+  void visitFeatureSpecification(FeatureSpecification node, FeatureSpecification.Modifier modifier , List<FeatureName> featureNames , List<FeatureArgument> arguments , ContractClause contracts , HasType hasType , RenameClause renaming , String comment , SourceLocation loc);
 
   void visitFormalGeneric(FormalGeneric node, String identifier , Type type , SourceLocation loc);
 
-  void visitGenericIndirection(GenericIndirection node, String indirectionElement , SourceLocation loc);
+  void visitGenericIndirection(GenericIndirection node, IndirectionElement indirectionElement , SourceLocation loc);
 
   void visitHasType(HasType node, TypeMark mark , Type type , SourceLocation loc);
 
@@ -91,7 +93,7 @@ public interface IVisitor {
 
   void visitMultiplicity(Multiplicity node, Integer multiplicity , SourceLocation loc);
 
-  void visitNamedIndirection(NamedIndirection node, String className , List<IndirectionElement> indirectionElements , SourceLocation loc);
+  void visitNamedIndirection(NamedIndirection node, ClassName className , List<IndirectionElement> indirectionElements , SourceLocation loc);
 
   void visitObjectGroup(ObjectGroup node, ObjectGroup.Nameless nameless , String name , List<DynamicComponent> components , String comment , SourceLocation loc);
 
@@ -107,7 +109,7 @@ public interface IVisitor {
 
   void visitRealConstant(RealConstant node, Double value , SourceLocation loc);
 
-  void visitRenameClause(RenameClause node, ClassName className , String featureName , SourceLocation loc);
+  void visitRenameClause(RenameClause node, ClassName className , FeatureName featureName , SourceLocation loc);
 
   void visitScenarioChart(ScenarioChart node, String systemName , List<ScenarioEntry> entries , Indexing indexing , String explanation , String part , SourceLocation loc);
 

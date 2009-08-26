@@ -34,7 +34,7 @@ public class CallExp extends Expression {
   public List<UnqualifiedCall> getCallChain() { return callChain; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitCallExp(this, qualifier, callChain, getLocation());
   }
 

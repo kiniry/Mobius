@@ -34,7 +34,7 @@ public class TypeRange extends VariableRange {
   public Type getType() { return type; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitTypeRange(this, identifiers, type, getLocation());
   }
 

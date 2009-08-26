@@ -34,7 +34,7 @@ public class StaticRef extends AstNode {
   public StaticRefPart getName() { return name; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitStaticRef(this, prefix, name, getLocation());
   }
 

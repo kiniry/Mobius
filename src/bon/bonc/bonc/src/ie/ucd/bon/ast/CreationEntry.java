@@ -34,7 +34,7 @@ public class CreationEntry extends AstNode {
   public List<String> getTypes() { return types; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitCreationEntry(this, name, types, getLocation());
   }
 

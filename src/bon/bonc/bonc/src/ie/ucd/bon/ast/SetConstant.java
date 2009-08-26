@@ -31,7 +31,7 @@ public class SetConstant extends ManifestConstant {
   public List<EnumerationElement> getEnumerations() { return enumerations; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitSetConstant(this, enumerations, getLocation());
   }
 

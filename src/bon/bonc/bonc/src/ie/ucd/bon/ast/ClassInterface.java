@@ -40,7 +40,7 @@ public class ClassInterface extends AstNode {
   public Indexing getIndexing() { return indexing; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClassInterface(this, features, parents, invariant, indexing, getLocation());
   }
 

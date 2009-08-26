@@ -34,7 +34,7 @@ public class IntegerInterval extends Interval {
   public Integer getStop() { return stop; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitIntegerInterval(this, start, stop, getLocation());
   }
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 import ie.ucd.bon.source.SourceLocation;
 
-public abstract class AbstractVisitor implements IVisitor {
+public abstract class AbstractVisitor implements IVisitorWithAdditions {
 
 
   public void visitBinaryExp(BinaryExp node, BinaryExp.Op op, Expression left, Expression right, SourceLocation loc) {
@@ -142,7 +142,12 @@ public abstract class AbstractVisitor implements IVisitor {
   }
   
 
-  public void visitFeatureSpecification(FeatureSpecification node, FeatureSpecification.Modifier modifier, List<String> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
+  public void visitFeatureName(FeatureName node, String name, SourceLocation loc) {
+    //Do nothing
+  }
+  
+
+  public void visitFeatureSpecification(FeatureSpecification node, FeatureSpecification.Modifier modifier, List<FeatureName> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
     //Do nothing
   }
   
@@ -152,7 +157,7 @@ public abstract class AbstractVisitor implements IVisitor {
   }
   
 
-  public void visitGenericIndirection(GenericIndirection node, String indirectionElement, SourceLocation loc) {
+  public void visitGenericIndirection(GenericIndirection node, IndirectionElement indirectionElement, SourceLocation loc) {
     //Do nothing
   }
   
@@ -212,7 +217,7 @@ public abstract class AbstractVisitor implements IVisitor {
   }
   
 
-  public void visitNamedIndirection(NamedIndirection node, String className, List<IndirectionElement> indirectionElements, SourceLocation loc) {
+  public void visitNamedIndirection(NamedIndirection node, ClassName className, List<IndirectionElement> indirectionElements, SourceLocation loc) {
     //Do nothing
   }
   
@@ -252,7 +257,7 @@ public abstract class AbstractVisitor implements IVisitor {
   }
   
 
-  public void visitRenameClause(RenameClause node, ClassName className, String featureName, SourceLocation loc) {
+  public void visitRenameClause(RenameClause node, ClassName className, FeatureName featureName, SourceLocation loc) {
     //Do nothing
   }
   

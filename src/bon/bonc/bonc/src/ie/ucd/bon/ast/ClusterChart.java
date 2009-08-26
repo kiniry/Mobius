@@ -49,7 +49,7 @@ public class ClusterChart extends InformalChart {
   public String getPart() { return part; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClusterChart(this, name, isSystem, classes, clusters, indexing, explanation, part, getLocation());
   }
 

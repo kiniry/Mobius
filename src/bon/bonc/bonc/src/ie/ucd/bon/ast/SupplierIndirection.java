@@ -34,7 +34,7 @@ public class SupplierIndirection extends ClientEntity {
   public GenericIndirection getGenericIndirection() { return genericIndirection; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitSupplierIndirection(this, indirectionFeaturePart, genericIndirection, getLocation());
   }
 

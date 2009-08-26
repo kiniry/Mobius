@@ -34,7 +34,7 @@ public class UnqualifiedCall extends AstNode {
   public List<Expression> getArgs() { return args; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitUnqualifiedCall(this, id, args, getLocation());
   }
 

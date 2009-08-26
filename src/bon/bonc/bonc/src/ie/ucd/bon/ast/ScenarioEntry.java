@@ -34,7 +34,7 @@ public class ScenarioEntry extends AstNode {
   public String getDescription() { return description; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitScenarioEntry(this, name, description, getLocation());
   }
 

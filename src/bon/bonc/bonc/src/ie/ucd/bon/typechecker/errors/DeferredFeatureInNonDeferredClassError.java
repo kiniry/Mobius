@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon.typechecker.errors;
 
+import ie.ucd.bon.ast.FeatureName;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.util.StringUtil;
 
@@ -26,7 +27,7 @@ public class DeferredFeatureInNonDeferredClassError extends TypeCheckingError {
   }
   
   public DeferredFeatureInNonDeferredClassError(SourceLocation loc,
-      List<String> featureNames, String className) {
+      List<FeatureName> featureNames, String className) {
     super(loc);
     
     if (featureNames.size() == 1) {

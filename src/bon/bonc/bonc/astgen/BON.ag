@@ -46,21 +46,22 @@ Multiplicity = Integer! multiplicity;
 ClientEntity :> Infix, Prefix, SupplierIndirection, ParentIndirection;
 SupplierIndirection = IndirectionFeaturePart indirectionFeaturePart, GenericIndirection! genericIndirection;
 IndirectionFeaturePart :> FeatureName, IndirectionFeatureList;
-IndirectionFeatureList = List<FeatureName> featureNames;
+IndirectionFeatureList = List<FeatureName>! featureNames;
+FeatureName = String! name;
 ParentIndirection = GenericIndirection! genericIndirection;
-GenericIndirection = String! indirectionElement;
-NamedIndirection = String! className, List<IndirectionElement>! indirectionElements; 
-IndirectionElement :> NamedIndirection, ClassName;
+GenericIndirection = IndirectionElement! indirectionElement;
+NamedIndirection = ClassName! className, List<IndirectionElement>! indirectionElements; 
+IndirectionElement :> NamedIndirection, ClassName, CompactedIndirectionElement;
 TypeMark = enum(Mark: NONE, HASTYPE, AGGREGATE, SHAREDMARK) mark, Integer multiplicity;
 ClassName = String! name;
 ClassInterface = List<Feature>! features, List<Type>! parents, List<Expression> invariant, Indexing indexing;  
 Feature = List<FeatureSpecification>! featureSpecifications, List<ClassName> selectiveExport, String comment;
-FeatureSpecification = enum(Modifier: NONE, DEFERRED, EFFECTIVE, REDEFINED) modifier, List<String>! featureNames, List<FeatureArgument>! arguments, ContractClause! contracts, HasType hasType, RenameClause renaming, String comment;
+FeatureSpecification = enum(Modifier: NONE, DEFERRED, EFFECTIVE, REDEFINED) modifier, List<FeatureName>! featureNames, List<FeatureArgument>! arguments, ContractClause! contracts, HasType hasType, RenameClause renaming, String comment;
 HasType = TypeMark! mark, Type! type;
 ContractClause = List<Expression> preconditions, List<Expression> postconditions;
 
 
-RenameClause = ClassName! className, String! featureName;
+RenameClause = ClassName! className, FeatureName! featureName;
 
 FeatureArgument = String identifier, Type! type;
 FormalGeneric = String! identifier, Type type;

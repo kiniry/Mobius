@@ -136,8 +136,8 @@ system_chart returns [ClusterChart sc]
 ;
 
 explanation returns [String explanation] :
-  e='explanation' manifest_textblock
-  { $explanation = $e.text; }
+  e='explanation' m=manifest_textblock
+  { $explanation = $m.text; }
  |
   e='explanation' 
   { addParseProblem(new MissingElementParseError(getSourceLocation($e), "explanation text", "after 'explanation'", false)); }
@@ -397,13 +397,22 @@ class_name returns [ClassName name] :
 
 /**********************************************/
 
-event_chart returns [EventChart ec] :
+event_chart returns [EventChart ec] 
+@init { boolean incoming = false; boolean outgoing = false; Indexing indexing = null;
+        String explanation = null; String part = null; List<EventEntry> eventEntries = null; }
+:
   e='event_chart' system_name 
-  ('incoming' | 'outgoing')?
-  (indexing)?
-  (explanation)?
-  (part)?
-  (event_entries)?
+  (  'incoming' { incoming = true; } 
+   | 'outgoing' { outgoing = true; }
+  )?
+  (indexing { indexing = $indexing.indexing; })?
+  (explanation { explanation = $explanation.explanation; } )?
+  (part { part = $part.part; } )?
+  ( ee=event_entries
+    { eventEntries = $ee.entries; }
+   |
+    { eventEntries = createList(); }
+  )
   'end'
 ;
              
@@ -627,51 +636,72 @@ client_entity_list returns [List<ClientEntity> entities] :
 client_entity returns [ClientEntity entity] :
    prefix
  | infix
- | supplier_indirection 
+ | supplier_indirection
+   { $entity = $supplier_indirection.indirection; } 
  | parent_indirection 
+   { $entity = $parent_indirection.indirection; }
 ;
                
-supplier_indirection  :  
-  (indirection_feature_part ':')? generic_indirection 
+supplier_indirection returns [SupplierIndirection indirection] 
+@init{IndirectionFeaturePart part = null; Token start = null; }
+:  
+  (ifp=indirection_feature_part { start = $ifp.start; } ':')? 
+  gi=generic_indirection 
+  { if (start==null) start=$gi.start; }
+  { indirection = SupplierIndirection.mk(part, $gi.indirection,getSLoc(start,$gi.stop)); }  
 ;
                       
-indirection_feature_part returns :
+indirection_feature_part returns [IndirectionFeaturePart part] :
    feature_name 
+   { $part = $feature_name.name; }
  | indirection_feature_list 
+   { $part = $indirection_feature_list.list; }
 ;	
                           
-indirection_feature_list  :
-  '(' feature_name_list ')' 
+indirection_feature_list returns [IndirectionFeatureList list] :
+  s='(' fnl=feature_name_list e=')'
+  { $list = IndirectionFeatureList.mk($fnl.list,getSLoc($s,$e)); } 
 ;
                           
-parent_indirection  :  
-  '->' generic_indirection
+parent_indirection returns [ParentIndirection indirection] :  
+  '->' gi=generic_indirection
+  { $indirection = ParentIndirection.mk($gi.indirection,getSLoc($gi.start,$gi.stop)); }
 ;
 
 /**********************************************/
 
-generic_indirection  :
+generic_indirection returns [GenericIndirection indirection] :
 //  formal_generic_name 
                        //NB - changed the below... both are IDENTIFIERs
 // | 
-    indirection_element
+    ie=indirection_element
+    { $indirection = GenericIndirection.mk($ie.el,getSLoc($ie.start,$ie.stop)); }
 ;
                      
-named_indirection :
-   class_name '[' indirection_list ']'
+named_indirection returns [NamedIndirection indirection] :
+   cn=class_name '[' il=indirection_list e=']'
+   { $indirection = NamedIndirection.mk($cn.name, $il.list, getSLoc($cn.start,$e)); }
  |
    s='[' indirection_list ']'  
    { addParseProblem(new MissingElementParseError(getSLoc($s), "class name", "before indirection list", true)); }
 ;
                    
-indirection_list  :
-  indirection_element (',' indirection_element)* 
+indirection_list returns [List<IndirectionElement> list] :
+  { $list = createList(); }
+  i1=indirection_element
+  { $list.add($i1.el); } 
+  (',' i=indirection_element
+       { $list.add($i.el); }
+  )* 
 ;
                   
-indirection_element  :   
-   '...'
+indirection_element returns [IndirectionElement el] :   
+   t='...'
+   { $el = CompactedIndirectionElementImpl.mk(getSLoc($t)); }
  | named_indirection 
+   { $el = $named_indirection.indirection; }
  | class_name
+   { $el = $class_name.name; }
 ;
 
                      
@@ -875,7 +905,7 @@ selective_export returns [List<ClassName> exports] :
   { $exports = $cnl.list; }  
 ;
                   
-feature_name_list returns [List<String> list] :
+feature_name_list returns [List<FeatureName> list] :
   { $list = createList(); }
   f1=feature_name 
   { $list.add($f1.name); }
@@ -884,9 +914,9 @@ feature_name_list returns [List<String> list] :
   )*
 ;
                    
-feature_name returns [String name] :
+feature_name returns [FeatureName name] :
    i=IDENTIFIER
-   { $name = $i.text; }
+   { $name = FeatureName.mk($i.text, getSLoc($i)); }
  | prefix 
  | infix 
 ;

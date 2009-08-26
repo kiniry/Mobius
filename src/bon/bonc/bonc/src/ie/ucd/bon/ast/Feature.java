@@ -37,7 +37,7 @@ public class Feature extends AstNode {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitFeature(this, featureSpecifications, selectiveExport, comment, getLocation());
   }
 

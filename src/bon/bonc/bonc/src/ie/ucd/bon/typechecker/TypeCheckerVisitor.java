@@ -1,6 +1,7 @@
 package ie.ucd.bon.typechecker;
 
-import ie.ucd.bon.ast.AbstractVisitor;
+import static ie.ucd.bon.ast.FeatureSpecification.Modifier.DEFERRED;
+import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.BONType;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
@@ -18,10 +19,11 @@ import ie.ucd.bon.ast.ContractClause;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureName;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.HasType;
-import ie.ucd.bon.ast.IVisitor;
+import ie.ucd.bon.ast.IVisitorWithAdditions;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.InheritanceRelation;
 import ie.ucd.bon.ast.IntegerConstant;
@@ -55,12 +57,10 @@ import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.TypeMismatchError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
 
-import static ie.ucd.bon.ast.FeatureSpecification.Modifier.DEFERRED;
-
 import java.util.Collection;
 import java.util.List;
 
-public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
+public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions {
 
   private final BONST st;
   private final VisitorContext context;
@@ -188,7 +188,7 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
 
   @Override
   public void visitFeatureSpecification(FeatureSpecification node,
-      Modifier modifier, List<String> featureNames,
+      Modifier modifier, List<FeatureName> featureNames,
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
 
@@ -196,18 +196,18 @@ public class TypeCheckerVisitor extends AbstractVisitor implements IVisitor {
       problems.addProblem(new DeferredFeatureInNonDeferredClassError(loc, featureNames, context.clazz.getName().getName()));
     }
     
-    for (String name : featureNames) {
+    for (FeatureName name : featureNames) {
       //TODO reference against table produced with Joe and Alex.
       switch(modifier) {
       case DEFERRED:
       case NONE:
-        checkParentFeatureCompatible(node, name, false, false, false);
+        checkParentFeatureCompatible(node, name.getName(), false, false, false);
         break;
       case EFFECTIVE:
-        checkParentFeatureCompatible(node, name, true, true, false);
+        checkParentFeatureCompatible(node, name.getName(), true, true, false);
         break;
       case REDEFINED:
-        checkParentFeatureCompatible(node, name, true, false, true);
+        checkParentFeatureCompatible(node, name.getName(), true, false, true);
         break;
       }
     }

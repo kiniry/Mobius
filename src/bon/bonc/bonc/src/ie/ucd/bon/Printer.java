@@ -12,11 +12,13 @@ import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.ClassDictionaryGenerator;
 import ie.ucd.bon.printer.HTMLLinkGenerator;
+import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.StringUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -95,17 +97,6 @@ public final class Printer {
     }
   }
 
-  public static Reader getPrintingOptionTemplateFileReader(final Print p) {
-    switch(p) {
-    case TXT:
-      return FileUtil.getResourceReader("templates/BONPlainText.stg");
-    case HTML:
-      return FileUtil.getResourceReader("templates/BONXHTML.stg"); 
-    default:
-      return null; //Shouldn't happen
-    }
-  }
-
   public static String getExtraPartsForPrintingOption(final Print p, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
     switch(p) {
     case HTML:
@@ -129,26 +120,15 @@ public final class Printer {
     }
   }
 
-  private static String printUsingTemplateToString(final ParseResult parseResult, final Reader stFile, final Print printingOption, final PrintingTracker printingTracker) throws RecognitionException {
-//    try {
-//      StringTemplateGroup templates = new StringTemplateGroup(stFile);
-//      stFile.close();
-      //TODO fix!
+  private static String doPrintToString(final ParseResult parseResult, final Print printingOption, final PrintingTracker printingTracker) throws RecognitionException {
+    switch (printingOption) {
+    case TXT:
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      parseResult.getParse().accept(new PrettyPrintVisitor(new PrintStream(baos)));
+      return baos.toString();
+    default:
       return "";
-//      CommonTree t = (CommonTree)parseResult.getParse().getTree(); //Get input tree
-//      CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
-//      nodes.setTokenStream(parseResult.getTokens());
-//
-//      walker.initialise(nodes, templates, printingTracker, printingOption); //Reset walker, provide inputs
-//
-//      BONSTTreeWalker.prog_return r2 = walker.prog();  //Walk
-//      StringTemplate output = (StringTemplate)r2.getTemplate();  //Get output
-//      return output.toString();
-
-//    } catch (IOException ioe) {
-//      System.out.println("An error occurred whilst reading templateFile " + stFile);
-//      return null;
-//    }
+    }
   }
 
   public static String printGeneratedClassDictionaryToString(final ParsingTracker tracker) {
@@ -272,22 +252,11 @@ public final class Printer {
   }
 
   public static String printToString(final ParseResult parseResult, final Print printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
-    //System.out.println("Printing to string...");
-
     if (printingOption == Print.DOT) {
       return printDotToString(parseResult);
-    }
-
-    //Normal template-based printing
-    String outputText = null;
-    Reader templateFile = getPrintingOptionTemplateFileReader(printingOption);
-    if (templateFile != null) {
-      outputText = printUsingTemplateToString(parseResult, templateFile, printingOption, printingTracker);
     } else {
-      System.out.println("Sorry, printing option  " + printingOption + " not yet implemented");
+      return doPrintToString(parseResult, printingOption, printingTracker);
     }
-
-    return outputText;
   }
 
 }

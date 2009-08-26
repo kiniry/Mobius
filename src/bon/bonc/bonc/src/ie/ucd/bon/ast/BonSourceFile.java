@@ -34,7 +34,7 @@ public class BonSourceFile extends AstNode {
   public Indexing getIndexing() { return indexing; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitBonSourceFile(this, bonSpecification, indexing, getLocation());
   }
 

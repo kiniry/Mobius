@@ -31,7 +31,7 @@ public class IntegerConstant extends ManifestConstant {
   public Integer getValue() { return value; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitIntegerConstant(this, value, getLocation());
   }
 

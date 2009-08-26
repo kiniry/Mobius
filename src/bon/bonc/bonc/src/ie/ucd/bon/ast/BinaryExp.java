@@ -59,7 +59,7 @@ public class BinaryExp extends Expression {
   public Expression getRight() { return right; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitBinaryExp(this, op, left, right, getLocation());
   }
 

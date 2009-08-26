@@ -37,7 +37,7 @@ public class \ClassName extends \Basename {
   public \if_primitive{\Membertype}{\MemberType} get\MemberName() { return \memberName; }}
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visit\ClassName(this,\members[,]{ \memberName}, getLocation());
   }
 

@@ -43,7 +43,7 @@ public class Quantification extends Expression {
   public Expression getProposition() { return proposition; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitQuantification(this, quantifier, variableRanges, restriction, proposition, getLocation());
   }
 

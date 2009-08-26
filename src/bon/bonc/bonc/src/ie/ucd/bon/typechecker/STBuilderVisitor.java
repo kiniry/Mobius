@@ -1,13 +1,8 @@
 package ie.ucd.bon.typechecker;
 
-import ie.ucd.bon.ast.AbstractVisitor;
+import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.AstNode;
-import ie.ucd.bon.ast.BONType;
-import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
-import ie.ucd.bon.ast.BooleanConstant;
-import ie.ucd.bon.ast.CallExp;
-import ie.ucd.bon.ast.CharacterConstant;
 import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.ClassEntry;
 import ie.ucd.bon.ast.ClassInterface;
@@ -22,15 +17,12 @@ import ie.ucd.bon.ast.ContractClause;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureName;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.HasType;
-import ie.ucd.bon.ast.IVisitor;
+import ie.ucd.bon.ast.IVisitorWithAdditions;
 import ie.ucd.bon.ast.Indexing;
-import ie.ucd.bon.ast.IntegerConstant;
-import ie.ucd.bon.ast.KeywordConstant;
-import ie.ucd.bon.ast.Quantification;
-import ie.ucd.bon.ast.RealConstant;
 import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
@@ -38,14 +30,7 @@ import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.StaticRef;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
-import ie.ucd.bon.ast.UnaryExp;
-import ie.ucd.bon.ast.UnqualifiedCall;
-import ie.ucd.bon.ast.VariableRange;
-import ie.ucd.bon.ast.BinaryExp.Op;
 import ie.ucd.bon.ast.Clazz.Mod;
-import ie.ucd.bon.ast.FeatureSpecification.Modifier;
-import ie.ucd.bon.ast.KeywordConstant.Constant;
-import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
@@ -60,7 +45,7 @@ import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
 import java.util.List;
 
-public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
+public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions {
 
   private final BONST st;
   private final Problems problems;
@@ -195,16 +180,16 @@ public class STBuilderVisitor extends AbstractVisitor implements IVisitor {
   
   @Override
   public void visitFeatureSpecification(FeatureSpecification node,
-      Modifier modifier, List<String> featureNames,
+      FeatureSpecification.Modifier modifier, List<FeatureName> featureNames,
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
 
-    for (String name : featureNames) {
-      FeatureSpecification other = st.featuresMap.get(context.clazz, name);
+    for (FeatureName name : featureNames) {
+      FeatureSpecification other = st.featuresMap.get(context.clazz, name.getName());
       if (other == null) {
-        st.featuresMap.put(context.clazz, name, node);
+        st.featuresMap.put(context.clazz, name.getName(), node);
       } else {
-        problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName().getName(), name, other));
+        problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName().getName(), name.getName(), other));
       }
     }
     

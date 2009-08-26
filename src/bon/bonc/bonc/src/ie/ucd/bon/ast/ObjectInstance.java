@@ -34,7 +34,7 @@ public class ObjectInstance extends DynamicComponent {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitObjectInstance(this, name, comment, getLocation());
   }
 

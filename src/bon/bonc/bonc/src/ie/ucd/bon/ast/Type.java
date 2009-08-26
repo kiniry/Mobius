@@ -37,7 +37,7 @@ public class Type extends AstNode {
   public String getFullString() { return fullString; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitType(this, identifier, actualGenerics, fullString, getLocation());
   }
 

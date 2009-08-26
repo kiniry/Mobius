@@ -1,6 +1,6 @@
 package ie.ucd.bon.printer;
 
-import ie.ucd.bon.ast.AbstractVisitor;
+import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
@@ -19,16 +19,19 @@ import ie.ucd.bon.ast.ClientEntityList;
 import ie.ucd.bon.ast.ClientRelation;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.ClusterEntry;
+import ie.ucd.bon.ast.CompactedIndirectionElement;
 import ie.ucd.bon.ast.DictionaryEntry;
 import ie.ucd.bon.ast.EnumerationElement;
+import ie.ucd.bon.ast.EventChart;
+import ie.ucd.bon.ast.EventEntry;
 import ie.ucd.bon.ast.Expression;
+import ie.ucd.bon.ast.FeatureName;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.GenericIndirection;
 import ie.ucd.bon.ast.HasType;
-import ie.ucd.bon.ast.IVisitor;
+import ie.ucd.bon.ast.IVisitorWithAdditions;
 import ie.ucd.bon.ast.IndexClause;
 import ie.ucd.bon.ast.Indexing;
-import ie.ucd.bon.ast.IndirectionElement;
 import ie.ucd.bon.ast.IndirectionFeaturePart;
 import ie.ucd.bon.ast.InheritanceRelation;
 import ie.ucd.bon.ast.IntegerConstant;
@@ -37,11 +40,15 @@ import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.LabelledAction;
 import ie.ucd.bon.ast.MemberRange;
 import ie.ucd.bon.ast.Multiplicity;
-import ie.ucd.bon.ast.NamedIndirection;
 import ie.ucd.bon.ast.Quantification;
 import ie.ucd.bon.ast.RealConstant;
+import ie.ucd.bon.ast.ScenarioChart;
+import ie.ucd.bon.ast.ScenarioDescription;
+import ie.ucd.bon.ast.ScenarioEntry;
 import ie.ucd.bon.ast.SetConstant;
 import ie.ucd.bon.ast.SpecificationElement;
+import ie.ucd.bon.ast.StaticComponent;
+import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.StaticRef;
 import ie.ucd.bon.ast.StringConstant;
 import ie.ucd.bon.ast.SupplierIndirection;
@@ -63,7 +70,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
+public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions {
 
   private final TextPrinter tp;
 
@@ -78,9 +85,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
       indexing.accept(this);
       tp.printLine();
     }
-    for (SpecificationElement spec : bonSpecification) {
-      spec.accept(this);
-    }
+    visitAllPrintingLines(bonSpecification, 2, false);
   }
 
   @Override
@@ -189,27 +194,40 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     if (!queries.isEmpty()) {
       tp.printLine("query");
       tp.increaseIndentation();
-      for (String query : queries) {
+      
+      for (Iterator<String> it = queries.iterator(); it.hasNext(); ) {
         tp.startLine();
-        tp.printLine(query);
+        tp.print(it.next());
+        if (it.hasNext()) {
+          tp.print(',');
+        }
+        tp.printLine();        
       }
       tp.decreaseIndentation();
     }
     if (!commands.isEmpty()) {
       tp.printLine("command");
       tp.increaseIndentation();
-      for (String command : commands) {
+      for (Iterator<String> it = commands.iterator(); it.hasNext(); ) {
         tp.startLine();
-        tp.printLine(command);
+        tp.print(it.next());
+        if (it.hasNext()) {
+          tp.print(',');
+        }
+        tp.printLine();        
       }
       tp.decreaseIndentation();
     }
     if (!constraints.isEmpty()) {
       tp.printLine("constraint");
       tp.increaseIndentation();
-      for (String constraint : constraints) {
+      for (Iterator<String> it = constraints.iterator(); it.hasNext(); ) {
         tp.startLine();
-        tp.printLine(constraint);
+        tp.print(it.next());
+        if (it.hasNext()) {
+          tp.print(',');
+        }
+        tp.printLine();        
       }
       tp.decreaseIndentation();
     }
@@ -224,9 +242,9 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
       Indexing indexing, String explanation, String part, SourceLocation loc) {
     tp.startLine();
     if (isSystem) {
-      tp.printLine("system_chart ");
+      tp.print("system_chart ");
     } else {
-      tp.printLine("cluster_chart ");
+      tp.print("cluster_chart ");
     }
     tp.printLine(name);
     tp.increaseIndentation();
@@ -278,6 +296,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     tp.startLine();
     tp.print("class ");
     tp.print(name);
+    tp.printSpace();
     tp.print(description);
     tp.printLine();
   }
@@ -287,6 +306,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     tp.startLine();
     tp.print("cluster ");
     tp.print(name);
+    tp.printSpace();
     tp.print(description);
     tp.printLine();
   }
@@ -407,7 +427,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
       String description, SourceLocation loc) {
     tp.print(label);
     tp.printSpace();
-    tp.print(description);
+    tp.printLine(description);
   }
 
   @Override
@@ -434,6 +454,124 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     tp.print(' ');
     type.accept(this);
   }
+
+  @Override
+  public void visitCompactedIndirectionElement(
+      CompactedIndirectionElement node, SourceLocation loc) {
+    tp.print("...");
+  }
+  
+  
+
+  @Override
+  public void visitScenarioChart(ScenarioChart node, String systemName,
+      List<ScenarioEntry> entries, Indexing indexing, String explanation,
+      String part, SourceLocation loc) {
+    tp.startLine();
+    tp.print("scenario_chart ");
+    tp.printLine(systemName);
+    
+    tp.increaseIndentation();
+    visitNodeIfNonNull(indexing);
+    printExplanation(explanation);
+    printPart(part);
+    visitAll(entries);
+    tp.decreaseIndentation();
+    
+    tp.startLine();
+    tp.printLine("end");
+  }
+  
+  @Override
+  public void visitScenarioEntry(ScenarioEntry node, String name,
+      String description, SourceLocation loc) {
+    tp.startLine();
+    tp.print("scenario ");
+    tp.print(name);
+    printDescription(description);
+    tp.printLine();
+  }
+  
+  @Override
+  public void visitScenarioDescription(ScenarioDescription node, String name,
+      List<LabelledAction> actions, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("scenario ");
+    tp.print(name);
+    tp.printSpace();
+    printComment(comment);
+    if (comment == null) {
+      tp.printLine();
+    }
+    tp.startLine();
+    tp.printLine("action");
+    tp.increaseIndentation();
+    visitAll(actions);
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.print("end");
+  }
+
+  @Override
+  public void visitEventChart(EventChart node, String systemName,
+      Boolean incoming, Boolean outgoing, List<EventEntry> entries,
+      Indexing indexing, String explanation, String part, SourceLocation loc) {
+    tp.startLine();
+    tp.print("event_chart ");
+    tp.print(systemName);
+    if (incoming) {
+      tp.print(" incoming");
+    }
+    if (outgoing) {
+      tp.print(" outgoing");
+    }
+    tp.printLine();
+
+    tp.increaseIndentation();
+    visitNodeIfNonNull(indexing);
+    printExplanation(explanation);
+    printPart(part);
+    visitAll(entries);
+    tp.decreaseIndentation();
+    
+    tp.startLine();
+    tp.printLine("end");
+  }
+
+  @Override
+  public void visitEventEntry(EventEntry node, String name, List<String> involved, SourceLocation loc) {
+    tp.startLine();
+    tp.print("event ");
+    tp.print(name);
+    tp.printSpace();
+    tp.print(" involves ");
+    tp.printLine(StringUtil.appendWithSeparator(involved, ", "));
+  }
+
+  @Override
+  public void visitStaticDiagram(StaticDiagram node, List<StaticComponent> components, String extendedId, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("static_diagram ");
+    if (extendedId != null) {
+      tp.printSpace();
+      tp.print(extendedId);
+    }
+    printCommentOrReturn(comment);
+    tp.startLine();
+    tp.printLine("component");
+    tp.increaseIndentation();
+    visitAll(components);
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.printLine("end");    
+  }
+
+  @Override
+  public void visitFeatureName(FeatureName node, String name, SourceLocation loc) {
+    tp.print(name);
+  }
+  
+  
 
   @Override
   public void visitCharacterConstant(CharacterConstant node, Character value,
@@ -481,9 +619,19 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
     }
   }
 
-  protected void printComment(String commentText) {
-    if (commentText != null) {
-      tp.printLine("--" + commentText);
+  protected void printCommentOrReturn(String comment) {
+    if (comment == null) {
+      tp.printLine();
+    } else {
+      tp.printLine(" -- ");
+      tp.printLine(comment);
+    }
+  }
+  
+  protected void printComment(String comment) {
+    if (comment != null) {
+      tp.print(" -- ");
+      tp.printLine(comment);
     }
   }
 
@@ -600,6 +748,15 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
       }
     }
   }
+  
+  public void visitAllPrintingLines(Collection<? extends AstNode> nodes, int numberOfLines, boolean linesAtEnd) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+      it.next().accept(this);
+      if (it.hasNext() || linesAtEnd) {
+        tp.printLines(numberOfLines);
+      }
+    }
+  }
 
   protected void printExplanation(String explanation) {
     if (explanation != null) {
@@ -634,4 +791,7 @@ public class PrettyPrintVisitor extends AbstractVisitor implements IVisitor {
       tp.print(label);
     }
   }
+  
+  
+  
 }

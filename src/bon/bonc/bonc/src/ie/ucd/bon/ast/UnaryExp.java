@@ -40,7 +40,7 @@ public class UnaryExp extends Expression {
   public Expression getExpression() { return expression; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitUnaryExp(this, op, expression, getLocation());
   }
 

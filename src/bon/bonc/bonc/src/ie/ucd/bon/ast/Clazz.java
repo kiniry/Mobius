@@ -57,7 +57,7 @@ public class Clazz extends StaticComponent {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClazz(this, name, generics, mod, classInterface, reused, persistent, interfaced, comment, getLocation());
   }
 

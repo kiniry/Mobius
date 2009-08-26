@@ -31,7 +31,7 @@ public class ClassName extends IndirectionElement {
   public String getName() { return name; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClassName(this, name, getLocation());
   }
 

@@ -31,7 +31,7 @@ public class ClientEntityList extends ClientEntityExpression {
   public List<ClientEntity> getEntities() { return entities; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClientEntityList(this, entities, getLocation());
   }
 

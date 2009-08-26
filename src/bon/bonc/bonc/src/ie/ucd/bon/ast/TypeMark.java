@@ -39,7 +39,7 @@ public class TypeMark extends AstNode {
   public Integer getMultiplicity() { return multiplicity; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitTypeMark(this, mark, multiplicity, getLocation());
   }
 

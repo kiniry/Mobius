@@ -43,7 +43,7 @@ public class ClientRelation extends StaticRelation {
   public String getSemanticLabel() { return semanticLabel; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClientRelation(this, client, supplier, clientEntities, typeMark, semanticLabel, getLocation());
   }
 

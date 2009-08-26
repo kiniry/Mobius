@@ -31,7 +31,7 @@ public class Multiplicity extends ClientEntityExpression {
   public Integer getMultiplicity() { return multiplicity; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitMultiplicity(this, multiplicity, getLocation());
   }
 

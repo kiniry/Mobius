@@ -31,7 +31,7 @@ public class StringConstant extends ManifestConstant {
   public String getValue() { return value; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitStringConstant(this, value, getLocation());
   }
 

@@ -31,7 +31,7 @@ public class ParentIndirection extends ClientEntity {
   public GenericIndirection getGenericIndirection() { return genericIndirection; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitParentIndirection(this, genericIndirection, getLocation());
   }
 

@@ -31,7 +31,7 @@ public class Indexing extends AstNode {
   public List<IndexClause> getIndexes() { return indexes; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitIndexing(this, indexes, getLocation());
   }
 

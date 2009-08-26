@@ -43,7 +43,7 @@ public class ClassDictionary extends SpecificationElement {
   public String getPart() { return part; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClassDictionary(this, systemName, entries, indexing, explanation, part, getLocation());
   }
 

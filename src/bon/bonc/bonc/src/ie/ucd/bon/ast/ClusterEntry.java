@@ -34,7 +34,7 @@ public class ClusterEntry extends AstNode {
   public String getDescription() { return description; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClusterEntry(this, name, description, getLocation());
   }
 

@@ -34,7 +34,7 @@ public class HasType extends AstNode {
   public Type getType() { return type; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitHasType(this, mark, type, getLocation());
   }
 

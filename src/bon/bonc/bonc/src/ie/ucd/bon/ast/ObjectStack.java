@@ -34,7 +34,7 @@ public class ObjectStack extends DynamicComponent {
   public String getComment() { return comment; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitObjectStack(this, name, comment, getLocation());
   }
 

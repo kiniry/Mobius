@@ -34,7 +34,7 @@ public class ObjectName extends AstNode {
   public String getExtendedId() { return extendedId; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitObjectName(this, className, extendedId, getLocation());
   }
 

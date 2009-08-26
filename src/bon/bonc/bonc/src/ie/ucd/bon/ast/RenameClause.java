@@ -12,29 +12,29 @@ public class RenameClause extends AstNode {
 
 
   private final ClassName className;
+  private final FeatureName featureName;
 
-  private final String featureName;
 
 
   // === Constructors and Factories ===
-  protected RenameClause(ClassName className, String featureName, SourceLocation location) {
+  protected RenameClause(ClassName className, FeatureName featureName, SourceLocation location) {
     super(location);
     this.className = className; assert className != null;
     this.featureName = featureName; assert featureName != null;
     
   }
   
-  public static RenameClause mk(ClassName className, String featureName, SourceLocation location) {
+  public static RenameClause mk(ClassName className, FeatureName featureName, SourceLocation location) {
     return new RenameClause(className, featureName, location);
   }
 
   // === Accessors ===
 
   public ClassName getClassName() { return className; }
-  public String getFeatureName() { return featureName; }
+  public FeatureName getFeatureName() { return featureName; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitRenameClause(this, className, featureName, getLocation());
   }
 
@@ -42,7 +42,7 @@ public class RenameClause extends AstNode {
   @Override
   public RenameClause clone() {
     ClassName newClassName = className == null ? null : className.clone();
-    String newFeatureName = featureName;
+    FeatureName newFeatureName = featureName == null ? null : featureName.clone();
     
     return RenameClause.mk(newClassName, newFeatureName, getLocation());
   }

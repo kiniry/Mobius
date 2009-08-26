@@ -37,7 +37,7 @@ public class DictionaryEntry extends AstNode {
   public String getDescription() { return description; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitDictionaryEntry(this, name, clusters, description, getLocation());
   }
 

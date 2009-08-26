@@ -49,7 +49,7 @@ public class EventChart extends InformalChart {
   public String getPart() { return part; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitEventChart(this, systemName, incoming, outgoing, entries, indexing, explanation, part, getLocation());
   }
 

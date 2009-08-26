@@ -31,7 +31,7 @@ public class RealConstant extends ManifestConstant {
   public Double getValue() { return value; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitRealConstant(this, value, getLocation());
   }
 

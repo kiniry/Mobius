@@ -14,6 +14,6 @@ public abstract class AstNode {
     return location;
   }
   
-  public abstract void accept(IVisitor visitor);
+  public abstract void accept(IVisitorWithAdditions visitor);
 
 }

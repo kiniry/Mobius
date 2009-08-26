@@ -31,7 +31,7 @@ public class BooleanConstant extends ManifestConstant {
   public Boolean getValue() { return value; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitBooleanConstant(this, value, getLocation());
   }
 

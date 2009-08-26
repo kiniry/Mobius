@@ -34,7 +34,7 @@ public class MemberRange extends VariableRange {
   public Expression getExpression() { return expression; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitMemberRange(this, identifiers, expression, getLocation());
   }
 

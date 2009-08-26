@@ -31,7 +31,7 @@ public class StaticRefPart extends AstNode {
   public String getName() { return name; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitStaticRefPart(this, name, getLocation());
   }
 

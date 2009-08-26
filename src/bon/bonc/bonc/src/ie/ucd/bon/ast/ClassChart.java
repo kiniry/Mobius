@@ -52,7 +52,7 @@ public class ClassChart extends InformalChart {
   public String getPart() { return part; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitClassChart(this, name, inherits, queries, commands, constraints, indexing, explanation, part, getLocation());
   }
 

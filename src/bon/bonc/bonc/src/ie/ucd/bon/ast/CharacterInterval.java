@@ -34,7 +34,7 @@ public class CharacterInterval extends Interval {
   public Character getStop() { return stop; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitCharacterInterval(this, start, stop, getLocation());
   }
 

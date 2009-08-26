@@ -34,7 +34,7 @@ public class ContractClause extends AstNode {
   public List<Expression> getPostconditions() { return postconditions; }
 
   // === Visitor ===
-  public void accept(IVisitor visitor) {
+  public void accept(IVisitorWithAdditions visitor) {
     visitor.visitContractClause(this, preconditions, postconditions, getLocation());
   }
 
