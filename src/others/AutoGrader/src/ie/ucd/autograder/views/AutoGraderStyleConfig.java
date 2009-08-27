@@ -38,7 +38,7 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     //applyColumnHeaderStylings(configRegistry);
     applyFontStylings(configRegistry);
   }
-  
+
   private static void applyColumnHeaderStylings(IConfigRegistry config) {
     Style columnHeaderStyle = new Style();
     columnHeaderStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
@@ -46,11 +46,11 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     //columnHeaderStyle.setAttributeValue(CellStyleAttributes.BORDER_STYLE, ...);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnHeaderStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ColumnHeaderString.COLUMN_HEADER);
   }
-  
+
   private static void applyFontStylings(IConfigRegistry config) {
     Style boldStyle = new Style();
     boldStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
-    
+
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.OverallTitleString.OVERALL_TITLE_CELL);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.OverallGrade.OVERALL_GRADE_CELL);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ItemGrade.ITEM_GRADE_CELL);
@@ -120,6 +120,38 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
 
   }
 
+  public static Color getDetaultColourForGrade(Grade grade) {
+    switch (grade) {
+    case A_PLUS:
+    case A:
+    case A_MINUS:
+    case B_PLUS:
+    case B:
+      return Colours.GRADE_OK;
+    case B_MINUS:
+    case C_PLUS:
+    case C:
+    case C_MINUS:
+      return Colours.GRADE_WARNING;
+    case D_PLUS:
+    case D:
+    case D_MINUS:
+    case E_PLUS:
+    case E:
+    case E_MINUS:
+    case F_PLUS:
+    case F:
+    case F_MINUS:
+    case G:
+    case NG:
+      return Colours.GRADE_ERROR;
+    case NA:
+      return Colours.WHITE;
+    default:
+      return Colours.WHITE;
+    }
+  }
+
   private static void applyBlankStylings(IConfigRegistry config) {
     Style blankStyle = new Style();
     blankStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, Colours.EMPTY_COLOR);
@@ -146,13 +178,13 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     public static final Color GRADE_WARNING = BRIGHT_ORANGE;
     public static final Color GRADE_OK = BRIGHT_GREEN;
   }
-  
+
   public static class Fonts {
     private static final Display display = Display.getDefault();
-    
+
     public static final Font DEFAULT_FONT = display.getSystemFont();
     public static final Font BOLD_FONT = makeBold(DEFAULT_FONT);
-    
+
     private static Font makeBold(Font font) {
       FontData[] data = font.getFontData();
       for (FontData fData : data) {
@@ -161,5 +193,5 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
       return new Font(display, data);
     }
   }
-  
+
 }

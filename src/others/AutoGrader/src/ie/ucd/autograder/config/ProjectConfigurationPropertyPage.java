@@ -2,6 +2,7 @@ package ie.ucd.autograder.config;
 
 import ie.ucd.autograder.AutoGraderPlugin;
 import ie.ucd.autograder.grading.Grade;
+import ie.ucd.autograder.views.AutoGraderStyleConfig;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -9,6 +10,7 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -88,7 +90,7 @@ public class ProjectConfigurationPropertyPage extends PropertyPage {
     for (Grade grade : Grade.values()) {
       store.setDefault("gradeboundaries."+grade.name()+".enabled", true);
       store.setDefault("gradeboundaries."+grade.name()+".value", value);
-      value -= 3;
+      store.setDefault("gradeboundaries."+grade.name()+".colour", StringConverter.asString(AutoGraderStyleConfig.getDetaultColourForGrade(grade).getRGB()));
     }
   }
 

@@ -23,7 +23,7 @@ public class GradeBoundariesComposite extends Composite {
 
   private final List<FieldEditor> fieldEditors;
   private final List<Pair<BooleanFieldEditor,List<FieldEditor>>> fieldEditorPairs;
-  private final static int GRID_WIDTH = 6;
+  private final static int GRID_WIDTH = 8;
   
   
   public GradeBoundariesComposite(Composite parent, PreferencePage prefPage) {
@@ -55,7 +55,7 @@ public class GradeBoundariesComposite extends Composite {
       gradeValue.setPage(prefPage);
       fieldEditors.add(gradeValue);
       gradeValue.setValidRange(0, 100);
-      ColorFieldEditor colourChooser = new ColorFieldEditor("gradeboundaries." + grade.name() + ".colour", "colour", this);
+      ColorFieldEditor colourChooser = new AGColourFieldEditor("gradeboundaries." + grade.name() + ".colour", "colour", this);
       colourChooser.setPage(prefPage);
       fieldEditors.add(colourChooser);
       
