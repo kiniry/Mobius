@@ -5,7 +5,7 @@ import java.io.File;
 
 /**
  * The interface used to handle the options on the user side.
- * @author The CLOPS team (kind@ucd.ie)
+ * @author The CLOPS team
  */
 public interface BONcOptionsInterface {
 
@@ -34,7 +34,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@67a5fb5a, ie.ucd.clops.util.Pair@421906df, ie.ucd.clops.util.Pair@79123c5f, ie.ucd.clops.util.Pair@1c39bf12, ie.ucd.clops.util.Pair@132f4538, ie.ucd.clops.util.Pair@469695f, ie.ucd.clops.util.Pair@2484de3c, ie.ucd.clops.util.Pair@f1a47df, ie.ucd.clops.util.Pair@6648938, ie.ucd.clops.util.Pair@326cbecf]]
+     * @param s one of the following strings: [SYSO, TXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, PIIG]
      * @return a valid Print member.
      */
     public static Print get(final String s) {
@@ -352,7 +352,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [[ie.ucd.clops.util.Pair@14cee41f, ie.ucd.clops.util.Pair@1ae2b9e5]]
+     * @param s one of the following strings: [ICG, IIG]
      * @return a valid Graph member.
      */
     public static Graph get(final String s) {

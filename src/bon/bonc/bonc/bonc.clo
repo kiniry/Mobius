@@ -82,8 +82,6 @@ OVERRIDES::
 
 VALIDITY::
 
-{$(Print?) && !$(PrintOutput?)} : "Output file (-po) for printing must be provided." ; 
-
 //If none of the AloneOptions are true
 {!$(Version) && !$(Help) && !$(PrintMan) && !$(PrintReadme) && !$(PrintBashCompletion) && 
  !$(ReadFromStdin) && ($(SourceFiles).size() == 0)} 

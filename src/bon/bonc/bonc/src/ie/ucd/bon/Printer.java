@@ -22,7 +22,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Reader;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -73,7 +72,7 @@ public final class Printer {
       case HTML:
         return FileUtil.readToString("templates/XHTMLStart.txt"); 
       default:
-        return ""; //Shouldn't happen
+        return "";
       }
     } catch (IOException ioe) {
       Main.logDebug("IOException thrown whilst reading printing option start string");
@@ -89,7 +88,7 @@ public final class Printer {
       case HTML:
         return FileUtil.readToString("templates/XHTMLEnd.txt"); 
       default:
-        return ""; //Shouldn't happen
+        return "";
       }
     } catch (IOException ioe) {
       Main.logDebug("IOException thrown whilst reading printing option start string");
@@ -169,27 +168,21 @@ public final class Printer {
   }
 
 
-  public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final Print printingType, final boolean printToFile, final boolean timing) {
+  public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final Print printingType, final boolean timing) {
     Main.logDebug("Printing to stream.");
     Calendar printTime = new GregorianCalendar();
     PrintingTracker printTracker = new PrintingTracker();
     StringBuilder main = new StringBuilder();
-
 
     if (isFileIndependentPrintingOption(printingType)) {
       main.append(printFileIndependentPrintingOptionToString(printingType, parsingTracker));
     } else {
 
       for (File file : files) {
-        Main.logDebug("Printing for file: " + file.getAbsolutePath());
-        String fileName;
-        if (file == null) {
-          fileName = "stdin";
-        } else {
-          fileName = file.getPath();
-        }
+        Main.logDebug("Printing for file: " + file);
 
-        ParseResult parse = parsingTracker.getParseResult(fileName);
+        ParseResult parse = parsingTracker.getParseResult(file);
+        System.out.println("Parse result: " + parse);
         if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
           try {
             String printed;
@@ -197,7 +190,7 @@ public final class Printer {
               long startTime = System.nanoTime();
               printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
               long endTime = System.nanoTime();
-              System.out.println("Printing " + fileName + " as " + Printer.getPrintingOptionName(printingType) + " took: " + StringUtil.timeString(endTime - startTime));
+              System.out.println("Printing " + file + " as " + Printer.getPrintingOptionName(printingType) + " took: " + StringUtil.timeString(endTime - startTime));
             } else {
               printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
             }
@@ -209,7 +202,7 @@ public final class Printer {
           }
 
         } else {
-          System.out.println("Not printing " + fileName + " due to parse errors.");
+          System.out.println("Not printing " + file + " due to parse errors.");
         }
       }
 
@@ -221,16 +214,6 @@ public final class Printer {
     outputStream.print(main.toString());
     outputStream.print(printEndToString(printingType, printTime, extraParts, parsingTracker));
   }
-
-  /*private static void printToStream(ParseResult parseResult, PrintingOption printOption, PrintingTracker printingTracker, ParsingTracker parsingTracker, PrintStream outputStream) 
-  throws RecognitionException {
-    System.out.println("Print to stream: " + parseResult);
-    String text = printToString(parseResult, printOption, printingTracker, parsingTracker);
-    if (text != null) {
-      outputStream.print(text);
-    }
-  }*/
-
 
   private static String printFileIndependentPrintingOptionToString(final Print printingOption, final ParsingTracker parsingTracker) {
     switch (printingOption) {

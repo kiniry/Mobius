@@ -167,8 +167,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogVersion);
     ogAloneOption.addOptionOrGroup(ogPrintReadme);
+    ogAloneOption.addOptionOrGroup(ogVersion);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);
@@ -209,7 +209,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return Print.get(ogPrint.getValue());
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Print without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public String getRawPrint() {
     return ogPrint.getRawValue();
   }
@@ -233,7 +235,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogPrintOutput.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option PrintOutput without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public File getRawPrintOutput() {
     return ogPrintOutput.getRawValue();
   }
@@ -257,7 +261,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogPrettyPrint.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option PrettyPrint without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawPrettyPrint() {
     return ogPrettyPrint.getRawValue();
   }
@@ -281,7 +287,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogPrintMan.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option PrintMan without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawPrintMan() {
     return ogPrintMan.getRawValue();
   }
@@ -305,7 +313,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogPrintReadme.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option PrintReadme without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawPrintReadme() {
     return ogPrintReadme.getRawValue();
   }
@@ -329,7 +339,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogPrintBashCompletion.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option PrintBashCompletion without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawPrintBashCompletion() {
     return ogPrintBashCompletion.getRawValue();
   }
@@ -353,7 +365,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogHelp.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Help without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawHelp() {
     return ogHelp.getRawValue();
   }
@@ -377,7 +391,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogTime.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Time without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawTime() {
     return ogTime.getRawValue();
   }
@@ -401,7 +417,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogTypecheck.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Typecheck without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawTypecheck() {
     return ogTypecheck.getRawValue();
   }
@@ -425,7 +443,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogInformal.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Informal without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawInformal() {
     return ogInformal.getRawValue();
   }
@@ -449,7 +469,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogFormal.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Formal without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawFormal() {
     return ogFormal.getRawValue();
   }
@@ -473,7 +495,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogCheckInformal.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option CheckInformal without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawCheckInformal() {
     return ogCheckInformal.getRawValue();
   }
@@ -497,7 +521,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogCheckFormal.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option CheckFormal without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawCheckFormal() {
     return ogCheckFormal.getRawValue();
   }
@@ -521,7 +547,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogCheckConsistency.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option CheckConsistency without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawCheckConsistency() {
     return ogCheckConsistency.getRawValue();
   }
@@ -545,7 +573,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogDebug.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Debug without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawDebug() {
     return ogDebug.getRawValue();
   }
@@ -569,7 +599,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogReadFromStdin.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option ReadFromStdin without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawReadFromStdin() {
     return ogReadFromStdin.getRawValue();
   }
@@ -593,7 +625,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogGenClassDic.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option GenClassDic without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawGenClassDic() {
     return ogGenClassDic.getRawValue();
   }
@@ -618,7 +652,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return Graph.get(ogGraph.getValue());
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Graph without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public String getRawGraph() {
     return ogGraph.getRawValue();
   }
@@ -642,7 +678,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogVersion.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option Version without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public boolean getRawVersion() {
     return ogVersion.getRawValue();
   }
@@ -666,7 +704,9 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     return ogSourceFiles.getValue();
   }
 
-  /** {@inheritDoc} */
+  /** Gets the value of option SourceFiles without checking if it is set.
+   *  This method will not throw an exception, but may return null. 
+   */
   public List<java.io.File> getRawSourceFiles() {
     return ogSourceFiles.getRawValue();
   }

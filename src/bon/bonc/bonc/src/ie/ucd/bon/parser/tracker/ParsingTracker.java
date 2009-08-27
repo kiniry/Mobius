@@ -17,8 +17,9 @@ import java.util.Vector;
 
 public class ParsingTracker {
 
+  private ParseResult stdParse;
   private final Vector<ParseResult> parses;
-  private final Map<String,ParseResult> parsesMap;
+  private final Map<File,ParseResult> parsesMap;
   private final Problems problems;
   
   private int severeProblemCount;
@@ -30,7 +31,7 @@ public class ParsingTracker {
   
   public ParsingTracker() {
     parses = new Vector<ParseResult>(); 
-    parsesMap = new HashMap<String,ParseResult>();
+    parsesMap = new HashMap<File,ParseResult>();
     problems = new Problems("Tracker");
     
     severeProblemCount = 0;
@@ -45,16 +46,20 @@ public class ParsingTracker {
     return parses;
   }
   
-  public ParseResult getParseResult(String fileName) {
-    if (fileName.equals("-")) {
-      return parsesMap.get("stdin");
+  public ParseResult getParseResult(File file) {
+    if (file == null) {
+      return stdParse;
     }
-    return parsesMap.get(fileName);
+    return parsesMap.get(file);
   }
   
-  public void addParse(String fileName, File file, ParseResult parse) {
+  public void addParse(File file, ParseResult parse) {
     parses.add(parse);
-    parsesMap.put(fileName, parse);
+    if (file == null) {
+      stdParse = parse;
+    } else {
+      parsesMap.put(file, parse);
+    }
     
     severeProblemCount += parse.getSevereProblemCount();
     if (!parse.isValidParse()) {

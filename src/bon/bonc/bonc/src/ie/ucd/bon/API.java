@@ -29,7 +29,7 @@ public class API {
     if (readFromStdIn) {
       ParseResult parseResult = doActualParse(SourceReader.getInstance().readStandardInput(), null, tracker, printTiming);
       if (parseResult != null) {
-        tracker.addParse("stdin", null, parseResult);
+        tracker.addParse(null, parseResult);
       }
     }
 
@@ -39,7 +39,7 @@ public class API {
 
         ParseResult parseResult = doActualParse(is, file, tracker, printTiming);
         if (parseResult != null) {
-          tracker.addParse(file.getName(), file, parseResult);
+          tracker.addParse(file, parseResult);
         }        
       } catch (FileNotFoundException fnfe) {
         //TODO report error
@@ -83,7 +83,7 @@ public class API {
         String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
         File classDicAutoFile = new File("class-dic-auto");
         if (!classDic.equals("")) {
-          tracker.addParse(classDicAutoFile.getName(), classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes()), tracker));
+          tracker.addParse(classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes()), tracker));
           files.add(classDicAutoFile);
         }
       } catch (RecognitionException re) {
@@ -114,7 +114,7 @@ public class API {
     }  
 
 
-    Printer.printToStream(files, tracker, outputStream, printType, printToFile, timing);
+    Printer.printToStream(files, tracker, outputStream, printType, timing);
 
     if (printToFile) {
       outputStream.close();

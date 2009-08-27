@@ -1,5 +1,6 @@
 package ie.ucd.bon.clinterface;
 
+import ie.ucd.clops.runtime.errors.ParseResult;
 import ie.ucd.clops.runtime.parser.AbstractSpecificCLParser;
 import ie.ucd.clops.runtime.rules.RuleStore;
 import ie.ucd.clops.runtime.options.exception.InvalidOptionPropertyValueException;
@@ -8,7 +9,7 @@ import ie.ucd.clops.runtime.options.exception.InvalidOptionPropertyValueExceptio
 /**
  * The arguments parser.
  * This is the main entry point for the option's handling.
- * @author The CLOPS team (kind@ucd.ie)
+ * @author The CLOPS team
  */
 public class BONcParser extends AbstractSpecificCLParser { 
 
@@ -28,7 +29,7 @@ public class BONcParser extends AbstractSpecificCLParser {
   }
 
   /**
-   * Get the {@link OptionStore} containing the option instances for this parser.
+   * Get the {@link ie.ucd.clops.runtime.options.OptionStore} containing the option instances for this parser.
    * @return the option store.
    */
   public BONcOptionStore getOptionStore() {
@@ -49,5 +50,25 @@ public class BONcParser extends AbstractSpecificCLParser {
    */
   public String getFormatString() {
     return "( Option*  SourceFiles*   )  | AloneOption"; 
+  }
+  
+  /**
+   * Parse the given command line arguments using a new BONcParser,
+   * with normal lookahead. 
+   */
+  public static BONcParseResult parse(String[] args) {
+    BONcParser parser = new BONcParser();
+    ParseResult parseResult = parser.parseInternal(args);
+    return new BONcParseResult(parseResult, parser.getOptionStore());
+  }
+  
+  /**
+   * Parse the given command line arguments using a new BONcParser,
+   * with infinite lookahead.
+   */
+  public static BONcParseResult parseAlternate(String[] args) {
+    BONcParser parser = new BONcParser();
+    ParseResult parseResult = parser.parseAlternateInternal(args);
+    return new BONcParseResult(parseResult, parser.getOptionStore());
   }
 }

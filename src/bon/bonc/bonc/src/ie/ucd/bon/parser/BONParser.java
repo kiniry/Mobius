@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-08-27 00:05:35
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-08-27 16:52:12
 
   package ie.ucd.bon.parser; 
   
@@ -9803,7 +9803,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1143:1: ( '(' (el= expression_list | ) ')' )
             // BON.g:1144:3: '(' (el= expression_list | ) ')'
             {
-            match(input,42,FOLLOW_42_in_actual_arguments7640); if (state.failed) return retval;
+            match(input,42,FOLLOW_42_in_actual_arguments7622); if (state.failed) return retval;
             // BON.g:1145:3: (el= expression_list | )
             int alt132=2;
             int LA132_0 = input.LA(1);
@@ -9825,7 +9825,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1145:6: el= expression_list
                     {
-                    pushFollow(FOLLOW_expression_list_in_actual_arguments7650);
+                    pushFollow(FOLLOW_expression_list_in_actual_arguments7632);
                     el=expression_list();
 
                     state._fsp--;
@@ -9848,7 +9848,7 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            match(input,43,FOLLOW_43_in_actual_arguments7673); if (state.failed) return retval;
+            match(input,43,FOLLOW_43_in_actual_arguments7655); if (state.failed) return retval;
 
             }
 
@@ -9883,7 +9883,7 @@ public class BONParser extends AbstractBONParser {
             if ( state.backtracking==0 ) {
                list = createList(); 
             }
-            pushFollow(FOLLOW_expression_in_expression_list7709);
+            pushFollow(FOLLOW_expression_in_expression_list7691);
             e1=expression();
 
             state._fsp--;
@@ -9906,8 +9906,8 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1156:4: ',' e= expression
             	    {
-            	    match(input,35,FOLLOW_35_in_expression_list7719); if (state.failed) return list;
-            	    pushFollow(FOLLOW_expression_in_expression_list7723);
+            	    match(input,35,FOLLOW_35_in_expression_list7701); if (state.failed) return list;
+            	    pushFollow(FOLLOW_expression_in_expression_list7705);
             	    e=expression();
 
             	    state._fsp--;
@@ -9955,13 +9955,13 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1167:56: ( '{' el= enumeration_list '}' )
             // BON.g:1168:3: '{' el= enumeration_list '}'
             {
-            match(input,62,FOLLOW_62_in_enumerated_set7769); if (state.failed) return retval;
-            pushFollow(FOLLOW_enumeration_list_in_enumerated_set7773);
+            match(input,62,FOLLOW_62_in_enumerated_set7751); if (state.failed) return retval;
+            pushFollow(FOLLOW_enumeration_list_in_enumerated_set7755);
             el=enumeration_list();
 
             state._fsp--;
             if (state.failed) return retval;
-            match(input,63,FOLLOW_63_in_enumerated_set7775); if (state.failed) return retval;
+            match(input,63,FOLLOW_63_in_enumerated_set7757); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
                retval.list = el; 
             }
@@ -9999,7 +9999,7 @@ public class BONParser extends AbstractBONParser {
             if ( state.backtracking==0 ) {
                list = createList(); 
             }
-            pushFollow(FOLLOW_enumeration_element_in_enumeration_list7817);
+            pushFollow(FOLLOW_enumeration_element_in_enumeration_list7799);
             el1=enumeration_element();
 
             state._fsp--;
@@ -10022,8 +10022,8 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1176:4: ',' el= enumeration_element
             	    {
-            	    match(input,35,FOLLOW_35_in_enumeration_list7827); if (state.failed) return list;
-            	    pushFollow(FOLLOW_enumeration_element_in_enumeration_list7831);
+            	    match(input,35,FOLLOW_35_in_enumeration_list7809); if (state.failed) return list;
+            	    pushFollow(FOLLOW_enumeration_element_in_enumeration_list7813);
             	    el=enumeration_element();
 
             	    state._fsp--;
@@ -10204,7 +10204,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1180:4: e= expression
                     {
-                    pushFollow(FOLLOW_expression_in_enumeration_element7863);
+                    pushFollow(FOLLOW_expression_in_enumeration_element7845);
                     e=expression();
 
                     state._fsp--;
@@ -10218,7 +10218,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1182:4: i= interval
                     {
-                    pushFollow(FOLLOW_interval_in_enumeration_element7877);
+                    pushFollow(FOLLOW_interval_in_enumeration_element7859);
                     i=interval();
 
                     state._fsp--;
@@ -10275,7 +10275,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1187:4: ii= integer_interval
                     {
-                    pushFollow(FOLLOW_integer_interval_in_interval7924);
+                    pushFollow(FOLLOW_integer_interval_in_interval7906);
                     ii=integer_interval();
 
                     state._fsp--;
@@ -10289,7 +10289,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1189:4: ci= character_interval
                     {
-                    pushFollow(FOLLOW_character_interval_in_interval7936);
+                    pushFollow(FOLLOW_character_interval_in_interval7918);
                     ci=character_interval();
 
                     state._fsp--;
@@ -10328,13 +10328,13 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1193:53: (i1= integer_constant '..' i2= integer_constant )
             // BON.g:1194:3: i1= integer_constant '..' i2= integer_constant
             {
-            pushFollow(FOLLOW_integer_constant_in_integer_interval7969);
+            pushFollow(FOLLOW_integer_constant_in_integer_interval7951);
             i1=integer_constant();
 
             state._fsp--;
             if (state.failed) return interval;
-            match(input,86,FOLLOW_86_in_integer_interval7971); if (state.failed) return interval;
-            pushFollow(FOLLOW_integer_constant_in_integer_interval7975);
+            match(input,86,FOLLOW_86_in_integer_interval7953); if (state.failed) return interval;
+            pushFollow(FOLLOW_integer_constant_in_integer_interval7957);
             i2=integer_constant();
 
             state._fsp--;
@@ -10371,13 +10371,13 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1198:57: (c1= character_constant '..' c2= character_constant )
             // BON.g:1199:3: c1= character_constant '..' c2= character_constant
             {
-            pushFollow(FOLLOW_character_constant_in_character_interval8017);
+            pushFollow(FOLLOW_character_constant_in_character_interval7999);
             c1=character_constant();
 
             state._fsp--;
             if (state.failed) return interval;
-            match(input,86,FOLLOW_86_in_character_interval8019); if (state.failed) return interval;
-            pushFollow(FOLLOW_character_constant_in_character_interval8023);
+            match(input,86,FOLLOW_86_in_character_interval8001); if (state.failed) return interval;
+            pushFollow(FOLLOW_character_constant_in_character_interval8005);
             c2=character_constant();
 
             state._fsp--;
@@ -10458,7 +10458,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1206:4: mc= manifest_constant
                     {
-                    pushFollow(FOLLOW_manifest_constant_in_constant8049);
+                    pushFollow(FOLLOW_manifest_constant_in_constant8031);
                     mc=manifest_constant();
 
                     state._fsp--;
@@ -10472,7 +10472,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1208:4: c= 'Current'
                     {
-                    c=(Token)match(input,87,FOLLOW_87_in_constant8062); if (state.failed) return retval;
+                    c=(Token)match(input,87,FOLLOW_87_in_constant8044); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                        retval.constant = KeywordConstant.mk(KeywordConstant.Constant.CURRENT, getSLoc(c)); 
                     }
@@ -10482,7 +10482,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1210:4: v= 'Void'
                     {
-                    v=(Token)match(input,88,FOLLOW_88_in_constant8075); if (state.failed) return retval;
+                    v=(Token)match(input,88,FOLLOW_88_in_constant8057); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                        retval.constant = KeywordConstant.mk(KeywordConstant.Constant.VOID, getSLoc(v)); 
                     }
@@ -10492,7 +10492,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1212:4: v= 'Result'
                     {
-                    v=(Token)match(input,89,FOLLOW_89_in_constant8099); if (state.failed) return retval;
+                    v=(Token)match(input,89,FOLLOW_89_in_constant8081); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                        retval.constant = KeywordConstant.mk(KeywordConstant.Constant.RESULT, getSLoc(v)); 
                     }
@@ -10617,7 +10617,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1217:4: bc= boolean_constant
                     {
-                    pushFollow(FOLLOW_boolean_constant_in_manifest_constant8122);
+                    pushFollow(FOLLOW_boolean_constant_in_manifest_constant8104);
                     bc=boolean_constant();
 
                     state._fsp--;
@@ -10631,7 +10631,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1219:4: cc= character_constant
                     {
-                    pushFollow(FOLLOW_character_constant_in_manifest_constant8135);
+                    pushFollow(FOLLOW_character_constant_in_manifest_constant8117);
                     cc=character_constant();
 
                     state._fsp--;
@@ -10645,7 +10645,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1221:4: ic= integer_constant
                     {
-                    pushFollow(FOLLOW_integer_constant_in_manifest_constant8148);
+                    pushFollow(FOLLOW_integer_constant_in_manifest_constant8130);
                     ic=integer_constant();
 
                     state._fsp--;
@@ -10659,7 +10659,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1223:4: rc= real_constant
                     {
-                    pushFollow(FOLLOW_real_constant_in_manifest_constant8161);
+                    pushFollow(FOLLOW_real_constant_in_manifest_constant8143);
                     rc=real_constant();
 
                     state._fsp--;
@@ -10673,7 +10673,7 @@ public class BONParser extends AbstractBONParser {
                 case 5 :
                     // BON.g:1225:4: ms= MANIFEST_STRING
                     {
-                    ms=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_constant8174); if (state.failed) return constant;
+                    ms=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_constant8156); if (state.failed) return constant;
                     if ( state.backtracking==0 ) {
                        constant = StringConstant.mk((ms!=null?ms.getText():null),getSLoc(ms)); 
                     }
@@ -10683,7 +10683,7 @@ public class BONParser extends AbstractBONParser {
                 case 6 :
                     // BON.g:1227:4: es= enumerated_set
                     {
-                    pushFollow(FOLLOW_enumerated_set_in_manifest_constant8187);
+                    pushFollow(FOLLOW_enumerated_set_in_manifest_constant8169);
                     es=enumerated_set();
 
                     state._fsp--;
@@ -10720,7 +10720,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1231:32: ( add_sub_op )
             // BON.g:1232:3: add_sub_op
             {
-            pushFollow(FOLLOW_add_sub_op_in_sign8226);
+            pushFollow(FOLLOW_add_sub_op_in_sign8208);
             add_sub_op81=add_sub_op();
 
             state._fsp--;
@@ -10774,7 +10774,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1237:4: 'true'
                     {
-                    match(input,90,FOLLOW_90_in_boolean_constant8252); if (state.failed) return retval;
+                    match(input,90,FOLLOW_90_in_boolean_constant8234); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                        retval.value = true; 
                     }
@@ -10784,7 +10784,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1239:4: 'false'
                     {
-                    match(input,91,FOLLOW_91_in_boolean_constant8263); if (state.failed) return retval;
+                    match(input,91,FOLLOW_91_in_boolean_constant8245); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
                        retval.value = false; 
                     }
@@ -10822,7 +10822,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1245:46: (cc= CHARACTER_CONSTANT )
             // BON.g:1246:2: cc= CHARACTER_CONSTANT
             {
-            cc=(Token)match(input,CHARACTER_CONSTANT,FOLLOW_CHARACTER_CONSTANT_in_character_constant8287); if (state.failed) return retval;
+            cc=(Token)match(input,CHARACTER_CONSTANT,FOLLOW_CHARACTER_CONSTANT_in_character_constant8269); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
                retval.value = (cc!=null?cc.getText():null).charAt(1); 
             }
@@ -10872,7 +10872,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1257:4: sign
                     {
-                    pushFollow(FOLLOW_sign_in_integer_constant8353);
+                    pushFollow(FOLLOW_sign_in_integer_constant8335);
                     sign82=sign();
 
                     state._fsp--;
@@ -10886,7 +10886,7 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            i=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_integer_constant8364); if (state.failed) return retval;
+            i=(Token)match(input,INTEGER,FOLLOW_INTEGER_in_integer_constant8346); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
                retval.value = new Integer((i!=null?i.getText():null)); if (negative) retval.value = -retval.value; 
             }
@@ -10936,7 +10936,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1265:4: sign
                     {
-                    pushFollow(FOLLOW_sign_in_real_constant8409);
+                    pushFollow(FOLLOW_sign_in_real_constant8391);
                     sign83=sign();
 
                     state._fsp--;
@@ -10950,7 +10950,7 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            r=(Token)match(input,REAL,FOLLOW_REAL_in_real_constant8421); if (state.failed) return retval;
+            r=(Token)match(input,REAL,FOLLOW_REAL_in_real_constant8403); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
                retval.value = new Double((r!=null?r.getText():null)); if (negative) retval.value = -retval.value; 
             }
@@ -10989,7 +10989,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1276:1: (s= 'dynamic_diagram' (eid= extended_id )? (c= COMMENT )? 'component' (db= dynamic_block | ) e= 'end' )
             // BON.g:1277:3: s= 'dynamic_diagram' (eid= extended_id )? (c= COMMENT )? 'component' (db= dynamic_block | ) e= 'end'
             {
-            s=(Token)match(input,92,FOLLOW_92_in_dynamic_diagram8452); if (state.failed) return dd;
+            s=(Token)match(input,92,FOLLOW_92_in_dynamic_diagram8434); if (state.failed) return dd;
             // BON.g:1278:3: (eid= extended_id )?
             int alt142=2;
             int LA142_0 = input.LA(1);
@@ -11001,7 +11001,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1278:4: eid= extended_id
                     {
-                    pushFollow(FOLLOW_extended_id_in_dynamic_diagram8460);
+                    pushFollow(FOLLOW_extended_id_in_dynamic_diagram8442);
                     eid=extended_id();
 
                     state._fsp--;
@@ -11026,7 +11026,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1279:4: c= COMMENT
                     {
-                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_dynamic_diagram8473); if (state.failed) return dd;
+                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_dynamic_diagram8455); if (state.failed) return dd;
                     if ( state.backtracking==0 ) {
                        comment = (c!=null?c.getText():null); 
                     }
@@ -11036,7 +11036,7 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            match(input,55,FOLLOW_55_in_dynamic_diagram8482); if (state.failed) return dd;
+            match(input,55,FOLLOW_55_in_dynamic_diagram8464); if (state.failed) return dd;
             // BON.g:1281:3: (db= dynamic_block | )
             int alt144=2;
             int LA144_0 = input.LA(1);
@@ -11058,7 +11058,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1281:5: db= dynamic_block
                     {
-                    pushFollow(FOLLOW_dynamic_block_in_dynamic_diagram8491);
+                    pushFollow(FOLLOW_dynamic_block_in_dynamic_diagram8473);
                     db=dynamic_block();
 
                     state._fsp--;
@@ -11081,7 +11081,7 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            e=(Token)match(input,25,FOLLOW_25_in_dynamic_diagram8515); if (state.failed) return dd;
+            e=(Token)match(input,25,FOLLOW_25_in_dynamic_diagram8497); if (state.failed) return dd;
             if ( state.backtracking==0 ) {
                dd = DynamicDiagram.mk(components, id, comment, getSLoc(s,e)); 
             }
@@ -11131,7 +11131,7 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1291:4: dc= dynamic_component
             	    {
-            	    pushFollow(FOLLOW_dynamic_component_in_dynamic_block8558);
+            	    pushFollow(FOLLOW_dynamic_component_in_dynamic_block8540);
             	    dc=dynamic_component();
 
             	    state._fsp--;
@@ -11216,7 +11216,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1295:4: scenario_description
                     {
-                    pushFollow(FOLLOW_scenario_description_in_dynamic_component8595);
+                    pushFollow(FOLLOW_scenario_description_in_dynamic_component8577);
                     scenario_description();
 
                     state._fsp--;
@@ -11227,7 +11227,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1296:4: object_group
                     {
-                    pushFollow(FOLLOW_object_group_in_dynamic_component8600);
+                    pushFollow(FOLLOW_object_group_in_dynamic_component8582);
                     object_group();
 
                     state._fsp--;
@@ -11238,7 +11238,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1297:4: object_stack
                     {
-                    pushFollow(FOLLOW_object_stack_in_dynamic_component8606);
+                    pushFollow(FOLLOW_object_stack_in_dynamic_component8588);
                     object_stack();
 
                     state._fsp--;
@@ -11249,7 +11249,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1298:4: object
                     {
-                    pushFollow(FOLLOW_object_in_dynamic_component8611);
+                    pushFollow(FOLLOW_object_in_dynamic_component8593);
                     object();
 
                     state._fsp--;
@@ -11260,7 +11260,7 @@ public class BONParser extends AbstractBONParser {
                 case 5 :
                     // BON.g:1299:4: message_relation
                     {
-                    pushFollow(FOLLOW_message_relation_in_dynamic_component8616);
+                    pushFollow(FOLLOW_message_relation_in_dynamic_component8598);
                     message_relation();
 
                     state._fsp--;
@@ -11300,8 +11300,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1306:1: (s= 'scenario' scenario_name (c= COMMENT )? 'action' la= labelled_actions e= 'end' )
             // BON.g:1307:3: s= 'scenario' scenario_name (c= COMMENT )? 'action' la= labelled_actions e= 'end'
             {
-            s=(Token)match(input,50,FOLLOW_50_in_scenario_description8644); if (state.failed) return description;
-            pushFollow(FOLLOW_scenario_name_in_scenario_description8646);
+            s=(Token)match(input,50,FOLLOW_50_in_scenario_description8626); if (state.failed) return description;
+            pushFollow(FOLLOW_scenario_name_in_scenario_description8628);
             scenario_name84=scenario_name();
 
             state._fsp--;
@@ -11317,7 +11317,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1308:4: c= COMMENT
                     {
-                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_scenario_description8654); if (state.failed) return description;
+                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_scenario_description8636); if (state.failed) return description;
                     if ( state.backtracking==0 ) {
                        comment = (c!=null?c.getText():null); 
                     }
@@ -11327,13 +11327,13 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            match(input,93,FOLLOW_93_in_scenario_description8663); if (state.failed) return description;
-            pushFollow(FOLLOW_labelled_actions_in_scenario_description8670);
+            match(input,93,FOLLOW_93_in_scenario_description8645); if (state.failed) return description;
+            pushFollow(FOLLOW_labelled_actions_in_scenario_description8652);
             la=labelled_actions();
 
             state._fsp--;
             if (state.failed) return description;
-            e=(Token)match(input,25,FOLLOW_25_in_scenario_description8677); if (state.failed) return description;
+            e=(Token)match(input,25,FOLLOW_25_in_scenario_description8659); if (state.failed) return description;
             if ( state.backtracking==0 ) {
                description = ScenarioDescription.mk(scenario_name84, la, comment, getSLoc(s,c)); 
             }
@@ -11383,7 +11383,7 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1317:4: la= labelled_action
             	    {
-            	    pushFollow(FOLLOW_labelled_action_in_labelled_actions8725);
+            	    pushFollow(FOLLOW_labelled_action_in_labelled_actions8707);
             	    la=labelled_action();
 
             	    state._fsp--;
@@ -11434,12 +11434,12 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1320:49: (al= action_label ad= action_description )
             // BON.g:1321:3: al= action_label ad= action_description
             {
-            pushFollow(FOLLOW_action_label_in_labelled_action8766);
+            pushFollow(FOLLOW_action_label_in_labelled_action8748);
             al=action_label();
 
             state._fsp--;
             if (state.failed) return action;
-            pushFollow(FOLLOW_action_description_in_labelled_action8770);
+            pushFollow(FOLLOW_action_description_in_labelled_action8752);
             ad=action_description();
 
             state._fsp--;
@@ -11477,7 +11477,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1325:37: (m= MANIFEST_STRING )
             // BON.g:1326:3: m= MANIFEST_STRING
             {
-            m=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_action_label8809); if (state.failed) return retval;
+            m=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_action_label8791); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
                retval.label = (m!=null?m.getText():null); 
             }
@@ -11514,7 +11514,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1330:49: (m= manifest_textblock )
             // BON.g:1331:3: m= manifest_textblock
             {
-            pushFollow(FOLLOW_manifest_textblock_in_action_description8844);
+            pushFollow(FOLLOW_manifest_textblock_in_action_description8826);
             m=manifest_textblock();
 
             state._fsp--;
@@ -11551,7 +11551,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1335:37: (m= manifest_textblock )
             // BON.g:1336:3: m= manifest_textblock
             {
-            pushFollow(FOLLOW_manifest_textblock_in_scenario_name8885);
+            pushFollow(FOLLOW_manifest_textblock_in_scenario_name8867);
             m=manifest_textblock();
 
             state._fsp--;
@@ -11615,7 +11615,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1347:6: n= 'nameless'
                     {
-                    n=(Token)match(input,94,FOLLOW_94_in_object_group8918); if (state.failed) return group;
+                    n=(Token)match(input,94,FOLLOW_94_in_object_group8900); if (state.failed) return group;
                     if ( state.backtracking==0 ) {
                        nameless = ObjectGroup.Nameless.NAMELESS; start = n; 
                     }
@@ -11634,11 +11634,11 @@ public class BONParser extends AbstractBONParser {
 
             }
 
-            s=(Token)match(input,95,FOLLOW_95_in_object_group8943); if (state.failed) return group;
+            s=(Token)match(input,95,FOLLOW_95_in_object_group8925); if (state.failed) return group;
             if ( state.backtracking==0 ) {
                if (start==null) start=s; 
             }
-            pushFollow(FOLLOW_group_name_in_object_group8949);
+            pushFollow(FOLLOW_group_name_in_object_group8931);
             group_name85=group_name();
 
             state._fsp--;
@@ -11657,7 +11657,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1354:4: c= COMMENT
                     {
-                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object_group8961); if (state.failed) return group;
+                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object_group8943); if (state.failed) return group;
                     if ( state.backtracking==0 ) {
                        comment = (c!=null?c.getText():null); end = c; 
                     }
@@ -11688,7 +11688,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1355:6: gc= group_components
                     {
-                    pushFollow(FOLLOW_group_components_in_object_group8976);
+                    pushFollow(FOLLOW_group_components_in_object_group8958);
                     gc=group_components();
 
                     state._fsp--;
@@ -11741,13 +11741,13 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1362:62: ( 'component' dynamic_block 'end' )
             // BON.g:1363:3: 'component' dynamic_block 'end'
             {
-            match(input,55,FOLLOW_55_in_group_components9027); if (state.failed) return components;
-            pushFollow(FOLLOW_dynamic_block_in_group_components9029);
+            match(input,55,FOLLOW_55_in_group_components9009); if (state.failed) return components;
+            pushFollow(FOLLOW_dynamic_block_in_group_components9011);
             dynamic_block86=dynamic_block();
 
             state._fsp--;
             if (state.failed) return components;
-            match(input,25,FOLLOW_25_in_group_components9031); if (state.failed) return components;
+            match(input,25,FOLLOW_25_in_group_components9013); if (state.failed) return components;
             if ( state.backtracking==0 ) {
                components = dynamic_block86; 
             }
@@ -11781,8 +11781,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1369:1: (s= 'object_stack' n= object_name (c= COMMENT )? )
             // BON.g:1370:3: s= 'object_stack' n= object_name (c= COMMENT )?
             {
-            s=(Token)match(input,96,FOLLOW_96_in_object_stack9076); if (state.failed) return stack;
-            pushFollow(FOLLOW_object_name_in_object_stack9083);
+            s=(Token)match(input,96,FOLLOW_96_in_object_stack9058); if (state.failed) return stack;
+            pushFollow(FOLLOW_object_name_in_object_stack9065);
             n=object_name();
 
             state._fsp--;
@@ -11801,7 +11801,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1373:4: c= COMMENT
                     {
-                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object_stack9095); if (state.failed) return stack;
+                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object_stack9077); if (state.failed) return stack;
                     if ( state.backtracking==0 ) {
                        comment = (c!=null?c.getText():null); end = c; 
                     }
@@ -11844,8 +11844,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1379:1: (s= 'object' n= object_name (c= COMMENT )? )
             // BON.g:1380:3: s= 'object' n= object_name (c= COMMENT )?
             {
-            s=(Token)match(input,97,FOLLOW_97_in_object9143); if (state.failed) return object;
-            pushFollow(FOLLOW_object_name_in_object9150);
+            s=(Token)match(input,97,FOLLOW_97_in_object9125); if (state.failed) return object;
+            pushFollow(FOLLOW_object_name_in_object9132);
             n=object_name();
 
             state._fsp--;
@@ -11864,7 +11864,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1383:4: c= COMMENT
                     {
-                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object9162); if (state.failed) return object;
+                    c=(Token)match(input,COMMENT,FOLLOW_COMMENT_in_object9144); if (state.failed) return object;
                     if ( state.backtracking==0 ) {
                        comment = (c!=null?c.getText():null); end = c; 
                     }
@@ -11899,13 +11899,13 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1389:19: ( caller 'calls' receiver ( message_label )? )
             // BON.g:1389:22: caller 'calls' receiver ( message_label )?
             {
-            pushFollow(FOLLOW_caller_in_message_relation9186);
+            pushFollow(FOLLOW_caller_in_message_relation9168);
             caller();
 
             state._fsp--;
             if (state.failed) return ;
-            match(input,98,FOLLOW_98_in_message_relation9188); if (state.failed) return ;
-            pushFollow(FOLLOW_receiver_in_message_relation9190);
+            match(input,98,FOLLOW_98_in_message_relation9170); if (state.failed) return ;
+            pushFollow(FOLLOW_receiver_in_message_relation9172);
             receiver();
 
             state._fsp--;
@@ -11921,7 +11921,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1389:47: message_label
                     {
-                    pushFollow(FOLLOW_message_label_in_message_relation9193);
+                    pushFollow(FOLLOW_message_label_in_message_relation9175);
                     message_label();
 
                     state._fsp--;
@@ -11954,7 +11954,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1392:9: ( dynamic_ref )
             // BON.g:1392:12: dynamic_ref
             {
-            pushFollow(FOLLOW_dynamic_ref_in_caller9225);
+            pushFollow(FOLLOW_dynamic_ref_in_caller9207);
             dynamic_ref();
 
             state._fsp--;
@@ -11981,7 +11981,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1395:11: ( dynamic_ref )
             // BON.g:1395:14: dynamic_ref
             {
-            pushFollow(FOLLOW_dynamic_ref_in_receiver9245);
+            pushFollow(FOLLOW_dynamic_ref_in_receiver9227);
             dynamic_ref();
 
             state._fsp--;
@@ -12008,7 +12008,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1402:14: ( extended_id ( '.' extended_id )* )
             // BON.g:1402:17: extended_id ( '.' extended_id )*
             {
-            pushFollow(FOLLOW_extended_id_in_dynamic_ref9271);
+            pushFollow(FOLLOW_extended_id_in_dynamic_ref9253);
             extended_id();
 
             state._fsp--;
@@ -12028,8 +12028,8 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1402:30: '.' extended_id
             	    {
-            	    match(input,70,FOLLOW_70_in_dynamic_ref9274); if (state.failed) return ;
-            	    pushFollow(FOLLOW_extended_id_in_dynamic_ref9276);
+            	    match(input,70,FOLLOW_70_in_dynamic_ref9256); if (state.failed) return ;
+            	    pushFollow(FOLLOW_extended_id_in_dynamic_ref9258);
             	    extended_id();
 
             	    state._fsp--;
@@ -12086,7 +12086,7 @@ public class BONParser extends AbstractBONParser {
                     // BON.g:1412:4: ( IDENTIFIER ( '.' extended_id )? )
                     // BON.g:1412:5: IDENTIFIER ( '.' extended_id )?
                     {
-                    match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_dynamic_component_name9307); if (state.failed) return ;
+                    match(input,IDENTIFIER,FOLLOW_IDENTIFIER_in_dynamic_component_name9289); if (state.failed) return ;
                     // BON.g:1412:16: ( '.' extended_id )?
                     int alt156=2;
                     int LA156_0 = input.LA(1);
@@ -12098,8 +12098,8 @@ public class BONParser extends AbstractBONParser {
                         case 1 :
                             // BON.g:1412:17: '.' extended_id
                             {
-                            match(input,70,FOLLOW_70_in_dynamic_component_name9310); if (state.failed) return ;
-                            pushFollow(FOLLOW_extended_id_in_dynamic_component_name9312);
+                            match(input,70,FOLLOW_70_in_dynamic_component_name9292); if (state.failed) return ;
+                            pushFollow(FOLLOW_extended_id_in_dynamic_component_name9294);
                             extended_id();
 
                             state._fsp--;
@@ -12119,7 +12119,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1413:4: INTEGER
                     {
-                    match(input,INTEGER,FOLLOW_INTEGER_in_dynamic_component_name9321); if (state.failed) return ;
+                    match(input,INTEGER,FOLLOW_INTEGER_in_dynamic_component_name9303); if (state.failed) return ;
 
                     }
                     break;
@@ -12156,7 +12156,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1418:1: (n= class_name ( '.' e= extended_id )? )
             // BON.g:1419:3: n= class_name ( '.' e= extended_id )?
             {
-            pushFollow(FOLLOW_class_name_in_object_name9344);
+            pushFollow(FOLLOW_class_name_in_object_name9326);
             n=class_name();
 
             state._fsp--;
@@ -12175,8 +12175,8 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1421:4: '.' e= extended_id
                     {
-                    match(input,70,FOLLOW_70_in_object_name9354); if (state.failed) return retval;
-                    pushFollow(FOLLOW_extended_id_in_object_name9358);
+                    match(input,70,FOLLOW_70_in_object_name9336); if (state.failed) return retval;
+                    pushFollow(FOLLOW_extended_id_in_object_name9340);
                     e=extended_id();
 
                     state._fsp--;
@@ -12226,7 +12226,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1425:34: (e= extended_id )
             // BON.g:1426:3: e= extended_id
             {
-            pushFollow(FOLLOW_extended_id_in_group_name9398);
+            pushFollow(FOLLOW_extended_id_in_group_name9380);
             e=extended_id();
 
             state._fsp--;
@@ -12262,7 +12262,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1430:38: (m= MANIFEST_STRING )
             // BON.g:1431:3: m= MANIFEST_STRING
             {
-            m=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_message_label9431); if (state.failed) return label;
+            m=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_message_label9413); if (state.failed) return label;
             if ( state.backtracking==0 ) {
                label = (m!=null?m.getText():null); 
             }
@@ -12315,7 +12315,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1440:4: change_string_marks
                     {
-                    pushFollow(FOLLOW_change_string_marks_in_notational_tuning9455);
+                    pushFollow(FOLLOW_change_string_marks_in_notational_tuning9437);
                     change_string_marks();
 
                     state._fsp--;
@@ -12326,7 +12326,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1441:4: change_concatenator
                     {
-                    pushFollow(FOLLOW_change_concatenator_in_notational_tuning9461);
+                    pushFollow(FOLLOW_change_concatenator_in_notational_tuning9443);
                     change_concatenator();
 
                     state._fsp--;
@@ -12337,7 +12337,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1442:4: change_prefix
                     {
-                    pushFollow(FOLLOW_change_prefix_in_notational_tuning9466);
+                    pushFollow(FOLLOW_change_prefix_in_notational_tuning9448);
                     change_prefix();
 
                     state._fsp--;
@@ -12366,9 +12366,9 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1445:22: ( 'string_marks' MANIFEST_STRING MANIFEST_STRING )
             // BON.g:1446:3: 'string_marks' MANIFEST_STRING MANIFEST_STRING
             {
-            match(input,99,FOLLOW_99_in_change_string_marks9481); if (state.failed) return ;
-            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_string_marks9483); if (state.failed) return ;
-            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_string_marks9485); if (state.failed) return ;
+            match(input,99,FOLLOW_99_in_change_string_marks9463); if (state.failed) return ;
+            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_string_marks9465); if (state.failed) return ;
+            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_string_marks9467); if (state.failed) return ;
 
             }
 
@@ -12391,8 +12391,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1449:22: ( 'concatenator' MANIFEST_STRING )
             // BON.g:1450:3: 'concatenator' MANIFEST_STRING
             {
-            match(input,100,FOLLOW_100_in_change_concatenator9519); if (state.failed) return ;
-            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_concatenator9521); if (state.failed) return ;
+            match(input,100,FOLLOW_100_in_change_concatenator9501); if (state.failed) return ;
+            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_concatenator9503); if (state.failed) return ;
 
             }
 
@@ -12415,8 +12415,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1453:16: ( 'keyword_prefix' MANIFEST_STRING )
             // BON.g:1454:3: 'keyword_prefix' MANIFEST_STRING
             {
-            match(input,101,FOLLOW_101_in_change_prefix9555); if (state.failed) return ;
-            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_prefix9557); if (state.failed) return ;
+            match(input,101,FOLLOW_101_in_change_prefix9537); if (state.failed) return ;
+            match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_change_prefix9539); if (state.failed) return ;
 
             }
 
@@ -12468,7 +12468,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1462:4: e= equivalence_expression
                     {
-                    pushFollow(FOLLOW_equivalence_expression_in_expression9583);
+                    pushFollow(FOLLOW_equivalence_expression_in_expression9565);
                     e=equivalence_expression();
 
                     state._fsp--;
@@ -12482,7 +12482,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1464:4: q= quantification
                     {
-                    pushFollow(FOLLOW_quantification_in_expression9597);
+                    pushFollow(FOLLOW_quantification_in_expression9579);
                     q=quantification();
 
                     state._fsp--;
@@ -12523,7 +12523,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1468:49: (l= implies_expression ( '<->' r= implies_expression )* )
             // BON.g:1469:3: l= implies_expression ( '<->' r= implies_expression )*
             {
-            pushFollow(FOLLOW_implies_expression_in_equivalence_expression9619);
+            pushFollow(FOLLOW_implies_expression_in_equivalence_expression9601);
             l=implies_expression();
 
             state._fsp--;
@@ -12546,8 +12546,8 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1471:4: '<->' r= implies_expression
             	    {
-            	    match(input,102,FOLLOW_102_in_equivalence_expression9629); if (state.failed) return exp;
-            	    pushFollow(FOLLOW_implies_expression_in_equivalence_expression9633);
+            	    match(input,102,FOLLOW_102_in_equivalence_expression9611); if (state.failed) return exp;
+            	    pushFollow(FOLLOW_implies_expression_in_equivalence_expression9615);
             	    r=implies_expression();
 
             	    state._fsp--;
@@ -12593,7 +12593,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1477:45: (l= and_or_xor_expression ( '->' r= implies_expression )? )
             // BON.g:1478:3: l= and_or_xor_expression ( '->' r= implies_expression )?
             {
-            pushFollow(FOLLOW_and_or_xor_expression_in_implies_expression9661);
+            pushFollow(FOLLOW_and_or_xor_expression_in_implies_expression9643);
             l=and_or_xor_expression();
 
             state._fsp--;
@@ -12612,8 +12612,8 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1480:4: '->' r= implies_expression
                     {
-                    match(input,65,FOLLOW_65_in_implies_expression9671); if (state.failed) return exp;
-                    pushFollow(FOLLOW_implies_expression_in_implies_expression9675);
+                    match(input,65,FOLLOW_65_in_implies_expression9653); if (state.failed) return exp;
+                    pushFollow(FOLLOW_implies_expression_in_implies_expression9657);
                     r=implies_expression();
 
                     state._fsp--;
@@ -12658,7 +12658,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1485:48: (l= comparison_expression (op= and_or_xor_op r= comparison_expression )* )
             // BON.g:1486:3: l= comparison_expression (op= and_or_xor_op r= comparison_expression )*
             {
-            pushFollow(FOLLOW_comparison_expression_in_and_or_xor_expression9702);
+            pushFollow(FOLLOW_comparison_expression_in_and_or_xor_expression9684);
             l=comparison_expression();
 
             state._fsp--;
@@ -12681,12 +12681,12 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1488:4: op= and_or_xor_op r= comparison_expression
             	    {
-            	    pushFollow(FOLLOW_and_or_xor_op_in_and_or_xor_expression9714);
+            	    pushFollow(FOLLOW_and_or_xor_op_in_and_or_xor_expression9696);
             	    op=and_or_xor_op();
 
             	    state._fsp--;
             	    if (state.failed) return exp;
-            	    pushFollow(FOLLOW_comparison_expression_in_and_or_xor_expression9718);
+            	    pushFollow(FOLLOW_comparison_expression_in_and_or_xor_expression9700);
             	    r=comparison_expression();
 
             	    state._fsp--;
@@ -12734,7 +12734,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1493:48: (l= add_sub_expression (op= comparison_op r= add_sub_expression )* )
             // BON.g:1494:3: l= add_sub_expression (op= comparison_op r= add_sub_expression )*
             {
-            pushFollow(FOLLOW_add_sub_expression_in_comparison_expression9746);
+            pushFollow(FOLLOW_add_sub_expression_in_comparison_expression9728);
             l=add_sub_expression();
 
             state._fsp--;
@@ -12757,12 +12757,12 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1496:4: op= comparison_op r= add_sub_expression
             	    {
-            	    pushFollow(FOLLOW_comparison_op_in_comparison_expression9758);
+            	    pushFollow(FOLLOW_comparison_op_in_comparison_expression9740);
             	    op=comparison_op();
 
             	    state._fsp--;
             	    if (state.failed) return exp;
-            	    pushFollow(FOLLOW_add_sub_expression_in_comparison_expression9763);
+            	    pushFollow(FOLLOW_add_sub_expression_in_comparison_expression9745);
             	    r=add_sub_expression();
 
             	    state._fsp--;
@@ -12810,7 +12810,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1501:45: (l= mul_div_expression (op= add_sub_op r= mul_div_expression )* )
             // BON.g:1502:3: l= mul_div_expression (op= add_sub_op r= mul_div_expression )*
             {
-            pushFollow(FOLLOW_mul_div_expression_in_add_sub_expression9791);
+            pushFollow(FOLLOW_mul_div_expression_in_add_sub_expression9773);
             l=mul_div_expression();
 
             state._fsp--;
@@ -12833,12 +12833,12 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1504:4: op= add_sub_op r= mul_div_expression
             	    {
-            	    pushFollow(FOLLOW_add_sub_op_in_add_sub_expression9803);
+            	    pushFollow(FOLLOW_add_sub_op_in_add_sub_expression9785);
             	    op=add_sub_op();
 
             	    state._fsp--;
             	    if (state.failed) return exp;
-            	    pushFollow(FOLLOW_mul_div_expression_in_add_sub_expression9807);
+            	    pushFollow(FOLLOW_mul_div_expression_in_add_sub_expression9789);
             	    r=mul_div_expression();
 
             	    state._fsp--;
@@ -12886,7 +12886,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1509:45: (l= mod_pow_expression (op= mul_div_op r= mod_pow_expression )* )
             // BON.g:1510:3: l= mod_pow_expression (op= mul_div_op r= mod_pow_expression )*
             {
-            pushFollow(FOLLOW_mod_pow_expression_in_mul_div_expression9835);
+            pushFollow(FOLLOW_mod_pow_expression_in_mul_div_expression9817);
             l=mod_pow_expression();
 
             state._fsp--;
@@ -12909,12 +12909,12 @@ public class BONParser extends AbstractBONParser {
             	case 1 :
             	    // BON.g:1512:4: op= mul_div_op r= mod_pow_expression
             	    {
-            	    pushFollow(FOLLOW_mul_div_op_in_mul_div_expression9847);
+            	    pushFollow(FOLLOW_mul_div_op_in_mul_div_expression9829);
             	    op=mul_div_op();
 
             	    state._fsp--;
             	    if (state.failed) return exp;
-            	    pushFollow(FOLLOW_mod_pow_expression_in_mul_div_expression9851);
+            	    pushFollow(FOLLOW_mod_pow_expression_in_mul_div_expression9833);
             	    r=mod_pow_expression();
 
             	    state._fsp--;
@@ -12962,7 +12962,7 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1518:45: (l= lowest_expression (op= mod_pow_op r= mod_pow_expression )? )
             // BON.g:1519:3: l= lowest_expression (op= mod_pow_op r= mod_pow_expression )?
             {
-            pushFollow(FOLLOW_lowest_expression_in_mod_pow_expression9880);
+            pushFollow(FOLLOW_lowest_expression_in_mod_pow_expression9862);
             l=lowest_expression();
 
             state._fsp--;
@@ -12981,12 +12981,12 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1521:4: op= mod_pow_op r= mod_pow_expression
                     {
-                    pushFollow(FOLLOW_mod_pow_op_in_mod_pow_expression9892);
+                    pushFollow(FOLLOW_mod_pow_op_in_mod_pow_expression9874);
                     op=mod_pow_op();
 
                     state._fsp--;
                     if (state.failed) return exp;
-                    pushFollow(FOLLOW_mod_pow_expression_in_mod_pow_expression9896);
+                    pushFollow(FOLLOW_mod_pow_expression_in_mod_pow_expression9878);
                     r=mod_pow_expression();
 
                     state._fsp--;
@@ -13044,7 +13044,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1527:5: ( constant )=> constant ( ( '.' cc= call_chain ) | )
                     {
-                    pushFollow(FOLLOW_constant_in_lowest_expression9929);
+                    pushFollow(FOLLOW_constant_in_lowest_expression9911);
                     constant87=constant();
 
                     state._fsp--;
@@ -13073,8 +13073,8 @@ public class BONParser extends AbstractBONParser {
                             // BON.g:1528:7: ( '.' cc= call_chain )
                             // BON.g:1528:8: '.' cc= call_chain
                             {
-                            match(input,70,FOLLOW_70_in_lowest_expression9938); if (state.failed) return retval;
-                            pushFollow(FOLLOW_call_chain_in_lowest_expression9942);
+                            match(input,70,FOLLOW_70_in_lowest_expression9920); if (state.failed) return retval;
+                            pushFollow(FOLLOW_call_chain_in_lowest_expression9924);
                             cc=call_chain();
 
                             state._fsp--;
@@ -13106,12 +13106,12 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1534:4: unary le= lowest_expression
                     {
-                    pushFollow(FOLLOW_unary_in_lowest_expression9992);
+                    pushFollow(FOLLOW_unary_in_lowest_expression9974);
                     unary88=unary();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    pushFollow(FOLLOW_lowest_expression_in_lowest_expression9996);
+                    pushFollow(FOLLOW_lowest_expression_in_lowest_expression9978);
                     le=lowest_expression();
 
                     state._fsp--;
@@ -13125,13 +13125,13 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1536:4: s= '(' e= expression ')' ( ( '.' cc= call_chain ) | )
                     {
-                    s=(Token)match(input,42,FOLLOW_42_in_lowest_expression10009); if (state.failed) return retval;
-                    pushFollow(FOLLOW_expression_in_lowest_expression10013);
+                    s=(Token)match(input,42,FOLLOW_42_in_lowest_expression9991); if (state.failed) return retval;
+                    pushFollow(FOLLOW_expression_in_lowest_expression9995);
                     e=expression();
 
                     state._fsp--;
                     if (state.failed) return retval;
-                    match(input,43,FOLLOW_43_in_lowest_expression10015); if (state.failed) return retval;
+                    match(input,43,FOLLOW_43_in_lowest_expression9997); if (state.failed) return retval;
                     // BON.g:1537:4: ( ( '.' cc= call_chain ) | )
                     int alt169=2;
                     int LA169_0 = input.LA(1);
@@ -13156,8 +13156,8 @@ public class BONParser extends AbstractBONParser {
                             // BON.g:1537:6: ( '.' cc= call_chain )
                             // BON.g:1537:7: '.' cc= call_chain
                             {
-                            match(input,70,FOLLOW_70_in_lowest_expression10025); if (state.failed) return retval;
-                            pushFollow(FOLLOW_call_chain_in_lowest_expression10029);
+                            match(input,70,FOLLOW_70_in_lowest_expression10007); if (state.failed) return retval;
+                            pushFollow(FOLLOW_call_chain_in_lowest_expression10011);
                             cc=call_chain();
 
                             state._fsp--;
@@ -13189,7 +13189,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1542:4: cc= call_chain
                     {
-                    pushFollow(FOLLOW_call_chain_in_lowest_expression10065);
+                    pushFollow(FOLLOW_call_chain_in_lowest_expression10047);
                     cc=call_chain();
 
                     state._fsp--;
@@ -13243,7 +13243,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1551:4: '+'
                     {
-                    match(input,103,FOLLOW_103_in_add_sub_op10089); if (state.failed) return op;
+                    match(input,103,FOLLOW_103_in_add_sub_op10071); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.ADD; 
                     }
@@ -13253,7 +13253,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1552:4: '-'
                     {
-                    match(input,104,FOLLOW_104_in_add_sub_op10097); if (state.failed) return op;
+                    match(input,104,FOLLOW_104_in_add_sub_op10079); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.SUB; 
                     }
@@ -13301,7 +13301,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1556:4: '+'
                     {
-                    match(input,103,FOLLOW_103_in_add_sub_op_unary10115); if (state.failed) return op;
+                    match(input,103,FOLLOW_103_in_add_sub_op_unary10097); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = UnaryExp.Op.ADD; 
                     }
@@ -13311,7 +13311,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1557:4: '-'
                     {
-                    match(input,104,FOLLOW_104_in_add_sub_op_unary10123); if (state.failed) return op;
+                    match(input,104,FOLLOW_104_in_add_sub_op_unary10105); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = UnaryExp.Op.SUB; 
                     }
@@ -13368,7 +13368,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1561:4: 'and'
                     {
-                    match(input,105,FOLLOW_105_in_and_or_xor_op10141); if (state.failed) return op;
+                    match(input,105,FOLLOW_105_in_and_or_xor_op10123); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.AND; 
                     }
@@ -13378,7 +13378,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1562:4: 'or'
                     {
-                    match(input,106,FOLLOW_106_in_and_or_xor_op10148); if (state.failed) return op;
+                    match(input,106,FOLLOW_106_in_and_or_xor_op10130); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.OR; 
                     }
@@ -13388,7 +13388,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1563:4: 'xor'
                     {
-                    match(input,107,FOLLOW_107_in_and_or_xor_op10156); if (state.failed) return op;
+                    match(input,107,FOLLOW_107_in_and_or_xor_op10138); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.XOR; 
                     }
@@ -13445,7 +13445,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1567:4: other_unary
                     {
-                    pushFollow(FOLLOW_other_unary_in_unary10176);
+                    pushFollow(FOLLOW_other_unary_in_unary10158);
                     other_unary89=other_unary();
 
                     state._fsp--;
@@ -13459,7 +13459,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1568:4: add_sub_op_unary
                     {
-                    pushFollow(FOLLOW_add_sub_op_unary_in_unary10190);
+                    pushFollow(FOLLOW_add_sub_op_unary_in_unary10172);
                     add_sub_op_unary90=add_sub_op_unary();
 
                     state._fsp--;
@@ -13522,7 +13522,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1572:4: 'delta'
                     {
-                    match(input,108,FOLLOW_108_in_other_unary10210); if (state.failed) return op;
+                    match(input,108,FOLLOW_108_in_other_unary10192); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = UnaryExp.Op.DELTA; 
                     }
@@ -13532,7 +13532,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1573:4: 'old'
                     {
-                    match(input,109,FOLLOW_109_in_other_unary10218); if (state.failed) return op;
+                    match(input,109,FOLLOW_109_in_other_unary10200); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = UnaryExp.Op.OLD; 
                     }
@@ -13542,7 +13542,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1574:4: 'not'
                     {
-                    match(input,110,FOLLOW_110_in_other_unary10227); if (state.failed) return op;
+                    match(input,110,FOLLOW_110_in_other_unary10209); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = UnaryExp.Op.NOT; 
                     }
@@ -13631,7 +13631,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1577:13: add_sub_op
                     {
-                    pushFollow(FOLLOW_add_sub_op_in_binary10258);
+                    pushFollow(FOLLOW_add_sub_op_in_binary10240);
                     add_sub_op();
 
                     state._fsp--;
@@ -13642,7 +13642,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1577:26: mul_div_op
                     {
-                    pushFollow(FOLLOW_mul_div_op_in_binary10262);
+                    pushFollow(FOLLOW_mul_div_op_in_binary10244);
                     mul_div_op();
 
                     state._fsp--;
@@ -13653,7 +13653,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1577:39: comparison_op
                     {
-                    pushFollow(FOLLOW_comparison_op_in_binary10266);
+                    pushFollow(FOLLOW_comparison_op_in_binary10248);
                     comparison_op();
 
                     state._fsp--;
@@ -13664,7 +13664,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1578:13: mod_pow_op
                     {
-                    pushFollow(FOLLOW_mod_pow_op_in_binary10281);
+                    pushFollow(FOLLOW_mod_pow_op_in_binary10263);
                     mod_pow_op();
 
                     state._fsp--;
@@ -13675,7 +13675,7 @@ public class BONParser extends AbstractBONParser {
                 case 5 :
                     // BON.g:1578:26: and_or_xor_op
                     {
-                    pushFollow(FOLLOW_and_or_xor_op_in_binary10285);
+                    pushFollow(FOLLOW_and_or_xor_op_in_binary10267);
                     and_or_xor_op();
 
                     state._fsp--;
@@ -13686,14 +13686,14 @@ public class BONParser extends AbstractBONParser {
                 case 6 :
                     // BON.g:1579:13: '->'
                     {
-                    match(input,65,FOLLOW_65_in_binary10300); if (state.failed) return ;
+                    match(input,65,FOLLOW_65_in_binary10282); if (state.failed) return ;
 
                     }
                     break;
                 case 7 :
                     // BON.g:1579:20: '<->'
                     {
-                    match(input,102,FOLLOW_102_in_binary10304); if (state.failed) return ;
+                    match(input,102,FOLLOW_102_in_binary10286); if (state.failed) return ;
 
                     }
                     break;
@@ -13777,7 +13777,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1582:4: '<'
                     {
-                    match(input,111,FOLLOW_111_in_comparison_op10320); if (state.failed) return op;
+                    match(input,111,FOLLOW_111_in_comparison_op10302); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.LT; 
                     }
@@ -13787,7 +13787,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1583:4: '>'
                     {
-                    match(input,112,FOLLOW_112_in_comparison_op10328); if (state.failed) return op;
+                    match(input,112,FOLLOW_112_in_comparison_op10310); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.GT; 
                     }
@@ -13797,7 +13797,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1584:4: '<='
                     {
-                    match(input,113,FOLLOW_113_in_comparison_op10336); if (state.failed) return op;
+                    match(input,113,FOLLOW_113_in_comparison_op10318); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.LE; 
                     }
@@ -13807,7 +13807,7 @@ public class BONParser extends AbstractBONParser {
                 case 4 :
                     // BON.g:1585:4: '>='
                     {
-                    match(input,114,FOLLOW_114_in_comparison_op10343); if (state.failed) return op;
+                    match(input,114,FOLLOW_114_in_comparison_op10325); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.GE; 
                     }
@@ -13817,7 +13817,7 @@ public class BONParser extends AbstractBONParser {
                 case 5 :
                     // BON.g:1586:4: '='
                     {
-                    match(input,115,FOLLOW_115_in_comparison_op10350); if (state.failed) return op;
+                    match(input,115,FOLLOW_115_in_comparison_op10332); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.EQ; 
                     }
@@ -13827,7 +13827,7 @@ public class BONParser extends AbstractBONParser {
                 case 6 :
                     // BON.g:1587:4: '/='
                     {
-                    match(input,116,FOLLOW_116_in_comparison_op10358); if (state.failed) return op;
+                    match(input,116,FOLLOW_116_in_comparison_op10340); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.NEQ; 
                     }
@@ -13837,7 +13837,7 @@ public class BONParser extends AbstractBONParser {
                 case 7 :
                     // BON.g:1588:4: 'member_of'
                     {
-                    match(input,85,FOLLOW_85_in_comparison_op10365); if (state.failed) return op;
+                    match(input,85,FOLLOW_85_in_comparison_op10347); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.MEMBEROF; 
                     }
@@ -13847,8 +13847,8 @@ public class BONParser extends AbstractBONParser {
                 case 8 :
                     // BON.g:1589:4: 'not' 'member_of'
                     {
-                    match(input,110,FOLLOW_110_in_comparison_op10372); if (state.failed) return op;
-                    match(input,85,FOLLOW_85_in_comparison_op10374); if (state.failed) return op;
+                    match(input,110,FOLLOW_110_in_comparison_op10354); if (state.failed) return op;
+                    match(input,85,FOLLOW_85_in_comparison_op10356); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.NOTMEMBEROF; 
                     }
@@ -13858,7 +13858,7 @@ public class BONParser extends AbstractBONParser {
                 case 9 :
                     // BON.g:1590:4: ':'
                     {
-                    match(input,34,FOLLOW_34_in_comparison_op10381); if (state.failed) return op;
+                    match(input,34,FOLLOW_34_in_comparison_op10363); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.HASTYPE; 
                     }
@@ -13915,7 +13915,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1595:4: '*'
                     {
-                    match(input,117,FOLLOW_117_in_mul_div_op10408); if (state.failed) return op;
+                    match(input,117,FOLLOW_117_in_mul_div_op10390); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.MUL; 
                     }
@@ -13925,7 +13925,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1596:4: '/'
                     {
-                    match(input,118,FOLLOW_118_in_mul_div_op10416); if (state.failed) return op;
+                    match(input,118,FOLLOW_118_in_mul_div_op10398); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.DIV; 
                     }
@@ -13935,7 +13935,7 @@ public class BONParser extends AbstractBONParser {
                 case 3 :
                     // BON.g:1597:4: '//'
                     {
-                    match(input,119,FOLLOW_119_in_mul_div_op10424); if (state.failed) return op;
+                    match(input,119,FOLLOW_119_in_mul_div_op10406); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.INTDIV; 
                     }
@@ -13983,7 +13983,7 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1601:4: '\\\\\\\\'
                     {
-                    match(input,120,FOLLOW_120_in_mod_pow_op10457); if (state.failed) return op;
+                    match(input,120,FOLLOW_120_in_mod_pow_op10439); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.MOD; 
                     }
@@ -13993,7 +13993,7 @@ public class BONParser extends AbstractBONParser {
                 case 2 :
                     // BON.g:1602:4: '^'
                     {
-                    match(input,76,FOLLOW_76_in_mod_pow_op10465); if (state.failed) return op;
+                    match(input,76,FOLLOW_76_in_mod_pow_op10447); if (state.failed) return op;
                     if ( state.backtracking==0 ) {
                        op = BinaryExp.Op.POW; 
                     }
@@ -14044,14 +14044,14 @@ public class BONParser extends AbstractBONParser {
                 case 1 :
                     // BON.g:1644:25: MANIFEST_STRING
                     {
-                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10768); if (state.failed) return retval;
+                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10750); if (state.failed) return retval;
 
                     }
                     break;
                 case 2 :
                     // BON.g:1645:10: MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END
                     {
-                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10780); if (state.failed) return retval;
+                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10762); if (state.failed) return retval;
                     // BON.g:1645:35: ( MANIFEST_TEXTBLOCK_MIDDLE )*
                     loop180:
                     do {
@@ -14067,7 +14067,7 @@ public class BONParser extends AbstractBONParser {
                     	case 1 :
                     	    // BON.g:1645:35: MANIFEST_TEXTBLOCK_MIDDLE
                     	    {
-                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10782); if (state.failed) return retval;
+                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10764); if (state.failed) return retval;
 
                     	    }
                     	    break;
@@ -14077,7 +14077,7 @@ public class BONParser extends AbstractBONParser {
                         }
                     } while (true);
 
-                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10785); if (state.failed) return retval;
+                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10767); if (state.failed) return retval;
 
                     }
                     break;
@@ -14101,7 +14101,7 @@ public class BONParser extends AbstractBONParser {
         // BON.g:1527:5: ( constant )
         // BON.g:1527:6: constant
         {
-        pushFollow(FOLLOW_constant_in_synpred1_BON9925);
+        pushFollow(FOLLOW_constant_in_synpred1_BON9907);
         constant();
 
         state._fsp--;
@@ -14975,184 +14975,184 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_unqualified_call_in_call_chain7528 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
     public static final BitSet FOLLOW_IDENTIFIER_in_unqualified_call7569 = new BitSet(new long[]{0x0000040000000002L});
     public static final BitSet FOLLOW_actual_arguments_in_unqualified_call7583 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_42_in_actual_arguments7640 = new BitSet(new long[]{0x40000C00000003B0L,0x000071800F860000L});
-    public static final BitSet FOLLOW_expression_list_in_actual_arguments7650 = new BitSet(new long[]{0x0000080000000000L});
-    public static final BitSet FOLLOW_43_in_actual_arguments7673 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_expression_in_expression_list7709 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_expression_list7719 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
-    public static final BitSet FOLLOW_expression_in_expression_list7723 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_62_in_enumerated_set7769 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
-    public static final BitSet FOLLOW_enumeration_list_in_enumerated_set7773 = new BitSet(new long[]{0x8000000000000000L});
-    public static final BitSet FOLLOW_63_in_enumerated_set7775 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_enumeration_element_in_enumeration_list7817 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_enumeration_list7827 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
-    public static final BitSet FOLLOW_enumeration_element_in_enumeration_list7831 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_expression_in_enumeration_element7863 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_interval_in_enumeration_element7877 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_integer_interval_in_interval7924 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_character_interval_in_interval7936 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_integer_constant_in_integer_interval7969 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400000L});
-    public static final BitSet FOLLOW_86_in_integer_interval7971 = new BitSet(new long[]{0x0000000000000080L,0x0000018000000000L});
-    public static final BitSet FOLLOW_integer_constant_in_integer_interval7975 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_character_constant_in_character_interval8017 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400000L});
-    public static final BitSet FOLLOW_86_in_character_interval8019 = new BitSet(new long[]{0x0000000000000100L});
-    public static final BitSet FOLLOW_character_constant_in_character_interval8023 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_constant_in_constant8049 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_87_in_constant8062 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_88_in_constant8075 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_89_in_constant8099 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_boolean_constant_in_manifest_constant8122 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_character_constant_in_manifest_constant8135 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_integer_constant_in_manifest_constant8148 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_real_constant_in_manifest_constant8161 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_constant8174 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_enumerated_set_in_manifest_constant8187 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_add_sub_op_in_sign8226 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_90_in_boolean_constant8252 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_91_in_boolean_constant8263 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_CHARACTER_CONSTANT_in_character_constant8287 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_sign_in_integer_constant8353 = new BitSet(new long[]{0x0000000000000080L});
-    public static final BitSet FOLLOW_INTEGER_in_integer_constant8364 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_sign_in_real_constant8409 = new BitSet(new long[]{0x0000000000000200L});
-    public static final BitSet FOLLOW_REAL_in_real_constant8421 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_92_in_dynamic_diagram8452 = new BitSet(new long[]{0x00800000000000E0L});
-    public static final BitSet FOLLOW_extended_id_in_dynamic_diagram8460 = new BitSet(new long[]{0x0080000000000040L});
-    public static final BitSet FOLLOW_COMMENT_in_dynamic_diagram8473 = new BitSet(new long[]{0x0080000000000000L});
-    public static final BitSet FOLLOW_55_in_dynamic_diagram8482 = new BitSet(new long[]{0x00040000020000A0L,0x00000003C0000000L});
-    public static final BitSet FOLLOW_dynamic_block_in_dynamic_diagram8491 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_25_in_dynamic_diagram8515 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dynamic_component_in_dynamic_block8558 = new BitSet(new long[]{0x00040000000000A2L,0x00000003C0000000L});
-    public static final BitSet FOLLOW_scenario_description_in_dynamic_component8595 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_object_group_in_dynamic_component8600 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_object_stack_in_dynamic_component8606 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_object_in_dynamic_component8611 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_message_relation_in_dynamic_component8616 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_scenario_description8644 = new BitSet(new long[]{0x0000000000000810L});
-    public static final BitSet FOLLOW_scenario_name_in_scenario_description8646 = new BitSet(new long[]{0x0000000000000040L,0x0000000020000000L});
-    public static final BitSet FOLLOW_COMMENT_in_scenario_description8654 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
-    public static final BitSet FOLLOW_93_in_scenario_description8663 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_labelled_actions_in_scenario_description8670 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_25_in_scenario_description8677 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_labelled_action_in_labelled_actions8725 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_action_label_in_labelled_action8766 = new BitSet(new long[]{0x0000000000000810L});
-    public static final BitSet FOLLOW_action_description_in_labelled_action8770 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_action_label8809 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_textblock_in_action_description8844 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_textblock_in_scenario_name8885 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_94_in_object_group8918 = new BitSet(new long[]{0x0000000000000000L,0x0000000080000000L});
-    public static final BitSet FOLLOW_95_in_object_group8943 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_group_name_in_object_group8949 = new BitSet(new long[]{0x0080000000000042L});
-    public static final BitSet FOLLOW_COMMENT_in_object_group8961 = new BitSet(new long[]{0x0080000000000002L});
-    public static final BitSet FOLLOW_group_components_in_object_group8976 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_55_in_group_components9027 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
-    public static final BitSet FOLLOW_dynamic_block_in_group_components9029 = new BitSet(new long[]{0x0000000002000000L});
-    public static final BitSet FOLLOW_25_in_group_components9031 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_96_in_object_stack9076 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_object_name_in_object_stack9083 = new BitSet(new long[]{0x0000000000000042L});
-    public static final BitSet FOLLOW_COMMENT_in_object_stack9095 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_97_in_object9143 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_object_name_in_object9150 = new BitSet(new long[]{0x0000000000000042L});
-    public static final BitSet FOLLOW_COMMENT_in_object9162 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_caller_in_message_relation9186 = new BitSet(new long[]{0x0000000000000000L,0x0000000400000000L});
-    public static final BitSet FOLLOW_98_in_message_relation9188 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
-    public static final BitSet FOLLOW_receiver_in_message_relation9190 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_message_label_in_message_relation9193 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dynamic_ref_in_caller9225 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dynamic_ref_in_receiver9245 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_extended_id_in_dynamic_ref9271 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_dynamic_ref9274 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_extended_id_in_dynamic_ref9276 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_IDENTIFIER_in_dynamic_component_name9307 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_dynamic_component_name9310 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_extended_id_in_dynamic_component_name9312 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_INTEGER_in_dynamic_component_name9321 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_class_name_in_object_name9344 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_object_name9354 = new BitSet(new long[]{0x00000000000000A0L});
-    public static final BitSet FOLLOW_extended_id_in_object_name9358 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_extended_id_in_group_name9398 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_message_label9431 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_change_string_marks_in_notational_tuning9455 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_change_concatenator_in_notational_tuning9461 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_change_prefix_in_notational_tuning9466 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_99_in_change_string_marks9481 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9483 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9485 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_100_in_change_concatenator9519 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_concatenator9521 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_101_in_change_prefix9555 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_prefix9557 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_equivalence_expression_in_expression9583 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_quantification_in_expression9597 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_implies_expression_in_equivalence_expression9619 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
-    public static final BitSet FOLLOW_102_in_equivalence_expression9629 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_implies_expression_in_equivalence_expression9633 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
-    public static final BitSet FOLLOW_and_or_xor_expression_in_implies_expression9661 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000002L});
-    public static final BitSet FOLLOW_65_in_implies_expression9671 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_implies_expression_in_implies_expression9675 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_comparison_expression_in_and_or_xor_expression9702 = new BitSet(new long[]{0x0000000000000002L,0x00000E0000000000L});
-    public static final BitSet FOLLOW_and_or_xor_op_in_and_or_xor_expression9714 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_comparison_expression_in_and_or_xor_expression9718 = new BitSet(new long[]{0x0000000000000002L,0x00000E0000000000L});
-    public static final BitSet FOLLOW_add_sub_expression_in_comparison_expression9746 = new BitSet(new long[]{0x0000000400000002L,0x001FC00000200000L});
-    public static final BitSet FOLLOW_comparison_op_in_comparison_expression9758 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_add_sub_expression_in_comparison_expression9763 = new BitSet(new long[]{0x0000000400000002L,0x001FC00000200000L});
-    public static final BitSet FOLLOW_mul_div_expression_in_add_sub_expression9791 = new BitSet(new long[]{0x0000000000000002L,0x0000018000000000L});
-    public static final BitSet FOLLOW_add_sub_op_in_add_sub_expression9803 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_mul_div_expression_in_add_sub_expression9807 = new BitSet(new long[]{0x0000000000000002L,0x0000018000000000L});
-    public static final BitSet FOLLOW_mod_pow_expression_in_mul_div_expression9835 = new BitSet(new long[]{0x0000000000000002L,0x00E0000000000000L});
-    public static final BitSet FOLLOW_mul_div_op_in_mul_div_expression9847 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_mod_pow_expression_in_mul_div_expression9851 = new BitSet(new long[]{0x0000000000000002L,0x00E0000000000000L});
-    public static final BitSet FOLLOW_lowest_expression_in_mod_pow_expression9880 = new BitSet(new long[]{0x0000000000000002L,0x0100000000001000L});
-    public static final BitSet FOLLOW_mod_pow_op_in_mod_pow_expression9892 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_mod_pow_expression_in_mod_pow_expression9896 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constant_in_lowest_expression9929 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_lowest_expression9938 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_call_chain_in_lowest_expression9942 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_unary_in_lowest_expression9992 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_lowest_expression_in_lowest_expression9996 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_42_in_lowest_expression10009 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
-    public static final BitSet FOLLOW_expression_in_lowest_expression10013 = new BitSet(new long[]{0x0000080000000000L});
-    public static final BitSet FOLLOW_43_in_lowest_expression10015 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_lowest_expression10025 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
-    public static final BitSet FOLLOW_call_chain_in_lowest_expression10029 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_call_chain_in_lowest_expression10065 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_103_in_add_sub_op10089 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_104_in_add_sub_op10097 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_103_in_add_sub_op_unary10115 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_104_in_add_sub_op_unary10123 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_105_in_and_or_xor_op10141 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_106_in_and_or_xor_op10148 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_107_in_and_or_xor_op10156 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_other_unary_in_unary10176 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_add_sub_op_unary_in_unary10190 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_108_in_other_unary10210 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_109_in_other_unary10218 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_110_in_other_unary10227 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_add_sub_op_in_binary10258 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mul_div_op_in_binary10262 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_comparison_op_in_binary10266 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_mod_pow_op_in_binary10281 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_and_or_xor_op_in_binary10285 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_65_in_binary10300 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_102_in_binary10304 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_111_in_comparison_op10320 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_112_in_comparison_op10328 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_113_in_comparison_op10336 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_114_in_comparison_op10343 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_115_in_comparison_op10350 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_116_in_comparison_op10358 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_85_in_comparison_op10365 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_110_in_comparison_op10372 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
-    public static final BitSet FOLLOW_85_in_comparison_op10374 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_34_in_comparison_op10381 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_117_in_mul_div_op10408 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_118_in_mul_div_op10416 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_119_in_mul_div_op10424 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_120_in_mod_pow_op10457 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_76_in_mod_pow_op10465 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10768 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10780 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10782 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10785 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_constant_in_synpred1_BON9925 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_42_in_actual_arguments7622 = new BitSet(new long[]{0x40000C00000003B0L,0x000071800F860000L});
+    public static final BitSet FOLLOW_expression_list_in_actual_arguments7632 = new BitSet(new long[]{0x0000080000000000L});
+    public static final BitSet FOLLOW_43_in_actual_arguments7655 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_expression_in_expression_list7691 = new BitSet(new long[]{0x0000000800000002L});
+    public static final BitSet FOLLOW_35_in_expression_list7701 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
+    public static final BitSet FOLLOW_expression_in_expression_list7705 = new BitSet(new long[]{0x0000000800000002L});
+    public static final BitSet FOLLOW_62_in_enumerated_set7751 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
+    public static final BitSet FOLLOW_enumeration_list_in_enumerated_set7755 = new BitSet(new long[]{0x8000000000000000L});
+    public static final BitSet FOLLOW_63_in_enumerated_set7757 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_enumeration_element_in_enumeration_list7799 = new BitSet(new long[]{0x0000000800000002L});
+    public static final BitSet FOLLOW_35_in_enumeration_list7809 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
+    public static final BitSet FOLLOW_enumeration_element_in_enumeration_list7813 = new BitSet(new long[]{0x0000000800000002L});
+    public static final BitSet FOLLOW_expression_in_enumeration_element7845 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_interval_in_enumeration_element7859 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_integer_interval_in_interval7906 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_character_interval_in_interval7918 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_integer_constant_in_integer_interval7951 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400000L});
+    public static final BitSet FOLLOW_86_in_integer_interval7953 = new BitSet(new long[]{0x0000000000000080L,0x0000018000000000L});
+    public static final BitSet FOLLOW_integer_constant_in_integer_interval7957 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_character_constant_in_character_interval7999 = new BitSet(new long[]{0x0000000000000000L,0x0000000000400000L});
+    public static final BitSet FOLLOW_86_in_character_interval8001 = new BitSet(new long[]{0x0000000000000100L});
+    public static final BitSet FOLLOW_character_constant_in_character_interval8005 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_manifest_constant_in_constant8031 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_87_in_constant8044 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_88_in_constant8057 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_89_in_constant8081 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_boolean_constant_in_manifest_constant8104 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_character_constant_in_manifest_constant8117 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_integer_constant_in_manifest_constant8130 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_real_constant_in_manifest_constant8143 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_constant8156 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_enumerated_set_in_manifest_constant8169 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_add_sub_op_in_sign8208 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_90_in_boolean_constant8234 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_91_in_boolean_constant8245 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_CHARACTER_CONSTANT_in_character_constant8269 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_sign_in_integer_constant8335 = new BitSet(new long[]{0x0000000000000080L});
+    public static final BitSet FOLLOW_INTEGER_in_integer_constant8346 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_sign_in_real_constant8391 = new BitSet(new long[]{0x0000000000000200L});
+    public static final BitSet FOLLOW_REAL_in_real_constant8403 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_92_in_dynamic_diagram8434 = new BitSet(new long[]{0x00800000000000E0L});
+    public static final BitSet FOLLOW_extended_id_in_dynamic_diagram8442 = new BitSet(new long[]{0x0080000000000040L});
+    public static final BitSet FOLLOW_COMMENT_in_dynamic_diagram8455 = new BitSet(new long[]{0x0080000000000000L});
+    public static final BitSet FOLLOW_55_in_dynamic_diagram8464 = new BitSet(new long[]{0x00040000020000A0L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_dynamic_block_in_dynamic_diagram8473 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_dynamic_diagram8497 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dynamic_component_in_dynamic_block8540 = new BitSet(new long[]{0x00040000000000A2L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_scenario_description_in_dynamic_component8577 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_object_group_in_dynamic_component8582 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_object_stack_in_dynamic_component8588 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_object_in_dynamic_component8593 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_message_relation_in_dynamic_component8598 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_50_in_scenario_description8626 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_scenario_name_in_scenario_description8628 = new BitSet(new long[]{0x0000000000000040L,0x0000000020000000L});
+    public static final BitSet FOLLOW_COMMENT_in_scenario_description8636 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
+    public static final BitSet FOLLOW_93_in_scenario_description8645 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_labelled_actions_in_scenario_description8652 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_scenario_description8659 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_labelled_action_in_labelled_actions8707 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_action_label_in_labelled_action8748 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_action_description_in_labelled_action8752 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_action_label8791 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_manifest_textblock_in_action_description8826 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_manifest_textblock_in_scenario_name8867 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_94_in_object_group8900 = new BitSet(new long[]{0x0000000000000000L,0x0000000080000000L});
+    public static final BitSet FOLLOW_95_in_object_group8925 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_group_name_in_object_group8931 = new BitSet(new long[]{0x0080000000000042L});
+    public static final BitSet FOLLOW_COMMENT_in_object_group8943 = new BitSet(new long[]{0x0080000000000002L});
+    public static final BitSet FOLLOW_group_components_in_object_group8958 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_55_in_group_components9009 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_dynamic_block_in_group_components9011 = new BitSet(new long[]{0x0000000002000000L});
+    public static final BitSet FOLLOW_25_in_group_components9013 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_96_in_object_stack9058 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_object_name_in_object_stack9065 = new BitSet(new long[]{0x0000000000000042L});
+    public static final BitSet FOLLOW_COMMENT_in_object_stack9077 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_97_in_object9125 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_object_name_in_object9132 = new BitSet(new long[]{0x0000000000000042L});
+    public static final BitSet FOLLOW_COMMENT_in_object9144 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_caller_in_message_relation9168 = new BitSet(new long[]{0x0000000000000000L,0x0000000400000000L});
+    public static final BitSet FOLLOW_98_in_message_relation9170 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_receiver_in_message_relation9172 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_message_label_in_message_relation9175 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dynamic_ref_in_caller9207 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_dynamic_ref_in_receiver9227 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_extended_id_in_dynamic_ref9253 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_70_in_dynamic_ref9256 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_extended_id_in_dynamic_ref9258 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_IDENTIFIER_in_dynamic_component_name9289 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_70_in_dynamic_component_name9292 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_extended_id_in_dynamic_component_name9294 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_INTEGER_in_dynamic_component_name9303 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_class_name_in_object_name9326 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_70_in_object_name9336 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_extended_id_in_object_name9340 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_extended_id_in_group_name9380 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_message_label9413 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_change_string_marks_in_notational_tuning9437 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_change_concatenator_in_notational_tuning9443 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_change_prefix_in_notational_tuning9448 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_99_in_change_string_marks9463 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9465 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9467 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_100_in_change_concatenator9501 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_concatenator9503 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_101_in_change_prefix9537 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_prefix9539 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_equivalence_expression_in_expression9565 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_quantification_in_expression9579 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_implies_expression_in_equivalence_expression9601 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
+    public static final BitSet FOLLOW_102_in_equivalence_expression9611 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_implies_expression_in_equivalence_expression9615 = new BitSet(new long[]{0x0000000000000002L,0x0000004000000000L});
+    public static final BitSet FOLLOW_and_or_xor_expression_in_implies_expression9643 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000002L});
+    public static final BitSet FOLLOW_65_in_implies_expression9653 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_implies_expression_in_implies_expression9657 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_comparison_expression_in_and_or_xor_expression9684 = new BitSet(new long[]{0x0000000000000002L,0x00000E0000000000L});
+    public static final BitSet FOLLOW_and_or_xor_op_in_and_or_xor_expression9696 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_comparison_expression_in_and_or_xor_expression9700 = new BitSet(new long[]{0x0000000000000002L,0x00000E0000000000L});
+    public static final BitSet FOLLOW_add_sub_expression_in_comparison_expression9728 = new BitSet(new long[]{0x0000000400000002L,0x001FC00000200000L});
+    public static final BitSet FOLLOW_comparison_op_in_comparison_expression9740 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_add_sub_expression_in_comparison_expression9745 = new BitSet(new long[]{0x0000000400000002L,0x001FC00000200000L});
+    public static final BitSet FOLLOW_mul_div_expression_in_add_sub_expression9773 = new BitSet(new long[]{0x0000000000000002L,0x0000018000000000L});
+    public static final BitSet FOLLOW_add_sub_op_in_add_sub_expression9785 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_mul_div_expression_in_add_sub_expression9789 = new BitSet(new long[]{0x0000000000000002L,0x0000018000000000L});
+    public static final BitSet FOLLOW_mod_pow_expression_in_mul_div_expression9817 = new BitSet(new long[]{0x0000000000000002L,0x00E0000000000000L});
+    public static final BitSet FOLLOW_mul_div_op_in_mul_div_expression9829 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_mod_pow_expression_in_mul_div_expression9833 = new BitSet(new long[]{0x0000000000000002L,0x00E0000000000000L});
+    public static final BitSet FOLLOW_lowest_expression_in_mod_pow_expression9862 = new BitSet(new long[]{0x0000000000000002L,0x0100000000001000L});
+    public static final BitSet FOLLOW_mod_pow_op_in_mod_pow_expression9874 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_mod_pow_expression_in_mod_pow_expression9878 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constant_in_lowest_expression9911 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_70_in_lowest_expression9920 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_call_chain_in_lowest_expression9924 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_unary_in_lowest_expression9974 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_lowest_expression_in_lowest_expression9978 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_42_in_lowest_expression9991 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
+    public static final BitSet FOLLOW_expression_in_lowest_expression9995 = new BitSet(new long[]{0x0000080000000000L});
+    public static final BitSet FOLLOW_43_in_lowest_expression9997 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
+    public static final BitSet FOLLOW_70_in_lowest_expression10007 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
+    public static final BitSet FOLLOW_call_chain_in_lowest_expression10011 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_call_chain_in_lowest_expression10047 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_103_in_add_sub_op10071 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_104_in_add_sub_op10079 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_103_in_add_sub_op_unary10097 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_104_in_add_sub_op_unary10105 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_105_in_and_or_xor_op10123 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_106_in_and_or_xor_op10130 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_107_in_and_or_xor_op10138 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_other_unary_in_unary10158 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_add_sub_op_unary_in_unary10172 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_108_in_other_unary10192 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_109_in_other_unary10200 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_110_in_other_unary10209 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_add_sub_op_in_binary10240 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mul_div_op_in_binary10244 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_comparison_op_in_binary10248 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_mod_pow_op_in_binary10263 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_and_or_xor_op_in_binary10267 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_65_in_binary10282 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_102_in_binary10286 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_111_in_comparison_op10302 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_112_in_comparison_op10310 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_113_in_comparison_op10318 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_114_in_comparison_op10325 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_115_in_comparison_op10332 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_116_in_comparison_op10340 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_85_in_comparison_op10347 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_110_in_comparison_op10354 = new BitSet(new long[]{0x0000000000000000L,0x0000000000200000L});
+    public static final BitSet FOLLOW_85_in_comparison_op10356 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_34_in_comparison_op10363 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_117_in_mul_div_op10390 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_118_in_mul_div_op10398 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_119_in_mul_div_op10406 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_120_in_mod_pow_op10439 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_76_in_mod_pow_op10447 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10750 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10762 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10764 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10767 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_constant_in_synpred1_BON9907 = new BitSet(new long[]{0x0000000000000002L});
 
 }

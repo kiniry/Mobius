@@ -333,7 +333,7 @@ public abstract class AbstractVisitor implements IVisitorWithAdditions {
   
 
 
-  public void visitAll(Collection<? extends AstNode> nodes) {
+  public final void visitAll(Collection<? extends AstNode> nodes) {
     if (nodes != null) {
       for (AstNode node : nodes) {
         node.accept(this);

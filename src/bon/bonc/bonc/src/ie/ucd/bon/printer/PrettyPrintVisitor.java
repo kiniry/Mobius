@@ -5,6 +5,7 @@ import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.BooleanConstant;
+import ie.ucd.bon.ast.CallExp;
 import ie.ucd.bon.ast.CharacterConstant;
 import ie.ucd.bon.ast.CharacterInterval;
 import ie.ucd.bon.ast.ClassChart;
@@ -17,21 +18,32 @@ import ie.ucd.bon.ast.ClientEntity;
 import ie.ucd.bon.ast.ClientEntityExpression;
 import ie.ucd.bon.ast.ClientEntityList;
 import ie.ucd.bon.ast.ClientRelation;
+import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.ClusterEntry;
 import ie.ucd.bon.ast.CompactedIndirectionElement;
+import ie.ucd.bon.ast.ContractClause;
+import ie.ucd.bon.ast.CreationChart;
+import ie.ucd.bon.ast.CreationEntry;
 import ie.ucd.bon.ast.DictionaryEntry;
+import ie.ucd.bon.ast.DynamicComponent;
+import ie.ucd.bon.ast.DynamicDiagram;
 import ie.ucd.bon.ast.EnumerationElement;
 import ie.ucd.bon.ast.EventChart;
 import ie.ucd.bon.ast.EventEntry;
 import ie.ucd.bon.ast.Expression;
+import ie.ucd.bon.ast.Feature;
+import ie.ucd.bon.ast.FeatureArgument;
 import ie.ucd.bon.ast.FeatureName;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.GenericIndirection;
 import ie.ucd.bon.ast.HasType;
 import ie.ucd.bon.ast.IVisitorWithAdditions;
 import ie.ucd.bon.ast.IndexClause;
 import ie.ucd.bon.ast.Indexing;
+import ie.ucd.bon.ast.IndirectionElement;
+import ie.ucd.bon.ast.IndirectionFeatureList;
 import ie.ucd.bon.ast.IndirectionFeaturePart;
 import ie.ucd.bon.ast.InheritanceRelation;
 import ie.ucd.bon.ast.IntegerConstant;
@@ -40,8 +52,14 @@ import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.LabelledAction;
 import ie.ucd.bon.ast.MemberRange;
 import ie.ucd.bon.ast.Multiplicity;
+import ie.ucd.bon.ast.NamedIndirection;
+import ie.ucd.bon.ast.ObjectInstance;
+import ie.ucd.bon.ast.ObjectName;
+import ie.ucd.bon.ast.ObjectStack;
+import ie.ucd.bon.ast.ParentIndirection;
 import ie.ucd.bon.ast.Quantification;
 import ie.ucd.bon.ast.RealConstant;
+import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.ScenarioChart;
 import ie.ucd.bon.ast.ScenarioDescription;
 import ie.ucd.bon.ast.ScenarioEntry;
@@ -50,15 +68,18 @@ import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.ast.StaticRef;
+import ie.ucd.bon.ast.StaticRefPart;
 import ie.ucd.bon.ast.StringConstant;
 import ie.ucd.bon.ast.SupplierIndirection;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.TypeRange;
 import ie.ucd.bon.ast.UnaryExp;
+import ie.ucd.bon.ast.UnqualifiedCall;
 import ie.ucd.bon.ast.VariableRange;
 import ie.ucd.bon.ast.BinaryExp.Op;
 import ie.ucd.bon.ast.Clazz.Mod;
+import ie.ucd.bon.ast.FeatureSpecification.Modifier;
 import ie.ucd.bon.ast.KeywordConstant.Constant;
 import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.ast.TypeMark.Mark;
@@ -105,8 +126,10 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.print(toString(mod));
     tp.print(name.getName());
 
-    if (generics != null && generics.size() > 0) {
-      //TODO print list of...
+    if (!generics.isEmpty()) {
+      tp.print('[');
+      visitAllPrintingSeparator(generics, ", ", false);
+      tp.print(']');
     } else {
       tp.print(" ");
     }
@@ -194,7 +217,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     if (!queries.isEmpty()) {
       tp.printLine("query");
       tp.increaseIndentation();
-      
+
       for (Iterator<String> it = queries.iterator(); it.hasNext(); ) {
         tp.startLine();
         tp.print(it.next());
@@ -421,7 +444,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     }
     genericIndirection.accept(this);
   }
-  
+
   @Override
   public void visitLabelledAction(LabelledAction node, String label,
       String description, SourceLocation loc) {
@@ -460,8 +483,8 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       CompactedIndirectionElement node, SourceLocation loc) {
     tp.print("...");
   }
-  
-  
+
+
 
   @Override
   public void visitScenarioChart(ScenarioChart node, String systemName,
@@ -470,18 +493,18 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.startLine();
     tp.print("scenario_chart ");
     tp.printLine(systemName);
-    
+
     tp.increaseIndentation();
     visitNodeIfNonNull(indexing);
     printExplanation(explanation);
     printPart(part);
     visitAll(entries);
     tp.decreaseIndentation();
-    
+
     tp.startLine();
     tp.printLine("end");
   }
-  
+
   @Override
   public void visitScenarioEntry(ScenarioEntry node, String name,
       String description, SourceLocation loc) {
@@ -491,7 +514,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     printDescription(description);
     tp.printLine();
   }
-  
+
   @Override
   public void visitScenarioDescription(ScenarioDescription node, String name,
       List<LabelledAction> actions, String comment, SourceLocation loc) {
@@ -533,7 +556,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     printPart(part);
     visitAll(entries);
     tp.decreaseIndentation();
-    
+
     tp.startLine();
     tp.printLine("end");
   }
@@ -570,8 +593,276 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   public void visitFeatureName(FeatureName node, String name, SourceLocation loc) {
     tp.print(name);
   }
+
+  @Override
+  public void visitClassInterface(ClassInterface node, List<Feature> features,
+      List<Type> parents, List<Expression> invariant, Indexing indexing,
+      SourceLocation loc) {
+    tp.increaseIndentation();
+    visitNodeIfNonNull(indexing);
+    if (!parents.isEmpty()) {
+      tp.startLine();
+      tp.print("inherit ");
+      visitAllPrintingSeparator(parents, "; ", false);
+      tp.printLine(";");
+    }
+    visitAll(features);
+    if (!invariant.isEmpty()) {
+      tp.startLine();
+      tp.printLine("invariant");
+      tp.increaseIndentation();
+      visitAll(invariant);
+      tp.decreaseIndentation();
+    }
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.print("end");
+  }
+
+  @Override
+  public void visitFeature(Feature node,
+      List<FeatureSpecification> featureSpecifications,
+      List<ClassName> selectiveExport, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("feature");
+    if (selectiveExport != null) {
+      tp.print(" {");
+      visitAllPrintingSeparator(selectiveExport, ", ", false);
+      tp.print('}');
+    }
+    printCommentOrReturn(comment);
+    tp.increaseIndentation();
+    visitAll(featureSpecifications);
+    tp.decreaseIndentation();
+  }
+
+  @Override
+  public void visitFeatureSpecification(FeatureSpecification node,
+      Modifier modifier, List<FeatureName> featureNames,
+      List<FeatureArgument> arguments, ContractClause contracts,
+      HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
+    tp.startLine();
+    switch(modifier) {
+    case DEFERRED:
+      tp.print("deferred ");
+      break;
+    case EFFECTIVE:
+      tp.print("effective ");
+      break;
+    case REDEFINED:
+      tp.print("redefined ");
+    }
+    visitAllPrintingSeparator(featureNames, ", ", false);
+    if (hasType != null) {
+      hasType.accept(this);
+      tp.printSpace();
+    }
+    if (renaming != null) {
+      renaming.accept(this);
+      tp.printSpace();
+    }
+    tp.printLine();
+    tp.increaseIndentation();
+    if (!arguments.isEmpty()) {
+      tp.startLine();
+      visitAllPrintingSeparator(arguments, " ", false);
+      tp.printLine();
+    }
+    contracts.accept(this);
+    tp.decreaseIndentation();
+  }
+
+  @Override
+  public void visitContractClause(ContractClause node, List<Expression> preconditions, List<Expression> postconditions, SourceLocation loc) {
+    boolean pre = !preconditions.isEmpty();
+    boolean post = !postconditions.isEmpty();
+    if (pre || post) {
+      if (pre) {
+        tp.startLine();
+        tp.printLine("require");
+        tp.increaseIndentation();
+        visitAllPrintingSeparatorAndlines(preconditions, ";", 1, true, true);
+        tp.decreaseIndentation();
+      }
+      if (post) {
+        tp.startLine();
+        tp.printLine("ensure");
+        tp.increaseIndentation();
+        visitAllPrintingSeparatorAndlines(postconditions, ";", 1, true, true);
+        tp.decreaseIndentation();
+      }
+      tp.startLine();
+      tp.printLine("end");
+    }
+  }
+
+  @Override
+  public void visitFeatureArgument(FeatureArgument node, String identifier, Type type, SourceLocation loc) {
+    tp.print("-> ");
+    if (identifier != null) {
+      tp.print(identifier);
+      tp.print(':');
+    }
+    type.accept(this);
+  }
+
+  @Override
+  public void visitFormalGeneric(FormalGeneric node, String identifier, Type type, SourceLocation loc) {
+    tp.print(identifier);
+    if (type != null) {
+      tp.print(" -> ");
+      type.accept(this);
+    }   
+  }
+
+  @Override
+  public void visitRenameClause(RenameClause node, ClassName className, FeatureName featureName, SourceLocation loc) {
+    tp.print("{^");
+    tp.print(className);
+    tp.print('.');
+    featureName.accept(this);
+    tp.print('}');
+  }
+
+  @Override
+  public void visitGenericIndirection(GenericIndirection node, IndirectionElement indirectionElement, SourceLocation loc) {
+    indirectionElement.accept(this);
+  }
+
+  @Override
+  public void visitIndirectionFeatureList(IndirectionFeatureList node, List<FeatureName> featureNames, SourceLocation loc) {
+    tp.print('(');
+    visitAllPrintingSeparator(featureNames, ", ", false);
+    tp.print(')');
+  }
+
+  @Override
+  public void visitNamedIndirection(NamedIndirection node, ClassName className, List<IndirectionElement> indirectionElements, SourceLocation loc) {
+    tp.print(className);
+    tp.print('[');
+    visitAllPrintingSeparator(indirectionElements, ", ", false);
+    tp.print(']');
+  }
+
+  @Override
+  public void visitParentIndirection(ParentIndirection node, GenericIndirection genericIndirection, SourceLocation loc) {
+    tp.print("-> ");
+    genericIndirection.accept(this);
+  }
+  
+  @Override
+  public void visitCluster(Cluster node, String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("cluster");
+    if (reused) {
+      tp.print(" reused");
+    }
+    printCommentOrReturn(comment);
+    tp.startLine();
+    tp.printLine("component");
+    tp.increaseIndentation();
+    visitAll(components);
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.printLine("end");
+  }
+
+  @Override
+  public void visitCreationChart(CreationChart node, String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation loc) {
+    tp.startLine();
+    tp.print("creation_chart ");
+    tp.printLine(name);
+    tp.increaseIndentation();
+    visitNodeIfNonNull(indexing);
+    printExplanation(explanation);
+    printPart(part);
+    visitAll(entries);
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.printLine("end");
+  }
+
+  @Override
+  public void visitCreationEntry(CreationEntry node, ClassName name, List<String> types, SourceLocation loc) {
+    tp.startLine();
+    tp.print("creator ");
+    tp.print(name);
+    tp.print(" creates ");
+    tp.printLine(StringUtil.appendWithSeparator(types, ", "));
+  }
   
   
+  @Override
+  public void visitCallExp(CallExp node, Expression qualifier, List<UnqualifiedCall> callChain, SourceLocation loc) {
+    if (qualifier != null) {
+      qualifier.accept(this);
+      tp.print('.');
+    }
+    visitAllPrintingSeparator(callChain, ".", false);
+  }
+
+  @Override
+  public void visitObjectInstance(ObjectInstance node, ObjectName name, String comment, SourceLocation loc) {
+    tp.print("object ");
+    tp.print(name);
+    printCommentOrReturn(comment);
+  }
+
+  @Override
+  public void visitObjectName(ObjectName node, ClassName className, String extendedId, SourceLocation loc) {
+    tp.print(className);
+    if (extendedId != null) {
+      tp.print('.');
+      tp.print(extendedId);
+    }
+  }
+
+  @Override
+  public void visitObjectStack(ObjectStack node, ObjectName name, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("object_stack ");
+    tp.print(name);
+    printCommentOrReturn(comment);
+  }
+
+  @Override
+  public void visitStaticRef(StaticRef node, List<StaticRefPart> prefix, StaticRefPart name, SourceLocation loc) {
+    if (!prefix.isEmpty()) {
+      visitAllPrintingSeparator(prefix, ".", true);
+    }
+    tp.print(name);
+  }
+
+  @Override
+  public void visitStaticRefPart(StaticRefPart node, String name, SourceLocation loc) {
+    tp.print(name);
+  }
+
+  @Override
+  public void visitUnqualifiedCall(UnqualifiedCall node, String id, List<Expression> args, SourceLocation loc) {
+    tp.print(id);
+    if (!args.isEmpty()) {
+      tp.print('(');
+      visitAllPrintingSeparator(args, ", ", false);
+      tp.print(')');
+    }
+  }
+
+  @Override
+  public void visitDynamicDiagram(DynamicDiagram node, List<DynamicComponent> components, String extendedId, String comment, SourceLocation loc) {
+    tp.startLine();
+    tp.print("dynamic_diagram");
+    if (extendedId != null) {
+      tp.printSpace();
+      tp.print(extendedId);
+    }
+    printCommentOrReturn(comment);
+    tp.increaseIndentation();
+    visitAll(components);
+    tp.decreaseIndentation();
+    tp.startLine();
+    tp.print("end");
+  }
 
   @Override
   public void visitCharacterConstant(CharacterConstant node, Character value,
@@ -627,7 +918,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       tp.printLine(comment);
     }
   }
-  
+
   protected void printComment(String comment) {
     if (comment != null) {
       tp.print(" -- ");
@@ -740,6 +1031,18 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     }
   }
 
+  public void visitAllPrintingSeparatorAndlines(Collection<? extends AstNode> nodes, String separator, int numberOfLines, boolean separatorAtEnd, boolean linesAtEnd) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+      it.next().accept(this);
+      if (it.hasNext() || separatorAtEnd) {
+        tp.print(separator);
+      }
+      if (it.hasNext() || linesAtEnd) {
+        tp.printLines(numberOfLines);
+      }      
+    }
+  }
+  
   public void visitAllPrintingSeparator(Collection<? extends AstNode> nodes, String separator, boolean separatorAtEnd) {
     for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
       it.next().accept(this);
@@ -748,7 +1051,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       }
     }
   }
-  
+
   public void visitAllPrintingLines(Collection<? extends AstNode> nodes, int numberOfLines, boolean linesAtEnd) {
     for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
       it.next().accept(this);
@@ -784,14 +1087,14 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.print(" description ");
     tp.print(description);
   }
-  
+
   protected void printSemanticLabel(String label) {
     if (label != null) {
       tp.printSpace();
       tp.print(label);
     }
   }
-  
-  
-  
+
+
+
 }

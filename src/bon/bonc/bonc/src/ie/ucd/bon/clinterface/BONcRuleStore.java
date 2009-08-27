@@ -45,10 +45,6 @@ public class BONcRuleStore extends RuleStore {
     ValidityRule rule5 = new ValidityRule(rule5Condition);
     rule5.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule5Expression()));
     addValidityRule(rule5);
-    Expression<Boolean> rule6Condition = new Rule6Condition();
-    ValidityRule rule6 = new ValidityRule(rule6Condition);
-    rule6.addAction(new Action<List<String>>("CLOPSERROROPTION", new Rule6Expression()));
-    addValidityRule(rule6);
   }
 
   public static class Rule1Condition implements Expression<Boolean> {
@@ -173,30 +169,12 @@ public class BONcRuleStore extends RuleStore {
      * {@inheritDoc}
      */
     public Boolean evaluate(final OptionStore optionStore) {
-      return ((ie.ucd.clops.runtime.options.EnumOption)optionStore.getOptionByIdentifier("Print")).hasValue() && !((ie.ucd.clops.runtime.options.FileOption)optionStore.getOptionByIdentifier("PrintOutput")).hasValue();
-    }
-  }
-    
-  public static class Rule5Expression implements Expression<List<String>> {
-    /**
-     * {@inheritDoc}
-     */
-    public List<String> evaluate(final OptionStore optionStore) {
-      return Arrays.asList("Output file (-po) for printing must be provided.");
-    }
-  }
-  
-  public static class Rule6Condition implements Expression<Boolean> {
-    /**
-     * {@inheritDoc}
-     */
-    public Boolean evaluate(final OptionStore optionStore) {
       return !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Version")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("Help")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintMan")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintReadme")).getValue() && !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("PrintBashCompletion")).getValue() && 
  !((ie.ucd.clops.runtime.options.BooleanOption)optionStore.getOptionByIdentifier("ReadFromStdin")).getValue() && (((ie.ucd.clops.runtime.options.FileListOption)optionStore.getOptionByIdentifier("SourceFiles")).getValue().size() == 0);
     }
   }
     
-  public static class Rule6Expression implements Expression<List<String>> {
+  public static class Rule5Expression implements Expression<List<String>> {
     /**
      * {@inheritDoc}
      */
