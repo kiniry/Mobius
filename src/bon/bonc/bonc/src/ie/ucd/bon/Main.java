@@ -7,12 +7,12 @@ package ie.ucd.bon;
 import static ie.ucd.clops.util.OptionUtil.SortingOption.ALPHABETICAL_BY_FIRST_ALIAS;
 import ie.ucd.bon.clinterface.BONcOptionStore;
 import ie.ucd.bon.clinterface.BONcOptionsInterface;
+import ie.ucd.bon.clinterface.BONcParseResult;
 import ie.ucd.bon.clinterface.BONcParser;
 import ie.ucd.bon.clinterface.InvalidArgumentsError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.util.FileUtil;
-import ie.ucd.clops.runtime.errors.ParseResult;
 import ie.ucd.clops.util.OptionUtil;
 
 import java.io.File;
@@ -75,11 +75,9 @@ public final class Main {
     Problems overallProblems = new Problems("Overall problems");
     try {      
       //CLOLogger.setLogLevel(Level.FINE);
-      BONcParser clParser = new BONcParser();
-
-      ParseResult clParseResult = clParser.parse(args);
+      BONcParseResult clParseResult = BONcParser.parse(args);
       if (clParseResult.successfulParse()) {
-        BONcOptionStore options = clParser.getOptionStore();
+        BONcOptionStore options = clParseResult.getOptionStore();
 
         debug = options.isDebugSet() && options.getDebug(); 
 

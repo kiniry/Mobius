@@ -182,7 +182,6 @@ public final class Printer {
         Main.logDebug("Printing for file: " + file);
 
         ParseResult parse = parsingTracker.getParseResult(file);
-        System.out.println("Parse result: " + parse);
         if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
           try {
             String printed;

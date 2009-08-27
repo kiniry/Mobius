@@ -84,5 +84,5 @@ VALIDITY::
 
 //If none of the AloneOptions are true
 {!$(Version) && !$(Help) && !$(PrintMan) && !$(PrintReadme) && !$(PrintBashCompletion) && 
- !$(ReadFromStdin) && ($(SourceFiles).size() == 0)} 
+ !$(ReadFromStdin) && (!$(SourceFiles?) || ($(SourceFiles)).size() == 0)} 
   : "Must provide at least one source file or read from standard input.";
