@@ -16,9 +16,9 @@ public class \ClassName extends \Basename {
   }}
 \invariants{  //@ invariant \inv_text;
 }
-\children{  private final \MemberType \memberName;
+\children{  public final \MemberType \memberName;
 }
-\primitives{  private final \Membertype \memberName;
+\primitives{  public final \Membertype \memberName;
 }
 
   // === Constructors and Factories ===

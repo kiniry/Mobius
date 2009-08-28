@@ -69,7 +69,7 @@
 	
   <path id="test.path">
     <path refid="base.path"/>
-    <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar ${clops-runtime-lib}"/>
+    <filelist dir="${lib}" files="antlr-runtime-3.1.3.jar ${clops-runtime-lib} freemarker.jar"/>
     <pathelement location="${build}"/>
   </path>
   
@@ -169,7 +169,7 @@
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">
-    	<fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,${clops-runtime-lib},stringtemplate.jar,prefuse.jar,google-collect-1.0-rc2.jar"/>
+    	<fileset dir="${lib}/" includes="antlr-runtime-3.1.3.jar,antlr-2.7.7.jar,${clops-runtime-lib},stringtemplate.jar,prefuse.jar,google-collect-1.0-rc2.jar,freemarker.jar"/>
     </copy>
   	
     <chmod perm="a+x">
