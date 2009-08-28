@@ -11,14 +11,14 @@ import ie.ucd.bon.source.SourceLocation;
 public class EventChart extends InformalChart {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final String systemName;
-  private final Boolean incoming;
-  private final Boolean outgoing;
-  private final List<EventEntry> entries;
-  private final String explanation;
-  private final String part;
+  public final String systemName;
+  public final Boolean incoming;
+  public final Boolean outgoing;
+  public final List<EventEntry> entries;
+  public final String explanation;
+  public final String part;
 
 
   // === Constructors and Factories ===

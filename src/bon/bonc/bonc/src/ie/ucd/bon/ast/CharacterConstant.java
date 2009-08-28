@@ -12,7 +12,7 @@ public class CharacterConstant extends ManifestConstant {
 
 
 
-  private final Character value;
+  public final Character value;
 
 
   // === Constructors and Factories ===

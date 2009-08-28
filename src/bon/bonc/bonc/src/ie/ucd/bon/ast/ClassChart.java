@@ -11,15 +11,15 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassChart extends InformalChart {
 
 
-  private final ClassName name;
-  private final Indexing indexing;
+  public final ClassName name;
+  public final Indexing indexing;
 
-  private final List<ClassName> inherits;
-  private final List<String> queries;
-  private final List<String> commands;
-  private final List<String> constraints;
-  private final String explanation;
-  private final String part;
+  public final List<ClassName> inherits;
+  public final List<String> queries;
+  public final List<String> commands;
+  public final List<String> constraints;
+  public final String explanation;
+  public final String part;
 
 
   // === Constructors and Factories ===

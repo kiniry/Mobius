@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class ObjectStack extends DynamicComponent {
 
 
-  private final ObjectName name;
+  public final ObjectName name;
 
-  private final String comment;
+  public final String comment;
 
 
   // === Constructors and Factories ===

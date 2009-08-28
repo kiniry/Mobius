@@ -11,8 +11,8 @@ import ie.ucd.bon.source.SourceLocation;
 public class SupplierIndirection extends ClientEntity {
 
 
-  private final IndirectionFeaturePart indirectionFeaturePart;
-  private final GenericIndirection genericIndirection;
+  public final IndirectionFeaturePart indirectionFeaturePart;
+  public final GenericIndirection genericIndirection;
 
 
 

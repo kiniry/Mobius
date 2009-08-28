@@ -17,8 +17,8 @@ public class TypeMark extends AstNode {
   }
 
 
-  private final Mark mark;
-  private final Integer multiplicity;
+  public final Mark mark;
+  public final Integer multiplicity;
 
 
   // === Constructors and Factories ===

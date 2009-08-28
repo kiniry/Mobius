@@ -11,12 +11,12 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassDictionary extends SpecificationElement {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final String systemName;
-  private final List<DictionaryEntry> entries;
-  private final String explanation;
-  private final String part;
+  public final String systemName;
+  public final List<DictionaryEntry> entries;
+  public final String explanation;
+  public final String part;
 
 
   // === Constructors and Factories ===

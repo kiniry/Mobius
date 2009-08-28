@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class TypeRange extends VariableRange {
 
 
-  private final Type type;
+  public final Type type;
 
-  private final List<String> identifiers;
+  public final List<String> identifiers;
 
 
   // === Constructors and Factories ===

@@ -11,12 +11,12 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClientRelation extends StaticRelation {
 
 
-  private final StaticRef client;
-  private final StaticRef supplier;
-  private final ClientEntityExpression clientEntities;
-  private final TypeMark typeMark;
+  public final StaticRef client;
+  public final StaticRef supplier;
+  public final ClientEntityExpression clientEntities;
+  public final TypeMark typeMark;
 
-  private final String semanticLabel;
+  public final String semanticLabel;
 
 
   // === Constructors and Factories ===

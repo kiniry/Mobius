@@ -12,7 +12,7 @@ public class ClientEntityList extends ClientEntityExpression {
 
 
 
-  private final List<ClientEntity> entities;
+  public final List<ClientEntity> entities;
 
 
   // === Constructors and Factories ===

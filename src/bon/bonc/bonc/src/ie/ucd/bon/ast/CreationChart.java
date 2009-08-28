@@ -11,12 +11,12 @@ import ie.ucd.bon.source.SourceLocation;
 public class CreationChart extends InformalChart {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final String name;
-  private final List<CreationEntry> entries;
-  private final String explanation;
-  private final String part;
+  public final String name;
+  public final List<CreationEntry> entries;
+  public final String explanation;
+  public final String part;
 
 
   // === Constructors and Factories ===

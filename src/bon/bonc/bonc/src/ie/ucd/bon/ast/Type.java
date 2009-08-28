@@ -12,9 +12,9 @@ public class Type extends AstNode {
 
 
 
-  private final String identifier;
-  private final List<Type> actualGenerics;
-  private final String fullString;
+  public final String identifier;
+  public final List<Type> actualGenerics;
+  public final String fullString;
 
 
   // === Constructors and Factories ===

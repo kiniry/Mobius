@@ -11,8 +11,8 @@ import ie.ucd.bon.source.SourceLocation;
 public class RenameClause extends AstNode {
 
 
-  private final ClassName className;
-  private final FeatureName featureName;
+  public final ClassName className;
+  public final FeatureName featureName;
 
 
 

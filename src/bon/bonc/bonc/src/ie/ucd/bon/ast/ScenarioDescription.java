@@ -12,9 +12,9 @@ public class ScenarioDescription extends DynamicComponent {
 
 
 
-  private final String name;
-  private final List<LabelledAction> actions;
-  private final String comment;
+  public final String name;
+  public final List<LabelledAction> actions;
+  public final String comment;
 
 
   // === Constructors and Factories ===

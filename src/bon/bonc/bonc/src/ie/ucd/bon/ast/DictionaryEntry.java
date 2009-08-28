@@ -12,9 +12,9 @@ public class DictionaryEntry extends AstNode {
 
 
 
-  private final String name;
-  private final List<String> clusters;
-  private final String description;
+  public final String name;
+  public final List<String> clusters;
+  public final String description;
 
 
   // === Constructors and Factories ===

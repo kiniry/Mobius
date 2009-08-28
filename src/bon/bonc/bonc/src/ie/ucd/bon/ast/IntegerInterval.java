@@ -12,8 +12,8 @@ public class IntegerInterval extends Interval {
 
 
 
-  private final Integer start;
-  private final Integer stop;
+  public final Integer start;
+  public final Integer stop;
 
 
   // === Constructors and Factories ===

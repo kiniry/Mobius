@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class MemberRange extends VariableRange {
 
 
-  private final Expression expression;
+  public final Expression expression;
 
-  private final List<String> identifiers;
+  public final List<String> identifiers;
 
 
   // === Constructors and Factories ===

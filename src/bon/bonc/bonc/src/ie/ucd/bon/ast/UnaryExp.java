@@ -17,9 +17,9 @@ public class UnaryExp extends Expression {
     ADD
   }
 
-  private final Expression expression;
+  public final Expression expression;
 
-  private final Op op;
+  public final Op op;
 
 
   // === Constructors and Factories ===

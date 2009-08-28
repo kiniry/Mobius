@@ -12,7 +12,7 @@ public class StaticRefPart extends AstNode {
 
 
 
-  private final String name;
+  public final String name;
 
 
   // === Constructors and Factories ===

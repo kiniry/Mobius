@@ -16,14 +16,14 @@ public class FeatureSpecification extends AstNode {
     EFFECTIVE
   }
 
-  private final ContractClause contracts;
-  private final HasType hasType;
-  private final RenameClause renaming;
+  public final ContractClause contracts;
+  public final HasType hasType;
+  public final RenameClause renaming;
 
-  private final Modifier modifier;
-  private final List<FeatureName> featureNames;
-  private final List<FeatureArgument> arguments;
-  private final String comment;
+  public final Modifier modifier;
+  public final List<FeatureName> featureNames;
+  public final List<FeatureArgument> arguments;
+  public final String comment;
 
 
   // === Constructors and Factories ===

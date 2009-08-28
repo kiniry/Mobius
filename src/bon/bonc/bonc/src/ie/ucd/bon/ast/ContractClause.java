@@ -12,8 +12,8 @@ public class ContractClause extends AstNode {
 
 
 
-  private final List<Expression> preconditions;
-  private final List<Expression> postconditions;
+  public final List<Expression> preconditions;
+  public final List<Expression> postconditions;
 
 
   // === Constructors and Factories ===

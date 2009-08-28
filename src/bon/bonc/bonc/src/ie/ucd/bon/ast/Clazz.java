@@ -16,15 +16,15 @@ public class Clazz extends StaticComponent {
     EFFECTIVE
   }
 
-  private final ClassName name;
-  private final ClassInterface classInterface;
+  public final ClassName name;
+  public final ClassInterface classInterface;
 
-  private final List<FormalGeneric> generics;
-  private final Mod mod;
-  private final Boolean reused;
-  private final Boolean persistent;
-  private final Boolean interfaced;
-  private final String comment;
+  public final List<FormalGeneric> generics;
+  public final Mod mod;
+  public final Boolean reused;
+  public final Boolean persistent;
+  public final Boolean interfaced;
+  public final String comment;
 
 
   // === Constructors and Factories ===

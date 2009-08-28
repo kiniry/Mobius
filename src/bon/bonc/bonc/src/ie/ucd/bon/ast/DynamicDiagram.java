@@ -12,9 +12,9 @@ public class DynamicDiagram extends SpecificationElement {
 
 
 
-  private final List<DynamicComponent> components;
-  private final String extendedId;
-  private final String comment;
+  public final List<DynamicComponent> components;
+  public final String extendedId;
+  public final String comment;
 
 
   // === Constructors and Factories ===

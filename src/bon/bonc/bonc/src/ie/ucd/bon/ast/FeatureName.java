@@ -12,7 +12,7 @@ public class FeatureName extends IndirectionFeaturePart {
 
 
 
-  private final String name;
+  public final String name;
 
 
   // === Constructors and Factories ===

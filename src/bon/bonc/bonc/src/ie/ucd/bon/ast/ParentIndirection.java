@@ -11,7 +11,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class ParentIndirection extends ClientEntity {
 
 
-  private final GenericIndirection genericIndirection;
+  public final GenericIndirection genericIndirection;
 
 
 

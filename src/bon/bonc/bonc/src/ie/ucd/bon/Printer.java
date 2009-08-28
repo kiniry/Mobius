@@ -15,6 +15,7 @@ import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.printer.PrintingTracker;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
+import ie.ucd.bon.printer.XHTMLPrintVisitor;
 import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.StringUtil;
 
@@ -125,6 +126,10 @@ public final class Printer {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       parseResult.getParse().accept(new PrettyPrintVisitor(new PrintStream(baos)));
       return baos.toString();
+    case HTML:
+      ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+      parseResult.getParse().accept(new XHTMLPrintVisitor(new PrintStream(baos2)));
+      return baos2.toString();
     default:
       return "";
     }

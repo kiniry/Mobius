@@ -12,7 +12,7 @@ public class StringConstant extends ManifestConstant {
 
 
 
-  private final String value;
+  public final String value;
 
 
   // === Constructors and Factories ===

@@ -33,10 +33,10 @@ public class BinaryExp extends Expression {
     ADD
   }
 
-  private final Expression left;
-  private final Expression right;
+  public final Expression left;
+  public final Expression right;
 
-  private final Op op;
+  public final Op op;
 
 
   // === Constructors and Factories ===

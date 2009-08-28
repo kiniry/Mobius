@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class ObjectName extends AstNode {
 
 
-  private final ClassName className;
+  public final ClassName className;
 
-  private final String extendedId;
+  public final String extendedId;
 
 
   // === Constructors and Factories ===

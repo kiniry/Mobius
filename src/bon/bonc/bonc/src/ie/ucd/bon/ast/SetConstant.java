@@ -12,7 +12,7 @@ public class SetConstant extends ManifestConstant {
 
 
 
-  private final List<EnumerationElement> enumerations;
+  public final List<EnumerationElement> enumerations;
 
 
   // === Constructors and Factories ===

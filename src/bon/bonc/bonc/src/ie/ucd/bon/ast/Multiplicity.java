@@ -12,7 +12,7 @@ public class Multiplicity extends ClientEntityExpression {
 
 
 
-  private final Integer multiplicity;
+  public final Integer multiplicity;
 
 
   // === Constructors and Factories ===

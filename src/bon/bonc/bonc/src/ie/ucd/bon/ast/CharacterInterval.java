@@ -12,8 +12,8 @@ public class CharacterInterval extends Interval {
 
 
 
-  private final Character start;
-  private final Character stop;
+  public final Character start;
+  public final Character stop;
 
 
   // === Constructors and Factories ===

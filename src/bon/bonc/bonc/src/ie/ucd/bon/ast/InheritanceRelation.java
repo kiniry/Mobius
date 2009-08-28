@@ -11,11 +11,11 @@ import ie.ucd.bon.source.SourceLocation;
 public class InheritanceRelation extends StaticRelation {
 
 
-  private final StaticRef child;
-  private final StaticRef parent;
-  private final Multiplicity multiplicity;
+  public final StaticRef child;
+  public final StaticRef parent;
+  public final Multiplicity multiplicity;
 
-  private final String semanticLabel;
+  public final String semanticLabel;
 
 
   // === Constructors and Factories ===

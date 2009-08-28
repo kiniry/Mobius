@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class NamedIndirection extends IndirectionElement {
 
 
-  private final ClassName className;
+  public final ClassName className;
 
-  private final List<IndirectionElement> indirectionElements;
+  public final List<IndirectionElement> indirectionElements;
 
 
   // === Constructors and Factories ===

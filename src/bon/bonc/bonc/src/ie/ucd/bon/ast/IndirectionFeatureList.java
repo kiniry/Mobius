@@ -12,7 +12,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
 
 
 
-  private final List<FeatureName> featureNames;
+  public final List<FeatureName> featureNames;
 
 
   // === Constructors and Factories ===

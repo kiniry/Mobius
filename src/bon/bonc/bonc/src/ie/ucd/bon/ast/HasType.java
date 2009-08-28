@@ -11,8 +11,8 @@ import ie.ucd.bon.source.SourceLocation;
 public class HasType extends AstNode {
 
 
-  private final TypeMark mark;
-  private final Type type;
+  public final TypeMark mark;
+  public final Type type;
 
 
 

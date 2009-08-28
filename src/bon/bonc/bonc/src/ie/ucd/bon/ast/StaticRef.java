@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class StaticRef extends AstNode {
 
 
-  private final StaticRefPart name;
+  public final StaticRefPart name;
 
-  private final List<StaticRefPart> prefix;
+  public final List<StaticRefPart> prefix;
 
 
   // === Constructors and Factories ===

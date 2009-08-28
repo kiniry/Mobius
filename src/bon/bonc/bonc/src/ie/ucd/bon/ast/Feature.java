@@ -12,9 +12,9 @@ public class Feature extends AstNode {
 
 
 
-  private final List<FeatureSpecification> featureSpecifications;
-  private final List<ClassName> selectiveExport;
-  private final String comment;
+  public final List<FeatureSpecification> featureSpecifications;
+  public final List<ClassName> selectiveExport;
+  public final String comment;
 
 
   // === Constructors and Factories ===

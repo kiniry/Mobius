@@ -11,7 +11,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class GenericIndirection extends AstNode {
 
 
-  private final IndirectionElement indirectionElement;
+  public final IndirectionElement indirectionElement;
 
 
 

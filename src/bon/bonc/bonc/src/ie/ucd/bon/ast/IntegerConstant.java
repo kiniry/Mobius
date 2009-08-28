@@ -12,7 +12,7 @@ public class IntegerConstant extends ManifestConstant {
 
 
 
-  private final Integer value;
+  public final Integer value;
 
 
   // === Constructors and Factories ===

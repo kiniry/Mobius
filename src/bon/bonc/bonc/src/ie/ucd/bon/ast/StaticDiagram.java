@@ -12,9 +12,9 @@ public class StaticDiagram extends SpecificationElement {
 
 
 
-  private final List<StaticComponent> components;
-  private final String extendedId;
-  private final String comment;
+  public final List<StaticComponent> components;
+  public final String extendedId;
+  public final String comment;
 
 
   // === Constructors and Factories ===

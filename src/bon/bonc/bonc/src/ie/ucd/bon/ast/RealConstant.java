@@ -12,7 +12,7 @@ public class RealConstant extends ManifestConstant {
 
 
 
-  private final Double value;
+  public final Double value;
 
 
   // === Constructors and Factories ===

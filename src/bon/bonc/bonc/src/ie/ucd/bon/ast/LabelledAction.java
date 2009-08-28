@@ -12,8 +12,8 @@ public class LabelledAction extends AstNode {
 
 
 
-  private final String label;
-  private final String description;
+  public final String label;
+  public final String description;
 
 
   // === Constructors and Factories ===

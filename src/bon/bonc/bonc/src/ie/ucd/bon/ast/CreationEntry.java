@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class CreationEntry extends AstNode {
 
 
-  private final ClassName name;
+  public final ClassName name;
 
-  private final List<String> types;
+  public final List<String> types;
 
 
   // === Constructors and Factories ===

@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class CallExp extends Expression {
 
 
-  private final Expression qualifier;
+  public final Expression qualifier;
 
-  private final List<UnqualifiedCall> callChain;
+  public final List<UnqualifiedCall> callChain;
 
 
   // === Constructors and Factories ===

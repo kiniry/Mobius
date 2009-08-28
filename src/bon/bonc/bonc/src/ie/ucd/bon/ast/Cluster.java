@@ -12,10 +12,10 @@ public class Cluster extends StaticComponent {
 
 
 
-  private final String name;
-  private final List<StaticComponent> components;
-  private final Boolean reused;
-  private final String comment;
+  public final String name;
+  public final List<StaticComponent> components;
+  public final Boolean reused;
+  public final String comment;
 
 
   // === Constructors and Factories ===

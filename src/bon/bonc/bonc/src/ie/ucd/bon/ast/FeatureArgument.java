@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class FeatureArgument extends AstNode {
 
 
-  private final Type type;
+  public final Type type;
 
-  private final String identifier;
+  public final String identifier;
 
 
   // === Constructors and Factories ===

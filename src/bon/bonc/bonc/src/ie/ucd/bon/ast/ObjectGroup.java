@@ -15,10 +15,10 @@ public class ObjectGroup extends DynamicComponent {
   }
 
 
-  private final Nameless nameless;
-  private final String name;
-  private final List<DynamicComponent> components;
-  private final String comment;
+  public final Nameless nameless;
+  public final String name;
+  public final List<DynamicComponent> components;
+  public final String comment;
 
 
   // === Constructors and Factories ===

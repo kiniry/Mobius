@@ -12,7 +12,7 @@ public class Indexing extends AstNode {
 
 
 
-  private final List<IndexClause> indexes;
+  public final List<IndexClause> indexes;
 
 
   // === Constructors and Factories ===

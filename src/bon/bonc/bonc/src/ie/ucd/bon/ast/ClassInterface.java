@@ -11,11 +11,11 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassInterface extends AstNode {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final List<Feature> features;
-  private final List<Type> parents;
-  private final List<Expression> invariant;
+  public final List<Feature> features;
+  public final List<Type> parents;
+  public final List<Expression> invariant;
 
 
   // === Constructors and Factories ===

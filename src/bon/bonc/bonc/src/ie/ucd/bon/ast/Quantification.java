@@ -14,11 +14,11 @@ public class Quantification extends Expression {
     EXISTS
   }
 
-  private final Expression restriction;
-  private final Expression proposition;
+  public final Expression restriction;
+  public final Expression proposition;
 
-  private final Quantifier quantifier;
-  private final List<VariableRange> variableRanges;
+  public final Quantifier quantifier;
+  public final List<VariableRange> variableRanges;
 
 
   // === Constructors and Factories ===

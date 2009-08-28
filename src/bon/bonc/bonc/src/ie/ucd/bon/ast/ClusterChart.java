@@ -11,14 +11,14 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClusterChart extends InformalChart {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final String name;
-  private final Boolean isSystem;
-  private final List<ClassEntry> classes;
-  private final List<ClusterEntry> clusters;
-  private final String explanation;
-  private final String part;
+  public final String name;
+  public final Boolean isSystem;
+  public final List<ClassEntry> classes;
+  public final List<ClusterEntry> clusters;
+  public final String explanation;
+  public final String part;
 
 
   // === Constructors and Factories ===

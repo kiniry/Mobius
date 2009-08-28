@@ -12,7 +12,7 @@ public class BooleanConstant extends ManifestConstant {
 
 
 
-  private final Boolean value;
+  public final Boolean value;
 
 
   // === Constructors and Factories ===

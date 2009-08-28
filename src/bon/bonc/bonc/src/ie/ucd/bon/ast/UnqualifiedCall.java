@@ -12,8 +12,8 @@ public class UnqualifiedCall extends AstNode {
 
 
 
-  private final String id;
-  private final List<Expression> args;
+  public final String id;
+  public final List<Expression> args;
 
 
   // === Constructors and Factories ===

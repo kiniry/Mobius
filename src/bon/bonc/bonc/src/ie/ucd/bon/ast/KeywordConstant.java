@@ -16,7 +16,7 @@ public class KeywordConstant extends Constant {
   }
 
 
-  private final Constant constant;
+  public final Constant constant;
 
 
   // === Constructors and Factories ===

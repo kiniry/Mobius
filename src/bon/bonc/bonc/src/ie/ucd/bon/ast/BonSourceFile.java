@@ -11,9 +11,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class BonSourceFile extends AstNode {
 
 
-  private final Indexing indexing;
+  public final Indexing indexing;
 
-  private final List<SpecificationElement> bonSpecification;
+  public final List<SpecificationElement> bonSpecification;
 
 
   // === Constructors and Factories ===

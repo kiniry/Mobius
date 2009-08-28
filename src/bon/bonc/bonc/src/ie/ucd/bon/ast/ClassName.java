@@ -12,7 +12,7 @@ public class ClassName extends IndirectionElement {
 
 
 
-  private final String name;
+  public final String name;
 
 
   // === Constructors and Factories ===
