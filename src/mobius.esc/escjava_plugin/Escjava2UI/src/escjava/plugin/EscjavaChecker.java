@@ -19,6 +19,8 @@ import mobius.prover.simplify.SimplifyEditor;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaModelException;
 
 import pluginlib.Log;
 import pluginlib.Utils;
@@ -159,31 +161,40 @@ public class EscjavaChecker extends escjava.Main
 	 * @param inputs The inputs (List of String) upon which the Escjava checker will be invoked
 	 * @return true if the checker ran successfully, false if there were warnings
 	 */
-	public boolean run(List inputs) {
-	  if (inputs.size() == 0) return true;
-	  //escjava.parser.JMLParser.setClassPath(Utils.getProjectClassPathEntries(project));
-	  //escjava.parser.JMLParser.parse(project,inputs);
-	  if (Log.on) Log.log("Running Escjava checker");
-	  if (!EscjavaUtils.isSpecsInstalled(project)) {
-	    EscjavaUtils.installDefaultSpecs(project);
-	  }
-	  inputs.add("-Specs");
-	  try {
-		final String specLocationFileName = EscjavaUtils.findSpecs();
-		inputs.add(specLocationFileName);
-	} catch (Exception e1) {
-		final String ErrorMessageCouldNotLocateSpecifications 
-		  = EscjavaChecker.COULD_NOT_LOCATE_SPECIFICATIONS_FOR 
-		  + Options.source.getStringValue();
-		Utils.showMessageInUI(null, "Esc/Java",
-        ErrorMessageCouldNotLocateSpecifications);
-        Log.errorlog(
-            ErrorMessageCouldNotLocateSpecifications, e1);
-        return false;
-	}
+	public boolean run(List<String> inputs) {
+  	  if (inputs.size() == 0) return true;
+  	  //escjava.parser.JMLParser.setClassPath(Utils.getProjectClassPathEntries(project));
+  	  //escjava.parser.JMLParser.parse(project,inputs);
+  	  if (Log.on) Log.log("Running Escjava checker");
+  	  if (!EscjavaUtils.isSpecsInstalled(project)) {
+  	    EscjavaUtils.installDefaultSpecs(project);
+  	  }
+  	  inputs.add("-Specs");
+  	  try {
+  		final String specLocationFileName = EscjavaUtils.findSpecs();
+  		inputs.add(specLocationFileName);
+  	} catch (Exception e1) {
+  		final String ErrorMessageCouldNotLocateSpecifications 
+  		  = EscjavaChecker.COULD_NOT_LOCATE_SPECIFICATIONS_FOR 
+  		  + Options.source.getStringValue();
+  		Utils.showMessageInUI(null, "Esc/Java",
+          ErrorMessageCouldNotLocateSpecifications);
+          Log.errorlog(
+              ErrorMessageCouldNotLocateSpecifications, e1);
+          return false;
+  	}
 	  
 	  inputs.add("-classpath");
-	  inputs.add(Utils.getProjectClassPath(project));
+	  try {
+	    String cp = "";
+	    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots())
+	      cp += ":" + f;
+	    cp = cp.substring(1);
+	    inputs.add(cp);
+    } catch (JavaModelException e1) {
+      inputs.add(Utils.getProjectClassPath(project));
+    }
+
 	  
 	  // FIXME - can avoid getting simplify if we are not doing any static checking
 	  
