@@ -5,7 +5,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="Canapa Action Set"
-            visible="true"
+            visible="false"
             id="canapa.actionSet">
          <menu
                label="Canapa &amp;Menu"
@@ -15,7 +15,7 @@
          <action
                toolbarPath="canapaGroup"
                label="&amp;Run Canapa"
-               icon="icons/sample.gif"
+               icon="icons/run.gif"
                class="canapa.actions.RunCanapaAction"
                tooltip="Run Canapa"
                menubarPath="canapaMenu/canapaGroup"
@@ -25,7 +25,7 @@
                label="C&amp;lean Canapa"
                class="canapa.actions.ClearCanapaAction"
                tooltip="Clear Canapa"
-               icon="icons/sample.gif"
+               icon="icons/clear.png"
                menubarPath="canapaMenu/canapaGroup"
                id="canapa.actions.ClearCanapaAction"/>
          <action
@@ -33,7 +33,7 @@
                label="Co&amp;mmitCanapa"
                class="canapa.actions.CommitCanapaAction"
                tooltip="Commit Canapa"
-               icon="icons/sample.gif"
+               icon="icons/commit.gif"
                menubarPath="canapaMenu/canapaGroup"
                id="canapa.actions.CommitCanapaAction"/>
       </actionSet>
