@@ -241,27 +241,6 @@
             natureId="prover.editor.nature"/>
    </extension>
    
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="mobius.prover.gui.PerspectiveFactory"
-            icon="icons/perspective.png"
-            id="ProverEditor.perspective"
-            name="Proving">
-      </perspective>
-   </extension>
-   <extension point="org.eclipse.ui.perspectiveExtensions">
-    <perspectiveExtension 
-       targetID="ProverEditor.perspective">
-      <actionSet id="ProverEditor.actions"/>
-    </perspectiveExtension>
-   </extension>
-   <extension point="org.eclipse.ui.actionSetPartAssociations">
-	<actionSetPartAssociation 
-		targetID="ProverEditor.actions">
-		<part id="ProverEditor.perspective"/>
-		<part id="ProverEditor.topview" />
-    </actionSetPartAssociation>
-   </extension>
+
    
 </plugin>
