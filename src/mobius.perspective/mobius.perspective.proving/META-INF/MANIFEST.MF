@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Proving
+Bundle-SymbolicName: mobius.perspective.proving;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: mobius.perspective.proving.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.ui,
+ org.eclipse.ui.console,
+ prover.editor
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
