@@ -1,6 +1,8 @@
 package mobius.atp;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -30,7 +32,7 @@ public class SimplifyActivator extends AbstractUIPlugin {
     {"MacOSX", "Simplify 1.5.5 for MacOS X", "Simplify-1.5.5.macosx"},
   };
   
-  
+  private static final Map<String, ProverPath> simplifies = new HashMap<String, ProverPath>();
   /**
    * The constructor.
    */
@@ -70,9 +72,15 @@ public class SimplifyActivator extends AbstractUIPlugin {
     if (os == null || os.length() == 0) {
       os = System.getProperty("os.name");
     }
-    String [] name = getSimplify(os);
-    String executable = Utils.findPluginResource(PLUGIN_ID, name[2]);
-    return executable;
+    ProverPath res = simplifies.get(os);
+    if (res == null) {
+      String [] name = getSimplify(os);
+      String executable = Utils.findPluginResource(PLUGIN_ID, name[2]);
+      res = new ProverPath(name[1], executable);
+      res.mkExecutable();
+      simplifies.put(os, res);
+    }
+    return res.getPath();
   }
   
   public static String  [] getSimplify(String osname) {
@@ -109,12 +117,23 @@ public class SimplifyActivator extends AbstractUIPlugin {
     for (int i = 0; i < pp.length; i++) {
       String [] curr = simplifyBinaries[i];
       try {
-        pp[i] = new ProverPath(curr[1], 
+        pp[i] = simplifies.get(curr[0]);
+        if (pp[i] == null) {
+          pp[i] = new ProverPath(curr[1], 
                                Utils.findPluginResource(PLUGIN_ID, curr[2]));
-      } catch (IOException e) {
+          try {
+            pp[i].mkExecutable();
+          } 
+          catch (IOException e) { 
+          }
+          simplifies.put(curr[0], pp[i]);
+        }
+      } 
+      catch (IOException e) {
         Log.log("Unable to find the executable: " + curr[2]);
         e.printStackTrace();
       }
+      
     }
     return pp;
   }
