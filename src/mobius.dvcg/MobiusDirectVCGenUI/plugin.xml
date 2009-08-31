@@ -14,7 +14,7 @@
       <actionSet
             id="MobiusDirectVCGenUI.actions"
             label="DirectVCGenUI"
-            visible="true">
+            visible="false">
          <action
                class="mobius.directvcgen.ui.poview.CompileAction"
                enablesFor="1"
@@ -26,14 +26,7 @@
          </action>
       </actionSet>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="mobius.directvcgen.ui.poview.PerspectiveFactory"
-            icon="icons/mobius_logo_sm.gif"
-            id="MobiusDirectVCGenUI.perspective1"
-            name="Mobius">
-      </perspective>
-   </extension>
-
+ 
+   
+ 
 </plugin>
