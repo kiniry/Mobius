@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.certification.PerspectiveFactory"
+            icon="icons/mobius_logo_sm.gif"
+            id="Certification.perspective"
+            name="Certification">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Certification.perspective">
+      <actionSet id="MobiusDirectVCGenUI.actions"/>
+    </perspectiveExtension>
+   </extension>
+</plugin>
