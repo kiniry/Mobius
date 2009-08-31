@@ -12,8 +12,6 @@ import java.util.List;
 
 import javafe.genericfile.GenericFile;
 import javafe.util.Location;
-
-import mobius.atp.SimplifyActivator;
 import mobius.prover.simplify.SimplifyEditor;
 
 import org.eclipse.core.resources.IProject;
@@ -187,8 +185,16 @@ public class EscjavaChecker extends escjava.Main
 	  inputs.add("-classpath");
 	  try {
 	    String cp = "";
-	    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots())
-	      cp += ":" + f;
+	    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
+	      String path = f.getPath().toOSString();
+	      if (f.getResource() != null) {
+	        path = f.getResource().getRawLocation().toOSString();
+	        cp += ":" + path;
+	      }
+	      
+	      
+	      
+	    }
 	    cp = cp.substring(1);
 	    inputs.add(cp);
     } catch (JavaModelException e1) {

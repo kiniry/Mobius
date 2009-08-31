@@ -184,56 +184,67 @@
    <extension
          point="org.eclipse.ui.actionSets">
          <actionSet
-            label="EscJava Actions"
-            visible="true"
-            id="mobius.escjava2.plugin.actionSet">
+            label="EscJava2"
+            visible="false"
+            id="mobius.escjava2.actions">
          <menu
-               label="JML"
-               id="JMLMenu">
+               icon="icons/JMLSmall.png"
+               id="JMLMenu"
+               label="JML">
             <separator
                   name="EscjavaGroup">
             </separator>
          </menu>
         
          <action
-               label="Disable auto ESC/Java2 checking"
-               tooltip="Disables selected objects for auto ESC/Java2 checking"
                class="escjava.plugin.actions.DisableESC"
-               menubarPath="JMLMenu/EscjavaGroup"
+               definitionId="mobius.escjava2.ui.commands.DisableESC"
+               icon="icons/disable.gif"
                id="mobius.escjava2.plugin.EscjavaAction.DisableESC"
-			   definitionId="mobius.escjava2.ui.commands.DisableESC">
+               label="Disable auto ESC/Java2 checking"
+               menubarPath="JMLMenu/EscjavaGroup"
+               toolbarPath="mobius.escjava2.actions"
+               tooltip="Disables selected objects for auto ESC/Java2 checking">
          </action>
          <action
-               label="Enable auto ESC/Java2 checking"
-               tooltip="Enables selected objects for auto ESC/Java2 checking"
                class="escjava.plugin.actions.EnableESC"
-               menubarPath="JMLMenu/EscjavaGroup"
+               definitionId="mobius.escjava2.plugin.commands.EnableESC"
+               icon="icons/enable.gif"
                id="mobius.escjava2.plugin.EscjavaAction.EnableESC"
-			   definitionId="mobius.escjava2.plugin.commands.EnableESC">
+               label="Enable auto ESC/Java2 checking"
+               menubarPath="JMLMenu/EscjavaGroup"
+               toolbarPath="mobius.escjava2.actions"
+               tooltip="Enables selected objects for auto ESC/Java2 checking">
          </action>
          <action
-               label="Go to associated declaration"
-               tooltip="Opens an editor and positions it at the location specified by some information associated with a marker"
                class="escjava.plugin.actions.GoToDecl"
-               menubarPath="JMLMenu/EscjavaGroup"
+               definitionId="mobius.escjava2.plugin.commands.GoToDeclaration"
+               icon="icons/goto.gif"
                id="mobius.escjava2.plugin.GoToDeclAction"
-               definitionId="mobius.escjava2.plugin.commands.GoToDeclaration">
+               label="Go to associated declaration"
+               menubarPath="JMLMenu/EscjavaGroup"
+               toolbarPath="mobius.escjava2.actions"
+               tooltip="Opens an editor and positions it at the location specified by some information associated with a marker">
          </action>         
          <action
-               label="Clear ESC/Java2 Markers"
-               tooltip="Clears any ESC/Java2 markers in the selected object"
                class="escjava.plugin.actions.Clear"
-               menubarPath="JMLMenu/EscjavaGroup"
+               definitionId="mobius.escjava2.plugin.commands.ClearMarkers"
+               icon="icons/cross.png"
                id="mobius.escjava2.plugin.ClearMarkerAction"
-               definitionId="mobius.escjava2.plugin.commands.ClearMarkers">
+               label="Clear ESC/Java2 Markers"
+               menubarPath="JMLMenu/EscjavaGroup"
+               toolbarPath="mobius.escjava2.actions"
+               tooltip="Clears any ESC/Java2 markers in the selected object">
          </action>
          <action
                class="escjava.plugin.actions.Check"
                definitionId="mobius.escjava2.plugin.commands.CheckEscjava"
+               icon="icons/esc.png"
                id="mobius.escjava2.plugin.EscjavaAction.Check"
                label="ESC/Java2"
                menubarPath="JMLMenu/EscjavaGroup"
                style="push"
+               toolbarPath="mobius.escjava2.actions"
                tooltip="Runs ESC/Java2 static checks">
          </action>
 

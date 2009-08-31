@@ -32,11 +32,11 @@ abstract public class ESC extends EscjavaAction {
 	/** A collection of IResource objects that need to
 	 *  be recompiled.
 	 */
-	private Collection touch;
+	private Collection<IResource> touch;
 
-	
+	@Override
 	protected boolean start(IJavaProject jp, Collection c) {
-		touch = new LinkedList();
+		touch = new LinkedList<IResource>();
 		return true;
 	}
 
@@ -53,8 +53,9 @@ abstract public class ESC extends EscjavaAction {
 			touch.add(resource);
 			b = true;
 		} else if (o instanceof IFile) {
-			action((IFile)o);
-			touch.add(o);
+		  IFile file = (IFile) o;
+			action(file);
+			touch.add(file);
 			b = true;
 			// FIXME - should we do IFolder?
 		} else if (o instanceof IJavaProject) {
@@ -80,12 +81,13 @@ abstract public class ESC extends EscjavaAction {
 	 */
 	abstract protected void action(IResource r);
 	
+	@Override
 	protected boolean end(IJavaProject jp, Collection elements) {
-		final Collection touchList = touch;
+		final Collection<IResource> touchList = touch;
 		// FIXME - is this the right thread to use
 		SafeRunner.run(new SafeRunnable() {
 			public void run() throws Exception {
-				Iterator i = touchList.iterator();
+				Iterator<IResource> i = touchList.iterator();
 				while (i.hasNext()) {
 					IResource r = (IResource)i.next();
 					r.touch(null);

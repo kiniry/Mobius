@@ -31,7 +31,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	/**
 	 * This is the list of listeners that have registered to this plugin.
 	 */
-	private List listeners = new ArrayList();
+	private List<IEscjavaListener> listeners = new ArrayList<IEscjavaListener>();
 	//@ constraint \not_modified(listeners);
 	// The List object does not change, though its content might
 	
@@ -210,7 +210,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 			final String file,
 			final int lineNumber, final int offset, final int length,
 			final String errorMessage, final int severity) throws Exception {
-		for (Iterator all = listeners.iterator(); all.hasNext(); ) {
+		for (Iterator<IEscjavaListener> all = listeners.iterator(); all.hasNext(); ) {
 			final IEscjavaListener each = (IEscjavaListener) all.next();
 			each.escjavaFailed(resource, file, lineNumber, offset, length, errorMessage, severity);
 		}

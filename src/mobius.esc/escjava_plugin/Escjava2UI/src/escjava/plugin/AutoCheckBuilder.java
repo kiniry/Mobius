@@ -92,7 +92,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 	// could be involved (e.g. UI thread in adding/removing,
 	// computational thread in using a current state)
 	/** The set of IResource objects that are enabled for RAC compiling. */
-	static private Set enabled = new HashSet();
+	static private Set<IResource> enabled = new HashSet<IResource>();
 	
 
 	/**
@@ -131,7 +131,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		 * 
 		 * @param c The collection of enabled resources.
 		 */
-		public void run(Collection c); 
+		public void run(Collection<IResource> c); 
 	}
 	
 	/** Returns whether the given IResource is in the collection

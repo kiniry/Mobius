@@ -104,7 +104,7 @@ public class EscjavaDecorator implements org.eclipse.jface.viewers.ILightweightL
 	/** The interface has methods to add and remove listeners;
 	 *  we keep track of them here.
 	 */
-	private Collection listeners = new HashSet();
+	private Collection<ILabelProviderListener> listeners = new HashSet<ILabelProviderListener>();
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)

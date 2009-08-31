@@ -190,11 +190,11 @@ public class EscjavaMarker implements IEscjavaListener {
 	 * @param c A collection of IResource objects
 	 * @throws CoreException
 	 */
-	public static void clearMarkers(final Collection c) throws CoreException {
+	public static void clearMarkers(final Collection<IResource> c) throws CoreException {
 		ResourcesPlugin.getWorkspace().run(
 				new IWorkspaceRunnable() {
 					public void run(IProgressMonitor pm) throws CoreException {
-						Iterator i = c.iterator();
+						Iterator<IResource> i = c.iterator();
 						while (i.hasNext()) {
 							IResource r = (IResource)i.next();
 							if (r.exists()) r.deleteMarkers(ESCJAVA_MARKER_ID, false, IResource.DEPTH_INFINITE);
@@ -211,8 +211,8 @@ public class EscjavaMarker implements IEscjavaListener {
 	 */
 	//@ requires m != null;;
 	//@ ensures \result != null;
-	static public List getExtraInfo(IMarker m) throws Exception {
-		List list = new LinkedList();
+	static public List<String> getExtraInfo(IMarker m) throws Exception {
+		List<String> list = new LinkedList<String>();
 		String s = (String)m.getAttribute(EXTRA_INFO);
 		//System.out.println("EX " + s);
 		if (s == null) return list;
