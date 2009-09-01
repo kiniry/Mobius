@@ -13,7 +13,8 @@
    <extension point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension 
        targetID="Validation.perspective">
-      
+      <actionSet id="jml-plugin.toolbar"/>
+      <actionSet id="com.mountainminds.eclemma.ui.CoverageActionSet"/>
     </perspectiveExtension>
    </extension>
 </plugin>
