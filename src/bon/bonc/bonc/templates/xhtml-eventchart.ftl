@@ -29,8 +29,8 @@
           </tr>
 <#list entries as entry>          <tr>
             <td class="light-grey">${entry.name}</td>
-            <td class="white spaced-lines"><#list entry.involved as in>${in}<#if in_has_next>, </#if></#list></td>
-          </tr>
+            <td class="white spaced-lines"><#list entry.involved as involved>${involved}<#if involved_has_next>, </#if></#list></td>
+          </tr></#list>
         </table>
       </td>
     </tr>

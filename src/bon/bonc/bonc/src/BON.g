@@ -413,7 +413,8 @@ event_chart returns [EventChart ec]
    |
     { eventEntries = createList(); }
   )
-  'end'
+  end='end'
+  { $ec = EventChart.mk($system_name.name, incoming, outgoing, eventEntries, indexing, explanation, part, getSLoc($e,$end)); }
 ;
              
 event_entries returns [List<EventEntry> entries] :
@@ -444,13 +445,18 @@ event_entry returns [EventEntry entry]
 
 /**********************************************/
 
-scenario_chart returns [ScenarioChart sc] :
+scenario_chart returns [ScenarioChart sc] 
+@init { Indexing indexing = null; String explanation = null; String part = null; List<ScenarioEntry> entries = null; }
+:
   s='scenario_chart' system_name
-  (indexing)?
-  (explanation)?
-  (part)?
-  (scenario_entries)?
-  'end'
+  (indexing { indexing = $indexing.indexing; } )?
+  (explanation { explanation = $explanation.explanation; } )?
+  (part {part = $part.part; } )?
+  ( scenario_entries { entries = $scenario_entries.entries; }
+   | { entries = emptyList(); }
+    )
+  e='end'
+  { $sc = ScenarioChart.mk($system_name.name, entries, indexing, explanation, part, getSLoc($s,$e)); }
 ;
                 
 scenario_entries returns [List<ScenarioEntry> entries] :
@@ -465,13 +471,17 @@ scenario_entry returns [ScenarioEntry entry] :
 
 /**********************************************/
 
-creation_chart returns [CreationChart cc] :
-  'creation_chart' system_name
-  (indexing)?
-  (explanation)?
-  (part)?
-  (creation_entries)?
-  'end' 
+creation_chart returns [CreationChart cc]
+@init { List<CreationEntry> entries = null; Indexing indexing = null; String explanation = null; String part = null; }
+:
+  start='creation_chart' system_name
+  (indexing { indexing = $indexing.indexing; } )?
+  (explanation { explanation = $explanation.explanation; } )?
+  (part { part = $part.part; } )?
+  ( creation_entries { entries = $creation_entries.entries; }
+   | { entries = emptyList(); } )
+  end='end' 
+  { $cc = CreationChart.mk($system_name.name, entries, indexing, explanation, part,getSLoc($start,$end)); }
 ;
                 
 creation_entries returns [List<CreationEntry> entries] :

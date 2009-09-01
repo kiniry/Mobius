@@ -45,9 +45,7 @@ public class PrintingCountVisitor extends AbstractVisitorWithAdditions{
   }
 
   @Override
-  public void visitCreationChart(CreationChart node, String name,
-      List<CreationEntry> entries, Indexing indexing, String explanation,
-      String part, SourceLocation loc) {
+  public void visitCreationChart(CreationChart node, String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation loc) {
     numberOfCreationCharts++;
   }
 
@@ -75,6 +73,10 @@ public class PrintingCountVisitor extends AbstractVisitorWithAdditions{
 
   public int getNumberOfClassDictionaries() {
     return numberOfClassDictionaries;
+  }
+  
+  public String toString() {
+    return "Counted " + numberOfClassDictionaries + " class dictionaries, " + numberOfCreationCharts + " creation charts, " + numberOfEventCharts + " event charts, " + numberOfScenarioCharts + " scenario charts";
   }
 }
 

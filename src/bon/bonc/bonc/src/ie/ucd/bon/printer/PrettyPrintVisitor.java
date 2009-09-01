@@ -801,7 +801,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   public void visitCreationEntry(CreationEntry node, ClassName name, List<String> types, SourceLocation loc) {
     tp.startLine();
     tp.print("creator ");
-    tp.print(name);
+    name.accept(this);
     tp.print(" creates ");
     tp.printLine(StringUtil.appendWithSeparator(types, ", "));
   }

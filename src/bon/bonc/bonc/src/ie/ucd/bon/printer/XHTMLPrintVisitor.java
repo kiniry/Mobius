@@ -20,7 +20,6 @@ import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.template.FreeMarkerTemplate;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.util.FileUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -166,7 +165,7 @@ public class XHTMLPrintVisitor extends AbstractVisitorWithAdditions implements P
     template.addToDataModel("explanation", explanation);
     template.addToDataModel("part", part);
     template.addToDataModel("id", scenarioChartId++ + "");
-    template.writeTemplate(writer, EVENT_CHART_TEMPLATE);
+    template.writeTemplate(writer, SCENARIO_CHART_TEMPLATE);
   }
   
 }

@@ -249,7 +249,7 @@ a:active {
   position: fixed; 
   bottom: 0px;
   right: 0px; 
-  width: 100%%;
+  width: 100%;
   border-top: 2px solid #000000;
   background-color: #cccccc;
 }
@@ -310,12 +310,12 @@ dd {
 }
 
 .top-level {
-  width: 98%%;
+  width: 98%;
   margin: auto;
 }
 
 .outer {
-  width: 100%%;
+  width: 100%;
   background-color: #a2a2a2;
   border: 2px solid #000000;
   margin-bottom: 30px;
@@ -345,7 +345,7 @@ dd {
 }
 
 .type, .part {
-  width: 25%%;
+  width: 25%;
 }
 
 .type {
@@ -353,20 +353,20 @@ dd {
 }
 
 .name, .indexing, .explanation {
-  width: 50%%;
+  width: 50%;
 }
 
 .top, .middle, .bottom {
-  width: 100%%;
+  width: 100%;
 }
 
 .bottom table {
   border: 4px groove #c0c0c0;
-  width: 100%%;
+  width: 100%;
 }
 
 .bottom tr {
-  width: 100%%;
+  width: 100%;
 }
 
 .bottom td, .bottom th {
