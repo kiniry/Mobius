@@ -13,7 +13,7 @@
    <extension point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension 
        targetID="Design.perspective">
-      
+      <actionSet id="jml-plugin.toolbar"/>
     </perspectiveExtension>
    </extension>
 </plugin>

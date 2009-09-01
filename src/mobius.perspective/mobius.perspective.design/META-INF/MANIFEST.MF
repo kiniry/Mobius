@@ -8,6 +8,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.ui;bundle-version="3.5.0",
  org.eclipse.ui.console;bundle-version="3.4.0",
- ie.ucd.bon.bonc;bundle-version="0.1.6"
+ ie.ucd.bon.bonc;bundle-version="0.1.6",
+ ch.ethz.inf.pm.jml.plugin.help;bundle-version="1.0.3",
+ ch.ethz.inf.pm.jml.plugin.resources;bundle-version="1.1.1",
+ ch.ethz.inf.pm.jml.plugin;bundle-version="1.1.1"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
