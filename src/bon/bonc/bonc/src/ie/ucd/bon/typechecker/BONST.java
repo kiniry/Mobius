@@ -56,6 +56,9 @@ public class BONST {
     
     public ClusterChart systemChart;
     
+    public final Map<String,String> alternativeClusterDescriptions = new HashMap<String,String>();
+    public final Map<String,String> alternativeClassDescriptions = new HashMap<String,String>();
+    
   }
   
   

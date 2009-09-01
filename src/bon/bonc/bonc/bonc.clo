@@ -58,7 +58,7 @@ SourceFiles:{}:{file-list}:[between="",canbedir="false",mustexist="true"]
 
 FORMAT::
 
-  ( Option*  SourceFiles*   ) 
+  ( Option*  SourceFiles* Option* ) 
 | AloneOption;
 
 

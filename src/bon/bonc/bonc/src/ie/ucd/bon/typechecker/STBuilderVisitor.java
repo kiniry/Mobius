@@ -282,7 +282,21 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     st.clientRelations.add(node);
   }
 
+  @Override
+  public void visitClassEntry(ClassEntry node, String name, String description, SourceLocation loc) {
+    String existingDesc = st.informal.alternativeClassDescriptions.get(name);
+    if (existingDesc == null && !"".equals(description.trim())) {
+      st.informal.alternativeClassDescriptions.put(name, description);
+    }
+  }
 
+  @Override
+  public void visitClusterEntry(ClusterEntry node, String name, String description, SourceLocation loc) {
+    String existingDesc = st.informal.alternativeClusterDescriptions.get(name);
+    if (existingDesc == null && !"".equals(description.trim())) {
+      st.informal.alternativeClusterDescriptions.put(name, description);
+    }
+  }
 
   private void indexing(AstNode node, Indexing indexing) {
     if (indexing != null) {

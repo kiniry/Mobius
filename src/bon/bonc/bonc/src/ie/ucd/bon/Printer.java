@@ -4,6 +4,7 @@
  */
 package ie.ucd.bon;
 
+import ie.ucd.bon.ast.BonSourceFile;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.clinterface.BONcOptionsInterface.Print;
 import ie.ucd.bon.graph.Grapher;
@@ -11,24 +12,19 @@ import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.ClassDictionaryGenerator;
-import ie.ucd.bon.printer.HTMLLinkGenerator;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
-import ie.ucd.bon.printer.PrintingTracker;
+import ie.ucd.bon.printer.PrintAgent;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
 import ie.ucd.bon.printer.XHTMLPrintVisitor;
-import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.StringUtil;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
-
-import org.antlr.runtime.RecognitionException;
-import org.antlr.runtime.tree.DOTTreeGenerator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -65,47 +61,6 @@ public final class Printer {
     }
   }
 
-  public static String getPrintingOptionStartString(final Print p) {
-    try {
-      switch(p) {
-      case TXT:
-        return FileUtil.readToString("templates/PlainTextStart.txt");
-      case HTML:
-        return FileUtil.readToString("templates/XHTMLStart.txt"); 
-      default:
-        return "";
-      }
-    } catch (IOException ioe) {
-      Main.logDebug("IOException thrown whilst reading printing option start string");
-      return "";
-    }
-  }
-
-  public static String getPrintingOptionEndString(final Print p) {
-    try {
-      switch(p) {
-      case TXT:
-        return FileUtil.readToString("templates/PlainTextEnd.txt");
-      case HTML:
-        return FileUtil.readToString("templates/XHTMLEnd.txt"); 
-      default:
-        return "";
-      }
-    } catch (IOException ioe) {
-      Main.logDebug("IOException thrown whilst reading printing option start string");
-      return "";
-    }
-  }
-
-  public static String getExtraPartsForPrintingOption(final Print p, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) {
-    switch(p) {
-    case HTML:
-      return HTMLLinkGenerator.generateLinks(printingTracker, parsingTracker);
-    default:
-      return "";
-    }
-  }
-
   public static boolean isFileIndependentPrintingOption(final Print p) {
     switch(p) {
     case DIC:
@@ -120,21 +75,6 @@ public final class Printer {
     }
   }
 
-  private static String doPrintToString(final ParseResult parseResult, final Print printingOption, final PrintingTracker printingTracker) throws RecognitionException {
-    switch (printingOption) {
-    case TXT:
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      parseResult.getParse().accept(new PrettyPrintVisitor(new PrintStream(baos)));
-      return baos.toString();
-    case HTML:
-      ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
-      parseResult.getParse().accept(new XHTMLPrintVisitor(new PrintStream(baos2)));
-      return baos2.toString();
-    default:
-      return "";
-    }
-  }
-
   public static String printGeneratedClassDictionaryToString(final ParsingTracker tracker) {
     try {
       return ClassDictionaryGenerator.generateDictionary(tracker);
@@ -144,79 +84,66 @@ public final class Printer {
     }
   }
 
-  public static String printDotToString(final ParseResult parseResult) {
-    DOTTreeGenerator gen = new DOTTreeGenerator();
-    //TODO fix!
-    return "";
-//    StringTemplate st = gen.toDOT((Tree)parseResult.getParse().getTree());
-//    return st.toString();
+  private static Map<String,Object> getAdditionalDataMap(final ParsingTracker parsingTracker) {
+    Map<String,Object> additionalDataMap = new HashMap<String,Object>();
+    additionalDataMap.put("version", Main.getVersion());
+    ClusterChart sysDef = parsingTracker.getSymbolTable().informal.systemChart;
+    additionalDataMap.put("systemName", sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName());
+    additionalDataMap.put("time", new Date());
+    return additionalDataMap;
   }
 
-  private static String printStartToString(final Print printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    return formatString(getPrintingOptionStartString(printOption), printTime, extraParts, parsingTracker);
-  }
 
-  private static String printEndToString(final Print printOption, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    return formatString(getPrintingOptionEndString(printOption), printTime, extraParts, parsingTracker);
+  private static PrintAgent getNewPrintAgent(final Print printingType) {
+    switch(printingType) {
+    case TXT:
+      return new PrettyPrintVisitor();
+    case HTML:
+      return new XHTMLPrintVisitor();
+    default:
+      return null;
+    }
   }
-
-  private static String formatString(final String toFormat, final Calendar printTime, final String extraParts, final ParsingTracker parsingTracker) {
-    ClusterChart sysDef = null; 
-    sysDef = parsingTracker.getSymbolTable().informal.systemChart;
-    String systemName = sysDef == null ? "NO SYSTEM DEFINED" : sysDef.getName(); 
-    return String.format(toFormat, 
-        printTime, 
-        Main.getVersion(), 
-        systemName,
-        extraParts
-    );
-  }
-
 
   public static void printToStream(final Collection<File> files, final ParsingTracker parsingTracker, final PrintStream outputStream, final Print printingType, final boolean timing) {
     Main.logDebug("Printing to stream.");
-    Calendar printTime = new GregorianCalendar();
-    PrintingTracker printTracker = new PrintingTracker();
-    StringBuilder main = new StringBuilder();
+    long startTime = System.nanoTime();
 
     if (isFileIndependentPrintingOption(printingType)) {
-      main.append(printFileIndependentPrintingOptionToString(printingType, parsingTracker));
+      outputStream.print(printFileIndependentPrintingOptionToString(printingType, parsingTracker));
     } else {
+
+      PrintAgent pa = getNewPrintAgent(printingType);
+      if (pa == null) {
+        System.out.println("Something went wrong when printing.");
+        return;
+      }
 
       for (File file : files) {
         Main.logDebug("Printing for file: " + file);
 
         ParseResult parse = parsingTracker.getParseResult(file);
         if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
-          try {
-            String printed;
-            if (timing) {
-              long startTime = System.nanoTime();
-              printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
-              long endTime = System.nanoTime();
-              System.out.println("Printing " + file + " as " + Printer.getPrintingOptionName(printingType) + " took: " + StringUtil.timeString(endTime - startTime));
-            } else {
-              printed = Printer.printToString(parse, printingType, printTracker, parsingTracker);
-            }
-            if (printed != null) {
-              main.append(printed);
-            }
-          } catch (RecognitionException re) {
-            System.out.println("Something went wrong when printing...");
-          }
-
+          BonSourceFile sf = parse.getParse();
+          pa.visitBonSourceFile(sf, sf.bonSpecification, sf.indexing, sf.getLocation());
         } else {
           System.out.println("Not printing " + file + " due to parse errors.");
         }
       }
 
-
+      Map<String,Object> additionalInfo = getAdditionalDataMap(parsingTracker);
+      try {
+        outputStream.print(pa.getAllOutputAsString(parsingTracker, additionalInfo));
+      } catch (IOException ioe) {
+        System.out.println("An error occurred while printing.");
+      }
     }
 
-    String extraParts = getExtraPartsForPrintingOption(printingType, printTracker, parsingTracker);
-    outputStream.print(printStartToString(printingType, printTime, extraParts, parsingTracker));
-    outputStream.print(main.toString());
-    outputStream.print(printEndToString(printingType, printTime, extraParts, parsingTracker));
+    if (timing) {
+      long endTime = System.nanoTime();
+      System.out.println("Printing as " + Printer.getPrintingOptionName(printingType) + " took: " + StringUtil.timeString(endTime - startTime));
+    }
+
   }
 
   private static String printFileIndependentPrintingOptionToString(final Print printingOption, final ParsingTracker parsingTracker) {
@@ -235,14 +162,6 @@ public final class Printer {
       //return Grapher.graphPrefuseInformalInheritance(parsingTracker);
     default:
       return "";
-    }
-  }
-
-  public static String printToString(final ParseResult parseResult, final Print printingOption, final PrintingTracker printingTracker, final ParsingTracker parsingTracker) throws RecognitionException {
-    if (printingOption == Print.DOT) {
-      return printDotToString(parseResult);
-    } else {
-      return doPrintToString(parseResult, printingOption, printingTracker);
     }
   }
 

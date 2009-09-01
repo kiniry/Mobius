@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-08-27 16:52:12
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-08-30 17:57:06
 
   package ie.ucd.bon.parser; 
   
@@ -1372,7 +1372,7 @@ public class BONParser extends AbstractBONParser {
             state._fsp--;
             if (state.failed) return ce;
             if ( state.backtracking==0 ) {
-               ce = ClusterEntry.mk((cluster_name20!=null?input.toString(cluster_name20.start,cluster_name20.stop):null), (description21!=null?input.toString(description21.start,description21.stop):null), getSLoc(c, (description21!=null?((Token)description21.stop):null))); 
+               ce = ClusterEntry.mk((cluster_name20!=null?input.toString(cluster_name20.start,cluster_name20.stop):null), (description21!=null?description21.description:null), getSLoc(c, (description21!=null?((Token)description21.stop):null))); 
             }
 
             }
@@ -2071,7 +2071,7 @@ public class BONParser extends AbstractBONParser {
             state._fsp--;
             if (state.failed) return entry;
             if ( state.backtracking==0 ) {
-               entry = ClassEntry.mk((class_name27!=null?input.toString(class_name27.start,class_name27.stop):null), (description28!=null?input.toString(description28.start,description28.stop):null), getSLoc(c, (description28!=null?((Token)description28.stop):null))); 
+               entry = ClassEntry.mk((class_name27!=null?input.toString(class_name27.start,class_name27.stop):null), (description28!=null?description28.description:null), getSLoc(c, (description28!=null?((Token)description28.stop):null))); 
             }
 
             }

@@ -9,7 +9,7 @@
       <td class="explanation" colspan="2">
         <dl>
           <dt>Type Of Object</dt>
-          <dd>${explanation}</dd>
+          <dd>${explanation!""}</dd>
         </dl>
       </td>
       <td class="indexing" colspan="2">

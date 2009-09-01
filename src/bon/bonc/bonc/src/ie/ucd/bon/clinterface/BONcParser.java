@@ -49,7 +49,7 @@ public class BONcParser extends AbstractSpecificCLParser {
    * @return the format string.
    */
   public String getFormatString() {
-    return "( Option*  SourceFiles*   )  | AloneOption"; 
+    return "( Option*  SourceFiles* Option* )  | AloneOption"; 
   }
   
   /**

@@ -12,21 +12,28 @@ import freemarker.template.TemplateException;
 
 public class FreeMarkerTemplate {
 
-  private final Configuration config;
+  private static Configuration config;
   private final Map<String,Object> dataModel;
   
   public FreeMarkerTemplate() {
-    config = new Configuration();
-    config.setClassForTemplateLoading(FileUtil.class, "../../../../templates");
+    if (config == null) {
+      config = new Configuration();
+      config.setClassForTemplateLoading(FileUtil.class, "../../../../templates");
+    }
     
     dataModel = new HashMap<String,Object>();
   }
   
-  public void addToDataModel(String name, Object o) {
+  public FreeMarkerTemplate addToDataModel(String name, Object o) {
     dataModel.put(name, o);
+    return this;
   }
   
   public void writeTemplate(Writer out, String templateName) {
+    writeTemplate(out, templateName, dataModel);
+  }
+  
+  public static void writeTemplate(Writer out, String templateName, Map<?,?> dataModel) {
     try {
       config.getTemplate(templateName).process(dataModel, out);
       out.flush();

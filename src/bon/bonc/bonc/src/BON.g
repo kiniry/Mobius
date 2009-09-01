@@ -173,7 +173,7 @@ cluster_entries returns [List<ClusterEntry> entries] :
                  
 cluster_entry returns [ClusterEntry ce] :
   c='cluster' cluster_name description
-  { $ce = ClusterEntry.mk($cluster_name.text, $description.text, getSLoc($c, $description.stop)); } 
+  { $ce = ClusterEntry.mk($cluster_name.text, $description.description, getSLoc($c, $description.stop)); } 
 ;
                
 system_name returns [String name] :
@@ -245,7 +245,7 @@ class_entries returns [List<ClassEntry> entries] :
 class_entry returns [ClassEntry entry] :
   c='class' class_name
   description
-  { $entry = ClassEntry.mk($class_name.text, $description.text, getSLoc($c, $description.stop)); }
+  { $entry = ClassEntry.mk($class_name.text, $description.description, getSLoc($c, $description.stop)); }
 ;
              
 cluster_name returns [String name] :
