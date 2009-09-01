@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.design.PerspectiveFactory"
+            id="Design.perspective"
+            icon="icons/design.png"
+            name="Design">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Design.perspective">
+      
+    </perspectiveExtension>
+   </extension>
+</plugin>
