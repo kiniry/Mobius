@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+  <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="mobius.perspective.validation.PerspectiveFactory"
+            id="Validation.perspective"
+            icon="icons/validation.jpg"
+            name="Validation">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+    <perspectiveExtension 
+       targetID="Validation.perspective">
+      
+    </perspectiveExtension>
+   </extension>
+</plugin>
