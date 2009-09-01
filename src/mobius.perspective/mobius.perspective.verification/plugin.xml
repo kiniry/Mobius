@@ -13,8 +13,8 @@
    <extension point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension 
        targetID="Verification.perspective">
-      <actionSet id="mobius.escjava2.actions"/>
       <actionSet id="canapa.actionSet"/>
+      <actionSet id="mobius.escjava2.actions"/>
     </perspectiveExtension>
    </extension>
 </plugin>
