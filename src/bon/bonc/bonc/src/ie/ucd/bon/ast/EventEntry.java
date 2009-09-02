@@ -12,39 +12,39 @@ public class EventEntry extends AstNode {
 
 
 
-  public final String name;
+  public final String description;
   public final List<String> involved;
 
 
   // === Constructors and Factories ===
-  protected EventEntry(String name, List<String> involved, SourceLocation location) {
+  protected EventEntry(String description, List<String> involved, SourceLocation location) {
     super(location);
-    this.name = name; assert name != null;
+    this.description = description; assert description != null;
     this.involved = involved; assert involved != null;
     
   }
   
-  public static EventEntry mk(String name, List<String> involved, SourceLocation location) {
-    return new EventEntry(name, involved, location);
+  public static EventEntry mk(String description, List<String> involved, SourceLocation location) {
+    return new EventEntry(description, involved, location);
   }
 
   // === Accessors ===
 
-  public String getName() { return name; }
+  public String getDescription() { return description; }
   public List<String> getInvolved() { return involved; }
 
   // === Visitor ===
   public void accept(IVisitorWithAdditions visitor) {
-    visitor.visitEventEntry(this, name, involved, getLocation());
+    visitor.visitEventEntry(this, description, involved, getLocation());
   }
 
   // === Others ===
   @Override
   public EventEntry clone() {
-    String newName = name;
+    String newDescription = description;
     List<String> newInvolved = involved;
     
-    return EventEntry.mk(newName, newInvolved, getLocation());
+    return EventEntry.mk(newDescription, newInvolved, getLocation());
   }
   
   @Override
@@ -52,8 +52,8 @@ public class EventEntry extends AstNode {
     StringBuilder sb = new StringBuilder();
     sb.append("EventEntry ast node: ");
     
-    sb.append("name = ");
-    sb.append(name);
+    sb.append("description = ");
+    sb.append(description);
     sb.append(", ");
     
     sb.append("involved = ");

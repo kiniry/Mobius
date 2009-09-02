@@ -1,3 +1,5 @@
+<#include "xhtml-macros.ftl">
+<#escape x as prepareManifest(x)?html>
 <div class="top-level" id="cluster_chart:${name}">
   <table class="outer">
     <tr class="top">
@@ -15,8 +17,7 @@
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
-<#if indexing??><#list indexing.indexes as indexitem>          <dd>${indexitem.id} : <#list indexitem.indexTerms as term>${term}<#if term_has_next>, </#if></#list>;</dd>
-</#list></#if>
+          <#if indexing??><@indexingm indexing=indexing/></#if>
         </dl>
       </td>
     </tr>
@@ -28,7 +29,7 @@
             <th class="grey">Description</th>
           </tr>
 <#list classes as clazz>          <tr>
-            <td class="light-grey">${clazz.name}</td>
+            <td class="light-grey"><@class_chart_link clazz=clazz/></td>
             <td class="white">${clazz.description}</td>
           </tr></#list>
         </table>
@@ -38,7 +39,7 @@
             <th>Description</th>
           </tr>
 <#list clusters as cluster>          <tr>
-            <td class="light-grey">${cluster.name}</td>
+            <td class="light-grey"><@cluster_chart_link cluster=cluster/></td>
             <td class="white">${cluster.description}</td>
           </tr></#list>
         </table>
@@ -47,3 +48,5 @@
     </tr>
   </table>
 </div>
+
+</#escape>

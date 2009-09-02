@@ -26,7 +26,7 @@ import java.util.List;
  */
 public final class Main {
 
-  public static final int TC_NUM_SEVERE_ERRORS = 2; //NB for all files
+  public static final int TC_NUM_SEVERE_ERRORS = 1; //NB for all files
   public static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
   public static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
   public static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
@@ -99,7 +99,7 @@ public final class Main {
           System.out.println(getVersion());
           return overallProblems;
         } else {
-          List<File> files = options.getSourceFiles();
+          List<File> files = options.getRawSourceFiles();
           Main.logDebug(files.size() + " files:");
           for (File file : files) {
             Main.logDebug("\t" + file.getPath());
@@ -144,6 +144,9 @@ public final class Main {
     ParsingTracker tracker = API.parse(files, readFromStdIn, printTiming);
     Problems parseProblems = tracker.getErrorsAndWarnings();
     totalProblems.addProblems(parseProblems);
+    if (readFromStdIn) {
+      files.add(null);
+    }
 
     if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
       Problems typeCheckProblems = API.typeCheck(tracker, so, printTiming);

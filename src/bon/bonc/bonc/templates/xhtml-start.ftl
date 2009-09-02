@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=iso-8859-1" />
 
-<title>BON Documentation: ${systemName}</title>
+<title>BON Documentation: ${systemName?html}</title>
 
 <script type="text/javascript">
 <!--

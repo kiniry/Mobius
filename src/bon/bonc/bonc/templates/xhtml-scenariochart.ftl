@@ -1,3 +1,5 @@
+<#include "xhtml-macros.ftl">
+<#escape x as prepareManifest(x)?html>
 <div class="top-level" id="scenario_chart:${id}">
   <table class="outer">
     <tr class="top">
@@ -15,8 +17,7 @@
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
-<#if indexing??><#list indexing.indexes as indexitem>          <dd>${indexitem.id} : <#list indexitem.indexTerms as term>${term}<#if term_has_next>, </#if></#list>;</dd>
-</#list></#if>
+          <#if indexing??><@indexingm indexing=indexing/></#if>
         </dl>
       </td>
     </tr>
@@ -36,3 +37,5 @@
     </tr>
   </table>
 </div>
+
+</#escape>

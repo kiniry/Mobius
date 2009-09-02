@@ -423,10 +423,10 @@ event_entries returns [List<EventEntry> entries] :
 ;
                
 event_entry returns [EventEntry entry]
-@init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String name = null; Token stop=null; } :
+@init { boolean mok=false; boolean cok=false; List<String> ccnl = null; String description = null; Token stop=null; } :
   e='event'
   (  ( m=manifest_textblock 
-      {mok=true; name=$m.text;} 
+      {mok=true; description=$m.text;} 
      )
    |  
    { addParseProblem(new MissingElementParseError(getSourceLocation($e), "event name", "in event entry clause", true)); }
@@ -440,7 +440,7 @@ event_entry returns [EventEntry entry]
      { addParseProblem(new MissingElementParseError(getSourceLocation($i), "class name list", "in involves clause of event entry", true)); }
      { stop = $i; }
   )
-  { if (mok && cok) $entry = EventEntry.mk(name, ccnl, getSLoc($e,stop)); }
+  { if (mok && cok) $entry = EventEntry.mk(description, ccnl, getSLoc($e,stop)); }
 ;
 
 /**********************************************/
@@ -1651,9 +1651,11 @@ MANIFEST_TEXTBLOCK_END  : '\\' (options {greedy=false;} : ~('"'|'\\') )+ '"'
          								;
 
 
-manifest_textblock  :   MANIFEST_STRING 
-					  | MANIFEST_TEXTBLOCK_START MANIFEST_TEXTBLOCK_MIDDLE* MANIFEST_TEXTBLOCK_END
-                    ;
+manifest_textblock  
+:   
+   MANIFEST_STRING 
+ | MANIFEST_TEXTBLOCK_START MANIFEST_TEXTBLOCK_MIDDLE* MANIFEST_TEXTBLOCK_END
+;
 
 COMMENT  :  LINE_COMMENT+ { $channel=HIDDEN; }
          ;

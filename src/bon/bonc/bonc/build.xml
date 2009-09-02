@@ -165,7 +165,12 @@
   	  <fileset dir="" includes="bonc,bonc.bat,update,my-bonc.example"/>
   	</copy>
   	
-    <jar jarfile="${dist}/lib/BON.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/lib/BON.jar" basedir="${build}">
+    	<manifest>
+    	  <attribute name="Main-Class" value="ie.ucd.bon.Main" />
+    	  <attribute name="Class-Path" value="antlr-runtime-3.1.3.jar prefuse.jar clops-0.2.2-runtime.jar google-collect-1.0-rc2.jar freemarker.jar"/>
+    	</manifest>
+  	</jar>
   	
     <mkdir dir="${dist}/lib"/>
     <copy todir="${dist}/lib">

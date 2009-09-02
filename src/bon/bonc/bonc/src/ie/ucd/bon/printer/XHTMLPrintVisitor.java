@@ -19,6 +19,7 @@ import ie.ucd.bon.ast.ScenarioEntry;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.template.FreeMarkerTemplate;
+import ie.ucd.bon.printer.template.IsClusterMethod;
 import ie.ucd.bon.source.SourceLocation;
 
 import java.io.ByteArrayOutputStream;
@@ -39,10 +40,12 @@ public class XHTMLPrintVisitor extends AbstractVisitorWithAdditions implements P
 
   private final PrintWriter writer;
   private final ByteArrayOutputStream baos;
+  private final ParsingTracker tracker;
   
-  public XHTMLPrintVisitor() {
+  public XHTMLPrintVisitor(ParsingTracker tracker) {
     baos = new ByteArrayOutputStream();
     writer = new PrintWriter(baos);
+    this.tracker = tracker;
   }
 
   public String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> data) throws IOException {
@@ -149,6 +152,7 @@ public class XHTMLPrintVisitor extends AbstractVisitorWithAdditions implements P
     template.addToDataModel("explanation", explanation);
     template.addToDataModel("part", part);
     template.addToDataModel("id", eventChartId++ + "");
+    template.addToDataModel("isCluster", new IsClusterMethod(tracker.getSymbolTable().informal));
     template.writeTemplate(writer, EVENT_CHART_TEMPLATE);
   }
 

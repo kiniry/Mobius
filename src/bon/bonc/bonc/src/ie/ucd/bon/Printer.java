@@ -94,12 +94,12 @@ public final class Printer {
   }
 
 
-  private static PrintAgent getNewPrintAgent(final Print printingType) {
+  private static PrintAgent getNewPrintAgent(final Print printingType, final ParsingTracker tracker) {
     switch(printingType) {
     case TXT:
       return new PrettyPrintVisitor();
     case HTML:
-      return new XHTMLPrintVisitor();
+      return new XHTMLPrintVisitor(tracker);
     default:
       return null;
     }
@@ -113,7 +113,7 @@ public final class Printer {
       outputStream.print(printFileIndependentPrintingOptionToString(printingType, parsingTracker));
     } else {
 
-      PrintAgent pa = getNewPrintAgent(printingType);
+      PrintAgent pa = getNewPrintAgent(printingType, parsingTracker);
       if (pa == null) {
         System.out.println("Something went wrong when printing.");
         return;

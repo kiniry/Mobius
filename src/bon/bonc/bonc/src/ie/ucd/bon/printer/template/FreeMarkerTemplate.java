@@ -16,11 +16,6 @@ public class FreeMarkerTemplate {
   private final Map<String,Object> dataModel;
   
   public FreeMarkerTemplate() {
-    if (config == null) {
-      config = new Configuration();
-      config.setClassForTemplateLoading(FileUtil.class, "../../../../templates");
-    }
-    
     dataModel = new HashMap<String,Object>();
   }
   
@@ -33,9 +28,18 @@ public class FreeMarkerTemplate {
     writeTemplate(out, templateName, dataModel);
   }
   
-  public static void writeTemplate(Writer out, String templateName, Map<?,?> dataModel) {
+  private static Configuration getConfig() {
+    if (config == null) {
+      config = new Configuration();
+      config.setClassForTemplateLoading(FileUtil.class, "/templates/");
+    }
+    return config;
+  }
+  
+  public static void writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
     try {
-      config.getTemplate(templateName).process(dataModel, out);
+      dataModel.put("prepareManifest", new PrepareManifestForXHTMLMethod());
+      getConfig().getTemplate(templateName).process(dataModel, out);
       out.flush();
     } catch (IOException e) {
       e.printStackTrace();

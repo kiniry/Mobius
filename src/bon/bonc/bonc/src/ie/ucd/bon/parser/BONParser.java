@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-09-01 13:59:51
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-09-02 13:47:48
 
   package ie.ucd.bon.parser; 
   
@@ -3584,9 +3584,9 @@ public class BONParser extends AbstractBONParser {
         BONParser.class_or_cluster_name_list_return ccns = null;
 
 
-         boolean mok=false; boolean cok=false; List<String> ccnl = null; String name = null; Token stop=null; 
+         boolean mok=false; boolean cok=false; List<String> ccnl = null; String description = null; Token stop=null; 
         try {
-            // BON.g:426:112: (e= 'event' ( (m= manifest_textblock ) | ) i= 'involves' ( (ccns= class_or_cluster_name_list ) | ) )
+            // BON.g:426:119: (e= 'event' ( (m= manifest_textblock ) | ) i= 'involves' ( (ccns= class_or_cluster_name_list ) | ) )
             // BON.g:427:3: e= 'event' ( (m= manifest_textblock ) | ) i= 'involves' ( (ccns= class_or_cluster_name_list ) | )
             {
             e=(Token)match(input,47,FOLLOW_47_in_event_entry2661); if (state.failed) return entry;
@@ -3620,7 +3620,7 @@ public class BONParser extends AbstractBONParser {
                     state._fsp--;
                     if (state.failed) return entry;
                     if ( state.backtracking==0 ) {
-                      mok=true; name=(m!=null?input.toString(m.start,m.stop):null);
+                      mok=true; description=(m!=null?input.toString(m.start,m.stop):null);
                     }
 
                     }
@@ -3698,7 +3698,7 @@ public class BONParser extends AbstractBONParser {
             }
 
             if ( state.backtracking==0 ) {
-               if (mok && cok) entry = EventEntry.mk(name, ccnl, getSLoc(e,stop)); 
+               if (mok && cok) entry = EventEntry.mk(description, ccnl, getSLoc(e,stop)); 
             }
 
             }
@@ -14129,7 +14129,7 @@ public class BONParser extends AbstractBONParser {
         retval.start = input.LT(1);
 
         try {
-            // BON.g:1654:21: ( MANIFEST_STRING | MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END )
+            // BON.g:1655:1: ( MANIFEST_STRING | MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END )
             int alt181=2;
             int LA181_0 = input.LA(1);
 
@@ -14148,17 +14148,17 @@ public class BONParser extends AbstractBONParser {
             }
             switch (alt181) {
                 case 1 :
-                    // BON.g:1654:25: MANIFEST_STRING
+                    // BON.g:1656:4: MANIFEST_STRING
                     {
-                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10823); if (state.failed) return retval;
+                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10828); if (state.failed) return retval;
 
                     }
                     break;
                 case 2 :
-                    // BON.g:1655:10: MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END
+                    // BON.g:1657:4: MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END
                     {
-                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10835); if (state.failed) return retval;
-                    // BON.g:1655:35: ( MANIFEST_TEXTBLOCK_MIDDLE )*
+                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10834); if (state.failed) return retval;
+                    // BON.g:1657:29: ( MANIFEST_TEXTBLOCK_MIDDLE )*
                     loop180:
                     do {
                         int alt180=2;
@@ -14171,9 +14171,9 @@ public class BONParser extends AbstractBONParser {
 
                         switch (alt180) {
                     	case 1 :
-                    	    // BON.g:1655:35: MANIFEST_TEXTBLOCK_MIDDLE
+                    	    // BON.g:1657:29: MANIFEST_TEXTBLOCK_MIDDLE
                     	    {
-                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10837); if (state.failed) return retval;
+                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10836); if (state.failed) return retval;
 
                     	    }
                     	    break;
@@ -14183,7 +14183,7 @@ public class BONParser extends AbstractBONParser {
                         }
                     } while (true);
 
-                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10840); if (state.failed) return retval;
+                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10839); if (state.failed) return retval;
 
                     }
                     break;
@@ -15255,10 +15255,10 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_119_in_mul_div_op10479 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_120_in_mod_pow_op10512 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_76_in_mod_pow_op10520 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10823 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10835 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10837 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10840 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10828 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10834 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10836 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10839 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_constant_in_synpred1_BON9980 = new BitSet(new long[]{0x0000000000000002L});
 
 }

@@ -1,3 +1,5 @@
+<#include "xhtml-macros.ftl">
+<#escape x as prepareManifest(x)?html>
 <div class="top-level" id="class_dictionary:${id}">
   <table class="outer">
     <tr class="top">
@@ -15,8 +17,7 @@
       <td class="indexing" colspan="2">
         <dl>
           <dt>Indexing</dt>
-<#if indexing??><#list indexing.indexes as indexitem>          <dd>${indexitem.id} : <#list indexitem.indexTerms as term>${term}<#if term_has_next>, </#if></#list>;</dd>
-</#list></#if>
+          <#if indexing??><@indexingm indexing=indexing/></#if>
         </dl>
       </td>
     </tr>
@@ -29,12 +30,14 @@
             <th class="grey">Description</th>
           </tr>
 <#list entries as entry>          <tr>
-            <td class="light-grey">${entry.name}</td>
-            <td class="light-grey"><#list entry.clusters as cluster>${cluster}<#if cluster_has_next> ,</#if></#list></td>
-            <td class="white">${entry.name}</td>
+            <td class="light-grey"><@class_chart_link clazz=entry/></td>
+            <td class="light-grey"><#list entry.clusters as cluster><@cluster_chart_link_string cluster_name=cluster/><#if cluster_has_next> ,</#if></#list></td>
+            <td class="white">${entry.description}</td>
           </tr></#list>
         </table>
       </td>
     </tr>
   </table>
 </div>
+
+</#escape>

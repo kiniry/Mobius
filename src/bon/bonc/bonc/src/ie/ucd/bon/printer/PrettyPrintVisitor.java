@@ -84,13 +84,14 @@ import ie.ucd.bon.ast.KeywordConstant.Constant;
 import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.ast.TypeMark.Mark;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.printer.template.FreeMarkerTemplate;
 import ie.ucd.bon.source.SourceLocation;
-import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -107,10 +108,12 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   public String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> data) throws IOException {
+    ByteArrayOutputStream start = new ByteArrayOutputStream();
+    FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "txt-start.ftl", data);
+    
     StringBuilder sb = new StringBuilder();
-    sb.append(FileUtil.readToString("templates/PlainTextStart.txt"));
+    sb.append(start.toString());
     sb.append(baos.toString());
-    sb.append(FileUtil.readToString("templates/PlainTextEnd.txt"));
     return sb.toString();
   }
   
@@ -577,10 +580,10 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   @Override
-  public void visitEventEntry(EventEntry node, String name, List<String> involved, SourceLocation loc) {
+  public void visitEventEntry(EventEntry node, String description, List<String> involved, SourceLocation loc) {
     tp.startLine();
     tp.print("event ");
-    tp.print(name);
+    tp.print(description);
     tp.printSpace();
     tp.print(" involves ");
     tp.printLine(StringUtil.appendWithSeparator(involved, ", "));

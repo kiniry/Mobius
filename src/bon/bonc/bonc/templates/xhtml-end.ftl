@@ -1,4 +1,4 @@
-
+<#escape x as prepareManifest(x)?html>
 <div id="footer">
   <p id="left-footer">
     <button id="showlink" onclick="return toggleShowAll();">Show all</button>
@@ -16,3 +16,5 @@
 
 </body>
 </html>
+
+</#escape>

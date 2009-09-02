@@ -57,7 +57,7 @@ public interface IVisitor {
 
   void visitEventChart(EventChart node, String systemName , Boolean incoming , Boolean outgoing , List<EventEntry> entries , Indexing indexing , String explanation , String part , SourceLocation loc);
 
-  void visitEventEntry(EventEntry node, String name , List<String> involved , SourceLocation loc);
+  void visitEventEntry(EventEntry node, String description , List<String> involved , SourceLocation loc);
 
   void visitFeature(Feature node, List<FeatureSpecification> featureSpecifications , List<ClassName> selectiveExport , String comment , SourceLocation loc);
 

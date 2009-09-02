@@ -127,7 +127,7 @@ public abstract class AbstractVisitor implements IVisitorWithAdditions {
   }
   
 
-  public void visitEventEntry(EventEntry node, String name, List<String> involved, SourceLocation loc) {
+  public void visitEventEntry(EventEntry node, String description, List<String> involved, SourceLocation loc) {
     //Do nothing
   }
   
