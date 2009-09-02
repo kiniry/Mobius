@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Certification
 Bundle-SymbolicName: mobius.perspective.certification;singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: mobius.perspective.certification.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
