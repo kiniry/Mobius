@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 public class BONcBuilder extends IncrementalProjectBuilder {
 
   private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
+  private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac os x");
   
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder";
   private static final String MARKER_ID = BONPlugin.PLUGIN_ID + ".bonclocproblemmarker";
@@ -120,7 +121,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
         //Adjusting for different counting of line-ending characters between eclipse and antlr
-        if (IS_WINDOWS && lineNumber != -1) {
+        if ((IS_WINDOWS || IS_MAC) && lineNumber != -1) {
           charPositionStart += (lineNumber -1);
           charPositionEnd += (lineNumber -1);
         }

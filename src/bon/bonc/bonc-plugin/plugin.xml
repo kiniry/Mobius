@@ -107,6 +107,27 @@
             value="true">
       </persistent>
    </extension>
-   
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="ie.ucd.bon.plugin.config.ProjectConfiguration"
+            id="ie.ucd.bon.plugin.config.samplePropertyPage"
+            name="BONc">
+         <enabledWhen>
+            <or>
+               <instanceof
+                     value="org.eclipse.core.resources.IProject">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.jdt.core.IJavaProject">
+               </instanceof>
+            </or>
+         </enabledWhen>
+         <filter
+               name="nature"
+               value="ie.ucd.bon.plugin.boncnature">
+         </filter>
+      </page>
+   </extension>
 
 </plugin>
