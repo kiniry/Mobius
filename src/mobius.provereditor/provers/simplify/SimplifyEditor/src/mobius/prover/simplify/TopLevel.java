@@ -25,18 +25,26 @@ public class TopLevel implements IProverTopLevel {
 
   public void sendCommand(ITopLevel itl, String cmd) throws AProverException {
     int idx = cmd.lastIndexOf('(');
+
     if (idx != -1) {
       String mainCmd = cmd.substring(idx).trim();
       if (mainCmd.equals("(PROMPT_OFF)")) {
         return;
       }
     }
+    //System.out.println(cmd);
     itl.sendToProver(cmd);
-    
     String res = itl.getStdBuffer().trim();
-    if (res.endsWith(">")) {
-      res = res.substring(0, res.length() - 1);
+    int tryout = 20; // we try 2 times
+    while (!res.endsWith(">") && tryout > 0) {
+      itl.waitForStandardInput();
+      res += itl.getStdBuffer().trim();
+      tryout --;
     }
+
+    
+    //System.out.println(res + itl.getErrBuffer().trim());
+    res = res.substring(0, res.length() - 1);    
     res = res.trim();
     if (isErrorMsg(res)) {
       throw new SyntaxErrorException(res);

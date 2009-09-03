@@ -77,10 +77,12 @@ public class ProverTranslator extends AProverTranslator implements IColorConstan
    
     wr.addWord("BG_PUSH", command);
     wr.addWord("DEFPRED", command);
+    wr.addWord("DEFPREDMAP", command);
     wr.addWord("PROMPT_OFF", command);
     wr.addWord("PROMPT_ON", command);
     
     wr.addWord("PATS", pats);
+    wr.addWord("NOPATS", pats);
     wr.addWord("MPAT", pats);
     String []  instruc = new String [] {"FORALL", "EQ", "NEQ", "NOT", "IMPLIES",
                                         "AND", "OR", "IFF", "DISTINCT", "EXPLIES"};
