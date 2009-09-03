@@ -132,7 +132,9 @@ public class TopLevel implements ITopLevel {
       fProverProc = Runtime.getRuntime().exec(fCmds);
       
       fOut = StreamHandler.createStreamHandler(fProverProc.getInputStream());
+      fOut.startRead();
       fErr = StreamHandler.createStreamHandler(fProverProc.getErrorStream());
+      fErr.startRead();
       fIn = new InputStreamHandler(fProverProc.getOutputStream());
       fIsAlive = true;
     } 
@@ -213,9 +215,11 @@ public class TopLevel implements ITopLevel {
     catch (InterruptedException e) {
       e.printStackTrace();
     }
+    //System.out.println(stream.getCnt() + "?? " + stream.getBuffer());
     buff.append(stream.getBuffer());
-    //in.fireToListeners();
+    //System.err.println("?? " + buff);
     stream.clearBuffer();
+    stream.startRead();
   }
   
 
@@ -257,7 +261,6 @@ public class TopLevel implements ITopLevel {
    * @throws AProverException if the communication with the prover fails
    */
   public void sendCommand(final String command) throws AProverException {
-//    System.out.println(command);
     fProverTopLevel.sendCommand(this, command);
   }
 

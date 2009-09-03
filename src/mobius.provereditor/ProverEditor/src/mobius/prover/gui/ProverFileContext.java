@@ -206,6 +206,11 @@ public class ProverFileContext {
    * @param lim a valid number
    */
   public void setLimit(final int lim) {
+/*    if ( lim)
+    int len = fDoc.getLength() - 1;
+    if (lim < len) {
+      len = lim;
+    }*/
     fScan.setLimit(lim);
   }
   

@@ -25,6 +25,9 @@ public class StreamHandler implements Runnable {
   private Thread fThread;
   /** the list of listeners. */
   private Set<IStreamListener> fListenerSet = new HashSet<IStreamListener>();
+
+  private int fCnt;
+  private static int cnt = 0;
   
   /**
    * Create a new Stream Handler for the specified stream.
@@ -32,6 +35,7 @@ public class StreamHandler implements Runnable {
    */
   protected StreamHandler(final InputStream inputStream) {
     fIn = inputStream;
+    fCnt = cnt++;
   }
 
   /**
@@ -58,9 +62,7 @@ public class StreamHandler implements Runnable {
    */
   public static StreamHandler createStreamHandler(final InputStream inputStream) {
     final StreamHandler sh = new StreamHandler(inputStream);
-    final Thread t = new Thread(sh);
-    t.start();
-    sh.setThread(t);
+    sh.startRead();
     return sh;
   }
   
@@ -90,7 +92,11 @@ public class StreamHandler implements Runnable {
       isl.append(this, str);
     }
   }
-
+  public void startRead() {
+    final Thread t = new Thread(this);
+    t.start();
+    setThread(t);
+  }
   
   /**
    * Read from the stream until there is an error.
@@ -100,28 +106,31 @@ public class StreamHandler implements Runnable {
    */
   protected void read() throws IOException {
     int read = 1;
-    StringBuffer buff = new StringBuffer();
     // On mange differentes infos
     final char [] cTab = new char [SIZE];
     final byte [] bTab = new byte [SIZE];
-    while ((read  = fIn.available()) >= 0) {
-      final int toRead = (read % SIZE);
-      read = fIn.read(bTab, 0, (toRead == 0) ? SIZE : toRead);
-      if (fIn.available() == 0) {
+  loop:
+    while (!fHasFinished) {
+      try {
+        read = fIn.read(bTab, 0, SIZE);
+        if (fIn.available() == 0 && read > 0) {
+          fHasFinished = true;
+        }
+        else {
+          fHasFinished = false;
+        }  
+      } 
+      catch (IOException e) {
         fHasFinished = true;
+        break loop;
       }
-      else {
-        fHasFinished = false;
-      }
-      for (int i = 0; i < cTab.length; i++) {
+      
+      for (int i = 0; i < read; i++) {
         cTab[i] = (char) bTab[i];
       }
       if (read > 0) {
-        buff.append(cTab, 0, read);
+        fBuff.append(cTab, 0, read);
       }
-      
-      fBuff.append(buff);
-      buff = new StringBuffer();
     }
   
   }
@@ -164,5 +173,11 @@ public class StreamHandler implements Runnable {
    */
   public boolean hasFinished() {
     return fHasFinished;
+  }
+
+ 
+
+  public int getCnt() {
+    return fCnt;
   }
 }
