@@ -1,5 +1,7 @@
 package ie.ucd.autograder.builder;
 
+import ie.ucd.autograder.AutoGraderPlugin;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -11,7 +13,7 @@ public class GraderNature implements IProjectNature {
 	/**
 	 * ID of this project nature
 	 */
-	public static final String NATURE_ID = "AutoGrader.nature";
+	public static final String NATURE_ID = AutoGraderPlugin.PLUGIN_ID + ".nature";
 
 	private IProject project;
 

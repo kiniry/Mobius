@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class AutoGraderPlugin extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "AutoGrader";
+	public static final String PLUGIN_ID = "ie.ucd.autograder";
 
 	// The shared instance
 	private static AutoGraderPlugin plugin;

@@ -3,7 +3,7 @@
 <plugin>
 
    <extension
-         id="AutoGrader.builder"
+         id="ie.ucd.autograder.builder"
          name="Auto-Grader Builder"
          point="org.eclipse.core.resources.builders">
       <builder
@@ -14,7 +14,7 @@
       </builder>
    </extension>
    <extension
-         id="AutoGrader.nature"
+         id="ie.ucd.autograder.nature"
          name="Auto-Grader Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
@@ -23,7 +23,7 @@
          </run>
       </runtime>
       <builder
-            id="AutoGrader.builder">
+            id="ie.ucd.autograder.builder">
       </builder>
    </extension>
    <extension
@@ -32,7 +32,7 @@
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
-            id="AutoGrader.addNaturePopupMenu">
+            id="ie.ucd.autograder.addNaturePopupMenu">
          <visibility>
             <not>
                <objectState
@@ -51,7 +51,7 @@
       </objectContribution>
       <objectContribution
             adaptable="true"
-            id="AutoGrader.removeNaturePopupMenu"
+            id="ie.ucd.autograder.removeNaturePopupMenu"
             objectClass="org.eclipse.core.resources.IProject">
          <visibility>
             <objectState
@@ -78,7 +78,7 @@
             name="Auto-Grader"
             category="AutoGrader"
             class="ie.ucd.autograder.views.AutoGraderView"
-            id="markeraccessor.views.AutoGraderView">
+            id="ie.ucd.autograder.views.AutoGraderView">
       </view>
    </extension>
    <extension
@@ -89,7 +89,7 @@
                ratio="0.5"
                relative="org.eclipse.ui.views.TaskList"
                relationship="right"
-               id="markeraccessor.views.AutoGraderView">
+               id="ie.ucd.autograder.views.AutoGraderView">
          </view>
       </perspectiveExtension>
    </extension>
@@ -111,7 +111,7 @@
          </enabledWhen>
          <filter
                name="nature"
-               value="AutoGrader.nature">
+               value="ie.ucd.autograder.nature">
          </filter>
       </page>
    </extension>

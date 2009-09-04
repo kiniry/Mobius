@@ -81,7 +81,7 @@ public class GradeBoundariesComposite extends Composite {
     
   }
   
-  public boolean performOk(IPreferenceStore store) {
+  public boolean performOk() {
     for (FieldEditor fe : fieldEditors) {
       if (!fe.isValid()) {
         return false;

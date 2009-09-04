@@ -1,5 +1,6 @@
 package ie.ucd.autograder.builder;
 
+import ie.ucd.autograder.AutoGraderPlugin;
 import ie.ucd.autograder.builder.markercollectors.BONcMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.CheckstyleMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.ESCJava2MarkerCollector;
@@ -34,7 +35,7 @@ import org.eclipse.jdt.core.JavaCore;
 
 public class GraderBuilder extends IncrementalProjectBuilder {
 
-  public static final String BUILDER_ID = "AutoGrader.builder";
+  public static final String BUILDER_ID = AutoGraderPlugin.PLUGIN_ID + ".builder";
   private final List<MarkerCollector> collectors;
 
   public GraderBuilder() {

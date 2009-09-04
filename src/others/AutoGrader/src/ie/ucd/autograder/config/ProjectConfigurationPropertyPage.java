@@ -1,8 +1,10 @@
 package ie.ucd.autograder.config;
 
 import ie.ucd.autograder.AutoGraderPlugin;
-import ie.ucd.autograder.grading.Grade;
-import ie.ucd.autograder.views.AutoGraderStyleConfig;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -10,7 +12,6 @@ import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -22,6 +23,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 public class ProjectConfigurationPropertyPage extends PropertyPage {
 
   private GradeBoundariesComposite boundaries;
+  private GradersComposite graders;
 
   public ProjectConfigurationPropertyPage() {
     super();
@@ -41,15 +43,21 @@ public class ProjectConfigurationPropertyPage extends PropertyPage {
     }
     tab1.setControl(boundaries);
 
-    Composite tab2contents = new Composite(tab, SWT.NONE);
-    tab2.setControl(tab2contents);
+    graders = new GradersComposite(tab, this);
+    if (getPreferenceStore() != null) {
+      graders.setPreferenceStore(getPreferenceStore());
+    }
+    tab2.setControl(graders);
 
     return tab;
   }
 
   public boolean performOk() {
-    boolean boundariesOk = boundaries.performOk(getPreferenceStore());
-    return boundariesOk;
+    if (!boundaries.performOk() || !graders.performOk()) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   @Override
@@ -86,12 +94,25 @@ public class ProjectConfigurationPropertyPage extends PropertyPage {
   }
 
   private static void initialiseDefaults(IPreferenceStore store) {
-    float value = 95;
-    for (Grade grade : Grade.values()) {
-      store.setDefault("gradeboundaries."+grade.name()+".enabled", true);
-      store.setDefault("gradeboundaries."+grade.name()+".value", value);
-      store.setDefault("gradeboundaries."+grade.name()+".colour", StringConverter.asString(AutoGraderStyleConfig.getDetaultColourForGrade(grade).getRGB()));
+    //TODO load default preferences from .properties file
+    
+    Properties properties = new Properties();
+    try {
+      properties.load(ProjectConfigurationPropertyPage.class.getResourceAsStream("/ie/ucd/autograder/config/ucd-config.properties"));
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    
+    for (Entry<Object,Object> entry : properties.entrySet()) {
+      store.setDefault(entry.getKey().toString(), entry.getValue().toString());
+    }
+    
+//    float value = 95;
+//    for (Grade grade : Grade.values()) {
+//      store.setDefault("gradeboundaries."+grade.name()+".enabled", true);
+//      store.setDefault("gradeboundaries."+grade.name()+".value", value);
+//      store.setDefault("gradeboundaries."+grade.name()+".colour", StringConverter.asString(AutoGraderStyleConfig.getDetaultColourForGrade(grade).getRGB()));
+//    }
   }
 
 }
