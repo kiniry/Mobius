@@ -27,16 +27,16 @@ public class GradeBoundariesComposite extends Composite {
   
   
   public GradeBoundariesComposite(Composite parent, PreferencePage prefPage) {
-    super(parent, SWT.NULL);
+    super(parent, SWT.NONE);
     fieldEditors = new ArrayList<FieldEditor>();
     fieldEditorPairs = new ArrayList<Pair<BooleanFieldEditor,List<FieldEditor>>>();
     
     GridLayout layout = new GridLayout();
     layout.marginWidth = 3;
     layout.marginHeight = 3;
-    layout.numColumns = GRID_WIDTH;
-    
+    layout.numColumns = GRID_WIDTH;    
     this.setLayout(layout);
+    
     createFormItems(prefPage);
   }
 

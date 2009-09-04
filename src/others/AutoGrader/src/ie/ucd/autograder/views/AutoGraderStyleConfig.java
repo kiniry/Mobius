@@ -39,13 +39,13 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     applyFontStylings(configRegistry);
   }
 
-  private static void applyColumnHeaderStylings(IConfigRegistry config) {
-    Style columnHeaderStyle = new Style();
-    columnHeaderStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
-    columnHeaderStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, GUIHelper.COLOR_WIDGET_BACKGROUND);
-    //columnHeaderStyle.setAttributeValue(CellStyleAttributes.BORDER_STYLE, ...);
-    config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnHeaderStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ColumnHeaderString.COLUMN_HEADER);
-  }
+//  private static void applyColumnHeaderStylings(IConfigRegistry config) {
+//    Style columnHeaderStyle = new Style();
+//    columnHeaderStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
+//    columnHeaderStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, GUIHelper.COLOR_WIDGET_BACKGROUND);
+//    //columnHeaderStyle.setAttributeValue(CellStyleAttributes.BORDER_STYLE, ...);
+//    config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnHeaderStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ColumnHeaderString.COLUMN_HEADER);
+//  }
 
   private static void applyFontStylings(IConfigRegistry config) {
     Style boldStyle = new Style();
