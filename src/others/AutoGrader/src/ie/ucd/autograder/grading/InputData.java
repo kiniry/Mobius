@@ -40,6 +40,10 @@ public class InputData {
   public Grade getGrade() {
     return lookup.toGrade(processMeasure(measure));
   }
+  
+  public double getScore(GradeLookupTable converter) {
+    return converter.getMarkForGrade(getGrade());
+  }
 
   protected double processMeasure(double measure) {
     return measure;

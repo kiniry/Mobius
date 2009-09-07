@@ -1,5 +1,6 @@
 package ie.ucd.autograder.config.ui;
 
+import ie.ucd.autograder.AutoGraderPlugin;
 import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.util.Pair;
 
@@ -48,14 +49,16 @@ public class GradeBoundariesComposite extends Composite {
       labelData.horizontalAlignment = SWT.LEFT;
       label.setLayoutData(labelData);
       
-      final BooleanFieldEditor enabled = new AGBooleanFieldEditor("gradeboundaries."+grade.name()+".enabled", "enabled?", this);
+      String id = AutoGraderPlugin.PLUGIN_ID + ".gradeboundaries.";
+      
+      final BooleanFieldEditor enabled = new AGBooleanFieldEditor(id + grade.name()+".enabled", "enabled?", this);
       enabled.setPage(prefPage);
       fieldEditors.add(enabled);
-      final FloatFieldEditor gradeValue = new FloatFieldEditor("gradeboundaries."+grade.name()+".value", "value", this);
+      final FloatFieldEditor gradeValue = new FloatFieldEditor(id + grade.name()+".value", "value", this);
       gradeValue.setPage(prefPage);
       fieldEditors.add(gradeValue);
       gradeValue.setValidRange(0, 100);
-      ColorFieldEditor colourChooser = new AGColourFieldEditor("gradeboundaries." + grade.name() + ".colour", "colour", this);
+      ColorFieldEditor colourChooser = new AGColourFieldEditor(id + grade.name() + ".colour", "colour", this);
       colourChooser.setPage(prefPage);
       fieldEditors.add(colourChooser);
       

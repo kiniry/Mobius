@@ -10,9 +10,7 @@ import ie.ucd.autograder.grading.InputData;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public class MetricsData extends AggregateData {
 
@@ -24,7 +22,7 @@ public class MetricsData extends AggregateData {
   private float weight;
 
   public MetricsData(Map<String,MetricHolder> metricsMap, IProject project, GradeLookupTable table) {
-    super(NAME, table);
+    super(NAME, table, false);
     setData(metricsMap, project);
   }
 
@@ -42,7 +40,7 @@ public class MetricsData extends AggregateData {
     IPreferenceStore store = AGConfig.getPreferenceStoreForProject(project);
 
     weight = store.getFloat(id + "overallweight");
-    
+
     boolean mlocEnabled = store.getBoolean(id + "methodloc.enabled");
     if (mlocEnabled) {
       String mlocLookupString = store.getString(id + "methodloc.lookup");
@@ -55,7 +53,7 @@ public class MetricsData extends AggregateData {
       }
     }
 
-    boolean mccEnabled = store.getBoolean(id + "methodccc.enabled");
+    boolean mccEnabled = store.getBoolean(id + "methodcc.enabled");
     if (mccEnabled) {
       String mccLookupString = store.getString(id + "methodcc.lookup");
       GradeLookupTable table = AGConfig.getGradeLookupTableFromPreferenceString(mccLookupString);
@@ -64,9 +62,8 @@ public class MetricsData extends AggregateData {
       MetricHolder ccMetric = metricsMap.get(MetricsConstants.McCabeCyclomaticComplexity.id);
       if (ccMetric != null) {
         addInputData(new InputData("Average method CC", table).setMeasure(ccMetric.getAvgPerMethod()), mccWeight);
-      }  
+      }
     }
-
   }
 
   public double getTLOC() {
@@ -76,5 +73,5 @@ public class MetricsData extends AggregateData {
   public float getWeight() {
     return weight;
   }
-  
+
 }

@@ -89,7 +89,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     List<AggregateData> projectData = new ArrayList<AggregateData>(2 + collectors.size());
   
     GradeLookupTable mainTable = AGConfig.getMainGradeLookupTable(project);
-    System.out.println("Main table: " + mainTable);
+    //System.out.println("Main table: " + mainTable);
     
     MetricsData metrics = new MetricsData(metricMap, project, mainTable);
     projectData.add(metrics);
@@ -101,7 +101,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
       projectData.add(collector.getAggregateData(kloc, mainTable));
     }
     
-    AggregateData total = new AggregateData(TOTAL_NAME, mainTable);
+    AggregateData total = new AggregateData(TOTAL_NAME, mainTable, true);
     total.addInputData(projectData.get(0), metrics.getWeight());
     for (int i=0; i < collectors.size(); i++) {
       total.addInputData(projectData.get(i+1), collectors.get(i).getOverallWeight());
@@ -135,6 +135,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
         }
       } else {
         //Missing data, return null
+        System.out.println("No metrics data in cache for this project");
       }
     }
     return metricMap;

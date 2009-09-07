@@ -50,8 +50,8 @@ public class GradeLookupTable {
   public double getMarkForGrade(Grade grade) {
     Double d = gradeMarkMap.get(grade);
     if (d == null) {
-      System.out.println("No mark for grade: " + grade);
-      System.out.println("In table: " + toString());
+//      System.out.println("No mark for grade: " + grade);
+//      System.out.println("In table: " + toString());
       return 0.0;
     } else {
       return d;

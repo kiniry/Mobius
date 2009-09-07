@@ -67,6 +67,12 @@ public class Pair <A,B> {
     }
   }
   
+  public static class MarkWeightPair extends Pair<Double,Double> {
+    public MarkWeightPair(Double first, Double second) {
+      super(first, second);
+    }
+  }
+  
   public static class NameProjectDataPair extends Pair<String,List<AggregateData>> {
     public NameProjectDataPair(String name, List<AggregateData> projectData) {
       super(name, projectData);

@@ -131,7 +131,7 @@ public class MarkerCollector {
   }
   
   public AggregateData getAggregateData(double kloc, GradeLookupTable table) {
-    AggregateData data = new AggregateData(getDataName(), table);
+    AggregateData data = new AggregateData(getDataName(), table, false);
     
     InputData errorData;
     if (divKLoc) {

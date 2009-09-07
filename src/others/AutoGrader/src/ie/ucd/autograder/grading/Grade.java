@@ -2,6 +2,7 @@ package ie.ucd.autograder.grading;
 
 import ie.ucd.autograder.util.Pair.GradeWeightPair;
 import ie.ucd.autograder.util.Pair.MarkGradePair;
+import ie.ucd.autograder.util.Pair.MarkWeightPair;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -54,7 +55,23 @@ public enum Grade {
     
     for (GradeWeightPair pair : grades) {
       total += table.getMarkForGrade(pair.first) * pair.second;
-      totalWeight += pair.getSecond();
+      totalWeight += pair.second;
+    }
+    
+    if (totalWeight == 0) {
+      return 0;
+    }
+    
+    return total / totalWeight;
+  }
+  
+  public static double weightedMeanAsDouble(Collection<MarkWeightPair> marks) {
+    double totalWeight = 0;
+    double total = 0;
+    
+    for (MarkWeightPair pair : marks) {
+      total += pair.first * pair.second;
+      totalWeight += pair.second;
     }
     
     if (totalWeight == 0) {
