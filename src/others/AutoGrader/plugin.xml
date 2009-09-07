@@ -96,7 +96,7 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            class="ie.ucd.autograder.config.ProjectConfigurationPropertyPage"
+            class="ie.ucd.autograder.config.ui.ProjectConfigurationPropertyPage"
             id="ie.ucd.autograder.config.ProjectConfigurationPropertyPage"
             name="AutoGrader">
          <enabledWhen>

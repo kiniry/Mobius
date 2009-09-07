@@ -1,4 +1,4 @@
-package ie.ucd.autograder.config;
+package ie.ucd.autograder.config.ui;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.swt.layout.GridLayout;

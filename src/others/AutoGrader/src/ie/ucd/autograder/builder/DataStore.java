@@ -22,7 +22,7 @@ public final class DataStore {
         if (includeThisProject || project != aProject) {
           try {
             if (project.hasNature(GraderNature.NATURE_ID)) {
-              List<AggregateData> projectData = GraderBuilder.collectProjectData(project, GraderBuilder.createCollectors());
+              List<AggregateData> projectData = GraderBuilder.collectProjectData(project);
               if (projectData != null) {
                 instance.setDataForProject(project, projectData);
               }

@@ -1,4 +1,4 @@
-package ie.ucd.autograder.config;
+package ie.ucd.autograder.config.ui;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.swt.layout.GridLayout;

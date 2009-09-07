@@ -2,6 +2,7 @@ package ie.ucd.autograder.builder.markercollectors;
 
 import ie.ucd.autograder.grading.AggregateData;
 import ie.ucd.autograder.grading.GradeLookupTable;
+import ie.ucd.autograder.grading.InputData;
 import ie.ucd.autograder.grading.InputDataDivKLOC;
 
 import java.util.Arrays;
@@ -16,12 +17,35 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-public abstract class MarkerCollector {
+public class MarkerCollector {
 
-  private Map<String,List<IMarker>> markersMap;
+  private final Map<String,List<IMarker>> markersMap;
   
-  public MarkerCollector() {
+  private final String name;
+  private final Collection<String> types;
+  private final float weight;
+  private final boolean divKLoc;
+  private final boolean errorsEnabled;
+  private final boolean warningsEnabled;
+  private final float errorsWeight;
+  private final float warningsWeight;
+  private final GradeLookupTable errorsLookup;
+  private final GradeLookupTable warningsLookup;
+  
+  public MarkerCollector(String name, Collection<String> types, float weight, boolean divKLoc, 
+      boolean errorsEnabled, float errorsWeight, GradeLookupTable errorsLookup,
+      boolean warningsEnabled, float warningsWeight, GradeLookupTable warningsLookup) {
     markersMap = new HashMap<String,List<IMarker>>();
+    this.name = name;
+    this.types = types;
+    this.weight = weight;
+    this.divKLoc = divKLoc;
+    this.errorsEnabled = errorsEnabled;
+    this.errorsWeight = errorsWeight;
+    this.errorsLookup = errorsLookup;
+    this.warningsEnabled = warningsEnabled;
+    this.warningsWeight = warningsWeight;
+    this.warningsLookup = warningsLookup;
   }
   
   public void addMarkers(String type, IMarker[] markersToAdd) {
@@ -35,7 +59,6 @@ public abstract class MarkerCollector {
   
   public void addMarkers(IProject project, String type) throws CoreException {
     IMarker[] markers = project.findMarkers(type, true, IResource.DEPTH_INFINITE);
-    //System.out.println("Found " + markers.length + " markers of type " + type);
     addMarkers(type, markers);
   }
   
@@ -55,7 +78,9 @@ public abstract class MarkerCollector {
     return total;
   }
   
-  public abstract Collection<String> getTypes();
+  public Collection<String> getTypes() {
+    return types;
+  }
   
   public void addMarkers(IProject project) throws CoreException {
     for (String type : getTypes()) {
@@ -105,26 +130,65 @@ public abstract class MarkerCollector {
     return filteredList;
   }
   
-  public AggregateData getAggregateData(double kloc) {
-    AggregateData data = new AggregateData(getDataName());
+  public AggregateData getAggregateData(double kloc, GradeLookupTable table) {
+    AggregateData data = new AggregateData(getDataName(), table);
     
-    InputDataDivKLOC errorData = new InputDataDivKLOC("Errors per KLOC", getErrorsLookup());
-    errorData.setKLOC(kloc);
+    InputData errorData;
+    if (divKLoc) {
+      InputDataDivKLOC errorData2 = new InputDataDivKLOC("Errors per KLOC", getErrorsLookup());
+      errorData2.setKLOC(kloc);
+      errorData = errorData2;
+    } else {
+      errorData = new InputData("Errors", getErrorsLookup());
+    }
     errorData.setMeasure(getAllErrorMarkers().size());
     data.addInputData(errorData, getErrorsWeight());
     
-    InputDataDivKLOC warningData = new InputDataDivKLOC("Warnings per KLOC", getWarningsLookup());
-    warningData.setKLOC(kloc);
+    InputData warningData;
+    if (divKLoc) {
+      InputDataDivKLOC warningData2 = new InputDataDivKLOC("Warnings per KLOC", getWarningsLookup());
+      warningData2.setKLOC(kloc);
+      warningData = warningData2;
+    } else {
+      warningData = new InputData("Warnings", getWarningsLookup());
+    }
+    
     warningData.setMeasure(getAllWarningMarkers().size());
     data.addInputData(warningData, getWarningsWeight());
         
     return data; 
   }
   
-  public abstract String getDataName();
-  public abstract GradeLookupTable getWarningsLookup();
-  public abstract double getWarningsWeight();
-  public abstract GradeLookupTable getErrorsLookup();
-  public abstract double getErrorsWeight();
-  public abstract double getOverallWeight();
+  public String getDataName() {
+    return name;
+  }
+  
+  public GradeLookupTable getWarningsLookup() {
+    return warningsLookup;
+  }
+  
+  public double getWarningsWeight() {
+    return warningsWeight;
+  }
+  
+  public GradeLookupTable getErrorsLookup() {
+    return errorsLookup;
+  }
+  
+  public double getErrorsWeight() {
+    return errorsWeight;
+  }
+  
+  public double getOverallWeight() {
+    return weight;
+  }
+
+  public boolean isErrorsEnabled() {
+    return errorsEnabled;
+  }
+
+  public boolean isWarningsEnabled() {
+    return warningsEnabled;
+  }
+  
 }

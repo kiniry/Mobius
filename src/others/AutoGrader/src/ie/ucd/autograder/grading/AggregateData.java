@@ -10,8 +10,8 @@ public class AggregateData extends InputData {
 
   private final List<Pair<InputData,Double>> data;
   
-  public AggregateData(String name) {
-    super(name, Grade.getPercentageLookup());
+  public AggregateData(String name, GradeLookupTable table) {
+    super(name, table);
     this.data = new ArrayList<Pair<InputData,Double>>();
   }
   
@@ -19,20 +19,26 @@ public class AggregateData extends InputData {
     data.add(new Pair<InputData,Double>(input,weight));
   }
   
+  public void addInputData(InputData input, Float weight) {
+    addInputData(input, weight.doubleValue());
+  }
+  
   public void clearInputData() {
     data.clear();
   }
 
-  @Override
-  public Grade getGrade() {
+  public double getScore() {
     List<GradeWeightPair> aggregateGrades = new ArrayList<GradeWeightPair>(data.size());
     for (Pair<InputData,Double> item : data) {
-//      System.out.println("Grade for gradeweightpair: " + item.getFirst().getGrade());
-//      System.out.println(item.getFirst().getClass());
       GradeWeightPair pair = new GradeWeightPair(item.getFirst().getGrade(),item.getSecond());
       aggregateGrades.add(pair);
     }
-    return Grade.weightedMean(aggregateGrades);
+    return Grade.weightedMeanAsDouble(aggregateGrades, getLookup());
+  }
+
+  @Override
+  public Grade getGrade() {
+    return getLookup().toGrade(getScore());
   }
 
   @Override

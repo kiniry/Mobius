@@ -1,5 +1,7 @@
 package ie.ucd.autograder.metrics;
 
+import ie.ucd.autograder.AutoGraderPlugin;
+import ie.ucd.autograder.config.AGConfig;
 import ie.ucd.autograder.grading.AggregateData;
 import ie.ucd.autograder.grading.Grade;
 import ie.ucd.autograder.grading.GradeLookupTable;
@@ -7,47 +9,72 @@ import ie.ucd.autograder.grading.InputData;
 
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
+
 public class MetricsData extends AggregateData {
 
   public static final String NAME = "Metrics";
-  
-  public static final double METRICS_OVERALL_WEIGHT = 1;
-  
+
   public static final double TLOC_WEIGHT = 0;
-  public static final double METHOD_AVG_LOC_WEIGHT = 1;
-  public static final double METHOD_AVG_CC_WEIGHT = 1;
-  
+
   private double tloc;
-  
-  public MetricsData(Map<String,MetricHolder> metricsMap) {
-    super(NAME);
-    setData(metricsMap);
+  private float weight;
+
+  public MetricsData(Map<String,MetricHolder> metricsMap, IProject project, GradeLookupTable table) {
+    super(NAME, table);
+    setData(metricsMap, project);
   }
-  
-  public final void setData(Map<String,MetricHolder> metricsMap) {
+
+  public final void setData(Map<String,MetricHolder> metricsMap, IProject project) {
     clearInputData();
+
     // TLOC
     MetricHolder tlocMetric = metricsMap.get(MetricsConstants.TotalLinesOfCode.id);
     if (tlocMetric != null) {
       tloc = tlocMetric.getMetric();
       addInputData(new InputData("TLOC", Grade.getNALookup()).setMeasure(tloc), TLOC_WEIGHT);
     }
+
+    String id = AutoGraderPlugin.PLUGIN_ID + ".collectors.metrics.";
+    IPreferenceStore store = AGConfig.getPreferenceStoreForProject(project);
+
+    weight = store.getFloat(id + "overallweight");
     
-    // TLOC/Method
-    MetricHolder mlocMetric = metricsMap.get(MetricsConstants.MethodLinesOfCode.id);
-    if (mlocMetric != null) {
-      addInputData(new InputData("Average method LOC", GradeLookupTable.METRICS_METHOD_LOC_LOOKUP).setMeasure(mlocMetric.getAvgPerMethod()), METHOD_AVG_LOC_WEIGHT);
+    boolean mlocEnabled = store.getBoolean(id + "methodloc.enabled");
+    if (mlocEnabled) {
+      String mlocLookupString = store.getString(id + "methodloc.lookup");
+      GradeLookupTable table = AGConfig.getGradeLookupTableFromPreferenceString(mlocLookupString);
+      float mlocWeight = store.getFloat(id + "methodloc.weight");
+      // TLOC/Method
+      MetricHolder mlocMetric = metricsMap.get(MetricsConstants.MethodLinesOfCode.id);
+      if (mlocMetric != null) {
+        addInputData(new InputData("Average method LOC", table).setMeasure(mlocMetric.getAvgPerMethod()), mlocWeight);
+      }
     }
-    
-    // CC/Method
-    MetricHolder ccMetric = metricsMap.get(MetricsConstants.McCabeCyclomaticComplexity.id);
-    if (ccMetric != null) {
-      addInputData(new InputData("Average method CC", GradeLookupTable.METRICS_METHOD_CC_LOOKUP).setMeasure(ccMetric.getAvgPerMethod()), METHOD_AVG_CC_WEIGHT);
+
+    boolean mccEnabled = store.getBoolean(id + "methodccc.enabled");
+    if (mccEnabled) {
+      String mccLookupString = store.getString(id + "methodcc.lookup");
+      GradeLookupTable table = AGConfig.getGradeLookupTableFromPreferenceString(mccLookupString);
+      float mccWeight = store.getFloat(id + "methodcc.weight");
+      //CC/Method
+      MetricHolder ccMetric = metricsMap.get(MetricsConstants.McCabeCyclomaticComplexity.id);
+      if (ccMetric != null) {
+        addInputData(new InputData("Average method CC", table).setMeasure(ccMetric.getAvgPerMethod()), mccWeight);
+      }  
     }
+
   }
 
   public double getTLOC() {
     return tloc;
+  }
+
+  public float getWeight() {
+    return weight;
   }
   
 }

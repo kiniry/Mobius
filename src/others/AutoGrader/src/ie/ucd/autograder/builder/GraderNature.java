@@ -39,7 +39,7 @@ public class GraderNature implements IProjectNature {
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 		project.setDescription(desc, null);
-		GraderBuilder.collectProjectData(project, GraderBuilder.createCollectors());
+		GraderBuilder.collectProjectData(project);
 	}
 
 	/*

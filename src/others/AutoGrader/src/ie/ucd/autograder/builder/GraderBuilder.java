@@ -1,13 +1,10 @@
 package ie.ucd.autograder.builder;
 
 import ie.ucd.autograder.AutoGraderPlugin;
-import ie.ucd.autograder.builder.markercollectors.BONcMarkerCollector;
-import ie.ucd.autograder.builder.markercollectors.CheckstyleMarkerCollector;
-import ie.ucd.autograder.builder.markercollectors.ESCJava2MarkerCollector;
-import ie.ucd.autograder.builder.markercollectors.FindBugsMarkerCollector;
 import ie.ucd.autograder.builder.markercollectors.MarkerCollector;
-import ie.ucd.autograder.builder.markercollectors.PMDMarkerCollector;
+import ie.ucd.autograder.config.AGConfig;
 import ie.ucd.autograder.grading.AggregateData;
+import ie.ucd.autograder.grading.GradeLookupTable;
 import ie.ucd.autograder.metrics.MetricHolder;
 import ie.ucd.autograder.metrics.MetricsConstants;
 import ie.ucd.autograder.metrics.MetricsData;
@@ -36,21 +33,6 @@ import org.eclipse.jdt.core.JavaCore;
 public class GraderBuilder extends IncrementalProjectBuilder {
 
   public static final String BUILDER_ID = AutoGraderPlugin.PLUGIN_ID + ".builder";
-  private final List<MarkerCollector> collectors;
-
-  public GraderBuilder() {
-    collectors = createCollectors();
-  }
-  
-  public static List<MarkerCollector> createCollectors() {
-    List<MarkerCollector> collectors = new ArrayList<MarkerCollector>(4);
-    collectors.add(new BONcMarkerCollector());
-    collectors.add(new FindBugsMarkerCollector());
-    collectors.add(new PMDMarkerCollector());
-    collectors.add(new CheckstyleMarkerCollector());
-    collectors.add(new ESCJava2MarkerCollector());
-    return collectors;
-  }
 
   /*
    * (non-Javadoc)
@@ -64,8 +46,8 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     IProject project = getProject();
     
     System.out.println("Running AutoGrader builder on project " + project);
-    
-    List<AggregateData> projectData = collectProjectData(project, collectors);
+        
+    List<AggregateData> projectData = collectProjectData(project);
     if (projectData != null) {
       DataStore.getInstance(project, false).setDataForProject(project, projectData);
       try {
@@ -80,7 +62,9 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     return new IProject[0];
   }
   
-  public static List<AggregateData> collectProjectData(IProject project, List<MarkerCollector> collectors) throws CoreException {
+  public static List<AggregateData> collectProjectData(IProject project) throws CoreException {
+    List<MarkerCollector> collectors = AGConfig.getMarkerCollectors(project);
+    
     IJavaProject javaProject = JavaCore.create(project);
     //Only operate on Java projects.
     if (javaProject != null) {
@@ -104,18 +88,21 @@ public class GraderBuilder extends IncrementalProjectBuilder {
   private static List<AggregateData> createProjectData(IProject project, Map<String,MetricHolder> metricMap, List<MarkerCollector> collectors) {
     List<AggregateData> projectData = new ArrayList<AggregateData>(2 + collectors.size());
   
-    MetricsData metrics = new MetricsData(metricMap);
+    GradeLookupTable mainTable = AGConfig.getMainGradeLookupTable(project);
+    System.out.println("Main table: " + mainTable);
+    
+    MetricsData metrics = new MetricsData(metricMap, project, mainTable);
     projectData.add(metrics);
     
     double tloc = metrics.getTLOC();
     tloc = tloc == 0 ? 0.00000001 : tloc; //Avoid div0 errors, but small enough to show up as zero
     double kloc = tloc / 1000d;
     for (MarkerCollector collector : collectors) {
-      projectData.add(collector.getAggregateData(kloc));
+      projectData.add(collector.getAggregateData(kloc, mainTable));
     }
     
-    AggregateData total = new AggregateData(TOTAL_NAME);
-    total.addInputData(projectData.get(0), MetricsData.METRICS_OVERALL_WEIGHT);
+    AggregateData total = new AggregateData(TOTAL_NAME, mainTable);
+    total.addInputData(projectData.get(0), metrics.getWeight());
     for (int i=0; i < collectors.size(); i++) {
       total.addInputData(projectData.get(i+1), collectors.get(i).getOverallWeight());
     }    

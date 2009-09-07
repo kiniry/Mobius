@@ -49,4 +49,8 @@ public class InputData {
     return name;
   }
 
+  public GradeLookupTable getLookup() {
+    return lookup;
+  }
+
 }

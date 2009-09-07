@@ -1,4 +1,4 @@
-package ie.ucd.autograder.config;
+package ie.ucd.autograder.config.ui;
 
 import ie.ucd.autograder.AutoGraderPlugin;
 
