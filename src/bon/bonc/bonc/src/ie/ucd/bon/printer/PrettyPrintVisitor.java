@@ -117,6 +117,10 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     return sb.toString();
   }
   
+  public String getVisitorOutputAsString() {
+    return baos.toString();
+  }
+  
   @Override
   public void visitBonSourceFile(BonSourceFile node,
       List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc) {
