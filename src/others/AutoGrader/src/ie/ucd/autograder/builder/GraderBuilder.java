@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.preference.IPreferenceStore;
 
 public class GraderBuilder extends IncrementalProjectBuilder {
 
@@ -89,10 +90,17 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     List<AggregateData> projectData = new ArrayList<AggregateData>(2 + collectors.size());
   
     GradeLookupTable mainTable = AGConfig.getMainGradeLookupTable(project);
-    //System.out.println("Main table: " + mainTable);
     
     MetricsData metrics = new MetricsData(metricMap, project, mainTable);
-    projectData.add(metrics);
+    
+    IPreferenceStore prefStore = AGConfig.getPreferenceStoreForProject(project);
+    boolean metricsEnabled = prefStore.getBoolean(AutoGraderPlugin.PLUGIN_ID + ".collectors.metrics.enabled");
+    if (metricsEnabled) {
+      System.out.println("Metrics enabled.");
+      projectData.add(metrics);
+    } else {
+      System.out.println("Metrics not enabled");
+    }
     
     double tloc = metrics.getTLOC();
     tloc = tloc == 0 ? 0.00000001 : tloc; //Avoid div0 errors, but small enough to show up as zero
@@ -104,7 +112,7 @@ public class GraderBuilder extends IncrementalProjectBuilder {
     AggregateData total = new AggregateData(TOTAL_NAME, mainTable, true);
     total.addInputData(projectData.get(0), metrics.getWeight());
     for (int i=0; i < collectors.size(); i++) {
-      total.addInputData(projectData.get(i+1), collectors.get(i).getOverallWeight());
+      total.addInputData(projectData.get(i+(metricsEnabled?1:0)), collectors.get(i).getOverallWeight());
     }    
     projectData.add(total);
     
