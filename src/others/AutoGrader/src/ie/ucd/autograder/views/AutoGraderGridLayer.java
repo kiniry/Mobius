@@ -1,13 +1,12 @@
 package ie.ucd.autograder.views;
 
-import net.sourceforge.nattable.grid.layer.ColumnHeaderLayer;
 import net.sourceforge.nattable.grid.layer.CornerLayer;
+import net.sourceforge.nattable.grid.layer.DimensionallyDependentLayer;
 import net.sourceforge.nattable.grid.layer.GridLayer;
-import net.sourceforge.nattable.grid.layer.RowHeaderLayer;
 import net.sourceforge.nattable.layer.ILayer;
 import net.sourceforge.nattable.layer.IUniqueIndexLayer;
-import net.sourceforge.nattable.layer.stack.DefaultBodyLayerStack;
-import net.sourceforge.nattable.selection.SelectionLayer;
+import net.sourceforge.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
+import net.sourceforge.nattable.viewport.ViewportLayer;
 
 public class AutoGraderGridLayer extends GridLayer {
 
@@ -19,16 +18,12 @@ public class AutoGraderGridLayer extends GridLayer {
   
   protected void init(IUniqueIndexLayer bodyDataLayer, IUniqueIndexLayer columnHeaderDataLayer, IUniqueIndexLayer rowHeaderDataLayer, IUniqueIndexLayer cornerDataLayer) {
     // Body
-    DefaultBodyLayerStack bodyLayer = new DefaultBodyLayerStack(bodyDataLayer);
-    
-    SelectionLayer selectionLayer = bodyLayer.getSelectionLayer();
-
+    ViewportLayer bodyLayer = new ViewportLayer(bodyDataLayer);
     // Column header
-    ILayer columnHeaderLayer = new ColumnHeaderLayer(columnHeaderDataLayer, bodyLayer, selectionLayer);
-    
+    DimensionallyDependentLayer columnHeaderLayer = new DimensionallyDependentLayer(columnHeaderDataLayer, bodyLayer, columnHeaderDataLayer);
+    columnHeaderLayer.addConfiguration(new DefaultColumnHeaderStyleConfiguration());
     // Row header
-    ILayer rowHeaderLayer = new RowHeaderLayer(rowHeaderDataLayer, bodyLayer, selectionLayer);
-    
+    ILayer rowHeaderLayer = new DimensionallyDependentLayer(rowHeaderDataLayer, rowHeaderDataLayer, bodyLayer);
     // Corner
     ILayer cornerLayer = new CornerLayer(cornerDataLayer, rowHeaderLayer, columnHeaderLayer);
     
