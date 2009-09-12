@@ -3,7 +3,6 @@ package ie.ucd.autograder.views;
 import net.sourceforge.nattable.NatTable;
 import net.sourceforge.nattable.data.IDataProvider;
 import net.sourceforge.nattable.grid.layer.DefaultColumnHeaderDataLayer;
-import net.sourceforge.nattable.grid.layer.DefaultGridLayer;
 import net.sourceforge.nattable.grid.layer.DefaultRowHeaderDataLayer;
 import net.sourceforge.nattable.layer.DataLayer;
 
@@ -86,13 +85,13 @@ public class AutoGraderView extends ViewPart {
     
     bodyLayer.setDefaultColumnWidth(150);
     
-    DefaultGridLayer grid = new DefaultGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
+    AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
     table.setLayer(grid);
 
-    grid.getBodyLayer().setConfigLabelAccumulator(data);
+    //grid.getBodyLayer().setConfigLabelAccumulator(data);
+    bodyLayer.setConfigLabelAccumulator(data);
     
     configureTable(table);
-    //AutoGraderStyleConfig.applyStylings(table.getConfigRegistry());
   }
 
   /**
