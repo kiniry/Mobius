@@ -148,7 +148,7 @@ public class Context
    * print(), but for the query and state change functions (like
    * isOn(), turnOn(), etc.), are short-circuited and do nothing.
    */
-  private /*@ spec_public @*/ boolean my_is_on /*#guarded_by this*/;
+  private /*@ spec_public @*/ volatile boolean my_is_on /*#guarded_by this*/;
 
   /**
    * @serial The current debug level of this context.
@@ -159,7 +159,7 @@ public class Context
    * this behavior by subtyping DebugConstants and installing the new
    * constant during the construction of a Context.
    */
-  private /*@ spec_public @*/ int my_level /*#guarded_by this*/;
+  private /*@ spec_public @*/ volatile int my_level /*#guarded_by this*/;
   //@ invariant validLevel(my_level);
 
   /**
@@ -276,7 +276,7 @@ public class Context
    */
   //@ assignable my_is_on;
   //@ ensures my_is_on;
-  public synchronized void turnOn() {
+  public void turnOn() {
     my_is_on = true;
   }
 
@@ -292,7 +292,7 @@ public class Context
    */
   //@ assignable my_is_on;
   //@ ensures !my_is_on;
-  public synchronized void turnOff() {
+  public void turnOff() {
     my_is_on = false;
   }
 
@@ -302,7 +302,7 @@ public class Context
    * @return a boolean indicating if any debugging is turned on.
    */
   //@ ensures \result == my_is_on;
-  public /*@ pure @*/ synchronized boolean isOn() {
+  public /*@ pure @*/ boolean isOn() {
     return my_is_on;
   }
 
@@ -504,7 +504,7 @@ public class Context
   //@ assignable my_level;
   //@ ensures getLevel() == the_new_level;
   //@ ensures validLevel(my_level);
-  public synchronized void setLevel(final int the_new_level) {
+  public void setLevel(final int the_new_level) {
     my_level = the_new_level;
   }
 
@@ -515,7 +515,7 @@ public class Context
    */
   //@ ensures validLevel(\result);
   //@ ensures \result == my_level;
-  public synchronized /*@ pure @*/ int getLevel() {
+  public /*@ pure @*/ int getLevel() {
     return my_level;
   }
 
