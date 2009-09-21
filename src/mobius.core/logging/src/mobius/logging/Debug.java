@@ -40,9 +40,9 @@
 
 package mobius.logging;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 
 /**
  * <p>
@@ -93,8 +93,8 @@ import java.util.HashMap;
  * <p>
  * In brief, the <code>Debug</code> class is normally used in the following
  * manner. A more detailed discussion of the use of this class can be found in
- * the full documentation for the package. See the Mobius Logging package's <a
- * href="../../../index.html">main index</a> for more information.
+ * the full documentation for the package. See the Mobius Logging package's
+ * <a href="../../../index.html">main index</a> for more information.
  * </p>
  *
  * <p>
@@ -215,14 +215,14 @@ import java.util.HashMap;
    * <code>Thread</code>, while a data value is a <code>Context</code>
    * object which contains the information specific to this thread.
    * </p>
-   *
+   */
+  protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
+
+  /**
    * <p>
-   * <code>my_thread_map</code> always has two entries, one under the key
-   * "GLOBAL_CATEGORIES" and one under the key "GLOBAL_CLASSES". These entries
-   * contain all the class-global categories and class-specific information
-   * for debugging, respectively.
+   * Class-specific information.
    * </p>
-   *
+   * 
    * <p>
    * Internal class handling is somewhat complicated. If the expression "*" is
    * <em>removed</em>, the database is simply cleared. If the expression
@@ -235,7 +235,15 @@ import java.util.HashMap;
    * specification of classes.
    * </p>
    */
-  protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
+  //@ constraint \old(my_classes_map) == my_classes_map;
+  protected /*@ non_null @*/ Map my_classes_map /*#guarded_by this*/;
+
+  /**
+   * <p>
+   * class-global categories.
+   */
+  //@ constraint \old(my_categories_map) == my_categories_map;
+  protected /*@ non_null @*/ Map my_categories_map /*#guarded_by this*/;
 
   /**
    * <p>
@@ -265,7 +273,7 @@ import java.util.HashMap;
    * </p>
    *
    * @design Higher valued levels usually indicate higher priorities. E.g. A
-   *         level 9 message is in the default implementation an asssertion;
+   *         level 9 message is in the default implementation an assertion;
    *         if it fails, the program exits. A level 5 message is an error and
    *         the user should probably be informed of the problem. You can
    *         override this behavior by subtyping <code>DebugConstants</code>
@@ -407,10 +415,9 @@ import java.util.HashMap;
    */
   public synchronized /*@ pure @*/ DebugOutput getOutputInterface() {
     final Thread currentThread = Thread.currentThread();
+    final Context debugContext = (Context)(my_thread_map.get(currentThread));
 
-    if (my_thread_map.containsKey(currentThread)) {
-      final Context debugContext = (Context)(my_thread_map.get(currentThread));
-      //@ assume debugContext != null;
+    if (debugContext != null) {
       return debugContext.getOutputInterface();
     } else
       return this.my_debug_output_interface;
@@ -454,14 +461,11 @@ import java.util.HashMap;
    *         on for a particular thread.
    */
   public synchronized boolean isOn(final /*@ non_null @*/ Thread a_thread) {
+      // Get the object that describes the per-thread debugging state.
+    final Context the_debug_context = (Context) (my_thread_map.get(a_thread)); //@ nowarn Exception;
     // Make sure that there is a legal entry in the my_thread_map
     // for this particular thread.
-    if (my_thread_map.containsKey(a_thread)) {
-      // Get the object that describes the per-thread debugging state.
-      final Context the_debug_context = (Context) (my_thread_map
-          .get(a_thread)); //@ nowarn Exception;
-      //@ assume the_debug_context != null;
-
+    if (the_debug_context != null) {
       return the_debug_context.isOn();
     } else
       return false;
@@ -534,7 +538,7 @@ import java.util.HashMap;
    * </p>
    *
    * @concurrency GUARDED
-   * @modifies my_thread_map, categoryMap
+   * @modifies my_thread_map
    * @param a_category
    *            the category to add to the global set of categories.
    * @param a_level
@@ -547,11 +551,7 @@ import java.util.HashMap;
   //@ requires 0 < a_category.length();
   public synchronized boolean addCategory(final /*@ non_null @*/ String a_category,
                                           final int a_level) {
-    // Get a reference to the global category map.
-    final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-    //@ assume categoryMap != null;
-
-    return addCategoryToMap(categoryMap, a_category, a_level);
+    return addCategoryToMap(my_categories_map, a_category, a_level);
   }
 
   /**
@@ -560,7 +560,7 @@ import java.util.HashMap;
    * </p>
    *
    * @concurrency GUARDED
-   * @modifies threadMap, categoryMap
+   * @modifies threadMap
    * @param a_category the category to remove.
    * @return a boolean indicating if the category was successfully removed
    *         from the database. A false indicates that the parameters were
@@ -568,11 +568,7 @@ import java.util.HashMap;
    */
   //@ requires 0 < a_category.length();
   public synchronized boolean removeCategory(final /*@ non_null @*/ String a_category) {
-    // Get a reference to the global category map.
-    final Map categoryMap = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-    //@ assume categoryMap != null;
-
-    return removeCategoryFromMap(categoryMap, a_category);
+    return removeCategoryFromMap(my_categories_map, a_category);
   }
 
   /**
@@ -590,18 +586,14 @@ import java.util.HashMap;
    */
   //@ requires 0 < a_category.length();
   public synchronized boolean containsCategory(final /*@ non_null @*/ String a_category) {
-    // Get global category map.
-    final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-    //@ assume map != null;
-
-    // If entry exists, return a true; otherwise return a false.
-    return map.containsKey(a_category);
+    return my_categories_map.containsKey(a_category);
   }
 
   /**
    * <p>
-   * Returns an <code>Iterator</code> that contains the list of class-global
+   * Returns a <code>Vector</code> that contains all the class-global
    * debugging categories that are currently in the category database.
+   * Only a copy is returned, not the internal structure.
    * </p>
    *
    * @concurrency GUARDED
@@ -610,12 +602,8 @@ import java.util.HashMap;
    *         debugging categories that are currently in the category database.
    * @see Map#values
    */
-  public synchronized Iterator listCategories() {
-    // Get global category map.
-    final Map map = (Map) (my_thread_map.get("GLOBAL_CATEGORIES"));
-    //@ assume map != null;
-
-    return map.values().iterator();
+  public synchronized Vector listCategories() {
+    return new Vector( my_categories_map.values());
   }
 
   /**
@@ -631,11 +619,7 @@ import java.util.HashMap;
    *            debugging enabled.
    */
   public synchronized void addClass(final /*@ non_null @*/ Class a_class_ref) {
-    // Get a reference to the global class map.
-    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-    //@ assume classMap != null;
-
-    Utilities.addClassToMap(classMap, a_class_ref.getName());
+    Utilities.addClassToMap(my_classes_map, a_class_ref.getName());
   }
 
   /**
@@ -654,11 +638,7 @@ import java.util.HashMap;
    */
   //@ requires 0 < a_class_name.length();
   public synchronized void addClass(final /*@ non_null @*/ String a_class_name) {
-    // Get a reference to the global class map.
-    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-    //@ assume classMap != null;
-
-    Utilities.addClassToMap(classMap, a_class_name);
+    Utilities.addClassToMap(my_classes_map, a_class_name);
   }
 
   /**
@@ -673,11 +653,7 @@ import java.util.HashMap;
    *            the class to remove.
    */
   public synchronized void removeClass(final /*@ non_null @*/ Class a_class_ref) {
-    // Get a reference to the global class map.
-    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-    //@ assume classMap != null;
-
-    Utilities.removeClassFromMap(classMap, a_class_ref.getName());
+    Utilities.removeClassFromMap(my_classes_map, a_class_ref.getName());
   }
 
   /**
@@ -695,11 +671,7 @@ import java.util.HashMap;
    */
   //@ requires 0 < a_class_name.length();
   public synchronized void removeClass(final /*@ non_null @*/ String a_class_name) {
-    // Get a reference to the global class map.
-    final Map classMap = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-    //@ assume classMap != null;
-
-    Utilities.removeClassFromMap(classMap, a_class_name);
+    Utilities.removeClassFromMap(my_classes_map, a_class_name);
   }
 
   /**
@@ -716,10 +688,7 @@ import java.util.HashMap;
    *         <code>null</code> if no such context exists.
    */
   public synchronized /*@ pure @*/ Context getContext(final /*@ non_null @*/ Thread a_thread) {
-    if (my_thread_map.containsKey(a_thread))
-      return (Context) (my_thread_map.get(a_thread));
-    else
-      return null;
+    return (Context) (my_thread_map.get(a_thread));
   }
 
   /**
@@ -733,17 +702,18 @@ import java.util.HashMap;
    * @param the_debug_context
    *            is the context that we are interested in adding.
    * @return a boolean indicating if the context was added to the database
-   *         sucessfully or that the thread was already in the database. A
+   *         successfully or that the thread was already in the database. A
    *         false indicates that the context was invalid.
    */
   public synchronized boolean addContext(final /*@ non_null @*/ Context the_debug_context) {
     // @review kiniry Why is a null value being checked given the
     // precondition?
-    if (the_debug_context == null)
-      return false;
-
-    my_thread_map.put(the_debug_context.getThread(), the_debug_context);
-    return true;
+    if (the_debug_context != null) {
+      my_thread_map.put(the_debug_context.getThread(), the_debug_context);
+      return true;
+    }
+    
+    return false;
   }
 
   /**
@@ -757,7 +727,7 @@ import java.util.HashMap;
    * @param a_debug_context
    *            is the context that we are interested in removing.
    * @return a boolean indicating if the context was removed from the database
-   *         sucessfully or that the thread was not in the database at all. A
+   *         successfully or that the thread was not in the database at all. A
    *         false indicates that the context was invalid or not in the table.
    */
   public synchronized boolean removeContext(final /*@ non_null @*/ Context a_debug_context) {
@@ -766,14 +736,15 @@ import java.util.HashMap;
     if ((a_debug_context != null) && (my_thread_map.containsKey(a_debug_context))) {
       my_thread_map.remove(a_debug_context);
       return true;
-    } else
-      return false;
+    }
+    
+    return false;
   }
 
   /**
    * <p>
-   * Returns an <code>Enumeration</code> that is the list of class-global
-   * classes that have debugging enabled.
+   * Returns a <code>Vector</code> containing all the class-global classes that have
+   * debugging enabled.
    * </p>
    *
    * @concurrency GUARDED
@@ -784,12 +755,8 @@ import java.util.HashMap;
    *         zero-length Enumeration will be returned if there is no
    *         information on the thread at all.
    */
-  public synchronized Iterator listClasses() {
-    // Get global category map.
-    final Map map = (Map) (my_thread_map.get("GLOBAL_CLASSES"));
-    //@ assume map != null;
-
-    return map.values().iterator();
+  public synchronized Vector listClasses() {
+    return new Vector( my_classes_map.values());
   }
 
   /**
@@ -810,9 +777,9 @@ import java.util.HashMap;
         (the_level <= DebugConstants.LEVEL_MAX)) {
       this.my_level = the_level;
       return true;
-    } else
-      return false;
-
+    }
+    
+    return false;
   }
 
   /**
@@ -824,15 +791,15 @@ import java.util.HashMap;
    * @modifies QUERY
    * @return the current class-global debugging level.
    */
-
   public /*@ pure @*/ synchronized int getLevel() {
     return my_level;
   }
 
   /**
    * <p>
-   * Returns an <code>Enumeration</code> that is the list of class-global
-   * threads that have debugging enabled.
+   * Returns a <code>Vector</code> containing all the class-global
+   * threads that have debugging enabled. Only a copy is returned,
+   * the internal structures are not eposed.
    * </p>
    *
    * @concurrency GUARDED
@@ -841,8 +808,8 @@ import java.util.HashMap;
    *         threads that currently have debugging enabled (they are in the
    *         thread database).
    */
-  public synchronized Iterator listThreads() {
-    return my_thread_map.keySet().iterator();
+  public synchronized Vector listThreads() {
+    return new Vector( my_thread_map.keySet());
   }
 
   // Protected Methods
@@ -866,6 +833,8 @@ import java.util.HashMap;
    *            an implementation of the <code>Collect</code> class.
    */
   //@ ensures my_thread_map != null;
+  //@ ensures my_classes_map != null;
+  //@ ensures my_categories_map != null;
   //@ ensures getAssert() != null;
   //@ ensures getCollect() == the_collect;
   //@ ensures my_debug_utilities != null;
@@ -876,15 +845,18 @@ import java.util.HashMap;
     my_thread_map = new HashMap();
     //@ set my_thread_map.keyType = \type(Thread);
     //@ set my_thread_map.elementType = \type(Context);
-    final Map categoryMap = new HashMap();
-    my_thread_map.put("GLOBAL_CATEGORIES", categoryMap); //@nowarn Exception;
+    
+    my_categories_map = new HashMap();
+    //@ set my_categories_map.keyType = \type(String);
+    //@ set my_categories_map.elementType = \type(Integer);
 
     my_debug_constants = the_debug_constants;
-    my_debug_constants.initCategories(categoryMap);
+    my_debug_constants.initCategories(my_categories_map);
 
-    final Map classMap = new HashMap();
-    my_thread_map.put("GLOBAL_CLASSES", classMap); //@ nowarn Exception;
-    classMap.put("*", Boolean.TRUE);
+    my_classes_map = new HashMap();
+    //@ set my_categories_map.keyType = \type(String);
+    //@ set my_categories_map.elementType = \type(Boolean);
+    my_classes_map.put("*", Boolean.TRUE);
 
     // Note that we need to actually initialize our own debugging context!
     my_assert = new Assert(this);
@@ -946,11 +918,7 @@ import java.util.HashMap;
   private synchronized boolean
   removeCategoryFromMap(final /*@ non_null @*/ Map the_map,
                         final /*@ non_null @*/ String a_category) {
-    // If is in the map, remove it.
-    if (the_map.containsKey(a_category))
-      the_map.remove(a_category);
-
-    return true;
+    return the_map.remove(a_category) != null;
   }
 
 } // end of class Debug
