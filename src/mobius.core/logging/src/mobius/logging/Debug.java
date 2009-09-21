@@ -264,7 +264,7 @@ import java.util.Vector;
    * <code>turnOn()</code>, etc.) are short-circuited and do nothing.
    * </p>
    */
-  protected /*@ spec_public @*/ boolean my_is_on /*#guarded_by this*/;
+  protected /*@ spec_public @*/ volatile boolean my_is_on /*#guarded_by this*/;
 
   /**
    * <p>
@@ -283,7 +283,7 @@ import java.util.Vector;
    * @values (my_debug_constants.LEVEL_MIN <= level <= my_debug_constants.LEVEL_MAX)
    */
   //@ invariant my_debug_constants.LEVEL_MIN <= my_level & my_level <= my_debug_constants.LEVEL_MAX;
-  protected int my_level /*#guarded_by this*/;
+  protected volatile int my_level /*#guarded_by this*/;
 
   /**
    * <p>
@@ -437,12 +437,16 @@ import java.util.Vector;
    * <p>
    * Returns a boolean indicating if any debugging is turned on.
    * </p>
+   * 
+   * <p>
+   * The method does not need to be synchronized, because it returns
+   * a volatile variable.
+   * </p>
    *
-   * @concurrency GUARDED
    * @modifies QUERY
    * @return a boolean indicating if any debugging is turned on.
    */
-  public /*@ pure @*/ synchronized boolean isOn() {
+  public /*@ pure @*/ boolean isOn() {
     return my_is_on;
   }
 
@@ -461,7 +465,7 @@ import java.util.Vector;
    *         on for a particular thread.
    */
   public synchronized boolean isOn(final /*@ non_null @*/ Thread a_thread) {
-      // Get the object that describes the per-thread debugging state.
+    // Get the object that describes the per-thread debugging state.
     final Context the_debug_context = (Context) (my_thread_map.get(a_thread)); //@ nowarn Exception;
     // Make sure that there is a legal entry in the my_thread_map
     // for this particular thread.
@@ -476,12 +480,11 @@ import java.util.Vector;
    * Returns a boolean indicating if any debugging is turned off.
    * </p>
    *
-   * @concurrency GUARDED
    * @modifies QUERY
    * @return a boolean indicating if any debugging is turned on.
    * @review kiniry Are the isOff() methods necessary at all?
    */
-  public synchronized boolean isOff() {
+  public boolean isOff() {
     return (!isOn());
   }
 
@@ -786,12 +789,14 @@ import java.util.Vector;
    * <p>
    * Returns the current class-global debugging level.
    * </p>
+   * 
+   * <p> The method needs not to be synchronized. </p>
    *
    * @concurrency GUARDED
    * @modifies QUERY
    * @return the current class-global debugging level.
    */
-  public /*@ pure @*/ synchronized int getLevel() {
+  public /*@ pure @*/ int getLevel() {
     return my_level;
   }
 

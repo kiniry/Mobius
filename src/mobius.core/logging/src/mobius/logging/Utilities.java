@@ -109,15 +109,16 @@ class Utilities {
    * If the current class debugging context is "*", adding a class has no
    * effect.  If adding the context "*", the database is cleared and the
    * "*" in inserted. </p>
+   * 
+   * <p> The caller must guarantee that this method is synchronized. </p>
    *
-   * @concurrency GUARDED
    * @param the_map the map to which the class is added.
    * @param the_class_name the name of the class to add to the set of classes
    * that have debugging enabled.
    */
 
-  static synchronized void addClassToMap(final /*@ non_null @*/ Map the_map,
-                                         final /*@ non_null @*/ String the_class_name) {
+  static void addClassToMap(final /*@ non_null @*/ Map the_map,
+                            final /*@ non_null @*/ String the_class_name) {
     // If we are adding "*", the tabled should be cleared and the "*"
     // should be inserted.
     if ("*".equals(the_class_name)) {
@@ -132,7 +133,7 @@ class Utilities {
           return;
         else
           // Add a new entry for the passed class.
-          the_map.put(the_class_name, null);
+          the_map.put(the_class_name, Boolean.TRUE);
       }
   }
 
@@ -142,32 +143,31 @@ class Utilities {
    * and debugging disabled.  There is no way to "undo" such a
    * command.  Adding classes after the removal of "*" works as you
    * would expect. </p>
+   * 
+   * <p> The caller must guarantee that this method is synchronized. </p>
    *
-   * @concurrency GUARDED
    * @param the_map the map from which the class is removed.
    * @param the_class_name the name of the class to remove.
    */
 
-  static synchronized void removeClassFromMap(final /*@ non_null @*/ Map the_map,
-                                              final /*@ non_null @*/ String the_class_name) {
+  static void removeClassFromMap(final /*@ non_null @*/ Map the_map,
+                                 final /*@ non_null @*/ String the_class_name) {
     // If we are removing the class "*", just clear the map.
     if ("*".equals(the_class_name)) {
       the_map.clear();
     } else
       // If entry is in the map, remove it.
-      if (the_map.containsKey(the_class_name))
-        the_map.remove(the_class_name);
+      the_map.remove(the_class_name);
   }
 
   /**
    * <p> Tests to see if the current debug context warrants output. </p>
    *
-   * @concurrency GUARDED
    * @param the_level The debugging level of this message.
    * @return true iff the current debug context warrants output.
    */
   //@ requires my_debug != null;
-  synchronized /*@ pure @*/ boolean levelTest(final int the_level) {
+  /*@ pure @*/ boolean levelTest(final int the_level) {
     // Get the current thread.
     final Thread currentThread = Thread.currentThread();
 
@@ -200,68 +200,61 @@ class Utilities {
   /**
    * <p> Tests to see if the current debug context warrants output. </p>
    *
-   * @concurrency GUARDED
    * @return a boolean indicating if the context warrants output.
    * @param a_category is the category of this message.
    */
   //@ requires a_category.length() > 0;
-  synchronized boolean categoryTest(final /*@ non_null @*/ String a_category) {
-    int the_category_level = 0;
-
+  boolean categoryTest(final /*@ non_null @*/ String a_category) {
+	int the_category_level_int = 0;
     // Get the current thread.
     final Thread the_current_thread = Thread.currentThread();
 
-    // Check to see if global-debugging is enabled.
-    if (my_debug.isOn()) {
-      // Get a reference to the global category map.
-      final Map the_category_map =
-        (Map)(my_debug.my_thread_map.get("GLOBAL_CATEGORIES"));
-      //@ assume the_category_map != null;
-      // "GLOBAL_CATEGORIES" is always presented in the_category_map
+    synchronized (my_debug) {
+        // Check to see if global-debugging is enabled.
+        if (my_debug.isOn()) {
+          // Get category level
+          Integer the_category_level =
+              (Integer)(my_debug.my_categories_map.get(a_category));
 
-      // If this category is not defined in the global map,
-      // we break out of the global checks and start the per-thread
-      // checks.
-      if (the_category_map.containsKey(a_category)) {
-        // Get the debugging level of this defined global category.
+          // If this category is not defined in the global map,
+          // we break out of the global checks and start the per-thread
+          // checks.
+          if (the_category_level != null) {
+            // Get the debugging level of this defined global category.
 
-        the_category_level =
-          ((Integer)(the_category_map.get(a_category))).intValue();
+            the_category_level_int = the_category_level.intValue();
 
-        // Global debugging is enabled, the category is defined in the
-        // global database, so check the current global debugging level
-        // and, if it is greater than or equal to the debugging level of
-        // the passed category, print out the message.
+            // Global debugging is enabled, the category is defined in the
+            // global database, so check the current global debugging level
+            // and, if it is greater than or equal to the debugging level of
+            // the passed category, print out the message.
 
-        return ((the_category_level >= my_debug.getLevel()) && sourceClassValid());
+            return ((the_category_level_int >= my_debug.getLevel()) && sourceClassValid());
+          }
       }
+      // Global debugging is not enabled, so check per-thread debugging.
+
+      // Check to see if this thread has a debugging context.
+      final Context the_debug_context = my_debug.getContext(the_current_thread);
+
+      // If there is no context, or if this thread does not have debugging enabled,
+      // or if this category is not defined for the current thread, then
+      // we should not give the OK to print.
+      if ((the_debug_context == null) || !the_debug_context.isOn() ||
+          (!the_debug_context.containsCategory(a_category)))
+        return false;
+
+      // The current thread has context, debugging is enabled, the
+      // category is defined, so get the per-thread debugging level of
+      // this defined per-thread category.
+      the_category_level_int = the_debug_context.getCategoryLevel(a_category);
+
+      // Now, see the current per-thread debugging level is >= the
+      // per-thread category debugging level of the passed category.  If
+      // this condition holds, print the message.
+
+      return ((the_category_level_int >= the_debug_context.getLevel()) && sourceClassValid());
     }
-
-    // Global debugging is not enabled, so check per-thread debugging.
-
-    // Check to see if this thread has a debugging context.
-    final Context the_debug_context = my_debug.getContext(the_current_thread);
-
-    // If there is no context, or if this thread does not have debugging enabled,
-    // or if this category is not defined for the current thread, then
-    // we should not give the ok to print.
-    if ((the_debug_context == null) || !the_debug_context.isOn() ||
-        (!the_debug_context.containsCategory(a_category)))
-      return false;
-
-    // The current thread has context, debugging is enabled, the
-    // category is defined, so get the per-thread debugging level of
-    // this defined per-thread category.
-    the_category_level = the_debug_context.getCategoryLevel(a_category);
-
-    // Now, see the current per-thread debugging level is >= the
-    // per-thread category debugging level of the passed category.  If
-    // this condition holds, print the message.
-
-    if ((the_category_level >= the_debug_context.getLevel()) && sourceClassValid())
-      return true;
-
-    return false;
   }
 
   /**
@@ -272,12 +265,11 @@ class Utilities {
    * @return a true if the object performing the debugging action
    * is permitted to print in the current debugging context.
    */
-
   // XXX @ modifies \nothing;
   // Can't use modifies \nothing since Throwable.printStackTrace has
   // assignable \not_specified
   // @REVIEW Should be obs_pure, not just pure.
-  synchronized /*@ pure @*/ boolean sourceClassValid() {
+  /*@ pure @*/ boolean sourceClassValid() {
     int an_index, the_start_index, the_paren_index;
     Throwable throwable;
     StringWriter a_string_writer;
@@ -304,7 +296,7 @@ class Utilities {
 
     a_string_buffer = a_string_writer.getBuffer();
     a_string = a_string_buffer.toString();
-    // Match to the last occurence of a Mobius logging stack frame.
+    // Match to the last occurrence of a Mobius logging stack frame.
     a_match_string = "mobius.logging";
     an_index = a_string.lastIndexOf(a_match_string);
     // Bump the index past the matched string.
@@ -334,55 +326,55 @@ class Utilities {
     // Now, we have the name of the class that called the debugging
     // routine.  It is stored in className.
 
-    // See if global debugging is enabled.
-    if (my_debug.isOn()) {
-      // It is, so see if this class is included in the list of
-      // classes that have debugging enabled.
-      the_class_map =
-        (Map)(my_debug.my_thread_map.get("GLOBAL_CLASSES"));
+    synchronized (my_debug) {    // See if global debugging is enabled.
+      if (my_debug.isOn()) {
+          // It is, so see if this class is included in the list of
+          // classes that have debugging enabled.
+          the_class_map = my_debug.my_classes_map;
 
-      // If "*" is in the map, then we are testing for reductive
-      // specification of classes.  I.e. if the class is not in the map
-      // _and_ "*" is in the map, then we _should_ return a true.  If "*"
-      // is _not_ in the map and the class _is_, then we _should_ return
-      // a true.  We do not return a false here because there is still the
-      // possibility that per-thread context will specify that output
-      // should appear.
+          // If "*" is in the map, then we are testing for reductive
+          // specification of classes.  I.e. if the class is not in the map
+          // _and_ "*" is in the map, then we _should_ return a true.  If "*"
+          // is _not_ in the map and the class _is_, then we _should_ return
+          // a true.  We do not return a false here because there is still the
+          // possibility that per-thread context will specify that output
+          // should appear.
 
-      if (((the_class_map.containsKey("*")) &&
-          (!the_class_map.containsKey(a_class_name))) ||
-          (the_class_map.containsKey(a_class_name)))
-          return true;
-    }
+          if (((the_class_map.containsKey("*")) &&
+              (!the_class_map.containsKey(a_class_name))) ||
+              (the_class_map.containsKey(a_class_name)))
+              return true;
+      }
 
-    // Either global debugging isn't enabled or the global debugging
-    // context didn't specify that output should appear. So, now we check
-    // the per-thread context.
+      // Either global debugging isn't enabled or the global debugging
+      // context didn't specify that output should appear. So, now we check
+      // the per-thread context.
 
-    final Thread currentThread = Thread.currentThread();
+      final Thread currentThread = Thread.currentThread();
 
-    // If there is no per-thread context for the current thread, return a
-    // false.
+      // If there is no per-thread context for the current thread, return a
+      // false.
 
-    if (!my_debug.my_thread_map.containsKey(currentThread))
-      return false;
+      if (!my_debug.my_thread_map.containsKey(currentThread))
+        return false;
 
-    // The table has the key, so get the record for this thread.
-    final Context debugContext =
-      (Context)(my_debug.my_thread_map.get(currentThread));
+      // The table has the key, so get the record for this thread.
+      final Context debugContext =
+        (Context)(my_debug.my_thread_map.get(currentThread));
 
-    // Is debugging turned on at all for this thread? If not, return a
-    // false.
-    if (!debugContext.isOn())
-      return false;
+      // Is debugging turned on at all for this thread? If not, return a
+      // false.
+      if (!debugContext.isOn())
+        return false;
 
-    // Debugging is enabled for this thread, so perform the same check as
-    // above to see if the calling class should output debugging
-    // information.  This time, if we fail, we fail.
-    if (debugContext.containsClass("*")) {
-      return !debugContext.containsClass(a_class_name);
-    } else {
-      return debugContext.containsClass(a_class_name);
+      // Debugging is enabled for this thread, so perform the same check as
+      // above to see if the calling class should output debugging
+      // information.  This time, if we fail, we fail.
+      if (debugContext.containsClass("*")) {
+        return !debugContext.containsClass(a_class_name);
+      } else {
+        return debugContext.containsClass(a_class_name);
+      }
     }
   }
 
