@@ -43,6 +43,7 @@ package mobius.logging;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.WeakHashMap;
 
 /**
  * <p>
@@ -157,7 +158,8 @@ import java.util.Vector;
  *       <li> New derivative: persistence mobile debug object. </li>
  *       <li> GUI interface to runtime debugging. </li>
  *       <li> Garbage collection thread for <code>Debug</code> to clean up
- *       stopped threads. </li>
+ *       stopped threads. UPDATE: should be fixed; using WeakHashMap for
+ *       my_thread_map</li>
  *       <li> Support for ThreadGroup contexts. </li>
  *       </ol>
  *
@@ -847,7 +849,7 @@ import java.util.Vector;
   //@ nowarn Exception;
   private /*@ helper @*/ void init(final /*@ non_null @*/ DebugConstants the_debug_constants,
                                    final Collector the_collect) {
-    my_thread_map = new HashMap();
+    my_thread_map = new WeakHashMap();
     //@ set my_thread_map.keyType = \type(Thread);
     //@ set my_thread_map.elementType = \type(Context);
     
