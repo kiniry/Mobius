@@ -90,6 +90,11 @@ import java.util.WeakHashMap;
  * <code>Debug</code> object to change the current global debugging context at
  * runtime.
  * </p>
+ * 
+ * <p>
+ * Contexts can be also owned by a thread group. Then, the context is
+ * associated with every thread that is a part of that thread group.
+ * </p>
  *
  * <p>
  * In brief, the <code>Debug</code> class is normally used in the following
