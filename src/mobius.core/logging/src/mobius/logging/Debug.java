@@ -160,7 +160,7 @@ import java.util.WeakHashMap;
  *       <li> Garbage collection thread for <code>Debug</code> to clean up
  *       stopped threads. UPDATE: should be fixed; using WeakHashMap for
  *       my_thread_map</li>
- *       <li> Support for ThreadGroup contexts. </li>
+ *       <li> Support for ThreadGroup contexts. UPDATE: done</li>
  *       </ol>
  *
  * @review kiniry To make debugging classes as robust as possible, we need to
@@ -211,11 +211,13 @@ import java.util.WeakHashMap;
 
   /**
    * <p>
-   * <code>my_thread_map</code> is a map of all threads that have some
-   * per-thread specific debugging attributes defined. Per-thread attributes
-   * include categories and classes. A key of this map is a reference to a
-   * <code>Thread</code>, while a data value is a <code>Context</code>
-   * object which contains the information specific to this thread.
+   * <code>my_thread_map</code> is a map of all threads or thread groups that
+   * have some per-thread of per-thread group specific debugging attributes
+   * defined. Per-thread attributes include categories and classes. A key of
+   * this map is a reference to a <code>Thread</code> or a
+   * <code>ThreadGroup</code>, while a data value is a <code>Context</code>
+   * object which contains the information specific to this thread or thread
+   * group.
    * </p>
    */
   protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
@@ -416,8 +418,7 @@ import java.util.WeakHashMap;
    *         interface.
    */
   public synchronized /*@ pure @*/ DebugOutput getOutputInterface() {
-    final Thread currentThread = Thread.currentThread();
-    final Context debugContext = (Context)(my_thread_map.get(currentThread));
+    final Context debugContext = getContext( Thread.currentThread());
 
     if (debugContext != null) {
       return debugContext.getOutputInterface();
@@ -468,7 +469,7 @@ import java.util.WeakHashMap;
    */
   public synchronized boolean isOn(final /*@ non_null @*/ Thread a_thread) {
     // Get the object that describes the per-thread debugging state.
-    final Context the_debug_context = (Context) (my_thread_map.get(a_thread)); //@ nowarn Exception;
+    final Context the_debug_context = getContext( a_thread);
     // Make sure that there is a legal entry in the my_thread_map
     // for this particular thread.
     if (the_debug_context != null) {
@@ -603,11 +604,11 @@ import java.util.WeakHashMap;
    *
    * @concurrency GUARDED
    * @modifies QUERY
-   * @return an <code>Iterator</code> that contains the list of class-global
+   * @return a <code>Vector</code> that contains all the class-global
    *         debugging categories that are currently in the category database.
    * @see Map#values
    */
-  public synchronized Vector listCategories() {
+  public /*@ pure non_null @*/ synchronized Vector listCategories() {
     return new Vector( my_categories_map.values());
   }
 
@@ -693,7 +694,14 @@ import java.util.WeakHashMap;
    *         <code>null</code> if no such context exists.
    */
   public synchronized /*@ pure @*/ Context getContext(final /*@ non_null @*/ Thread a_thread) {
-    return (Context) (my_thread_map.get(a_thread));
+	Context context = (Context) (my_thread_map.get(a_thread));
+	if (context == null) {
+		ThreadGroup group = a_thread.getThreadGroup();
+		if (group != null)
+			context = (Context) (my_thread_map.get(group));
+	}
+	
+	return context;
   }
 
   /**
@@ -714,7 +722,7 @@ import java.util.WeakHashMap;
     // @review kiniry Why is a null value being checked given the
     // precondition?
     if (the_debug_context != null) {
-      my_thread_map.put(the_debug_context.getThread(), the_debug_context);
+      my_thread_map.put(the_debug_context.getOwner(), the_debug_context);
       return true;
     }
     
@@ -736,14 +744,7 @@ import java.util.WeakHashMap;
    *         false indicates that the context was invalid or not in the table.
    */
   public synchronized boolean removeContext(final /*@ non_null @*/ Context a_debug_context) {
-    // @review kiniry Why is a null value being checked given the
-    // precondition?
-    if ((a_debug_context != null) && (my_thread_map.containsKey(a_debug_context))) {
-      my_thread_map.remove(a_debug_context);
-      return true;
-    }
-    
-    return false;
+    return my_thread_map.remove(a_debug_context) != null;
   }
 
   /**
@@ -754,13 +755,11 @@ import java.util.WeakHashMap;
    *
    * @concurrency GUARDED
    * @modifies QUERY
-   * @return an <code>Enumeration</code> that is the list of class-global
+   * @return a <code>Vector</code> that contains all the class-global
    *         classes that currently have debugging enabled (they are in the
-   *         class database). Returns a null if a null is passed, otherwise a
-   *         zero-length Enumeration will be returned if there is no
-   *         information on the thread at all.
+   *         class database).
    */
-  public synchronized Vector listClasses() {
+  public synchronized /*@ pure non_null @*/ Vector listClasses() {
     return new Vector( my_classes_map.values());
   }
 
@@ -769,7 +768,6 @@ import java.util.WeakHashMap;
    * Set a new class-global debugging level.
    * </p>
    *
-   * @concurrency GUARDED
    * @modifies level
    * @param the_level
    *            the new debugging level.
@@ -777,7 +775,7 @@ import java.util.WeakHashMap;
    *         reason why a setLevel might fail is if the level passed is out of
    *         range.
    */
-  public synchronized boolean setLevel(final int the_level) {
+  public boolean setLevel(final int the_level) {
     if ((the_level >= DebugConstants.LEVEL_MIN) &&
         (the_level <= DebugConstants.LEVEL_MAX)) {
       this.my_level = the_level;
@@ -806,16 +804,16 @@ import java.util.WeakHashMap;
    * <p>
    * Returns a <code>Vector</code> containing all the class-global
    * threads that have debugging enabled. Only a copy is returned,
-   * the internal structures are not eposed.
+   * the internal structures are not exposed.
    * </p>
    *
    * @concurrency GUARDED
    * @modifies QUERY
-   * @return an <code>Enumeration</code> that is the list of class-global
+   * @return a <code>Vector</code> that contains all the class-global
    *         threads that currently have debugging enabled (they are in the
    *         thread database).
    */
-  public synchronized Vector listThreads() {
+  public synchronized /*@ pure non_null @*/ Vector listThreads() {
     return new Vector( my_thread_map.keySet());
   }
 
@@ -850,7 +848,7 @@ import java.util.WeakHashMap;
   private /*@ helper @*/ void init(final /*@ non_null @*/ DebugConstants the_debug_constants,
                                    final Collector the_collect) {
     my_thread_map = new WeakHashMap();
-    //@ set my_thread_map.keyType = \type(Thread);
+    //@ set my_thread_map.keyType = \type(Object);
     //@ set my_thread_map.elementType = \type(Context);
     
     my_categories_map = new HashMap();

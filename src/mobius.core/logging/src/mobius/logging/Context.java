@@ -42,8 +42,8 @@ package mobius.logging;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * <p> Context is the data structure that holds the information that is
@@ -91,7 +91,7 @@ import java.util.Map;
  * was used in package versions 0.01 through 0.17.
  * @design changeonly{} specifications are not used here because the
  * clone() method is part of the IDebug context design and is not
- * implemented for changeonly semantics.
+ * implemented for change only semantics.
  */
 //+@ nullable_by_default
 public class Context
@@ -140,7 +140,7 @@ public class Context
   /**
    * @serial The debugging constants for this class.
    */
-  private transient final /*@ spec_public @*/ DebugConstants my_debug_constants;
+  private transient final /*@ non_null spec_public @*/ DebugConstants my_debug_constants;
 
   /**
    * @serial A flag indicating if debugging is enabled for this
@@ -175,9 +175,9 @@ public class Context
   private final /*@ non_null spec_public @*/ Map my_class_map /*#guarded_by this*/;
 
   /**
-   * The thread that owns this context.
+   * The thread or thread group that owns this context.
    */
-  private transient /*@ spec_public @*/ Thread my_thread /*#guarded_by this*/;
+  private transient /*@ non_null spec_public @*/ Object my_owner /*#guarded_by this*/;
 
   /**
    * <p> The object used by this thread to control debugging output device.
@@ -187,34 +187,37 @@ public class Context
   private transient /*@ spec_public @*/ DebugOutput my_debug_output_interface;
 
   /**
-   * <p> The standard constructor.  The thread that is constructing the
-   * context is the "owning thread".  All calls to this context will be
-   * recognized only in the context of the original constructing
-   * thread. </p>
-   *
    * <p> The constructor initializes all the static data-structures used by
    * the Context class.  Note that the <code>initCategories()</code> method
    * is automatically called as necessary to initialize the default
    * categories database of the Context class. </p>
+   * 
+   * <p> The context is associated with a thread or a thread group, but not
+   * both. Therefore, one of the parameters <code>thread</code> and
+   * <code>thread_group</code> has to be null. </p>
    *
    * @concurrency CONCURRENT
    * @param some_debug_constants an implementation of the <code>DebugConstants</code> that
    * defines the semantics of this debug context.
    * @param a_debug_output an implementation of <code>DebugOutput</code> that defines
    * the semantics of debugging output.
+   * @param thread thread associated with this context
+   * @param thread_group thread group associated with this context
    */
   // @todo kiniry put fields in objectState and use datagroup in frame axiom
+  //@ requires thread != null ==> thread_group == null;
+  //@ requires thread_group != null ==> thread == null;
   //@ ensures my_is_on == false;
   //@ ensures my_level == my_debug_constants.LEVEL_MIN;
   //@ ensures validLevel(my_level);
-  //@ ensures my_category_map != null;
-  //@ ensures my_class_map != null;
-  //@ ensures my_debug_constants != null;
   //@ ensures my_debug_output_interface != null;
-  //@ ensures my_thread != null;
+  //@ ensures my_thread == null ==> my_thread_group != null;
+  //@ ensures my_thread_group == null ==> my_thread != null;
   // @todo kiniry Change these postconditions into an initially assertion.
   public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
-                 final /*@ non_null @*/ DebugOutput a_debug_output) {
+                 final /*@ non_null @*/ DebugOutput a_debug_output,
+                 final Thread thread,
+                 final ThreadGroup thread_group) {
     super();
     my_is_on = false;
     my_category_map = new HashMap();
@@ -228,7 +231,58 @@ public class Context
     my_debug_constants.initCategories(my_category_map);
     my_level = DebugConstants.LEVEL_MIN;
     my_debug_output_interface = a_debug_output;
-    my_thread = Thread.currentThread();
+    my_owner = thread != null ? thread : thread_group;
+  }
+
+  /**
+   * <p> The standard constructor.  The thread that is constructing the
+   * context is the "owning thread".  All calls to this context will be
+   * recognized only in the context of the original constructing
+   * thread. </p>
+   *
+   * @concurrency CONCURRENT
+   * @param some_debug_constants an implementation of the <code>DebugConstants</code> that
+   * defines the semantics of this debug context.
+   * @param a_debug_output an implementation of <code>DebugOutput</code> that defines
+   * the semantics of debugging output.
+   */
+  // @todo kiniry put fields in objectState and use datagroup in frame axiom
+  //@ ensures my_is_on == false;
+  //@ ensures my_level == my_debug_constants.LEVEL_MIN;
+  //@ ensures validLevel(my_level);
+  //@ ensures my_debug_output_interface != null;
+  //@ ensures my_thread == null ==> my_thread_group != null;
+  //@ ensures my_thread_group == null ==> my_thread != null;
+  // @todo kiniry Change these postconditions into an initially assertion.
+  public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
+                 final /*@ non_null @*/ DebugOutput a_debug_output) {
+	this( some_debug_constants, a_debug_output, Thread.currentThread(), null);
+  }
+
+  /**
+   * <p> Constructs the thread-group context. The context is automatically
+   * associated with every thread which belongs to the specified thread
+   * group. </p>
+   *
+   * @concurrency CONCURRENT
+   * @param some_debug_constants an implementation of the <code>DebugConstants</code> that
+   * defines the semantics of this debug context.
+   * @param a_debug_output an implementation of <code>DebugOutput</code> that defines
+   * the semantics of debugging output.
+   * @param thread_group thread group associated with this context
+   */
+  // @todo kiniry put fields in objectState and use datagroup in frame axiom
+  //@ ensures my_is_on == false;
+  //@ ensures my_level == my_debug_constants.LEVEL_MIN;
+  //@ ensures validLevel(my_level);
+  //@ ensures my_debug_output_interface != null;
+  //@ ensures my_thread == null ==> my_thread_group != null;
+  //@ ensures my_thread_group == null ==> my_thread != null;
+  // @todo kiniry Change these postconditions into an initially assertion.
+  public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
+                 final /*@ non_null @*/ DebugOutput a_debug_output,
+                 final /*@ non_null @*/ ThreadGroup thread_group) {
+	this( some_debug_constants, a_debug_output, null, thread_group);
   }
 
   /**
@@ -249,21 +303,24 @@ public class Context
     } catch (CloneNotSupportedException cnse) {
       throw new RuntimeException(cnse.getMessage(), cnse);
     }
-    a_context_clone.my_thread = Thread.currentThread();
+    a_context_clone.my_owner = Thread.currentThread();
     a_context_clone.my_debug_output_interface = my_debug_output_interface;
 
     return a_context_clone;
   }
 
   /**
-   * @return the thread that owns this context.
+   * 
+   * @return the thread that owns this context or null if it is owned with
+   * a thread group
    *
    * @concurrency CONCURRENT
    * @modifies QUERY
    */
-  //@ ensures \result == my_thread;
-  public /*@ pure @*/ Thread getThread() {
-    return my_thread;
+  //@ ensures \result == my_owner;
+  //@ ensures \result != null;
+  public /*@ pure @*/ Object getOwner() {
+    return my_owner;
   }
 
   /**
@@ -387,13 +444,12 @@ public class Context
   /**
    * @modifies QUERY
    * @concurrency GUARDED
-   * @return an iterator that contains the list of per-thread debugging
-   * categories that are currently in this Context's category
-   * database.  An empty iterator will be returned if there
-   * are no categories defined in the database as of yet.
+   * @return a vector that contains all the per-thread or per-thread group
+   * debugging categories that are currently in this Context's category
+   * database.
    */
-  public synchronized Iterator listCategories() {
-    return my_category_map.values().iterator();
+  public synchronized /*@ pure non_null @*/ Vector listCategories() {
+    return new Vector( my_category_map.values());
   }
 
   /**
@@ -480,18 +536,17 @@ public class Context
   }
 
   /**
-   * <p> Returns an iterator that contains the list of classes that have
+   * <p> Returns a <code>Vector</code> that contains all the classes that have
    * debugging enabled in this Context. </p>
    *
    * @modifies QUERY
    * @concurrency GUARDED
-   * @return an iterator that contains the list of the classes that
+   * @return a vector that contains all the classes that
    * currently have debugging enabled (they are in the class database)
-   * for the owning thread. Returns an empty iterator if there
-   * are no enabled classes.
+   * for the owning thread or thread group.
    */
-  public synchronized /*@ pure @*/ Iterator listClasses() {
-    return my_class_map.values().iterator();
+  public synchronized /*@ non_null pure @*/ Vector listClasses() {
+    return new Vector( my_class_map.values());
   }
 
   /**
