@@ -54,6 +54,7 @@ public class ProgressEndAction  extends AProverAction {
     /** {@inheritDoc} */
     @Override
     protected IStatus run(final IProgressMonitor monitor) {
+      
       boolean notlastres = true;
       final TopLevelManager top = TopLevelManager.getInstance();
       if (top == null) {
