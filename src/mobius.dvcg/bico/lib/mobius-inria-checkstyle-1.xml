@@ -70,9 +70,6 @@ The INRIA Mobius coding standard.
             <property name="max" value="5"/>
             <property name="tokens" value="STATIC_INIT"/>
         </module>
-        <module name="FileLength">
-            <property name="max" value="500"/>
-        </module>
         <module name="LineLength">
             <property name="ignorePattern" value="(^ *//\*@ .+$)|(^ *@.+$)"/>
             <property name="max" value="95"/>
@@ -102,7 +99,6 @@ The INRIA Mobius coding standard.
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR,               BOR_ASSIGN, BSR, BSR_ASSIGN, BXOR, BXOR_ASSIGN, COLON, DIV,               DIV_ASSIGN, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR,               LT, MINUS, MINUS_ASSIGN, MOD, MOD_ASSIGN, NOT_EQUAL, PLUS,               PLUS_ASSIGN, QUESTION, SL, SL_ASSIGN, SR, SR_ASSIGN, STAR,               STAR_ASSIGN"/>
         </module>
         <module name="ParenPad"/>
-        <module name="TabCharacter"/>
         <module name="WhitespaceAfter">
             <property name="tokens" value="COMMA, SEMI"/>
         </module>
@@ -164,10 +160,10 @@ The INRIA Mobius coding standard.
             <property name="format" value="System\.out\.println"/>
             <property name="message" value="Never use System.out."/>
         </module -->
-        <module name="GenericIllegalRegexp">
+        <!-- module name="GenericIllegalRegexp">
             <property name="format" value="(@review)|(@todo)|(@design)"/>
             <property name="message" value="Some code still needs review."/>
-        </module>
+        </module -->
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <module name="FinalParameters"/>
@@ -181,11 +177,15 @@ The INRIA Mobius coding standard.
             <property name="caseIndent" value="2"/>
         </module>
     </module>
-    <module name="PackageHtml"/>
     <module name="NewlineAtEndOfFile">
         <property name="lineSeparator" value="lf"/>
     </module>
     <module name="StrictDuplicateCode">
         <property name="min" value="15"/>
-    </module>
+  </module>
+  <module name="FileLength">
+   	<property name="max" value="500"/>
+  </module>
+  <module name="FileTabCharacter"/>
+  <module name="JavadocPackage"/>
 </module>
