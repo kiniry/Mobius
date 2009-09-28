@@ -31,6 +31,8 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   private static Set<IAction> fSet = new HashSet<IAction>();
   /** the set of the handler listener for this handler. */
   private Set<IHandlerListener> fHandlerSet = new HashSet<IHandlerListener>();
+  /** the eclipse action associated with this prover action. */ 
+  private IAction fAction;
   
   /**
    * Shows the TopLevel view from the ProverEditor.
@@ -86,6 +88,7 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
   public void selectionChanged(final IAction action, 
                                final ISelection selection) {
     fSet.add(action);
+    this.fAction = action;
     action.setEnabled(isEnabled());
   }
   
@@ -110,6 +113,14 @@ public abstract class AProverAction implements IWorkbenchWindowActionDelegate,  
     final IEditorPart ed = getActiveEditor();
     return (ed != null) && (ed instanceof ProverEditor)  &&
              (TopLevelManager.getInstance() != null);
+  }
+  
+  /**
+   * Set the enabling action state.
+   * @param val the value to set
+   */
+  public void setEnabled(final boolean val) {
+    fAction.setEnabled(val);
   }
   
   /** {@inheritDoc} */

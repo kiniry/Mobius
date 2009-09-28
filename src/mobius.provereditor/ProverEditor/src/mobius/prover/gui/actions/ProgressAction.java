@@ -53,7 +53,7 @@ public class ProgressAction extends AProverAction {
     
     /** {@inheritDoc} */
     @Override
-    public IStatus run(final IProgressMonitor monitor) {      
+    public IStatus run(final IProgressMonitor monitor) {
       TopLevelManager.getInstance().progress(new ProverFileContext(fEditor));
       return new Status(IStatus.OK, Platform.PI_RUNTIME, IStatus.OK, "", null);
     }
