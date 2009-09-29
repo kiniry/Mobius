@@ -23,7 +23,7 @@ public interface BONcOptionsInterface {
    * The enumeration type used to represent the string enum option.
    */
   static enum  Print {
-    SYSO("SYSO"),    TXT("TXT"),    DOT("DOT"),    HTML("HTML"),    DIC("DIC"),    IIG("IIG"),    ICG("ICG"),    CL("CL"),    PICG("PICG"),    PIIG("PIIG");
+    SYSO("SYSO"),    TXT("TXT"),    DOT("DOT"),    HTML("HTML"),    DIC("DIC"),    IIG("IIG"),    ICG("ICG"),    CL("CL"),    PICG("PICG"),    PIIG("PIIG"),    TEX("TEX");
 
     private final String[] matchStrings;
     private Print(final String... s) {
@@ -34,7 +34,7 @@ public interface BONcOptionsInterface {
     }
     /**
      * Returns the appropriate enum value for the given string
-     * @param s one of the following strings: [SYSO, TXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, PIIG]
+     * @param s one of the following strings: [SYSO, TXT, DOT, HTML, DIC, IIG, ICG, CL, PICG, PIIG, TEX]
      * @return a valid Print member.
      */
     public static Print get(final String s) {

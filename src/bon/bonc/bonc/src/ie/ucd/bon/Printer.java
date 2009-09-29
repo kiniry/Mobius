@@ -12,6 +12,7 @@ import ie.ucd.bon.linguistical.MiscLing;
 import ie.ucd.bon.parser.tracker.ParseResult;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.ClassDictionaryGenerator;
+import ie.ucd.bon.printer.LatexPrintVisitor;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.printer.PrintAgent;
 import ie.ucd.bon.printer.UnableToGenerateClassDictionaryException;
@@ -56,6 +57,8 @@ public final class Printer {
       return "informal cluster graph for prefuse";
     case PIIG:
       return "informal cluster graph for prefuse";
+    case TEX:
+      return "latex";
     default:
       return "unknown"; //Shouldn't happen
     }
@@ -98,6 +101,8 @@ public final class Printer {
     switch(printingType) {
     case TXT:
       return new PrettyPrintVisitor();
+    case TEX:
+      return new LatexPrintVisitor();
     case HTML:
       return new XHTMLPrintVisitor(tracker);
     default:

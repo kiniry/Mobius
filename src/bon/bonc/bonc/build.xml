@@ -484,6 +484,10 @@
 	    <arg value="-v"/>
 	    <arg value="-p"/>
 	    <arg value="${clops-pkg}"/>
+	  	<arg value="-c"/>
+	    <arg value="gen-dummy-op-store.vm"/>
+	  	<arg value="-t"/>
+	  	<arg value="${clops-target}"/>
 	    <arg value="-o"/>
 	    <arg value="${clops-target}"/>
       <arg value="${clops-file}"/>

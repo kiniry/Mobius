@@ -40,7 +40,7 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     //Options
     ogPrint = new EnumOption("Print", "(?:-p)|(?:--print)");
     addOption(ogPrint);
-    ogPrint.setProperty("choices", "SYSO,TXT,DOT,HTML,DIC,IIG,ICG,CL,PICG,PIIG");
+    ogPrint.setProperty("choices", "SYSO,TXT,DOT,HTML,DIC,IIG,ICG,CL,PICG,PIIG,TEX");
     ogPrint.setProperty("casesensitive", "false");
     ogPrint.setProperty("aliases", "-p,--print");
     ogPrint.setProperty("description", "Print the parsed input in the given format. TXT for plain-text, HTML for html generation of informal charts, DIC to generate the class dictionary, IIG for the informal class inheritance graph. See the manpage or README.txt for more information and a list of all printing options.");
@@ -167,8 +167,8 @@ public class BONcOptionStore extends OptionStore implements BONcOptionsInterface
     ogOption.addOptionOrGroup(ogFormal);
     ogAloneOption.addOptionOrGroup(ogHelp);
     ogAloneOption.addOptionOrGroup(ogPrintMan);
-    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogVersion);
+    ogAloneOption.addOptionOrGroup(ogPrintReadme);
     ogAloneOption.addOptionOrGroup(ogPrintBashCompletion);
     //AllOptions group
     ogAllOptions.addOptionOrGroup(ogPrint);

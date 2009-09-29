@@ -158,7 +158,8 @@ public final class Main {
     API.printResults(totalProblems, tracker, System.out);    
 
     if (so.isPrintSet()) {
-      API.print(files, tracker, so, printTiming);
+      File outputFile = so.isPrintOutputSet() ? so.getPrintOutput() : null;
+      API.print(so.getPrint(), so.getGenClassDic(), outputFile, files, tracker, printTiming);
     }
 
     if (so.isGraphSet()) {

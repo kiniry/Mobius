@@ -70,15 +70,9 @@ public class API {
   }
 
 
-  public static void print(final Collection<File> files, final ParsingTracker tracker, final BONcOptionsInterface options, final boolean timing) {
+  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final Collection<File> files, final ParsingTracker tracker, final boolean timing) {
 
-    if (!options.isPrintSet()) {
-      return;
-    }
-
-    BONcOptionsInterface.Print printType = options.getPrint();
-
-    if (options.getGenClassDic() && printType != BONcOptionsInterface.Print.DIC) {
+    if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
       try {
         String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
         File classDicAutoFile = new File("class-dic-auto");
@@ -92,13 +86,8 @@ public class API {
       }
     }
 
-    boolean printToFile = options.isPrintOutputSet();
-
     PrintStream outputStream;
-    File outputFile = null;
-    if (printToFile) {
-      outputFile = options.getPrintOutput();
-
+    if (outputFile != null) {
       try {
         FileOutputStream outputFileStream = new FileOutputStream(outputFile);
         outputStream = new PrintStream(outputFileStream);
@@ -116,7 +105,7 @@ public class API {
 
     Printer.printToStream(files, tracker, outputStream, printType, timing);
 
-    if (printToFile) {
+    if (outputFile != null) {
       outputStream.close();
       System.out.println("Succesfully created: " + outputFile.getPath());
     }
