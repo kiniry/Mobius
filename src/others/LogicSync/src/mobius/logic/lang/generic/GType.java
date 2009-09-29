@@ -191,25 +191,23 @@ public class GType implements Iterable<GType> {
     return new GType(TopType);
   }
 
-
-  @Override
   public Iterator<GType> iterator() {
     
     return new Iterator<GType>() {
       private GType n = GType.this;
-      @Override
+
       public boolean hasNext() {
         return n != null;
       }
 
-      @Override
+
       public GType next() {
         final GType res = n;
         n = n.next;
         return res;
       }
 
-      @Override
+
       public void remove() {
         n = n.getNext();
       }
