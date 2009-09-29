@@ -156,14 +156,7 @@ The INRIA Mobius coding standard.
             <property name="max" value="3"/>
         </module>
         <module name="CyclomaticComplexity"/>
-        <!-- module name="GenericIllegalRegexp">
-            <property name="format" value="System\.out\.println"/>
-            <property name="message" value="Never use System.out."/>
-        </module -->
-        <!-- module name="GenericIllegalRegexp">
-            <property name="format" value="(@review)|(@todo)|(@design)"/>
-            <property name="message" value="Some code still needs review."/>
-        </module -->
+     
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <module name="FinalParameters"/>
@@ -185,6 +178,14 @@ The INRIA Mobius coding standard.
   </module>
   <module name="FileLength">
    	<property name="max" value="500"/>
+  </module>
+  <module name="RegexpMultiline">
+     <property name="format" value="System\.out\.println"/>
+     <property name="message" value="Never use System.out."/>
+  </module>
+  <module name="RegexpMultiline">
+     <property name="format" value="(@review)|(@todo)|(@design)"/>
+     <property name="message" value="Some code still needs review."/>
   </module>
   <module name="FileTabCharacter"/>
   <module name="JavadocPackage"/>
