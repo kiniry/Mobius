@@ -4,7 +4,8 @@ Bundle-Name: Mobius Plug-in UI Library
 Bundle-SymbolicName: mobius.pluginlib;singleton:=true
 Bundle-Version: 1.0.3
 Bundle-Vendor: David Cok and EU Mobius Partners
-Export-Package: pluginlib
+Export-Package: mobius.util.plugin,
+ pluginlib
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jface,
  org.eclipse.ui.console,
