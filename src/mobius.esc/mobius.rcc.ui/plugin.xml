@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <extension point="org.eclipse.ui.actionSets">
+    <actionSet label="RCC" visible="false"
+            id="mobius.rcc.actions">
+       <action
+             class="mobius.rcc.ui.RunAction"
+             id="mobius.rcc.ui.run"
+             label="Run on file"
+             style="push">
+       </action>
+    </actionSet>
+ </extension>
+</plugin>
