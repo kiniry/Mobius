@@ -2,7 +2,7 @@ package mobius.directvcgen.ui.poview.tree;
 
 
 
-import mobius.directvcgen.ui.poview.util.ConsoleUtils;
+import mobius.util.plugin.ConsoleUtils;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;

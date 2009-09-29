@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mobius.directvcgen.ui.poview.util.ImagesUtils.EImages;
+import mobius.util.plugin.ImagesUtils.EImages;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;

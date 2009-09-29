@@ -3,7 +3,7 @@ package mobius.directvcgen.ui.poview.tree;
 import java.io.File;
 
 import mobius.directvcgen.ui.poview.util.RefreshUtils;
-import mobius.directvcgen.ui.poview.util.ImagesUtils.EImages;
+import mobius.util.plugin.ImagesUtils.EImages;
 import mobius.prover.gui.popup.CompileFile;
 
 import org.eclipse.core.resources.IFile;

@@ -5,7 +5,7 @@ import java.io.File;
 import mobius.bicolano.BicolanoUtil;
 import mobius.directVCGen.clops.DirectVCGenMain;
 import mobius.directvcgen.ui.poview.util.RefreshUtils;
-import mobius.directvcgen.ui.poview.util.ConsoleUtils.ConsoleOutputWrapper;
+import mobius.util.plugin.ConsoleUtils.ConsoleOutputWrapper;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
