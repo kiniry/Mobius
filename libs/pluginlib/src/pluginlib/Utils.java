@@ -33,6 +33,7 @@ import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -195,7 +196,7 @@ public class Utils {
 				new IWorkspaceRunnable() {
 					public void run(IProgressMonitor pm) throws CoreException {
 						command.setBuilderName(disabledBuilderName);
-						Map map = new HashMap();
+						Map<String, String> map = new HashMap<String, String>();
 						map.put(disabledBuilderKey,"<project>/.externalToolBuilders/"+builder+".launch");
 						command.setArguments(map);
 						IFolder dir = project.getFolder(".externalToolBuilders");
@@ -392,7 +393,7 @@ public class Utils {
 	 */
 	public static IJavaProject[] getJavaProjects() {
 		IProject[] projects = getRoot().getProjects();
-		Collection list = new LinkedList();
+		Collection<IJavaProject> list = new LinkedList<IJavaProject>();
 		for (int i=0; i<projects.length; ++i) {
 			IJavaProject jp = JavaCore.create(projects[i]);
 			if (jp != null) list.add(jp);
@@ -415,11 +416,11 @@ public class Utils {
 	static public String getProjectClassPath(IJavaProject project) {
 
 		StringBuffer classPath = new StringBuffer(System.getProperty("java.class.path"));
-		List list = new LinkedList();
+		List<String> list = new LinkedList<String>();
 		
 		addResolvedClassPathEntries(list,project,false);
 
-		Iterator i = list.iterator();
+		Iterator<String> i = list.iterator();
 		while (i.hasNext()) {
 			classPath.append(java.io.File.pathSeparator);
 			classPath.append(i.next());
@@ -437,9 +438,9 @@ public class Utils {
 	 * @param project
 	 * @return List of String containing classpath locations
 	 */
-	static public List getProjectClassPathEntries(IJavaProject project) {
+	static public List<String> getProjectClassPathEntries(IJavaProject project) {
 		//StringBuffer classPath = new StringBuffer(System.getProperty("java.class.path"));
-		List list = new LinkedList();		
+		List<String> list = new LinkedList<String>();		
 		addResolvedClassPathEntries(list,project,false);
 		return list;
 		// FIXME - does not include the system entries
@@ -454,7 +455,7 @@ public class Utils {
 	// value of cpe.isExported() does not seem to reflect the setting in the Java BuildPath properties.
 	// Thus here we arbitrarily state that only source entries are exported, not
 	// libraries or projects.
-	static void addResolvedClassPathEntries(List list, IJavaProject project, boolean onlyExported) {
+	static void addResolvedClassPathEntries(List<String> list, IJavaProject project, boolean onlyExported) {
 		try {
 			IClasspathEntry[] classPathEntries = project.getResolvedClasspath(false);
 			
@@ -660,17 +661,17 @@ public class Utils {
 	 * @param window  The window in which a selected editor exists
 	 * @return A List of IJavaElement and IResource
 	 */
-	public static List getSelectedElements(ISelection selection, IWorkbenchWindow window ) {
-		List list = new LinkedList();
+	public static List<IAdaptable> getSelectedElements(ISelection selection, IWorkbenchWindow window ) {
+		List<IAdaptable> list = new LinkedList<IAdaptable>();
 		if (!selection.isEmpty()) {
 			if (selection instanceof IStructuredSelection) {
 				IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-				for (Iterator iter = structuredSelection.iterator(); iter.hasNext(); ) {
+				for (Iterator<?> iter = structuredSelection.iterator(); iter.hasNext(); ) {
 					Object element = iter.next();
 					if (element instanceof IJavaElement) {
-						list.add(element);
+						list.add((IJavaElement)element);
 					} else if (element instanceof IResource) {
-						list.add(element);
+						list.add((IResource)element);
 					}
 				}
 			} else if (selection instanceof ITextSelection){
@@ -678,7 +679,7 @@ public class Utils {
 				IResource resource = (IResource) editor.getEditorInput().getAdapter(IFile.class);
 				IJavaElement element = JavaCore.create(resource);
 				if (element != null)
-					list.add(element);
+					list.add((IJavaElement)element);
 				else
 					list.add(resource);
 			}
@@ -699,11 +700,11 @@ public class Utils {
 	             elements.elementType <: IJavaElement;
 	    ensures \result != null;
 	 */
-	public static Map sortByProject(Collection elements) {
-		Map map = new HashMap();
-		Iterator i = elements.iterator();
+	public static Map<IJavaProject, Collection<IAdaptable>>  sortByProject(Collection<IAdaptable> elements) {
+		Map<IJavaProject, Collection<IAdaptable>> map = new HashMap<IJavaProject, Collection<IAdaptable>>();
+		Iterator<IAdaptable> i = elements.iterator();
 		while (i.hasNext()) {
-			Object o = i.next();
+		  IAdaptable o = i.next();
 			IJavaProject jp;
 			if (o instanceof IResource) {
 				jp = JavaCore.create(((IResource)o).getProject());
@@ -732,11 +733,13 @@ public class Utils {
 	             elements.elementType <: IJavaElement;
 	    ensures \result != null;
 	 */
-	public static Map sortByPackageFragmentRoot(Collection elements) throws CoreException {
-		Map map = new HashMap();
-		Iterator i = elements.iterator();
+	public static Map<IPackageFragmentRoot, Collection<IAdaptable>> 
+	    sortByPackageFragmentRoot(Collection<IAdaptable> elements) throws CoreException {
+		Map<IPackageFragmentRoot, Collection<IAdaptable>> map = 
+		  new HashMap<IPackageFragmentRoot, Collection<IAdaptable>>();
+		Iterator<IAdaptable> i = elements.iterator();
 		while (i.hasNext()) {
-			Object o = i.next();
+			IAdaptable o = i.next();
 			IPackageFragmentRoot pfr = null;
 			if (o instanceof IResource) {
 				IJavaElement oo = JavaCore.create((IResource)o);
@@ -800,7 +803,8 @@ public class Utils {
 				IPackageFragmentRoot[] roots = ((IJavaProject)o).getPackageFragmentRoots();
 				for (int j = 0; j<roots.length; j++) {
 					pfr = roots[j];
-					if (!pfr.isArchive()) addToMap(map,pfr,pfr);
+					if (!pfr.isArchive()) 
+					  addToMap(map, pfr, pfr);
 				}
 				continue;
 			} else if (o instanceof IJavaElement) {
@@ -831,9 +835,9 @@ public class Utils {
 	 * 		already present
 	 * @param object An item to add to the Collection for the given key
 	 */
-	private static void addToMap(Map map, Object key, Object object) {
-		Collection list = (Collection)map.get(key);
-		if (list == null) map.put(key, list = new LinkedList());
+	private static <K, V> void  addToMap(Map<K, Collection<V>> map, K key, V object) {
+		Collection<V> list = map.get(key);
+		if (list == null) map.put(key, list = new LinkedList<V>());
 		list.add(object);
 	}
 
@@ -904,6 +908,10 @@ public class Utils {
     }
     public String getPath() {
       return path;
+    }
+    
+    public void mkExecutable() throws IOException {
+        Runtime.getRuntime().exec(new String[] {"/bin/chmod", "+x", path});  
     }
   }
 }
