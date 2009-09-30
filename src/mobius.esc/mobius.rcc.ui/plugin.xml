@@ -2,13 +2,19 @@
 <?eclipse version="3.4"?>
 <plugin>
  <extension point="org.eclipse.ui.actionSets">
-    <actionSet label="RCC" visible="false"
-            id="mobius.rcc.actions">
+    <actionSet
+          description="Race Condition Checker commands"
+          id="mobius.rcc.actions"
+          label="RCC"
+          visible="true">
        <action
              class="mobius.rcc.ui.RunAction"
+             enablesFor="1"
+             icon="icons/rcc.gif"
              id="mobius.rcc.ui.run"
-             label="Run on file"
-             style="push">
+             label="Run RCC on a file"
+             style="push"
+             toolbarPath="RCC,actions">
        </action>
     </actionSet>
  </extension>
