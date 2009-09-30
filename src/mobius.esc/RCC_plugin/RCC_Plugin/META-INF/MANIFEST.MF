@@ -6,11 +6,23 @@ Bundle-Version: 1.0.0
 Bundle-Vendor: Mobius
 Export-Package: 
  escwizard,
+ javafe,
+ javafe.ast,
+ javafe.decsrc,
+ javafe.filespace,
+ javafe.genericfile,
+ javafe.parser,
+ javafe.parser.test,
+ javafe.reader,
+ javafe.tc,
+ javafe.test,
+ javafe.test.lex,
+ javafe.util,
  rcc,
  rcc.ast,
  rcc.parser,
  rcc.parser.test,
  rcc.tc,
  rccwizard
-Bundle-ClassPath: lib/rcc-1.0.0.jar, lib/javafe-1.0.0.jar
+Bundle-ClassPath: lib/rcc-1.0.0.jar, lib/javafe-1.0.jar
 Bundle-ActivationPolicy: lazy
