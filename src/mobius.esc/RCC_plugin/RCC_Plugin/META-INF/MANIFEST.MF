@@ -1,7 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: MOBIUS RCC plugin
-Bundle-SymbolicName: mobius.rcc.plugin;singleton:=true
+Bundle-Name: Mobius RCC plugin
+Bundle-SymbolicName: mobius.rcc.plugin
 Bundle-Version: 1.0.0
-Bundle-Vendor: MOBIUS
-Bundle-RequiredExecutionEnvironment: J2SE-1.4
+Bundle-Vendor: Mobius
+Require-Bundle: mobius.javafe.plugin
+Export-Package: escwizard,
+ rcc,
+ rcc.ast,
+ rcc.parser,
+ rcc.parser.test,
+ rcc.tc,
+ rccwizard
+Bundle-ClassPath: ./rcc-1.0.0.jar
+Bundle-ActivationPolicy: lazy
