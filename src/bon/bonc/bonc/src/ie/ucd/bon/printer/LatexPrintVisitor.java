@@ -85,6 +85,17 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   public void visitClassInterface(ClassInterface node, List<Feature> features, List<Type> parents, List<Expression> invariant, Indexing indexing, SourceLocation loc) {
     tp.printLine("\\nodepart{second}");
     tp.increaseIndentation();
+    tp.printLine("\\begin{varwidth}[t!]{0.3\\textwidth}");
+    visitAllPrintingSeparatorAndlines(parents, " \\\\", 1, false, true);
+    tp.printLine("\\end{varwidth}");
+    tp.printLine("\\hspace{2mm}");
+    tp.printLine("\\begin{varwidth}[t!]{0.7\\textwidth}");
+    visitAllPrintingSeparatorAndlines(parents, " \\\\", 1, false, true);
+    tp.printLine("\\end{varwidth}");
+    tp.decreaseIndentation();
+    
+    tp.printLine("\\nodepart{second}");
+    tp.increaseIndentation();
     tp.printLine("\\begin{varwidth}[t!]{1.0\\textwidth}");
     tp.printLine("\\begin{flushleft}");
     
@@ -140,7 +151,6 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     visitAllPrintingSeparator(featureNames, ", ", false);
     visitNodeIfNonNull(hasType);
     tp.printLine();
-    System.out.println("Here");
     visitAll(arguments);
   }
   
@@ -151,7 +161,6 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   
   @Override
   public void visitFeatureArgument(FeatureArgument node, String identifier, Type type, SourceLocation loc) {
-    System.out.println("Here2");
     tp.printLine("\\hspace{5mm}");
     tp.print("$\\rightarrow$ ");
     if (identifier != null) {
@@ -337,25 +346,25 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   protected void printBinaryExpOp(Op op) {
     switch (op) {
     case ADD:
-      tp.print('+');
+      tp.print("$+$");
       break;
     case AND:
-      tp.print("and");
+      tp.print("\\textbf{and}");
       break;
     case DIV:
-      tp.print('/');
+      tp.print("$/$");
       break;
     case EQ:
-      tp.print('=');
+      tp.print("$=$");
       break;
     case EQUIV:
-      tp.print("<->");
+      tp.print("$\\leftrightarrow$");
       break;
     case GE:
-      tp.print(">=");
+      tp.print("$\\geq$");
       break;
     case GT:
-      tp.print('>');
+      tp.print("$\\gt$");
       break;
     case HASTYPE:
       tp.print(':');
@@ -367,37 +376,37 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
       tp.print("//");
       break;
     case LE:
-      tp.print("<=");
+      tp.print("$\\leq$");
       break;
     case LT:
       tp.print('<');
       break;
     case MEMBEROF:
-      tp.print("member_of");
+      tp.print("$\\in$");
       break;
     case MOD:
-      tp.print("\\\\");
+      tp.print("$%$");
       break;
     case MUL:
-      tp.print('*');
+      tp.print("$*$");
       break;
     case NEQ:
-      tp.print("/=");
+      tp.print("$\\neq$");
       break;
     case NOTMEMBEROF:
-      tp.print("not member_of");
+      tp.print("$\\nin$");
       break;
     case OR:
-      tp.print("or");
+      tp.print("\\textbf{or}");
       break;
     case POW:
       tp.print('^');
       break;
     case SUB:
-      tp.print('-');
+      tp.print("$-$");
       break;
     case XOR:
-      tp.print("xor");
+      tp.print("\\textbf{xor}");
       break;
     }
   }
