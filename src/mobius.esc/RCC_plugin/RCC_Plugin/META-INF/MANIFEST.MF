@@ -5,12 +5,13 @@ Bundle-SymbolicName: mobius.rcc.plugin
 Bundle-Version: 1.0.0
 Bundle-Vendor: Mobius
 Require-Bundle: mobius.javafe.plugin
-Export-Package: escwizard,
+Export-Package: 
+ escwizard,
  rcc,
  rcc.ast,
  rcc.parser,
  rcc.parser.test,
  rcc.tc,
  rccwizard
-Bundle-ClassPath: ./rcc-1.0.0.jar
+Bundle-ClassPath: ./lib/rcc-1.0.0.jar
 Bundle-ActivationPolicy: lazy
