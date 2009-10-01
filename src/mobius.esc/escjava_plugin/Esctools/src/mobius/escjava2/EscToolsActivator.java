@@ -4,6 +4,7 @@ package mobius.escjava2;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+
 /**
  * The activator class controls the plug-in life cycle.
  * 
@@ -14,6 +15,61 @@ public class EscToolsActivator extends AbstractUIPlugin {
   /** The plug-in ID. */
   public static final String PLUGIN_ID = "mobius.escjava2.esctools";
 
+  /**
+   * Name of jarfile of ESC/Java2 build (has been "esctools2.jar" for a *long* time).
+   */
+  public static final String ESCJAVA_JAR_FILENAME = "esctools2.jar";
+  
+
+  public enum JavaVersions {
+    DEFAULT("Default", "escspecs.jar"),
+    JAVA_CARD_2_1("JavaCard 2.1", "escspecs-javacard.jar"),
+    JAVA_1_3("1.3",  "escspecs-java1.4.jar"),
+    JAVA_1_4("1.4",  "escspecs-java1.4.jar"),
+    JAVA_1_5("1.5",  "escspecs-java1.5.jar");
+    
+    
+    private final String str;
+    private final String specs;
+    public String toString() {
+      return str;
+    }
+    public String getSpecsJarfileName() {
+      return specs;
+    }
+    
+    private JavaVersions(final String str, final String specs) {
+      this.str = str;
+      this.specs = specs;
+    }
+    public static String [] toStringList() {
+      JavaVersions [] jvs = JavaVersions.values();
+      String [] res = new String [jvs.length];
+      
+      for (int i = 0; i < res.length; i++) {
+        res[i] = jvs[i].toString();
+      }
+      return res;
+    }
+    
+    public static boolean isValidSpecsJar(String location) {
+      for (JavaVersions jv: JavaVersions.values()) {
+        if (location.endsWith(jv.specs)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    
+    public static JavaVersions selected(String val) {
+      for (JavaVersions jv: JavaVersions.values()) {
+        if (jv.str.equals(val)) {
+          return jv;
+        }
+      }
+      return DEFAULT;
+    }
+  }
   /** The shared instance. */
   private static EscToolsActivator plugin;
 
