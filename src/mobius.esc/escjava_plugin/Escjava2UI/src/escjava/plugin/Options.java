@@ -8,6 +8,8 @@ package escjava.plugin;
 
 import java.util.List;
 
+import mobius.escjava2.EscToolsActivator;
+
 import pluginlib.AbstractPreference;
 import pluginlib.Utils;
 
@@ -28,11 +30,7 @@ public class Options {
 			"OwnerNull", "Post", "Pre", "Race", "RaceAllNull", "Unenforcable",
 			"Exception", "SpecificationException", "Deferred", "Writable" };
 
-	public static final String JAVA_CARD_2_1 = "JavaCard 2.1";
 
-	public static final String JAVA_1_4 = "1.4";
-
-	public static final String JAVA_1_3 = "1.3";
 
 	/** A copy of the plugin's id */
 	final private static String PLUGINID = EscjavaPlugin.PLUGIN_ID + ".";
@@ -154,7 +152,7 @@ public class Options {
 	 */
 	static final protected AbstractPreference.ChoiceOption source = new AbstractPreference.ChoiceOption(
 			(PLUGINID + "source"),
-			new String[]{Options.JAVA_1_3,Options.JAVA_1_4,Options.JAVA_CARD_2_1},
+			EscToolsActivator.JavaVersions.toStringList(),
 			1,
 			"Java source version",
 			"The version of Java that is supported [JML --source option]");
@@ -217,7 +215,7 @@ public class Options {
 	 * @param args  The command-line argument array to be added to
 	 *        (a List of String)
 	 */
-	public static void getOptions(List args) {
+	public static void getOptions(List<String> args) {
 		if (quiet.getValue()) args.add("-quiet");
 		if (parsePlus.getValue()) args.add("-parsePlus");
 		if (noSemicolonWarnings.getValue()) args.add("-noSemicolonWarnings");

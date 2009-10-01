@@ -10,6 +10,7 @@ import java.util.Iterator;
 
 import mobius.atp.SimplifyActivator;
 import mobius.escjava2.EscToolsActivator;
+import mobius.escjava2.EscToolsActivator.JavaVersions;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -79,21 +80,9 @@ public class EscjavaUtils {
 	static /*@ non_null @*/ public String findSpecs() throws Exception {
 		String	specLocation = null;
 		
-		// Java 1.4 specifications
-		if (Options.source.getStringValue().equals(Options.JAVA_1_3) ||
-				Options.source.getStringValue().equals(Options.JAVA_1_4)) {
-			specLocation = EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME;
-		}
-		
-		// Java Card 2.1 specifications
-		else if (Options.source.getStringValue().equals(Options.JAVA_CARD_2_1)) {
-			specLocation = EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME;
-		}
-		
-		// default generic minimal specifications for Java 
-		else { 
-			specLocation = EscjavaPlugin.JML_JAR_FILENAME;
-		}
+		JavaVersions jv = JavaVersions.selected(Options.source.getStringValue());
+		specLocation = jv.getSpecsJarfileName();
+
 		
 		// Locate the specification
 		String pluginResource = null;
@@ -220,7 +209,7 @@ public class EscjavaUtils {
 			IJavaProject javaProject = JavaCore.create(project);
 			if (location.endsWith(".jar")) {
 				// The location is a library 
-				folderName = EscjavaPlugin.JML_JAR_FILENAME; // Really a file, not a folder
+				folderName = JavaVersions.DEFAULT.getSpecsJarfileName(); // Really a file, not a folder
 				IFile f = project.getFile(folderName);
 				f.createLink(new Path(location),IResource.NONE,null);
 				// Add the library entry as the only entry to the new classpath
@@ -275,11 +264,10 @@ public class EscjavaUtils {
 			IResource r = Utils.getRoot().findMember(p);
 			if (r instanceof IFolder) {
 				if (((IContainer)r).findMember(pp) != null) return true;
-			} else if (cpe.endsWith("jmlspecs.jar") ||  cpe.endsWith("escspecs.jar") ||
-					   cpe.endsWith(EscjavaPlugin.JML_JAR_FILENAME) ||
-					   cpe.endsWith(EscjavaPlugin.JML_JAVA1_4_JAR_FILENAME) ||
-					   cpe.endsWith(EscjavaPlugin.JML_JAVACARD2_1_JAR_FILENAME) ||
-					   cpe.endsWith(EscjavaPlugin.ESCJAVA_JAR_FILENAME)) return true;
+			} 
+			else if (cpe.endsWith("jmlspecs.jar") ||  cpe.endsWith("escspecs.jar") ||
+					   JavaVersions.isValidSpecsJar(cpe)) 
+			  return true;
 			// FIXME - should really check if this has 'pp' in it
 			//   the above is really a hack
 		}

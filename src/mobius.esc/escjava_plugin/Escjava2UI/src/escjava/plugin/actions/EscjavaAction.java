@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -105,10 +106,11 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 		try {
 			//if (useProjects()) {
 		  if (true) {
-				Map map = Utils.sortByProject(Utils.getSelectedElements(selection,window));
+				Map<IJavaProject, Collection<IAdaptable>>  map = Utils.sortByProject(Utils.getSelectedElements(selection,window));
 				iterateByProject(map);
-			} else {
-				Map map = Utils.sortByPackageFragmentRoot(Utils.getSelectedElements(selection,window));
+			} 
+		  else {
+				Map<IPackageFragmentRoot, Collection<IAdaptable>> map = Utils.sortByPackageFragmentRoot(Utils.getSelectedElements(selection,window));
 				iterateByPFR(map);			
 			}
 //		} catch (JMLEclipseCancel e) {
@@ -130,9 +132,9 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 */
 	public void iterateByProject(Map map) {
 		boolean nothing = true;
-		Iterator ii = orderedProjectIterator(map);
+		Iterator<IProject> ii = orderedProjectIterator(map);
 		while (ii.hasNext()) {
-			IJavaProject jp = JavaCore.create((IProject)ii.next());
+			IJavaProject jp = JavaCore.create(ii.next());
 			Collection elements = (Collection)map.get(jp);
 			if (Log.on) Log.log("  Doing project " + jp.getElementName() + " " + elements.size() + " items");
 			if (!elements.isEmpty()) nothing = false;
@@ -228,7 +230,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * 		(which are IProject objects) in order, with projects
 	 * 		required coming before those that require them.
 	 */
-	protected Iterator orderedProjectIterator(Map map) {
+	protected Iterator<IProject> orderedProjectIterator(Map map) {
 		return Arrays.asList(orderedProjects(map)).iterator();
 	}
 	

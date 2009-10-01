@@ -45,18 +45,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
 	 */
 	public static final String PLUGIN_ID = "mobius.escjava2.ui";
 	
-	/**
-	 * Name of jarfile of ESC/Java2 build (has been "esctools2.jar" for a *long* time).
-	 */
-	public static final String ESCJAVA_JAR_FILENAME = "libs/esctools2.jar";
-	
-	/**
-   * Name of jarfile of JML specs file (has been "jmlspecs.jar" for a *long* time).
-   */
-  public static final String JML_JAR_FILENAME = "escspecs.jar";
-  public static final String JML_JAVA1_4_JAR_FILENAME = "escspecs-java1.4.jar";
-  public static final String JML_JAVACARD2_1_JAR_FILENAME = "escspecs-javacard.jar";
-  
+ 
   /**
    * The name of the automatically-generated project that contains our specifications.
    */

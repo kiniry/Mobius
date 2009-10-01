@@ -188,9 +188,8 @@
             visible="false"
             id="mobius.escjava2.actions">
          <menu
-               icon="icons/JMLSmall.png"
                id="JMLMenu"
-               label="JML">
+               label="ESC/Java2">
             <separator
                   name="EscjavaGroup">
             </separator>
@@ -241,7 +240,7 @@
                definitionId="mobius.escjava2.plugin.commands.CheckEscjava"
                icon="icons/esc.png"
                id="mobius.escjava2.plugin.EscjavaAction.Check"
-               label="ESC/Java2"
+               label="Run ESC/Java2"
                menubarPath="JMLMenu/EscjavaGroup"
                style="push"
                toolbarPath="mobius.escjava2.actions"
@@ -293,7 +292,7 @@
    <!-- These extensions add a menu item named 'Run ESC/Java2'
    		to the context menus of projects/packages/compilation units
    		and types in the Package Navigator and other views
-   	-->
+   	
    <extension point="org.eclipse.ui.popupMenus">
 	<objectContribution 
 			objectClass="org.eclipse.jdt.core.IJavaElement" 
@@ -306,7 +305,7 @@
   			id="mobius.escjava2.plugin.Check.Popup" /> 
   	</objectContribution>
    </extension>
-
+-->
 <!-- FIXME - comment here -->
 <!-- This shows the menu item, but I can't get it to work
      <extension
