@@ -6,7 +6,7 @@
           description="Race Condition Checker commands"
           id="mobius.rcc.actions"
           label="RCC"
-          visible="true">
+          visible="false">
        <action
              class="mobius.rcc.ui.RunAction"
              enablesFor="1"
