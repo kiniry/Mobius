@@ -239,6 +239,8 @@ $(ESCJAVA2_SPECS_JAR):
 $(ESCJAVA2_SPECS_JAVA1_4_JAR):
 	( cd specs-java1.4; jar cf $(ESCJAVA2_SPECS_JAVA1_4_JAR) . )
 
+$(ESCJAVA2_SPECS_JAVA1_5_JAR):
+	( cd specs-java1.4; jar cf $(ESCJAVA2_SPECS_JAVA1_5_JAR) . )
 $(ESCJAVA2_SPECS_JAVACARD_JAR):
 	( cd specs-javacard; jar cf $(ESCJAVA2_SPECS_JAVACARD_JAR) . )
 
@@ -669,10 +671,12 @@ SPECS_TEST_TARGETS:=`find ${ESCJAVA2_SPECS} -type d | grep -v \.svn`
 SPECS_TEST_CP ?= ${JUNIT_LIB}
 
 ## Run escjava on the specs
-specs_test: specs_test_java14
+specs_test: specs_test_java15
 
 specs_test_java14:
 	$(MAKE) ESCJAVA2_SPECS=${ESCJAVA2_SPECS_JAVA1_4} _specs_test
+specs_test_java15:
+	$(MAKE) ESCJAVA2_SPECS=${ESCJAVA2_SPECS_JAVA1_5} _specs_test
 
 _specs_test: build
 	@echo "TESTING specs: "
