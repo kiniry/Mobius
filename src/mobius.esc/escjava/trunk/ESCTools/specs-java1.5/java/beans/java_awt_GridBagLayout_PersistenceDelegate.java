@@ -11,7 +11,7 @@ class java_awt_GridBagLayout_PersistenceDelegate extends DefaultPersistenceDeleg
     
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
         super.initialize(type, oldInstance, newInstance, out);
-        Hashtable comptable = (Hashtable)(Hashtable)ReflectionUtils.getPrivateField(oldInstance, .java.awt.GridBagLayout.class, "comptable", out.getExceptionListener());
+        Hashtable comptable = (Hashtable)(Hashtable)ReflectionUtils.getPrivateField(oldInstance, java.awt.GridBagLayout.class, "comptable", out.getExceptionListener());
         if (comptable != null) {
             for (Enumeration e = comptable.keys(); e.hasMoreElements(); ) {
                 Object child = e.nextElement();

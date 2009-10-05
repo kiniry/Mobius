@@ -88,7 +88,7 @@ public abstract class OutputStream extends Object implements Closeable, Flushabl
       @   assignable outputBytes;
       @   signals (IOException) (* an IO error occured *);
       @*/
-    public abstract void write(int i) throws IOException;
+    public abstract void write(int b) throws IOException;
 
 // FIXME - record what was written
     /*@ public behavior

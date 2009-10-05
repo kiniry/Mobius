@@ -74,15 +74,15 @@ public abstract class Writer implements Appendable, Closeable, Flushable {
     
     public abstract void close() throws IOException;
     
-    /*synthetic*/ public Appendable append(char x0) throws IOException {
+    /*synthetic public Appendable append(char x0) throws IOException {
         return this.append(x0);
-    }
+    } */
     
-    /*synthetic*/ public Appendable append(CharSequence x0, int x1, int x2) throws IOException {
+    /*synthetic public Appendable append(CharSequence x0, int x1, int x2) throws IOException {
         return this.append(x0, x1, x2);
-    }
+    } */
     
-    /*synthetic*/ public Appendable append(CharSequence x0) throws IOException {
+    /*synthetic public Appendable append(CharSequence x0) throws IOException {
         return this.append(x0);
-    }
+    } */
 }

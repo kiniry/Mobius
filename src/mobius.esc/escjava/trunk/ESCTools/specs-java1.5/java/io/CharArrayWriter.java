@@ -111,27 +111,27 @@ public class CharArrayWriter extends Writer {
     public void close() {
     }
     
-    /*synthetic*/ public Writer append(char x0) throws IOException {
+    /*synthetic public Writer append(char x0) throws IOException {
         return this.append(x0);
-    }
+    } */
     
-    /*synthetic*/ public Writer append(CharSequence x0, int x1, int x2) throws IOException {
+    /*synthetic public Writer append(CharSequence x0, int x1, int x2) throws IOException {
         return this.append(x0, x1, x2);
-    }
+    } */
     
-    /*synthetic*/ public Writer append(CharSequence x0) throws IOException {
+    /*synthetic public Writer append(CharSequence x0) throws IOException {
         return this.append(x0);
-    }
+    } */
     
-    /*synthetic*/ public Appendable append(char x0) throws IOException {
+    /*synthetic public Appendable append(char x0) throws IOException {
         return this.append(x0);
-    }
+    } */
     
-    /*synthetic*/ public Appendable append(CharSequence x0, int x1, int x2) throws IOException {
+    /*synthetic public Appendable append(CharSequence x0, int x1, int x2) throws IOException {
         return this.append(x0, x1, x2);
-    }
+    } */
     
-    /*synthetic*/ public Appendable append(CharSequence x0) throws IOException {
+    /*synthetic public Appendable append(CharSequence x0) throws IOException {
         return this.append(x0);
-    }
+    } */
 }

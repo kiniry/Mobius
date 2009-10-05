@@ -482,21 +482,7 @@ protected /*@ non_null */ ASTVisitor[] registerVisitors() {
        
        checkSoundnessAndCompleteness(cu);
      }
-    else {
-    	// Always warn about the use of "modifies \everything"
-    	checkModifiesEverything(cu);
-     }
   }
-
-  /**
-   * Warn about the usage of "modifies \everything"
-   * 
-   * @param cu The compilation unit
-   */
-  private void checkModifiesEverything(/*@ non_null @*/ CompilationUnit cu) {
-	  ASTVisitor visitor = new ModificationSoundnessVisitor();	
-	  visitor.visitASTNode(cu);
-}
 
 /**
    * This method is called by SrcTool on the TypeDecl of each
@@ -1531,7 +1517,9 @@ private void useNewVCgen(RoutineDecl r, TypeSig sig, InitialState initState,
       if (checkByteCodeVersion > 0 && javafe.util.Info.on) {
         final String futureVersion = "1.6";
         ErrorSet
-            .caution("Java " + futureVersion + " or later VMs are not fully supported at this time.");
+            .caution("Java " + futureVersion + " or later VMs are not fully supported at this time.\n"
+            		+ " Also, the JML JDK specifications bundled with ESC/Java2 are for Java 1.4 which means that"
+            		+ " false errors may be reported, due to a mismatch between the JDK and the JML specifications.");
       }
     }
   }

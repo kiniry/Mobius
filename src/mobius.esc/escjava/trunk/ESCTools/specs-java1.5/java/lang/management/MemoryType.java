@@ -1,8 +1,8 @@
 package java.lang.management;
 
-public enum MemoryType extends Enum<MemoryType> {
-    /*public static final*/ HEAP /* = new MemoryType("HEAP", 0, "Heap memory") */,
-    /*public static final*/ NON_HEAP /* = new MemoryType("NON_HEAP", 1, "Non-heap memory") */;
+public class MemoryType extends Enum {
+    public static final MemoryType HEAP = new MemoryType("HEAP", 0, "Heap memory");
+    public static final MemoryType NON_HEAP = new MemoryType("NON_HEAP", 1, "Non-heap memory");
     /*synthetic*/ private static final MemoryType[] $VALUES = new MemoryType[]{MemoryType.HEAP, MemoryType.NON_HEAP};
     
     public static final MemoryType[] values() {

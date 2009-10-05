@@ -212,7 +212,7 @@ public class MessageFormat extends Format {
         return subformat(arguments, result, pos, null);
     }
     
-    public static String format(String pattern, Object... arguments) {
+    public static String format(String pattern, Object[] arguments) {
         MessageFormat temp = new MessageFormat(pattern);
         return temp.format(arguments);
     }

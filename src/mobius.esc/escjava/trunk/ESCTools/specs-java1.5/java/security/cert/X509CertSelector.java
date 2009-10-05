@@ -426,7 +426,7 @@ public class X509CertSelector implements CertSelector {
     }
     
     void setPathToNamesInternal(Set names) {
-        pathToNames = Collections.<List<?>>emptySet();
+        pathToNames = Collections.emptySet();
         pathToGeneralNames = names;
     }
     

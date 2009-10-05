@@ -7,8 +7,8 @@ class java_util_List_PersistenceDelegate extends DefaultPersistenceDelegate {
     }
     
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
-        java.util.List oldO = (java.util.List)(.java.util.List)oldInstance;
-        java.util.List newO = (java.util.List)(.java.util.List)newInstance;
+        java.util.List oldO = (java.util.List)(java.util.List)oldInstance;
+        java.util.List newO = (java.util.List)(java.util.List)newInstance;
         int oldSize = oldO.size();
         int newSize = (newO == null) ? 0 : newO.size();
         if (oldSize < newSize) {

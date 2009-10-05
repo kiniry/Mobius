@@ -29,7 +29,7 @@ public class PKIXParameters implements CertPathParameters {
     public PKIXParameters(Set trustAnchors) throws InvalidAlgorithmParameterException {
         
         setTrustAnchors(trustAnchors);
-        this.unmodInitialPolicies = Collections.<String>emptySet();
+        this.unmodInitialPolicies = Collections.emptySet();
         this.certPathCheckers = new ArrayList();
         this.certStores = new ArrayList();
     }
@@ -47,7 +47,7 @@ public class PKIXParameters implements CertPathParameters {
             }
         }
         setTrustAnchors(hashSet);
-        this.unmodInitialPolicies = Collections.<String>emptySet();
+        this.unmodInitialPolicies = Collections.emptySet();
         this.certPathCheckers = new ArrayList();
         this.certStores = new ArrayList();
     }
@@ -81,7 +81,7 @@ public class PKIXParameters implements CertPathParameters {
                 if (!(i.next() instanceof String)) throw new ClassCastException("all elements of set must be of type java.lang.String");
             }
             this.unmodInitialPolicies = Collections.unmodifiableSet(new HashSet(initialPolicies));
-        } else this.unmodInitialPolicies = Collections.<String>emptySet();
+        } else this.unmodInitialPolicies = Collections.emptySet();
     }
     
     public void setCertStores(List stores) {

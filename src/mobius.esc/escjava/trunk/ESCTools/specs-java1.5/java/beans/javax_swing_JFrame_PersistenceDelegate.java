@@ -8,8 +8,8 @@ class javax_swing_JFrame_PersistenceDelegate extends DefaultPersistenceDelegate 
     
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
         super.initialize(type, oldInstance, newInstance, out);
-        java.awt.Window oldC = (java.awt.Window)(.java.awt.Window)oldInstance;
-        java.awt.Window newC = (java.awt.Window)(.java.awt.Window)newInstance;
+        java.awt.Window oldC = (java.awt.Window)(java.awt.Window)oldInstance;
+        java.awt.Window newC = (java.awt.Window)(java.awt.Window)newInstance;
         boolean oldV = oldC.isVisible();
         boolean newV = newC.isVisible();
         if (newV != oldV) {

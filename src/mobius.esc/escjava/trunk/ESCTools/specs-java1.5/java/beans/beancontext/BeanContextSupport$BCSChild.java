@@ -6,11 +6,11 @@ public class BeanContextSupport$BCSChild implements Serializable {
     /*synthetic*/ final BeanContextSupport this$0;
     private static final long serialVersionUID = -5815286101609939109L;
     
-    BeanContextSupport$BCSChild(/*synthetic*/ final BeanContextSupport this$0, Object bcc, Object peer) {
+    BeanContextSupport$BCSChild(/*synthetic*/ final BeanContextSupport this$0, Object bcc, Object pee) {
         this.this$0 = this$0;
         
         child = bcc;
-        proxyPeer = peer;
+        proxyPeer = pee;
     }
     
     Object getChild() {

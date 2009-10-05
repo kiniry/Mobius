@@ -86,15 +86,15 @@ class ProcessEnvironment$StringEnvironment extends AbstractMap {
         return block;
     }
     
-    /*synthetic*/ public Object remove(Object x0) {
+    /*synthetic public Object remove(Object x0) {
         return this.remove(x0);
-    }
+    } */
     
-    /*synthetic*/ public Object put(Object x0, Object x1) {
+    /*synthetic public Object put(Object x0, Object x1) {
         return this.put((String)x0, (String)x1);
-    }
+    }*/
     
-    /*synthetic*/ public Object get(Object x0) {
+    /*synthetic public Object get(Object x0) {
         return this.get(x0);
-    }
+    }*/
 }

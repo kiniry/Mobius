@@ -237,6 +237,6 @@ public class Timestamp extends java.util.Date {
     static final long serialVersionUID = 2745179027874758501L;
     
     /*synthetic*/ public int compareTo(Object x0) {
-        return this.compareTo((.java.util.Date)x0);
+        return this.compareTo((java.util.Date)x0);
     }
 }

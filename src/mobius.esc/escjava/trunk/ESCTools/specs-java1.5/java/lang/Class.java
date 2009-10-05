@@ -378,7 +378,7 @@ public final class Class implements java.io.Serializable, java.lang.reflect.Gene
         return field;
     }
     
-    public Method getMethod(String name, Class... parameterTypes) throws NoSuchMethodException, SecurityException {
+    public Method getMethod(String name, Class[] parameterTypes) throws NoSuchMethodException, SecurityException {
         checkMemberAccess(Member.PUBLIC, ClassLoader.getCallerClassLoader());
         Method method = getMethod0(name, parameterTypes);
         if (method == null) {
@@ -387,7 +387,7 @@ public final class Class implements java.io.Serializable, java.lang.reflect.Gene
         return method;
     }
     
-    public Constructor getConstructor(Class... parameterTypes) throws NoSuchMethodException, SecurityException {
+    public Constructor getConstructor(Class[] parameterTypes) throws NoSuchMethodException, SecurityException {
         checkMemberAccess(Member.PUBLIC, ClassLoader.getCallerClassLoader());
         return getConstructor0(parameterTypes, Member.PUBLIC);
     }
@@ -421,7 +421,7 @@ public final class Class implements java.io.Serializable, java.lang.reflect.Gene
         return field;
     }
     
-    public Method getDeclaredMethod(String name, Class... parameterTypes) throws NoSuchMethodException, SecurityException {
+    public Method getDeclaredMethod(String name, Class[] parameterTypes) throws NoSuchMethodException, SecurityException {
         checkMemberAccess(Member.DECLARED, ClassLoader.getCallerClassLoader());
         Method method = searchMethods(privateGetDeclaredMethods(false), name, parameterTypes);
         if (method == null) {
@@ -430,7 +430,7 @@ public final class Class implements java.io.Serializable, java.lang.reflect.Gene
         return method;
     }
     
-    public Constructor getDeclaredConstructor(Class... parameterTypes) throws NoSuchMethodException, SecurityException {
+    public Constructor getDeclaredConstructor(Class[] parameterTypes) throws NoSuchMethodException, SecurityException {
         checkMemberAccess(Member.DECLARED, ClassLoader.getCallerClassLoader());
         return getConstructor0(parameterTypes, Member.DECLARED);
     }

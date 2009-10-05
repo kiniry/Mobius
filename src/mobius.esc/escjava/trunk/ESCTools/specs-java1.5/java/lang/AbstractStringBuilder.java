@@ -448,15 +448,15 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
         return value;
     }
     
-    /*synthetic*/ public Appendable append(char x0) throws .java.io.IOException {
+    /*synthetic public Appendable append(char x0) throws java.io.IOException {
         return this.append(x0);
     }
     
-    /*synthetic*/ public Appendable append(CharSequence x0, int x1, int x2) throws .java.io.IOException {
+    /*synthetic public Appendable append(CharSequence x0, int x1, int x2) throws .java.io.IOException {
         return this.append(x0, x1, x2);
     }
     
-    /*synthetic*/ public Appendable append(CharSequence x0) throws .java.io.IOException {
+    /*synthetic public Appendable append(CharSequence x0) throws java.io.IOException {
         return this.append(x0);
-    }
+    }*/
 }

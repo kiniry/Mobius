@@ -7,8 +7,8 @@ class java_util_Map_PersistenceDelegate extends DefaultPersistenceDelegate {
     }
     
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
-        java.util.Map oldMap = (java.util.Map)(.java.util.Map)oldInstance;
-        java.util.Map newMap = (java.util.Map)(.java.util.Map)newInstance;
+        java.util.Map oldMap = (java.util.Map)(java.util.Map)oldInstance;
+        java.util.Map newMap = (java.util.Map)(java.util.Map)newInstance;
         if (newMap != null) {
             java.util.Iterator newKeys = newMap.keySet().iterator();
             while (newKeys.hasNext()) {

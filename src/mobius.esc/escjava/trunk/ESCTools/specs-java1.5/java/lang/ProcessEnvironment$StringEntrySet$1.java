@@ -24,7 +24,7 @@ class ProcessEnvironment$StringEntrySet$1 implements Iterator {
         i.remove();
     }
     
-    /*synthetic*/ public Object next() {
+    /*synthetic public Object next() {
         return this.next();
-    }
+    } */
 }

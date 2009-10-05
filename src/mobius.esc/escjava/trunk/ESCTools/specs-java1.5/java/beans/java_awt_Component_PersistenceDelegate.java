@@ -8,14 +8,14 @@ class java_awt_Component_PersistenceDelegate extends DefaultPersistenceDelegate 
     
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
         super.initialize(type, oldInstance, newInstance, out);
-        java.awt.Component c = (java.awt.Component)(.java.awt.Component)oldInstance;
-        java.awt.Component c2 = (java.awt.Component)(.java.awt.Component)newInstance;
+        java.awt.Component c = (java.awt.Component)(java.awt.Component)oldInstance;
+        java.awt.Component c2 = (java.awt.Component)(java.awt.Component)newInstance;
         if (!(oldInstance instanceof java.awt.Window)) {
             String[] fieldNames = new String[]{"background", "foreground", "font"};
             for (int i = 0; i < fieldNames.length; i++) {
                 String name = fieldNames[i];
-                Object oldValue = ReflectionUtils.getPrivateField(oldInstance, .java.awt.Component.class, name, out.getExceptionListener());
-                Object newValue = (newInstance == null) ? null : ReflectionUtils.getPrivateField(newInstance, .java.awt.Component.class, name, out.getExceptionListener());
+                Object oldValue = ReflectionUtils.getPrivateField(oldInstance, java.awt.Component.class, name, out.getExceptionListener());
+                Object newValue = (newInstance == null) ? null : ReflectionUtils.getPrivateField(newInstance, java.awt.Component.class, name, out.getExceptionListener());
                 if (oldValue != null && !oldValue.equals(newValue)) {
                     invokeStatement(oldInstance, "set" + NameGenerator.capitalize(name), new Object[]{oldValue}, out);
                 }

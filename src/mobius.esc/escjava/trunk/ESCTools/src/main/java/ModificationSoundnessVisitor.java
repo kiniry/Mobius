@@ -142,6 +142,7 @@ import javafe.util.ErrorSet;
 public class ModificationSoundnessVisitor extends ASTVisitor {
 
   public static final String MODIFICATION_TARGETS_UNSOUNDNESS_WARNING = "Modification targets are checked in an unsound way.";
+  public static final String MODIFIES_EVERYTHING_UNSOUNDNESS_WARNING = "Modifies everything target is checked in an unsound way.";
 
   public void visitCompilationUnit(/*@ non_null */ CompilationUnit x) {
     visitASTNode(x);
@@ -516,6 +517,10 @@ public class ModificationSoundnessVisitor extends ASTVisitor {
 
 
   public void visitEverythingExpr(/*@ non_null */ EverythingExpr x) {
+    if (x.getTag() == TagConstants.MODIFIES) {
+      ErrorSet.caution(x.getStartLoc(), MODIFIES_EVERYTHING_UNSOUNDNESS_WARNING);
+     }
+  
      visitASTNode(x);
      
   }
@@ -666,7 +671,7 @@ public class ModificationSoundnessVisitor extends ASTVisitor {
 
 
   public void visitParsedSpecs(/*@ non_null */ ParsedSpecs x) {
-     visitASTNode(x);
+	  visitASTNode(x);
      
   }
 

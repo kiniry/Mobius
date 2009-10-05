@@ -5,9 +5,9 @@ import java.io.*;
 class UNIXProcess$1$1 extends Thread {
     /*synthetic*/ final UNIXProcess$1 this$1;
     
-    UNIXProcess$1$1(/*synthetic*/ final UNIXProcess$1 this$1, .java.lang.String x0) {
-        this.this$1 = this$1;
+    UNIXProcess$1$1(/*synthetic*/ final UNIXProcess$1 this$1, java.lang.String x0) {
         super(x0);
+        this.this$1 = this$1;
     }
     
     public void run() {

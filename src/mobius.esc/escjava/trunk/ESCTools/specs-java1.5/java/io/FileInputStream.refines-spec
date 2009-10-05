@@ -21,11 +21,11 @@ public class FileInputStream extends InputStream {
 
     /*@
       @ public behavior
-      @   requires fd != null;
+      @   requires fdObj != null;
       @   assignable \not_specified;
       @   ensures initialInputStream();
       @*/
-    public FileInputStream(FileDescriptor fd);
+    public FileInputStream(FileDescriptor fdObj);
 
     /*@
       @ public behavior
@@ -60,17 +60,17 @@ public class FileInputStream extends InputStream {
     /*@
       @ 
       @*/
-    public native long skip(long bytes) throws IOException;
+    public native long skip(long n) throws IOException;
 
     /*@
       @ 
       @*/
-    public int read(byte[] bytes) throws IOException;
+    public int read(byte[] b) throws IOException;
 
     /*@
       @ 
       @*/
-    public int read(byte[] bytes, int off, int len) throws IOException;
+    public int read(byte[] b, int off, int len) throws IOException;
 
     /*@
       @ 

@@ -7,8 +7,8 @@ public class Dialog$AccessibleAWTDialog extends Window$AccessibleAWTWindow {
     /*synthetic*/ final Dialog this$0;
     
     protected Dialog$AccessibleAWTDialog(/*synthetic*/ final Dialog this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = 4837230331833941201L;
     

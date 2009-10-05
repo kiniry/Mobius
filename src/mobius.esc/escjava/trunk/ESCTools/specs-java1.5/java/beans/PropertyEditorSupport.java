@@ -92,7 +92,7 @@ public class PropertyEditorSupport implements PropertyEditor {
             if (listeners == null) {
                 return;
             }
-            targets = (java.util.Vector)(.java.util.Vector)listeners.clone();
+            targets = (java.util.Vector)(java.util.Vector)listeners.clone();
         }
         PropertyChangeEvent evt = new PropertyChangeEvent(source, null, null, null);
         for (int i = 0; i < targets.size(); i++) {

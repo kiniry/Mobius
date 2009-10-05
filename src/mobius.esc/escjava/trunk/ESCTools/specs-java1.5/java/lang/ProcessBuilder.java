@@ -19,7 +19,7 @@ public final class ProcessBuilder {
         this.command = command;
     }
     
-    public ProcessBuilder(String... command) {
+    public ProcessBuilder(String[] command) {
         
         this.command = new ArrayList(command.length);
         for (String[] arr$ = command, len$ = arr$.length, i$ = 0; i$ < len$; ++i$) {
@@ -34,7 +34,7 @@ public final class ProcessBuilder {
         return this;
     }
     
-    public ProcessBuilder command(String... command) {
+    public ProcessBuilder command(String[] command) {
         this.command = new ArrayList(command.length);
         for (String[] arr$ = command, len$ = arr$.length, i$ = 0; i$ < len$; ++i$) {
             String arg = arr$[i$];

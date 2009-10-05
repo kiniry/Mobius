@@ -23,15 +23,15 @@ class ProcessEnvironment$StringEntrySet$2 implements Map$Entry {
         throw new UnsupportedOperationException();
     }
     
-    /*synthetic*/ public Object setValue(Object x0) {
+    /*synthetic public Object setValue(Object x0) {
         return this.setValue((ProcessEnvironment$Value)x0);
-    }
-    
-    /*synthetic*/ public Object getValue() {
+    } */
+
+    /*synthetic public Object getValue() {
         return this.getValue();
-    }
+    } */
     
-    /*synthetic*/ public Object getKey() {
+    /*synthetic public Object getKey() {
         return this.getKey();
-    }
+    } */
 }

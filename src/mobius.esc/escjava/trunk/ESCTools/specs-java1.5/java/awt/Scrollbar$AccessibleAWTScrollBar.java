@@ -7,8 +7,8 @@ public class Scrollbar$AccessibleAWTScrollBar extends Component$AccessibleAWTCom
     /*synthetic*/ final Scrollbar this$0;
     
     protected Scrollbar$AccessibleAWTScrollBar(/*synthetic*/ final Scrollbar this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = -344337268523697807L;
     

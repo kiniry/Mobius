@@ -42,7 +42,7 @@ public abstract class ActivationGroup extends UnicastRemoteObject implements Act
         try {
             String groupClassName = desc.getClassName();
             if (groupClassName == null) {
-                groupClassName = .sun.rmi.server.ActivationGroupImpl.class.getName();
+                groupClassName = sun.rmi.server.ActivationGroupImpl.class.getName();
             }
             final String className = groupClassName;
             Class cl;

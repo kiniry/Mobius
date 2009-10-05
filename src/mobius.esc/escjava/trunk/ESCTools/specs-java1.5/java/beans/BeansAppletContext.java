@@ -36,7 +36,7 @@ class BeansAppletContext implements AppletContext {
                 imageCache.put(url, o);
                 return (Image)(Image)o;
             }
-            Image img = target.createImage((java.awt.image.ImageProducer)(.java.awt.image.ImageProducer)o);
+            Image img = target.createImage((java.awt.image.ImageProducer)(java.awt.image.ImageProducer)o);
             imageCache.put(url, img);
             return img;
         } catch (Exception ex) {

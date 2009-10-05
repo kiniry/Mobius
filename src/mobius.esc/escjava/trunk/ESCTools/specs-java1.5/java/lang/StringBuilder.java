@@ -211,135 +211,135 @@ public final class StringBuilder extends AbstractStringBuilder implements java.i
         value = (char[])(char[])s.readObject();
     }
     
-    /*synthetic*/ public AbstractStringBuilder reverse() {
+    /*synthetic public AbstractStringBuilder reverse() {
         return this.reverse();
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, double x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, double x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, float x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, float x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, long x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, long x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, int x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, int x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, char x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, char x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, boolean x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, boolean x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, CharSequence x1, int x2, int x3) {
+    /*synthetic public AbstractStringBuilder insert(int x0, CharSequence x1, int x2, int x3) {
         return this.insert(x0, x1, x2, x3);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, CharSequence x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, CharSequence x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, char[] x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, char[] x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, String x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, String x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, Object x1) {
+    /*synthetic public AbstractStringBuilder insert(int x0, Object x1) {
         return this.insert(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder insert(int x0, char[] x1, int x2, int x3) {
+    /*synthetic public AbstractStringBuilder insert(int x0, char[] x1, int x2, int x3) {
         return this.insert(x0, x1, x2, x3);
     }
     
-    /*synthetic*/ public AbstractStringBuilder replace(int x0, int x1, String x2) {
+    /*synthetic public AbstractStringBuilder replace(int x0, int x1, String x2) {
         return this.replace(x0, x1, x2);
     }
     
-    /*synthetic*/ public AbstractStringBuilder deleteCharAt(int x0) {
+    /*synthetic public AbstractStringBuilder deleteCharAt(int x0) {
         return this.deleteCharAt(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder appendCodePoint(int x0) {
+    /*synthetic public AbstractStringBuilder appendCodePoint(int x0) {
         return this.appendCodePoint(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder delete(int x0, int x1) {
+    /*synthetic public AbstractStringBuilder delete(int x0, int x1) {
         return this.delete(x0, x1);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(double x0) {
+    /*synthetic public AbstractStringBuilder append(double x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(float x0) {
+    /*synthetic public AbstractStringBuilder append(float x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(long x0) {
+    /*synthetic public AbstractStringBuilder append(long x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(int x0) {
+    /*synthetic public AbstractStringBuilder append(int x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(char x0) {
+    /*synthetic public AbstractStringBuilder append(char x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(boolean x0) {
+    /*synthetic public AbstractStringBuilder append(boolean x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(char[] x0, int x1, int x2) {
+    /*synthetic public AbstractStringBuilder append(char[] x0, int x1, int x2) {
         return this.append(x0, x1, x2);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(char[] x0) {
+    /*synthetic public AbstractStringBuilder append(char[] x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(CharSequence x0, int x1, int x2) {
+    /*synthetic public AbstractStringBuilder append(CharSequence x0, int x1, int x2) {
         return this.append(x0, x1, x2);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(CharSequence x0) {
+    /*synthetic public AbstractStringBuilder append(CharSequence x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(StringBuffer x0) {
+    /*synthetic public AbstractStringBuilder append(StringBuffer x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(String x0) {
+    /*synthetic public AbstractStringBuilder append(String x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public AbstractStringBuilder append(Object x0) {
+    /*synthetic public AbstractStringBuilder append(Object x0) {
         return this.append(x0);
     }
     
-    /*synthetic*/ public Appendable append(char x0) throws .java.io.IOException {
+    /*synthetic/ public Appendable append(char x0) throws java.io.IOException {
         return this.append(x0);
     }
     
-    /*synthetic*/ public Appendable append(CharSequence x0, int x1, int x2) throws .java.io.IOException {
+    /*synthetic public Appendable append(CharSequence x0, int x1, int x2) throws .java.io.IOException {
         return this.append(x0, x1, x2);
     }
     
-    /*synthetic*/ public Appendable append(CharSequence x0) throws .java.io.IOException {
+    /*synthetic public Appendable append(CharSequence x0) throws java.io.IOException {
         return this.append(x0);
-    }
+    } */
 }

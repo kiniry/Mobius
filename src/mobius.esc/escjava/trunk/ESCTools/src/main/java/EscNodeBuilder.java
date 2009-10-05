@@ -50,13 +50,14 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	// Dynamic types
 	public PredSymbol symIs = registerPredSymbol("is", new Sort[] { sortValue, sortType }, TagConstants.IS);
 	public FnSymbol symCast = registerFnSymbol("cast", new Sort[] { sortValue, sortType }, sortValue, TagConstants.CAST);
-	public FnSymbol symTypeOf = registerFnSymbol("typeof", new Sort[] { sortValue }, sortType, TagConstants.TYPEOF);	
+	public FnSymbol symTypeOf = registerFnSymbol("typeof", new Sort[] { sortRef }, sortType, TagConstants.TYPEOF);	
 	// Allocation status
 	public PredSymbol symIsAllocated = registerPredSymbol("isAllocated", new Sort[] { sortRef, sortTime }, TagConstants.ISALLOCATED);
 	public FnSymbol symEClosedTime = registerFnSymbol("eClosedTime", new Sort[] { sortElems }, sortTime, TagConstants.ECLOSEDTIME); 
 	public FnSymbol symFClosedTime = registerFnSymbol("fClosedTime", new Sort[] { sortField }, sortTime, TagConstants.FCLOSEDTIME);
 	// The as-trick
 	public FnSymbol symAsChild = registerFnSymbol("asChild", new Sort[] { sortType, sortType }, sortType );
+	public FnSymbol symClassDown = registerFnSymbol("classDown", new Sort[] { sortType, sortType }, sortType );
 	public FnSymbol symAsElems = registerFnSymbol("asElems", new Sort[] { sortElems }, sortElems, TagConstants.ASELEMS);
 	public FnSymbol symAsField = registerFnSymbol("asField", new Sort[] { sortField, sortType }, sortField, TagConstants.ASFIELD);
 	public FnSymbol symAsLockSet = registerFnSymbol("asLockSet", new Sort[] { sortLockSet }, sortLockSet, TagConstants.ASLOCKSET);
@@ -64,6 +65,8 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	public FnSymbol symArrayLength = registerFnSymbol("arrayLength", new Sort[] { sortArray }, sortInt, TagConstants.ARRAYLENGTH);
 	public FnSymbol symArrayShapeOne = registerFnSymbol("arrayShapeOne", new Sort[] { sortInt }, sortShape, TagConstants.ARRAYSHAPEONE);
 	public FnSymbol symArrayShapeMore = registerFnSymbol("arrayShapeMore", new Sort[] { sortInt, sortShape }, sortShape, TagConstants.ARRAYSHAPEMORE);
+	public FnSymbol symArrayParent = registerFnSymbol("arrayParent", new Sort[] { sortArray }, sortArray);
+	public FnSymbol symArrayPosition = registerFnSymbol("arrayPosition", new Sort[] { sortArray }, sortInt);
 	public PredSymbol symArrayFresh = registerPredSymbol("arrayFresh", 
 			new Sort[] { sortArray, sortTime, sortTime, sortElems, sortShape, sortType, sortValue }, TagConstants.ARRAYFRESH);
 	public PredSymbol symIsNewArray = registerPredSymbol("isNewArray", new Sort[] { sortArray }, TagConstants.ISNEWARRAY);
@@ -72,7 +75,10 @@ public abstract class EscNodeBuilder extends NodeBuilder
 	// stuff unhandled by the T* interface
 	public FnSymbol symArray = registerFnSymbol("_array", new Sort[] { sortType }, sortType);	
     public FnSymbol symIntern = registerFnSymbol("|intern:|", new Sort[] { sortInt, sortInt }, sortString, TagConstants.INTERN);
-    public PredSymbol symInterned = registerPredSymbol("|interned:|", new Sort[] { sortString }, TagConstants.INTERNED);
+    //:ALEX: was PredSymbol:
+    // - is used as predicate and function
+    // - Lifter.saveBgSymbol assumes that it is a function
+    public FnSymbol symInterned = registerFnSymbol("|interned:|", new Sort[] { sortString }, sortBool, TagConstants.INTERNED);
     public FnSymbol symStringCat = registerFnSymbol("stringCat", new Sort[] { sortString, sortString, sortTime }, sortString, TagConstants.STRINGCAT);
     // the 3rd argument seems to be sometimes int and sometimes string
     public PredSymbol symStringCatP = registerPredSymbol("stringCatP", new Sort[] { sortString, sortString, sortValue, sortTime, sortTime }, TagConstants.STRINGCATP);
@@ -131,7 +137,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
     	if (from == null) {
     		return s;
     	} else if (from == sortRef) {
-    		Sort to = s.getMapFrom().theRealThing();
+    		Sort to = s.getMapTo().theRealThing();
     		if (to == sortRef) return sortRefField;
     		if (to == sortInt) return sortIntField;
     		if (to == sortBool) return sortBoolField;
@@ -140,7 +146,7 @@ public abstract class EscNodeBuilder extends NodeBuilder
     		if (to == sortArrayValue) return sortElems;
     		return s;
     	} else if (from == sortInt) {
-    		Sort to = s.getMapFrom().theRealThing();
+    		Sort to = s.getMapTo().theRealThing();
     		if (to == sortValue) return sortArrayValue;
     		return s;
     	} else {

@@ -1,9 +1,9 @@
 package java.lang.annotation;
 
-public enum RetentionPolicy extends Enum<RetentionPolicy> {
-    /*public static final*/ SOURCE /* = new RetentionPolicy("SOURCE", 0) */,
-    /*public static final*/ CLASS /* = new RetentionPolicy("CLASS", 1) */,
-    /*public static final*/ RUNTIME /* = new RetentionPolicy("RUNTIME", 2) */;
+public class RetentionPolicy extends Enum {
+    public static final RetentionPolicy SOURCE  = new RetentionPolicy("SOURCE", 0);
+    public static final RetentionPolicy CLASS  = new RetentionPolicy("CLASS", 1);
+    public static final RetentionPolicy RUNTIME  = new RetentionPolicy("RUNTIME", 2);
     /*synthetic*/ private static final RetentionPolicy[] $VALUES = new RetentionPolicy[]{RetentionPolicy.SOURCE, RetentionPolicy.CLASS, RetentionPolicy.RUNTIME};
     
     public static final RetentionPolicy[] values() {

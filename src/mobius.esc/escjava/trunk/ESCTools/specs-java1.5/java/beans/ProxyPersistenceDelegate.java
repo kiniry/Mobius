@@ -10,7 +10,7 @@ class ProxyPersistenceDelegate extends PersistenceDelegate {
     
     protected Expression instantiate(Object oldInstance, Encoder out) {
         Class type = oldInstance.getClass();
-        java.lang.reflect.Proxy p = (java.lang.reflect.Proxy)(.java.lang.reflect.Proxy)oldInstance;
+        java.lang.reflect.Proxy p = (java.lang.reflect.Proxy)(java.lang.reflect.Proxy)oldInstance;
         java.lang.reflect.InvocationHandler ih = java.lang.reflect.Proxy.getInvocationHandler(p);
         if (ih instanceof EventHandler) {
             EventHandler eh = (EventHandler)(EventHandler)ih;
@@ -27,6 +27,6 @@ class ProxyPersistenceDelegate extends PersistenceDelegate {
             }
             return new Expression(oldInstance, EventHandler.class, "create", args.toArray());
         }
-        return new Expression(oldInstance, .java.lang.reflect.Proxy.class, "newProxyInstance", new Object[]{type.getClassLoader(), type.getInterfaces(), ih});
+        return new Expression(oldInstance, java.lang.reflect.Proxy.class, "newProxyInstance", new Object[]{type.getClassLoader(), type.getInterfaces(), ih});
     }
 }

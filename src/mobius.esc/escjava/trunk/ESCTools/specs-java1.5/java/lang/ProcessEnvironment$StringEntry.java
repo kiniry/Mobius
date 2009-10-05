@@ -39,15 +39,15 @@ class ProcessEnvironment$StringEntry implements Map$Entry {
         return e.hashCode();
     }
     
-    /*synthetic*/ public Object setValue(Object x0) {
+    /*synthetic public Object setValue(Object x0) {
         return this.setValue((String)x0);
-    }
+    } */
     
-    /*synthetic*/ public Object getValue() {
+    /*synthetic public Object getValue() {
         return this.getValue();
-    }
+    } */
     
-    /*synthetic*/ public Object getKey() {
+    /*synthetic public Object getKey() {
         return this.getKey();
-    }
+    } */
 }

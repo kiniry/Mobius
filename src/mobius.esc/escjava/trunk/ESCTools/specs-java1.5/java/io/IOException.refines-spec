@@ -11,8 +11,8 @@ public class IOException extends java.lang.Exception {
     public IOException();
 
     /*@ public normal_behavior
-      @   ensures standardThrowable(message);
+      @   ensures standardThrowable(s);
       @*/
     //@ pure
-    public IOException(String message);
+    public IOException(String s);
 }

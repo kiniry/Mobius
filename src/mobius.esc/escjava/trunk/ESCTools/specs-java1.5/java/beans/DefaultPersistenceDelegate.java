@@ -129,17 +129,17 @@ public class DefaultPersistenceDelegate extends PersistenceDelegate {
                 out.getExceptionListener().exceptionThrown(e);
             }
         }
-        if (!.java.awt.Component.class.isAssignableFrom(type)) {
+        if (!java.awt.Component.class.isAssignableFrom(type)) {
             return;
         }
         EventSetDescriptor[] eventSetDescriptors = info.getEventSetDescriptors();
         for (int e = 0; e < eventSetDescriptors.length; e++) {
             EventSetDescriptor d = eventSetDescriptors[e];
             Class listenerType = d.getListenerType();
-            if (listenerType == .java.awt.event.ComponentListener.class) {
+            if (listenerType == java.awt.event.ComponentListener.class) {
                 continue;
             }
-            if (listenerType == .javax.swing.event.ChangeListener.class && type == .javax.swing.JMenuItem.class) {
+            if (listenerType == javax.swing.event.ChangeListener.class && type == javax.swing.JMenuItem.class) {
                 continue;
             }
             EventListener[] oldL = new EventListener[0];

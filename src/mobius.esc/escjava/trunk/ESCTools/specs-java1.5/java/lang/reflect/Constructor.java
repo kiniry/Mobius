@@ -181,7 +181,7 @@ public final class Constructor extends AccessibleObject implements GenericDeclar
         }
     }
     
-    public Object newInstance(Object... initargs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public Object newInstance(Object[] initargs) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (!override) {
             if (!Reflection.quickCheckMemberAccess(clazz, modifiers)) {
                 Class caller = Reflection.getCallerClass(2);

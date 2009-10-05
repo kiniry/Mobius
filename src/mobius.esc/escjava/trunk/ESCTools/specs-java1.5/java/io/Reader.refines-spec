@@ -25,18 +25,18 @@ public abstract class Reader extends Object {
     public boolean ready()
         throws IOException;
 
-    public void mark(int Param0)
+    public void mark(int readAheadLimit)
         throws IOException;
 
-    public long skip(long Param0)
+    public long skip(long n)
         throws IOException;
 
-    public int read(/*@non_null*/ char[] Param0)
+    public int read(/*@non_null*/ char[] cbuf)
         throws IOException;
 
     //@ signals_only ArrayStoreException, IOException;
-    public abstract int read(/*@non_null*/ char[] Param0, int Param1, int Param2)
+    public abstract int read(/*@non_null*/ char[] cbuf, int off, int len)
         throws IOException;
 
-    protected Reader(/*@non_null*/ Object Param0);
+    protected Reader(/*@non_null*/ Object lock);
 }

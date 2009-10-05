@@ -141,7 +141,7 @@ public class VetoableChangeSupport implements java.io.Serializable {
         VetoableChangeSupport child = null;
         synchronized (this) {
             if (listeners != null) {
-                targets = (java.util.Vector)(.java.util.Vector)listeners.clone();
+                targets = (java.util.Vector)(java.util.Vector)listeners.clone();
             }
             if (children != null && propertyName != null) {
                 child = (VetoableChangeSupport)(VetoableChangeSupport)children.get(propertyName);
@@ -188,7 +188,7 @@ public class VetoableChangeSupport implements java.io.Serializable {
         java.util.Vector v = null;
         synchronized (this) {
             if (listeners != null) {
-                v = (java.util.Vector)(.java.util.Vector)listeners.clone();
+                v = (java.util.Vector)(java.util.Vector)listeners.clone();
             }
         }
         if (v != null) {

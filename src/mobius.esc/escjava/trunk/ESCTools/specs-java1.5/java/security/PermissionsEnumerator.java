@@ -38,7 +38,7 @@ final class PermissionsEnumerator implements Enumeration {
         return null;
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    }*/
 }

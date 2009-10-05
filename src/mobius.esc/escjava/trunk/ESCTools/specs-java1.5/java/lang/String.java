@@ -877,11 +877,11 @@ public final class String implements java.io.Serializable, Comparable, CharSeque
         return result;
     }
     
-    public static String format(String format, Object... args) {
+    public static String format(String format, Object[] args) {
         return new Formatter().format(format, args).toString();
     }
     
-    public static String format(Locale l, String format, Object... args) {
+    public static String format(Locale l, String format, Object[] args) {
         return new Formatter(l).format(format, args).toString();
     }
     

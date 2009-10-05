@@ -23,24 +23,24 @@ import java.util.Locale;
 public class BeanContextSupport extends BeanContextChildSupport implements BeanContext, Serializable, PropertyChangeListener, VetoableChangeListener {
     static final long serialVersionUID = -4879613978649577204L;
     
-    public BeanContextSupport(BeanContext peer, Locale lcle, boolean dTime, boolean visible) {
-        super(peer);
+    public BeanContextSupport(BeanContext pee, Locale lcle, boolean dTime, boolean visible) {
+        super(pee);
         locale = lcle != null ? lcle : Locale.getDefault();
         designTime = dTime;
         okToUseGui = visible;
         initialize();
     }
     
-    public BeanContextSupport(BeanContext peer, Locale lcle, boolean dtime) {
-        this(peer, lcle, dtime, true);
+    public BeanContextSupport(BeanContext pee, Locale lcle, boolean dtime) {
+        this(pee, lcle, dtime, true);
     }
     
-    public BeanContextSupport(BeanContext peer, Locale lcle) {
-        this(peer, lcle, false, true);
+    public BeanContextSupport(BeanContext pee, Locale lcle) {
+        this(pee, lcle, false, true);
     }
     
-    public BeanContextSupport(BeanContext peer) {
-        this(peer, null, false, true);
+    public BeanContextSupport(BeanContext pee) {
+        this(pee, null, false, true);
     }
     
     public BeanContextSupport() {
@@ -102,8 +102,8 @@ public class BeanContextSupport extends BeanContextChildSupport implements BeanC
     {
     }
     
-    protected BeanContextSupport$BCSChild createBCSChild(Object targetChild, Object peer) {
-        return new BeanContextSupport$BCSChild(this, targetChild, peer);
+    protected BeanContextSupport$BCSChild createBCSChild(Object targetChild, Object pee) {
+        return new BeanContextSupport$BCSChild(this, targetChild, pee);
     }
     
     public boolean add(Object targetChild) {
@@ -173,7 +173,7 @@ public class BeanContextSupport extends BeanContextChildSupport implements BeanC
             }
             BeanContextSupport$BCSChild bcsc = (BeanContextSupport$BCSChild)(BeanContextSupport$BCSChild)children.get(targetChild);
             BeanContextSupport$BCSChild pbcsc = null;
-            Object peer = null;
+            Object pee = null;
             synchronized (targetChild) {
                 if (callChildSetBC) {
                     BeanContextChild cbcc = getChildBeanContextChild(targetChild);
@@ -192,18 +192,18 @@ public class BeanContextSupport extends BeanContextChildSupport implements BeanC
                 synchronized (children) {
                     children.remove(targetChild);
                     if (bcsc.isProxyPeer()) {
-                        pbcsc = (BeanContextSupport$BCSChild)(BeanContextSupport$BCSChild)children.get(peer = bcsc.getProxyPeer());
-                        children.remove(peer);
+                        pbcsc = (BeanContextSupport$BCSChild)(BeanContextSupport$BCSChild)children.get(pee = bcsc.getProxyPeer());
+                        children.remove(pee);
                     }
                 }
                 if (getChildSerializable(targetChild) != null) serializable--;
                 childJustRemovedHook(targetChild, bcsc);
-                if (peer != null) {
-                    if (getChildSerializable(peer) != null) serializable--;
-                    childJustRemovedHook(peer, pbcsc);
+                if (pee != null) {
+                    if (getChildSerializable(pee) != null) serializable--;
+                    childJustRemovedHook(pee, pbcsc);
                 }
             }
-            fireChildrenRemoved(new BeanContextMembershipEvent(getBeanContextPeer(), peer == null ? new Object[]{targetChild} : new Object[]{targetChild, peer}));
+            fireChildrenRemoved(new BeanContextMembershipEvent(getBeanContextPeer(), pee == null ? new Object[]{targetChild} : new Object[]{targetChild, pee}));
         }
         return true;
     }

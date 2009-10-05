@@ -14,20 +14,20 @@ import java.util.Locale;
 
 public class BeanContextServicesSupport extends BeanContextSupport implements BeanContextServices {
     
-    public BeanContextServicesSupport(BeanContextServices peer, Locale lcle, boolean dTime, boolean visible) {
-        super(peer, lcle, dTime, visible);
+    public BeanContextServicesSupport(BeanContextServices pee, Locale lcle, boolean dTime, boolean visible) {
+        super(pee, lcle, dTime, visible);
     }
     
-    public BeanContextServicesSupport(BeanContextServices peer, Locale lcle, boolean dtime) {
-        this(peer, lcle, dtime, true);
+    public BeanContextServicesSupport(BeanContextServices pee, Locale lcle, boolean dtime) {
+        this(pee, lcle, dtime, true);
     }
     
-    public BeanContextServicesSupport(BeanContextServices peer, Locale lcle) {
-        this(peer, lcle, false, true);
+    public BeanContextServicesSupport(BeanContextServices pee, Locale lcle) {
+        this(pee, lcle, false, true);
     }
     
-    public BeanContextServicesSupport(BeanContextServices peer) {
-        this(peer, null, false, true);
+    public BeanContextServicesSupport(BeanContextServices pee) {
+        this(pee, null, false, true);
     }
     
     public BeanContextServicesSupport() {
@@ -46,8 +46,8 @@ public class BeanContextServicesSupport extends BeanContextSupport implements Be
     {
     }
     
-    protected BeanContextSupport$BCSChild createBCSChild(Object targetChild, Object peer) {
-        return new BeanContextServicesSupport$BCSSChild(this, targetChild, peer);
+    protected BeanContextSupport$BCSChild createBCSChild(Object targetChild, Object pee) {
+        return new BeanContextServicesSupport$BCSSChild(this, targetChild, pee);
     }
     {
     }

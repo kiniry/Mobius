@@ -31,7 +31,7 @@ public class Proxy implements java.io.Serializable {
         this.h = h;
     }
     
-    public static Class getProxyClass(ClassLoader loader, Class... interfaces) throws IllegalArgumentException {
+    public static Class getProxyClass(ClassLoader loader, Class[] interfaces) throws IllegalArgumentException {
         if (interfaces.length > 65535) {
             throw new IllegalArgumentException("interface limit exceeded");
         }

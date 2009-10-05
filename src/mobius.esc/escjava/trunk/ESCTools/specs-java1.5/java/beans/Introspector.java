@@ -624,7 +624,7 @@ public class Introspector {
                     }
                     Method[] methods = (Method[])(Method[])validMethods.toArray(new Method[validMethods.size()]);
                     EventSetDescriptor esd = new EventSetDescriptor(eventName, argType, methods, addMethod, removeMethod, getMethod);
-                    if (throwsException(addMethod, .java.util.TooManyListenersException.class)) {
+                    if (throwsException(addMethod, java.util.TooManyListenersException.class)) {
                         esd.setUnicast(true);
                     }
                     addEvent(esd);
@@ -771,7 +771,7 @@ public class Introspector {
         if (argTypes.length != 1) {
             return false;
         }
-        if (isSubclass(argTypes[0], .java.util.EventObject.class)) {
+        if (isSubclass(argTypes[0], java.util.EventObject.class)) {
             return true;
         }
         return false;

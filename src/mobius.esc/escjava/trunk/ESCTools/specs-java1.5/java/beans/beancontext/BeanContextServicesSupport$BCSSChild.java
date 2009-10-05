@@ -15,9 +15,10 @@ public class BeanContextServicesSupport$BCSSChild extends BeanContextSupport$BCS
     {
     }
     
-    BeanContextServicesSupport$BCSSChild(/*synthetic*/ final BeanContextServicesSupport this$0, Object bcc, Object peer) {
-        this.this$0 = this$0;
-        super(this$0, bcc, peer);
+    BeanContextServicesSupport$BCSSChild(/*synthetic*/ final BeanContextServicesSupport this$0, Object bcc, Object pee) {
+        super(this$0, bcc, pee);
+	this.this$0 = this$0;
+
     }
     
     synchronized void usingService(Object requestor, Object service, Class serviceClass, BeanContextServiceProvider bcsp, boolean isDelegated, BeanContextServiceRevokedListener bcsrl) throws TooManyListenersException, UnsupportedOperationException {

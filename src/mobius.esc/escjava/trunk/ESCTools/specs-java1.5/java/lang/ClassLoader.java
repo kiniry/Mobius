@@ -223,7 +223,7 @@ public abstract class ClassLoader {
     private synchronized void checkCerts(String name, CodeSource cs) {
         int i = name.lastIndexOf('.');
         String pname = (i == -1) ? "" : name.substring(0, i);
-        java.security.cert.Certificate[] pcerts = (java.security.cert.Certificate[])(.java.security.cert.Certificate[])package2certs.get(pname);
+        java.security.cert.Certificate[] pcerts = (java.security.cert.Certificate[])(java.security.cert.Certificate[])package2certs.get(pname);
         if (pcerts == null) {
             if (cs != null) {
                 pcerts = cs.getCertificates();
