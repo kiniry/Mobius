@@ -15,8 +15,8 @@ class XPStyle$XPFillBorder extends LineBorder implements UIResource {
     /*synthetic*/ final XPStyle this$0;
     
     XPStyle$XPFillBorder(/*synthetic*/ final XPStyle this$0, Color color, int thickness) {
-        this.this$0 = this$0;
         super(color, thickness);
+        this.this$0 = this$0;
     }
     
     public Insets getBorderInsets(Component c) {

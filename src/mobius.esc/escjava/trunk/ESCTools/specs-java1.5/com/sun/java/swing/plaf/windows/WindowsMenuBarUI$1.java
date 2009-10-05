@@ -16,12 +16,10 @@ class WindowsMenuBarUI$1 extends WindowAdapter {
         
     }
     
-    @Override()
     public void windowActivated(WindowEvent e) {
         WindowsMenuBarUI.access$000(this$0).repaint();
     }
     
-    @Override()
     public void windowDeactivated(WindowEvent e) {
         WindowsMenuBarUI.access$100(this$0).repaint();
     }

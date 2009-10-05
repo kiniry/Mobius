@@ -12,8 +12,8 @@ class WindowsLookAndFeel$TriggerDesktopProperty extends DesktopProperty {
     /*synthetic*/ final WindowsLookAndFeel this$0;
     
     WindowsLookAndFeel$TriggerDesktopProperty(/*synthetic*/ final WindowsLookAndFeel this$0, String key) {
-        this.this$0 = this$0;
         super(key, null, WindowsLookAndFeel.access$000(this$0));
+        this.this$0 = this$0;
         getValueFromDesktop();
     }
     

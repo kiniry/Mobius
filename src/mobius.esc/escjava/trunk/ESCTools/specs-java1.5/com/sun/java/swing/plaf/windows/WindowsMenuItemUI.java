@@ -38,7 +38,6 @@ public class WindowsMenuItemUI extends BasicMenuItemUI {
         g.setColor(oldColor);
     }
     
-    @Override()
     protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
         if (WindowsMenuItemUI.isVistaPainting()) {
             WindowsMenuItemUI.paintBackground(accessor, g, menuItem, bgColor);

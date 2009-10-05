@@ -43,7 +43,6 @@ public class WindowsMenuBarUI extends BasicMenuBarUI {
         return new WindowsMenuBarUI();
     }
     
-    @Override()
     protected void uninstallListeners() {
         uninstallWindowListener();
         if (hierarchyListener != null) {
@@ -72,7 +71,6 @@ public class WindowsMenuBarUI extends BasicMenuBarUI {
         windowListener = null;
     }
     
-    @Override()
     protected void installListeners() {
         if (WindowsLookAndFeel.isOnVista()) {
             installWindowListener();
@@ -94,7 +92,6 @@ public class WindowsMenuBarUI extends BasicMenuBarUI {
     {
     }
     
-    @Override()
     public void paint(Graphics g, JComponent c) {
         if (WindowsMenuItemUI.isVistaPainting()) {
             XPStyle xp = XPStyle.getXP();
