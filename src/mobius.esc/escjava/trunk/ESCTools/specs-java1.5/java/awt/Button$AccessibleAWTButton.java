@@ -7,8 +7,8 @@ public class Button$AccessibleAWTButton extends Component$AccessibleAWTComponent
     /*synthetic*/ final Button this$0;
     
     protected Button$AccessibleAWTButton(/*synthetic*/ final Button this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = -5932203980244017102L;
     

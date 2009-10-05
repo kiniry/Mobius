@@ -38,7 +38,7 @@ class NetworkInterface$1checkedAddresses implements Enumeration {
         return (i < count);
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

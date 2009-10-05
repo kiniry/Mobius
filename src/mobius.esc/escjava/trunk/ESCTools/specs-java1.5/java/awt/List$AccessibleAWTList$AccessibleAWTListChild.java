@@ -11,8 +11,8 @@ public class List$AccessibleAWTList$AccessibleAWTListChild extends Component$Acc
     private int indexInParent;
     
     public List$AccessibleAWTList$AccessibleAWTListChild(/*synthetic*/ final List$AccessibleAWTList this$1, List parent, int indexInParent) {
-        this.this$1 = this$1;
         super(this$1.this$0);
+        this.this$1 = this$1;
         this.parent = parent;
         this.setAccessibleParent(parent);
         this.indexInParent = indexInParent;

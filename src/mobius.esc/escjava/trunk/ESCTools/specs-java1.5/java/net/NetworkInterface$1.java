@@ -26,7 +26,7 @@ class NetworkInterface$1 implements Enumeration {
         return (val$netifs != null && i < val$netifs.length);
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

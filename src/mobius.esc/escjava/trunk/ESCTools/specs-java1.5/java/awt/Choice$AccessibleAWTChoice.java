@@ -9,8 +9,8 @@ public class Choice$AccessibleAWTChoice extends Component$AccessibleAWTComponent
     private static final long serialVersionUID = 7175603582428509322L;
     
     public Choice$AccessibleAWTChoice(/*synthetic*/ final Choice this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleAction getAccessibleAction() {

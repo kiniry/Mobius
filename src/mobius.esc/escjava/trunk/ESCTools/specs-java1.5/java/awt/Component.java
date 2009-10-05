@@ -1431,7 +1431,7 @@ public abstract class Component implements ImageObserver, MenuContainer, Seriali
             if (id == FocusEvent.FOCUS_GAINED) {
                 InputContext inputContext = getInputContext();
                 if (inputContext != null && inputContext instanceof sun.awt.im.InputContext) {
-                    ((sun.awt.im.InputContext)(.sun.awt.im.InputContext)inputContext).disableNativeIM();
+                    ((sun.awt.im.InputContext)(sun.awt.im.InputContext)inputContext).disableNativeIM();
                 }
             }
         }
@@ -3251,7 +3251,7 @@ public abstract class Component implements ImageObserver, MenuContainer, Seriali
                 states.add(AccessibleState.FOCUSED);
             }
             if (this instanceof Accessible) {
-                AccessibleContext ac = ((Accessible)(.javax.accessibility.Accessible)this).getAccessibleContext();
+                AccessibleContext ac = ((Accessible)(javax.accessibility.Accessible)this).getAccessibleContext();
                 if (ac != null) {
                     Accessible ap = ac.getAccessibleParent();
                     if (ap != null) {
@@ -3272,7 +3272,7 @@ public abstract class Component implements ImageObserver, MenuContainer, Seriali
                 }
             }
             if (this instanceof javax.swing.JComponent) {
-                if (((javax.swing.JComponent)(.javax.swing.JComponent)this).isOpaque()) {
+                if (((javax.swing.JComponent)(javax.swing.JComponent)this).isOpaque()) {
                     states.add(AccessibleState.OPAQUE);
                 }
             }

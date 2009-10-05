@@ -7,8 +7,9 @@ public class Label$AccessibleAWTLabel extends Component$AccessibleAWTComponent {
     private static final long serialVersionUID = -3568967560160480438L;
     
     public Label$AccessibleAWTLabel(/*synthetic*/ final Label this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
+
     }
     
     public String getAccessibleName() {

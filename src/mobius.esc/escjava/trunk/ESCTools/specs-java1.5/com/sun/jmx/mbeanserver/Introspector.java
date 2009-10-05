@@ -24,7 +24,7 @@ public class Introspector {
     }
     
     public static final boolean isDynamic(final Class c) {
-        return .javax.management.DynamicMBean.class.isAssignableFrom(c);
+        return javax.management.DynamicMBean.class.isAssignableFrom(c);
     }
     
     public static void testCreation(Class c) throws NotCompliantMBeanException {

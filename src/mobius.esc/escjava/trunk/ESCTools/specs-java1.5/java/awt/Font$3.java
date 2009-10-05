@@ -16,7 +16,7 @@ class Font$3 implements PrivilegedExceptionAction {
         return null;
     }
     
-    /*synthetic*/ public Object run() throws Exception {
+    /*synthetic public Object run() throws Exception {
         return this.run();
-    }
+    } */
 }

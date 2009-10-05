@@ -9,10 +9,10 @@ import sun.security.util.PropertyExpander;
 
 class PolicyParser {
     
-    /*synthetic*/ static .java.util.ResourceBundle access$000() {
+    /*synthetic*/ static java.util.ResourceBundle access$000() {
         return rb;
     }
-    private static final java.util.ResourceBundle rb = (java.util.ResourceBundle)(.java.util.ResourceBundle)java.security.AccessController.doPrivileged(new PolicyParser$1());
+    private static final java.util.ResourceBundle rb = (java.util.ResourceBundle)(java.util.ResourceBundle)java.security.AccessController.doPrivileged(new PolicyParser$1());
     private Vector grantEntries;
     private static final sun.security.util.Debug debug = sun.security.util.Debug.getInstance("parser", "\t[Auth Policy Parser]");
     private StreamTokenizer st;

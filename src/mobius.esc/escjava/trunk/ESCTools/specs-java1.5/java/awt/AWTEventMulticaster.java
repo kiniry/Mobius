@@ -419,9 +419,9 @@ public class AWTEventMulticaster implements ComponentListener, ContainerListener
         }
     }
     
-    public static .java.util.EventListener[] getListeners(EventListener l, Class listenerType) {
+    public static java.util.EventListener[] getListeners(EventListener l, Class listenerType) {
         int n = getListenerCount(l, listenerType);
-        .java.util.EventListener[] result = (.java.util.EventListener[])(.java.util.EventListener[])Array.newInstance(listenerType, n);
+        java.util.EventListener[] result = (java.util.EventListener[])(java.util.EventListener[])Array.newInstance(listenerType, n);
         populateListenerArray(result, l, 0);
         return result;
     }

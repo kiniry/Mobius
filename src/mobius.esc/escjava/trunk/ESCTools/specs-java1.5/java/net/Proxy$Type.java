@@ -1,9 +1,9 @@
 package java.net;
 
-public enum Proxy$Type extends Enum<Proxy$Type> {
-    /*public static final*/ DIRECT /* = new Proxy$Type("DIRECT", 0) */,
-    /*public static final*/ HTTP /* = new Proxy$Type("HTTP", 1) */,
-    /*public static final*/ SOCKS /* = new Proxy$Type("SOCKS", 2) */;
+public class Proxy$Type extends Enum {
+    public static final Proxy$Type DIRECT  = new Proxy$Type("DIRECT", 0);
+    public static final Proxy$Type HTTP  = new Proxy$Type("HTTP", 1);
+    public static final Proxy$Type SOCKS  = new Proxy$Type("SOCKS", 2);
     /*synthetic*/ private static final Proxy$Type[] $VALUES = new Proxy$Type[]{Proxy$Type.DIRECT, Proxy$Type.HTTP, Proxy$Type.SOCKS};
     
     public static final Proxy$Type[] values() {

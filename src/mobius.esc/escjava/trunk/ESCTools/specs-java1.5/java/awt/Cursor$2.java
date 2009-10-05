@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 
 class Cursor$2 implements java.security.PrivilegedExceptionAction {
     
-    Cursor$2() throws .java.io.IOException {
+    Cursor$2() throws java.io.IOException {
         
     }
     

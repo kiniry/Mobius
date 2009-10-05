@@ -1,8 +1,8 @@
 package java.net;
 
-public enum Authenticator$RequestorType extends Enum<Authenticator$RequestorType> {
-    /*public static final*/ PROXY /* = new Authenticator$RequestorType("PROXY", 0) */,
-    /*public static final*/ SERVER /* = new Authenticator$RequestorType("SERVER", 1) */;
+public class Authenticator$RequestorType extends Enum {
+    public static final  Authenticator$RequestorType PROXY  = new Authenticator$RequestorType("PROXY", 0) ;
+    public static final Authenticator$RequestorType SERVER  = new Authenticator$RequestorType("SERVER", 1) ;
     /*synthetic*/ private static final Authenticator$RequestorType[] $VALUES = new Authenticator$RequestorType[]{Authenticator$RequestorType.PROXY, Authenticator$RequestorType.SERVER};
     
     public static final Authenticator$RequestorType[] values() {

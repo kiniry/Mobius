@@ -287,7 +287,7 @@ public final class URI implements Comparable, Serializable {
     /*@
       @ 
       @*/
-    public int compareTo(Object ob);
+    public int compareTo(Object x0);
 
     /*@
       @ 

@@ -4,8 +4,8 @@ class EventDispatchThread$StopDispatchEvent extends AWTEvent implements ActiveEv
     /*synthetic*/ final EventDispatchThread this$0;
     
     public EventDispatchThread$StopDispatchEvent(/*synthetic*/ final EventDispatchThread this$0) {
-        this.this$0 = this$0;
         super(this$0, 0);
+        this.this$0 = this$0;
     }
     
     public void dispatch() {

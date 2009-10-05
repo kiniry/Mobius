@@ -7,8 +7,8 @@ public class CheckboxMenuItem$AccessibleAWTCheckboxMenuItem extends MenuItem$Acc
     /*synthetic*/ final CheckboxMenuItem this$0;
     
     protected CheckboxMenuItem$AccessibleAWTCheckboxMenuItem(/*synthetic*/ final CheckboxMenuItem this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = -1122642964303476L;
     

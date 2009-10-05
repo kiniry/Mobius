@@ -10,8 +10,8 @@ public class TextComponent$AccessibleAWTTextComponent extends Component$Accessib
     private static final long serialVersionUID = 3631432373506317811L;
     
     public TextComponent$AccessibleAWTTextComponent(/*synthetic*/ final TextComponent this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addTextListener(this);
     }
     

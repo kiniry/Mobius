@@ -28,7 +28,7 @@ class Socket$1 implements PrivilegedAction {
         }
     }
     
-    /*synthetic*/ public Object run() {
+    /*synthetic public Object run() {
         return this.run();
-    }
+    } */
 }

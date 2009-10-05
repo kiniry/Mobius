@@ -1270,7 +1270,7 @@ public class Container extends Component {
     private void startLWModal() {
         modalAppContext = AppContext.getAppContext();
         long time = Toolkit.getEventQueue().getMostRecentEventTime();
-        Component predictedFocusOwner = (this instanceof javax.swing.JInternalFrame) ? ((javax.swing.JInternalFrame)((.javax.swing.JInternalFrame)this)).getMostRecentFocusOwner() : null;
+        Component predictedFocusOwner = (this instanceof javax.swing.JInternalFrame) ? ((javax.swing.JInternalFrame)((javax.swing.JInternalFrame)this)).getMostRecentFocusOwner() : null;
         if (predictedFocusOwner != null) {
             KeyboardFocusManager.getCurrentKeyboardFocusManager().enqueueKeyEvents(time, predictedFocusOwner);
         }

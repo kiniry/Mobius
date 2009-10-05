@@ -13,7 +13,7 @@ class Font$1 implements PrivilegedExceptionAction {
         return File.createTempFile("+~JF", ".tmp", null);
     }
     
-    /*synthetic*/ public Object run() throws Exception {
+    /*synthetic public Object run() throws Exception {
         return this.run();
-    }
+    } */
 }

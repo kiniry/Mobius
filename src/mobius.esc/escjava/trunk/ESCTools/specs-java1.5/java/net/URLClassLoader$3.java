@@ -41,7 +41,7 @@ class URLClassLoader$3 implements Enumeration {
         return next();
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

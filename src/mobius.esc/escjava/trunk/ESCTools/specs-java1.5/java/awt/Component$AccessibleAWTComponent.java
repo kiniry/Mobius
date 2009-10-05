@@ -69,7 +69,7 @@ public abstract class Component$AccessibleAWTComponent extends AccessibleContext
         } else {
             Container parent = this$0.getParent();
             if (parent instanceof Accessible) {
-                return (Accessible)(.javax.accessibility.Accessible)parent;
+                return (Accessible)(javax.accessibility.Accessible)parent;
             }
         }
         return null;

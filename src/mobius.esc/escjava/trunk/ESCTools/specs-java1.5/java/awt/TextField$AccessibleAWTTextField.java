@@ -7,8 +7,9 @@ public class TextField$AccessibleAWTTextField extends TextComponent$AccessibleAW
     /*synthetic*/ final TextField this$0;
     
     protected TextField$AccessibleAWTTextField(/*synthetic*/ final TextField this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
+
     }
     private static final long serialVersionUID = 6219164359235943158L;
     

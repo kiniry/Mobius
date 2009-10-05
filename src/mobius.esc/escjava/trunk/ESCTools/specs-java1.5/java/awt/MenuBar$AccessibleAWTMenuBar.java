@@ -6,8 +6,8 @@ public class MenuBar$AccessibleAWTMenuBar extends MenuComponent$AccessibleAWTMen
     /*synthetic*/ final MenuBar this$0;
     
     protected MenuBar$AccessibleAWTMenuBar(/*synthetic*/ final MenuBar this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = -8577604491830083815L;
     

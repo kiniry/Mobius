@@ -7,8 +7,8 @@ public class ScrollPane$AccessibleAWTScrollPane extends Container$AccessibleAWTC
     /*synthetic*/ final ScrollPane this$0;
     
     protected ScrollPane$AccessibleAWTScrollPane(/*synthetic*/ final ScrollPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = 6100703663886637L;
     

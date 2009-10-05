@@ -583,7 +583,7 @@ public abstract class KeyboardFocusManager implements KeyEventDispatcher, KeyEve
     }
     
     protected synchronized java.util.List getKeyEventDispatchers() {
-        return (keyEventDispatchers != null) ? (java.util.List)(.java.util.List)keyEventDispatchers.clone() : null;
+        return (keyEventDispatchers != null) ? (java.util.List)(java.util.List)keyEventDispatchers.clone() : null;
     }
     
     public void addKeyEventPostProcessor(KeyEventPostProcessor processor) {
@@ -608,7 +608,7 @@ public abstract class KeyboardFocusManager implements KeyEventDispatcher, KeyEve
     }
     
     protected java.util.List getKeyEventPostProcessors() {
-        return (keyEventPostProcessors != null) ? (java.util.List)(.java.util.List)keyEventPostProcessors.clone() : null;
+        return (keyEventPostProcessors != null) ? (java.util.List)(java.util.List)keyEventPostProcessors.clone() : null;
     }
     
     static void setMostRecentFocusOwner(Component component) {

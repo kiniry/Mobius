@@ -8,8 +8,8 @@ public class List$AccessibleAWTList extends Component$AccessibleAWTComponent imp
     private static final long serialVersionUID = 7924617370136012829L;
     
     public List$AccessibleAWTList(/*synthetic*/ final List this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addActionListener(this);
         this$0.addItemListener(this);
     }

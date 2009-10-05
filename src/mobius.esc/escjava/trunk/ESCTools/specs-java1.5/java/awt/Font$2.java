@@ -15,7 +15,7 @@ class Font$2 implements PrivilegedExceptionAction {
         return new FileOutputStream(val$tFile);
     }
     
-    /*synthetic*/ public Object run() throws Exception {
+    /*synthetic public Object run() throws Exception {
         return this.run();
-    }
+    } */
 }

@@ -8,8 +8,8 @@ public class Checkbox$AccessibleAWTCheckbox extends Component$AccessibleAWTCompo
     private static final long serialVersionUID = 7881579233144754107L;
     
     public Checkbox$AccessibleAWTCheckbox(/*synthetic*/ final Checkbox this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addItemListener(this);
     }
     

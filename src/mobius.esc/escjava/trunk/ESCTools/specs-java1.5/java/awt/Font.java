@@ -108,7 +108,7 @@ public class Font implements java.io.Serializable {
     }
     
     private Font2D getFont2D() {
-        if (FontManager.usingPerAppContextComposites && font2DHandle != null && font2DHandle.font2D instanceof sun.font.CompositeFont && ((sun.font.CompositeFont)((.sun.font.CompositeFont)font2DHandle.font2D)).isStdComposite()) {
+        if (FontManager.usingPerAppContextComposites && font2DHandle != null && font2DHandle.font2D instanceof sun.font.CompositeFont && ((sun.font.CompositeFont)((sun.font.CompositeFont)font2DHandle.font2D)).isStdComposite()) {
             return FontManager.findFont2D(name, style, FontManager.LOGICAL_FALLBACK);
         } else if (font2DHandle == null) {
             font2DHandle = FontManager.findFont2D(name, style, FontManager.LOGICAL_FALLBACK).handle;

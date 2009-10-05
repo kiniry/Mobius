@@ -8,8 +8,8 @@ public class Container$AccessibleAWTContainer extends Component$AccessibleAWTCom
     /*synthetic*/ final Container this$0;
     
     protected Container$AccessibleAWTContainer(/*synthetic*/ final Container this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = 5081320404842566097L;
     

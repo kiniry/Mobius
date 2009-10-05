@@ -1,14 +1,14 @@
 package java.math;
 
-public enum RoundingMode extends Enum<RoundingMode> {
-    /*public static final*/ UP /* = new RoundingMode("UP", 0, BigDecimal.ROUND_UP) */,
-    /*public static final*/ DOWN /* = new RoundingMode("DOWN", 1, BigDecimal.ROUND_DOWN) */,
-    /*public static final*/ CEILING /* = new RoundingMode("CEILING", 2, BigDecimal.ROUND_CEILING) */,
-    /*public static final*/ FLOOR /* = new RoundingMode("FLOOR", 3, BigDecimal.ROUND_FLOOR) */,
-    /*public static final*/ HALF_UP /* = new RoundingMode("HALF_UP", 4, BigDecimal.ROUND_HALF_UP) */,
-    /*public static final*/ HALF_DOWN /* = new RoundingMode("HALF_DOWN", 5, BigDecimal.ROUND_HALF_DOWN) */,
-    /*public static final*/ HALF_EVEN /* = new RoundingMode("HALF_EVEN", 6, BigDecimal.ROUND_HALF_EVEN) */,
-    /*public static final*/ UNNECESSARY /* = new RoundingMode("UNNECESSARY", 7, BigDecimal.ROUND_UNNECESSARY) */;
+public class RoundingMode extends Enum {
+    public static final RoundingMode UP  = new RoundingMode("UP", 0, BigDecimal.ROUND_UP);
+    public static final RoundingMode DOWN  = new RoundingMode("DOWN", 1, BigDecimal.ROUND_DOWN) ;
+    public static final RoundingMode CEILING  = new RoundingMode("CEILING", 2, BigDecimal.ROUND_CEILING) ;
+    public static final RoundingMode FLOOR  = new RoundingMode("FLOOR", 3, BigDecimal.ROUND_FLOOR);
+    public static final RoundingMode HALF_UP  = new RoundingMode("HALF_UP", 4, BigDecimal.ROUND_HALF_UP);
+    public static final RoundingMode HALF_DOWN  = new RoundingMode("HALF_DOWN", 5, BigDecimal.ROUND_HALF_DOWN);
+    public static final RoundingMode HALF_EVEN  = new RoundingMode("HALF_EVEN", 6, BigDecimal.ROUND_HALF_EVEN);
+    public static final RoundingMode UNNECESSARY  = new RoundingMode("UNNECESSARY", 7, BigDecimal.ROUND_UNNECESSARY);
     /*synthetic*/ private static final RoundingMode[] $VALUES = new RoundingMode[]{RoundingMode.UP, RoundingMode.DOWN, RoundingMode.CEILING, RoundingMode.FLOOR, RoundingMode.HALF_UP, RoundingMode.HALF_DOWN, RoundingMode.HALF_EVEN, RoundingMode.UNNECESSARY};
     
     public static final RoundingMode[] values() {

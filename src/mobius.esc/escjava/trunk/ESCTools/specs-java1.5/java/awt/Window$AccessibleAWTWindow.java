@@ -7,8 +7,8 @@ public class Window$AccessibleAWTWindow extends Container$AccessibleAWTContainer
     /*synthetic*/ final Window this$0;
     
     protected Window$AccessibleAWTWindow(/*synthetic*/ final Window this$0) {
-        this.this$0 = this$0;
         super(this$0);
+    	this.this$0 = this$0;
     }
     private static final long serialVersionUID = 4215068635060671780L;
     

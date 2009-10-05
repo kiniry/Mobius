@@ -7,8 +7,8 @@ public class MenuItem$AccessibleAWTMenuItem extends MenuComponent$AccessibleAWTM
     /*synthetic*/ final MenuItem this$0;
     
     protected MenuItem$AccessibleAWTMenuItem(/*synthetic*/ final MenuItem this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     private static final long serialVersionUID = -217847831945965825L;
     

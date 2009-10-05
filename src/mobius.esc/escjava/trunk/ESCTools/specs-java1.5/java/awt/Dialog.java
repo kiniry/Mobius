@@ -137,7 +137,7 @@ public class Dialog extends Window {
                 }
                 peer.show();
                 for (int i = 0; i < ownedWindowList.size(); i++) {
-                    Window child = (Window)((.java.lang.ref.WeakReference)ownedWindowList.elementAt(i)).get();
+                    Window child = (Window)((java.lang.ref.WeakReference)ownedWindowList.elementAt(i)).get();
                     if ((child != null) && child.showWithParent) {
                         child.show();
                         child.showWithParent = false;
