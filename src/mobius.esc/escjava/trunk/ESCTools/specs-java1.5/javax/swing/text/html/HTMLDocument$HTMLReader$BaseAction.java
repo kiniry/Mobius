@@ -13,8 +13,8 @@ class HTMLDocument$HTMLReader$BaseAction extends HTMLDocument$HTMLReader$TagActi
     /*synthetic*/ final HTMLDocument$HTMLReader this$1;
     
     HTMLDocument$HTMLReader$BaseAction(/*synthetic*/ final HTMLDocument$HTMLReader this$1) {
-        this.this$1 = this$1;
         super(this$1);
+        this.this$1 = this$1;
     }
     
     public void start(HTML$Tag t, MutableAttributeSet attr) {

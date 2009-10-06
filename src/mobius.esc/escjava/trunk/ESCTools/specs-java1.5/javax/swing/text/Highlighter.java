@@ -19,8 +19,4 @@ public interface Highlighter {
     public void changeHighlight(Object tag, int p0, int p1) throws BadLocationException;
     
     public Highlighter$Highlight[] getHighlights();
-    {
-    }
-    {
-    }
 }

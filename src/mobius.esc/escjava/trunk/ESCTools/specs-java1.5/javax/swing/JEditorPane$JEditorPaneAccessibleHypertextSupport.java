@@ -45,8 +45,8 @@ public class JEditorPane$JEditorPaneAccessibleHypertextSupport extends JEditorPa
     }
     
     public JEditorPane$JEditorPaneAccessibleHypertextSupport(/*synthetic*/ final JEditorPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         hyperlinks = new JEditorPane$JEditorPaneAccessibleHypertextSupport$LinkVector(this, null);
         Document d = this$0.getDocument();
         if (d != null) {

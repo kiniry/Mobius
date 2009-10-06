@@ -8,9 +8,9 @@ import java.awt.event.*;
 class BasicComboPopup$1 extends JList {
     /*synthetic*/ final BasicComboPopup this$0;
     
-    BasicComboPopup$1(/*synthetic*/ final BasicComboPopup this$0, .javax.swing.ListModel x0) {
-        this.this$0 = this$0;
+    BasicComboPopup$1(/*synthetic*/ final BasicComboPopup this$0, javax.swing.ListModel x0) {
         super(x0);
+        this.this$0 = this$0;
     }
     
     public void processMouseEvent(MouseEvent e) {

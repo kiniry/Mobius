@@ -9,8 +9,8 @@ class AbstractDocument$BidiRootElement extends AbstractDocument$BranchElement {
     /*synthetic*/ final AbstractDocument this$0;
     
     AbstractDocument$BidiRootElement(/*synthetic*/ final AbstractDocument this$0) {
-        this.this$0 = this$0;
         super(this$0, null, null);
+        this.this$0 = this$0;
     }
     
     public String getName() {

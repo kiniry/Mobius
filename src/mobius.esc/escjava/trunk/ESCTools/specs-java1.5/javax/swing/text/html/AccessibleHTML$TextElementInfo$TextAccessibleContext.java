@@ -14,8 +14,8 @@ public class AccessibleHTML$TextElementInfo$TextAccessibleContext extends Access
     /*synthetic*/ final AccessibleHTML$TextElementInfo this$1;
     
     public AccessibleHTML$TextElementInfo$TextAccessibleContext(/*synthetic*/ final AccessibleHTML$TextElementInfo this$1, AccessibleHTML$ElementInfo elementInfo) {
-        this.this$1 = this$1;
         super(this$1.this$0, elementInfo);
+        this.this$1 = this$1;
     }
     
     public AccessibleText getAccessibleText() {

@@ -11,8 +11,8 @@ class StyleSheet$SmallConversionSet extends StyleContext$SmallAttributeSet {
     /*synthetic*/ final StyleSheet this$0;
     
     public StyleSheet$SmallConversionSet(/*synthetic*/ final StyleSheet this$0, AttributeSet attrs) {
-        this.this$0 = this$0;
         super(this$0, attrs);
+        this.this$0 = this$0;
     }
     
     public boolean isDefined(Object key) {

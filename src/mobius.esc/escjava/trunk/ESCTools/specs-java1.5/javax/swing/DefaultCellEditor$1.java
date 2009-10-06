@@ -10,9 +10,9 @@ class DefaultCellEditor$1 extends DefaultCellEditor$EditorDelegate {
     /*synthetic*/ final JTextField val$textField;
     
     DefaultCellEditor$1(/*synthetic*/ final DefaultCellEditor this$0, /*synthetic*/ final JTextField val$textField) {
+        super(this$0);
         this.this$0 = this$0;
         this.val$textField = val$textField;
-        super(this$0);
     }
     
     public void setValue(Object value) {

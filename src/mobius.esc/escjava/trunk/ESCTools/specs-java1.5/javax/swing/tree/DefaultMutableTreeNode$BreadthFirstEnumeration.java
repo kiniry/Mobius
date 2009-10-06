@@ -35,7 +35,7 @@ final class DefaultMutableTreeNode$BreadthFirstEnumeration implements Enumeratio
     {
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

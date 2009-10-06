@@ -14,9 +14,9 @@ import java.lang.ref.*;
 class HTMLEditorKit$HTMLFactory$1 extends BlockView {
     /*synthetic*/ final HTMLEditorKit$HTMLFactory this$0;
     
-    HTMLEditorKit$HTMLFactory$1(/*synthetic*/ final HTMLEditorKit$HTMLFactory this$0, .javax.swing.text.Element x0, int x1) {
-        this.this$0 = this$0;
+    HTMLEditorKit$HTMLFactory$1(/*synthetic*/ final HTMLEditorKit$HTMLFactory this$0, javax.swing.text.Element x0, int x1) {
         super(x0, x1);
+        this.this$0 = this$0;
     }
     
     public float getPreferredSpan(int axis) {

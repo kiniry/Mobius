@@ -8,8 +8,8 @@ public class WindowsMenuUI$WindowsMouseInputHandler extends BasicMenuUI$MouseInp
     /*synthetic*/ final WindowsMenuUI this$0;
     
     protected WindowsMenuUI$WindowsMouseInputHandler(/*synthetic*/ final WindowsMenuUI this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public void mouseEntered(MouseEvent evt) {

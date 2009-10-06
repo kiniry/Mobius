@@ -9,8 +9,8 @@ public class AbstractDocument$LeafElement extends AbstractDocument$AbstractEleme
     /*synthetic*/ final AbstractDocument this$0;
     
     public AbstractDocument$LeafElement(/*synthetic*/ final AbstractDocument this$0, Element parent, AttributeSet a, int offs0, int offs1) {
-        this.this$0 = this$0;
         super(this$0, parent, a);
+        this.this$0 = this$0;
         try {
             p0 = this$0.createPosition(offs0);
             p1 = this$0.createPosition(offs1);

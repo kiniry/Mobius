@@ -1,66 +1,66 @@
-package com.sun.java.swing.plaf.windows;
+package com.sun.java.swing.plaf.window;
 
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 import sun.awt.windows.ThemeReader;
 
-public enum TMSchema$State extends Enum<TMSchema$State> {
-    /*public static final*/ ACTIVE /* = new TMSchema$State("ACTIVE", 0) */,
-    /*public static final*/ ASSIST /* = new TMSchema$State("ASSIST", 1) */,
-    /*public static final*/ BITMAP /* = new TMSchema$State("BITMAP", 2) */,
-    /*public static final*/ CHECKED /* = new TMSchema$State("CHECKED", 3) */,
-    /*public static final*/ CHECKEDDISABLED /* = new TMSchema$State("CHECKEDDISABLED", 4) */,
-    /*public static final*/ CHECKEDHOT /* = new TMSchema$State("CHECKEDHOT", 5) */,
-    /*public static final*/ CHECKEDNORMAL /* = new TMSchema$State("CHECKEDNORMAL", 6) */,
-    /*public static final*/ CHECKEDPRESSED /* = new TMSchema$State("CHECKEDPRESSED", 7) */,
-    /*public static final*/ CHECKMARKNORMAL /* = new TMSchema$State("CHECKMARKNORMAL", 8) */,
-    /*public static final*/ CHECKMARKDISABLED /* = new TMSchema$State("CHECKMARKDISABLED", 9) */,
-    /*public static final*/ BULLETNORMAL /* = new TMSchema$State("BULLETNORMAL", 10) */,
-    /*public static final*/ BULLETDISABLED /* = new TMSchema$State("BULLETDISABLED", 11) */,
-    /*public static final*/ CLOSED /* = new TMSchema$State("CLOSED", 12) */,
-    /*public static final*/ DEFAULTED /* = new TMSchema$State("DEFAULTED", 13) */,
-    /*public static final*/ DISABLED /* = new TMSchema$State("DISABLED", 14) */,
-    /*public static final*/ DISABLEDHOT /* = new TMSchema$State("DISABLEDHOT", 15) */,
-    /*public static final*/ DISABLEDPUSHED /* = new TMSchema$State("DISABLEDPUSHED", 16) */,
-    /*public static final*/ DOWNDISABLED /* = new TMSchema$State("DOWNDISABLED", 17) */,
-    /*public static final*/ DOWNHOT /* = new TMSchema$State("DOWNHOT", 18) */,
-    /*public static final*/ DOWNNORMAL /* = new TMSchema$State("DOWNNORMAL", 19) */,
-    /*public static final*/ DOWNPRESSED /* = new TMSchema$State("DOWNPRESSED", 20) */,
-    /*public static final*/ FOCUSED /* = new TMSchema$State("FOCUSED", 21) */,
-    /*public static final*/ HOT /* = new TMSchema$State("HOT", 22) */,
-    /*public static final*/ HOTCHECKED /* = new TMSchema$State("HOTCHECKED", 23) */,
-    /*public static final*/ INACTIVE /* = new TMSchema$State("INACTIVE", 24) */,
-    /*public static final*/ INACTIVENORMAL /* = new TMSchema$State("INACTIVENORMAL", 25) */,
-    /*public static final*/ INACTIVEHOT /* = new TMSchema$State("INACTIVEHOT", 26) */,
-    /*public static final*/ INACTIVEPUSHED /* = new TMSchema$State("INACTIVEPUSHED", 27) */,
-    /*public static final*/ INACTIVEDISABLED /* = new TMSchema$State("INACTIVEDISABLED", 28) */,
-    /*public static final*/ LEFTDISABLED /* = new TMSchema$State("LEFTDISABLED", 29) */,
-    /*public static final*/ LEFTHOT /* = new TMSchema$State("LEFTHOT", 30) */,
-    /*public static final*/ LEFTNORMAL /* = new TMSchema$State("LEFTNORMAL", 31) */,
-    /*public static final*/ LEFTPRESSED /* = new TMSchema$State("LEFTPRESSED", 32) */,
-    /*public static final*/ MIXEDDISABLED /* = new TMSchema$State("MIXEDDISABLED", 33) */,
-    /*public static final*/ MIXEDHOT /* = new TMSchema$State("MIXEDHOT", 34) */,
-    /*public static final*/ MIXEDNORMAL /* = new TMSchema$State("MIXEDNORMAL", 35) */,
-    /*public static final*/ MIXEDPRESSED /* = new TMSchema$State("MIXEDPRESSED", 36) */,
-    /*public static final*/ NORMAL /* = new TMSchema$State("NORMAL", 37) */,
-    /*public static final*/ PRESSED /* = new TMSchema$State("PRESSED", 38) */,
-    /*public static final*/ OPENED /* = new TMSchema$State("OPENED", 39) */,
-    /*public static final*/ PUSHED /* = new TMSchema$State("PUSHED", 40) */,
-    /*public static final*/ READONLY /* = new TMSchema$State("READONLY", 41) */,
-    /*public static final*/ RIGHTDISABLED /* = new TMSchema$State("RIGHTDISABLED", 42) */,
-    /*public static final*/ RIGHTHOT /* = new TMSchema$State("RIGHTHOT", 43) */,
-    /*public static final*/ RIGHTNORMAL /* = new TMSchema$State("RIGHTNORMAL", 44) */,
-    /*public static final*/ RIGHTPRESSED /* = new TMSchema$State("RIGHTPRESSED", 45) */,
-    /*public static final*/ SELECTED /* = new TMSchema$State("SELECTED", 46) */,
-    /*public static final*/ UNCHECKEDDISABLED /* = new TMSchema$State("UNCHECKEDDISABLED", 47) */,
-    /*public static final*/ UNCHECKEDHOT /* = new TMSchema$State("UNCHECKEDHOT", 48) */,
-    /*public static final*/ UNCHECKEDNORMAL /* = new TMSchema$State("UNCHECKEDNORMAL", 49) */,
-    /*public static final*/ UNCHECKEDPRESSED /* = new TMSchema$State("UNCHECKEDPRESSED", 50) */,
-    /*public static final*/ UPDISABLED /* = new TMSchema$State("UPDISABLED", 51) */,
-    /*public static final*/ UPHOT /* = new TMSchema$State("UPHOT", 52) */,
-    /*public static final*/ UPNORMAL /* = new TMSchema$State("UPNORMAL", 53) */,
-    /*public static final*/ UPPRESSED /* = new TMSchema$State("UPPRESSED", 54) */;
+public class TMSchema$State extends Enum {
+    public static final TMSChema$State ACTIVE = new TMSchema$State("ACTIVE", 0) ;
+    public static final TMSChema$State ASSIST = new TMSchema$State("ASSIST", 1) ;
+    public static final TMSChema$State BITMAP = new TMSchema$State("BITMAP", 2) ;
+    public static final TMSChema$State CHECKED = new TMSchema$State("CHECKED", 3) ;
+    public static final TMSChema$State CHECKEDDISABLED = new TMSchema$State("CHECKEDDISABLED", 4) ;
+    public static final TMSChema$State CHECKEDHOT = new TMSchema$State("CHECKEDHOT", 5) ;
+    public static final TMSChema$State CHECKEDNORMAL = new TMSchema$State("CHECKEDNORMAL", 6) ;
+    public static final TMSChema$State CHECKEDPRESSED = new TMSchema$State("CHECKEDPRESSED", 7) ;
+    public static final TMSChema$State CHECKMARKNORMAL = new TMSchema$State("CHECKMARKNORMAL", 8) ;
+    public static final TMSChema$State CHECKMARKDISABLED = new TMSchema$State("CHECKMARKDISABLED", 9) ;
+    public static final TMSChema$State BULLETNORMAL = new TMSchema$State("BULLETNORMAL", 10) ;
+    public static final TMSChema$State BULLETDISABLED = new TMSchema$State("BULLETDISABLED", 11) ;
+    public static final TMSChema$State CLOSED = new TMSchema$State("CLOSED", 12) ;
+    public static final TMSChema$State DEFAULTED = new TMSchema$State("DEFAULTED", 13) ;
+    public static final TMSChema$State DISABLED = new TMSchema$State("DISABLED", 14) ;
+    public static final TMSChema$State DISABLEDHOT = new TMSchema$State("DISABLEDHOT", 15) ;
+    public static final TMSChema$State DISABLEDPUSHED = new TMSchema$State("DISABLEDPUSHED", 16) ;
+    public static final TMSChema$State DOWNDISABLED = new TMSchema$State("DOWNDISABLED", 17) ;
+    public static final TMSChema$State DOWNHOT = new TMSchema$State("DOWNHOT", 18) ;
+    public static final TMSChema$State DOWNNORMAL = new TMSchema$State("DOWNNORMAL", 19) ;
+    public static final TMSChema$State DOWNPRESSED = new TMSchema$State("DOWNPRESSED", 20) ;
+    public static final TMSChema$State FOCUSED = new TMSchema$State("FOCUSED", 21) ;
+    public static final TMSChema$State HOT = new TMSchema$State("HOT", 22) ;
+    public static final TMSChema$State HOTCHECKED = new TMSchema$State("HOTCHECKED", 23) ;
+    public static final TMSChema$State INACTIVE = new TMSchema$State("INACTIVE", 24) ;
+    public static final TMSChema$State INACTIVENORMAL = new TMSchema$State("INACTIVENORMAL", 25) ;
+    public static final TMSChema$State INACTIVEHOT = new TMSchema$State("INACTIVEHOT", 26) ;
+    public static final TMSChema$State INACTIVEPUSHED = new TMSchema$State("INACTIVEPUSHED", 27) ;
+    public static final TMSChema$State INACTIVEDISABLED = new TMSchema$State("INACTIVEDISABLED", 28) ;
+    public static final TMSChema$State LEFTDISABLED = new TMSchema$State("LEFTDISABLED", 29) ;
+    public static final TMSChema$State LEFTHOT = new TMSchema$State("LEFTHOT", 30) ;
+    public static final TMSChema$State LEFTNORMAL = new TMSchema$State("LEFTNORMAL", 31) ;
+    public static final TMSChema$State LEFTPRESSED = new TMSchema$State("LEFTPRESSED", 32) ;
+    public static final TMSChema$State MIXEDDISABLED = new TMSchema$State("MIXEDDISABLED", 33) ;
+    public static final TMSChema$State MIXEDHOT = new TMSchema$State("MIXEDHOT", 34) ;
+    public static final TMSChema$State MIXEDNORMAL = new TMSchema$State("MIXEDNORMAL", 35) ;
+    public static final TMSChema$State MIXEDPRESSED = new TMSchema$State("MIXEDPRESSED", 36) ;
+    public static final TMSChema$State NORMAL = new TMSchema$State("NORMAL", 37) ;
+    public static final TMSChema$State PRESSED = new TMSchema$State("PRESSED", 38) ;
+    public static final TMSChema$State OPENED = new TMSchema$State("OPENED", 39) ;
+    public static final TMSChema$State PUSHED = new TMSchema$State("PUSHED", 40) ;
+    public static final TMSChema$State READONLY = new TMSchema$State("READONLY", 41) ;
+    public static final TMSChema$State RIGHTDISABLED = new TMSchema$State("RIGHTDISABLED", 42) ;
+    public static final TMSChema$State RIGHTHOT = new TMSchema$State("RIGHTHOT", 43) ;
+    public static final TMSChema$State RIGHTNORMAL = new TMSchema$State("RIGHTNORMAL", 44) ;
+    public static final TMSChema$State RIGHTPRESSED = new TMSchema$State("RIGHTPRESSED", 45) ;
+    public static final TMSChema$State SELECTED = new TMSchema$State("SELECTED", 46) ;
+    public static final TMSChema$State UNCHECKEDDISABLED = new TMSchema$State("UNCHECKEDDISABLED", 47) ;
+    public static final TMSChema$State UNCHECKEDHOT = new TMSchema$State("UNCHECKEDHOT", 48) ;
+    public static final TMSChema$State UNCHECKEDNORMAL = new TMSchema$State("UNCHECKEDNORMAL", 49) ;
+    public static final TMSChema$State UNCHECKEDPRESSED = new TMSchema$State("UNCHECKEDPRESSED", 50) ;
+    public static final TMSChema$State UPDISABLED = new TMSchema$State("UPDISABLED", 51) ;
+    public static final TMSChema$State UPHOT = new TMSchema$State("UPHOT", 52) ;
+    public static final TMSChema$State UPNORMAL = new TMSchema$State("UPNORMAL", 53) ;
+    public static final TMSChema$State UPPRESSED = new TMSchema$State("UPPRESSED", 54);
     /*synthetic*/ private static final TMSchema$State[] $VALUES = new TMSchema$State[]{TMSchema$State.ACTIVE, TMSchema$State.ASSIST, TMSchema$State.BITMAP, TMSchema$State.CHECKED, TMSchema$State.CHECKEDDISABLED, TMSchema$State.CHECKEDHOT, TMSchema$State.CHECKEDNORMAL, TMSchema$State.CHECKEDPRESSED, TMSchema$State.CHECKMARKNORMAL, TMSchema$State.CHECKMARKDISABLED, TMSchema$State.BULLETNORMAL, TMSchema$State.BULLETDISABLED, TMSchema$State.CLOSED, TMSchema$State.DEFAULTED, TMSchema$State.DISABLED, TMSchema$State.DISABLEDHOT, TMSchema$State.DISABLEDPUSHED, TMSchema$State.DOWNDISABLED, TMSchema$State.DOWNHOT, TMSchema$State.DOWNNORMAL, TMSchema$State.DOWNPRESSED, TMSchema$State.FOCUSED, TMSchema$State.HOT, TMSchema$State.HOTCHECKED, TMSchema$State.INACTIVE, TMSchema$State.INACTIVENORMAL, TMSchema$State.INACTIVEHOT, TMSchema$State.INACTIVEPUSHED, TMSchema$State.INACTIVEDISABLED, TMSchema$State.LEFTDISABLED, TMSchema$State.LEFTHOT, TMSchema$State.LEFTNORMAL, TMSchema$State.LEFTPRESSED, TMSchema$State.MIXEDDISABLED, TMSchema$State.MIXEDHOT, TMSchema$State.MIXEDNORMAL, TMSchema$State.MIXEDPRESSED, TMSchema$State.NORMAL, TMSchema$State.PRESSED, TMSchema$State.OPENED, TMSchema$State.PUSHED, TMSchema$State.READONLY, TMSchema$State.RIGHTDISABLED, TMSchema$State.RIGHTHOT, TMSchema$State.RIGHTNORMAL, TMSchema$State.RIGHTPRESSED, TMSchema$State.SELECTED, TMSchema$State.UNCHECKEDDISABLED, TMSchema$State.UNCHECKEDHOT, TMSchema$State.UNCHECKEDNORMAL, TMSchema$State.UNCHECKEDPRESSED, TMSchema$State.UPDISABLED, TMSchema$State.UPHOT, TMSchema$State.UPNORMAL, TMSchema$State.UPPRESSED};
     
     public static final TMSchema$State[] values() {

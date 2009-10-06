@@ -15,14 +15,14 @@ class AccessibleHTML$TableElementInfo$TableCellElementInfo extends AccessibleHTM
     private boolean isHeaderCell;
     
     AccessibleHTML$TableElementInfo$TableCellElementInfo(/*synthetic*/ final AccessibleHTML$TableElementInfo this$1, Element e, AccessibleHTML$ElementInfo parent) {
-        this.this$1 = this$1;
         super(this$1.this$0, e, parent);
+        this.this$1 = this$1;
         this.isHeaderCell = false;
     }
     
     AccessibleHTML$TableElementInfo$TableCellElementInfo(/*synthetic*/ final AccessibleHTML$TableElementInfo this$1, Element e, AccessibleHTML$ElementInfo parent, boolean isHeaderCell) {
-        this.this$1 = this$1;
         super(this$1.this$0, e, parent);
+        this.this$1 = this$1;
         this.isHeaderCell = isHeaderCell;
     }
     

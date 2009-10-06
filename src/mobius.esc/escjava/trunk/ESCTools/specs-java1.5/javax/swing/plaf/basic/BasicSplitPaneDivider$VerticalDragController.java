@@ -11,8 +11,8 @@ public class BasicSplitPaneDivider$VerticalDragController extends BasicSplitPane
     /*synthetic*/ final BasicSplitPaneDivider this$0;
     
     protected BasicSplitPaneDivider$VerticalDragController(/*synthetic*/ final BasicSplitPaneDivider this$0, MouseEvent e) {
-        this.this$0 = this$0;
         super(this$0, e);
+        this.this$0 = this$0;
         JSplitPane splitPane = this$0.splitPaneUI.getSplitPane();
         Component leftC = splitPane.getLeftComponent();
         Component rightC = splitPane.getRightComponent();

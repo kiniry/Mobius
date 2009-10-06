@@ -11,8 +11,8 @@ public class HTMLDocument$HTMLReader$PreAction extends HTMLDocument$HTMLReader$B
     /*synthetic*/ final HTMLDocument$HTMLReader this$1;
     
     public HTMLDocument$HTMLReader$PreAction(/*synthetic*/ final HTMLDocument$HTMLReader this$1) {
-        this.this$1 = this$1;
         super(this$1);
+        this.this$1 = this$1;
     }
     
     public void start(HTML$Tag t, MutableAttributeSet attr) {

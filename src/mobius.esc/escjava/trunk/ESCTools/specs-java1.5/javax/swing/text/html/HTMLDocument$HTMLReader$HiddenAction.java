@@ -11,8 +11,8 @@ public class HTMLDocument$HTMLReader$HiddenAction extends HTMLDocument$HTMLReade
     /*synthetic*/ final HTMLDocument$HTMLReader this$1;
     
     public HTMLDocument$HTMLReader$HiddenAction(/*synthetic*/ final HTMLDocument$HTMLReader this$1) {
-        this.this$1 = this$1;
         super(this$1);
+        this.this$1 = this$1;
     }
     
     public void start(HTML$Tag t, MutableAttributeSet a) {

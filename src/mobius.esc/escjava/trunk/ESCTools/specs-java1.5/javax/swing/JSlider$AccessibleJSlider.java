@@ -11,8 +11,8 @@ public class JSlider$AccessibleJSlider extends JComponent$AccessibleJComponent i
     /*synthetic*/ final JSlider this$0;
     
     protected JSlider$AccessibleJSlider(/*synthetic*/ final JSlider this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

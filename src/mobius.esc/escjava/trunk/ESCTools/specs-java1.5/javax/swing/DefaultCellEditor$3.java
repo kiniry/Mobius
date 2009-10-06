@@ -11,9 +11,9 @@ class DefaultCellEditor$3 extends DefaultCellEditor$EditorDelegate {
     /*synthetic*/ final JComboBox val$comboBox;
     
     DefaultCellEditor$3(/*synthetic*/ final DefaultCellEditor this$0, /*synthetic*/ final JComboBox val$comboBox) {
+        super(this$0);
         this.this$0 = this$0;
         this.val$comboBox = val$comboBox;
-        super(this$0);
     }
     
     public void setValue(Object value) {

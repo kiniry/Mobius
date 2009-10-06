@@ -23,7 +23,7 @@ abstract class CachedPainter {
         getCache(getClass()).setMaxCount(cacheCount);
     }
     
-    protected void paint(Component c, Graphics g, int x, int y, int w, int h, Object... args) {
+    protected void paint(Component c, Graphics g, int x, int y, int w, int h, Object[] args) {
         if (w <= 0 || h <= 0) {
             return;
         }

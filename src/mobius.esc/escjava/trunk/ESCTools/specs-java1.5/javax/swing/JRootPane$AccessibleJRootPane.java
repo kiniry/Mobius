@@ -10,8 +10,8 @@ public class JRootPane$AccessibleJRootPane extends JComponent$AccessibleJCompone
     /*synthetic*/ final JRootPane this$0;
     
     protected JRootPane$AccessibleJRootPane(/*synthetic*/ final JRootPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

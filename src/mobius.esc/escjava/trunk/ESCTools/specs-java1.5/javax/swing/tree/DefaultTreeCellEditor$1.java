@@ -12,9 +12,9 @@ import java.util.EventObject;
 class DefaultTreeCellEditor$1 extends DefaultCellEditor {
     /*synthetic*/ final DefaultTreeCellEditor this$0;
     
-    DefaultTreeCellEditor$1(/*synthetic*/ final DefaultTreeCellEditor this$0, .javax.swing.JTextField x0) {
-        this.this$0 = this$0;
+    DefaultTreeCellEditor$1(/*synthetic*/ final DefaultTreeCellEditor this$0, javax.swing.JTextField x0) {
         super(x0);
+        this.this$0 = this$0;
     }
     
     public boolean shouldSelectCell(EventObject event) {

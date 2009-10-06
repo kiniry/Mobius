@@ -12,8 +12,8 @@ public abstract class JComponent$AccessibleJComponent extends Container$Accessib
     /*synthetic*/ final JComponent this$0;
     
     protected JComponent$AccessibleJComponent(/*synthetic*/ final JComponent this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     protected ContainerListener accessibleContainerHandler = null;
     protected FocusListener accessibleFocusHandler = null;

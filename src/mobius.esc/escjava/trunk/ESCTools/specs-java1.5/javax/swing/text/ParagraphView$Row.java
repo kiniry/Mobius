@@ -9,8 +9,8 @@ class ParagraphView$Row extends BoxView {
     /*synthetic*/ final ParagraphView this$0;
     
     ParagraphView$Row(/*synthetic*/ final ParagraphView this$0, Element elem) {
-        this.this$0 = this$0;
         super(elem, View.X_AXIS);
+        this.this$0 = this$0;
     }
     
     protected void loadChildren(ViewFactory f) {
@@ -118,7 +118,6 @@ class ParagraphView$Row extends BoxView {
         return ret;
     }
     
-    @Override()
     protected SizeRequirements calculateMajorAxisRequirements(int axis, SizeRequirements r) {
         int[] oldJustficationData = justificationData;
         justificationData = null;
@@ -129,7 +128,6 @@ class ParagraphView$Row extends BoxView {
         return ret;
     }
     
-    @Override()
     protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets, int[] spans) {
         int[] oldJustficationData = justificationData;
         justificationData = null;
@@ -206,7 +204,6 @@ class ParagraphView$Row extends BoxView {
         }
     }
     
-    @Override()
     public float getMaximumSpan(int axis) {
         float ret;
         if (View.X_AXIS == axis && isJustifyEnabled()) {

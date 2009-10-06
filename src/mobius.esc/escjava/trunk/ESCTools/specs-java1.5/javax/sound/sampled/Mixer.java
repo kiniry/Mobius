@@ -27,6 +27,4 @@ public interface Mixer extends Line {
     public void unsynchronize(Line[] lines);
     
     public boolean isSynchronizationSupported(Line[] lines, boolean maintainSync);
-    {
-    }
 }

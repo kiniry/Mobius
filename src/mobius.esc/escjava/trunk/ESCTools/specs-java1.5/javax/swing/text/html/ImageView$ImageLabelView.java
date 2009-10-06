@@ -14,8 +14,8 @@ class ImageView$ImageLabelView extends InlineView {
     private Color fg;
     
     ImageView$ImageLabelView(/*synthetic*/ final ImageView this$0, Element e, String text) {
-        this.this$0 = this$0;
         super(e);
+        this.this$0 = this$0;
         reset(text);
     }
     

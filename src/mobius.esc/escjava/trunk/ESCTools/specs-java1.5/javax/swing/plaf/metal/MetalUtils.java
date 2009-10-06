@@ -125,7 +125,7 @@ class MetalUtils {
     }
     
     static boolean drawGradient(Component c, Graphics g, String key, int x, int y, int w, int h, boolean vertical) {
-        java.util.List gradient = (java.util.List)(.java.util.List)UIManager.get(key);
+        java.util.List gradient = (java.util.List)(java.util.List)UIManager.get(key);
         if (gradient == null || !(g instanceof Graphics2D)) {
             return false;
         }

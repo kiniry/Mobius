@@ -11,8 +11,8 @@ public class JButton$AccessibleJButton extends AbstractButton$AccessibleAbstract
     /*synthetic*/ final JButton this$0;
     
     protected JButton$AccessibleJButton(/*synthetic*/ final JButton this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

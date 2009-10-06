@@ -20,7 +20,6 @@ public class WindowsCheckBoxMenuItemUI extends BasicCheckBoxMenuItemUI {
         return new WindowsCheckBoxMenuItemUI();
     }
     
-    @Override()
     protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
         if (WindowsMenuItemUI.isVistaPainting()) {
             WindowsMenuItemUI.paintBackground(accessor, g, menuItem, bgColor);

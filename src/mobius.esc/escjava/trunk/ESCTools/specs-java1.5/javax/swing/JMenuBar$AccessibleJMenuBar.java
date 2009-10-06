@@ -9,8 +9,8 @@ public class JMenuBar$AccessibleJMenuBar extends JComponent$AccessibleJComponent
     /*synthetic*/ final JMenuBar this$0;
     
     protected JMenuBar$AccessibleJMenuBar(/*synthetic*/ final JMenuBar this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

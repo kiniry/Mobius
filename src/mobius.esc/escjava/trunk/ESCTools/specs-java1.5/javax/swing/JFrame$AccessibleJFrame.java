@@ -8,8 +8,8 @@ public class JFrame$AccessibleJFrame extends Frame$AccessibleAWTFrame {
     /*synthetic*/ final JFrame this$0;
     
     protected JFrame$AccessibleJFrame(/*synthetic*/ final JFrame this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

@@ -38,7 +38,7 @@ final class DefaultMutableTreeNode$PathBetweenNodesEnumeration implements Enumer
         }
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

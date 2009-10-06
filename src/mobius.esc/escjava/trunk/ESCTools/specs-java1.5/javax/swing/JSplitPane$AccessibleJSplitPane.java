@@ -8,8 +8,8 @@ public class JSplitPane$AccessibleJSplitPane extends JComponent$AccessibleJCompo
     /*synthetic*/ final JSplitPane this$0;
     
     protected JSplitPane$AccessibleJSplitPane(/*synthetic*/ final JSplitPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

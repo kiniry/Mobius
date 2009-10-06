@@ -26,7 +26,7 @@ public class DefaultCellEditor extends AbstractCellEditor implements TableCellEd
         editorComponent = checkBox;
         delegate = new DefaultCellEditor$2(this, checkBox);
         checkBox.addActionListener(delegate);
-        if (.com.sun.java.swing.SwingUtilities2.DRAG_FIX) {
+        if (com.sun.java.swing.SwingUtilities2.DRAG_FIX) {
             checkBox.setRequestFocusEnabled(false);
         }
     }

@@ -7,14 +7,14 @@ final class GapContent$MarkData extends WeakReference {
     /*synthetic*/ final GapContent this$0;
     
     GapContent$MarkData(/*synthetic*/ final GapContent this$0, int index) {
-        this.this$0 = this$0;
         super(null);
+        this.this$0 = this$0;
         this.index = index;
     }
     
     GapContent$MarkData(/*synthetic*/ final GapContent this$0, int index, GapContent$StickyPosition position, ReferenceQueue queue) {
-        this.this$0 = this$0;
         super(position, queue);
+        this.this$0 = this$0;
         this.index = index;
     }
     

@@ -9,8 +9,8 @@ public class JInternalFrame$AccessibleJInternalFrame extends JComponent$Accessib
     /*synthetic*/ final JInternalFrame this$0;
     
     protected JInternalFrame$AccessibleJInternalFrame(/*synthetic*/ final JInternalFrame this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

@@ -68,7 +68,6 @@ public class WindowsPopupMenuUI extends BasicPopupMenuUI {
         return leftToRight;
     }
     
-    @Override()
     public void paint(Graphics g, JComponent c) {
         if (WindowsMenuItemUI.isVistaPainting()) {
             XPStyle xp = XPStyle.getXP();

@@ -13,8 +13,8 @@ class AccessibleHTML$RootHTMLAccessibleContext extends AccessibleHTML$HTMLAccess
     /*synthetic*/ final AccessibleHTML this$0;
     
     public AccessibleHTML$RootHTMLAccessibleContext(/*synthetic*/ final AccessibleHTML this$0, AccessibleHTML$ElementInfo elementInfo) {
-        this.this$0 = this$0;
         super(this$0, elementInfo);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

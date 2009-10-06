@@ -9,9 +9,9 @@ import javax.accessibility.*;
 class JCheckBox$1 extends AbstractActionPropertyChangeListener {
     /*synthetic*/ final JCheckBox this$0;
     
-    JCheckBox$1(/*synthetic*/ final JCheckBox this$0, .javax.swing.JComponent x0, .javax.swing.Action x1) {
-        this.this$0 = this$0;
+    JCheckBox$1(/*synthetic*/ final JCheckBox this$0, javax.swing.JComponent x0, javax.swing.Action x1) {
         super(x0, x1);
+        this.this$0 = this$0;
     }
     
     public void propertyChange(PropertyChangeEvent e) {

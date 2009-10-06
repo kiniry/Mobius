@@ -9,8 +9,8 @@ class AbstractDocument$BidiElement extends AbstractDocument$LeafElement {
     /*synthetic*/ final AbstractDocument this$0;
     
     AbstractDocument$BidiElement(/*synthetic*/ final AbstractDocument this$0, Element parent, int start, int end, int level) {
-        this.this$0 = this$0;
         super(this$0, parent, new SimpleAttributeSet(), start, end);
+        this.this$0 = this$0;
         addAttribute(StyleConstants.BidiLevel, new Integer(level));
     }
     

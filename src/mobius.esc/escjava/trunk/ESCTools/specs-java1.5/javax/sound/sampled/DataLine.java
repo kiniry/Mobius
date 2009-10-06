@@ -27,6 +27,4 @@ public interface DataLine extends Line {
     public long getMicrosecondPosition();
     
     public float getLevel();
-    {
-    }
 }

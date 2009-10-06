@@ -17,7 +17,7 @@ class DefaultMutableTreeNode$1 implements Enumeration {
         throw new NoSuchElementException("No more elements");
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

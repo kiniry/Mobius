@@ -4,11 +4,11 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
-public enum TMSchema$TypeEnum extends Enum<TMSchema$TypeEnum> {
-    /*public static final*/ BT_IMAGEFILE /* = new TMSchema$TypeEnum("BT_IMAGEFILE", 0, TMSchema$Prop.BGTYPE, "imagefile", 0) */,
-    /*public static final*/ BT_BORDERFILL /* = new TMSchema$TypeEnum("BT_BORDERFILL", 1, TMSchema$Prop.BGTYPE, "borderfill", 1) */,
-    /*public static final*/ TST_SINGLE /* = new TMSchema$TypeEnum("TST_SINGLE", 2, TMSchema$Prop.TEXTSHADOWTYPE, "single", 1) */,
-    /*public static final*/ TST_CONTINUOUS /* = new TMSchema$TypeEnum("TST_CONTINUOUS", 3, TMSchema$Prop.TEXTSHADOWTYPE, "continuous", 2) */;
+public class TMSchema$TypeEnum extends Enum {
+    public static final TMSchema$TypeEnum BT_IMAGEFILE = new TMSchema$TypeEnum("BT_IMAGEFILE", 0, TMSchema$Prop.BGTYPE, "imagefile", 0) ;
+    public static final TMSchema$TypeEnum BT_BORDERFILL = new TMSchema$TypeEnum("BT_BORDERFILL", 1, TMSchema$Prop.BGTYPE, "borderfill", 1) ;
+    public static final TMSchema$TypeEnum TST_SINGLE = new TMSchema$TypeEnum("TST_SINGLE", 2, TMSchema$Prop.TEXTSHADOWTYPE, "single", 1) ;
+    public static final TMSchema$TypeEnum TST_CONTINUOUS = new TMSchema$TypeEnum("TST_CONTINUOUS", 3, TMSchema$Prop.TEXTSHADOWTYPE, "continuous", 2);
     /*synthetic*/ private static final TMSchema$TypeEnum[] $VALUES = new TMSchema$TypeEnum[]{TMSchema$TypeEnum.BT_IMAGEFILE, TMSchema$TypeEnum.BT_BORDERFILL, TMSchema$TypeEnum.TST_SINGLE, TMSchema$TypeEnum.TST_CONTINUOUS};
     
     public static final TMSchema$TypeEnum[] values() {

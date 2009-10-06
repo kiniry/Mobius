@@ -33,7 +33,7 @@ final class DefaultMutableTreeNode$PreorderEnumeration implements Enumeration {
         return node;
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

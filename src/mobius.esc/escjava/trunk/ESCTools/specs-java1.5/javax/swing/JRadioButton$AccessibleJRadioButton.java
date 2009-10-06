@@ -10,8 +10,8 @@ public class JRadioButton$AccessibleJRadioButton extends JToggleButton$Accessibl
     /*synthetic*/ final JRadioButton this$0;
     
     protected JRadioButton$AccessibleJRadioButton(/*synthetic*/ final JRadioButton this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

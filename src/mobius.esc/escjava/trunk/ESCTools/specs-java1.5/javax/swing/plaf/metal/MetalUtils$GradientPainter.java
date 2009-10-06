@@ -36,7 +36,7 @@ class MetalUtils$GradientPainter extends CachedPainter {
     
     protected void paintToImage(Component c, Graphics g, int w, int h, Object[] args) {
         Graphics2D g2 = (Graphics2D)(Graphics2D)g;
-        java.util.List gradient = (java.util.List)(.java.util.List)args[0];
+        java.util.List gradient = (java.util.List)(java.util.List)args[0];
         boolean isVertical = ((Boolean)(Boolean)args[1]).booleanValue();
         if (isVertical) {
             drawVerticalGradient(g2, ((Number)(Number)gradient.get(0)).floatValue(), ((Number)(Number)gradient.get(1)).floatValue(), (Color)(Color)gradient.get(2), (Color)(Color)gradient.get(3), (Color)(Color)gradient.get(4), w, h);

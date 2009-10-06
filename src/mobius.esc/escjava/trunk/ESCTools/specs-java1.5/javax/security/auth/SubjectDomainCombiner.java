@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class SubjectDomainCombiner implements java.security.DomainCombiner {
     
-    /*synthetic*/ static .sun.security.util.Debug access$100() {
+    /*synthetic*/ static sun.security.util.Debug access$100() {
         return debug;
     }
     private Subject subject;
@@ -234,7 +234,7 @@ public class SubjectDomainCombiner implements java.security.DomainCombiner {
     }
     
     private static boolean compatPolicy() {
-        javax.security.auth.Policy javaxPolicy = (javax.security.auth.Policy)(.javax.security.auth.Policy)AccessController.doPrivileged(new SubjectDomainCombiner$5());
+        javax.security.auth.Policy javaxPolicy = (javax.security.auth.Policy)(javax.security.auth.Policy)AccessController.doPrivileged(new SubjectDomainCombiner$5());
         if (!(javaxPolicy instanceof com.sun.security.auth.PolicyFile)) {
             if (debug != null) {
                 debug.println("Providing backwards compatibility for " + "javax.security.auth.policy implementation: " + javaxPolicy.toString());

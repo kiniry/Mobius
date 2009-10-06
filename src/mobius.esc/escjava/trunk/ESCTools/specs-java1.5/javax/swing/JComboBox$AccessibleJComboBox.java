@@ -35,11 +35,11 @@ public class JComboBox$AccessibleJComboBox extends JComponent$AccessibleJCompone
     private Accessible previousSelectedAccessible = null;
     
     public JComboBox$AccessibleJComboBox(/*synthetic*/ final JComboBox this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         Accessible a = this$0.getUI().getAccessibleChild(this$0, 0);
         if (a instanceof javax.swing.plaf.basic.ComboPopup) {
-            popupList = ((javax.swing.plaf.basic.ComboPopup)(.javax.swing.plaf.basic.ComboPopup)a).getList();
+            popupList = ((javax.swing.plaf.basic.ComboPopup)(javax.swing.plaf.basic.ComboPopup)a).getList();
             popupList.addListSelectionListener(new JComboBox$AccessibleJComboBox$AccessibleJComboBoxListSelectionListener(this, null));
         }
         this$0.addPopupMenuListener(new JComboBox$AccessibleJComboBox$AccessibleJComboBoxPopupMenuListener(this, null));
@@ -123,7 +123,7 @@ public class JComboBox$AccessibleJComboBox extends JComponent$AccessibleJCompone
     public Accessible getAccessibleSelection(int i) {
         Accessible a = this$0.getUI().getAccessibleChild(this$0, 0);
         if (a != null && a instanceof javax.swing.plaf.basic.ComboPopup) {
-            JList list = ((javax.swing.plaf.basic.ComboPopup)(.javax.swing.plaf.basic.ComboPopup)a).getList();
+            JList list = ((javax.swing.plaf.basic.ComboPopup)(javax.swing.plaf.basic.ComboPopup)a).getList();
             AccessibleContext ac = list.getAccessibleContext();
             if (ac != null) {
                 AccessibleSelection as = ac.getAccessibleSelection();

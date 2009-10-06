@@ -20,8 +20,8 @@ class BasicTreeUI$DragFixHandler extends BasicTreeUI$Handler implements MouseMot
     /*synthetic*/ final BasicTreeUI this$0;
     
     private BasicTreeUI$DragFixHandler(/*synthetic*/ final BasicTreeUI this$0) {
-        this.this$0 = this$0;
         super(this$0, null);
+        this.this$0 = this$0;
     }
     private boolean dragPressDidSelection;
     private boolean dragStarted;

@@ -11,8 +11,8 @@ class StyleSheet$LargeConversionSet extends SimpleAttributeSet {
     /*synthetic*/ final StyleSheet this$0;
     
     public StyleSheet$LargeConversionSet(/*synthetic*/ final StyleSheet this$0, AttributeSet source) {
-        this.this$0 = this$0;
         super(source);
+        this.this$0 = this$0;
     }
     
     public StyleSheet$LargeConversionSet(/*synthetic*/ final StyleSheet this$0) {

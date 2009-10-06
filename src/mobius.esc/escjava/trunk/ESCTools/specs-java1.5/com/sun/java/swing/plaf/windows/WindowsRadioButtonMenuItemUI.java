@@ -20,7 +20,6 @@ public class WindowsRadioButtonMenuItemUI extends BasicRadioButtonMenuItemUI {
         return new WindowsRadioButtonMenuItemUI();
     }
     
-    @Override()
     protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
         if (WindowsMenuItemUI.isVistaPainting()) {
             WindowsMenuItemUI.paintBackground(accessor, g, menuItem, bgColor);

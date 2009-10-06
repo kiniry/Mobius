@@ -15,8 +15,8 @@ class HTMLEditorKit$NavigateLinkAction$FocusHighlightPainter extends DefaultHigh
     /*synthetic*/ final HTMLEditorKit$NavigateLinkAction this$0;
     
     HTMLEditorKit$NavigateLinkAction$FocusHighlightPainter(/*synthetic*/ final HTMLEditorKit$NavigateLinkAction this$0, Color color) {
-        this.this$0 = this$0;
         super(color);
+        this.this$0 = this$0;
     }
     
     public Shape paintLayer(Graphics g, int offs0, int offs1, Shape bounds, JTextComponent c, View view) {

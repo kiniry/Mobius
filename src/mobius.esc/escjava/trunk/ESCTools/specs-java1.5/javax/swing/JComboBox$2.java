@@ -12,9 +12,9 @@ import javax.accessibility.*;
 class JComboBox$2 extends AbstractActionPropertyChangeListener {
     /*synthetic*/ final JComboBox this$0;
     
-    JComboBox$2(/*synthetic*/ final JComboBox this$0, .javax.swing.JComponent x0, .javax.swing.Action x1) {
-        this.this$0 = this$0;
+    JComboBox$2(/*synthetic*/ final JComboBox this$0, javax.swing.JComponent x0, javax.swing.Action x1) {
         super(x0, x1);
+        this.this$0 = this$0;
     }
     
     public void propertyChange(PropertyChangeEvent e) {

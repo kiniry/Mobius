@@ -8,8 +8,8 @@ public class Box$Filler$AccessibleBoxFiller extends Component$AccessibleAWTCompo
     /*synthetic*/ final Box$Filler this$0;
     
     protected Box$Filler$AccessibleBoxFiller(/*synthetic*/ final Box$Filler this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

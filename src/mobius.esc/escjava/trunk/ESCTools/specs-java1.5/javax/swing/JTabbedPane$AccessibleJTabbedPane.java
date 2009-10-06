@@ -12,8 +12,8 @@ public class JTabbedPane$AccessibleJTabbedPane extends JComponent$AccessibleJCom
     /*synthetic*/ final JTabbedPane this$0;
     
     public JTabbedPane$AccessibleJTabbedPane(/*synthetic*/ final JTabbedPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.model.addChangeListener(this);
     }
     

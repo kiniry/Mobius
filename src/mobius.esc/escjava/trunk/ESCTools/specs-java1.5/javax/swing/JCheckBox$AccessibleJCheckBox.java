@@ -10,8 +10,8 @@ public class JCheckBox$AccessibleJCheckBox extends JToggleButton$AccessibleJTogg
     /*synthetic*/ final JCheckBox this$0;
     
     protected JCheckBox$AccessibleJCheckBox(/*synthetic*/ final JCheckBox this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

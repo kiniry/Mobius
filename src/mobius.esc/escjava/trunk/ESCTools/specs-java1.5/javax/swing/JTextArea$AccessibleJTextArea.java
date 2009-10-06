@@ -10,8 +10,8 @@ public class JTextArea$AccessibleJTextArea extends JTextComponent$AccessibleJTex
     /*synthetic*/ final JTextArea this$0;
     
     protected JTextArea$AccessibleJTextArea(/*synthetic*/ final JTextArea this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

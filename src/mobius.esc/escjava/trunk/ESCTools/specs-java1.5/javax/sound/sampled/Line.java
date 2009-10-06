@@ -19,6 +19,4 @@ public interface Line {
     public void addLineListener(LineListener listener);
     
     public void removeLineListener(LineListener listener);
-    {
-    }
 }

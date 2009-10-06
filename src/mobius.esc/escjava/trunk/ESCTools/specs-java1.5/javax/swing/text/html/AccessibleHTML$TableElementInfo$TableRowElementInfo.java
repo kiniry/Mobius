@@ -23,8 +23,8 @@ class AccessibleHTML$TableElementInfo$TableRowElementInfo extends AccessibleHTML
     private int rowNumber;
     
     AccessibleHTML$TableElementInfo$TableRowElementInfo(/*synthetic*/ final AccessibleHTML$TableElementInfo this$1, Element e, AccessibleHTML$TableElementInfo parent, int rowNumber) {
-        this.this$1 = this$1;
         super(this$1.this$0, e, parent);
+        this.this$1 = this$1;
         this.parent = parent;
         this.rowNumber = rowNumber;
     }

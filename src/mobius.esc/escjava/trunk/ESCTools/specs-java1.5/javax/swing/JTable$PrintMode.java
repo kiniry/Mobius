@@ -12,9 +12,9 @@ import javax.swing.table.*;
 import javax.swing.border.*;
 import javax.print.attribute.*;
 
-public enum JTable$PrintMode extends Enum<JTable$PrintMode> {
-    /*public static final*/ NORMAL /* = new JTable$PrintMode("NORMAL", 0) */,
-    /*public static final*/ FIT_WIDTH /* = new JTable$PrintMode("FIT_WIDTH", 1) */;
+public class JTable$PrintMode extends Enum {
+    public static final JTable$PrintMode NORMAL  = new JTable$PrintMode("NORMAL", 0);
+    public static final JTable$PrintMode FIT_WIDTH  = new JTable$PrintMode("FIT_WIDTH", 1);
     /*synthetic*/ private static final JTable$PrintMode[] $VALUES = new JTable$PrintMode[]{JTable$PrintMode.NORMAL, JTable$PrintMode.FIT_WIDTH};
     
     public static final JTable$PrintMode[] values() {

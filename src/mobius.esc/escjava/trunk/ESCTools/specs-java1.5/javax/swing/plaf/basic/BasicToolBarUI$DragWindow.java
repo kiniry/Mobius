@@ -15,8 +15,8 @@ public class BasicToolBarUI$DragWindow extends Window {
     Point offset;
     
     BasicToolBarUI$DragWindow(/*synthetic*/ final BasicToolBarUI this$0, Window w) {
-        this.this$0 = this$0;
         super(w);
+        this.this$0 = this$0;
     }
     
     public void setOrientation(int o) {

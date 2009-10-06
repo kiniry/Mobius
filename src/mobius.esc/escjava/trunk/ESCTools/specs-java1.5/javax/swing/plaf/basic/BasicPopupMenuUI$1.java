@@ -20,7 +20,7 @@ class BasicPopupMenuUI$1 implements java.security.PrivilegedAction {
         return Boolean.valueOf(value);
     }
     
-    /*synthetic*/ public Object run() {
+    /*synthetic public Object run() {
         return this.run();
-    }
+    } */
 }

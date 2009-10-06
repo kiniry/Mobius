@@ -10,8 +10,8 @@ public class JToggleButton$AccessibleJToggleButton extends AbstractButton$Access
     /*synthetic*/ final JToggleButton this$0;
     
     public JToggleButton$AccessibleJToggleButton(/*synthetic*/ final JToggleButton this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addItemListener(this);
     }
     

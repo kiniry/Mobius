@@ -7,8 +7,8 @@ class WrappedPlainView$WrappedLine extends View {
     /*synthetic*/ final WrappedPlainView this$0;
     
     WrappedPlainView$WrappedLine(/*synthetic*/ final WrappedPlainView this$0, Element elem) {
-        this.this$0 = this$0;
         super(elem);
+        this.this$0 = this$0;
     }
     
     final int calculateLineCount() {

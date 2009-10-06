@@ -11,9 +11,9 @@ import javax.accessibility.*;
 class JTextField$1 extends AbstractActionPropertyChangeListener {
     /*synthetic*/ final JTextField this$0;
     
-    JTextField$1(/*synthetic*/ final JTextField this$0, .javax.swing.JComponent x0, .javax.swing.Action x1) {
-        this.this$0 = this$0;
+    JTextField$1(/*synthetic*/ final JTextField this$0, javax.swing.JComponent x0, javax.swing.Action x1) {
         super(x0, x1);
+        this.this$0 = this$0;
     }
     
     public void propertyChange(PropertyChangeEvent e) {

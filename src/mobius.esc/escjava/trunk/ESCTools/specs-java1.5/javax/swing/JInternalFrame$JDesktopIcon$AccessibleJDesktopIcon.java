@@ -9,8 +9,8 @@ public class JInternalFrame$JDesktopIcon$AccessibleJDesktopIcon extends JCompone
     /*synthetic*/ final JInternalFrame$JDesktopIcon this$0;
     
     protected JInternalFrame$JDesktopIcon$AccessibleJDesktopIcon(/*synthetic*/ final JInternalFrame$JDesktopIcon this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

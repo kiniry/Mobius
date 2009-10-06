@@ -10,8 +10,8 @@ public class TableView$RowView extends BoxView {
     /*synthetic*/ final TableView this$0;
     
     public TableView$RowView(/*synthetic*/ final TableView this$0, Element elem) {
-        this.this$0 = this$0;
         super(elem, View.X_AXIS);
+        this.this$0 = this$0;
         fillColumns = new BitSet();
         this.setPropertiesFromAttributes();
     }

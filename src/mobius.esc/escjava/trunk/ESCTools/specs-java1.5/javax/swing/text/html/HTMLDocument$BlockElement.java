@@ -11,8 +11,8 @@ public class HTMLDocument$BlockElement extends AbstractDocument$BranchElement {
     /*synthetic*/ final HTMLDocument this$0;
     
     public HTMLDocument$BlockElement(/*synthetic*/ final HTMLDocument this$0, Element parent, AttributeSet a) {
-        this.this$0 = this$0;
         super(this$0, parent, a);
+        this.this$0 = this$0;
     }
     
     public String getName() {

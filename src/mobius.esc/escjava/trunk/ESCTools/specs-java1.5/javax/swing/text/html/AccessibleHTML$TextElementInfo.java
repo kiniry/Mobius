@@ -13,8 +13,8 @@ class AccessibleHTML$TextElementInfo extends AccessibleHTML$ElementInfo implemen
     /*synthetic*/ final AccessibleHTML this$0;
     
     AccessibleHTML$TextElementInfo(/*synthetic*/ final AccessibleHTML this$0, Element element, AccessibleHTML$ElementInfo parent) {
-        this.this$0 = this$0;
         super(this$0, element, parent);
+        this.this$0 = this$0;
     }
     private AccessibleContext accessibleContext;
     

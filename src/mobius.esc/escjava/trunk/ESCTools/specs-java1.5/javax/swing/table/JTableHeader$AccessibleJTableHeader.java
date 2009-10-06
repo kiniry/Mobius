@@ -12,8 +12,8 @@ public class JTableHeader$AccessibleJTableHeader extends JComponent$AccessibleJC
     /*synthetic*/ final JTableHeader this$0;
     
     protected JTableHeader$AccessibleJTableHeader(/*synthetic*/ final JTableHeader this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

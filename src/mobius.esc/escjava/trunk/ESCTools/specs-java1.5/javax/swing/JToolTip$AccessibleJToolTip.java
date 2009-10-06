@@ -7,8 +7,8 @@ public class JToolTip$AccessibleJToolTip extends JComponent$AccessibleJComponent
     /*synthetic*/ final JToolTip this$0;
     
     protected JToolTip$AccessibleJToolTip(/*synthetic*/ final JToolTip this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleDescription() {

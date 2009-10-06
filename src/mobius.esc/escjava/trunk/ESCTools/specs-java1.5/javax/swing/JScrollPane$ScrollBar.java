@@ -13,8 +13,8 @@ public class JScrollPane$ScrollBar extends JScrollBar implements UIResource {
     private boolean blockIncrementSet;
     
     public JScrollPane$ScrollBar(/*synthetic*/ final JScrollPane this$0, int orientation) {
-        this.this$0 = this$0;
         super(orientation);
+        this.this$0 = this$0;
     }
     
     public void setUnitIncrement(int unitIncrement) {

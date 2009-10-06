@@ -12,8 +12,8 @@ public class JTextField$AccessibleJTextField extends JTextComponent$AccessibleJT
     /*synthetic*/ final JTextField this$0;
     
     protected JTextField$AccessibleJTextField(/*synthetic*/ final JTextField this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

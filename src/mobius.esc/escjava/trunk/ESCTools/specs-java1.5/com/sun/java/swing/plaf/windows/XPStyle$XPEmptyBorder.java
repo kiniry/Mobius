@@ -15,8 +15,8 @@ class XPStyle$XPEmptyBorder extends EmptyBorder implements UIResource {
     /*synthetic*/ final XPStyle this$0;
     
     XPStyle$XPEmptyBorder(/*synthetic*/ final XPStyle this$0, Insets m) {
-        this.this$0 = this$0;
         super(m.top + 2, m.left + 2, m.bottom + 2, m.right + 2);
+        this.this$0 = this$0;
     }
     
     public Insets getBorderInsets(Component c) {

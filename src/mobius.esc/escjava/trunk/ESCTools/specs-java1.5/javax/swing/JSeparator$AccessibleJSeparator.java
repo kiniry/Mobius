@@ -7,8 +7,8 @@ public class JSeparator$AccessibleJSeparator extends JComponent$AccessibleJCompo
     /*synthetic*/ final JSeparator this$0;
     
     protected JSeparator$AccessibleJSeparator(/*synthetic*/ final JSeparator this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

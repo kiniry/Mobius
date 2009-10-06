@@ -9,8 +9,8 @@ class FixedHeightLayoutCache$FHTreeStateNode extends DefaultMutableTreeNode {
     protected TreePath path;
     
     public FixedHeightLayoutCache$FHTreeStateNode(/*synthetic*/ final FixedHeightLayoutCache this$0, Object userObject, int childIndex, int row) {
-        this.this$0 = this$0;
         super(userObject);
+        this.this$0 = this$0;
         this.childIndex = childIndex;
         this.row = row;
     }

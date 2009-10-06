@@ -77,7 +77,7 @@ class FixedHeightLayoutCache$VisibleFHTreeStateNodeEnumeration implements Enumer
         return true;
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

@@ -12,13 +12,13 @@ class BasicToolBarUI$1ToolBarDialog extends JDialog {
     /*synthetic*/ final BasicToolBarUI this$0;
     
     public BasicToolBarUI$1ToolBarDialog(/*synthetic*/ final BasicToolBarUI this$0, Frame owner, String title, boolean modal) {
-        this.this$0 = this$0;
         super(owner, title, modal);
+        this.this$0 = this$0;
     }
     
     public BasicToolBarUI$1ToolBarDialog(/*synthetic*/ final BasicToolBarUI this$0, Dialog owner, String title, boolean modal) {
-        this.this$0 = this$0;
         super(owner, title, modal);
+        this.this$0 = this$0;
     }
     
     protected JRootPane createRootPane() {

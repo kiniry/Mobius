@@ -9,8 +9,8 @@ public class AbstractDocument$BranchElement extends AbstractDocument$AbstractEle
     /*synthetic*/ final AbstractDocument this$0;
     
     public AbstractDocument$BranchElement(/*synthetic*/ final AbstractDocument this$0, Element parent, AttributeSet a) {
-        this.this$0 = this$0;
         super(this$0, parent, a);
+        this.this$0 = this$0;
         children = new AbstractDocument$AbstractElement[1];
         nchildren = 0;
         lastIndex = -1;

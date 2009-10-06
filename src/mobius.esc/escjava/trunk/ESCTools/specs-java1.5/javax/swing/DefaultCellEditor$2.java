@@ -11,9 +11,9 @@ class DefaultCellEditor$2 extends DefaultCellEditor$EditorDelegate {
     /*synthetic*/ final JCheckBox val$checkBox;
     
     DefaultCellEditor$2(/*synthetic*/ final DefaultCellEditor this$0, /*synthetic*/ final JCheckBox val$checkBox) {
+        super(this$0);
         this.this$0 = this$0;
         this.val$checkBox = val$checkBox;
-        super(this$0);
     }
     
     public void setValue(Object value) {

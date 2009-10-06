@@ -16,8 +16,8 @@ public class JTextComponent$AccessibleJTextComponent extends JComponent$Accessib
     Point oldLocationOnScreen;
     
     public JTextComponent$AccessibleJTextComponent(/*synthetic*/ final JTextComponent this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         Document doc = this$0.getDocument();
         if (doc != null) {
             doc.addDocumentListener(this);

@@ -14,8 +14,8 @@ public class JLabel$AccessibleJLabel extends JComponent$AccessibleJComponent imp
     /*synthetic*/ final JLabel this$0;
     
     protected JLabel$AccessibleJLabel(/*synthetic*/ final JLabel this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

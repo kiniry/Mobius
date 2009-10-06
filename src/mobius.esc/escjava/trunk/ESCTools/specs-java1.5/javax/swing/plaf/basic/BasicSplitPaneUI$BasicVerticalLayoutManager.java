@@ -11,7 +11,7 @@ public class BasicSplitPaneUI$BasicVerticalLayoutManager extends BasicSplitPaneU
     /*synthetic*/ final BasicSplitPaneUI this$0;
     
     public BasicSplitPaneUI$BasicVerticalLayoutManager(/*synthetic*/ final BasicSplitPaneUI this$0) {
-        this.this$0 = this$0;
         super(this$0, 1);
+        this.this$0 = this$0;
     }
 }

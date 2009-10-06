@@ -8,8 +8,8 @@ public class JDialog$AccessibleJDialog extends Dialog$AccessibleAWTDialog {
     /*synthetic*/ final JDialog this$0;
     
     protected JDialog$AccessibleJDialog(/*synthetic*/ final JDialog this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

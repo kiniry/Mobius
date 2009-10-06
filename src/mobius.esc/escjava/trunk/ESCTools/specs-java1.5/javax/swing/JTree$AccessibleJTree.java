@@ -16,8 +16,8 @@ public class JTree$AccessibleJTree extends JComponent$AccessibleJComponent imple
     Accessible leadSelectionAccessible;
     
     public JTree$AccessibleJTree(/*synthetic*/ final JTree this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         TreeModel model = this$0.getModel();
         if (model != null) {
             model.addTreeModelListener(this);

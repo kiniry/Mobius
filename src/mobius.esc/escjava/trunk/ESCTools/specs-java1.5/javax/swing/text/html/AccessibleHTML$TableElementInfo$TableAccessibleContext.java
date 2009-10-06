@@ -14,8 +14,8 @@ public class AccessibleHTML$TableElementInfo$TableAccessibleContext extends Acce
     private AccessibleHTML$TableElementInfo$TableAccessibleContext$AccessibleHeadersTable rowHeadersTable;
     
     public AccessibleHTML$TableElementInfo$TableAccessibleContext(/*synthetic*/ final AccessibleHTML$TableElementInfo this$1, AccessibleHTML$ElementInfo elementInfo) {
-        this.this$1 = this$1;
         super(this$1.this$0, elementInfo);
+        this.this$1 = this$1;
     }
     
     public String getAccessibleName() {

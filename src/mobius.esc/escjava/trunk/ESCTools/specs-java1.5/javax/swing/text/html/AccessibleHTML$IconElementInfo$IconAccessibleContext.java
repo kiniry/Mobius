@@ -13,8 +13,8 @@ public class AccessibleHTML$IconElementInfo$IconAccessibleContext extends Access
     /*synthetic*/ final AccessibleHTML$IconElementInfo this$1;
     
     public AccessibleHTML$IconElementInfo$IconAccessibleContext(/*synthetic*/ final AccessibleHTML$IconElementInfo this$1, AccessibleHTML$ElementInfo elementInfo) {
-        this.this$1 = this$1;
         super(this$1.this$0, elementInfo);
+        this.this$1 = this$1;
     }
     
     public String getAccessibleName() {

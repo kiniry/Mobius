@@ -11,8 +11,8 @@ class JSlider$1SmartHashtable$LabelUIResource extends JLabel implements UIResour
     /*synthetic*/ final JSlider$1SmartHashtable this$1;
     
     public JSlider$1SmartHashtable$LabelUIResource(/*synthetic*/ final JSlider$1SmartHashtable this$1, String text, int alignment) {
-        this.this$1 = this$1;
         super(text, alignment);
+        this.this$1 = this$1;
         setName("Slider.label");
     }
 }

@@ -15,8 +15,8 @@ class BasicLookAndFeel$AudioAction extends AbstractAction implements LineListene
     private byte[] audioBuffer;
     
     public BasicLookAndFeel$AudioAction(/*synthetic*/ final BasicLookAndFeel this$0, String name, String resource) {
-        this.this$0 = this$0;
         super(name);
+        this.this$0 = this$0;
         audioResource = resource;
     }
     

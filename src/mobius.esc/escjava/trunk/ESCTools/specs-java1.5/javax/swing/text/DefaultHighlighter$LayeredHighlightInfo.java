@@ -8,8 +8,8 @@ class DefaultHighlighter$LayeredHighlightInfo extends DefaultHighlighter$Highlig
     /*synthetic*/ final DefaultHighlighter this$0;
     
     DefaultHighlighter$LayeredHighlightInfo(/*synthetic*/ final DefaultHighlighter this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     void union(Shape bounds) {

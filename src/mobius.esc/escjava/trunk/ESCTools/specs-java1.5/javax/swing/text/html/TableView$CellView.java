@@ -8,8 +8,8 @@ class TableView$CellView extends BlockView {
     /*synthetic*/ final TableView this$0;
     
     public TableView$CellView(/*synthetic*/ final TableView this$0, Element elem) {
-        this.this$0 = this$0;
         super(elem, Y_AXIS);
+        this.this$0 = this$0;
     }
     
     protected void layoutMajorAxis(int targetSpan, int axis, int[] offsets, int[] spans) {
@@ -45,7 +45,6 @@ class TableView$CellView extends BlockView {
         return req;
     }
     
-    @Override()
     protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
         SizeRequirements rv = super.calculateMinorAxisRequirements(axis, r);
         int n = getViewCount();

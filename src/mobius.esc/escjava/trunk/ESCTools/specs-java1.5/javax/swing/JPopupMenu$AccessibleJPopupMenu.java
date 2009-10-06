@@ -11,8 +11,8 @@ public class JPopupMenu$AccessibleJPopupMenu extends JComponent$AccessibleJCompo
     /*synthetic*/ final JPopupMenu this$0;
     
     protected JPopupMenu$AccessibleJPopupMenu(/*synthetic*/ final JPopupMenu this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addPropertyChangeListener(this);
     }
     

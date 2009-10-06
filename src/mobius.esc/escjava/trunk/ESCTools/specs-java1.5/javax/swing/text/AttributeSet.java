@@ -3,14 +3,6 @@ package javax.swing.text;
 import java.util.Enumeration;
 
 public interface AttributeSet {
-    {
-    }
-    {
-    }
-    {
-    }
-    {
-    }
     
     public int getAttributeCount();
     

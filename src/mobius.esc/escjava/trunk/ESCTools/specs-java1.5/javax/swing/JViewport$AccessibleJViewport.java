@@ -10,8 +10,8 @@ public class JViewport$AccessibleJViewport extends JComponent$AccessibleJCompone
     /*synthetic*/ final JViewport this$0;
     
     protected JViewport$AccessibleJViewport(/*synthetic*/ final JViewport this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

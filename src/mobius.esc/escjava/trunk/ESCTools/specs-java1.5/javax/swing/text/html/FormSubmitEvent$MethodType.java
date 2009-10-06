@@ -2,9 +2,9 @@ package javax.swing.text.html;
 
 import javax.swing.text.*;
 
-public enum FormSubmitEvent$MethodType extends Enum<FormSubmitEvent$MethodType> {
-    /*public static final*/ GET /* = new FormSubmitEvent$MethodType("GET", 0) */,
-    /*public static final*/ POST /* = new FormSubmitEvent$MethodType("POST", 1) */;
+public class FormSubmitEvent$MethodType extends Enum {
+    public static final FormSubmitEvent$MethodType GET  = new FormSubmitEvent$MethodType("GET", 0);
+    public static final FormSubmitEvent$MethodType POST  = new FormSubmitEvent$MethodType("POST", 1);
     /*synthetic*/ private static final FormSubmitEvent$MethodType[] $VALUES = new FormSubmitEvent$MethodType[]{FormSubmitEvent$MethodType.GET, FormSubmitEvent$MethodType.POST};
     
     public static final FormSubmitEvent$MethodType[] values() {

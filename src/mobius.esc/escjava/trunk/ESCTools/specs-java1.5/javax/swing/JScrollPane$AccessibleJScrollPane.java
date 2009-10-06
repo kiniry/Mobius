@@ -23,8 +23,8 @@ public class JScrollPane$AccessibleJScrollPane extends JComponent$AccessibleJCom
     }
     
     public JScrollPane$AccessibleJScrollPane(/*synthetic*/ final JScrollPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         resetViewPort();
         JScrollBar scrollBar = this$0.getHorizontalScrollBar();
         if (scrollBar != null) {

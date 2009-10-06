@@ -14,8 +14,8 @@ class VariableHeightLayoutCache$TreeStateNode extends DefaultMutableTreeNode {
     protected TreePath path;
     
     public VariableHeightLayoutCache$TreeStateNode(/*synthetic*/ final VariableHeightLayoutCache this$0, Object value) {
-        this.this$0 = this$0;
         super(value);
+        this.this$0 = this$0;
     }
     
     public void setParent(MutableTreeNode parent) {

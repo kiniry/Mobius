@@ -12,8 +12,8 @@ public class JList$AccessibleJList extends JComponent$AccessibleJComponent imple
     int leadSelectionIndex;
     
     public JList$AccessibleJList(/*synthetic*/ final JList this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addPropertyChangeListener(this);
         this$0.getSelectionModel().addListSelectionListener(this);
         this$0.getModel().addListDataListener(this);

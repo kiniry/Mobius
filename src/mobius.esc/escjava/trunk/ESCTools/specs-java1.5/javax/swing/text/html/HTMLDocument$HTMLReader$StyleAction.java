@@ -11,8 +11,8 @@ class HTMLDocument$HTMLReader$StyleAction extends HTMLDocument$HTMLReader$TagAct
     /*synthetic*/ final HTMLDocument$HTMLReader this$1;
     
     HTMLDocument$HTMLReader$StyleAction(/*synthetic*/ final HTMLDocument$HTMLReader this$1) {
-        this.this$1 = this$1;
         super(this$1);
+        this.this$1 = this$1;
     }
     
     public void start(HTML$Tag t, MutableAttributeSet a) {

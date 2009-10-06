@@ -402,16 +402,16 @@ public class JEditorPane extends JTextComponent {
     
     private static Hashtable getKitTypeRegistry() {
         loadDefaultKitsIfNecessary();
-        return (Hashtable)(.java.util.Hashtable)SwingUtilities.appContextGet(kitTypeRegistryKey);
+        return (Hashtable)(java.util.Hashtable)SwingUtilities.appContextGet(kitTypeRegistryKey);
     }
     
     private static Hashtable getKitLoaderRegistry() {
         loadDefaultKitsIfNecessary();
-        return (Hashtable)(.java.util.Hashtable)SwingUtilities.appContextGet(kitLoaderRegistryKey);
+        return (Hashtable)(java.util.Hashtable)SwingUtilities.appContextGet(kitLoaderRegistryKey);
     }
     
     private static Hashtable getKitRegisty() {
-        Hashtable ht = (Hashtable)(.java.util.Hashtable)SwingUtilities.appContextGet(kitRegistryKey);
+        Hashtable ht = (Hashtable)(java.util.Hashtable)SwingUtilities.appContextGet(kitRegistryKey);
         if (ht == null) {
             ht = new Hashtable(3);
             SwingUtilities.appContextPut(kitRegistryKey, ht);

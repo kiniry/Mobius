@@ -18,8 +18,8 @@ class BasicMenuUI$Handler extends BasicMenuItemUI$Handler implements MenuKeyList
     /*synthetic*/ final BasicMenuUI this$0;
     
     private BasicMenuUI$Handler(/*synthetic*/ final BasicMenuUI this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public void propertyChange(PropertyChangeEvent e) {

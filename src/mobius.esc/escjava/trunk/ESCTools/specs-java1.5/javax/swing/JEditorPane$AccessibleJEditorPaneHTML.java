@@ -21,8 +21,8 @@ public class JEditorPane$AccessibleJEditorPaneHTML extends JEditorPane$Accessibl
     }
     
     protected JEditorPane$AccessibleJEditorPaneHTML(/*synthetic*/ final JEditorPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+
         HTMLEditorKit kit = (HTMLEditorKit)(HTMLEditorKit)this$0.getEditorKit();
         accessibleContext = kit.getAccessibleContext();
     }

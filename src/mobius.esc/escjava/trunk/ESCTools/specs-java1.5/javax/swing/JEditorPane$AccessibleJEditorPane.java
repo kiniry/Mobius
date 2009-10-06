@@ -16,8 +16,8 @@ public class JEditorPane$AccessibleJEditorPane extends JTextComponent$Accessible
     /*synthetic*/ final JEditorPane this$0;
     
     protected JEditorPane$AccessibleJEditorPane(/*synthetic*/ final JEditorPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleDescription() {

@@ -9,8 +9,8 @@ public class JToolBar$AccessibleJToolBar extends JComponent$AccessibleJComponent
     /*synthetic*/ final JToolBar this$0;
     
     protected JToolBar$AccessibleJToolBar(/*synthetic*/ final JToolBar this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

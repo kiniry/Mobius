@@ -7,8 +7,8 @@ public class JDesktopPane$AccessibleJDesktopPane extends JComponent$AccessibleJC
     /*synthetic*/ final JDesktopPane this$0;
     
     protected JDesktopPane$AccessibleJDesktopPane(/*synthetic*/ final JDesktopPane this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleRole getAccessibleRole() {

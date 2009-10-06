@@ -20,8 +20,8 @@ public abstract class AbstractButton$AccessibleAbstractButton extends JComponent
     /*synthetic*/ final AbstractButton this$0;
     
     protected AbstractButton$AccessibleAbstractButton(/*synthetic*/ final AbstractButton this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public String getAccessibleName() {

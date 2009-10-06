@@ -14,8 +14,4 @@ public interface DocumentEvent {
     public DocumentEvent$EventType getType();
     
     public DocumentEvent$ElementChange getChange(Element elem);
-    {
-    }
-    {
-    }
 }

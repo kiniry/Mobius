@@ -11,9 +11,9 @@ import javax.swing.plaf.*;
 class BasicToolBarUI$1 extends JFrame {
     /*synthetic*/ final BasicToolBarUI this$0;
     
-    BasicToolBarUI$1(/*synthetic*/ final BasicToolBarUI this$0, .java.lang.String x0, .java.awt.GraphicsConfiguration x1) {
-        this.this$0 = this$0;
+    BasicToolBarUI$1(/*synthetic*/ final BasicToolBarUI this$0, java.lang.String x0, java.awt.GraphicsConfiguration x1) {
         super(x0, x1);
+        this.this$0 = this$0;
     }
     
     protected JRootPane createRootPane() {

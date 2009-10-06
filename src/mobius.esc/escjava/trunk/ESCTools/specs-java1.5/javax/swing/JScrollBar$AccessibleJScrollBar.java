@@ -8,8 +8,8 @@ public class JScrollBar$AccessibleJScrollBar extends JComponent$AccessibleJCompo
     /*synthetic*/ final JScrollBar this$0;
     
     protected JScrollBar$AccessibleJScrollBar(/*synthetic*/ final JScrollBar this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public AccessibleStateSet getAccessibleStateSet() {

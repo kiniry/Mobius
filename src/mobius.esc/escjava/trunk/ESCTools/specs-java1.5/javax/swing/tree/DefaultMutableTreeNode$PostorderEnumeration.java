@@ -35,7 +35,7 @@ final class DefaultMutableTreeNode$PostorderEnumeration implements Enumeration {
         return retval;
     }
     
-    /*synthetic*/ public Object nextElement() {
+    /*synthetic public Object nextElement() {
         return this.nextElement();
-    }
+    } */
 }

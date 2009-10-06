@@ -19,8 +19,8 @@ class AccessibleHTML$TableElementInfo extends AccessibleHTML$ElementInfo impleme
     private AccessibleHTML$TableElementInfo$TableCellElementInfo[][] grid;
     
     AccessibleHTML$TableElementInfo(/*synthetic*/ final AccessibleHTML this$0, Element e, AccessibleHTML$ElementInfo parent) {
-        this.this$0 = this$0;
         super(this$0, e, parent);
+        this.this$0 = this$0;
     }
     
     public AccessibleHTML$ElementInfo getCaptionInfo() {

@@ -16,8 +16,8 @@ public class JMenuItem$AccessibleJMenuItem extends AbstractButton$AccessibleAbst
     private boolean isSelected = false;
     
     JMenuItem$AccessibleJMenuItem(/*synthetic*/ final JMenuItem this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addChangeListener(this);
     }
     

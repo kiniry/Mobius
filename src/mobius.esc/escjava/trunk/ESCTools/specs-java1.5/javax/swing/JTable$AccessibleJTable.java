@@ -18,8 +18,8 @@ public class JTable$AccessibleJTable extends JComponent$AccessibleJComponent imp
     int lastSelectedCol;
     
     protected JTable$AccessibleJTable(/*synthetic*/ final JTable this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
         this$0.addPropertyChangeListener(this);
         this$0.getSelectionModel().addListSelectionListener(this);
         TableColumnModel tcm = this$0.getColumnModel();

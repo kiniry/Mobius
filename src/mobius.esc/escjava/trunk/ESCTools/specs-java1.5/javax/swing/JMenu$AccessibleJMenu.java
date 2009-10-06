@@ -13,8 +13,8 @@ public class JMenu$AccessibleJMenu extends JMenuItem$AccessibleJMenuItem impleme
     /*synthetic*/ final JMenu this$0;
     
     protected JMenu$AccessibleJMenu(/*synthetic*/ final JMenu this$0) {
-        this.this$0 = this$0;
         super(this$0);
+        this.this$0 = this$0;
     }
     
     public int getAccessibleChildrenCount() {

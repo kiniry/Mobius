@@ -35,8 +35,8 @@ class AccessibleHTML$IconElementInfo extends AccessibleHTML$ElementInfo implemen
     private int height = -1;
     
     AccessibleHTML$IconElementInfo(/*synthetic*/ final AccessibleHTML this$0, Element element, AccessibleHTML$ElementInfo parent) {
-        this.this$0 = this$0;
         super(this$0, element, parent);
+        this.this$0 = this$0;
     }
     
     protected void invalidate(boolean first) {
