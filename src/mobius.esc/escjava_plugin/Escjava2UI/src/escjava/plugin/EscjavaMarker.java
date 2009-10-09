@@ -163,7 +163,8 @@ public class EscjavaMarker implements IEscjavaListener {
 		String a;
 		if (o == null) {
 			a = s;
-		} else {
+		} 
+		else {
 			a = (String)o + "; " + s;
 		}
 		mostRecentMarker.setAttribute(EXTRA_INFO,a);
