@@ -95,7 +95,7 @@ public interface CharSequence {
     public String toString();
 
     /** According to the javadocs, the equals method should not be called. */
-    public boolean equals(Object obj);
+    public /*@ pure @*/ boolean equals(Object obj);
 
     /** According to the javadocs, the hashCode method should not be called. */
     public int hashCode();

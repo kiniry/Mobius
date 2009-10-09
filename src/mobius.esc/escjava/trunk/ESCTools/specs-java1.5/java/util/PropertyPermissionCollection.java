@@ -100,7 +100,7 @@ final class PropertyPermissionCollection extends PermissionCollection implements
         synchronized (this) {
             permissions.putAll(perms);
         }
-        ObjectOutputStream$PutField pfields = out.putFields();
+        ObjectOutputStream.PutField pfields = out.putFields();
         pfields.put("all_allowed", all_allowed);
         pfields.put("permissions", permissions);
         out.writeFields();
