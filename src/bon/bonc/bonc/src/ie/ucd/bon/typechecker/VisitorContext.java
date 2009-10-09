@@ -16,6 +16,8 @@ public class VisitorContext {
   public final Stack<Cluster> clusterStack = new Stack<Cluster>();
   
   public List<ClassName> selectiveExport = null;
+  public List<String> selectiveExportStrings = null;
+  public boolean selectiveExportPrivate = false;
  
   public Type callQualifier = null;
 }

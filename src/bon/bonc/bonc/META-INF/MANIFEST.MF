@@ -10,6 +10,12 @@ Bundle-ClassPath: bonc.jar,
  lib/prefuse.jar
 Bundle-Vendor: Fintan Fairmichael
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
-Export-Package: ie.ucd.bon,
+Export-Package: com.google.common.collect,
+ ie.ucd.bon,
+ ie.ucd.bon.ast,
  ie.ucd.bon.errorreporting,
- ie.ucd.bon.source
+ ie.ucd.bon.graph,
+ ie.ucd.bon.parser.tracker,
+ ie.ucd.bon.printer,
+ ie.ucd.bon.source,
+ ie.ucd.bon.typechecker

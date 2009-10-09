@@ -1,16 +1,16 @@
 package input;
 
+import ie.ucd.bon.API;
+import ie.ucd.bon.parser.tracker.ParsingTracker;
+
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
 import main.Beetlz;
-
 import structure.ClassCollection;
 import utils.BConst;
-import ie.ucd.bon.Main;
-import ie.ucd.bon.typechecker.TypingInformation;
 
 /**
  * Collects all BON input files and the parsed class structures,
@@ -72,22 +72,12 @@ public class BonFile {
       return true;
     }
     final List < String > args = new Vector < String > ();
-    args.add("-f"); //$NON-NLS-1$
-    args.add("-tc=false"); //$NON-NLS-1$
+    
+    ParsingTracker tracker = API.parse(my_files, false, false);
 
-
-    for (int i = 0; i < my_files.size(); i++) {
-      args.add((my_files.get(i)).getAbsolutePath());
-    }
-
-    final String[] ar = args.toArray(new String[0]);
-    final boolean success = Main.main2(ar, false);
-
-    if (success) {
-      LOGGER.config(Beetlz.getResourceBundle().
-                    getString("BonFile.successfullyCompiled")); //$NON-NLS-1$
-      final TypingInformation typingInfo = ie.ucd.bon.Main.getTypingInfo();
-      my_bonWalker.parseTypingInformation(typingInfo);
+    if (tracker.continueFromParse(0)) {
+      LOGGER.config(Beetlz.getResourceBundle().getString("BonFile.successfullyCompiled")); //$NON-NLS-1$
+      my_bonWalker.parseTypingInformation(tracker);
       my_classCollection.addMoreClasses(my_bonWalker.getAllClasses());
     } else {
       parse_success = false;

@@ -1,27 +1,51 @@
 package input;
 
 import ie.ucd.bon.ast.BONType;
+import ie.ucd.bon.ast.ClassName;
+import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.Feature;
+import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureName;
+import ie.ucd.bon.ast.FeatureSpecification;
+import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.IndexClause;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
-import ie.ucd.bon.typechecker.ClassDefinition;
-import ie.ucd.bon.typechecker.ClusterDefinition;
-import ie.ucd.bon.typechecker.FeatureArgument;
-import ie.ucd.bon.typechecker.FeatureSpecification;
-import ie.ucd.bon.typechecker.FeatureSpecificationInstance;
-import ie.ucd.bon.typechecker.FormalGeneric;
+import ie.ucd.bon.ast.TypeMark;
+import ie.ucd.bon.printer.PrettyPrintVisitor;
+import ie.ucd.bon.typechecker.BONST;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
-
+import log.CCLevel;
+import log.CCLogRecord;
+import logic.Expression;
+import logic.Operator;
+import logic.Expression.ArithmeticExpression;
+import logic.Expression.EqualityExpression;
+import logic.Expression.EquivalenceExpression;
+import logic.Expression.IdentifierExpression;
+import logic.Expression.ImpliesExpression;
+import logic.Expression.InformalExpression;
+import logic.Expression.Keyword;
+import logic.Expression.LiteralExpression;
+import logic.Expression.LogicalExpression;
+import logic.Expression.MemberaccessExpression;
+import logic.Expression.MethodcallExpression;
+import logic.Expression.Nullity;
+import logic.Expression.RelationalExpression;
+import logic.Expression.UnaryExpression;
+import logic.Expression.Keyword.Keywords;
+import main.Beetlz;
 import structure.ClassStructure;
 import structure.FeatureStructure;
 import structure.Invariant;
@@ -41,26 +65,6 @@ import utils.smart.ParametrizedSmartString;
 import utils.smart.SmartString;
 import utils.smart.TypeSmartString;
 import utils.smart.WildcardSmartString;
-import log.CCLevel;
-import log.CCLogRecord;
-import logic.Expression.ArithmeticExpression;
-import logic.Expression.EqualityExpression;
-import logic.Expression.EquivalenceExpression;
-import logic.Expression;
-import logic.Expression.ImpliesExpression;
-import logic.Expression.InformalExpression;
-import logic.Expression.Keyword;
-import logic.Expression.LiteralExpression;
-import logic.Expression.IdentifierExpression;
-import logic.Expression.LogicalExpression;
-import logic.Expression.MemberaccessExpression;
-import logic.Expression.MethodcallExpression;
-import logic.Expression.Nullity;
-import logic.Operator;
-import logic.Expression.RelationalExpression;
-import logic.Expression.UnaryExpression;
-import logic.Expression.Keyword.Keywords;
-import main.Beetlz;
 
 /**
  * Parser for BON information from BONc data structures.
@@ -74,12 +78,14 @@ public final class BONParser {
   private BONParser() { }
   /**
    * Parse classes.
+   * @param the_st symbol table
    * @param a_class class definition
    * @param a_cluster c cluster the class belongs to
    * @return parsed class
    */
-  public static ClassStructure parseClass(final ClassDefinition a_class,
-                                          final Set < ClusterDefinition > a_cluster) {
+  public static ClassStructure parseClass(final BONST the_st,
+                                          final Clazz a_class,
+                                          final Collection<Cluster> a_cluster) {
     final int two = 2;
     final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
@@ -92,8 +98,8 @@ public final class BONParser {
     String version = ""; //$NON-NLS-1$
     String all_else = ""; //$NON-NLS-1$
     //Comments
-    if (a_class.getIndexing() != null) {
-      final Indexing index = a_class.getIndexing();
+    final Indexing index = the_st.indexing.get(a_class);
+    if (index != null) {
       for (final IndexClause i : index.getIndexes()) {
         if (i.getId().equals("about")) { //$NON-NLS-1$
           for (final String s : i.getIndexTerms()) {
@@ -130,42 +136,42 @@ public final class BONParser {
       }
     }
     //Modifier
-    if (a_class.isDeferred()) {
-      mod.add(ClassModifier.ABSTRACT);
+    switch(a_class.mod) {
+      case DEFERRED:
+        mod.add(ClassModifier.ABSTRACT);
+        break;
+      case EFFECTIVE:
+        mod.add(ClassModifier.EFFECTIVE);
+        break;
+      case ROOT:
+        mod.add(ClassModifier.ROOT);
+        break;
     }
-    if (a_class.isEffective()) {
-      mod.add(ClassModifier.EFFECTIVE);
-    }
-    if (a_class.isRoot()) {
-      mod.add(ClassModifier.ROOT);
-    }
-    if (a_class.isInterfaced()) {
+    
+    if (a_class.interfaced) {
       mod.add(ClassModifier.INTERFACED);
     }
-    if (a_class.isPersistent()) {
+    if (a_class.persistent) {
       mod.add(ClassModifier.PERSISTENT);
     }
-    if (a_class.isReused()) {
+    if (a_class.reused) {
       mod.add(ClassModifier.REUSED);
     }
     //Generics
-    if (a_class.hasFormalGenerics()) {
+    if (!a_class.generics.isEmpty()) {
       mod.add(ClassModifier.GENERIC);
-      final Collection < FormalGeneric > g = a_class.getFormalGenerics();
-      if (g.size()  > 0) {
-        for (final FormalGeneric f : g) {
-          generics.add(getFormalGeneric(f));
-        }
+      for (final FormalGeneric f : a_class.generics) {
+        generics.add(getFormalGeneric(f));
       }
     }
     //Class name
-    final TypeSmartString name = new TypeSmartString(a_class.getName());
+    final TypeSmartString name = new TypeSmartString(a_class.name.name);
 
     //Inheritance
-    final Set < BONType > superC = a_class.getParentClasses();
+    Collection<Type> superC = the_st.classInheritanceGraph.get(a_class.name.name); 
 
     if (superC != null) {
-      for (final BONType s : superC) {
+      for (final Type s : superC) {
         final boolean success = interfaces.add(getType(s));
         if (!success) {
           Beetlz.getWaitingRecords().
@@ -178,18 +184,31 @@ public final class BONParser {
       }
     }
     //Invariant
-    inv = parseInvariant(a_class.getInvariants());
+    Collection<ie.ucd.bon.ast.Expression> invariants;
+    if (a_class.classInterface != null) {
+      invariants = a_class.classInterface.invariant;
+    } else {
+      invariants = Collections.emptyList();
+    }
+    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+    Collection<String> invariantStrings = new ArrayList<String>(invariants.size());
+    for (ie.ucd.bon.ast.Expression exp : invariants) {
+      exp.accept(ppv);
+      invariantStrings.add(ppv.getVisitorOutputAsString());
+      ppv.resetVisitorOutput();
+    }
+    inv = parseInvariant(invariantStrings);
+    
     //Cluster
     if (a_cluster != null) {
-      final Iterator < ClusterDefinition > iter = a_cluster.iterator();
-      while (iter.hasNext()) {
-        clus.add(new SmartString(iter.next().getName()));
+      for (Cluster c : a_cluster) {
+        clus.add(new SmartString(c.name));
       }
     }
     //Source location
-    final SourceLocation src = new SourceLocation(a_class.getSourceLocation()
+    final SourceLocation src = new SourceLocation(a_class.getLocation()
                                                   .getSourceFile(),
-                                                  a_class.getSourceLocation().
+                                                  a_class.getLocation().
                                                   getLineNumber());
     //Create class
     final ClassStructure parsedClass =
@@ -198,16 +217,23 @@ public final class BONParser {
     parsedClass.setComment(about, author, version, all_else);
     parsedClass.setInvariant(inv);
     //Get the features
-    for (final FeatureSpecificationInstance feat : a_class.getFeatures()) {
-      final FeatureStructure f = parseFeature(feat, parsedClass);
-      if (!Beetlz.getProfile().pureBon()) {
-        if (f.getSimpleName().equals(BConst.MAKE) ||
-            f.getSimpleName().matches(BConst.MAKE + "[0-9]")) { //$NON-NLS-1$
-          parsedClass.addConstructor(f);
-          continue;
+    if (a_class.classInterface != null) {
+
+      for (final Feature feat : a_class.classInterface.features) {
+        for (final FeatureSpecification fSpec : feat.featureSpecifications) {
+          for (final FeatureName fName : fSpec.featureNames) {
+            final FeatureStructure f = parseFeature(the_st, fSpec, fName.name, parsedClass);
+            if (!Beetlz.getProfile().pureBon()) {
+              if (f.getSimpleName().equals(BConst.MAKE) ||
+                  f.getSimpleName().matches(BConst.MAKE + "[0-9]")) { //$NON-NLS-1$
+                parsedClass.addConstructor(f);
+                continue;
+              }
+            }
+            parsedClass.addFeature(f);
+          }
         }
       }
-      parsedClass.addFeature(f);
     }
     return parsedClass;
   }
@@ -218,29 +244,30 @@ public final class BONParser {
    * @param a_encl_class enclosing class
    * @return parsed feature
    */
-  private static FeatureStructure parseFeature(final FeatureSpecificationInstance a_feature,
+  private static FeatureStructure parseFeature(final BONST the_st,
+                                               final FeatureSpecification fSpec,
+                                               final String f_name,
                                                final ClassStructure a_encl_class) {
     //full feature
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
     Visibility vis                          = new Visibility(VisibilityModifier.PUBLIC);
-    final FeatureSpecification fSpec        = a_feature.getFeatureSpec();
     String rename_class                      = null;
     String rename_feature                    = null;
     //Modifier
-    if (fSpec.isDeferred()) {
+    if (fSpec.modifier == FeatureSpecification.Modifier.DEFERRED) {
       mod.add(FeatureModifier.ABSTRACT);
     }
-    if (fSpec.isRedefined()) {
+    if (fSpec.modifier == FeatureSpecification.Modifier.REDEFINED) {
       mod.add(FeatureModifier.REDEFINED);
     }
-    if (fSpec.isEffective()) {
+    if (fSpec.modifier == FeatureSpecification.Modifier.EFFECTIVE) {
       mod.add(FeatureModifier.EFFECTIVE);
     }
     //Visibility
-    if (fSpec.getFeature().isPrivate()) {
+    if (the_st.selectiveExportPrivateMap.get(fSpec)) {
       vis = new Visibility(VisibilityModifier.PRIVATE);
-    } else if (fSpec.getFeature().getExports().size() > 0) {
-      final Set < String > exp = fSpec.getFeature().getExports();
+    } else if (!the_st.selectiveExportMap.get(fSpec).isEmpty()) {
+      final List<String> exp = the_st.selectiveExportStringsMap.get(fSpec);
       if (exp.size() == 1 && exp.contains(a_encl_class.getSimpleName())) {
         vis = new Visibility(VisibilityModifier.PROTECTED);
       } else if (exp.size() == 1 && exp.contains(a_encl_class.getInnermostPackage().
@@ -250,44 +277,66 @@ public final class BONParser {
         vis = new Visibility(VisibilityModifier.RESTRICTED);
       }
       final List < TypeSmartString > exports = new Vector < TypeSmartString > ();
-      for (final String s : fSpec.getFeature().getExports()) {
+      for (final String s : exp) {
         exports.add(new TypeSmartString(s));
       }
       vis.setExports(exports);
     }
     //Feature name
-    final FeatureSmartString name = new FeatureSmartString(a_feature.getName());
+    final FeatureSmartString name = new FeatureSmartString(f_name);
     //Return type
     SmartString return_value = SmartString.getVoid(); //default is void
     final Map < String , SmartString > params = new HashMap < String, SmartString > ();
-    if (fSpec.getType() != null) {
-      return_value = getType(fSpec.getType());
+    if (fSpec.hasType != null) {
+      return_value = getType(fSpec.hasType.type);
     }
     //Parameter
-    for (final FeatureArgument a : fSpec.getArgs().values()) {
-      params.put(a.getName(), getType(a.getType()));
+    for (final FeatureArgument a : fSpec.arguments) {
+      params.put(a.identifier, getType(a.getType()));
     }
     //Specs?
-    final Spec spec = BONParser.parseFeatureSpecs(fSpec.getPrecondition(),
-                                                  fSpec.getPostcondition(),
-                                                  return_value, name.toString(), params);
+    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+    String pre = null;
+    if (!fSpec.contracts.preconditions.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      for (ie.ucd.bon.ast.Expression exp : fSpec.contracts.preconditions) {
+        exp.accept(ppv);
+        sb.append(ppv.getVisitorOutputAsString());
+        sb.append("; ");
+        ppv.resetVisitorOutput();
+      }
+      pre = sb.toString();
+    }
+    String post = null;
+    if (!fSpec.contracts.postconditions.isEmpty()) {
+      StringBuilder sb = new StringBuilder();
+      for (ie.ucd.bon.ast.Expression exp : fSpec.contracts.postconditions) {
+        exp.accept(ppv);
+        sb.append(ppv.getVisitorOutputAsString());
+        sb.append("; ");
+        ppv.resetVisitorOutput();
+      }
+      post = sb.toString();
+    }
+    
+    final Spec spec = BONParser.parseFeatureSpecs(pre, post, return_value, name.toString(), params);
     final List < Spec > specCases = new Vector < Spec > ();
     specCases.add(spec);
     final Signature sign = Signature.getBonSignature(return_value, params);
     //SourceLocation
     final SourceLocation src =
-      new SourceLocation(a_feature.getSourceLocation().getSourceFile(),
-                         a_feature.getSourceLocation().getLineNumber());
+      new SourceLocation(fSpec.getLocation().getSourceFile(),
+                         fSpec.getLocation().getLineNumber());
     //Renaming
-    if (a_feature.getFeatureSpec().getRenaming() != null) {
-      rename_class = a_feature.getFeatureSpec().getRenaming().getClassName();
-      rename_feature = a_feature.getFeatureSpec().getRenaming().getFeatureName();
+    if (fSpec.renaming != null) {
+      rename_class = fSpec.renaming.className.name;
+      rename_feature = fSpec.renaming.featureName.name;
     }
     //Client relations
-    if (fSpec.getTypeMark() != null && fSpec.getTypeMark().isSharedMark()) {
+    if (fSpec.hasType != null && fSpec.hasType.mark.mark == TypeMark.Mark.SHAREDMARK) {
       a_encl_class.addSharedAssociation(return_value);
     }
-    if (fSpec.getTypeMark() != null && fSpec.getTypeMark().isAggregate()) {
+    if (fSpec.hasType != null && fSpec.hasType.mark.mark == TypeMark.Mark.AGGREGATE) {
       a_encl_class.addAggregation(return_value);
     }
     return new FeatureStructure(mod, vis, name, sign,
@@ -733,36 +782,14 @@ public final class BONParser {
    * @param a_type type to parse
    * @return parsed type
    */
-  private static SmartString getType(final BONType a_type) {
-
-    if (a_type.getActualGenerics() == null) {
-      return new TypeSmartString(a_type.getIdentifier());
-    }
-    final SmartString name = new TypeSmartString(a_type.getIdentifier());
-    final List < SmartString > params = new Vector < SmartString > ();
-    for (final BONType t : a_type.getActualGenerics()) {
-      if (t.getFullString().equals("ANY")) { //$NON-NLS-1$
-        params.add(WildcardSmartString.getBONWildcard());
-      } else {
-        params.add(getType(t));
-      }
-    }
-    return new ParametrizedSmartString(a_type.getFullString(), name, params);
-  }
-
-  /**
-   * Parse type.
-   * @param a_type type to parse
-   * @return parsed type
-   */
   private static SmartString getType(final Type a_type) {
+
     if (a_type.getActualGenerics() == null) {
       return new TypeSmartString(a_type.getIdentifier());
     }
     final SmartString name = new TypeSmartString(a_type.getIdentifier());
     final List < SmartString > params = new Vector < SmartString > ();
-
-    for (final BONType t : a_type.getActualGenerics()) {
+    for (final Type t : a_type.actualGenerics) {
       if (t.getFullString().equals("ANY")) { //$NON-NLS-1$
         params.add(WildcardSmartString.getBONWildcard());
       } else {
@@ -770,7 +797,6 @@ public final class BONParser {
       }
     }
     return new ParametrizedSmartString(a_type.getFullString(), name, params);
-
   }
 
   /**
@@ -783,11 +809,11 @@ public final class BONParser {
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(getType(a_generic.getType()));
       //System.err.println(form.getName() + "  " + form.getType().toString());
-      final String name = a_generic.getName() + " -> " +
+      final String name = a_generic.identifier + " -> " +
         a_generic.getType().getFullString(); //$NON-NLS-1$
-      return new GenericParameter(name, a_generic.getName(), list);
+      return new GenericParameter(name, a_generic.identifier, list);
     }
-    return new GenericParameter(a_generic.getName(), a_generic.getName(), null);
+    return new GenericParameter(a_generic.identifier, a_generic.identifier, null);
   }
 
   /**

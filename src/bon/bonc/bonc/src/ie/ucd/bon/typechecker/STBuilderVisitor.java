@@ -43,6 +43,7 @@ import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions {
@@ -175,6 +176,19 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       List<ClassName> selectiveExport, String comment, SourceLocation loc) {
 
     context.selectiveExport = selectiveExport;
+    context.selectiveExportStrings = new ArrayList<String>(selectiveExport.size());
+    context.selectiveExportPrivate = false;
+    for (ClassName name : selectiveExport) {
+      if (name.name.equals("NONE")) {
+        if (selectiveExport.size() != 1) {
+          //TODO error!
+          
+        }
+        context.selectiveExportPrivate = true;
+      }
+      context.selectiveExportStrings.add(name.name);
+    }
+    
     visitAll(featureSpecifications);
   }
   
@@ -194,6 +208,8 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     }
     
     st.selectiveExportMap.put(node, context.selectiveExport);
+    st.selectiveExportStringsMap.put(node, context.selectiveExportStrings);
+    st.selectiveExportPrivateMap.put(node, context.selectiveExportPrivate);
     
     visitNode(contracts);
   }

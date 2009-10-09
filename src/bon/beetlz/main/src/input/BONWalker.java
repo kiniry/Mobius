@@ -1,17 +1,19 @@
 package input;
 
+import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.ast.ClientRelation;
+import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.TypeMark;
+import ie.ucd.bon.graph.Graph;
+import ie.ucd.bon.parser.tracker.ParsingTracker;
+import ie.ucd.bon.typechecker.BONST;
+
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import main.Beetlz;
 import main.UserProfile;
-
-import ie.ucd.bon.graph.Graph;
-import ie.ucd.bon.typechecker.ClassDefinition;
-import ie.ucd.bon.typechecker.ClientRelation;
-import ie.ucd.bon.typechecker.ClusterDefinition;
-import ie.ucd.bon.typechecker.TypingInformation;
 import structure.ClassStructure;
 import utils.smart.TypeSmartString;
 
@@ -35,31 +37,33 @@ public class BONWalker {
 
   /**
    * Parse info.
-   * @param the_info typing information
+   * @param the_tracker parse information
    */
-  public final void parseTypingInformation(final TypingInformation the_info) {
-    final Graph < String, ClusterDefinition > clusterList = the_info.getClassClusterGraph();
+  public final void parseTypingInformation(final ParsingTracker the_tracker) {
     final UserProfile profile = Beetlz.getProfile();
+    final BONST the_st = the_tracker.getSymbolTable();
+    
+    final Graph<String,Cluster> clusterList = the_st.classClusterGraph;
 
-    for (final ClassDefinition c : the_info.getClasses().values()) {
-      if (!profile.isBONIgnored(c.getName())) {
-        final Set < ClusterDefinition > clusterInfo = clusterList.getLinkedNodes(c.getName());
-        final ClassStructure temp = BONParser.parseClass(c, clusterInfo);
+    for (final Clazz c : the_st.classes.values()) {
+      if (!profile.isBONIgnored(c.name.name)) {
+        final Collection<Cluster> clusterInfo = clusterList.get(c.name.name);
+        final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
         my_classes.put(temp.getSimpleName(), temp);
       }
     }
 
-    for (final ClientRelation cr : the_info.getClientRelations()) {
+    for (final ClientRelation cr : the_st.clientRelations) {
       if (my_classes.containsKey(cr.getClient()) && my_classes.containsKey(cr.getSupplier())) {
-        if (cr.getTypeMark().isAggregate()) {
+        if (cr.typeMark.mark == TypeMark.Mark.AGGREGATE) {
           my_classes.get(cr.getClient()).
             addAggregation(new TypeSmartString(my_classes.
                                              get(cr.getSupplier()).
                                              getSimpleName()));
         }
-        if (cr.getTypeMark().isSharedMark()) {
+        if (cr.typeMark.mark == TypeMark.Mark.SHAREDMARK) {
           my_classes.get(cr.getClient()).
-            addSharedAssociation(new TypeSmartString(cr.getSupplier()));
+            addSharedAssociation(new TypeSmartString(cr.supplier.name.name));
         }
       }
     }
