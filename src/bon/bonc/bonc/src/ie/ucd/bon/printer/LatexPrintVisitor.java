@@ -60,7 +60,6 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp = new TextPrinter(new PrintStream(baos));
   }
   
-  @Override
   public String getAllOutputAsString(ParsingTracker tracker, Map<String, Object> additionalData) throws IOException {
     ByteArrayOutputStream start = new ByteArrayOutputStream();
     //FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "latex-start.ftl", additionalData);
