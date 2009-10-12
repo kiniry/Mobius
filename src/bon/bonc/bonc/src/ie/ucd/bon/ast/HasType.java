@@ -21,7 +21,6 @@ public class HasType extends AstNode {
     super(location);
     this.mark = mark; assert mark != null;
     this.type = type; assert type != null;
-    
   }
   
   public static HasType mk(TypeMark mark, Type type, SourceLocation location) {
@@ -43,7 +42,6 @@ public class HasType extends AstNode {
   public HasType clone() {
     TypeMark newMark = mark == null ? null : mark.clone();
     Type newType = type == null ? null : type.clone();
-    
     return HasType.mk(newMark, newType, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class HasType extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("HasType ast node: ");
-    
     sb.append("mark = ");
     sb.append(mark);
     sb.append(", ");
-    
-    sb.append("type = ");
+        sb.append("type = ");
     sb.append(type);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

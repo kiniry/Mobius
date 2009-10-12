@@ -23,7 +23,6 @@ public class DictionaryEntry extends AstNode {
     this.name = name; assert name != null;
     this.clusters = clusters; assert clusters != null;
     this.description = description; assert description != null;
-    
   }
   
   public static DictionaryEntry mk(String name, List<String> clusters, String description, SourceLocation location) {
@@ -47,7 +46,6 @@ public class DictionaryEntry extends AstNode {
     String newName = name;
     List<String> newClusters = clusters;
     String newDescription = description;
-    
     return DictionaryEntry.mk(newName, newClusters, newDescription, getLocation());
   }
   
@@ -55,21 +53,17 @@ public class DictionaryEntry extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("DictionaryEntry ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("clusters = ");
+        sb.append("clusters = ");
     sb.append(clusters);
     sb.append(", ");
-    
-    sb.append("description = ");
+        sb.append("description = ");
     sb.append(description);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

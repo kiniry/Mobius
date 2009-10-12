@@ -21,7 +21,6 @@ public class FeatureArgument extends AstNode {
     super(location);
     this.identifier = identifier; 
     this.type = type; assert type != null;
-    
   }
   
   public static FeatureArgument mk(String identifier, Type type, SourceLocation location) {
@@ -43,7 +42,6 @@ public class FeatureArgument extends AstNode {
   public FeatureArgument clone() {
     String newIdentifier = identifier;
     Type newType = type == null ? null : type.clone();
-    
     return FeatureArgument.mk(newIdentifier, newType, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class FeatureArgument extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("FeatureArgument ast node: ");
-    
     sb.append("identifier = ");
     sb.append(identifier);
     sb.append(", ");
-    
-    sb.append("type = ");
+        sb.append("type = ");
     sb.append(type);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

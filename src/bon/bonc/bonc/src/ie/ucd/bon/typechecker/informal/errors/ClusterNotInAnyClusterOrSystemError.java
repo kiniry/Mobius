@@ -10,7 +10,7 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class ClusterNotInAnyClusterOrSystemError extends TypeCheckingError {
 
   private static final String message = "Cluster %s does not appear in any cluster chart or in the system chart";
-  
+
   private final String clusterName;
 
   public ClusterNotInAnyClusterOrSystemError(SourceLocation loc, String clusterName) {
@@ -22,7 +22,4 @@ public class ClusterNotInAnyClusterOrSystemError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, clusterName);
   }
-
-  
-  
 }

@@ -21,7 +21,6 @@ public class RenameClause extends AstNode {
     super(location);
     this.className = className; assert className != null;
     this.featureName = featureName; assert featureName != null;
-    
   }
   
   public static RenameClause mk(ClassName className, FeatureName featureName, SourceLocation location) {
@@ -43,7 +42,6 @@ public class RenameClause extends AstNode {
   public RenameClause clone() {
     ClassName newClassName = className == null ? null : className.clone();
     FeatureName newFeatureName = featureName == null ? null : featureName.clone();
-    
     return RenameClause.mk(newClassName, newFeatureName, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class RenameClause extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("RenameClause ast node: ");
-    
     sb.append("className = ");
     sb.append(className);
     sb.append(", ");
-    
-    sb.append("featureName = ");
+        sb.append("featureName = ");
     sb.append(featureName);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

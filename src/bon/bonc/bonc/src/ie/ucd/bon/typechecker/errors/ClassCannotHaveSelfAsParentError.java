@@ -9,7 +9,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassCannotHaveSelfAsParentError extends TypeCheckingError {
 
   private static final String message = "Class %s cannot have itself as a parent";
-  
+
   private final String className;
 
   public ClassCannotHaveSelfAsParentError(SourceLocation loc, String className) {
@@ -22,6 +22,4 @@ public class ClassCannotHaveSelfAsParentError extends TypeCheckingError {
     return String.format(message, className);
   }
 
-  
-  
 }

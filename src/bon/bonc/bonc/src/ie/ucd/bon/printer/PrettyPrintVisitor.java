@@ -244,39 +244,39 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       tp.printLine("query");
       tp.increaseIndentation();
 
-      for (Iterator<String> it = queries.iterator(); it.hasNext(); ) {
+      for (Iterator<String> it = queries.iterator(); it.hasNext();) {
         tp.startLine();
         tp.print(it.next());
         if (it.hasNext()) {
           tp.print(',');
         }
-        tp.printLine();        
+        tp.printLine();
       }
       tp.decreaseIndentation();
     }
     if (!commands.isEmpty()) {
       tp.printLine("command");
       tp.increaseIndentation();
-      for (Iterator<String> it = commands.iterator(); it.hasNext(); ) {
+      for (Iterator<String> it = commands.iterator(); it.hasNext();) {
         tp.startLine();
         tp.print(it.next());
         if (it.hasNext()) {
           tp.print(',');
         }
-        tp.printLine();        
+        tp.printLine();
       }
       tp.decreaseIndentation();
     }
     if (!constraints.isEmpty()) {
       tp.printLine("constraint");
       tp.increaseIndentation();
-      for (Iterator<String> it = constraints.iterator(); it.hasNext(); ) {
+      for (Iterator<String> it = constraints.iterator(); it.hasNext();) {
         tp.startLine();
         tp.print(it.next());
         if (it.hasNext()) {
           tp.print(',');
         }
-        tp.printLine();        
+        tp.printLine();
       }
       tp.decreaseIndentation();
     }

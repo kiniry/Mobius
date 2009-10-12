@@ -19,6 +19,4 @@ public class CannotRenameMultipleFeaturesError extends TypeCheckingError {
     return message;
   }
 
-  
-  
 }

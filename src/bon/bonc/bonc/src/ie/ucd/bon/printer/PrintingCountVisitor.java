@@ -20,7 +20,7 @@ import ie.ucd.bon.ast.ScenarioEntry;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.source.SourceLocation;
 
-public class PrintingCountVisitor extends AbstractVisitorWithAdditions{
+public class PrintingCountVisitor extends AbstractVisitorWithAdditions {
 
   private int numberOfEventCharts;
   private int numberOfScenarioCharts;

@@ -19,7 +19,6 @@ public class FeatureName extends IndirectionFeaturePart {
   protected FeatureName(String name, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
-    
   }
   
   public static FeatureName mk(String name, SourceLocation location) {
@@ -39,7 +38,6 @@ public class FeatureName extends IndirectionFeaturePart {
   @Override
   public FeatureName clone() {
     String newName = name;
-    
     return FeatureName.mk(newName, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class FeatureName extends IndirectionFeaturePart {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("FeatureName ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

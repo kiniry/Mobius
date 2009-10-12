@@ -10,7 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 
-public class StringUtil {
+public final class StringUtil {
+
+  /** Private constructor, cannot be instantiated. */
+  private StringUtil() { }
 
   public static String stripForHTML(final String mtb, boolean withSpeechMarks) {
     String stripped = strip(mtb);
@@ -42,7 +45,7 @@ public class StringUtil {
     StringBuilder sb = new StringBuilder();
     sb.append(stripFirstLine(lines[0]));
 
-    for (int i=1; i < lines.length-1; i++) {
+    for (int i = 1; i < lines.length-1; i++) {
       sb.append(stripMiddleLine(lines[i]));
     }
 
@@ -72,22 +75,22 @@ public class StringUtil {
       return staticRef.substring(staticRef.lastIndexOf("."));
     }
   }
-  
+
   public static String timeString(final long timeInNano) {
     return timeInNano + "ns (" + (timeInNano / 1000000d) + "ms or " + (timeInNano / 1000000000d) + "s)";
   }
-  
+
   public static String exceptionStackTraceAsString(Exception e) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     PrintStream ps = new PrintStream(baos);
     e.printStackTrace(ps);
     return baos.toString();
   }
-  
+
   public static String appendWithSeparator(Collection<?> items, String sep) {
     return appendWithSeparator(items, sep, false);
   }
-  
+
   public static String appendWithSeparator(Collection<?> items, String sep, boolean separatorAtEnd) {
     StringBuilder sb = new StringBuilder();
     for (Object o : items) {
@@ -99,7 +102,7 @@ public class StringUtil {
     }
     return sb.toString();
   }
-  
+
   public static String appendWithSeparator(String[] items, String sep, boolean separatorAtEnd) {
     return appendWithSeparator(Arrays.asList(items), sep, separatorAtEnd);
   }

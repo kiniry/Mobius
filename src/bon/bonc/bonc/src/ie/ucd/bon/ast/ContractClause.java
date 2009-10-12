@@ -21,7 +21,6 @@ public class ContractClause extends AstNode {
     super(location);
     this.preconditions = preconditions; 
     this.postconditions = postconditions; 
-    
   }
   
   public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
@@ -43,7 +42,6 @@ public class ContractClause extends AstNode {
   public ContractClause clone() {
     List<Expression> newPreconditions = preconditions;
     List<Expression> newPostconditions = postconditions;
-    
     return ContractClause.mk(newPreconditions, newPostconditions, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class ContractClause extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ContractClause ast node: ");
-    
     sb.append("preconditions = ");
     sb.append(preconditions);
     sb.append(", ");
-    
-    sb.append("postconditions = ");
+        sb.append("postconditions = ");
     sb.append(postconditions);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

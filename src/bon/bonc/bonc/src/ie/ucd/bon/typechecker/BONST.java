@@ -23,47 +23,46 @@ public class BONST {
 
   public final Map<String,Cluster> clusters = new HashMap<String,Cluster>();
   public final Map<String,Clazz> classes = new HashMap<String,Clazz>();
-  
+
   public final Graph<String,Type> classInheritanceGraph = new Graph<String,Type>();
   public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
   public final Graph<String,Cluster> classClusterGraph = new Graph<String,Cluster>();
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
-  
+
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
   public final Map<FeatureSpecification,List<ClassName>> selectiveExportMap = new HashMap<FeatureSpecification,List<ClassName>>();
   public final Map<FeatureSpecification,List<String>> selectiveExportStringsMap = new HashMap<FeatureSpecification,List<String>>();
   public final Map<FeatureSpecification,Boolean> selectiveExportPrivateMap = new HashMap<FeatureSpecification,Boolean>();
-  
+
   public final Map<Clazz,List<FormalGeneric>> genericsMap = new HashMap<Clazz,List<FormalGeneric>>();
   public final TwoDimensionalMap<Clazz, String, FormalGeneric> genericNamesMap = new TwoDimensionalMap<Clazz, String, FormalGeneric>();
-  
+
   public final Map<AstNode,Indexing> indexing = new HashMap<AstNode,Indexing>();
-  public final Collection<ClientRelation> clientRelations = new ArrayList<ClientRelation>();  
-  
+  public final Collection<ClientRelation> clientRelations = new ArrayList<ClientRelation>();
+
   public final Map<AstNode,Type> typeMap = new HashMap<AstNode,Type>();
-  
+
   public final BONSTInformal informal = new BONSTInformal();
-  
+
   public class BONSTInformal {
-    
+
     public final Map<String,ClusterChart> clusters = new HashMap<String,ClusterChart>();
-    public final Map<String,ClassChart> classes = new HashMap<String,ClassChart>();  
-   
+    public final Map<String,ClassChart> classes = new HashMap<String,ClassChart>();
+
     public final Graph<String,ClusterChart> classClusterGraph = new Graph<String,ClusterChart>();
     public final Graph<String,ClusterChart> clusterClusterGraph = new Graph<String,ClusterChart>();
-    
+
     public final Graph<ClassChart,String> classInheritanceGraph = new Graph<ClassChart,String>();
-    
+
     public final Graph<String,String> descriptionGraph = new Graph<String,String>();
-    
+
     public ClusterChart systemChart;
-    
+
     public final Map<String,String> alternativeClusterDescriptions = new HashMap<String,String>();
     public final Map<String,String> alternativeClassDescriptions = new HashMap<String,String>();
-    
+
   }
-  
-  
+
   public boolean isSubtypeOrEqual(Type type1, Type type2) {
     if (type1 == null && type2 == null) {
       //TODO should we definitely return true here?

@@ -27,7 +27,6 @@ public class ClientRelation extends StaticRelation {
     this.clientEntities = clientEntities; 
     this.typeMark = typeMark; 
     this.semanticLabel = semanticLabel; 
-    
   }
   
   public static ClientRelation mk(StaticRef client, StaticRef supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
@@ -55,7 +54,6 @@ public class ClientRelation extends StaticRelation {
     ClientEntityExpression newClientEntities = clientEntities == null ? null : clientEntities.clone();
     TypeMark newTypeMark = typeMark == null ? null : typeMark.clone();
     String newSemanticLabel = semanticLabel;
-    
     return ClientRelation.mk(newClient, newSupplier, newClientEntities, newTypeMark, newSemanticLabel, getLocation());
   }
   
@@ -63,29 +61,23 @@ public class ClientRelation extends StaticRelation {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClientRelation ast node: ");
-    
     sb.append("client = ");
     sb.append(client);
     sb.append(", ");
-    
-    sb.append("supplier = ");
+        sb.append("supplier = ");
     sb.append(supplier);
     sb.append(", ");
-    
-    sb.append("clientEntities = ");
+        sb.append("clientEntities = ");
     sb.append(clientEntities);
     sb.append(", ");
-    
-    sb.append("typeMark = ");
+        sb.append("typeMark = ");
     sb.append(typeMark);
     sb.append(", ");
-    
-    sb.append("semanticLabel = ");
+        sb.append("semanticLabel = ");
     sb.append(semanticLabel);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

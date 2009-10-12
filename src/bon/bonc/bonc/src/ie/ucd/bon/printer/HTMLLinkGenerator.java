@@ -28,7 +28,7 @@ public class HTMLLinkGenerator {
     for (ParseResult parse : parsingTracker.getParses()) {
       parse.getParse().accept(counter);
     }
-    
+
     StringBuilder sb = new StringBuilder();
     sb.append(generateJSIDs(st, counter));
     sb.append('\n');
@@ -47,7 +47,7 @@ public class HTMLLinkGenerator {
 
     if (counter.getNumberOfClassDictionaries() > 0) {
       sb.append("'Class Dictionaries', 'class_dictionary', ");
-    }    
+    }
     if (!st.clusters.isEmpty()) {
       sb.append("'Cluster Charts', 'cluster_chart', ");
     }
@@ -89,7 +89,7 @@ public class HTMLLinkGenerator {
       for (String clusterName : clusterNames) {
         sb.append("'" + clusterName + "',");
         sb.append("'" + CLUSTER_CHART + clusterName + "',");
-      } 
+      }
       if (clusterNames.size() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -103,7 +103,7 @@ public class HTMLLinkGenerator {
       for (String className : classNames) {
         sb.append("'" + className + "',");
         sb.append("'" + CLASS_CHART + className + "',");
-      } 
+      }
       if (classNames.size() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -116,7 +116,7 @@ public class HTMLLinkGenerator {
       for (int i=1; i <= counter.getNumberOfEventCharts(); i++) {
         sb.append("'Event Chart " + i + "',");
         sb.append("'" + EVENT_CHART + i + "',");
-      } 
+      }
       if (counter.getNumberOfEventCharts() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -129,7 +129,7 @@ public class HTMLLinkGenerator {
       for (int i=1; i <= counter.getNumberOfCreationCharts(); i++) {
         sb.append("'Creation Chart " + i + "',");
         sb.append("'" + CREATION_CHART + i + "',");
-      } 
+      }
       if (counter.getNumberOfCreationCharts() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -142,7 +142,7 @@ public class HTMLLinkGenerator {
       for (int i=1; i <= counter.getNumberOfScenarioCharts(); i++) {
         sb.append("'Scenario Chart " + i + "',");
         sb.append("'" + SCENARIO_CHART + i + "',");
-      } 
+      }
       if (counter.getNumberOfScenarioCharts() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -155,7 +155,7 @@ public class HTMLLinkGenerator {
       for (int i=1; i <= counter.getNumberOfClassDictionaries(); i++) {
         sb.append("'Class Dictionary " + i + "',");
         sb.append("'" + CLASS_DICTIONARY + i + "',");
-      } 
+      }
       if (counter.getNumberOfClassDictionaries() > 0) {
         sb.deleteCharAt(sb.length()-1);
       }
@@ -202,7 +202,7 @@ public class HTMLLinkGenerator {
     } else {
       return sb.substring(0,sb.length()-1).concat("];");
     }
-  } 
+  }
 
   private static void appendItem(StringBuilder sb, String item) {
     sb.append('\'');

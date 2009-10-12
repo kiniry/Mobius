@@ -224,10 +224,10 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     ClusterChart otherCluster = st.informal.clusters.get(name.getName());
     if (otherCluster != null) {
       problems.addProblem(new NameNotUniqueError(loc, "Cluster", name.getName(), "class", otherCluster.getLocation()));
-    }else {
+    } else {
       ClassChart clazz = st.informal.classes.get(name.getName());
       if (clazz != null) {
-        problems.addProblem(new DuplicateClassChartError(loc, clazz));  
+        problems.addProblem(new DuplicateClassChartError(loc, clazz));
       } else {
         st.informal.classes.put(name.getName(), node);
       }
@@ -237,7 +237,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       if (parent.equals(name)) {
         problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, name.getName()));
       } else {
-        st.informal.classInheritanceGraph.put(node, parent.getName());      
+        st.informal.classInheritanceGraph.put(node, parent.getName());
       }
     }
     

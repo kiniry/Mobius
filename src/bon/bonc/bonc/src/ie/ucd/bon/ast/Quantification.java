@@ -28,7 +28,6 @@ public class Quantification extends Expression {
     this.variableRanges = variableRanges; 
     this.restriction = restriction; 
     this.proposition = proposition; assert proposition != null;
-    
   }
   
   public static Quantification mk(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
@@ -54,7 +53,6 @@ public class Quantification extends Expression {
     List<VariableRange> newVariableRanges = variableRanges;
     Expression newRestriction = restriction == null ? null : restriction.clone();
     Expression newProposition = proposition == null ? null : proposition.clone();
-    
     return Quantification.mk(newQuantifier, newVariableRanges, newRestriction, newProposition, getLocation());
   }
   
@@ -62,25 +60,20 @@ public class Quantification extends Expression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Quantification ast node: ");
-    
     sb.append("quantifier = ");
     sb.append(quantifier);
     sb.append(", ");
-    
-    sb.append("variableRanges = ");
+        sb.append("variableRanges = ");
     sb.append(variableRanges);
     sb.append(", ");
-    
-    sb.append("restriction = ");
+        sb.append("restriction = ");
     sb.append(restriction);
     sb.append(", ");
-    
-    sb.append("proposition = ");
+        sb.append("proposition = ");
     sb.append(proposition);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

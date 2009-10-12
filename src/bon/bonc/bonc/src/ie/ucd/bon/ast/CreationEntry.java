@@ -21,7 +21,6 @@ public class CreationEntry extends AstNode {
     super(location);
     this.name = name; assert name != null;
     this.types = types; assert types != null;
-    
   }
   
   public static CreationEntry mk(ClassName name, List<String> types, SourceLocation location) {
@@ -43,7 +42,6 @@ public class CreationEntry extends AstNode {
   public CreationEntry clone() {
     ClassName newName = name == null ? null : name.clone();
     List<String> newTypes = types;
-    
     return CreationEntry.mk(newName, newTypes, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class CreationEntry extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CreationEntry ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("types = ");
+        sb.append("types = ");
     sb.append(types);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

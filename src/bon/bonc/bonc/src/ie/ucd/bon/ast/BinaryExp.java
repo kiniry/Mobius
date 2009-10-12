@@ -45,7 +45,6 @@ public class BinaryExp extends Expression {
     this.op = op; 
     this.left = left; assert left != null;
     this.right = right; assert right != null;
-    
   }
   
   public static BinaryExp mk(Op op, Expression left, Expression right, SourceLocation location) {
@@ -69,7 +68,6 @@ public class BinaryExp extends Expression {
     Op newOp = op;
     Expression newLeft = left == null ? null : left.clone();
     Expression newRight = right == null ? null : right.clone();
-    
     return BinaryExp.mk(newOp, newLeft, newRight, getLocation());
   }
   
@@ -77,21 +75,17 @@ public class BinaryExp extends Expression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("BinaryExp ast node: ");
-    
     sb.append("op = ");
     sb.append(op);
     sb.append(", ");
-    
-    sb.append("left = ");
+        sb.append("left = ");
     sb.append(left);
     sb.append(", ");
-    
-    sb.append("right = ");
+        sb.append("right = ");
     sb.append(right);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

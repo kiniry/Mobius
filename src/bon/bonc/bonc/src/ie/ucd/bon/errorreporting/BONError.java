@@ -20,6 +20,5 @@ public abstract class BONError extends BONProblem {
   @Override
   public final boolean isWarning() {
     return false;
-  }  
-  
+  }
 }

@@ -26,7 +26,6 @@ public class TypeMark extends AstNode {
     super(location);
     this.mark = mark; 
     this.multiplicity = multiplicity; 
-    
   }
   
   public static TypeMark mk(Mark mark, Integer multiplicity, SourceLocation location) {
@@ -48,7 +47,6 @@ public class TypeMark extends AstNode {
   public TypeMark clone() {
     Mark newMark = mark;
     Integer newMultiplicity = multiplicity;
-    
     return TypeMark.mk(newMark, newMultiplicity, getLocation());
   }
   
@@ -56,17 +54,14 @@ public class TypeMark extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("TypeMark ast node: ");
-    
     sb.append("mark = ");
     sb.append(mark);
     sb.append(", ");
-    
-    sb.append("multiplicity = ");
+        sb.append("multiplicity = ");
     sb.append(multiplicity);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

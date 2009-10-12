@@ -10,10 +10,10 @@ public class MissingElementParseError extends ParsingError {
 
   private static final String message1 = "Missing %s";
   private static final String message2 = "Missing %s %s";
-  
+
   private final String elementName;
   private final String locationDescription;
-  
+
   public MissingElementParseError(SourceLocation sourceLoc, String elementName, String locationDescription, boolean isSevere) {
     super(sourceLoc, isSevere);
     this.elementName = elementName;
@@ -28,5 +28,5 @@ public class MissingElementParseError extends ParsingError {
       return String.format(message2, elementName, locationDescription);
     }
   }
-  
+
 }

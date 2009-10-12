@@ -20,23 +20,23 @@ public final class TypeChecker {
     //TODO fix!
 //    InformalTypeChecker itc = tracker.getInformalTypeChecker();
 //    FormalTypeChecker ftc = tracker.getFormalTypeChecker();
-//    
+//
 //    if (checkInformal) {
 //      Main.logDebug("Checking informal");
 //      itc.performPreliminaryChecks();
 //    }
-//    
+//
 //    if (checkFormal) {
 //      Main.logDebug("Checking formal");
 //      ftc.performPreliminaryChecks();
 //    }
-//    
+//
 //    if (checkConsistency) {
 //      Main.logDebug("Checking consistency");
 //      //TODO better way than passing ITI in here?
 //      ftc.performLevelConsistencyChecks(tracker.getTypingInformation().informal());
 //    }
-//    
+//
 //    if (typeCheck) {
 //      for (ParseResult parse : tracker.getParses()) {
 //        typeCheck(parse, itc, ftc);
@@ -44,30 +44,30 @@ public final class TypeChecker {
 //    } else {
 //      Main.logDebug("Not typechecking");
 //    }
-    
+
     PreliminaryChecker preCheck = new PreliminaryChecker(tracker.getSymbolTable());
     preCheck.runChecks(checkFormal, checkInformal);
     //tracker.addProblems(preCheck.getProblems());
-    
+
     TypeCheckerVisitor visitor = new TypeCheckerVisitor(tracker.getSymbolTable());
     for (ParseResult parse : tracker.getParses()) {
       parse.getParse().accept(visitor);
     }
     return visitor.getProblems().addProblems(preCheck.getProblems());
   }
-  
+
 //  public static void typeCheck(final ParseResult parse, final InformalTypeChecker itc, final FormalTypeChecker ftc) throws RecognitionException {
 //    Main.logDebug("Typechecking " + parse.getFilePath());
-    
+
     //TODO fix!
-    
+
 //    CommonTree t = (CommonTree)parse.getParse().getTree(); //Get input tree
 //    CommonTreeNodeStream nodes = new CommonTreeNodeStream(t);  //Get stream of nodes from tree
 //    nodes.setTokenStream(parse.getTokens());
 //
 //    walker.initialise(nodes, itc, ftc, parse.getFile()); //Reset walker, provide inputs
 //
-//    walker.prog();  //Walk    
+//    walker.prog();  //Walk
 //  }
-  
+
 }

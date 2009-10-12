@@ -19,7 +19,12 @@ import java.util.Collection;
 
 import org.antlr.runtime.RecognitionException;
 
-public class API {
+public final class API {
+
+  /**
+   * Private constructor - cannot be instantiated.
+   */
+  private API() { }
 
   //Parse
 
@@ -33,14 +38,14 @@ public class API {
       }
     }
 
-    for (File file : files) {      
+    for (File file : files) {
       try {
         InputStream is = SourceReader.getInstance().readFile(file);
 
         ParseResult parseResult = doActualParse(is, file, tracker, printTiming);
         if (parseResult != null) {
           tracker.addParse(file, parseResult);
-        }        
+        }
       } catch (FileNotFoundException fnfe) {
         //TODO report error
       } catch (IOException ioe) {
@@ -51,7 +56,7 @@ public class API {
     return tracker;
   }
 
-  private static ParseResult doActualParse(InputStream is, File file, ParsingTracker tracker, boolean printTiming) {
+  private static ParseResult doActualParse(final InputStream is, final File file, final ParsingTracker tracker, final boolean printTiming) {
     try {
       if (printTiming) {
         long startTime = System.nanoTime();
@@ -100,7 +105,7 @@ public class API {
     } else {
       outputStream = System.out;
       Main.logDebug("printing: " + printType + ", to: stdout");
-    }  
+    }
 
 
     Printer.printToStream(files, tracker, outputStream, printType, timing);
@@ -111,13 +116,13 @@ public class API {
     }
   }
 
-  public static void printResults(final Problems problems, final ParsingTracker tracker, PrintStream out) {
+  public static void printResults(final Problems problems, final ParsingTracker tracker, final PrintStream out) {
     printResults(problems, out);
     if (tracker != null) {
       tracker.printFinalMessage(out);
     }
   }
-  
+
   public static void printResults(final Problems problems, final PrintStream out) {
     problems.printProblems(out);
     problems.printSummary(out);

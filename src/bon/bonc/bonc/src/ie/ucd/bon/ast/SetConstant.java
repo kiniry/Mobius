@@ -19,7 +19,6 @@ public class SetConstant extends ManifestConstant {
   protected SetConstant(List<EnumerationElement> enumerations, SourceLocation location) {
     super(location);
     this.enumerations = enumerations; 
-    
   }
   
   public static SetConstant mk(List<EnumerationElement> enumerations, SourceLocation location) {
@@ -39,7 +38,6 @@ public class SetConstant extends ManifestConstant {
   @Override
   public SetConstant clone() {
     List<EnumerationElement> newEnumerations = enumerations;
-    
     return SetConstant.mk(newEnumerations, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class SetConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("SetConstant ast node: ");
-    
     sb.append("enumerations = ");
     sb.append(enumerations);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

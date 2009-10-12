@@ -9,7 +9,7 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class SystemNotDefinedError extends TypeCheckingError {
 
   private static final String message = "No system was defined";
-  
+
   public SystemNotDefinedError() {
     super(null);
   }
@@ -18,7 +18,5 @@ public class SystemNotDefinedError extends TypeCheckingError {
   public String getMessage() {
     return message;
   }
-  
-  
 
 }

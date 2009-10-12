@@ -49,21 +49,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
-    IVisitorWithAdditions, PrintAgent {
+public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions, PrintAgent {
 
   private final TextPrinter tp;
   private final ByteArrayOutputStream baos;
-  
+
   public LatexPrintVisitor() {
     baos = new ByteArrayOutputStream();
     tp = new TextPrinter(new PrintStream(baos));
   }
-  
+
   public String getAllOutputAsString(ParsingTracker tracker, Map<String, Object> additionalData) throws IOException {
     ByteArrayOutputStream start = new ByteArrayOutputStream();
     //FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "latex-start.ftl", additionalData);
-    
+
     StringBuilder sb = new StringBuilder();
     sb.append(start.toString());
     sb.append(baos.toString());
@@ -74,7 +73,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   public void visitStaticDiagram(StaticDiagram node, List<StaticComponent> components, String extendedId, String comment, SourceLocation loc) {
     visitAll(components);
   }
-  
+
   @Override
   public void visitBonSourceFile(BonSourceFile node, List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc) {
     visitAll(bonSpecification);
@@ -92,24 +91,24 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     visitAllPrintingSeparatorAndlines(parents, " \\\\", 1, false, true);
     tp.printLine("\\end{varwidth}");
     tp.decreaseIndentation();
-    
+
     tp.printLine("\\nodepart{second}");
     tp.increaseIndentation();
     tp.printLine("\\begin{varwidth}[t!]{1.0\\textwidth}");
     tp.printLine("\\begin{flushleft}");
-    
-    visitAll(features);    
-    
-    tp.printLine("\\end{flushleft}"); 
+
+    visitAll(features);
+
+    tp.printLine("\\end{flushleft}");
     tp.printLine("\\end{varwidth}");
     tp.decreaseIndentation();
-    
+
     tp.printLine("\\nodepart{third}");
     tp.increaseIndentation();
     tp.printLine("\\begin{varwidth}[t!]{1.0\\textwidth}");
     tp.printLine("\\begin{flushleft}");
     visitAllPrintingSeparatorAndlines(invariant, "; \\\\", 1, false, true);
-    tp.printLine("\\end{flushleft}"); 
+    tp.printLine("\\end{flushleft}");
     tp.printLine("\\end{varwidth}");
     tp.decreaseIndentation();
   }
@@ -118,20 +117,20 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   public void visitClazz(Clazz node, ClassName name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface,
       Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
     tp.printLine("\\begin{tikzpicture}");
-    tp.printLine("\\pgfsetcornersarced{\\pgfpoint{20mm}{20mm}}"); 
+    tp.printLine("\\pgfsetcornersarced{\\pgfpoint{20mm}{20mm}}");
     tp.printLine("\\node [bonclass] [rectangle split, rectangle split, rectangle split parts=3] (box) {%");
     tp.increaseIndentation();
-    tp.print("\\textbf{"); 
+    tp.print("\\textbf{");
     name.accept(this);
     tp.printLine("}");
-    
+
     visitNodeIfNonNull(classInterface);
-    
+
     tp.decreaseIndentation();
     tp.printLine("};");
     tp.printLine("\\end{tikzpicture}");
   }
-  
+
   @Override
   public void visitClassName(ClassName node, String name, SourceLocation loc) {
     tp.print(sanitizeIdentifier(name));
@@ -140,9 +139,9 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
   @Override
   public void visitFeature(Feature node, List<FeatureSpecification> featureSpecifications,
       List<ClassName> selectiveExport, String comment, SourceLocation loc) {
-    visitAll(featureSpecifications);    
+    visitAll(featureSpecifications);
   }
-  
+
   @Override
   public void visitFeatureSpecification(FeatureSpecification node, Modifier modifier, List<FeatureName> featureNames,
       List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
@@ -152,12 +151,12 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp.printLine();
     visitAll(arguments);
   }
-  
+
   @Override
   public void visitFeatureName(FeatureName node, String name, SourceLocation loc) {
     tp.print("\\emph{" + sanitizeIdentifier(name) + "}");
   }
-  
+
   @Override
   public void visitFeatureArgument(FeatureArgument node, String identifier, Type type, SourceLocation loc) {
     tp.printLine("\\hspace{5mm}");
@@ -176,7 +175,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp.print(' ');
     type.accept(this);
   }
-  
+
   @Override
   public void visitType(Type node, String identifier, List<Type> actualGenerics, String fullString, SourceLocation loc) {
     tp.print(identifier);
@@ -186,7 +185,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
       tp.print(']');
     }
   }
-  
+
   @Override
   public void visitTypeMark(TypeMark node, Mark mark, Integer multiplicity, SourceLocation loc) {
     switch(mark) {
@@ -205,7 +204,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
       break;
     }
   }
-  
+
   @Override
   public void visitBinaryExp(BinaryExp node, Op op, Expression left,
       Expression right, SourceLocation loc) {
@@ -223,8 +222,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp.printSpace();
     expression.accept(this);
   }
-  
-  
+
   @Override
   public void visitCallExp(CallExp node, Expression qualifier, List<UnqualifiedCall> callChain, SourceLocation loc) {
     if (qualifier != null) {
@@ -233,7 +231,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     }
     visitAllPrintingSeparator(callChain, ".", false);
   }
-  
+
   @Override
   public void visitUnqualifiedCall(UnqualifiedCall node, String id, List<Expression> args, SourceLocation loc) {
     tp.print(sanitizeIdentifier(id));
@@ -243,12 +241,12 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
       tp.print(')');
     }
   }
-  
+
   @Override
   public void visitIntegerConstant(IntegerConstant node, Integer value, SourceLocation loc) {
     tp.print(value);
   }
-  
+
   @Override
   public void visitIntegerInterval(IntegerInterval node, Integer start, Integer stop, SourceLocation loc) {
     tp.print(start);
@@ -277,14 +275,14 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp.print(multiplicity);
     tp.print("} ");
   }
-  
+
   @Override
   public void visitCharacterConstant(CharacterConstant node, Character value,
       SourceLocation loc) {
     tp.print('\'');
     tp.print(value);
     tp.print('\'');
-  } 
+  }
 
   @Override
   public void visitCharacterInterval(CharacterInterval node, Character start,
@@ -297,8 +295,7 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
     tp.print(stop);
     tp.print('\'');
   }
-  
-  
+
   protected String toString(KeywordConstant.Constant constant) {
     switch (constant) {
     case CURRENT:
@@ -420,36 +417,34 @@ public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements
       break;
     }
   }
-  
-  
 
   protected final void visitNodeIfNonNull(AstNode node) {
     if (node != null) {
       node.accept(this);
     }
   }
-  
+
   public void visitAllPrintingSeparator(Collection<? extends AstNode> nodes, String separator, boolean separatorAtEnd) {
-    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext();) {
       it.next().accept(this);
       if (it.hasNext() || separatorAtEnd) {
         tp.print(separator);
       }
     }
   }
-  
+
   public void visitAllPrintingSeparatorAndlines(Collection<? extends AstNode> nodes, String separator, int numberOfLines, boolean separatorAtEnd, boolean linesAtEnd) {
-    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext();) {
       it.next().accept(this);
       if (it.hasNext() || separatorAtEnd) {
         tp.print(separator);
       }
       if (it.hasNext() || linesAtEnd) {
         tp.printLines(numberOfLines);
-      }      
+      }
     }
   }
-  
+
   private static String sanitizeIdentifier(String id) {
     return id.replace("_", "\\_");
   }

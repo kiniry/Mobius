@@ -19,7 +19,6 @@ public class ClassName extends IndirectionElement {
   protected ClassName(String name, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
-    
   }
   
   public static ClassName mk(String name, SourceLocation location) {
@@ -39,7 +38,6 @@ public class ClassName extends IndirectionElement {
   @Override
   public ClassName clone() {
     String newName = name;
-    
     return ClassName.mk(newName, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class ClassName extends IndirectionElement {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClassName ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

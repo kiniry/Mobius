@@ -21,7 +21,6 @@ public class UnqualifiedCall extends AstNode {
     super(location);
     this.id = id; assert id != null;
     this.args = args; assert args != null;
-    
   }
   
   public static UnqualifiedCall mk(String id, List<Expression> args, SourceLocation location) {
@@ -43,7 +42,6 @@ public class UnqualifiedCall extends AstNode {
   public UnqualifiedCall clone() {
     String newId = id;
     List<Expression> newArgs = args;
-    
     return UnqualifiedCall.mk(newId, newArgs, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class UnqualifiedCall extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("UnqualifiedCall ast node: ");
-    
     sb.append("id = ");
     sb.append(id);
     sb.append(", ");
-    
-    sb.append("args = ");
+        sb.append("args = ");
     sb.append(args);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

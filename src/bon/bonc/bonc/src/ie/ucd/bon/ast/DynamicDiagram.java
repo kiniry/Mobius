@@ -23,7 +23,6 @@ public class DynamicDiagram extends SpecificationElement {
     this.components = components; assert components != null;
     this.extendedId = extendedId; 
     this.comment = comment; 
-    
   }
   
   public static DynamicDiagram mk(List<DynamicComponent> components, String extendedId, String comment, SourceLocation location) {
@@ -47,7 +46,6 @@ public class DynamicDiagram extends SpecificationElement {
     List<DynamicComponent> newComponents = components;
     String newExtendedId = extendedId;
     String newComment = comment;
-    
     return DynamicDiagram.mk(newComponents, newExtendedId, newComment, getLocation());
   }
   
@@ -55,21 +53,17 @@ public class DynamicDiagram extends SpecificationElement {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("DynamicDiagram ast node: ");
-    
     sb.append("components = ");
     sb.append(components);
     sb.append(", ");
-    
-    sb.append("extendedId = ");
+        sb.append("extendedId = ");
     sb.append(extendedId);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -21,7 +21,6 @@ public class StaticRef extends AstNode {
     super(location);
     this.prefix = prefix; assert prefix != null;
     this.name = name; assert name != null;
-    
   }
   
   public static StaticRef mk(List<StaticRefPart> prefix, StaticRefPart name, SourceLocation location) {
@@ -43,7 +42,6 @@ public class StaticRef extends AstNode {
   public StaticRef clone() {
     List<StaticRefPart> newPrefix = prefix;
     StaticRefPart newName = name == null ? null : name.clone();
-    
     return StaticRef.mk(newPrefix, newName, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class StaticRef extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StaticRef ast node: ");
-    
     sb.append("prefix = ");
     sb.append(prefix);
     sb.append(", ");
-    
-    sb.append("name = ");
+        sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

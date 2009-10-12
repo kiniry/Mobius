@@ -19,7 +19,6 @@ public class Indexing extends AstNode {
   protected Indexing(List<IndexClause> indexes, SourceLocation location) {
     super(location);
     this.indexes = indexes; assert indexes != null;
-    
   }
   
   public static Indexing mk(List<IndexClause> indexes, SourceLocation location) {
@@ -39,7 +38,6 @@ public class Indexing extends AstNode {
   @Override
   public Indexing clone() {
     List<IndexClause> newIndexes = indexes;
-    
     return Indexing.mk(newIndexes, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class Indexing extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Indexing ast node: ");
-    
     sb.append("indexes = ");
     sb.append(indexes);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

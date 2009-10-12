@@ -28,7 +28,6 @@ public class ObjectGroup extends DynamicComponent {
     this.name = name; assert name != null;
     this.components = components; assert components != null;
     this.comment = comment; 
-    
   }
   
   public static ObjectGroup mk(Nameless nameless, String name, List<DynamicComponent> components, String comment, SourceLocation location) {
@@ -54,7 +53,6 @@ public class ObjectGroup extends DynamicComponent {
     String newName = name;
     List<DynamicComponent> newComponents = components;
     String newComment = comment;
-    
     return ObjectGroup.mk(newNameless, newName, newComponents, newComment, getLocation());
   }
   
@@ -62,25 +60,20 @@ public class ObjectGroup extends DynamicComponent {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ObjectGroup ast node: ");
-    
     sb.append("nameless = ");
     sb.append(nameless);
     sb.append(", ");
-    
-    sb.append("name = ");
+        sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("components = ");
+        sb.append("components = ");
     sb.append(components);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

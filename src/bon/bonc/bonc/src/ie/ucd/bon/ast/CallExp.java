@@ -21,7 +21,6 @@ public class CallExp extends Expression {
     super(location);
     this.qualifier = qualifier; 
     this.callChain = callChain; assert callChain != null;
-    
   }
   
   public static CallExp mk(Expression qualifier, List<UnqualifiedCall> callChain, SourceLocation location) {
@@ -43,7 +42,6 @@ public class CallExp extends Expression {
   public CallExp clone() {
     Expression newQualifier = qualifier == null ? null : qualifier.clone();
     List<UnqualifiedCall> newCallChain = callChain;
-    
     return CallExp.mk(newQualifier, newCallChain, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class CallExp extends Expression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CallExp ast node: ");
-    
     sb.append("qualifier = ");
     sb.append(qualifier);
     sb.append(", ");
-    
-    sb.append("callChain = ");
+        sb.append("callChain = ");
     sb.append(callChain);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

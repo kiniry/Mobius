@@ -21,7 +21,6 @@ public class TypeRange extends VariableRange {
     super(location);
     this.identifiers = identifiers; assert identifiers != null;
     this.type = type; assert type != null;
-    
   }
   
   public static TypeRange mk(List<String> identifiers, Type type, SourceLocation location) {
@@ -43,7 +42,6 @@ public class TypeRange extends VariableRange {
   public TypeRange clone() {
     List<String> newIdentifiers = identifiers;
     Type newType = type == null ? null : type.clone();
-    
     return TypeRange.mk(newIdentifiers, newType, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class TypeRange extends VariableRange {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("TypeRange ast node: ");
-    
     sb.append("identifiers = ");
     sb.append(identifiers);
     sb.append(", ");
-    
-    sb.append("type = ");
+        sb.append("type = ");
     sb.append(type);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

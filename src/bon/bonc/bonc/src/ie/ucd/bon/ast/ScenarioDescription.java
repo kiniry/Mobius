@@ -23,7 +23,6 @@ public class ScenarioDescription extends DynamicComponent {
     this.name = name; assert name != null;
     this.actions = actions; assert actions != null;
     this.comment = comment; 
-    
   }
   
   public static ScenarioDescription mk(String name, List<LabelledAction> actions, String comment, SourceLocation location) {
@@ -47,7 +46,6 @@ public class ScenarioDescription extends DynamicComponent {
     String newName = name;
     List<LabelledAction> newActions = actions;
     String newComment = comment;
-    
     return ScenarioDescription.mk(newName, newActions, newComment, getLocation());
   }
   
@@ -55,21 +53,17 @@ public class ScenarioDescription extends DynamicComponent {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ScenarioDescription ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("actions = ");
+        sb.append("actions = ");
     sb.append(actions);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

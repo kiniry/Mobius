@@ -36,7 +36,6 @@ public class FeatureSpecification extends AstNode {
     this.hasType = hasType; 
     this.renaming = renaming; 
     this.comment = comment; 
-    
   }
   
   public static FeatureSpecification mk(Modifier modifier, List<FeatureName> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
@@ -68,7 +67,6 @@ public class FeatureSpecification extends AstNode {
     HasType newHasType = hasType == null ? null : hasType.clone();
     RenameClause newRenaming = renaming == null ? null : renaming.clone();
     String newComment = comment;
-    
     return FeatureSpecification.mk(newModifier, newFeatureNames, newArguments, newContracts, newHasType, newRenaming, newComment, getLocation());
   }
   
@@ -76,37 +74,29 @@ public class FeatureSpecification extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("FeatureSpecification ast node: ");
-    
     sb.append("modifier = ");
     sb.append(modifier);
     sb.append(", ");
-    
-    sb.append("featureNames = ");
+        sb.append("featureNames = ");
     sb.append(featureNames);
     sb.append(", ");
-    
-    sb.append("arguments = ");
+        sb.append("arguments = ");
     sb.append(arguments);
     sb.append(", ");
-    
-    sb.append("contracts = ");
+        sb.append("contracts = ");
     sb.append(contracts);
     sb.append(", ");
-    
-    sb.append("hasType = ");
+        sb.append("hasType = ");
     sb.append(hasType);
     sb.append(", ");
-    
-    sb.append("renaming = ");
+        sb.append("renaming = ");
     sb.append(renaming);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

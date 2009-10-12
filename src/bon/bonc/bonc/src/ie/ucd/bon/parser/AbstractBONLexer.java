@@ -48,37 +48,31 @@ public abstract class AbstractBONLexer extends Lexer {
   @Override
   public String getErrorMessage(RecognitionException e, String[] tokenNames) {
     String msg = null;
-    if ( e instanceof MismatchedTokenException ) {
+    if (e instanceof MismatchedTokenException) {
       MismatchedTokenException mte = (MismatchedTokenException)e;
-      msg = "Unexpected character "+getCharErrorDisplay(e.c)+", expecting "+getCharErrorDisplay(mte.expecting);
-    }
-    else if ( e instanceof NoViableAltException ) {
+      msg = "Unexpected character " + getCharErrorDisplay(e.c) + ", expecting " + getCharErrorDisplay(mte.expecting);
+    } else if (e instanceof NoViableAltException) {
       //NoViableAltException nvae = (NoViableAltException)e;
       // for development, can add "decision=<<"+nvae.grammarDecisionDescription+">>"
       // and "(decision="+nvae.decisionNumber+") and
       // "state "+nvae.stateNumber
 
       msg = "Unexpected " + getCharErrorDisplay(e.c);
-    }
-    else if ( e instanceof EarlyExitException ) {
+    } else if (e instanceof EarlyExitException) {
       //EarlyExitException eee = (EarlyExitException)e;
       // for development, can add "(decision="+eee.decisionNumber+")"
-      msg = "required (...)+ loop did not match anything at character "+getCharErrorDisplay(e.c);
-    }
-    else if ( e instanceof MismatchedNotSetException ) {
+      msg = "required (...)+ loop did not match anything at character " + getCharErrorDisplay(e.c);
+    } else if (e instanceof MismatchedNotSetException) {
       MismatchedNotSetException mse = (MismatchedNotSetException)e;
-      msg = "mismatched character "+getCharErrorDisplay(e.c)+" expecting set "+mse.expecting;
-    }
-    else if ( e instanceof MismatchedSetException ) {
+      msg = "mismatched character " + getCharErrorDisplay(e.c) + " expecting set " + mse.expecting;
+    } else if (e instanceof MismatchedSetException) {
       MismatchedSetException mse = (MismatchedSetException)e;
-      msg = "mismatched character "+getCharErrorDisplay(e.c)+" expecting set "+mse.expecting;
-    }
-    else if ( e instanceof MismatchedRangeException ) {
+      msg = "mismatched character " + getCharErrorDisplay(e.c) + " expecting set " + mse.expecting;
+    } else if (e instanceof MismatchedRangeException) {
       MismatchedRangeException mre = (MismatchedRangeException)e;
-      msg = "mismatched character "+getCharErrorDisplay(e.c)+" expecting set "+
-      getCharErrorDisplay(mre.a)+".."+getCharErrorDisplay(mre.b);
-    }
-    else {
+      msg = "mismatched character " + getCharErrorDisplay(e.c) + " expecting set "
+      + getCharErrorDisplay(mre.a) + ".." + getCharErrorDisplay(mre.b);
+    } else {
       msg = super.getErrorMessage(e, tokenNames);
     }
     return msg;
@@ -96,7 +90,7 @@ public abstract class AbstractBONLexer extends Lexer {
     if (Main.isDebug()) {
       e.printStackTrace(System.out);
     }
-    
+
     BONProblem problem;
     if (e.token == null) {
       int offset = getOffset(e);
@@ -108,7 +102,7 @@ public abstract class AbstractBONLexer extends Lexer {
 
     problems.addProblem(problem);
   }
-  
+
   private int getOffset(RecognitionException re) {
     if (re instanceof NoViableAltException) {
       NoViableAltException nvae = (NoViableAltException)re;

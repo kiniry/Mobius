@@ -21,7 +21,6 @@ public class LabelledAction extends AstNode {
     super(location);
     this.label = label; assert label != null;
     this.description = description; assert description != null;
-    
   }
   
   public static LabelledAction mk(String label, String description, SourceLocation location) {
@@ -43,7 +42,6 @@ public class LabelledAction extends AstNode {
   public LabelledAction clone() {
     String newLabel = label;
     String newDescription = description;
-    
     return LabelledAction.mk(newLabel, newDescription, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class LabelledAction extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("LabelledAction ast node: ");
-    
     sb.append("label = ");
     sb.append(label);
     sb.append(", ");
-    
-    sb.append("description = ");
+        sb.append("description = ");
     sb.append(description);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

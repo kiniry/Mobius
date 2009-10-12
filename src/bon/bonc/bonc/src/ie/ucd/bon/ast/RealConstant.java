@@ -19,7 +19,6 @@ public class RealConstant extends ManifestConstant {
   protected RealConstant(Double value, SourceLocation location) {
     super(location);
     this.value = value; assert value != null;
-    
   }
   
   public static RealConstant mk(Double value, SourceLocation location) {
@@ -39,7 +38,6 @@ public class RealConstant extends ManifestConstant {
   @Override
   public RealConstant clone() {
     Double newValue = value;
-    
     return RealConstant.mk(newValue, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class RealConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("RealConstant ast node: ");
-    
     sb.append("value = ");
     sb.append(value);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

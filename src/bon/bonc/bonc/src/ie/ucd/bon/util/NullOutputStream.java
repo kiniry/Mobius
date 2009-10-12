@@ -11,14 +11,14 @@ import java.io.PrintStream;
 public class NullOutputStream extends OutputStream {
 
   private static PrintStream instance;
-  
+
   public static PrintStream getNullPrintStreamInstance() {
     if (instance == null) {
       instance = new PrintStream(new NullOutputStream());
     }
     return instance;
   }
-  
+
   @Override
   public void close() throws IOException {
   }
@@ -38,5 +38,5 @@ public class NullOutputStream extends OutputStream {
   @Override
   public void write(int b) throws IOException {
   }
-  
+
 }

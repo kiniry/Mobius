@@ -9,7 +9,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassDoesNotDeclareFeatureError extends TypeCheckingError {
 
   private static final String message = "Class %s does not declare a feature with name %s";
-  
+
   private final String className;
   private final String featureName;
 
@@ -22,6 +22,6 @@ public class ClassDoesNotDeclareFeatureError extends TypeCheckingError {
   @Override
   public String getMessage() {
     return String.format(message, className, featureName);
-  }  
+  }
 
 }

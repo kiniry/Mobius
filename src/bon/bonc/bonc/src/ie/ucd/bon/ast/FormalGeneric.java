@@ -21,7 +21,6 @@ public class FormalGeneric extends AstNode {
     super(location);
     this.identifier = identifier; assert identifier != null;
     this.type = type; 
-    
   }
   
   public static FormalGeneric mk(String identifier, Type type, SourceLocation location) {
@@ -43,7 +42,6 @@ public class FormalGeneric extends AstNode {
   public FormalGeneric clone() {
     String newIdentifier = identifier;
     Type newType = type == null ? null : type.clone();
-    
     return FormalGeneric.mk(newIdentifier, newType, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class FormalGeneric extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("FormalGeneric ast node: ");
-    
     sb.append("identifier = ");
     sb.append(identifier);
     sb.append(", ");
-    
-    sb.append("type = ");
+        sb.append("type = ");
     sb.append(type);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -19,7 +19,6 @@ public class BooleanConstant extends ManifestConstant {
   protected BooleanConstant(Boolean value, SourceLocation location) {
     super(location);
     this.value = value; assert value != null;
-    
   }
   
   public static BooleanConstant mk(Boolean value, SourceLocation location) {
@@ -39,7 +38,6 @@ public class BooleanConstant extends ManifestConstant {
   @Override
   public BooleanConstant clone() {
     Boolean newValue = value;
-    
     return BooleanConstant.mk(newValue, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class BooleanConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("BooleanConstant ast node: ");
-    
     sb.append("value = ");
     sb.append(value);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -19,7 +19,6 @@ public class GenericIndirection extends AstNode {
   protected GenericIndirection(IndirectionElement indirectionElement, SourceLocation location) {
     super(location);
     this.indirectionElement = indirectionElement; assert indirectionElement != null;
-    
   }
   
   public static GenericIndirection mk(IndirectionElement indirectionElement, SourceLocation location) {
@@ -39,7 +38,6 @@ public class GenericIndirection extends AstNode {
   @Override
   public GenericIndirection clone() {
     IndirectionElement newIndirectionElement = indirectionElement == null ? null : indirectionElement.clone();
-    
     return GenericIndirection.mk(newIndirectionElement, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class GenericIndirection extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("GenericIndirection ast node: ");
-    
     sb.append("indirectionElement = ");
     sb.append(indirectionElement);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

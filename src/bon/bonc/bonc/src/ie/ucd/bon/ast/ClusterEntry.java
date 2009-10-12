@@ -21,7 +21,6 @@ public class ClusterEntry extends AstNode {
     super(location);
     this.name = name; assert name != null;
     this.description = description; assert description != null;
-    
   }
   
   public static ClusterEntry mk(String name, String description, SourceLocation location) {
@@ -43,7 +42,6 @@ public class ClusterEntry extends AstNode {
   public ClusterEntry clone() {
     String newName = name;
     String newDescription = description;
-    
     return ClusterEntry.mk(newName, newDescription, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class ClusterEntry extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClusterEntry ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("description = ");
+        sb.append("description = ");
     sb.append(description);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

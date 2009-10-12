@@ -48,6 +48,6 @@ public class NullIgnoringList<E> extends ForwardingList<E> {
   @Override
   public boolean addAll(int index, Collection<? extends E> elements) {
     return list.addAll(index, Collections2.filter(elements, Predicates.notNull()));
-  }  
+  }
 
 }

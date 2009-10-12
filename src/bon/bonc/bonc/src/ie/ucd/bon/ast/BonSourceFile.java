@@ -21,7 +21,6 @@ public class BonSourceFile extends AstNode {
     super(location);
     this.bonSpecification = bonSpecification; assert bonSpecification != null;
     this.indexing = indexing; 
-    
   }
   
   public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
@@ -43,7 +42,6 @@ public class BonSourceFile extends AstNode {
   public BonSourceFile clone() {
     List<SpecificationElement> newBonSpecification = bonSpecification;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
-    
     return BonSourceFile.mk(newBonSpecification, newIndexing, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class BonSourceFile extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("BonSourceFile ast node: ");
-    
     sb.append("bonSpecification = ");
     sb.append(bonSpecification);
     sb.append(", ");
-    
-    sb.append("indexing = ");
+        sb.append("indexing = ");
     sb.append(indexing);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

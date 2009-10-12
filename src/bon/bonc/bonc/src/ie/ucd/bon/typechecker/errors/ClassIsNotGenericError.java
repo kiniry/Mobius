@@ -9,7 +9,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class ClassIsNotGenericError extends TypeCheckingError {
 
   private static final String message = "Class %s is not generic";
-  
+
   private final String className;
 
   public ClassIsNotGenericError(SourceLocation loc, String className) {
@@ -21,7 +21,4 @@ public class ClassIsNotGenericError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, className);
   }
-  
-  
-
 }

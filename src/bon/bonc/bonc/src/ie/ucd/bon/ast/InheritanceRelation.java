@@ -25,7 +25,6 @@ public class InheritanceRelation extends StaticRelation {
     this.parent = parent; assert parent != null;
     this.multiplicity = multiplicity; 
     this.semanticLabel = semanticLabel; 
-    
   }
   
   public static InheritanceRelation mk(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
@@ -51,7 +50,6 @@ public class InheritanceRelation extends StaticRelation {
     StaticRef newParent = parent == null ? null : parent.clone();
     Multiplicity newMultiplicity = multiplicity == null ? null : multiplicity.clone();
     String newSemanticLabel = semanticLabel;
-    
     return InheritanceRelation.mk(newChild, newParent, newMultiplicity, newSemanticLabel, getLocation());
   }
   
@@ -59,25 +57,20 @@ public class InheritanceRelation extends StaticRelation {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("InheritanceRelation ast node: ");
-    
     sb.append("child = ");
     sb.append(child);
     sb.append(", ");
-    
-    sb.append("parent = ");
+        sb.append("parent = ");
     sb.append(parent);
     sb.append(", ");
-    
-    sb.append("multiplicity = ");
+        sb.append("multiplicity = ");
     sb.append(multiplicity);
     sb.append(", ");
-    
-    sb.append("semanticLabel = ");
+        sb.append("semanticLabel = ");
     sb.append(semanticLabel);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

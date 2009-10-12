@@ -26,19 +26,19 @@ import org.antlr.runtime.tree.RewriteEarlyExitException;
 import org.antlr.runtime.tree.RewriteEmptyStreamException;
 
 /**
- * 
+ *
  * @author Fintan
  *
  */
 public final class Parser {
-  
+
   private static BONParser parser = new BONParser(null);
   private static BONLexer lexer = new BONLexer(null);
-      
+
   /** Prevent instantiation of Parser. */
   private Parser() { }
-  
-  public static ParseResult parse(final File inputFile, final InputStream is, final ParsingTracker tracker) 
+
+  public static ParseResult parse(final File inputFile, final InputStream is, final ParsingTracker tracker)
   throws RecognitionException {
     if (is == null) {
       Problems problems = new Problems("Parser");
@@ -59,14 +59,14 @@ public final class Parser {
       result = parser.prog();
       is.close();
       Main.logDebug("Valid parse: " + parser.isValidParse());
-      
+
 //      Main.logDebug("Starting ST builder");
       STBuilderVisitor v = new STBuilderVisitor(tracker.getSymbolTable());
       result.accept(v);
 //      Main.logDebug("Finished ST builder");
-      
+
       return new ParseResult(parser.isValidParse(), result, tokens, inputFile, parser.getProblems(), lexer.getProblems(), v.getProblems());
-      
+
     } catch (IOException ioe) {
       BONProblem problem = new FileReadError(inputFile, ioe.getMessage());
       boolean valid = result != null; //Theoretically the IOException could be thrown closing the stream

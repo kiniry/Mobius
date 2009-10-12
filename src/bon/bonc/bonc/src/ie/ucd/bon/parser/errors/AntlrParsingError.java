@@ -18,6 +18,5 @@ public class AntlrParsingError extends ParsingError {
   @Override
   public String getMessage() {
     return message;
-  } 
-  
+  }
 }

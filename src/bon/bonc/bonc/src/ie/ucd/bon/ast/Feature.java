@@ -23,7 +23,6 @@ public class Feature extends AstNode {
     this.featureSpecifications = featureSpecifications; assert featureSpecifications != null;
     this.selectiveExport = selectiveExport; 
     this.comment = comment; 
-    
   }
   
   public static Feature mk(List<FeatureSpecification> featureSpecifications, List<ClassName> selectiveExport, String comment, SourceLocation location) {
@@ -47,7 +46,6 @@ public class Feature extends AstNode {
     List<FeatureSpecification> newFeatureSpecifications = featureSpecifications;
     List<ClassName> newSelectiveExport = selectiveExport;
     String newComment = comment;
-    
     return Feature.mk(newFeatureSpecifications, newSelectiveExport, newComment, getLocation());
   }
   
@@ -55,21 +53,17 @@ public class Feature extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Feature ast node: ");
-    
     sb.append("featureSpecifications = ");
     sb.append(featureSpecifications);
     sb.append(", ");
-    
-    sb.append("selectiveExport = ");
+        sb.append("selectiveExport = ");
     sb.append(selectiveExport);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

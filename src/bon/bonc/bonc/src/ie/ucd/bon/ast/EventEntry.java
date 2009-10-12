@@ -21,7 +21,6 @@ public class EventEntry extends AstNode {
     super(location);
     this.description = description; assert description != null;
     this.involved = involved; assert involved != null;
-    
   }
   
   public static EventEntry mk(String description, List<String> involved, SourceLocation location) {
@@ -43,7 +42,6 @@ public class EventEntry extends AstNode {
   public EventEntry clone() {
     String newDescription = description;
     List<String> newInvolved = involved;
-    
     return EventEntry.mk(newDescription, newInvolved, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class EventEntry extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("EventEntry ast node: ");
-    
     sb.append("description = ");
     sb.append(description);
     sb.append(", ");
-    
-    sb.append("involved = ");
+        sb.append("involved = ");
     sb.append(involved);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

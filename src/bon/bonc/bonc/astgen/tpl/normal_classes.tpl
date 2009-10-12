@@ -25,8 +25,7 @@ public class \ClassName extends \Basename {
   protected \ClassName(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
     super(location);
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
-}    
-  }
+}  }
   
   public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
     return new \ClassName(\members[, ]{\memberName}, location);
@@ -45,21 +44,18 @@ public class \ClassName extends \Basename {
   @Override
   public \ClassName clone() {
     \members{\if_primitive{\Membertype new\MemberName = \memberName;}{\MemberType new\MemberName = \memberName == null ? null : \memberName.clone();}
-    }
-    return \ClassName.mk(\members[, ]{new\MemberName}, getLocation());
+    }return \ClassName.mk(\members[, ]{new\MemberName}, getLocation());
   }
   
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("\ClassName ast node: ");
-    \members{
-    sb.append("\memberName = ");
+\members{    sb.append("\memberName = ");
     sb.append(\memberName);
     sb.append(", ");
-    }
-    if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+    }if (sb.length() >= 2) {
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

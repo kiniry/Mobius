@@ -12,5 +12,5 @@ public abstract class ParsingWarning extends BONWarning {
   public ParsingWarning(SourceLocation sourceLoc, String message) {
     super(sourceLoc);
   }
-  
+
 }

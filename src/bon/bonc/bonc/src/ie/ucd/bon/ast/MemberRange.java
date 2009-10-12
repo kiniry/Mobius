@@ -21,7 +21,6 @@ public class MemberRange extends VariableRange {
     super(location);
     this.identifiers = identifiers; assert identifiers != null;
     this.expression = expression; assert expression != null;
-    
   }
   
   public static MemberRange mk(List<String> identifiers, Expression expression, SourceLocation location) {
@@ -43,7 +42,6 @@ public class MemberRange extends VariableRange {
   public MemberRange clone() {
     List<String> newIdentifiers = identifiers;
     Expression newExpression = expression == null ? null : expression.clone();
-    
     return MemberRange.mk(newIdentifiers, newExpression, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class MemberRange extends VariableRange {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("MemberRange ast node: ");
-    
     sb.append("identifiers = ");
     sb.append(identifiers);
     sb.append(", ");
-    
-    sb.append("expression = ");
+        sb.append("expression = ");
     sb.append(expression);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

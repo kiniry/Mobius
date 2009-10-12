@@ -27,7 +27,6 @@ public class CreationChart extends InformalChart {
     this.indexing = indexing; 
     this.explanation = explanation; 
     this.part = part; 
-    
   }
   
   public static CreationChart mk(String name, List<CreationEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
@@ -55,7 +54,6 @@ public class CreationChart extends InformalChart {
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     String newExplanation = explanation;
     String newPart = part;
-    
     return CreationChart.mk(newName, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
   
@@ -63,29 +61,23 @@ public class CreationChart extends InformalChart {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CreationChart ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("entries = ");
+        sb.append("entries = ");
     sb.append(entries);
     sb.append(", ");
-    
-    sb.append("indexing = ");
+        sb.append("indexing = ");
     sb.append(indexing);
     sb.append(", ");
-    
-    sb.append("explanation = ");
+        sb.append("explanation = ");
     sb.append(explanation);
     sb.append(", ");
-    
-    sb.append("part = ");
+        sb.append("part = ");
     sb.append(part);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

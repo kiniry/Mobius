@@ -19,7 +19,6 @@ public class ClientEntityList extends ClientEntityExpression {
   protected ClientEntityList(List<ClientEntity> entities, SourceLocation location) {
     super(location);
     this.entities = entities; assert entities != null;
-    
   }
   
   public static ClientEntityList mk(List<ClientEntity> entities, SourceLocation location) {
@@ -39,7 +38,6 @@ public class ClientEntityList extends ClientEntityExpression {
   @Override
   public ClientEntityList clone() {
     List<ClientEntity> newEntities = entities;
-    
     return ClientEntityList.mk(newEntities, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class ClientEntityList extends ClientEntityExpression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClientEntityList ast node: ");
-    
     sb.append("entities = ");
     sb.append(entities);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -19,7 +19,6 @@ public class CharacterConstant extends ManifestConstant {
   protected CharacterConstant(Character value, SourceLocation location) {
     super(location);
     this.value = value; assert value != null;
-    
   }
   
   public static CharacterConstant mk(Character value, SourceLocation location) {
@@ -39,7 +38,6 @@ public class CharacterConstant extends ManifestConstant {
   @Override
   public CharacterConstant clone() {
     Character newValue = value;
-    
     return CharacterConstant.mk(newValue, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class CharacterConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CharacterConstant ast node: ");
-    
     sb.append("value = ");
     sb.append(value);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

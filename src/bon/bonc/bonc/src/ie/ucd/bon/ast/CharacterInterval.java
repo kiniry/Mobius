@@ -21,7 +21,6 @@ public class CharacterInterval extends Interval {
     super(location);
     this.start = start; assert start != null;
     this.stop = stop; assert stop != null;
-    
   }
   
   public static CharacterInterval mk(Character start, Character stop, SourceLocation location) {
@@ -43,7 +42,6 @@ public class CharacterInterval extends Interval {
   public CharacterInterval clone() {
     Character newStart = start;
     Character newStop = stop;
-    
     return CharacterInterval.mk(newStart, newStop, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class CharacterInterval extends Interval {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("CharacterInterval ast node: ");
-    
     sb.append("start = ");
     sb.append(start);
     sb.append(", ");
-    
-    sb.append("stop = ");
+        sb.append("stop = ");
     sb.append(stop);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

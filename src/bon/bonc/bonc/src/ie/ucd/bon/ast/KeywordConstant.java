@@ -23,7 +23,6 @@ public class KeywordConstant extends Constant {
   protected KeywordConstant(Constant constant, SourceLocation location) {
     super(location);
     this.constant = constant; 
-    
   }
   
   public static KeywordConstant mk(Constant constant, SourceLocation location) {
@@ -43,7 +42,6 @@ public class KeywordConstant extends Constant {
   @Override
   public KeywordConstant clone() {
     Constant newConstant = constant;
-    
     return KeywordConstant.mk(newConstant, getLocation());
   }
   
@@ -51,13 +49,11 @@ public class KeywordConstant extends Constant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("KeywordConstant ast node: ");
-    
     sb.append("constant = ");
     sb.append(constant);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

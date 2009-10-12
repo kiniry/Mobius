@@ -19,7 +19,6 @@ public class StaticRefPart extends AstNode {
   protected StaticRefPart(String name, SourceLocation location) {
     super(location);
     this.name = name; assert name != null;
-    
   }
   
   public static StaticRefPart mk(String name, SourceLocation location) {
@@ -39,7 +38,6 @@ public class StaticRefPart extends AstNode {
   @Override
   public StaticRefPart clone() {
     String newName = name;
-    
     return StaticRefPart.mk(newName, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class StaticRefPart extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StaticRefPart ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

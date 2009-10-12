@@ -14,16 +14,9 @@ public abstract class ParsingError extends BONError {
   public ParsingError(SourceLocation sourceLoc, boolean isSevere) {
     super(sourceLoc);
     this.severe = isSevere;
-  }  
-  
+  }
+
   public final boolean isSevere() {
     return severe;
   }
-
-  @Override
-  public boolean equals(Object obj) {
-    return super.equals(obj);
-  }
-  
-  
 }

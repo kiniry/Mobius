@@ -19,7 +19,6 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   protected IndirectionFeatureList(List<FeatureName> featureNames, SourceLocation location) {
     super(location);
     this.featureNames = featureNames; assert featureNames != null;
-    
   }
   
   public static IndirectionFeatureList mk(List<FeatureName> featureNames, SourceLocation location) {
@@ -39,7 +38,6 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   @Override
   public IndirectionFeatureList clone() {
     List<FeatureName> newFeatureNames = featureNames;
-    
     return IndirectionFeatureList.mk(newFeatureNames, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("IndirectionFeatureList ast node: ");
-    
     sb.append("featureNames = ");
     sb.append(featureNames);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

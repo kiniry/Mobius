@@ -22,7 +22,5 @@ public class ClassNotInAnyClusterError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, className);
   }
-  
-   
-  
+
 }

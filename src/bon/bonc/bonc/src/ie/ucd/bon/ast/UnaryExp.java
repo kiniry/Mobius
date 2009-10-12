@@ -27,7 +27,6 @@ public class UnaryExp extends Expression {
     super(location);
     this.op = op; 
     this.expression = expression; assert expression != null;
-    
   }
   
   public static UnaryExp mk(Op op, Expression expression, SourceLocation location) {
@@ -49,7 +48,6 @@ public class UnaryExp extends Expression {
   public UnaryExp clone() {
     Op newOp = op;
     Expression newExpression = expression == null ? null : expression.clone();
-    
     return UnaryExp.mk(newOp, newExpression, getLocation());
   }
   
@@ -57,17 +55,14 @@ public class UnaryExp extends Expression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("UnaryExp ast node: ");
-    
     sb.append("op = ");
     sb.append(op);
     sb.append(", ");
-    
-    sb.append("expression = ");
+        sb.append("expression = ");
     sb.append(expression);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

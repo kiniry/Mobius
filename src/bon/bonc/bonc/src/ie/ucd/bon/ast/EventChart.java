@@ -31,7 +31,6 @@ public class EventChart extends InformalChart {
     this.indexing = indexing; 
     this.explanation = explanation; 
     this.part = part; 
-    
   }
   
   public static EventChart mk(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
@@ -63,7 +62,6 @@ public class EventChart extends InformalChart {
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     String newExplanation = explanation;
     String newPart = part;
-    
     return EventChart.mk(newSystemName, newIncoming, newOutgoing, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
   
@@ -71,37 +69,29 @@ public class EventChart extends InformalChart {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("EventChart ast node: ");
-    
     sb.append("systemName = ");
     sb.append(systemName);
     sb.append(", ");
-    
-    sb.append("incoming = ");
+        sb.append("incoming = ");
     sb.append(incoming);
     sb.append(", ");
-    
-    sb.append("outgoing = ");
+        sb.append("outgoing = ");
     sb.append(outgoing);
     sb.append(", ");
-    
-    sb.append("entries = ");
+        sb.append("entries = ");
     sb.append(entries);
     sb.append(", ");
-    
-    sb.append("indexing = ");
+        sb.append("indexing = ");
     sb.append(indexing);
     sb.append(", ");
-    
-    sb.append("explanation = ");
+        sb.append("explanation = ");
     sb.append(explanation);
     sb.append(", ");
-    
-    sb.append("part = ");
+        sb.append("part = ");
     sb.append(part);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

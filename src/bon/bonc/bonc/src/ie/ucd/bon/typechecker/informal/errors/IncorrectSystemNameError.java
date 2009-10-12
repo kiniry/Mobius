@@ -10,7 +10,7 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class IncorrectSystemNameError extends TypeCheckingError {
 
   private static final String message = "Incorrect system name \"%s\" (actual system %s defined at %s:%s)";
-  
+
   private final String incorrectSystemName;
   private final String realSystemName;
   private final String systemFilePath;

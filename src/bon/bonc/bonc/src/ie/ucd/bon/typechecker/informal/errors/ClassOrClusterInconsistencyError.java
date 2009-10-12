@@ -10,11 +10,11 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class ClassOrClusterInconsistencyError extends TypeCheckingError {
 
   private static final String message = "%s %s has no matching %s";
-  
+
   private final String itemType;
   private final String itemName;
   private final String noMatchingItemType;
-  
+
   public ClassOrClusterInconsistencyError(SourceLocation loc, String itemType, String itemName, String noMatchingItemType) {
     super(loc);
     this.itemType = itemType;
@@ -26,5 +26,5 @@ public class ClassOrClusterInconsistencyError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, itemType, itemName, noMatchingItemType);
   }
-  
+
 }

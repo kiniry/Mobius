@@ -19,7 +19,6 @@ public class Multiplicity extends ClientEntityExpression {
   protected Multiplicity(Integer multiplicity, SourceLocation location) {
     super(location);
     this.multiplicity = multiplicity; assert multiplicity != null;
-    
   }
   
   public static Multiplicity mk(Integer multiplicity, SourceLocation location) {
@@ -39,7 +38,6 @@ public class Multiplicity extends ClientEntityExpression {
   @Override
   public Multiplicity clone() {
     Integer newMultiplicity = multiplicity;
-    
     return Multiplicity.mk(newMultiplicity, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class Multiplicity extends ClientEntityExpression {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Multiplicity ast node: ");
-    
     sb.append("multiplicity = ");
     sb.append(multiplicity);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

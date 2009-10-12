@@ -17,6 +17,9 @@ import java.util.TreeSet;
 
 public class ClassDictionaryGenerator {
 
+  /** Private constructor, disallow instantiation. */
+  private ClassDictionaryGenerator() { }
+
   public static String generateDictionary(ParsingTracker tracker) throws UnableToGenerateClassDictionaryException {
     String newLine = System.getProperty("line.separator");
 
@@ -66,7 +69,7 @@ public class ClassDictionaryGenerator {
         sb.append(newLine);
         sb.append("    ");
         if (classDef.getExplanation() == null || "".equals(classDef.getExplanation())) {
-          String altDesc = st.informal.alternativeClassDescriptions.get(className); 
+          String altDesc = st.informal.alternativeClassDescriptions.get(className);
           sb.append(altDesc == null ? "" : altDesc);
         } else {
           sb.append(classDef.getExplanation());

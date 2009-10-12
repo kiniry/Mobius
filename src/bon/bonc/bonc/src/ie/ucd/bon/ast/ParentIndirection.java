@@ -19,7 +19,6 @@ public class ParentIndirection extends ClientEntity {
   protected ParentIndirection(GenericIndirection genericIndirection, SourceLocation location) {
     super(location);
     this.genericIndirection = genericIndirection; assert genericIndirection != null;
-    
   }
   
   public static ParentIndirection mk(GenericIndirection genericIndirection, SourceLocation location) {
@@ -39,7 +38,6 @@ public class ParentIndirection extends ClientEntity {
   @Override
   public ParentIndirection clone() {
     GenericIndirection newGenericIndirection = genericIndirection == null ? null : genericIndirection.clone();
-    
     return ParentIndirection.mk(newGenericIndirection, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class ParentIndirection extends ClientEntity {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ParentIndirection ast node: ");
-    
     sb.append("genericIndirection = ");
     sb.append(genericIndirection);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

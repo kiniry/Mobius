@@ -10,9 +10,9 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class InvalidInformalClassTypeError extends TypeCheckingError {
 
   private static final String message = "Unknown class type %s. Are you missing a class chart for %s?";
-  
+
   private final String classType;
-  
+
   public InvalidInformalClassTypeError(SourceLocation loc, String classType) {
     super(loc);
     this.classType = classType;
@@ -22,5 +22,4 @@ public class InvalidInformalClassTypeError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, classType, classType);
   }
-  
 }

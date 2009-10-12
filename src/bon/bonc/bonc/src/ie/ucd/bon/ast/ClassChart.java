@@ -33,7 +33,6 @@ public class ClassChart extends InformalChart {
     this.indexing = indexing; 
     this.explanation = explanation; 
     this.part = part; 
-    
   }
   
   public static ClassChart mk(ClassName name, List<ClassName> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
@@ -67,7 +66,6 @@ public class ClassChart extends InformalChart {
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     String newExplanation = explanation;
     String newPart = part;
-    
     return ClassChart.mk(newName, newInherits, newQueries, newCommands, newConstraints, newIndexing, newExplanation, newPart, getLocation());
   }
   
@@ -75,41 +73,32 @@ public class ClassChart extends InformalChart {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClassChart ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("inherits = ");
+        sb.append("inherits = ");
     sb.append(inherits);
     sb.append(", ");
-    
-    sb.append("queries = ");
+        sb.append("queries = ");
     sb.append(queries);
     sb.append(", ");
-    
-    sb.append("commands = ");
+        sb.append("commands = ");
     sb.append(commands);
     sb.append(", ");
-    
-    sb.append("constraints = ");
+        sb.append("constraints = ");
     sb.append(constraints);
     sb.append(", ");
-    
-    sb.append("indexing = ");
+        sb.append("indexing = ");
     sb.append(indexing);
     sb.append(", ");
-    
-    sb.append("explanation = ");
+        sb.append("explanation = ");
     sb.append(explanation);
     sb.append(", ");
-    
-    sb.append("part = ");
+        sb.append("part = ");
     sb.append(part);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

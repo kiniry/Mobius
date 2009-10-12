@@ -12,17 +12,17 @@ import java.util.Stack;
  * Adapted from Henri Yandell's version at http://www.generationjava.com/projects/XmlWriter.shtml
  */
 public class XMLWriter {
-  
+
   private static String NEW_LINE = System.getProperty("line.separator");
 
   private Writer writer; // underlying writer
-  private Stack<String> stack;// of xml entity names
+  private Stack<String> stack; // of xml entity names
   private StringBuffer attrs; // current attribute string
   private boolean empty;      // is the current node empty
   private boolean closed;     // is the current node closed...
-  
+
   private int indentation;
-  
+
   private static final int NUM_SPACES_PER_INDENT = 2;
 
   /**
@@ -36,25 +36,25 @@ public class XMLWriter {
   }
 
   /**
-   * Begin to output an entity. 
+   * Begin to output an entity.
    *
-   * @param String name of entity.
+   * @param name name of entity.
    */
   public XMLWriter writeEntity(String name) throws IOException {
     closeOpeningTag();
     this.closed = false;
-    
+
     this.writer.write(NEW_LINE);
-    for (int i=0; i < NUM_SPACES_PER_INDENT * indentation; i++) {
+    for (int i = 0; i < NUM_SPACES_PER_INDENT * indentation; i++) {
       this.writer.write(' ');
     }
-    
+
     this.writer.write("<");
     this.writer.write(name);
     stack.add(name);
     this.empty = true;
     indentation++;
-    
+
     return this;
   }
 
@@ -77,9 +77,9 @@ public class XMLWriter {
   }
 
   /**
-   * Write an attribute out for the current entity. 
+   * Write an attribute out for the current entity.
    * Any xml characters in the value are escaped.
-   * Currently it does not actually throw the exception, but 
+   * Currently it does not actually throw the exception, but
    * the api is set that way for future changes.
    *
    * @param String name of attribute.
@@ -99,13 +99,13 @@ public class XMLWriter {
   }
 
   /**
-   * End the current entity. This will throw an exception 
-   * if it is called when there is not a currently open 
+   * End the current entity. This will throw an exception
+   * if it is called when there is not a currently open
    * entity.
    */
   public XMLWriter endEntity() throws IOException {
     indentation--;
-    if(this.stack.empty()) {
+    if (this.stack.empty()) {
       throw new IOException("Called endEntity too many times. ");
     }
     String name = this.stack.pop();
@@ -115,7 +115,7 @@ public class XMLWriter {
         this.writer.write("/>");
       } else {
         this.writer.write(NEW_LINE);
-        for (int i=0; i < NUM_SPACES_PER_INDENT * indentation; i++) {
+        for (int i = 0; i < NUM_SPACES_PER_INDENT * indentation; i++) {
           this.writer.write(' ');
         }
         this.writer.write("</");
@@ -125,24 +125,23 @@ public class XMLWriter {
       this.empty = false;
       this.closed = true;
     }
-    
+
     return this;
   }
 
   /**
-   * Close this writer. It does not close the underlying 
-   * writer, but does throw an exception if there are 
+   * Close this writer. It does not close the underlying
+   * writer, but does throw an exception if there are
    * as yet unclosed tags.
    */
   public void close() throws IOException {
-    if(!this.stack.empty()) {
-      throw new IOException("Tags are not all closed. "+
-          "Possibly, "+this.stack.pop()+" is unclosed. ");
+    if (!this.stack.empty()) {
+      throw new IOException("Tags are not all closed. " + "Possibly, "+this.stack.pop()+" is unclosed. ");
     }
   }
 
   /**
-   * Output body text. Any xml characters are escaped. 
+   * Output body text. Any xml characters are escaped.
    */
   public XMLWriter writeText(String text) throws IOException {
     closeOpeningTag();
@@ -152,19 +151,19 @@ public class XMLWriter {
   }
 
   // from XmlW
-  static public String escapeXml(String str) {
+  public static String escapeXml(String str) {
     str = replaceString(str,"&","&amp;");
     str = replaceString(str,"<","&lt;");
     str = replaceString(str,">","&gt;");
     str = replaceString(str,"\"","&quot;");
     str = replaceString(str,"'","&apos;");
     return str;
-  }  
+  }
 
   // from StringW
-  static public String replaceString(String text, String repl, String with) {
+  public static String replaceString(String text, String repl, String with) {
     return replaceString(text, repl, with, -1);
-  }  
+  }
   /**
    * Replace a string with another string inside a larger string, for
    * the first n values of the search string.
@@ -177,25 +176,25 @@ public class XMLWriter {
    * @return String with n values replacEd
    */
   static public String replaceString(String text, String repl, String with, int max) {
-    if(text == null) {
+    if (text == null) {
       return null;
     }
 
     StringBuffer buffer = new StringBuffer(text.length());
     int start = 0;
     int end = 0;
-    while( (end = text.indexOf(repl, start)) != -1 ) {
+    while ((end = text.indexOf(repl, start)) != -1) {
       buffer.append(text.substring(start, end)).append(with);
       start = end + repl.length();
 
-      if(--max == 0) {
+      if (--max == 0) {
         break;
       }
     }
     buffer.append(text.substring(start));
 
     return buffer.toString();
-  }              
+  }
 
 
 }

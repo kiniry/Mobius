@@ -23,7 +23,6 @@ public class StaticDiagram extends SpecificationElement {
     this.components = components; assert components != null;
     this.extendedId = extendedId; 
     this.comment = comment; 
-    
   }
   
   public static StaticDiagram mk(List<StaticComponent> components, String extendedId, String comment, SourceLocation location) {
@@ -47,7 +46,6 @@ public class StaticDiagram extends SpecificationElement {
     List<StaticComponent> newComponents = components;
     String newExtendedId = extendedId;
     String newComment = comment;
-    
     return StaticDiagram.mk(newComponents, newExtendedId, newComment, getLocation());
   }
   
@@ -55,21 +53,17 @@ public class StaticDiagram extends SpecificationElement {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StaticDiagram ast node: ");
-    
     sb.append("components = ");
     sb.append(components);
     sb.append(", ");
-    
-    sb.append("extendedId = ");
+        sb.append("extendedId = ");
     sb.append(extendedId);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

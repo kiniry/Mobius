@@ -71,8 +71,8 @@ public abstract class AbstractBONParser extends Parser {
     }
   }
 
-  
-  
+
+
   @Override
   public boolean mismatchIsMissingToken(IntStream input, BitSet follow) {
     Main.logDebug("Mismatch (missing token).");
@@ -92,121 +92,116 @@ public abstract class AbstractBONParser extends Parser {
     return validParse;
   }
 
-  /**
-   * 
-   * @param e
-   * @param tokenNames 
-   */
   //TODO what is the difference between tokenNames here and getTokenNames()
   public BONProblem getErrorProblem(RecognitionException e, String[] tokenNames) {
-		if ( e instanceof MismatchedTokenException ) {
-			MismatchedTokenException mte = (MismatchedTokenException)e;
-			
-			String tokenName;
-			if ( mte.expecting== Token.EOF ) {
-				tokenName = "EOF";
-			} else {
-				tokenName = tokenNames[mte.expecting];
-			}
-			
-			if (e.token.getType() == Token.EOF) {
-			  Token t = input.LT(-1);
-			  if (t != null) {
-			    String prevTokenText = t.getText();
-			    String msg = "Expected " + tokenName + " after " + prevTokenText + ", before end of file";
-			    //return new AntlrParsingError(sourceFile, t.getLine(), t.getCharPositionInLine()+prevTokenText.length()+1, msg, true);
-			    return new AntlrParsingError(new SourceLocation(t, e.token, sourceFile), msg, true);
-			  } else {
-			    String msg = "Unexpected input " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName + "";
-			    //return new AntlrParsingError(sourceFile, BONProblem.EOF_LINE, 0, msg, true);
-			    return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-			  }
-			} else {
-			  //Main.logDebug("Mismatched " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName);
-	      String msg = ParseProblemExplanations.getExplanationWithExpecting(e,tokenName);
+    if (e instanceof MismatchedTokenException) {
+      MismatchedTokenException mte = (MismatchedTokenException)e;
 
-	      if (msg == null) {
-	        msg = "Unexpected input " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName + "";
-	      } else {
-	        msg = String.format(msg, getTokenErrorDisplay(e.token));
-	      }
-			  //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-	      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-			}
-			
-		} else if ( e instanceof NoViableAltException ) {
-			String msg = ParseProblemExplanations.getExplanation(e);
-			if (msg == null) {
-			  msg = "Unexpected input " + getTokenErrorDisplay(e.token);
-			}
-			//return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-			return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-			
-		} else if ( e instanceof EarlyExitException ) {
-			String explanation = ParseProblemExplanations.getExplanation(e);
-			
-			String msg;
-			if (explanation != null) {
-        msg = "Missing " + explanation;  
+      String tokenName;
+      if (mte.expecting == Token.EOF) {
+        tokenName = "EOF";
+      } else {
+        tokenName = tokenNames[mte.expecting];
+      }
+
+      if (e.token.getType() == Token.EOF) {
+        Token t = input.LT(-1);
+        if (t != null) {
+          String prevTokenText = t.getText();
+          String msg = "Expected " + tokenName + " after " + prevTokenText + ", before end of file";
+          //return new AntlrParsingError(sourceFile, t.getLine(), t.getCharPositionInLine()+prevTokenText.length()+1, msg, true);
+          return new AntlrParsingError(new SourceLocation(t, e.token, sourceFile), msg, true);
+        } else {
+          String msg = "Unexpected input " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName + "";
+          //return new AntlrParsingError(sourceFile, BONProblem.EOF_LINE, 0, msg, true);
+          return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+        }
+      } else {
+        //Main.logDebug("Mismatched " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName);
+        String msg = ParseProblemExplanations.getExplanationWithExpecting(e,tokenName);
+
+        if (msg == null) {
+          msg = "Unexpected input " + getTokenErrorDisplay(e.token) + ", expecting " + tokenName + "";
+        } else {
+          msg = String.format(msg, getTokenErrorDisplay(e.token));
+        }
+        //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+        return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+      }
+
+    } else if (e instanceof NoViableAltException) {
+      String msg = ParseProblemExplanations.getExplanation(e);
+      if (msg == null) {
+        msg = "Unexpected input " + getTokenErrorDisplay(e.token);
+      }
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+
+    } else if (e instanceof EarlyExitException) {
+      String explanation = ParseProblemExplanations.getExplanation(e);
+
+      String msg;
+      if (explanation != null) {
+        msg = "Missing " + explanation;
       } else {
         //Main.logDebug("Debug: could not find explanation for EarlyExitException from method " + methodName);
         //msg = "required (...)+ loop did not match anything at input "+ getTokenErrorDisplay(e.token);
         msg = "Unexpected input "+ getTokenErrorDisplay(e.token);
       }
-			//return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-			return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-			
-		} else if ( e instanceof MismatchedSetException ) {
-			MismatchedSetException mse = (MismatchedSetException)e;
-			String msg = "mismatched input "+getTokenErrorDisplay(e.token)+" expecting set "+mse.expecting;
-			//return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-			return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-		} else if ( e instanceof MismatchedNotSetException ) {
-			MismatchedNotSetException mse = (MismatchedNotSetException)e;
-			String msg = "mismatched input "+getTokenErrorDisplay(e.token)+" expecting set "+mse.expecting;
-			//return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-			return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-		} else if ( e instanceof FailedPredicateException ) {
-			FailedPredicateException fpe = (FailedPredicateException)e;
-			String msg = "rule "+fpe.ruleName+" failed predicate: {"+fpe.predicateText+"}?";
-			//return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
-			return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
-		} else {
-		  //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, "An unknown error occurred", true);
-		  return new AntlrParsingError(new SourceLocation(e.token, sourceFile), "An unknown error occurred", true);
-		}
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
 
-  }  
-  
-  
+    } else if (e instanceof MismatchedSetException) {
+      MismatchedSetException mse = (MismatchedSetException)e;
+      String msg = "mismatched input "+getTokenErrorDisplay(e.token)+" expecting set "+mse.expecting;
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+    } else if (e instanceof MismatchedNotSetException) {
+      MismatchedNotSetException mse = (MismatchedNotSetException)e;
+      String msg = "mismatched input "+getTokenErrorDisplay(e.token)+" expecting set "+mse.expecting;
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+    } else if (e instanceof FailedPredicateException) {
+      FailedPredicateException fpe = (FailedPredicateException)e;
+      String msg = "rule "+fpe.ruleName+" failed predicate: {"+fpe.predicateText+"}?";
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, msg, true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
+    } else {
+      //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, "An unknown error occurred", true);
+      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), "An unknown error occurred", true);
+    }
+
+  }
+
   /**
    * Returns the error header, which is just the source filename and the line number on
-   * which the error occurs
-   * 
+   * which the error occurs.
+   *
    * @param e The RecognitionException representing the error
    * @return A String giving the source filename and line on which the error occurs
    */
-	public String getErrorHeader(RecognitionException e) {
-		return null; //sourceFileName + ":" + e.line + ":";
-	}
+  public String getErrorHeader(RecognitionException e) {
+    return null; //sourceFileName + ":" + e.line + ":";
+  }
 
   /**
    * Get a string to identify this Token for use in an error message.
+   * @param t the Token to identify.
+   * @return a String to identify the provided token in an error message.
    */
   public String getTokenErrorDisplay(Token t) {
     String s = t.getText();
-		if ( s==null ) {
-			if ( t.getType()==Token.EOF ) {
-				s = "<EOF>";
-			}
-			else {
-				s = "<"+t.getType()+">";
-			}
-		}
-		s = s.replaceAll("\n","\\\\n");
-		s = s.replaceAll("\r","\\\\r");
-		s = s.replaceAll("\t","\\\\t");
-		return "'" + s + "'";
+    if (s == null) {
+      if (t.getType() == Token.EOF) {
+        s = "<EOF>";
+      } else {
+        s = "<"+t.getType()+">";
+      }
+    }
+    s = s.replaceAll("\n","\\\\n");
+    s = s.replaceAll("\r","\\\\r");
+    s = s.replaceAll("\t","\\\\t");
+    return "'" + s + "'";
   }
 
   public void displayRecognitionError(String[] tokenNames, RecognitionException e) {
@@ -217,9 +212,9 @@ public abstract class AbstractBONParser extends Parser {
     if (Main.isDebug()) {
       e.printStackTrace(System.out);
     }
-    
+
     validParse = false;
-    
+
     //TODO adjust severity here according to if we recovered ok or not...
     problems.addProblem(problem);
   }
@@ -257,25 +252,25 @@ public abstract class AbstractBONParser extends Parser {
   public final SourceLocation getSourceLocation(Token t) {
     return new SourceLocation(t, this.sourceFile);
   }
-  
+
   public final SourceLocation getSourceLocation(Token tStart, Token tEnd) {
     return new SourceLocation(tStart, tEnd, this.sourceFile);
   }
-  
+
   //Just a shorter version
   public final SourceLocation getSLoc(Token t) {
     return getSourceLocation(t);
   }
-  
+
   //Just a shorter version
   public final SourceLocation getSLoc(Token tStart, Token tEnd) {
     return getSourceLocation(tStart, tEnd);
   }
-  
+
   public final SourceLocation getSLoc(SourceLocation start, SourceLocation end) {
-	return new SourceLocation(start, end);
+    return new SourceLocation(start, end);
   }
-  
+
   public final void addParseProblem(BONProblem problem) {
     if (problem instanceof ParsingError) {
       if (((ParsingError)problem).isSevere()) {
@@ -284,7 +279,7 @@ public abstract class AbstractBONParser extends Parser {
     }
     problems.addProblem(problem);
   }
-  
+
   public Problems getProblems() {
     return problems;
   }
@@ -293,9 +288,9 @@ public abstract class AbstractBONParser extends Parser {
     //return new LinkedList<T>();
     return new NullIgnoringList<T>(new ArrayList<T>());
   }
-  
+
   protected static <T> List<T> emptyList() {
     return Collections.emptyList();
   }
-  
+
 }

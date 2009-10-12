@@ -10,6 +10,7 @@ import ie.ucd.bon.clinterface.BONcOptionsInterface;
 import ie.ucd.bon.clinterface.BONcParseResult;
 import ie.ucd.bon.clinterface.BONcParser;
 import ie.ucd.bon.clinterface.InvalidArgumentsError;
+import ie.ucd.bon.errorreporting.ExceptionalError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.util.FileUtil;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Fintan
  *
  */
@@ -73,13 +74,13 @@ public final class Main {
 
   public static Problems main2(final String[] args, final boolean exitOnFailure) {
     Problems overallProblems = new Problems("Overall problems");
-    try {      
+    try {
       //CLOLogger.setLogLevel(Level.FINE);
       BONcParseResult clParseResult = BONcParser.parse(args);
       if (clParseResult.successfulParse()) {
         BONcOptionStore options = clParseResult.getOptionStore();
 
-        debug = options.isDebugSet() && options.getDebug(); 
+        debug = options.isDebugSet() && options.getDebug();
 
         if (options.getPrintMan()) {
           OptionUtil.printOptionsInManFormat(System.out, OptionUtil.sortOptions(options, ALPHABETICAL_BY_FIRST_ALIAS));
@@ -111,13 +112,13 @@ public final class Main {
             return problems;
           }
         }
-      } 
-      
+      }
+
       //Invalid command line parse
       overallProblems.addProblem(new InvalidArgumentsError("Invalid arguments."));
       overallProblems.printProblems(System.out);
       clParseResult.printErrorsAndWarnings(System.out);
-      //TODO print usage  
+      //TODO print usage
       if (exitOnFailure) {
         System.exit(1);
       }
@@ -157,7 +158,7 @@ public final class Main {
       tracker.setFinalMessage("Not typechecking due to parse errors.");
     }
 
-    API.printResults(totalProblems, tracker, System.out);    
+    API.printResults(totalProblems, tracker, System.out);
 
     if (so.isPrintSet()) {
       File outputFile = so.isPrintOutputSet() ? so.getPrintOutput() : null;

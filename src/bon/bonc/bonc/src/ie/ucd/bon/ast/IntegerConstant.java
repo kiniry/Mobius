@@ -19,7 +19,6 @@ public class IntegerConstant extends ManifestConstant {
   protected IntegerConstant(Integer value, SourceLocation location) {
     super(location);
     this.value = value; assert value != null;
-    
   }
   
   public static IntegerConstant mk(Integer value, SourceLocation location) {
@@ -39,7 +38,6 @@ public class IntegerConstant extends ManifestConstant {
   @Override
   public IntegerConstant clone() {
     Integer newValue = value;
-    
     return IntegerConstant.mk(newValue, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class IntegerConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("IntegerConstant ast node: ");
-    
     sb.append("value = ");
     sb.append(value);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -25,7 +25,6 @@ public class ClassInterface extends AstNode {
     this.parents = parents; assert parents != null;
     this.invariant = invariant; 
     this.indexing = indexing; 
-    
   }
   
   public static ClassInterface mk(List<Feature> features, List<Type> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
@@ -51,7 +50,6 @@ public class ClassInterface extends AstNode {
     List<Type> newParents = parents;
     List<Expression> newInvariant = invariant;
     Indexing newIndexing = indexing == null ? null : indexing.clone();
-    
     return ClassInterface.mk(newFeatures, newParents, newInvariant, newIndexing, getLocation());
   }
   
@@ -59,25 +57,20 @@ public class ClassInterface extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ClassInterface ast node: ");
-    
     sb.append("features = ");
     sb.append(features);
     sb.append(", ");
-    
-    sb.append("parents = ");
+        sb.append("parents = ");
     sb.append(parents);
     sb.append(", ");
-    
-    sb.append("invariant = ");
+        sb.append("invariant = ");
     sb.append(invariant);
     sb.append(", ");
-    
-    sb.append("indexing = ");
+        sb.append("indexing = ");
     sb.append(indexing);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

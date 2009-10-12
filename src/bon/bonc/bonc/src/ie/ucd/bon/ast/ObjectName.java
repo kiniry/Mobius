@@ -21,7 +21,6 @@ public class ObjectName extends AstNode {
     super(location);
     this.className = className; assert className != null;
     this.extendedId = extendedId; 
-    
   }
   
   public static ObjectName mk(ClassName className, String extendedId, SourceLocation location) {
@@ -43,7 +42,6 @@ public class ObjectName extends AstNode {
   public ObjectName clone() {
     ClassName newClassName = className == null ? null : className.clone();
     String newExtendedId = extendedId;
-    
     return ObjectName.mk(newClassName, newExtendedId, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class ObjectName extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ObjectName ast node: ");
-    
     sb.append("className = ");
     sb.append(className);
     sb.append(", ");
-    
-    sb.append("extendedId = ");
+        sb.append("extendedId = ");
     sb.append(extendedId);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

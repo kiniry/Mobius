@@ -13,18 +13,18 @@ import java.io.File;
 public class DuplicateClassChartError extends TypeCheckingError {
 
   private static final String message = "Duplicate class chart for %s (Other chart - %s:%s)";
-  
+
   private final String className;
   private final File otherChartFile;
   private final int otherChartLineNumber;
-  
+
   public DuplicateClassChartError(SourceLocation loc, ClassChart other) {
     super(loc);
     this.className = other.getName().getName();
     this.otherChartFile = other.getLocation().getSourceFile();
     this.otherChartLineNumber = other.getLocation().getLineNumber();
   }
-  
+
   //For the test cases...
   public DuplicateClassChartError(SourceLocation loc, String className, File otherChartFile, int otherChartLineNumber) {
     super(loc);
@@ -37,7 +37,4 @@ public class DuplicateClassChartError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, className, SourceLocation.getFilePath(otherChartFile), otherChartLineNumber);
   }
-  
-  
-  
 }

@@ -21,7 +21,6 @@ public class IndexClause extends AstNode {
     super(location);
     this.id = id; assert id != null;
     this.indexTerms = indexTerms; assert indexTerms != null;
-    
   }
   
   public static IndexClause mk(String id, List<String> indexTerms, SourceLocation location) {
@@ -43,7 +42,6 @@ public class IndexClause extends AstNode {
   public IndexClause clone() {
     String newId = id;
     List<String> newIndexTerms = indexTerms;
-    
     return IndexClause.mk(newId, newIndexTerms, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class IndexClause extends AstNode {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("IndexClause ast node: ");
-    
     sb.append("id = ");
     sb.append(id);
     sb.append(", ");
-    
-    sb.append("indexTerms = ");
+        sb.append("indexTerms = ");
     sb.append(indexTerms);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

@@ -21,7 +21,6 @@ public class ObjectStack extends DynamicComponent {
     super(location);
     this.name = name; assert name != null;
     this.comment = comment; 
-    
   }
   
   public static ObjectStack mk(ObjectName name, String comment, SourceLocation location) {
@@ -43,7 +42,6 @@ public class ObjectStack extends DynamicComponent {
   public ObjectStack clone() {
     ObjectName newName = name == null ? null : name.clone();
     String newComment = comment;
-    
     return ObjectStack.mk(newName, newComment, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class ObjectStack extends DynamicComponent {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("ObjectStack ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

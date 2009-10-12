@@ -25,7 +25,6 @@ public class Cluster extends StaticComponent {
     this.components = components; assert components != null;
     this.reused = reused; assert reused != null;
     this.comment = comment; 
-    
   }
   
   public static Cluster mk(String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation location) {
@@ -51,7 +50,6 @@ public class Cluster extends StaticComponent {
     List<StaticComponent> newComponents = components;
     Boolean newReused = reused;
     String newComment = comment;
-    
     return Cluster.mk(newName, newComponents, newReused, newComment, getLocation());
   }
   
@@ -59,25 +57,20 @@ public class Cluster extends StaticComponent {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("Cluster ast node: ");
-    
     sb.append("name = ");
     sb.append(name);
     sb.append(", ");
-    
-    sb.append("components = ");
+        sb.append("components = ");
     sb.append(components);
     sb.append(", ");
-    
-    sb.append("reused = ");
+        sb.append("reused = ");
     sb.append(reused);
     sb.append(", ");
-    
-    sb.append("comment = ");
+        sb.append("comment = ");
     sb.append(comment);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

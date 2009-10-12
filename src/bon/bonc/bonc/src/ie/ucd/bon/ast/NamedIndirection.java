@@ -21,7 +21,6 @@ public class NamedIndirection extends IndirectionElement {
     super(location);
     this.className = className; assert className != null;
     this.indirectionElements = indirectionElements; assert indirectionElements != null;
-    
   }
   
   public static NamedIndirection mk(ClassName className, List<IndirectionElement> indirectionElements, SourceLocation location) {
@@ -43,7 +42,6 @@ public class NamedIndirection extends IndirectionElement {
   public NamedIndirection clone() {
     ClassName newClassName = className == null ? null : className.clone();
     List<IndirectionElement> newIndirectionElements = indirectionElements;
-    
     return NamedIndirection.mk(newClassName, newIndirectionElements, getLocation());
   }
   
@@ -51,17 +49,14 @@ public class NamedIndirection extends IndirectionElement {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("NamedIndirection ast node: ");
-    
     sb.append("className = ");
     sb.append(className);
     sb.append(", ");
-    
-    sb.append("indirectionElements = ");
+        sb.append("indirectionElements = ");
     sb.append(indirectionElements);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

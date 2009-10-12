@@ -11,14 +11,13 @@ import ie.ucd.bon.typechecker.errors.TypeCheckingError;
 public class ClassInheritanceInconsistencyError extends TypeCheckingError {
 
   private static final String message = "%s %s does not declare inheritance from %s, as in the %s of %s";
-  
+
   private final String itemType;
   private final String itemName;
   private final String superName;
   private final String noMatchingItemType;
 
-  public ClassInheritanceInconsistencyError(SourceLocation loc, 
-      String itemType, String itemName, String superName, String noMatchingItemType) {
+  public ClassInheritanceInconsistencyError(SourceLocation loc, String itemType, String itemName, String superName, String noMatchingItemType) {
     super(loc);
     this.itemType = itemType;
     this.itemName = itemName;
@@ -46,7 +45,5 @@ public class ClassInheritanceInconsistencyError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, itemType, itemName, superName, noMatchingItemType, itemName);
   }
-  
-  
-  
+
 }

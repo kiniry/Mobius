@@ -19,7 +19,6 @@ public class StringConstant extends ManifestConstant {
   protected StringConstant(String value, SourceLocation location) {
     super(location);
     this.value = value; assert value != null;
-    
   }
   
   public static StringConstant mk(String value, SourceLocation location) {
@@ -39,7 +38,6 @@ public class StringConstant extends ManifestConstant {
   @Override
   public StringConstant clone() {
     String newValue = value;
-    
     return StringConstant.mk(newValue, getLocation());
   }
   
@@ -47,13 +45,11 @@ public class StringConstant extends ManifestConstant {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("StringConstant ast node: ");
-    
     sb.append("value = ");
     sb.append(value);
     sb.append(", ");
-    
     if (sb.length() >= 2) {
-      sb.delete(sb.length()-2,sb.length());
+      sb.delete(sb.length()-2, sb.length());
     }
     return sb.toString();
   }

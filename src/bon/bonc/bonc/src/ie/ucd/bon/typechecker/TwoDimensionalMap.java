@@ -11,9 +11,9 @@ import com.google.common.collect.Multimap;
 public class TwoDimensionalMap<A,B,C> extends HashMap<KeyPair<A,B>,C> {
 
   private static final long serialVersionUID = 8052860720948202726L;
-  
+
   private final Multimap<A,C> map;
-  
+
   public TwoDimensionalMap() {
     map = LinkedHashMultimap.create();
   }
@@ -31,14 +31,9 @@ public class TwoDimensionalMap<A,B,C> extends HashMap<KeyPair<A,B>,C> {
     map.put(key.a, value);
     return super.put(key, value);
   }
-  
-  /**
-   * Gets a collection with all
-   * @param a
-   * @return
-   */
+
   public Collection<C> getAll(A a) {
     return map.get(a);
   }
-  
+
 }
