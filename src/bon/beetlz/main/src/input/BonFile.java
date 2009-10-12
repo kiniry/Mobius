@@ -75,11 +75,12 @@ public class BonFile {
     
     ParsingTracker tracker = API.parse(my_files, false, false);
 
-    if (tracker.continueFromParse(0)) {
+    if (tracker.getErrorsAndWarnings().getNumberOfErrors() == 0) {
       LOGGER.config(Beetlz.getResourceBundle().getString("BonFile.successfullyCompiled")); //$NON-NLS-1$
       my_bonWalker.parseTypingInformation(tracker);
       my_classCollection.addMoreClasses(my_bonWalker.getAllClasses());
     } else {
+      System.out.println("BONc parsing failed.");
       parse_success = false;
     }
     return parse_success;

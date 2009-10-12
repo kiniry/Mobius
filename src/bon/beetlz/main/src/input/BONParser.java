@@ -194,7 +194,7 @@ public final class BONParser {
     Collection<String> invariantStrings = new ArrayList<String>(invariants.size());
     for (ie.ucd.bon.ast.Expression exp : invariants) {
       exp.accept(ppv);
-      invariantStrings.add(ppv.getVisitorOutputAsString());
+      invariantStrings.add(ppv.getVisitorOutputAsString() + ";");
       ppv.resetVisitorOutput();
     }
     inv = parseInvariant(invariantStrings);
