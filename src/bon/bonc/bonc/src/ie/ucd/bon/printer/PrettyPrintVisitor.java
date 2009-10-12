@@ -937,7 +937,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       }
       if (it.hasNext() || linesAtEnd) {
         tp.printLines(numberOfLines);
-      }      
+      }
     }
   }
   

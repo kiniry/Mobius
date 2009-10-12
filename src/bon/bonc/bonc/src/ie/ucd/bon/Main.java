@@ -125,8 +125,10 @@ public final class Main {
 
     } catch (Exception e) {
       overallProblems.addProblem(new ExceptionalError(e));
-      System.out.println("Something went wrong.");
-      e.printStackTrace();
+      System.out.println("Something unexpected went wrong.");
+      if (isDebug()) {
+        e.printStackTrace();
+      }
       if (exitOnFailure) {
         System.exit(1);
       }

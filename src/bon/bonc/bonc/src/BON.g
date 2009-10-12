@@ -1479,7 +1479,8 @@ equivalence_expression returns [Expression exp] :
   l=implies_expression
   { $exp = $l.exp; } 
   ('<->' r=implies_expression
-   { $exp = BinaryExp.mk(BinaryExp.Op.EQUIV, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk(BinaryExp.Op.EQUIV, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )*
 ;
 
@@ -1488,15 +1489,17 @@ implies_expression returns [Expression exp] :
   l=and_or_xor_expression
   { $exp = $l.exp; } 
   ('->' r=implies_expression
-   { $exp = BinaryExp.mk(BinaryExp.Op.IMPLIES, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk(BinaryExp.Op.IMPLIES, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )?
 ;
 
 and_or_xor_expression returns [Expression exp] :
   l=comparison_expression
   { $exp = $l.exp; } 
-  (op=and_or_xor_op r=comparison_expression
-   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+  ( op=and_or_xor_op r=comparison_expression
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )* 
 ;
 
@@ -1504,7 +1507,9 @@ comparison_expression returns [Expression exp] :
   l=add_sub_expression
   { $exp = $l.exp; } 
   (op=comparison_op  r=add_sub_expression
-   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); 
+   }
   )* 
 ;
 
@@ -1512,7 +1517,8 @@ add_sub_expression returns [Expression exp] :
   l=mul_div_expression
   { $exp = $l.exp; } 
   (op=add_sub_op r=mul_div_expression
-   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )* 
 ;
 
@@ -1520,7 +1526,8 @@ mul_div_expression returns [Expression exp] :
   l=mod_pow_expression
   { $exp = $l.exp; } 
   (op=mul_div_op r=mod_pow_expression
-   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )* 
 ;
 
@@ -1529,7 +1536,8 @@ mod_pow_expression returns [Expression exp] :
   l=lowest_expression
   { $exp = $l.exp; } 
   (op=mod_pow_op r=mod_pow_expression
-   { $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
+   { if ($r.exp == null) throw new RecognitionException();
+     $exp = BinaryExp.mk($op.op, $exp, $r.exp, getSLoc($exp.getLocation(),$r.exp.getLocation())); }
   )? 
 ;
 
