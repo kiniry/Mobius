@@ -13,18 +13,18 @@ import java.io.File;
 public class DuplicateClusterDefinitionError extends TypeCheckingError {
 
   private static final String message = "Duplicate definition of cluster %s (Other definition - %s:%s)";
-  
+
   private final String clusterName;
   private final File otherClusterFile;
   private final int otherClusterLineNumber;
-  
+
   public DuplicateClusterDefinitionError(SourceLocation loc, Cluster other) {
     super(loc);
     this.clusterName = other.getName();
     this.otherClusterFile = other.getLocation().getSourceFile();
     this.otherClusterLineNumber = other.getLocation().getLineNumber();
   }
-  
+
   //Testing
   public DuplicateClusterDefinitionError(SourceLocation loc, String clusterName, File otherClusterFile, int otherClusterLineNumber) {
     super(loc);

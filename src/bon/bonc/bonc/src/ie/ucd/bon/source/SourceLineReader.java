@@ -38,7 +38,7 @@ public class SourceLineReader {
     lines = new ArrayList<String>();
     lineReadTo = 0;
   }
-  
+
   public SourceLineReader(List<String> lines) {
     this.lines = lines;
     this.br = null;
@@ -46,7 +46,7 @@ public class SourceLineReader {
   }
 
   /**
-   * Gets the line requested from the source file. If the source file does not exist, 
+   * Gets the line requested from the source file. If the source file does not exist,
    * if there is a problem reading from the file, or if the line asked for is past the end
    * of the file, then null will be returned.
    * @param lineNumber
@@ -80,10 +80,10 @@ public class SourceLineReader {
     if (lineToReadTo <= lineReadTo) {
       return;
     }
-    
+
     if (br == null) {
       throw new IOException("The source file was not found or not set.");
-    } 
+    }
 
     for ( ; lineReadTo < lineToReadTo; lineReadTo++) {
       String line = br.readLine();
@@ -95,8 +95,7 @@ public class SourceLineReader {
       }
     }
   }
-  
-  
+
   //TODO this is _not_ a very efficient way of doing this.
   //Perhaps store a corresponding list with cumulative character absolutes?
 //  public int getCharOffset(int lineNumber) throws IOException {

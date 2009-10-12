@@ -11,7 +11,7 @@ import java.io.File;
 public class NameNotUniqueError extends TypeCheckingError {
 
   private static final String message = "%s identifier %s is not unique (other use: %s %s - %s:%s)";
-  
+
   private final String type;
   private final String name;
   private final String otherUseType;

@@ -19,7 +19,7 @@ public class PrettyPrinterTester {
     if (args.length > 0 && args[0].equalsIgnoreCase("timing=true")) {
       timing = true;
     }
-    
+
     String testDir = "../test/";
     String outDir = "../test/pretty-printed/";
     //TODO we should be creating this dir if necessary... (can do in ant for moment...)
@@ -37,8 +37,8 @@ public class PrettyPrinterTester {
           margs += "-time ";
         }
         margs += "-pp txt -ppo " + outputDir + " " + originalFilesDir + f.getName();
-        
-        Main.main(margs.split("\\s+")); 
+
+        Main.main(margs.split("\\s+"));
       }
     }
   }

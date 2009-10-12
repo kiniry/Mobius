@@ -14,7 +14,7 @@ import java.io.File;
 import org.antlr.runtime.CommonTokenStream;
 
 /**
- * 
+ *
  * @author Fintan
  *
  */
@@ -27,9 +27,9 @@ public class ParseResult {
   private final Problems parseProblems;
   private final Problems lexerProblems;
   private final Problems stProblems;
-  
+
   private final int severeProblemCount;
-  
+
   public ParseResult(final boolean validParse, final BonSourceFile parse, final CommonTokenStream tokens, final File file, final Problems problems, final Problems lexerProblems, final Problems stProblems) {
     this.validParse = validParse;
     this.parse = parse;
@@ -40,7 +40,7 @@ public class ParseResult {
     this.stProblems = stProblems;
     this.severeProblemCount = countSevere(problems);
   }
-  
+
   private static int countSevere(Problems problems) {
     int count = 0;
     for (BONProblem problem : problems.getProblems()) {
@@ -52,7 +52,7 @@ public class ParseResult {
     }
     return count;
   }
-  
+
   public boolean isValidParse() {
     return validParse;
   }
@@ -60,7 +60,7 @@ public class ParseResult {
   public Problems getParseProblems() {
     return parseProblems;
   }
-  
+
   public Problems getLexerProblems() {
     return lexerProblems;
   }
@@ -72,15 +72,15 @@ public class ParseResult {
   public String getFilePath() {
     return file != null ? file.getPath() : "stdin";
   }
-  
+
   public String getFileName() {
     return file != null ? file.getName() : "stdin";
   }
-  
+
   public File getFile() {
     return file;
   }
-  
+
   public BonSourceFile getParse() {
     return parse;
   }
@@ -96,10 +96,9 @@ public class ParseResult {
   public int getSevereProblemCount() {
     return severeProblemCount;
   }
-  
+
   public boolean continueFromParse(int safeNumberOfSevereParseErrors) {
     return severeProblemCount <= safeNumberOfSevereParseErrors;
   }
-  
 
 }

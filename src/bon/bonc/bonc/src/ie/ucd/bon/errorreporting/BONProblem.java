@@ -50,7 +50,7 @@ public abstract class BONProblem implements Comparable<BONProblem> {
         return 0;
       }
     }
-  }  
+  }
 
   /**
    * Returns a String which simply contains a caret character to indicate the location of

@@ -12,18 +12,18 @@ import java.io.File;
 public class DuplicateSystemDefinitionError extends TypeCheckingError {
 
   private static String message = "The system has already been defined (System %s - %s:%s)";
-  
+
   private final String systemName;
   private final File otherSystemFile;
   private final int otherSystemLineNumber;
-  
+
   public DuplicateSystemDefinitionError(SourceLocation loc, ClusterChart otherSystem) {
     super(loc);
     this.systemName = otherSystem.getName();
     this.otherSystemFile = otherSystem.getLocation().getSourceFile();
     this.otherSystemLineNumber = otherSystem.getLocation().getLineNumber();
-  }  
-  
+  }
+
   //Testing
   public DuplicateSystemDefinitionError(SourceLocation loc, String systemName, File otherSystemFile, int otherSystemLineNumber) {
     super(loc);
@@ -36,5 +36,5 @@ public class DuplicateSystemDefinitionError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, systemName, SourceLocation.getFilePath(otherSystemFile), otherSystemLineNumber);
   }
-  
+
 }

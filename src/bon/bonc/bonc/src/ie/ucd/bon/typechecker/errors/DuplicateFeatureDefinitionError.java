@@ -17,7 +17,7 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
   private final String className;
   private final File otherFeatureFile;
   private final int otherFeatureLineNumber;
-  
+
   public DuplicateFeatureDefinitionError(SourceLocation loc, String className, String featureName, FeatureSpecification other) {
     super(loc);
     this.featureName = featureName;
@@ -39,7 +39,4 @@ public class DuplicateFeatureDefinitionError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, featureName, className, SourceLocation.getFilePath(otherFeatureFile), otherFeatureLineNumber);
   }
-  
-  
-  
 }

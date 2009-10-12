@@ -8,9 +8,9 @@ import ie.ucd.bon.errorreporting.BONError;
 import ie.ucd.bon.source.SourceLocation;
 
 public abstract class TypeCheckingError extends BONError {
-  
+
   public TypeCheckingError(SourceLocation sourceLoc) {
     super(sourceLoc);
   }
-  
+
 }

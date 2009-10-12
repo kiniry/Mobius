@@ -13,7 +13,7 @@ public abstract class BONWarning extends BONProblem {
   public BONWarning(SourceLocation sourceLoc) {
     super(sourceLoc);
   }
-  
+
   @Override
   public final boolean isError() {
     return false;
@@ -28,7 +28,6 @@ public abstract class BONWarning extends BONProblem {
   protected void printMessage(PrintStream ps) {
     ps.print("Warning: ");
     super.printMessage(ps);
-  }  
-  
-  
+  }
+
 }

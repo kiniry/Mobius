@@ -5,6 +5,7 @@
 package ie.ucd.bon.printer;
 
 public class UnableToGenerateClassDictionaryException extends Exception {
+  private static final long serialVersionUID = -947837013742178818L;
 
   public UnableToGenerateClassDictionaryException() {
     super();
@@ -13,5 +14,5 @@ public class UnableToGenerateClassDictionaryException extends Exception {
   public UnableToGenerateClassDictionaryException(String message) {
     super(message);
   }
-  
+
 }

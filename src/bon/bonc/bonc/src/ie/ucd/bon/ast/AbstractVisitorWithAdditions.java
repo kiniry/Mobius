@@ -7,5 +7,5 @@ public abstract class AbstractVisitorWithAdditions extends AbstractVisitor imple
   public void visitCompactedIndirectionElement(CompactedIndirectionElement node, SourceLocation loc) {
     //Do nothing
   }
-  
+
 }

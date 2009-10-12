@@ -12,7 +12,7 @@ public class DuplicateSuperclassWarning extends TypeCheckingWarning {
 
   private final String className;
   private final String superClassName;
-  
+
   public DuplicateSuperclassWarning(SourceLocation loc, String className, String superClassName) {
     super(loc);
     this.className = className;
@@ -23,5 +23,5 @@ public class DuplicateSuperclassWarning extends TypeCheckingWarning {
   public String getMessage() {
     return String.format(message, superClassName, className);
   }
-  
+
 }

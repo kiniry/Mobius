@@ -17,7 +17,7 @@ public class TypeMismatchError extends TypeCheckingError {
     super(loc);
     err = String.format(message2, desired, actual);
   }
-  
+
   public TypeMismatchError(SourceLocation loc, String desired) {
     super(loc);
     err = String.format(message1, desired);
@@ -26,7 +26,5 @@ public class TypeMismatchError extends TypeCheckingError {
   public String getMessage() {
     return err;
   }
-  
-  
 
 }

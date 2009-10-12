@@ -22,14 +22,14 @@ import java.util.Map;
  *
  */
 public final class SourceReader {
-  
-  /** Singleton instance of SourceReader */
+
+  /** Singleton instance of SourceReader. */
   private static SourceReader instance;
-  
-  /** Mapping Files to SourceLineReaders */
+
+  /** Mapping Files to SourceLineReaders. */
   private final Map<File,SourceLineReader> readers;
-  
-  /** The lines read from standard input (if any) */
+
+  /** The lines read from standard input (if any). */
   private final List<String> stdInLines;
 
   /**
@@ -39,9 +39,9 @@ public final class SourceReader {
     readers = new HashMap<File,SourceLineReader>();
     stdInLines = new ArrayList<String>();
   }
-  
+
   /**
-   * Get the singleton instance of SourceReader
+   * Get the singleton instance of SourceReader.
    * @return
    */
   public static SourceReader getInstance() {
@@ -50,9 +50,9 @@ public final class SourceReader {
     }
     return instance;
   }
-  
+
   /**
-   * 
+   *
    * @param sourceFile
    * @param lineNumber
    * @return
@@ -72,13 +72,13 @@ public final class SourceReader {
       return reader.getLine(lineNumber);
     }
   }
-  
+
   public SourceLineReader getSourceLineReader(File file) {
     return readers.get(file);
   }
-  
+
   /**
-   * 
+   *
    * @param lineNumber
    * @return
    */
@@ -92,9 +92,9 @@ public final class SourceReader {
       return null;
     }
   }
-  
+
   /**
-   * 
+   *
    * @return
    */
   public InputStream readStandardInput() {
@@ -106,14 +106,14 @@ public final class SourceReader {
         sb.append(line);
         stdInLines.add(line);
         sb.append('\n');
-      }      
+      }
       return new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
     } catch (IOException ioe) {
       System.out.println("Something went wrong when reading from stdin");
       return null;
     }
   }
-  
+
   /**
    * Read from a provided File, creating an InputStream to facilitate this.
    * @param f the File to read from.
@@ -124,17 +124,17 @@ public final class SourceReader {
         BufferedReader br = new BufferedReader(new FileReader(f));
         StringBuilder sb = new StringBuilder();
         ArrayList<String> lines = new ArrayList<String>();
-        
+
         String line;
         while ((line = br.readLine()) != null) {
           sb.append(line);
           lines.add(line);
           sb.append('\n');
-        }      
-        
+        }
+
         SourceLineReader slr = new SourceLineReader(lines);
         readers.put(f, slr);
-        
+
         return new ByteArrayInputStream(sb.toString().getBytes());
   }
 }

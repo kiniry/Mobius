@@ -121,9 +121,8 @@ public abstract class AbstractBONLexer extends Lexer {
     if ((char)arg0 == '\n') {
       return "newline";
     } else {
-      return "input " + super.getCharErrorDisplay(arg0); 
+      return "input " + super.getCharErrorDisplay(arg0);
     }
   }
 
-  
 }

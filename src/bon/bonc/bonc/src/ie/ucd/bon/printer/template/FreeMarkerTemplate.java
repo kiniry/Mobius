@@ -14,20 +14,20 @@ public class FreeMarkerTemplate {
 
   private static Configuration config;
   private final Map<String,Object> dataModel;
-  
+
   public FreeMarkerTemplate() {
     dataModel = new HashMap<String,Object>();
   }
-  
+
   public FreeMarkerTemplate addToDataModel(String name, Object o) {
     dataModel.put(name, o);
     return this;
   }
-  
+
   public void writeTemplate(Writer out, String templateName) {
     writeTemplate(out, templateName, dataModel);
   }
-  
+
   private static Configuration getConfig() {
     if (config == null) {
       config = new Configuration();
@@ -35,7 +35,7 @@ public class FreeMarkerTemplate {
     }
     return config;
   }
-  
+
   public static void writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
     try {
       dataModel.put("prepareManifest", new PrepareManifestForXHTMLMethod());
@@ -47,5 +47,5 @@ public class FreeMarkerTemplate {
       e.printStackTrace();
     }
   }
-  
+
 }

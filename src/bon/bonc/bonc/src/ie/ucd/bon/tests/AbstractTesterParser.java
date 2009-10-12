@@ -16,18 +16,17 @@ import org.antlr.runtime.TokenStream;
 public abstract class AbstractTesterParser extends Parser {
 
   private final Collection<TestCase> testCases;
-  
+
   public AbstractTesterParser(TokenStream input, RecognizerSharedState state) {
     super(input, state);
     testCases = new Vector<TestCase>();
   }
 
   protected void addTestCase(TestCase testCase) {
-    testCases.add(testCase);    
+    testCases.add(testCase);
   }
-  
+
   public Collection<TestCase> getTestCases() {
     return testCases;
   }
-  
 }

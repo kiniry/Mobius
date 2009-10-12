@@ -9,9 +9,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class InvalidClusterTypeError extends TypeCheckingError {
 
   private static final String message = "Unknown cluster type %s";
-  
+
   private final String clusterType;
-  
+
   public InvalidClusterTypeError(SourceLocation loc, String clusterType) {
     super(loc);
     this.clusterType = clusterType;
@@ -21,6 +21,4 @@ public class InvalidClusterTypeError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, clusterType);
   }
-  
-  
 }

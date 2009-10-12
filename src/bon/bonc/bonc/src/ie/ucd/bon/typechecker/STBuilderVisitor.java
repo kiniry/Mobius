@@ -70,17 +70,17 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
   public void visitBonSourceFile(BonSourceFile node,
       List<SpecificationElement> bonSpecification, Indexing indexing,
       SourceLocation loc) {
-    
+
     visitAll(bonSpecification);
     indexing(node, indexing);
   }
-  
+
   @Override
   public void visitStaticDiagram(StaticDiagram node,
       List<StaticComponent> components, String extendedId, String comment,
       SourceLocation loc) {
-    
-    visitAll(components);    
+
+    visitAll(components);
   }
 
   @Override
@@ -92,7 +92,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     Cluster cluster = st.clusters.get(name.getName());
 
     if (cluster != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Class", name.getName(), "cluster", cluster.getLocation()));  
+      problems.addProblem(new NameNotUniqueError(loc, "Class", name.getName(), "cluster", cluster.getLocation()));
     } else if (clazz != null) {
       problems.addProblem(new DuplicateClassDefinitionError(loc, clazz));
     } else {
@@ -101,14 +101,13 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       if (!context.clusterStack.empty()) {
         st.classClusterGraph.put(name.getName(), context.clusterStack.peek());
       }
-      
+
       st.genericsMap.put(context.clazz, generics);
-      
+
       context.clazz = node;
       visitAll(generics);
       visitNode(classInterface);
-      context.clazz = null;      
-
+      context.clazz = null;
     }
   }
 
@@ -131,7 +130,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     Cluster cluster = st.clusters.get(name);
 
     if (clazz != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", clazz.getLocation()));  
+      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", clazz.getLocation()));
     } else if (cluster != null) {
       problems.addProblem(new DuplicateClusterDefinitionError(loc, cluster));
     } else {
@@ -141,7 +140,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     if (!context.clusterStack.empty()) {
       st.clusterClusterGraph.put(name, context.clusterStack.peek());
     }
-    
+
     context.clusterStack.push(node);
     visitAll(components);
     context.clusterStack.pop();
@@ -151,7 +150,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
   public void visitClassInterface(ClassInterface node, List<Feature> features,
       List<Type> parents, List<Expression> invariant, Indexing indexing,
       SourceLocation loc) {
-    
+
     for (Type parent : parents) {
       if (parent.getIdentifier().equals(context.clazz.getName().getName())) {
         problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, context.clazz.getName().getName()));
@@ -160,7 +159,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
         st.simpleClassInheritanceGraph.put(context.clazz.getName().getName(), parent.getIdentifier());
       }
     }
-    
+
     //TODO proper ST for feature
     visitAll(features);
     visitAll(invariant);
@@ -182,16 +181,15 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       if (name.name.equals("NONE")) {
         if (selectiveExport.size() != 1) {
           //TODO error!
-          
         }
         context.selectiveExportPrivate = true;
       }
       context.selectiveExportStrings.add(name.name);
     }
-    
+
     visitAll(featureSpecifications);
   }
-  
+
   @Override
   public void visitFeatureSpecification(FeatureSpecification node,
       FeatureSpecification.Modifier modifier, List<FeatureName> featureNames,
@@ -206,11 +204,11 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
         problems.addProblem(new DuplicateFeatureDefinitionError(loc, context.clazz.getName().getName(), name.getName(), other));
       }
     }
-    
+
     st.selectiveExportMap.put(node, context.selectiveExport);
     st.selectiveExportStringsMap.put(node, context.selectiveExportStrings);
     st.selectiveExportPrivateMap.put(node, context.selectiveExportPrivate);
-    
+
     visitNode(contracts);
   }
 
@@ -219,7 +217,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       List<ClassName> inherits, List<String> queries, List<String> commands,
       List<String> constraints, Indexing indexing, String explanation,
       String part, SourceLocation loc) {
-    
+
     //Check if name unique
     ClusterChart otherCluster = st.informal.clusters.get(name.getName());
     if (otherCluster != null) {
@@ -240,7 +238,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
         st.informal.classInheritanceGraph.put(node, parent.getName());
       }
     }
-    
+
     indexing(node, indexing);
   }
 
@@ -273,7 +271,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
         st.informal.clusters.put(name, node);
       }
     }
-    
+
     context.clusterChart = node;
     for (ClassEntry entry : classes) {
       //TODO check for duplicate class entries
@@ -288,13 +286,12 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     context.clusterChart = null;
 
     indexing(node, indexing);
-  }  
+  }
 
   @Override
   public void visitClientRelation(ClientRelation node, StaticRef client,
       StaticRef supplier, ClientEntityExpression clientEntities,
       TypeMark typeMark, String semanticLabel, SourceLocation loc) {
-    
     st.clientRelations.add(node);
   }
 
@@ -319,6 +316,5 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       st.indexing.put(node, indexing);
     }
   }
-  
 }
 

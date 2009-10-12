@@ -9,10 +9,10 @@ import ie.ucd.bon.source.SourceLocation;
 public class StaticTypeCannotHaveGenericsHere extends TypeCheckingError {
 
   private static final String message = "Static component %s cannot have generics %s";
-  
+
   private final String staticComponentName;
   private final String locationDescription;
-  
+
   public StaticTypeCannotHaveGenericsHere(SourceLocation loc, String staticComponentName, String locationDescription) {
     super(loc);
     this.staticComponentName = staticComponentName;

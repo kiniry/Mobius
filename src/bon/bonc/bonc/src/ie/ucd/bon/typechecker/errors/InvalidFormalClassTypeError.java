@@ -9,9 +9,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class InvalidFormalClassTypeError extends TypeCheckingError {
 
   private static final String message = "Unknown class type %s";
-  
+
   private final String classType;
-  
+
   public InvalidFormalClassTypeError(SourceLocation loc, String classType) {
     super(loc);
     this.classType = classType;
@@ -21,5 +21,5 @@ public class InvalidFormalClassTypeError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, classType);
   }
-  
+
 }

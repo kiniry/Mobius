@@ -6,7 +6,7 @@ import ie.ucd.bon.source.SourceLocation;
 public class InvalidArgumentsError extends BONError {
 
   private final String message;
-  
+
   public InvalidArgumentsError(String message) {
     super(SourceLocation.NO_LOCATION);
     this.message = message;

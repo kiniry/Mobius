@@ -82,8 +82,8 @@ public class XMLWriter {
    * Currently it does not actually throw the exception, but
    * the api is set that way for future changes.
    *
-   * @param String name of attribute.
-   * @param String value of attribute.
+   * @param attr name of attribute.
+   * @param value value of attribute.
    */
   public XMLWriter writeAttribute(String attr, String value) throws IOException {
 
@@ -171,11 +171,11 @@ public class XMLWriter {
    * @param text String to do search and replace in
    * @param repl String to search for
    * @param with String to replace with
-   * @param n    int    values to replace
+   * @param max  int    values to replace
    *
    * @return String with n values replacEd
    */
-  static public String replaceString(String text, String repl, String with, int max) {
+  public static String replaceString(String text, String repl, String with, int max) {
     if (text == null) {
       return null;
     }

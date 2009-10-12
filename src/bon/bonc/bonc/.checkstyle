@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<fileset-config file-format-version="1.2.0" simple-config="true">
+<fileset-config file-format-version="1.2.0" simple-config="false">
   <local-check-config name="BONc Checkstyle Configuration" location="checkstyle-config.xml" type="project" description="">
     <additional-data name="protect-config-file" value="false"/>
   </local-check-config>
   <fileset name="all" enabled="true" check-config-name="BONc Checkstyle Configuration" local="true">
     <file-match-pattern match-pattern="." include-pattern="true"/>
+    <file-match-pattern match-pattern="TesterLexer.java" include-pattern="false"/>
+    <file-match-pattern match-pattern="TesterParser.java" include-pattern="false"/>
+    <file-match-pattern match-pattern="BONLexer.java" include-pattern="false"/>
+    <file-match-pattern match-pattern="BONParser.java" include-pattern="false"/>
   </fileset>
   <filter name="FilesFromPackage" enabled="false">
     <filter-data value="&lt;recurse=false&gt;"/>

@@ -20,7 +20,7 @@ public class PreliminaryChecker {
 
   private final Problems problems;
   private final BONST st;
-  
+
   public PreliminaryChecker(BONST st) {
     problems = new Problems("Prelim");
     this.st = st;
@@ -29,12 +29,12 @@ public class PreliminaryChecker {
   public Problems getProblems() {
     return problems;
   }
-  
+
   public void runChecks(boolean checkFormal, boolean checkInformal) {
     if (checkFormal) {
       checkFormalGraphsForCycles();
     }
-    
+
     if (checkInformal) {
       checkInformalGraphsForCycles();
       checkSystemDefined();
@@ -42,12 +42,11 @@ public class PreliminaryChecker {
       checkAllClustersInClustersOrSystem();
     }
   }
-  
+
   public void checkInformalGraphsForCycles() {
     Main.logDebug("Check informal class inheritance for cycles");
     for (ClassChart classChart : st.informal.classes.values()) {
-      Collection<ClassChart> cycle = 
-        st.informal.classInheritanceGraph.findCycle(classChart, 
+      Collection<ClassChart> cycle = st.informal.classInheritanceGraph.findCycle(classChart,
           new Converter<String,ClassChart>() {
             public ClassChart convert(final String name) {
               return st.informal.classes.get(name);
@@ -58,11 +57,10 @@ public class PreliminaryChecker {
         problems.addProblem(new CycleInRelationsError(classChart.getLocation(), "Class", classChart, cycle, "class hierarchy"));
       }
     }
-    
+
     Main.logDebug("Checking informal clusters for cycles");
-    for (ClusterChart clusterChart : st.informal.clusters.values()) { 
-      Collection<String> cycle = 
-        st.informal.clusterClusterGraph.findCycle(clusterChart.getName(),
+    for (ClusterChart clusterChart : st.informal.clusters.values()) {
+      Collection<String> cycle = st.informal.clusterClusterGraph.findCycle(clusterChart.getName(),
           new Converter<ClusterChart,String>() {
             public String convert(final ClusterChart name) {
               return name.getName();
@@ -78,8 +76,7 @@ public class PreliminaryChecker {
   public void checkFormalGraphsForCycles() {
     Main.logDebug("Check formal class inheritance for cycles");
     for (Clazz clazz : st.classes.values()) {
-      Collection<String> cycle = 
-        st.classInheritanceGraph.findCycle(clazz.getName().getName(), 
+      Collection<String> cycle = st.classInheritanceGraph.findCycle(clazz.getName().getName(),
           new Converter<Type,String>() {
             public String convert(final Type type) {
               return type.getIdentifier();
@@ -90,11 +87,10 @@ public class PreliminaryChecker {
         problems.addProblem(new CycleInRelationsError(clazz.getLocation(), "Class", clazz.getName().getName(), cycle, "class hierarchy"));
       }
     }
-    
+
     Main.logDebug("Checking formal clusters for cycles");
-    for (Cluster cluster : st.clusters.values()) { 
-      Collection<String> cycle = 
-        st.clusterClusterGraph.findCycle(cluster.getName(),
+    for (Cluster cluster : st.clusters.values()) {
+      Collection<String> cycle = st.clusterClusterGraph.findCycle(cluster.getName(),
           new Converter<Cluster,String>() {
             public String convert(final Cluster name) {
               return name.getName();
@@ -116,7 +112,7 @@ public class PreliminaryChecker {
       }
     }
   }
-  
+
   public void checkAllClustersInClustersOrSystem() {
     Set<String> allClusterNames = st.informal.clusters.keySet();
     for (String clusterName : allClusterNames) {
@@ -134,5 +130,5 @@ public class PreliminaryChecker {
       problems.addProblem(new SystemNotDefinedError());
     }
   }
-  
+
 }

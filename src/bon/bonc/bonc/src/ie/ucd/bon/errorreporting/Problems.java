@@ -14,23 +14,23 @@ public class Problems {
   private final Collection<BONProblem> problems;
   private int numberOfErrors;
   private int numberOfWarnings;
-  
+
   private final String id;
-  
+
   public Problems(String id) {
     problems = TreeMultiset.create();
     numberOfErrors = 0;
     numberOfWarnings = 0;
     this.id = id;
   }
-  
+
   public Problems addProblem(BONProblem problem) {
     //In time filter here...
     problems.add(problem);
     countProblem(problem);
     return this;
   }
-  
+
   public Problems addProblems(Problems newProblems) {
 //    System.out.println("Adding " + newProblems.id + " to " + this.id);
     //In time filter here
@@ -40,7 +40,7 @@ public class Problems {
     }
     return this;
   }
-  
+
   private void countProblem(BONProblem problem) {
     if (problem.isError()) {
       numberOfErrors++;
@@ -48,7 +48,7 @@ public class Problems {
       numberOfWarnings++;
     }
   }
-  
+
   public Collection<BONProblem> getProblems() {
     return problems;
   }
@@ -58,19 +58,19 @@ public class Problems {
       problem.print(ps);
     }
   }
-  
+
   public void printSummary(PrintStream ps) {
     if (numberOfErrors > 0) {
       ps.println(numberOfErrors + " error" + (numberOfErrors>1 ? "s." : "."));
-    } 
+    }
     if (numberOfWarnings > 0) {
       ps.println(numberOfWarnings + " warning" + (numberOfWarnings>1 ? "s." : "."));
     }
   }
-  
+
   public boolean testEquality(Problems otherProblems, PrintStream ps) {
     boolean equal = true;
-    
+
     //All problems in this contained in otherProblems?
     for (BONProblem problem : problems) {
       if (!otherProblems.problems.contains(problem)) {
@@ -81,18 +81,18 @@ public class Problems {
         equal = false;
       }
     }
-    
+
     //All problems in otherProblems contained in this?
     for (BONProblem problem : otherProblems.problems) {
       if (!problems.contains(problem)) {
         ps.println("  Error: The following problem was not detected");
         ps.println("******");
-        problem.print(ps); 
+        problem.print(ps);
         ps.println("******");
         equal = false;
       }
     }
-    
+
     return equal;
   }
 
@@ -108,7 +108,4 @@ public class Problems {
   public String toString() {
     return id + "Problems: " + problems.size() + " problems.\n" + problems;
   }
-  
-  
-  
 }

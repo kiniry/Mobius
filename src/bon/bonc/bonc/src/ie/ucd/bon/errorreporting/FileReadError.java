@@ -12,10 +12,10 @@ import java.io.File;
 public class FileReadError extends ParsingError {
 
   private static final String message = "An I/O error occurred whilst reading %s: %s";
-  
+
   //private final File sourceFile;
   private final String exceptionMessage;
-  
+
   public FileReadError(File sourceFile, String exceptionMessage) {
     super(SourceLocation.noLocationInFile(sourceFile), true);
     //this.sourceFile = sourceFile;
@@ -26,7 +26,4 @@ public class FileReadError extends ParsingError {
   public String getMessage() {
     return String.format(message, getLocation().getFilePath(), exceptionMessage);
   }
-
-  
-  
 }

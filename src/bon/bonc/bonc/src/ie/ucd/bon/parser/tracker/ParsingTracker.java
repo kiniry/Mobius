@@ -21,38 +21,38 @@ public class ParsingTracker {
   private final Vector<ParseResult> parses;
   private final Map<File,ParseResult> parsesMap;
   private final Problems problems;
-  
+
   private int severeProblemCount;
   private boolean containsFailedParses;
-  
+
   private BONST symbolTable;
-  
+
   private String finalMessage;
-  
+
   public ParsingTracker() {
-    parses = new Vector<ParseResult>(); 
+    parses = new Vector<ParseResult>();
     parsesMap = new HashMap<File,ParseResult>();
     problems = new Problems("Tracker");
-    
+
     severeProblemCount = 0;
     containsFailedParses = false;
-    
+
     finalMessage = null;
-    
+
     symbolTable = new BONST();
   }
 
   public Collection<ParseResult> getParses() {
     return parses;
   }
-  
+
   public ParseResult getParseResult(File file) {
     if (file == null) {
       return stdParse;
     }
     return parsesMap.get(file);
   }
-  
+
   public void addParse(File file, ParseResult parse) {
     parses.add(parse);
     if (file == null) {
@@ -60,7 +60,7 @@ public class ParsingTracker {
     } else {
       parsesMap.put(file, parse);
     }
-    
+
     severeProblemCount += parse.getSevereProblemCount();
     if (!parse.isValidParse()) {
       containsFailedParses = true;
@@ -70,7 +70,7 @@ public class ParsingTracker {
   public void addProblem(BONProblem problem) {
     problems.addProblem(problem);
   }
-  
+
   public void addProblems(Problems newProblems) {
     problems.addProblems(newProblems);
   }
@@ -78,12 +78,12 @@ public class ParsingTracker {
   public void setFinalMessage(String finalMessage) {
     this.finalMessage = finalMessage;
   }
-  
+
   public Problems getErrorsAndWarnings() {
-    //TODO provide filter level and filter...    
+    //TODO provide filter level and filter...
     Problems probs = new Problems("Return");
     probs.addProblems(this.problems);
-    
+
     for (ParseResult parse : parses) {
       probs.addProblems(parse.getParseProblems());
       Problems lexerProblems = parse.getLexerProblems();
@@ -97,14 +97,13 @@ public class ParsingTracker {
     }
     return probs;
   }
-  
-  public void printFinalMessage(PrintStream ps) {        
+
+  public void printFinalMessage(PrintStream ps) {
     if (finalMessage != null) {
       ps.println(finalMessage);
     }
   }
-  
-  
+
   public boolean continueFromParse(int safeNumberOfSevereParseErrors) {
     return containsFailedParses ? false : severeProblemCount <= safeNumberOfSevereParseErrors;
   }
@@ -112,7 +111,4 @@ public class ParsingTracker {
   public BONST getSymbolTable() {
     return symbolTable;
   }
-  
-  
-
 }

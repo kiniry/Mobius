@@ -10,7 +10,7 @@ import freemarker.template.TemplateModelException;
 public class IsClusterMethod implements TemplateMethodModel {
 
   private final BONSTInformal st;
-  
+
   public IsClusterMethod(BONSTInformal st) {
     super();
     this.st = st;
@@ -22,7 +22,7 @@ public class IsClusterMethod implements TemplateMethodModel {
       throw new TemplateModelException("Wrong arguments");
     }
     String s = arguments.get(0).toString();
-    return st.clusters.containsKey(s);    
+    return st.clusters.containsKey(s);
   }
 
 }

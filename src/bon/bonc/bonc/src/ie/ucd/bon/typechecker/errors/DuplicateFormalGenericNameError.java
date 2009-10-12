@@ -9,9 +9,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class DuplicateFormalGenericNameError extends TypeCheckingError {
 
   private static final String message = "Duplicate formal generic with name %s";
-  
+
   private final String formalGenericName;
-  
+
   public DuplicateFormalGenericNameError(SourceLocation loc, String formalGenericName) {
     super(loc);
     this.formalGenericName = formalGenericName;
@@ -21,5 +21,5 @@ public class DuplicateFormalGenericNameError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, formalGenericName);
   }
-  
+
 }

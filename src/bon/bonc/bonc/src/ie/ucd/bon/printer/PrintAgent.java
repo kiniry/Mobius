@@ -13,6 +13,6 @@ import java.util.Map;
 public interface PrintAgent {
 
   void visitBonSourceFile(BonSourceFile node, List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc);
-  
-  String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> additionalData) throws IOException;  
+
+  String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> additionalData) throws IOException;
 }

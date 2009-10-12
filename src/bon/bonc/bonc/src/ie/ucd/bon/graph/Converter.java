@@ -10,7 +10,7 @@ import java.util.Collection;
 public abstract class Converter<B,A> {
 
   public abstract A convert(B toConvert);
-  
+
   public Collection<A> convert(final Collection<B> toConvert) {
     Collection<A> result = new ArrayList<A>(toConvert.size());
     for (B b : toConvert) {
@@ -23,9 +23,9 @@ public abstract class Converter<B,A> {
     }
     return result;
   }
-  
+
   public static final Converter<String,String> stringIdentityConverter = identityConverter();
-  
+
   public static final <T> Converter<T,T> identityConverter() {
     return new Converter<T,T>() {
       public final T convert(final T t) {

@@ -5,16 +5,7 @@
 package ie.ucd.bon.graph.display;
 
 import ie.ucd.bon.clinterface.BONcOptionsInterface;
-import ie.ucd.bon.graph.Grapher;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-
-import prefuse.util.ui.UILib;
 
 
 public class PrefuseGraphDisplay {

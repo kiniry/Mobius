@@ -8,7 +8,6 @@ import ie.ucd.bon.Main;
 
 public class GraphTester {
 
-  
   public static void main(String[] args) {
 
     boolean timing = false;
@@ -19,7 +18,7 @@ public class GraphTester {
     String testDir = "../test/";
     String outputDir = testDir + "graph/";
 
-    String[] testFiles = { "typingtest" };
+    String[] testFiles = {"typingtest"};
 
     for (String s : testFiles) {
       printGraph(testDir, s, outputDir, timing);
@@ -33,7 +32,7 @@ public class GraphTester {
     }
     margs += "-cg " + outputDir + fileName + ".dot" + " " + fileDir + fileName;
 
-    Main.main(margs.split("\\s+")); 
+    Main.main(margs.split("\\s+"));
 
   }
 }

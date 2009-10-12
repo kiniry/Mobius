@@ -17,11 +17,11 @@ import java.util.Vector;
 
 public class TestOutput {
 
-  private static final String[] PACKAGES = { "ie.ucd.bon.errorreporting", "ie.ucd.bon.parser.errors", "ie.ucd.bon.typechecker.errors", "ie.ucd.bon.typechecker.informal", "ie.ucd.bon.typechecker.informal.errors" };
+  private static final String[] PACKAGES = {"ie.ucd.bon.errorreporting", "ie.ucd.bon.parser.errors", "ie.ucd.bon.typechecker.errors", "ie.ucd.bon.typechecker.informal", "ie.ucd.bon.typechecker.informal.errors" };
 
   private String errorType;
   private final Collection<String> extraParams;
-  
+
   public TestOutput() {
     extraParams = new Vector<String>();
   }
@@ -29,12 +29,12 @@ public class TestOutput {
   public void setErrorType(String errorType) {
     this.errorType = errorType;
   }
-  
+
   public void addExtraParam(String param) {
     extraParams.add(param);
   }
 
-  
+
   public BONProblem getProblem() {
     Class<?> c = null;
 
@@ -58,7 +58,7 @@ public class TestOutput {
 
     //Find the constructor which requires the most arguments and use it.
     int longestConstructorIndex = 0;
-    int longestConstructorSize = 0;    
+    int longestConstructorSize = 0;
     for (int i=0; i < cons.length; i++) {
       if (cons[i].getParameterTypes().length > longestConstructorSize) {
         //Avoid constructors with collections...
@@ -68,9 +68,9 @@ public class TestOutput {
         longestConstructorIndex = i;
         longestConstructorSize = cons[i].getParameterTypes().length;
       }
-    }    
+    }
     Constructor<?> constructor = cons[longestConstructorIndex];
-    
+
     Class<?>[] paramTypes = constructor.getParameterTypes();
 
     int countSL = 0;
@@ -79,7 +79,7 @@ public class TestOutput {
         countSL++;
       }
     }
-    
+
     if (paramTypes.length != extraParams.size() - (countSL*2)) {
       System.out.println("Invalid arguments for constructor of " + errorType);
       return null;
@@ -125,5 +125,5 @@ public class TestOutput {
 
     return null;
   }
-  
+
 }

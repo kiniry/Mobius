@@ -9,16 +9,14 @@ import ie.ucd.bon.Main;
 public class CommandlineTester {
 
   public static void main(String[] args) {
-    
-    
-    String[] tests = { 
+
+    String[] tests = {
         "--help hjkhjk",                  //Help, even with other invalid options
         "-pp test.bon",                   //Print with invalid file
         "-pp -tc ../test/classchart",     //Valid
         "-pp -tc ../test/clusterchart"    //Valid
     };
-    
-    
+
     for (String s : tests) {
       System.out.println("Testing with arguments: " + s);
       if (s.equals("")) {
@@ -27,8 +25,6 @@ public class CommandlineTester {
         Main.main2(s.split("\\s+"),false);
       }
     }
-    
-
   }
 
 }

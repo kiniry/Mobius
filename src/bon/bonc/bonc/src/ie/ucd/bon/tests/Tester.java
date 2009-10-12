@@ -19,7 +19,7 @@ import org.antlr.runtime.Lexer;
 import org.antlr.runtime.RecognitionException;
 
 public class Tester {
-  
+
   public static void test(String testsDir, String testCasesFile, String logFile) throws IOException, RecognitionException {
     FileInputStream fis = new FileInputStream(testCasesFile);
     ANTLRInputStream input = new ANTLRInputStream(fis);
@@ -29,26 +29,25 @@ public class Tester {
     parser.setTestsDir(testsDir);
     parser.testGrammar();
     fis.close();
-    
+
     PrintStream logs;
     if (logFile == null) {
       logs = NullOutputStream.getNullPrintStreamInstance();
     } else {
       logs = new PrintStream(new FileOutputStream(logFile));
     }
-    
+
     Collection<TestCase> testCases = parser.getTestCases();
-    
+
     int countFailed = 0;
     for (TestCase testCase : testCases) {
       if (!testCase.runTest(logs, logs)) {
         countFailed++;
       }
     }
-    
+
     int countPassed = testCases.size() - countFailed;
-    
-    
+
     System.out.println("All tests completed.");
     System.out.println("****************************************");
     System.out.println("Summary:");
@@ -60,7 +59,7 @@ public class Tester {
       System.out.println("\tLogfile created at: " + logFile);
     }
   }
-  
+
   public static void main(String[] args) {
     if (args.length != 2 && args.length != 3) {
       System.out.println("Invalid arguments for running tests. Usage: java ie.ucd.ebon.test.Tester <test-dir> <test-file> [<log-file> <clops-log-file>]");
@@ -77,5 +76,5 @@ public class Tester {
       }
     }
   }
-  
+
 }

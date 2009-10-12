@@ -101,7 +101,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
 
   private final TextPrinter tp;
   private final ByteArrayOutputStream baos;
-  
+
   public PrettyPrintVisitor() {
     baos = new ByteArrayOutputStream();
     tp = new TextPrinter(new PrintStream(baos));
@@ -110,21 +110,21 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   public String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> data) throws IOException {
     ByteArrayOutputStream start = new ByteArrayOutputStream();
     FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "txt-start.ftl", data);
-    
+
     StringBuilder sb = new StringBuilder();
     sb.append(start.toString());
     sb.append(baos.toString());
     return sb.toString();
   }
-  
+
   public String getVisitorOutputAsString() {
     return baos.toString();
   }
-  
+
   public void resetVisitorOutput() {
     baos.reset();
   }
-  
+
   @Override
   public void visitBonSourceFile(BonSourceFile node,
       List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc) {
@@ -426,7 +426,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       tp.print(')');
       break;
     }
-  }  
+  }
 
   @Override
   public void visitTypeRange(TypeRange node, List<String> identifiers, Type type, SourceLocation loc) {
@@ -612,7 +612,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     visitAll(components);
     tp.decreaseIndentation();
     tp.startLine();
-    tp.printLine("end");    
+    tp.printLine("end");
   }
 
   @Override
@@ -738,7 +738,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     if (type != null) {
       tp.print(" -> ");
       type.accept(this);
-    }   
+    }
   }
 
   @Override
@@ -775,7 +775,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.print("-> ");
     genericIndirection.accept(this);
   }
-  
+
   @Override
   public void visitCluster(Cluster node, String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation loc) {
     tp.startLine();
@@ -816,8 +816,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.print(" creates ");
     tp.printLine(StringUtil.appendWithSeparator(types, ", "));
   }
-  
-  
+
   @Override
   public void visitCallExp(CallExp node, Expression qualifier, List<UnqualifiedCall> callChain, SourceLocation loc) {
     if (qualifier != null) {
@@ -896,7 +895,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.print('\'');
     tp.print(value);
     tp.print('\'');
-  } 
+  }
 
   @Override
   public void visitCharacterInterval(CharacterInterval node, Character start,
@@ -930,7 +929,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   public void visitAllPrintingSeparatorAndlines(Collection<? extends AstNode> nodes, String separator, int numberOfLines, boolean separatorAtEnd, boolean linesAtEnd) {
-    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext();) {
       it.next().accept(this);
       if (it.hasNext() || separatorAtEnd) {
         tp.print(separator);
@@ -940,9 +939,9 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       }
     }
   }
-  
+
   public void visitAllPrintingSeparator(Collection<? extends AstNode> nodes, String separator, boolean separatorAtEnd) {
-    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext();) {
       it.next().accept(this);
       if (it.hasNext() || separatorAtEnd) {
         tp.print(separator);
@@ -951,7 +950,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   public void visitAllPrintingLines(Collection<? extends AstNode> nodes, int numberOfLines, boolean linesAtEnd) {
-    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends AstNode> it = nodes.iterator(); it.hasNext();) {
       it.next().accept(this);
       if (it.hasNext() || linesAtEnd) {
         tp.printLines(numberOfLines);

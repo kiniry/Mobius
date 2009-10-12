@@ -7,14 +7,13 @@ package ie.ucd.bon.typechecker.errors;
 import ie.ucd.bon.source.SourceLocation;
 
 public class EffectiveClassDoesNotDefineDeferredFeatureError extends TypeCheckingError {
-  
-  
+
   private static final String message = "%s is effective and does not define deferred feature %s from %s";
-  
+
   private final String featureName;
   private final String className;
   private final String parentName;
-  
+
   public EffectiveClassDoesNotDefineDeferredFeatureError(SourceLocation loc, String featureName, String className, String parentName) {
     super(loc);
     this.featureName = featureName;

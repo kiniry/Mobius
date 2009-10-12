@@ -17,27 +17,27 @@ public class ParsingTester {
 
     testDirectory(new File(testDir));
   }
-  
+
   public static void testDirectory(File directory) {
     File[] testFiles = directory.listFiles();
-    
+
     for (File f : testFiles) {
       testFile(f);
-    }    
+    }
   }
-  
+
   public static void testFile(File file) {
     if (file.getName().startsWith(".")) {
       return;
     }
-    if (file.isDirectory()) { 
+    if (file.isDirectory()) {
       testDirectory(file);
     } else {
       System.out.println("Testing parsing on file: " + file);
-      String[] args = { "-ntc", "-time", file.getAbsolutePath() };
+      String[] args = {"-ntc", "-time", file.getAbsolutePath()};
       Main.main(args);
     }
-    
+
   }
 
 

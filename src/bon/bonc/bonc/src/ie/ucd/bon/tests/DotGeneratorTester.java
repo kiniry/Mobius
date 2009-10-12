@@ -15,7 +15,7 @@ public class DotGeneratorTester {
     if (args.length > 0 && args[0].equalsIgnoreCase("timing=true")) {
       timing = true;
     }
-    
+
     String testDir = "../test/";
     String outDir = "../test/dot/";
     //TODO we should be creating this dir if necessary... (can do in ant for moment...)
@@ -34,7 +34,7 @@ public class DotGeneratorTester {
         }
         margs += "-p dot -po " + outputDir + " " + originalFilesDir + f.getName();
 
-        Main.main(margs.split("\\s+")); 
+        Main.main(margs.split("\\s+"));
       }
     }
   }

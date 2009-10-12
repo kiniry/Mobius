@@ -6,13 +6,6 @@ package ie.ucd.bon.graph;
 
 import ie.ucd.bon.Main;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
-import ie.ucd.bon.util.XMLWriter;
-
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeSet;
 
 public class Grapher {
 
@@ -31,7 +24,7 @@ public class Grapher {
     StringBuilder sb = new StringBuilder();
 
     //TODO fix!
-    
+
     //InformalTypingInformation informalTypingInfo = parseTracker.getInformalTypingInformation();
 
 //    printGraphName(informalTypingInfo, sb);
@@ -45,7 +38,7 @@ public class Grapher {
 //      for (String parentClassName : classInheritanceGraph.get(subclassName)) {
 //        printClassInheritanceLink(subclassName, parentClassName, sb);
 //      }
-//    }    
+//    }
 //    appendLine(sb);
 //
 //    appendLine("}", sb);
@@ -160,7 +153,7 @@ public class Grapher {
     ClusterChartDefinition sysDef = iti.getSystem();
     if (sysDef == null) {
       graphName = "System";
-    } else {        
+    } else {
       graphName = "System: " + sysDef.getName();
     }
     appendLine("digraph \"" + graphName + "\" {", sb);
@@ -182,27 +175,27 @@ public class Grapher {
 //      //Start xml
 //      xw.writeEntity("tree");
 //      xw.writeEntity("declarations");
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "name");
 //      xw.writeAttribute("type", "String");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "cluster");
 //      xw.writeAttribute("type", "Boolean");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "class");
 //      xw.writeAttribute("type", "Boolean");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "system");
 //      xw.writeAttribute("type", "Boolean");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.endEntity(); //declarations
 //
 //      //Top-level branch/system node
@@ -239,10 +232,10 @@ public class Grapher {
 
     if (clusters != null || classes != null) {
       xw.writeEntity("branch");
-      
+
       printPrefuseAttribute("name", clusterName, xw);
       printPrefuseAttribute("cluster", "true", xw);
-      
+
       if (clusters != null) {
         clusters = new TreeSet<String>(clusters);
         for (String childClusterName : clusters) {
@@ -254,7 +247,7 @@ public class Grapher {
         for (String childClassName : classes) {
           printPrefuseClass(childClassName, xw);
         }
-      }      
+      }
       xw.endEntity(); //branch
     } else {
       xw.writeEntity("leaf");
@@ -271,14 +264,14 @@ public class Grapher {
     printPrefuseAttribute("class", "true", xw);
     xw.endEntity(); //leaf
   }
-  
+
   private static void printPrefuseAttribute(String name, String value, XMLWriter xw) throws IOException {
     xw.writeEntity("attribute");
     xw.writeAttribute("name", name);
     xw.writeAttribute("value", value);
-    xw.endEntity();    
+    xw.endEntity();
   }
-  
+
   public static String graphPrefuseInformalInheritance(ParsingTracker parseTracker) {
   //Output
     StringWriter sw = new StringWriter();
@@ -290,34 +283,34 @@ public class Grapher {
 //    Graph<String,String> inheritanceGraph = informalTypingInfo.getClassInheritanceGraph();
 //    Graph<String,String> reverseInheritanceGraph = informalTypingInfo.getReverseClassInheritanceGraph();
 //    Set<String> topLevel = new TreeSet<String>();
-//    
+//
 //    for (String className : classes) {
 //      if (!inheritanceGraph.containsKey(className)) {
 //        topLevel.add(className);
 //      }
 //    }
-//    
+//
 //    try {
 //      //Start xml
 //      xw.writeEntity("tree");
 //      xw.writeEntity("declarations");
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "name");
 //      xw.writeAttribute("type", "String");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.writeEntity("attributeDecl");
 //      xw.writeAttribute("name", "class");
 //      xw.writeAttribute("type", "Boolean");
 //      xw.endEntity(); //attributeDecl
-//      
+//
 //      xw.endEntity(); //declarations
 //
 //      //Top-level branch/system node
 //      xw.writeEntity("branch");
 //
-//      
+//
 //      printPrefuseAttribute("name", "BOTTOM", xw);
 //
 //      for (String className : topLevel) {
@@ -334,23 +327,20 @@ public class Grapher {
 //      return "";
 //    }
   }
-  
+
   private static void printPrefuseClassWithInheritance(String className, Graph<String,String> reverseInheritanceGraph, XMLWriter xw) throws IOException {
-    
-    
+
     Collection<String> subclasses = reverseInheritanceGraph.get(className);
-    
+
     if (subclasses != null && subclasses.size() > 0) {
       xw.writeEntity("branch");
-      
-      
+
       printPrefuseAttribute("name", className, xw);
       printPrefuseAttribute("class", "true", xw);
-      
+
       for (String subclassName : subclasses) {
         printPrefuseClassWithInheritance(subclassName, reverseInheritanceGraph, xw);
       }
-      
       xw.endEntity(); //branch
     } else {
       xw.writeEntity("leaf");
@@ -358,7 +348,6 @@ public class Grapher {
       printPrefuseAttribute("class", "true", xw);
       xw.endEntity(); //leaf
     }
-    
   }
   */
 

@@ -84,8 +84,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   public void visitStaticDiagram(StaticDiagram node,
       List<StaticComponent> components, String extendedId, String comment,
       SourceLocation loc) {
-
-    visitAll(components);    
+    visitAll(components);
   }
 
 
@@ -118,7 +117,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     boolean isCluster = isCluster(name.getName());
 
     if (!isClass && !isCluster) {
-      problems.addProblem(new InvalidStaticComponentTypeError(name.getLocation(), name.getName()));          
+      problems.addProblem(new InvalidStaticComponentTypeError(name.getLocation(), name.getName()));
     }
 
     if (prefix.size() > 0) {
@@ -150,7 +149,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
         }
       } else {
         problems.addProblem(new InvalidClusterTypeError(finalPrefix.getLocation(), finalPrefix.getName()));
-      } 
+      }
     }
   }
 
@@ -195,7 +194,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     if (modifier == DEFERRED && context.clazz.getMod() != Clazz.Mod.DEFERRED) {
       problems.addProblem(new DeferredFeatureInNonDeferredClassError(loc, featureNames, context.clazz.getName().getName()));
     }
-    
+
     for (FeatureName name : featureNames) {
       //TODO reference against table produced with Joe and Alex.
       switch(modifier) {
@@ -211,14 +210,14 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
         break;
       }
     }
-    
+
     visitNode(contracts);
   }
-  
-  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist, 
+
+  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist,
       boolean parentFeatureMustBeDeferred, boolean parentFeatureMustBeNonDeferred) {
     FeatureSpecification parentFeature = findParentFeatureWithName(context.clazz.getName().getName(), featureName);
-    
+
     if (parentFeature == null) {
       if (parentFeatureMustExist) {
         //TODO error, no parent feature with this name
@@ -227,18 +226,18 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       if (parentFeatureMustBeDeferred && parentFeature.getModifier() != DEFERRED) {
         //TODO error, parent feature is not deferred
       }
-      
+
       if (parentFeatureMustBeNonDeferred && parentFeature.getModifier() == DEFERRED) {
         //TODO error, redefining a deferred feature
       }
-      
+
       //TODO check return type and arguments are type-compatible
     }
   }
-  
+
   private FeatureSpecification findParentFeatureWithName(String className, String featureName) {
     Collection<String> parents = st.simpleClassInheritanceGraph.get(featureName);
-    
+
     for (String parent : parents) {
       Clazz parentClass = st.classes.get(parent);
       if (parentClass != null) {
@@ -254,7 +253,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
         }
       }
     }
-    
+
     //No such feature
     return null;
   }
@@ -397,7 +396,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
     case AND:
     case OR:
-    case EQ:  
+    case EQ:
     case LE:
     case NEQ:
     case LT:
@@ -407,7 +406,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     case EQUIV:
     case IMPLIES:
       st.typeMap.put(node, BONType.mk("BOOLEAN"));
-      break;  
+      break;
     }
 
   }
@@ -481,13 +480,13 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   public void visitUnqualifiedCall(UnqualifiedCall node, String id,
       List<Expression> args, SourceLocation loc) {
     //TODO, we need feature types in a previous pass...
-    Type qualifier = context.callQualifier;
+    //Type qualifier = context.callQualifier;
 
     visitAll(args);
     //Type is the type of feature id for the qualifier type
 
   }
-  
+
   private boolean compareType(Type expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
       problems.addProblem(new TypeMismatchError(loc, typeToString(expected)));
@@ -499,7 +498,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       return true;
     }
   }
-  
+
   private boolean compareType(Type[] expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
       problems.addProblem(new TypeMismatchError(loc, typeChoices(expected)));
@@ -514,7 +513,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       return false;
     }
   }
-  
+
   private String typeChoices(Type[] types) {
     if (types.length == 0) {
       return "";
@@ -536,7 +535,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     //TODO fix
     return type.getIdentifier();
   }
-  
+
   public Problems getProblems() {
     return problems;
   }

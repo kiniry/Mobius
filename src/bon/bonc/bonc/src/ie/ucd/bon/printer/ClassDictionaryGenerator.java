@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class ClassDictionaryGenerator {
+public final class ClassDictionaryGenerator {
 
   /** Private constructor, disallow instantiation. */
   private ClassDictionaryGenerator() { }

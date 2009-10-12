@@ -64,7 +64,7 @@ import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
 
 /**
- * Demonstration of a node-link tree viewer
+ * Demonstration of a node-link tree viewer.
  *
  * @version 1.0
  * @author <a href="http://jheer.org">jeffrey heer</a>
@@ -101,7 +101,7 @@ public class TreeView extends Display {
 
     // colors
     ItemAction nodeColor = new NodeColorAction(treeNodes);
-    ItemAction textColor = new NodeTextColorAction(treeNodes); 
+    ItemAction textColor = new NodeTextColorAction(treeNodes);
 
     m_vis.putAction("textColor", textColor);
 
@@ -131,8 +131,7 @@ public class TreeView extends Display {
     treeLayout.setLayoutAnchor(new Point2D.Double(25,300));
     m_vis.putAction("treeLayout", treeLayout);
 
-    CollapsedSubtreeLayout subLayout = 
-      new CollapsedSubtreeLayout(tree, m_orientation);
+    CollapsedSubtreeLayout subLayout = new CollapsedSubtreeLayout(tree, m_orientation);
     m_vis.putAction("subLayout", subLayout);
 
     AutoPanAction autoPan = new AutoPanAction();
@@ -192,14 +191,14 @@ public class TreeView extends Display {
     registerKeyboardAction(
         new OrientAction(Constants.ORIENT_BOTTOM_TOP),
         "bottom-to-top", KeyStroke.getKeyStroke("ctrl 4"), WHEN_FOCUSED);
-    
+
     // ------------------------------------------------
 
     // filter graph and perform layout
     setOrientation(m_orientation);
     m_vis.run("filter");
 
-    TupleSet search = new PrefixSearchTupleSet(); 
+    TupleSet search = new PrefixSearchTupleSet();
     m_vis.addFocusGroup(Visualization.SEARCH_ITEMS, search);
     search.addTupleSetListener(new TupleSetListener() {
       public void tupleSetChanged(TupleSet t, Tuple[] add, Tuple[] rem) {
@@ -213,42 +212,40 @@ public class TreeView extends Display {
   // ------------------------------------------------------------------------
 
   public void setOrientation(int orientation) {
-    NodeLinkTreeLayout rtl 
-    = (NodeLinkTreeLayout)m_vis.getAction("treeLayout");
-    CollapsedSubtreeLayout stl
-    = (CollapsedSubtreeLayout)m_vis.getAction("subLayout");
-    switch ( orientation ) {
-    case Constants.ORIENT_LEFT_RIGHT:
-      m_nodeRenderer.setHorizontalAlignment(Constants.LEFT);
-      m_edgeRenderer.setHorizontalAlignment1(Constants.RIGHT);
-      m_edgeRenderer.setHorizontalAlignment2(Constants.LEFT);
-      m_edgeRenderer.setVerticalAlignment1(Constants.CENTER);
-      m_edgeRenderer.setVerticalAlignment2(Constants.CENTER);
-      break;
-    case Constants.ORIENT_RIGHT_LEFT:
-      m_nodeRenderer.setHorizontalAlignment(Constants.RIGHT);
-      m_edgeRenderer.setHorizontalAlignment1(Constants.LEFT);
-      m_edgeRenderer.setHorizontalAlignment2(Constants.RIGHT);
-      m_edgeRenderer.setVerticalAlignment1(Constants.CENTER);
-      m_edgeRenderer.setVerticalAlignment2(Constants.CENTER);
-      break;
-    case Constants.ORIENT_TOP_BOTTOM:
-      m_nodeRenderer.setHorizontalAlignment(Constants.CENTER);
-      m_edgeRenderer.setHorizontalAlignment1(Constants.CENTER);
-      m_edgeRenderer.setHorizontalAlignment2(Constants.CENTER);
-      m_edgeRenderer.setVerticalAlignment1(Constants.BOTTOM);
-      m_edgeRenderer.setVerticalAlignment2(Constants.TOP);
-      break;
-    case Constants.ORIENT_BOTTOM_TOP:
-      m_nodeRenderer.setHorizontalAlignment(Constants.CENTER);
-      m_edgeRenderer.setHorizontalAlignment1(Constants.CENTER);
-      m_edgeRenderer.setHorizontalAlignment2(Constants.CENTER);
-      m_edgeRenderer.setVerticalAlignment1(Constants.TOP);
-      m_edgeRenderer.setVerticalAlignment2(Constants.BOTTOM);
-      break;
-    default:
-      throw new IllegalArgumentException(
-          "Unrecognized orientation value: "+orientation);
+    NodeLinkTreeLayout rtl = (NodeLinkTreeLayout)m_vis.getAction("treeLayout");
+    CollapsedSubtreeLayout stl = (CollapsedSubtreeLayout)m_vis.getAction("subLayout");
+    switch (orientation) {
+      case Constants.ORIENT_LEFT_RIGHT:
+        m_nodeRenderer.setHorizontalAlignment(Constants.LEFT);
+        m_edgeRenderer.setHorizontalAlignment1(Constants.RIGHT);
+        m_edgeRenderer.setHorizontalAlignment2(Constants.LEFT);
+        m_edgeRenderer.setVerticalAlignment1(Constants.CENTER);
+        m_edgeRenderer.setVerticalAlignment2(Constants.CENTER);
+        break;
+      case Constants.ORIENT_RIGHT_LEFT:
+        m_nodeRenderer.setHorizontalAlignment(Constants.RIGHT);
+        m_edgeRenderer.setHorizontalAlignment1(Constants.LEFT);
+        m_edgeRenderer.setHorizontalAlignment2(Constants.RIGHT);
+        m_edgeRenderer.setVerticalAlignment1(Constants.CENTER);
+        m_edgeRenderer.setVerticalAlignment2(Constants.CENTER);
+        break;
+      case Constants.ORIENT_TOP_BOTTOM:
+        m_nodeRenderer.setHorizontalAlignment(Constants.CENTER);
+        m_edgeRenderer.setHorizontalAlignment1(Constants.CENTER);
+        m_edgeRenderer.setHorizontalAlignment2(Constants.CENTER);
+        m_edgeRenderer.setVerticalAlignment1(Constants.BOTTOM);
+        m_edgeRenderer.setVerticalAlignment2(Constants.TOP);
+        break;
+      case Constants.ORIENT_BOTTOM_TOP:
+        m_nodeRenderer.setHorizontalAlignment(Constants.CENTER);
+        m_edgeRenderer.setHorizontalAlignment1(Constants.CENTER);
+        m_edgeRenderer.setHorizontalAlignment2(Constants.CENTER);
+        m_edgeRenderer.setVerticalAlignment1(Constants.TOP);
+        m_edgeRenderer.setVerticalAlignment2(Constants.BOTTOM);
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Unrecognized orientation value: "+orientation);
     }
     m_orientation = orientation;
     rtl.setOrientation(orientation);
@@ -265,7 +262,7 @@ public class TreeView extends Display {
     Tree t = null;
     try {
       t = (Tree)new TreeMLReader().readGraph(is);
-    } catch ( Exception e ) {
+    } catch (Exception e) {
       e.printStackTrace();
       System.exit(1);
     }
@@ -300,8 +297,9 @@ public class TreeView extends Display {
 
     tview.addControlListener(new ControlAdapter() {
       public void itemEntered(VisualItem item, MouseEvent e) {
-        if ( item.canGetString(label) )
+        if (item.canGetString(label)) {
           title.setText(item.getString(label));
+        }
       }
       public void itemExited(VisualItem item, MouseEvent e) {
         title.setText(null);
@@ -327,9 +325,7 @@ public class TreeView extends Display {
   // ------------------------------------------------------------------------
 
   public class OrientAction extends AbstractAction {
-    /**
-     * 
-     */
+
     private static final long serialVersionUID = 154642313345L;
     private int orientation;
 
@@ -352,24 +348,25 @@ public class TreeView extends Display {
 
     public void run(double frac) {
       TupleSet ts = m_vis.getFocusGroup(Visualization.FOCUS_ITEMS);
-      if ( ts.getTupleCount() == 0 )
+      if (ts.getTupleCount() == 0) {
         return;
+      }
 
-      if ( frac == 0.0 ) {
+      if (frac == 0.0) {
         int xbias=0, ybias=0;
-        switch ( m_orientation ) {
-        case Constants.ORIENT_LEFT_RIGHT:
-          xbias = m_bias;
-          break;
-        case Constants.ORIENT_RIGHT_LEFT:
-          xbias = -m_bias;
-          break;
-        case Constants.ORIENT_TOP_BOTTOM:
-          ybias = m_bias;
-          break;
-        case Constants.ORIENT_BOTTOM_TOP:
-          ybias = -m_bias;
-          break;
+        switch (m_orientation) {
+          case Constants.ORIENT_LEFT_RIGHT:
+            xbias = m_bias;
+            break;
+          case Constants.ORIENT_RIGHT_LEFT:
+            xbias = -m_bias;
+            break;
+          case Constants.ORIENT_TOP_BOTTOM:
+            ybias = m_bias;
+            break;
+          case Constants.ORIENT_BOTTOM_TOP:
+            ybias = -m_bias;
+            break;
         }
 
         VisualItem vi = (VisualItem)ts.tuples().next();
@@ -391,16 +388,17 @@ public class TreeView extends Display {
     }
 
     public int getColor(VisualItem item) {
-      if ( m_vis.isInGroup(item, Visualization.SEARCH_ITEMS) )
+      if (m_vis.isInGroup(item, Visualization.SEARCH_ITEMS)) {
         return ColorLib.rgb(255,190,190);
-      else if ( m_vis.isInGroup(item, Visualization.FOCUS_ITEMS) )
+      } else if (m_vis.isInGroup(item, Visualization.FOCUS_ITEMS)) {
         return ColorLib.rgb(198,229,229);
-      else if ( item.getDOI() > -1 )
+      } else if (item.getDOI() > -1) {
         return ColorLib.rgb(164,193,193);
-      else
+      } else {
         return ColorLib.rgba(255,255,255,0);
+      }
     }
-  } 
+  }
 
   public static class NodeTextColorAction extends ColorAction {
 
@@ -419,6 +417,6 @@ public class TreeView extends Display {
         return ColorLib.rgb(255, 0, 0);
       }
     }
-  } 
+  }
 
 } // end of class TreeMap

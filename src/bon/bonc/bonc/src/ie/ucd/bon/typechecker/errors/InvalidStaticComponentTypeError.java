@@ -9,9 +9,9 @@ import ie.ucd.bon.source.SourceLocation;
 public class InvalidStaticComponentTypeError extends TypeCheckingError {
 
   private static final String message = "Unknown component type %s (%s is neither a class nor a cluster)";
-  
+
   private final String componentName;
-  
+
   public InvalidStaticComponentTypeError(SourceLocation loc, String componentName) {
     super(loc);
     this.componentName = componentName;
@@ -21,7 +21,4 @@ public class InvalidStaticComponentTypeError extends TypeCheckingError {
   public String getMessage() {
     return String.format(message, componentName, componentName);
   }
-  
-  
-  
 }

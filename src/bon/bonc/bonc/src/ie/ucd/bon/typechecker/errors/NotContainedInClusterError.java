@@ -7,14 +7,14 @@ package ie.ucd.bon.typechecker.errors;
 import ie.ucd.bon.source.SourceLocation;
 
 public class NotContainedInClusterError extends TypeCheckingError {
- 
+
   private static final String message1 = "Class %s is not contained in cluster %s";
   private static final String message2 = "Cluster %s is not contained in cluster %s";
-  
+
   private final String componentName;
   private final boolean isClass;
   private final String clusterName;
-  
+
   public NotContainedInClusterError(SourceLocation loc, String componentName, boolean isClass, String clusterName) {
     super(loc);
     this.componentName = componentName;
@@ -29,6 +29,6 @@ public class NotContainedInClusterError extends TypeCheckingError {
     } else {
       return String.format(message2, componentName, clusterName);
     }
-  }  
-  
+  }
+
 }

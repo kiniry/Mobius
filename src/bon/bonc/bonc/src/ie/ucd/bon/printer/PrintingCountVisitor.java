@@ -26,14 +26,14 @@ public class PrintingCountVisitor extends AbstractVisitorWithAdditions {
   private int numberOfScenarioCharts;
   private int numberOfCreationCharts;
   private int numberOfClassDictionaries;
-  
+
   public PrintingCountVisitor() {
     this.numberOfEventCharts = 0;
     this.numberOfScenarioCharts = 0;
     this.numberOfCreationCharts = 0;
     this.numberOfClassDictionaries = 0;
   }
-  
+
   @Override
   public void visitBonSourceFile(BonSourceFile node, List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc) {
     visitAll(bonSpecification);
@@ -58,15 +58,15 @@ public class PrintingCountVisitor extends AbstractVisitorWithAdditions {
   public void visitScenarioChart(ScenarioChart node, String systemName, List<ScenarioEntry> entries, Indexing indexing, String explanation, String part, SourceLocation loc) {
     numberOfScenarioCharts++;
   }
-  
+
   public int getNumberOfEventCharts() {
     return numberOfEventCharts;
   }
-  
+
   public int getNumberOfScenarioCharts() {
     return numberOfScenarioCharts;
   }
-  
+
   public int getNumberOfCreationCharts() {
     return numberOfCreationCharts;
   }
@@ -74,7 +74,7 @@ public class PrintingCountVisitor extends AbstractVisitorWithAdditions {
   public int getNumberOfClassDictionaries() {
     return numberOfClassDictionaries;
   }
-  
+
   public String toString() {
     return "Counted " + numberOfClassDictionaries + " class dictionaries, " + numberOfCreationCharts + " creation charts, " + numberOfEventCharts + " event charts, " + numberOfScenarioCharts + " scenario charts";
   }
