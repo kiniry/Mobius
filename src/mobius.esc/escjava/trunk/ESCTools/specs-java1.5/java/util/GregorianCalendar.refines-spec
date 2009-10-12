@@ -38,8 +38,8 @@ public class GregorianCalendar extends Calendar {
 
     //@ public static final ghost int NUM_DAYS[] = {0,31,59,90,120,151,181,212,243,273,304,334};
     //@ public static final ghost int LEAP_NUM_DAYS[] = {0,31,60,91,121,152,182,213,244,274,305,335};
-    //@ public static final ghost int MONTH_LENGTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
-    //@ public static final ghost int LEAP_MONTH_LENGTH[] = {31,29,31,30,31,30,31,31,30,31,30,31};
+    // @ public static final ghost int MONTH_LENGTH[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    // @ public static final ghost int LEAP_MONTH_LENGTH[] = {31,29,31,30,31,30,31,31,30,31,30,31};
 
     /*@ constraint 
       @		\old(NUM_DAYS).equals(NUM_DAYS) &&
@@ -80,18 +80,21 @@ public class GregorianCalendar extends Calendar {
      * (*) In units of one-hour
      */
 
-    /*@ public static final ghost int MIN_VALUES[] = {
+    /* @ public static final ghost int MIN_VALUES[] = {
       @   0,1,0,1,0,1,1,1,-1,0,0,0,0,0,0,-12*ONE_HOUR,0
       @ };
-      @
+      @*/
+    /*  @
       @ public static final ghost int LEAST_MAX_VALUES[] = {
       @   1,292269054,11,52,4,28,365,7,4,1,11,23,59,59,999,12*ONE_HOUR,1*ONE_HOUR
       @ };
-      @
+      @*/
+    /* @
       @ public static final ghost int MAX_VALUES[] = {
       @   1,292278994,11,53,6,31,366,7,6,1,11,23,59,59,999,12*ONE_HOUR,1*ONE_HOUR
       @ };
-      @
+      @*/
+    /*@
       @ constraint
       @		\old(MIN_VALUES).equals(MIN_VALUES) &&
       @		\old(MAX_VALUES).equals(MAX_VALUES) &&
@@ -458,7 +461,7 @@ public class GregorianCalendar extends Calendar {
       @ ensures zone.equals(TimeZone.getDefault())
       @         && locale.equals(Locale.getDefault());
       @*/
-    public GregorianCalendar();
+    public /*@ pure @*/ GregorianCalendar();
 
     /*@ public normal_behavior
       @ requires zone != null;
@@ -466,7 +469,7 @@ public class GregorianCalendar extends Calendar {
       @ ensures this.zone.equals(zone)
       @         && locale.equals(Locale.getDefault());
       @*/
-    public GregorianCalendar(TimeZone zone);
+    public /*@ pure @*/ GregorianCalendar(TimeZone zone);
 
     /*@ public normal_behavior
       @ requires aLocale != null;
@@ -474,7 +477,7 @@ public class GregorianCalendar extends Calendar {
       @ ensures zone.equals(TimeZone.getDefault())
       @         && locale.equals(aLocale);
       @*/
-    public GregorianCalendar(Locale aLocale);
+    public /*@ pure @*/ GregorianCalendar(Locale aLocale);
 
     /*@ public normal_behavior
       @ requires zone != null && aLocale != null;
@@ -1206,4 +1209,6 @@ public class GregorianCalendar extends Calendar {
     private /*@ spec_public pure @*/ final int yearLength();
 
     static final long serialVersionUID;
+
+    public /*@non_null*/ Object clone();
 }

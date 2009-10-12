@@ -120,13 +120,13 @@ public class ArrayList extends AbstractList
       @   ensures ((ArrayList)\result).theString == this.theString;
       @   ensures ((ArrayList)\result).theHashCode == this.theHashCode;
       @*/
-    public /*@ pure @*/ Object clone();
+    public /*@ pure non_null @*/ Object clone();
 
     // specification inherited from List
-    public /*@ pure @*/ Object[] toArray();
+    public /*@ pure non_null @*/ Object[] toArray();
 
     // specification inherited from List
-    public Object[] toArray(Object[] a);
+    public /*@ non_null @*/ Object[] toArray(Object[] a);
 
     // specification inherited from List
     public /*@ pure @*/ Object get(int index);

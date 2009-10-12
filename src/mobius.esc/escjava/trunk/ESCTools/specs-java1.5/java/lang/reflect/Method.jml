@@ -69,7 +69,7 @@ class Method extends AccessibleObject implements Member {
 
     public /*@ pure @*/ int hashCode();
 
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 
     /*@ ensures getReturnType() == boolean.class ==> \result instanceof Boolean;
       @ ensures getReturnType() == byte.class    ==> \result instanceof Byte;

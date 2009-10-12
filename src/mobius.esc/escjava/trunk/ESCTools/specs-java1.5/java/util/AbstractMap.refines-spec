@@ -47,12 +47,12 @@ public abstract class AbstractMap implements Map {
     public Set keySet();
     public Collection values();
     public abstract Set entrySet();
-    public boolean equals(Object o);
+    public /*@ pure @*/ boolean equals(Object o);
     public int hashCode();
-    public String toString();
-    protected Object clone() throws CloneNotSupportedException;
+    public /*@ non_null @*/ String toString();
+    protected /*@ non_null @*/ Object clone() throws CloneNotSupportedException;
 
-/*
+
     static class SimpleEntry implements Entry {
 
         //@ public normal_behavior
@@ -70,11 +70,11 @@ public abstract class AbstractMap implements Map {
         public Object getKey();
         public Object getValue();
         public Object setValue(Object value);
-        public boolean equals(Object o);
+        public /*@ pure @*/ boolean equals(Object o);
         public int hashCode();
-        public String toString();
+        public /*@ non_null @*/ String toString();
 
     }
-*/
+
 
 }

@@ -98,7 +98,7 @@ public /*@ pure @*/ final
         protected Subset(String name);
         public final /*@ pure @*/ boolean equals(Object obj);
         public final int hashCode();
-        public final String toString();
+        public final /*@ non_null @*/ String toString();
     }
 
     public static final class UnicodeBlock extends Subset {
@@ -238,7 +238,7 @@ public /*@ pure @*/ final
       @   ensures \result !=null && \result.equals(String.valueOf(ch_));
       @   ensures \result.charAt(0) == ch_;
       @*/
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /*@ 
       @  public normal_behavior

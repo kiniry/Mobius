@@ -39,7 +39,7 @@ public final class Pattern implements java.io.Serializable {
     public /*@ pure @*/ String[] split(CharSequence input, int limit);
 
     public /*@ pure @*/ String[] split(CharSequence input);
-
+    public /*@ non_null @*/ String toString();
 /*
     static final class TreeInfo {
 

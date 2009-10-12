@@ -28,10 +28,10 @@ public abstract class AbstractSequentialList extends java.util.AbstractList {
     public boolean addAll(int index, java.util.Collection c);
 
     // specs inherited from List
-    public java.util.Iterator iterator();
+    public /*@ non_null @*/ java.util.Iterator iterator();
 
     // specs inherited from List
-    public abstract java.util.ListIterator listIterator(int index);
+    public abstract /*@ non_null @*/ java.util.ListIterator listIterator(int index);
 
     // specs inherited from List
     public java.lang.Object set(int index, java.lang.Object element);

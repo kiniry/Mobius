@@ -62,7 +62,7 @@ public abstract class OutputStream extends Object implements Closeable, Flushabl
     //@ pure
     public OutputStream();
 
-    /*@ public behavior
+    /*@ also public behavior
       @   requires isOpen;
       @   assignable output, isOpen, wasClosed;
       @   ensures !isOpen;
@@ -73,7 +73,7 @@ public abstract class OutputStream extends Object implements Closeable, Flushabl
     public void close() throws IOException;
 
 // FIXME - ought to keep track of how much of hte outputBytes buffer is flushed?
-    /*@ public behavior
+    /*@ also public behavior
       @   requires isOpen;
       @   assignable output;
       @   ensures \not_modified(outputBytes);

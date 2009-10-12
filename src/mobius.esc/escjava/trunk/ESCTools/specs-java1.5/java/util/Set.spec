@@ -44,7 +44,7 @@ public interface Set extends Collection {
     boolean contains(/*@nullable*/ Object o);
 
     // specification inherited
-    Iterator iterator();
+    /*@ non_null @*/ Iterator iterator();
 
     // specification inherited
     /*@non_null*/ Object[] toArray();

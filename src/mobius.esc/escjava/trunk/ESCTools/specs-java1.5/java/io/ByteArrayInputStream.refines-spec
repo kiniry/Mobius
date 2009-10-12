@@ -13,19 +13,18 @@ public class ByteArrayInputStream extends InputStream {
     // Hence all sorts of errors can occur in the various methods.
 
     /*@ public normal_behavior
-      @   assignable \not_specified;
       @   ensures \result == (
       @              buf != null && pos >= 0 && pos <= count && 
       @              count <= buf.length &&
       @              mark >= 0 && mark <= count);
-      @ public model boolean valid();
+      @ public pure model boolean valid();
       @*/
 
     // CONSTRUCTORS
 
     /*@
       @ public normal_behavior
-      @    requires bytes != null;
+      @    requires buf != null;
       @    ensures initialInputStream();
       @    ensures this.buf == buf;
       @    ensures pos == 0;
@@ -39,12 +38,12 @@ public class ByteArrayInputStream extends InputStream {
 
     /*@
       @ public normal_behavior
-      @    requires bytes != null;
+      @    requires buf != null;
       @    ensures initialInputStream();
       @    ensures this.buf == buf;
-      @    ensures pos == off;
-      @    ensures count == Math.min(bytes.length,offset+length);
-      @    ensures mark == off;
+      @    ensures pos == offset;
+      @    ensures count == Math.min(buf.length, offset + length);
+      @    ensures mark == offset;
       @    ensures markPosition == mark && markLimit == buf.length;
       @    ensures valid();
       @ pure
@@ -111,7 +110,7 @@ public class ByteArrayInputStream extends InputStream {
       @   requires n > 0;
       @   modifies streamState;
       @   ensures \not_modified(isOpen,wasClosed);
-      @   ensures \result == \old(Math.min(len, count-pos));
+      @   ensures \result == \old(Math.min(n, count-pos));
       @   ensures pos == \old(pos) + \result;
       @   ensures valid();
       @*/
@@ -161,7 +160,7 @@ public class ByteArrayInputStream extends InputStream {
       @ also public normal_behavior
       @   requires isOpen;
       @   requires b != null;
-      @   requires off >= 0 && off + len <= bytes.length;
+      @   requires off >= 0 && off + len <= b.length;
       @   requires len > 0;
       @   requires pos < count;
       @   modifies streamState, b[off .. off+len-1];

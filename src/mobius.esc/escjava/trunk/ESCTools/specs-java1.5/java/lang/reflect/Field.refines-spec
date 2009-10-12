@@ -45,7 +45,7 @@ class Field extends AccessibleObject implements Member {
 
     public /*@ pure @*/ int hashCode();
 
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 
     public /*@ pure @*/ Object get(Object obj)
         throws IllegalArgumentException, IllegalAccessException;

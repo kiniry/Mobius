@@ -164,7 +164,7 @@ public class LinkedList extends AbstractSequentialList
     public int lastIndexOf(Object o);
     
     //@ pure
-    public ListIterator listIterator(int index);
+    public /*@ non_null @*/ ListIterator listIterator(int index);
     
     /*@ also
       @   public normal_behavior
@@ -172,10 +172,10 @@ public class LinkedList extends AbstractSequentialList
       @          && ((LinkedList)\result).equals(this);
       @       ensures_redundantly \result != this;
       @*/
-    public /*@ pure @*/ Object clone();
+    public /*@ non_null pure @*/ Object clone();
 
     //@ pure
-    public Object[] toArray();
+    public /*@ non_null @*/ Object[] toArray();
     
-    public Object[] toArray(Object[] a);
+    public /*@ non_null @*/ Object[] toArray(Object[] a);
 }

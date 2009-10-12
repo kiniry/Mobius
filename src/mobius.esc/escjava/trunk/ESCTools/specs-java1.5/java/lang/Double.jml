@@ -153,7 +153,7 @@ public /*@ pure @*/ final class Double extends Number implements Comparable {
 
     // specification inherited from java.lang.Object
     //@ also ensures \result.equals(toString(doubleValue()));
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /*@ also
       @   public normal_behavior

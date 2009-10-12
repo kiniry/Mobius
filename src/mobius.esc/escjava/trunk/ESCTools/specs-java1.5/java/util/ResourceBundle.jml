@@ -51,5 +51,7 @@ public abstract class ResourceBundle {
     protected abstract Object handleGetObject(String key);
     
     public abstract Enumeration getKeys();
-
+    class ResourceCacheKey implements Cloneable {
+         public /*@ non_null @*/ Object clone();
+    }
 }

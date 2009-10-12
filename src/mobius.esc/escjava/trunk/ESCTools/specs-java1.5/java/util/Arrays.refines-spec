@@ -1617,5 +1617,34 @@ public class Arrays {
         //-@ function
         static pure public model boolean contains(\real[] array, \real o);
      */
+    public class ArrayList extends AbstractList implements List, RandomAccess, Cloneable, java.io.Serializable {
+	
+	public /*@ pure @*/ ArrayList(int initialCapacity);
+	
+	public /*@ pure @*/ ArrayList();
+    
+	public /*@ pure @*/ ArrayList(Collection c);
+    
+	public void trimToSize();
+    
+	public void ensureCapacity(int minCapacity);
+    
+	public /*@ pure @*/  int size();
+    
+	public /*@ pure @*/  boolean isEmpty();
+    
+	public /*@ pure @*/  boolean contains(Object elem);
+    
+	public /*@ pure @*/ int indexOf(Object elem);
+    
+	public /*@ pure @*/ int lastIndexOf(Object elem);
+    
+	public /*@ non_null @*/ Object clone();
+        public /*@ pure non_null*/ Object[] toArray();
+
+    }
+    
+ 
+
 }
 

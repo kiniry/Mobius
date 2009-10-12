@@ -149,7 +149,7 @@ public class Package {
 
     //@ also
     //@ ensures \result.startsWith("package " + getName());
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 
 
     /*@ normal_behavior

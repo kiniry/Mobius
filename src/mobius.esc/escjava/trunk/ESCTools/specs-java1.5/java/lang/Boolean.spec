@@ -106,7 +106,7 @@ public final /*@ pure @*/ class Boolean implements java.io.Serializable {
       @   ensures decode(\result) == theBoolean;
       @   ensures \result == canonicalString(theBoolean);
       @*/
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     //+@ public static model int TRUE_HC;
     //+@ public static model int FALSE_HC;

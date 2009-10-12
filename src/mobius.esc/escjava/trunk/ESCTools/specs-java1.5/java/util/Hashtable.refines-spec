@@ -38,7 +38,7 @@ public class Hashtable extends Dictionary
     /*@
       @ public normal_behavior
       @   ensures \result <==> ( initialMap() &&
-      @                          loadFactor == f &&
+      @                          mLoadFactor == f &&
       @                          initialCapacity == i);
       @ public pure model boolean initialHashtable(double f, int i);
       @
@@ -111,13 +111,13 @@ public class Hashtable extends Dictionary
       @   normal_behavior
       @     ensures \fresh(\result); 
       @*/
-    public /*@ pure @*/ synchronized Enumeration keys(); 
+    public /*@ pure non_null @*/ synchronized Enumeration keys(); 
  
     /*@ also 
       @   normal_behavior
       @     ensures \fresh(\result);  
       @*/
-    public /*@ pure @*/ synchronized Enumeration elements(); 
+    public /*@ pure non_null @*/ synchronized Enumeration elements(); 
 
     /*@ also
       @   public behavior
@@ -160,10 +160,10 @@ public class Hashtable extends Dictionary
       @       ensures_redundantly \result != this;
       @*/
     // FIXME - what about loadFactor, initialCapacity?
-    public /*@ pure @*/ synchronized Object clone(); 
+    public /*@ pure non_null @*/ synchronized Object clone(); 
 
     // FIXME - needs a more specific spec
-    public synchronized String toString();
+    public /*@ non_null @*/ synchronized String toString();
 
     // specification inherited
     public Set keySet();
@@ -175,10 +175,40 @@ public class Hashtable extends Dictionary
     public Collection values();
 
     // specification inherited
-    public synchronized boolean equals(Object o);
+    public /*@ pure @*/ synchronized boolean equals(Object o);
 
    // specification inherited
     public synchronized int hashCode();
+   class Entry implements Map.Entry {
+        protected /*@ non_null @*/ Object clone();
+	public /*@ non_null @*/String toString();
+    
+    }
+
+    class KeySet extends AbstractCollection implements Map.KeySet {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+    class EntrySet extends AbstractCollection implements Map.EntrySet {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+
+    class Values extends AbstractCollection implements Map.Values {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+    
+    class ValueCollection extends AbstractCollection {
+        public abstract /*@ pure non_null @*/ Iterator iterator();
+       
+    }
 
 
 }

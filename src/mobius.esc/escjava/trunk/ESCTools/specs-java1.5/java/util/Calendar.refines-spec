@@ -76,7 +76,8 @@ public abstract class Calendar implements Serializable, Cloneable {
     
     protected /*@ spec_public @*/ int []        fields; 
     protected /*@ spec_public @*/ boolean []    isSet; 
-    private transient /*@ spec_public @*/ int []        stamp;
+    // private transient
+    //@ public ghost   int []        stamp;
     protected /*@ spec_public @*/ long          time;
     protected /*@ spec_public @*/ boolean       isTimeSet; 
     protected /*@ spec_public @*/ boolean       areFieldsSet; 
@@ -87,9 +88,9 @@ public abstract class Calendar implements Serializable, Cloneable {
     //@ public model int           minimalDaysInFirstWeek;
     //@ public model static        Hashtable cachedLocaleData;
     
-    private /*@ spec_public @*/ static final int UNSET;
-    ///*@ spec_public @*/ static final int INTERNALLY_SET;
-    private /*@ spec_public @*/ static final int MINIMUM_USER_STAMP;
+    //@ public ghost static final int UNSET = 0 ;
+    //@ public ghost static final int INTERNALLY_SET = 1;
+    //@ public ghost static final int MINIMUM_USER_STAMP = 2;
 
     static final int currentSerialVersion;
     static final long serialVersionUID;
@@ -484,12 +485,12 @@ public abstract class Calendar implements Serializable, Cloneable {
        @        assignable \nothing;
        @        ensures \fresh(\result) && \result.equals(this);
        @*/
-    public Object clone();
+    public /*@ non_null @*/ Object clone();
 
     /*@ also
        @ public normal_behavior
        @        assignable \nothing;
        @        ensures (* \result is the String representation of Calendar *);
        @*/
-    public /*@ pure @*/ String toString();
+    public /*@ pure non_null @*/ String toString();
 }

@@ -10,8 +10,8 @@ public interface Comparator {
     // This is a comparison between Comparator objects.  It returns true
     // only if the two objects produce precisely the same comparisons.
     /*@ also public behavior
-      @   ensures o==this ==> \result;
-      @   ensures o==null ==> !\result;
+      @   ensures obj == this ==> \result;
+      @   ensures obj == null ==> !\result;
       @*/
     //@ pure
     public boolean equals(java.lang.Object obj);

@@ -113,7 +113,7 @@ public class HashMap extends AbstractMap
        @          && ((Map)\result).equals(this);
        @     ensures_redundantly \result != this;
        @*/    
-    public Object clone();
+    public /*@ non_null @*/ Object clone();
 
     // specified by Map      
     public Set keySet(); 
@@ -124,4 +124,45 @@ public class HashMap extends AbstractMap
     // specified by Map
     public Set entrySet(); 
 
+    class Entry implements Map.Entry {
+    
+	/*@ pure @*/Entry(int h, Object k, Object v, HashMap$Entry n);
+    
+	public  /*@ pure @*/ Object getKey();
+    
+	public /*@ pure @*/ Object getValue();
+    
+	public Object setValue(Object newValue);
+    
+	public /*@ pure @*/ boolean equals(Object o);
+    
+	public int hashCode();
+    
+	public /*@ non_null @*/String toString();
+    
+	void recordAccess(HashMap m);
+    
+	void recordRemoval(HashMap m);
+    }
+
+    class KeySet extends AbstractCollection implements Map.KeySet {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+    class EntrySet extends AbstractCollection implements Map.EntrySet {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+
+    class Values extends AbstractCollection implements Map.Values {
+
+    
+	public /*@ non_null @*/String toString();
+        public /*@ pure non_null @*/ Iterator iterator();
+    }
+    
 }

@@ -36,7 +36,7 @@ public final class StackTraceElement implements java.io.Serializable {
 
     public /*@ pure @*/ boolean isNativeMethod();
 
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     public /*@ pure @*/ boolean equals(Object obj);
 

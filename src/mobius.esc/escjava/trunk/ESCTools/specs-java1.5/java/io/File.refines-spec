@@ -87,7 +87,7 @@ public class File implements Serializable, Comparable {
       @*/
 
     //@ also public normal_behavior
-    //@   requires x0 instanceof File && definedComparison(o);
+    //@   requires x0 instanceof File && definedComparison(x0);
     //@   ensures \result == this.compareTo((File)x0);
     //@ pure
     public int compareTo(/*@non_null*/ Object x0);

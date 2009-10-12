@@ -36,7 +36,7 @@ public abstract class AbstractCollection implements Collection {
     // Query Operations
 
     // specification inherited from Collection
-    public abstract /*@ pure @*/ Iterator iterator();
+    public abstract /*@ pure non_null @*/ Iterator iterator();
 
     // specification inherited from Collection
     public abstract /*@ pure @*/ int size();
@@ -48,10 +48,10 @@ public abstract class AbstractCollection implements Collection {
     public /*@ pure @*/ boolean contains(Object o);
 
     // specification inherited from Collection
-    public /*@ pure @*/ Object[] toArray();
+    public /*@ pure non_null @*/ Object[] toArray();
 
     // specification inherited from Collection
-    public Object[] toArray(Object[] a);
+    public /*@ non_null @*/ Object[] toArray(Object[] a);
 
     // Modification Operations
 
@@ -81,6 +81,6 @@ public abstract class AbstractCollection implements Collection {
     //  String conversion
 
     // specification inherited from Collection
-    public String toString();
+    public /*@ non_null @*/ String toString();
 }
 

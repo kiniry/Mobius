@@ -72,15 +72,15 @@ public abstract class AbstractList extends AbstractCollection implements List {
     // Iterators
 
     // specification inherited from List
-    public /*@ pure @*//*@non_null*/ Iterator iterator();
+    public /*@ pure non_null*/ Iterator iterator();
 
-    public /*@ pure @*/ ListIterator listIterator();
-
-    // specification inherited from List
-    public /*@ pure @*/ ListIterator listIterator(final int index);
+    public /*@ pure non_null @*/ ListIterator listIterator();
 
     // specification inherited from List
-    public /*@ pure @*/ List subList(int fromIndex, int toIndex);
+    public /*@ pure non_null @*/ ListIterator listIterator(final int index);
+
+    // specification inherited from List
+    public /*@ pure non_null @*/ List subList(int fromIndex, int toIndex);
 
     // Comparison and hashing
 

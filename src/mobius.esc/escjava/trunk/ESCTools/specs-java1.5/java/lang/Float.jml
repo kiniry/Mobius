@@ -161,7 +161,7 @@ public /*@ pure @*/ final class Float extends Number implements Comparable {
         
     // specification inherited from java.lang.Object
     //@  also ensures \result.equals(toString(floatValue()));
-    public String toString();
+    public /*@ non_null @*/ String toString();
 
     /*@ also
       @   public normal_behavior
