@@ -112,7 +112,7 @@ fi
 ############ Setting JAVAFE_LIB, if necessary
 
 if [ -z "$JAVAFE_LIB" ]; then
-  JAVAFE_LIB=$ESCTOOLS_ROOT/Utils/Javafe/Javafe2.0.5b.jar
+  JAVAFE_LIB=$ESCTOOLS_ROOT/Utils/Javafe/Javafe2.0.5c.jar
   warn "Guessing JAVAFE_LIB=$JAVAFE_LIB"
 fi
 
