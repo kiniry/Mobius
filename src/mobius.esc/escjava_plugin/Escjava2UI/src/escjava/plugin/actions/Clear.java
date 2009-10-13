@@ -1,8 +1,7 @@
 package escjava.plugin.actions;
 
-import java.util.Iterator;
-
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -19,13 +18,13 @@ import escjava.plugin.EscjavaMarker;
 public class Clear extends EscjavaAction {
 	public final void run(final IAction action) {
 		try {  // FIXME - continue loop even if exception?
-			Iterator i = Utils.getSelectedElements(selection,window).iterator();
-			while (i.hasNext()) {
-				Object o = i.next();
-				if (o instanceof IResource) {
-					EscjavaMarker.clearMarkers((IResource)o);
-				} else if (o instanceof IJavaElement) {
-					IResource r = ((IJavaElement)o).getCorrespondingResource();
+			
+			for (IAdaptable adap: Utils.getSelectedElements(selection,window)) {
+				if (adap instanceof IResource) {
+					EscjavaMarker.clearMarkers((IResource)adap);
+				} 
+				else if (adap instanceof IJavaElement) {
+					IResource r = ((IJavaElement)adap).getCorrespondingResource();
 					// FIXME - check the behavior of the following if the IJavaElement is smaller than a ocmpilation unit
 					if (r != null) EscjavaMarker.clearMarkers(r);
 				}

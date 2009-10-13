@@ -23,12 +23,10 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
 
 import pluginlib.Log;
 import pluginlib.Utils;
@@ -46,22 +44,16 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	/** Caches the value of the window, when informed of it. */
 	protected IWorkbenchWindow window;
 	
-	/** Caches the value of the shell in which the window exists. */
-	protected Shell shell = null;
-	
 	/** The current selection. */
 	protected ISelection selection;
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
-	 */
+
+  /** {@inheritDoc} */
 	public final void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
 	  //System.out.println("SET ACTIVE PART");
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
+  /** {@inheritDoc} */
 	public final void selectionChanged(final IAction action, final ISelection selection) {
 		this.selection = selection;
 		//System.out.println("SEL CHANGED " + selection.getClass());
@@ -83,7 +75,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 */
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
-		this.shell = window.getShell();
+		//this.shell = window.getShell();
 	}
 
 	/**
@@ -95,9 +87,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 		Utils.showMessageInUI(window.getShell(),"ESC/Java2 Operation",msg);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
+	/** {@inheritDoc} */
 	public void run(final IAction action) {
 		// Called in response to a menu selection (or other command)
 		// Either this or some of the component template routines
@@ -105,14 +95,14 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 		// individual menu items
 		try {
 			//if (useProjects()) {
-		  if (true) {
+//		  if (true) {
 				Map<IJavaProject, Collection<IAdaptable>>  map = Utils.sortByProject(Utils.getSelectedElements(selection,window));
 				iterateByProject(map);
-			} 
-		  else {
-				Map<IPackageFragmentRoot, Collection<IAdaptable>> map = Utils.sortByPackageFragmentRoot(Utils.getSelectedElements(selection,window));
-				iterateByPFR(map);			
-			}
+//			} 
+//		  else {
+//				Map<IPackageFragmentRoot, Collection<IAdaptable>> map = Utils.sortByPackageFragmentRoot(Utils.getSelectedElements(selection,window));
+//				iterateByPFR(map);			
+//			}
 //		} catch (JMLEclipseCancel e) {
 //			throw e;  // FIXME - where does this get caught?
 		} catch (Exception e) {
@@ -130,21 +120,19 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @param map The map containing IJavaProjects and their Collections of
 	 * IJavaElements and IResources.
 	 */
-	public void iterateByProject(Map map) {
+	public void iterateByProject(Map<IJavaProject, Collection<IAdaptable>> map) {
 		boolean nothing = true;
 		Iterator<IProject> ii = orderedProjectIterator(map);
 		while (ii.hasNext()) {
 			IJavaProject jp = JavaCore.create(ii.next());
-			Collection elements = (Collection)map.get(jp);
+			Collection<IAdaptable> elements = map.get(jp);
 			if (Log.on) Log.log("  Doing project " + jp.getElementName() + " " + elements.size() + " items");
 			if (!elements.isEmpty()) nothing = false;
 			// Catch exceptions here so that we can continue on after an error
 			// in one project to do other projects
 			try {
 				if (!start(jp,elements)) continue;
-				Iterator iii = elements.iterator();
-				while (iii.hasNext()) {
-					Object o = iii.next();
+				for (IAdaptable o: elements) {;
 					boolean ok = doit(o);
 					if (!ok) {
 						if (Log.on) Log.log("Unable to process an item of type " + o.getClass());
@@ -172,23 +160,21 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * its Collection.  The map must be indexed by package fragment root.
 	 * @param map The map containing IPackageFragmentRoot keys and Collection values
 	 */
-	public void iterateByPFR(Map map) {
-		Iterator ii = map.keySet().iterator();
+	public void iterateByPFR(Map<IPackageFragmentRoot, Collection<IAdaptable>>  map) {
 		boolean nothing = true;
-		while (ii.hasNext()) {
-			IPackageFragmentRoot pfr = (IPackageFragmentRoot)ii.next();
-			Collection elements = (Collection)map.get(pfr);
+		for (Map.Entry<IPackageFragmentRoot, Collection<IAdaptable>> entry: map.entrySet()) {
+			IPackageFragmentRoot pfr = entry.getKey();
+			Collection<IAdaptable> elements = entry.getValue();
 			if (!elements.isEmpty()) nothing = false;
 			// Catch exceptions here so that we can continue on
 			// with other items to be done
 			try {
-				if (!start(pfr,elements)) continue;
-				Iterator i = elements.iterator();
-				while (i.hasNext()) {
-					Object o = i.next();
-					boolean ok = doit(o);
+				if (!start(pfr,elements)) 
+				  continue;
+				for (IAdaptable ad: elements) {
+					boolean ok = doit(ad);
 					if (!ok) {
-						showMessage("Unable to process an item of type " + o.getClass());
+						showMessage("Unable to process an item of type " + ad.getClass());
 					}
 				}
 				end(pfr.getJavaProject(),elements);
@@ -214,11 +200,13 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * 		objects) sorted so that any project comes after projects
 	 * 		that it requires.
 	 */
-	protected IProject[] orderedProjects(Map map) {
-		Set s = map.keySet();
+	protected IProject[] orderedProjects(Map<IJavaProject, Collection<IAdaptable>> map) {
+		Set<IJavaProject> s = map.keySet();
 		IProject projects[] = new IProject[s.size()];
-		Iterator i = s.iterator(); int j = 0;
-		while (i.hasNext()) { projects[j++] = ((IJavaProject)i.next()).getProject(); }
+		int j = 0;
+		for (IJavaProject proj : s) {
+		  projects[j++] = proj.getProject(); 
+		}
 		return ResourcesPlugin.getWorkspace().computeProjectOrder(projects).projects;
 	}	
 	
@@ -230,7 +218,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * 		(which are IProject objects) in order, with projects
 	 * 		required coming before those that require them.
 	 */
-	protected Iterator<IProject> orderedProjectIterator(Map map) {
+	protected Iterator<IProject> orderedProjectIterator(Map<IJavaProject, Collection<IAdaptable>> map) {
 		return Arrays.asList(orderedProjects(map)).iterator();
 	}
 	
@@ -244,7 +232,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @return Return true if processing is to continue with each element; false if this method contains all the processing to be performed
 	 * @throws Exception
 	 */
-	protected boolean start(IJavaProject jp, Collection elements) throws Exception { return true; }
+	protected boolean start(IJavaProject jp, Collection<IAdaptable> elements) throws Exception { return true; }
 
 	/**
 	 * Called prior to processing the Collection of elements for the
@@ -256,7 +244,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @return Return true if processing is to continue with each element; false if this method contains all the processing to be performed
 	 * @throws Exception
 	 */
-	protected boolean start(IPackageFragmentRoot pfr, Collection elements) throws Exception { return true; }
+	protected boolean start(IPackageFragmentRoot pfr, Collection<IAdaptable> elements) throws Exception { return true; }
 	
 
 	/**
@@ -266,7 +254,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @return Ignored // FIXME
 	 * @throws Exception
 	 */
-	protected boolean end(IJavaProject jp, Collection elements) throws Exception { return true; }
+	protected boolean end(IJavaProject jp, Collection<IAdaptable> elements) throws Exception { return true; }
 	
 	/**
 	 * Executes the processing for one element (the argument).
@@ -274,7 +262,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @return true if the object was processed successfully, false otherwise.
 	 * @throws Exception
 	 */
-	protected boolean doit(Object o)
+	protected boolean doit(IAdaptable o)
 					throws Exception { return true; }
 	
 	/**
@@ -301,7 +289,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 	 * @throws Exception
 	 */
 	protected boolean doProject(IJavaProject p) throws Exception {
-		org.eclipse.jdt.core.IPackageFragmentRoot[] pr = p.getPackageFragmentRoots();
+    IPackageFragmentRoot[] pr = p.getPackageFragmentRoots();
 		boolean b = true;
 		for (int kk=0; kk<pr.length; ++kk) {
 			if (pr[kk].isArchive()) continue;

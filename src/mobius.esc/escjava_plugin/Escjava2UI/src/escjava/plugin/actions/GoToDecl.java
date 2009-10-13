@@ -14,6 +14,6 @@ import escjava.plugin.WarningDeclarationsAction;
 public class GoToDecl extends EscjavaAction {
 	public final void run(final IAction action) {
 	  //System.out.println("ACTION " + action.getClass());
-		WarningDeclarationsAction.run(shell,window,selection);
+		WarningDeclarationsAction.run(window, selection);
 	}
 }

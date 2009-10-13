@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -35,12 +36,12 @@ abstract public class ESC extends EscjavaAction {
 	private Collection<IResource> touch;
 
 	@Override
-	protected boolean start(IJavaProject jp, Collection c) {
+	protected boolean start(IJavaProject jp, Collection<IAdaptable> c) {
 		touch = new LinkedList<IResource>();
 		return true;
 	}
 
-	protected boolean doit(Object o) throws Exception {
+	protected boolean doit(IAdaptable o) throws Exception {
 		boolean b;
 		if (o instanceof ICompilationUnit) {
 			ICompilationUnit p = (ICompilationUnit)o;
@@ -52,21 +53,27 @@ abstract public class ESC extends EscjavaAction {
 			// recompilation
 			touch.add(resource);
 			b = true;
-		} else if (o instanceof IFile) {
+		} 
+		else if (o instanceof IFile) {
 		  IFile file = (IFile) o;
 			action(file);
 			touch.add(file);
 			b = true;
 			// FIXME - should we do IFolder?
-		} else if (o instanceof IJavaProject) {
+		} 
+		else if (o instanceof IJavaProject) {
 			b = doProject((IJavaProject)o);
-		} else if (o instanceof IPackageFragmentRoot) {
+		} 
+		else if (o instanceof IPackageFragmentRoot) {
 			b = doPackageFragmentRoot((IPackageFragmentRoot)o);
-		} else if (o instanceof IPackageFragment) {
+		} 
+		else if (o instanceof IPackageFragment) {
 			b = doPackageFragment((IPackageFragment)o);
-		} else if (o instanceof IWorkspace) {
+		} 
+		else if (o instanceof IWorkspace) {
 			b = doWorkspace();
-		} else {
+		} 
+		else {
 			b = false;
 		}
 		return b;
@@ -82,7 +89,7 @@ abstract public class ESC extends EscjavaAction {
 	abstract protected void action(IResource r);
 	
 	@Override
-	protected boolean end(IJavaProject jp, Collection elements) {
+	protected boolean end(IJavaProject jp, Collection<IAdaptable> elements) {
 		final Collection<IResource> touchList = touch;
 		// FIXME - is this the right thread to use
 		SafeRunner.run(new SafeRunnable() {

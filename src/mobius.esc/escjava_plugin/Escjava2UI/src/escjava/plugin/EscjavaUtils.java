@@ -6,9 +6,6 @@
  */
 package escjava.plugin;
 
-import java.util.Iterator;
-
-import mobius.atp.SimplifyActivator;
 import mobius.escjava2.EscToolsActivator;
 import mobius.escjava2.EscToolsActivator.JavaVersions;
 
@@ -257,9 +254,7 @@ public class EscjavaUtils {
 		// We do this check by taking one file that ought to be in the
 		// JML specs and checking to see if it is on the classpath somewhere
 		IPath pp = new Path("java/lang/Object.jml");
-		Iterator i = Utils.getProjectClassPathEntries(javaProject).iterator();
-		while (i.hasNext()) {
-			String cpe = (String)i.next();
+		for (String cpe: Utils.getProjectClassPathEntries(javaProject)) {
 			IPath p = new Path(cpe);
 			IResource r = Utils.getRoot().findMember(p);
 			if (r instanceof IFolder) {

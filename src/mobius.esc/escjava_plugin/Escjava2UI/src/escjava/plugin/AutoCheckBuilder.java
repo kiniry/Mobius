@@ -71,7 +71,7 @@ public class AutoCheckBuilder extends IncrementalProjectBuilder {
 		try {
 			EscjavaMarker.clearMarkers(getProject());
 			IJavaProject javaProject = JavaCore.create(getProject());
-			Check.checkProject(javaProject);
+			Check.checkJavaElement(javaProject);
 		} catch (CoreException e) {
 			throw e;
 		} catch (Exception e) {

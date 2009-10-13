@@ -1,12 +1,12 @@
 package escjava.plugin.actions;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.swt.widgets.Shell;
 
 import pluginlib.Log;
 import pluginlib.Utils;
@@ -28,28 +29,25 @@ import escjava.plugin.EscjavaMarker;
  */
 public class Check extends EscjavaAction {
 	public final void run(final IAction action) {
+	  Shell shell = window.getShell();
 		try {
-			
-			Iterator i = Utils.getSelectedElements(selection,window).iterator();
-			if (!i.hasNext()) {
-				Utils.showMessageInUI(
-						shell,
-						"ESCJava Plugin",
-						"Nothing to check");
+		  List<IAdaptable> list = Utils.getSelectedElements(selection,window);
+			if (list.size() == 0) {
+				Utils.showMessageInUI(shell, "ESCJava Plugin", "Nothing to check");
 			}
-			while (i.hasNext()) {
-				IJavaElement e = (IJavaElement)i.next();
+			for (IAdaptable adap: list) {
+			  if (!(adap instanceof IJavaElement)) 
+			    continue;
+				IJavaElement e = (IJavaElement) adap;
 				boolean checked = checkJavaElement(e);
 				if (!checked) {
 					String msg = "Cannot check " + e.getClass();
-					Utils.showMessageInUI(
-								shell,
-								"ESCJava Plugin",
-								msg);
+					Utils.showMessageInUI(shell, "ESCJava Plugin", msg);
 				}
 			}
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			if (window != null) {
 				Utils.showMessageInUI(
 						shell,
@@ -63,17 +61,21 @@ public class Check extends EscjavaAction {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean checkJavaElement(IJavaElement element) 
+	public static boolean checkJavaElement(IJavaElement element) 
 	throws Exception {
 		if (element instanceof IJavaProject) {
 			checkProject( (IJavaProject)element );
-		} else if (element instanceof IPackageFragment) {
+		}
+		else if (element instanceof IPackageFragment) {
 			checkPackage( (IPackageFragment)element );
-		} else if (element instanceof ICompilationUnit) {
+		}
+		else if (element instanceof ICompilationUnit) {
 			checkCompilationUnit( (ICompilationUnit)element );
-		} else if (element instanceof IType) {
+		}
+		else if (element instanceof IType) {
 			checkType((IType)element);
-		} else {
+		}
+		else {
 			return false;
 		}
 		return true;
@@ -83,15 +85,11 @@ public class Check extends EscjavaAction {
 	 * @param javaProject
 	 * @throws Exception
 	 */
-	static public void checkProject(IJavaProject javaProject) 
+	private static void checkProject(IJavaProject javaProject) 
 	throws Exception {
-		List filesToCheck = new LinkedList();
-		IPackageFragment[] packages = javaProject.getPackageFragments();
-		for (int i = 0; i<packages.length; ++i) {
-			IPackageFragment p = packages[i];
-			ICompilationUnit[] cus = p.getCompilationUnits();
-			for (int j=0; j<cus.length; ++j) {
-				ICompilationUnit cu = cus[j];
+		List<String> filesToCheck = new LinkedList<String>();
+		for (IPackageFragment p: javaProject.getPackageFragments()) {
+			for (ICompilationUnit cu: p.getCompilationUnits()) {
 				filesToCheck.add(cu.getResource().getLocation().toOSString());				
 			}
 			// FIXME - put package names on command-line?
@@ -101,7 +99,8 @@ public class Check extends EscjavaAction {
 		    // FIXME - multi-thread this?
 			EscjavaChecker ec = new EscjavaChecker(javaProject);
 			ec.run(filesToCheck);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Log.errorlog("Exception occurred in running ESCJava checks: ",e);
 		}
 	}
@@ -110,12 +109,10 @@ public class Check extends EscjavaAction {
 	 * @param p
 	 * @throws Exception
 	 */
-	public void checkPackage(IPackageFragment p) 
+	private static void checkPackage(IPackageFragment p) 
 	throws Exception {
-		List filesToCheck = new LinkedList();
-		ICompilationUnit[] cus = p.getCompilationUnits();
-		for (int j=0; j<cus.length; ++j) {
-			ICompilationUnit cu = cus[j];
+		List<String> filesToCheck = new LinkedList<String>();
+		for (ICompilationUnit cu: p.getCompilationUnits()) {
 			filesToCheck.add(cu.getResource().getLocation().toOSString());				
 		}
 		EscjavaMarker.clearMarkers(p.getResource());
@@ -134,10 +131,10 @@ public class Check extends EscjavaAction {
 	 * @throws JavaModelException
 	 * @throws CoreException
 	 */
-	public void checkCompilationUnit(ICompilationUnit p) 
+	private static void checkCompilationUnit(ICompilationUnit p) 
 				throws JavaModelException, CoreException  {
 		IResource resource = p.getUnderlyingResource();
-		ArrayList list = new ArrayList(1);
+		ArrayList<String> list = new ArrayList<String>(1);
 		list.add(resource.getLocation().toOSString());
 		IJavaProject jp = p.getJavaProject();
 		EscjavaMarker.clearMarkers(resource);
@@ -145,7 +142,8 @@ public class Check extends EscjavaAction {
 		    // FIXME - multi-thread this?
 			EscjavaChecker ec = new EscjavaChecker(jp);
 			ec.run(list);
-		} catch (Exception e) {
+		} 
+		catch (Exception e) {
 			Log.errorlog("Exception occurred in running ESCJava checks: ",e);
 		}
 	}
@@ -153,7 +151,7 @@ public class Check extends EscjavaAction {
 	/**TODO
 	 * @param p
 	 */
-	public void checkType(IType p) {
+	private static void checkType(IType p) {
 		System.out.println("TYPE " + p.getFullyQualifiedName());
 		// FIXME
 	}

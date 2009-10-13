@@ -13,6 +13,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.IAction;
@@ -34,55 +35,42 @@ import pluginlib.ZipEditorInput;
 
 /**
  * @author David Cok
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public class WarningDeclarationsAction implements
     org.eclipse.ui.IEditorActionDelegate {
 
   /** Caches the value of the window, when informed of it. */
   protected IWorkbenchWindow window;
+  
+  /** Cached value of the current selection */
+  private ISelection selection = null;
 
-  /** Caches the value of the shell in which the window exists. */
-  protected Shell shell = null;
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.IEditorActionDelegate#setActiveEditor(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IEditorPart)
-   */
+  /** {@inheritDoc} */
   public void setActiveEditor(IAction action, IEditorPart targetEditor) {
     //System.out.println("IACTION " + action.getClass() + " " + action);
     if (targetEditor != null && targetEditor.getSite() != null) {
       window = targetEditor.getSite().getWorkbenchWindow();
-      shell = window == null ? null : window.getShell();
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-   */
+  /** {@inheritDoc} */
   public void run(IAction action) {
-    // TODO Auto-generated method stub
     //System.out.println("RUNNING IACTION " + action.getClass() + " " +
     // action);
-    run(shell, window, selection);
+    run(window, selection);
   }
 
   /**
-   * TODO
+   * Open the file associated with the given selected markers,
+   * highlighting the first one.
    * 
-   * @param shell
    * @param window
    * @param selection
    */
-  static public void run(Shell shell, IWorkbenchWindow window,
+  static public void run(IWorkbenchWindow window,
       ISelection selection) {
-    List list = getMarkers(window,selection);
+    Shell shell = window.getShell();
+    List<IMarker> list = getMarkers(window,selection);
     if (list.isEmpty()) {
       Utils.showMessage(shell, "EscJava2 Checker", "No Markers selected");
     } else if (list.size() > 1) {
@@ -91,7 +79,7 @@ public class WarningDeclarationsAction implements
     } else {
       IMarker m = (IMarker)list.get(0);
       try {
-        List mlist = EscjavaMarker.getExtraInfo(m);
+        List<String> mlist = EscjavaMarker.getExtraInfo(m);
         if (mlist.isEmpty()) {
           Utils.showMessage(shell, "EscJava2 Checker",
               "No associated declarations");
@@ -100,7 +88,7 @@ public class WarningDeclarationsAction implements
           openEditor(window, s);
         } else {
           // Need to put up a choice - FIXME
-          Iterator i = mlist.iterator();
+          Iterator<String> i = mlist.iterator();
           if (i.hasNext()) i.next(); // skip the first one
           while (i.hasNext()) {
             openEditor(window, (String)i.next());
@@ -123,18 +111,20 @@ public class WarningDeclarationsAction implements
    * @param selection
    * @return List of IMarker objects in selection
    */
-  static public List getMarkers(IWorkbenchWindow window, ISelection selection) {
-    List list = new LinkedList();
+  @SuppressWarnings("unchecked")
+  static public List<IMarker> getMarkers(IWorkbenchWindow window, ISelection selection) {
+    List<IMarker> list = new LinkedList<IMarker>();
     if (!selection.isEmpty()) {
       if (selection instanceof IStructuredSelection) {
         IStructuredSelection structuredSelection = (IStructuredSelection)selection;
-        for (Iterator iter = structuredSelection.iterator(); iter.hasNext();) {
+        for (Iterator<Object> iter = (Iterator<Object>) structuredSelection.iterator(); iter.hasNext();) {
           Object element = iter.next();
           if (element instanceof IMarker) {
-            list.add(element);
+            list.add((IMarker)element);
           }
         }
-      } else if (selection instanceof ITextSelection) {
+      } 
+      else if (selection instanceof ITextSelection) {
         try {
           IWorkbenchPage page = window.getActivePage();
           IEditorPart editor = page.getActiveEditor();
@@ -162,14 +152,13 @@ public class WarningDeclarationsAction implements
   }
 
   /**
-   * TODO
+   * Open an editor containing to explore the given file.
    * 
-   * @param window
-   * @param fname
-   * @throws Exception
+   * @param window the current workbench
+   * @param fname the name of the file
+   * @throws CoreException if the initialization of the editor fails
    */
-  static public void openEditor(IWorkbenchWindow window, String fname)
-      throws Exception {
+  static public void openEditor(IWorkbenchWindow window, String fname) throws CoreException {
     int offset = -1;
     int line = -1;
     int k = fname.lastIndexOf(' ');
@@ -185,21 +174,20 @@ public class WarningDeclarationsAction implements
     IPath p = new Path(fname);
     int jk = fname.indexOf(".jar:");
     IWorkbenchPage page = window.getActivePage();
-    if (jk == -1) {
-      IFile[] files = Utils.getRoot().findFilesForLocation(p);
+    if (jk == -1) { // if the file is not in a jar file
+      IFile file = Utils.getRoot().getFileForLocation(p);
       //System.out.println("FOUND " + files.length + " FOR " + p);
-      if (0 < files.length) {
-        if (line == -1)
-          IDE.openEditor(page, files[0]);
-        else {
-          IMarker marker = files[0].createMarker(IMarker.TEXT);
-          marker.setAttribute(IMarker.LINE_NUMBER, line);
-          IDE.openEditor(page, marker);
-          marker.delete();
-        }
-        return;
+      if (line == -1)
+        IDE.openEditor(page, file);
+      else {
+        IMarker marker = file.createMarker(IMarker.TEXT);
+        marker.setAttribute(IMarker.LINE_NUMBER, line);
+        IDE.openEditor(page, marker);
+        marker.delete();
       }
-    } else {
+      return;
+    } 
+    else { // if the file is contained in a jarfile
       String jarfile = fname.substring(0, jk + 4);
       fname = fname.substring(jk + 5);
       try {
@@ -224,16 +212,9 @@ public class WarningDeclarationsAction implements
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
+  /** {@inheritDoc} */
   public void selectionChanged(IAction action, ISelection selection) {
     this.selection = selection;
   }
 
-  /** Cached value of the current selection */
-  private ISelection selection = null;
 }
