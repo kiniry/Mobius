@@ -107,32 +107,6 @@
     </javadoc>
   </target>
 
-  <target name="test-parser" depends="compile">
-    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.ParsingTester">
-      <classpath refid="test.path"/>
-    </java>
-  </target>
-	
-  <target name="test-prettyprinter" depends="compile">
-    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.PrettyPrinterTester">
-      <classpath refid="test.path"/>
-    	<arg value="timing=true"/>
-    </java>
-  </target>
-	
-  <target name="test-dotgen" depends="compile">
-    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.DotGeneratorTester">
-      <classpath refid="test.path"/>
-  	<arg value="timing=true"/>
-    </java>
-  </target>
-
-  <target name="test-commandline" depends="compile">
-    <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.CommandlineTester">
-      <classpath refid="test.path"/>
-    </java>
-  </target>
-
   <target name="test-dist" depends="dist">
     <java fork="yes" dir="." classname="ie.ucd.bon.tests.Tester">
       <classpath refid="dist.path"/>
@@ -308,7 +282,7 @@
 	</target>
 	
 	<!-- High-level targets -->
-  <target name="all-tests" depends="test-parser,test-prettyprinter,test-commandline,test-dist" description="Run all tests"/>
+  <target name="all-tests" depends="test-cases,test-dist" description="Run all tests"/>
   
   <target name="all-src" depends="init,antlr" description="Create all source files"/>
   

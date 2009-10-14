@@ -199,7 +199,7 @@
 
 @Test-name: "Eva's Zoo example."
 @Prog-args: {--informal}
-@Location { ./ }
+@Location { zoo/ }
 @Input { zoo_formal.bon }
 @Output { < SystemNotDefinedError > }
 
