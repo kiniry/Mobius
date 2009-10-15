@@ -12,8 +12,9 @@ import escjava.plugin.WarningDeclarationsAction;
  * @author David R. Cok
  */
 public class GoToDecl extends EscjavaAction {
-	public final void run(final IAction action) {
-	  //System.out.println("ACTION " + action.getClass());
-		WarningDeclarationsAction.run(window, selection);
-	}
+  /** {@inheritDoc} */
+  public final void run(final IAction action) {
+    //System.out.println("ACTION " + action.getClass());
+    WarningDeclarationsAction.run(window, selection);
+  }
 }

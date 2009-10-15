@@ -16,28 +16,31 @@ import escjava.plugin.EscjavaMarker;
  * @author David R. Cok
  */
 public class Clear extends EscjavaAction {
-	public final void run(final IAction action) {
-		try {  // FIXME - continue loop even if exception?
-			
-			for (IAdaptable adap: Utils.getSelectedElements(selection,window)) {
-				if (adap instanceof IResource) {
-					EscjavaMarker.clearMarkers((IResource)adap);
-				} 
-				else if (adap instanceof IJavaElement) {
-					IResource r = ((IJavaElement)adap).getCorrespondingResource();
-					// FIXME - check the behavior of the following if the IJavaElement is smaller than a ocmpilation unit
-					if (r != null) EscjavaMarker.clearMarkers(r);
-				}
-			}
-		} catch (Exception e) {
-			if (window != null) {
-				MessageDialog.openInformation(
-						window.getShell(),
-						"Escjava Plugin - exception",
-						e.toString());
-			}			
-		}
-		return;
-		
-	}
+  /** {@inheritDoc} */
+  public final void run(final IAction action) {
+    try {  // FIXME - continue loop even if exception?
+      
+      for (IAdaptable adap: Utils.getSelectedElements(selection, window)) {
+        if (adap instanceof IResource) {
+          EscjavaMarker.clearMarkers((IResource)adap);
+        } 
+        else if (adap instanceof IJavaElement) {
+          final IResource r = ((IJavaElement)adap).getCorrespondingResource();
+          // FIXME - check the behavior of the following 
+          // if the IJavaElement is smaller than a ocmpilation unit
+          if (r != null) {
+            EscjavaMarker.clearMarkers(r);
+          }
+        }
+      }
+    } 
+    catch (Exception e) {
+      if (window != null) {
+        MessageDialog.openInformation(window.getShell(),
+                                      "Escjava Plugin - exception",
+                                      e.toString());
+      }
+    }
+    return;
+  }
 }

@@ -200,7 +200,7 @@ public class PreferencePage extends pluginlib.PreferencePage {
   }
 
   public void performDefaults() {
-    // When OK is pressed, set all the options selected.	
+    // When OK is pressed, set all the options selected.  
     setDefaults(eclipseOptions);
     setDefaults(widgets);
     setDefaults(warningWidgets);

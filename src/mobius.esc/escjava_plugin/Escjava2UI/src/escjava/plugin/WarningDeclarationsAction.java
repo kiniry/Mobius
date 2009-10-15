@@ -213,8 +213,8 @@ public class WarningDeclarationsAction implements
   }
 
   /** {@inheritDoc} */
-  public void selectionChanged(IAction action, ISelection selection) {
-    this.selection = selection;
+  public void selectionChanged(IAction action, ISelection sel) {
+    this.selection = sel;
   }
 
 }

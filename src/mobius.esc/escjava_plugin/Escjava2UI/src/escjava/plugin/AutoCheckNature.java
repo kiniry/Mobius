@@ -21,46 +21,34 @@ import pluginlib.Utils;
  * @author David R. Cok
  */
 public class AutoCheckNature implements IProjectNature {
-	
-	/**
-	 * This is the nature's project.
-	 */
-	private IProject project;
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IProjectNature#configure()
-	 */
-	public void configure() throws CoreException {
 
-		Utils.addBuilder(getProject(),EscjavaPlugin.ESCJAVA_AUTOCHECK_BUILDER);
-		IJavaProject jp = JavaCore.create(getProject());
-		EscjavaUtils.installDefaultSpecs(jp);
-	}
+  /**
+   * This is the nature's project.
+   */
+  private IProject project;
+  
+  /** {@inheritDoc} */
+  public void configure() throws CoreException {
+    Utils.addBuilder(getProject(), EscjavaPlugin.ESCJAVA_AUTOCHECK_BUILDER);
+    final IJavaProject jp = JavaCore.create(getProject());
+    EscjavaUtils.installDefaultSpecs(jp);
+  }
+  
+  /** {@inheritDoc} */
+  public void deconfigure() throws CoreException {
+    Utils.removeBuilder(getProject(), EscjavaPlugin.ESCJAVA_AUTOCHECK_BUILDER);
+    final IJavaProject jp = JavaCore.create(getProject());
+    EscjavaUtils.removeDefaultSpecs(jp);
+  }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IProjectNature#deconfigure()
-	 */
-	public void deconfigure() throws CoreException {
-		Utils.removeBuilder(getProject(),EscjavaPlugin.ESCJAVA_AUTOCHECK_BUILDER);
-		IJavaProject jp = JavaCore.create(getProject());
-		EscjavaUtils.removeDefaultSpecs(jp);
-	}
-
-
-		
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IProjectNature#getProject()
-	 */
-	public IProject getProject() {
-		return project;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
-	 */
-	public void setProject(IProject project) {
-		this.project = project;
-	}
-	
+  /** {@inheritDoc} */
+  public IProject getProject() {
+    return project;
+  }
+  
+  /** {@inheritDoc} */
+  public void setProject(final IProject proj) {
+    project = proj;
+  }  
 }
 

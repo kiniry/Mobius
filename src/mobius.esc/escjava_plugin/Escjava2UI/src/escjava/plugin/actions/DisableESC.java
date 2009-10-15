@@ -15,10 +15,16 @@ import escjava.plugin.AutoCheckBuilder;
  * the RAC enabled list.
  */
 public class DisableESC extends ESC {
-	public void action(IResource resource) { AutoCheckBuilder.remove(resource); }
-
-	public void run(final IAction action) {
-		super.run(action);
-		if (Log.on) Log.log("Completed Disable Esc/Java action " + (new Date().toString()));
-	}
+  /** {@inheritDoc} */
+  public void action(final IResource resource) {
+    AutoCheckBuilder.remove(resource);
+  }
+  
+  /** {@inheritDoc} */
+  public void run(final IAction action) {
+    super.run(action);
+    if (Log.on) {
+      Log.log("Completed Disable Esc/Java action " + (new Date().toString()));
+    }
+  }
 }

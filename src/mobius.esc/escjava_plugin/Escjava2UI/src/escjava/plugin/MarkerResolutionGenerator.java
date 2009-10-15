@@ -16,13 +16,13 @@ import org.eclipse.ui.IMarkerResolutionGenerator;
  * TODO Implement quick fixes for Escjava warnings
  */
 public class MarkerResolutionGenerator 
-		implements IMarkerResolutionGenerator {
+    implements IMarkerResolutionGenerator {
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
-	 */
-	public IMarkerResolution[] getResolutions(IMarker marker) {
-		return new IMarkerResolution[0];
-	}
+  /* (non-Javadoc)
+   * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
+   */
+  public IMarkerResolution[] getResolutions(IMarker marker) {
+    return new IMarkerResolution[0];
+  }
 
 }

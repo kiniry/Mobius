@@ -43,105 +43,107 @@ import pluginlib.Utils;
  * @author David R. Cok
  */
 public class AutoCheckBuilder extends IncrementalProjectBuilder {
-		
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.internal.events.InternalBuilder#clean(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected void clean(IProgressMonitor pm) {
-		try {
-			EscjavaMarker.clearMarkers(getProject());
-		} catch (CoreException e) {
-			String s = "Exception while cleaning " + getProject().getName();
-			Log.errorlog(s,e);
-			Utils.showMessageInUI(null,"ESC/Java2 Checker cleaning",s + ": " + e);
-		}
-	}
+  // We guard access to this collection using synchronized
+  // modifiers, since it is likely that different threads 
+  // could be involved (e.g. UI thread in adding/removing,
+  // computational thread in using a current state)
+  /** The set of IResource objects that are enabled for RAC compiling. */
+  private static Set<IResource> enabled = new HashSet<IResource>();
+  
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
-			
-		// This method provides the main interface to the checking process.
-		// When the 'builder' is invoked, this method is executed. Since we are not really
-		// building the project, but instead using Eclipse builders interface to invoke the
-		// type checker, we return 'null' here.
+  /** {@inheritDoc} */
+  protected void clean(final IProgressMonitor pm) {
+    try {
+      EscjavaMarker.clearMarkers(getProject());
+    }
+    catch (CoreException e) {
+      final String s = "Exception while cleaning " + getProject().getName();
+      Log.errorlog(s, e);
+      Utils.showMessageInUI(null, "ESC/Java2 Checker cleaning", s + ": " + e);
+    } 
+  }
 
-		if (Log.on) Log.log("ESC/Java2 Builder starting " + (new Date()).toString());
-		try {
-			EscjavaMarker.clearMarkers(getProject());
-			IJavaProject javaProject = JavaCore.create(getProject());
-			Check.checkJavaElement(javaProject);
-		} catch (CoreException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new CoreException(
-					new Status(IStatus.ERROR, 
-							       EscjavaPlugin.PLUGIN_ID,
-							       IStatus.OK, // plug-in specific value
-							       "Exception caught during ESC/Java2 Checking",
-							       e));
-		} finally {
-			if (Log.on) Log.log("ESC/Java2 Builder ending " + (new Date()));
-		}
-		return null;
-	}
-	
-	// We guard access to this collection using synchronized
-	// modifiers, since it is likely that different threads 
-	// could be involved (e.g. UI thread in adding/removing,
-	// computational thread in using a current state)
-	/** The set of IResource objects that are enabled for RAC compiling. */
-	static private Set<IResource> enabled = new HashSet<IResource>();
-	
 
-	/**
-	 * Adds an IResource object to the enabled list.
-	 * @param s The resource to be added, if not already present.
-	 */
-	synchronized
-	static public void add(IResource s) {
-		enabled.add(s);
-	}
-	
-	/**
-	 * Removes an IResource from the set of enabled resources.
-	 * @param s The resource to be removed, if present.
-	 */
-	synchronized
-	static public void remove(IResource s) {
-		enabled.remove(s);
-	}
-	
-	/**
-	 * This method runs the argument while maintaining the synchronization
-	 * lock; thus we can iterate over the collection of enabled files in
-	 * a thread-safe manner.
-	 * 
-	 * @param r
-	 */
-	synchronized
-	static public void run(IRunnable r) {
-		r.run(enabled);
-	}
-	
-	/** An interface to use with the run() method. */
-	interface IRunnable { 
-		/** The run method to be implemented by the client.
-		 * 
-		 * @param c The collection of enabled resources.
-		 */
-		public void run(Collection<IResource> c); 
-	}
-	
-	/** Returns whether the given IResource is in the collection
-	 * @param r The resource to test
-	 * @return true if it has been added to the collection
-	 */
-	synchronized
-	static public boolean isEnabled(IResource r) {
-		return enabled.contains(r);
-	}
-
+  /** {@inheritDoc} */
+  @SuppressWarnings("unchecked")
+  protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor) 
+    throws CoreException {
+    
+    // This method provides the main interface to the checking process.
+    // When the 'builder' is invoked, this method is executed. Since we are not really
+    // building the project, but instead using Eclipse builders interface to invoke the
+    // type checker, we return 'null' here.
+    
+    if (Log.on) {
+      Log.log("ESC/Java2 Builder starting " + (new Date()).toString());
+    }
+    try {
+      EscjavaMarker.clearMarkers(getProject());
+      final IJavaProject javaProject = JavaCore.create(getProject());
+      Check.checkJavaElement(javaProject);
+    } 
+    catch (CoreException e) {
+      throw e;
+    } 
+    catch (Exception e) {
+      throw new CoreException(new Status(IStatus.ERROR, 
+                                         EscjavaPlugin.PLUGIN_ID,
+                                         IStatus.OK, // plug-in specific value
+                                         "Exception caught during ESC/Java2 Checking",
+                                         e));
+    } 
+    finally {
+      if (Log.on) {
+        Log.log("ESC/Java2 Builder ending " + (new Date()));
+      }
+    }
+    return null;
+  }
+  
+  
+  /**
+   * Adds an IResource object to the enabled list.
+   * @param s The resource to be added, if not already present.
+   */
+  public static synchronized void add(final IResource s) {
+    enabled.add(s);
+  }
+  
+  /**
+   * Removes an IResource from the set of enabled resources.
+   * @param s The resource to be removed, if present.
+   */
+  public static synchronized  void remove(final IResource s) {
+    enabled.remove(s);
+  }
+  
+  /**
+   * This method runs the argument while maintaining the synchronization
+   * lock; thus we can iterate over the collection of enabled files in
+   * a thread-safe manner.
+   * 
+   * @param r
+   */
+  public static synchronized void run(final IRunnable r) {
+    r.run(enabled);
+  }
+  
+  /** An interface to use with the run() method. */
+  interface IRunnable { 
+    /** 
+     * The run method to be implemented by the client.
+     * @param c The collection of enabled resources.
+     */
+    void run(Collection<IResource> c); 
+  }
+  
+  /** 
+   * Returns whether the given IResource is in the collection.
+   * @param r The resource to test
+   * @return true if it has been added to the collection
+   */
+  public static synchronized boolean isEnabled(final IResource r) {
+    return enabled.contains(r);
+  }
 }
 

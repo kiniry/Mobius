@@ -9,18 +9,20 @@ import pluginlib.Log;
 import escjava.plugin.AutoCheckBuilder;
 
 /**
-	 * @author David Cok
-	 *
-	 * Implements an action that lists selected files as
-	 * enabled for RAC.
-	 */
-	public class EnableESC extends ESC {
-		public void action(IResource resource) { 
-		  AutoCheckBuilder.add(resource); 
-		}
+   * @author David Cok
+   *
+   * Implements an action that lists selected files as
+   * enabled for RAC.
+   */
+public class EnableESC extends ESC {
+  public void action(IResource resource) { 
+    AutoCheckBuilder.add(resource); 
+  }
 
-		public void run(final IAction action) {
-			super.run(action);
-			if (Log.on) Log.log("Completed Enable Esc/Java action " + (new Date().toString()));
-		}
+  public void run(final IAction action) {
+    super.run(action);
+    if (Log.on) {
+      Log.log("Completed Enable Esc/Java action " + (new Date().toString()));
+    }
+  }
 }
