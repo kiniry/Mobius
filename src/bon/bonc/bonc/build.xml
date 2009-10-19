@@ -118,9 +118,9 @@
   <target name="test-cases" depends="compile">
     <java fork="yes" dir="${build}" classname="ie.ucd.bon.tests.Tester">
       <classpath refid="test.path"/>
-      <arg value="../test/test-cases/"/>
-      <arg value="../test/test-cases/tests"/>
-      <arg value="../test/test-cases/test-cases.log"/>
+      <arg value="../test/"/>
+      <arg value="../test/tests"/>
+      <arg value="../test/test-cases.log"/>
     </java>
   </target>
 

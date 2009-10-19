@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -28,7 +28,7 @@ public class ClassDictionary extends SpecificationElement {
     this.explanation = explanation; 
     this.part = part; 
   }
-  
+
   public static ClassDictionary mk(String systemName, List<DictionaryEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassDictionary(systemName, entries, indexing, explanation, part, location);
   }
@@ -56,7 +56,7 @@ public class ClassDictionary extends SpecificationElement {
     String newPart = part;
     return ClassDictionary.mk(newSystemName, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class ParentIndirection extends ClientEntity {
     super(location);
     this.genericIndirection = genericIndirection; assert genericIndirection != null;
   }
-  
+
   public static ParentIndirection mk(GenericIndirection genericIndirection, SourceLocation location) {
     return new ParentIndirection(genericIndirection, location);
   }
@@ -40,7 +40,7 @@ public class ParentIndirection extends ClientEntity {
     GenericIndirection newGenericIndirection = genericIndirection == null ? null : genericIndirection.clone();
     return ParentIndirection.mk(newGenericIndirection, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

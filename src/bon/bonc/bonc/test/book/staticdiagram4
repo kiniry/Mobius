@@ -10,7 +10,7 @@ component
   effective class ROCKET
   class SPACE_SHUTTLE
   deferred class VEHICLE
-  effective class BICYCE
+  effective class BICYCLE
   effective class BOAT
   effective class CAR
   REFRIGERATOR inherit COLD_STORE

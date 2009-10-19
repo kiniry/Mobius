@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -37,7 +37,7 @@ public class FeatureSpecification extends AstNode {
     this.renaming = renaming; 
     this.comment = comment; 
   }
-  
+
   public static FeatureSpecification mk(Modifier modifier, List<FeatureName> featureNames, List<FeatureArgument> arguments, ContractClause contracts, HasType hasType, RenameClause renaming, String comment, SourceLocation location) {
     return new FeatureSpecification(modifier, featureNames, arguments, contracts, hasType, renaming, comment, location);
   }
@@ -69,7 +69,7 @@ public class FeatureSpecification extends AstNode {
     String newComment = comment;
     return FeatureSpecification.mk(newModifier, newFeatureNames, newArguments, newContracts, newHasType, newRenaming, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

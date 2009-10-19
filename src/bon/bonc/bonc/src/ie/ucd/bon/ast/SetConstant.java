@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class SetConstant extends ManifestConstant {
     super(location);
     this.enumerations = enumerations; 
   }
-  
+
   public static SetConstant mk(List<EnumerationElement> enumerations, SourceLocation location) {
     return new SetConstant(enumerations, location);
   }
@@ -40,7 +40,7 @@ public class SetConstant extends ManifestConstant {
     List<EnumerationElement> newEnumerations = enumerations;
     return SetConstant.mk(newEnumerations, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

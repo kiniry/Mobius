@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -39,7 +39,7 @@ public class Clazz extends StaticComponent {
     this.interfaced = interfaced; assert interfaced != null;
     this.comment = comment; 
   }
-  
+
   public static Clazz mk(ClassName name, List<FormalGeneric> generics, Mod mod, ClassInterface classInterface, Boolean reused, Boolean persistent, Boolean interfaced, String comment, SourceLocation location) {
     return new Clazz(name, generics, mod, classInterface, reused, persistent, interfaced, comment, location);
   }
@@ -73,7 +73,7 @@ public class Clazz extends StaticComponent {
     String newComment = comment;
     return Clazz.mk(newName, newGenerics, newMod, newClassInterface, newReused, newPersistent, newInterfaced, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -24,7 +24,7 @@ public class KeywordConstant extends Constant {
     super(location);
     this.constant = constant; 
   }
-  
+
   public static KeywordConstant mk(Constant constant, SourceLocation location) {
     return new KeywordConstant(constant, location);
   }
@@ -44,7 +44,7 @@ public class KeywordConstant extends Constant {
     Constant newConstant = constant;
     return KeywordConstant.mk(newConstant, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -26,7 +26,7 @@ public class Cluster extends StaticComponent {
     this.reused = reused; assert reused != null;
     this.comment = comment; 
   }
-  
+
   public static Cluster mk(String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation location) {
     return new Cluster(name, components, reused, comment, location);
   }
@@ -52,7 +52,7 @@ public class Cluster extends StaticComponent {
     String newComment = comment;
     return Cluster.mk(newName, newComponents, newReused, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

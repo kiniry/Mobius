@@ -78,7 +78,7 @@ public final class SourceReader {
   }
 
   /**
-   *
+   * Get the chosen line's text from the standard input source.
    * @param lineNumber
    * @return
    */
@@ -94,8 +94,8 @@ public final class SourceReader {
   }
 
   /**
-   *
-   * @return
+   * Read all of standard input to a buffer, and return an input stream to read from this.
+   * @return an input stream to access the contents read from standard input.
    */
   public InputStream readStandardInput() {
     try {

@@ -1,6 +1,8 @@
 package ie.ucd.bon;
 
 import ie.ucd.bon.clinterface.BONcOptionsInterface;
+import ie.ucd.bon.errorreporting.ExceptionalError;
+import ie.ucd.bon.errorreporting.FileNotFoundError;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.graph.display.PrefuseGraphDisplay;
 import ie.ucd.bon.parser.tracker.ParseResult;
@@ -47,9 +49,12 @@ public final class API {
           tracker.addParse(file, parseResult);
         }
       } catch (FileNotFoundException fnfe) {
-        //TODO report error
+        tracker.addProblem(new FileNotFoundError(file));
       } catch (IOException ioe) {
-        //TODO report error
+        tracker.addProblem(new ExceptionalError(ioe));
+        if (Main.isDebug()) {
+          ioe.printStackTrace();
+        }
       }
     }
 

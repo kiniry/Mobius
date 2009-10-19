@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class StaticRefPart extends AstNode {
     super(location);
     this.name = name; assert name != null;
   }
-  
+
   public static StaticRefPart mk(String name, SourceLocation location) {
     return new StaticRefPart(name, location);
   }
@@ -40,7 +40,7 @@ public class StaticRefPart extends AstNode {
     String newName = name;
     return StaticRefPart.mk(newName, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

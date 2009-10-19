@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -26,7 +26,7 @@ public class InheritanceRelation extends StaticRelation {
     this.multiplicity = multiplicity; 
     this.semanticLabel = semanticLabel; 
   }
-  
+
   public static InheritanceRelation mk(StaticRef child, StaticRef parent, Multiplicity multiplicity, String semanticLabel, SourceLocation location) {
     return new InheritanceRelation(child, parent, multiplicity, semanticLabel, location);
   }
@@ -52,7 +52,7 @@ public class InheritanceRelation extends StaticRelation {
     String newSemanticLabel = semanticLabel;
     return InheritanceRelation.mk(newChild, newParent, newMultiplicity, newSemanticLabel, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

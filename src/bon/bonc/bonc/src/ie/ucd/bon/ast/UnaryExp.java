@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -28,7 +28,7 @@ public class UnaryExp extends Expression {
     this.op = op; 
     this.expression = expression; assert expression != null;
   }
-  
+
   public static UnaryExp mk(Op op, Expression expression, SourceLocation location) {
     return new UnaryExp(op, expression, location);
   }
@@ -50,7 +50,7 @@ public class UnaryExp extends Expression {
     Expression newExpression = expression == null ? null : expression.clone();
     return UnaryExp.mk(newOp, newExpression, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

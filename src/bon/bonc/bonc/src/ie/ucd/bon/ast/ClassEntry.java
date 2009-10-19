@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class ClassEntry extends AstNode {
     this.name = name; assert name != null;
     this.description = description; assert description != null;
   }
-  
+
   public static ClassEntry mk(String name, String description, SourceLocation location) {
     return new ClassEntry(name, description, location);
   }
@@ -44,7 +44,7 @@ public class ClassEntry extends AstNode {
     String newDescription = description;
     return ClassEntry.mk(newName, newDescription, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

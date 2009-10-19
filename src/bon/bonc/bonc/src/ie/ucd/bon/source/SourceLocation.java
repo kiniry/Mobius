@@ -216,6 +216,6 @@ public class SourceLocation implements Comparable<SourceLocation> {
 
   @Override
   public int hashCode() {
-    return (this.sourceFile == null ? 0 : this.sourceFile.hashCode()) + (this.lineNumber*1024*1024) + (this.absoluteCharPositionStart*1024) + this.charPositionInLine;
+    return (this.sourceFile == null ? 0 : this.sourceFile.hashCode()) + (this.lineNumber << 16) + (this.absoluteCharPositionStart << 8) + this.charPositionInLine;
   }
 }

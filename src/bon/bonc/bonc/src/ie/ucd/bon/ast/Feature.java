@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -24,7 +24,7 @@ public class Feature extends AstNode {
     this.selectiveExport = selectiveExport; 
     this.comment = comment; 
   }
-  
+
   public static Feature mk(List<FeatureSpecification> featureSpecifications, List<ClassName> selectiveExport, String comment, SourceLocation location) {
     return new Feature(featureSpecifications, selectiveExport, comment, location);
   }
@@ -48,7 +48,7 @@ public class Feature extends AstNode {
     String newComment = comment;
     return Feature.mk(newFeatureSpecifications, newSelectiveExport, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

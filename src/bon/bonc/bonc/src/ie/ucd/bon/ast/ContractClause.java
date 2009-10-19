@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class ContractClause extends AstNode {
     this.preconditions = preconditions; 
     this.postconditions = postconditions; 
   }
-  
+
   public static ContractClause mk(List<Expression> preconditions, List<Expression> postconditions, SourceLocation location) {
     return new ContractClause(preconditions, postconditions, location);
   }
@@ -44,7 +44,7 @@ public class ContractClause extends AstNode {
     List<Expression> newPostconditions = postconditions;
     return ContractClause.mk(newPreconditions, newPostconditions, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

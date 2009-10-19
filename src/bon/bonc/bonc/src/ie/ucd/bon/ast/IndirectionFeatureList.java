@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
     super(location);
     this.featureNames = featureNames; assert featureNames != null;
   }
-  
+
   public static IndirectionFeatureList mk(List<FeatureName> featureNames, SourceLocation location) {
     return new IndirectionFeatureList(featureNames, location);
   }
@@ -40,7 +40,7 @@ public class IndirectionFeatureList extends IndirectionFeaturePart {
     List<FeatureName> newFeatureNames = featureNames;
     return IndirectionFeatureList.mk(newFeatureNames, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

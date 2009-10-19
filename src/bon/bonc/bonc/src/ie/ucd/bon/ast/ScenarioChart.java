@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -28,7 +28,7 @@ public class ScenarioChart extends InformalChart {
     this.explanation = explanation; 
     this.part = part; 
   }
-  
+
   public static ScenarioChart mk(String systemName, List<ScenarioEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ScenarioChart(systemName, entries, indexing, explanation, part, location);
   }
@@ -56,7 +56,7 @@ public class ScenarioChart extends InformalChart {
     String newPart = part;
     return ScenarioChart.mk(newSystemName, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

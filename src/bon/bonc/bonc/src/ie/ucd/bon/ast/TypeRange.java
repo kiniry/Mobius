@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class TypeRange extends VariableRange {
     this.identifiers = identifiers; assert identifiers != null;
     this.type = type; assert type != null;
   }
-  
+
   public static TypeRange mk(List<String> identifiers, Type type, SourceLocation location) {
     return new TypeRange(identifiers, type, location);
   }
@@ -44,7 +44,7 @@ public class TypeRange extends VariableRange {
     Type newType = type == null ? null : type.clone();
     return TypeRange.mk(newIdentifiers, newType, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

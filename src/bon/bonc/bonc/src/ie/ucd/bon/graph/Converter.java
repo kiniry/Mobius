@@ -24,7 +24,7 @@ public abstract class Converter<B,A> {
     return result;
   }
 
-  public static final Converter<String,String> stringIdentityConverter = identityConverter();
+  public static final Converter<String,String> STRING_IDENTITY_CONVERTER = identityConverter();
 
   public static final <T> Converter<T,T> identityConverter() {
     return new Converter<T,T>() {

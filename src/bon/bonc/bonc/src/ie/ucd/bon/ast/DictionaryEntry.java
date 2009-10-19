@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -24,7 +24,7 @@ public class DictionaryEntry extends AstNode {
     this.clusters = clusters; assert clusters != null;
     this.description = description; assert description != null;
   }
-  
+
   public static DictionaryEntry mk(String name, List<String> clusters, String description, SourceLocation location) {
     return new DictionaryEntry(name, clusters, description, location);
   }
@@ -48,7 +48,7 @@ public class DictionaryEntry extends AstNode {
     String newDescription = description;
     return DictionaryEntry.mk(newName, newClusters, newDescription, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

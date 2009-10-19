@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class SupplierIndirection extends ClientEntity {
     this.indirectionFeaturePart = indirectionFeaturePart; 
     this.genericIndirection = genericIndirection; assert genericIndirection != null;
   }
-  
+
   public static SupplierIndirection mk(IndirectionFeaturePart indirectionFeaturePart, GenericIndirection genericIndirection, SourceLocation location) {
     return new SupplierIndirection(indirectionFeaturePart, genericIndirection, location);
   }
@@ -44,7 +44,7 @@ public class SupplierIndirection extends ClientEntity {
     GenericIndirection newGenericIndirection = genericIndirection == null ? null : genericIndirection.clone();
     return SupplierIndirection.mk(newIndirectionFeaturePart, newGenericIndirection, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

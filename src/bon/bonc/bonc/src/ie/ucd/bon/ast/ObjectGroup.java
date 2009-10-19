@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -29,7 +29,7 @@ public class ObjectGroup extends DynamicComponent {
     this.components = components; assert components != null;
     this.comment = comment; 
   }
-  
+
   public static ObjectGroup mk(Nameless nameless, String name, List<DynamicComponent> components, String comment, SourceLocation location) {
     return new ObjectGroup(nameless, name, components, comment, location);
   }
@@ -55,7 +55,7 @@ public class ObjectGroup extends DynamicComponent {
     String newComment = comment;
     return ObjectGroup.mk(newNameless, newName, newComponents, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

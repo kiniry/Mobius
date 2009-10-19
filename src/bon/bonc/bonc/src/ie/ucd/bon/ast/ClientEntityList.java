@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class ClientEntityList extends ClientEntityExpression {
     super(location);
     this.entities = entities; assert entities != null;
   }
-  
+
   public static ClientEntityList mk(List<ClientEntity> entities, SourceLocation location) {
     return new ClientEntityList(entities, location);
   }
@@ -40,7 +40,7 @@ public class ClientEntityList extends ClientEntityExpression {
     List<ClientEntity> newEntities = entities;
     return ClientEntityList.mk(newEntities, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

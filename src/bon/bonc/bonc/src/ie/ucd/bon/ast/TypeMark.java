@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -27,7 +27,7 @@ public class TypeMark extends AstNode {
     this.mark = mark; 
     this.multiplicity = multiplicity; 
   }
-  
+
   public static TypeMark mk(Mark mark, Integer multiplicity, SourceLocation location) {
     return new TypeMark(mark, multiplicity, location);
   }
@@ -49,7 +49,7 @@ public class TypeMark extends AstNode {
     Integer newMultiplicity = multiplicity;
     return TypeMark.mk(newMark, newMultiplicity, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

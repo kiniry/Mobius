@@ -12,7 +12,7 @@ import java.io.PrintStream;
 
 public class FileNotFoundError extends ParsingError {
 
-  private static final String message = "File not found: %s";
+  private static final String MESSAGE = "File not found: %s";
 
   public FileNotFoundError(File sourceFile) {
     //super(sourceFile, BONProblem.FILE_PROBLEM, BONProblem.UNKNOWN_CHAR_POSITION, true);
@@ -25,7 +25,7 @@ public class FileNotFoundError extends ParsingError {
 
   @Override
   public String getMessage() {
-    return String.format(message, getLocation().getSourceFile().getPath());
+    return String.format(MESSAGE, getLocation().getSourceFile().getPath());
   }
 
 }

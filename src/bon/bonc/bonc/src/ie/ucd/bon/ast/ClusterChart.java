@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -32,7 +32,7 @@ public class ClusterChart extends InformalChart {
     this.explanation = explanation; 
     this.part = part; 
   }
-  
+
   public static ClusterChart mk(String name, Boolean isSystem, List<ClassEntry> classes, List<ClusterEntry> clusters, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClusterChart(name, isSystem, classes, clusters, indexing, explanation, part, location);
   }
@@ -64,7 +64,7 @@ public class ClusterChart extends InformalChart {
     String newPart = part;
     return ClusterChart.mk(newName, newIsSystem, newClasses, newClusters, newIndexing, newExplanation, newPart, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

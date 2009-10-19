@@ -49,8 +49,8 @@ public class SourceLineReader {
    * Gets the line requested from the source file. If the source file does not exist,
    * if there is a problem reading from the file, or if the line asked for is past the end
    * of the file, then null will be returned.
-   * @param lineNumber
-   * @return
+   * @param lineNumber the line number of the line to get.
+   * @return the text for the given line number.
    */
   public String getLine(int lineNumber) {
     if (lineNumber < 1) {
@@ -95,16 +95,4 @@ public class SourceLineReader {
       }
     }
   }
-
-  //TODO this is _not_ a very efficient way of doing this.
-  //Perhaps store a corresponding list with cumulative character absolutes?
-//  public int getCharOffset(int lineNumber) throws IOException {
-//    readUpTo(lineNumber);
-//    int count = 0;
-//    for (int i=0; i < lineNumber-1; i++) {
-//      count += lines.get(i).length() + 1;
-//    }
-//    return count;
-//  }
-
 }

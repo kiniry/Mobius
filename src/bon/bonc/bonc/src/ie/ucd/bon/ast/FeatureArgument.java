@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class FeatureArgument extends AstNode {
     this.identifier = identifier; 
     this.type = type; assert type != null;
   }
-  
+
   public static FeatureArgument mk(String identifier, Type type, SourceLocation location) {
     return new FeatureArgument(identifier, type, location);
   }
@@ -44,7 +44,7 @@ public class FeatureArgument extends AstNode {
     Type newType = type == null ? null : type.clone();
     return FeatureArgument.mk(newIdentifier, newType, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

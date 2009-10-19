@@ -206,3 +206,53 @@
 @Test-name: "Sensetile system."
 @Location { sensetile/ }
 @Input { sensetile.bon, processor_unit/processor_unit.bon, processor_unit/sensor_metadata.bon, st_board/channel/channel-formal.bon, st_board/sensor/sensors-formal.bon, processor_unit/sensor_board_driver.bon, server/server.bon, st_board/sensor/sensor_board.bon }
+
+@Test-name: "BON book dynamic diagram examples"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { dynamicdiagram1, dynamicdiagram2, dynamicdiagram3 }
+
+@Test-name: "BON book class chart example"
+@Location { book/ }
+@Input { classchart }
+
+@Test-name: "BON book cluster chart example"
+@Location { book/ }
+@Input { clusterchart }
+@Output { < SystemNotDefinedError >,
+          < ClusterNotInAnyClusterOrSystemError, #File:clusterchart, 1, 0, ORGANIZATION > }
+
+@Test-name: "BON book static diagram example #1"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram3 }
+
+@Test-name: "BON book static diagram example #2"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram4 }
+
+@Test-name: "BON book static diagram example #3"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram8 }
+
+@Test-name: "BON book static diagram example #4"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram9 }
+
+@Test-name: "BON book static diagram example #5"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram12 }
+
+@Test-name: "BON book static diagram example #6"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram13 }
+
+@Test-name: "BON book static diagram example #5"
+@Prog-args: {--formal}
+@Location { book/ }
+@Input { staticdiagram15 }

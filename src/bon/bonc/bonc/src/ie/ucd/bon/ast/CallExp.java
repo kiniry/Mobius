@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class CallExp extends Expression {
     this.qualifier = qualifier; 
     this.callChain = callChain; assert callChain != null;
   }
-  
+
   public static CallExp mk(Expression qualifier, List<UnqualifiedCall> callChain, SourceLocation location) {
     return new CallExp(qualifier, callChain, location);
   }
@@ -44,7 +44,7 @@ public class CallExp extends Expression {
     List<UnqualifiedCall> newCallChain = callChain;
     return CallExp.mk(newQualifier, newCallChain, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

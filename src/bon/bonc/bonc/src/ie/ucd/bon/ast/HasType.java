@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class HasType extends AstNode {
     this.mark = mark; assert mark != null;
     this.type = type; assert type != null;
   }
-  
+
   public static HasType mk(TypeMark mark, Type type, SourceLocation location) {
     return new HasType(mark, type, location);
   }
@@ -44,7 +44,7 @@ public class HasType extends AstNode {
     Type newType = type == null ? null : type.clone();
     return HasType.mk(newMark, newType, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

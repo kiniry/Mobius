@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class RenameClause extends AstNode {
     this.className = className; assert className != null;
     this.featureName = featureName; assert featureName != null;
   }
-  
+
   public static RenameClause mk(ClassName className, FeatureName featureName, SourceLocation location) {
     return new RenameClause(className, featureName, location);
   }
@@ -44,7 +44,7 @@ public class RenameClause extends AstNode {
     FeatureName newFeatureName = featureName == null ? null : featureName.clone();
     return RenameClause.mk(newClassName, newFeatureName, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class StringConstant extends ManifestConstant {
     super(location);
     this.value = value; assert value != null;
   }
-  
+
   public static StringConstant mk(String value, SourceLocation location) {
     return new StringConstant(value, location);
   }
@@ -40,7 +40,7 @@ public class StringConstant extends ManifestConstant {
     String newValue = value;
     return StringConstant.mk(newValue, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

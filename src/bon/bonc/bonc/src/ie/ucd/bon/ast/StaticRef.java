@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class StaticRef extends AstNode {
     this.prefix = prefix; assert prefix != null;
     this.name = name; assert name != null;
   }
-  
+
   public static StaticRef mk(List<StaticRefPart> prefix, StaticRefPart name, SourceLocation location) {
     return new StaticRef(prefix, name, location);
   }
@@ -44,7 +44,7 @@ public class StaticRef extends AstNode {
     StaticRefPart newName = name == null ? null : name.clone();
     return StaticRef.mk(newPrefix, newName, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class ScenarioEntry extends AstNode {
     this.name = name; assert name != null;
     this.description = description; assert description != null;
   }
-  
+
   public static ScenarioEntry mk(String name, String description, SourceLocation location) {
     return new ScenarioEntry(name, description, location);
   }
@@ -44,7 +44,7 @@ public class ScenarioEntry extends AstNode {
     String newDescription = description;
     return ScenarioEntry.mk(newName, newDescription, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

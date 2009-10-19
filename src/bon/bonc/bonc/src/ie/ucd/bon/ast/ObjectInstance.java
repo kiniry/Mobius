@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class ObjectInstance extends DynamicComponent {
     this.name = name; assert name != null;
     this.comment = comment; 
   }
-  
+
   public static ObjectInstance mk(ObjectName name, String comment, SourceLocation location) {
     return new ObjectInstance(name, comment, location);
   }
@@ -44,7 +44,7 @@ public class ObjectInstance extends DynamicComponent {
     String newComment = comment;
     return ObjectInstance.mk(newName, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

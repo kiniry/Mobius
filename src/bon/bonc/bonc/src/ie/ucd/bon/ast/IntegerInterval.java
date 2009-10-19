@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class IntegerInterval extends Interval {
     this.start = start; assert start != null;
     this.stop = stop; assert stop != null;
   }
-  
+
   public static IntegerInterval mk(Integer start, Integer stop, SourceLocation location) {
     return new IntegerInterval(start, stop, location);
   }
@@ -44,7 +44,7 @@ public class IntegerInterval extends Interval {
     Integer newStop = stop;
     return IntegerInterval.mk(newStart, newStop, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class CharacterInterval extends Interval {
     this.start = start; assert start != null;
     this.stop = stop; assert stop != null;
   }
-  
+
   public static CharacterInterval mk(Character start, Character stop, SourceLocation location) {
     return new CharacterInterval(start, stop, location);
   }
@@ -44,7 +44,7 @@ public class CharacterInterval extends Interval {
     Character newStop = stop;
     return CharacterInterval.mk(newStart, newStop, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

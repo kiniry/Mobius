@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class IndexClause extends AstNode {
     this.id = id; assert id != null;
     this.indexTerms = indexTerms; assert indexTerms != null;
   }
-  
+
   public static IndexClause mk(String id, List<String> indexTerms, SourceLocation location) {
     return new IndexClause(id, indexTerms, location);
   }
@@ -44,7 +44,7 @@ public class IndexClause extends AstNode {
     List<String> newIndexTerms = indexTerms;
     return IndexClause.mk(newId, newIndexTerms, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

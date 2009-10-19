@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class MemberRange extends VariableRange {
     this.identifiers = identifiers; assert identifiers != null;
     this.expression = expression; assert expression != null;
   }
-  
+
   public static MemberRange mk(List<String> identifiers, Expression expression, SourceLocation location) {
     return new MemberRange(identifiers, expression, location);
   }
@@ -44,7 +44,7 @@ public class MemberRange extends VariableRange {
     Expression newExpression = expression == null ? null : expression.clone();
     return MemberRange.mk(newIdentifiers, newExpression, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

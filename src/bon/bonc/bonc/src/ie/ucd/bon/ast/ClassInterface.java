@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -26,7 +26,7 @@ public class ClassInterface extends AstNode {
     this.invariant = invariant; 
     this.indexing = indexing; 
   }
-  
+
   public static ClassInterface mk(List<Feature> features, List<Type> parents, List<Expression> invariant, Indexing indexing, SourceLocation location) {
     return new ClassInterface(features, parents, invariant, indexing, location);
   }
@@ -52,7 +52,7 @@ public class ClassInterface extends AstNode {
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     return ClassInterface.mk(newFeatures, newParents, newInvariant, newIndexing, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

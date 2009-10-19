@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -34,7 +34,7 @@ public class ClassChart extends InformalChart {
     this.explanation = explanation; 
     this.part = part; 
   }
-  
+
   public static ClassChart mk(ClassName name, List<ClassName> inherits, List<String> queries, List<String> commands, List<String> constraints, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new ClassChart(name, inherits, queries, commands, constraints, indexing, explanation, part, location);
   }
@@ -68,7 +68,7 @@ public class ClassChart extends InformalChart {
     String newPart = part;
     return ClassChart.mk(newName, newInherits, newQueries, newCommands, newConstraints, newIndexing, newExplanation, newPart, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

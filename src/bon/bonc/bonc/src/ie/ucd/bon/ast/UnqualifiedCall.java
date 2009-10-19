@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class UnqualifiedCall extends AstNode {
     this.id = id; assert id != null;
     this.args = args; assert args != null;
   }
-  
+
   public static UnqualifiedCall mk(String id, List<Expression> args, SourceLocation location) {
     return new UnqualifiedCall(id, args, location);
   }
@@ -44,7 +44,7 @@ public class UnqualifiedCall extends AstNode {
     List<Expression> newArgs = args;
     return UnqualifiedCall.mk(newId, newArgs, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

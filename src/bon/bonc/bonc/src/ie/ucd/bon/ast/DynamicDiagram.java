@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -24,7 +24,7 @@ public class DynamicDiagram extends SpecificationElement {
     this.extendedId = extendedId; 
     this.comment = comment; 
   }
-  
+
   public static DynamicDiagram mk(List<DynamicComponent> components, String extendedId, String comment, SourceLocation location) {
     return new DynamicDiagram(components, extendedId, comment, location);
   }
@@ -48,7 +48,7 @@ public class DynamicDiagram extends SpecificationElement {
     String newComment = comment;
     return DynamicDiagram.mk(newComponents, newExtendedId, newComment, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

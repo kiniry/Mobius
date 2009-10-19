@@ -1,2 +1,0 @@
--- Generated using BONc (version: %2$2s) plain text output, %1$tc
-

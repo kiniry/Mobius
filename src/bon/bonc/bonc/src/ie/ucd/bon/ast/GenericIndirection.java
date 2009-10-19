@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class GenericIndirection extends AstNode {
     super(location);
     this.indirectionElement = indirectionElement; assert indirectionElement != null;
   }
-  
+
   public static GenericIndirection mk(IndirectionElement indirectionElement, SourceLocation location) {
     return new GenericIndirection(indirectionElement, location);
   }
@@ -40,7 +40,7 @@ public class GenericIndirection extends AstNode {
     IndirectionElement newIndirectionElement = indirectionElement == null ? null : indirectionElement.clone();
     return GenericIndirection.mk(newIndirectionElement, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

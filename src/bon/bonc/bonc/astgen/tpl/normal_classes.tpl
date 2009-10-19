@@ -2,7 +2,7 @@ This template generates java classes for the normal classes.
 
 \normal_classes{\file{\ClassName.java}
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package \Userdefine{pkg};
@@ -26,7 +26,7 @@ public class \ClassName extends \Basename {
     super(location);
 \members{    this.\memberName = \memberName; \if_nonnull{assert \memberName != null;}{}
 }  }
-  
+
   public static \ClassName mk(\members[, ]{\if_primitive{\Membertype}{\MemberType} \memberName}, SourceLocation location) {
     return new \ClassName(\members[, ]{\memberName}, location);
   }
@@ -46,7 +46,7 @@ public class \ClassName extends \Basename {
     \members{\if_primitive{\Membertype new\MemberName = \memberName;}{\MemberType new\MemberName = \memberName == null ? null : \memberName.clone();}
     }return \ClassName.mk(\members[, ]{new\MemberName}, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

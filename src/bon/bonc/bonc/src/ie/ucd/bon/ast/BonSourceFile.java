@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class BonSourceFile extends AstNode {
     this.bonSpecification = bonSpecification; assert bonSpecification != null;
     this.indexing = indexing; 
   }
-  
+
   public static BonSourceFile mk(List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation location) {
     return new BonSourceFile(bonSpecification, indexing, location);
   }
@@ -44,7 +44,7 @@ public class BonSourceFile extends AstNode {
     Indexing newIndexing = indexing == null ? null : indexing.clone();
     return BonSourceFile.mk(newBonSpecification, newIndexing, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

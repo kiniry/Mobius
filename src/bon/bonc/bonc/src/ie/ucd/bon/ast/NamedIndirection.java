@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -22,7 +22,7 @@ public class NamedIndirection extends IndirectionElement {
     this.className = className; assert className != null;
     this.indirectionElements = indirectionElements; assert indirectionElements != null;
   }
-  
+
   public static NamedIndirection mk(ClassName className, List<IndirectionElement> indirectionElements, SourceLocation location) {
     return new NamedIndirection(className, indirectionElements, location);
   }
@@ -44,7 +44,7 @@ public class NamedIndirection extends IndirectionElement {
     List<IndirectionElement> newIndirectionElements = indirectionElements;
     return NamedIndirection.mk(newClassName, newIndirectionElements, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

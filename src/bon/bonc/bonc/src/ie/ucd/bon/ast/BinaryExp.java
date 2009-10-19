@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -46,7 +46,7 @@ public class BinaryExp extends Expression {
     this.left = left; assert left != null;
     this.right = right; assert right != null;
   }
-  
+
   public static BinaryExp mk(Op op, Expression left, Expression right, SourceLocation location) {
     return new BinaryExp(op, left, right, location);
   }
@@ -70,7 +70,7 @@ public class BinaryExp extends Expression {
     Expression newRight = right == null ? null : right.clone();
     return BinaryExp.mk(newOp, newLeft, newRight, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -29,7 +29,7 @@ public class Quantification extends Expression {
     this.restriction = restriction; 
     this.proposition = proposition; assert proposition != null;
   }
-  
+
   public static Quantification mk(Quantifier quantifier, List<VariableRange> variableRanges, Expression restriction, Expression proposition, SourceLocation location) {
     return new Quantification(quantifier, variableRanges, restriction, proposition, location);
   }
@@ -55,7 +55,7 @@ public class Quantification extends Expression {
     Expression newProposition = proposition == null ? null : proposition.clone();
     return Quantification.mk(newQuantifier, newVariableRanges, newRestriction, newProposition, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -20,7 +20,7 @@ public class Multiplicity extends ClientEntityExpression {
     super(location);
     this.multiplicity = multiplicity; assert multiplicity != null;
   }
-  
+
   public static Multiplicity mk(Integer multiplicity, SourceLocation location) {
     return new Multiplicity(multiplicity, location);
   }
@@ -40,7 +40,7 @@ public class Multiplicity extends ClientEntityExpression {
     Integer newMultiplicity = multiplicity;
     return Multiplicity.mk(newMultiplicity, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -24,7 +24,7 @@ public class Type extends AstNode {
     this.actualGenerics = actualGenerics; assert actualGenerics != null;
     this.fullString = fullString; assert fullString != null;
   }
-  
+
   public static Type mk(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
     return new Type(identifier, actualGenerics, fullString, location);
   }
@@ -48,7 +48,7 @@ public class Type extends AstNode {
     String newFullString = fullString;
     return Type.mk(newIdentifier, newActualGenerics, newFullString, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

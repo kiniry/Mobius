@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -28,7 +28,7 @@ public class ClientRelation extends StaticRelation {
     this.typeMark = typeMark; 
     this.semanticLabel = semanticLabel; 
   }
-  
+
   public static ClientRelation mk(StaticRef client, StaticRef supplier, ClientEntityExpression clientEntities, TypeMark typeMark, String semanticLabel, SourceLocation location) {
     return new ClientRelation(client, supplier, clientEntities, typeMark, semanticLabel, location);
   }
@@ -56,7 +56,7 @@ public class ClientRelation extends StaticRelation {
     String newSemanticLabel = semanticLabel;
     return ClientRelation.mk(newClient, newSupplier, newClientEntities, newTypeMark, newSemanticLabel, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

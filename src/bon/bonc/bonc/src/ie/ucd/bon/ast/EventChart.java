@@ -1,6 +1,6 @@
 
 /**
-  This class is generated automatically from normal_classes.tpl. 
+  This class is generated automatically from normal_classes.tpl.
   Do not edit.
  */
 package ie.ucd.bon.ast;
@@ -32,7 +32,7 @@ public class EventChart extends InformalChart {
     this.explanation = explanation; 
     this.part = part; 
   }
-  
+
   public static EventChart mk(String systemName, Boolean incoming, Boolean outgoing, List<EventEntry> entries, Indexing indexing, String explanation, String part, SourceLocation location) {
     return new EventChart(systemName, incoming, outgoing, entries, indexing, explanation, part, location);
   }
@@ -64,7 +64,7 @@ public class EventChart extends InformalChart {
     String newPart = part;
     return EventChart.mk(newSystemName, newIncoming, newOutgoing, newEntries, newIndexing, newExplanation, newPart, getLocation());
   }
-  
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
