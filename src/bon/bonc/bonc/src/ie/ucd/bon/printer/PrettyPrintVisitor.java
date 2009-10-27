@@ -149,6 +149,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   public void visitClazz(Clazz node, ClassName name, List<FormalGeneric> generics,
       Mod mod, ClassInterface classInterface, Boolean reused,
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
+    tp.startLine();
     tp.print(toString(mod));
     tp.print(name.getName());
 
@@ -196,6 +197,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.startLine();
     tp.print(id);
     tp.print(':');
+    tp.printSpace();
     tp.print(StringUtil.appendWithSeparator(indexTerms, ", "));
     tp.printLine(";");
   }
@@ -637,12 +639,13 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       tp.startLine();
       tp.printLine("invariant");
       tp.increaseIndentation();
+      tp.startLine();
       visitAll(invariant);
       tp.decreaseIndentation();
     }
     tp.decreaseIndentation();
     tp.startLine();
-    tp.print("end");
+    tp.printLine("end");
   }
 
   @Override
@@ -651,7 +654,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       List<ClassName> selectiveExport, String comment, SourceLocation loc) {
     tp.startLine();
     tp.print("feature");
-    if (selectiveExport != null) {
+    if (selectiveExport != null && !selectiveExport.isEmpty()) {
       tp.print(" {");
       visitAllPrintingSeparator(selectiveExport, ", ", false);
       tp.print('}');
@@ -707,6 +710,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
         tp.startLine();
         tp.printLine("require");
         tp.increaseIndentation();
+        tp.startLine();
         visitAllPrintingSeparatorAndlines(preconditions, ";", 1, true, true);
         tp.decreaseIndentation();
       }
@@ -714,6 +718,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
         tp.startLine();
         tp.printLine("ensure");
         tp.increaseIndentation();
+        tp.startLine();
         visitAllPrintingSeparatorAndlines(postconditions, ";", 1, true, true);
         tp.decreaseIndentation();
       }
@@ -937,6 +942,9 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       if (it.hasNext() || linesAtEnd) {
         tp.printLines(numberOfLines);
       }
+      if (it.hasNext()) {
+        tp.startLine();
+      }
     }
   }
 
@@ -954,6 +962,9 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       it.next().accept(this);
       if (it.hasNext() || linesAtEnd) {
         tp.printLines(numberOfLines);
+      }
+      if (it.hasNext()) {
+        tp.startLine();
       }
     }
   }
