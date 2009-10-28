@@ -151,6 +151,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       Boolean persistent, Boolean interfaced, String comment, SourceLocation loc) {
     tp.startLine();
     tp.print(toString(mod));
+    tp.print("class ");
     tp.print(name.getName());
 
     if (!generics.isEmpty()) {
@@ -640,7 +641,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       tp.printLine("invariant");
       tp.increaseIndentation();
       tp.startLine();
-      visitAll(invariant);
+      visitAllPrintingSeparatorAndlines(invariant, ";", 1, true, true);
       tp.decreaseIndentation();
     }
     tp.decreaseIndentation();
@@ -784,10 +785,11 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   @Override
   public void visitCluster(Cluster node, String name, List<StaticComponent> components, Boolean reused, String comment, SourceLocation loc) {
     tp.startLine();
-    tp.print("cluster");
+    tp.print("cluster ");
     if (reused) {
-      tp.print(" reused");
+      tp.print("reused ");
     }
+    tp.print(name);
     printCommentOrReturn(comment);
     tp.startLine();
     tp.printLine("component");
