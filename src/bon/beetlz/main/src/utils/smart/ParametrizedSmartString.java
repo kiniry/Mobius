@@ -130,4 +130,11 @@ public class ParametrizedSmartString extends SmartString {
   public final List < SmartString > getParams() {
     return my_params;
   }
+
+  @Override
+  public String toString() {
+    return my_name + "[" + my_params + "]";
+  }
+  
+  
 }

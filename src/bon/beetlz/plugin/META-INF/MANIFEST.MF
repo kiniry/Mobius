@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beetlz Plug-in
 Bundle-SymbolicName: BeetlzPlugin;singleton:=true
-Bundle-Version: 1.1.0
+Bundle-Version: 1.2.1
 Bundle-Activator: beetlzplugin.Activator
 Bundle-Vendor: Evka Darulova et al.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -12,6 +12,6 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
- Beetlz;bundle-version="1.1.0",
+ Beetlz;bundle-version="1.2.1",
  org.eclipse.jdt.core,
  org.eclipse.ui.console

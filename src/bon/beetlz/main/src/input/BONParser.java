@@ -784,7 +784,7 @@ public final class BONParser {
    */
   private static SmartString getType(final Type a_type) {
 
-    if (a_type.getActualGenerics() == null) {
+    if (a_type.actualGenerics == null || a_type.actualGenerics.isEmpty()) {
       return new TypeSmartString(a_type.getIdentifier());
     }
     final SmartString name = new TypeSmartString(a_type.getIdentifier());
