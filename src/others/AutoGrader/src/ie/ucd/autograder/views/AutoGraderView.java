@@ -10,6 +10,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -17,12 +18,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.navigator.resources.ProjectExplorer;
 import org.eclipse.ui.part.ViewPart;
 
 public class AutoGraderView extends ViewPart {
 
   private NatTable table;
-
+  
   /**
    * The constructor.
    */
@@ -83,7 +85,11 @@ public class AutoGraderView extends ViewPart {
     DataLayer rowHeaderLayer = new DefaultRowHeaderDataLayer(rowHeaderProvider);
     DataLayer cornerLayer = new DataLayer(cornerProvider);
     
-    bodyLayer.setDefaultColumnWidth(150);
+    if (AutoGraderDataProvider.getInstance().validData()) {
+      bodyLayer.setDefaultColumnWidth(150);
+    } else {
+      bodyLayer.setDefaultColumnWidth(600);
+    }
     
     AutoGraderGridLayer grid = new AutoGraderGridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer, false);
     table.setLayer(grid);
@@ -104,13 +110,13 @@ public class AutoGraderView extends ViewPart {
 
     //Register this view to receive selection changes.
     ISelectionService service = getSite().getWorkbenchWindow().getSelectionService();
-    service.addSelectionListener("org.eclipse.jdt.ui.PackageExplorer",
-        new ISelectionListener() {
+    ISelectionListener listener = new ISelectionListener() {
       public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         updateView(selection);
       }
-    });
-    //    System.out.println("Registered selection listener");
+    };
+    service.addSelectionListener(JavaUI.ID_PACKAGES, listener);
+    service.addSelectionListener(ProjectExplorer.VIEW_ID, listener);
   }
 
   /**

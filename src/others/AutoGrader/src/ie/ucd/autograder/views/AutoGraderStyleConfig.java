@@ -37,20 +37,13 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     applyBasicStylings(configRegistry);    
     //applyColumnHeaderStylings(configRegistry);
     applyFontStylings(configRegistry);
+    applyOtherStatusMessagesStylings(configRegistry);
   }
-
-//  private static void applyColumnHeaderStylings(IConfigRegistry config) {
-//    Style columnHeaderStyle = new Style();
-//    columnHeaderStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
-//    columnHeaderStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, GUIHelper.COLOR_WIDGET_BACKGROUND);
-//    //columnHeaderStyle.setAttributeValue(CellStyleAttributes.BORDER_STYLE, ...);
-//    config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, columnHeaderStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ColumnHeaderString.COLUMN_HEADER);
-//  }
 
   private static void applyFontStylings(IConfigRegistry config) {
     Style boldStyle = new Style();
     boldStyle.setAttributeValue(CellStyleAttributes.FONT, Fonts.BOLD_FONT);
-
+    
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.OverallTitleString.OVERALL_TITLE_CELL);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.OverallGrade.OVERALL_GRADE_CELL);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, boldStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ItemGrade.ITEM_GRADE_CELL);
@@ -118,6 +111,16 @@ public class AutoGraderStyleConfig extends AbstractRegistryConfiguration {
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, errorGradeStyle, DisplayMode.NORMAL, AutoGraderDataProvider.GradeHolder.GRADE + Grade.G);
     config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, errorGradeStyle, DisplayMode.NORMAL, AutoGraderDataProvider.GradeHolder.GRADE + Grade.NG);
 
+  }
+  
+  private static void applyOtherStatusMessagesStylings(IConfigRegistry config) {
+    Style statusStyle = new Style();
+    statusStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, Colours.PALE_YELLOW);
+    config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, statusStyle, DisplayMode.NORMAL, AutoGraderDataProvider.NoDataStringHolder.NO_DATA_CELL);
+    
+    Style errorStyle = new Style();
+    errorStyle.setAttributeValue(CellStyleAttributes.BACKGROUND_COLOR, Colours.RED);
+    config.registerConfigAttribute(CellConfigAttributes.CELL_STYLE, errorStyle, DisplayMode.NORMAL, AutoGraderDataProvider.ErrorStringHolder.ERROR_CELL);
   }
 
   public static Color getDetaultColourForGrade(Grade grade) {

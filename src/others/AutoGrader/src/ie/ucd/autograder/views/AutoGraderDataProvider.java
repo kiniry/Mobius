@@ -110,10 +110,10 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
           return cellData[row][col];
         }        
       } else {
-        return "No data for " + selectedProject.getName();
+        return "No data for " + selectedProject.getName() + ". Is the AutoGrader nature enabled for this project?";
       }
     } else {
-      return "No data for selection.";
+      return "No data for selection. Please select an AutoGrader-enabled project from the Package Explorer or Project Explorer.";
     }
   }
 
@@ -241,6 +241,32 @@ public class AutoGraderDataProvider implements IConfigLabelAccumulator {
       if (labels == null) {
         labels = new ArrayList<String>();
         labels.add(STRING_CELL);
+      }
+      return labels;
+    }
+  }
+  
+  public static class NoDataStringHolder extends StringHolder {
+    public static final String NO_DATA_CELL = "NO_DATA_CELL";
+    public NoDataStringHolder(String string) { super(string); }
+    private List<String> labels;
+    public List<String> getLabels() {
+      if (labels == null) {
+        labels = super.getLabels();
+        labels.add(NO_DATA_CELL);
+      }
+      return labels;
+    }
+  }
+  
+  public static class ErrorStringHolder extends StringHolder {
+    public static final String ERROR_CELL = "ERROR_CELL";
+    public ErrorStringHolder(String string) { super(string); }
+    private List<String> labels;
+    public List<String> getLabels() {
+      if (labels == null) {
+        labels = super.getLabels();
+        labels.add(ERROR_CELL);
       }
       return labels;
     }
