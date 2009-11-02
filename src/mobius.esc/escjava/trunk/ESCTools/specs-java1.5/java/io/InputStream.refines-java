@@ -25,14 +25,14 @@ package java.io;
  * @author David Cok
  *  (following Leaven's spec of OutputStream)
  */
-public abstract class InputStream {
+public abstract class InputStream implements Closeable {
     // FIXME: availableBytes may change asynchronously, but presumably only increases
     // FIXME: This spec does not reflect the blocking that can occur (needs when clauses)
 
     // FIXME - should modify objectState and then use not_modified on any
     // vars that are unchanged
 
-    //@ public model JMLDataGroup streamState; in objectState;
+    //@ public model JMLDataGroup streamState; in closeableDataGroup, objectState;
 
     // inputBytes models the bytes that have been or will be
     // read between the opening and the closing of the InputStream
