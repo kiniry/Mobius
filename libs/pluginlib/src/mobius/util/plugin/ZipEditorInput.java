@@ -4,7 +4,7 @@
  * 
  * Created on Feb 5, 2005
  */
-package pluginlib;
+package mobius.util.plugin;
 
 import java.io.IOException;
 import java.util.zip.ZipFile;
@@ -26,30 +26,33 @@ import org.eclipse.ui.IStorageEditorInput;
 public class ZipEditorInput implements IStorageEditorInput {
 
   /**
-   * Cached value corresponding to the entry in the Zip file
+   * Cached value corresponding to the entry in the Zip file.
    */
   //@ non_null
-  final private ZipEntryStorage s;
+  private final ZipEntryStorage s;
 
-  /** Constructor to wrap the zip file entry for the editor
+  /** 
+   * Constructor to wrap the zip file entry for the editor.
    * @param zes The zip file entry destined for the editor
    */
-  public ZipEditorInput(/*@ non_null */ ZipEntryStorage zes) {
+  public ZipEditorInput(final /*@ non_null */ ZipEntryStorage zes) {
     s = zes;
   }
   
-  /** Constructor to wrap an element of the zip file for the editor
+  /** 
+   * Constructor to wrap an element of the zip file for the editor.
    * @param jarFileName   The name of the zip or jar file in which the element resides
    * @param jarEntryName  The file name of the entry within the zip /jar file
    * @throws IOException
    */
-  public ZipEditorInput(String jarFileName, String jarEntryName) 
+  public ZipEditorInput(final String jarFileName, final String jarEntryName) 
   		throws IOException {
-    ZipFile z = new ZipFile(jarFileName);
-    s = new ZipEntryStorage(z,z.getEntry(jarEntryName));
+    final ZipFile z = new ZipFile(jarFileName);
+    s = new ZipEntryStorage(z, z.getEntry(jarEntryName));
   }
 
-  public Object getAdapter(Class c) {
+  /** {@inheritDoc} */
+  public Object getAdapter(final Class c) {
     // There are requests to adpat this object to IFile,
     // IResource, ILocationProvider.  Since there is not
     // a file system entity to point to and since we do not
@@ -63,9 +66,11 @@ public class ZipEditorInput implements IStorageEditorInput {
    * 
    * @return true if the objects refer to the same entry of the same zip file
    */
-  public boolean equals(Object o) {
-    if (!(o instanceof ZipEditorInput)) return false;
-    ZipEditorInput z = (ZipEditorInput)o;
+  public boolean equals(final Object o) {
+    if (!(o instanceof ZipEditorInput)) {
+      return false;
+    }
+    final ZipEditorInput z = (ZipEditorInput)o;
     return s.getFullPath().equals(z.s.getFullPath());
   }
 

@@ -53,7 +53,7 @@ public final class ConsoleUtils {
   /**
    * The constructor, initialize all the datas.
    */
-  private ConsoleUtils(String name) {
+  private ConsoleUtils(final String name) {
     instance = this;
     fConsole = new IOConsole("Mobius" + name + " Console", EImages.TOOL.getDescriptor());
     fConsole.activate();

@@ -22,7 +22,6 @@ public class Activator extends AbstractUIPlugin {
   /** {@inheritDoc} */
   public void start(final BundleContext context) throws Exception {
     super.start(context);
-
   }
 
   /** {@inheritDoc} */
