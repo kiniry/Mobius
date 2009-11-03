@@ -693,15 +693,12 @@ public class BonPretty {
    */
   public static String printPrettyFeature(final FeatureStructure the_feature) {
     String feature = ""; //$NON-NLS-1$
-    final int count = 0;
-
+    
+    //final int count = 0;
     //Name
-    String head = ""; //$NON-NLS-1$
-    if (count == 0) {
-      head += the_feature.getSimpleName();
-    } else {
-      head += the_feature.getSimpleName() + count;
-    }
+    //String head = ""; //$NON-NLS-1$
+    //head += the_feature.getSimpleName() + (count == 0 ? "" : count);
+    String head = the_feature.getSimpleName();
 
     //Potentially return value
     if (!the_feature.getSignature().getReturnValue().equals(SmartString.getVoid())) {

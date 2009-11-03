@@ -14,7 +14,6 @@ public abstract class Animal {
     
     public zoo.enclosure.Enclosure place = new Enclosure();
     
-    @SuppressWarnings("unchecked")
     public boolean isSleeping() { return true;}
     
     @Deprecated

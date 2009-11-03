@@ -71,7 +71,6 @@ public class BonFile {
     if (my_files.size() == 0) {
       return true;
     }
-    final List < String > args = new Vector < String > ();
     
     ParsingTracker tracker = API.parse(my_files, false, false);
 

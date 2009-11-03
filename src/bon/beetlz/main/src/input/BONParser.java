@@ -1,7 +1,5 @@
 package input;
 
-import ie.ucd.bon.ast.BONType;
-import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.Feature;
@@ -84,8 +82,8 @@ public final class BONParser {
    * @return parsed class
    */
   public static ClassStructure parseClass(final BONST the_st,
-                                          final Clazz a_class,
-                                          final Collection<Cluster> a_cluster) {
+      final Clazz a_class,
+      final Collection<Cluster> a_cluster) {
     final int two = 2;
     final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
@@ -137,17 +135,17 @@ public final class BONParser {
     }
     //Modifier
     switch(a_class.mod) {
-      case DEFERRED:
-        mod.add(ClassModifier.ABSTRACT);
-        break;
-      case EFFECTIVE:
-        mod.add(ClassModifier.EFFECTIVE);
-        break;
-      case ROOT:
-        mod.add(ClassModifier.ROOT);
-        break;
+    case DEFERRED:
+      mod.add(ClassModifier.ABSTRACT);
+      break;
+    case EFFECTIVE:
+      mod.add(ClassModifier.EFFECTIVE);
+      break;
+    case ROOT:
+      mod.add(ClassModifier.ROOT);
+      break;
     }
-    
+
     if (a_class.interfaced) {
       mod.add(ClassModifier.INTERFACED);
     }
@@ -175,11 +173,11 @@ public final class BONParser {
         final boolean success = interfaces.add(getType(s));
         if (!success) {
           Beetlz.getWaitingRecords().
-            add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
-                              String.format(Beetlz.getResourceBundle().
-                                            getString("BONParser." + //$NON-NLS-1$
-                                            "repeatedInheritanceNotSupported"), //$NON-NLS-1$
-                                            s, name)));
+          add(new CCLogRecord(CCLevel.JAVA_WARNING, null,
+              String.format(Beetlz.getResourceBundle().
+                  getString("BONParser." + //$NON-NLS-1$
+                  "repeatedInheritanceNotSupported"), //$NON-NLS-1$
+                  s, name)));
         }
       }
     }
@@ -198,7 +196,7 @@ public final class BONParser {
       ppv.resetVisitorOutput();
     }
     inv = parseInvariant(invariantStrings);
-    
+
     //Cluster
     if (a_cluster != null) {
       for (Cluster c : a_cluster) {
@@ -207,13 +205,13 @@ public final class BONParser {
     }
     //Source location
     final SourceLocation src = new SourceLocation(a_class.getLocation()
-                                                  .getSourceFile(),
-                                                  a_class.getLocation().
-                                                  getLineNumber());
+        .getSourceFile(),
+        a_class.getLocation().
+        getLineNumber());
     //Create class
     final ClassStructure parsedClass =
       new ClassStructure(ClassType.BON, mod, vis, generics, name,
-                         interfaces, clus, src);
+          interfaces, clus, src);
     parsedClass.setComment(about, author, version, all_else);
     parsedClass.setInvariant(inv);
     //Get the features
@@ -245,9 +243,9 @@ public final class BONParser {
    * @return parsed feature
    */
   private static FeatureStructure parseFeature(final BONST the_st,
-                                               final FeatureSpecification fSpec,
-                                               final String f_name,
-                                               final ClassStructure a_encl_class) {
+      final FeatureSpecification fSpec,
+      final String f_name,
+      final ClassStructure a_encl_class) {
     //full feature
     final SortedSet < FeatureModifier > mod = new TreeSet < FeatureModifier > ();
     Visibility vis                          = new Visibility(VisibilityModifier.PUBLIC);
@@ -271,7 +269,7 @@ public final class BONParser {
       if (exp.size() == 1 && exp.contains(a_encl_class.getSimpleName())) {
         vis = new Visibility(VisibilityModifier.PROTECTED);
       } else if (exp.size() == 1 && exp.contains(a_encl_class.getInnermostPackage().
-                                                 toString())) {
+          toString())) {
         vis = new Visibility(VisibilityModifier.PACKAGE_PRIVATE);
       } else {
         vis = new Visibility(VisibilityModifier.RESTRICTED);
@@ -294,39 +292,15 @@ public final class BONParser {
     for (final FeatureArgument a : fSpec.arguments) {
       params.put(a.identifier, getType(a.getType()));
     }
-    //Specs?
-    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
-    String pre = null;
-    if (!fSpec.contracts.preconditions.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (ie.ucd.bon.ast.Expression exp : fSpec.contracts.preconditions) {
-        exp.accept(ppv);
-        sb.append(ppv.getVisitorOutputAsString());
-        sb.append("; ");
-        ppv.resetVisitorOutput();
-      }
-      pre = sb.toString();
-    }
-    String post = null;
-    if (!fSpec.contracts.postconditions.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (ie.ucd.bon.ast.Expression exp : fSpec.contracts.postconditions) {
-        exp.accept(ppv);
-        sb.append(ppv.getVisitorOutputAsString());
-        sb.append("; ");
-        ppv.resetVisitorOutput();
-      }
-      post = sb.toString();
-    }
-    
-    final Spec spec = BONParser.parseFeatureSpecs(pre, post, return_value, name.toString(), params);
+
+    final Spec spec = BONParser.parseFeatureSpecs(fSpec.contracts.preconditions, fSpec.contracts.postconditions, return_value, name.toString(), params);
     final List < Spec > specCases = new Vector < Spec > ();
     specCases.add(spec);
     final Signature sign = Signature.getBonSignature(return_value, params);
     //SourceLocation
     final SourceLocation src =
       new SourceLocation(fSpec.getLocation().getSourceFile(),
-                         fSpec.getLocation().getLineNumber());
+          fSpec.getLocation().getLineNumber());
     //Renaming
     if (fSpec.renaming != null) {
       rename_class = fSpec.renaming.className.name;
@@ -340,8 +314,8 @@ public final class BONParser {
       a_encl_class.addAggregation(return_value);
     }
     return new FeatureStructure(mod, vis, name, sign,
-                                specCases, src, rename_class,
-                                rename_feature, a_encl_class);
+        specCases, src, rename_class,
+        rename_feature, a_encl_class);
   }
 
   /**
@@ -560,7 +534,7 @@ public final class BONParser {
    * @return count of chars
    */
   private static int numberOfChars(final char a_character,
-                                   final String a_string) {
+      final String a_string) {
     int i = 0;
     for (final char c : a_string.toCharArray()) {
       if (a_character == c) i++;
@@ -575,31 +549,31 @@ public final class BONParser {
    * @return parsed expression
    */
   private static Expression getTwoPartExpression(final String[] the_parts,
-                                                 final Operator the_operator) {
+      final Operator the_operator) {
     final int two = 2;
     if (the_parts.length == two) {
       switch (the_operator) {
-        case MULTIPLE: case DIVIDE: case MODULO: case INT_DIVIDE: case PLUS:
-        case MINUS: case POWER:
-          return new ArithmeticExpression(parseExpression(the_parts[0]),
-                                          the_operator, parseExpression(the_parts[1]));
-        case GREATER: case SMALLER: case GREATER_EQUAL: case SMALLER_EQUAL:
-          return new RelationalExpression(parseExpression(the_parts[0]),
-                                          the_operator, parseExpression(the_parts[1]));
-        case EQUAL: case NOT_EQUAL:
-          return new EqualityExpression(parseExpression(the_parts[0]),
-                                        the_operator, parseExpression(the_parts[1]));
-        case AND: case OR: case XOR:
-          return new LogicalExpression(parseExpression(the_parts[0]),
-                                       the_operator, parseExpression(the_parts[1]));
-        case IMPLIES:
-          return new ImpliesExpression(parseExpression(the_parts[0]),
-                                       parseExpression(the_parts[1]));
-        case IFF: case NOT_IFF:
-          return new EquivalenceExpression(parseExpression(the_parts[0]),
-                                           the_operator, parseExpression(the_parts[1]));
-        default:
-          return new InformalExpression(the_parts[0].trim());
+      case MULTIPLE: case DIVIDE: case MODULO: case INT_DIVIDE: case PLUS:
+      case MINUS: case POWER:
+        return new ArithmeticExpression(parseExpression(the_parts[0]),
+            the_operator, parseExpression(the_parts[1]));
+      case GREATER: case SMALLER: case GREATER_EQUAL: case SMALLER_EQUAL:
+        return new RelationalExpression(parseExpression(the_parts[0]),
+            the_operator, parseExpression(the_parts[1]));
+      case EQUAL: case NOT_EQUAL:
+        return new EqualityExpression(parseExpression(the_parts[0]),
+            the_operator, parseExpression(the_parts[1]));
+      case AND: case OR: case XOR:
+        return new LogicalExpression(parseExpression(the_parts[0]),
+            the_operator, parseExpression(the_parts[1]));
+      case IMPLIES:
+        return new ImpliesExpression(parseExpression(the_parts[0]),
+            parseExpression(the_parts[1]));
+      case IFF: case NOT_IFF:
+        return new EquivalenceExpression(parseExpression(the_parts[0]),
+            the_operator, parseExpression(the_parts[1]));
+      default:
+        return new InformalExpression(the_parts[0].trim());
       }
     }
     return new InformalExpression(the_parts[0].trim());
@@ -635,7 +609,7 @@ public final class BONParser {
     final String source = a_str.substring(0, dot);
     final String field = a_str.substring(dot + 1);
     return new MemberaccessExpression(parseExpression(source),
-                                      parseExpression(field));
+        parseExpression(field));
   }
 
   /**
@@ -647,46 +621,38 @@ public final class BONParser {
    * @param the_params parameter
    * @return specs
    */
-  public static Spec parseFeatureSpecs(final String a_pre, final String a_post,
-                                       final SmartString a_return_value,
-                                       final String a_feature,
-                                       final Map < String , SmartString > the_params) {
+  public static Spec parseFeatureSpecs(final List<ie.ucd.bon.ast.Expression> a_pre, final List<ie.ucd.bon.ast.Expression> a_post,
+      final SmartString a_return_value,
+      final String a_feature,
+      final Map < String , SmartString > the_params) {
     final List < Expression > preconditions = new Vector < Expression > ();
     final List < Expression > postconditions = new Vector < Expression > ();
     SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
     FeatureType type;
     String constant = null;
 
-    if (a_pre != null) {
-      final String[] parts = a_pre.split(";"); //$NON-NLS-1$
-      for (final String s : parts) {
-        if (s != null) {
-          final boolean nul = parseArgumentNullity(s, the_params);
-          if (!nul) {
-            final Expression e = parseExpression(s.trim());
-            preconditions.addAll(splitBooleanExpressions(e));
-          }
-        }
+    for (ie.ucd.bon.ast.Expression a_pre_exp : a_pre) {
+      String a_pre_string = prettyPrintExpression(a_pre_exp).trim();
+      final boolean nul = parseArgumentNullity(a_pre_string, the_params);
+      if (!nul) {
+        final Expression e = parseExpression(a_pre_string);
+        preconditions.addAll(splitBooleanExpressions(e));
       }
     }
-
-    if (a_post != null) {
-      final String[] parts = a_post.split(";"); //$NON-NLS-1$
-      for (final String s : parts) {
-        if (s != null) {
-          if (s.contains("delta")) { //$NON-NLS-1$
-            frame = parseFrameConstraint(s);
-          } else {
-            final Nullity nul = parseReturnNullity(s.trim());
-            if (nul != null) {
-              a_return_value.setNullity(nul);
-            } else {
-              constant = parseConstant(s, a_feature);
-              if (constant == null) {
-                final Expression e = parseExpression(s.trim());
-                postconditions.addAll(splitBooleanExpressions(e));
-              }
-            }
+    
+    for (ie.ucd.bon.ast.Expression a_post_exp : a_post) {
+      String a_post_string = prettyPrintExpression(a_post_exp).trim();
+      if (a_post_string.contains("delta")) { //$NON-NLS-1$
+        frame = parseFrameConstraint(a_post_string);
+      } else {
+        final Nullity nul = parseReturnNullity(a_post_string);
+        if (nul != null) {
+          a_return_value.setNullity(nul);
+        } else {
+          constant = parseConstant(a_post_string, a_feature);
+          if (constant == null) {
+            final Expression e = parseExpression(a_post_string);
+            postconditions.addAll(splitBooleanExpressions(e));
           }
         }
       }
@@ -705,7 +671,7 @@ public final class BONParser {
       type = FeatureType.MIXED;
     }
     return new Spec(preconditions, postconditions, frame,
-                    constant, type, ClassType.BON);
+        constant, type, ClassType.BON);
   }
 
   /**
@@ -719,8 +685,8 @@ public final class BONParser {
       a_frame.replace("delta", "").split(",");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     for (final String s : parts) {
       frame.add(new FeatureSmartString(s.
-                                       replace("}", "").//$NON-NLS-1$   //$NON-NLS-2$
-                                       replace("{", "").trim())); //$NON-NLS-1$   //$NON-NLS-2$
+          replace("}", "").//$NON-NLS-1$   //$NON-NLS-2$
+          replace("{", "").trim())); //$NON-NLS-1$   //$NON-NLS-2$
     }
     return frame;
   }
@@ -732,8 +698,8 @@ public final class BONParser {
    * @return true if nullity parsed
    */
   private static boolean parseArgumentNullity(final String a_str,
-                                              final Map < String,
-                                              SmartString > the_params) {
+      final Map < String,
+      SmartString > the_params) {
     for (final String p : the_params.keySet()) {
       if (a_str.matches(p + "\\s*/=\\s*Void")) { //$NON-NLS-1$
         the_params.get(p).setNullity(Nullity.NON_NULL);
@@ -810,7 +776,7 @@ public final class BONParser {
       list.add(getType(a_generic.getType()));
       //System.err.println(form.getName() + "  " + form.getType().toString());
       final String name = a_generic.identifier + " -> " +
-        a_generic.getType().getFullString(); //$NON-NLS-1$
+      a_generic.getType().getFullString(); //$NON-NLS-1$
       return new GenericParameter(name, a_generic.identifier, list);
     }
     return new GenericParameter(a_generic.identifier, a_generic.identifier, null);
@@ -833,5 +799,11 @@ public final class BONParser {
     }
     list.add(an_expr);
     return list;
+  }
+
+  private static String prettyPrintExpression(ie.ucd.bon.ast.Expression an_exp) {
+    PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+    an_exp.accept(ppv);
+    return ppv.getVisitorOutputAsString(); 
   }
 }

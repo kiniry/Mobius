@@ -4,11 +4,7 @@ Bundle-Name: Beetlz
 Bundle-SymbolicName: Beetlz
 Bundle-Version: 1.2.1
 Bundle-ClassPath: Beetlz.jar,
- lib/junit-4.5.jar,
- lib/openjml.jar,
- lib/antlr-3.1.3.jar,
- lib/bonc2.jar,
- lib/clops.jar
+ lib/openjml.jar
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: check,
  input,
