@@ -32,6 +32,7 @@ import org.antlr.runtime.tree.RewriteEmptyStreamException;
  */
 public final class Parser {
 
+  //Keep static to save re-instantiating
   private static BONParser parser = new BONParser(null);
   private static BONLexer lexer = new BONLexer(null);
 
@@ -60,10 +61,8 @@ public final class Parser {
       is.close();
       Main.logDebug("Valid parse: " + parser.isValidParse());
 
-//      Main.logDebug("Starting ST builder");
       STBuilderVisitor v = new STBuilderVisitor(tracker.getSymbolTable());
       result.accept(v);
-//      Main.logDebug("Finished ST builder");
 
       return new ParseResult(parser.isValidParse(), result, tokens, inputFile, parser.getProblems(), lexer.getProblems(), v.getProblems());
 

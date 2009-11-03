@@ -12,13 +12,8 @@ public abstract class BONError extends BONProblem {
     super(sourceLoc);
   }
 
-  @Override
-  public final boolean isError() {
-    return true;
+  public BONProblemType getType() {
+    return BONProblemType.ERROR;
   }
 
-  @Override
-  public final boolean isWarning() {
-    return false;
-  }
 }

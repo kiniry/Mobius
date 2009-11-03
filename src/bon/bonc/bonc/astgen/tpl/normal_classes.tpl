@@ -2,8 +2,11 @@ This template generates java classes for the normal classes.
 
 \normal_classes{\file{\ClassName.java}
 /**
-  This class is generated automatically from normal_classes.tpl.
-  Do not edit.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ *
+ * This class is generated automatically from normal_classes.tpl.
+ * Do not edit.
  */
 package \Userdefine{pkg};
 

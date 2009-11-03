@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon;
 
 import ie.ucd.bon.clinterface.BONcOptionsInterface;
@@ -21,6 +25,10 @@ import java.util.Collection;
 
 import org.antlr.runtime.RecognitionException;
 
+/**
+ * The public API for BONc.
+ * @author fintan
+ */
 public final class API {
 
   /**
@@ -28,13 +36,18 @@ public final class API {
    */
   private API() { }
 
-  //Parse
-
+  /**
+   * Parse the provided input.
+   * @param files the files to parse.
+   * @param readFromStdIn a boolean indicating whether to also read input from stdin.
+   * @param printTiming a boolean indicating whether timing information should be printed to stdout.
+   * @return the ParsingTracker storing the results of the parse.
+   */
   public static ParsingTracker parse(final Collection<File> files, final boolean readFromStdIn, final boolean printTiming) {
     ParsingTracker tracker = new ParsingTracker();
 
     if (readFromStdIn) {
-      ParseResult parseResult = doActualParse(SourceReader.getInstance().readStandardInput(), null, tracker, printTiming);
+      ParseResult parseResult = parseInput(SourceReader.getInstance().readStandardInput(), null, tracker, printTiming);
       if (parseResult != null) {
         tracker.addParse(null, parseResult);
       }
@@ -44,7 +57,7 @@ public final class API {
       try {
         InputStream is = SourceReader.getInstance().readFile(file);
 
-        ParseResult parseResult = doActualParse(is, file, tracker, printTiming);
+        ParseResult parseResult = parseInput(is, file, tracker, printTiming);
         if (parseResult != null) {
           tracker.addParse(file, parseResult);
         }
@@ -61,7 +74,15 @@ public final class API {
     return tracker;
   }
 
-  private static ParseResult doActualParse(final InputStream is, final File file, final ParsingTracker tracker, final boolean printTiming) {
+  /**
+   * Read from the given InputStream and parse what is read.
+   * @param is the InputStream to read from.
+   * @param file the File object representing where the InputStream is reading from.
+   * @param tracker the ParsingTracker to store the results of this parse in.
+   * @param printTiming a boolean indicating whether timing information should be printed to stdout.
+   * @return a ParseResult object representing the result of parsing this input.
+   */
+  private static ParseResult parseInput(final InputStream is, final File file, final ParsingTracker tracker, final boolean printTiming) {
     try {
       if (printTiming) {
         long startTime = System.nanoTime();
@@ -140,11 +161,7 @@ public final class API {
     }
   }
 
-  public static Problems typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
-    boolean checkInformal = so.getCheckInformal();
-    boolean checkFormal = so.getCheckFormal();
-    boolean checkConsistency = so.getCheckConsistency();
-    boolean typeCheck = so.getTypecheck();
+  public static Problems typeCheck(final ParsingTracker tracker, final boolean checkInformal, final boolean checkFormal, final boolean checkConsistency, final boolean typeCheck, final boolean timing) {
     Main.logDebug("typeCheck: " + typeCheck + ", checkInformal: " + checkInformal + ", checkFormal: " + checkFormal + ", checkConsistency: " + checkConsistency);
 
     if (timing) {
@@ -157,4 +174,11 @@ public final class API {
       return TypeChecker.typeCheck(tracker, typeCheck, checkInformal, checkFormal, checkConsistency);
     }
   }
+
+  static Problems typeCheck(final ParsingTracker tracker, final BONcOptionsInterface so, final boolean timing) {
+    return typeCheck(tracker, so.getCheckInformal(), so.getCheckFormal(), so.getCheckConsistency(), so.getTypecheck(), timing);
+  }
+
+
+  //TODO combined operations for a nicer interface in some situations. For example parseAndTypeCheck(final Collection<File> files, final boolean readFromStdIn, final boolean printTiming
 }

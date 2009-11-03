@@ -256,3 +256,9 @@
 @Prog-args: {--formal}
 @Location { book/ }
 @Input { staticdiagram15 }
+
+@Test-name: "Features in the presence of inheritance #1"
+@Prog-args: {--formal}
+@Location: { misc/ }
+@Input { feature_inherits }
+@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 6, Y, K, effective > } 

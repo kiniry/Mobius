@@ -97,8 +97,8 @@ public class ParseResult {
     return severeProblemCount;
   }
 
-  public boolean continueFromParse(int safeNumberOfSevereParseErrors) {
-    return severeProblemCount <= safeNumberOfSevereParseErrors;
+  public boolean continueFromParse() {
+    return severeProblemCount == 0;
   }
 
 }

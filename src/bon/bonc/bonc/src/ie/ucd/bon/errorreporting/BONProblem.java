@@ -11,6 +11,8 @@ import java.io.PrintStream;
 
 public abstract class BONProblem implements Comparable<BONProblem> {
 
+  public enum BONProblemType { ERROR, WARNING, INFO };
+
   private final String sourceLine;
   private final SourceLocation location;
 
@@ -26,9 +28,21 @@ public abstract class BONProblem implements Comparable<BONProblem> {
     return SourceReader.getInstance().getSource(location.getSourceFile(), location.getLineNumber());
   }
 
-  public abstract boolean isError();
-  public abstract boolean isWarning();
+  public abstract BONProblemType getType();
 
+  public final boolean isError() {
+    return getType() == BONProblemType.ERROR;
+  }
+
+  public final boolean isWarning() {
+    return getType() == BONProblemType.WARNING;
+  }
+  
+  public final boolean isInfo() {
+    return getType() == BONProblemType.INFO;
+  }
+  
+  
   public SourceLocation getLocation() {
     return location;
   }

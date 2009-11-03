@@ -8,19 +8,23 @@ import ie.ucd.bon.source.SourceLocation;
 
 public class TypeMismatchError extends TypeCheckingError {
 
-  private static final String message1 = "Expected %s.";
-  private static final String message2 = "Expected %s but found %s.";
+  protected static final String MESSAGE1 = "Expected %s.";
+  protected static final String MESSAGE2 = "Expected %s but found %s.";
 
   private final String err;
 
   public TypeMismatchError(SourceLocation loc, String desired, String actual) {
     super(loc);
-    err = String.format(message2, desired, actual);
+    if (actual == null) {
+      err = String.format(MESSAGE1, desired);
+    } else {
+      err = String.format(MESSAGE2, desired, actual);
+    }
   }
 
-  public TypeMismatchError(SourceLocation loc, String desired) {
+  protected TypeMismatchError(SourceLocation loc, String errorMessage) {
     super(loc);
-    err = String.format(message1, desired);
+    this.err = errorMessage;
   }
 
   public String getMessage() {

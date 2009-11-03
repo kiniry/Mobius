@@ -2,7 +2,11 @@ This is the generic interface for a visitor.
 
 \file{AbstractVisitor.java}
 /**
-  This file is generated from abstract_visitor.tpl. Do not edit.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ *
+ * This class is generated automatically from abstract_visitor.tpl.
+ * Do not edit.
  */
 package \Userdefine{pkg};
 
@@ -37,8 +41,12 @@ public abstract class AbstractVisitor implements IVisitorWithAdditions {
 }
 
 \file{IVisitor.java}
-/** 
-  This file is generated from abstract_visitor.tpl. Do not edit.
+/**
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ *
+ * This class is generated automatically from abstract_visitor.tpl.
+ * Do not edit.
  */
 package \Userdefine{pkg};
 

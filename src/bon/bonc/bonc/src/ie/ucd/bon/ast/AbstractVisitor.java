@@ -1,6 +1,10 @@
 
 /**
-  This file is generated from abstract_visitor.tpl. Do not edit.
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ *
+ * This class is generated automatically from abstract_visitor.tpl.
+ * Do not edit.
  */
 package ie.ucd.bon.ast;
 

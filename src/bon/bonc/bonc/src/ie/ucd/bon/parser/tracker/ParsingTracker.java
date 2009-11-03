@@ -104,8 +104,8 @@ public class ParsingTracker {
     }
   }
 
-  public boolean continueFromParse(int safeNumberOfSevereParseErrors) {
-    return containsFailedParses ? false : severeProblemCount <= safeNumberOfSevereParseErrors;
+  public boolean continueFromParse() {
+    return containsFailedParses ? false : severeProblemCount == 0;
   }
 
   public BONST getSymbolTable() {

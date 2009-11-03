@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon.typechecker;
 
 import static ie.ucd.bon.ast.FeatureSpecification.Modifier.DEFERRED;
@@ -47,14 +51,16 @@ import ie.ucd.bon.ast.Clazz.Mod;
 import ie.ucd.bon.ast.FeatureSpecification.Modifier;
 import ie.ucd.bon.ast.Quantification.Quantifier;
 import ie.ucd.bon.errorreporting.Problems;
+import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.typechecker.errors.ClassCannotHaveSelfAsParentError;
 import ie.ucd.bon.typechecker.errors.DeferredFeatureInNonDeferredClassError;
 import ie.ucd.bon.typechecker.errors.InvalidClusterTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
+import ie.ucd.bon.typechecker.errors.NoParentDeclaresFeatureError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
-import ie.ucd.bon.typechecker.errors.TypeMismatchError;
+import ie.ucd.bon.typechecker.errors.TypeMismatchWithExplanationError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
 
 import java.util.Collection;
@@ -73,10 +79,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   @Override
-  public void visitBonSourceFile(BonSourceFile node,
-      List<SpecificationElement> bonSpecification, Indexing indexing,
-      SourceLocation loc) {
-
+  public void visitBonSourceFile(BonSourceFile node, List<SpecificationElement> bonSpecification, Indexing indexing, SourceLocation loc) {
     visitAll(bonSpecification);
   }
 
@@ -216,15 +219,17 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist,
       boolean parentFeatureMustBeDeferred, boolean parentFeatureMustBeNonDeferred) {
-    FeatureSpecification parentFeature = findParentFeatureWithName(context.clazz.getName().getName(), featureName);
+    String className = context.clazz.getName().getName();
+    FeatureSpecification parentFeature = findParentFeatureWithName(className, featureName);
 
     if (parentFeature == null) {
       if (parentFeatureMustExist) {
-        //TODO error, no parent feature with this name
+        problems.addProblem(new NoParentDeclaresFeatureError(node.getLocation(), featureName, className, PrettyPrintVisitor.toString(node.getModifier())));
       }
     } else {
       if (parentFeatureMustBeDeferred && parentFeature.getModifier() != DEFERRED) {
         //TODO error, parent feature is not deferred
+        //TODO need mapping from FeatureSpecification to declaring class.
       }
 
       if (parentFeatureMustBeNonDeferred && parentFeature.getModifier() == DEFERRED) {
@@ -237,7 +242,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private FeatureSpecification findParentFeatureWithName(String className, String featureName) {
     Collection<String> parents = st.simpleClassInheritanceGraph.get(featureName);
-
+    //TODO handle renamings
     for (String parent : parents) {
       Clazz parentClass = st.classes.get(parent);
       if (parentClass != null) {
@@ -489,10 +494,10 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private boolean compareType(Type expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
-      problems.addProblem(new TypeMismatchError(loc, typeToString(expected)));
+      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), null));
       return false;
     } else if (!st.isSubtypeOrEqual(found, expected)) {
-      problems.addProblem(new TypeMismatchError(loc, typeToString(expected), typeToString(found)));
+      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), typeToString(found)));
       return false;
     } else {
       return true;
@@ -501,7 +506,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private boolean compareType(Type[] expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
-      problems.addProblem(new TypeMismatchError(loc, typeChoices(expected)));
+      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), null));
       return false;
     } else {
       for (Type type : expected) {
@@ -509,7 +514,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
           return true;
         }
       }
-      problems.addProblem(new TypeMismatchError(loc, typeChoices(expected), typeToString(found)));
+      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), typeToString(found)));
       return false;
     }
   }

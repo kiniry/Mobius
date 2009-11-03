@@ -128,7 +128,7 @@ public final class Printer {
         Main.logDebug("Printing for file: " + file);
 
         ParseResult parse = parsingTracker.getParseResult(file);
-        if (parse.continueFromParse(Main.PP_NUM_SEVERE_ERRORS)) {
+        if (parse.continueFromParse()) {
           BonSourceFile sf = parse.getParse();
           pa.visitBonSourceFile(sf, sf.bonSpecification, sf.indexing, sf.getLocation());
         } else {

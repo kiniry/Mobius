@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon.util;
 
 import java.util.Collection;
@@ -9,7 +13,7 @@ import com.google.common.collect.ForwardingList;
 
 public class NullIgnoringList<E> extends ForwardingList<E> {
 
-  private List<E> list;
+  private final List<E> list;
 
   public NullIgnoringList(List<E> list) {
     this.list = list;

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
+ * See LICENCE.TXT for details.
+ */
 package ie.ucd.bon.printer;
 
 import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
@@ -348,7 +352,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.startLine();
     tp.print("class ");
     tp.print(name);
-    tp.printSpace();
+    tp.print(" description ");
     tp.print(description);
     tp.printLine();
   }
@@ -358,7 +362,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     tp.startLine();
     tp.print("cluster ");
     tp.print(name);
-    tp.printSpace();
+    tp.print(" description ");
     tp.print(description);
     tp.printLine();
   }
@@ -383,15 +387,15 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   @Override
   public void visitKeywordConstant(KeywordConstant node, Constant constant, SourceLocation loc) {
     switch(constant) {
-    case CURRENT:
-      tp.print("Current");
-      break;
-    case RESULT:
-      tp.print("Result");
-      break;
-    case VOID:
-      tp.print("Void");
-      break;
+      case CURRENT:
+        tp.print("Current");
+        break;
+      case RESULT:
+        tp.print("Result");
+        break;
+      case VOID:
+        tp.print("Void");
+        break;
     }
   }
 
@@ -415,19 +419,19 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   @Override
   public void visitTypeMark(TypeMark node, Mark mark, Integer multiplicity, SourceLocation loc) {
     switch(mark) {
-    case AGGREGATE:
-      tp.print(":{");
-      break;
-    case HASTYPE:
-      tp.print(':');
-      break;
-    case NONE:
-      break;
-    case SHAREDMARK:
-      tp.print(":(");
-      tp.print(multiplicity);
-      tp.print(')');
-      break;
+      case AGGREGATE:
+        tp.print(":{");
+        break;
+      case HASTYPE:
+        tp.print(':');
+        break;
+      case NONE:
+        break;
+      case SHAREDMARK:
+        tp.print(":(");
+        tp.print(multiplicity);
+        tp.print(')');
+        break;
     }
   }
 
@@ -672,16 +676,8 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
       List<FeatureArgument> arguments, ContractClause contracts,
       HasType hasType, RenameClause renaming, String comment, SourceLocation loc) {
     tp.startLine();
-    switch(modifier) {
-    case DEFERRED:
-      tp.print("deferred ");
-      break;
-    case EFFECTIVE:
-      tp.print("effective ");
-      break;
-    case REDEFINED:
-      tp.print("redefined ");
-    }
+    tp.print(toString(modifier));
+    tp.printSpace();
     visitAllPrintingSeparator(featureNames, ", ", false);
     if (hasType != null) {
       hasType.accept(this);
@@ -1005,125 +1001,138 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
     }
   }
 
-  protected String toString(KeywordConstant.Constant constant) {
+  public static String toString(KeywordConstant.Constant constant) {
     switch (constant) {
-    case CURRENT:
-      return "Current";
-    case VOID:
-      return "Void";
+      case CURRENT:
+        return "Current";
+      case VOID:
+        return "Void";
     }
     return "";
   }
 
-  protected String toString(Clazz.Mod modifier) {
+  public static String toString(FeatureSpecification.Modifier modifier) {
+    switch(modifier) {
+      case DEFERRED:
+        return "deferred";
+      case EFFECTIVE:
+        return "effective";
+      case REDEFINED:
+        return "redefined";
+      default:
+        return "";
+    }
+  }
+
+  public static String toString(Clazz.Mod modifier) {
     switch (modifier) {
-    case DEFERRED:
-      return "deferred ";
-    case EFFECTIVE:
-      return "effective ";
-    case ROOT:
-      return "root ";
-    default:
-      return "";
+      case DEFERRED:
+        return "deferred ";
+      case EFFECTIVE:
+        return "effective ";
+      case ROOT:
+        return "root ";
+      default:
+        return "";
     }
   }
 
   protected void printUnaryExpOp(ie.ucd.bon.ast.UnaryExp.Op op) {
     switch (op) {
-    case ADD:
-      tp.print('+');
-      break;
-    case DELTA:
-      tp.print("delta");
-      break;
-    case NOT:
-      tp.print("not");
-      break;
-    case OLD:
-      tp.print("old");
-      break;
-    case SUB:
-      tp.print('-');
-      break;
+      case ADD:
+        tp.print('+');
+        break;
+      case DELTA:
+        tp.print("delta");
+        break;
+      case NOT:
+        tp.print("not");
+        break;
+      case OLD:
+        tp.print("old");
+        break;
+      case SUB:
+        tp.print('-');
+        break;
     }
   }
 
   protected void printBinaryExpOp(Op op) {
     switch (op) {
-    case ADD:
-      tp.print('+');
-      break;
-    case AND:
-      tp.print("and");
-      break;
-    case DIV:
-      tp.print('/');
-      break;
-    case EQ:
-      tp.print('=');
-      break;
-    case EQUIV:
-      tp.print("<->");
-      break;
-    case GE:
-      tp.print(">=");
-      break;
-    case GT:
-      tp.print('>');
-      break;
-    case HASTYPE:
-      tp.print(':');
-      break;
-    case IMPLIES:
-      tp.print("->");
-      break;
-    case INTDIV:
-      tp.print("//");
-      break;
-    case LE:
-      tp.print("<=");
-      break;
-    case LT:
-      tp.print('<');
-      break;
-    case MEMBEROF:
-      tp.print("member_of");
-      break;
-    case MOD:
-      tp.print("\\\\");
-      break;
-    case MUL:
-      tp.print('*');
-      break;
-    case NEQ:
-      tp.print("/=");
-      break;
-    case NOTMEMBEROF:
-      tp.print("not member_of");
-      break;
-    case OR:
-      tp.print("or");
-      break;
-    case POW:
-      tp.print('^');
-      break;
-    case SUB:
-      tp.print('-');
-      break;
-    case XOR:
-      tp.print("xor");
-      break;
+      case ADD:
+        tp.print('+');
+        break;
+      case AND:
+        tp.print("and");
+        break;
+      case DIV:
+        tp.print('/');
+        break;
+      case EQ:
+        tp.print('=');
+        break;
+      case EQUIV:
+        tp.print("<->");
+        break;
+      case GE:
+        tp.print(">=");
+        break;
+      case GT:
+        tp.print('>');
+        break;
+      case HASTYPE:
+        tp.print(':');
+        break;
+      case IMPLIES:
+        tp.print("->");
+        break;
+      case INTDIV:
+        tp.print("//");
+        break;
+      case LE:
+        tp.print("<=");
+        break;
+      case LT:
+        tp.print('<');
+        break;
+      case MEMBEROF:
+        tp.print("member_of");
+        break;
+      case MOD:
+        tp.print("\\\\");
+        break;
+      case MUL:
+        tp.print('*');
+        break;
+      case NEQ:
+        tp.print("/=");
+        break;
+      case NOTMEMBEROF:
+        tp.print("not member_of");
+        break;
+      case OR:
+        tp.print("or");
+        break;
+      case POW:
+        tp.print('^');
+        break;
+      case SUB:
+        tp.print('-');
+        break;
+      case XOR:
+        tp.print("xor");
+        break;
     }
   }
 
   protected void printQuantifier(Quantifier quantifier) {
     switch (quantifier) {
-    case EXISTS:
-      tp.print("exists");
-      break;
-    case FORALL:
-      tp.print("for_all");
-      break;
+      case EXISTS:
+        tp.print("exists");
+        break;
+      case FORALL:
+        tp.print("for_all");
+        break;
     }
   }
 

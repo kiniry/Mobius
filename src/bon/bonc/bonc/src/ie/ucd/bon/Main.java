@@ -27,11 +27,6 @@ import java.util.List;
  */
 public final class Main {
 
-  public static final int TC_NUM_SEVERE_ERRORS = 1; //NB for all files
-  public static final int PP_NUM_SEVERE_ERRORS = 0; //NB for one file
-  public static final int CCG_NUM_SEVERE_ERRORS = 10; //NB for all files
-  public static final int IG_NUM_SEVERE_ERRORS = 10; //NB for all files
-
   private static boolean debug = false;
   private static String version;
 
@@ -151,7 +146,7 @@ public final class Main {
       files.add(null);
     }
 
-    if (tracker.continueFromParse(TC_NUM_SEVERE_ERRORS)) {
+    if (tracker.continueFromParse()) {
       Problems typeCheckProblems = API.typeCheck(tracker, so, printTiming);
       totalProblems.addProblems(typeCheckProblems);
     } else {
