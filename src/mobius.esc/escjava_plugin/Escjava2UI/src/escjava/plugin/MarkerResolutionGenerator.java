@@ -17,11 +17,8 @@ import org.eclipse.ui.IMarkerResolutionGenerator;
  */
 public class MarkerResolutionGenerator 
     implements IMarkerResolutionGenerator {
-
-  /* (non-Javadoc)
-   * @see org.eclipse.ui.IMarkerResolutionGenerator#getResolutions(org.eclipse.core.resources.IMarker)
-   */
-  public IMarkerResolution[] getResolutions(IMarker marker) {
+  /** {@inheritDoc} */
+  public IMarkerResolution[] getResolutions(final IMarker marker) {
     return new IMarkerResolution[0];
   }
 

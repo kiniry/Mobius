@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -15,8 +18,6 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Shell;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 import escjava.plugin.EscjavaChecker;
 import escjava.plugin.EscjavaMarker;
 
@@ -30,9 +31,9 @@ public class Check extends EscjavaAction {
   
   /** {@inheritDoc} */
   public final void run(final IAction action) {
-    final Shell shell = window.getShell();
+    final Shell shell = getWindow().getShell();
     try {
-      final List<IAdaptable> list = Utils.getSelectedElements(selection, window);
+      final List<IAdaptable> list = Utils.getSelectedElements(getSelection(), getWindow());
       if (list.size() == 0) {
         Utils.showMessageInUI(shell, "ESCJava Plugin", "Nothing to check");
       }
@@ -50,7 +51,7 @@ public class Check extends EscjavaAction {
       
     } 
     catch (Exception e) {
-      if (window != null) {
+      if (getWindow() != null) {
         Utils.showMessageInUI(
             shell,
             "ESCJava Plugin - exception",
@@ -58,7 +59,8 @@ public class Check extends EscjavaAction {
       }      
     }
   }
-  /**TODO
+  /**
+   * TODO
    * @param element
    * @return
    * @throws CoreException 
@@ -75,6 +77,7 @@ public class Check extends EscjavaAction {
       checkCompilationUnit((ICompilationUnit)element);
     }
     else if (element instanceof IType) {
+      // should not happen
       checkType((IType)element);
     }
     else {
@@ -84,24 +87,23 @@ public class Check extends EscjavaAction {
   }
   
   /**TODO
-   * @param javaProject
+   * @param project
    * @throws CoreException 
-   * @throws Exception
    */
-  private static void checkProject(final IJavaProject javaProject) 
+  private static void checkProject(final IJavaProject project) 
     throws CoreException {
     //throws Exception {
     final List<String> filesToCheck = new LinkedList<String>();
-    for (IPackageFragment p: javaProject.getPackageFragments()) {
+    for (IPackageFragment p: project.getPackageFragments()) {
       for (ICompilationUnit cu: p.getCompilationUnits()) {
         filesToCheck.add(cu.getResource().getLocation().toOSString());        
       }
       // FIXME - put package names on command-line?
     }
-    EscjavaMarker.clearMarkers(javaProject.getProject());
+    EscjavaMarker.clearMarkers(project.getProject());
     try {
         // FIXME - multi-thread this?
-      final EscjavaChecker ec = new EscjavaChecker(javaProject);
+      final EscjavaChecker ec = new EscjavaChecker(project);
       ec.run(filesToCheck);
     } 
     catch (Exception e) {
@@ -153,11 +155,13 @@ public class Check extends EscjavaAction {
     }
   }
   
-  /**TODO
-   * @param p
+  /**
+   * Check the given type.
+   * @param t the type to check
+   * @deprecated does nothing
    */
-  private static void checkType(final IType p) {
-    System.out.println("TYPE " + p.getFullyQualifiedName());
+  private static void checkType(final IType t) {
+    System.err.println("TYPE " + t.getFullyQualifiedName());
     // FIXME
   }
   

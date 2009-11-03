@@ -13,6 +13,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -25,8 +28,6 @@ import org.eclipse.jdt.core.JavaCore;
 
 import escjava.plugin.actions.Check;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 // FIXME _ what about cancellation
 // FIXME - we really need to make this incremental, both cleaning and building

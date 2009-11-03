@@ -12,6 +12,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
@@ -28,8 +31,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 /**
  * This class and its subclasses are the classes
@@ -42,21 +43,21 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
                     IWorkbenchWindowActionDelegate {
 
   /** Caches the value of the window, when informed of it. */
-  protected IWorkbenchWindow window;
+  private IWorkbenchWindow window;
   
   /** The current selection. */
-  protected ISelection selection;
+  private ISelection selection;
   
 
   /** {@inheritDoc} */
   public final void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
-    //System.out.println("SET ACTIVE PART");
+    //System.err.println("SET ACTIVE PART");
   }
   
   /** {@inheritDoc} */
   public final void selectionChanged(final IAction action, final ISelection sel) {
     selection = sel;
-    //System.out.println("SEL CHANGED " + selection.getClass());
+    //System.err.println("SEL CHANGED " + selection.getClass());
   }
 
   /**
@@ -74,7 +75,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    * @see IWorkbenchWindowActionDelegate#init
    */
   public void init(final IWorkbenchWindow win) {
-    this.window = win;
+    window = win;
   }
 
   /**
@@ -83,7 +84,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    * @param msg  The message to show
    */
   protected void showMessage(final String msg) {
-    Utils.showMessageInUI(window.getShell(), "ESC/Java2 Operation", msg);
+    Utils.showMessageInUI(getWindow().getShell(), "ESC/Java2 Operation", msg);
   }
 
   /** {@inheritDoc} */
@@ -96,7 +97,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
       //if (useProjects()) {
 //      if (true) {
       final Map<IJavaProject, Collection<IAdaptable>>  map = 
-        Utils.sortByProject(Utils.getSelectedElements(selection, window));
+        Utils.sortByProject(Utils.getSelectedElements(getSelection(), getWindow()));
       iterateByProject(map);
 //      } 
 //      else {
@@ -154,7 +155,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
 //        throw e;
       }
       catch (Exception e) {
-        Log.errorlog("Exception occurred while processing project " + jp.getElementName(),e);
+        Log.errorlog("Exception occurred while processing project " + jp.getElementName(), e);
         showMessage("Exception in project " + jp.getElementName() + ": " + e.toString());
       }
     }
@@ -201,7 +202,7 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
       catch (Exception e) {
         showMessage("Exception while acting on folder " + 
                     pfr.getElementName() + ": " + e.getMessage());
-        Log.errorlog("Exception while acting on folder " + pfr.getElementName(),e);
+        Log.errorlog("Exception while acting on folder " + pfr.getElementName(), e);
       }
     }
     if (nothing) {
@@ -238,7 +239,8 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    *     (which are IProject objects) in order, with projects
    *     required coming before those that require them.
    */
-  protected Iterator<IProject> orderedProjectIterator(final Map<IJavaProject, Collection<IAdaptable>> map) {
+  protected Iterator<IProject> orderedProjectIterator(
+                      final Map<IJavaProject, Collection<IAdaptable>> map) {
     return Arrays.asList(orderedProjects(map)).iterator();
   }
   
@@ -271,7 +273,10 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    * false if this method contains all the processing to be performed
    * @throws Exception
    */
-  protected boolean start(IPackageFragmentRoot pfr, Collection<IAdaptable> elements) throws Exception { return true; }
+  protected boolean start(final IPackageFragmentRoot pfr, 
+                          final Collection<IAdaptable> elements) throws Exception { 
+    return true;
+  }
   
 
   /**
@@ -282,7 +287,10 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    * @return Ignored // FIXME
    * @throws Exception
    */
-  protected boolean end(IJavaProject jp, Collection<IAdaptable> elements) throws Exception { return true; }
+  protected boolean end(final IJavaProject jp, 
+                        final Collection<IAdaptable> elements) throws Exception {
+    return true;
+  }
   
   /**
    * Executes the processing for one element (the argument).
@@ -370,6 +378,23 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
       }
     }
     return b;
+  }
+
+  /**
+   * Returns the current window.
+   * @return the currently selected window
+   */
+  protected IWorkbenchWindow getWindow() {
+    return window;
+  }
+
+  /**
+   * return the current selection.
+   * @return a selection or null if nothing has been yet
+   * selected
+   */
+  protected ISelection getSelection() {
+    return selection;
   }
 
 }

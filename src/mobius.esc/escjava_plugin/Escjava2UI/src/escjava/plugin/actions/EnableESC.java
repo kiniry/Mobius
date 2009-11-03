@@ -2,10 +2,11 @@ package escjava.plugin.actions;
 
 import java.util.Date;
 
+import mobius.util.plugin.Log;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 
-import pluginlib.Log;
 import escjava.plugin.AutoCheckBuilder;
 
 /**
@@ -15,10 +16,12 @@ import escjava.plugin.AutoCheckBuilder;
    * enabled for RAC.
    */
 public class EnableESC extends ESC {
-  public void action(IResource resource) { 
+  /** {@inheritDoc} */
+  public void action(final IResource resource) { 
     AutoCheckBuilder.add(resource); 
   }
 
+  /** {@inheritDoc} */
   public void run(final IAction action) {
     super.run(action);
     if (Log.on) {

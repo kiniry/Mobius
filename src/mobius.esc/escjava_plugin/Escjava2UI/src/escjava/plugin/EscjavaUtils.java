@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import mobius.escjava2.EscToolsActivator;
 import mobius.escjava2.EscToolsActivator.JavaVersions;
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -17,7 +19,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -26,8 +27,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 
 /**
@@ -36,8 +35,10 @@ import pluginlib.Utils;
  * @author David Cok
  *
  */
-public class EscjavaUtils {
+public final class EscjavaUtils {
 
+  
+  
   /** The ordered list of standard JML suffixes to search for the
    *  most refined specification file, omitting prefixed '.'s.
    */
@@ -50,15 +51,18 @@ public class EscjavaUtils {
     ".refines-java", ".refines-spec", ".refines-jml", ".spec", ".jml"
   };
     
-  /** A convenience holder for the IPath of the (one) workspace. */
-  private static IPath workspacePath = null;
-
-  
   /** A convenience holder for the one MarkerCreator, which
    *  manages creating and deleting JML markers.
    */
-  public final static EscjavaMarker markerCreator = new EscjavaMarker();
+  public static final EscjavaMarker markerCreator = new EscjavaMarker();
   
+  /** A convenience holder for the IPath of the (one) workspace. */
+  private static IPath workspacePath;
+
+  /** */
+  private EscjavaUtils() { }
+  
+
   /**
    * Returns the IPath for the one workspace object.
    * @return The IPath of the workspace.
@@ -107,38 +111,38 @@ public class EscjavaUtils {
   /**
    * Install JML JDK specifications as a source folder.
    * 
-   * @param javaProject
+   * @param project
    * @param sourceFolderName
    * @param location
    */
-  static public void installSpecsAsSrcFolder(final IJavaProject javaProject,
+  public static void installSpecsAsSrcFolder(final IJavaProject project,
                                              final String sourceFolderName, 
                                              final String location) {
     try {
-      final IClasspathEntry[] classpath = javaProject.getRawClasspath();
+      final IClasspathEntry[] classpath = project.getRawClasspath();
   
-      final IFolder f = javaProject.getProject().getFolder(sourceFolderName);
+      final IFolder f = project.getProject().getFolder(sourceFolderName);
       if (f.exists()) {
         Log.errorlog("Source folder " + sourceFolderName + 
                      " already exists in project " + 
-                     javaProject.getElementName(), null);
+                     project.getElementName(), null);
         return;
       }
       f.createLink(new Path(location), IResource.NONE, null);
       
-      final IClasspathEntry[] newClasspath = new IClasspathEntry[classpath.length+1];
+      final IClasspathEntry[] newClasspath = new IClasspathEntry[classpath.length + 1];
       System.arraycopy(classpath, 0, newClasspath, 0, classpath.length);
       newClasspath[classpath.length] = JavaCore.newSourceEntry(
           f.getFullPath(), 
           new Path[]{new Path("**")});   
           // FIXME - does this exclude the folder from the classpath altogether?
           
-      javaProject.setRawClasspath(newClasspath, null);
+      project.setRawClasspath(newClasspath, null);
       // FIXME - the source folder ought to be marked as
       // exported, but there does not seem to be a way to do this
       if (Log.on) {
         Log.log("Installed specs at " + sourceFolderName + " in project " + 
-                javaProject.getElementName() + ", location " + location);
+                project.getElementName() + ", location " + location);
       }
        
     } 
@@ -338,10 +342,10 @@ public class EscjavaUtils {
       return;
     }
     try {
-      installSpecsAsSrcFolder(javaProject, EscjavaPlugin.JMLSPECS_PROJECT_NAME,location);
+      installSpecsAsSrcFolder(javaProject, EscjavaPlugin.JMLSPECS_PROJECT_NAME, location);
     }
     catch (Exception e) {
-      Log.errorlog("Failed to install default specs as a source folder",e);
+      Log.errorlog("Failed to install default specs as a source folder", e);
     }
   }
   
@@ -349,14 +353,14 @@ public class EscjavaUtils {
 
 
   /**
-   * Remove jmlspecs dependencies
+   * Remove jmlspecs dependencies.
    * 
-   * @param javaproject
+   * @param project
    */
-  public static void removeDefaultSpecs(final IJavaProject javaProject) {
+  public static void removeDefaultSpecs(final IJavaProject project) {
     try {
       // Check to see if the specs are already linked into the project
-      if (!isSpecsInstalled(javaProject)) {
+      if (!isSpecsInstalled(project)) {
         return;
       }
       final IProgressMonitor monitor = null;
@@ -368,6 +372,7 @@ public class EscjavaUtils {
       Log.errorlog("Failed to remove dependencies", e);
     }
   }
+  
 
  
   

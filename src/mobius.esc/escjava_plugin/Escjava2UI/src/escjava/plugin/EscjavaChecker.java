@@ -14,6 +14,8 @@ import javafe.genericfile.GenericFile;
 import javafe.util.ClipPolicy;
 import javafe.util.Location;
 import mobius.prover.simplify.SimplifyEditor;
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -21,8 +23,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 /**
  * This class is the glue between the plugin and the
@@ -34,7 +34,8 @@ import pluginlib.Utils;
 public class EscjavaChecker extends escjava.Main 
         implements javafe.util.ErrorSet.Reporter {
 
-  public static final String COULD_NOT_LOCATE_SPECIFICATIONS_FOR = "Could not locate specifications for ";
+  public static final String COULD_NOT_LOCATE_SPECIFICATIONS_FOR = 
+    "Could not locate specifications for ";
 
   /** The project on whose files the checker is acting. */
   private IJavaProject project;
@@ -43,6 +44,7 @@ public class EscjavaChecker extends escjava.Main
   private final javafe.util.ErrorSet.Reporter oldReporter = 
     new javafe.util.ErrorSet.StandardReporter();
   
+  /** the location of the simplify executable. */
   private String simplifyloc;
   
   /**
@@ -107,7 +109,8 @@ public class EscjavaChecker extends escjava.Main
           IEscjavaListener.ERROR); // FIXME - how to translate errors?
     } 
     catch (Exception e) {
-      Log.errorlog("Failed to translate error for Java project " + project.getElementName(),e);
+      Log.errorlog("Failed to translate error for Java project " + 
+                   project.getElementName(), e);
     }
   }
   
@@ -182,6 +185,48 @@ public class EscjavaChecker extends escjava.Main
     if (Log.on) {
       Log.log("Running Escjava checker");
     }
+    if (!addSpecsOptions(inputs) || 
+        !addClasspathOptions(inputs) || 
+        !addSimplifyOptions(inputs)) {
+      return false;
+    }
+    
+    Options.getOptions(inputs);
+    
+    //    System.out.print("STARTING ESCJAVA WITH");
+    //    java.util.Iterator it = inputs.iterator();
+    //    while (it.hasNext()) {
+    //      System.out.print(" ");
+    //      System.out.print(it.next());
+    //    }
+    //    System.err.println("");
+    //    System.err.println("CLASSPATH " + Utils.getProjectClassPath(project));
+    
+    // This method is inherited from org.jmlspecs.checker.Main. Set the initial
+    // task to be executed by the compiler (Parsing in this case).
+    final  PrintStream out = System.out;
+    final  PrintStream err = System.err;
+    final  PrintStream newout = Log.logPrintStream();
+    System.setOut(newout);
+    System.setErr(newout);
+    final  String[] strings = new String[0];
+    final  String[] inputArray = (String[])inputs.toArray(strings);
+    final  int i = compile(inputArray);
+    System.setOut(out);
+    System.setErr(err);
+    if (Log.on) {
+      Log.log("Escjava checker ended, status code " + i);
+    }
+    return i == 0;
+  }
+
+
+  /**
+   * Add the options for the specifications in the option list.
+   * @param inputs the argument list
+   * @return false if something went wrong.
+   */
+  private boolean addSpecsOptions(final List<String> inputs) {
     if (!EscjavaUtils.isSpecsInstalled(project)) {
       EscjavaUtils.installDefaultSpecs(project);
     }
@@ -198,7 +243,12 @@ public class EscjavaChecker extends escjava.Main
       Log.errorlog(errMsg, e1);
       return false;
     }
-    
+    return true;
+  }
+
+
+
+  private boolean addClasspathOptions(final List<String> inputs) {
     inputs.add("-classpath");
     try {
       String cp = "";
@@ -215,8 +265,12 @@ public class EscjavaChecker extends escjava.Main
     catch (JavaModelException e1) {
       inputs.add(Utils.getProjectClassPath(project));
     }
+    return true;
+  }
 
-    
+
+
+  private boolean addSimplifyOptions(final List<String> inputs) {
     // FIXME - can avoid getting simplify if we are not doing any static checking
     
     final String loc = SimplifyEditor.getSimplifyLocation();
@@ -248,32 +302,6 @@ public class EscjavaChecker extends escjava.Main
       /* skip */
     }
     simplifyloc = loc;
-    Options.getOptions(inputs);
-    
-    //    System.out.print("STARTING ESCJAVA WITH");
-    //    java.util.Iterator it = inputs.iterator();
-    //    while (it.hasNext()) {
-    //      System.out.print(" ");
-    //      System.out.print(it.next());
-    //    }
-    //    System.out.println("");
-    //    System.out.println("CLASSPATH " + Utils.getProjectClassPath(project));
-    
-    // This method is inherited from org.jmlspecs.checker.Main. Set the initial
-    // task to be executed by the compiler (Parsing in this case).
-    final  PrintStream out = System.out;
-    final  PrintStream err = System.err;
-    final  PrintStream newout = Log.logPrintStream();
-    System.setOut(newout);
-    System.setErr(newout);
-    final  String[] strings = new String[0];
-    final  String[] inputArray = (String[])inputs.toArray(strings);
-    final  int i = compile(inputArray);
-    System.setOut(out);
-    System.setErr(err);
-    if (Log.on) {
-      Log.log("Escjava checker ended, status code " + i);
-    }
-    return i == 0;
+    return true;
   }
 }

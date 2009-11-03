@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -12,8 +15,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 import escjava.plugin.EscjavaPlugin;
 
 /**
@@ -29,7 +30,7 @@ public class EnableEscjava extends EscjavaAction {
   public final void run(final IAction action) {
     try {
       final Map<IJavaProject, Collection<IAdaptable>>  map = 
-        Utils.sortByProject(Utils.getSelectedElements(selection, window));
+        Utils.sortByProject(Utils.getSelectedElements(getSelection(), getWindow()));
       for (IJavaProject proj: map.keySet()) {
         final IProject p = proj.getProject();
         EscjavaPlugin.getPlugin().addEscjavaAutocheckNature(p);

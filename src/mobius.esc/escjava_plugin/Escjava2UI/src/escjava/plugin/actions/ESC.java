@@ -23,7 +23,7 @@ import escjava.plugin.EscjavaPlugin;
  *
  * A base class for the enable and disable RAC classes.
  */
-abstract public class ESC extends EscjavaAction {
+public abstract class ESC extends EscjavaAction {
   // FIXME - this all happens in the UI thread with no progress - is that ok?
   //  the touch operation could use a monitor
   // These operations just read information from the UI
@@ -41,7 +41,8 @@ abstract public class ESC extends EscjavaAction {
     return true;
   }
 
-  protected boolean doit(IAdaptable o) throws Exception {
+  /** {@inheritDoc} */
+  protected boolean doit(final IAdaptable o) throws Exception {
     boolean b;
     if (o instanceof ICompilationUnit) {
       final ICompilationUnit p = (ICompilationUnit)o;

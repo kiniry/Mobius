@@ -10,6 +10,9 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
@@ -24,8 +27,6 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.osgi.framework.Bundle;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 /**
  * @author David Cok
@@ -38,14 +39,14 @@ public class EscjavaDecorator implements org.eclipse.jface.viewers.ILightweightL
    * A cached value of an icon that is used when the
    *  element is enabled for Esc/Java checking.
    */
-  private static ImageDescriptor img = null;
+  private static ImageDescriptor img;
   
   /** 
    * A cached value of an icon that is used when the
    *  element is individually enabled for Esc/Java checking,
    *  but the project as a whole is disabled.
    */
-  private static ImageDescriptor imgDisabled = null;
+  private static ImageDescriptor imgDisabled;
   
   
   /** The interface has methods to add and remove listeners;

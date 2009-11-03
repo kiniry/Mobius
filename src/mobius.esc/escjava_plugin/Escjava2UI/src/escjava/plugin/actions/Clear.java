@@ -1,12 +1,13 @@
 package escjava.plugin.actions;
 
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-import pluginlib.Utils;
 import escjava.plugin.EscjavaMarker;
 
 /**
@@ -20,7 +21,7 @@ public class Clear extends EscjavaAction {
   public final void run(final IAction action) {
     try {  // FIXME - continue loop even if exception?
       
-      for (IAdaptable adap: Utils.getSelectedElements(selection, window)) {
+      for (IAdaptable adap: Utils.getSelectedElements(getSelection(), getWindow())) {
         if (adap instanceof IResource) {
           EscjavaMarker.clearMarkers((IResource)adap);
         } 
@@ -35,8 +36,8 @@ public class Clear extends EscjavaAction {
       }
     } 
     catch (Exception e) {
-      if (window != null) {
-        MessageDialog.openInformation(window.getShell(),
+      if (getWindow() != null) {
+        MessageDialog.openInformation(getWindow().getShell(),
                                       "Escjava Plugin - exception",
                                       e.toString());
       }

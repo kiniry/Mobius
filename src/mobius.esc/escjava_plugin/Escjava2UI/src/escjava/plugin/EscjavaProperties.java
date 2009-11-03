@@ -6,10 +6,11 @@
 
 package escjava.plugin;
 
+import mobius.util.plugin.widgets.OptionWidget;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import pluginlib.OptionWidget;
 
 /**
  * This class implements the property page for the 
@@ -17,18 +18,21 @@ import pluginlib.OptionWidget;
  * 
  * @author David R. Cok
  */
-public class EscjavaProperties extends pluginlib.PropertyPage {
+public class EscjavaProperties extends mobius.util.plugin.widgets.PropertyPage {
 //
 //  // FIXME - can we move these common widgets/options to the library
 //  
 //  /** The option button corresponding to Eclipse logging. */
-//  static public OptionWidget.BooleanWidget logging = new OptionWidget.BooleanWidget(Options.logging);
+//  static public OptionWidget.BooleanWidget logging = 
+//  new OptionWidget.BooleanWidget(Options.logging);
 //
 //  /** The choice of using the console or System.out for logging */
-//  static final public OptionWidget.BooleanWidget useConsole = new OptionWidget.BooleanWidget(Options.useConsole);
+//  static final public OptionWidget.BooleanWidget useConsole = 
+//  new OptionWidget.BooleanWidget(Options.useConsole);
 //  
 //  /** The choice to send informational output to the log file as well */
-//  static final public OptionWidget.BooleanWidget alsoLogInfo = new OptionWidget.BooleanWidget(Options.alsoLogInfo);
+//  static final public OptionWidget.BooleanWidget alsoLogInfo = 
+//  new OptionWidget.BooleanWidget(Options.alsoLogInfo);
 //  
 //  /** This is the list of widgets in the JmlEclipse options section of the properties page */
 //  final static public OptionWidget[] eclipseOptions =  new OptionWidget[]{
@@ -38,63 +42,74 @@ public class EscjavaProperties extends pluginlib.PropertyPage {
 //  /**
 //   * The Simplify executable to use (a value is required).
 //   */
-//  static final public OptionWidget.FileWidget simplify = new OptionWidget.FileWidget(Options.simplify);
+//  static final public OptionWidget.FileWidget simplify = 
+//  new OptionWidget.FileWidget(Options.simplify);
 //  /**
 //   * The option button corresponding to the Quiet option,
 //   * but in the reverse sense.
 //   */
-//  static final public OptionWidget.BooleanWidget quiet = new OptionWidget.BooleanWidget(Options.quiet);
+//  static final public OptionWidget.BooleanWidget quiet = 
+//  new OptionWidget.BooleanWidget(Options.quiet);
 //
 //  /**
 //   * The option button corresponding to -typecheck, which does only
 //   * parsing and typechecking.
 //   */
-//  static final public OptionWidget.BooleanWidget typeCheckOnly = new OptionWidget.BooleanWidget(Options.typeCheckOnly);
+//  static final public OptionWidget.BooleanWidget typeCheckOnly = 
+// new OptionWidget.BooleanWidget(Options.typeCheckOnly);
 //
 //  /**
 //   * The option button corresponding to -parsePlus,
 //   * which turns off warnings due to missing semicolons
 //   */
-//  static final public OptionWidget.BooleanWidget parsePlus = new OptionWidget.BooleanWidget(Options.parsePlus);
+//  static final public OptionWidget.BooleanWidget parsePlus = 
+//  new OptionWidget.BooleanWidget(Options.parsePlus);
 //
 //  /**
 //   * The option button corresponding to -noSemicolonWarnings,
 //   * which turns off warnings due to missing semicolons
 //   */
-//  static final public OptionWidget.BooleanWidget noSemicolonWarnings = new OptionWidget.BooleanWidget(Options.noSemicolonWarnings);
+//  static final public OptionWidget.BooleanWidget noSemicolonWarnings = 
+//  new OptionWidget.BooleanWidget(Options.noSemicolonWarnings);
 //
 //  /**
 //   * Enables caution as well as warning messages to be produced,
 //   * correpsonding to the inverse of the -nocaution option
 //   */
-//  static final public OptionWidget.BooleanWidget cautionMessages = new OptionWidget.BooleanWidget(Options.cautionMessages);
+//  static final public OptionWidget.BooleanWidget cautionMessages = 
+//  new OptionWidget.BooleanWidget(Options.cautionMessages);
 //
 //  /**
 //   * Enables counterexample information to be generated [-counterexample option]
 //   */
-//  static final public OptionWidget.BooleanWidget counterexample = new OptionWidget.BooleanWidget(Options.counterexample);
+//  static final public OptionWidget.BooleanWidget counterexample = 
+//  new OptionWidget.BooleanWidget(Options.counterexample);
 //
 //  /**
 //   * Enables counterexample information to be generated [-counterexample option]
 //   */
-//  static final public OptionWidget.BooleanWidget suggest = new OptionWidget.BooleanWidget(Options.suggest);
+//  static final public OptionWidget.BooleanWidget suggest = 
+//  new OptionWidget.BooleanWidget(Options.suggest);
 //
 //  /**
 //   * Enables checking for the use of impure methods in annotations [-checkPurity option]
 //   */
-//  static final public OptionWidget.BooleanWidget checkPurity = new OptionWidget.BooleanWidget(Options.checkPurity);
+//  static final public OptionWidget.BooleanWidget checkPurity = 
+//  new OptionWidget.BooleanWidget(Options.checkPurity);
 //
 //  /** The option widget corresponding to the choice of source
 //   *  version compatibility (Java 1.3 or Java 1.4) to be supported -
 //   *  this is essentially the interpretation to be applied to the
 //   *  assert keyword.
 //   */
-//  static final protected OptionWidget.ChoiceWidget source = new OptionWidget.ChoiceWidget(Options.source);
+//  static final protected OptionWidget.ChoiceWidget source = 
+//  new OptionWidget.ChoiceWidget(Options.source);
 //
 //  /**
 //   * This allows the setting of the Esc/Java -ea, -da, -eajava, -eajml options.
 //   */
-//  static final public OptionWidget.ChoiceWidget assertBehavior = new OptionWidget.ChoiceWidget(Options.assertBehavior);
+//  static final public OptionWidget.ChoiceWidget assertBehavior = 
+//  new OptionWidget.ChoiceWidget(Options.assertBehavior);
 //      
 //  /**
 //   * An array of the EscJava option widgets.
@@ -124,11 +139,11 @@ public class EscjavaProperties extends pluginlib.PropertyPage {
    *  @param parent The UI object into which to insert the controls
    *  @return The new control that is added to 'parent'
    */
-  protected Control createContents(Composite parent) {
+  protected Control createContents(final Composite parent) {
     
     // Creates the contents of the property page view.
     
-    Control composite = null; //addControl(parent);
+    final Control composite = null; //addControl(parent);
     return composite;
   }
 //  
@@ -152,7 +167,8 @@ public class EscjavaProperties extends pluginlib.PropertyPage {
 //   */
 //  private Control addControl(Composite parent) {
 //    Composite composite0a = new Widgets.VComposite(parent);
-//    new Label(composite0a, SWT.CENTER).setText("These options are workspace options that apply to every EscJava-enabled Java project.");
+//    new Label(composite0a, SWT.CENTER).setText("These 
+//      options are workspace options that apply to every EscJava-enabled Java project.");
 //    Composite composite0 = new Widgets.HComposite(composite0a,2);
 //    Composite composite1 = new Widgets.VComposite(composite0);
 //    Composite composite2a = new Widgets.VComposite(composite0);
@@ -167,7 +183,8 @@ public class EscjavaProperties extends pluginlib.PropertyPage {
 //    addWidgets(widgets,composite1);
 //    
 //
-//    // FIXME - -quiet, nowarn noredundancy loop loopsafe  plainwarning pgc ppvc f pxLog  quiet sourcepath classpath specpath source
+//    // FIXME - -quiet, nowarn noredundancy loop loopsafe  
+ //   plainwarning pgc ppvc f pxLog  quiet sourcepath classpath specpath source
 //
 //    initWarningWidgets();
 //    int n = warningWidgets.length;
@@ -209,6 +226,11 @@ public class EscjavaProperties extends pluginlib.PropertyPage {
 //    setDefaults(warningWidgets);
 //  }
 //  
+  
+  /**
+   * @deprecated not used
+   * @return nothing, throws an exception
+   */
   public OptionWidget[] options() {
     // We don't use this since performOK and performDefaults
     // are both overridden

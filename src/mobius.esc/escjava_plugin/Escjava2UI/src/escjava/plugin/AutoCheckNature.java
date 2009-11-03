@@ -7,13 +7,14 @@
  */
 package escjava.plugin;
 
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 
-import pluginlib.Utils;
 
 /**
  * This class implements the nature on which the Escjava builder resides.
@@ -22,9 +23,7 @@ import pluginlib.Utils;
  */
 public class AutoCheckNature implements IProjectNature {
 
-  /**
-   * This is the nature's project.
-   */
+  /** This is the nature's project. */
   private IProject project;
   
   /** {@inheritDoc} */

@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -22,8 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 
-import pluginlib.Log;
-import pluginlib.Utils;
 
 /**
  * This class manages a new type of marker for Esc/Java2 warnings.
@@ -45,7 +46,7 @@ public class EscjavaMarker implements IEscjavaListener {
    *  coming in subsequent jmlFailed calls can be associated with the correct marker.
    */
   // FIXME - another reason this is not thread-safe
-  private static IMarker mostRecentMarker = null;
+  private static IMarker mostRecentMarker;
   
   
   /**
@@ -82,7 +83,7 @@ public class EscjavaMarker implements IEscjavaListener {
       if (res == null) {
         // It is likely that filePath is an absolute path to
         // a linked resource
-        final IResource s = Utils.mapBack(JavaCore.create(resource.getProject()),file,false);
+        final IResource s = Utils.mapBack(JavaCore.create(resource.getProject()), file, false);
         res = s != null ? s : resource;
       }
     }
@@ -222,7 +223,7 @@ public class EscjavaMarker implements IEscjavaListener {
     throws CoreException {
     final List<String> list = new LinkedList<String>();
     String s = (String)m.getAttribute(EXTRA_INFO);
-    //System.out.println("EX " + s);
+    //System.err.println("EX " + s);
     if (s == null) {
       return list;
     }

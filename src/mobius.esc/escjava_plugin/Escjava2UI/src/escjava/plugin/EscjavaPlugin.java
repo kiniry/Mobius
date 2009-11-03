@@ -9,15 +9,16 @@ package escjava.plugin;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobius.util.plugin.AbstractPreference;
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import pluginlib.AbstractPreference;
-import pluginlib.Log;
-import pluginlib.Utils;
 
 /**
  * The main plugin class for the EscJava plugin.
@@ -26,18 +27,8 @@ import pluginlib.Utils;
  */
 public class EscjavaPlugin extends AbstractUIPlugin {
 
+
   public static final String ESC_TOOL_NAME = "ESC/Java2";
-  /**
-   * This is the list of listeners that have registered to this plugin.
-   */
-  private final List<IEscjavaListener> listeners = new ArrayList<IEscjavaListener>();
-  //@ constraint \not_modified(listeners);
-  // The List object does not change, though its content might
-  
-  /** The shared instance of the singleton plugin. */
-  private static EscjavaPlugin plugin;
-  //@ initially plugin == this;
-  //@ constraint \not_modified(plugin);
   
   /**
    * The IDs of the plugins.
@@ -51,17 +42,30 @@ public class EscjavaPlugin extends AbstractUIPlugin {
   public static final String JMLSPECS_PROJECT_NAME = "jmlspecs";
   
   /**
-   * This is the id of the auto-check nature extension made for Escjava checking
+   * This is the id of the auto-check nature extension made for Escjava checking.
    */
   public static final String ESCJAVA_AUTOCHECK_NATURE = PLUGIN_ID + ".autocheckEscjavaNature";
   
   /**
-   * This is the id of the auto-check builder extension made for Escjava checking
+   * This is the id of the auto-check builder extension made for Escjava checking.
    */
-  public static final String ESCJAVA_AUTOCHECK_BUILDER = PLUGIN_ID + ".autocheckEscjavaBuilder";
-  public static final String JMLSPECS_FOLDER_NAME = "specs"; // default
-  
+  public static final String ESCJAVA_AUTOCHECK_BUILDER = 
+    PLUGIN_ID + ".autocheckEscjavaBuilder";
 
+  public static final String JMLSPECS_FOLDER_NAME = "specs"; // default
+
+  /** The shared instance of the singleton plugin. */
+  private static EscjavaPlugin plugin;
+  //@ initially plugin == this;
+  //@ constraint \not_modified(plugin);
+  
+  /**
+   * This is the list of listeners that have registered to this plugin.
+   */
+  private final List<IEscjavaListener> listeners = new ArrayList<IEscjavaListener>();
+  //@ constraint \not_modified(listeners);
+  // The List object does not change, though its content might
+  
   /**
    * The constructor.
    */
@@ -81,9 +85,9 @@ public class EscjavaPlugin extends AbstractUIPlugin {
   public void start(final BundleContext context) throws Exception {
     super.start(context);
     Log.createLog(EscjavaPlugin.ESC_TOOL_NAME, this);
-    AbstractPreference.preferenceStore = getPlugin().getPreferenceStore();
+    AbstractPreference.setPreferenceStore(getPlugin().getPreferenceStore());
     AbstractPreference.addListener(
-        new AbstractPreference.Listener() {
+        new AbstractPreference.IListener() {
           public void run() {
             Log.initializeState(
                 Options.logging.getValue(),

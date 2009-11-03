@@ -2,10 +2,11 @@ package escjava.plugin.actions;
 
 import java.util.Date;
 
+import mobius.util.plugin.Log;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 
-import pluginlib.Log;
 import escjava.plugin.AutoCheckBuilder;
 
 /**
