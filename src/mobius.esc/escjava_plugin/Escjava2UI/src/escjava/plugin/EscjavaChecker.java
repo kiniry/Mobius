@@ -8,7 +8,9 @@
 package escjava.plugin;
 
 import java.io.PrintStream;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javafe.genericfile.GenericFile;
 import javafe.util.ClipPolicy;
@@ -18,11 +20,15 @@ import mobius.util.plugin.Log;
 import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -244,6 +250,7 @@ public class EscjavaChecker extends escjava.Main
       Log.errorlog(errMsg, e1);
       return false;
     }
+    
     return true;
   }
 
@@ -253,23 +260,48 @@ public class EscjavaChecker extends escjava.Main
     inputs.add("-classpath");
     try {
       String cp = "";
-      for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
-        String path = f.getPath().toOSString();
-        if (f.getResource() != null) {
-          final IPath p = f.getResource().getRawLocation();
-          if (p != null) {
-            path = p.toOSString();
-            cp += ":" + path;
-          }
-        }  
-      }
+      cp = computeClasspath(new HashSet<IJavaProject>(), project, cp);
       cp = cp.substring(1);
       inputs.add(cp);
     } 
     catch (JavaModelException e1) {
       inputs.add(Utils.getProjectClassPath(project));
     }
+
     return true;
+  }
+  
+  private static String computeClasspath(Set<IJavaProject> already, IJavaProject project, String cp) throws JavaModelException {
+    already.add(project);
+    IPackageFragmentRoot [] fragments = project.getAllPackageFragmentRoots();
+    if (fragments.length == 0) {
+      System.out.println("!!!" + project.getResource().getRawLocation());
+    }
+    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
+      String path = f.getPath().toOSString();
+      if (f.getResource() != null) {
+        final IPath p = f.getResource().getRawLocation();
+        if (p != null) {
+          path = p.toOSString();
+          cp = path + ":" + cp;
+        }
+        else {
+         IResource elem = f.getCorrespondingResource();
+         IJavaModel model = f.getJavaModel();
+         IJavaProject proj = model.getJavaProject(elem.getName());
+         if (proj != null) {
+           if (!already.contains(proj)) {      
+             cp = computeClasspath(already, proj, cp.substring(1));
+           }
+           else {
+             cp = "" + Utils.getRoot().getRawLocation() + proj.getPath() + ":" + cp;
+             
+           }
+         }
+        }
+      }
+    }
+    return cp;
   }
 
 
