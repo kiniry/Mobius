@@ -232,6 +232,8 @@
                id="mobius.escjava2.ui.ClearMarkerAction"
                label="Clear ESC/Java2 Markers"
                menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
+               style="push"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Clears any ESC/Java2 markers in the selected object">
          </action>
@@ -242,6 +244,7 @@
                id="mobius.escjava2.ui.EscjavaAction.Check"
                label="Run ESC/Java2"
                menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
                style="push"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Runs ESC/Java2 static checks">

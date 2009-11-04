@@ -15,7 +15,7 @@ import escjava.plugin.AutoCheckBuilder;
  * Implements an action that removes selected files from
  * the RAC enabled list.
  */
-public class DisableESC extends ESC {
+public class DisableESC extends AESC {
   /** {@inheritDoc} */
   public void action(final IResource resource) {
     AutoCheckBuilder.remove(resource);

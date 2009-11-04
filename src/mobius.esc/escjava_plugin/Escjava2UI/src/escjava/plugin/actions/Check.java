@@ -4,18 +4,24 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import mobius.util.plugin.JobStatus;
 import mobius.util.plugin.Log;
 import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Shell;
 
 import escjava.plugin.EscjavaChecker;
@@ -28,37 +34,85 @@ import escjava.plugin.EscjavaMarker;
  * @author David R. Cok
  */
 public class Check extends EscjavaAction {
+  boolean bWorking;
+  
   
   /** {@inheritDoc} */
-  public final void run(final IAction action) {
-    final Shell shell = getWindow().getShell();
-    try {
-      final List<IAdaptable> list = Utils.getSelectedElements(getSelection(), getWindow());
-      if (list.size() == 0) {
-        Utils.showMessageInUI(shell, "ESCJava Plugin", "Nothing to check");
-      }
-      for (IAdaptable adap: list) {
-        if (!(adap instanceof IJavaElement)) {
-          continue;
+  public final void run(final IAction ac) {
+    setDisable();
+    bWorking = true;
+    Job job = new Job("ESCJava Check") {
+
+      @Override
+      protected IStatus run(IProgressMonitor monitor) {
+        final Shell shell = getWindow().getShell();
+
+        try {
+          final List<IAdaptable> list = Utils.getSelectedElements(getSelection(), getWindow());
+          if (list.size() == 0) {
+            Utils.showMessageInUI(shell, "ESCJava Plugin", "Nothing to check");
+          }
+          for (IAdaptable adap: list) {
+            if (!(adap instanceof IJavaElement)) {
+              continue;
+            }
+            final IJavaElement e = (IJavaElement) adap;
+            final boolean checked = checkJavaElement(e);
+            if (!checked) {
+              final String msg = "Cannot check " + e.getClass();
+              Utils.showMessageInUI(shell, "ESCJava Plugin", msg);
+            }
+          }
+          
+        } 
+        catch (Exception e) {
+          if (getWindow() != null) {
+            Utils.showMessageInUI(shell, "ESCJava Plugin - exception",
+                                  e.toString());
+          }
         }
-        final IJavaElement e = (IJavaElement) adap;
-        final boolean checked = checkJavaElement(e);
-        if (!checked) {
-          final String msg = "Cannot check " + e.getClass();
-          Utils.showMessageInUI(shell, "ESCJava Plugin", msg);
-        }
+        bWorking = false;
+        setEnabled();
+        return JobStatus.getOkStatus();
       }
-      
-    } 
-    catch (Exception e) {
-      if (getWindow() != null) {
-        Utils.showMessageInUI(
-            shell,
-            "ESCJava Plugin - exception",
-            e.toString());
-      }      
+
+
+    };
+    job.schedule();
+  }
+  private void setDisable() {
+    getAction().setEnabled(false);
+    if (Clear.getInstance() == null) {
+      return;
+    }
+    IAction clearAction = Clear.getInstance().getAction();
+    if (clearAction != null) {
+      clearAction.setEnabled(false);
     }
   }
+  private void setEnabled(boolean b) {
+    if (b) {
+      setEnabled();
+    }
+    else {
+      setDisable();
+    }
+  }
+  private void setEnabled() {
+    if (bWorking) {
+      setDisable();
+      return;
+    }
+    getAction().setEnabled(true);
+    if (Clear.getInstance() == null) {
+      return;
+    }
+    IAction clearAction = Clear.getInstance().getAction();
+    if (clearAction != null) {
+      clearAction.setEnabled(true);
+    }
+  }
+  
   /**
    * TODO
    * @param element
@@ -146,9 +200,10 @@ public class Check extends EscjavaAction {
     final IJavaProject jp = p.getJavaProject();
     EscjavaMarker.clearMarkers(resource);
     try {
-        // FIXME - multi-thread this?
       final EscjavaChecker ec = new EscjavaChecker(jp);
       ec.run(list);
+          
+
     } 
     catch (Exception e) {
       Log.errorlog("Exception occurred in running ESCJava checks: ", e);
@@ -164,7 +219,17 @@ public class Check extends EscjavaAction {
     System.err.println("TYPE " + t.getFullyQualifiedName());
     // FIXME
   }
-  
+  public void selectionChanged(final IAction ac, final ISelection sel) {
+    super.selectionChanged(ac, sel);
+    if (sel instanceof IStructuredSelection) {
+      IStructuredSelection ss = (IStructuredSelection) sel;
+      setEnabled(ss.getFirstElement() instanceof IJavaElement);
+    }
+    else {
+      setDisable();
+    }
+    //System.err.println("SEL CHANGED " + selection.getClass());
+  }
   // FIXME - want to check only a method as well.
 
 }

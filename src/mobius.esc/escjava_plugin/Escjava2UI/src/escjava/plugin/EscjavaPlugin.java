@@ -27,12 +27,10 @@ import org.osgi.framework.BundleContext;
  */
 public class EscjavaPlugin extends AbstractUIPlugin {
 
-
+  /** the name of the tool. */
   public static final String ESC_TOOL_NAME = "ESC/Java2";
   
-  /**
-   * The IDs of the plugins.
-   */
+  /** The IDs of the plugins. */
   public static final String PLUGIN_ID = "mobius.escjava2.ui";
   
  
@@ -52,6 +50,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
   public static final String ESCJAVA_AUTOCHECK_BUILDER = 
     PLUGIN_ID + ".autocheckEscjavaBuilder";
 
+  /** default folder name. */
   public static final String JMLSPECS_FOLDER_NAME = "specs"; // default
 
   /** The shared instance of the singleton plugin. */

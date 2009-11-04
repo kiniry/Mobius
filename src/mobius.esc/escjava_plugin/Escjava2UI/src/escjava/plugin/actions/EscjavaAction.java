@@ -48,15 +48,18 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
   /** The current selection. */
   private ISelection selection;
   
+  private IAction action;
 
   /** {@inheritDoc} */
-  public final void setActivePart(final IAction action, final IWorkbenchPart targetPart) {
+  public final void setActivePart(final IAction ac, final IWorkbenchPart targetPart) {
     //System.err.println("SET ACTIVE PART");
+    action = ac;
   }
   
   /** {@inheritDoc} */
-  public final void selectionChanged(final IAction action, final ISelection sel) {
+  public void selectionChanged(final IAction ac, final ISelection sel) {
     selection = sel;
+    action = ac;
     //System.err.println("SEL CHANGED " + selection.getClass());
   }
 
@@ -88,7 +91,8 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
   }
 
   /** {@inheritDoc} */
-  public void run(final IAction action) {
+  public void run(final IAction ac) {
+    action = ac;
     // Called in response to a menu selection (or other command)
     // Either this or some of the component template routines
     // (iterator, start, doit, end) should be overridden for
@@ -123,7 +127,8 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
    * @param map The map containing IJavaProjects and their Collections of
    * IJavaElements and IResources.
    */
-  public void iterateByProject(final Map<IJavaProject, Collection<IAdaptable>> map) {
+  public void iterateByProject(final Map<IJavaProject, 
+                                         Collection<IAdaptable>> map) {
     boolean nothing = true;
     final Iterator<IProject> ii = orderedProjectIterator(map);
     while (ii.hasNext()) {
@@ -387,7 +392,13 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
   protected IWorkbenchWindow getWindow() {
     return window;
   }
-
+  /**
+   * Returns the current action.
+   * @return the ccurrent action
+   */
+  protected IAction getAction() {
+    return action;
+  }
   /**
    * return the current selection.
    * @return a selection or null if nothing has been yet

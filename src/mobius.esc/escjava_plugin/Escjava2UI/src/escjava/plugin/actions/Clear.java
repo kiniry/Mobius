@@ -17,6 +17,15 @@ import escjava.plugin.EscjavaMarker;
  * @author David R. Cok
  */
 public class Clear extends EscjavaAction {
+  private static Clear inst;
+  
+  /** */
+  public Clear() {
+    super();
+    System.out.println(inst);
+    inst = this;
+  }
+  
   /** {@inheritDoc} */
   public final void run(final IAction action) {
     try {  // FIXME - continue loop even if exception?
@@ -43,5 +52,9 @@ public class Clear extends EscjavaAction {
       }
     }
     return;
+  }
+
+  public static Clear getInstance() {
+    return inst;
   }
 }

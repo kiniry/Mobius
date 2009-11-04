@@ -15,7 +15,7 @@ import escjava.plugin.AutoCheckBuilder;
    * Implements an action that lists selected files as
    * enabled for RAC.
    */
-public class EnableESC extends ESC {
+public class EnableESC extends AESC {
   /** {@inheritDoc} */
   public void action(final IResource resource) { 
     AutoCheckBuilder.add(resource); 

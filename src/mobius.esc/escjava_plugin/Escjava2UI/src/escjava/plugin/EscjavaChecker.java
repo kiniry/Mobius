@@ -23,12 +23,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.ui.PlatformUI;
 
 
 /**
@@ -40,7 +38,7 @@ import org.eclipse.ui.PlatformUI;
 
 public class EscjavaChecker extends escjava.Main 
         implements javafe.util.ErrorSet.Reporter {
-
+  /** "could not locate specifications for" constant. */
   public static final String COULD_NOT_LOCATE_SPECIFICATIONS_FOR = 
     "Could not locate specifications for ";
 
@@ -271,34 +269,32 @@ public class EscjavaChecker extends escjava.Main
     return true;
   }
   
-  private static String computeClasspath(Set<IJavaProject> already, IJavaProject project, String cp) throws JavaModelException {
+  private static String computeClasspath(final Set<IJavaProject> already, 
+                                         final IJavaProject project, 
+                                         final String currentpath) throws JavaModelException {
+    String cp = currentpath;
     already.add(project);
-    IPackageFragmentRoot [] fragments = project.getAllPackageFragmentRoots();
-    if (fragments.length == 0) {
-      System.out.println("!!!" + project.getResource().getRawLocation());
-    }
     for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
-      String path = f.getPath().toOSString();
       if (f.getResource() != null) {
         final IPath p = f.getResource().getRawLocation();
         if (p != null) {
-          path = p.toOSString();
+          final String path = p.toOSString();
           cp = path + ":" + cp;
         }
         else {
-         IResource elem = f.getCorrespondingResource();
-         IJavaModel model = f.getJavaModel();
-         IJavaProject proj = model.getJavaProject(elem.getName());
-         if (proj != null) {
-           if (!already.contains(proj)) {      
-             cp = computeClasspath(already, proj, cp.substring(1));
-           }
-           else {
-             cp = "" + Utils.getRoot().getRawLocation() + proj.getPath() + ":" + cp;
-             
-           }
-         }
-        }
+          final IResource elem = f.getCorrespondingResource();
+          final IJavaModel model = f.getJavaModel();
+          final IJavaProject proj = model.getJavaProject(elem.getName());
+          if (proj != null) {
+            if (!already.contains(proj)) {
+              cp = computeClasspath(already, proj, cp.substring(1));
+            }
+            else { /* if it contains already the proj, 
+                       it means that we have to add it to the classpath */
+              cp = "" + Utils.getRoot().getRawLocation() + proj.getPath() + ":" + cp;
+            }
+          }
+        } 
       }
     }
     return cp;
