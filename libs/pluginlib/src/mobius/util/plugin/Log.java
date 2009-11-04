@@ -58,13 +58,18 @@ import org.eclipse.ui.console.MessageConsoleStream;
  */
 public class Log {
   
-  /** Holds a current value for the log object, for convenience. */
-  private static Log log;
-
   /** A flag used to record whether or not to output tracing 
    *  information.
    */
   public static boolean on = false;
+  
+  /** Holds a current value for the log object, for convenience. */
+  private static Log log;
+
+  /** Color to use for error messages. */
+  // FIXME - should get this color from the system preferences
+  private static final Color errorColor = new Color(null, 255, 0, 0);
+
   
   /**
    *  Creates a Log and sets the current log object.
@@ -76,7 +81,7 @@ public class Log {
   //@ modifies log;
   //@ ensures log != null && \fresh(log);
   //@ ensures log.consoleName == consoleName;
-  public static void createLog(String consoleName, Plugin plugin) {
+  public static void createLog(final String consoleName, final Plugin plugin) {
     log = new Log(consoleName, plugin);
   }
 
@@ -88,17 +93,20 @@ public class Log {
    *       This is simply to be tested in code prior to calling log() or errorlog(),
    *       to avoid the method invocation when logging is off, as in
    *         if (Log.on) Log.log(msg);
-   * @param useConsole Sets whether logged output is sent to System.out or to the Eclipse console
-   * @param alsoLogInfo Sets whether informational output (via log()) should be sent to the system
-   *       error log as well; material sent to errorlog() is always sent to the error log.
+   * @param useConsole Sets whether logged output is sent to System.out or 
+   * to the Eclipse console
+   * @param alsoLogInfo Sets whether informational output (via log()) 
+   * should be sent to the system error log as well; material sent to 
+   * errorlog() is always sent to the error log.
    */
   //@ requires log != null;
   //@ modifies Log.on, log.useConsole, log.alsoLogInfo;
   //@ ensures Log.on == on;
   //@ ensures log.useConsole == useConsole;
   //@ ensures log.alsoLogInfo == alsoLogInfo;
-  public static void initializeState(boolean on, boolean useConsole, boolean alsoLogInfo) {
-    boolean b = Log.on;
+  public static void initializeState(final boolean on, final boolean useConsole, 
+                                     final boolean alsoLogInfo) {
+    final boolean b = Log.on;
     Log.on = on;
     if (log == null) {
       // Internal error - no log yet defined
@@ -209,6 +217,7 @@ public class Log {
   private MessageConsoleStream stream = null;
   //@ private constraint \old(stream) != null ==> \not_modified(stream);
   
+  
   /**
    * Initializes any internal state of the log, e.g. based on
    * stored preferences or properties.
@@ -249,10 +258,7 @@ public class Log {
     return stream;
   }
   
-  /** Color to use for error messages. */
-  // FIXME - should get this color from the system preferences
-  private static final Color errorColor = new Color(null,255,0,0);
-  
+
   /**
    * Records an informational message. 
    * @param msg The message to log
@@ -328,10 +334,13 @@ public class Log {
    * @author David R. Cok
    */
   public static class StreamToConsole extends OutputStream {
-    protected ByteBuffer bb = ByteBuffer.allocate(2000);
+    /** size of the buffer. */
+    public static final int BUFF_LEN = 2 * 1024;
+    
+    protected ByteBuffer bb = ByteBuffer.allocate(BUFF_LEN);
     protected char[] input = new char[1];
-    protected CharBuffer output = CharBuffer.allocate(2000);
-    protected char[] outputchar = new char[2000];
+    protected CharBuffer output = CharBuffer.allocate(BUFF_LEN);
+    protected char[] outputchar = new char[BUFF_LEN];
     protected int len;
     protected CharsetDecoder decoder;
     
@@ -361,22 +370,24 @@ public class Log {
       dump(false);
     }
     
-    public void write(final byte[] b,int off, int len) {
-      int n = len;
+    public void write(final byte[] b, final int off, final int length) {
+      int n = length;
+      int towrite = length;
+      int written = off;
       while (true) {
         if (n > outputchar.length) {
           n = outputchar.length;
         }
         for (int k = 0; k < n; ++k) {
-          outputchar[k] = (char)b[off + k];
+          outputchar[k] = (char)b[written + k];
         }
         this.len = n;
         dump(false);
-        if (n == len) {
+        if (n == towrite) {
           return;
         }
-        off += n;
-        len -= n;
+        written += n;
+        towrite -= n;
       }
     }
 

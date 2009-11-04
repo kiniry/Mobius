@@ -32,7 +32,7 @@ public abstract class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage {
   public boolean performOk() {
     // When OK is pressed, set all the options selected.  
     setOptionValue(options());
-    AbstractOption.notifyListeners();
+    AOption.notifyListeners();
     return true;
   }
   

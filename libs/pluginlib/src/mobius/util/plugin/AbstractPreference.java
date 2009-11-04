@@ -128,7 +128,9 @@ public class AbstractPreference {
      * Returns the current value of the option. 
      * @return The current value of the option
      */
-    public boolean getValue() { return preferenceStore.getBoolean(getKey()); }
+    public boolean getValue() { 
+      return preferenceStore.getBoolean(getKey()); 
+    }
     
     /**
      * Sets the workspace property value to the given value.
@@ -211,7 +213,7 @@ public class AbstractPreference {
         final int def,
         final String label, final String tooltip) {
       super(q, label, tooltip);
-      preferenceStore.setDefault(q, choices[def]);
+      preferenceStore.setDefault(q, choic[def]);
       this.choices = choic;
     }
     

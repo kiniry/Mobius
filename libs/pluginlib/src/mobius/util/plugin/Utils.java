@@ -69,7 +69,8 @@ public class Utils {
   /** A convenience holder for the end-of-line String 
       for the current platform. */
   public static final String eol = "" + Character.LINE_SEPARATOR;
-  
+
+  public static final String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + eol;
   /* NOTE:
    * Builders can be present in a project in either an enabled or
    * disabled state.  I cannot find any API to switch between the
@@ -218,8 +219,7 @@ public class Utils {
             if (f.exists()) {
               f.delete(true, false, null);
             }
-            final String content = 
-              "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + eol +
+            final String content = xmlHeader + 
               "<launchConfiguration type=\"org.eclipse.ant.AntBuilderLaunchConfigurationType\">" + eol +
               "<booleanAttribute key=\"org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED\" value=\"false\"/>" + eol +
               "<mapAttribute key=\"org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS\"/>" + eol +

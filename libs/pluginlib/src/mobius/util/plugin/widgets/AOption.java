@@ -16,9 +16,10 @@ import org.eclipse.core.runtime.QualifiedName;
  * This is a base class for persistent options.  The options are
  * stored as workspace properties.
  * 
+ * @param <T> the type of the option: String, Boolean, Integer (for choice usually)
  * @author David R. Cok
  */
-abstract class AbstractOption<T> {
+abstract class AOption<T> {
 
   /** The listeners that will be notified when options change. */
   private static final  Collection<IListener> listeners = new LinkedList<IListener>();
@@ -47,7 +48,7 @@ abstract class AbstractOption<T> {
    * @param label  A short description suitable as a label
    * @param tooltip  A longer description suitable as help
    */
-  protected AbstractOption(final QualifiedName q, 
+  protected AOption(final QualifiedName q, 
                            final T def,
                            final String label, 
                            final String tooltip) {
@@ -121,7 +122,7 @@ abstract class AbstractOption<T> {
   }
 
   /** An option that has a boolean value. */
-  public static class BooleanOption extends AbstractOption<Boolean> {
+  public static class BooleanOption extends AOption<Boolean> {
 
 
     
@@ -159,7 +160,7 @@ abstract class AbstractOption<T> {
   }
 
   /** An option that has a String value. */
-  public static class StringOption extends AbstractOption<String> {
+  public static class StringOption extends AOption<String> {
     
     /**
      * Creating a String option object.
@@ -193,7 +194,7 @@ abstract class AbstractOption<T> {
   
 
   /** An option that has a String value. */
-  public static class ChoiceOption extends AbstractOption<Integer> {
+  public static class ChoiceOption extends AOption<Integer> {
     
     /** The choices. */
     protected String[] choices;

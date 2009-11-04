@@ -52,6 +52,7 @@ public final class ConsoleUtils {
   
   /**
    * The constructor, initialize all the datas.
+   * @param name the name of the software eg. VCGen or whatever.
    */
   private ConsoleUtils(final String name) {
     instance = this;

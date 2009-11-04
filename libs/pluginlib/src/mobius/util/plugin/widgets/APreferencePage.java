@@ -9,6 +9,7 @@ package mobius.util.plugin.widgets;
 import mobius.util.plugin.AbstractPreference;
 import mobius.util.plugin.Options;
 
+import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -20,8 +21,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  * 
  * @author David R. Cok
  */
-public abstract class PreferencePage extends org.eclipse.jface.preference.PreferencePage 
-implements IWorkbenchPreferencePage {
+public abstract class APreferencePage extends PreferencePage 
+  implements IWorkbenchPreferencePage {
   
   /** The option button corresponding to Eclipse logging. */
   public static final PreferenceWidget.BooleanWidget logging = 
