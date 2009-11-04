@@ -19,6 +19,7 @@ import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
@@ -255,8 +256,11 @@ public class EscjavaChecker extends escjava.Main
       for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
         String path = f.getPath().toOSString();
         if (f.getResource() != null) {
-          path = f.getResource().getRawLocation().toOSString();
-          cp += ":" + path;
+          final IPath p = f.getResource().getRawLocation();
+          if (p != null) {
+            path = p.toOSString();
+            cp += ":" + path;
+          }
         }  
       }
       cp = cp.substring(1);

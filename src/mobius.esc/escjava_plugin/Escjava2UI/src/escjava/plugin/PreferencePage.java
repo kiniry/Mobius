@@ -10,6 +10,7 @@ package escjava.plugin;
 
 import mobius.util.plugin.AbstractPreference;
 import mobius.util.plugin.AbstractPreference.BooleanOption;
+import mobius.util.plugin.widgets.APreferencePage;
 import mobius.util.plugin.widgets.PreferenceWidget;
 import mobius.util.plugin.widgets.Widgets;
 
@@ -25,7 +26,7 @@ import org.eclipse.swt.widgets.Label;
  * 
  * This class implements the preference page for the plugin
  */
-public class PreferencePage extends mobius.util.plugin.widgets.PreferencePage {
+public class PreferencePage extends APreferencePage {
  
 
   /**
