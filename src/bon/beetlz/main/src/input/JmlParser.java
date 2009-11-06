@@ -785,9 +785,9 @@ public final class JmlParser {
         final String constant = null;
         FeatureType type;
         for (final JmlTree.JmlMethodClause c : s.clauses) {
-          if (c instanceof JmlTree.JmlMethodClauseAssignable) {
-            final JmlTree.JmlMethodClauseAssignable ass =
-              (JmlTree.JmlMethodClauseAssignable) c;
+          if (c instanceof JmlTree.JmlMethodClauseStoreRef) {
+            final JmlTree.JmlMethodClauseStoreRef ass =
+              (JmlTree.JmlMethodClauseStoreRef) c;
             for (final JCTree t : ass.list) {
               if (t.getKind() == Kind.IDENTIFIER) {
                 frame.add(new FeatureSmartString(t.toString()));
