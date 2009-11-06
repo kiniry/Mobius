@@ -17,10 +17,12 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
@@ -41,6 +43,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -431,7 +434,43 @@ public class Utils {
     }
     return (IJavaProject[]) list.toArray(new IJavaProject[list.size()]);
   }
-
+  
+  public static String computeClassPath(final IJavaProject project)  throws JavaModelException {
+    String cp = "";
+    cp = computeClasspath(new HashSet<IJavaProject>(), project, cp);
+    return cp;
+  }
+  
+  private static String computeClasspath(final Set<IJavaProject> already, 
+                                         final IJavaProject project, 
+                                         final String currentpath) throws JavaModelException {
+    String cp = currentpath;
+    already.add(project);
+    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
+      if (f.getResource() != null) {
+        final IPath p = f.getResource().getRawLocation();
+        if (p != null) {
+          final String path = p.toOSString();
+          cp = path + ":" + cp;
+        }
+        else {
+          final IResource elem = f.getCorrespondingResource();
+          final IJavaModel model = f.getJavaModel();
+          final IJavaProject proj = model.getJavaProject(elem.getName());
+          if (proj != null) {
+            if (!already.contains(proj)) {
+              cp = computeClasspath(already, proj, cp.substring(1));
+            }
+            else { /* if it contains already the proj, 
+                       it means that we have to add it to the classpath */
+              cp = "" + Utils.getRoot().getRawLocation() + proj.getPath() + ":" + cp;
+            }
+          }
+        } 
+      }
+    }
+    return cp;
+  }
   
   /**
    * Computes the classpath (in terms of full absolute file-system paths to
@@ -442,9 +481,10 @@ public class Utils {
    * @param project The project whose classpath is to be determined.
    * @return The classpath of the argument in full absolute file-system paths,
    *     separated by the platform's path separator
+   * @deprecated use {@link #computeClassPath(IJavaProject)} instead
    */
   // FIXME - may need to distinguish source and binary classpaths?
-  public static String getProjectClassPath(final IJavaProject project) {
+   public static String getProjectClassPath(final IJavaProject project) {
 
     final StringBuffer classPath = new StringBuffer(System.getProperty("java.class.path"));
     final List<String> list = new LinkedList<String>();
