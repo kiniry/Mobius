@@ -158,6 +158,9 @@ public class Beetlz {
   /** Command line option. */
   public static final String VERBOSE_OPTION = "-verbose"; //$NON-NLS-1$
 
+  /** Command line option. */
+  public static final String JAVA_JML_CLASSPATH_OPTION = "-javajmlcp"; //$NON-NLS-1$
+  
   /** Configuration settings. */
   private static UserProfile my_profile;
 
@@ -524,6 +527,7 @@ public class Beetlz {
     final List < String > javaFiles = new Vector < String > ();
     final List < String > bonFiles = new Vector < String > ();
     String custom_file = null;
+    String classpath = null;
 
     int i = 0;
     String arg;
@@ -567,6 +571,13 @@ public class Beetlz {
           specs = the_args[i++];
         } else {
           JAVA_LOGGER.severe(my_labels.getString("Beetlz.specsNeedsArgument")); //$NON-NLS-1$
+          return null;
+        }
+      } else if (arg.equals(JAVA_JML_CLASSPATH_OPTION)) {
+        if (i < the_args.length) {
+          classpath = the_args[i++];
+        } else {
+          JAVA_LOGGER.severe(my_labels.getString("Beetlz.classpathNeedsArgument")); //$NON-NLS-1$
           return null;
         }
       } else if (arg.equals(SKELETON_OPTION)) {
@@ -620,7 +631,8 @@ public class Beetlz {
                                                 pure_bon, skeleton, skel_dir,
                                                 skel_one_file, check_null,
                                                 javaFiles, bonFiles,
-                                                custom_file, no_basics, specs);
+                                                custom_file, no_basics, specs,
+                                                classpath);
     return profile;
 
   }

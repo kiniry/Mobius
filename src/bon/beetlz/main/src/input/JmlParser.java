@@ -6,7 +6,6 @@ package input;
 import static com.sun.tools.javac.code.Flags.ENUM;
 import static com.sun.tools.javac.code.Flags.INTERFACE;
 
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -14,33 +13,36 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
+
 import javax.lang.model.element.Modifier;
 
 import log.CCLevel;
 import log.CCLogRecord;
+import logic.Expression;
+import logic.Operator;
 import logic.Expression.ArithmeticExpression;
 import logic.Expression.ArrayaccessExpression;
 import logic.Expression.EqualityExpression;
-import logic.Expression;
-import logic.Expression.ImpliesExpression;
 import logic.Expression.EquivalenceExpression;
+import logic.Expression.IdentifierExpression;
+import logic.Expression.ImpliesExpression;
 import logic.Expression.InformalExpression;
 import logic.Expression.Keyword;
 import logic.Expression.LiteralExpression;
-import logic.Expression.IdentifierExpression;
 import logic.Expression.LogicalExpression;
 import logic.Expression.MemberaccessExpression;
 import logic.Expression.MethodcallExpression;
 import logic.Expression.Nullity;
-import logic.Operator;
 import logic.Expression.RelationalExpression;
 import logic.Expression.UnaryExpression;
 import logic.Expression.Keyword.Keywords;
 import main.Beetlz;
 
+import org.jmlspecs.openjml.JmlSpecs;
 import org.jmlspecs.openjml.JmlToken;
 import org.jmlspecs.openjml.JmlTree;
 import org.jmlspecs.openjml.JmlSpecs.FieldSpecs;
+import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
 
 import structure.ClassStructure;
@@ -58,9 +60,9 @@ import utils.ModifierManager.FeatureModifier;
 import utils.ModifierManager.VisibilityModifier;
 import utils.smart.FeatureSmartString;
 import utils.smart.GenericParameter;
-import utils.smart.TypeSmartString;
 import utils.smart.ParametrizedSmartString;
 import utils.smart.SmartString;
+import utils.smart.TypeSmartString;
 import utils.smart.WildcardSmartString;
 import utils.smart.WildcardSmartString.WildcardType;
 
@@ -238,7 +240,7 @@ public final class JmlParser {
    * @return specs
    */
   public static FeatureStructure parseMethod(final JmlTree.JmlMethodDecl a_method,
-                                             final JmlTree.JmlMethodSpecs the_specs,
+                                             final JmlSpecs.MethodSpecs the_specs,
                                              final ClassStructure an_encl_class,
                                              final JmlTree.JmlCompilationUnit the_cu) {
 
@@ -362,7 +364,7 @@ public final class JmlParser {
     final Signature sign = Signature.getJavaSignature(return_value, params);
     //Specs
     final List < Spec > spec =
-      JmlParser.parseFeatureSpecs(a_method.methodSpecs, pure, return_value, encl_pure);
+      JmlParser.parseFeatureSpecs(a_method.methodSpecsCombined, pure, return_value, encl_pure);
     if (encl_pure && spec.get(0).getFeatureType() == FeatureType.QUERY) {
       mod.add(FeatureModifier.PURE);
     }
@@ -772,13 +774,13 @@ public final class JmlParser {
    * @param an_encl_class_pure enclosing class
    * @return list specs clauses
    */
-  private static List < Spec > parseFeatureSpecs(final JmlTree.JmlMethodSpecs some_specs,
+  private static List < Spec > parseFeatureSpecs(final MethodSpecs some_specs,
                                                  final boolean a_pure,
                                                  final SmartString a_return_value,
                                                  final boolean an_encl_class_pure) {
     final List < Spec > specCases = new Vector < Spec > ();
 
-    for (final JmlTree.JmlSpecificationCase s : some_specs.cases) {
+    for (final JmlTree.JmlSpecificationCase s : some_specs.cases.cases) {
       if (s.token == null || s.token == JmlToken.NORMAL_BEHAVIOR ||
           s.token == JmlToken.BEHAVIOR) {
         final List < Expression > pre = new Vector < Expression > ();

@@ -53,6 +53,9 @@ public class UserProfile {
 
   /** Custom specs directory. */
   private final String my_specs;
+  
+  /** The Java/JML classpath, to be passed to openjml. */
+  private final String my_classpath;
 
   /** Check for nullity? */
   private final boolean my_nullity;
@@ -119,7 +122,7 @@ public class UserProfile {
                      final List < String > some_javafiles,
                      final List < String > some_bonfiles,
                      final String a_custom_file, final boolean a_use_basics,
-                     final String the_specs) {
+                     final String the_specs, final String the_classpath) {
     my_no_error = a_no_error;
     my_no_warning = a_no_warning;
     my_no_jml = a_no_jml;
@@ -131,6 +134,7 @@ public class UserProfile {
     my_skeleton_directory = the_skeleton_dir;
     my_skeleton_one_file = a_skeleton_one_file;
     my_specs = the_specs;
+    my_classpath = the_classpath;
     my_nullity = a_check_null;
     my_java_files = some_javafiles;
     my_bon_files = some_bonfiles;
@@ -687,6 +691,14 @@ public class UserProfile {
    */
   public final List < String > getPrefixes() {
     return my_prefixes;
+  }
+  
+  /**
+   * Get the Java/JML classpath.
+   * @return the classpath
+   */
+  public String getClasspath() {
+    return my_classpath;
   }
 
   /**

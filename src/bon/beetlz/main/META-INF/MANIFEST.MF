@@ -16,4 +16,4 @@ Export-Package: check,
  utils,
  utils.smart
 Bundle-Vendor: Evka Darulova et al.
-Require-Bundle: ie.ucd.bon.bonc;bundle-version="0.1.6"
+Require-Bundle: ie.ucd.bon.bonc;bundle-version="0.2.0"

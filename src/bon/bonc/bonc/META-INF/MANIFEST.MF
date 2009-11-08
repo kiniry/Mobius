@@ -19,4 +19,5 @@ Export-Package: com.google.common.collect,
  ie.ucd.bon.parser.tracker,
  ie.ucd.bon.printer,
  ie.ucd.bon.source,
- ie.ucd.bon.typechecker
+ ie.ucd.bon.typechecker,
+ ie.ucd.bon.util

@@ -1,6 +1,9 @@
 package input;
 
+import static com.sun.tools.javac.code.Flags.GENERATEDCONSTR;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
@@ -11,25 +14,23 @@ import log.CCLevel;
 import log.CCLogRecord;
 import main.Beetlz;
 
-import org.jmlspecs.openjml.Main;
+import org.jmlspecs.openjml.API;
 import org.jmlspecs.openjml.JmlSpecs.FieldSpecs;
+import org.jmlspecs.openjml.JmlSpecs.MethodSpecs;
 import org.jmlspecs.openjml.JmlSpecs.TypeSpecs;
+import org.jmlspecs.openjml.JmlTree.JmlClassDecl;
 import org.jmlspecs.openjml.JmlTree.JmlCompilationUnit;
-import org.jmlspecs.openjml.JmlTree.JmlMethodSpecs;
-
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-
-import static com.sun.tools.javac.code.Flags.*;
 
 import structure.ClassCollection;
 import structure.ClassStructure;
 import structure.FeatureStructure;
 import utils.BConst;
+
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 
 /**
  * Collects all Java input files and the parsed class structures,
@@ -72,12 +73,12 @@ public class JmlFile {
       if (!my_files.contains(temp)) { //ignore duplicate files
         if (temp.exists()) {
           LOGGER.config(Beetlz.getResourceBundle().getString("JmlFile.fileFound") +
-                        temp.getAbsolutePath()); //$NON-NLS-1$
+              temp.getAbsolutePath()); //$NON-NLS-1$
           my_files.add(temp);
         } else {
           LOGGER.severe(Beetlz.
-                        getResourceBundle().getString("JmlFile.cannotFindFile") + //$NON-NLS-1$
-                        s);
+              getResourceBundle().getString("JmlFile.cannotFindFile") + //$NON-NLS-1$
+              s);
         }
       }
     }
@@ -91,59 +92,57 @@ public class JmlFile {
     if (my_files.size() == 0) {
       return true;
     }
+    ArrayList<String> openjmlArgs = new ArrayList<String>();
+
+    openjmlArgs.add("-classpath");
+    openjmlArgs.add(Beetlz.getProfile().getClasspath());
+
+    if (Beetlz.getProfile().verbose()) {
+      openjmlArgs.add("-verbose");
+    }
+    if (Beetlz.getProfile().getSpecs() != null) {
+      openjmlArgs.add("-specspath");
+      openjmlArgs.add(Beetlz.getProfile().getSpecs());
+      openjmlArgs.add("-noInternalSpecs");
+    }
+
+
+    String[] openjmlArgsArr = openjmlArgs.toArray(new String[openjmlArgs.size()]);
     try {
-      Main m;
-      if (Beetlz.getProfile().getSpecs() != null && Beetlz.getProfile().verbose()) {
-        m = new Main(new String[]{"-specs", Beetlz.getProfile().getSpecs(), //$NON-NLS-1$
-                                  "-noInternalSpecs", //$NON-NLS-1$
-                                  "-verbose"}); //$NON-NLS-1$
-      } else if (Beetlz.getProfile().getSpecs() != null) {
-        m = new Main(new String[]{"-specs", Beetlz.getProfile().getSpecs(), //$NON-NLS-1$
-                                  "-noInternalSpecs"}); //$NON-NLS-1$
-      } else {
-        m = new Main(new String[0]);
-      }
-      final File[] fileArray = my_files.toArray(new File[my_files.size()]);
-      try {
-        m.parseAndCheck(fileArray);
-      } catch (final NullPointerException e) {
-        Beetlz.getWaitingRecords().
-          add(new CCLogRecord(CCLevel.COMPILATION_ERROR, null,
-                            String.format(Beetlz.getResourceBundle().
-                                          getString("JmlFile.compilError")))); //$NON-NLS-1$
-        return false;
-      }
+      API api = new API(openjmlArgsArr);
 
-      for (final File f : my_files) {
-        final JmlCompilationUnit cu = m.parseFile(f.getAbsoluteFile());
+      List<JmlCompilationUnit> trees = api.parseFiles(my_files.toArray(new File[my_files.size()]));
+      api.enterAndCheck(trees);
+      
+      for (final JmlCompilationUnit cu : trees) {
 
-        if (cu == null) {
-          LOGGER.severe(String.format(Beetlz.getResourceBundle().
-                                      getString("JmlFile.skippingNoUnit"), //$NON-NLS-1$
-                                      f.getName()));
-          continue;
-        }
         final JmlWalker walker = new JmlWalker(cu);
         cu.accept(walker);
         my_qualifiedNames.addAll(walker.getQualifiedNames());
 
         for (final String qName : walker.getQualifiedNames()) {
           if (!Beetlz.getProfile().isJavaIgnored(qName)) {
-            final ClassSymbol sym = m.getClassSymbol(qName);
+            final ClassSymbol sym = api.getClassSymbol(qName);
             if (sym != null) {
-              final JCTree ast = m.getClassAST(qName);
-              parseClass(ast, sym, m, cu, null); //no enclosing class, top level
+              final JmlClassDecl ast = api.getJavaDecl(sym);
+              parseClass(ast, sym, api, cu, null); //no enclosing class, top level
             } else {
               LOGGER.severe(String.format(Beetlz.getResourceBundle().
-                                          getString("JmlFile.noClassSymbol"), //$NON-NLS-1$
-                                          f.getName()));
+                  getString("JmlFile.noClassSymbol"), //$NON-NLS-1$
+                  cu.sourcefile.getName()));
             }
           }
         } //end for
       }
+    } catch (final NullPointerException e) {
+      Beetlz.getWaitingRecords().
+      add(new CCLogRecord(CCLevel.COMPILATION_ERROR, null,
+          String.format(Beetlz.getResourceBundle().
+              getString("JmlFile.compilError")))); //$NON-NLS-1$
+      return false;
     } catch (final Exception e) {
       LOGGER.severe(Beetlz.getResourceBundle().
-                    getString("JmlFile.cannotParseJml")); //$NON-NLS-1$
+          getString("JmlFile.cannotParseJml")); //$NON-NLS-1$
       e.printStackTrace(Beetlz.getErrorStream());
       return false;
     }
@@ -160,17 +159,17 @@ public class JmlFile {
    * @param an_enclosing enclosing class
    * @return class structure
    */
-  private ClassStructure parseClass(final JCTree an_ast, final ClassSymbol a_symbol,
-                                    final Main a_main, final JmlCompilationUnit a_cu,
-                                    final ClassStructure an_enclosing) {
+  private ClassStructure parseClass(final JmlClassDecl an_ast, final ClassSymbol a_symbol,
+      final API a_main, final JmlCompilationUnit a_cu,
+      final ClassStructure an_enclosing) {
     if (a_symbol.getKind() != ElementKind.ANNOTATION_TYPE) {
       if (an_ast instanceof JCClassDecl) {
         try {
           //parse the class
           final TypeSpecs cs = a_main.getSpecs(a_symbol);
           final ClassStructure cls = JmlParser.parseClass((JCClassDecl)an_ast, cs, a_symbol,
-                                                          a_symbol.flatname.toString(),
-                                                          an_enclosing, a_cu);
+              a_symbol.flatname.toString(),
+              an_enclosing, a_cu);
           if (a_symbol != null && a_symbol.members() != null &&
               a_symbol.members().getElements() != null) {
             for (final Symbol member : a_symbol.members().getElements()) {
@@ -180,9 +179,9 @@ public class JmlFile {
                   continue;
                 }
 
-                final JmlMethodSpecs ms = a_main.getSpecs((MethodSymbol)member);
+                final MethodSpecs ms = a_main.getSpecs((MethodSymbol)member);
                 if (ms != null) {
-                  final FeatureStructure feat = JmlParser.parseMethod(ms.decl, ms, cls, a_cu);
+                  final FeatureStructure feat = JmlParser.parseMethod(a_main.getJavaDecl((MethodSymbol)member), ms, cls, a_cu);
                   if (Beetlz.getProfile().noJml() && feat.isModel()) {
                     continue;
                   }
@@ -192,7 +191,7 @@ public class JmlFile {
                     cls.addFeature(feat);
                   }
                 }
-              //end method
+                //end method
               } else if (member instanceof VarSymbol) {
                 final FieldSpecs fs = a_main.getSpecs((VarSymbol)member);
                 if (fs != null) {
@@ -203,14 +202,12 @@ public class JmlFile {
                   }
                   cls.addFeature(feat);
                 }
-              //end variable
+                //end variable
               } else if (member instanceof ClassSymbol) {
                 if (!Beetlz.getProfile().
                     isJavaIgnored(((ClassSymbol) member).flatname.toString())) {
-                  final JCTree ast =
-                    a_main.getClassAST(((ClassSymbol) member).flatname.toString());
-                  final ClassStructure memberClass =
-                    parseClass(ast, (ClassSymbol)member, a_main, a_cu, cls);
+                  final JmlClassDecl ast = a_main.getJavaDecl((ClassSymbol) member);
+                  final ClassStructure memberClass = parseClass(ast, (ClassSymbol)member, a_main, a_cu, cls);
                   cls.addAggregation(memberClass.getName());
                 }
               } //end member class
@@ -221,8 +218,8 @@ public class JmlFile {
           return cls;
         } catch (final Exception e) {
           LOGGER.severe(String.format(Beetlz.getResourceBundle().
-                                      getString("JmlFile.problemWithClass"),
-                                      a_symbol.className()));  //$NON-NLS-1$
+              getString("JmlFile.problemWithClass"),
+              a_symbol.className()));  //$NON-NLS-1$
         }
       } //end instanceof
     } //end annotation filter
@@ -242,7 +239,7 @@ public class JmlFile {
    */
   public final void printOut() {
     LOGGER.info(Beetlz.getResourceBundle().
-                getString("JmlFile.javaFileContents")); //$NON-NLS-1$
+        getString("JmlFile.javaFileContents")); //$NON-NLS-1$
     my_classCollection.printOut();
   }
 

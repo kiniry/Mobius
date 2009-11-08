@@ -1,5 +1,7 @@
 package beetlzplugin.runner;
 
+import ie.ucd.bon.util.StringUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +18,13 @@ import log.CCLevel;
 import log.CCLogRecord;
 import main.Beetlz;
 import main.Beetlz.Status;
+import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -132,6 +136,7 @@ public class BeetlzRunner {
     //no console found, so create a new one
     final MessageConsole myConsole = new MessageConsole(name, null);
     conMan.addConsoles(new IConsole[]{myConsole});
+    myConsole.activate();
     return myConsole;
   }
 
@@ -145,7 +150,6 @@ public class BeetlzRunner {
 
     //Clear console:
     myConsole.clearConsole();
-    myConsole.activate();
 
     //Redirect System.out, doesnt work for Java Logger for some reason
     err = new ByteArrayOutputStream();
@@ -177,6 +181,12 @@ public class BeetlzRunner {
     final boolean success = settings.isValid();
     updateClassPath(settings.getSpecsPath());    
     final List<String> args = settings.getUserOptionsAsArgs(); 
+
+    //Classpath for openjml
+    List<String> cpEntries = Utils.getProjectClassPathEntries(JavaCore.create(project));
+    String cp = StringUtil.appendWithSeparator(cpEntries, File.pathSeparator);
+    args.add("-javajmlcp");
+    args.add(cp);
 
     //Get files
     args.add("-files"); //$NON-NLS-1$
@@ -235,30 +245,30 @@ public class BeetlzRunner {
     try {
       for (final CCLogRecord rec : records) {
         final SourceLocation location = rec.getSourceLoc();
-        
+
         if (location != null && location.exists() && location.getSourceFile() != null) {
           //Normal error with location
           File file = location.getSourceFile();
           int line_num = location.getLineNumber();
 
-            final IResource resource = pathResourceMap.get(file.getAbsolutePath());
-            if (resource != null) {
-              IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
+          final IResource resource = pathResourceMap.get(file.getAbsolutePath());
+          if (resource != null) {
+            IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
 
-              marker.setAttribute(IMarker.MESSAGE,
-                  rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-              if (line_num > 0) {
-                marker.setAttribute(IMarker.LINE_NUMBER, line_num);
-              } else {
-                marker.setAttribute(IMarker.LINE_NUMBER, 0);
-              } //end setting line numbers
-              setSeverity(marker, rec.getLevel());
-            }
+            marker.setAttribute(IMarker.MESSAGE,
+                rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+            if (line_num > 0) {
+              marker.setAttribute(IMarker.LINE_NUMBER, line_num);
+            } else {
+              marker.setAttribute(IMarker.LINE_NUMBER, 0);
+            } //end setting line numbers
+            setSeverity(marker, rec.getLevel());
+          }
 
         } else {
           //No location
           IMarker marker = project.createMarker(getMarkerIDForLevel(rec.getLevel())); 
-          
+
           marker.setAttribute(IMarker.MESSAGE,
               rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
           setSeverity(marker, rec.getLevel());
@@ -266,7 +276,7 @@ public class BeetlzRunner {
       } //end for
     } catch (final Exception e) { }
   }
-  
+
   private String getMarkerIDForLevel(Level level) {
     if (level == CCLevel.JAVA_ERROR) {
       return JAVA_ERROR_MARKER_ID;
@@ -279,7 +289,7 @@ public class BeetlzRunner {
     } else {
       return GENERAL_NOTE_MARKER_ID;
     }
-      
+
   }
 
   private List<String> getFileArgsForProject(final IProject project) {
