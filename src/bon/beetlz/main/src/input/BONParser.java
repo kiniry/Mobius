@@ -511,7 +511,9 @@ public final class BONParser {
    * @return split expression
    */
   private static String[] mySplit(final String an_expr, final String an_op) {
-    final int index = an_expr.indexOf(an_op);
+    final int index;
+    if(an_op.equals(" or ")) { index = an_expr.lastIndexOf(an_op);}
+    else {  	index = an_expr.indexOf(an_op);    }
     if (index == -1) {
       return new String[0];
     }

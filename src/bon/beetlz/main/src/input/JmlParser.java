@@ -610,6 +610,7 @@ public final class JmlParser {
    */
   private static Expression parseJCExpression(final JCTree.JCExpression an_expr) {
     Expression new_expr = InformalExpression.EMPTY_COMMENT;
+    
     if (an_expr instanceof JCTree.JCBinary) {
       final JCTree.JCBinary bin = (JCTree.JCBinary) an_expr;
       if (bin.getKind() == Kind.GREATER_THAN) {
@@ -660,6 +661,7 @@ public final class JmlParser {
       //end binary
     } else if (an_expr instanceof JmlTree.JmlBinary) {
       final JmlTree.JmlBinary b = (JmlTree.JmlBinary) an_expr;
+      
       if (b.op == JmlToken.IMPLIES) {
         new_expr = new ImpliesExpression(parseJCExpression(b.lhs), parseJCExpression(b.rhs));
       } else if (b.op == JmlToken.REVERSE_IMPLIES) {
