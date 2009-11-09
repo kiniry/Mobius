@@ -34,6 +34,7 @@ public class BONST {
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
 
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();
+  public final Map<FeatureSpecification,Clazz> featureDeclaringClassMap = new HashMap<FeatureSpecification,Clazz>();
   public final Map<FeatureSpecification,List<ClassName>> selectiveExportMap = new HashMap<FeatureSpecification,List<ClassName>>();
   public final Map<FeatureSpecification,List<String>> selectiveExportStringsMap = new HashMap<FeatureSpecification,List<String>>();
   public final Map<FeatureSpecification,Boolean> selectiveExportPrivateMap = new HashMap<FeatureSpecification,Boolean>();

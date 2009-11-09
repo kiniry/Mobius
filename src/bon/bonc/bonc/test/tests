@@ -259,6 +259,18 @@
 
 @Test-name: "Features in the presence of inheritance #1"
 @Prog-args: {--formal}
-@Location: { misc/ }
+@Location { misc/ }
 @Input { feature_inherits }
-@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 6, Y, K, effective > } 
+@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 6, Y, K, effective > }
+
+@Test-name: "Features in the presence of inheritance #2"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { feature_inherits2 }
+@Output { < ParentFeatureNotDeferredError, #File:feature_inherits2, 9, 6, K, Y > }
+
+@Test-name: "Features in the presence of inheritance #3"
+@Prog-args: {--formal}
+@Location { misc/ }
+@Input { feature_inherits3 }
+@Output { < ParentFeatureIsDeferredError, #File:feature_inherits3, 10, 6, K, Y > }

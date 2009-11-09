@@ -60,6 +60,8 @@ import ie.ucd.bon.typechecker.errors.InvalidFormalClassTypeError;
 import ie.ucd.bon.typechecker.errors.InvalidStaticComponentTypeError;
 import ie.ucd.bon.typechecker.errors.NoParentDeclaresFeatureError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
+import ie.ucd.bon.typechecker.errors.ParentFeatureIsDeferredError;
+import ie.ucd.bon.typechecker.errors.ParentFeatureNotDeferredError;
 import ie.ucd.bon.typechecker.errors.TypeMismatchWithExplanationError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
 
@@ -228,12 +230,11 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       }
     } else {
       if (parentFeatureMustBeDeferred && parentFeature.getModifier() != DEFERRED) {
-        //TODO error, parent feature is not deferred
-        //TODO need mapping from FeatureSpecification to declaring class.
+        problems.addProblem(new ParentFeatureNotDeferredError(node.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
       }
 
       if (parentFeatureMustBeNonDeferred && parentFeature.getModifier() == DEFERRED) {
-        //TODO error, redefining a deferred feature
+        problems.addProblem(new ParentFeatureIsDeferredError(node.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
       }
 
       //TODO check return type and arguments are type-compatible
@@ -241,7 +242,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   private FeatureSpecification findParentFeatureWithName(String className, String featureName) {
-    Collection<String> parents = st.simpleClassInheritanceGraph.get(featureName);
+    Collection<String> parents = st.simpleClassInheritanceGraph.get(className);
     //TODO handle renamings
     for (String parent : parents) {
       Clazz parentClass = st.classes.get(parent);

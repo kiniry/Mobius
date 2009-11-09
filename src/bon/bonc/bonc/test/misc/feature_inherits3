@@ -1,0 +1,12 @@
+static_diagram A
+component
+  deferred class X
+    feature 
+      deferred K
+  end --class X
+  class Y
+    inherit X
+    feature
+      redefined K
+  end --class Y
+end

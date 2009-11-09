@@ -11,11 +11,11 @@ import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.errorreporting.Problems;
-import ie.ucd.bon.graph.Converter;
 import ie.ucd.bon.typechecker.errors.CycleInRelationsError;
 import ie.ucd.bon.typechecker.informal.errors.ClassNotInAnyClusterError;
 import ie.ucd.bon.typechecker.informal.errors.ClusterNotInAnyClusterOrSystemError;
 import ie.ucd.bon.typechecker.informal.errors.SystemNotDefinedError;
+import ie.ucd.bon.util.Converter;
 
 import java.util.Collection;
 import java.util.Set;

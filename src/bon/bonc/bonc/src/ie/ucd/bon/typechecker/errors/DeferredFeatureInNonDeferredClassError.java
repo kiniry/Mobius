@@ -6,6 +6,7 @@ package ie.ucd.bon.typechecker.errors;
 
 import ie.ucd.bon.ast.FeatureName;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.Converter;
 import ie.ucd.bon.util.StringUtil;
 
 import java.util.List;
@@ -17,8 +18,7 @@ public class DeferredFeatureInNonDeferredClassError extends TypeCheckingError {
 
   private final String message;
 
-  public DeferredFeatureInNonDeferredClassError(SourceLocation loc,
-      String featureNames, boolean moreThanOneFeature, String className) {
+  public DeferredFeatureInNonDeferredClassError(SourceLocation loc, String featureNames, boolean moreThanOneFeature, String className) {
     super(loc);
 
     this.message = moreThanOneFeature
@@ -26,14 +26,17 @@ public class DeferredFeatureInNonDeferredClassError extends TypeCheckingError {
       : String.format(message1, featureNames, className);
   }
 
-  public DeferredFeatureInNonDeferredClassError(SourceLocation loc,
-      List<FeatureName> featureNames, String className) {
+  public DeferredFeatureInNonDeferredClassError(SourceLocation loc, List<FeatureName> featureNames, String className) {
     super(loc);
 
     if (featureNames.size() == 1) {
-      this.message = String.format(message1, featureNames.get(0), className);
+      this.message = String.format(message1, featureNames.get(0).name, className);
     } else {
-      this.message = String.format(message2, StringUtil.appendWithSeparator(featureNames, ", "), className);
+      //Convert AST nodes to strings
+      Converter<FeatureName,String> converter = new Converter<FeatureName,String>() {
+        public String convert(FeatureName toConvert) { return toConvert.name; }
+      };
+      this.message = String.format(message2, StringUtil.appendWithSeparator(converter.convert(featureNames), ", "), className);
     }
   }
 

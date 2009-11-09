@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.graph;
 
+import ie.ucd.bon.util.Converter;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;

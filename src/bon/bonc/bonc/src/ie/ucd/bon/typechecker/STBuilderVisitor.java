@@ -209,6 +209,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       }
     }
 
+    st.featureDeclaringClassMap.put(node, context.clazz);	
     st.selectiveExportMap.put(node, context.selectiveExport);
     st.selectiveExportStringsMap.put(node, context.selectiveExportStrings);
     st.selectiveExportPrivateMap.put(node, context.selectiveExportPrivate);
