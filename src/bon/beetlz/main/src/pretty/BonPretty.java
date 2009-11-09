@@ -40,7 +40,7 @@ public class BonPretty {
   /** Tab. */
   private final String my_tab;
   /** Newline character. */
-  private final String my_newline = "\n"; //$NON-NLS-1$
+  private final String my_newline = System.getProperty("line.separator"); //$NON-NLS-1$
   /** Semicolon character. */
   private final String my_semicolon = ";"; //$NON-NLS-1$
 
@@ -202,16 +202,7 @@ public class BonPretty {
     }
 
     //class name
-    header += "class " + PrettyFormatter.//$NON-NLS-1$
-      formatBonClassName(the_class.getName().toString()) + " "; //$NON-NLS-1$
-
-    //[reused, persistent, interfaced]
-    if (the_class.isPersistent()) {
-      header += "persistent "; //$NON-NLS-1$
-    }
-    if (the_class.isInterface() || Helper.qualifiesAsBonInterfaced(the_class)) {
-      header += "interfaced "; //$NON-NLS-1$
-    }
+    header += "class " + PrettyFormatter.formatBonClassName(the_class.getName().toString()); //$NON-NLS-1$
 
     //Generics
     final List < SmartString > gen = the_class.getGenerics();
@@ -222,6 +213,14 @@ public class BonPretty {
       }
       header += PrettyFormatter.getBonType(gen.get(gen.size() - 1));
       header += "]"; //$NON-NLS-1$
+    }
+    
+    //[reused, persistent, interfaced]
+    if (the_class.isPersistent()) {
+      header += " persistent"; //$NON-NLS-1$
+    }
+    if (the_class.isInterface() || Helper.qualifiesAsBonInterfaced(the_class)) {
+      header += " interfaced"; //$NON-NLS-1$
     }
     return header + my_newline;
   }
@@ -238,26 +237,36 @@ public class BonPretty {
       comment.add(BConst.INDEXING + my_newline);
       if (comm.my_about != null && comm.my_about.size() > 0) {
         comment.add(my_tab + BConst.BON_ABOUT + " \"" + //$NON-NLS-1$
-                    comm.my_about.get(0).trim() + "\"" + //$NON-NLS-1$
-                    my_newline);
-        for (int i = 1; i < comm.my_about.size(); i++) {
-          comment.add(my_tab + my_tab + "\"" + //$NON-NLS-1$
-                      comm.my_about.get(i) + "\"" + //$NON-NLS-1$
-                      my_newline);
+                    comm.my_about.get(0).trim() + "\""); //$NON-NLS-1$
+        if (comm.my_about.size() > 1) {
+          comment.add(" \\");
+        } else {
+          comment.add(my_semicolon);
         }
-
+        comment.add(my_newline);
+        for (int i = 1; i < comm.my_about.size(); i++) {
+          comment.add(my_tab + my_tab + "\\ \"" + //$NON-NLS-1$
+                      comm.my_about.get(i) + "\""); //$NON-NLS-1$
+          if (i < comm.my_about.size() - 1) {
+            comment.add(" \\");
+          } else {
+            comment.add(my_semicolon);
+          }
+          comment.add(my_newline);
+        }
+        
       }
       if (comm.my_author != null && comm.my_author.length() > 0) {
         comment.add(my_tab + BConst.BON_AUTHOR + " \"" + //$NON-NLS-1$
-                    comm.my_author.trim() + "\"" + my_newline); //$NON-NLS-1$
+                    comm.my_author.trim() + "\"" + my_semicolon + my_newline); //$NON-NLS-1$
       }
       if (comm.my_version != null && comm.my_version.length() > 0) {
         comment.add(my_tab + BConst.BON_VERSION + " \"" + //$NON-NLS-1$
-                    comm.my_version.trim() + "\"" + my_newline); //$NON-NLS-1$
+                    comm.my_version.trim() + "\"" + my_semicolon + my_newline); //$NON-NLS-1$
       }
       if (comm.my_allElse != null && comm.my_allElse.length() > 0) {
         comment.add(my_tab + "misc: \"" + comm.my_allElse.trim() + //$NON-NLS-1$
-                    "\"" + my_newline); //$NON-NLS-1$
+                    "\"" + my_semicolon + my_newline); //$NON-NLS-1$
       }
     }
     return comment;

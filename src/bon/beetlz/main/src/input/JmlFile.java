@@ -94,8 +94,11 @@ public class JmlFile {
     }
     ArrayList<String> openjmlArgs = new ArrayList<String>();
 
-    openjmlArgs.add("-classpath");
-    openjmlArgs.add(Beetlz.getProfile().getClasspath());
+    String cp = Beetlz.getProfile().getClasspath();
+    if (cp != null) {
+      openjmlArgs.add("-classpath");
+      openjmlArgs.add(cp);
+    }
 
     if (Beetlz.getProfile().verbose()) {
       openjmlArgs.add("-verbose");

@@ -16,17 +16,17 @@ import org.eclipse.swt.SWT;
 
 
 /**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
+ * This code was edited or generated using CloudGarden's Jigloo
+ * SWT/Swing GUI Builder, which is free for non-commercial
+ * use. If Jigloo is being used commercially (ie, by a corporation,
+ * company or business for any purpose whatever) then you
+ * should purchase a license for each developer using Jigloo.
+ * Please visit www.cloudgarden.com for details.
+ * Use of Jigloo implies acceptance of these licensing terms.
+ * A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
+ * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
+ * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
+ */
 public class BeetlzSkeletonGui extends org.eclipse.swt.widgets.Dialog {
 
   private Shell dialogShell;
@@ -63,34 +63,34 @@ public class BeetlzSkeletonGui extends org.eclipse.swt.widgets.Dialog {
         //handle the obtaining and disposing of resources
         //SWTResourceManager.registerResourceUser(dialogShell);
       }
-      
+
       Listener listener = new Listener() {
-           public void handleEvent(Event event) {
-                if (event.widget == buttonGo) {
-                  //get our selected options:
-                  action.useJml = buttonUseJml.getSelection();
-                  action.pureBon = buttonPureBon.getSelection();
-                  action.useBasics = buttonUseBasics.getSelection();
-                  action.nullCheck = buttonNullCheck.getSelection();
-                  
-                  if (buttonSourceJava.getSelection()) action.source = "java"; //$NON-NLS-1$
-                  else if(buttonSourceBon.getSelection()) action.source = "bon"; //$NON-NLS-1$
-                  else action.source = "default"; //$NON-NLS-1$
-                  
-                  if (buttonOneFile.getSelection()) action.output = "onefile"; //$NON-NLS-1$
-                  else if (buttonAllFiles.getSelection()) action.output = "allfiles"; //$NON-NLS-1$
-                  else {
-                    action.output = "console"; //$NON-NLS-1$
-                  }
-                  dialogShell.dispose();
-                }
-                
-                if (event.widget == buttonCancel) {
-                  action.cancel = true;
-                  dialogShell.dispose();
-                }
-           } 
-        };
+        public void handleEvent(Event event) {
+          if (event.widget == buttonGo) {
+            //get our selected options:
+            action.useJml = buttonUseJml.getSelection();
+            action.pureBon = buttonPureBon.getSelection();
+            action.useBasics = buttonUseBasics.getSelection();
+            action.nullCheck = buttonNullCheck.getSelection();
+
+            if (buttonSourceJava.getSelection()) action.source = "java"; //$NON-NLS-1$
+            else if(buttonSourceBon.getSelection()) action.source = "bon"; //$NON-NLS-1$
+            else action.source = "default"; //$NON-NLS-1$
+
+            if (buttonOneFile.getSelection()) action.output = "onefile"; //$NON-NLS-1$
+            else if (buttonAllFiles.getSelection()) action.output = "allfiles"; //$NON-NLS-1$
+            else {
+              action.output = "console"; //$NON-NLS-1$
+            }
+            dialogShell.dispose();
+          }
+
+          if (event.widget == buttonCancel) {
+            action.cancel = true;
+            dialogShell.dispose();
+          }
+        } 
+      };
       dialogShell.setLayout(new FormLayout());
       {
         groupSkeletonOutput = new Group(dialogShell, SWT.NONE);
@@ -166,9 +166,9 @@ public class BeetlzSkeletonGui extends org.eclipse.swt.widgets.Dialog {
         buttonGo.setText(Messages.getString("BeetlzGui.go")); //$NON-NLS-1$
         buttonGo.setData(new Integer(13));
         buttonGo.addListener(SWT.Selection, listener);
-            //cancelButton.addListener(SWT.Selection, listener);
-        
-        
+        //cancelButton.addListener(SWT.Selection, listener);
+
+
         FormData buttonGoLData = new FormData();
         buttonGoLData.width = 128;
         buttonGoLData.height = 29;

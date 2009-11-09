@@ -104,7 +104,7 @@ public class UserSettings {
     return args;
   }
 
-  private static IPreferenceStore getAppropriatePreferenceStore(final IProject project) {
+  public static IPreferenceStore getAppropriatePreferenceStore(final IProject project) {
     IPreferenceStore projectPrefs = getProjectPreferenceStore(project);
     boolean projectSpecificEnabled = projectPrefs.getBoolean(PreferenceConstants.USE_PROJECT_SPECIFIC);
     if (projectSpecificEnabled) {
@@ -129,4 +129,6 @@ public class UserSettings {
 
     return store;
   }
+  
+  
 }

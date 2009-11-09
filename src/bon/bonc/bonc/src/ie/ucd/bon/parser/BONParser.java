@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-10-12 14:35:48
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-11-09 13:31:56
 
   package ie.ucd.bon.parser; 
   
@@ -18,7 +18,7 @@ import java.util.HashMap;
  */
 public class BONParser extends AbstractBONParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "MANIFEST_STRING", "IDENTIFIER", "COMMENT", "INTEGER", "CHARACTER_CONSTANT", "REAL", "NEWLINE", "MANIFEST_TEXTBLOCK_START", "MANIFEST_TEXTBLOCK_MIDDLE", "MANIFEST_TEXTBLOCK_END", "LINE_COMMENT", "COMMENT_START", "DIGIT", "ALPHA", "ALPHANUMERIC_OR_UNDERSCORE", "ALPHANUMERIC", "UNDERSCORE", "LOWER", "UPPER", "WHITESPACE", "'dictionary'", "'end'", "'class'", "'cluster'", "'system_chart'", "'explanation'", "'indexing'", "'part'", "'description'", "';'", "':'", "','", "'cluster_chart'", "'class_chart'", "'inherit'", "'query'", "'command'", "'constraint'", "'('", "')'", "'event_chart'", "'incoming'", "'outgoing'", "'event'", "'involves'", "'scenario_chart'", "'scenario'", "'creation_chart'", "'creator'", "'creates'", "'static_diagram'", "'component'", "'reused'", "'root'", "'deferred'", "'effective'", "'persistent'", "'interfaced'", "'{'", "'}'", "'client'", "'->'", "'['", "']'", "'...'", "':{'", "'.'", "'invariant'", "'feature'", "'redefined'", "'require'", "'ensure'", "'^'", "'<-'", "'prefix'", "'\"'", "'infix'", "'for_all'", "'exists'", "'such_that'", "'it_holds'", "'member_of'", "'..'", "'Current'", "'Void'", "'Result'", "'true'", "'false'", "'dynamic_diagram'", "'action'", "'nameless'", "'object_group'", "'object_stack'", "'object'", "'calls'", "'string_marks'", "'concatenator'", "'keyword_prefix'", "'<->'", "'+'", "'-'", "'and'", "'or'", "'xor'", "'delta'", "'old'", "'not'", "'<'", "'>'", "'<='", "'>='", "'='", "'/='", "'*'", "'/'", "'//'", "'\\\\\\\\'"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "IDENTIFIER", "MANIFEST_STRING", "COMMENT", "INTEGER", "CHARACTER_CONSTANT", "REAL", "NEWLINE", "MANIFEST_TEXTBLOCK_START", "MANIFEST_TEXTBLOCK_MIDDLE", "MANIFEST_TEXTBLOCK_END", "LINE_COMMENT", "COMMENT_START", "DIGIT", "ALPHA", "ALPHANUMERIC_OR_UNDERSCORE", "ALPHANUMERIC", "UNDERSCORE", "LOWER", "UPPER", "WHITESPACE", "'dictionary'", "'end'", "'class'", "'cluster'", "'system_chart'", "'explanation'", "'indexing'", "'part'", "'description'", "';'", "':'", "','", "'cluster_chart'", "'class_chart'", "'inherit'", "'query'", "'command'", "'constraint'", "'('", "')'", "'event_chart'", "'incoming'", "'outgoing'", "'event'", "'involves'", "'scenario_chart'", "'scenario'", "'creation_chart'", "'creator'", "'creates'", "'static_diagram'", "'component'", "'reused'", "'root'", "'deferred'", "'effective'", "'persistent'", "'interfaced'", "'{'", "'}'", "'client'", "'->'", "'['", "']'", "'...'", "':{'", "'.'", "'invariant'", "'feature'", "'redefined'", "'require'", "'ensure'", "'^'", "'<-'", "'prefix'", "'\"'", "'infix'", "'for_all'", "'exists'", "'such_that'", "'it_holds'", "'member_of'", "'..'", "'Current'", "'Void'", "'Result'", "'true'", "'false'", "'dynamic_diagram'", "'action'", "'nameless'", "'object_group'", "'object_stack'", "'object'", "'calls'", "'string_marks'", "'concatenator'", "'keyword_prefix'", "'<->'", "'+'", "'-'", "'and'", "'or'", "'xor'", "'delta'", "'old'", "'not'", "'<'", "'>'", "'<='", "'>='", "'='", "'/='", "'*'", "'/'", "'//'", "'\\\\\\\\'"
     };
     public static final int T__29=29;
     public static final int T__28=28;
@@ -97,7 +97,7 @@ public class BONParser extends AbstractBONParser {
     public static final int T__107=107;
     public static final int T__108=108;
     public static final int T__109=109;
-    public static final int IDENTIFIER=5;
+    public static final int IDENTIFIER=4;
     public static final int ALPHANUMERIC=19;
     public static final int T__59=59;
     public static final int T__103=103;
@@ -125,7 +125,7 @@ public class BONParser extends AbstractBONParser {
     public static final int T__102=102;
     public static final int T__101=101;
     public static final int T__100=100;
-    public static final int MANIFEST_STRING=4;
+    public static final int MANIFEST_STRING=5;
     public static final int T__30=30;
     public static final int T__31=31;
     public static final int T__32=32;
@@ -1159,26 +1159,27 @@ public class BONParser extends AbstractBONParser {
 
 
     // $ANTLR start "part"
-    // BON.g:155:1: part returns [String part] : (p= 'part' m= MANIFEST_STRING | p= 'part' );
+    // BON.g:155:1: part returns [String part] : (p= 'part' m= manifest_textblock | p= 'part' );
     public final String part() throws RecognitionException {
         String part = null;
 
         Token p=null;
-        Token m=null;
+        BONParser.manifest_textblock_return m = null;
+
 
         try {
-            // BON.g:155:28: (p= 'part' m= MANIFEST_STRING | p= 'part' )
+            // BON.g:155:28: (p= 'part' m= manifest_textblock | p= 'part' )
             int alt15=2;
             int LA15_0 = input.LA(1);
 
             if ( (LA15_0==31) ) {
                 int LA15_1 = input.LA(2);
 
-                if ( (LA15_1==MANIFEST_STRING) ) {
-                    alt15=1;
-                }
-                else if ( ((LA15_1>=25 && LA15_1<=27)||(LA15_1>=38 && LA15_1<=41)||LA15_1==47||LA15_1==50||LA15_1==52) ) {
+                if ( ((LA15_1>=25 && LA15_1<=27)||(LA15_1>=38 && LA15_1<=41)||LA15_1==47||LA15_1==50||LA15_1==52) ) {
                     alt15=2;
+                }
+                else if ( (LA15_1==MANIFEST_STRING||LA15_1==MANIFEST_TEXTBLOCK_START) ) {
+                    alt15=1;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return part;}
@@ -1197,12 +1198,16 @@ public class BONParser extends AbstractBONParser {
             }
             switch (alt15) {
                 case 1 :
-                    // BON.g:156:5: p= 'part' m= MANIFEST_STRING
+                    // BON.g:156:5: p= 'part' m= manifest_textblock
                     {
                     p=(Token)match(input,31,FOLLOW_31_in_part755); if (state.failed) return part;
-                    m=(Token)match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_part759); if (state.failed) return part;
+                    pushFollow(FOLLOW_manifest_textblock_in_part759);
+                    m=manifest_textblock();
+
+                    state._fsp--;
+                    if (state.failed) return part;
                     if ( state.backtracking==0 ) {
-                       part = (m!=null?m.getText():null); 
+                       part = (m!=null?input.toString(m.start,m.stop):null); 
                     }
 
                     }
@@ -2372,11 +2377,11 @@ public class BONParser extends AbstractBONParser {
             if ( (LA34_0==38) ) {
                 int LA34_1 = input.LA(2);
 
-                if ( (LA34_1==25||(LA34_1>=39 && LA34_1<=41)) ) {
-                    alt34=2;
-                }
-                else if ( (LA34_1==IDENTIFIER) ) {
+                if ( (LA34_1==IDENTIFIER) ) {
                     alt34=1;
+                }
+                else if ( (LA34_1==25||(LA34_1>=39 && LA34_1<=41)) ) {
+                    alt34=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return inherits;}
@@ -4886,7 +4891,7 @@ public class BONParser extends AbstractBONParser {
             if ( (LA72_0==66) ) {
                 alt72=1;
             }
-            else if ( ((LA72_0>=IDENTIFIER && LA72_0<=COMMENT)||(LA72_0>=25 && LA72_0<=27)||LA72_0==30||LA72_0==38||(LA72_0>=56 && LA72_0<=61)||LA72_0==72) ) {
+            else if ( (LA72_0==IDENTIFIER||LA72_0==COMMENT||(LA72_0>=25 && LA72_0<=27)||LA72_0==30||LA72_0==38||(LA72_0>=56 && LA72_0<=61)||LA72_0==72) ) {
                 alt72=2;
             }
             else {
@@ -6479,7 +6484,7 @@ public class BONParser extends AbstractBONParser {
                 if ( (LA93_1==70) ) {
                     alt93=2;
                 }
-                else if ( ((LA93_1>=MANIFEST_STRING && LA93_1<=IDENTIFIER)||(LA93_1>=25 && LA93_1<=27)||LA93_1==38||(LA93_1>=57 && LA93_1<=59)||LA93_1==64) ) {
+                else if ( ((LA93_1>=IDENTIFIER && LA93_1<=MANIFEST_STRING)||(LA93_1>=25 && LA93_1<=27)||LA93_1==38||(LA93_1>=57 && LA93_1<=59)||LA93_1==64) ) {
                     alt93=1;
                 }
                 else {
@@ -7186,7 +7191,7 @@ public class BONParser extends AbstractBONParser {
             if ( (LA102_0==62) ) {
                 alt102=1;
             }
-            else if ( ((LA102_0>=IDENTIFIER && LA102_0<=COMMENT)||(LA102_0>=58 && LA102_0<=59)||LA102_0==73||LA102_0==78||LA102_0==80) ) {
+            else if ( (LA102_0==IDENTIFIER||LA102_0==COMMENT||(LA102_0>=58 && LA102_0<=59)||LA102_0==73||LA102_0==78||LA102_0==80) ) {
                 alt102=2;
             }
             else {
@@ -8715,11 +8720,11 @@ public class BONParser extends AbstractBONParser {
             if ( (LA119_0==IDENTIFIER) ) {
                 int LA119_1 = input.LA(2);
 
-                if ( (LA119_1==65) ) {
-                    alt119=2;
-                }
-                else if ( (LA119_1==35||LA119_1==67) ) {
+                if ( (LA119_1==35||LA119_1==67) ) {
                     alt119=1;
+                }
+                else if ( (LA119_1==65) ) {
+                    alt119=2;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return generic;}
@@ -9043,7 +9048,7 @@ public class BONParser extends AbstractBONParser {
             if ( (LA122_0==66) ) {
                 alt122=1;
             }
-            else if ( ((LA122_0>=IDENTIFIER && LA122_0<=COMMENT)||LA122_0==25||LA122_0==33||LA122_0==35||(LA122_0>=58 && LA122_0<=59)||LA122_0==62||LA122_0==65||LA122_0==67||(LA122_0>=71 && LA122_0<=75)||(LA122_0>=77 && LA122_0<=78)||LA122_0==80||(LA122_0>=83 && LA122_0<=84)) ) {
+            else if ( (LA122_0==IDENTIFIER||LA122_0==COMMENT||LA122_0==25||LA122_0==33||LA122_0==35||(LA122_0>=58 && LA122_0<=59)||LA122_0==62||LA122_0==65||LA122_0==67||(LA122_0>=71 && LA122_0<=75)||(LA122_0>=77 && LA122_0<=78)||LA122_0==80||(LA122_0>=83 && LA122_0<=84)) ) {
                 alt122=2;
             }
             else {
@@ -9137,7 +9142,7 @@ public class BONParser extends AbstractBONParser {
                 if ( (LA123_0==33) ) {
                     int LA123_1 = input.LA(2);
 
-                    if ( ((LA123_1>=MANIFEST_STRING && LA123_1<=IDENTIFIER)||(LA123_1>=INTEGER && LA123_1<=REAL)||LA123_1==42||LA123_1==62||(LA123_1>=81 && LA123_1<=82)||(LA123_1>=87 && LA123_1<=91)||(LA123_1>=103 && LA123_1<=104)||(LA123_1>=108 && LA123_1<=110)) ) {
+                    if ( ((LA123_1>=IDENTIFIER && LA123_1<=MANIFEST_STRING)||(LA123_1>=INTEGER && LA123_1<=REAL)||LA123_1==42||LA123_1==62||(LA123_1>=81 && LA123_1<=82)||(LA123_1>=87 && LA123_1<=91)||(LA123_1>=103 && LA123_1<=104)||(LA123_1>=108 && LA123_1<=110)) ) {
                         alt123=1;
                     }
 
@@ -9914,7 +9919,7 @@ public class BONParser extends AbstractBONParser {
             int alt132=2;
             int LA132_0 = input.LA(1);
 
-            if ( ((LA132_0>=MANIFEST_STRING && LA132_0<=IDENTIFIER)||(LA132_0>=INTEGER && LA132_0<=REAL)||LA132_0==42||LA132_0==62||(LA132_0>=81 && LA132_0<=82)||(LA132_0>=87 && LA132_0<=91)||(LA132_0>=103 && LA132_0<=104)||(LA132_0>=108 && LA132_0<=110)) ) {
+            if ( ((LA132_0>=IDENTIFIER && LA132_0<=MANIFEST_STRING)||(LA132_0>=INTEGER && LA132_0<=REAL)||LA132_0==42||LA132_0==62||(LA132_0>=81 && LA132_0<=82)||(LA132_0>=87 && LA132_0<=91)||(LA132_0>=103 && LA132_0<=104)||(LA132_0>=108 && LA132_0<=110)) ) {
                 alt132=1;
             }
             else if ( (LA132_0==43) ) {
@@ -10175,8 +10180,8 @@ public class BONParser extends AbstractBONParser {
             // BON.g:1189:53: (e= expression | i= interval )
             int alt135=2;
             switch ( input.LA(1) ) {
-            case MANIFEST_STRING:
             case IDENTIFIER:
+            case MANIFEST_STRING:
             case REAL:
             case 42:
             case 62:
@@ -10234,7 +10239,7 @@ public class BONParser extends AbstractBONParser {
                         throw nvae;
                     }
                 }
-                else if ( ((LA135_3>=MANIFEST_STRING && LA135_3<=IDENTIFIER)||(LA135_3>=CHARACTER_CONSTANT && LA135_3<=REAL)||LA135_3==42||LA135_3==62||(LA135_3>=87 && LA135_3<=91)||(LA135_3>=103 && LA135_3<=104)||(LA135_3>=108 && LA135_3<=110)) ) {
+                else if ( ((LA135_3>=IDENTIFIER && LA135_3<=MANIFEST_STRING)||(LA135_3>=CHARACTER_CONSTANT && LA135_3<=REAL)||LA135_3==42||LA135_3==62||(LA135_3>=87 && LA135_3<=91)||(LA135_3>=103 && LA135_3<=104)||(LA135_3>=108 && LA135_3<=110)) ) {
                     alt135=1;
                 }
                 else {
@@ -10267,7 +10272,7 @@ public class BONParser extends AbstractBONParser {
                         throw nvae;
                     }
                 }
-                else if ( ((LA135_4>=MANIFEST_STRING && LA135_4<=IDENTIFIER)||(LA135_4>=CHARACTER_CONSTANT && LA135_4<=REAL)||LA135_4==42||LA135_4==62||(LA135_4>=87 && LA135_4<=91)||(LA135_4>=103 && LA135_4<=104)||(LA135_4>=108 && LA135_4<=110)) ) {
+                else if ( ((LA135_4>=IDENTIFIER && LA135_4<=MANIFEST_STRING)||(LA135_4>=CHARACTER_CONSTANT && LA135_4<=REAL)||LA135_4==42||LA135_4==62||(LA135_4>=87 && LA135_4<=91)||(LA135_4>=103 && LA135_4<=104)||(LA135_4>=108 && LA135_4<=110)) ) {
                     alt135=1;
                 }
                 else {
@@ -10657,11 +10662,11 @@ public class BONParser extends AbstractBONParser {
                 {
                 int LA138_3 = input.LA(2);
 
-                if ( (LA138_3==INTEGER) ) {
-                    alt138=3;
-                }
-                else if ( (LA138_3==REAL) ) {
+                if ( (LA138_3==REAL) ) {
                     alt138=4;
+                }
+                else if ( (LA138_3==INTEGER) ) {
+                    alt138=3;
                 }
                 else {
                     if (state.backtracking>0) {state.failed=true; return constant;}
@@ -12557,7 +12562,7 @@ public class BONParser extends AbstractBONParser {
             int alt160=2;
             int LA160_0 = input.LA(1);
 
-            if ( ((LA160_0>=MANIFEST_STRING && LA160_0<=IDENTIFIER)||(LA160_0>=INTEGER && LA160_0<=REAL)||LA160_0==42||LA160_0==62||(LA160_0>=87 && LA160_0<=91)||(LA160_0>=103 && LA160_0<=104)||(LA160_0>=108 && LA160_0<=110)) ) {
+            if ( ((LA160_0>=IDENTIFIER && LA160_0<=MANIFEST_STRING)||(LA160_0>=INTEGER && LA160_0<=REAL)||LA160_0==42||LA160_0==62||(LA160_0>=87 && LA160_0<=91)||(LA160_0>=103 && LA160_0<=104)||(LA160_0>=108 && LA160_0<=110)) ) {
                 alt160=1;
             }
             else if ( ((LA160_0>=81 && LA160_0<=82)) ) {
@@ -14156,17 +14161,21 @@ public class BONParser extends AbstractBONParser {
             }
             switch (alt181) {
                 case 1 :
-                    // BON.g:1664:4: MANIFEST_STRING
+                    // BON.g:1664:3: MANIFEST_STRING
                     {
-                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10829); if (state.failed) return retval;
+                    if ( state.backtracking==0 ) {
+                       //TODO warn when not MANIFEST_STRING where we desire a single block. 
+                        
+                    }
+                    match(input,MANIFEST_STRING,FOLLOW_MANIFEST_STRING_in_manifest_textblock10833); if (state.failed) return retval;
 
                     }
                     break;
                 case 2 :
-                    // BON.g:1665:4: MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END
+                    // BON.g:1667:4: MANIFEST_TEXTBLOCK_START ( MANIFEST_TEXTBLOCK_MIDDLE )* MANIFEST_TEXTBLOCK_END
                     {
-                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10835); if (state.failed) return retval;
-                    // BON.g:1665:29: ( MANIFEST_TEXTBLOCK_MIDDLE )*
+                    match(input,MANIFEST_TEXTBLOCK_START,FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10839); if (state.failed) return retval;
+                    // BON.g:1667:29: ( MANIFEST_TEXTBLOCK_MIDDLE )*
                     loop180:
                     do {
                         int alt180=2;
@@ -14179,9 +14188,9 @@ public class BONParser extends AbstractBONParser {
 
                         switch (alt180) {
                     	case 1 :
-                    	    // BON.g:1665:29: MANIFEST_TEXTBLOCK_MIDDLE
+                    	    // BON.g:1667:29: MANIFEST_TEXTBLOCK_MIDDLE
                     	    {
-                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10837); if (state.failed) return retval;
+                    	    match(input,MANIFEST_TEXTBLOCK_MIDDLE,FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10841); if (state.failed) return retval;
 
                     	    }
                     	    break;
@@ -14191,7 +14200,7 @@ public class BONParser extends AbstractBONParser {
                         }
                     } while (true);
 
-                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10840); if (state.failed) return retval;
+                    match(input,MANIFEST_TEXTBLOCK_END,FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10844); if (state.failed) return retval;
 
                     }
                     break;
@@ -14254,11 +14263,11 @@ public class BONParser extends AbstractBONParser {
         "\1\3\1\uffff\1\5\4\uffff\2\5\1\uffff\1\5\1\uffff\1\5\1\uffff\4\5"+
         "\2\uffff\2\5";
     static final String DFA1_minS =
-        "\1\30\1\uffff\1\5\1\uffff\1\42\2\uffff\1\4\1\5\1\42\1\5\1\42\3\4"+
-        "\3\5\2\4\2\5";
+        "\1\30\1\uffff\1\4\1\uffff\1\42\2\uffff\2\4\1\42\1\4\1\42\1\4\1\5"+
+        "\4\4\2\5\2\4";
     static final String DFA1_maxS =
         "\1\134\1\uffff\1\134\1\uffff\1\42\2\uffff\2\134\1\42\1\134\1\42"+
-        "\1\134\1\4\4\134\2\4\2\134";
+        "\1\134\1\5\4\134\2\5\2\134";
     static final String DFA1_acceptS =
         "\1\uffff\1\1\1\uffff\1\3\1\uffff\1\4\1\2\17\uffff";
     static final String DFA1_specialS =
@@ -14267,44 +14276,44 @@ public class BONParser extends AbstractBONParser {
             "\1\1\3\uffff\1\1\1\uffff\1\2\5\uffff\2\1\6\uffff\1\1\4\uffff"+
             "\1\1\1\uffff\1\1\2\uffff\1\1\45\uffff\1\1",
             "",
-            "\1\4\22\uffff\1\6\3\uffff\1\6\7\uffff\2\6\6\uffff\1\6\4\uffff"+
+            "\1\4\23\uffff\1\6\3\uffff\1\6\7\uffff\2\6\6\uffff\1\6\4\uffff"+
             "\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff\1\6",
             "",
             "\1\7",
             "",
             "",
-            "\1\12\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
+            "\1\11\1\12\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
-            "\1\13\22\uffff\1\6\3\uffff\1\6\7\uffff\2\6\6\uffff\1\6\4\uffff"+
+            "\1\13\23\uffff\1\6\3\uffff\1\6\7\uffff\2\6\6\uffff\1\6\4\uffff"+
             "\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff\1\6",
             "\1\14",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\15\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\15\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
             "\1\16",
-            "\1\17\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
+            "\1\11\1\17\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
             "\1\20",
-            "\1\21\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
+            "\1\11\1\21\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\2\uffff\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\22\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\22\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\15\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\15\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\23\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\23\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
             "\1\24",
             "\1\25",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\22\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\22\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6",
-            "\1\11\22\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\23\2"+
+            "\1\11\23\uffff\1\6\3\uffff\1\6\4\uffff\1\10\1\uffff\1\23\2"+
             "\6\6\uffff\1\6\4\uffff\1\6\1\uffff\1\6\2\uffff\1\6\45\uffff"+
             "\1\6"
     };
@@ -14347,9 +14356,9 @@ public class BONParser extends AbstractBONParser {
     static final String DFA78_eofS =
         "\7\uffff";
     static final String DFA78_minS =
-        "\1\5\1\46\1\uffff\1\5\1\uffff\1\46\1\5";
+        "\1\4\1\46\1\uffff\1\4\1\uffff\1\46\1\4";
     static final String DFA78_maxS =
-        "\1\5\1\106\1\uffff\1\5\1\uffff\1\106\1\5";
+        "\1\4\1\106\1\uffff\1\4\1\uffff\1\106\1\4";
     static final String DFA78_acceptS =
         "\2\uffff\1\2\1\uffff\1\1\2\uffff";
     static final String DFA78_specialS =
@@ -14402,7 +14411,7 @@ public class BONParser extends AbstractBONParser {
     static final String DFA86_eofS =
         "\46\uffff";
     static final String DFA86_minS =
-        "\1\5\2\117\2\uffff\1\147\1\42\21\117\1\125\10\117\2\42\1\117\2\uffff";
+        "\1\4\2\117\2\uffff\1\147\1\42\21\117\1\125\10\117\2\42\1\117\2\uffff";
     static final String DFA86_maxS =
         "\1\120\2\117\2\uffff\1\156\1\170\21\117\1\125\10\117\2\77\1\117"+
         "\2\uffff";
@@ -14411,7 +14420,7 @@ public class BONParser extends AbstractBONParser {
     static final String DFA86_specialS =
         "\46\uffff}>";
     static final String[] DFA86_transitionS = {
-            "\1\3\44\uffff\1\3\26\uffff\1\4\1\3\1\uffff\1\3\11\uffff\1\1"+
+            "\1\3\45\uffff\1\3\26\uffff\1\4\1\3\1\uffff\1\3\11\uffff\1\1"+
             "\1\uffff\1\2",
             "\1\5",
             "\1\6",
@@ -14492,9 +14501,9 @@ public class BONParser extends AbstractBONParser {
     static final String DFA129_eofS =
         "\6\uffff";
     static final String DFA129_minS =
-        "\1\5\1\42\1\5\2\uffff\1\42";
+        "\1\4\1\42\1\4\2\uffff\1\42";
     static final String DFA129_maxS =
-        "\1\5\1\125\1\5\2\uffff\1\125";
+        "\1\4\1\125\1\4\2\uffff\1\125";
     static final String DFA129_acceptS =
         "\3\uffff\1\1\1\2\1\uffff";
     static final String DFA129_specialS =
@@ -14554,7 +14563,7 @@ public class BONParser extends AbstractBONParser {
     static final String DFA170_specialS =
         "\1\1\3\uffff\1\0\1\2\12\uffff}>";
     static final String[] DFA170_transitionS = {
-            "\1\10\1\17\1\uffff\1\6\1\3\1\7\40\uffff\1\16\23\uffff\1\11\30"+
+            "\1\17\1\10\1\uffff\1\6\1\3\1\7\40\uffff\1\16\23\uffff\1\11\30"+
             "\uffff\1\12\1\13\1\14\1\1\1\2\13\uffff\1\4\1\5\3\uffff\3\15",
             "",
             "",
@@ -14709,56 +14718,56 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_event_chart_in_informal_chart378 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_scenario_chart_in_informal_chart390 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_creation_chart_in_informal_chart402 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_24_in_class_dictionary437 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_24_in_class_dictionary437 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_system_name_in_class_dictionary442 = new BitSet(new long[]{0x00000000E4000000L});
     public static final BitSet FOLLOW_indexing_in_class_dictionary448 = new BitSet(new long[]{0x00000000E4000000L});
     public static final BitSet FOLLOW_explanation_in_class_dictionary458 = new BitSet(new long[]{0x00000000E4000000L});
     public static final BitSet FOLLOW_part_in_class_dictionary469 = new BitSet(new long[]{0x00000000E4000000L});
     public static final BitSet FOLLOW_dictionary_entry_in_class_dictionary482 = new BitSet(new long[]{0x00000000E6000000L});
     public static final BitSet FOLLOW_25_in_class_dictionary499 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_26_in_dictionary_entry525 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_26_in_dictionary_entry525 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_dictionary_entry527 = new BitSet(new long[]{0x0000000008000000L});
-    public static final BitSet FOLLOW_27_in_dictionary_entry532 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_27_in_dictionary_entry532 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_cluster_name_list_in_dictionary_entry534 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_description_in_dictionary_entry539 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_28_in_system_chart570 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_28_in_system_chart570 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_system_name_in_system_chart575 = new BitSet(new long[]{0x00000000EA000000L});
     public static final BitSet FOLLOW_indexing_in_system_chart581 = new BitSet(new long[]{0x00000000AA000000L});
     public static final BitSet FOLLOW_explanation_in_system_chart591 = new BitSet(new long[]{0x000000008A000000L});
     public static final BitSet FOLLOW_part_in_system_chart602 = new BitSet(new long[]{0x000000000A000000L});
     public static final BitSet FOLLOW_cluster_entries_in_system_chart617 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_system_chart644 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_29_in_explanation665 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_29_in_explanation665 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_manifest_textblock_in_explanation669 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_29_in_explanation682 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_30_in_indexing707 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_30_in_indexing707 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_index_list_in_indexing709 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_30_in_indexing725 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_31_in_part755 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_part759 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_31_in_part755 = new BitSet(new long[]{0x0000000000000820L});
+    public static final BitSet FOLLOW_manifest_textblock_in_part759 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_31_in_part777 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_32_in_description807 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_32_in_description807 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_manifest_textblock_in_description811 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_cluster_entry_in_cluster_entries836 = new BitSet(new long[]{0x0000000008000002L});
-    public static final BitSet FOLLOW_27_in_cluster_entry875 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_27_in_cluster_entry875 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_cluster_name_in_cluster_entry877 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_description_in_cluster_entry879 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_system_name916 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_index_clause_in_index_list973 = new BitSet(new long[]{0x0000000200000022L});
-    public static final BitSet FOLLOW_33_in_index_list1012 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_index_clause_in_index_list1016 = new BitSet(new long[]{0x0000000200000022L});
-    public static final BitSet FOLLOW_index_clause_in_index_list1059 = new BitSet(new long[]{0x0000000200000022L});
+    public static final BitSet FOLLOW_index_clause_in_index_list973 = new BitSet(new long[]{0x0000000200000012L});
+    public static final BitSet FOLLOW_33_in_index_list1012 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_index_clause_in_index_list1016 = new BitSet(new long[]{0x0000000200000012L});
+    public static final BitSet FOLLOW_index_clause_in_index_list1059 = new BitSet(new long[]{0x0000000200000012L});
     public static final BitSet FOLLOW_33_in_index_list1117 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_index_clause1150 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_index_clause1152 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_34_in_index_clause1152 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_index_term_list_in_index_clause1154 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_index_clause1168 = new BitSet(new long[]{0x0000000400000000L});
     public static final BitSet FOLLOW_34_in_index_clause1170 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_index_string_in_index_term_list1212 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_index_term_list1222 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_35_in_index_term_list1222 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_index_string_in_index_term_list1226 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_index_string1271 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_36_in_cluster_chart1305 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_36_in_cluster_chart1305 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_cluster_name_in_cluster_chart1307 = new BitSet(new long[]{0x00000000EE000000L});
     public static final BitSet FOLLOW_indexing_in_cluster_chart1315 = new BitSet(new long[]{0x00000000AE000000L});
     public static final BitSet FOLLOW_explanation_in_cluster_chart1326 = new BitSet(new long[]{0x000000008E000000L});
@@ -14767,11 +14776,11 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_cluster_entries_in_cluster_chart1376 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_cluster_chart1397 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_class_entry_in_class_entries1436 = new BitSet(new long[]{0x0000000004000002L});
-    public static final BitSet FOLLOW_26_in_class_entry1474 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_26_in_class_entry1474 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_class_entry1476 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_description_in_class_entry1480 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_cluster_name1514 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_37_in_class_chart1545 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_37_in_class_chart1545 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_class_chart1547 = new BitSet(new long[]{0x000003C0E2000000L});
     public static final BitSet FOLLOW_indexing_in_class_chart1555 = new BitSet(new long[]{0x000003C0A2000000L});
     public static final BitSet FOLLOW_explanation_in_class_chart1566 = new BitSet(new long[]{0x000003C082000000L});
@@ -14781,47 +14790,47 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_commands_in_class_chart1628 = new BitSet(new long[]{0x0000020002000000L});
     public static final BitSet FOLLOW_constraints_in_class_chart1647 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_class_chart1665 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_38_in_inherits1699 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_38_in_inherits1699 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_list_in_inherits1704 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_38_in_inherits1718 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_39_in_queries1738 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_39_in_queries1738 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_query_list_in_queries1740 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_40_in_commands1770 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_40_in_commands1770 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_command_list_in_commands1772 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_41_in_constraints1791 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_41_in_constraints1791 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_constraint_list_in_constraints1793 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_textblock_in_query_list1819 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_35_in_query_list1832 = new BitSet(new long[]{0x0000000000000810L});
-    public static final BitSet FOLLOW_manifest_textblock_in_query_list1836 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_manifest_textblock_in_query_list1868 = new BitSet(new long[]{0x0000000800000812L});
+    public static final BitSet FOLLOW_manifest_textblock_in_query_list1819 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_35_in_query_list1832 = new BitSet(new long[]{0x0000000000000820L});
+    public static final BitSet FOLLOW_manifest_textblock_in_query_list1836 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_manifest_textblock_in_query_list1868 = new BitSet(new long[]{0x0000000800000822L});
     public static final BitSet FOLLOW_35_in_query_list1894 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_textblock_in_command_list1941 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_35_in_command_list1954 = new BitSet(new long[]{0x0000000000000810L});
-    public static final BitSet FOLLOW_manifest_textblock_in_command_list1958 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_manifest_textblock_in_command_list1984 = new BitSet(new long[]{0x0000000800000812L});
+    public static final BitSet FOLLOW_manifest_textblock_in_command_list1941 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_35_in_command_list1954 = new BitSet(new long[]{0x0000000000000820L});
+    public static final BitSet FOLLOW_manifest_textblock_in_command_list1958 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_manifest_textblock_in_command_list1984 = new BitSet(new long[]{0x0000000800000822L});
     public static final BitSet FOLLOW_35_in_command_list2009 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2045 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_35_in_constraint_list2058 = new BitSet(new long[]{0x0000000000000810L});
-    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2062 = new BitSet(new long[]{0x0000000800000812L});
-    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2073 = new BitSet(new long[]{0x0000000800000812L});
+    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2045 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_35_in_constraint_list2058 = new BitSet(new long[]{0x0000000000000820L});
+    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2062 = new BitSet(new long[]{0x0000000800000822L});
+    public static final BitSet FOLLOW_manifest_textblock_in_constraint_list2073 = new BitSet(new long[]{0x0000000800000822L});
     public static final BitSet FOLLOW_35_in_constraint_list2097 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_class_name_in_class_name_list2119 = new BitSet(new long[]{0x0000000800000022L});
-    public static final BitSet FOLLOW_35_in_class_name_list2133 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_class_name_in_class_name_list2137 = new BitSet(new long[]{0x0000000800000022L});
-    public static final BitSet FOLLOW_class_name_in_class_name_list2166 = new BitSet(new long[]{0x0000000800000022L});
-    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2235 = new BitSet(new long[]{0x0000000800000022L});
-    public static final BitSet FOLLOW_35_in_cluster_name_list2248 = new BitSet(new long[]{0x0000000000000020L});
-    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2252 = new BitSet(new long[]{0x0000000800000022L});
-    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2280 = new BitSet(new long[]{0x0000000800000022L});
+    public static final BitSet FOLLOW_class_name_in_class_name_list2119 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_35_in_class_name_list2133 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_class_name_in_class_name_list2137 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_class_name_in_class_name_list2166 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2235 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_35_in_cluster_name_list2248 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2252 = new BitSet(new long[]{0x0000000800000012L});
+    public static final BitSet FOLLOW_cluster_name_in_cluster_name_list2280 = new BitSet(new long[]{0x0000000800000012L});
     public static final BitSet FOLLOW_class_or_bracketed_cluster_name_in_class_or_cluster_name_list2377 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_class_or_cluster_name_list2387 = new BitSet(new long[]{0x0000040000000020L});
+    public static final BitSet FOLLOW_35_in_class_or_cluster_name_list2387 = new BitSet(new long[]{0x0000040000000010L});
     public static final BitSet FOLLOW_class_or_bracketed_cluster_name_in_class_or_cluster_name_list2391 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_class_name_in_class_or_bracketed_cluster_name2419 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_42_in_class_or_bracketed_cluster_name2433 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_42_in_class_or_bracketed_cluster_name2433 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_cluster_name_in_class_or_bracketed_cluster_name2435 = new BitSet(new long[]{0x0000080000000000L});
     public static final BitSet FOLLOW_43_in_class_or_bracketed_cluster_name2437 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_class_name2459 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_44_in_event_chart2490 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_44_in_event_chart2490 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_system_name_in_event_chart2492 = new BitSet(new long[]{0x0000E000E2000000L});
     public static final BitSet FOLLOW_45_in_event_chart2500 = new BitSet(new long[]{0x00008000E2000000L});
     public static final BitSet FOLLOW_46_in_event_chart2510 = new BitSet(new long[]{0x00008000E2000000L});
@@ -14831,11 +14840,11 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_event_entries_in_event_chart2554 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_event_chart2581 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_event_entry_in_event_entries2618 = new BitSet(new long[]{0x0000800000000002L});
-    public static final BitSet FOLLOW_47_in_event_entry2661 = new BitSet(new long[]{0x0001000000000810L});
+    public static final BitSet FOLLOW_47_in_event_entry2661 = new BitSet(new long[]{0x0001000000000820L});
     public static final BitSet FOLLOW_manifest_textblock_in_event_entry2672 = new BitSet(new long[]{0x0001000000000000L});
-    public static final BitSet FOLLOW_48_in_event_entry2712 = new BitSet(new long[]{0x0000040000000022L});
+    public static final BitSet FOLLOW_48_in_event_entry2712 = new BitSet(new long[]{0x0000040000000012L});
     public static final BitSet FOLLOW_class_or_cluster_name_list_in_event_entry2722 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_49_in_scenario_chart2802 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_49_in_scenario_chart2802 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_system_name_in_scenario_chart2804 = new BitSet(new long[]{0x00040000E2000000L});
     public static final BitSet FOLLOW_indexing_in_scenario_chart2809 = new BitSet(new long[]{0x00040000A2000000L});
     public static final BitSet FOLLOW_explanation_in_scenario_chart2819 = new BitSet(new long[]{0x0004000082000000L});
@@ -14843,10 +14852,10 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_scenario_entries_in_scenario_chart2840 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_scenario_chart2861 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_scenario_entry_in_scenario_entries2901 = new BitSet(new long[]{0x0004000000000002L});
-    public static final BitSet FOLLOW_50_in_scenario_entry2942 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_50_in_scenario_entry2942 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_scenario_entry2946 = new BitSet(new long[]{0x0000000100000000L});
     public static final BitSet FOLLOW_description_in_scenario_entry2950 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_51_in_creation_chart2979 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_51_in_creation_chart2979 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_system_name_in_creation_chart2981 = new BitSet(new long[]{0x00100000E2000000L});
     public static final BitSet FOLLOW_indexing_in_creation_chart2986 = new BitSet(new long[]{0x00100000A2000000L});
     public static final BitSet FOLLOW_explanation_in_creation_chart2996 = new BitSet(new long[]{0x0010000082000000L});
@@ -14854,34 +14863,34 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_creation_entries_in_creation_chart3017 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_creation_chart3034 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_creation_entry_in_creation_entries3075 = new BitSet(new long[]{0x0010000000000002L});
-    public static final BitSet FOLLOW_52_in_creation_entry3115 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_52_in_creation_entry3115 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_creation_entry3117 = new BitSet(new long[]{0x0020000000000000L});
-    public static final BitSet FOLLOW_53_in_creation_entry3122 = new BitSet(new long[]{0x0000040000000020L});
+    public static final BitSet FOLLOW_53_in_creation_entry3122 = new BitSet(new long[]{0x0000040000000010L});
     public static final BitSet FOLLOW_class_or_cluster_name_list_in_creation_entry3126 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_54_in_static_diagram3159 = new BitSet(new long[]{0x00800000000000E0L});
+    public static final BitSet FOLLOW_54_in_static_diagram3159 = new BitSet(new long[]{0x00800000000000D0L});
     public static final BitSet FOLLOW_extended_id_in_static_diagram3165 = new BitSet(new long[]{0x0080000000000040L});
     public static final BitSet FOLLOW_COMMENT_in_static_diagram3178 = new BitSet(new long[]{0x0080000000000000L});
-    public static final BitSet FOLLOW_55_in_static_diagram3188 = new BitSet(new long[]{0x0E0000000E000020L});
+    public static final BitSet FOLLOW_55_in_static_diagram3188 = new BitSet(new long[]{0x0E0000000E000010L});
     public static final BitSet FOLLOW_static_block_in_static_diagram3195 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_static_diagram3202 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_extended_id3258 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_INTEGER_in_extended_id3271 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_static_component_in_static_block3312 = new BitSet(new long[]{0x0E0000000C000022L});
+    public static final BitSet FOLLOW_static_component_in_static_block3312 = new BitSet(new long[]{0x0E0000000C000012L});
     public static final BitSet FOLLOW_cluster_in_static_component3347 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_clazz_in_static_component3360 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_static_relation_in_static_component3373 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_27_in_cluster3405 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_27_in_cluster3405 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_cluster_name_in_cluster3407 = new BitSet(new long[]{0x0180000000000042L});
     public static final BitSet FOLLOW_56_in_cluster3416 = new BitSet(new long[]{0x0080000000000042L});
     public static final BitSet FOLLOW_COMMENT_in_cluster3429 = new BitSet(new long[]{0x0080000000000002L});
     public static final BitSet FOLLOW_cluster_components_in_cluster3447 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_55_in_cluster_components3502 = new BitSet(new long[]{0x0E0000000E000020L});
+    public static final BitSet FOLLOW_55_in_cluster_components3502 = new BitSet(new long[]{0x0E0000000E000010L});
     public static final BitSet FOLLOW_static_block_in_cluster_components3504 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_cluster_components3506 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_57_in_clazz3557 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_58_in_clazz3574 = new BitSet(new long[]{0x0000000004000000L});
     public static final BitSet FOLLOW_59_in_clazz3587 = new BitSet(new long[]{0x0000000004000000L});
-    public static final BitSet FOLLOW_26_in_clazz3621 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_26_in_clazz3621 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_clazz3632 = new BitSet(new long[]{0x3100004040000042L,0x0000000000000104L});
     public static final BitSet FOLLOW_formal_generics_in_clazz3645 = new BitSet(new long[]{0x3100004040000042L,0x0000000000000100L});
     public static final BitSet FOLLOW_56_in_clazz3667 = new BitSet(new long[]{0x3000004040000042L,0x0000000000000100L});
@@ -14892,50 +14901,50 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_inheritance_relation_in_static_relation3758 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_client_relation_in_static_relation3770 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_child_in_inheritance_relation3801 = new BitSet(new long[]{0x0000004000000000L});
-    public static final BitSet FOLLOW_38_in_inheritance_relation3803 = new BitSet(new long[]{0x4000000000000020L});
+    public static final BitSet FOLLOW_38_in_inheritance_relation3803 = new BitSet(new long[]{0x4000000000000010L});
     public static final BitSet FOLLOW_62_in_inheritance_relation3811 = new BitSet(new long[]{0x0000000000000080L});
     public static final BitSet FOLLOW_multiplicity_in_inheritance_relation3813 = new BitSet(new long[]{0x8000000000000000L});
-    public static final BitSet FOLLOW_63_in_inheritance_relation3817 = new BitSet(new long[]{0x4000000000000020L});
-    public static final BitSet FOLLOW_parent_in_inheritance_relation3834 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_63_in_inheritance_relation3817 = new BitSet(new long[]{0x4000000000000010L});
+    public static final BitSet FOLLOW_parent_in_inheritance_relation3834 = new BitSet(new long[]{0x0000000000000022L});
     public static final BitSet FOLLOW_semantic_label_in_inheritance_relation3845 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_client_in_client_relation3904 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000001L});
-    public static final BitSet FOLLOW_64_in_client_relation3906 = new BitSet(new long[]{0x4000000400000020L,0x0000000000000020L});
-    public static final BitSet FOLLOW_client_entities_in_client_relation3911 = new BitSet(new long[]{0x4000000400000020L,0x0000000000000020L});
-    public static final BitSet FOLLOW_type_mark_in_client_relation3923 = new BitSet(new long[]{0x4000000400000020L,0x0000000000000020L});
-    public static final BitSet FOLLOW_supplier_in_client_relation3949 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_64_in_client_relation3906 = new BitSet(new long[]{0x4000000400000010L,0x0000000000000020L});
+    public static final BitSet FOLLOW_client_entities_in_client_relation3911 = new BitSet(new long[]{0x4000000400000010L,0x0000000000000020L});
+    public static final BitSet FOLLOW_type_mark_in_client_relation3923 = new BitSet(new long[]{0x4000000400000010L,0x0000000000000020L});
+    public static final BitSet FOLLOW_supplier_in_client_relation3949 = new BitSet(new long[]{0x0000000000000022L});
     public static final BitSet FOLLOW_semantic_label_in_client_relation3959 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_62_in_client_entities4000 = new BitSet(new long[]{0x00000400000000A0L,0x0000000000014016L});
+    public static final BitSet FOLLOW_62_in_client_entities4000 = new BitSet(new long[]{0x0000040000000090L,0x0000000000014016L});
     public static final BitSet FOLLOW_client_entity_expression_in_client_entities4004 = new BitSet(new long[]{0x8000000000000000L});
     public static final BitSet FOLLOW_63_in_client_entities4006 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_client_entity_list_in_client_entity_expression4045 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_multiplicity_in_client_entity_expression4058 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_client_entity_in_client_entity_list4111 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_client_entity_list4120 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014016L});
+    public static final BitSet FOLLOW_35_in_client_entity_list4120 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014016L});
     public static final BitSet FOLLOW_client_entity_in_client_entity_list4124 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_prefix_in_client_entity4175 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_infix_in_client_entity4180 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_supplier_indirection_in_client_entity4185 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_parent_indirection_in_client_entity4196 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_indirection_feature_part_in_supplier_indirection4242 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_supplier_indirection4246 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014014L});
+    public static final BitSet FOLLOW_34_in_supplier_indirection4246 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014014L});
     public static final BitSet FOLLOW_generic_indirection_in_supplier_indirection4255 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_feature_name_in_indirection_feature_part4304 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_indirection_feature_list_in_indirection_feature_part4315 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_42_in_indirection_feature_list4365 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
+    public static final BitSet FOLLOW_42_in_indirection_feature_list4365 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
     public static final BitSet FOLLOW_feature_name_list_in_indirection_feature_list4369 = new BitSet(new long[]{0x0000080000000000L});
     public static final BitSet FOLLOW_43_in_indirection_feature_list4373 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_65_in_parent_indirection4421 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014014L});
+    public static final BitSet FOLLOW_65_in_parent_indirection4421 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014014L});
     public static final BitSet FOLLOW_generic_indirection_in_parent_indirection4425 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_indirection_element_in_generic_indirection4477 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_class_name_in_named_indirection4522 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000004L});
-    public static final BitSet FOLLOW_66_in_named_indirection4524 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014014L});
+    public static final BitSet FOLLOW_66_in_named_indirection4524 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014014L});
     public static final BitSet FOLLOW_indirection_list_in_named_indirection4528 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_67_in_named_indirection4532 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_66_in_named_indirection4547 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014014L});
+    public static final BitSet FOLLOW_66_in_named_indirection4547 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014014L});
     public static final BitSet FOLLOW_indirection_list_in_named_indirection4549 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_67_in_named_indirection4551 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_indirection_element_in_indirection_list4598 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_indirection_list4608 = new BitSet(new long[]{0x0000040000000020L,0x0000000000014014L});
+    public static final BitSet FOLLOW_35_in_indirection_list4608 = new BitSet(new long[]{0x0000040000000010L,0x0000000000014014L});
     public static final BitSet FOLLOW_indirection_element_in_indirection_list4612 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_68_in_indirection_element4666 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_named_indirection_in_indirection_element4676 = new BitSet(new long[]{0x0000000000000002L});
@@ -14952,12 +14961,12 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_static_ref_in_client4904 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_static_ref_in_supplier4934 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_static_component_name_in_static_ref4968 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_cluster_prefix_in_static_ref4984 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_cluster_prefix_in_static_ref4984 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_static_component_name_in_static_ref4988 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_cluster_name_in_cluster_prefix5027 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_cluster_prefix5036 = new BitSet(new long[]{0x0000000000000022L});
+    public static final BitSet FOLLOW_70_in_cluster_prefix5036 = new BitSet(new long[]{0x0000000000000012L});
     public static final BitSet FOLLOW_cluster_name_in_cluster_prefix5045 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_cluster_prefix5047 = new BitSet(new long[]{0x0000000000000022L});
+    public static final BitSet FOLLOW_70_in_cluster_prefix5047 = new BitSet(new long[]{0x0000000000000012L});
     public static final BitSet FOLLOW_IDENTIFIER_in_static_component_name5079 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_INTEGER_in_multiplicity5123 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_semantic_label5159 = new BitSet(new long[]{0x0000000000000002L});
@@ -14968,28 +14977,28 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_25_in_class_interface5253 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_71_in_class_invariant5292 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
     public static final BitSet FOLLOW_assertion_in_class_invariant5294 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_38_in_parent_class_list5335 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_38_in_parent_class_list5335 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_type_in_parent_class_list5339 = new BitSet(new long[]{0x0000000200000002L});
-    public static final BitSet FOLLOW_33_in_parent_class_list5350 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_33_in_parent_class_list5350 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_type_in_parent_class_list5354 = new BitSet(new long[]{0x0000000200000002L});
     public static final BitSet FOLLOW_33_in_parent_class_list5371 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_38_in_parent_class_list5382 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_feature_clause_in_features5426 = new BitSet(new long[]{0x0000004040000002L,0x0000000000000100L});
-    public static final BitSet FOLLOW_72_in_feature_clause5467 = new BitSet(new long[]{0x4C00000000000060L,0x0000000000014200L});
-    public static final BitSet FOLLOW_selective_export_in_feature_clause5477 = new BitSet(new long[]{0x4C00000000000060L,0x0000000000014200L});
-    public static final BitSet FOLLOW_COMMENT_in_feature_clause5499 = new BitSet(new long[]{0x4C00000000000060L,0x0000000000014200L});
+    public static final BitSet FOLLOW_72_in_feature_clause5467 = new BitSet(new long[]{0x4C00000000000050L,0x0000000000014200L});
+    public static final BitSet FOLLOW_selective_export_in_feature_clause5477 = new BitSet(new long[]{0x4C00000000000050L,0x0000000000014200L});
+    public static final BitSet FOLLOW_COMMENT_in_feature_clause5499 = new BitSet(new long[]{0x4C00000000000050L,0x0000000000014200L});
     public static final BitSet FOLLOW_feature_specifications_in_feature_clause5511 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_feature_specification_in_feature_specifications5554 = new BitSet(new long[]{0x4C00000000000062L,0x0000000000014200L});
-    public static final BitSet FOLLOW_58_in_feature_specification5609 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
-    public static final BitSet FOLLOW_59_in_feature_specification5622 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
-    public static final BitSet FOLLOW_73_in_feature_specification5633 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
+    public static final BitSet FOLLOW_feature_specification_in_feature_specifications5554 = new BitSet(new long[]{0x4C00000000000052L,0x0000000000014200L});
+    public static final BitSet FOLLOW_58_in_feature_specification5609 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
+    public static final BitSet FOLLOW_59_in_feature_specification5622 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
+    public static final BitSet FOLLOW_73_in_feature_specification5633 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
     public static final BitSet FOLLOW_feature_name_list_in_feature_specification5664 = new BitSet(new long[]{0x4000000400000042L,0x0000000000002C22L});
     public static final BitSet FOLLOW_has_type_in_feature_specification5673 = new BitSet(new long[]{0x4000000000000042L,0x0000000000002C02L});
     public static final BitSet FOLLOW_rename_clause_in_feature_specification5685 = new BitSet(new long[]{0x0000000000000042L,0x0000000000002C02L});
     public static final BitSet FOLLOW_COMMENT_in_feature_specification5697 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002C02L});
     public static final BitSet FOLLOW_feature_arguments_in_feature_specification5711 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000C00L});
     public static final BitSet FOLLOW_contract_clause_in_feature_specification5738 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_type_mark_in_has_type5801 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_type_mark_in_has_type5801 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_type_in_has_type5803 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_contracting_conditions_in_contract_clause5828 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_contract_clause5830 = new BitSet(new long[]{0x0000000000000002L});
@@ -15000,11 +15009,11 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_assertion_in_precondition5919 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_75_in_postcondition5953 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
     public static final BitSet FOLLOW_assertion_in_postcondition5955 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_62_in_selective_export5978 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_62_in_selective_export5978 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_list_in_selective_export5982 = new BitSet(new long[]{0x8000000000000000L});
     public static final BitSet FOLLOW_63_in_selective_export5984 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_feature_name_in_feature_name_list6029 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_feature_name_list6039 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
+    public static final BitSet FOLLOW_35_in_feature_name_list6039 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
     public static final BitSet FOLLOW_feature_name_in_feature_name_list6043 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_feature_name6092 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_prefix_in_feature_name6102 = new BitSet(new long[]{0x0000000000000002L});
@@ -15012,18 +15021,18 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_62_in_rename_clause6138 = new BitSet(new long[]{0x0000000000000000L,0x0000000000001000L});
     public static final BitSet FOLLOW_renaming_in_rename_clause6140 = new BitSet(new long[]{0x8000000000000000L});
     public static final BitSet FOLLOW_63_in_rename_clause6142 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_76_in_renaming6178 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_76_in_renaming6178 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_name_in_renaming6180 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_renaming6182 = new BitSet(new long[]{0x0000000000000020L,0x0000000000014000L});
+    public static final BitSet FOLLOW_70_in_renaming6182 = new BitSet(new long[]{0x0000000000000010L,0x0000000000014000L});
     public static final BitSet FOLLOW_feature_name_in_renaming6184 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_feature_argument_in_feature_arguments6219 = new BitSet(new long[]{0x0000000000000002L,0x0000000000002002L});
-    public static final BitSet FOLLOW_set_in_feature_argument6259 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_set_in_feature_argument6259 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_identifier_list_in_feature_argument6283 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_feature_argument6285 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_34_in_feature_argument6285 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_type_in_feature_argument6289 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_type_in_feature_argument6321 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_identifier_list6381 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_identifier_list6391 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_35_in_identifier_list6391 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_IDENTIFIER_in_identifier_list6395 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_78_in_prefix6412 = new BitSet(new long[]{0x0000000000000000L,0x0000000000008000L});
     public static final BitSet FOLLOW_79_in_prefix6414 = new BitSet(new long[]{0x0000000000000000L,0x0000718000000000L});
@@ -15035,24 +15044,24 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_79_in_infix6443 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_unary_in_prefix_operator6463 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_binary_in_infix_operator6478 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_66_in_formal_generics6497 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_66_in_formal_generics6497 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_formal_generic_list_in_formal_generics6501 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_67_in_formal_generics6503 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_formal_generic_in_formal_generic_list6546 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_formal_generic_list6555 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_35_in_formal_generic_list6555 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_formal_generic_in_formal_generic_list6559 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_formal_generic_name_in_formal_generic6609 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_formal_generic_name_in_formal_generic6621 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000002L});
-    public static final BitSet FOLLOW_65_in_formal_generic6623 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_65_in_formal_generic6623 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_class_type_in_formal_generic6627 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_formal_generic_name6666 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_class_name_in_class_type6711 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000004L});
     public static final BitSet FOLLOW_actual_generics_in_class_type6719 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_66_in_actual_generics6790 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_66_in_actual_generics6790 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_type_list_in_actual_generics6792 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000008L});
     public static final BitSet FOLLOW_67_in_actual_generics6794 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_type_in_type_list6858 = new BitSet(new long[]{0x0000000800000002L});
-    public static final BitSet FOLLOW_35_in_type_list6886 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_35_in_type_list6886 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_type_in_type_list6890 = new BitSet(new long[]{0x0000000800000002L});
     public static final BitSet FOLLOW_IDENTIFIER_in_type6945 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000004L});
     public static final BitSet FOLLOW_actual_generics_in_type6967 = new BitSet(new long[]{0x0000000000000002L});
@@ -15062,14 +15071,14 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_33_in_assertion7076 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_boolean_expression_in_assertion_clause7105 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_expression_in_boolean_expression7127 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_quantifier_in_quantification7167 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_quantifier_in_quantification7167 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_range_expression_in_quantification7174 = new BitSet(new long[]{0x0000000000000000L,0x0000000000180000L});
     public static final BitSet FOLLOW_restriction_in_quantification7182 = new BitSet(new long[]{0x0000000000000000L,0x0000000000180000L});
     public static final BitSet FOLLOW_proposition_in_quantification7194 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_81_in_quantifier7233 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_82_in_quantifier7246 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_variable_range_in_range_expression7284 = new BitSet(new long[]{0x0000000200000002L});
-    public static final BitSet FOLLOW_33_in_range_expression7294 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_33_in_range_expression7294 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_variable_range_in_range_expression7298 = new BitSet(new long[]{0x0000000200000002L});
     public static final BitSet FOLLOW_33_in_range_expression7313 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_83_in_restriction7350 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
@@ -15082,7 +15091,7 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_85_in_member_range7482 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F860000L});
     public static final BitSet FOLLOW_expression_in_member_range7486 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_identifier_list_in_type_range7522 = new BitSet(new long[]{0x0000000400000000L});
-    public static final BitSet FOLLOW_34_in_type_range7524 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_34_in_type_range7524 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_type_in_type_range7528 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_unqualified_call_in_call_chain7588 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
     public static final BitSet FOLLOW_70_in_call_chain7597 = new BitSet(new long[]{0x40000400000003B0L,0x000071800F800000L});
@@ -15129,71 +15138,71 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_INTEGER_in_integer_constant8419 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_sign_in_real_constant8464 = new BitSet(new long[]{0x0000000000000200L});
     public static final BitSet FOLLOW_REAL_in_real_constant8476 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_92_in_dynamic_diagram8507 = new BitSet(new long[]{0x00800000000000E0L});
+    public static final BitSet FOLLOW_92_in_dynamic_diagram8507 = new BitSet(new long[]{0x00800000000000D0L});
     public static final BitSet FOLLOW_extended_id_in_dynamic_diagram8515 = new BitSet(new long[]{0x0080000000000040L});
     public static final BitSet FOLLOW_COMMENT_in_dynamic_diagram8528 = new BitSet(new long[]{0x0080000000000000L});
-    public static final BitSet FOLLOW_55_in_dynamic_diagram8537 = new BitSet(new long[]{0x00040000020000A0L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_55_in_dynamic_diagram8537 = new BitSet(new long[]{0x0004000002000090L,0x00000003C0000000L});
     public static final BitSet FOLLOW_dynamic_block_in_dynamic_diagram8546 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_dynamic_diagram8570 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_dynamic_component_in_dynamic_block8613 = new BitSet(new long[]{0x00040000000000A2L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_dynamic_component_in_dynamic_block8613 = new BitSet(new long[]{0x0004000000000092L,0x00000003C0000000L});
     public static final BitSet FOLLOW_scenario_description_in_dynamic_component8650 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_object_group_in_dynamic_component8655 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_object_stack_in_dynamic_component8661 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_object_in_dynamic_component8666 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_message_relation_in_dynamic_component8671 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_50_in_scenario_description8699 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_50_in_scenario_description8699 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_scenario_name_in_scenario_description8701 = new BitSet(new long[]{0x0000000000000040L,0x0000000020000000L});
     public static final BitSet FOLLOW_COMMENT_in_scenario_description8709 = new BitSet(new long[]{0x0000000000000000L,0x0000000020000000L});
-    public static final BitSet FOLLOW_93_in_scenario_description8718 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_93_in_scenario_description8718 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_labelled_actions_in_scenario_description8725 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_scenario_description8732 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_labelled_action_in_labelled_actions8780 = new BitSet(new long[]{0x0000000000000012L});
-    public static final BitSet FOLLOW_action_label_in_labelled_action8821 = new BitSet(new long[]{0x0000000000000810L});
+    public static final BitSet FOLLOW_labelled_action_in_labelled_actions8780 = new BitSet(new long[]{0x0000000000000022L});
+    public static final BitSet FOLLOW_action_label_in_labelled_action8821 = new BitSet(new long[]{0x0000000000000820L});
     public static final BitSet FOLLOW_action_description_in_labelled_action8825 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_action_label8864 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_manifest_textblock_in_action_description8899 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_manifest_textblock_in_scenario_name8940 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_94_in_object_group8973 = new BitSet(new long[]{0x0000000000000000L,0x0000000080000000L});
-    public static final BitSet FOLLOW_95_in_object_group8998 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_95_in_object_group8998 = new BitSet(new long[]{0x0000000000000090L});
     public static final BitSet FOLLOW_group_name_in_object_group9004 = new BitSet(new long[]{0x0080000000000042L});
     public static final BitSet FOLLOW_COMMENT_in_object_group9016 = new BitSet(new long[]{0x0080000000000002L});
     public static final BitSet FOLLOW_group_components_in_object_group9031 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_55_in_group_components9082 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_55_in_group_components9082 = new BitSet(new long[]{0x0004000000000090L,0x00000003C0000000L});
     public static final BitSet FOLLOW_dynamic_block_in_group_components9084 = new BitSet(new long[]{0x0000000002000000L});
     public static final BitSet FOLLOW_25_in_group_components9086 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_96_in_object_stack9131 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_96_in_object_stack9131 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_object_name_in_object_stack9138 = new BitSet(new long[]{0x0000000000000042L});
     public static final BitSet FOLLOW_COMMENT_in_object_stack9150 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_97_in_object9198 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_97_in_object9198 = new BitSet(new long[]{0x0000000000000010L});
     public static final BitSet FOLLOW_object_name_in_object9205 = new BitSet(new long[]{0x0000000000000042L});
     public static final BitSet FOLLOW_COMMENT_in_object9217 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_caller_in_message_relation9241 = new BitSet(new long[]{0x0000000000000000L,0x0000000400000000L});
-    public static final BitSet FOLLOW_98_in_message_relation9243 = new BitSet(new long[]{0x00040000000000A0L,0x00000003C0000000L});
-    public static final BitSet FOLLOW_receiver_in_message_relation9245 = new BitSet(new long[]{0x0000000000000012L});
+    public static final BitSet FOLLOW_98_in_message_relation9243 = new BitSet(new long[]{0x0004000000000090L,0x00000003C0000000L});
+    public static final BitSet FOLLOW_receiver_in_message_relation9245 = new BitSet(new long[]{0x0000000000000022L});
     public static final BitSet FOLLOW_message_label_in_message_relation9248 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_dynamic_ref_in_caller9280 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_dynamic_ref_in_receiver9300 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_extended_id_in_dynamic_ref9326 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_dynamic_ref9329 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_70_in_dynamic_ref9329 = new BitSet(new long[]{0x0000000000000090L});
     public static final BitSet FOLLOW_extended_id_in_dynamic_ref9331 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
     public static final BitSet FOLLOW_IDENTIFIER_in_dynamic_component_name9362 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_dynamic_component_name9365 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_70_in_dynamic_component_name9365 = new BitSet(new long[]{0x0000000000000090L});
     public static final BitSet FOLLOW_extended_id_in_dynamic_component_name9367 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_INTEGER_in_dynamic_component_name9376 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_class_name_in_object_name9399 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000040L});
-    public static final BitSet FOLLOW_70_in_object_name9409 = new BitSet(new long[]{0x00000000000000A0L});
+    public static final BitSet FOLLOW_70_in_object_name9409 = new BitSet(new long[]{0x0000000000000090L});
     public static final BitSet FOLLOW_extended_id_in_object_name9413 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_extended_id_in_group_name9453 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_message_label9486 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_change_string_marks_in_notational_tuning9510 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_change_concatenator_in_notational_tuning9516 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_change_prefix_in_notational_tuning9521 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_99_in_change_string_marks9536 = new BitSet(new long[]{0x0000000000000010L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9538 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_99_in_change_string_marks9536 = new BitSet(new long[]{0x0000000000000020L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9538 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_change_string_marks9540 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_100_in_change_concatenator9574 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_100_in_change_concatenator9574 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_change_concatenator9576 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_101_in_change_prefix9610 = new BitSet(new long[]{0x0000000000000010L});
+    public static final BitSet FOLLOW_101_in_change_prefix9610 = new BitSet(new long[]{0x0000000000000020L});
     public static final BitSet FOLLOW_MANIFEST_STRING_in_change_prefix9612 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_equivalence_expression_in_expression9638 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_quantification_in_expression9652 = new BitSet(new long[]{0x0000000000000002L});
@@ -15263,10 +15272,10 @@ public class BONParser extends AbstractBONParser {
     public static final BitSet FOLLOW_119_in_mul_div_op10480 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_120_in_mod_pow_op10513 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_76_in_mod_pow_op10521 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10829 = new BitSet(new long[]{0x0000000000000002L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10835 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10837 = new BitSet(new long[]{0x0000000000003000L});
-    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10840 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_STRING_in_manifest_textblock10833 = new BitSet(new long[]{0x0000000000000002L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_START_in_manifest_textblock10839 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_MIDDLE_in_manifest_textblock10841 = new BitSet(new long[]{0x0000000000003000L});
+    public static final BitSet FOLLOW_MANIFEST_TEXTBLOCK_END_in_manifest_textblock10844 = new BitSet(new long[]{0x0000000000000002L});
     public static final BitSet FOLLOW_constant_in_synpred1_BON9981 = new BitSet(new long[]{0x0000000000000002L});
 
 }

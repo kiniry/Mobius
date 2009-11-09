@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-10-12 14:35:52
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-11-09 13:31:58
 
 /**
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
@@ -90,7 +90,7 @@ public class BONLexer extends AbstractBONLexer {
     public static final int T__107=107;
     public static final int T__108=108;
     public static final int T__109=109;
-    public static final int IDENTIFIER=5;
+    public static final int IDENTIFIER=4;
     public static final int ALPHANUMERIC=19;
     public static final int T__59=59;
     public static final int T__103=103;
@@ -119,7 +119,7 @@ public class BONLexer extends AbstractBONLexer {
     public static final int T__101=101;
     public static final int T__100=100;
     public static final int T__30=30;
-    public static final int MANIFEST_STRING=4;
+    public static final int MANIFEST_STRING=5;
     public static final int T__31=31;
     public static final int T__32=32;
     public static final int T__33=33;
@@ -2504,10 +2504,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1668:10: ( ( LINE_COMMENT )+ )
-            // BON.g:1668:13: ( LINE_COMMENT )+
+            // BON.g:1670:10: ( ( LINE_COMMENT )+ )
+            // BON.g:1670:13: ( LINE_COMMENT )+
             {
-            // BON.g:1668:13: ( LINE_COMMENT )+
+            // BON.g:1670:13: ( LINE_COMMENT )+
             int cnt7=0;
             loop7:
             do {
@@ -2521,7 +2521,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // BON.g:1668:13: LINE_COMMENT
+            	    // BON.g:1670:13: LINE_COMMENT
             	    {
             	    mLINE_COMMENT(); 
 
@@ -2552,11 +2552,11 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LINE_COMMENT"
     public final void mLINE_COMMENT() throws RecognitionException {
         try {
-            // BON.g:1672:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
-            // BON.g:1672:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
+            // BON.g:1674:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
+            // BON.g:1674:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
             {
             mCOMMENT_START(); 
-            // BON.g:1672:32: ( options {greedy=false; } : . )*
+            // BON.g:1674:32: ( options {greedy=false; } : . )*
             loop8:
             do {
                 int alt8=2;
@@ -2575,7 +2575,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // BON.g:1672:59: .
+            	    // BON.g:1674:59: .
             	    {
             	    matchAny(); 
 
@@ -2600,8 +2600,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "COMMENT_START"
     public final void mCOMMENT_START() throws RecognitionException {
         try {
-            // BON.g:1676:16: ( '--' )
-            // BON.g:1676:18: '--'
+            // BON.g:1678:16: ( '--' )
+            // BON.g:1678:18: '--'
             {
             match("--"); 
 
@@ -2617,10 +2617,10 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "NEWLINE"
     public final void mNEWLINE() throws RecognitionException {
         try {
-            // BON.g:1680:10: ( ( '\\r' )? '\\n' )
-            // BON.g:1680:13: ( '\\r' )? '\\n'
+            // BON.g:1682:10: ( ( '\\r' )? '\\n' )
+            // BON.g:1682:13: ( '\\r' )? '\\n'
             {
-            // BON.g:1680:13: ( '\\r' )?
+            // BON.g:1682:13: ( '\\r' )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -2629,7 +2629,7 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt9) {
                 case 1 :
-                    // BON.g:1680:13: '\\r'
+                    // BON.g:1682:13: '\\r'
                     {
                     match('\r'); 
 
@@ -2653,10 +2653,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = INTEGER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1687:10: ( ( DIGIT )+ )
-            // BON.g:1687:13: ( DIGIT )+
+            // BON.g:1689:10: ( ( DIGIT )+ )
+            // BON.g:1689:13: ( DIGIT )+
             {
-            // BON.g:1687:13: ( DIGIT )+
+            // BON.g:1689:13: ( DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -2670,7 +2670,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // BON.g:1687:14: DIGIT
+            	    // BON.g:1689:14: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2702,10 +2702,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = REAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1690:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
-            // BON.g:1690:10: ( DIGIT )+ '.' ( DIGIT )+
+            // BON.g:1692:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
+            // BON.g:1692:10: ( DIGIT )+ '.' ( DIGIT )+
             {
-            // BON.g:1690:10: ( DIGIT )+
+            // BON.g:1692:10: ( DIGIT )+
             int cnt11=0;
             loop11:
             do {
@@ -2719,7 +2719,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // BON.g:1690:10: DIGIT
+            	    // BON.g:1692:10: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2736,7 +2736,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('.'); 
-            // BON.g:1690:21: ( DIGIT )+
+            // BON.g:1692:21: ( DIGIT )+
             int cnt12=0;
             loop12:
             do {
@@ -2750,7 +2750,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt12) {
             	case 1 :
-            	    // BON.g:1690:21: DIGIT
+            	    // BON.g:1692:21: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2780,8 +2780,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // BON.g:1694:8: ( '0' .. '9' )
-            // BON.g:1694:11: '0' .. '9'
+            // BON.g:1696:8: ( '0' .. '9' )
+            // BON.g:1696:11: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2798,11 +2798,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1707:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
-            // BON.g:1707:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // BON.g:1709:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
+            // BON.g:1709:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             {
             mALPHA(); 
-            // BON.g:1707:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // BON.g:1709:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -2811,9 +2811,9 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt14) {
                 case 1 :
-                    // BON.g:1707:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
+                    // BON.g:1709:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
                     {
-                    // BON.g:1707:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
+                    // BON.g:1709:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
                     loop13:
                     do {
                         int alt13=2;
@@ -2835,7 +2835,7 @@ public class BONLexer extends AbstractBONLexer {
 
                         switch (alt13) {
                     	case 1 :
-                    	    // BON.g:1707:22: ALPHANUMERIC_OR_UNDERSCORE
+                    	    // BON.g:1709:22: ALPHANUMERIC_OR_UNDERSCORE
                     	    {
                     	    mALPHANUMERIC_OR_UNDERSCORE(); 
 
@@ -2868,7 +2868,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC_OR_UNDERSCORE"
     public final void mALPHANUMERIC_OR_UNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1713:29: ( ALPHANUMERIC | UNDERSCORE )
+            // BON.g:1715:29: ( ALPHANUMERIC | UNDERSCORE )
             // BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2892,8 +2892,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UNDERSCORE"
     public final void mUNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1717:13: ( '_' )
-            // BON.g:1717:16: '_'
+            // BON.g:1719:13: ( '_' )
+            // BON.g:1719:16: '_'
             {
             match('_'); 
 
@@ -2908,7 +2908,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC"
     public final void mALPHANUMERIC() throws RecognitionException {
         try {
-            // BON.g:1721:15: ( ALPHA | DIGIT )
+            // BON.g:1723:15: ( ALPHA | DIGIT )
             // BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2932,7 +2932,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHA"
     public final void mALPHA() throws RecognitionException {
         try {
-            // BON.g:1725:8: ( LOWER | UPPER )
+            // BON.g:1727:8: ( LOWER | UPPER )
             // BON.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2956,8 +2956,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LOWER"
     public final void mLOWER() throws RecognitionException {
         try {
-            // BON.g:1729:8: ( 'a' .. 'z' )
-            // BON.g:1729:10: 'a' .. 'z'
+            // BON.g:1731:8: ( 'a' .. 'z' )
+            // BON.g:1731:10: 'a' .. 'z'
             {
             matchRange('a','z'); 
 
@@ -2972,8 +2972,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UPPER"
     public final void mUPPER() throws RecognitionException {
         try {
-            // BON.g:1733:8: ( 'A' .. 'Z' )
-            // BON.g:1733:10: 'A' .. 'Z'
+            // BON.g:1735:8: ( 'A' .. 'Z' )
+            // BON.g:1735:10: 'A' .. 'Z'
             {
             matchRange('A','Z'); 
 
@@ -2990,10 +2990,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1740:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
-            // BON.g:1740:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // BON.g:1742:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
+            // BON.g:1742:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             {
-            // BON.g:1740:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // BON.g:1742:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             int cnt15=0;
             loop15:
             do {

@@ -1,5 +1,7 @@
 package beetlzplugin.popup.actions;
 
+import ie.ucd.bon.util.StringUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -12,10 +14,12 @@ import java.util.Vector;
 
 import main.Beetlz;
 import main.Beetlz.Status;
+import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -34,8 +38,8 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-import beetlzplugin.Activator;
 import beetlzplugin.preferences.PreferenceConstants;
+import beetlzplugin.runner.UserSettings;
 
 /**
  * Class for skeleton generation menu item.
@@ -113,11 +117,13 @@ public class BeetlzSkeleton implements IObjectActionDelegate {
     setConsole();
 
     //Get options
-    final List < String > args = new Vector < String > ();
+    final List<String> args = new Vector < String > ();
+    final List<String> fileArgs = getFileArguments();
+
     final boolean cont = getUserOptions(args);
     //Get files
     args.add("-files"); //$NON-NLS-1$
-    args.addAll(getFileArguments());
+    args.addAll(fileArgs);
 
     if (cont) {
       try {
@@ -166,7 +172,8 @@ public class BeetlzSkeleton implements IObjectActionDelegate {
    * @return successful and continue?
    */
   private boolean getUserOptions(final List < String > args) {
-    final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+    IPreferenceStore store = UserSettings.getAppropriatePreferenceStore(my_project);
+
     final String fileName = store.getString(PreferenceConstants.SPEC_PATH);
     final String userFile = 
       store.getString(PreferenceConstants.USER_SETTING_PATH);
@@ -178,6 +185,12 @@ public class BeetlzSkeleton implements IObjectActionDelegate {
       args.add("-userSettings"); //$NON-NLS-1$
       args.add(userFile);
     }
+
+    //Classpath for openjml
+    List<String> cpEntries = Utils.getProjectClassPathEntries(JavaCore.create(my_project));
+    String cp = StringUtil.appendWithSeparator(cpEntries, File.pathSeparator);
+    args.add("-javajmlcp");
+    args.add(cp);
 
     useJml = store.getBoolean(PreferenceConstants.USE_JML_OPTION);
     useJava = store.getBoolean(PreferenceConstants.USE_JAVA_OPTION);

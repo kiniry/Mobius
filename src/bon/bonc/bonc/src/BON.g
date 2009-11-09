@@ -153,7 +153,7 @@ indexing returns [Indexing indexing] :
 ;
 
 part returns [String part] :
-    p='part' m=MANIFEST_STRING
+    p='part' m=manifest_textblock
     { $part = $m.text; }
   |
     p='part' 
@@ -1661,6 +1661,8 @@ MANIFEST_TEXTBLOCK_END  : '\\' (options {greedy=false;} : ~('"'|'\\') )+ '"'
 
 manifest_textblock  
 :   
+  { //TODO warn when not MANIFEST_STRING where we desire a single block. 
+  }
    MANIFEST_STRING 
  | MANIFEST_TEXTBLOCK_START MANIFEST_TEXTBLOCK_MIDDLE* MANIFEST_TEXTBLOCK_END
 ;
