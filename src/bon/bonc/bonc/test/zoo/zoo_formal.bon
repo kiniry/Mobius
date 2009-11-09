@@ -140,7 +140,7 @@ feature
 		-> name: SEQUENCE[SEQUENCE[STRING]]
 	isHappy: BOOLEAN
 feature{NONE}
-	effective wakeWakeUp
+	effective wakeUp
 	
 end 
 
@@ -203,7 +203,7 @@ feature
   	countStripes
 	pattern
 	dummy
-	redefined wakeUp
+	effective wakeUp
 feature{SNAKE}
 	patternOne: STRING
 	patternTwo: STRING
@@ -243,8 +243,8 @@ effective class KEEPER  -- strictfp
 inherit 
 	PERSONNEL
 feature
-	redefined getID: INTEGER
-	redefined setVacation  
+	effective getID: INTEGER
+	effective setVacation  
 	name: STRING
 	feedAnimal: BOOLEAN
 		-> animal: ANIMAL

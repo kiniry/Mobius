@@ -497,10 +497,11 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private boolean compareType(Type expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
-      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), null));
+      //TODO uncomment the addProblem calls in the two compareType methods
+      //problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), null));
       return false;
     } else if (!st.isSubtypeOrEqual(found, expected)) {
-      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), typeToString(found)));
+      //problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeToString(expected), typeToString(found)));
       return false;
     } else {
       return true;
@@ -509,7 +510,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
 
   private boolean compareType(Type[] expected, Type found, SourceLocation loc, String explanation) {
     if (found == null) {
-      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), null));
+      //problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), null));
       return false;
     } else {
       for (Type type : expected) {
@@ -517,7 +518,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
           return true;
         }
       }
-      problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), typeToString(found)));
+      //problems.addProblem(new TypeMismatchWithExplanationError(loc, explanation, typeChoices(expected), typeToString(found)));
       return false;
     }
   }

@@ -16,7 +16,7 @@ component
       inherit 
         BOOK
       feature 
-        effective NO_PAGES: VALUE
+        NO_PAGES: VALUE
     end
   end
 end

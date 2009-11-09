@@ -198,10 +198,9 @@
 @Output { < DeferredFeatureInNonDeferredClassError, #File:deferred_feature_in_non_deferred_class.bon, 7, 6, "X, Y", true, A > }
 
 @Test-name: "Eva's Zoo example."
-@Prog-args: {--informal}
+@Prog-args: {--formal}
 @Location { zoo/ }
 @Input { zoo_formal.bon }
-@Output { < SystemNotDefinedError > }
 
 @Test-name: "Sensetile system."
 @Location { sensetile/ }
@@ -261,16 +260,16 @@
 @Prog-args: {--formal}
 @Location { misc/ }
 @Input { feature_inherits }
-@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 6, Y, K, effective > }
+@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 16, Y, K, effective > }
 
 @Test-name: "Features in the presence of inheritance #2"
 @Prog-args: {--formal}
 @Location { misc/ }
 @Input { feature_inherits2 }
-@Output { < ParentFeatureNotDeferredError, #File:feature_inherits2, 9, 6, K, Y > }
+@Output { < ParentFeatureNotDeferredError, #File:feature_inherits2, 9, 16, K, Y > }
 
 @Test-name: "Features in the presence of inheritance #3"
 @Prog-args: {--formal}
 @Location { misc/ }
 @Input { feature_inherits3 }
-@Output { < ParentFeatureIsDeferredError, #File:feature_inherits3, 10, 6, K, Y > }
+@Output { < ParentFeatureIsDeferredError, #File:feature_inherits3, 10, 16, K, Y > }
