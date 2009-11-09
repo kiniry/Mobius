@@ -110,18 +110,18 @@ public class BonPretty {
             }
           }
         } else {
-          the_out.write(my_tab + "cluster " + clusterName +
-                        my_newline + my_newline); //$NON-NLS-1$
+          the_out.write(my_tab + "cluster " + clusterName + my_newline); //$NON-NLS-1$
+          the_out.write(my_tab + "component" + my_newline + my_newline);
           for (final String[] cls : classes.get(clusterName)) {
             for (final String s : cls) {
               the_out.write(my_tab + my_tab + s);
             }
           }
 
-          the_out.write(my_tab + "end" + my_newline + my_newline); //$NON-NLS-1$
+          the_out.write(my_tab + "end --cluster " + clusterName + my_newline + my_newline); //$NON-NLS-1$
         }
       }
-      the_out.write("end" + my_newline); //$NON-NLS-1$
+      the_out.write("end --static diagram" + my_newline); //$NON-NLS-1$
       //out.flush();
     } catch (final IOException e) {
       e.printStackTrace();
@@ -174,7 +174,7 @@ public class BonPretty {
     list.addAll(feat);
     list.addAll(invariant);
     if (feat.size() > 0 || invariant.size() > 0 || !the_class.getComments().isEmpty()) {
-      list.add("end" + my_newline); //$NON-NLS-1$
+      list.add("end --class " + PrettyFormatter.formatBonClassName(the_class.getName().toString()) + my_newline); //$NON-NLS-1$
     }
     list.add(my_newline);
     list.addAll(printClientRelations(the_class));
@@ -237,20 +237,20 @@ public class BonPretty {
       comment.add(BConst.INDEXING + my_newline);
       if (comm.my_about != null && comm.my_about.size() > 0) {
         comment.add(my_tab + BConst.BON_ABOUT + " \"" + //$NON-NLS-1$
-                    comm.my_about.get(0).trim() + "\""); //$NON-NLS-1$
+                    comm.my_about.get(0).trim()); //$NON-NLS-1$
         if (comm.my_about.size() > 1) {
           comment.add(" \\");
         } else {
-          comment.add(my_semicolon);
+          comment.add("\"" + my_semicolon);
         }
         comment.add(my_newline);
         for (int i = 1; i < comm.my_about.size(); i++) {
-          comment.add(my_tab + my_tab + "\\ \"" + //$NON-NLS-1$
-                      comm.my_about.get(i) + "\""); //$NON-NLS-1$
+          comment.add(my_tab + my_tab + "\\ " + //$NON-NLS-1$
+                      comm.my_about.get(i));
           if (i < comm.my_about.size() - 1) {
             comment.add(" \\");
           } else {
-            comment.add(my_semicolon);
+            comment.add("\"" + my_semicolon);
           }
           comment.add(my_newline);
         }

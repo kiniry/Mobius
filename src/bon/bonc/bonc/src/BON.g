@@ -153,7 +153,7 @@ indexing returns [Indexing indexing] :
 ;
 
 part returns [String part] :
-    p='part' m=manifest_textblock
+    p='part' m=MANIFEST_STRING
     { $part = $m.text; }
   |
     p='part' 
@@ -213,7 +213,7 @@ index_term_list returns [List<String> strings] :
 ;
                  
 index_string returns [String s] :
-  m=MANIFEST_STRING
+  m=manifest_textblock
   { $s = $m.text; }    
 ;
 
@@ -574,7 +574,9 @@ clazz returns [Clazz clazz]
   (p='persistent' { persistent = true; end = $p; })?   
   (i='interfaced' { interfaced = true; end = $i; })? 
   (co=COMMENT { comment = $co.text; end = $co; } )?
-  (ci=class_interface { classInterface = $ci.ci; end = $ci.stop; } )? 
+  
+  (ci=class_interface { classInterface = $ci.ci; end = $ci.stop; } )?
+  
   { $clazz = Clazz.mk($cn.name, generics, mod, classInterface, reused, persistent, interfaced, comment, getSLoc(start,end)); }
 ;
             
@@ -790,22 +792,57 @@ semantic_label returns [String label] :
  ***   Class Interface Description          ***
  **********************************************/
 
-class_interface returns [ClassInterface ci] 
-@init { Indexing indexing = null; List<Type> parents = null; List<Expression> invariant = null; Token start = null; }
+class_interface returns [ClassInterface ci] :
+    cisi=class_interface_start_indexing {$ci=$cisi.ci;}
+  | cisp=class_interface_start_inherit {$ci=$cisp.ci;}
+  | cisf=class_interface_start_features {$ci=$cisf.ci;}
+  | cisv=class_interface_start_invariant {$ci=$cisv.ci;}
+;
+
+class_interface_start_indexing returns [ClassInterface ci]
+@init { Indexing indexing = null; List<Type> parents = emptyList(); 
+        List<Expression> invariant = emptyList(); Token start = null; 
+        List<Feature> features = emptyList(); }
 :
-  (indexing { indexing = $indexing.indexing; start = $indexing.start; } )?
-  (  pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } 
-   | { parents = emptyList(); }
-  )
-  features
-  { if (start == null) start = $features.start; }
-  (  inv=class_invariant { invariant = $inv.invariant; } 
-   | { invariant = emptyList(); }
-  )
+  indexing { indexing = $indexing.indexing; start = $indexing.start; } 
+  (  pcl=parent_class_list { parents = $pcl.parents; if (start == null) start = $pcl.start; } )?
+  (   features { features = $features.features; } )?
+  (  inv=class_invariant { invariant = $inv.invariant; } )?
+  e='end'
+  { $ci = ClassInterface.mk(features, parents, invariant, indexing, getSLoc(start, $e)); }
+;
+
+class_interface_start_inherit returns [ClassInterface ci]
+@init { Indexing indexing = null; List<Type> parents = emptyList(); 
+        List<Expression> invariant = emptyList(); Token start = null; 
+        List<Feature> features = emptyList(); }
+:
+  pcl=parent_class_list { start = $pcl.start; }
+  (   features { features = $features.features; } )?
+  (  inv=class_invariant { invariant = $inv.invariant; } )?
+  e='end'
+  { $ci = ClassInterface.mk(features, $pcl.parents, invariant, indexing, getSLoc(start, $e)); }
+;
+
+class_interface_start_features returns [ClassInterface ci]
+@init { Indexing indexing = null; List<Type> parents = emptyList(); 
+        List<Expression> invariant = emptyList(); Token start = null; }
+:
+  features { start = $features.start; }
+  (  inv=class_invariant { invariant = $inv.invariant; } )?
   e='end'
   { $ci = ClassInterface.mk($features.features, parents, invariant, indexing, getSLoc(start, $e)); }
 ;
-                    
+
+class_interface_start_invariant returns [ClassInterface ci]
+@init { Indexing indexing = null; List<Type> parents = emptyList(); 
+        Token start = null; List<Feature> features = emptyList(); }
+:
+  inv=class_invariant { start = $inv.start; }
+  e='end'
+  { $ci = ClassInterface.mk(features, parents, $inv.invariant, indexing, getSLoc(start, $e)); }
+;
+
 class_invariant returns [List<Expression> invariant] :
   'invariant' assertion 
   { $invariant = $assertion.clauses; }

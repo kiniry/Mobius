@@ -205,13 +205,13 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       switch(modifier) {
       case DEFERRED:
       case NONE:
-        checkParentFeatureCompatible(node, name.getName(), false, false, false);
+        checkParentFeatureCompatible(node, name, false, false, false);
         break;
       case EFFECTIVE:
-        checkParentFeatureCompatible(node, name.getName(), true, true, false);
+        checkParentFeatureCompatible(node, name, true, true, false);
         break;
       case REDEFINED:
-        checkParentFeatureCompatible(node, name.getName(), true, false, true);
+        checkParentFeatureCompatible(node, name, true, false, true);
         break;
       }
     }
@@ -219,22 +219,24 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
     visitNode(contracts);
   }
 
-  private void checkParentFeatureCompatible(FeatureSpecification node, String featureName, boolean parentFeatureMustExist,
+  private void checkParentFeatureCompatible(FeatureSpecification node, FeatureName featureNameNode, boolean parentFeatureMustExist,
       boolean parentFeatureMustBeDeferred, boolean parentFeatureMustBeNonDeferred) {
     String className = context.clazz.getName().getName();
+    String featureName = featureNameNode.getName();
+    
     FeatureSpecification parentFeature = findParentFeatureWithName(className, featureName);
 
     if (parentFeature == null) {
       if (parentFeatureMustExist) {
-        problems.addProblem(new NoParentDeclaresFeatureError(node.getLocation(), featureName, className, PrettyPrintVisitor.toString(node.getModifier())));
+        problems.addProblem(new NoParentDeclaresFeatureError(featureNameNode.getLocation(), featureName, className, PrettyPrintVisitor.toString(node.getModifier())));
       }
     } else {
       if (parentFeatureMustBeDeferred && parentFeature.getModifier() != DEFERRED) {
-        problems.addProblem(new ParentFeatureNotDeferredError(node.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
+        problems.addProblem(new ParentFeatureNotDeferredError(featureNameNode.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
       }
 
       if (parentFeatureMustBeNonDeferred && parentFeature.getModifier() == DEFERRED) {
-        problems.addProblem(new ParentFeatureIsDeferredError(node.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
+        problems.addProblem(new ParentFeatureIsDeferredError(featureNameNode.getLocation(), featureName, st.featureDeclaringClassMap.get(node).name.name));
       }
 
       //TODO check return type and arguments are type-compatible

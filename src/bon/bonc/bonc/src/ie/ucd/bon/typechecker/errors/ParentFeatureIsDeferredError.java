@@ -4,7 +4,7 @@ import ie.ucd.bon.source.SourceLocation;
 
 public class ParentFeatureIsDeferredError extends TypeCheckingError {
 
-  private static final String MESSAGE = "Feature %s is redefined, but feature %s in parent class %s is deferred.";
+  private static final String MESSAGE = "Feature %s cannot be redefined, as feature %s in parent class %s is deferred.";
   private final String message;
 
   public ParentFeatureIsDeferredError(SourceLocation sourceLoc, String featureName, String parentName) {
