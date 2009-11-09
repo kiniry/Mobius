@@ -1,9 +1,12 @@
 package mobius.rcc.ui;
 
+import mobius.util.plugin.JobStatus;
 import mobius.util.plugin.ConsoleUtils.ConsoleOutputWrapper;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.JavaRuntime;
@@ -19,21 +22,16 @@ public class RunAction implements IWorkbenchWindowActionDelegate {
   /** the current selection. */
   private ICompilationUnit fSel;
   
-  public void dispose() {
-    // TODO Auto-generated method stub
-   
-  }
+  private class RccJob extends Job {
+    public RccJob() {
+      super("Rcc");
+    }
 
-  public void init(IWorkbenchWindow window) {
-    // TODO Auto-generated method stub
-
-  }
-
-  public void run(IAction action) {
-    if (fSel != null) {
+    @Override
+    protected IStatus run(IProgressMonitor monitor) {
       final ConsoleOutputWrapper wrapper = new ConsoleOutputWrapper();
-
       wrapper.wrap();
+      System.out.println("Wrapping the standard output.");
       final String [] args = computeArgs();      
       try {
         System.out.print("Calling RCC with the arguments: ");
@@ -50,17 +48,30 @@ public class RunAction implements IWorkbenchWindowActionDelegate {
         e.printStackTrace();
       }
       finally {
+        System.out.println("Unwrapping the standard output.");
         wrapper.unwrap();
         //RefreshUtils.refreshResource(fSel.getJavaProject().getProject()); 
       }
+      
+      return JobStatus.getOkStatus();
+    }
+  }
+  
+  /** {@inheritDoc} */
+  public void dispose() { }
 
+  /** {@inheritDoc} */
+  public void init(IWorkbenchWindow window) { }
+
+  public void run(IAction action) {
+    if (fSel != null) {
+      Job job = new RccJob();
+      job.schedule();
     }
   }
 
   private String[] computeArgs() {
-    try { // computing the arguments
-      final IPath path = fSel.getCorrespondingResource().getProject().getLocation();
-      
+    try { // computing the arguments      
       String[] classPath = null;
       classPath = JavaRuntime.computeDefaultRuntimeClassPath(fSel.getJavaProject());
       String res = "";
@@ -101,5 +112,4 @@ public class RunAction implements IWorkbenchWindowActionDelegate {
       }
     }
   }
-
 }
