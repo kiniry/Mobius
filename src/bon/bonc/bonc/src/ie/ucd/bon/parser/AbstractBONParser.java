@@ -9,7 +9,6 @@ import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.parser.errors.AntlrParsingError;
 import ie.ucd.bon.parser.errors.ParsingError;
-import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.util.NullIgnoringList;
 import ie.ucd.bon.util.NullOutputStream;
@@ -50,7 +49,7 @@ public abstract class AbstractBONParser extends Parser {
   /**
    * {@inheritDoc}
    */
-  public void initialise(ParsingTracker tracker, TokenStream input, File sourceFile) {
+  public void initialise(TokenStream input, File sourceFile) {
     this.sourceFile = sourceFile;
     validParse = true;
     problems = new Problems("Parser");

@@ -107,7 +107,7 @@ public final class SourceReader {
         stdInLines.add(line);
         sb.append('\n');
       }
-      return new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
+      return new ByteArrayInputStream(sb.toString().getBytes());
     } catch (IOException ioe) {
       System.out.println("Something went wrong when reading from stdin");
       return null;

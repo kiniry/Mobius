@@ -26,18 +26,18 @@ public class ParseResult {
   private final File file;
   private final Problems parseProblems;
   private final Problems lexerProblems;
-  private final Problems stProblems;
+  private Problems stProblems;
 
   private final int severeProblemCount;
 
-  public ParseResult(final boolean validParse, final BonSourceFile parse, final CommonTokenStream tokens, final File file, final Problems problems, final Problems lexerProblems, final Problems stProblems) {
+  public ParseResult(final boolean validParse, final BonSourceFile parse, final CommonTokenStream tokens, final File file, final Problems problems, final Problems lexerProblems) {
     this.validParse = validParse;
     this.parse = parse;
     this.tokens = tokens;
     this.file = file;
     this.parseProblems = problems;
     this.lexerProblems = lexerProblems;
-    this.stProblems = stProblems;
+    this.stProblems = new Problems("ST");
     this.severeProblemCount = countSevere(problems);
   }
 
@@ -57,6 +57,10 @@ public class ParseResult {
     return validParse;
   }
 
+  public void setSTProblems(Problems problems) {
+    stProblems = problems;
+  }
+  
   public Problems getParseProblems() {
     return parseProblems;
   }

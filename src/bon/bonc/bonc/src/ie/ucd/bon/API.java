@@ -23,8 +23,6 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Collection;
 
-import org.antlr.runtime.RecognitionException;
-
 /**
  * The public API for BONc.
  * @author fintan
@@ -74,6 +72,14 @@ public final class API {
     return tracker;
   }
 
+  public static ParseResult parse(final InputStream is) {
+    return Parser.parse(null, is);
+  }
+  
+  public static ParseResult parse(String bonText) {
+    return Parser.parse(null, new ByteArrayInputStream(bonText.getBytes()));
+  }
+
   /**
    * Read from the given InputStream and parse what is read.
    * @param is the InputStream to read from.
@@ -83,20 +89,17 @@ public final class API {
    * @return a ParseResult object representing the result of parsing this input.
    */
   private static ParseResult parseInput(final InputStream is, final File file, final ParsingTracker tracker, final boolean printTiming) {
-    try {
-      if (printTiming) {
-        long startTime = System.nanoTime();
-        ParseResult parseResult = Parser.parse(file, is, tracker);
-        long endTime = System.nanoTime();
-        System.out.println("Parsing took: " + StringUtil.timeString(endTime - startTime));
-        return parseResult;
-      } else {
-        return Parser.parse(file, is, tracker);
-      }
-    } catch (RecognitionException re) {
-      //Nothing - won't actually happen?
-      System.out.println("ERROR, something went wrong...");
-      return null;
+    if (printTiming) {
+      long startTime = System.nanoTime();
+      ParseResult parseResult = Parser.parse(file, is);
+      Parser.buildSymbolTable(parseResult, tracker);
+      long endTime = System.nanoTime();
+      System.out.println("Parsing took: " + StringUtil.timeString(endTime - startTime));
+      return parseResult;
+    } else {
+      ParseResult parseResult = Parser.parse(file, is);
+      Parser.buildSymbolTable(parseResult, tracker);
+      return parseResult;
     }
   }
 
@@ -104,16 +107,11 @@ public final class API {
   public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final Collection<File> files, final ParsingTracker tracker, final boolean timing) {
 
     if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
-      try {
-        String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
-        File classDicAutoFile = new File("class-dic-auto");
-        if (!classDic.equals("")) {
-          tracker.addParse(classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes()), tracker));
-          files.add(classDicAutoFile);
-        }
-      } catch (RecognitionException re) {
-        //Can't actually be thrown for this.
-        Main.logDebug("Main: Threw RecognitionException while executing printGeneratedClassDictionaryToString");
+      String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
+      File classDicAutoFile = new File("class-dic-auto");
+      if (!classDic.equals("")) {
+        tracker.addParse(classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes())));
+        files.add(classDicAutoFile);
       }
     }
 

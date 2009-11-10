@@ -10,12 +10,15 @@
  *******************************************************************************/
 package ie.ucd.bon.plugin.editor;
 
+import ie.ucd.bon.plugin.editor.outline.BONOutlinePage;
+
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 
 /**
@@ -66,7 +69,17 @@ public class BONEditor extends TextEditor {
 		fProjectionSupport.install();
 		viewer.doOperation(ProjectionViewer.TOGGLE);
 	}
-	
-	
+
+	IContentOutlinePage outline = null;
+  @Override
+  public Object getAdapter(Class adapter) {
+    if (IContentOutlinePage.class.equals(adapter)) {
+      if (outline == null) {
+        outline = new BONOutlinePage(getDocumentProvider().getDocument(getEditorInput()));
+      }
+      return outline;
+   }
+    return super.getAdapter(adapter);
+  }
 	
 }
