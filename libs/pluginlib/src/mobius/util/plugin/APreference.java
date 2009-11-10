@@ -17,7 +17,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
  * 
  * @author David R. Cok
  */
-public class AbstractPreference {
+public abstract class APreference {
   /** the current preference store of the plugin. */
   private static IPreferenceStore preferenceStore;
   
@@ -49,7 +49,7 @@ public class AbstractPreference {
    * @param lbl  A short description suitable as a label
    * @param tltip  A longer description suitable as help
    */
-  protected AbstractPreference(final String q, final String lbl, 
+  protected APreference(final String q, final String lbl, 
                                final String tltip) {
     key = q;
     this.label = lbl;
@@ -109,7 +109,7 @@ public class AbstractPreference {
   }
 
   /** An option that has a boolean value. */
-  public static class BooleanOption extends AbstractPreference {
+  public static class BooleanOption extends APreference {
     
     /**
      * Creating a boolean option object.
@@ -154,7 +154,7 @@ public class AbstractPreference {
   /** 
    * An option that has a String value.
    */
-  public static class StringOption extends AbstractPreference {
+  public static class StringOption extends APreference {
     
     /**
      * Creating a String option object.
@@ -195,7 +195,7 @@ public class AbstractPreference {
   
 
   /** An option that has a String value. */
-  public static class ChoiceOption extends AbstractPreference {
+  public static class ChoiceOption extends APreference {
     
     /** The choices. */
     private String[] choices;
@@ -297,9 +297,9 @@ public class AbstractPreference {
 
   /**
    * Set the store to handle the preferences.
-   * @param prefStore
+   * @param store the preference store used to store the preferences.
    */
-  public static void setPreferenceStore(final IPreferenceStore prefStore) {
-    preferenceStore = prefStore;
+  public static void setPreferenceStore(final IPreferenceStore store) {
+    preferenceStore = store;
   }
 }

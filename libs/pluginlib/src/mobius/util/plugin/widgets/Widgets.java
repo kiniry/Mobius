@@ -141,22 +141,44 @@ public class Widgets {
      * @param initialValue  The initial value for the text field (a directory path)
      * @param toolTipText   The explantory text used as a tooltip
      * @param length    The size of the visible part of the field, in characters
-     *     */
+     *      
+     */
     public FileTextField(final /*@ non_null */ Composite parent,
         final /*@ non_null */ String label, 
         final /*@ non_null */ String initialValue,
         final /*@ non_null */ String toolTipText,
         final int length) {
       super(parent);
+      initComponents(parent, label, initialValue, toolTipText, length);
+    }
+
+    /**
+     * Initialise composite widget as a member of the given
+     * parent and with the given parameters.
+     * 
+     * This is a composite widget with internals
+     * arranged as follows:
+     * <pre>
+     *   *********************************************
+     *   *   label     *  Browse button              *
+     *   *********************************************
+     *   *        Text field                         *
+     *   *********************************************
+     * </pre>
+     * 
+     * @param parent  The container this new widget is made part of
+     * @param label    The label to be used for this widget (e.g. the 
+     * purpose of the directory being identified)
+     * @param initialValue  The initial value for the text field (a directory path)
+     * @param toolTipText   The explantory text used as a tooltip
+     * @param length    The size of the visible part of the field, in characters
+     *      
+     */
+    private void initComponents(final Composite parent, final String label,
+                                final String initialValue,
+                                final String toolTipText, final int length) {
       final Shell shell = parent.getShell();
-      
-      // This is a composite widget with internals
-      // arranged as follows:
-      //   *********************************************
-      //   *   label     *  Browse button              *
-      //   *********************************************
-      //   *        Text field                         *
-      //   *********************************************
+
       
       final Composite hc = new HComposite(this, 2);
 

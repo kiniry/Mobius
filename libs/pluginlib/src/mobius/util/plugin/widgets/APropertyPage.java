@@ -7,7 +7,10 @@
 package mobius.util.plugin.widgets;
 
 
+import java.util.Collection;
+
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.dialogs.PropertyPage;
 
 /**
  * A superclass of property pages for plugins, providing some
@@ -15,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
  * 
  * @author David R. Cok
  */
-public abstract class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage {
+public abstract class APropertyPage extends PropertyPage {
 
   /** 
    * This method must be overridden to return an array of 
@@ -23,15 +26,17 @@ public abstract class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage {
    * @return An array of OptionWidget[] contained in this property page
    */
   //@ ensures \result != null && \nonnullelements(\result);
-  protected abstract OptionWidget[] options();
+  protected abstract Collection<? extends AOptionWidget<?>> options();
   
+  /** {@inheritDoc} */
   protected void performDefaults() {
-    setDefaults(options());
+    APreferencePage.setDefaults(options());
   }
   
+  /** {@inheritDoc} */
   public boolean performOk() {
     // When OK is pressed, set all the options selected.  
-    setOptionValue(options());
+    APreferencePage.setOptionValue(options());
     AOption.notifyListeners();
     return true;
   }
@@ -47,7 +52,7 @@ public abstract class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage {
    */
   //@ requires ws != null && composite != null;
   //@ requires \nonnullelements(ws);
-  public void addWidgets(final OptionWidget[] ws, final Composite composite) {
+  public void addWidgets(final AOptionWidget<?>[] ws, final Composite composite) {
     addWidgets(ws, 0, ws.length, composite);
   }
   
@@ -63,34 +68,10 @@ public abstract class PropertyPage extends org.eclipse.ui.dialogs.PropertyPage {
   //@ requires offset >= 0 && offset < ws.length;
   //@ requires num >= 0 && offset + num < ws.length;
   //@ requires \nonnullelements(ws);
-  public void addWidgets(final OptionWidget[] ws, final int offset, 
+  public void addWidgets(final AOptionWidget<?>[] ws, final int offset, 
                          final int num, final Composite composite) {
     for (int i = 0; i < num; ++i) {
       ws[offset + i].addWidget(composite);
-    }
-  }
-  
-  /** 
-   * Calls setDefault for each widget in the list.
-   * @param ws
-   */
-  //@ requires ws != null;
-  //@ requires \nonnullelements(ws);
-  public void setDefaults(final OptionWidget[] ws) {
-    for (int i = 0; i < ws.length; ++i) {
-      ws[i].setDefault();
-    }
-  }
-  
-  /**
-   * Calls 'setOptionValue' on all the items in the array.
-   * @param ws An array of OptionWidget items 
-   */
-  //@ requires ws != null;
-  //@ requires \nonnullelements(ws);
-  public void setOptionValue(final OptionWidget[] ws) {
-    for (int i = 0; i < ws.length; ++i) {
-      ws[i].setOptionValue();
     }
   }
 

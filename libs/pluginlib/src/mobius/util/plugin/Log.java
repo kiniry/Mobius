@@ -71,6 +71,58 @@ public class Log {
   private static final Color errorColor = new Color(null, 255, 0, 0);
 
   
+  // This model variable models the content of the material
+  // sent to the log.
+  //@ model public String content;
+  
+
+  
+  // TODO: Perhaps provide
+  // a way to introduce other logging mechanisms.  One could
+  // argue that the various options allowed here should just
+  // be instances of different logging mechanisms.  That is a
+  // degree of freedom we don't need right at the moment, though
+  // it does make for a nice modular design.
+  
+  /** If true, put output to the console; if false, put output
+   *  to System.out.
+   */
+  public boolean useConsole = true;
+  
+  /** If true, then informational output is recorded in the
+   *  system log; if false, then it is not.
+   */
+  public boolean alsoLogInfo = false;
+  
+  
+  /** The name of the console that this plugin writes to. */
+  //@ constraint \not_modified(consoleName);
+  //@ invariant consoleName != null;
+  //@ spec_public
+  private String consoleName;
+  
+  /** The ILog of the plugin that this Log object connects to. */
+  //@ constraint \not_modified(pluginLog);
+  //@ invariant pluginLog != null;
+  //@ spec_public
+  private ILog pluginLog;
+  
+  /** The id of the plugin using this log. */
+  //@ constraint \not_modified(plugiID);
+  //@ invariant pluginID != null;
+  //@ spec_public
+  private String pluginID;
+  
+  
+  /** Cached value of the MessageConsole object. */
+  private MessageConsole console;
+  //@ private constraint \old(console) != null ==> \not_modified(console);
+  
+  /** Cached value of the stream to use to write to the console. */
+  private MessageConsoleStream stream;
+  //@ private constraint \old(stream) != null ==> \not_modified(stream);
+  
+  
   /**
    *  Creates a Log and sets the current log object.
    * 
@@ -155,7 +207,8 @@ public class Log {
 
   //==============================================================
 
-  /** Creates a new Log utility object.
+  /** 
+   * Creates a new Log utility object.
    * 
    * @param name The name of the console to be logged to
    * @param plugin The plugin object using this log
@@ -170,66 +223,20 @@ public class Log {
     this.pluginID = plugin.getBundle().getSymbolicName();
   }
   
-  // This model variable models the content of the material
-  // sent to the log.
-  //@ model public String content;
-  
-  /** The name of the console that this plugin writes to. */
-  //@ constraint \not_modified(consoleName);
-  //@ invariant consoleName != null;
-  //@ spec_public
-  private String consoleName;
-  
-  /** The ILog of the plugin that this Log object connects to. */
-  //@ constraint \not_modified(pluginLog);
-  //@ invariant pluginLog != null;
-  //@ spec_public
-  private ILog pluginLog;
-  
-  /** The id of the plugin using this log. */
-  //@ constraint \not_modified(plugiID);
-  //@ invariant pluginID != null;
-  //@ spec_public
-  private String pluginID;
-  
-  // TODO: Perhaps provide
-  // a way to introduce other logging mechanisms.  One could
-  // argue that the various options allowed here should just
-  // be instances of different logging mechanisms.  That is a
-  // degree of freedom we don't need right at the moment, though
-  // it does make for a nice modular design.
-  
-  /** If true, put output to the console; if false, put output
-   *  to System.out.
-   */
-  public boolean useConsole = true;
-  
-  /** If true, then informational output is recorded in the
-   *  system log; if false, then it is not.
-   */
-  public boolean alsoLogInfo = false;
-  
-  /** Cached value of the MessageConsole object. */
-  private MessageConsole console = null;
-  //@ private constraint \old(console) != null ==> \not_modified(console);
-  
-  /** Cached value of the stream to use to write to the console. */
-  private MessageConsoleStream stream = null;
-  //@ private constraint \old(stream) != null ==> \not_modified(stream);
-  
+
   
   /**
    * Initializes any internal state of the log, e.g. based on
    * stored preferences or properties.
    * 
-   * @param useConsole Sets whether logged output is sent to System.out or to the Eclipse console
-   * @param alsoLogInfo Sets whether informational output (via log()) should be sent to the system
+   * @param useCons Sets whether logged output is sent to System.out or to the Eclipse console
+   * @param logInfo Sets whether informational output (via log()) should be sent to the system
    *       error log as well; material sent to errorlog() is always sent to the error log.
    */
-  public void init(final boolean useConsole, 
-                   final boolean alsoLogInfo) {
-    this.useConsole = useConsole;
-    this.alsoLogInfo = alsoLogInfo;
+  public void init(final boolean useCons, 
+                   final boolean logInfo) {
+    useConsole = useCons;
+    alsoLogInfo = logInfo;
   }
 
   
@@ -370,6 +377,7 @@ public class Log {
       dump(false);
     }
     
+    /** {@inheritDoc} */
     public void write(final byte[] b, final int off, final int length) {
       int n = length;
       int towrite = length;

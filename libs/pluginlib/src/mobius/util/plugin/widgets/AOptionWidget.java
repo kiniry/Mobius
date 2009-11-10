@@ -1,18 +1,14 @@
 /*
  * This file is part of the Esc/Java2 plugin project.
- * Copyright 2004-2005 David R. Cok
+ * Copyright 2004 David R. Cok
  * 
- * Created on Feb 2, 2005
+ * Created on Oct 9, 2004
  */
 package mobius.util.plugin.widgets;
 
-import mobius.util.plugin.AbstractPreference;
-import mobius.util.plugin.AbstractPreference.BooleanOption;
-import mobius.util.plugin.AbstractPreference.ChoiceOption;
-import mobius.util.plugin.AbstractPreference.StringOption;
-import mobius.util.plugin.widgets.Widgets.FileTextField;
-import mobius.util.plugin.widgets.Widgets.HComposite;
-import mobius.util.plugin.widgets.Widgets.LabeledSeparator;
+import mobius.util.plugin.widgets.AOption.BooleanOption;
+import mobius.util.plugin.widgets.AOption.ChoiceOption;
+import mobius.util.plugin.widgets.AOption.StringOption;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
@@ -23,21 +19,23 @@ import org.eclipse.swt.widgets.Composite;
 /**
  * This class is a base class for the controls that are used in
  * the property page; each control is connected to an Option object.
- * 
+ * @param <T> the real java type of the option
  * @author David Cok
+ *
  */
-public abstract class PreferenceWidget {
+public abstract class AOptionWidget<T> implements IValueProp {
   
-  /** The option object represented by this PreferenceWidget. */
-  AbstractPreference option;
+  /** The option object represented by this OptionWidget. */
+  private final AOption<T> option;
+  
   
   /**
    * Base class constructor, taking some common arguments.
    * 
-   * @param option The option that this widget represents.
+   * @param opt The option that this widget represents.
    */
-  public PreferenceWidget(final AbstractPreference option) {
-    this.option = option;
+  public AOptionWidget(final AOption<T> opt) {
+    option = opt;
   }
   
   /**
@@ -46,20 +44,15 @@ public abstract class PreferenceWidget {
    */
   public abstract void addWidget(final Composite parent);
   
-  /**
-   * Sets the UI widget to the built-in default value.
-   *
-   */
-  public abstract void setDefault();
-  
-  /**
-   * Sets the value of the associated option based on the
-   * current UI setting.
-   * 
-   */
-  public abstract void setOptionValue();
 
-  
+  /**
+   * @return the store representation associated with the widget
+   */
+  protected AOption<T> getOption() {
+    return option;
+  }
+
+
   /**
    * A UI widget that offers a selection from a fixed 
    * set of strings,
@@ -68,10 +61,10 @@ public abstract class PreferenceWidget {
    * @author David Cok
    *
    */
-  public static class ChoiceWidget extends PreferenceWidget {
+  public static class ChoiceWidget extends AOptionWidget<Integer> {
     
     /** The widget used to get input from the user. */
-    protected Combo widget = null;
+    private Combo widget;
     
     /**
      * A constructor that creates a Combo widget, initializing
@@ -80,7 +73,7 @@ public abstract class PreferenceWidget {
      * @param option The option with which the widget is associated
      */
     //@ pure
-    public ChoiceWidget(final AbstractPreference.ChoiceOption option) {
+    public ChoiceWidget(final ChoiceOption option) {
       super(option);
     }
     
@@ -92,11 +85,11 @@ public abstract class PreferenceWidget {
      */
     //@ ensures widget != null;
     public void addWidget(final Composite parent) {
-      final ChoiceOption opt = (ChoiceOption)option;
+      final ChoiceOption opt = (ChoiceOption) getOption();
       final Composite composite = new Widgets.HComposite(parent, 2);
       widget = new Combo(composite, SWT.READ_ONLY);
       widget.setItems(opt.choices());
-      widget.select(opt.getIndexValue());
+      widget.select(opt.getValue());
       widget.setVisibleItemCount(opt.choices().length);
       widget.setToolTipText(opt.tooltip());
       final org.eclipse.swt.widgets.Label label2 = 
@@ -121,16 +114,14 @@ public abstract class PreferenceWidget {
      *
      */
     public void setDefault() {
-      widget.select(((ChoiceOption)option).getDefaultIndex());
+      widget.select(getOption().getDefaultValue());
     }    
     
     /**
      * Sets the option value to be consistent with the
      * current setting of the UI's widget.
      */
-    public void setOptionValue() {
-      ((AbstractPreference.ChoiceOption)option).setValue(value());
-    } 
+    public void setOptionValue() { ((AOption.ChoiceOption)getOption()).setValue(value()); } 
   }
   
   /**
@@ -141,10 +132,10 @@ public abstract class PreferenceWidget {
    * @author David Cok
    *
    */
-  public static class FileWidget extends PreferenceWidget {
+  public static class FileWidget extends AOptionWidget<String> {
     
     /** The UI widget representing a file browser. */
-    protected Widgets.FileTextField widget = null;
+    private Widgets.FileTextField widget;
 
     /**
      * Creates a FileWidget (the underlying widget is not
@@ -155,7 +146,7 @@ public abstract class PreferenceWidget {
     //@ ensures widget == null;
     //@ ensures this.option == option;
     //@ pure
-    public FileWidget(final AbstractPreference.StringOption option) {
+    public FileWidget(final StringOption option) {
       super(option);
     }
     
@@ -168,8 +159,9 @@ public abstract class PreferenceWidget {
      */
     //@ ensures widget != null;
     public void addWidget(final Composite parent) {
-      final String fn = ((AbstractPreference.StringOption)option).getValue();
-      widget = new Widgets.FileTextField(parent, option.label(), fn, option.tooltip(), 50);
+      final String fn = getOption().getValue();
+      widget = new Widgets.FileTextField(parent, getOption().label(), 
+                                         fn, getOption().tooltip(), 50);
     }
     
     /**
@@ -187,7 +179,7 @@ public abstract class PreferenceWidget {
     //@ requires widget != null;
     //@ requires option != null;
     public void setDefault() {
-      widget.setText(((AbstractPreference.StringOption)option).getDefault());
+      widget.setText(getOption().getDefaultValue());
     }
         
     /**
@@ -196,9 +188,7 @@ public abstract class PreferenceWidget {
      */
     //@ requires widget != null;
     //@ requires option != null;
-    public void setOptionValue() { 
-      ((AbstractPreference.StringOption)option).setValue(value());
-    } 
+    public void setOptionValue() { ((AOption.StringOption)getOption()).setValue(value()); } 
   }
   
   /**
@@ -208,10 +198,10 @@ public abstract class PreferenceWidget {
    * @author David Cok
    *
    */
-  public static class BooleanWidget extends PreferenceWidget {
+  public static class BooleanWidget extends AOptionWidget<Boolean> {
     
     /** The UI widget representing a boolean choice. */
-    protected Button widget = null;
+    private Button widget;
     
     /**
      * Creates a checkbox widget on the given parent Composite widget;
@@ -221,7 +211,7 @@ public abstract class PreferenceWidget {
     //@ requires option != null;
     //@ ensures this.option == option;
     //@ pure
-    public BooleanWidget(final AbstractPreference.BooleanOption option) {
+    public BooleanWidget(final BooleanOption option) {
       super(option);
     }
     
@@ -231,13 +221,13 @@ public abstract class PreferenceWidget {
      * instance of a property page.
      * @param parent The Composite that holds all of the option widgets
      */
-    //@ requires option != null;
+    //@ reqiures option != null;
     //@ ensures widget != null;
     public void addWidget(final Composite parent) {
       widget = new Button(parent, SWT.CHECK);
-      widget.setText(option.label());
-      widget.setToolTipText(option.tooltip());
-      widget.setSelection(((AbstractPreference.BooleanOption)option).getValue());
+      widget.setText(getOption().label());
+      widget.setToolTipText(getOption().tooltip());
+      widget.setSelection(((BooleanOption)getOption()).getValue());
     }
     
     /**
@@ -255,7 +245,7 @@ public abstract class PreferenceWidget {
     //@ requires widget != null;
     //@ requires option != null;
     public void setDefault() {
-      widget.setSelection(((AbstractPreference.BooleanOption)option).getDefault());
+      widget.setSelection(getOption().getDefaultValue());
     }
     
     /**
@@ -264,37 +254,35 @@ public abstract class PreferenceWidget {
      */
     //@ requires widget != null;
     //@ requires option != null;
-    public void setOptionValue() {
-      ((AbstractPreference.BooleanOption)option).setValue(value());
-    } 
+    public void setOptionValue() { ((BooleanOption)getOption()).setValue(value()); } 
   }
   
   /**
-   * This class implements an PreferenceWidget that is a Label, so
-   * that it can sit in lists of PreferenceWidgets.  However, it does
+   * This class implements an OptionWidget that is a Label, so
+   * that it can sit in lists of OptionWidgets.  However, it does
    * not have an option associated with it.
    * 
    * @author David Cok
    *
    */
-  public static class Label extends PreferenceWidget {
+  public static class Label extends AOptionWidget<Object> {
     
     /** The UI widget that is a label. */
-    private Widgets.LabeledSeparator widget = null;
+    private Widgets.LabeledSeparator widget;
     
     /** The label value. */
     private String label;
   
     /** 
      * Creates a Label widget on the given parent Composite widget.
-     * @param label The label text for the widget
+     * @param lbl The label text for the widget
      */
-    //@ requires label != null;
-    //@ ensures this.label == label;
+    //@ requires lbl != null;
+    //@ ensures this.label == lbl;
     //@ pure
-    public Label(final String label) {
+    public Label(final String lbl) {
       super(null);
-      this.label = label;
+      this.label = lbl;
     }
     
     /**

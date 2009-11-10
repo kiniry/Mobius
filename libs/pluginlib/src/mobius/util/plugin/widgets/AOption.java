@@ -28,7 +28,7 @@ abstract class AOption<T> {
    * The QualifiedName used as the key into the 
    * persistent store for the value of the option.
    */
-  private QualifiedName q;
+  private QualifiedName name;
   
   /** The label to use for the widget. */
   private String label;
@@ -38,23 +38,24 @@ abstract class AOption<T> {
   /** The default value if no corresponding property exists. */
   private T defaultValue;
 
-  //@ invariant q != null;
+  //@ invariant name != null;
   //@ invariant label != null;
   //@ invariant tooltip != null;
 
   /**
    * The protected constructor used by derived classes.
    * @param q  The qualified name used as a property key
-   * @param label  A short description suitable as a label
-   * @param tooltip  A longer description suitable as help
+   * @param lbl  A short description suitable as a label
+   * @param tltip  A longer description suitable as help
+   * @param def the default value
    */
   protected AOption(final QualifiedName q, 
                            final T def,
-                           final String label, 
-                           final String tooltip) {
-    this.q = q;
-    this.label = label;
-    this.tooltip = tooltip;
+                           final String lbl, 
+                           final String tltip) {
+    name = q;
+    label = lbl;
+    tooltip = tltip;
     defaultValue = def;
   }
 
@@ -118,7 +119,7 @@ abstract class AOption<T> {
   
 
   protected QualifiedName getQualifiedName() {
-    return q;
+    return name;
   }
 
   /** An option that has a boolean value. */
@@ -197,22 +198,22 @@ abstract class AOption<T> {
   public static class ChoiceOption extends AOption<Integer> {
     
     /** The choices. */
-    protected String[] choices;
+    private String[] choices;
     
     /**
      * Creating a String option object.
      * @param q  The qualified name used as a property key
      * @param def  The default value used if no value is previously
      *  stored (an index into the array of choices)
-     * @param choices The choices (as Strings) to be chosen among
+     * @param choi The choices (as Strings) to be chosen among
      * @param label A short description usable as a label
      * @param tooltip A long description usable as help
      */
-    public ChoiceOption(final QualifiedName q, final String[] choices,
+    public ChoiceOption(final QualifiedName q, final String[] choi,
         final int def,
         final String label, final String tooltip) {
       super(q, def, label, tooltip);
-      this.choices = choices;
+      choices = choi;
     }
     
     /** Returns the array of choices; this array should not be modified.

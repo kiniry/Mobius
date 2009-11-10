@@ -72,8 +72,9 @@ public class Utils {
   /** A convenience holder for the end-of-line String 
       for the current platform. */
   public static final String eol = "" + Character.LINE_SEPARATOR;
-
-  public static final String xmlHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + eol;
+  /** the xml header. */
+  public static final String xmlHeader = 
+     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + eol;
   /* NOTE:
    * Builders can be present in a project in either an enabled or
    * disabled state.  I cannot find any API to switch between the
@@ -204,39 +205,54 @@ public class Utils {
    * @return        the new builder command
    * @throws CoreException
    */
-  public static ICommand newDisabledCommand(final IProject project, final IProjectDescription description, final String builder) throws CoreException {
+  public static ICommand newDisabledCommand(final IProject project, 
+                                            final IProjectDescription description, 
+                                            final String builder) throws CoreException {
     // Put this in a resource change environment
     final ICommand command = description.newCommand();
-    ResourcesPlugin.getWorkspace().run(
-        new IWorkspaceRunnable() {
-          public void run(final IProgressMonitor pm) throws CoreException {
-            command.setBuilderName(disabledBuilderName);
-            final Map<String, String> map = new HashMap<String, String>();
-            map.put(disabledBuilderKey, "<project>/.externalToolBuilders/"+builder+".launch");
-            command.setArguments(map);
-            final IFolder dir = project.getFolder(".externalToolBuilders");
-            if (!dir.exists()) {
-              dir.create(true, true, null);
-            }
-            final IFile f = dir.getFile(builder + ".launch");
-            if (f.exists()) {
-              f.delete(true, false, null);
-            }
-            final String content = xmlHeader + 
-              "<launchConfiguration type=\"org.eclipse.ant.AntBuilderLaunchConfigurationType\">" + eol +
-              "<booleanAttribute key=\"org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED\" value=\"false\"/>" + eol +
-              "<mapAttribute key=\"org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS\"/>" + eol +
-              "<stringAttribute key=\"org.eclipse.ui.externaltools.ATTR_DISABLED_BUILDER\" value=\"" + builder + "\"/>" + eol +
-              "</launchConfiguration>";
-            final ByteBuffer bb = Charset.forName("UTF-8").encode(content);
-            f.create(new ByteArrayInputStream(bb.array(), bb.position(),
-                                              bb.limit() - bb.position()), true, null);
-          }
-        }, null); // no progress monitor
+    ResourcesPlugin.getWorkspace().run(new AddBuilderJob(project, command, builder), 
+                                       null); // no progress monitor
 
     return command;
   }
 
+  private static class AddBuilderJob implements IWorkspaceRunnable {
+    private final ICommand command;
+    private final IProject project;
+    private final String builder;
+    public AddBuilderJob(final IProject proj, final ICommand cmd, final String blder) {
+      command = cmd;
+      project = proj;
+      builder = blder;
+    }
+    
+    public void run(final IProgressMonitor pm) throws CoreException {
+      command.setBuilderName(disabledBuilderName);
+      final Map<String, String> map = new HashMap<String, String>();
+      map.put(disabledBuilderKey, "<project>/.externalToolBuilders/" + builder + ".launch");
+      command.setArguments(map);
+      final IFolder dir = project.getFolder(".externalToolBuilders");
+      if (!dir.exists()) {
+        dir.create(true, true, null);
+      }
+      final IFile f = dir.getFile(builder + ".launch");
+      if (f.exists()) {
+        f.delete(true, false, null);
+      }
+      final String content = xmlHeader + 
+        "<launchConfiguration " +
+        "type=\"org.eclipse.ant.AntBuilderLaunchConfigurationType\">" + eol +
+        "<booleanAttribute key=\"org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED\" " +
+        "value=\"false\"/>" + eol +
+        "<mapAttribute key=\"org.eclipse.ui.externaltools.ATTR_TOOL_ARGUMENTS\"/>" + eol +
+        "<stringAttribute key=\"org.eclipse.ui.externaltools.ATTR_DISABLED_BUILDER\" " +
+        "value=\"" + builder + "\"/>" + eol +
+        "</launchConfiguration>";
+      final ByteBuffer bb = Charset.forName("UTF-8").encode(content);
+      f.create(new ByteArrayInputStream(bb.array(), bb.position(),
+                                        bb.limit() - bb.position()), true, null);
+    }
+  }
 
   /**
    * Adds the given builder to the list of commands.
@@ -405,7 +421,8 @@ public class Utils {
    *       false otherwise
    * @throws CoreException
    */
-  public static boolean isBuilderEnabled(final IProject p, final String builder) throws CoreException {
+  public static boolean isBuilderEnabled(final IProject p, 
+                                         final String builder) throws CoreException {
     
     final ICommand[] commands = p.getDescription().getBuildSpec();
     for (int i = 0; i < commands.length; ++i) {
@@ -459,7 +476,7 @@ public class Utils {
           final IJavaProject proj = model.getJavaProject(elem.getName());
           if (proj != null) {
             if (!already.contains(proj)) {
-              cp = computeClasspath(already, proj, cp.substring(1));
+              cp = computeClasspath(already, proj, cp);
             }
             else { /* if it contains already the proj, 
                        it means that we have to add it to the classpath */
@@ -481,11 +498,8 @@ public class Utils {
    * @param project The project whose classpath is to be determined.
    * @return The classpath of the argument in full absolute file-system paths,
    *     separated by the platform's path separator
-   * @deprecated use {@link #computeClassPath(IJavaProject)} instead
    */
-  // FIXME - may need to distinguish source and binary classpaths?
-   public static String getProjectClassPath(final IJavaProject project) {
-
+  public static String getProjectClassPath(final IJavaProject project) {
     final StringBuffer classPath = new StringBuffer(System.getProperty("java.class.path"));
     final List<String> list = new LinkedList<String>();
     
@@ -506,15 +520,13 @@ public class Utils {
    * once; source folders are converted to file system absolute
    * paths (remember that source folders may be linked).
    * 
-   * @param project
+   * @param project the project from which to get the entries.
    * @return List of String containing classpath locations
    */
   public static List<String> getProjectClassPathEntries(final IJavaProject project) {
-    //StringBuffer classPath = new StringBuffer(System.getProperty("java.class.path"));
     final List<String> list = new LinkedList<String>();    
     addResolvedClassPathEntries(list, project, false);
     return list;
-    // FIXME - does not include the system entries
   }
 
   /** 
@@ -533,52 +545,54 @@ public class Utils {
                                           final boolean onlyExported) {
     try {
       final IClasspathEntry[] classPathEntries = project.getResolvedClasspath(false);
-      
       for (int i = 0; i < classPathEntries.length; ++i) {
         final IClasspathEntry cpe = classPathEntries[i];
         final IPath entry = cpe.getPath();
         final IResource res = getRoot().findMember(entry);
-        if (cpe.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
-          // Might be an internal or external library
-          if (res != null) {
-            // internal
-            list.add(res.getRawLocation().toOSString());
-            // NOTE: Per the note below, it is not entirely clear
-            // whether the above should be getLocation or getRawLocation
-            // FIXME - try a linked library, if that is possible
-          } 
-          else {
-            // external
-            list.add(entry.toOSString());
+        switch (cpe.getEntryKind()) {
+          case IClasspathEntry.CPE_LIBRARY:
+            // Might be an internal or external library
+            if (res != null) {
+              // internal
+              list.add(res.getRawLocation().toOSString());
+              // NOTE: Per the note below, it is not entirely clear
+              // whether the above should be getLocation or getRawLocation
+              // FIXME - try a linked library, if that is possible
+            } 
+            else {
+              // external
+              list.add(entry.toOSString());
+            }
+            break;
+          case IClasspathEntry.CPE_SOURCE: 
+            // The Eclipse documentation is a bit unclear or at odds with
+            // the actual behavior.  What I observe is that
+            // - a linked folder gives the same result for getLocation and getRawLocation
+            // - a project that is also a source folder gives null for getRawLocation
+            // Thus experiment would indicate that getLocation could always be used,
+            // but the documentation implies one could always use getRawLocation.  
+            // The following code is trying to be conservative. (NOTE)
+            if (res.isLinked()) {
+              list.add(res.getRawLocation().toOSString());
+            }
+            else {
+              list.add(res.getLocation().toOSString());
+            }
+            break;
+          case IClasspathEntry.CPE_PROJECT: {
+            final IJavaProject jp = JavaCore.create((IProject)res);
+            if (jp != null) {
+              addResolvedClassPathEntries(list, jp, true);
+            }
+            else {
+              // FIXME - throw an error of some sort
+            }
+            break;
           }
-        } 
-        else if (cpe.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-          // The Eclipse documentation is a bit unclear or at odds with
-          // the actual behavior.  What I observe is that
-          // - a linked folder gives the same result for getLocation and getRawLocation
-          // - a project that is also a source folder gives null for getRawLocation
-          // Thus experiment would indicate that getLocation could always be used,
-          // but the documentation implies one could always use getRawLocation.  The following
-          // code is trying to be conservative. (NOTE)
-          if (res.isLinked()) {
-            list.add(res.getRawLocation().toOSString());
-          }
-          else {
-            list.add(res.getLocation().toOSString());
-          }
-        } 
-        else if (cpe.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-          final IJavaProject jp = JavaCore.create((IProject)res);
-          if (jp != null) {
-            addResolvedClassPathEntries(list, jp, true);
-          }
-          else {
-            // FIXME - throw an error of some sort
-          }
-        } 
-        else {
-          Log.errorlog("Unexpected content kind as a classpath entry: " + 
-                       cpe.getEntryKind(), null);
+          default:
+            Log.errorlog("Unexpected content kind as a classpath entry: " + 
+                         cpe.getEntryKind(), null);
+        
         }
       }
     }

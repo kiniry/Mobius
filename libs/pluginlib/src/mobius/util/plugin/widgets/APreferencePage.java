@@ -6,7 +6,11 @@
 package mobius.util.plugin.widgets;
 
 
-import mobius.util.plugin.AbstractPreference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import mobius.util.plugin.APreference;
 import mobius.util.plugin.Options;
 
 import org.eclipse.jface.preference.PreferencePage;
@@ -25,30 +29,35 @@ public abstract class APreferencePage extends PreferencePage
   implements IWorkbenchPreferencePage {
   
   /** The option button corresponding to Eclipse logging. */
-  public static final PreferenceWidget.BooleanWidget logging = 
-    new PreferenceWidget.BooleanWidget(Options.logging);
+  public static final APreferenceWidget.BooleanWidget logging = 
+    new APreferenceWidget.BooleanWidget(Options.logging);
 
   /** The choice of using the console or System.out for logging. */
-  public static final PreferenceWidget.BooleanWidget useConsole = 
-    new PreferenceWidget.BooleanWidget(Options.useConsole);
+  public static final APreferenceWidget.BooleanWidget useConsole = 
+    new APreferenceWidget.BooleanWidget(Options.useConsole);
 
   /** The choice to send informational output to the log file as well. */
-  public static final PreferenceWidget.BooleanWidget alsoLogInfo = 
-    new PreferenceWidget.BooleanWidget(Options.alsoLogInfo);
+  public static final APreferenceWidget.BooleanWidget alsoLogInfo = 
+    new APreferenceWidget.BooleanWidget(Options.alsoLogInfo);
 
   /**
    * This is the list of widgets in the JmlEclipse options section of the
    * properties page.
    */
-  public static final PreferenceWidget[] eclipseOptions = 
-    new PreferenceWidget[] {logging, useConsole, alsoLogInfo };
+  public static final List<APreferenceWidget<?>> eclipseOptions = 
+    new ArrayList<APreferenceWidget<?>>();
+  static {
+    eclipseOptions.add(logging);
+    eclipseOptions.add(useConsole);
+    eclipseOptions.add(alsoLogInfo); 
+  }
 
   /** This method must be overridden to return an array of OptionWidget
    *  that the other methods here are to act upon.
    * @return An array of OptionWidget[] contained in this property page
    */
   //@ ensures \result != null && \nonnullelements(\result);
-  protected abstract PreferenceWidget[] options();
+  protected abstract Collection<APreferenceWidget<?>> options();
   
   /** {@inheritDoc} */
   public void init(final IWorkbench workbench) {
@@ -63,7 +72,7 @@ public abstract class APreferencePage extends PreferencePage
   public boolean performOk() {
     // When OK is pressed, set all the options selected.  
     setOptionValue(options());
-    AbstractPreference.notifyListeners();
+    APreference.notifyListeners();
     return true;
   }
 
@@ -84,8 +93,9 @@ public abstract class APreferencePage extends PreferencePage
    */
   //@ requires ws != null && composite != null;
   //@ requires \nonnullelements(ws);
-  public void addWidgets(final PreferenceWidget[] ws, final Composite composite) {
-    addWidgets(ws, 0, ws.length, composite);
+  public static void addWidgets(final List<? extends APreferenceWidget<?>> ws, 
+                                final Composite composite) {
+    addWidgets(ws, 0, ws.size(), composite);
   }
   
   /**
@@ -100,23 +110,24 @@ public abstract class APreferencePage extends PreferencePage
   //@ requires offset >= 0 && offset < ws.length;
   //@ requires num >= 0 && offset + num < ws.length;
   //@ requires \nonnullelements(ws);
-  public void addWidgets(final PreferenceWidget[] ws, final int offset, final int num, 
-                         final Composite composite) {
+  public static void addWidgets(final List<? extends APreferenceWidget<?>> ws, 
+                                final int offset, final int num, 
+                                final Composite composite) {
     for (int i = 0; i < num; ++i) {
-      ws[offset + i].addWidget(composite);
+      ws.get(offset + i).addWidget(composite);
     }
   }
   
   /** 
    * Calls setDefault for each widget in the list.
    * 
-   * @param ws
+   * @param ws the list of widgets to which to set the default
    */
   //@ requires ws != null;
   //@ requires \nonnullelements(ws);
-  public void setDefaults(final PreferenceWidget[] ws) {
-    for (int i = 0; i < ws.length; ++i) {
-      ws[i].setDefault();
+  public static void setDefaults(final Collection<? extends IValueProp> ws) {
+    for (IValueProp val: ws) {
+      val.setDefault();
     }
   }
   
@@ -126,9 +137,9 @@ public abstract class APreferencePage extends PreferencePage
    */
   //@ requires ws != null;
   //@ requires \nonnullelements(ws);
-  public void setOptionValue(final PreferenceWidget[] ws) {
-    for (int i = 0; i < ws.length; ++i) {
-      ws[i].setOptionValue();
+  public static void setOptionValue(final Collection<? extends IValueProp> ws) {
+    for (IValueProp val: ws) {
+      val.setOptionValue();
     }
   }
 

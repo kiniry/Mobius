@@ -6,7 +6,7 @@
  */
 package mobius.util.plugin;
 
-import mobius.util.plugin.AbstractPreference.BooleanOption;
+import mobius.util.plugin.APreference.BooleanOption;
 
 /**
  * This class holds (as static variables) the persistent options of
@@ -18,7 +18,7 @@ public final class Options {
 
   /** The option button corresponding to Eclipse logging. */
   public static final  BooleanOption logging = 
-    new AbstractPreference.BooleanOption(
+    new APreference.BooleanOption(
       (Activator.PLUGIN_ID + ".Logging"),
       false,
       "Enable Eclipse informational messages",
@@ -26,7 +26,7 @@ public final class Options {
 
   /** The choice of using the console or System.out for logging. */
   public static final BooleanOption useConsole = 
-    new AbstractPreference.BooleanOption(
+    new APreference.BooleanOption(
       (Activator.PLUGIN_ID + ".UseConsole"),
       true,
       "Log to the Eclipse console (rather than System.out)",
@@ -38,7 +38,7 @@ public final class Options {
       "of a parent Eclipse UI, or may be lost.");
   
   /** The choice to send informational output to the log file as well. */
-  public static final BooleanOption alsoLogInfo = new AbstractPreference.BooleanOption(
+  public static final BooleanOption alsoLogInfo = new APreference.BooleanOption(
       (Activator.PLUGIN_ID + ".AlsoLogInfo"),
       false,
       "Send informational output to the Log file also",

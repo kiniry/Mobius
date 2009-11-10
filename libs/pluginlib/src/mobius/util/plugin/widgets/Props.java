@@ -18,7 +18,10 @@ import org.eclipse.core.runtime.QualifiedName;
  * 
  * @author David R. Cok
  */
-class Props {
+final class Props {
+  
+  /** */
+  private Props() { }
   /**
    * Returns the value of a project property as a String,
    * null if it does not exist.

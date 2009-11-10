@@ -22,9 +22,9 @@ import org.eclipse.ui.console.IOConsoleOutputStream;
 
 /**
  * All the utilities associated with the console that is used to output 
- * the result of the DirectVCGen.
+ * the result of the tool being run.
  * 
- * @author J. Charles (julien.charles@inria.fr)
+ * @author J. Charles (julien.charles@gmail.com)
  */
 public final class ConsoleUtils {
   /** the color red. */

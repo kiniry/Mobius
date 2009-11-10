@@ -46,7 +46,7 @@ public class ZipEditorInput implements IStorageEditorInput {
    * @throws IOException
    */
   public ZipEditorInput(final String jarFileName, final String jarEntryName) 
-  		throws IOException {
+    throws IOException {
     final ZipFile z = new ZipFile(jarFileName);
     s = new ZipEntryStorage(z, z.getEntry(jarEntryName));
   }
@@ -62,6 +62,7 @@ public class ZipEditorInput implements IStorageEditorInput {
   }
 
   /** 
+   * {@inheritDoc}
    * @see java.lang.Object#equals(java.lang.Object)
    * 
    * @return true if the objects refer to the same entry of the same zip file
@@ -74,6 +75,10 @@ public class ZipEditorInput implements IStorageEditorInput {
     return s.getFullPath().equals(z.s.getFullPath());
   }
 
+  /** {@inheritDoc} */
+  public int hashCode() {
+    return s.getFullPath().hashCode();
+  }
   
   /** Returns the IStorage object represented by this.
    * @return The underlying IZipEntryStorage object
