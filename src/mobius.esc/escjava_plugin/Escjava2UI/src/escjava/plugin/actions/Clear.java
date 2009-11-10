@@ -16,13 +16,12 @@ import escjava.plugin.EscjavaMarker;
  * 
  * @author David R. Cok
  */
-public class Clear extends EscjavaAction {
+public class Clear extends AEscjavaAction {
   private static Clear inst;
   
   /** */
   public Clear() {
     super();
-    System.out.println(inst);
     inst = this;
   }
   

@@ -11,7 +11,7 @@ import escjava.plugin.WarningDeclarationsAction;
  * 
  * @author David R. Cok
  */
-public class GoToDecl extends EscjavaAction {
+public class GoToDecl extends AEscjavaAction {
   /** {@inheritDoc} */
   public final void run(final IAction action) {
     //System.err.println("ACTION " + action.getClass());

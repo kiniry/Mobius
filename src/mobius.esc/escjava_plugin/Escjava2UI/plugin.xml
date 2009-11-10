@@ -202,6 +202,7 @@
                id="mobius.escjava2.ui.EscjavaAction.DisableESC"
                label="Disable auto ESC/Java2 checking"
                menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Disables selected objects for auto ESC/Java2 checking">
          </action>
@@ -212,6 +213,7 @@
                id="mobius.escjava2.ui.EscjavaAction.EnableESC"
                label="Enable auto ESC/Java2 checking"
                menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Enables selected objects for auto ESC/Java2 checking">
          </action>
@@ -222,6 +224,7 @@
                id="mobius.escjava2.ui.GoToDeclAction"
                label="Go to associated declaration"
                menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Opens an editor and positions it at the location specified by some information associated with a marker">
          </action>         
@@ -274,20 +277,22 @@
                <separator name="JMLSetupSubmenu"/>
          </menu>           
          <action
-               label="Disable ESC/Java Nature, remove Builder in SELECTED projects"
-               tooltip="Removes the ESC/Java Nature from the project and the ESC/Java Builder from the Incremental builder"
-               class="escjava.plugin.actions.DisableEscjava"
-               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               class="escjava.plugin.actions.DisableEscjavaNature"
+               definitionId="mobius.escjava2.ui.commands.DisableEscjava"
                id="mobius.escjava2.ui.EscjavaAction.DisableEscjava"
-			   definitionId="mobius.escjava2.ui.commands.DisableEscjava">
+               label="Disable ESC/Java Nature, remove Builder in SELECTED projects"
+               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               state="false"
+               tooltip="Removes the ESC/Java Nature from the project and the ESC/Java Builder from the Incremental builder">
          </action> 
          <action
-               label="Enable ESC/Java Nature, add Builder in SELECTED projects"
-               tooltip="Adds the ESC/Java Nature to the project and the ESC/Java Builder to the Incremental builder"
-               class="escjava.plugin.actions.EnableEscjava"
-               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               class="escjava.plugin.actions.EnableEscjavaNature"
+               definitionId="mobius.escjava2.ui.commands.EnableEscjava"
                id="mobius.escjava2.ui.EscjavaAction.EnableJML"
-			   definitionId="mobius.escjava2.ui.commands.EnableEscjava">
+               label="Enable ESC/Java Nature, add Builder in SELECTED projects"
+               menubarPath="JMLMenu/JMLSetup/JMLSetupSubmenu"
+               state="false"
+               tooltip="Adds the ESC/Java Nature to the project and the ESC/Java Builder to the Incremental builder">
          </action> 
      </actionSet>
    </extension>

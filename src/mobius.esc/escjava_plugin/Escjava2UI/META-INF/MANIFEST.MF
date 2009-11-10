@@ -2,8 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ESC/Java2 plug-in
 Bundle-SymbolicName: mobius.escjava2.ui;singleton:=true
-Bundle-Version: 2.0.25
-Bundle-ActivationPolicy: lazy
+Bundle-Version: 2.0.26
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 Project
 Bundle-Activator: escjava.plugin.EscjavaPlugin
 Require-Bundle: org.eclipse.ui,
@@ -23,3 +22,4 @@ Export-Package: escjava.plugin,
  escjava.plugin.actions
 Bundle-ClassPath: bin/,
  .
+Bundle-ActivationPolicy: lazy

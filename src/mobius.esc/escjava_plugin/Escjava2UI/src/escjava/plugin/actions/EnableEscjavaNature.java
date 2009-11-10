@@ -23,7 +23,7 @@ import escjava.plugin.EscjavaPlugin;
  * @author David Cok
  *
  */
-public class EnableEscjava extends EscjavaAction {
+public class EnableEscjavaNature extends AEscjavaAction {
   // This is all done in the UI thread with no progress
   // FIXME - is it fast enough?
   /** {@inheritDoc} */

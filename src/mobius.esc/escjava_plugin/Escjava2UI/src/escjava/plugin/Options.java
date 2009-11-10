@@ -10,8 +10,8 @@ import java.util.List;
 
 import mobius.escjava2.EscToolsActivator;
 import mobius.util.plugin.Utils;
-import mobius.util.plugin.AbstractPreference.BooleanOption;
-import mobius.util.plugin.AbstractPreference.ChoiceOption;
+import mobius.util.plugin.APreference.BooleanOption;
+import mobius.util.plugin.APreference.ChoiceOption;
 
 
 /**
@@ -35,14 +35,14 @@ public final class Options {
 
   /** The option button corresponding to Eclipse logging. */
   public static final BooleanOption logging = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "Logging"),
+      (EscjavaPlugin.PLUGIN_ID + ".Logging"),
       true,
       "Enable Eclipse informational messages",
       "Turns on Eclipse progress and debug messages (in the Console windows)");
 
   /** The choice of using the console or System.out for logging. */
   public static final  BooleanOption useConsole = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "UseConsole"),
+      (EscjavaPlugin.PLUGIN_ID + ".UseConsole"),
       true,
       "Log to the Eclipse console (rather than System.out)",
       "If logging is enabled, the output can be sent either to" + Utils.eol +
@@ -55,7 +55,7 @@ public final class Options {
   /** The choice to send informational output to the log file as well. */
   public static final BooleanOption alsoLogInfo = 
     new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "AlsoLogInfo"),
+      (EscjavaPlugin.PLUGIN_ID + ".AlsoLogInfo"),
       false,
       "Send informational output to the Log file also",
       "Informational output, if enabled, is sent to either the Console" + Utils.eol +
@@ -68,7 +68,7 @@ public final class Options {
    * but in the reverse sense.
    */
   public static final BooleanOption quiet = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "quiet"),
+      (EscjavaPlugin.PLUGIN_ID + ".quiet"),
       false,
       "Disable ESC/Java informational messages",
       "Turns off progress and timing messages (in the Console windows) [JML --Quiet option]");
@@ -78,7 +78,7 @@ public final class Options {
    * parsing and typechecking.
    */
   public static final BooleanOption typeCheckOnly = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "typeCheckOnly"),
+      (EscjavaPlugin.PLUGIN_ID + ".typeCheckOnly"),
       false,
       "Type check only (no static checking)",
       "[escjava -typecheck option]"); // FIXME
@@ -88,7 +88,7 @@ public final class Options {
    * which turns off warnings due to missing semicolons.
    */
   public static final BooleanOption parsePlus = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "parsePlus"),
+      (EscjavaPlugin.PLUGIN_ID + ".parsePlus"),
       false,
       "Enable parsing of //+@ and /*+@ annotations",
       "Escjava parses annotations beginning with //@, /*@, //-@, /*-@; " + Utils.eol +
@@ -101,7 +101,7 @@ public final class Options {
    * which turns off warnings due to missing semicolons.
    */
   public static final BooleanOption noSemicolonWarnings = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "noSemicolonWarnings"),
+      (EscjavaPlugin.PLUGIN_ID + ".noSemicolonWarnings"),
       false,
       "No semicolon warnings",
       "Turns off warnings about missing semicolons at the ends of lines" + Utils.eol +
@@ -112,7 +112,7 @@ public final class Options {
    * corresponding to the inverse of the -nocaution option.
    */
   public static final BooleanOption cautionMessages = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "cautionMessages"),
+      (EscjavaPlugin.PLUGIN_ID + ".cautionMessages"),
       true,
       "Enable caution messages",
       "Enables caution as well as warning messages [-nocaution option]");
@@ -122,7 +122,7 @@ public final class Options {
    * [-counterexample option].
    */
   public static final BooleanOption counterexample = new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "counterexample"),
+      (EscjavaPlugin.PLUGIN_ID + ".counterexample"),
       false,
       "Enables output of counterexample information",
       "Enables output of counterexample information when annotation " +
@@ -134,7 +134,7 @@ public final class Options {
    */
   public static final BooleanOption suggest = 
     new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "suggest"),
+      (EscjavaPlugin.PLUGIN_ID + ".suggest"),
       false,
       "Enables output of suggestion information",
       "Enables output of suggestions that might correct " +
@@ -145,7 +145,7 @@ public final class Options {
    */
   public static final BooleanOption checkPurity = 
     new BooleanOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "checkPurity"),
+      (EscjavaPlugin.PLUGIN_ID + ".checkPurity"),
       true,
       "Enables checking that annotations are pure",
       "Warnings are issued when an annotation contains an impure " +
@@ -156,7 +156,7 @@ public final class Options {
    */
   public static final ChoiceOption assertBehavior = 
     new ChoiceOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "assertBehavior"),
+      (EscjavaPlugin.PLUGIN_ID + ".assertBehavior"),
       new String[]{"Ignore assert", "Java behavior", "JML behavior"},
       1,
       "Behavior of assert statement (Java 1.4)",
@@ -171,7 +171,7 @@ public final class Options {
    */
   protected static final ChoiceOption source = 
     new ChoiceOption(
-      ((EscjavaPlugin.PLUGIN_ID + ".") + "source"),
+      (EscjavaPlugin.PLUGIN_ID + ".source"),
       EscToolsActivator.JavaVersions.toStringList(),
       1,
       "Java source version",

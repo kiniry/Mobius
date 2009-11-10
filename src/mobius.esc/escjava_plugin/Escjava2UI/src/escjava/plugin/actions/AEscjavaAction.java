@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -39,14 +40,14 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @author David R. Cok
  *
  */
-public abstract class EscjavaAction implements IObjectActionDelegate,
+public abstract class AEscjavaAction implements IObjectActionDelegate,
                     IWorkbenchWindowActionDelegate {
 
   /** Caches the value of the window, when informed of it. */
   private IWorkbenchWindow window;
   
   /** The current selection. */
-  private ISelection selection;
+  private IStructuredSelection selection;
   
   private IAction action;
 
@@ -58,8 +59,15 @@ public abstract class EscjavaAction implements IObjectActionDelegate,
   
   /** {@inheritDoc} */
   public void selectionChanged(final IAction ac, final ISelection sel) {
-    selection = sel;
     action = ac;
+    if (sel instanceof IStructuredSelection) {
+      selection = (IStructuredSelection) sel;
+      action.setEnabled(selection.getFirstElement() instanceof IJavaElement);      
+    }
+    else {
+      action.setEnabled(false);
+    }
+
     //System.err.println("SEL CHANGED " + selection.getClass());
   }
 

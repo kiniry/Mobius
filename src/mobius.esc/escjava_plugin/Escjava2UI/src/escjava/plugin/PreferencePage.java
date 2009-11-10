@@ -8,11 +8,16 @@
  */
 package escjava.plugin;
 
-import mobius.util.plugin.AbstractPreference;
-import mobius.util.plugin.AbstractPreference.BooleanOption;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import mobius.util.plugin.APreference;
+import mobius.util.plugin.APreference.BooleanOption;
 import mobius.util.plugin.widgets.APreferencePage;
-import mobius.util.plugin.widgets.PreferenceWidget;
+import mobius.util.plugin.widgets.APreferenceWidget;
 import mobius.util.plugin.widgets.Widgets;
+import mobius.util.plugin.widgets.APreferenceWidget.BooleanWidget;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -33,88 +38,94 @@ public class PreferencePage extends APreferencePage {
    * The option button corresponding to the Quiet option, but in the reverse
    * sense.
    */
-  public static final PreferenceWidget.BooleanWidget quiet = 
-    new PreferenceWidget.BooleanWidget(Options.quiet);
+  public static final APreferenceWidget.BooleanWidget quiet = 
+    new APreferenceWidget.BooleanWidget(Options.quiet);
 
   /**
    * The option button corresponding to -typecheck, which does only parsing and
    * typechecking.
    */
-  public static final PreferenceWidget.BooleanWidget typeCheckOnly = 
-    new PreferenceWidget.BooleanWidget(Options.typeCheckOnly);
+  public static final APreferenceWidget.BooleanWidget typeCheckOnly = 
+    new APreferenceWidget.BooleanWidget(Options.typeCheckOnly);
 
   /**
    * The option button corresponding to -parsePlus, which turns off warnings due
    * to missing semicolons.
    */
-  public static final PreferenceWidget.BooleanWidget parsePlus = 
-    new PreferenceWidget.BooleanWidget(Options.parsePlus);
+  public static final APreferenceWidget.BooleanWidget parsePlus = 
+    new APreferenceWidget.BooleanWidget(Options.parsePlus);
 
   /**
    * The option button corresponding to -noSemicolonWarnings, which turns off
    * warnings due to missing semicolons.
    */
-  public static final PreferenceWidget.BooleanWidget noSemicolonWarnings = 
-    new PreferenceWidget.BooleanWidget(Options.noSemicolonWarnings);
+  public static final APreferenceWidget.BooleanWidget noSemicolonWarnings = 
+    new APreferenceWidget.BooleanWidget(Options.noSemicolonWarnings);
 
   /**
    * Enables caution as well as warning messages to be produced, corresponding
    * to the inverse of the -nocaution option.
    */
-  public static final PreferenceWidget.BooleanWidget cautionMessages = 
-    new PreferenceWidget.BooleanWidget(Options.cautionMessages);
+  public static final APreferenceWidget.BooleanWidget cautionMessages = 
+    new APreferenceWidget.BooleanWidget(Options.cautionMessages);
 
   /**
    * Enables counterexample information to be generated [-counterexample option].
    */
-  public static final PreferenceWidget.BooleanWidget counterexample = 
-    new PreferenceWidget.BooleanWidget(Options.counterexample);
+  public static final APreferenceWidget.BooleanWidget counterexample = 
+    new APreferenceWidget.BooleanWidget(Options.counterexample);
 
   /**
    * Enables counterexample information to be generated [-counterexample option].
    */
-  public static final PreferenceWidget.BooleanWidget suggest = 
-    new PreferenceWidget.BooleanWidget(Options.suggest);
+  public static final APreferenceWidget.BooleanWidget suggest = 
+    new APreferenceWidget.BooleanWidget(Options.suggest);
 
   /**
    * Enables checking for the use of impure methods in annotations [-checkPurity
    * option].
    */
-  public static final PreferenceWidget.BooleanWidget checkPurity = 
-    new PreferenceWidget.BooleanWidget(Options.checkPurity);
+  public static final APreferenceWidget.BooleanWidget checkPurity = 
+    new APreferenceWidget.BooleanWidget(Options.checkPurity);
 
   /**
    * This allows the setting of the ESC/Java -ea, -da, -eajava, -eajml options.
    */
-  public static final PreferenceWidget.ChoiceWidget assertBehavior = 
-    new PreferenceWidget.ChoiceWidget(Options.assertBehavior);
+  public static final APreferenceWidget.ChoiceWidget assertBehavior = 
+    new APreferenceWidget.ChoiceWidget(Options.assertBehavior);
 
   /**
    * This is an array of toggles that control which escjava warnings static
    * checker warnings are enabled [-nowarn option].
    */
-  public static PreferenceWidget.BooleanWidget[] warningWidgets;
+  public static final List<BooleanWidget> warningWidgets = 
+    new ArrayList<BooleanWidget>();
   
   /**
    * The option widget corresponding to the choice of source version
    * compatibility (Java 1.3, Java 1.4 or Java Card 2.1) to be supported.  
    */
-  protected static final PreferenceWidget.ChoiceWidget source = 
-    new PreferenceWidget.ChoiceWidget(Options.source);
+  protected static final APreferenceWidget.ChoiceWidget source = 
+    new APreferenceWidget.ChoiceWidget(Options.source);
 
 
   
   /**
    * An array of the ESCJava option widgets.
    */
-  private static final PreferenceWidget[] widgets = {
-    new PreferenceWidget.Label("Syntax and semantics checks"),
-    typeCheckOnly, noSemicolonWarnings, cautionMessages,
-    checkPurity, new PreferenceWidget.Label("Generated information"),
-    counterexample, suggest, quiet,
-    new PreferenceWidget.Label("Java language"), source,
-    assertBehavior };
-
+  private static final List<APreferenceWidget<?>> widgets =
+    new ArrayList<APreferenceWidget<?>>();
+  {
+    APreferenceWidget<?>[] tab = {new APreferenceWidget.Label("Syntax and semantics checks"),
+                                typeCheckOnly, noSemicolonWarnings, cautionMessages,
+                                checkPurity, new APreferenceWidget.Label("Generated information"),
+                                counterexample, suggest, quiet,
+                                new APreferenceWidget.Label("Java language"), source,
+                                assertBehavior };
+    for (APreferenceWidget<?> w: tab) {
+      widgets.add(w);
+    }
+  }
 
   /**
    * Creates the property page controls and initializes them.
@@ -160,7 +171,7 @@ public class PreferencePage extends APreferencePage {
     // pxLog quiet sourcepath classpath specpath source
 
     initWarningWidgets();
-    final int n = warningWidgets.length;
+    final int n = warningWidgets.size();
     addWidgets(warningWidgets, 0, (n + 1) / 2, composite3);
     addWidgets(warningWidgets, (n + 1) / 2, n - (n + 1) / 2, composite4);
 
@@ -175,10 +186,10 @@ public class PreferencePage extends APreferencePage {
   private static void initWarningWidgets() {
     final BooleanOption[] opts = Options.warningOptions();
     final int n = opts.length;
-    warningWidgets = new PreferenceWidget.BooleanWidget[n];
+    warningWidgets.clear();
 
     for (int i = 0; i < n; ++i) {
-      warningWidgets[i] = new PreferenceWidget.BooleanWidget(opts[i]);
+      warningWidgets.add(new APreferenceWidget.BooleanWidget(opts[i]));
     }
   }
 
@@ -186,7 +197,7 @@ public class PreferencePage extends APreferencePage {
   public boolean performOk() {
     // When OK is pressed, set all the options selected.
     setOptionValue(eclipseOptions);
-    AbstractPreference.notifyListeners();
+    APreference.notifyListeners();
     setOptionValue(widgets);
     setOptionValue(warningWidgets);
     return true;
@@ -203,7 +214,7 @@ public class PreferencePage extends APreferencePage {
   /** Returns the array of widgets displayed in this page.
    * @return The array of PreferenceWidget objects for this page.
    */
-  protected PreferenceWidget[] options() {
+  protected Collection<APreferenceWidget<?>> options() {
     throw new RuntimeException(); // SHOULD NOT BE USED
   }
 

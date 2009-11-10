@@ -33,20 +33,19 @@ import escjava.plugin.EscjavaMarker;
  * 
  * @author David R. Cok
  */
-public class Check extends EscjavaAction {
-  boolean bWorking;
+public class Check extends AEscjavaAction {
+  /** if escjava has a working process. */
+  private boolean bWorking;
   
   
   /** {@inheritDoc} */
   public final void run(final IAction ac) {
     setDisable();
     bWorking = true;
-    Job job = new Job("ESCJava Check") {
-
+    final Job job = new Job("ESCJava Check") {
       @Override
-      protected IStatus run(IProgressMonitor monitor) {
+      protected IStatus run(final IProgressMonitor monitor) {
         final Shell shell = getWindow().getShell();
-
         try {
           final List<IAdaptable> list = Utils.getSelectedElements(getSelection(), getWindow());
           if (list.size() == 0) {
@@ -63,7 +62,6 @@ public class Check extends EscjavaAction {
               Utils.showMessageInUI(shell, "ESCJava Plugin", msg);
             }
           }
-          
         } 
         catch (Exception e) {
           if (getWindow() != null) {
@@ -85,11 +83,12 @@ public class Check extends EscjavaAction {
     if (Clear.getInstance() == null) {
       return;
     }
-    IAction clearAction = Clear.getInstance().getAction();
+    final IAction clearAction = Clear.getInstance().getAction();
     if (clearAction != null) {
       clearAction.setEnabled(false);
     }
   }
+
   private void setEnabled(boolean b) {
     if (b) {
       setEnabled();
@@ -98,6 +97,7 @@ public class Check extends EscjavaAction {
       setDisable();
     }
   }
+  
   private void setEnabled() {
     if (bWorking) {
       setDisable();
@@ -107,7 +107,7 @@ public class Check extends EscjavaAction {
     if (Clear.getInstance() == null) {
       return;
     }
-    IAction clearAction = Clear.getInstance().getAction();
+    final IAction clearAction = Clear.getInstance().getAction();
     if (clearAction != null) {
       clearAction.setEnabled(true);
     }
@@ -146,22 +146,8 @@ public class Check extends EscjavaAction {
    */
   private static void checkProject(final IJavaProject project) 
     throws CoreException {
-    //throws Exception {
-    final List<String> filesToCheck = new LinkedList<String>();
     for (IPackageFragment p: project.getPackageFragments()) {
-      for (ICompilationUnit cu: p.getCompilationUnits()) {
-        filesToCheck.add(cu.getResource().getLocation().toOSString());        
-      }
-      // FIXME - put package names on command-line?
-    }
-    EscjavaMarker.clearMarkers(project.getProject());
-    try {
-        // FIXME - multi-thread this?
-      final EscjavaChecker ec = new EscjavaChecker(project);
-      ec.run(filesToCheck);
-    } 
-    catch (Exception e) {
-      Log.errorlog("Exception occurred in running ESCJava checks: ", e);
+      checkPackage(p);
     }
   }
   
@@ -178,7 +164,6 @@ public class Check extends EscjavaAction {
     EscjavaMarker.clearMarkers(p.getResource());
     // FIXME - put package names on command-line?
     try {
-        // FIXME - multi-thread this?
       final EscjavaChecker ec = new EscjavaChecker(p.getJavaProject());
       ec.run(filesToCheck);
     }
@@ -222,7 +207,7 @@ public class Check extends EscjavaAction {
   public void selectionChanged(final IAction ac, final ISelection sel) {
     super.selectionChanged(ac, sel);
     if (sel instanceof IStructuredSelection) {
-      IStructuredSelection ss = (IStructuredSelection) sel;
+      final IStructuredSelection ss = (IStructuredSelection) sel;
       setEnabled(ss.getFirstElement() instanceof IJavaElement);
     }
     else {

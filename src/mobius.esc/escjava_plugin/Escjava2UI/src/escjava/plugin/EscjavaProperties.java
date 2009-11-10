@@ -6,7 +6,9 @@
 
 package escjava.plugin;
 
-import mobius.util.plugin.widgets.OptionWidget;
+import java.util.List;
+
+import mobius.util.plugin.widgets.AOptionWidget;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -18,7 +20,7 @@ import org.eclipse.swt.widgets.Control;
  * 
  * @author David R. Cok
  */
-public class EscjavaProperties extends mobius.util.plugin.widgets.PropertyPage {
+public class EscjavaProperties extends mobius.util.plugin.widgets.APropertyPage {
 //
 //  // FIXME - can we move these common widgets/options to the library
 //  
@@ -231,7 +233,7 @@ public class EscjavaProperties extends mobius.util.plugin.widgets.PropertyPage {
    * @deprecated not used
    * @return nothing, throws an exception
    */
-  public OptionWidget[] options() {
+  public List<AOptionWidget<?>> options() {
     // We don't use this since performOK and performDefaults
     // are both overridden
     throw new RuntimeException();

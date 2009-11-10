@@ -9,7 +9,7 @@ package escjava.plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobius.util.plugin.AbstractPreference;
+import mobius.util.plugin.APreference;
 import mobius.util.plugin.Log;
 import mobius.util.plugin.Utils;
 
@@ -84,9 +84,9 @@ public class EscjavaPlugin extends AbstractUIPlugin {
   public void start(final BundleContext context) throws Exception {
     super.start(context);
     Log.createLog(EscjavaPlugin.ESC_TOOL_NAME, this);
-    AbstractPreference.setPreferenceStore(getPlugin().getPreferenceStore());
-    AbstractPreference.addListener(
-        new AbstractPreference.IListener() {
+    APreference.setPreferenceStore(getPlugin().getPreferenceStore());
+    APreference.addListener(
+        new APreference.IListener() {
           public void run() {
             Log.initializeState(
                 Options.logging.getValue(),
@@ -94,7 +94,7 @@ public class EscjavaPlugin extends AbstractUIPlugin {
                 Options.alsoLogInfo.getValue());
           }
         });
-    AbstractPreference.notifyListeners();
+    APreference.notifyListeners();
     if (Log.on) {
       Log.log(ESC_TOOL_NAME + " plugin is starting");
     }

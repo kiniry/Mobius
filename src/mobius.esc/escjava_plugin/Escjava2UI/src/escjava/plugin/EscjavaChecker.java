@@ -8,9 +8,7 @@
 package escjava.plugin;
 
 import java.io.PrintStream;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javafe.genericfile.GenericFile;
 import javafe.util.ClipPolicy;
@@ -20,12 +18,8 @@ import mobius.util.plugin.Log;
 import mobius.util.plugin.Utils;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 
 
@@ -258,8 +252,7 @@ public class EscjavaChecker extends escjava.Main
     inputs.add("-classpath");
     try {
       String cp = "";
-      cp = computeClasspath(new HashSet<IJavaProject>(), project, cp);
-      cp = cp.substring(1);
+      cp = Utils.computeClassPath(project);
       inputs.add(cp);
     } 
     catch (JavaModelException e1) {
@@ -269,36 +262,7 @@ public class EscjavaChecker extends escjava.Main
     return true;
   }
   
-  private static String computeClasspath(final Set<IJavaProject> already, 
-                                         final IJavaProject project, 
-                                         final String currentpath) throws JavaModelException {
-    String cp = currentpath;
-    already.add(project);
-    for (IPackageFragmentRoot f: project.getAllPackageFragmentRoots()) {
-      if (f.getResource() != null) {
-        final IPath p = f.getResource().getRawLocation();
-        if (p != null) {
-          final String path = p.toOSString();
-          cp = path + ":" + cp;
-        }
-        else {
-          final IResource elem = f.getCorrespondingResource();
-          final IJavaModel model = f.getJavaModel();
-          final IJavaProject proj = model.getJavaProject(elem.getName());
-          if (proj != null) {
-            if (!already.contains(proj)) {
-              cp = computeClasspath(already, proj, cp.substring(1));
-            }
-            else { /* if it contains already the proj, 
-                       it means that we have to add it to the classpath */
-              cp = "" + Utils.getRoot().getRawLocation() + proj.getPath() + ":" + cp;
-            }
-          }
-        } 
-      }
-    }
-    return cp;
-  }
+  
 
 
 
