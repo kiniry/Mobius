@@ -2,7 +2,7 @@
 <feature
       id="ie.ucd.bon.beetlz"
       label="Beetlz Feature"
-      version="1.2.1">
+      version="1.2.2">
 
    <description url="http://kind.ucd.ie/products/opensource/Beetlz/">
       The Beetlz consistency checker for BON, JML and Java.
@@ -43,6 +43,10 @@ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
 OF THE POSSIBILITY OF SUCH DAMAGE.
    </license>
+
+   <url>
+      <discovery label="Mobius Update Site" url="http://kind.ucd.ie/products/opensource/Mobius/updates"/>
+   </url>
 
    <requires>
       <import plugin="org.eclipse.ui"/>
