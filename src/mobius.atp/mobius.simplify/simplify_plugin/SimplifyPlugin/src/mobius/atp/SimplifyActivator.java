@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import mobius.util.plugin.Log;
+import mobius.util.plugin.Utils;
+import mobius.util.plugin.Utils.ProverPath;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import pluginlib.Log;
-import pluginlib.Utils;
-import pluginlib.Utils.ProverPath;
 
 /**
  * The activator class controls the plug-in life cycle.

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simplify Plug-in
 Bundle-SymbolicName: mobius.atp.simplify;singleton:=true
-Bundle-Version: 1.5.9
+Bundle-Version: 1.5.11
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: David R. Cok and EU Project "Mobius" (IST-159050)
 Require-Bundle: org.eclipse.ui,
