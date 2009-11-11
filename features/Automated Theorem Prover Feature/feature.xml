@@ -2,19 +2,13 @@
 <feature
       id="mobius.atp"
       label="Automated Theorem Provers"
-      version="0.2.3">
+      version="0.2.6"
+      provider-name="EU Mobius IST-15905 Project">
 
    <description>
-      This feature contains Mobius related automated theorem prover like Simplify.
+      This feature contains Mobius related automated theorem provers. 
+      It includes Simplify, Yices, CVC3 and Z3.
    </description>
-
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
-   </copyright>
-
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
-   </license>
 
    <plugin
          id="mobius.atp.simplify"
