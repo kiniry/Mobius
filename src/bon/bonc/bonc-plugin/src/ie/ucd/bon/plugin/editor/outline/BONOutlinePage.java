@@ -2,19 +2,19 @@ package ie.ucd.bon.plugin.editor.outline;
 
 import ie.ucd.bon.API;
 import ie.ucd.bon.parser.tracker.ParseResult;
+import ie.ucd.bon.plugin.editor.BONEditor;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
-public class BONOutlinePage extends ContentOutlinePage implements IContentOutlinePage {
+public class BONOutlinePage extends ContentOutlinePage {
 
-  private final IDocument input;
+  private final BONEditor editor;
   
-  public BONOutlinePage(IDocument input) {
-    this.input = input;
+  public BONOutlinePage(BONEditor editor) {
+    this.editor = editor;
   }
   
   @Override
@@ -25,8 +25,11 @@ public class BONOutlinePage extends ContentOutlinePage implements IContentOutlin
     viewer.setLabelProvider(new BONOutlineLabelProvider());
     viewer.addSelectionChangedListener(this);
     
-    ParseResult result = API.parse(input.get());
-    viewer.setInput(new BONDocumentOutlineNode(result.getParse()));
+    //viewer.addP
+    IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+    ParseResult result = API.parse(document.get());
+    viewer.setInput(BONDocumentOutlineNode.elementsToTreeNodes(null, result.getParse().bonSpecification));
+    viewer.expandAll();
   }
 
 }

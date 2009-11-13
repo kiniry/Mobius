@@ -4,9 +4,11 @@
  */
 package ie.ucd.bon.util;
 
+import ie.ucd.bon.ast.AstNode;
+import ie.ucd.bon.printer.PrettyPrintVisitor;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -106,6 +108,16 @@ public final class StringUtil {
 
   public static String appendWithSeparator(String[] items, String sep, boolean separatorAtEnd) {
     return appendWithSeparator(Arrays.asList(items), sep, separatorAtEnd);
+  }
+  
+  private static final PrettyPrintVisitor ppv = new PrettyPrintVisitor();
+  public static String prettyPrint(AstNode node) {
+    if (node == null) {
+      return "";
+    }
+    ppv.resetVisitorOutput();
+    node.accept(ppv);
+    return ppv.getVisitorOutputAsString();
   }
 
 }

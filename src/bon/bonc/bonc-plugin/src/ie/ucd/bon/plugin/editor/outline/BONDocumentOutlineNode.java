@@ -12,32 +12,35 @@ import org.eclipse.jface.viewers.TreeNode;
 
 public class BONDocumentOutlineNode extends TreeNode {
   
-  public BONDocumentOutlineNode(Object value) {
+  public BONDocumentOutlineNode(BONDocumentOutlineNode parent, Object value) {
     super(value);
-    System.out.println("Created node: " + value.getClass());
     setChildren(createChildren());
+    setParent(parent);
   }
 
   protected TreeNode[] createChildren() {
-    System.out.println("creating");
     if (value instanceof BonSourceFile) {
-      return elementsToTreeNodes(((BonSourceFile)value).bonSpecification);
+      return elementsToTreeNodes(this, ((BonSourceFile)value).bonSpecification);
     } else if (value instanceof StaticDiagram) {
-      return elementsToTreeNodes(((StaticDiagram)value).components);
+      return elementsToTreeNodes(this, ((StaticDiagram)value).components);
     } else if (value instanceof Cluster) {
-      return elementsToTreeNodes(((Cluster)value).components);
+      return elementsToTreeNodes(this, ((Cluster)value).components);
     } else {
       return new TreeNode[0];
     }
   }
   
-  private static TreeNode[] elementsToTreeNodes(List<? extends AstNode> els) {
+  public static TreeNode[] elementsToTreeNodes(BONDocumentOutlineNode parent, List<? extends AstNode> els) {
     List<TreeNode> nodes = new ArrayList<TreeNode>(els.size());
     for (AstNode node : els) {
-      nodes.add(new BONDocumentOutlineNode(node));
+      nodes.add(new BONDocumentOutlineNode(parent, node));
     }
     return nodes.toArray(new TreeNode[nodes.size()]);
   }
-  
 
+  @Override
+  public String toString() {
+    return "Tree node: " + value;
+  }  
+  
 }

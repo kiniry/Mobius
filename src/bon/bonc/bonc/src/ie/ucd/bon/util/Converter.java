@@ -11,7 +11,7 @@ public abstract class Converter<B,A> {
 
   public abstract A convert(B toConvert);
 
-  public Collection<A> convert(final Collection<B> toConvert) {
+  public Collection<A> convert(final Collection<? extends B> toConvert) {
     Collection<A> result = new ArrayList<A>(toConvert.size());
     for (B b : toConvert) {
       if (b != null) {

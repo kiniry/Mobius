@@ -75,7 +75,7 @@ public class BONEditor extends TextEditor {
   public Object getAdapter(Class adapter) {
     if (IContentOutlinePage.class.equals(adapter)) {
       if (outline == null) {
-        outline = new BONOutlinePage(getDocumentProvider().getDocument(getEditorInput()));
+        outline = new BONOutlinePage(this);
       }
       return outline;
    }
