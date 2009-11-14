@@ -21,12 +21,12 @@ public class SourceLocation implements Comparable<SourceLocation> {
   }
   public static final String STDIN_TEXT = "<stdin>";
 
-  private final File sourceFile;
-  private int lineNumber;
-  private int charPositionInLine;
+  protected final File sourceFile;
+  protected int lineNumber;
+  protected int charPositionInLine;
 
-  private int absoluteCharPositionStart;
-  private int absoluteCharPositionEnd;
+  protected int absoluteCharPositionStart;
+  protected int absoluteCharPositionEnd;
 
   public SourceLocation(File sourceFile, int lineNumber,
       int charPositionInLine, int absoluteCharPositionStart,
@@ -37,6 +37,10 @@ public class SourceLocation implements Comparable<SourceLocation> {
     this.charPositionInLine = charPositionInLine;
     this.absoluteCharPositionEnd = absoluteCharPositionEnd;
     this.absoluteCharPositionStart = absoluteCharPositionStart;
+  }
+  
+  public SourceLocation(SourceLocation loc) {
+    this(loc.sourceFile, loc.lineNumber, loc.charPositionInLine, loc.absoluteCharPositionStart, loc.absoluteCharPositionEnd);
   }
 
   public SourceLocation(Token t, File sourceFile) {
@@ -212,6 +216,22 @@ public class SourceLocation implements Comparable<SourceLocation> {
     } else {
       return this.getCharPositionInLine() - o.getCharPositionInLine();
     }
+  }
+  
+  public boolean isRealLocation() {
+    return absoluteCharPositionStart != UNKNOWN 
+        && absoluteCharPositionEnd != UNKNOWN
+        && charPositionInLine != UNKNOWN
+        && lineNumber != UNKNOWN;
+  }
+
+  @Override
+  public SourceLocation clone() {
+    return new SourceLocation(this);
+  }
+  
+  public MutableSourceLocation mutableClone() {
+    return new MutableSourceLocation(this);
   }
 
   @Override

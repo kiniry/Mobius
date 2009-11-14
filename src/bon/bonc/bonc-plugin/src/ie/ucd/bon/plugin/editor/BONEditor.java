@@ -10,7 +10,11 @@
  *******************************************************************************/
 package ie.ucd.bon.plugin.editor;
 
+import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.plugin.editor.outline.BONOutlinePage;
+import ie.ucd.bon.plugin.util.PluginUtil;
+import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.AstUtil;
 
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -80,6 +84,15 @@ public class BONEditor extends TextEditor {
       return outline;
    }
     return super.getAdapter(adapter);
+  }
+  
+  public void selectAndReveal(AstNode node) {
+    SourceLocation location = AstUtil.getReportingSourceLocation(node);
+    if (location.isRealLocation()) {
+      int startChar = PluginUtil.eclipseAbsoluteCharacterPosition(location.getAbsoluteCharPositionStart(), location.getLineNumber());
+      int endChar = PluginUtil.eclipseAbsoluteCharacterPosition(location.getAbsoluteCharPositionEnd(), location.getLineNumber());
+      this.selectAndReveal(startChar, endChar-startChar+1);
+    }
   }
 	
 }

@@ -3,9 +3,15 @@ package ie.ucd.bon.plugin.editor.outline;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.StaticDiagram;
-import ie.ucd.bon.util.Converter;
+import ie.ucd.bon.ast.Type;
+import ie.ucd.bon.util.AstUtil;
 import ie.ucd.bon.util.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
@@ -18,13 +24,15 @@ public class BONOutlineLabelProvider implements ILabelProvider {
   public Image getImage(Object element) {
     if (element instanceof BONDocumentOutlineNode){
       BONDocumentOutlineNode node = (BONDocumentOutlineNode)element;
-      Object value = node.getValue();
+      AstNode value = node.getValue();
       if (value instanceof StaticDiagram) {
         return null; //TODO
       } else if (value instanceof Cluster) {
         return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
       } else if (value instanceof Clazz) {
         return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS);
+      } else if (value instanceof FeatureSpecification) {
+        return JavaUI.getSharedImages().getImage(ISharedImages.IMG_FIELD_PUBLIC);
       }
     }
     return null;
@@ -35,23 +43,28 @@ public class BONOutlineLabelProvider implements ILabelProvider {
       BONDocumentOutlineNode node = (BONDocumentOutlineNode)element;
       Object value = node.getValue();
       if (value instanceof StaticDiagram) {
-        return ((StaticDiagram)value).extendedId;
+        StaticDiagram sd = (StaticDiagram)value;
+        return sd.extendedId == null ? "static_diagram" : sd.extendedId;
       } else if (value instanceof Cluster) {
         return ((Cluster)value).name;
       } else if (value instanceof Clazz) {
         Clazz clazz = ((Clazz)value);
-        return clazz.name.name + (clazz.generics.size() > 0 ? "[" + StringUtil.appendWithSeparator(nodeToStringConverter.convert(clazz.generics), ",") + "]" : "");
+        return clazz.name.name + (clazz.generics.size() > 0 ? "[" + StringUtil.appendWithSeparator(AstUtil.nodeToStringConverter.convert(clazz.generics), ",") + "]" : "");
+      } else if (value instanceof FeatureSpecification) {
+        FeatureSpecification fSpec = (FeatureSpecification)value;
+        String featureNames = StringUtil.appendWithSeparator(AstUtil.nodeToStringConverter.convert(fSpec.featureNames),",");
+        List<Type> argTypes = new ArrayList<Type>();
+        for (FeatureArgument fArg : fSpec.arguments) {
+          argTypes.add(fArg.type);
+        }
+        String args = "(" + StringUtil.appendWithSeparator(AstUtil.nodeToStringConverter.convert(argTypes),",") + ")";
+        String returnType = fSpec.hasType == null ? "" : " " + StringUtil.prettyPrint(fSpec.hasType);
+        return featureNames + args + returnType; 
       }
       return "NONE..." + value.getClass();
     }
     return "";
   }
-
-  private static Converter<AstNode,String> nodeToStringConverter = new Converter<AstNode,String>() {
-    public String convert(AstNode toConvert) {
-      return StringUtil.prettyPrint(toConvert);
-    }
-  };
 
   public void dispose() {
     // TODO Auto-generated method stub

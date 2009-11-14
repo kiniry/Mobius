@@ -507,8 +507,10 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   @Override
   public void visitHasType(HasType node, TypeMark mark, Type type, SourceLocation loc) {
     mark.accept(this);
-    tp.print(' ');
-    type.accept(this);
+    if (type != null) {
+      tp.print(' ');
+      type.accept(this);
+    }
   }
 
   @Override

@@ -6,6 +6,7 @@ import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.BONWarning;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.plugin.BONPlugin;
+import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.source.SourceLocation;
 
 import java.io.File;
@@ -30,9 +31,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 public class BONcBuilder extends IncrementalProjectBuilder {
 
-  private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("win");
-  private static final boolean IS_MAC = System.getProperty("os.name").toLowerCase().startsWith("mac os x");
-  
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder";
   private static final String MARKER_ID = BONPlugin.PLUGIN_ID + ".bonclocproblemmarker";
   private static final String NO_LOC_MARKER_ID = BONPlugin.PLUGIN_ID + ".boncproblemmarker";
@@ -120,11 +118,8 @@ public class BONcBuilder extends IncrementalProjectBuilder {
         int charPositionStart = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionStart();
         int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
 
-        //Adjusting for different counting of line-ending characters between eclipse and antlr
-        if ((IS_WINDOWS || IS_MAC) && lineNumber != -1) {
-          charPositionStart += (lineNumber -1);
-          charPositionEnd += (lineNumber -1);
-        }
+        charPositionStart = PluginUtil.eclipseAbsoluteCharacterPosition(charPositionStart, lineNumber);
+        charPositionEnd = PluginUtil.eclipseAbsoluteCharacterPosition(charPositionEnd, lineNumber);
 
         //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
 
