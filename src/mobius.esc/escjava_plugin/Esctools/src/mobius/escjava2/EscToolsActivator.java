@@ -26,7 +26,8 @@ public class EscToolsActivator extends AbstractUIPlugin {
     JAVA_CARD_2_1("JavaCard 2.1", "escspecs-javacard.jar"),
     JAVA_1_3("1.3",  "escspecs-java1.4.jar"),
     JAVA_1_4("1.4",  "escspecs-java1.4.jar"),
-    JAVA_1_5("1.5",  "escspecs-java1.5.jar");
+    JAVA_1_5("1.5",  "escspecs-java1.5.jar"),
+    JAVA_1_6("1.6",  "escspecs-java1.6.jar");
     
     
     private final String str;
