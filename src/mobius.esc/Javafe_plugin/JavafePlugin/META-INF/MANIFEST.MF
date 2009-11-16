@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Javafe plugin
 Bundle-SymbolicName: mobius.javafe.plugin
-Bundle-Version: 2.0.9
-Bundle-ClassPath: libs/Javafe2.0.5b.jar
+Bundle-Version: 2.0.10
+Bundle-ClassPath: libs/JavafeCURRENT.jar
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: HP Labs and EU Mobius IST-15905
 Export-Package: javafe,
