@@ -20,6 +20,8 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -86,6 +88,8 @@ public class BONEditor extends TextEditor {
     return super.getAdapter(adapter);
   }
   
+  
+  
   public void selectAndReveal(AstNode node) {
     SourceLocation location = AstUtil.getReportingSourceLocation(node);
     if (location.isRealLocation()) {
@@ -94,5 +98,28 @@ public class BONEditor extends TextEditor {
       this.selectAndReveal(startChar, endChar-startChar+1);
     }
   }
+  
+  public void addCaretPositionListener(CaretListener listener) {
+    getSourceViewer().getTextWidget().addCaretListener(listener);
+  }
+  
+  public void removeCaretPositionListener(CaretListener listener) {
+    getSourceViewer().getTextWidget().removeCaretListener(listener);
+  }
+  
+  public int getCaretPosition() {
+    return getSourceViewer().getTextWidget().getCaretOffset();
+  }
+  
+  public SelectionProvider getSelectionProvider() {
+    return (SelectionProvider)super.getSelectionProvider();
+  }
+  
+  public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
+    getSelectionProvider().addPostSelectionChangedListener(listener);
+  }
 	
+  public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
+    getSelectionProvider().removePostSelectionChangedListener(listener);
+  }
 }
