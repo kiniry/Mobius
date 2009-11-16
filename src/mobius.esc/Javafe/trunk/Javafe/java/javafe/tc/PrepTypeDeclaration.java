@@ -803,8 +803,7 @@ public class PrepTypeDeclaration {
 						// Allow covariant inheritance in Java 1.5
 						if (!typeSig.isSubtypeOf(TypeSig
 								.getSig((TypeName) superMethod.returnType))
-								|| (System.getProperty("java.version").indexOf(
-										"1.5") == -1)) {
+								|| !isRecentJava()) {
 
 							ErrorSet.error(overridingMethod.loc,
 									"Different or incompatible return types"
@@ -1019,4 +1018,8 @@ public class PrepTypeDeclaration {
 		return sig.getEnv(isStatic);
 	}
 
+	public static boolean isRecentJava() {
+	  String version = System.getProperty("java.version");
+	  return (version.indexOf("1.5") != -1) || (version.indexOf("1.6") != -1);
+	}
 }
