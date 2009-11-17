@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Canapa Plug-in
 Bundle-SymbolicName: mobius.canapa; singleton=true
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Bundle-Activator: canapa.CanapaPlugin 
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -17,4 +17,5 @@ Bundle-ClassPath: .,
  libs/Javafe2.0.5b.jar,
  libs/antlr-2.7.5.jar,
  bin/
+Export-Package: canapa
 

@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -127,12 +128,17 @@ public class Check extends AEscjavaAction {
     else if (element instanceof IPackageFragment) {
       checkPackage((IPackageFragment)element);
     }
+    else if (element instanceof IPackageFragmentRoot) {
+      checkPackage((IPackageFragmentRoot)element);
+    }
+    
     else if (element instanceof ICompilationUnit) {
       checkCompilationUnit((ICompilationUnit)element);
     }
     else if (element instanceof IType) {
       // should not happen
       checkType((IType)element);
+      throw new UnsupportedOperationException();
     }
     else {
       return false;
@@ -150,7 +156,16 @@ public class Check extends AEscjavaAction {
       checkPackage(p);
     }
   }
-  
+  /** TODO
+   * @param p
+   * @throws Exception
+   */
+  private static void checkPackage(final IPackageFragmentRoot p) 
+    throws CoreException {
+    for (IJavaElement elem: p.getChildren()) {
+      checkJavaElement(elem);
+    }
+  }
   /** TODO
    * @param p
    * @throws Exception
@@ -161,6 +176,7 @@ public class Check extends AEscjavaAction {
     for (ICompilationUnit cu: p.getCompilationUnits()) {
       filesToCheck.add(cu.getResource().getLocation().toOSString());        
     }
+    
     EscjavaMarker.clearMarkers(p.getResource());
     // FIXME - put package names on command-line?
     try {

@@ -115,13 +115,14 @@ public class PreferencePage extends APreferencePage {
    */
   private static final List<APreferenceWidget<?>> widgets =
     new ArrayList<APreferenceWidget<?>>();
-  {
-    APreferenceWidget<?>[] tab = {new APreferenceWidget.Label("Syntax and semantics checks"),
-                                typeCheckOnly, noSemicolonWarnings, cautionMessages,
-                                checkPurity, new APreferenceWidget.Label("Generated information"),
-                                counterexample, suggest, quiet,
-                                new APreferenceWidget.Label("Java language"), source,
-                                assertBehavior };
+  static {
+    final APreferenceWidget<?>[] tab = {
+      new APreferenceWidget.Label("Syntax and semantics checks"),
+      typeCheckOnly, noSemicolonWarnings, cautionMessages,
+      checkPurity, new APreferenceWidget.Label("Generated information"),
+      counterexample, suggest, quiet,
+      new APreferenceWidget.Label("Java language"), source,
+      assertBehavior };
     for (APreferenceWidget<?> w: tab) {
       widgets.add(w);
     }

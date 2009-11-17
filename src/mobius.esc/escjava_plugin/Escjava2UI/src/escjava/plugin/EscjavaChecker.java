@@ -210,7 +210,13 @@ public class EscjavaChecker extends escjava.Main
     System.setErr(newout);
     final  String[] strings = new String[0];
     final  String[] inputArray = (String[])inputs.toArray(strings);
-    final  int i = compile(inputArray);
+    int i = 1;
+    try {
+      i = compile(inputArray);
+    }
+    catch (final Throwable t) {
+      t.printStackTrace();
+    }
     System.setOut(out);
     System.setErr(err);
     if (Log.on) {

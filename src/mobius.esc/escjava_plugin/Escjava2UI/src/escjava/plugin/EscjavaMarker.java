@@ -182,6 +182,8 @@ public class EscjavaMarker implements IEscjavaListener {
    * @throws CoreException
    */
   public static void clearMarkers(final IResource r) throws CoreException {
+    if (r == null)
+      return;
     if (r.exists()) {
       r.deleteMarkers(ESCJAVA_MARKER_ID, false, IResource.DEPTH_INFINITE);
     }

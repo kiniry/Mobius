@@ -203,6 +203,7 @@
                label="Disable auto ESC/Java2 checking"
                menubarPath="JMLMenu/EscjavaGroup"
                state="false"
+               style="push"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Disables selected objects for auto ESC/Java2 checking">
          </action>
@@ -214,6 +215,7 @@
                label="Enable auto ESC/Java2 checking"
                menubarPath="JMLMenu/EscjavaGroup"
                state="false"
+               style="push"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Enables selected objects for auto ESC/Java2 checking">
          </action>
@@ -225,6 +227,7 @@
                label="Go to associated declaration"
                menubarPath="JMLMenu/EscjavaGroup"
                state="false"
+               style="push"
                toolbarPath="mobius.escjava2.actions"
                tooltip="Opens an editor and positions it at the location specified by some information associated with a marker">
          </action>         
