@@ -28,7 +28,7 @@ import umbra.editor.BytecodeContribution;
 import umbra.editor.BytecodeEditorContributor;
 import umbra.lib.EclipseIdentifiers;
 import umbra.lib.FileNames;
-import visitor.TranslatingVisitor;
+//import visitor.TranslatingVisitor;
 import annot.bcclass.BCClass;
 import annot.io.ReadAttributeException;
 import b2bpl.Project;
@@ -147,15 +147,15 @@ public class BytecodeGenerateBoogiePL extends BytecodeEditorAction {
     throws ClassNotFoundException, ReadAttributeException {
     BCClass clazz;
     clazz = new BCClass(a_dirname, a_classname);
-    final TranslatingVisitor v = new TranslatingVisitor();
+    //final TranslatingVisitor v = new TranslatingVisitor();
     final String bplName = an_active.lastSegment().replace(
       FileNames.BYTECODE_EXTENSION, FileNames.BOOGIEPL_EXTENSION);
     try {
-      compile(bplName, v.visit(clazz));
+     // compile(bplName, v.visit(clazz));
     } catch (NullPointerException e) {
       e.printStackTrace(); // TODO strange ????
       try {
-        compile(bplName, v.visit(clazz));
+       // compile(bplName, v.visit(clazz));
       } catch (NullPointerException e1) {
         e1.printStackTrace(); // TODO strange ????
       }

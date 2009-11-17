@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <fileset-config file-format-version="1.2.0" simple-config="true">
-    <local-check-config name="Bmllib" location="doc/bmllib-checkstyle-4.2.xml" type="project" description="">
-        <additional-data name="protect-config-file" value="false"/>
-    </local-check-config>
-    <fileset name="all" enabled="true" check-config-name="Bmllib" local="true">
-        <file-match-pattern match-pattern="." include-pattern="true"/>
-    </fileset>
-    <filter name="FilesFromPackage" enabled="true">
-        <filter-data value="src/test"/>
-        <filter-data value="antlr3-generated"/>
-        <filter-data value="antlr3-generated/annot"/>
-        <filter-data value="antlr3-generated/annot/textio"/>
-    </filter>
-    <filter name="NonSrcDirs" enabled="true"/>
+  <local-check-config name="Bmllib" location="doc/bmllib-checkstyle-4.2.xml" type="project" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <local-check-config name="bml5" location="doc/bmllib-checkstyle-5.0.xml" type="project" description="">
+    <additional-data name="protect-config-file" value="false"/>
+  </local-check-config>
+  <fileset name="all" enabled="true" check-config-name="bml5" local="true">
+    <file-match-pattern match-pattern="." include-pattern="true"/>
+  </fileset>
+  <filter name="FilesFromPackage" enabled="true">
+    <filter-data value="src/test"/>
+    <filter-data value="antlr3-generated"/>
+    <filter-data value="antlr3-generated/annot"/>
+    <filter-data value="antlr3-generated/annot/textio"/>
+  </filter>
+  <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>
