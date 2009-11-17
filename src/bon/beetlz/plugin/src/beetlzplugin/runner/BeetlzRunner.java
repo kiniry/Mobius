@@ -38,6 +38,8 @@ import utils.SourceLocation;
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
 import beetlzplugin.popup.actions.ResourceVisitor;
+import beetlzplugin.preferences.PreferenceConstants;
+import beetlzplugin.preferences.PreferenceInitializer;
 
 public class BeetlzRunner {
 
@@ -79,7 +81,7 @@ public class BeetlzRunner {
   private static void updateClassPath(String specsPath) {
 
     if (lastUsedSpecsPath == null || !lastUsedSpecsPath.equals(specsPath)) {
-      System.out.println("Old classpath: " + System.getProperty("java.class.path"));
+      //System.out.println("Old classpath: " + System.getProperty("java.class.path"));
       List<String> cpParts = new ArrayList<String>(Arrays.asList(System.getProperty("java.class.path").split(File.pathSeparator)));
       if (lastUsedSpecsPath != null) {
         cpParts.remove(lastUsedSpecsPath);
@@ -90,13 +92,13 @@ public class BeetlzRunner {
       StringBuilder newPath = new StringBuilder(File.pathSeparator);
       for (String path : newCPParts) {
         newPath.append(path);
-        System.out.println("Added: " + path);
+        //System.out.println("Added: " + path);
         newPath.append(File.pathSeparator);
       }
 
       System.setProperty("java.class.path",  //$NON-NLS-1$
           newPath.toString());
-      System.out.println("New classpath: " + System.getProperty("java.class.path"));
+      //System.out.println("New classpath: " + System.getProperty("java.class.path"));
       lastUsedSpecsPath = specsPath;
     }
 
@@ -184,6 +186,12 @@ public class BeetlzRunner {
 
     //Classpath for openjml
     List<String> cpEntries = Utils.getProjectClassPathEntries(JavaCore.create(project));
+    String setSpecPath = UserSettings.getAppropriatePreferenceStore(project).getString(PreferenceConstants.SPEC_PATH);
+    cpEntries.add(setSpecPath);
+    String openJMLPath = PreferenceInitializer.attemptToGetJMLSpecsPath();
+    if (!openJMLPath.isEmpty() && !openJMLPath.equals(setSpecPath)) {
+      cpEntries.add(openJMLPath);
+    }    
     String cp = StringUtil.appendWithSeparator(cpEntries, File.pathSeparator);
     args.add("-javajmlcp");
     args.add(cp);
@@ -194,6 +202,7 @@ public class BeetlzRunner {
 
     //We have a valid configuration to continue
     if (success) {
+      //my_console.println("Beetlz CL args: " + args.toString());
       try {
         //Now run the Consistency Checker
         final Beetlz beetl = new Beetlz(args.toArray(new String[args.size()]), errStream, outStream);

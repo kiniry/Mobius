@@ -14,6 +14,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import beetlzplugin.Activator;
 import beetlzplugin.preferences.PreferenceConstants;
+import beetlzplugin.preferences.PreferenceInitializer;
 
 public class UserSettings {
 
@@ -74,13 +75,16 @@ public class UserSettings {
   public List<String> getUserOptionsAsArgs() {
     List<String> args = new ArrayList<String>();
 
-    if (userFile != null && userFile.length() > 0) {
+    if (userFile != null && !userFile.trim().isEmpty()) {
       args.add(Beetlz.USERSET_OPTION); //$NON-NLS-1$
       args.add(userFile);
     }
 
-    args.add(Beetlz.SPECS_OPTION);
-    args.add(fileName);
+    String builtInSpecsPath = PreferenceInitializer.attemptToGetJMLSpecsPath();
+    if (!fileName.equals(builtInSpecsPath)) {
+      args.add(Beetlz.SPECS_OPTION);
+      args.add(fileName);
+    }
 
     if (!useJml) args.add(Beetlz.NO_JML_OPTION);
     if (!useJava) args.add(Beetlz.NO_JAVA_OPTION);

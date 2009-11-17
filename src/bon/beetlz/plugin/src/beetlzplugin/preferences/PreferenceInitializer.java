@@ -52,16 +52,23 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     store.setDefault(PreferenceConstants.BUILT_IN_SPEC_PATH, true);
     store.setDefault(PreferenceConstants.USE_PROJECT_SPECIFIC, false);
   }
-  
+
+  private static String jmlSpecsPath = null;
   /**
    * Get a default value for the jml-specs path.
    * Use the openjml.jar specs that are included with the Beetlz plugin.
    * @return a path to the built-in jml specs, if possible.
    */
   public static String attemptToGetJMLSpecsPath() {
-    
+    if (jmlSpecsPath == null) {
+      jmlSpecsPath = doAttemptToGetJMLSpecsPath();
+    }
+    return jmlSpecsPath;
+  }
+
+  private static String doAttemptToGetJMLSpecsPath() {
     Bundle bundle = Platform.getBundle(Beetlz.PLUGIN_ID);
-    
+
     IPath p = new Path(Beetlz.JMLSPECS_PATH);
     URL url = FileLocator.find(bundle, p, null);
 
@@ -78,5 +85,5 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
       return "";
     }
   }
-  
+
 }
