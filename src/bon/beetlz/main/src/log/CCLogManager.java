@@ -1,13 +1,13 @@
 package log;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import logic.Expression;
 import logic.Expression.Nullity;
 import main.Beetlz;
-
 import structure.FeatureStructure;
 import utils.FeatureType;
 import utils.PrettyFormatter;
@@ -44,6 +44,11 @@ public class CCLogManager {
     my_errors = new TreeSet < CCLogRecord > ();
     my_to_bon = Beetlz.getProfile().javaIsSource();
     my_pretty = new PrettyFormatter(!my_to_bon);
+  }
+  
+  public void clear() {
+    my_records.clear();
+    my_errors.clear();
   }
 
   /* ************************
@@ -102,9 +107,19 @@ public class CCLogManager {
         jml_warn++;
       }
     }
-    return String.format(Beetlz.getResourceBundle().
-                         getString("CCLogManager.errorStats"), //$NON-NLS-1$
-                         java_err, java_warn, jml_err, jml_warn);
+    ResourceBundle rb = Beetlz.getResourceBundle();
+    String java_err_s = rb.getString(java_err == 1 ? "CCLogManager.errorSingular" : "CCLogManager.errorPlural");
+    String jml_err_s = rb.getString(jml_err == 1 ? "CCLogManager.errorSingular" : "CCLogManager.errorPlural");
+    String java_warn_s = rb.getString(java_warn == 1 ? "CCLogManager.warningSingular" : "CCLogManager.warningPlural");
+    String jml_warn_s = rb.getString(jml_warn == 1 ? "CCLogManager.warningSingular" : "CCLogManager.warningPlural");
+    
+    return String.format(rb.getString("CCLogManager.errorStats"), //$NON-NLS-1$
+                         java_err, java_err_s, java_warn, java_warn_s,
+                         jml_err, jml_err_s, jml_warn, jml_warn_s);
+  }
+  
+  public void setToJava(boolean toJava) {
+      my_pretty.setToJava(toJava);
   }
 
   /**

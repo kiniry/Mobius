@@ -183,6 +183,9 @@ public class Beetlz {
   /** Files have been parsed okay.  */
   private boolean my_parse_ok;
 
+  private List < TypeSmartString > bonMissing;
+  private List < TypeSmartString > jmlMissing;
+  
   /**
    * Create a new Beetlz tool.
    * @param some_args arguments
@@ -335,59 +338,32 @@ public class Beetlz {
     boolean success = true;
     if (!my_options_ok) {
       success = false;
-    } else if (my_parse_ok && my_profile.skeleton()) {
-      startPrettyPrint();
-
-    } else if (my_parse_ok) {
-      startComparison();
-      
-      //check the other way?
-      if(my_profile.checkBothWays()) {
-        my_profile.setSource(false);
-        startComparison();
-      }
-      
-      for (final CCLogRecord r : my_logger.getErrors()) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, my_labels
-          .getString("Beetlz.generalNotes")); //$NON-NLS-1$
-      for (final CCLogRecord r : my_logger
-          .getRecords((CCLevel) CCLevel.GENERAL_NOTE)) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER
-          .log(CCLevel.JAVA_ERROR, my_labels.getString("Beetlz.javaErrors")); //$NON-NLS-1$
-      for (final CCLogRecord r : my_logger
-          .getRecords((CCLevel) CCLevel.JAVA_ERROR)) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER.log(CCLevel.JAVA_WARNING, my_labels
-          .getString("Beetlz.javaWarnings")); //$NON-NLS-1$
-      for (final CCLogRecord r : my_logger
-          .getRecords((CCLevel) CCLevel.JAVA_WARNING)) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER.log(CCLevel.JML_ERROR, my_labels.
-                      getString("Beetlz.jmlErrors")); //$NON-NLS-1$
-      for (final CCLogRecord r : my_logger
-          .getRecords((CCLevel) CCLevel.JML_ERROR)) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER.log(CCLevel.JML_WARNING, my_labels
-          .getString("Beetlz.jmlWarnings")); //$NON-NLS-1$
-      for (final CCLogRecord r : my_logger
-          .getRecords((CCLevel) CCLevel.JML_WARNING)) {
-        JAVA_LOGGER.log(r);
-      }
-      JAVA_LOGGER.info(my_logger.getStats());
-
-    } else {
+    } else if (!my_parse_ok) {
       JAVA_LOGGER.severe(my_labels.getString("Beetlz.couldNotParse")); //$NON-NLS-1$
       for (final CCLogRecord r : my_records_waiting) {
         JAVA_LOGGER.log(r);
       }
       success = false;
+    } else if (my_profile.skeleton()) {
+    
+      startPrettyPrint();
+
+    } else {
+      
+      JAVA_LOGGER.config(my_labels.getString(my_profile.javaIsSource() ? "Beetlz.checkingDirJB" : "Beetlz.checkingDirBJ")); //$NON-NLS-1$
+      startComparison();      
+      report();
+      my_logger.clear();
+      
+      //check the other way?
+      if(my_profile.checkBothWays()) {
+        JAVA_LOGGER.config(my_labels.getString("Beetlz.checkingDirBJ")); //$NON-NLS-1$
+        my_profile.setSource(false);
+        my_logger.setToJava(true);
+        startComparison();
+        report();
+        my_logger.clear();
+      }
     }
 
     for (final Handler h : JAVA_LOGGER.getHandlers()) {
@@ -396,19 +372,53 @@ public class Beetlz {
     return success;
 
   }
+  
+  private void report() {
+    for (final CCLogRecord r : my_logger.getErrors()) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER.log(CCLevel.GENERAL_NOTE, my_labels
+        .getString("Beetlz.generalNotes")); //$NON-NLS-1$
+    for (final CCLogRecord r : my_logger
+        .getRecords((CCLevel) CCLevel.GENERAL_NOTE)) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER
+        .log(CCLevel.JAVA_ERROR, my_labels.getString("Beetlz.javaErrors")); //$NON-NLS-1$
+    for (final CCLogRecord r : my_logger
+        .getRecords((CCLevel) CCLevel.JAVA_ERROR)) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER.log(CCLevel.JAVA_WARNING, my_labels
+        .getString("Beetlz.javaWarnings")); //$NON-NLS-1$
+    for (final CCLogRecord r : my_logger
+        .getRecords((CCLevel) CCLevel.JAVA_WARNING)) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER.log(CCLevel.JML_ERROR, my_labels.
+                    getString("Beetlz.jmlErrors")); //$NON-NLS-1$
+    for (final CCLogRecord r : my_logger
+        .getRecords((CCLevel) CCLevel.JML_ERROR)) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER.log(CCLevel.JML_WARNING, my_labels
+        .getString("Beetlz.jmlWarnings")); //$NON-NLS-1$
+    for (final CCLogRecord r : my_logger
+        .getRecords((CCLevel) CCLevel.JML_WARNING)) {
+      JAVA_LOGGER.log(r);
+    }
+    JAVA_LOGGER.info(my_logger.getStats());
+
+  }
 
   /**
    * Map classes together.
    * @return mapping
    */
   private TwoWayMap < String, String > createClassTypeMapping() {
-    final List < TypeSmartString > bonList =
-      new Vector < TypeSmartString > (my_bonfile.getClassCollection()
-          .getAccesibleClassTypes());
-    final List < TypeSmartString > jmlList =
-      new Vector < TypeSmartString > (my_jmlfile.getClassCollection().
-          getAccesibleClassTypes());
-    final List < TypeSmartString > bonMissing = new Vector < TypeSmartString > ();
+    final List < TypeSmartString > bonList = new Vector < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypes());
+    final List < TypeSmartString > jmlList = new Vector < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypes());
+    bonMissing = new Vector < TypeSmartString > ();
     final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
 
     //BON types are unique, so let's map them to Java types
@@ -434,7 +444,6 @@ public class Beetlz {
         final int first = jmlList.indexOf(bonName);
         final int last = jmlList.lastIndexOf(bonName);
         if (first == -1) {
-          //my_logger.logClassNotFound(bonName.toString());
           bonMissing.add(bonName);
         } else if (first != last) {
           my_logger.logMultipleClasses(bonName);
@@ -448,16 +457,7 @@ public class Beetlz {
       }
     } //end for
 
-    if (my_profile.javaIsSource()) {
-      for (final TypeSmartString s : jmlList) {
-        my_logger.logClassNotFound(s);
-      }
-    } else {
-      for (final TypeSmartString s : bonMissing) {
-        my_logger.logClassNotFound(s);
-      }
-    }
-
+    jmlMissing = jmlList;
     return classMap;
   }
 
@@ -496,10 +496,6 @@ public class Beetlz {
     } else {
       my_profile.setJavaIsSource(false);
     }
-    if (my_profile.javaIsSource())
-      JAVA_LOGGER.config(my_labels.getString("Beetlz.checkingDirJB")); //$NON-NLS-1$
-    else
-      JAVA_LOGGER.config("Beetlz.checkingDirBJ"); //$NON-NLS-1$
 
     return my_jmlfile.parseAll() && my_bonfile.parseAll();
   }
@@ -560,7 +556,7 @@ public class Beetlz {
           source = the_args[i++];
           if (source == "both") { //$NON-NLS-1$
             check_both = true;
-        	source = "java";//$NON-NLS-1$
+        	  source = "java";//$NON-NLS-1$
           }
         } else {
           JAVA_LOGGER.severe(my_labels.getString("Beetlz.sourceNeedsArgument")); //$NON-NLS-1$
@@ -644,6 +640,19 @@ public class Beetlz {
    * Here we do the actual comparison.
    */
   private void startComparison() {
+    //First log the missing classes for the appropriate direction
+    if (my_profile.javaIsSource()) {
+      for (final TypeSmartString s : jmlMissing) {
+        my_logger.logClassNotFound(s);
+      }
+    } else {
+      for (final TypeSmartString s : bonMissing) {
+        my_logger.logClassNotFound(s);
+      }
+    }
+    my_logger.setToJava(!my_profile.javaIsSource());
+    
+    
     final ClassCollection jml = my_jmlfile.getClassCollection();
     final ClassCollection bon = my_bonfile.getClassCollection();
 

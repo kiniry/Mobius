@@ -30,7 +30,7 @@ public class PrettyFormatter {
   /** Global profile of user settings. */
   private static UserProfile my_profile = Beetlz.getProfile();
   /** Formatting to Java. */
-  private final boolean my_to_java;
+  private boolean my_to_java;
 
 
   /**
@@ -40,6 +40,12 @@ public class PrettyFormatter {
   public PrettyFormatter(final boolean the_to_java) {
     my_to_java = the_to_java;
   }
+
+  public void setToJava(boolean myToJava) {
+    my_to_java = myToJava;
+  }
+
+
 
   /**
    * Get a formatted string of a type.
