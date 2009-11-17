@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: JML2 Plug-in
+Bundle-SymbolicName: ch.ethz.inf.pm.jml.plugin;singleton:=true
+Bundle-Version: 1.1.1.mobius
+Bundle-Activator: ch.ethz.inf.pm.jml.plugin.internal.core.JmlPlugin
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,org.eclipse.jd
+ t.core,org.eclipse.jdt.launching,org.eclipse.debug.ui,org.eclipse.jdt
+ .debug.ui,org.eclipse.jdt.ui,org.eclipse.ui.forms,org.eclipse.jface.t
+ ext,ch.ethz.inf.pm.jml.plugin.resources,org.eclipse.core.resources,or
+ g.eclipse.ui.ide
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: pm.inf.ethz.ch
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Export-Package: ch.ethz.inf.pm.jml.plugin.internal.core
+

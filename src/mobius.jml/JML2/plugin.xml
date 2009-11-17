@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            description="JML2 Plug-in Category"
+            id="jml-plugin.commands"
+            name="JML2 Plug-in">
+      </category>
+      <command
+            categoryId="jml-plugin.commands"
+            description="Run the JML2 checker on the current file"
+            id="jml-plugin.runChecker"
+            name="Run JML2 checker">
+      </command>
+      <command
+            categoryId="jml-plugin.commands"
+            description="Run the JML2 RAC compiler on the current file"
+            id="jml-plugin.runCompiler"
+            name="Run JML2 compiler">
+      </command>
+      <command
+            categoryId="jml-plugin.commands"
+            description="Run the JML2 exec tool on the current file"
+            id="jml-plugin.runExec"
+            name="Run JML2 exec">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="jml-plugin.runChecker"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+J C">
+      </key>
+      <key
+            commandId="jml-plugin.runCompiler"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+J R">
+      </key>
+      <key
+            commandId="jml-plugin.runExec"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Ctrl+J E">
+      </key>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="jml-plugin.runjml.IFile"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlExecAction"
+               id="jml-plugin.runjmlexec.action.IFile"
+               label="Run JML2 &amp;exec"
+               menubarPath="jml-plugin.jml-menu.IFile/jml-plugin.jml-tool-separator.IFile"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCompilerAction"
+               id="jml-plugin.runjmlcompiler.action.IFile"
+               label="Run JML2 compile&amp;r"
+               menubarPath="jml-plugin.jml-menu.IFile/jml-plugin.jml-tool-separator.IFile"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCheckerAction"
+               id="jml-plugin.runjmlchecker.action.IFile"
+               label="Run JML2 &amp;checker"
+               menubarPath="jml-plugin.jml-menu.IFile/jml-plugin.jml-tool-separator.IFile"/>
+         <menu
+               id="jml-plugin.jml-menu.IFile"
+               label="&amp;JML2 Tools"
+               path="additions">
+            <separator name="jml-plugin.jml-tool-separator.IFile"/>
+         </menu>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="jml-plugin.rumjml.javaElement"
+            objectClass="org.eclipse.jdt.core.IJavaElement">
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlExecAction"
+               id="jml-plugin.runjmlexec.action.javaElement"
+               label="Run JML2 &amp;exec"
+               menubarPath="jml-plugin.jml-menu/jml-plugin.jml-tool-separator"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCompilerAction"
+               id="jml-plugin.runjmlcompiler.action.javaElement"
+               label="Run JML2 compile&amp;r"
+               menubarPath="jml-plugin.jml-menu/jml-plugin.jml-tool-separator"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCheckerAction"
+               id="jml-plugin.runjmlchecker.action.javaElement"
+               label="Run JML2 &amp;checker"
+               menubarPath="jml-plugin.jml-menu/jml-plugin.jml-tool-separator"/>
+         <menu
+               id="jml-plugin.jml-menu"
+               label="&amp;JML2 Tools"
+               path="additions">
+            <separator name="jml-plugin.jml-tool-separator"/>
+         </menu>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            category="org.eclipse.jdt.ui.java"
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.errors.JmlErrorView"
+            id="ch.ethz.inf.pm.jml.plugin.ui.JmlErrorView"
+            name="JML2 Errors"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="ch.ethz.inf.pm.jml.plugin.internal.core.JmlRacLaunchConfigurationDelegate"
+            delegateDescription="Run with JML2 runtime assertion checking libraries."
+            id="ch.ethz.inf.pm.jml.plugin.LaunchConfiguration.JmlRac"
+            modes="run"
+            name="JML2 RAC"
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="ch.ethz.inf.pm.jml.plugin.LaunchConfiguration.JmlRac"
+            icon="icons/jml_logo.gif"
+            id="jml-plugin.LaunchConfigurationTypeImage.JmlRac"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.rac.JmlRacLaunchConfigurationTabGroup"
+            id="jml-plugin.LaunchConfigurationTabGroup.JmlRac"
+            type="ch.ethz.inf.pm.jml.plugin.LaunchConfiguration.JmlRac"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.rac.JmlRacLaunchShortcut"
+            description="Run with JML2 runtime assertion checking libraries."
+            icon="icons/jml_logo.gif"
+            id="jml-plugin.LaunchShortcut.JmlRac"
+            label="JML2 RAC"
+            modes="run">
+         <contextualLaunch>
+            <contextLabel
+                  label="JML2 RAC"
+                  mode="run"/>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+               </with>
+            </enablement>
+         </contextualLaunch>
+      </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.properties.JmlRootPropertiesPage"
+            id="jml-plugin.jmlRootPropertiesPage"
+            name="JML2 Plug-in">
+            <enabledWhen>
+              <or>
+            	<instanceof value="org.eclipse.core.resources.IProject"/>
+            	<instanceof value="org.eclipse.jdt.core.IJavaProject"/>
+              </or>
+            </enabledWhen>
+      </page>
+
+      <page
+            category="jml-plugin.jmlRootPropertiesPage"
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.properties.JmlCheckerPropertiesPage"
+            id="jml-plugin.jmlCheckerPropertiesPage"
+            name="JML2 Checker">
+            <enabledWhen>
+              <or>
+            	<instanceof value="org.eclipse.core.resources.IProject"/>
+            	<instanceof value="org.eclipse.jdt.core.IJavaProject"/>
+              </or>
+            </enabledWhen>
+      </page>
+
+      <page
+            category="jml-plugin.jmlRootPropertiesPage"
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.properties.JmlCompilerPropertiesPage"
+            id="jml-plugin.jmlCompilerPropertiesPage"
+            name="JML2 Compiler">
+            <enabledWhen>
+              <or>
+            	<instanceof value="org.eclipse.core.resources.IProject"/>
+            	<instanceof value="org.eclipse.jdt.core.IJavaProject"/>
+              </or>
+            </enabledWhen>
+      </page>
+           
+      <page
+            category="jml-plugin.jmlRootPropertiesPage"
+            class="ch.ethz.inf.pm.jml.plugin.internal.ui.properties.JmlRacPropertiesPage"
+            id="jml-plugin.jmlRacPropertiesPage"
+            name="JML2 RAC">
+            <enabledWhen>
+              <or>
+            	<instanceof value="org.eclipse.core.resources.IProject"/>
+            	<instanceof value="org.eclipse.jdt.core.IJavaProject"/>
+              </or>
+            </enabledWhen>
+      </page>   
+   </extension>
+   
+   <extension
+         id="error"
+         name="JML2 Error"
+         point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <persistent value="true"/>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="jml-plugin.toolbar"
+            label="JML2 plug-in toolbar"
+            visible="false">
+            
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlExecAction"
+               definitionId="jml-plugin.runExec"
+               icon="icons/jml_exec.gif"
+               id="jml-plugin.runjmlexec.action"
+               label="Run JML2 exec"
+               toolbarPath="Normal/additions"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCompilerAction"
+               definitionId="jml-plugin.runCompiler"
+               icon="icons/jml_compiler.gif"
+               id="jml-plugin.runjmlcompiler.action"
+               label="Run JML2 compiler"
+               toolbarPath="Normal/additions"/>
+         <action
+               class="ch.ethz.inf.pm.jml.plugin.internal.ui.RunJmlCheckerAction"
+               definitionId="jml-plugin.runChecker"
+               icon="icons/jml_checker.gif"
+               id="jml-plugin.runjmlchecker.action"
+               label="Run JML2 checker"
+               toolbarPath="Normal/additions"/>
+         <menu
+               id="jml-plugin.toolbar"
+               label="JML2 plug-in toolbar"
+               path="additions">
+         </menu>
+      </actionSet>
+   </extension>
+
+   <extension
+          point="org.eclipse.ui.editors.templates">
+       <template
+             autoinsert="true"
+             contextTypeId="java"
+             description="JML lightweight method specification."
+             id="jml-plugin.template.method.light"
+             name="jmll">
+          <pattern>
+/ *@ requires P;
+  @ assignable X;
+  @ ensures Q;
+  @ signals (Exception) R;
+  @*/
+          </pattern>
+       </template>
+       
+       <template
+             autoinsert="true"
+             contextTypeId="java"
+             description="JML heavyweight method specification."
+             id="jml-plugin.template.method.heavy"
+             name="jmlh">
+          <pattern>
+/ *@ protected behavior
+  @ requires P;
+  @ diverges false;
+  @ assignable X;
+  @ when \not_specified;
+  @ working_space \not_specified;
+  @ duration \not_specified;
+  @ ensures Q;
+  @ signals_only Exception;
+  @ signals (Exception) R;
+  @*/
+          </pattern>
+       </template>
+       
+	   <template
+             autoinsert="true"
+             contextTypeId="java"
+             description="JML object invariant specification."
+             id="jml-plugin.template.invariant"
+             name="jmli">
+          <pattern>
+/ *@ invariant I; @*/
+          </pattern>
+       </template>       
+   </extension>
+   
+   <extension
+         id="ch.ethz.inf.pm.jml.plugin.CheckerBuilder"
+         name="JML2 Checker Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="ch.ethz.inf.pm.jml.plugin.internal.core.builder.JmlCheckerBuilder">
+         </run>
+      </builder>
+   </extension>
+   
+   <extension
+         id="ch.ethz.inf.pm.jml.plugin.CheckerNature"
+         name="JML2 Checker Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="ch.ethz.inf.pm.jml.plugin.internal.core.builder.JmlCheckerNature">
+         </run>
+      </runtime>
+      <builder
+            id="ch.ethz.inf.pm.jml.plugin.CheckerBuilder">
+      </builder>
+   </extension>
+   
+   <!--
+   <extension point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/jml_nature.gif"
+            id="jml-plugin.CheckerNatureImage"
+            natureId="ch.ethz.inf.pm.jml.plugin.CheckerNature">
+      </image>
+   </extension>
+   -->
+</plugin>
