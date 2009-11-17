@@ -5,6 +5,7 @@ import mobius.prover.gui.editor.BasicTextAttribute;
 import mobius.prover.gui.editor.IColorConstants;
 import mobius.prover.gui.editor.detector.WordDetector;
 import mobius.prover.plugins.AProverTranslator;
+import mobius.util.plugin.Utils.ProverPath;
 
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
@@ -15,7 +16,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
-import pluginlib.Utils.ProverPath;
 
 public class ProverTranslator extends AProverTranslator implements IColorConstants {
 

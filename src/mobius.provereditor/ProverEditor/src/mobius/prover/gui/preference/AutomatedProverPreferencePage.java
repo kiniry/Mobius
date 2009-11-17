@@ -2,6 +2,7 @@ package mobius.prover.gui.preference;
 
 import mobius.prover.Prover;
 import mobius.prover.gui.preference.AProverPreferenceNode.IProverPreferencePage;
+import mobius.util.plugin.Utils.ProverPath;
 
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -14,7 +15,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import pluginlib.Utils.ProverPath;
 
 /**
  * The prover preference page. For each prover a prover preference

@@ -23,6 +23,8 @@ public class SyntaxErrorException extends ProverException {
     super(description);
   }
 
+  /** {@inheritDoc} */
+  @Override
   public String toString() {
     return "Syntax Error: " + getMessage();
   }

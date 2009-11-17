@@ -4,13 +4,13 @@ import java.util.regex.Pattern;
 
 import mobius.prover.gui.editor.ProverEditor;
 import mobius.prover.gui.editor.outline.types.ProverType;
+import mobius.util.plugin.Utils.ProverPath;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 
-import pluginlib.Utils.ProverPath;
 
 
 /**
@@ -87,7 +87,7 @@ public abstract class AProverTranslator {
 
   /**
    * @param s the message to evalute.
-   * @return Is the string <var>s</var> an error message returned by the compiler?
+   * @return Is the string <code>s</code> an error message returned by the compiler?
    */
   public abstract boolean isErrorMsg(String s);
   
@@ -102,7 +102,7 @@ public abstract class AProverTranslator {
    * prover may choose to ignore the running location specified in path[0] as Coq does.
    * @param file the full path to the file to compile.
    * @return What is the command-line that may be used with 
-   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
+   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <code>file</code> to be
    * loaded into the "normal" IDE for this prover, as specified in the project preferences?
    */
   public abstract String[] /*@ non_null @*/ getIdeCommand(String ide, 
@@ -110,8 +110,8 @@ public abstract class AProverTranslator {
   
   /**
    * Compute the "compiling" command, (the command to execute that will cause the prover to
-   * compile <var>file</var>) from the compiler path, the path to the libraries, and the path 
-   * to the file to compile.
+   * compile <code>file</code>) from the compiler path, the path to the libraries, 
+   * and the path to the file to compile.
    * Typically, this command is trigger from by ProverEditor->Compile file menu.
    * @param comp the top-level path to the compiler executable or wrapper shell script, as 
    * specified by the user in the preference page.
@@ -120,7 +120,7 @@ public abstract class AProverTranslator {
    * prover may choose to ignore the running location specified in path[0] as Coq does.
    * @param file the full path to the file to compile.
    * @return What is the command-line that may be used with 
-   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <var>file</var> to be
+   * {@link java.lang.Runtime#exec(java.lang.String[])} that will cause <code>file</code> to be
    * compiled?
    */
   public abstract /*@ non_null @*/ String[] getCompilingCommand(String comp, 

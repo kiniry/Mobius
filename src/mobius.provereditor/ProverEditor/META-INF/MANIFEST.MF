@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ProverEditor Plug-in
 Bundle-SymbolicName: prover.editor; singleton:=true
-Bundle-Version: 0.9.11
+Bundle-Version: 0.9.12
 Bundle-Activator: mobius.prover.ProverEditorPlugin
 Bundle-Vendor: Mobius Project
 Require-Bundle: org.eclipse.ui.console,
