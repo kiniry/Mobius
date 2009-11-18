@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Main {
 
-  private static final int numberOfTests = 1000000;
+  private static int numberOfTests = 1000000;
   private static final int minimumMods = 0;
   private static final int maximumMods = 10000;
 
@@ -28,7 +28,10 @@ public class Main {
   private static final ToolTestWrapper bonTestWrapper = new BONTestWrapper();
 
   public static void main(String[] args) {
-    if (args.length == 2) {
+    if (args.length == 3) {
+      numberOfTests = Integer.parseInt(args[2]);
+      runTests(new File(args[0]), new File(args[1]));
+    } else if (args.length == 2) {
       runTests(new File(args[0]), new File(args[1]));
     } else if (args.length == 1) {
       testInputs(new File(args[0]));
@@ -49,7 +52,7 @@ public class Main {
       System.out.println("IOException when reading input files " + ioe);
       return;
     }
-    System.out.println("Read all files.");
+    System.out.println("Read all files (" + allFiles.size() + ").");
 
     runTests(readFiles, outputDirectory);
   }
