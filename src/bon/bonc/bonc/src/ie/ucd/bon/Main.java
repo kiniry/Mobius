@@ -123,6 +123,7 @@ public final class Main {
       overallProblems.addProblem(new ExceptionalError(e));
       System.out.println("Something unexpected went wrong.");
       if (isDebug()) {
+        System.out.println(e.getMessage());
         e.printStackTrace();
       }
       if (exitOnFailure) {

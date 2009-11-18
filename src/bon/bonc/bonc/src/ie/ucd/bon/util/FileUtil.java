@@ -5,8 +5,11 @@
 package ie.ucd.bon.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -54,6 +57,10 @@ public final class FileUtil {
     return sb.toString();
   }
 
+  public static String readToString(File file) throws IOException {
+    return readToString(new BufferedReader(new FileReader(file)));
+  }
+  
   public static String readToString(String filePath) throws IOException {
     Reader r = getResourceReader(filePath);
     if (r == null) {
@@ -61,6 +68,13 @@ public final class FileUtil {
     } else {
       return readToString(r);
     }
+  }
+  
+  public static void writeStringToFile(String s, File f) throws IOException {
+    BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+    bw.write(s);
+    bw.flush();
+    bw.close();
   }
 
 }

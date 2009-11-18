@@ -1,6 +1,7 @@
 package ie.ucd.bon.tester;
 
 import ie.ucd.bon.util.FileUtil;
+import ie.ucd.bon.util.StringUtil;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -27,10 +28,10 @@ public class Main {
   private static final ToolTestWrapper bonTestWrapper = new BONTestWrapper();
 
   public static void main(String[] args) {
-    if (args.length != 2) {
-      return;
-    } else {
+    if (args.length == 2) {
       runTests(new File(args[0]), new File(args[1]));
+    } else if (args.length == 1) {
+      testInputs(new File(args[0]));
     }    
   }
 
@@ -53,7 +54,8 @@ public class Main {
 
   private static void runTests(List<Pair<File,String>> inputs, File outputDirectory) {
     System.out.println("Running " + numberOfTests + " tests.");
-    
+    long startTime = System.nanoTime();
+
     int exceptionCount = 0;
     for (int i=0; i < numberOfTests; i++) {
       Pair<File,String> input = RandomUtil.randomlyChooseFromList(inputs);
@@ -67,20 +69,24 @@ public class Main {
         try {
           FileUtil.writeStringToFile(actualInput, new File(outputDirectory.getAbsoluteFile() + File.separator + "exception" + exceptionCount + "input.bon"));
           PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(new File(outputDirectory.getAbsoluteFile() + File.separator + "exception" + exceptionCount + "stacktrace"))));
+          pw.println("exception" + exceptionCount);
           e.printStackTrace(pw);
+          pw.flush();
           pw.close();
         } catch (IOException ioe) {
           System.out.println("IOException when trying to deal report error #" + exceptionCount);
         }
       }
-      
+
       //System.out.println("Actual:\n" + actualInput);
-      
+
       if (i % 10000 == 9999) {
         System.out.println("Completed " + (i+1));
       }
     }
     System.out.println("Done. Hit " + exceptionCount + " exceptions.");
+    long endTime = System.nanoTime();
+    System.out.println("Testing took: " + StringUtil.timeString(endTime - startTime));
   }
 
   private static String performModifications(String input, List<Pair<File,String>> otherInputs) {
@@ -103,6 +109,36 @@ public class Main {
 
   private static void performSingleMod(StringBuilder string, List<Pair<File,String>> otherInputs) {
     RandomUtil.chooseRandomModification().modify(string, otherInputs);
+  }
+
+  private static void testInputs(File directory) {
+    List<File> files = listFiles(directory);
+    int failCount = 0;
+    int successCount = 0;
+    for (File file : files) {
+      String s = null;
+      try {
+        s = FileUtil.readToString(file);
+      } catch (IOException ioe) {
+        System.out.println("IOException when reading file: " + ioe);
+        continue;
+      }
+      try {
+        bonTestWrapper.run(s);
+        System.out.println("No longer fails! - " + file.getAbsolutePath());
+
+        String absolutePath = file.getAbsolutePath();
+        new File(absolutePath.substring(0, absolutePath.length()-9).concat("stacktrace")).delete();
+        file.delete();
+
+        successCount++;
+      } catch (Exception e) { 
+        failCount++;
+      }
+    }
+    System.out.println("Now passing: " + successCount);
+    System.out.println("Still failing: " + failCount);
+    System.out.println("Total: " + (failCount + successCount));
   }
 
   private static List<File> listFiles(File directory) {

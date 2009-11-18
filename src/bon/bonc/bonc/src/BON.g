@@ -47,7 +47,7 @@ prog returns [BonSourceFile bonSource] :
        | 
          indexing e=EOF 
          { addParseProblem(new MissingElementParseError(getSourceLocation($e), "at least one specification entry", "in source file", true)); }
-         { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, $i.indexing, getSLoc($i.start,$i.stop)); }
+         { $bonSource = BonSourceFile.mk(Constants.NO_SPEC_ELEMS, $indexing.indexing, getSLoc($indexing.start,$indexing.stop)); }
 ;
 
 /**********************************************  
@@ -1076,7 +1076,8 @@ type returns [Type type] :
        i=IDENTIFIER 
        (
         ( actual_generics 
-          { $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, $IDENTIFIER.text.concat($actual_generics.text), getSLoc($i,$actual_generics.stop)); }
+          { String fullText = $actual_generics.text==null? $IDENTIFIER.text : $IDENTIFIER.text.concat($actual_generics.text);
+            $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, fullText, getSLoc($i,$actual_generics.stop)); }
         ) 
         |
         { $type = BONType.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, $IDENTIFIER.text,getSLoc($i)); }

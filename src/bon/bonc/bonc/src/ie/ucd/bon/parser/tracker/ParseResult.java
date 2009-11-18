@@ -36,7 +36,11 @@ public class ParseResult {
     this.tokens = tokens;
     this.file = file;
     this.parseProblems = problems;
-    this.lexerProblems = lexerProblems;
+    if (lexerProblems == null) {
+      this.lexerProblems = lexerProblems;
+    } else {
+      this.lexerProblems = new Problems("Lexer");
+    }
     this.stProblems = new Problems("ST");
     this.severeProblemCount = countSevere(problems);
   }

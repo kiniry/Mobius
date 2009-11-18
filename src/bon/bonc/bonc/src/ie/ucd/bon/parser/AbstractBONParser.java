@@ -167,7 +167,11 @@ public abstract class AbstractBONParser extends Parser {
       return new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg, true);
     } else {
       //return new AntlrParsingError(sourceFile, e.line, e.charPositionInLine, "An unknown error occurred", true);
-      return new AntlrParsingError(new SourceLocation(e.token, sourceFile), "An unknown error occurred", true);
+      if (e.token != null) {
+        return new AntlrParsingError(new SourceLocation(e.token, sourceFile), "An unknown error occurred", true);
+      } else {
+        return new AntlrParsingError(SourceLocation.noLocationInFile(sourceFile), "An unknown error occurred", true);
+      }
     }
 
   }
@@ -223,7 +227,9 @@ public abstract class AbstractBONParser extends Parser {
     Main.logDebug("Recovering..." + re);
     PrintStream oldErr = System.err;
     System.setErr(NullOutputStream.getNullPrintStreamInstance());
+    Main.logDebug("About to recover.");
     super.recover(input, re);
+    Main.logDebug("Did recover.");
     System.setErr(oldErr);
   }
 
