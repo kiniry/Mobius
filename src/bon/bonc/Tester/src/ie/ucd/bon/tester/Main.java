@@ -32,7 +32,9 @@ public class Main {
       runTests(new File(args[0]), new File(args[1]));
     } else if (args.length == 1) {
       testInputs(new File(args[0]));
-    }    
+    } else {
+      System.out.println("Invalid args");
+    }
   }
 
   private static void runTests(File inputDirectory, File outputDirectory) {

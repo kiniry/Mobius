@@ -60,8 +60,6 @@ public final class Parser {
       is.close();
       Main.logDebug("Valid parse: " + parser.isValidParse());
 
-      
-
       return new ParseResult(parser.isValidParse(), result, tokens, inputFile, parser.getProblems(), lexer.getProblems());
 
     } catch (IOException ioe) {

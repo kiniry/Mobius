@@ -6,7 +6,7 @@
 @Test-name: "Parsing error 1"
 @Location { misc/ }
 @Input { parseerror }
-@Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa, true> }
+@Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa> }
 
 //File problem tests
 //Commented out, since clops now handles this, and we have clops unit tests to ensure this.

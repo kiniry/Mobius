@@ -10,8 +10,8 @@ public class AntlrParsingError extends ParsingError {
 
   private final String message;
 
-  public AntlrParsingError(SourceLocation sourceLoc, String message, boolean isSevere) {
-    super(sourceLoc, isSevere);
+  public AntlrParsingError(SourceLocation sourceLoc, String message) {
+    super(sourceLoc, true);
     this.message = message;
   }
 

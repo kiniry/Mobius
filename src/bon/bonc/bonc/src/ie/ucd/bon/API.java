@@ -92,13 +92,21 @@ public final class API {
     if (printTiming) {
       long startTime = System.nanoTime();
       ParseResult parseResult = Parser.parse(file, is);
-      Parser.buildSymbolTable(parseResult, tracker);
+      if (parseResult.isValidParse()) {
+        Parser.buildSymbolTable(parseResult, tracker);
+      } else {
+        Main.logDebug("Not building symbol table due to parse errors.");
+      }
       long endTime = System.nanoTime();
       System.out.println("Parsing took: " + StringUtil.timeString(endTime - startTime));
       return parseResult;
     } else {
       ParseResult parseResult = Parser.parse(file, is);
-      Parser.buildSymbolTable(parseResult, tracker);
+      if (parseResult.isValidParse()) {
+        Parser.buildSymbolTable(parseResult, tracker);
+      } else {
+        Main.logDebug("Not building symbol table due to parse errors.");
+      }
       return parseResult;
     }
   }
