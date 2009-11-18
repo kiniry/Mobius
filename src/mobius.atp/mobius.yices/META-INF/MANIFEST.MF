@@ -4,3 +4,10 @@ Bundle-Name: Yices
 Bundle-SymbolicName: mobius.atp.yices
 Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.jdt.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.ide,
+ org.eclipse.ui.views,
+ mobius.pluginlib
