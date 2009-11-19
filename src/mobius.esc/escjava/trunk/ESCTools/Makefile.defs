@@ -243,7 +243,7 @@ export UTILS_CLASSFILES = ${ESCTOOLS_ROOT}/Utils
 export BCEL_LIB ?= ${ESCTOOLS_ROOT}/Utils/BCEL/bcel-5.2/bcel-5.2.jar
 
 ## Java Front End Library
-export JAVAFE_VERSION ?= 2.0.5c
+export JAVAFE_VERSION ?= 2.0.5d
 export JAVAFE_LIB ?= ${ESCTOOLS_ROOT}/Utils/Javafe/Javafe${JAVAFE_VERSION}.jar
 
 ## Pertinent things for Escjava
