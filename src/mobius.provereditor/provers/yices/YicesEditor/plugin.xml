@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="prover.editor.prover">
+      <language
+            extension="yicesfile"
+            name="Yices"
+            provertoplevel="mobius.prover.yices.TopLevel"
+            translator="mobius.prover.yices.ProverTranslator">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="mobius.prover.gui.editor.ProverEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            extensions="sx"
+            icon="icons/sx.png"
+            id="yices.YicesEditor"
+            name="YicesEditor">
+      </editor>
+   </extension>
+
+</plugin>
