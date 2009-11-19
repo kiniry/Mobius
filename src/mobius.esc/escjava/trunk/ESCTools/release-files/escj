@@ -43,6 +43,14 @@ MAIN=escjava.Main    # the main class
 VCSVER=0             # whether this is the VCS version (vs. release)
 ARGS=""              # extra arguments to be sent to ESCJava
 
+# Default values
+DEFAULT_BCEL_LIB=Utils/BCEL/bcel-5.2/bcel-5.2.jar
+DEFAULT_CVC3_LIB=Utils/libcvc3-20090718.jar
+DEFAULT_JAVAFE_LIB=Utils/Javafe/Javafe2.0.5d.jar
+DEFAULT_JUNIT_LIB=Utils/junit.jar
+DEFAULT_SIMPLIFY_DIR=Escjava/release/master/bin
+DEFAULT_XMLRPC_LIB=Escjava/xmlrpc-1.2-b1-modified.jar
+
 # Helper functions
 function warn {
   if (( $VERBOSE > 0 )); then
@@ -101,18 +109,18 @@ fi
 ############ Setting ESCJ_SIMPLIFY_DIR, if necessary
 
 if [ -z "$ESCJ_SIMPLIFY_DIR" ]; then
- if (( $VCSVER > 0)) ; then
-    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT/Escjava/release/master/bin
- else
+  if (( $VCSVER > 0)) ; then
+    ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT/$DEFAULT_SIMPLIFY_DIR
+  else
     ESCJ_SIMPLIFY_DIR=$ESCTOOLS_ROOT
- fi
+  fi
   warn "Guessing ESCJ_SIMPLIFY_DIR=$ESCJ_SIMPLIFY_DIR"
 fi
 
 ############ Setting JAVAFE_LIB, if necessary
 
 if [ -z "$JAVAFE_LIB" ]; then
-  JAVAFE_LIB=$ESCTOOLS_ROOT/Utils/Javafe/Javafe2.0.5d.jar
+  JAVAFE_LIB=$ESCTOOLS_ROOT/$DEFAULT_JAVAFE_LIB
   warn "Guessing JAVAFE_LIB=$JAVAFE_LIB"
 fi
 
@@ -120,21 +128,21 @@ fi
 ############ Setting BCEL_LIB, if necessary
 
 if [ -z "$BCEL_LIB" ]; then
-  BCEL_LIB=$ESCTOOLS_ROOT/Utils/BCEL/bcel-5.2/bcel-5.2.jar
+  BCEL_LIB=$ESCTOOLS_ROOT/$DEFAULT_BCEL_LIB
   warn "Guessing BCEL_LIB=$BCEL_LIB"
 fi
 
 ############ Setting XMLRPC_LIB, if necessary
 
 if [ -z "$XMLRPC_LIB" ]; then
-  XMLRPC_LIB=$ESCTOOLS_ROOT/Escjava/xmlrpc-1.2-b1-modified.jar
+  XMLRPC_LIB=$ESCTOOLS_ROOT/$DEFAULT_XMLRPC_LIB
   warn "Guessing XMLRPC_LIB=$XMLRPC_LIB"
 fi
 
 ############ Setting JUNIT_LIB, if necessary
 
 if [ -z "$JUNIT_LIB" ]; then
-  export JUNIT_LIB=${ESCTOOLS_ROOT}/Utils/junit.jar
+  export JUNIT_LIB=$ESCTOOLS_ROOT/$DEFAULT_JUNIT_LIB
   warn "Guessing JUNIT_LIB=$JUNIT_LIB"
 fi
 
@@ -182,7 +190,7 @@ fi
 ############ Setting CVC3, if necessary
 
 if [ -z "$CVC3_LIB" ]; then
-  export CVC3_LIB=${ESCTOOLS_ROOT}/Utils/libcvc3-20090718.jar
+  export CVC3_LIB=${ESCTOOLS_ROOT}/$DEFAULT_CVC3_LIB
   warn "Guessing CVC3_LIB=$CVC3_lIB"
 fi
 
