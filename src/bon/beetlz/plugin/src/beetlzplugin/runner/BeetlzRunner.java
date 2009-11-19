@@ -1,5 +1,6 @@
 package beetlzplugin.runner;
 
+import ie.ucd.bon.plugin.util.PluginUtil;
 import ie.ucd.bon.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -8,10 +9,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 import java.util.logging.Level;
 
 import log.CCLevel;
@@ -34,7 +35,7 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import beetlzplugin.Activator;
 import beetlzplugin.popup.actions.Messages;
 import beetlzplugin.popup.actions.ResourceVisitor;
@@ -111,16 +112,18 @@ public class BeetlzRunner {
    */
   private static void setSeverity(final IMarker marker, final Level level) {
     try {
-      if (level == CCLevel.JAVA_ERROR ||
-          level == CCLevel.JML_ERROR) {
-        marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-      } else if (level == CCLevel.JAVA_WARNING ||
-          level == CCLevel.JML_WARNING) {
-        marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-      } else {
-        marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-      }
+      marker.setAttribute(IMarker.SEVERITY, getSeverity(level));
     } catch (final Exception e) {}
+  }
+
+  private static int getSeverity(final Level level) {
+    if (level == CCLevel.JAVA_ERROR || level == CCLevel.JML_ERROR) {
+      return IMarker.SEVERITY_ERROR;
+    } else if (level == CCLevel.JAVA_WARNING || level == CCLevel.JML_WARNING) {
+      return IMarker.SEVERITY_WARNING;
+    } else {
+      return IMarker.SEVERITY_WARNING;
+    }
   }
 
   /**
@@ -242,7 +245,7 @@ public class BeetlzRunner {
     }
     my_console.println(out.toString());
 
-    final SortedSet<CCLogRecord> records = Beetlz.getLogManager().getRecords();
+    final Collection<CCLogRecord> records = Beetlz.getAllRecords();
     createMarkers(records, project);
   }
 
@@ -250,37 +253,43 @@ public class BeetlzRunner {
    * Set marker from log records.
    * @param records records to set
    */
-  private void createMarkers(final SortedSet <CCLogRecord> records, final IProject project) {
+  private void createMarkers(final Collection <CCLogRecord> records, final IProject project) {
     try {
       for (final CCLogRecord rec : records) {
-        final SourceLocation location = rec.getSourceLoc();
+        final BeetlzSourceLocation location = rec.getSourceLoc();
 
-        if (location != null && location.exists() && location.getSourceFile() != null) {
-          //Normal error with location
-          File file = location.getSourceFile();
-          int line_num = location.getLineNumber();
+        if (!rec.getSourceLoc().isJavaFile()) {
+          //Marker on BON source
+          PluginUtil.createMarker(project, getMarkerIDForLevel(rec.getLevel()), 
+              location, pathResourceMap, rec.getMessage(), getSeverity(rec.getLevel()));
+        } else {
 
-          final IResource resource = pathResourceMap.get(file.getAbsolutePath());
-          if (resource != null) {
-            IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
+          if (location != null && location.exists() && location.getSourceFile() != null) {
+            //Normal error with location
+            File file = location.getSourceFile();
+            int line_num = location.getLineNumber();
+
+            final IResource resource = pathResourceMap.get(file.getAbsolutePath());
+            if (resource != null) {
+              IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
+
+              marker.setAttribute(IMarker.MESSAGE, rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+              if (line_num > 0) {
+                marker.setAttribute(IMarker.LINE_NUMBER, line_num);
+              } else {
+                marker.setAttribute(IMarker.LINE_NUMBER, 0);
+              } //end setting line numbers
+              setSeverity(marker, rec.getLevel());
+            }
+
+          } else {
+            //No location
+            IMarker marker = project.createMarker(getMarkerIDForLevel(rec.getLevel())); 
 
             marker.setAttribute(IMarker.MESSAGE,
                 rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-            if (line_num > 0) {
-              marker.setAttribute(IMarker.LINE_NUMBER, line_num);
-            } else {
-              marker.setAttribute(IMarker.LINE_NUMBER, 0);
-            } //end setting line numbers
             setSeverity(marker, rec.getLevel());
           }
-
-        } else {
-          //No location
-          IMarker marker = project.createMarker(getMarkerIDForLevel(rec.getLevel())); 
-
-          marker.setAttribute(IMarker.MESSAGE,
-              rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-          setSeverity(marker, rec.getLevel());
         }
       } //end for
     } catch (final Exception e) { }

@@ -8,6 +8,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -32,6 +34,7 @@ import utils.TwoWayMap;
 import utils.smart.FeatureSmartString;
 import utils.smart.SmartString;
 import utils.smart.TypeSmartString;
+import utils.smart.TypeSmartStringWithLocation;
 import check.ClassTranslator;
 
 /**
@@ -139,6 +142,9 @@ public class Beetlz {
 
   /** Storing error messages until we can pass them on to LogManager. */
   private static List < CCLogRecord > my_records_waiting;
+  
+  /** All records. */
+  private static Collection < CCLogRecord > all_records;
 
   /** Command line option. */
   public static final String SKELETON_ONE_FILE_OPTION = "-skeletonOneFile"; //$NON-NLS-1$
@@ -183,8 +189,8 @@ public class Beetlz {
   /** Files have been parsed okay.  */
   private boolean my_parse_ok;
 
-  private List < TypeSmartString > bonMissing;
-  private List < TypeSmartString > jmlMissing;
+  private List < TypeSmartStringWithLocation > bonMissing;
+  private List < TypeSmartStringWithLocation > jmlMissing;
   
   /**
    * Create a new Beetlz tool.
@@ -200,7 +206,8 @@ public class Beetlz {
     errorStream = an_error_stream;
     my_jmlfile = new JmlFile();
     my_bonfile = new BonFile();
-    my_records_waiting = new Vector < CCLogRecord > ();
+    my_records_waiting = new ArrayList < CCLogRecord > ();
+    all_records = new ArrayList < CCLogRecord >();
 
     
     
@@ -353,6 +360,7 @@ public class Beetlz {
       JAVA_LOGGER.config(my_labels.getString(my_profile.javaIsSource() ? "Beetlz.checkingDirJB" : "Beetlz.checkingDirBJ")); //$NON-NLS-1$
       startComparison();      
       report();
+      all_records.addAll(my_logger.getRecords());
       my_logger.clear();
       
       //check the other way?
@@ -362,6 +370,7 @@ public class Beetlz {
         my_logger.setToJava(true);
         startComparison();
         report();
+        all_records.addAll(my_logger.getRecords());
         my_logger.clear();
       }
     }
@@ -416,27 +425,24 @@ public class Beetlz {
    * @return mapping
    */
   private TwoWayMap < String, String > createClassTypeMapping() {
-    final List < TypeSmartString > bonList = new Vector < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypes());
-    final List < TypeSmartString > jmlList = new Vector < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypes());
-    bonMissing = new Vector < TypeSmartString > ();
+    final List < TypeSmartStringWithLocation > bonList = new ArrayList < TypeSmartStringWithLocation > (my_bonfile.getClassCollection().getAccesibleClassTypes());
+    final List < TypeSmartStringWithLocation > jmlList = new ArrayList < TypeSmartStringWithLocation > (my_jmlfile.getClassCollection().getAccesibleClassTypes());
+    bonMissing = new ArrayList < TypeSmartStringWithLocation > ();
     final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
 
     //BON types are unique, so let's map them to Java types
-    for (final TypeSmartString bonName : bonList) {
+    for (final TypeSmartStringWithLocation bonName : bonList) {
       //check for user mapping first
-      final TypeSmartString jName = new TypeSmartString(my_profile
-          .getClassMapping(bonName.toString()));
+      final TypeSmartString jName = new TypeSmartString(my_profile.getClassMapping(bonName.toString()));
       if (!jName.toString().equals(BConst.NULL_SMARTSTRING)) {
         final int first = jmlList.indexOf(jName);
         final int last = jmlList.lastIndexOf(jName);
         if (first == -1 || first != last) {
           my_logger.logIncorrectMapping(null, bonName.toString());
         } else {
-          classMap.put(bonName.toQualifiedString().toString(), jName
-              .toQualifiedString().toString());
+          classMap.put(bonName.toQualifiedString().toString(), jName.toQualifiedString().toString());
           //simple types must be recognized in return values
-          my_profile.addTypeMapping(bonName.getSimpleName(), jName
-              .getSimpleName());
+          my_profile.addTypeMapping(bonName.getSimpleName(), jName.getSimpleName());
           jmlList.remove(jName);
         }
 
@@ -642,11 +648,11 @@ public class Beetlz {
   private void startComparison() {
     //First log the missing classes for the appropriate direction
     if (my_profile.javaIsSource()) {
-      for (final TypeSmartString s : jmlMissing) {
+      for (final TypeSmartStringWithLocation s : jmlMissing) {
         my_logger.logClassNotFound(s);
       }
     } else {
-      for (final TypeSmartString s : bonMissing) {
+      for (final TypeSmartStringWithLocation s : bonMissing) {
         my_logger.logClassNotFound(s);
       }
     }
@@ -734,13 +740,6 @@ public class Beetlz {
     return errorStream;
   }
 
-  /**
-   * Get the logger with consistency checking results.
-   * @return logger
-   */
-  public static CCLogManager getLogManager() {
-    return my_logger;
-  }
 
   /**
    * Get the localisation resource bundle.
@@ -764,5 +763,13 @@ public class Beetlz {
    */
   public static List < CCLogRecord > getWaitingRecords() {
     return my_records_waiting;
+  }
+  
+  /**
+   * Get all the records that Beetlz has created in the last run.
+   * @return all the records created in the last run.
+   */
+  public static Collection < CCLogRecord > getAllRecords() {
+    return all_records;
   }
 }

@@ -3,6 +3,7 @@
  */
 package structure;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import main.Beetlz;
 import utils.BConst;
 import utils.smart.SmartString;
 import utils.smart.TypeSmartString;
+import utils.smart.TypeSmartStringWithLocation;
 
 /**
  * A collection of parsed classes in a system.
@@ -128,11 +130,11 @@ public class ClassCollection {
    * Returns all keys, ie class names.
    * @return list of keys
    */
-  public final /*@ pure @*/ List < TypeSmartString > getAccesibleClassTypes() {
-    final List < TypeSmartString > list = new Vector < TypeSmartString > ();
+  public final /*@ pure @*/ List < TypeSmartStringWithLocation > getAccesibleClassTypes() {
+    final List < TypeSmartStringWithLocation > list = new ArrayList < TypeSmartStringWithLocation > ();
     for (final ClassStructure cls : my_classes.values()) {
       if (!cls.isPrivate()) {
-        list.add(cls.getName());
+        list.add(new TypeSmartStringWithLocation(cls.getName(), cls.getSourceLocation()));
       }
     }
     return list;

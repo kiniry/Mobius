@@ -1,9 +1,7 @@
 package ie.ucd.bon.plugin.builder;
 
 import ie.ucd.bon.Main;
-import ie.ucd.bon.errorreporting.BONError;
 import ie.ucd.bon.errorreporting.BONProblem;
-import ie.ucd.bon.errorreporting.BONWarning;
 import ie.ucd.bon.errorreporting.Problems;
 import ie.ucd.bon.plugin.BONPlugin;
 import ie.ucd.bon.plugin.util.PluginUtil;
@@ -33,7 +31,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
   private static final String BUILDER_ID = BONPlugin.PLUGIN_ID + ".boncbuilder";
   private static final String MARKER_ID = BONPlugin.PLUGIN_ID + ".bonclocproblemmarker";
-  private static final String NO_LOC_MARKER_ID = BONPlugin.PLUGIN_ID + ".boncproblemmarker";
+  //private static final String NO_LOC_MARKER_ID = BONPlugin.PLUGIN_ID + ".boncproblemmarker";
 
   @SuppressWarnings("unchecked")
   protected IProject[] build(final int kind, final Map args, final IProgressMonitor monitor)
@@ -102,7 +100,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
     //System.out.println("Deleting markers");
     getProject().deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
-    getProject().deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
+    //getProject().deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
 
     System.out.println("Bonc args: " + boncArgs.toString());
 
@@ -111,47 +109,16 @@ public class BONcBuilder extends IncrementalProjectBuilder {
 
     try {
       for (BONProblem bonProblem : actualProblems) {
-
-        SourceLocation location = bonProblem.getLocation();
-        File file = location == null ? null : bonProblem.getLocation().getSourceFile();
-        int lineNumber = location == null ? -1 : bonProblem.getLocation().getLineNumber();
-        int charPositionStart = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionStart();
-        int charPositionEnd = location == null ? -1 : bonProblem.getLocation().getAbsoluteCharPositionEnd();
-
-        charPositionStart = PluginUtil.eclipseAbsoluteCharacterPosition(charPositionStart, lineNumber);
-        charPositionEnd = PluginUtil.eclipseAbsoluteCharacterPosition(charPositionEnd, lineNumber);
-
-        //System.out.println("File: " + file + ", line: " + lineNumber + ", char: (" + charPositionStart + ", " + charPositionEnd + ")");
-
-        if (file != null && lineNumber > 0 && charPositionStart >= 0 && charPositionEnd >= 0) {
-
-          IResource resource = pathResourceMap.get(file.getAbsolutePath());
-          if (resource != null) {
-            IMarker marker = resource.createMarker(MARKER_ID);
-            marker.setAttribute(IMarker.MESSAGE, bonProblem.getMessage());
-            marker.setAttribute(IMarker.LINE_NUMBER, lineNumber);
-            marker.setAttribute(IMarker.CHAR_START, charPositionStart);
-            marker.setAttribute(IMarker.CHAR_END, charPositionEnd + 1);
-
-            if (bonProblem instanceof BONError) {
-              marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-            } else if (bonProblem instanceof BONWarning) {
-              marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-            }
-          }                
-
+        int severity;
+        if (bonProblem.isError()) {
+          severity = IMarker.SEVERITY_ERROR;
+        } else if (bonProblem.isWarning()) {
+          severity = IMarker.SEVERITY_WARNING;
         } else {
-          //For the moment nothing.
-          //TODO - how best to show an error without an associated location?
-          IMarker marker = getProject().createMarker(NO_LOC_MARKER_ID);
-          marker.setAttribute(IMarker.MESSAGE, bonProblem.getMessage());
-          if (bonProblem instanceof BONError) {
-            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_ERROR);
-          } else if (bonProblem instanceof BONWarning) {
-            marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
-          }
+          severity = IMarker.SEVERITY_INFO;
         }
-
+        SourceLocation location = bonProblem.getLocation();
+        IMarker marker = PluginUtil.createMarker(getProject(), MARKER_ID, location, pathResourceMap, bonProblem.getMessage(), severity);
       }
     } catch (Exception e) {
       System.out.println("Exception: " + e);
@@ -231,7 +198,7 @@ public class BONcBuilder extends IncrementalProjectBuilder {
       description.setBuildSpec(newCmds.toArray(new ICommand[newCmds.size()])); 
       try { 
         project.deleteMarkers(MARKER_ID, false, IResource.DEPTH_INFINITE);
-        project.deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
+        //project.deleteMarkers(NO_LOC_MARKER_ID, false, IResource.DEPTH_INFINITE);
         project.setDescription(description, null);
       } catch (CoreException e) {
         return;

@@ -53,7 +53,7 @@ import structure.Spec;
 import structure.Visibility;
 import utils.BConst;
 import utils.FeatureType;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.ModifierManager.FeatureModifier;
@@ -188,9 +188,13 @@ public final class JmlParser {
     }
 
     //SourceLocation
+    //TODO use exact position of identifier
     final File fileName = new File(a_cu.sourcefile.toUri().getPath());
-    final int lineNum = a_cu.getLineMap().getLineNumber(a_cls.getStartPosition());
-    final SourceLocation src = new SourceLocation(fileName, lineNum);
+    final int startPos = a_cls.getStartPosition();
+    //final int endPos = a_cls.getEndPosition(a_cu.endPositions);
+    final int lineNum = a_cu.getLineMap().getLineNumber(startPos);
+    
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
     //Create class
     final ClassStructure parsedClass = new ClassStructure(ClassType.JAVA, mod,
                                                           vis, generics, name,
@@ -372,7 +376,7 @@ public final class JmlParser {
     //SourceLocation
     final File fileName = new File(the_cu.sourcefile.toUri().getPath());
     final int lineNum = the_cu.getLineMap().getLineNumber(a_method.getStartPosition());
-    final SourceLocation src = new SourceLocation(fileName, lineNum);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
 
     final FeatureStructure feat = new FeatureStructure(mod, vis, name, sign, spec,
                                                        src, null, null, an_encl_class);
@@ -471,7 +475,7 @@ public final class JmlParser {
     //SourceLocation
     final File fileName = new File(the_cu.sourcefile.toUri().getPath());
     final int lineNum = the_cu.getLineMap().getLineNumber(a_variable.pos);
-    final SourceLocation src = new SourceLocation(fileName, lineNum);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
 
     return new FeatureStructure(mod, vis, name, sign, spec,
                                 src, null, null, an_encl_class);

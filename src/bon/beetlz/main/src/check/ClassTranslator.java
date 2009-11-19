@@ -13,7 +13,7 @@ import structure.ClassStructure;
 import structure.FeatureStructure;
 import utils.BConst;
 import utils.Helper;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.smart.SmartString;
@@ -33,7 +33,7 @@ public class ClassTranslator {
   /**  Our Logger for this session.  */
   private CCLogManager my_logger;
   /**  Sourcelocation for target class, is needed very often.  */
-  private SourceLocation my_src;
+  private BeetlzSourceLocation my_src;
   /**  User profile.  */
   private UserProfile my_profile;
 

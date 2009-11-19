@@ -14,7 +14,7 @@ import structure.FeatureStructure;
 import structure.Spec;
 import utils.BConst;
 import utils.Helper;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.smart.FeatureSmartString;
 import utils.smart.SmartString;
 
@@ -40,7 +40,7 @@ public class JMLFeatureTranslator {
   /**  The target features.  */
   private Spec my_trgSpec;
   /** Source location  of target feature (shortcut).*/
-  private SourceLocation my_src;
+  private BeetlzSourceLocation my_src;
   /** Logger for this session.  */
   private final CCLogManager my_logger;
   /** User settings.  */
@@ -70,7 +70,7 @@ public class JMLFeatureTranslator {
    */
   public double doCheck(final Spec a_src_spec, final FeatureStructure a_src_name,
                         final Spec a_trg_spec, final FeatureStructure a_trg_name,
-                        final SourceLocation a_src) {
+                        final BeetlzSourceLocation a_src) {
     my_srcSpec = a_src_spec;
     my_trgSpec = a_trg_spec;
     my_srcFeat = a_src_name;

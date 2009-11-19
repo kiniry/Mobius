@@ -16,4 +16,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  org.eclipse.ui.console,
  mobius.pluginlib;bundle-version="1.0.5",
- ie.ucd.bon.bonc;bundle-version="0.2.0"
+ ie.ucd.bon.bonc;bundle-version="0.2.0",
+ ie.ucd.bon.plugin;bundle-version="0.3.1"

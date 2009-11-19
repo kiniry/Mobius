@@ -11,7 +11,7 @@ import java.util.Vector;
 
 import main.Beetlz;
 import utils.FeatureType;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.FeatureModifier;
 import utils.ModifierManager.VisibilityModifier;
 import utils.smart.FeatureSmartString;
@@ -37,7 +37,7 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
   /** Pre- postconditions and frame constraints. */
   private List < Spec > my_spec;
   /** Source location. */
-  private final SourceLocation my_sourceLoc;
+  private final BeetlzSourceLocation my_sourceLoc;
   /** Comments.  */
   private String my_comment;
   /** Renaming. */
@@ -62,7 +62,7 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
                                        final FeatureSmartString a_name,
                                        final Signature a_signature,
                                        final List < Spec > a_spec,
-                                       final SourceLocation a_source_location,
+                                       final BeetlzSourceLocation a_source_location,
                                        final /*@ nullable @*/ String a_renaming_class,
                                        final /*@ nullable @*/ String a_renaming_feature,
                                        final ClassStructure a_enclosing_class) {
@@ -81,22 +81,6 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
     my_enclosingClass = a_enclosing_class;
   }
 
-  /**
-   * Create a default feature.
-   * Default settings are: public, UNKNOWN_NAME, void return type and no arguments.
-   */
-  public /*@ pure @*/ FeatureStructure() {
-    my_modifiers = new TreeSet < FeatureModifier > ();
-    my_visibility = new Visibility(VisibilityModifier.PUBLIC);
-    my_name = new FeatureSmartString("UNKNOWN_NAME"); //$NON-NLS-1$
-    my_signature = new Signature(SmartString.getVoid(),
-                                 new HashMap < String , SmartString > ());
-    my_spec = new Vector < Spec > ();
-    my_sourceLoc = new SourceLocation();
-    my_renaming = null;
-    my_enclosingClass = new ClassStructure();
-    my_generics = new Vector < SmartString > ();
-  }
 
   //**************************
   // Printing methods
@@ -263,7 +247,7 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
    * Get source location.
    * @return source location
    */
-  public final /*@ pure @*/ SourceLocation getSourceLoc() {
+  public final /*@ pure @*/ BeetlzSourceLocation getSourceLoc() {
     return my_sourceLoc;
   }
 

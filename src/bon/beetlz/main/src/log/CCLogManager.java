@@ -11,11 +11,12 @@ import main.Beetlz;
 import structure.FeatureStructure;
 import utils.FeatureType;
 import utils.PrettyFormatter;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.FeatureModifier;
 import utils.ModifierManager.VisibilityModifier;
 import utils.smart.SmartString;
+import utils.smart.TypeSmartStringWithLocation;
 
 /**
  * Collects and format consistency checking errors and warnings,
@@ -142,7 +143,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_mapping mapping that is faulty
    */
-  public void logIncorrectMapping(final SourceLocation the_src, final String a_mapping) {
+  public void logIncorrectMapping(final BeetlzSourceLocation the_src, final String a_mapping) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
                                    String.format(Beetlz.getResourceBundle().
                                                  getString("CCLogManager." +
@@ -158,7 +159,7 @@ public class CCLogManager {
    * @param the_expected expected feature type
    * @param the_found actually found feature type
    */
-  public void logIncorrectFeatureType(final SourceLocation the_src,
+  public void logIncorrectFeatureType(final BeetlzSourceLocation the_src,
                                       final SmartString a_class,
                                       final SmartString a_feature,
                                       final FeatureType the_expected,
@@ -179,7 +180,7 @@ public class CCLogManager {
    * @param the_expected expected frame condition
    * @param the_found actually found frame condition
    */
-  public void logIncorrectFrameCondition(final SourceLocation the_src,
+  public void logIncorrectFrameCondition(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final SmartString a_feature,
                                          final String the_expected,
@@ -199,7 +200,7 @@ public class CCLogManager {
    * @param the_expected expected generic
    * @param the_found actually found generic
    */
-  public void logIncorrectGenerics(final SourceLocation the_src, final SmartString a_class,
+  public void logIncorrectGenerics(final BeetlzSourceLocation the_src, final SmartString a_class,
                                    final SmartString the_expected,
                                    final SmartString the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -217,7 +218,7 @@ public class CCLogManager {
    * @param the_expected expected number of generic parameters
    * @param the_found actually found number of generic parameters
    */
-  public void logIncorrectGenericsNumber(final SourceLocation the_src,
+  public void logIncorrectGenericsNumber(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final int the_expected, final int the_found) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -235,7 +236,7 @@ public class CCLogManager {
    * @param the_expected expected modifier
    * @param the_found actually found modifier
    */
-  public void logIncorrectModifier(final SourceLocation the_src, final SmartString a_class,
+  public void logIncorrectModifier(final BeetlzSourceLocation the_src, final SmartString a_class,
                                    final SmartString a_feature,
                                    final FeatureModifier the_expected,
                                    final FeatureModifier the_found) {
@@ -256,7 +257,7 @@ public class CCLogManager {
    * @param the_expected expected modifier
    * @param the_found actually found modifier
    */
-  public void logIncorrectVisibilityModifier(final SourceLocation the_src,
+  public void logIncorrectVisibilityModifier(final BeetlzSourceLocation the_src,
                                              final SmartString a_class,
                                              final SmartString a_feature,
                                              final VisibilityModifier the_expected,
@@ -277,7 +278,7 @@ public class CCLogManager {
    * @param the_expected expected return type
    * @param the_found actually found return type
    */
-  public void logIncorrectReturnType(final SourceLocation the_src,
+  public void logIncorrectReturnType(final BeetlzSourceLocation the_src,
                                      final SmartString a_class,
                                      final SmartString a_feature,
                                      final SmartString the_expected,
@@ -299,7 +300,7 @@ public class CCLogManager {
    * @param the_expected expected default
    * @param the_found actually found default
    */
-  public void logIncorrectFrameDefault(final SourceLocation the_src,
+  public void logIncorrectFrameDefault(final BeetlzSourceLocation the_src,
                                        final SmartString a_class,
                                        final SmartString a_feature,
                                        final String the_expected,
@@ -322,7 +323,7 @@ public class CCLogManager {
    * @param the_expected expected nullity
    * @param the_found actually found nullity
    */
-  public void logIncorrectReturnTypeNullity(final SourceLocation the_src,
+  public void logIncorrectReturnTypeNullity(final BeetlzSourceLocation the_src,
                                             final SmartString a_class,
                                             final SmartString a_feature,
                                             final Nullity the_expected,
@@ -345,7 +346,7 @@ public class CCLogManager {
    * @param a_class class with fault
    * @param a_feature feature with incorrect nullity
    */
-  public void logIncorrectParameterTypeNullity(final SourceLocation the_src,
+  public void logIncorrectParameterTypeNullity(final BeetlzSourceLocation the_src,
                                                final SmartString a_class,
                                                final SmartString a_feature) {
     my_records.
@@ -363,7 +364,7 @@ public class CCLogManager {
    * @param the_expected expected package
    * @param the_found actually found package
    */
-  public void logIncorrectPackage(final SourceLocation the_src,
+  public void logIncorrectPackage(final BeetlzSourceLocation the_src,
                                   final SmartString a_class,
                                   final SmartString the_expected,
                                   final SmartString the_found) {
@@ -397,7 +398,7 @@ public class CCLogManager {
    * @param a_class class where feature is missing
    * @param the_features list of features that are missing.
    */
-  public void logMissingFeature(final SourceLocation the_src, final SmartString a_class,
+  public void logMissingFeature(final BeetlzSourceLocation the_src, final SmartString a_class,
                                 final List < String > the_features) {
     String list = ""; //$NON-NLS-1$
     final int two = 2;
@@ -427,7 +428,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class class with missing constructor
    */
-  public void logMissingConstructor(final SourceLocation the_src, final SmartString a_class) {
+  public void logMissingConstructor(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
                         String.format(Beetlz.getResourceBundle().
@@ -442,7 +443,7 @@ public class CCLogManager {
    * @param a_class class with missing interface
    * @param a_missing_cls name of missing interface
    */
-  public void logMissingInterface(final SourceLocation the_src, final SmartString a_class,
+  public void logMissingInterface(final BeetlzSourceLocation the_src, final SmartString a_class,
                                   final SmartString a_missing_cls) {
     if (the_src.isJavaFile()) {
       my_records.
@@ -471,7 +472,7 @@ public class CCLogManager {
    * @param the_class class with missing association
    * @param a_missing_cls missing association
    */
-  public void logMissingSharedAssociation(final SourceLocation the_src,
+  public void logMissingSharedAssociation(final BeetlzSourceLocation the_src,
                                           final SmartString the_class,
                                           final SmartString a_missing_cls) {
     my_records.add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
@@ -488,7 +489,7 @@ public class CCLogManager {
    * @param the_class class with missing aggregation
    * @param a_missing_cls name of missing aggregation/member class
    */
-  public void logMissingAggregation(final SourceLocation the_src, final SmartString the_class,
+  public void logMissingAggregation(final BeetlzSourceLocation the_src, final SmartString the_class,
                                     final SmartString a_missing_cls) {
     if (the_src.isJavaFile()) {
       my_records.
@@ -512,7 +513,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class name of class that is missing invariant
    */
-  public void logMissingInvariant(final SourceLocation the_src, final SmartString a_class) {
+  public void logMissingInvariant(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
                         String.format(Beetlz.getResourceBundle().
@@ -527,7 +528,7 @@ public class CCLogManager {
    * @param a_class name of class with missing invariants
    * @param the_clauses clauses that are missing
    */
-  public void logMissingInvariantClauses(final SourceLocation the_src,
+  public void logMissingInvariantClauses(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final List < Expression > the_clauses) {
     String clauses = ""; //$NON-NLS-1$
@@ -553,7 +554,7 @@ public class CCLogManager {
    * @param a_feature feature with missing formal parameters
    * @param some_params list of missing parameters
    */
-  public void logMissingParameter(final SourceLocation the_src,
+  public void logMissingParameter(final BeetlzSourceLocation the_src,
                                   final SmartString a_class,
                                   final SmartString a_feature,
                                   final List < SmartString > some_params) {
@@ -578,7 +579,7 @@ public class CCLogManager {
    * @param a_feature feature with missing postcondition
    * @param the_post list of missing postconditions
    */
-  public void logMissingPostcondition(final SourceLocation the_src,
+  public void logMissingPostcondition(final BeetlzSourceLocation the_src,
                                       final SmartString a_class,
                                       final SmartString a_feature,
                                       final List < Expression > the_post) {
@@ -605,7 +606,7 @@ public class CCLogManager {
    * @param a_feature feature with missing precondition
    * @param the_pre list of missing preconditions
    */
-  public void logMissingPrecondition(final SourceLocation the_src,
+  public void logMissingPrecondition(final BeetlzSourceLocation the_src,
                                      final SmartString a_class,
                                      final SmartString a_feature,
                                      final List < Expression > the_pre) {
@@ -632,7 +633,7 @@ public class CCLogManager {
    * @param a_feature feature with missing frame condition
    * @param a_frame name of missing condition
    */
-  public void logMissingFrameCondition(final SourceLocation the_src,
+  public void logMissingFrameCondition(final BeetlzSourceLocation the_src,
                                        final SmartString a_class,
                                        final SmartString a_feature,
                                        final SmartString a_frame) {
@@ -651,7 +652,7 @@ public class CCLogManager {
    * @param the_class class with missing history constraint
    * @param the_cond constraint missing
    */
-  public void logMissingHistoryContraint(final SourceLocation the_src,
+  public void logMissingHistoryContraint(final BeetlzSourceLocation the_src,
                                          final SmartString the_class,
                                          final Expression the_cond) {
     my_records.
@@ -671,9 +672,9 @@ public class CCLogManager {
    * Class not found.
    * @param a_cls name of class not found.
    */
-  public void logClassNotFound(final SmartString a_cls) {
+  public void logClassNotFound(final TypeSmartStringWithLocation a_cls) {
     my_records.
-    add(new CCLogRecord(CCLevel.JAVA_ERROR, null,
+    add(new CCLogRecord(CCLevel.JAVA_ERROR, a_cls.getLocation(),
                         String.format(Beetlz.getResourceBundle().
                                       getString("CCLogManager." +
                                       "classNotFoundMsg"),  //$NON-NLS-1$
@@ -686,7 +687,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class class with not all features public
    */
-  public void logExpectedAllPublic(final SourceLocation the_src, final SmartString a_class) {
+  public void logExpectedAllPublic(final BeetlzSourceLocation the_src, final SmartString a_class) {
     if (the_src.isJavaFile()) {
       my_records.
       add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -710,7 +711,7 @@ public class CCLogManager {
    * @param a_class class with missing modifier
    * @param the_expected expected modifier
    */
-  public void logExpectedClassModifier(final SourceLocation the_src, final SmartString a_class,
+  public void logExpectedClassModifier(final BeetlzSourceLocation the_src, final SmartString a_class,
                                        final ClassModifier the_expected) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -727,7 +728,7 @@ public class CCLogManager {
    * @param a_feature feature missing a modifier
    * @param the_expected expected modifier
    */
-  public void logExpectedFeatureModifier(final SourceLocation the_src,
+  public void logExpectedFeatureModifier(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final SmartString a_feature,
                                          final FeatureModifier the_expected) {
@@ -747,7 +748,7 @@ public class CCLogManager {
    * @param a_feature feature missing a modifier
    * @param the_expected expected modifier
    */
-  public void logExpectedFeatureModifierWarning(final SourceLocation the_src,
+  public void logExpectedFeatureModifierWarning(final BeetlzSourceLocation the_src,
                                                 final SmartString a_class,
                                                 final SmartString a_feature,
                                                 final FeatureModifier the_expected) {
@@ -765,7 +766,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class name of class expected to be enum
    */
-  public void logExpectedEnum(final SourceLocation the_src, final SmartString a_class) {
+  public void logExpectedEnum(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
                         String.format(Beetlz.getResourceBundle().
@@ -792,7 +793,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class not accessible class
    */
-  public void logNotAccessible(final SourceLocation the_src, final SmartString a_class) {
+  public void logNotAccessible(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
                         String.format(Beetlz.getResourceBundle().
@@ -807,7 +808,7 @@ public class CCLogManager {
    * @param a_class class with redundant enclosing class
    * @param the_found redundant enclosing class
    */
-  public void logRedundantEnclosingClass(final SourceLocation the_src,
+  public void logRedundantEnclosingClass(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final SmartString the_found) {
     my_records.
@@ -824,7 +825,7 @@ public class CCLogManager {
    * @param a_class class with redundant interface
    * @param a_redundant_cls redundant interface name
    */
-  public void logRedundantInterface(final SourceLocation the_src, final SmartString a_class,
+  public void logRedundantInterface(final BeetlzSourceLocation the_src, final SmartString a_class,
                                     final SmartString a_redundant_cls) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -839,7 +840,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param the_class class with redundant constructor
    */
-  public void logRedundantConstructor(final SourceLocation the_src,
+  public void logRedundantConstructor(final BeetlzSourceLocation the_src,
                                       final SmartString the_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_ERROR, the_src,
@@ -855,7 +856,7 @@ public class CCLogManager {
    * @param the_class class with redundant shared association
    * @param the_redundant_ass name of redundant associated class
    */
-  public void logRedundantSharedAssociation(final SourceLocation the_src,
+  public void logRedundantSharedAssociation(final BeetlzSourceLocation the_src,
                                             final SmartString the_class,
                                             final SmartString the_redundant_ass) {
     my_records.
@@ -872,7 +873,7 @@ public class CCLogManager {
    * @param the_class class with redundant aggregation
    * @param the_redundant_ass name of redundant aggregated class
    */
-  public void logRedundantAggregation(final SourceLocation the_src,
+  public void logRedundantAggregation(final BeetlzSourceLocation the_src,
                                       final SmartString the_class,
                                       final SmartString the_redundant_ass) {
     if (the_src.isJavaFile()) {
@@ -898,7 +899,7 @@ public class CCLogManager {
    * @param a_class class with redundant features
    * @param the_features list of redundant features
    */
-  public void logRedundantFeature(final SourceLocation the_src, final SmartString a_class,
+  public void logRedundantFeature(final BeetlzSourceLocation the_src, final SmartString a_class,
                                   final List < FeatureStructure > the_features) {
     String list = ""; //$NON-NLS-1$
     final int two = 2;
@@ -920,7 +921,7 @@ public class CCLogManager {
    * @param a_class class with additional modifier
    * @param a_should_not modifier that should not be present
    */
-  public void logShouldNotClassModifier(final SourceLocation the_src,
+  public void logShouldNotClassModifier(final BeetlzSourceLocation the_src,
                                         final SmartString a_class,
                                         final ClassModifier a_should_not) {
     my_records.
@@ -938,7 +939,7 @@ public class CCLogManager {
    * @param a_feature feature with additional modifier
    * @param a_should_not modifier it should not have
    */
-  public void logShouldNotFeatureModifierWarning(final SourceLocation the_src,
+  public void logShouldNotFeatureModifierWarning(final BeetlzSourceLocation the_src,
                                                  final SmartString a_class,
                                                  final SmartString a_feature,
                                                  final FeatureModifier a_should_not) {
@@ -956,7 +957,7 @@ public class CCLogManager {
    * @param the_src source location of error
    * @param a_class name of class that should not be enumerated
    */
-  public void logShouldNotEnum(final SourceLocation the_src, final SmartString a_class) {
+  public void logShouldNotEnum(final BeetlzSourceLocation the_src, final SmartString a_class) {
     my_records.
     add(new CCLogRecord(CCLevel.JAVA_WARNING, the_src,
                         String.format(Beetlz.getResourceBundle().
@@ -972,7 +973,7 @@ public class CCLogManager {
    * @param a_feature feature with too many parameters
    * @param some_params list of additional parameters
    */
-  public void logTooManyParameter(final SourceLocation the_src,
+  public void logTooManyParameter(final BeetlzSourceLocation the_src,
                                   final SmartString a_class,
                                   final SmartString a_feature,
                                   final List < SmartString > some_params) {
@@ -997,7 +998,7 @@ public class CCLogManager {
    * @param a_feature feature with too many preconditions
    * @param the_pre list of additional preconditions
    */
-  public void logTooManyPrecondition(final SourceLocation the_src,
+  public void logTooManyPrecondition(final BeetlzSourceLocation the_src,
                                      final SmartString a_class,
                                      final SmartString a_feature,
                                      final List < Expression > the_pre) {
@@ -1024,7 +1025,7 @@ public class CCLogManager {
    * @param a_feature feature with too many postconditions
    * @param the_post list of additional postconditions
    */
-  public void logTooManyPostcondition(final SourceLocation the_src,
+  public void logTooManyPostcondition(final BeetlzSourceLocation the_src,
                                       final SmartString a_class,
                                       final SmartString a_feature,
                                       final List < Expression > the_post) {
@@ -1050,7 +1051,7 @@ public class CCLogManager {
    * @param a_class class with too many invariants
    * @param the_inv list of additional invariants
    */
-  public void logTooManyInvariant(final SourceLocation the_src, final SmartString a_class,
+  public void logTooManyInvariant(final BeetlzSourceLocation the_src, final SmartString a_class,
                                   final List < Expression > the_inv) {
     String clauses = ""; //$NON-NLS-1$
     for (final Expression s : the_inv) {
@@ -1078,7 +1079,7 @@ public class CCLogManager {
    * @param a_class class with redefined modifier or Override annotation
    * @param a_feature feature with modifier or annotation
    */
-  public void logRedefinedCorrespondence(final SourceLocation the_src,
+  public void logRedefinedCorrespondence(final BeetlzSourceLocation the_src,
                                          final SmartString a_class,
                                          final SmartString a_feature) {
     my_records.
@@ -1119,7 +1120,7 @@ public class CCLogManager {
    * @param the_class class with generic method
    * @param the_method method with generic parameters
    */
-  public void logGenericMethodNotSupported(final SourceLocation the_src,
+  public void logGenericMethodNotSupported(final BeetlzSourceLocation the_src,
                                            final SmartString the_class,
                                            final SmartString the_method) {
     my_records.

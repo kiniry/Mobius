@@ -92,12 +92,24 @@ public class PrettyFormatter {
    * @return formatted class name
    */
   public final String getClassName(final SmartString a_name) {
-    if (my_to_java) {
+    return getClassName(a_name, my_to_java);
+  }
+  
+  /**
+   * Formats a class name.
+   * @param a_name class name to format
+   * @return formatted class name
+   */
+  public final String getClassNameFlipped(final SmartString a_name) {
+    return getClassName(a_name, !my_to_java);
+  }
+  
+  private final String getClassName(final SmartString a_name, final boolean to_java) {
+    if (to_java) {
       return formatJavaClassName(a_name.toString());
     } else {
       return formatBonClassName(a_name.toString());
     }
-
   }
 
   /**

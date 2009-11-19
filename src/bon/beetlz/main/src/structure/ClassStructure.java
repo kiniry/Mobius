@@ -11,7 +11,7 @@ import java.util.Vector;
 import logic.Expression.Nullity;
 import utils.BConst;
 import utils.Helper;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.ModifierManager.FeatureModifier;
@@ -39,7 +39,7 @@ public class ClassStructure implements Comparable < ClassStructure > {
   /** Implemented interface's and super classes' names. */
   private final SortedSet < SmartString > my_interfaces;
   /*** Source location. */
-  private final SourceLocation my_sourceLoc;
+  private final BeetlzSourceLocation my_sourceLoc;
   /** Features. We allow duplicate features, because Java allows overriding. */
   private final SortedSet < FeatureStructure > my_features;
   /** Constructors. */
@@ -60,54 +60,6 @@ public class ClassStructure implements Comparable < ClassStructure > {
   private boolean my_pure;
 
   /**
-   * Make a default class.
-   * Class 'unknown_name' extends nothing and has no interfaces and no features yet,
-   * but they can be extended.
-   */
-  public /*@ pure @*/ ClassStructure() {
-    my_type = ClassType.NOT_SPECIFIED;
-    my_modifiers = new TreeSet < ClassModifier > ();
-    my_visibility = new Visibility(VisibilityModifier.PUBLIC);
-    my_generics = new Vector < SmartString > ();
-    my_simplename = new TypeSmartString("UNKNOWN_NAME"); //$NON-NLS-1$
-    my_interfaces = new TreeSet < SmartString > ();
-    my_sourceLoc = new SourceLocation();
-    my_features = new TreeSet < FeatureStructure > ();
-    my_constructors = new TreeSet < FeatureStructure > ();
-    my_invariant = null;
-    my_pack = new Vector < SmartString > ();
-    my_aggregations = new TreeSet < SmartString > ();
-    my_sharedAssociations = new TreeSet < SmartString > ();
-    my_comments = new Comment();
-  }
-
-  /**
-   * Make a class with only a name.
-   * Features and member classes can be added later.
-   * @param the_name class name
-   */
-  public /*@ pure @*/ ClassStructure(final TypeSmartString the_name) {
-    my_type = ClassType.NOT_SPECIFIED;
-    my_modifiers = new TreeSet < ClassModifier > ();
-    my_visibility = new Visibility(VisibilityModifier.PUBLIC);
-    my_generics = new Vector < SmartString > ();
-    if (the_name == null) {
-      my_simplename = new TypeSmartString("UNKNOWN_NAME"); //$NON-NLS-1$
-    } else {
-      my_simplename = the_name;
-    }
-    my_interfaces = new TreeSet < SmartString > ();
-    my_sourceLoc = new SourceLocation();
-    my_features = new TreeSet < FeatureStructure > ();
-    my_constructors = new TreeSet < FeatureStructure > ();
-    my_invariant = null;
-    my_pack = new Vector < SmartString > ();
-    my_aggregations = new TreeSet < SmartString > ();
-    my_sharedAssociations = new TreeSet < SmartString > ();
-    my_comments = new Comment();
-  }
-
-  /**
    * Create a fully specified class.
    * @param a_class_type class type: Bon or Java
    * @param a_modifier modifier
@@ -125,7 +77,7 @@ public class ClassStructure implements Comparable < ClassStructure > {
                                      final TypeSmartString a_name,
                                      final SortedSet < SmartString > the_interfaces,
                                      final List < SmartString > the_package,
-                                     final SourceLocation the_source_location) {
+                                     final BeetlzSourceLocation the_source_location) {
     //final ClassStructure enclosingClass
     my_type = a_class_type;
     my_sourceLoc = the_source_location;
@@ -347,7 +299,7 @@ public class ClassStructure implements Comparable < ClassStructure > {
    * Get source location.
    * @return source location
    */
-  public final /*@ pure @*/ SourceLocation getSourceLocation() {
+  public final /*@ pure @*/ BeetlzSourceLocation getSourceLocation() {
     return this.my_sourceLoc;
   }
 

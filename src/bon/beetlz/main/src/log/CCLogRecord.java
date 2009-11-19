@@ -3,7 +3,7 @@ package log;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 
 /**
  * A customized log record for recording errors found
@@ -21,7 +21,7 @@ import utils.SourceLocation;
 @SuppressWarnings("serial")
 public class CCLogRecord extends LogRecord implements Comparable < CCLogRecord > {
   /** Source location or the error.  */
-  private final SourceLocation my_sourceLoc;
+  private final BeetlzSourceLocation my_sourceLoc;
 
   /**
    * Creare a new log record.
@@ -30,7 +30,7 @@ public class CCLogRecord extends LogRecord implements Comparable < CCLogRecord >
    * can be specified, null
    * @param a_message message of this error
    */
-  public CCLogRecord(final Level a_level, final SourceLocation a_source_location,
+  public CCLogRecord(final Level a_level, final BeetlzSourceLocation a_source_location,
                      final String a_message) {
     super(a_level, a_message);
     this.my_sourceLoc = a_source_location;
@@ -41,7 +41,7 @@ public class CCLogRecord extends LogRecord implements Comparable < CCLogRecord >
    * Get the source location in this log record.
    * @return source location
    */
-  public final SourceLocation getSourceLoc() {
+  public final BeetlzSourceLocation getSourceLoc() {
     return my_sourceLoc;
   }
 

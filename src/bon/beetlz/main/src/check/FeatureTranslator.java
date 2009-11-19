@@ -13,7 +13,7 @@ import main.UserProfile;
 import structure.FeatureStructure;
 import utils.BasicTypesDictionary;
 import utils.Helper;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.FeatureModifier;
 import utils.smart.SmartString;
 
@@ -36,7 +36,7 @@ public class FeatureTranslator {
   /** The enclosing class of the target feature.  */
   private SmartString my_trg_cls_name;
   /** Source location  of target feature (shortcut).*/
-  private SourceLocation my_src;
+  private BeetlzSourceLocation my_src;
   /** Basic types dictionary.  */
   private BasicTypesDictionary my_basic_types;
   /** Logger for this session.  */

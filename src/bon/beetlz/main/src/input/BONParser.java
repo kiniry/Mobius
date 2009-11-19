@@ -13,6 +13,7 @@ import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.util.AstUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,7 +53,7 @@ import structure.Spec;
 import structure.Visibility;
 import utils.BConst;
 import utils.FeatureType;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.ModifierManager.FeatureModifier;
@@ -204,10 +205,7 @@ public final class BONParser {
       }
     }
     //Source location
-    final SourceLocation src = new SourceLocation(a_class.getLocation()
-        .getSourceFile(),
-        a_class.getLocation().
-        getLineNumber());
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(AstUtil.getReportingSourceLocation(a_class));
     //Create class
     final ClassStructure parsedClass =
       new ClassStructure(ClassType.BON, mod, vis, generics, name,
@@ -298,9 +296,7 @@ public final class BONParser {
     specCases.add(spec);
     final Signature sign = Signature.getBonSignature(return_value, params);
     //SourceLocation
-    final SourceLocation src =
-      new SourceLocation(fSpec.getLocation().getSourceFile(),
-          fSpec.getLocation().getLineNumber());
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(AstUtil.getReportingSourceLocation(fSpec));
     //Renaming
     if (fSpec.renaming != null) {
       rename_class = fSpec.renaming.className.name;

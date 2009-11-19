@@ -10,7 +10,7 @@ import main.UserProfile;
 import structure.ClassStructure;
 import structure.FeatureStructure;
 import structure.Invariant;
-import utils.SourceLocation;
+import utils.BeetlzSourceLocation;
 import utils.ModifierManager.ClassType;
 import utils.smart.SmartString;
 
@@ -28,7 +28,7 @@ public class JMLClassTranslator {
   /**  The target class's name. */
   private SmartString my_trgName;
   /** Source location  of target feature (shortcut).*/
-  private SourceLocation my_src;
+  private BeetlzSourceLocation my_src;
   /** Logger for this session.  */
   private final CCLogManager my_logger;
   /** User settings.  */
@@ -56,7 +56,7 @@ public class JMLClassTranslator {
    */
   public double doCheck(final ClassStructure a_src_cls,
                         final ClassStructure a_trg_cls,
-                        final SourceLocation a_src) {
+                        final BeetlzSourceLocation a_src) {
     my_srcCls = a_src_cls;
     my_trgCls = a_trg_cls;
     my_trgName = my_trgCls.getName();
