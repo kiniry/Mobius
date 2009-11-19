@@ -2,8 +2,8 @@
 <feature
       id="mobius.provereditor"
       label="Prover Editor"
-      version="1.0.4"
-      provider-name="MOBIUS and Julien Charles">
+      version="1.0.10"
+      provider-name="Mobius">
 
    <description>
       The prover editor program of Mobius PVE.
@@ -708,6 +708,20 @@ END OF TERMS AND CONDITIONS
 
    <plugin
          id="simplify.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.perspective.proving"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.atp.yices"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -3,7 +3,7 @@
       id="mobius.bml"
       label="BML"
       version="0.0.14"
-      provider-name="EU MOBIUS IST-15905 Project &amp; Warsaw University">
+      provider-name="EU Mobius IST-15905 Project &amp; Warsaw University">
 
    <description>
       This feature makes available the Umbra editor together with accompanying libraries.

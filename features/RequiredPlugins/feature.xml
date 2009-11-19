@@ -2,7 +2,7 @@
 <feature
       id="mobius.required"
       label="RequiredPlugins Feature"
-      version="1.0.3">
+      version="1.0.8">
 
    <description>
       This feature contains all the required plugins needed by the other components of Mobius PVE.

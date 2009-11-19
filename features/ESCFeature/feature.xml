@@ -2,21 +2,22 @@
 <feature
       id="mobius.esc"
       label="Extended Static Checking"
-      version="2.0.27"
-      provider-name="MOBIUS">
+      version="2.0.44"
+      provider-name="EU Mobius IST-15905 Project">
 
-   <description url="http://www.example.com/description">
-      This feature contains the ESC/Java2 extended static checker and its subsystems
+   <description>
+      This feature contains the ESC/Java2 extended static checker and
+its subsystems
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright>
       Copyright (c) 2004-2005 David R. Cok.
 Copyright (c) 2004-2007 Joe Kiniry, Radboud University Nijmegen,
 and University College Dublin.
 Copyright (c) 2006-2008 EU Mobius IST-15905 project.
    </copyright>
 
-   <license url="http://www.example.com/license">
+   <license>
       This is an experimental Eclipse plugin.  It is licensed AS IS,
 without any warranty, and distributed subject to the Eclipse
 Common Public License.  The source code is available through
@@ -795,6 +796,20 @@ limitations under the License.
 
    <plugin
          id="mobius.canapa"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.perspective.verification"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.rcc.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"
