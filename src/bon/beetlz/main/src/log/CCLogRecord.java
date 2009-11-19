@@ -54,7 +54,7 @@ public class CCLogRecord extends LogRecord implements Comparable < CCLogRecord >
    */
   @Override
   public final String toString() {
-    return my_sourceLoc.toString() + getMessage();
+    return my_sourceLoc.toFileAndLineString() + getMessage();
   }
 
 

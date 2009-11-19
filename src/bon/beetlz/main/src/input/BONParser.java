@@ -309,9 +309,7 @@ public final class BONParser {
     if (fSpec.hasType != null && fSpec.hasType.mark.mark == TypeMark.Mark.AGGREGATE) {
       a_encl_class.addAggregation(return_value);
     }
-    return new FeatureStructure(mod, vis, name, sign,
-        specCases, src, rename_class,
-        rename_feature, a_encl_class);
+    return new FeatureStructure(mod, vis, name, sign, specCases, src, rename_class, rename_feature, a_encl_class);
   }
 
   /**
@@ -665,6 +663,10 @@ public final class BONParser {
     } else if (frame.size() == 0) {
       type = FeatureType.QUERY;
       frame.add(FeatureSmartString.nothing());
+      //TODO Review this whole part of setting the FeatureType
+      if (!the_params.isEmpty()) {
+        type = FeatureType.MIXED;
+      }
     } else {
       type = FeatureType.MIXED;
     }

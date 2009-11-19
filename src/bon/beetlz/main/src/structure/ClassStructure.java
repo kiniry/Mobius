@@ -220,7 +220,7 @@ public class ClassStructure implements Comparable < ClassStructure > {
     string += "\n   *part of package: " + my_pack; //$NON-NLS-1$
 
     //SourceLocation
-    string += "\n(" + my_sourceLoc.toString() + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$
+    string += "\n(" + my_sourceLoc.toFileAndLineString() + ")\n"; //$NON-NLS-1$ //$NON-NLS-2$
     string += "}"; //$NON-NLS-1$
     return string;
   }

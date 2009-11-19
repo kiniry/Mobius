@@ -1,6 +1,7 @@
 package beetlzplugin.runner;
 
 import ie.ucd.bon.plugin.util.PluginUtil;
+import ie.ucd.bon.source.SourceLocation;
 import ie.ucd.bon.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -258,39 +259,45 @@ public class BeetlzRunner {
       for (final CCLogRecord rec : records) {
         final BeetlzSourceLocation location = rec.getSourceLoc();
 
-        if (!rec.getSourceLoc().isJavaFile()) {
+        if (location != null && !location.isJavaFile()) {
           //Marker on BON source
           PluginUtil.createMarker(project, getMarkerIDForLevel(rec.getLevel()), 
-              location, pathResourceMap, rec.getMessage(), getSeverity(rec.getLevel()));
+              location, pathResourceMap, rec.getMessage().replace("\n", " "), getSeverity(rec.getLevel()));
         } else {
 
           if (location != null && location.exists() && location.getSourceFile() != null) {
             //Normal error with location
             File file = location.getSourceFile();
-            int line_num = location.getLineNumber();
-
             final IResource resource = pathResourceMap.get(file.getAbsolutePath());
             if (resource != null) {
               IMarker marker = resource.createMarker(getMarkerIDForLevel(rec.getLevel()));
 
               marker.setAttribute(IMarker.MESSAGE, rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
-              if (line_num > 0) {
+              int line_num = location.getLineNumber();
+              int charStart = location.getAbsoluteCharPositionStart();
+              int charEnd = location.getAbsoluteCharPositionEnd();
+              
+              if (line_num != SourceLocation.UNKNOWN) {
                 marker.setAttribute(IMarker.LINE_NUMBER, line_num);
-              } else {
-                marker.setAttribute(IMarker.LINE_NUMBER, 0);
-              } //end setting line numbers
+              }
+              System.out.println("Location:");
+              System.out.println(location.toString());
+              if (charStart != SourceLocation.UNKNOWN) {
+                marker.setAttribute(IMarker.CHAR_START, charStart);
+                marker.setAttribute(IMarker.CHAR_END, charEnd);
+              }
+              
               setSeverity(marker, rec.getLevel());
             }
 
           } else {
             //No location
             IMarker marker = project.createMarker(getMarkerIDForLevel(rec.getLevel())); 
-
-            marker.setAttribute(IMarker.MESSAGE,
-                rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
+            marker.setAttribute(IMarker.MESSAGE, rec.getMessage().replace("\n", " ")); //$NON-NLS-1$ //$NON-NLS-2$
             setSeverity(marker, rec.getLevel());
           }
         }
+        
       } //end for
     } catch (final Exception e) { }
   }

@@ -1,6 +1,7 @@
 /** Package for consistency checker. */
 package check;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.SortedSet;
@@ -12,8 +13,8 @@ import main.UserProfile;
 import structure.ClassStructure;
 import structure.FeatureStructure;
 import utils.BConst;
-import utils.Helper;
 import utils.BeetlzSourceLocation;
+import utils.Helper;
 import utils.ModifierManager.ClassModifier;
 import utils.ModifierManager.ClassType;
 import utils.smart.SmartString;
@@ -406,9 +407,10 @@ public class ClassTranslator {
    */
   private double relateFeatures() {
     double success = 1;
-    final List < String > missingFeatures = new Vector < String > ();
+    final List < FeatureStructure > missingFeatures = new ArrayList < FeatureStructure > ();
+    final List < ClassStructure > missingFeatureClasses = new ArrayList < ClassStructure > ();
     final List < FeatureStructure > trgFeatures =
-      new Vector < FeatureStructure > (my_trg_class.getAccessibleFeatures());
+      new ArrayList < FeatureStructure > (my_trg_class.getAccessibleFeatures());
     final FeatureTranslator translator = new FeatureTranslator(my_logger, my_profile);
     for (final FeatureStructure srcF : my_src_class.getAccessibleFeatures()) {
       //Try to find mapping in dictionary
@@ -462,7 +464,8 @@ public class ClassTranslator {
             continue; //static main is not being compared
           }
 
-          missingFeatures.add(srcF.getSimpleName());
+          missingFeatures.add(srcF);
+          missingFeatureClasses.add(my_trg_class);
         }
 
       } else { //NOTHING FOUND
@@ -474,15 +477,16 @@ public class ClassTranslator {
           continue; //static main is not being compared
         }
 
-        missingFeatures.add(srcF.getSimpleName());
+        missingFeatures.add(srcF);
+        missingFeatureClasses.add(my_trg_class);
       }
 
     }
     if (missingFeatures.size() > 0) {
-      my_logger.logMissingFeature(my_src, my_trg_name, missingFeatures);
+      my_logger.logMissingFeature(my_trg_name, missingFeatures, missingFeatureClasses);
     }
     if (Beetlz.getProfile().javaIsSource() && !trgFeatures.isEmpty()) {
-      my_logger.logRedundantFeature(my_src, my_trg_name, trgFeatures);
+      my_logger.logRedundantFeature(my_trg_name, trgFeatures);
     }
     return success;
   }

@@ -190,11 +190,17 @@ public final class JmlParser {
     //SourceLocation
     //TODO use exact position of identifier
     final File fileName = new File(a_cu.sourcefile.toUri().getPath());
-    final int startPos = a_cls.getStartPosition();
+    //final int startPos = a_cls.getStartPosition();
+    int startPos = a_cls.pos().getStartPosition() + a_cls.mods.toString().length();
+    if (!a_cls.mods.toString().contains("interface")) {
+      startPos += 6;
+    }
     //final int endPos = a_cls.getEndPosition(a_cu.endPositions);
+    final int endPos = startPos + a_cls.name.toString().length();
     final int lineNum = a_cu.getLineMap().getLineNumber(startPos);
+    final int posInLine = a_cu.getLineMap().getColumnNumber(startPos);
     
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, true);
     //Create class
     final ClassStructure parsedClass = new ClassStructure(ClassType.JAVA, mod,
                                                           vis, generics, name,
@@ -376,7 +382,11 @@ public final class JmlParser {
     //SourceLocation
     final File fileName = new File(the_cu.sourcefile.toUri().getPath());
     final int lineNum = the_cu.getLineMap().getLineNumber(a_method.getStartPosition());
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, true);
+    final int startPos = a_method.getStartPosition() + a_method.getModifiers().toString().length();
+    final int endPos = startPos + a_method.name.toString().length();
+    final int posInLine = the_cu.getLineMap().getColumnNumber(startPos);
+    
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fileName, lineNum, posInLine, startPos, endPos, true);
 
     final FeatureStructure feat = new FeatureStructure(mod, vis, name, sign, spec,
                                                        src, null, null, an_encl_class);

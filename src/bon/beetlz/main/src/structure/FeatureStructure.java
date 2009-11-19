@@ -181,7 +181,7 @@ public class FeatureStructure implements Comparable < FeatureStructure > {
       string += "\n       *exports: " + my_visibility.getExports(); //$NON-NLS-1$
     }
     //SourceLocation
-    string += "\n       *" + my_sourceLoc.toString() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
+    string += "\n       *" + my_sourceLoc.toFileAndLineString() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$
     return string;
   }
 

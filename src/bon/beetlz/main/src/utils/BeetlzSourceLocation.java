@@ -60,10 +60,9 @@ public class BeetlzSourceLocation extends SourceLocation {
    * @see java.lang.Object#toString()
    * @return string representation
    */
-  @Override
-  public final String toString() {
+  public final String toFileAndLineString() {
     return "file " + getFileName() + ", line: " + //$NON-NLS-1$ //$NON-NLS-2$
-    getLineNumber();
+      getLineNumber();
   }
 
   /**
