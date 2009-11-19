@@ -28,15 +28,15 @@ public class YicesActivator extends AbstractUIPlugin {
 
   public static String [][] yicesBinaries = {
 	  
-    {"Windows", "Yices 1.0.21 for cygwin", "yices-1.0.21-i686-pc-cygwin.exe"},
-    {"Linux", "Yices 1.0.21 for Linux i686", "yices-1.0.21-i686-pc-linux-gnu"},
-    {"Solaris","Yices 1.0.21 for Solaris", "yices-1.0.21-sparc-sun-solaris2.10"},
-    {"mingw32", "Yices 1.0.21 for mingw32", "yices-1.0.21-i686-pc-mingw32.exe"},
-    {"MacOSX", "Yices 1.0.21 for MacOS X Darwin 9.6.0 i386", "yices-1.0.21-i386-apple-darwin9.6.0"},
-    {"Linux64", "Yices 1.0.21 for Linux x86_64", "yices-1.0.21-x86_64-pc-linux-gnu"},
-    {"MacOSX8.11", "Yices 1.0.21 for MacOS X Darwin 8.11.1 i386", "yices-1.0.21-i386-apple-darwin8.11.1"},
-    {"MacOSX8.11ppc", "Yices 1.0.21 for MacOS X Darwin 8.11.0 powerpc", "yices-1.0.21-powerpc-apple-darwin8.11.0"},
-    {"MacOSX9.6_64", "Yices 1.0.21 for MacOS X Darwin 9.6.0 x86_64", "yices-1.0.21-x86_64-apple-darwin9.6.0"}
+    {"Windows", "Yices 1.0.21 for cygwin", "yices-1.0.21/bin/yices-1.0.21-i686-pc-cygwin.exe"},
+    {"Linux", "Yices 1.0.21 for Linux i686", "yices-1.0.21/bin/yices-1.0.21-i686-pc-linux-gnu"},
+    {"Solaris","Yices 1.0.21 for Solaris", "yices-1.0.21/bin/yices-1.0.21-sparc-sun-solaris2.10"},
+    {"mingw32", "Yices 1.0.21 for mingw32", "yices-1.0.21/bin/yices-1.0.21-i686-pc-mingw32.exe"},
+    {"MacOSX", "Yices 1.0.21 for MacOS X Darwin 9.6.0 i386", "yices-1.0.21/bin/yices-1.0.21-i386-apple-darwin9.6.0"},
+    {"Linux64", "Yices 1.0.21 for Linux x86_64", "yices-1.0.21/bin/yices-1.0.21-x86_64-pc-linux-gnu"},
+    {"MacOSX8.11", "Yices 1.0.21 for MacOS X Darwin 8.11.1 i386", "yices-1.0.21/bin/yices-1.0.21-i386-apple-darwin8.11.1"},
+    {"MacOSX8.11ppc", "Yices 1.0.21 for MacOS X Darwin 8.11.0 powerpc", "yices-1.0.21/bin/yices-1.0.21-powerpc-apple-darwin8.11.0"},
+    {"MacOSX9.6_64", "Yices 1.0.21 for MacOS X Darwin 9.6.0 x86_64", "yices-1.0.21/bin/yices-1.0.21-x86_64-apple-darwin9.6.0"}
   };
   
   private static final Map<String, ProverPath> yices = new HashMap<String, ProverPath>();
