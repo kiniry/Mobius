@@ -205,7 +205,7 @@ public final class BONParser {
       }
     }
     //Source location
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(AstUtil.getReportingSourceLocation(a_class));
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(a_class.getReportingLocation());
     //Create class
     final ClassStructure parsedClass =
       new ClassStructure(ClassType.BON, mod, vis, generics, name,
@@ -296,7 +296,7 @@ public final class BONParser {
     specCases.add(spec);
     final Signature sign = Signature.getBonSignature(return_value, params);
     //SourceLocation
-    final BeetlzSourceLocation src = new BeetlzSourceLocation(AstUtil.getReportingSourceLocation(fSpec));
+    final BeetlzSourceLocation src = new BeetlzSourceLocation(fSpec.getReportingLocation());
     //Renaming
     if (fSpec.renaming != null) {
       rename_class = fSpec.renaming.className.name;

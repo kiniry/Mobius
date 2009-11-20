@@ -16,6 +16,7 @@ import ie.ucd.bon.ast.FormalGeneric;
 import ie.ucd.bon.ast.Indexing;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.graph.Graph;
+import ie.ucd.bon.util.TwoDimensionalMap;
 
 import java.util.ArrayList;
 import java.util.Collection;

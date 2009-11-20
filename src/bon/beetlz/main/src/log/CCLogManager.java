@@ -186,12 +186,13 @@ public class CCLogManager {
       final SmartString a_feature,
       final String the_expected,
       final String the_found) {
-    my_records.add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectFrameCondMsg"),  //$NON-NLS-1$
-            a_feature, a_class,
-            the_expected, the_found)));
+//    my_records.add(new CCLogRecord(CCLevel.JML_ERROR, the_src,
+//        String.format(Beetlz.getResourceBundle().
+//            getString("CCLogManager." +
+//            "incorrectFrameCondMsg"),  //$NON-NLS-1$
+//            a_feature, a_class,
+//            the_expected, the_found)));
+    //TODO re-enable
   }
 
   /**
@@ -306,12 +307,13 @@ public class CCLogManager {
       final SmartString a_feature,
       final String the_expected,
       final String the_found) {
-    my_records.add(new CCLogRecord(CCLevel.JML_WARNING, the_src,
-        String.format(Beetlz.getResourceBundle().
-            getString("CCLogManager." +
-            "incorrectFrameDefaultMsg"), //$NON-NLS-1$
-            a_feature, a_class,
-            the_expected, the_found)));
+//    my_records.add(new CCLogRecord(CCLevel.JML_WARNING, the_src,
+//        String.format(Beetlz.getResourceBundle().
+//            getString("CCLogManager." +
+//            "incorrectFrameDefaultMsg"), //$NON-NLS-1$
+//            a_feature, a_class,
+//            the_expected, the_found)));
+  //TODO re-enable
   }
 
   /**

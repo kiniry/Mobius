@@ -91,7 +91,7 @@ public class BONEditor extends TextEditor {
   
   
   public void selectAndReveal(AstNode node) {
-    SourceLocation location = AstUtil.getReportingSourceLocation(node);
+    SourceLocation location = node.getReportingLocation();
     if (location.isRealLocation()) {
       int startChar = PluginUtil.eclipseAbsoluteCharacterPosition(location.getAbsoluteCharPositionStart(), location.getLineNumber());
       int endChar = PluginUtil.eclipseAbsoluteCharacterPosition(location.getAbsoluteCharPositionEnd(), location.getLineNumber());

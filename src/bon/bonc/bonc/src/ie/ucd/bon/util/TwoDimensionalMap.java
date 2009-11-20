@@ -2,9 +2,8 @@
  * Copyright (c) 2007-2009, Fintan Fairmichael, University College Dublin under the BSD licence.
  * See LICENCE.TXT for details.
  */
-package ie.ucd.bon.typechecker;
+package ie.ucd.bon.util;
 
-import ie.ucd.bon.util.KeyPair;
 
 import java.util.Collection;
 import java.util.HashMap;

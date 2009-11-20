@@ -25,6 +25,7 @@ import structure.ClassCollection;
 import structure.ClassStructure;
 import structure.FeatureStructure;
 import utils.BConst;
+import utils.BeetlzSourceLocation;
 
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -139,7 +140,7 @@ public class JmlFile {
       }
     } catch (final NullPointerException e) {
       Beetlz.getWaitingRecords().
-      add(new CCLogRecord(CCLevel.COMPILATION_ERROR, null,
+      add(new CCLogRecord(CCLevel.COMPILATION_ERROR, new BeetlzSourceLocation(true),
           String.format(Beetlz.getResourceBundle().
               getString("JmlFile.compilError")))); //$NON-NLS-1$
       return false;

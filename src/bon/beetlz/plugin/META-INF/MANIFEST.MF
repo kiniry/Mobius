@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Beetlz Plug-in
 Bundle-SymbolicName: BeetlzPlugin;singleton:=true
-Bundle-Version: 1.2.2
+Bundle-Version: 1.2.3
 Bundle-Activator: beetlzplugin.Activator
 Bundle-Vendor: Evka Darulova et al.
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

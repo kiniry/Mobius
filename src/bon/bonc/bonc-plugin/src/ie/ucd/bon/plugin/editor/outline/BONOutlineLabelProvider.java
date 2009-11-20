@@ -1,8 +1,10 @@
 package ie.ucd.bon.plugin.editor.outline;
 
 import ie.ucd.bon.ast.AstNode;
+import ie.ucd.bon.ast.ClassChart;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureArgument;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.StaticDiagram;
@@ -33,6 +35,10 @@ public class BONOutlineLabelProvider implements ILabelProvider {
         return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS);
       } else if (value instanceof FeatureSpecification) {
         return JavaUI.getSharedImages().getImage(ISharedImages.IMG_FIELD_PUBLIC);
+      } else if (value instanceof ClusterChart) {
+        return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_PACKAGE);
+      } else if (value instanceof ClassChart) {
+        return JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_CLASS);
       }
     }
     return null;
