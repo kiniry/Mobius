@@ -205,19 +205,17 @@ public class Context
    * @param thread_group thread group associated with this context
    */
   // @todo kiniry put fields in objectState and use datagroup in frame axiom
-  //@ requires thread != null ==> thread_group == null;
-  //@ requires thread_group != null ==> thread == null;
+  //@ requires a_thread != null ==> a_thread_group == null;
+  //@ requires a_thread_group != null ==> a_thread == null;
   //@ ensures my_is_on == false;
   //@ ensures my_level == my_debug_constants.LEVEL_MIN;
   //@ ensures validLevel(my_level);
   //@ ensures my_debug_output_interface != null;
-  //@ ensures my_thread == null ==> my_thread_group != null;
-  //@ ensures my_thread_group == null ==> my_thread != null;
   // @todo kiniry Change these postconditions into an initially assertion.
   public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
                  final /*@ non_null @*/ DebugOutput a_debug_output,
-                 final Thread thread,
-                 final ThreadGroup thread_group) {
+                 final Thread a_thread,
+                 final ThreadGroup a_thread_group) {
     super();
     my_is_on = false;
     my_category_map = new HashMap();
@@ -225,13 +223,13 @@ public class Context
     //@ set my_category_map.elementType = \type(Integer);
     my_class_map = new HashMap();
     //@ set my_class_map.keyType = \type(String);
-    //@ set my_class_map.elementType = \type(boolean);
+    //@ set my_class_map.elementType = \type(Boolean);
     my_class_map.put("*", Boolean.TRUE);
     my_debug_constants = some_debug_constants;
     my_debug_constants.initCategories(my_category_map);
     my_level = DebugConstants.LEVEL_MIN;
     my_debug_output_interface = a_debug_output;
-    my_owner = thread != null ? thread : thread_group;
+    my_owner = (a_thread != null) ? (Object)a_thread : (Object)a_thread_group;
   }
 
   /**
@@ -251,8 +249,7 @@ public class Context
   //@ ensures my_level == my_debug_constants.LEVEL_MIN;
   //@ ensures validLevel(my_level);
   //@ ensures my_debug_output_interface != null;
-  //@ ensures my_thread == null ==> my_thread_group != null;
-  //@ ensures my_thread_group == null ==> my_thread != null;
+  //@ ensures my_owner != null;
   // @todo kiniry Change these postconditions into an initially assertion.
   public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
                  final /*@ non_null @*/ DebugOutput a_debug_output) {
@@ -276,13 +273,12 @@ public class Context
   //@ ensures my_level == my_debug_constants.LEVEL_MIN;
   //@ ensures validLevel(my_level);
   //@ ensures my_debug_output_interface != null;
-  //@ ensures my_thread == null ==> my_thread_group != null;
-  //@ ensures my_thread_group == null ==> my_thread != null;
+  //@ ensures my_owner != null;
   // @todo kiniry Change these postconditions into an initially assertion.
   public Context(final /*@ non_null @*/ DebugConstants some_debug_constants,
                  final /*@ non_null @*/ DebugOutput a_debug_output,
-                 final /*@ non_null @*/ ThreadGroup thread_group) {
-	this( some_debug_constants, a_debug_output, null, thread_group);
+                 final /*@ non_null @*/ ThreadGroup a_thread_group) {
+	this( some_debug_constants, a_debug_output, null, a_thread_group);
   }
 
   /**

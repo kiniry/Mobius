@@ -225,7 +225,7 @@ import java.util.WeakHashMap;
    * group.
    * </p>
    */
-  protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
+  final protected /*@ non_null @*/ Map my_thread_map /*#guarded_by this*/;
 
   /**
    * <p>
@@ -251,8 +251,10 @@ import java.util.WeakHashMap;
    * <p>
    * class-global categories.
    */
-  //@ constraint \old(my_categories_map) == my_categories_map;
-  protected /*@ non_null @*/ Map my_categories_map /*#guarded_by this*/;
+  final private /*@ non_null @*/ Map my_categories_map /*#guarded_by this*/; // in debugState;
+  //@ private constraint \old(my_categories_map) == my_categories_map;
+  //@ private instance invariant my_categories_map.keyType == \type(String);
+  //@ private instance invariant my_categories_map.removeSupported == true;
 
   /**
    * <p>
@@ -262,7 +264,7 @@ import java.util.WeakHashMap;
    * @modifies SINGLE-ASSIGNMENT
    */
   //@ constraint \old(my_debug_constants) == my_debug_constants;
-  protected /*@ non_null @*/ DebugConstants my_debug_constants /*#guarded_by this*/;
+  final protected /*@ non_null @*/ DebugConstants my_debug_constants /*#guarded_by this*/;
 
   /**
    * <p>
@@ -322,7 +324,7 @@ import java.util.WeakHashMap;
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  protected /*@ non_null @*/ Utilities my_debug_utilities /*#guarded_by this*/;
+  final protected /*@ non_null @*/ Utilities my_debug_utilities /*#guarded_by this*/;
 
   /**
    * <p>
@@ -341,8 +343,15 @@ import java.util.WeakHashMap;
    * <code>Debug</code> object before it can be used.
    * </p>
    */
+  //@ ensures my_thread_map != null;
+  //@ ensures my_classes_map != null;
+  //@ ensures getAssert() != null;
+  //@ ensures my_debug_utilities != null;
+  //@ ensures my_categories_map != null;
+  //@ ensures my_categories_map.keyType == \type(String);
+  //@ ensures my_categories_map.removeSupported == true;
   public Debug() {
-    init(new DefaultDebugConstants(), null);
+    this(new DefaultDebugConstants(), null);
   }
 
   /**
@@ -351,7 +360,15 @@ import java.util.WeakHashMap;
    * <code>setOutputInterface</code> need be called on the newly constructed
    * <code>Debug</code> object before it can be used.
    * </p>
+   * 
+   * <p>
+   * Also, it initializes all the static data-structures used by the <code>Debug</code>
+   * class. Note that the <code>initCategories()</code> method is
+   * automatically called as necessary to initialize the default categories
+   * database of the <code>Debug</code> class.
+   * </p>
    *
+   * @modifies my_thread_map, debugConstants, assert, collect, debugUtilities
    * @param some_constants
    *            an implementation of the <code>DebugConstants</code>
    *            interface that defines the semantics of this debug context.
@@ -359,9 +376,41 @@ import java.util.WeakHashMap;
    *            an implementation of the <code>Collect</code> class.
    * @see mobius.logging.examples.SimpleCollect
    */
+  //@ ensures my_thread_map != null;
+  //@ ensures my_classes_map != null;
+  //@ ensures my_categories_map != null;
+  //@ ensures getAssert() != null;
+  //@ ensures getCollect() == a_collect;
+  //@ ensures my_debug_utilities != null;
+  //@ ensures getDebugConstants() == some_constants;
+  //@ ensures my_categories_map.keyType == \type(String);
+  //@ ensures my_categories_map.removeSupported == true;
   public Debug(final /*@ non_null @*/ DebugConstants some_constants,
-               final /*@ non_null @*/ Collector a_collect) {
-    init(some_constants, a_collect);
+               final /*@ nullable @*/ Collector a_collect) {
+    my_thread_map = new WeakHashMap();
+    //@ set my_thread_map.keyType = \type(Object);
+    //@ set my_thread_map.elementType = \type(Context);
+    //@ set my_thread_map.removeSupported = true;
+    
+    my_categories_map = new HashMap();
+    //@ set my_categories_map.keyType = \type(String);
+    //@ set my_categories_map.elementType = \type(Integer);
+    //@ set my_categories_map.removeSupported = true;
+
+    my_debug_constants = some_constants;
+    my_debug_constants.initCategories(my_categories_map);
+
+    my_classes_map = new HashMap();
+    //@ set my_classes_map.keyType = \type(String);
+    //@ set my_classes_map.elementType = \type(Boolean);
+    //@ set my_classes_map.removeSupported = true;
+    my_classes_map.put("*", Boolean.TRUE);
+
+    // Note that we need to actually initialize our own debugging context!
+    my_assert = new Assert(this);
+    my_collect = a_collect;
+
+    my_debug_utilities = new Utilities(this);
   }
 
   // Public Methods
@@ -579,7 +628,7 @@ import java.util.WeakHashMap;
    */
   //@ requires 0 < a_category.length();
   public synchronized boolean removeCategory(final /*@ non_null @*/ String a_category) {
-    return removeCategoryFromMap(my_categories_map, a_category);
+	 return removeCategoryFromMap(my_categories_map, a_category);
   }
 
   /**
@@ -598,6 +647,22 @@ import java.util.WeakHashMap;
   //@ requires 0 < a_category.length();
   public synchronized boolean containsCategory(final /*@ non_null @*/ String a_category) {
     return my_categories_map.containsKey(a_category);
+  }
+
+  /**
+   * <p>
+   * Returns a level associated with specified category.
+   * </p>
+   *
+   * @concurrency GUARDED
+   * @modifies QUERY
+   * @param a_category
+   *            is the category to lookup.
+   * @return category level
+   */
+  //@ requires 0 < a_category.length();
+  public synchronized Integer categoryLevel(final /*@ non_null @*/ String a_category) {
+    return (Integer)my_categories_map.get(a_category);
   }
 
   /**
@@ -828,55 +893,6 @@ import java.util.WeakHashMap;
 
   /**
    * <p>
-   * Initialize all the static data-structures used by the <code>Debug</code>
-   * class. Note that the <code>initCategories()</code> method is
-   * automatically called as necessary to initialize the default categories
-   * database of the <code>Debug</code> class.
-   * </p>
-   *
-   * @concurrency CONCURRENT
-   * @modifies my_thread_map, debugConstants, assert, collect, debugUtilities
-   * @param the_debug_constants
-   *            an implementation of the <code>DebugConstants</code> that
-   *            defines the semantics of this debug context.
-   * @param the_collect
-   *            an implementation of the <code>Collect</code> class.
-   */
-  //@ ensures my_thread_map != null;
-  //@ ensures my_classes_map != null;
-  //@ ensures my_categories_map != null;
-  //@ ensures getAssert() != null;
-  //@ ensures getCollect() == the_collect;
-  //@ ensures my_debug_utilities != null;
-  //@ ensures getDebugConstants() == the_debug_constants;
-  //@ nowarn Exception;
-  private /*@ helper @*/ void init(final /*@ non_null @*/ DebugConstants the_debug_constants,
-                                   final Collector the_collect) {
-    my_thread_map = new WeakHashMap();
-    //@ set my_thread_map.keyType = \type(Object);
-    //@ set my_thread_map.elementType = \type(Context);
-    
-    my_categories_map = new HashMap();
-    //@ set my_categories_map.keyType = \type(String);
-    //@ set my_categories_map.elementType = \type(Integer);
-
-    my_debug_constants = the_debug_constants;
-    my_debug_constants.initCategories(my_categories_map);
-
-    my_classes_map = new HashMap();
-    //@ set my_categories_map.keyType = \type(String);
-    //@ set my_categories_map.elementType = \type(Boolean);
-    my_classes_map.put("*", Boolean.TRUE);
-
-    // Note that we need to actually initialize our own debugging context!
-    my_assert = new Assert(this);
-    my_collect = the_collect;
-
-    my_debug_utilities = new Utilities(this);
-  }
-
-  /**
-   * <p>
    * Adds a category to a map of legal debugging categories. Once a category
    * exists in the database, its debugging level cannot be changed without
    * removing and re-adding the category to the database.
@@ -925,6 +941,8 @@ import java.util.WeakHashMap;
    *         the database. A false indicates that the parameters were invalid.
    */
   //@ requires 0 < a_category.length();
+  //@ requires the_map.keyType == \type(String);
+  //@ requires the_map.removeSupported;
   private synchronized boolean
   removeCategoryFromMap(final /*@ non_null @*/ Map the_map,
                         final /*@ non_null @*/ String a_category) {

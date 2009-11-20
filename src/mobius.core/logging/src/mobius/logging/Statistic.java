@@ -82,7 +82,7 @@ import java.io.Serializable;
    *
    * @see Statistic
    */
-  private static /*@ spec_public @*/ volatile int my_current_ID /*#guarded_by this */;
+  private static /*@ spec_public @*/ int my_current_ID /*#guarded_by this */;
 
   /**
    * <p> The unique ID for this statistic. </p>

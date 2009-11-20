@@ -214,7 +214,7 @@ class Utilities {
         if (my_debug.isOn()) {
           // Get category level
           Integer the_category_level =
-              (Integer)(my_debug.my_categories_map.get(a_category));
+              my_debug.categoryLevel(a_category);
 
           // If this category is not defined in the global map,
           // we break out of the global checks and start the per-thread

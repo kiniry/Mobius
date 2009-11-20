@@ -36,8 +36,8 @@ package mobius.logging;
  */
 //+@ nullable_by_default
 interface Collector {
-  //@ public model instance JMLDataGroup collectorObjectState;
-  //@ public instance model Debug the_debug_model; in collectorObjectState;
+  //@ public model non_null instance JMLDataGroup collectorObjectState;
+  //@ public model non_null instance Debug the_debug_model; in collectorObjectState;
 
   /**
    * <p> Checks a debug instance to make sure its <code>collect</code>
@@ -64,7 +64,7 @@ interface Collector {
    */
   //@ public normal_behavior
   //@   requires checkDebugCollectRef(a_debug);
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   //@   ensures the_debug_model == a_debug;
   void setDebug(/*@ non_null @*/ final Debug a_debug);
 
@@ -76,7 +76,7 @@ interface Collector {
    */
   //@ public normal_behavior
   //@   requires checkStatisticID(a_statistic);
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   //@   ensures isRegistered(a_statistic);
   void register(/*@ non_null @*/ final Statistic a_statistic);
 
@@ -99,7 +99,7 @@ interface Collector {
    * @param a_statistic the statistic to unregister.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   //@   ensures !isRegistered(a_statistic);
   void unregister(final /*@ non_null @*/ Statistic a_statistic);
 
@@ -148,7 +148,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double increment(/*@ non_null @*/ Statistic the_statistic,
                    double the_value);
 
@@ -159,7 +159,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double increment(/*@ non_null @*/ Statistic the_statistic);
 
   /**
@@ -170,7 +170,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double decrement(/*@ non_null @*/ Statistic the_statistic,
                    double the_value);
 
@@ -181,7 +181,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double decrement(/*@ non_null @*/ Statistic the_statistic);
 
   /**
@@ -191,7 +191,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double reset(/*@ non_null @*/ Statistic the_statistic);
 
   /**
@@ -202,7 +202,7 @@ interface Collector {
    * @return the old value of the statistic.
    */
   //@ public normal_behavior
-  //@   assignable objectState;
+  //@   assignable collectorObjectState;
   double set(/*@ non_null @*/ Statistic the_statistic,
              double the_value);
 

@@ -70,7 +70,8 @@ import java.util.HashMap;
    * definitions. </p>
    */
   private final /*@ non_null spec_public @*/
-  Map my_statistics /*#guarded_by this*/; //@ in collectorObjectState;
+      Map my_statistics /*#guarded_by this*/; //@ in collectorObjectState;
+  //@ maps my_statistics.mapObjectState \into collectorObjectState;
 
   /**
    * <p> The <code>Debug</code> object associated with this
@@ -78,19 +79,25 @@ import java.util.HashMap;
    *
    * @modifies SINGLE-ASSIGNMENT
    */
-  //@ private constraint ((my_debug != null) && (\old(my_debug) != null)) ==> (my_debug == \old(my_debug));
-  private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */; //@ in collectorObjectState;
-
+  private /*@ spec_public @*/ Debug my_debug /*#guarded_by this */ = null; //@ in collectorObjectState;
+  //@ represents the_debug_model = my_debug;
+  //@ private constraint \old(my_debug) != null ==> my_debug != null;
+  
   // Inherited Methods
   // Constructors
 
   /**
    * <p> Construct a new <code>Collect</code> class. </p>
    */
+  //@ assignable my_statistics;
+  //@ ensures my_statistics.keyType == \type(Statistic);
+  //@ ensures my_statistics.elementType == \type(Statistic);
+  //@ ensures my_statistics.containsNull == false;
   public AbstractCollect() {
-    this.my_statistics = new HashMap();
-    // @ set my_statistics.elementType = CuncurrentHashMap; XXX
-    // @ set my_statistics.containsNull = false; XXX
+    my_statistics = new HashMap();
+    //@ set my_statistics.keyType = \type(Statistic);
+    //@ set my_statistics.elementType = \type(Statistic);
+    //@ set my_statistics.containsNull = false;
   }
 
   // Public Methods
@@ -103,14 +110,17 @@ import java.util.HashMap;
   /** {@inheritDoc} */
   //@ also
   //@ public normal_behavior
-  //@   requires my_debug == null;
+  //@  requires my_debug == null;
   //@  assignable my_debug;
   //@  ensures my_debug == a_debug;
   public final void setDebug(final /*@ non_null @*/ Debug a_debug) {
-    my_debug = a_debug;
+    my_debug = a_debug;  
   }
 
   /** {@inheritDoc} */
+  //@ also
+  //@ requires my_statistics.keyType == \type(Statistic);
+  //@ requires my_statistics.elementType == \type(Statistic);
   public void register(final /*@ non_null @*/ Statistic a_statistic) {
     my_statistics.put(a_statistic, a_statistic);
   }
@@ -127,7 +137,6 @@ import java.util.HashMap;
 
   /** {@inheritDoc} */
   public synchronized void unregister(final /*@ non_null @*/ Statistic a_statistic) {
-    //@ assume \typeof(my_statistics) == \type(HashMap);
     my_statistics.remove(a_statistic);
   }
 

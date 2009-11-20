@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="specs"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="libs/servlet.jar"/>
 	<classpathentry kind="src" path="/jmlspecs"/>

@@ -72,7 +72,8 @@ public class SimpleCollect extends AbstractCollect
   /**
    * <p> A map used to hold the data being collected. </p>
    */
-  private final /*@ non_null @*/ Map my_data;
+  private final /*@ non_null @*/ Map my_data; //@ in collectorObjectState;
+  //@ maps my_data.mapObjectState \into collectorObjectState;
 
   // Constructors
 
@@ -101,7 +102,7 @@ public class SimpleCollect extends AbstractCollect
    * @param the_statistic the statistic to register.
    */
   //@ also
-  //@ assignable objectState;
+  //@ assignable collectorObjectState;
   //@ ensures isRegistered(the_statistic);
   public void register(final /*@ non_null @*/ Statistic the_statistic) {
     super.register(the_statistic);
@@ -222,7 +223,7 @@ public class SimpleCollect extends AbstractCollect
    * @return the old value of the statistic.
    */
   //@ also
-  //@ assignable objectState;
+  //@ assignable collectorObjectState;
   public double reset(final /*@ non_null @*/ Statistic the_statistic) {
     final double oldValue = currentValue(the_statistic);
 

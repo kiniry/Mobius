@@ -82,14 +82,13 @@ package mobius.logging.testsuite;
  *
  * @note The top-level class of the IDebug test suite.
  */
-//@ non_null_by_default
 public final class TestSuite {
   // Attributes
   // Constructors
 
-  /** Disallow constrution of this object. */
+  /** Disallow construction of this object. */
   private TestSuite() {
-    assert false;
+    //assert false;
   }
 
   // Inherited Methods
@@ -105,11 +104,11 @@ public final class TestSuite {
   public static void main(final String [] the_arguments) {
     // Check for --help argument.
     if (showHelp(the_arguments))
-      System.exit(0);
+      return;
 
     // Check for --version argument.
     if (showVersion(the_arguments))
-      System.exit(0);
+      return;
 
     // Check validity of test mode argument.
     String the_test_mode = null;
@@ -139,18 +138,25 @@ public final class TestSuite {
    * @param the_arguments the arguments passed to this program from the command-line.
    * @return a string representing which test mode is in operation.
    */
-  private static String testArgs(final String [] the_arguments) {
+  /*@ ensures (\result.equals("console") || \result.equals("servletlog") ||
+    @		\result.equals("window") || \result.equals("writer")); */
+  private static String testArgs(final String [] the_arguments) throws IllegalArgumentException {
     if (the_arguments == null)
       return "console";
     if (the_arguments.length == 0)
       return "console";
 
     for (int i = 0; i < the_arguments.length; i++) {
-      if (the_arguments[i].equals("--console") ||
-          the_arguments[i].equals("--servletlog") ||
-          the_arguments[i].equals("--window") ||
-          the_arguments[i].equals("--writer"))
-        return the_arguments[i].substring("--".length());
+      if (the_arguments[i] == null)
+    	  return "console";
+      if (the_arguments[i].equals("--console"))
+    	  return "console";
+      if (the_arguments[i].equals("--servletlog"))
+    	  return "servletlog";
+      if (the_arguments[i].equals("--window"))
+    	  return "window";
+      if (the_arguments[i].equals("--writer"))
+    	  return "writer";
     }
     throw new IllegalArgumentException("Argument list is non-null and " +
                          "erroneous.\nUse --help for more information.");
