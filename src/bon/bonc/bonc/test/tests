@@ -5,8 +5,8 @@
 
 @Test-name: "Parsing error 1"
 @Location { misc/ }
-@Input { parseerror }
-@Output { <AntlrParsingError, #File:parseerror, 2, 0, aaa> }
+@Input { parseerror.bon }
+@Output { <AntlrParsingError, #File:parseerror.bon, 2, 0, aaa> }
 
 //File problem tests
 //Commented out, since clops now handles this, and we have clops unit tests to ensure this.
@@ -27,118 +27,118 @@
 
 @Test-name: "System not defined."
 @Location { misc/ }
-@Input { no_sys }
+@Input { no_sys.bon }
 @Output { < SystemNotDefinedError > }
 
 @Test-name: "Duplicate class chart."
 @Location { misc/ }
-@Input { dup_class_chart }
-@Output { < DuplicateClassChartError, #File:dup_class_chart, 12, 0, BOOK, #File:dup_class_chart, 4 > }
+@Input { dup_class_chart.bon }
+@Output { < DuplicateClassChartError, #File:dup_class_chart.bon, 12, 0, BOOK, #File:dup_class_chart, 4 > }
 
 @Test-name: "Duplicate cluster chart."
 @Location { misc/ }
-@Input { dup_cluster_chart }
-@Output { < DuplicateClusterChartError, #File:dup_cluster_chart, 8, 0, A, #File:dup_cluster_chart, 4 > }
+@Input { dup_cluster_chart.bon }
+@Output { < DuplicateClusterChartError, #File:dup_cluster_chart.bon, 8, 0, A, #File:dup_cluster_chart, 4 > }
 
 @Test-name: "Duplicate class definition."
 @Location { misc/ }
-@Input { dup_class }
-@Output { < DuplicateClassDefinitionError, #File:dup_class, 16, 4, A, #File:dup_class, 11 > }
+@Input { dup_class.bon }
+@Output { < DuplicateClassDefinitionError, #File:dup_class.bon, 16, 10, A, #File:dup_class, 11 > }
 
 @Test-name: "Duplicate cluster definition."
 @Location { misc/ }
-@Input { dup_cluster }
-@Output { < DuplicateClusterDefinitionError, #File:dup_cluster, 15, 2, CLUSTER_A, #File:dup_cluster, 10 > }
+@Input { dup_cluster.bon }
+@Output { < DuplicateClusterDefinitionError, #File:dup_cluster.bon, 15, 2, CLUSTER_A, #File:dup_cluster, 10 > }
 
 @Test-name: "Duplicate feature definition."
 @Location { misc/ }
-@Input { dup_feature }
-@Output { < DuplicateFeatureDefinitionError, #File:dup_feature, 16, 8, x, A, #File:dup_feature, 13 > }
+@Input { dup_feature.bon }
+@Output { < DuplicateFeatureDefinitionError, #File:dup_feature.bon, 16, 8, x, A, #File:dup_feature, 13 > }
 
 @Test-name: "Duplicate formal generic name."
 @Location { misc/ }
-@Input { dup_formal }
-@Output { < DuplicateFormalGenericNameError, #File:dup_formal, 11, 19, A > }
+@Input { dup_formal.bon }
+@Output { < DuplicateFormalGenericNameError, #File:dup_formal.bon, 11, 19, A > }
 
 @Test-name: "Duplicate system definition."
 @Location { misc/ }
-@Input { dup_system }
-@Output { < DuplicateSystemDefinitionError, #File:dup_system, 4, 0, LIB, #File:dup_system, 1 > }
+@Input { dup_system.bon }
+@Output { < DuplicateSystemDefinitionError, #File:dup_system.bon, 4, 0, LIB, #File:dup_system, 1 > }
 
 @Test-name: "Deferred feature not defined in effective class."
 @Location { misc/ }
-@Input { effective_deferred }
-@Output { < EffectiveClassDoesNotDefineDeferredFeatureError, #File:effective_deferred, 19, 14, x, B, A > }
+@Input { effective_deferred.bon }
+@Output { < EffectiveClassDoesNotDefineDeferredFeatureError, #File:effective_deferred.bon, 19, 14, x, B, A > }
 
 @Test-name: "Invalid class type."
 @Location { misc/ }
-@Input { invalid_class }
-@Output { < InvalidFormalClassTypeError, #File:invalid_class, 17, 8, BOOK >,
-          < InvalidInformalClassTypeError, #File:invalid_class, 26, 4, BOOK > }
+@Input { invalid_class.bon }
+@Output { < InvalidFormalClassTypeError, #File:invalid_class.bon, 17, 8, BOOK >,
+          < InvalidInformalClassTypeError, #File:invalid_class.bon, 26, 4, BOOK > }
 
 @Test-name: "Invalid cluster type."
 @Location { misc/ }
-@Input { invalid_cluster }
-@Output { < InvalidClusterTypeError, #File:invalid_cluster, 12, 2, Z > }
+@Input { invalid_cluster.bon }
+@Output { < InvalidClusterTypeError, #File:invalid_cluster.bon, 12, 2, Z > }
 
 @Test-name: "Invalid static component."
 @Location { misc/ }
-@Input { invalid_static_component }
-@Output { < InvalidStaticComponentTypeError, #File:invalid_static_component, 12, 2, K > }
+@Input { invalid_static_component.bon }
+@Output { < InvalidStaticComponentTypeError, #File:invalid_static_component.bon, 12, 2, K > }
 
 @Test-name: "Static component is not contained in cluster."
 @Location { misc/ }
-@Input { static_component_not_contained }
-@Output { < NotContainedInClusterError, #File:static_component_not_contained, 12, 2, B, true, X > }
+@Input { static_component_not_contained.bon }
+@Output { < NotContainedInClusterError, #File:static_component_not_contained.bon, 12, 2, B, true, X > }
 
 //This is technically allowed in BON, so we should not issue an error automatically.
 //Possibly this should be an option as to whether to warn/give error for duplicate superclass.
 //@Test-name: "Duplicate superclass."
 //@Location { misc/ }
-//@Input { dup_super }
-//@Output { < DuplicateSuperclassWarning, #File:dup_super, 15, 10, B, Z > }
+//@Input { dup_super.bon }
+//@Output { < DuplicateSuperclassWarning, #File:dup_super.bon, 15, 10, B, Z > }
 
 @Test-name: "Cluster containment cycle."
 @Prog-args: {--informal}
 @Location { misc/ }
-@Input { clus_hier_cycle }
-@Output { < CycleInRelationsError, #File:clus_hier_cycle, 5, 0, Cluster, B, "B->D->C->B", "clustering hierarchy" >,
-          < CycleInRelationsError, #File:clus_hier_cycle, 9, 0, Cluster, C, "C->B->D->C", "clustering hierarchy" >,
-          < CycleInRelationsError, #File:clus_hier_cycle, 13, 0, Cluster, D, "D->C->B->D", "clustering hierarchy" > }
+@Input { clus_hier_cycle.bon }
+@Output { < CycleInRelationsError, #File:clus_hier_cycle.bon, 5, 0, Cluster, B, "B->D->C->B", "clustering hierarchy" >,
+          < CycleInRelationsError, #File:clus_hier_cycle.bon, 9, 0, Cluster, C, "C->B->D->C", "clustering hierarchy" >,
+          < CycleInRelationsError, #File:clus_hier_cycle.bon, 13, 0, Cluster, D, "D->C->B->D", "clustering hierarchy" > }
 
 @Test-name: "Informal class hierarchy cycle."
 @Prog-args: {--informal}
 @Location { misc/ }
-@Input { class_hier_cycle }
-@Output { < CycleInRelationsError, #File:class_hier_cycle, 12, 0, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle, 17, 0, Class, X, "X->Y->Z->W->X", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle, 22, 0, Class, Y, "Y->Z->W->X->Y", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle, 27, 0, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
+@Input { class_hier_cycle.bon }
+@Output { < CycleInRelationsError, #File:class_hier_cycle.bon, 12, 0, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 17, 0, Class, X, "X->Y->Z->W->X", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 22, 0, Class, Y, "Y->Z->W->X->Y", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 27, 0, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
 
 @Test-name: "Class not in any cluster."
 @Prog-args: {--informal}
 @Location { misc/ }
-@Input { class_not_in_cluster }
-@Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster, 4, 0, X > }
+@Input { class_not_in_cluster.bon }
+@Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster.bon, 4, 0, X > }
 
 @Test-name: "Cluster not in any cluster or system."
 @Prog-args: {--informal}
 @Location { misc/ }
-@Input { clus_not_in_clus_or_sys }
-@Output { < ClusterNotInAnyClusterOrSystemError, #File:clus_not_in_clus_or_sys, 12, 0, Z > }
+@Input { clus_not_in_clus_or_sys.bon }
+@Output { < ClusterNotInAnyClusterOrSystemError, #File:clus_not_in_clus_or_sys.bon, 12, 0, Z > }
 
 @Test-name: "Class has self as parent (informal)."
 @Prog-args: {--informal}
 @Location { misc/ }
-@Input { self_as_super1 }
-@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1, 9, 12, C >,
-          < CycleInRelationsError, #File:self_as_super1, 9, 0, Class, C, "C->C->C", "class hierarchy" > }
+@Input { self_as_super1.bon }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1.bon, 9, 12, C >,
+          < CycleInRelationsError, #File:self_as_super1.bon, 9, 0, Class, C, "C->C->C", "class hierarchy" > }
 
 @Test-name: "Class has self as parent (formal)."
 @Prog-args: {--formal}
 @Location { misc/ }
-@Input { self_as_super2 }
-@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2, 7, 4, X > }
+@Input { self_as_super2.bon }
+@Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super2.bon, 8, 6, X > }
 
 @Test-name: "Connector system."
 @Prog-args: {--informal}
@@ -186,7 +186,7 @@
 @Test-name: "Identifier uniqueness."
 @Location { misc/ }
 @Input { uniqueness.bon }
-@Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 0, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7, 0 >,
+@Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 12, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7, 0 >,
           < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14, 0 >, 
           < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24, 3 >,
           < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29, 2 > }
@@ -209,67 +209,67 @@
 @Test-name: "BON book dynamic diagram examples"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { dynamicdiagram1, dynamicdiagram2, dynamicdiagram3 }
+@Input { dynamicdiagram1.bon, dynamicdiagram2.bon, dynamicdiagram3.bon }
 
 @Test-name: "BON book class chart example"
 @Location { book/ }
-@Input { classchart }
+@Input { classchart.bon }
 
 @Test-name: "BON book cluster chart example"
 @Location { book/ }
-@Input { clusterchart }
+@Input { clusterchart.bon }
 @Output { < SystemNotDefinedError >,
-          < ClusterNotInAnyClusterOrSystemError, #File:clusterchart, 1, 0, ORGANIZATION > }
+          < ClusterNotInAnyClusterOrSystemError, #File:clusterchart.bon, 1, 0, ORGANIZATION > }
 
 @Test-name: "BON book static diagram example #1"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram3 }
+@Input { staticdiagram3.bon }
 
 @Test-name: "BON book static diagram example #2"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram4 }
+@Input { staticdiagram4.bon }
 
 @Test-name: "BON book static diagram example #3"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram8 }
+@Input { staticdiagram8.bon }
 
 @Test-name: "BON book static diagram example #4"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram9 }
+@Input { staticdiagram9.bon }
 
 @Test-name: "BON book static diagram example #5"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram12 }
+@Input { staticdiagram12.bon }
 
 @Test-name: "BON book static diagram example #6"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram13 }
+@Input { staticdiagram13.bon }
 
 @Test-name: "BON book static diagram example #5"
 @Prog-args: {--formal}
 @Location { book/ }
-@Input { staticdiagram15 }
+@Input { staticdiagram15.bon }
 
 @Test-name: "Features in the presence of inheritance #1"
 @Prog-args: {--formal}
 @Location { misc/ }
-@Input { feature_inherits }
-@Output { < NoParentDeclaresFeatureError, #File:feature_inherits, 7, 16, Y, K, effective > }
+@Input { feature_inherits.bon }
+@Output { < NoParentDeclaresFeatureError, #File:feature_inherits.bon, 7, 16, Y, K, effective > }
 
 @Test-name: "Features in the presence of inheritance #2"
 @Prog-args: {--formal}
 @Location { misc/ }
-@Input { feature_inherits2 }
-@Output { < ParentFeatureNotDeferredError, #File:feature_inherits2, 9, 16, K, Y > }
+@Input { feature_inherits2.bon }
+@Output { < ParentFeatureNotDeferredError, #File:feature_inherits2.bon, 9, 16, K, Y > }
 
 @Test-name: "Features in the presence of inheritance #3"
 @Prog-args: {--formal}
 @Location { misc/ }
-@Input { feature_inherits3 }
-@Output { < ParentFeatureIsDeferredError, #File:feature_inherits3, 10, 16, K, Y > }
+@Input { feature_inherits3.bon }
+@Output { < ParentFeatureIsDeferredError, #File:feature_inherits3.bon, 10, 16, K, Y > }
