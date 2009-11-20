@@ -48,7 +48,7 @@ public class Tester {
 
     int countPassed = testCases.size() - countFailed;
 
-    System.out.println("All tests completed.");
+    System.out.println("***** All tests completed. *************");
     System.out.println("****************************************");
     System.out.println("Summary:");
     System.out.println("\tTests Passed: " + countPassed);

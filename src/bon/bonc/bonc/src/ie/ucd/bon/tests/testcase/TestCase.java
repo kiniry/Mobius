@@ -8,6 +8,7 @@ import ie.ucd.bon.Main;
 import ie.ucd.bon.errorreporting.BONProblem;
 import ie.ucd.bon.errorreporting.Problems;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -85,24 +86,12 @@ public class TestCase {
       runString.append(' ');
     }
 
-    System.out.print("Test #" + testNumber);
-    if (testName != null) {
-      System.out.print(" (" + testName + ")");
-    }
-    System.out.println();
-    //System.out.println("Runstring: *" + runString + "*");
-
     //We don't want to print any output from the test run
     PrintStream oldOut = System.out;
     PrintStream oldErr = System.err;
-    //TODO It would probably be even faster to have a NullPrintStream here
+    //It would probably be even faster to have a NullPrintStream here
     System.setOut(out);
     System.setErr(err);
-    System.out.println();
-    System.out.print("Test #" + testNumber);
-    if (testName != null) {
-      System.out.println(" (" + testName + ")");
-    }
 
     String runStringS = runString.toString().trim();
     Problems foundProblems;
@@ -126,25 +115,18 @@ public class TestCase {
         desiredProblems.addProblem(problem);
       }
     }
+    
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-//    System.out.println("Found:");
-//    System.out.println(foundProblems);
-//    System.out.println("Desired");
-//    System.out.println(desiredProblems);
-
-    boolean passed = foundProblems.testEquality(desiredProblems, System.out);
+    boolean passed = foundProblems.testEquality(desiredProblems, new PrintStream(baos));
     if (!passed) {
       System.out.print("***Test #" + testNumber);
       if (testName != null) {
         System.out.print(" (" + testName + ")");
       }
       System.out.println(" failed.");
-    } else {
-      System.out.print("Test #" + testNumber);
-      if (testName != null) {
-        System.out.print(" (" + testName + ")");
-      }
-      System.out.println(" passed successfully.");
+      System.out.println(baos.toString());
+      System.out.println("****************************************");
     }
 
     return passed;
