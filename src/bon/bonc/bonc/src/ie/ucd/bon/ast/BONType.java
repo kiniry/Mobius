@@ -6,12 +6,17 @@ package ie.ucd.bon.ast;
 
 import ie.ucd.bon.source.SourceLocation;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BONType extends Type {
 
+  public static final BONType voidType(SourceLocation loc) {
+    return new BONType("Void", new ArrayList<Type>(0), "Void", loc);
+  }
+  
   private static Map<String,BONType> typeMap = new HashMap<String,BONType>();
 
   public BONType(String identifier, List<Type> actualGenerics,

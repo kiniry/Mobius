@@ -1,4 +1,4 @@
-// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-11-18 14:16:57
+// $ANTLR 3.1.3 Apr 15, 2009 15:48:38 BON.g 2009-11-20 10:00:41
 
 /**
  * Copyright (c) 2007, Fintan Fairmichael, University College Dublin under the BSD licence.
@@ -1190,10 +1190,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__74;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:61:7: ( 'require' )
-            // BON.g:61:9: 'require'
+            // BON.g:61:7: ( 'Void' )
+            // BON.g:61:9: 'Void'
             {
-            match("require"); 
+            match("Void"); 
 
 
             }
@@ -1211,10 +1211,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__75;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:62:7: ( 'ensure' )
-            // BON.g:62:9: 'ensure'
+            // BON.g:62:7: ( 'require' )
+            // BON.g:62:9: 'require'
             {
-            match("ensure"); 
+            match("require"); 
 
 
             }
@@ -1232,10 +1232,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__76;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:63:7: ( '^' )
-            // BON.g:63:9: '^'
+            // BON.g:63:7: ( 'ensure' )
+            // BON.g:63:9: 'ensure'
             {
-            match('^'); 
+            match("ensure"); 
+
 
             }
 
@@ -1252,11 +1253,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__77;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:64:7: ( '<-' )
-            // BON.g:64:9: '<-'
+            // BON.g:64:7: ( '^' )
+            // BON.g:64:9: '^'
             {
-            match("<-"); 
-
+            match('^'); 
 
             }
 
@@ -1273,10 +1273,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__78;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:65:7: ( 'prefix' )
-            // BON.g:65:9: 'prefix'
+            // BON.g:65:7: ( '<-' )
+            // BON.g:65:9: '<-'
             {
-            match("prefix"); 
+            match("<-"); 
 
 
             }
@@ -1294,10 +1294,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__79;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:66:7: ( '\"' )
-            // BON.g:66:9: '\"'
+            // BON.g:66:7: ( 'prefix' )
+            // BON.g:66:9: 'prefix'
             {
-            match('\"'); 
+            match("prefix"); 
+
 
             }
 
@@ -1314,11 +1315,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__80;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:67:7: ( 'infix' )
-            // BON.g:67:9: 'infix'
+            // BON.g:67:7: ( '\"' )
+            // BON.g:67:9: '\"'
             {
-            match("infix"); 
-
+            match('\"'); 
 
             }
 
@@ -1335,10 +1335,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__81;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:68:7: ( 'for_all' )
-            // BON.g:68:9: 'for_all'
+            // BON.g:68:7: ( 'infix' )
+            // BON.g:68:9: 'infix'
             {
-            match("for_all"); 
+            match("infix"); 
 
 
             }
@@ -1356,10 +1356,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__82;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:69:7: ( 'exists' )
-            // BON.g:69:9: 'exists'
+            // BON.g:69:7: ( 'for_all' )
+            // BON.g:69:9: 'for_all'
             {
-            match("exists"); 
+            match("for_all"); 
 
 
             }
@@ -1377,10 +1377,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__83;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:70:7: ( 'such_that' )
-            // BON.g:70:9: 'such_that'
+            // BON.g:70:7: ( 'exists' )
+            // BON.g:70:9: 'exists'
             {
-            match("such_that"); 
+            match("exists"); 
 
 
             }
@@ -1398,10 +1398,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__84;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:71:7: ( 'it_holds' )
-            // BON.g:71:9: 'it_holds'
+            // BON.g:71:7: ( 'such_that' )
+            // BON.g:71:9: 'such_that'
             {
-            match("it_holds"); 
+            match("such_that"); 
 
 
             }
@@ -1419,10 +1419,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__85;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:72:7: ( 'member_of' )
-            // BON.g:72:9: 'member_of'
+            // BON.g:72:7: ( 'it_holds' )
+            // BON.g:72:9: 'it_holds'
             {
-            match("member_of"); 
+            match("it_holds"); 
 
 
             }
@@ -1440,10 +1440,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__86;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:73:7: ( '..' )
-            // BON.g:73:9: '..'
+            // BON.g:73:7: ( 'member_of' )
+            // BON.g:73:9: 'member_of'
             {
-            match(".."); 
+            match("member_of"); 
 
 
             }
@@ -1461,10 +1461,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__87;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:74:7: ( 'Current' )
-            // BON.g:74:9: 'Current'
+            // BON.g:74:7: ( '..' )
+            // BON.g:74:9: '..'
             {
-            match("Current"); 
+            match(".."); 
 
 
             }
@@ -1482,10 +1482,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = T__88;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:75:7: ( 'Void' )
-            // BON.g:75:9: 'Void'
+            // BON.g:75:7: ( 'Current' )
+            // BON.g:75:9: 'Current'
             {
-            match("Void"); 
+            match("Current"); 
 
 
             }
@@ -2170,8 +2170,8 @@ public class BONLexer extends AbstractBONLexer {
             int _channel = DEFAULT_TOKEN_CHANNEL;
             int v;
 
-            // BON.g:1299:20: ( '\\'' v= . '\\'' )
-            // BON.g:1299:23: '\\'' v= . '\\''
+            // BON.g:1303:20: ( '\\'' v= . '\\'' )
+            // BON.g:1303:23: '\\'' v= . '\\''
             {
             match('\''); 
             v = input.LA(1);
@@ -2193,11 +2193,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1680:17: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"' )
-            // BON.g:1680:19: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"'
+            // BON.g:1684:17: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"' )
+            // BON.g:1684:19: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )* '\"'
             {
             match('\"'); 
-            // BON.g:1681:19: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )*
+            // BON.g:1685:19: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )*
             loop1:
             do {
                 int alt1=2;
@@ -2213,7 +2213,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // BON.g:1681:46: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
+            	    // BON.g:1685:46: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2250,11 +2250,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_START;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1691:27: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
-            // BON.g:1691:29: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
+            // BON.g:1695:27: ( '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
+            // BON.g:1695:29: '\"' ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
             {
             match('\"'); 
-            // BON.g:1691:33: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+
+            // BON.g:1695:33: ( options {greedy=false; } : ~ ( '\\n' | '\\r' | '\"' | '\\\\' ) )+
             int cnt2=0;
             loop2:
             do {
@@ -2271,7 +2271,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt2) {
             	case 1 :
-            	    // BON.g:1691:60: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
+            	    // BON.g:1695:60: ~ ( '\\n' | '\\r' | '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2296,7 +2296,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('\\'); 
-            // BON.g:1691:90: ( ' ' | '\\t' )*
+            // BON.g:1695:90: ( ' ' | '\\t' )*
             loop3:
             do {
                 int alt3=2;
@@ -2346,11 +2346,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_MIDDLE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1694:28: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
-            // BON.g:1694:30: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
+            // BON.g:1698:28: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE )
+            // BON.g:1698:30: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\\\\' ( ' ' | '\\t' )* NEWLINE
             {
             match('\\'); 
-            // BON.g:1694:35: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
+            // BON.g:1698:35: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
             int cnt4=0;
             loop4:
             do {
@@ -2367,7 +2367,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // BON.g:1694:62: ~ ( '\"' | '\\\\' )
+            	    // BON.g:1698:62: ~ ( '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2392,7 +2392,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('\\'); 
-            // BON.g:1694:82: ( ' ' | '\\t' )*
+            // BON.g:1698:82: ( ' ' | '\\t' )*
             loop5:
             do {
                 int alt5=2;
@@ -2442,11 +2442,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = MANIFEST_TEXTBLOCK_END;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1697:25: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"' )
-            // BON.g:1697:27: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"'
+            // BON.g:1701:25: ( '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"' )
+            // BON.g:1701:27: '\\\\' ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+ '\"'
             {
             match('\\'); 
-            // BON.g:1697:32: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
+            // BON.g:1701:32: ( options {greedy=false; } : ~ ( '\"' | '\\\\' ) )+
             int cnt6=0;
             loop6:
             do {
@@ -2463,7 +2463,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt6) {
             	case 1 :
-            	    // BON.g:1697:59: ~ ( '\"' | '\\\\' )
+            	    // BON.g:1701:59: ~ ( '\"' | '\\\\' )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -2504,10 +2504,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1709:10: ( ( LINE_COMMENT )+ )
-            // BON.g:1709:13: ( LINE_COMMENT )+
+            // BON.g:1713:10: ( ( LINE_COMMENT )+ )
+            // BON.g:1713:13: ( LINE_COMMENT )+
             {
-            // BON.g:1709:13: ( LINE_COMMENT )+
+            // BON.g:1713:13: ( LINE_COMMENT )+
             int cnt7=0;
             loop7:
             do {
@@ -2521,7 +2521,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt7) {
             	case 1 :
-            	    // BON.g:1709:13: LINE_COMMENT
+            	    // BON.g:1713:13: LINE_COMMENT
             	    {
             	    mLINE_COMMENT(); 
 
@@ -2552,11 +2552,11 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LINE_COMMENT"
     public final void mLINE_COMMENT() throws RecognitionException {
         try {
-            // BON.g:1713:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
-            // BON.g:1713:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
+            // BON.g:1717:15: ( COMMENT_START ( options {greedy=false; } : . )* NEWLINE )
+            // BON.g:1717:18: COMMENT_START ( options {greedy=false; } : . )* NEWLINE
             {
             mCOMMENT_START(); 
-            // BON.g:1713:32: ( options {greedy=false; } : . )*
+            // BON.g:1717:32: ( options {greedy=false; } : . )*
             loop8:
             do {
                 int alt8=2;
@@ -2575,7 +2575,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // BON.g:1713:59: .
+            	    // BON.g:1717:59: .
             	    {
             	    matchAny(); 
 
@@ -2600,8 +2600,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "COMMENT_START"
     public final void mCOMMENT_START() throws RecognitionException {
         try {
-            // BON.g:1717:16: ( '--' )
-            // BON.g:1717:18: '--'
+            // BON.g:1721:16: ( '--' )
+            // BON.g:1721:18: '--'
             {
             match("--"); 
 
@@ -2617,10 +2617,10 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "NEWLINE"
     public final void mNEWLINE() throws RecognitionException {
         try {
-            // BON.g:1721:10: ( ( '\\r' )? '\\n' )
-            // BON.g:1721:13: ( '\\r' )? '\\n'
+            // BON.g:1725:10: ( ( '\\r' )? '\\n' )
+            // BON.g:1725:13: ( '\\r' )? '\\n'
             {
-            // BON.g:1721:13: ( '\\r' )?
+            // BON.g:1725:13: ( '\\r' )?
             int alt9=2;
             int LA9_0 = input.LA(1);
 
@@ -2629,7 +2629,7 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt9) {
                 case 1 :
-                    // BON.g:1721:13: '\\r'
+                    // BON.g:1725:13: '\\r'
                     {
                     match('\r'); 
 
@@ -2653,10 +2653,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = INTEGER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1728:10: ( ( DIGIT )+ )
-            // BON.g:1728:13: ( DIGIT )+
+            // BON.g:1732:10: ( ( DIGIT )+ )
+            // BON.g:1732:13: ( DIGIT )+
             {
-            // BON.g:1728:13: ( DIGIT )+
+            // BON.g:1732:13: ( DIGIT )+
             int cnt10=0;
             loop10:
             do {
@@ -2670,7 +2670,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt10) {
             	case 1 :
-            	    // BON.g:1728:14: DIGIT
+            	    // BON.g:1732:14: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2702,10 +2702,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = REAL;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1731:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
-            // BON.g:1731:10: ( DIGIT )+ '.' ( DIGIT )+
+            // BON.g:1735:7: ( ( DIGIT )+ '.' ( DIGIT )+ )
+            // BON.g:1735:10: ( DIGIT )+ '.' ( DIGIT )+
             {
-            // BON.g:1731:10: ( DIGIT )+
+            // BON.g:1735:10: ( DIGIT )+
             int cnt11=0;
             loop11:
             do {
@@ -2719,7 +2719,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt11) {
             	case 1 :
-            	    // BON.g:1731:10: DIGIT
+            	    // BON.g:1735:10: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2736,7 +2736,7 @@ public class BONLexer extends AbstractBONLexer {
             } while (true);
 
             match('.'); 
-            // BON.g:1731:21: ( DIGIT )+
+            // BON.g:1735:21: ( DIGIT )+
             int cnt12=0;
             loop12:
             do {
@@ -2750,7 +2750,7 @@ public class BONLexer extends AbstractBONLexer {
 
                 switch (alt12) {
             	case 1 :
-            	    // BON.g:1731:21: DIGIT
+            	    // BON.g:1735:21: DIGIT
             	    {
             	    mDIGIT(); 
 
@@ -2780,8 +2780,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "DIGIT"
     public final void mDIGIT() throws RecognitionException {
         try {
-            // BON.g:1735:8: ( '0' .. '9' )
-            // BON.g:1735:11: '0' .. '9'
+            // BON.g:1739:8: ( '0' .. '9' )
+            // BON.g:1739:11: '0' .. '9'
             {
             matchRange('0','9'); 
 
@@ -2798,11 +2798,11 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = IDENTIFIER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1748:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
-            // BON.g:1748:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // BON.g:1752:13: ( ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )? )
+            // BON.g:1752:15: ALPHA ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             {
             mALPHA(); 
-            // BON.g:1748:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
+            // BON.g:1752:21: ( ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC )?
             int alt14=2;
             int LA14_0 = input.LA(1);
 
@@ -2811,9 +2811,9 @@ public class BONLexer extends AbstractBONLexer {
             }
             switch (alt14) {
                 case 1 :
-                    // BON.g:1748:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
+                    // BON.g:1752:22: ( ALPHANUMERIC_OR_UNDERSCORE )* ALPHANUMERIC
                     {
-                    // BON.g:1748:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
+                    // BON.g:1752:22: ( ALPHANUMERIC_OR_UNDERSCORE )*
                     loop13:
                     do {
                         int alt13=2;
@@ -2835,7 +2835,7 @@ public class BONLexer extends AbstractBONLexer {
 
                         switch (alt13) {
                     	case 1 :
-                    	    // BON.g:1748:22: ALPHANUMERIC_OR_UNDERSCORE
+                    	    // BON.g:1752:22: ALPHANUMERIC_OR_UNDERSCORE
                     	    {
                     	    mALPHANUMERIC_OR_UNDERSCORE(); 
 
@@ -2868,7 +2868,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC_OR_UNDERSCORE"
     public final void mALPHANUMERIC_OR_UNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1754:29: ( ALPHANUMERIC | UNDERSCORE )
+            // BON.g:1758:29: ( ALPHANUMERIC | UNDERSCORE )
             // BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2892,8 +2892,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UNDERSCORE"
     public final void mUNDERSCORE() throws RecognitionException {
         try {
-            // BON.g:1758:13: ( '_' )
-            // BON.g:1758:16: '_'
+            // BON.g:1762:13: ( '_' )
+            // BON.g:1762:16: '_'
             {
             match('_'); 
 
@@ -2908,7 +2908,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHANUMERIC"
     public final void mALPHANUMERIC() throws RecognitionException {
         try {
-            // BON.g:1762:15: ( ALPHA | DIGIT )
+            // BON.g:1766:15: ( ALPHA | DIGIT )
             // BON.g:
             {
             if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2932,7 +2932,7 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "ALPHA"
     public final void mALPHA() throws RecognitionException {
         try {
-            // BON.g:1766:8: ( LOWER | UPPER )
+            // BON.g:1770:8: ( LOWER | UPPER )
             // BON.g:
             {
             if ( (input.LA(1)>='A' && input.LA(1)<='Z')||(input.LA(1)>='a' && input.LA(1)<='z') ) {
@@ -2956,8 +2956,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "LOWER"
     public final void mLOWER() throws RecognitionException {
         try {
-            // BON.g:1770:8: ( 'a' .. 'z' )
-            // BON.g:1770:10: 'a' .. 'z'
+            // BON.g:1774:8: ( 'a' .. 'z' )
+            // BON.g:1774:10: 'a' .. 'z'
             {
             matchRange('a','z'); 
 
@@ -2972,8 +2972,8 @@ public class BONLexer extends AbstractBONLexer {
     // $ANTLR start "UPPER"
     public final void mUPPER() throws RecognitionException {
         try {
-            // BON.g:1774:8: ( 'A' .. 'Z' )
-            // BON.g:1774:10: 'A' .. 'Z'
+            // BON.g:1778:8: ( 'A' .. 'Z' )
+            // BON.g:1778:10: 'A' .. 'Z'
             {
             matchRange('A','Z'); 
 
@@ -2990,10 +2990,10 @@ public class BONLexer extends AbstractBONLexer {
         try {
             int _type = WHITESPACE;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // BON.g:1781:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
-            // BON.g:1781:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // BON.g:1785:13: ( ( ' ' | '\\n' | '\\r' | '\\t' )+ )
+            // BON.g:1785:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             {
-            // BON.g:1781:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
+            // BON.g:1785:16: ( ' ' | '\\n' | '\\r' | '\\t' )+
             int cnt15=0;
             loop15:
             do {
@@ -3806,66 +3806,65 @@ public class BONLexer extends AbstractBONLexer {
     protected DFA16 dfa16 = new DFA16(this);
     static final String DFA16_eotS =
         "\1\uffff\6\52\1\uffff\1\101\1\uffff\1\52\2\uffff\2\52\2\uffff\1"+
-        "\113\2\uffff\1\115\1\52\1\uffff\1\123\1\126\10\52\1\uffff\1\52\1"+
+        "\113\2\uffff\1\115\2\52\1\uffff\1\124\1\125\7\52\1\uffff\1\52\1"+
         "\143\1\uffff\1\146\3\uffff\1\151\2\uffff\24\52\2\uffff\3\52\1\u008f"+
-        "\3\52\3\uffff\1\u0096\1\uffff\3\52\1\u009b\5\uffff\13\52\11\uffff"+
-        "\5\52\1\u00af\27\52\1\uffff\6\52\1\uffff\1\u00d1\4\52\2\uffff\3"+
-        "\52\3\uffff\6\52\1\u00df\1\52\1\u00e1\1\52\1\u00e3\2\uffff\5\52"+
-        "\1\uffff\33\52\1\u0104\5\52\1\uffff\3\52\1\u010d\1\52\1\uffff\3"+
-        "\52\1\u0113\1\52\1\u0115\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff"+
+        "\3\52\3\uffff\1\u0096\1\uffff\4\52\1\u009c\5\uffff\12\52\11\uffff"+
+        "\5\52\1\u00af\27\52\1\uffff\6\52\1\uffff\1\u00d1\4\52\2\uffff\4"+
+        "\52\3\uffff\5\52\1\u00df\1\52\1\u00e1\1\52\1\u00e3\2\uffff\5\52"+
+        "\1\uffff\33\52\1\u0104\5\52\1\uffff\3\52\1\u010d\1\52\1\uffff\1"+
+        "\52\1\u0111\3\52\1\u0115\1\52\1\uffff\1\52\1\uffff\1\52\1\uffff"+
         "\3\52\1\u011c\4\52\1\u0122\1\52\1\u0125\7\52\1\u012f\4\52\1\uffff"+
         "\6\52\1\u013b\1\52\1\uffff\2\52\1\u013f\5\52\1\uffff\2\52\1\u0147"+
-        "\2\52\1\uffff\1\52\1\uffff\6\52\1\uffff\1\52\1\u0152\1\52\1\u0154"+
-        "\2\uffff\1\52\2\uffff\1\52\1\u0159\7\52\1\uffff\13\52\1\uffff\2"+
-        "\52\1\u016e\1\uffff\1\52\1\u0171\1\u0172\4\52\1\uffff\2\52\1\u0179"+
-        "\1\u017a\6\52\1\uffff\1\52\1\uffff\3\52\1\u0186\1\uffff\1\u0187"+
-        "\4\52\1\u018c\1\u018d\1\uffff\1\52\2\uffff\2\52\1\u0194\6\52\1\uffff"+
-        "\1\52\3\uffff\1\52\1\u019f\1\u01a0\1\u01a1\1\uffff\1\u01a3\2\uffff"+
-        "\4\52\1\u01a8\1\uffff\4\52\3\uffff\4\52\2\uffff\1\52\1\u01b5\3\52"+
-        "\1\u01b9\1\uffff\1\u01ba\1\u01bb\2\52\1\u01be\1\52\1\u01c0\3\52"+
-        "\3\uffff\1\52\1\uffff\1\u01c5\1\uffff\2\52\1\uffff\3\52\1\u01cc"+
-        "\2\52\1\u01cf\2\52\1\uffff\1\52\2\uffff\2\52\1\u01d7\3\uffff\1\u01d8"+
-        "\1\52\1\uffff\1\52\1\uffff\2\52\1\u01dd\1\u01de\1\uffff\1\52\1\u01e0"+
-        "\4\52\1\uffff\2\52\1\uffff\1\u01e7\6\52\2\uffff\1\u01ee\1\u01ef"+
-        "\2\52\2\uffff\1\52\1\uffff\1\u01f3\1\52\1\u01f5\1\u01f6\1\u01f7"+
-        "\1\52\1\uffff\6\52\2\uffff\3\52\1\uffff\1\52\3\uffff\1\52\1\u0204"+
-        "\1\52\1\u0206\2\52\1\u0209\1\u020a\1\u020b\2\52\1\u020e\1\uffff"+
-        "\1\52\1\uffff\2\52\3\uffff\2\52\1\uffff\1\u0214\1\u0215\1\u0216"+
-        "\1\u0217\1\u0218\5\uffff";
+        "\1\uffff\3\52\1\uffff\6\52\1\uffff\1\52\1\u0152\1\52\1\u0154\2\uffff"+
+        "\1\52\2\uffff\1\52\1\u0159\7\52\1\uffff\13\52\1\uffff\2\52\1\u016e"+
+        "\1\uffff\1\52\1\u0171\1\u0172\4\52\1\uffff\2\52\1\u0179\1\u017a"+
+        "\6\52\1\uffff\1\52\1\uffff\3\52\1\u0186\1\uffff\1\u0187\4\52\1\u018c"+
+        "\1\u018d\1\uffff\1\52\2\uffff\2\52\1\u0194\6\52\1\uffff\1\52\3\uffff"+
+        "\1\52\1\u019f\1\u01a0\1\u01a1\1\uffff\1\u01a3\2\uffff\4\52\1\u01a8"+
+        "\1\uffff\4\52\3\uffff\4\52\2\uffff\1\52\1\u01b5\3\52\1\u01b9\1\uffff"+
+        "\1\u01ba\1\u01bb\2\52\1\u01be\1\52\1\u01c0\3\52\3\uffff\1\52\1\uffff"+
+        "\1\u01c5\1\uffff\2\52\1\uffff\3\52\1\u01cc\2\52\1\u01cf\2\52\1\uffff"+
+        "\1\52\2\uffff\2\52\1\u01d7\3\uffff\1\u01d8\1\52\1\uffff\1\52\1\uffff"+
+        "\2\52\1\u01dd\1\u01de\1\uffff\1\52\1\u01e0\4\52\1\uffff\2\52\1\uffff"+
+        "\1\u01e7\6\52\2\uffff\1\u01ee\1\u01ef\2\52\2\uffff\1\52\1\uffff"+
+        "\1\u01f3\1\52\1\u01f5\1\u01f6\1\u01f7\1\52\1\uffff\6\52\2\uffff"+
+        "\3\52\1\uffff\1\52\3\uffff\1\52\1\u0204\1\52\1\u0206\2\52\1\u0209"+
+        "\1\u020a\1\u020b\2\52\1\u020e\1\uffff\1\52\1\uffff\2\52\3\uffff"+
+        "\2\52\1\uffff\1\u0214\1\u0215\1\u0216\1\u0217\1\u0218\5\uffff";
     static final String DFA16_eofS =
         "\u0219\uffff";
     static final String DFA16_minS =
         "\1\11\1\145\1\146\1\141\1\143\1\156\1\141\1\uffff\1\173\1\uffff"+
-        "\1\165\2\uffff\1\142\1\145\2\uffff\1\55\2\uffff\1\56\1\141\1\uffff"+
-        "\1\55\1\0\1\145\1\165\1\157\1\145\1\162\1\143\1\141\1\145\1\uffff"+
+        "\1\165\2\uffff\1\142\1\145\2\uffff\1\55\2\uffff\1\56\1\141\1\157"+
+        "\1\uffff\1\55\1\0\1\145\1\165\1\145\1\162\1\143\1\141\1\145\1\uffff"+
         "\1\157\1\75\1\uffff\1\57\1\uffff\1\0\1\uffff\1\56\2\uffff\1\143"+
         "\1\146\1\156\1\144\1\151\1\145\1\146\1\141\1\155\1\145\1\154\1\163"+
         "\1\145\1\141\2\143\1\137\2\162\1\145\2\uffff\1\145\1\164\1\152\1"+
-        "\60\2\144\1\157\3\uffff\1\56\1\uffff\1\141\1\162\1\154\1\76\2\uffff"+
-        "\1\0\2\uffff\1\155\1\162\1\151\1\163\1\165\1\164\1\144\1\155\1\164"+
-        "\1\171\1\162\6\uffff\1\0\2\uffff\1\164\1\143\1\145\1\164\1\141\1"+
-        "\60\1\165\1\154\1\163\1\156\1\145\2\163\1\145\1\155\1\143\1\141"+
+        "\60\2\144\1\157\3\uffff\1\56\1\uffff\1\141\1\162\1\154\1\151\1\76"+
+        "\3\uffff\1\0\1\uffff\1\155\1\162\1\163\1\165\1\164\1\144\1\155\1"+
+        "\164\1\171\1\162\6\uffff\1\0\2\uffff\1\164\1\143\1\145\1\164\1\141"+
+        "\1\60\1\165\1\154\1\163\1\156\1\145\2\163\1\145\1\155\1\143\1\141"+
         "\1\154\1\164\1\156\1\164\1\151\1\150\2\145\1\157\1\141\1\145\1\151"+
         "\1\60\1\164\1\163\1\146\1\162\1\147\1\145\1\uffff\1\60\1\163\1\145"+
-        "\1\165\1\164\2\uffff\1\164\1\137\1\163\3\uffff\1\142\1\162\1\144"+
+        "\1\165\1\164\2\uffff\1\164\1\137\1\163\1\144\3\uffff\1\142\1\162"+
         "\1\165\1\145\1\151\1\60\1\145\1\60\1\167\1\60\2\uffff\1\151\2\162"+
         "\1\141\1\155\1\uffff\1\162\1\141\2\164\1\143\1\163\1\164\1\156\1"+
         "\141\1\157\1\164\1\141\1\164\1\163\1\145\1\141\1\151\1\156\1\137"+
         "\1\170\1\162\1\155\1\154\2\162\1\170\1\157\1\60\2\151\1\171\1\157"+
-        "\1\143\1\uffff\1\145\1\146\1\151\1\60\1\165\1\60\3\145\1\60\1\154"+
-        "\1\60\1\157\1\uffff\1\154\1\uffff\1\157\1\uffff\1\157\1\151\1\162"+
-        "\1\60\1\151\1\145\1\156\1\163\1\60\1\164\1\60\1\145\1\164\2\156"+
-        "\1\162\1\164\1\145\1\60\1\155\1\162\1\143\1\147\1\60\3\151\1\166"+
-        "\1\151\1\146\1\60\1\154\1\uffff\1\163\1\170\1\60\1\151\1\164\1\144"+
-        "\1\151\1\162\1\uffff\1\162\1\154\1\60\1\162\1\156\1\uffff\1\164"+
-        "\1\uffff\1\156\1\145\1\162\1\156\1\160\1\145\1\uffff\1\143\1\60"+
-        "\1\141\2\60\1\uffff\1\151\1\60\1\uffff\1\162\1\60\1\144\1\145\1"+
-        "\141\1\145\1\157\1\162\1\163\1\uffff\1\137\1\151\2\137\1\150\1\156"+
-        "\1\164\1\156\1\145\2\141\1\uffff\1\144\1\164\1\60\1\uffff\1\156"+
-        "\2\60\1\156\2\145\1\154\1\uffff\1\137\1\164\2\60\1\163\1\144\1\141"+
-        "\1\164\1\144\1\137\1\uffff\1\164\1\uffff\1\150\1\166\1\150\1\60"+
-        "\1\uffff\1\60\1\156\1\151\2\156\3\60\1\157\2\60\1\141\1\147\1\60"+
-        "\1\147\1\163\1\156\1\143\1\163\1\145\1\uffff\1\147\1\60\2\uffff"+
+        "\1\143\1\uffff\1\145\1\146\1\151\1\60\1\165\1\60\1\145\1\60\2\145"+
+        "\1\154\1\60\1\157\1\uffff\1\154\1\uffff\1\157\1\uffff\1\157\1\151"+
+        "\1\162\1\60\1\151\1\145\1\156\1\163\1\60\1\164\1\60\1\145\1\164"+
+        "\2\156\1\162\1\164\1\145\1\60\1\155\1\162\1\143\1\147\1\60\3\151"+
+        "\1\166\1\151\1\146\1\60\1\154\1\uffff\1\163\1\170\1\60\1\151\1\164"+
+        "\1\144\1\151\1\162\1\uffff\1\162\1\154\1\60\1\uffff\1\162\1\156"+
+        "\1\164\1\uffff\1\156\1\145\1\162\1\156\1\160\1\145\1\uffff\1\143"+
+        "\1\60\1\141\2\60\1\uffff\1\151\1\60\1\uffff\1\162\1\60\1\144\1\145"+
+        "\1\141\1\145\1\157\1\162\1\163\1\uffff\1\137\1\151\2\137\1\150\1"+
+        "\156\1\164\1\156\1\145\2\141\1\uffff\1\144\1\164\1\60\1\uffff\1"+
+        "\156\2\60\1\156\2\145\1\154\1\uffff\1\137\1\164\2\60\1\163\1\144"+
+        "\1\141\1\164\1\144\1\137\1\uffff\1\164\1\uffff\1\150\1\166\1\150"+
+        "\1\60\1\uffff\1\60\1\156\1\151\2\156\3\60\1\157\2\60\1\141\1\147"+
+        "\1\60\1\147\1\163\1\156\1\143\1\163\1\145\1\uffff\1\147\1\60\2\uffff"+
         "\1\145\5\60\2\uffff\1\163\1\137\1\162\1\151\2\60\1\151\1\141\1\145"+
         "\1\141\1\60\2\uffff\1\164\1\156\1\141\1\137\2\uffff\1\150\1\60\1"+
         "\151\1\141\1\164\1\60\1\uffff\2\60\1\164\1\145\1\60\1\156\1\60\1"+
@@ -3881,77 +3880,77 @@ public class BONLexer extends AbstractBONLexer {
         "\1\170\1\155\1\uffff\5\60\5\uffff";
     static final String DFA16_maxS =
         "\1\175\1\171\1\170\1\162\1\171\1\164\1\162\1\uffff\1\173\1\uffff"+
-        "\1\165\2\uffff\1\165\1\157\2\uffff\1\76\2\uffff\1\56\1\157\1\uffff"+
-        "\1\75\1\uffff\1\145\1\165\1\157\1\145\1\162\1\156\1\157\1\145\1"+
-        "\uffff\1\157\1\75\1\uffff\1\75\1\uffff\1\uffff\1\uffff\1\71\2\uffff"+
-        "\1\143\1\163\1\156\1\163\1\160\1\145\1\146\1\165\1\156\1\145\1\154"+
+        "\1\165\2\uffff\1\165\1\157\2\uffff\1\76\2\uffff\1\56\2\157\1\uffff"+
+        "\1\75\1\uffff\1\145\1\165\1\145\1\162\1\156\1\157\1\145\1\uffff"+
+        "\1\157\1\75\1\uffff\1\75\1\uffff\1\uffff\1\uffff\1\71\2\uffff\1"+
+        "\143\1\163\1\156\1\163\1\160\1\145\1\146\1\165\1\156\1\145\1\154"+
         "\1\163\1\145\1\162\1\143\1\166\1\137\2\162\1\145\2\uffff\1\145\1"+
         "\164\1\152\1\172\1\144\1\165\1\157\3\uffff\1\56\1\uffff\1\141\1"+
-        "\162\1\154\1\76\2\uffff\1\uffff\2\uffff\1\155\1\162\1\151\1\163"+
+        "\162\1\154\1\151\1\76\3\uffff\1\uffff\1\uffff\1\155\1\162\1\163"+
         "\1\165\1\164\1\144\1\155\1\164\1\171\1\162\6\uffff\1\uffff\2\uffff"+
         "\1\164\1\143\1\145\1\164\1\141\1\172\1\165\1\154\1\163\1\156\1\145"+
         "\2\163\1\145\1\160\1\163\1\141\1\154\1\164\1\156\1\164\1\151\1\150"+
         "\2\145\2\157\1\145\1\151\1\172\1\164\1\163\1\146\1\162\1\147\1\145"+
         "\1\uffff\1\172\1\163\1\145\1\165\1\164\2\uffff\1\164\1\137\1\163"+
-        "\3\uffff\1\142\1\162\1\144\1\165\1\145\1\151\1\172\1\145\1\172\1"+
+        "\1\144\3\uffff\1\142\1\162\1\165\1\145\1\151\1\172\1\145\1\172\1"+
         "\167\1\172\2\uffff\1\151\2\162\1\141\1\155\1\uffff\1\162\1\141\2"+
         "\164\1\143\1\163\1\164\1\156\1\141\1\157\1\164\1\141\1\164\1\163"+
         "\1\145\1\141\1\151\1\156\1\137\1\170\1\162\1\155\1\154\2\162\1\170"+
         "\1\157\1\172\2\151\1\171\1\157\1\143\1\uffff\1\145\1\146\1\151\1"+
-        "\172\1\165\1\172\3\145\1\172\1\154\1\172\1\157\1\uffff\1\154\1\uffff"+
-        "\1\157\1\uffff\1\157\1\151\1\162\1\172\1\151\1\145\1\156\1\163\1"+
-        "\172\1\164\1\172\1\145\1\164\2\156\1\162\1\164\1\157\1\172\1\155"+
-        "\1\162\1\143\1\147\1\172\3\151\1\166\1\151\1\146\1\172\1\154\1\uffff"+
-        "\1\163\1\170\1\172\1\151\1\164\1\144\1\151\1\162\1\uffff\1\162\1"+
-        "\154\1\172\1\162\1\156\1\uffff\1\164\1\uffff\1\156\1\145\1\162\1"+
-        "\156\1\160\1\145\1\uffff\1\143\1\172\1\141\2\172\1\uffff\1\151\1"+
-        "\172\1\uffff\1\162\1\172\1\144\1\145\1\141\1\145\1\157\1\162\1\163"+
-        "\1\uffff\1\137\1\151\2\137\1\150\1\156\1\164\1\156\1\145\2\141\1"+
-        "\uffff\1\144\1\164\1\172\1\uffff\1\156\2\172\1\156\2\145\1\154\1"+
-        "\uffff\1\137\1\164\2\172\1\163\1\144\1\141\1\164\1\144\1\137\1\uffff"+
-        "\1\164\1\uffff\1\150\1\166\1\150\1\172\1\uffff\1\172\1\156\1\151"+
-        "\2\156\3\172\1\157\2\172\1\141\1\147\1\172\1\147\1\163\1\156\1\143"+
-        "\1\163\1\145\1\uffff\1\147\1\172\2\uffff\1\145\5\172\2\uffff\1\163"+
-        "\1\137\1\162\1\151\2\172\1\151\1\141\1\145\1\141\1\172\2\uffff\1"+
-        "\164\1\156\1\141\1\137\2\uffff\1\150\1\172\1\151\1\141\1\164\1\172"+
-        "\1\uffff\2\172\1\164\1\145\1\172\1\156\1\172\1\162\1\164\1\144\3"+
-        "\uffff\1\146\1\uffff\2\172\1\171\1\157\1\uffff\1\151\1\157\1\162"+
-        "\1\172\1\162\1\150\1\172\2\164\1\172\1\141\1\172\1\uffff\1\141\1"+
-        "\162\1\172\3\uffff\1\172\1\144\1\uffff\1\164\1\uffff\1\157\1\141"+
-        "\2\172\1\uffff\1\162\1\172\1\156\1\141\1\156\1\164\1\uffff\1\164"+
-        "\1\141\1\uffff\1\172\1\157\1\150\1\162\1\150\1\147\1\153\2\uffff"+
-        "\2\172\1\165\1\143\2\uffff\1\145\1\uffff\1\172\1\147\3\172\1\162"+
-        "\1\uffff\1\162\1\141\1\164\1\141\1\162\1\163\2\uffff\1\160\1\153"+
-        "\1\146\1\uffff\1\162\3\uffff\1\164\1\172\1\162\1\172\1\162\1\141"+
-        "\3\172\1\151\1\141\1\172\1\uffff\1\164\1\uffff\1\164\1\155\3\uffff"+
-        "\1\170\1\155\1\uffff\5\172\5\uffff";
+        "\172\1\165\1\172\1\145\1\172\2\145\1\154\1\172\1\157\1\uffff\1\154"+
+        "\1\uffff\1\157\1\uffff\1\157\1\151\1\162\1\172\1\151\1\145\1\156"+
+        "\1\163\1\172\1\164\1\172\1\145\1\164\2\156\1\162\1\164\1\157\1\172"+
+        "\1\155\1\162\1\143\1\147\1\172\3\151\1\166\1\151\1\146\1\172\1\154"+
+        "\1\uffff\1\163\1\170\1\172\1\151\1\164\1\144\1\151\1\162\1\uffff"+
+        "\1\162\1\154\1\172\1\uffff\1\162\1\156\1\164\1\uffff\1\156\1\145"+
+        "\1\162\1\156\1\160\1\145\1\uffff\1\143\1\172\1\141\2\172\1\uffff"+
+        "\1\151\1\172\1\uffff\1\162\1\172\1\144\1\145\1\141\1\145\1\157\1"+
+        "\162\1\163\1\uffff\1\137\1\151\2\137\1\150\1\156\1\164\1\156\1\145"+
+        "\2\141\1\uffff\1\144\1\164\1\172\1\uffff\1\156\2\172\1\156\2\145"+
+        "\1\154\1\uffff\1\137\1\164\2\172\1\163\1\144\1\141\1\164\1\144\1"+
+        "\137\1\uffff\1\164\1\uffff\1\150\1\166\1\150\1\172\1\uffff\1\172"+
+        "\1\156\1\151\2\156\3\172\1\157\2\172\1\141\1\147\1\172\1\147\1\163"+
+        "\1\156\1\143\1\163\1\145\1\uffff\1\147\1\172\2\uffff\1\145\5\172"+
+        "\2\uffff\1\163\1\137\1\162\1\151\2\172\1\151\1\141\1\145\1\141\1"+
+        "\172\2\uffff\1\164\1\156\1\141\1\137\2\uffff\1\150\1\172\1\151\1"+
+        "\141\1\164\1\172\1\uffff\2\172\1\164\1\145\1\172\1\156\1\172\1\162"+
+        "\1\164\1\144\3\uffff\1\146\1\uffff\2\172\1\171\1\157\1\uffff\1\151"+
+        "\1\157\1\162\1\172\1\162\1\150\1\172\2\164\1\172\1\141\1\172\1\uffff"+
+        "\1\141\1\162\1\172\3\uffff\1\172\1\144\1\uffff\1\164\1\uffff\1\157"+
+        "\1\141\2\172\1\uffff\1\162\1\172\1\156\1\141\1\156\1\164\1\uffff"+
+        "\1\164\1\141\1\uffff\1\172\1\157\1\150\1\162\1\150\1\147\1\153\2"+
+        "\uffff\2\172\1\165\1\143\2\uffff\1\145\1\uffff\1\172\1\147\3\172"+
+        "\1\162\1\uffff\1\162\1\141\1\164\1\141\1\162\1\163\2\uffff\1\160"+
+        "\1\153\1\146\1\uffff\1\162\3\uffff\1\164\1\172\1\162\1\172\1\162"+
+        "\1\141\3\172\1\151\1\141\1\172\1\uffff\1\164\1\uffff\1\164\1\155"+
+        "\3\uffff\1\170\1\155\1\uffff\5\172\5\uffff";
     static final String DFA16_acceptS =
         "\7\uffff\1\12\1\uffff\1\14\1\uffff\1\23\1\24\2\uffff\1\47\1\50\1"+
-        "\uffff\1\53\1\54\2\uffff\1\65\12\uffff\1\120\2\uffff\1\134\1\uffff"+
+        "\uffff\1\53\1\54\3\uffff\1\66\11\uffff\1\120\2\uffff\1\134\1\uffff"+
         "\1\136\1\uffff\1\142\1\uffff\1\152\1\153\24\uffff\1\56\1\13\7\uffff"+
-        "\1\52\1\147\1\121\1\uffff\1\57\4\uffff\1\132\1\130\1\uffff\1\143"+
-        "\1\70\13\uffff\1\133\1\131\1\135\1\140\1\137\1\141\1\uffff\1\150"+
-        "\1\151\44\uffff\1\123\5\uffff\1\55\1\77\3\uffff\1\117\1\66\1\144"+
-        "\13\uffff\1\145\1\146\5\uffff\1\2\41\uffff\1\126\15\uffff\1\122"+
-        "\1\uffff\1\127\1\uffff\1\124\40\uffff\1\10\10\uffff\1\42\5\uffff"+
-        "\1\101\1\uffff\1\103\6\uffff\1\125\5\uffff\1\30\2\uffff\1\3\11\uffff"+
-        "\1\113\13\uffff\1\71\3\uffff\1\20\7\uffff\1\104\12\uffff\1\64\1"+
-        "\uffff\1\73\4\uffff\1\51\24\uffff\1\67\2\uffff\1\112\1\41\6\uffff"+
+        "\1\52\1\147\1\121\1\uffff\1\57\5\uffff\1\132\1\130\1\71\1\uffff"+
+        "\1\143\12\uffff\1\133\1\131\1\135\1\140\1\137\1\141\1\uffff\1\150"+
+        "\1\151\44\uffff\1\123\5\uffff\1\55\1\100\4\uffff\1\117\1\67\1\144"+
+        "\12\uffff\1\145\1\146\5\uffff\1\2\41\uffff\1\126\15\uffff\1\122"+
+        "\1\uffff\1\127\1\uffff\1\124\40\uffff\1\10\10\uffff\1\42\3\uffff"+
+        "\1\63\3\uffff\1\103\6\uffff\1\125\5\uffff\1\30\2\uffff\1\3\11\uffff"+
+        "\1\113\13\uffff\1\72\3\uffff\1\20\7\uffff\1\104\12\uffff\1\65\1"+
+        "\uffff\1\74\4\uffff\1\51\24\uffff\1\70\2\uffff\1\112\1\41\6\uffff"+
         "\1\102\1\106\13\uffff\1\4\1\21\4\uffff\1\35\1\36\6\uffff\1\17\12"+
-        "\uffff\1\63\1\61\1\72\1\uffff\1\100\4\uffff\1\43\14\uffff\1\33\3"+
-        "\uffff\1\7\1\26\1\31\2\uffff\1\75\1\uffff\1\27\4\uffff\1\107\6\uffff"+
-        "\1\44\2\uffff\1\40\7\uffff\1\74\1\60\4\uffff\1\62\1\76\1\uffff\1"+
+        "\uffff\1\64\1\61\1\73\1\uffff\1\101\4\uffff\1\43\14\uffff\1\33\3"+
+        "\uffff\1\7\1\26\1\31\2\uffff\1\76\1\uffff\1\27\4\uffff\1\107\6\uffff"+
+        "\1\44\2\uffff\1\40\7\uffff\1\75\1\60\4\uffff\1\62\1\77\1\uffff\1"+
         "\1\6\uffff\1\22\6\uffff\1\46\1\45\3\uffff\1\11\1\uffff\1\6\1\25"+
         "\1\16\14\uffff\1\115\1\uffff\1\5\2\uffff\1\114\1\110\1\111\2\uffff"+
         "\1\15\5\uffff\1\34\1\32\1\37\1\116\1\105";
     static final String DFA16_specialS =
-        "\30\uffff\1\1\16\uffff\1\3\54\uffff\1\0\23\uffff\1\2\u01b0\uffff}>";
+        "\31\uffff\1\1\15\uffff\1\3\56\uffff\1\0\21\uffff\1\2\u01b0\uffff}>";
     static final String[] DFA16_transitionS = {
-            "\2\53\2\uffff\1\53\22\uffff\1\53\1\uffff\1\30\4\uffff\1\50\1"+
-            "\13\1\14\1\46\1\41\1\11\1\21\1\24\1\45\12\51\1\10\1\7\1\27\1"+
-            "\44\1\43\2\uffff\2\52\1\32\16\52\1\34\3\52\1\33\4\52\1\22\1"+
-            "\47\1\23\1\26\2\uffff\1\36\1\52\1\3\1\1\1\2\1\25\2\52\1\5\1"+
-            "\52\1\40\1\52\1\31\1\37\1\15\1\6\1\12\1\16\1\4\1\35\3\52\1\42"+
+            "\2\53\2\uffff\1\53\22\uffff\1\53\1\uffff\1\31\4\uffff\1\50\1"+
+            "\13\1\14\1\46\1\41\1\11\1\21\1\24\1\45\12\51\1\10\1\7\1\30\1"+
+            "\44\1\43\2\uffff\2\52\1\33\16\52\1\34\3\52\1\26\4\52\1\22\1"+
+            "\47\1\23\1\27\2\uffff\1\36\1\52\1\3\1\1\1\2\1\25\2\52\1\5\1"+
+            "\52\1\40\1\52\1\32\1\37\1\15\1\6\1\12\1\16\1\4\1\35\3\52\1\42"+
             "\2\52\1\17\1\uffff\1\20",
             "\1\55\3\uffff\1\54\17\uffff\1\56",
             "\1\62\7\uffff\1\57\7\uffff\1\61\1\uffff\1\60",
@@ -3974,11 +3973,11 @@ public class BONLexer extends AbstractBONLexer {
             "",
             "\1\114",
             "\1\120\3\uffff\1\116\11\uffff\1\117",
+            "\1\121",
             "",
-            "\1\121\17\uffff\1\122",
-            "\12\124\1\uffff\2\124\1\uffff\24\124\1\125\71\124\1\uffff\uffa3"+
-            "\124",
-            "\1\127",
+            "\1\122\17\uffff\1\123",
+            "\12\126\1\uffff\2\126\1\uffff\24\126\1\127\71\126\1\uffff\uffa3"+
+            "\126",
             "\1\130",
             "\1\131",
             "\1\132",
@@ -4036,13 +4035,13 @@ public class BONLexer extends AbstractBONLexer {
             "\1\u0098",
             "\1\u0099",
             "\1\u009a",
+            "\1\u009b",
             "",
             "",
-            "\12\124\1\uffff\2\124\1\uffff\24\124\1\125\71\124\1\u009c\uffa3"+
-            "\124",
             "",
+            "\12\126\1\uffff\2\126\1\uffff\24\126\1\127\71\126\1\u009d\uffa3"+
+            "\126",
             "",
-            "\1\u009d",
             "\1\u009e",
             "\1\u009f",
             "\1\u00a0",
@@ -4109,10 +4108,10 @@ public class BONLexer extends AbstractBONLexer {
             "\1\u00d6",
             "\1\u00d7",
             "\1\u00d8",
-            "",
-            "",
-            "",
             "\1\u00d9",
+            "",
+            "",
+            "",
             "\1\u00da",
             "\1\u00db",
             "\1\u00dc",
@@ -4172,9 +4171,9 @@ public class BONLexer extends AbstractBONLexer {
             "\1\u010e",
             "\12\52\7\uffff\32\52\4\uffff\1\52\1\uffff\1\u010f\31\52",
             "\1\u0110",
-            "\1\u0111",
-            "\1\u0112",
             "\12\52\7\uffff\32\52\4\uffff\1\52\1\uffff\32\52",
+            "\1\u0112",
+            "\1\u0113",
             "\1\u0114",
             "\12\52\7\uffff\32\52\4\uffff\1\52\1\uffff\32\52",
             "\1\u0116",
@@ -4228,9 +4227,9 @@ public class BONLexer extends AbstractBONLexer {
             "\1\u0145",
             "\1\u0146",
             "\12\52\7\uffff\32\52\4\uffff\1\52\1\uffff\32\52",
+            "",
             "\1\u0148",
             "\1\u0149",
-            "",
             "\1\u014a",
             "",
             "\1\u014b",
@@ -4535,26 +4534,26 @@ public class BONLexer extends AbstractBONLexer {
         	int _s = s;
             switch ( s ) {
                     case 0 : 
-                        int LA16_84 = input.LA(1);
+                        int LA16_86 = input.LA(1);
 
                         s = -1;
-                        if ( (LA16_84=='\\') ) {s = 156;}
+                        if ( (LA16_86=='\\') ) {s = 157;}
 
-                        else if ( ((LA16_84>='\u0000' && LA16_84<='\t')||(LA16_84>='\u000B' && LA16_84<='\f')||(LA16_84>='\u000E' && LA16_84<='!')||(LA16_84>='#' && LA16_84<='[')||(LA16_84>=']' && LA16_84<='\uFFFF')) ) {s = 84;}
+                        else if ( ((LA16_86>='\u0000' && LA16_86<='\t')||(LA16_86>='\u000B' && LA16_86<='\f')||(LA16_86>='\u000E' && LA16_86<='!')||(LA16_86>='#' && LA16_86<='[')||(LA16_86>=']' && LA16_86<='\uFFFF')) ) {s = 86;}
 
-                        else if ( (LA16_84=='\"') ) {s = 85;}
+                        else if ( (LA16_86=='\"') ) {s = 87;}
 
                         if ( s>=0 ) return s;
                         break;
                     case 1 : 
-                        int LA16_24 = input.LA(1);
+                        int LA16_25 = input.LA(1);
 
                         s = -1;
-                        if ( ((LA16_24>='\u0000' && LA16_24<='\t')||(LA16_24>='\u000B' && LA16_24<='\f')||(LA16_24>='\u000E' && LA16_24<='!')||(LA16_24>='#' && LA16_24<='[')||(LA16_24>=']' && LA16_24<='\uFFFF')) ) {s = 84;}
+                        if ( ((LA16_25>='\u0000' && LA16_25<='\t')||(LA16_25>='\u000B' && LA16_25<='\f')||(LA16_25>='\u000E' && LA16_25<='!')||(LA16_25>='#' && LA16_25<='[')||(LA16_25>=']' && LA16_25<='\uFFFF')) ) {s = 86;}
 
-                        else if ( (LA16_24=='\"') ) {s = 85;}
+                        else if ( (LA16_25=='\"') ) {s = 87;}
 
-                        else s = 86;
+                        else s = 85;
 
                         if ( s>=0 ) return s;
                         break;

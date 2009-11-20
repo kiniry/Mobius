@@ -664,9 +664,9 @@ public final class BONParser {
       type = FeatureType.QUERY;
       frame.add(FeatureSmartString.nothing());
       //TODO Review this whole part of setting the FeatureType
-      if (!the_params.isEmpty()) {
-        type = FeatureType.MIXED;
-      }
+//      if (!the_params.isEmpty()) {
+//        type = FeatureType.MIXED;
+//      }
     } else {
       type = FeatureType.MIXED;
     }

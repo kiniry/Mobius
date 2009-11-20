@@ -188,7 +188,7 @@ public final class JmlParser {
     }
 
     //SourceLocation
-    //TODO use exact position of identifier
+    //TODO use exact position of identifier, but how to do this?
     final File fileName = new File(a_cu.sourcefile.toUri().getPath());
     //final int startPos = a_cls.getStartPosition();
     int startPos = a_cls.pos().getStartPosition() + a_cls.mods.toString().length();

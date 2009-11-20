@@ -913,8 +913,12 @@ feature_specification returns [FeatureSpecification spec]
 ;
                        
 has_type returns [HasType htype] :
-  type_mark type 
-  { if(isOk()) $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
+  type_mark 
+  (  type 
+     { if(isOk()) $htype = HasType.mk($type_mark.mark, $type.type, getSLoc($type_mark.start,$type.stop)); }
+   | v='Void'
+     { if(isOk()) $htype = HasType.mk($type_mark.mark, BONType.voidType(getSLoc($v)), getSLoc($v)); }
+  )
 ;
 
 /**********************************************/
