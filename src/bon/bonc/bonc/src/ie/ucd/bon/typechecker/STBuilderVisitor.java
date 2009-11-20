@@ -46,7 +46,6 @@ import ie.ucd.bon.typechecker.errors.DuplicateSystemDefinitionError;
 import ie.ucd.bon.typechecker.errors.NameNotUniqueError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClassChartError;
 import ie.ucd.bon.typechecker.informal.errors.DuplicateClusterChartError;
-import ie.ucd.bon.util.AstUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,10 +96,10 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     Cluster cluster = st.clusters.get(name.getName());
 
     if (cluster != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Class", name.getName(), "cluster", cluster.getLocation()));
+      problems.addProblem(new NameNotUniqueError(node.getReportingLocation(), "Class", name.getName(), "cluster", cluster.getLocation()));
     } else if (clazz != null) {
       //TODO differentiate between expanded and flat class forms
-      problems.addProblem(new DuplicateClassDefinitionError(AstUtil.getReportingSourceLocation(node), clazz));
+      problems.addProblem(new DuplicateClassDefinitionError(node.getReportingLocation(), clazz));
     } else {
       st.classes.put(name.getName(), node);
 
@@ -136,9 +135,9 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     Cluster cluster = st.clusters.get(name);
 
     if (clazz != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster", name, "class", clazz.getLocation()));
+      problems.addProblem(new NameNotUniqueError(node.getReportingLocation(), "Cluster", name, "class", clazz.getLocation()));
     } else if (cluster != null) {
-      problems.addProblem(new DuplicateClusterDefinitionError(AstUtil.getReportingSourceLocation(node), cluster));
+      problems.addProblem(new DuplicateClusterDefinitionError(node.getReportingLocation(), cluster));
     } else {
       st.clusters.put(name, node);
     }
@@ -159,7 +158,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
 
     for (Type parent : parents) {
       if (parent.getIdentifier().equals(context.clazz.getName().getName())) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(parent.getLocation(), context.clazz.getName().getName()));
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(parent.getReportingLocation(), context.clazz.getName().getName()));
       } else {
         st.classInheritanceGraph.put(context.clazz.getName().getName(), parent);
         st.simpleClassInheritanceGraph.put(context.clazz.getName().getName(), parent.getIdentifier());
@@ -207,7 +206,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       if (other == null) {
         st.featuresMap.put(context.clazz, name.getName(), node);
       } else {
-        problems.addProblem(new DuplicateFeatureDefinitionError(AstUtil.getReportingSourceLocation(node), context.clazz.getName().getName(), name.getName(), other));
+        problems.addProblem(new DuplicateFeatureDefinitionError(node.getReportingLocation(), context.clazz.getName().getName(), name.getName(), other));
       }
     }
 
@@ -228,11 +227,11 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     //Check if name unique
     ClusterChart otherCluster = st.informal.clusters.get(name.getName());
     if (otherCluster != null) {
-      problems.addProblem(new NameNotUniqueError(AstUtil.getReportingSourceLocation(node), "Class chart", name.getName(), "cluster chart", otherCluster.getLocation()));
+      problems.addProblem(new NameNotUniqueError(node.getReportingLocation(), "Class chart", name.getName(), "cluster chart", otherCluster.getLocation()));
     } else {
       ClassChart clazz = st.informal.classes.get(name.getName());
       if (clazz != null) {
-        problems.addProblem(new DuplicateClassChartError(loc, clazz));
+        problems.addProblem(new DuplicateClassChartError(node.getReportingLocation(), clazz));
       } else {
         st.informal.classes.put(name.getName(), node);
       }
@@ -240,7 +239,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
 
     for (ClassName parent : inherits) {
       if (parent.equals(name)) {
-        problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, name.getName()));
+        problems.addProblem(new ClassCannotHaveSelfAsParentError(node.getReportingLocation(), name.getName()));
       } else {
         st.informal.classInheritanceGraph.put(node, parent.getName());
       }
@@ -258,7 +257,7 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     if (isSystem) {
       if (st.informal.systemChart != null) {
         //Duplicate system, add error.
-        problems.addProblem(new DuplicateSystemDefinitionError(AstUtil.getReportingSourceLocation(node), node));
+        problems.addProblem(new DuplicateSystemDefinitionError(node.getReportingLocation(), st.informal.systemChart));
         return;
       } else {
         st.informal.systemChart = node;
@@ -268,11 +267,11 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
     //Check if name unique
     ClassChart otherClass = st.informal.classes.get(name);
     if (otherClass != null) {
-      problems.addProblem(new NameNotUniqueError(loc, "Cluster chart", name, "class chart", otherClass.getLocation()));
+      problems.addProblem(new NameNotUniqueError(node.getReportingLocation(), "Cluster chart", name, "class chart", otherClass.getLocation()));
     } else {
       ClusterChart otherCluster = st.informal.clusters.get(name);
       if (otherCluster != null) {
-        problems.addProblem(new DuplicateClusterChartError(loc, otherCluster));
+        problems.addProblem(new DuplicateClusterChartError(node.getReportingLocation(), otherCluster));
         return;
       } else {
         st.informal.clusters.put(name, node);

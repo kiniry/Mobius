@@ -5,6 +5,7 @@
 package ie.ucd.bon.ast;
 
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.AstUtil;
 
 public abstract class AstNode {
 
@@ -16,6 +17,10 @@ public abstract class AstNode {
 
   public SourceLocation getLocation() {
     return location;
+  }
+  
+  public SourceLocation getReportingLocation() {
+    return AstUtil.getReportingSourceLocation(this);
   }
 
   public abstract void accept(IVisitorWithAdditions visitor);

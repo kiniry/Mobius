@@ -58,7 +58,7 @@ public class PreliminaryChecker {
           });
       if (cycle != null) {
         //TODO mark class as having cycle
-        problems.addProblem(new CycleInRelationsError(classChart.getLocation(), "Class", classChart, cycle, "class hierarchy"));
+        problems.addProblem(new CycleInRelationsError(classChart.getReportingLocation(), "Class", classChart, cycle, "class hierarchy"));
       }
     }
 
@@ -72,7 +72,7 @@ public class PreliminaryChecker {
           });
       if (cycle != null) {
         //TODO mark cluster as having cycle
-        problems.addProblem(new CycleInRelationsError(clusterChart.getLocation(), "Cluster", clusterChart, cycle, "clustering hierarchy"));
+        problems.addProblem(new CycleInRelationsError(clusterChart.getReportingLocation(), "Cluster", clusterChart, cycle, "clustering hierarchy"));
       }
     }
   }
@@ -88,7 +88,7 @@ public class PreliminaryChecker {
           });
       if (cycle != null) {
         //TODO mark class as having cycle
-        problems.addProblem(new CycleInRelationsError(clazz.getLocation(), "Class", clazz.getName().getName(), cycle, "class hierarchy"));
+        problems.addProblem(new CycleInRelationsError(clazz.getReportingLocation(), "Class", clazz.getName().getName(), cycle, "class hierarchy"));
       }
     }
 
@@ -102,7 +102,7 @@ public class PreliminaryChecker {
           });
       if (cycle != null) {
         //TODO mark cluster as having cycle
-        problems.addProblem(new CycleInRelationsError(cluster.getLocation(), "Cluster", cluster.getName(), cycle, "clustering hierarchy"));
+        problems.addProblem(new CycleInRelationsError(cluster.getReportingLocation(), "Cluster", cluster.getName(), cycle, "clustering hierarchy"));
       }
     }
   }
@@ -112,7 +112,7 @@ public class PreliminaryChecker {
     for (String className : allClassNames) {
       if (!st.informal.classClusterGraph.containsKey(className)) {
         ClassChart clazz = st.informal.classes.get(className);
-        problems.addProblem(new ClassNotInAnyClusterError(clazz.getLocation(), className));
+        problems.addProblem(new ClassNotInAnyClusterError(clazz.getReportingLocation(), className));
       }
     }
   }
@@ -123,7 +123,7 @@ public class PreliminaryChecker {
       if (!st.informal.clusterClusterGraph.containsKey(clusterName)) {
         ClusterChart cluster = st.informal.clusters.get(clusterName);
         if (!cluster.getIsSystem()) {
-          problems.addProblem(new ClusterNotInAnyClusterOrSystemError(cluster.getLocation(), clusterName));
+          problems.addProblem(new ClusterNotInAnyClusterOrSystemError(cluster.getReportingLocation(), clusterName));
         }
       }
     }

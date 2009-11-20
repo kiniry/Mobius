@@ -62,7 +62,6 @@ import ie.ucd.bon.typechecker.errors.NoParentDeclaresFeatureError;
 import ie.ucd.bon.typechecker.errors.NotContainedInClusterError;
 import ie.ucd.bon.typechecker.errors.ParentFeatureIsDeferredError;
 import ie.ucd.bon.typechecker.errors.ParentFeatureNotDeferredError;
-import ie.ucd.bon.typechecker.errors.TypeMismatchWithExplanationError;
 import ie.ucd.bon.typechecker.informal.errors.InvalidInformalClassTypeError;
 
 import java.util.Collection;
@@ -108,7 +107,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
       String semanticLabel, SourceLocation loc) {
 
     if (child.getName().getName().equals(parent.getName().getName())) {
-      problems.addProblem(new ClassCannotHaveSelfAsParentError(loc, child.getName().getName()));
+      problems.addProblem(new ClassCannotHaveSelfAsParentError(child.getReportingLocation(), child.getName().getName()));
     }
 
     visitNode(child);
@@ -135,7 +134,7 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
             problems.addProblem(new NotContainedInClusterError(new SourceLocation(current.getLocation(), next.getLocation()), next.getName(), false, current.getName()));
           }
         } else {
-          problems.addProblem(new InvalidClusterTypeError(current.getLocation(), current.getName()));
+          problems.addProblem(new InvalidClusterTypeError(current.getReportingLocation(), current.getName()));
         }
       }
 

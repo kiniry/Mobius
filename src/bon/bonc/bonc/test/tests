@@ -33,7 +33,7 @@
 @Test-name: "Duplicate class chart."
 @Location { misc/ }
 @Input { dup_class_chart.bon }
-@Output { < DuplicateClassChartError, #File:dup_class_chart.bon, 12, 0, BOOK, #File:dup_class_chart, 4 > }
+@Output { < DuplicateClassChartError, #File:dup_class_chart.bon, 12, 12, BOOK, #File:dup_class_chart, 4 > }
 
 @Test-name: "Duplicate cluster chart."
 @Location { misc/ }
@@ -110,16 +110,16 @@
 @Prog-args: {--informal}
 @Location { misc/ }
 @Input { class_hier_cycle.bon }
-@Output { < CycleInRelationsError, #File:class_hier_cycle.bon, 12, 0, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle.bon, 17, 0, Class, X, "X->Y->Z->W->X", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle.bon, 22, 0, Class, Y, "Y->Z->W->X->Y", "class hierarchy" >,
-          < CycleInRelationsError, #File:class_hier_cycle.bon, 27, 0, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
+@Output { < CycleInRelationsError, #File:class_hier_cycle.bon, 12, 12, Class, W, "W->X->Y->Z->W", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 17, 12, Class, X, "X->Y->Z->W->X", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 22, 12, Class, Y, "Y->Z->W->X->Y", "class hierarchy" >,
+          < CycleInRelationsError, #File:class_hier_cycle.bon, 27, 12, Class, Z, "Z->W->X->Y->Z", "class hierarchy" > }
 
 @Test-name: "Class not in any cluster."
 @Prog-args: {--informal}
 @Location { misc/ }
 @Input { class_not_in_cluster.bon }
-@Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster.bon, 4, 0, X > }
+@Output { < ClassNotInAnyClusterError, #File:class_not_in_cluster.bon, 4, 12, X > }
 
 @Test-name: "Cluster not in any cluster or system."
 @Prog-args: {--informal}
@@ -132,7 +132,7 @@
 @Location { misc/ }
 @Input { self_as_super1.bon }
 @Output { < ClassCannotHaveSelfAsParentError, #File:self_as_super1.bon, 9, 12, C >,
-          < CycleInRelationsError, #File:self_as_super1.bon, 9, 0, Class, C, "C->C->C", "class hierarchy" > }
+          < CycleInRelationsError, #File:self_as_super1.bon, 9, 12, Class, C, "C->C->C", "class hierarchy" > }
 
 @Test-name: "Class has self as parent (formal)."
 @Prog-args: {--formal}
@@ -188,7 +188,7 @@
 @Input { uniqueness.bon }
 @Output { < NameNotUniqueError, #File:uniqueness.bon, 11, 12, "Class chart", A, "cluster chart", #File:uniqueness.bon, 7, 0 >,
           < NameNotUniqueError, #File:uniqueness.bon, 17, 0, "Cluster chart", B, "class chart", #File:uniqueness.bon, 14, 0 >, 
-          < NameNotUniqueError, #File:uniqueness.bon, 26, 4, "Class", A, "cluster", #File:uniqueness.bon, 24, 3 >,
+          < NameNotUniqueError, #File:uniqueness.bon, 26, 10, "Class", A, "cluster", #File:uniqueness.bon, 24, 3 >,
           < NameNotUniqueError, #File:uniqueness.bon, 31, 2, "Cluster", B, "class", #File:uniqueness.bon, 29, 2 > }
 
 @Test-name: "Deferred feature in non-deferred class"
