@@ -3,6 +3,7 @@ package input;
 import static com.sun.tools.javac.code.Flags.GENERATEDCONSTR;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -113,7 +114,8 @@ public class JmlFile {
 
     String[] openjmlArgsArr = openjmlArgs.toArray(new String[openjmlArgs.size()]);
     try {
-      API api = new API(openjmlArgsArr);
+      PrintWriter jmlComplaints = new PrintWriter(new File("jmlComplaints.txt"));
+      API api = new API(jmlComplaints, null, openjmlArgsArr);
 
       List<JmlCompilationUnit> trees = api.parseFiles(my_files.toArray(new File[my_files.size()]));
       api.enterAndCheck(trees);
