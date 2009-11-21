@@ -285,17 +285,17 @@ public final class JmlParser {
       if (an.getAnnotationType().toString().equals("Override")) { //$NON-NLS-1$
         mod.add(FeatureModifier.REDEFINED);
       } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.Pure")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
         mod.add(FeatureModifier.PURE);
         pure = true;
       } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.NonNull")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
         return_value.setNullity(Nullity.NON_NULL);
       } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.Nullable")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
         return_value.setNullity(Nullity.NULLABLE);
       } else if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.Model")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.Model")) { //$NON-NLS-1$
         mod.add(FeatureModifier.MODEL);
       }
     }
@@ -626,7 +626,6 @@ public final class JmlParser {
    */
   private static Expression parseJCExpression(final JCTree.JCExpression an_expr) {
     Expression new_expr = InformalExpression.EMPTY_COMMENT;
-    
     if (an_expr instanceof JCTree.JCBinary) {
       final JCTree.JCBinary bin = (JCTree.JCBinary) an_expr;
       if (bin.getKind() == Kind.GREATER_THAN) {

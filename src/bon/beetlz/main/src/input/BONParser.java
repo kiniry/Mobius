@@ -88,7 +88,7 @@ public final class BONParser {
     final int two = 2;
     final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
-    final List  < SmartString > generics   = new Vector < SmartString > ();
+    final List  < SmartString > generics   		= new Vector < SmartString > ();
     final SortedSet < SmartString > interfaces  = new TreeSet < SmartString > ();
     Invariant inv                               = null;
     final List < SmartString > clus             = new Vector < SmartString > ();
@@ -617,10 +617,11 @@ public final class BONParser {
    * @param the_params parameter
    * @return specs
    */
-  public static Spec parseFeatureSpecs(final List<ie.ucd.bon.ast.Expression> a_pre, final List<ie.ucd.bon.ast.Expression> a_post,
-      final SmartString a_return_value,
-      final String a_feature,
-      final Map < String , SmartString > the_params) {
+  public static Spec parseFeatureSpecs(final List<ie.ucd.bon.ast.Expression> a_pre, 
+		  final List<ie.ucd.bon.ast.Expression> a_post,
+		  final SmartString a_return_value,
+		  final String a_feature,
+		  final Map < String , SmartString > the_params) {
     final List < Expression > preconditions = new Vector < Expression > ();
     final List < Expression > postconditions = new Vector < Expression > ();
     SortedSet < FeatureSmartString > frame = new TreeSet < FeatureSmartString > ();
@@ -663,10 +664,6 @@ public final class BONParser {
     } else if (frame.size() == 0) {
       type = FeatureType.QUERY;
       frame.add(FeatureSmartString.nothing());
-      //TODO Review this whole part of setting the FeatureType
-//      if (!the_params.isEmpty()) {
-//        type = FeatureType.MIXED;
-//      }
     } else {
       type = FeatureType.MIXED;
     }
@@ -774,7 +771,6 @@ public final class BONParser {
     if (a_generic.getType() != null) {
       final List < SmartString > list = new Vector < SmartString > ();
       list.add(getType(a_generic.getType()));
-      //System.err.println(form.getName() + "  " + form.getType().toString());
       final String name = a_generic.identifier + " -> " +
       a_generic.getType().getFullString(); //$NON-NLS-1$
       return new GenericParameter(name, a_generic.identifier, list);
