@@ -405,17 +405,17 @@ public class CCLogManager {
     for (int i=0; i < the_features.size(); i++) {
       FeatureStructure fS = the_features.get(i);
       ClassStructure cS = the_classes.get(i);
-
+      
       if (cS.getSourceLocation().isJavaFile()) {
         my_records.
-        add(new CCLogRecord(CCLevel.JAVA_ERROR, fS.getSourceLoc(),
+        add(new CCLogRecord(CCLevel.JAVA_ERROR, cS.getSourceLocation(),
             String.format(Beetlz.getResourceBundle().
                 getString("CCLogManager." +
                 "missingMethodsMsg"), //$NON-NLS-1$
                 a_class, fS.getSimpleName())));
       } else {
         my_records.
-        add(new CCLogRecord(CCLevel.JAVA_ERROR, fS.getSourceLoc(),
+        add(new CCLogRecord(CCLevel.JAVA_ERROR, cS.getSourceLocation(),
             String.format(Beetlz.getResourceBundle().
                 getString("CCLogManager." +
                 "missingFeaturesMsg"), //$NON-NLS-1$
