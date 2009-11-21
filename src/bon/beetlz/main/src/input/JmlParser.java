@@ -946,10 +946,10 @@ public final class JmlParser {
    */
   private static VisibilityModifier parseSpecVisibility(final VarSymbol a_var) {
     for (final Attribute.Compound c : a_var.attributes_field) {
-      if (c.toString().equals("@org.jmlspecs.annotations.SpecPublic")) { //$NON-NLS-1$
+      if (c.toString().equals("@org.jmlspecs.annotation.SpecPublic")) { //$NON-NLS-1$
         return VisibilityModifier.PUBLIC;
       }
-      if (c.toString().equals("@org.jmlspecs.annotations.SpecProtected")) { //$NON-NLS-1$
+      if (c.toString().equals("@org.jmlspecs.annotation.SpecProtected")) { //$NON-NLS-1$
         return VisibilityModifier.PROTECTED;
       }
     }
