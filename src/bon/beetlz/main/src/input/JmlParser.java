@@ -228,11 +228,11 @@ public final class JmlParser {
     //Annotations?
     for (final Compound an : a_sym.getAnnotationMirrors()) {
       if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.NullableByDefault")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.NullableByDefault")) { //$NON-NLS-1$
         parsedClass.setNullity(Nullity.NULLABLE);
       }
       if (an.getAnnotationType().toString().
-          equals("org.jmlspecs.annotations.Pure")) { //$NON-NLS-1$
+          equals("org.jmlspecs.annotation.Pure")) { //$NON-NLS-1$
         parsedClass.setPure(true);
       }
     }
@@ -351,11 +351,11 @@ public final class JmlParser {
       }
       for (final Compound an : v.sym.getAnnotationMirrors()) {
         if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotations.NonNull")) { //$NON-NLS-1$
+            equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
           par.setNullity(Nullity.NON_NULL);
         }
         if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotations.Nullable")) { //$NON-NLS-1$
+            equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
           par.setNullity(Nullity.NULLABLE);
         }
       }
@@ -452,10 +452,10 @@ public final class JmlParser {
 
     //Annotations
     for (final Compound an : a_variable.getAnnotationMirrors()) {
-      if (an.toString().equals("@org.jmlspecs.annotations.Ghost")) { //$NON-NLS-1$
+      if (an.toString().equals("@org.jmlspecs.annotation.Ghost")) { //$NON-NLS-1$
         mod.add(FeatureModifier.GHOST);
       }
-      if (an.toString().equals("@org.jmlspecs.annotations.Model")) { //$NON-NLS-1$
+      if (an.toString().equals("@org.jmlspecs.annotation.Model")) { //$NON-NLS-1$
         mod.add(FeatureModifier.MODEL);
       }
     }
@@ -466,11 +466,11 @@ public final class JmlParser {
       return_value = getType(a_variable.type);
       for (final Compound an : a_variable.getAnnotationMirrors()) {
         if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotations.NonNull")) { //$NON-NLS-1$
+            equals("org.jmlspecs.annotation.NonNull")) { //$NON-NLS-1$
           return_value.setNullity(Nullity.NON_NULL);
         }
         if (an.getAnnotationType().toString().
-            equals("org.jmlspecs.annotations.Nullable")) { //$NON-NLS-1$
+            equals("org.jmlspecs.annotation.Nullable")) { //$NON-NLS-1$
           return_value.setNullity(Nullity.NULLABLE);
         }
       }
