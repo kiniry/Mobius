@@ -55,9 +55,6 @@ public class BONWalker {
 
     
     for (final ClientRelation cr : the_st.clientRelations) {
-      System.err.println(cr.getTypeMark());
-      System.err.println(cr.getClient().getName().getName());
-      System.err.println(cr.getSupplier().getName().getName());
       if (my_classes.containsKey(cr.getClient().getName().getName()) && 
           my_classes.containsKey(cr.getSupplier().getName().getName())) {
         if (cr.typeMark.mark == TypeMark.Mark.AGGREGATE) {
