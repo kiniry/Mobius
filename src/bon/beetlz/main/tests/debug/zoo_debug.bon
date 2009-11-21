@@ -1,0 +1,75 @@
+indexing
+  about:        "A test zoo.";
+  title:        "Zoo model";
+  author:       "Evka";
+  copyright:    "none";
+  organisation: "School of Computer Science and Informatics, UCD";
+  date:         "March 2009";
+  version:      "Revision: 1";
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ENCLOSURE cluster classes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+static_diagram ZOO           
+component
+cluster DEBUG_CLUSTER
+component
+
+	deferred class ANIMAL 
+	indexing    
+	  about:  "An abstract animal.";
+	  author: "Evka";
+	  version: "1";
+	feature  
+	  	weight:VALUE
+	  	feedingFrequency: VALUE
+	  	dummyDummy: VALUE
+	  	ensure
+	  			Result = 10 or Result =20 or Result =30;
+	  	end
+	  	sleeping: BOOLEAN
+	  	deferred wakeUp
+	  	scareAwake
+	end 
+	
+	class ZEBRA 
+	feature
+		weight: INTEGER
+		hungry: BOOLEAN
+		pissed: BOOLEAN
+		stripes: SEQUENCE[STRING]
+		feed
+			-> amount: VALUE
+			ensure
+				delta {hungry, asleep};
+				sleeping -> pissed = true;
+				not (sleeping <-> not hungry);
+			end  
+		
+		wakeUp
+			require
+				asleep = true;
+			ensure
+				delta asleep;
+				asleep = false;
+			end
+	feature{DEBUG_CLUSTER} 
+		makePicture
+			require
+				stripes.item(2) = "black stripe";
+			end   
+		paintOver
+			require
+				not pissed;
+				sleeping and not hungry;
+			ensure
+				delta stripes;
+				pissed or hungry;
+			end
+	feature{ZEBRA}
+		asleep: BOOLEAN
+	invariant 
+		weight > 0;
+	end 
+	
+end 
+end

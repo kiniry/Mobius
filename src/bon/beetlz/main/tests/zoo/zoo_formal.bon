@@ -120,8 +120,13 @@ component
 	  about:  "An abstract animal.";
 	  author: "Evka";
 	  version: "1";
-	feature
-	  	weight, feedingFrequency: VALUE
+	feature  
+	  	weight:VALUE
+	  	feedingFrequency: VALUE
+	  	dummyDummy: VALUE
+	  	ensure
+	  			Result = 10 or Result =20 or Result =30;
+	  		end
 	  	place: ENCLOSURE
 	  	sleeping: BOOLEAN
 	  	deferred wakeUp
