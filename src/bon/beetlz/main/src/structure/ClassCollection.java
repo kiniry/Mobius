@@ -130,7 +130,7 @@ public class ClassCollection {
    * Returns all keys, ie class names.
    * @return list of keys
    */
-  public final /*@ pure @*/ List < TypeSmartStringWithLocation > getAccesibleClassTypes() {
+  public final /*@ pure @ */ List < TypeSmartStringWithLocation > getAccesibleClassTypes() {
     final List < TypeSmartStringWithLocation > list = new ArrayList < TypeSmartStringWithLocation > ();
     for (final ClassStructure cls : my_classes.values()) {
       if (!cls.isPrivate()) {
@@ -139,7 +139,17 @@ public class ClassCollection {
     }
     return list;
   }
-
+  
+  public final /*@ pure @ */ List < TypeSmartString > getAccesibleClassTypesNoLoc() {
+    final List < TypeSmartString > list = new ArrayList < TypeSmartString > ();
+    for (final ClassStructure cls : my_classes.values()) {
+      if (!cls.isPrivate()) {
+        list.add(cls.getName());
+      }
+    }
+    return list;
+  }
+  
   /**
    * Gives all classes in the package given.
    * These classes are all in the model/implementation respectively.

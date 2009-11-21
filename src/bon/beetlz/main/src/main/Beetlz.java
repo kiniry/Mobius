@@ -30,6 +30,7 @@ import pretty.JavaPretty;
 import structure.ClassCollection;
 import structure.ClassStructure;
 import utils.BConst;
+import utils.BeetlzSourceLocation;
 import utils.TwoWayMap;
 import utils.smart.FeatureSmartString;
 import utils.smart.SmartString;
@@ -97,7 +98,7 @@ public class Beetlz {
     }
   }
 
-  /** Enumeration for status of this tool, maily used for Eclipse plugin. */
+  /** Enumeration for status of this tool, mainly used for Eclipse plugin. */
   public enum Status {
     /** Status. */
     HELP, OPTIONS_OK, PARSING_OK, PARSING_PROBLEM, STARTED
@@ -382,6 +383,18 @@ public class Beetlz {
 
   }
   
+  public final void debugParsing() {
+	  final ClassCollection jml = my_jmlfile.getClassCollection();
+	  final ClassCollection bon = my_bonfile.getClassCollection();
+	  
+	  System.out.println("***************** JML classes *************");
+	  jml.printOut();
+	  
+	  System.out.println("***************** BON classes *************");
+	  bon.printOut();
+	  
+  }
+  
   private void report() {
     for (final CCLogRecord r : my_logger.getErrors()) {
       JAVA_LOGGER.log(r);
@@ -425,15 +438,19 @@ public class Beetlz {
    * @return mapping
    */
   private TwoWayMap < String, String > createClassTypeMapping() {
-    final List < TypeSmartStringWithLocation > bonList = new ArrayList < TypeSmartStringWithLocation > (my_bonfile.getClassCollection().getAccesibleClassTypes());
-    final List < TypeSmartStringWithLocation > jmlList = new ArrayList < TypeSmartStringWithLocation > (my_jmlfile.getClassCollection().getAccesibleClassTypes());
+    final List < TypeSmartString > bonList = 
+      new ArrayList < TypeSmartString > (my_bonfile.getClassCollection().getAccesibleClassTypesNoLoc());
+    final List < TypeSmartString > jmlList = 
+      new ArrayList < TypeSmartString > (my_jmlfile.getClassCollection().getAccesibleClassTypesNoLoc());
+    
     bonMissing = new ArrayList < TypeSmartStringWithLocation > ();
     final TwoWayMap < String, String > classMap = new TwoWayMap < String, String > ();
-
+    
     //BON types are unique, so let's map them to Java types
-    for (final TypeSmartStringWithLocation bonName : bonList) {
+    for (final TypeSmartString bonName : bonList) {
       //check for user mapping first
       final TypeSmartString jName = new TypeSmartString(my_profile.getClassMapping(bonName.toString()));
+      
       if (!jName.toString().equals(BConst.NULL_SMARTSTRING)) {
         final int first = jmlList.indexOf(jName);
         final int last = jmlList.lastIndexOf(jName);
@@ -450,7 +467,8 @@ public class Beetlz {
         final int first = jmlList.indexOf(bonName);
         final int last = jmlList.lastIndexOf(bonName);
         if (first == -1) {
-          bonMissing.add(bonName);
+          //TODO: does this really work?
+          bonMissing.add(new TypeSmartStringWithLocation(bonName, new BeetlzSourceLocation(false)));
         } else if (first != last) {
           my_logger.logMultipleClasses(bonName);
         } else {
@@ -463,8 +481,17 @@ public class Beetlz {
       }
     } //end for
 
-    jmlMissing = jmlList;
+    jmlMissing = copyToListWithSourceLocation(jmlList);
     return classMap;
+  }
+  
+  private List < TypeSmartStringWithLocation > copyToListWithSourceLocation(List < TypeSmartString > list) {
+    List < TypeSmartStringWithLocation > result = new ArrayList < TypeSmartStringWithLocation >();
+    for(TypeSmartString t: list) {
+      result.add(new TypeSmartStringWithLocation(t, new BeetlzSourceLocation(false)));
+    }
+    
+    return result;
   }
 
   /**
@@ -642,6 +669,7 @@ public class Beetlz {
   /* ****************************
    * Private methods
    ******************************/
+  
   /**
    * Here we do the actual comparison.
    */
@@ -675,10 +703,14 @@ public class Beetlz {
       source = bon;
       target = jml;
     }
+    //System.err.println(my_class_map.toString());
     for (final ClassStructure sourceClass : source.getClasses()) {
+      
       final String targetName = (String) my_class_map.get(sourceClass
           .getQualifiedName().toString());
-
+      //System.err.println(sourceClass.toString() + " - " + targetName);
+      
+      
       if (targetName != null) {
         final ClassStructure targetClass = target.getClass(targetName);
         if (targetClass != null) {
