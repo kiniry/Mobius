@@ -53,16 +53,21 @@ public class BONWalker {
       }
     }
 
+    
     for (final ClientRelation cr : the_st.clientRelations) {
-      if (my_classes.containsKey(cr.getClient()) && my_classes.containsKey(cr.getSupplier())) {
+      System.err.println(cr.getTypeMark());
+      System.err.println(cr.getClient().getName().getName());
+      System.err.println(cr.getSupplier().getName().getName());
+      if (my_classes.containsKey(cr.getClient().getName().getName()) && 
+          my_classes.containsKey(cr.getSupplier().getName().getName())) {
         if (cr.typeMark.mark == TypeMark.Mark.AGGREGATE) {
-          my_classes.get(cr.getClient()).
+          my_classes.get(cr.getClient().getName().getName()).
             addAggregation(new TypeSmartString(my_classes.
-                                             get(cr.getSupplier()).
+                                             get(cr.getSupplier().getName().getName()).
                                              getSimpleName()));
         }
         if (cr.typeMark.mark == TypeMark.Mark.SHAREDMARK) {
-          my_classes.get(cr.getClient()).
+          my_classes.get(cr.getClient().getName().getName()).
             addSharedAssociation(new TypeSmartString(cr.supplier.name.name));
         }
       }
