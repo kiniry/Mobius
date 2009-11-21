@@ -59,13 +59,14 @@ public class Main {
 
   private static void runTests(List<Pair<File,String>> inputs, File outputDirectory) {
     System.out.println("Running " + numberOfTests + " tests.");
+    Tracker tracker = new Tracker();
     long startTime = System.nanoTime();
 
     int exceptionCount = 0;
     for (int i=0; i < numberOfTests; i++) {
       Pair<File,String> input = RandomUtil.randomlyChooseFromList(inputs);
       String actualInput = performModifications(input.getSecond(), inputs);
-
+      tracker.addInput(actualInput);
       try {
         bonTestWrapper.run(actualInput); 
       } catch (Exception e) {
@@ -89,15 +90,17 @@ public class Main {
         System.out.println("Completed " + (i+1));
       }
     }
+    System.out.println("Average length of input: " + (tracker.getTotalLength() / numberOfTests));
     System.out.println("Done. Hit " + exceptionCount + " exceptions.");
     long endTime = System.nanoTime();
     System.out.println("Testing took: " + StringUtil.timeString(endTime - startTime));
   }
 
   private static String performModifications(String input, List<Pair<File,String>> otherInputs) {
+    boolean justJoin = RandomUtil.justJoin();
     StringBuilder sb = new StringBuilder(input);
     for (int i=0; i < minimumMods; i++) {
-      performSingleMod(sb, otherInputs);
+      performSingleMod(sb, otherInputs, justJoin);
     }
 
     for (int i=minimumMods; i < maximumMods; i++) {
@@ -105,15 +108,19 @@ public class Main {
         //System.out.println("Stopped at " + i + " modifications.");
         return sb.toString();
       } else {
-        performSingleMod(sb, otherInputs);
+        performSingleMod(sb, otherInputs, justJoin);
       }
     }    
 
     return sb.toString();
   }
 
-  private static void performSingleMod(StringBuilder string, List<Pair<File,String>> otherInputs) {
-    RandomUtil.chooseRandomModification().modify(string, otherInputs);
+  private static void performSingleMod(StringBuilder string, List<Pair<File,String>> otherInputs, boolean justJoin) {
+    if (justJoin) {
+      RandomUtil.appendMod.modify(string, otherInputs);
+    } else {
+      RandomUtil.chooseRandomModification().modify(string, otherInputs);
+    }
   }
 
   private static void testInputs(File directory) {

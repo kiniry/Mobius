@@ -6,6 +6,8 @@ import java.util.Random;
 
 public class RandomUtil {
 
+  
+  private static final double justJoinProbability = 0.2d;
   private static final double deleteProbability = 0.5d;
   private static final double addProbability = 0.5d;
   private static final double joinFileProbability = 0.01d;
@@ -13,13 +15,17 @@ public class RandomUtil {
   private static final List<Modification> mods = new ArrayList<Modification>();
   private static final double modProbSum = deleteProbability + addProbability + joinFileProbability;
   
+  public static final Modification deleteMod = new RemoveTextModification();
+  public static final Modification addMod = new AddTextModification();
+  public static final Modification appendMod = new AppendFileModification();
+  
   static {
     modProbabilities.add(deleteProbability);
-    mods.add(new RemoveTextModification());
+    mods.add(deleteMod);
     modProbabilities.add(addProbability);
-    mods.add(new AddTextModification());
+    mods.add(addMod);
     modProbabilities.add(joinFileProbability);
-    mods.add(new AppendFileModification());
+    mods.add(appendMod);
   }
   
   private static final double anotherModProbability = 0.99;
@@ -28,6 +34,10 @@ public class RandomUtil {
   
   public static <T> T randomlyChooseFromList(List<T> items) {
     return items.get(r.nextInt(items.size()));
+  }
+  
+  public static boolean justJoin() {
+    return r.nextDouble() < justJoinProbability;
   }
   
   public static boolean makeAnotherMod() {
