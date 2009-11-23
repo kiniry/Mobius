@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="prover.editor.prover">
+      <language
+            extension="z3feckinfiles"
+            name="Z3"
+            provertoplevel="mobius.prover.z3.TopLevel"
+            translator="mobius.prover.z3.ProverTranslator">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="mobius.prover.gui.editor.ProverEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            extensions="z3feckinfiles"
+            icon="icons/sx.png"
+            id="z3.Z3Editor"
+            name="Z3Editor">
+      </editor>
+   </extension>
+
+</plugin>
