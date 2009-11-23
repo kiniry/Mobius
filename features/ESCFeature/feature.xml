@@ -2,7 +2,7 @@
 <feature
       id="mobius.esc"
       label="Extended Static Checking"
-      version="2.0.44"
+      version="2.0.45"
       provider-name="EU Mobius IST-15905 Project">
 
    <description>
@@ -750,7 +750,7 @@ limitations under the License.
    </url>
 
    <requires>
-      <import feature="mobius.required" version="1.0.0"/>
+      <import feature="mobius.required"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -760,6 +760,7 @@ limitations under the License.
       <import plugin="org.eclipse.ui.editors"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.junit"/>
+      <import feature="mobius.provereditor"/>
    </requires>
 
    <plugin
@@ -810,6 +811,13 @@ limitations under the License.
 
    <plugin
          id="mobius.rcc.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="mobius.perspective.verification.expert"
          download-size="0"
          install-size="0"
          version="0.0.0"

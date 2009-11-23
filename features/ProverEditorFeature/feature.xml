@@ -683,6 +683,7 @@ END OF TERMS AND CONDITIONS
       <import plugin="org.eclipse.jdt.junit"/>
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import feature="mobius.atp"/>
    </requires>
 
    <plugin
