@@ -13,6 +13,5 @@ Export-Package: mobius.bico,
  mobius.bico.executors,
  mobius.bico.implem,
  mobius.bico.visitors
-Require-Bundle: bcel.plugin;bundle-version="5.2.0",
- ClopsRuntime
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: ClopsRuntime,
+ bcel.plugin;bundle-version="5.2.0"
