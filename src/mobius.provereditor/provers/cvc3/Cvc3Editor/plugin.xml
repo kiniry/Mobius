@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="prover.editor.prover">
+      <language
+            extension="cvc3files"
+            name="Cvc3"
+            provertoplevel="mobius.prover.cvc3.TopLevel"
+            translator="mobius.prover.cvc3.ProverTranslator">
+      </language>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="mobius.prover.gui.editor.ProverEditor"
+            contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
+            extensions="cvc3files"
+            icon="icons/sx.png"
+            id="cvc3.Cvc3Editor"
+            name="Cvc3Editor">
+      </editor>
+   </extension>
+
+</plugin>
