@@ -15,7 +15,7 @@
       <editor
             class="mobius.prover.gui.editor.ProverEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
-            extensions="sx"
+            extensions="yicesfiles"
             icon="icons/sx.png"
             id="yices.YicesEditor"
             name="YicesEditor">
