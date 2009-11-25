@@ -84,7 +84,7 @@ public final class BONParser {
    */
   public static ClassStructure parseClass(final BONST the_st,
       final Clazz a_class,
-      final Collection<Cluster> a_cluster) {
+      final Cluster a_cluster) {
     final int two = 2;
     final SortedSet  <  ClassModifier  > mod    = new TreeSet < ClassModifier > ();
     final Visibility vis                        = new Visibility(VisibilityModifier.PUBLIC);
@@ -200,9 +200,7 @@ public final class BONParser {
 
     //Cluster
     if (a_cluster != null) {
-      for (Cluster c : a_cluster) {
-        clus.add(new SmartString(c.name));
-      }
+      clus.add(new SmartString(a_cluster.name));
     }
     //Source location
     final BeetlzSourceLocation src = new BeetlzSourceLocation(a_class.getReportingLocation());

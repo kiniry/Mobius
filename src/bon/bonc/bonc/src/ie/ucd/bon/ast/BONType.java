@@ -19,8 +19,7 @@ public class BONType extends Type {
   
   private static Map<String,BONType> typeMap = new HashMap<String,BONType>();
 
-  public BONType(String identifier, List<Type> actualGenerics,
-      String fullString, SourceLocation location) {
+  public BONType(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
     super(identifier, actualGenerics, fullString, location);
     typeMap.put(fullString, this);
   }

@@ -307,7 +307,8 @@ public class TypeCheckerVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   private boolean isClassInCluster(String className, String clusterName) {
-    return st.classClusterGraph.containsEntry(className, st.clusters.get(clusterName));
+    Cluster cluster = st.classClusterMap.get(className);
+    return cluster != null && clusterName.equals(cluster.name);
   }
 
   private boolean isClusterInCluster(String containee, String containing) {

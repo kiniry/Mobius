@@ -6,6 +6,8 @@ package ie.ucd.bon.printer.template;
 
 import ie.ucd.bon.util.FileUtil;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
@@ -40,16 +42,35 @@ public class FreeMarkerTemplate {
     return config;
   }
 
-  public static void writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
+  public static boolean writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
     try {
       dataModel.put("prepareManifest", new PrepareManifestForXHTMLMethod());
+      dataModel.put("pp", new PrettyPrintMethod());
       getConfig().getTemplate(templateName).process(dataModel, out);
       out.flush();
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
+      return false;
     } catch (TemplateException e) {
       e.printStackTrace();
+      return false;
     }
   }
 
+  public static boolean writeTemplateToFile(File outputFile, String templateName, Map<String,Object> dataModel) {
+    try {
+      FileWriter fw = new FileWriter(outputFile);
+      if (!writeTemplate(fw, templateName, dataModel)) {
+        return false;
+      } else {
+        fw.close();
+        return true;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+  
 }

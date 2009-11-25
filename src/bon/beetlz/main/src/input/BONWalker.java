@@ -43,11 +43,11 @@ public class BONWalker {
     final UserProfile profile = Beetlz.getProfile();
     final BONST the_st = the_tracker.getSymbolTable();
     
-    final Graph<String,Cluster> clusterList = the_st.classClusterGraph;
+    final Map<String,Cluster> clusterList = the_st.classClusterMap;
 
     for (final Clazz c : the_st.classes.values()) {
       if (!profile.isBONIgnored(c.name.name)) {
-        final Collection<Cluster> clusterInfo = clusterList.get(c.name.name);
+        Cluster clusterInfo = clusterList.get(c.name.name);
         final ClassStructure temp = BONParser.parseClass(the_st, c, clusterInfo);
         my_classes.put(temp.getSimpleName(), temp);
       }

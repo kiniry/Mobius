@@ -57,9 +57,9 @@ public class XHTMLPrintVisitor extends AbstractVisitorWithAdditions implements P
     data.put("links", links);
 
     ByteArrayOutputStream start = new ByteArrayOutputStream();
-    FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "xhtml-start.ftl", data);
+    FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "xhtml/xhtml-start.ftl", data);
     ByteArrayOutputStream end = new ByteArrayOutputStream();
-    FreeMarkerTemplate.writeTemplate(new PrintWriter(end), "xhtml-end.ftl", data);
+    FreeMarkerTemplate.writeTemplate(new PrintWriter(end), "xhtml/xhtml-end.ftl", data);
 
     StringBuilder sb = new StringBuilder();
     sb.append(start.toString());

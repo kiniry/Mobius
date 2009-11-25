@@ -18,14 +18,32 @@ import com.google.common.collect.Multimap;
 public class Graph<A,B> extends ForwardingMultimap<A,B> {
 
   private final Multimap<A,B> delegate;
+  private final Multimap<B,A> reverse;
 
   public Graph() {
     delegate = LinkedListMultimap.create();
+    reverse = LinkedListMultimap.create();
   }
 
   @Override
   protected Multimap<A, B> delegate() {
     return delegate;
+  }
+
+  @Override
+  public boolean put(A key, B value) {
+    reverse.put(value, key);
+    return super.put(key, value);
+  }
+
+  @Override
+  public boolean remove(Object key, Object value) {
+    reverse.remove(value, key);
+    return super.remove(key, value);
+  }
+  
+  public Multimap<B,A> reverse() {
+    return reverse;
   }
 
   /**

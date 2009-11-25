@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.antlr.runtime.BitSet;
+import org.antlr.runtime.CommonTokenStream;
 import org.antlr.runtime.EarlyExitException;
 import org.antlr.runtime.FailedPredicateException;
 import org.antlr.runtime.IntStream;
@@ -41,6 +42,7 @@ public abstract class AbstractBONParser extends Parser {
   private boolean validParse;
   private File sourceFile;
   private Problems problems;
+  private CommonTokenStream tokenStream;
 
   public AbstractBONParser(TokenStream input, RecognizerSharedState state) {
     super(null, state);
@@ -49,8 +51,9 @@ public abstract class AbstractBONParser extends Parser {
   /**
    * {@inheritDoc}
    */
-  public void initialise(TokenStream input, File sourceFile) {
+  public void initialise(CommonTokenStream input, File sourceFile) {
     this.sourceFile = sourceFile;
+    this.tokenStream = input;
     validParse = true;
     problems = new Problems("Parser");
     super.setTokenStream(input);
@@ -288,6 +291,41 @@ public abstract class AbstractBONParser extends Parser {
 
   protected static <T> List<T> emptyList() {
     return Collections.emptyList();
+  }
+  
+  protected String lookForCommentBefore() {
+    int index = tokenStream.index()-1;
+    
+    while (index > 0) {
+      Token t = tokenStream.get(index);
+      if (t.getChannel() != HIDDEN) {
+        return null;
+      } else if (getTokenTypeName(t.getType()).equals("COMMENT")) {
+        System.out.println("HIDDEN token. type " + t.getType() + ", text:" + t.getText() + ", channel: " + t.getChannel());
+        System.out.println("Found comment: " + prepareComment(t.getText()));
+        return prepareComment(t.getText());
+      }
+      index--;
+    }
+    
+    return null;
+  }
+  
+  private String prepareComment(String comment) {
+    String[] lines = comment.split("\n");
+    List<String> linesp = new ArrayList<String>();
+    for (String line : lines) {
+      linesp.add(line.substring(2).trim());
+    }
+    StringBuilder sb = new StringBuilder();
+    for (String line : linesp) {
+      sb.append(line);
+      sb.append('\n');
+    }
+    if (sb.length() > 1) {
+      sb.deleteCharAt(sb.length()-1);
+    }
+    return sb.toString();
   }
 
 }

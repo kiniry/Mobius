@@ -31,7 +31,7 @@ public class BONST {
 
   public final Graph<String,Type> classInheritanceGraph = new Graph<String,Type>();
   public final Graph<String,String> simpleClassInheritanceGraph = new Graph<String,String>();
-  public final Graph<String,Cluster> classClusterGraph = new Graph<String,Cluster>();
+  public final Map<String,Cluster> classClusterMap = new HashMap<String,Cluster>();
   public final Graph<String,Cluster> clusterClusterGraph = new Graph<String,Cluster>();
 
   public final TwoDimensionalMap<Clazz, String, FeatureSpecification> featuresMap = new TwoDimensionalMap<Clazz,String,FeatureSpecification>();

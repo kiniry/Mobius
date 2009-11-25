@@ -17,7 +17,6 @@ import ie.ucd.bon.util.StringUtil;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
@@ -112,40 +111,17 @@ public final class API {
   }
 
 
-  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final Collection<File> files, final ParsingTracker tracker, final boolean timing) {
+  public static void print(final BONcOptionsInterface.Print printType, final boolean genClassDic, final File outputFile, final ParsingTracker tracker, final boolean timing) {
 
     if (genClassDic && printType != BONcOptionsInterface.Print.DIC) {
       String classDic = Printer.printGeneratedClassDictionaryToString(tracker);
       File classDicAutoFile = new File("class-dic-auto");
       if (!classDic.equals("")) {
         tracker.addParse(classDicAutoFile, Parser.parse(classDicAutoFile, new ByteArrayInputStream(classDic.getBytes())));
-        files.add(classDicAutoFile);
       }
     }
 
-    PrintStream outputStream;
-    if (outputFile != null) {
-      try {
-        FileOutputStream outputFileStream = new FileOutputStream(outputFile);
-        outputStream = new PrintStream(outputFileStream);
-
-        Main.logDebug("printing: " + printType + ", to: " + outputFile.getPath());
-      } catch (FileNotFoundException fnfe) {
-        System.out.println("Error writing to file " + outputFile.getPath());
-        return;
-      }
-    } else {
-      outputStream = System.out;
-      Main.logDebug("printing: " + printType + ", to: stdout");
-    }
-
-
-    Printer.printToStream(files, tracker, outputStream, printType, timing);
-
-    if (outputFile != null) {
-      outputStream.close();
-      System.out.println("Succesfully created: " + outputFile.getPath());
-    }
+    Printer.print(printType, outputFile, tracker, timing);
   }
 
   public static void printResults(final Problems problems, final ParsingTracker tracker, final PrintStream out) {

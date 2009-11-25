@@ -9,264 +9,353 @@ indexing
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- ENCLOSURE cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-static_diagram ZOO       
--- a test zoo.
-component 
-
--- Test of generic and compound types
-class ENCLOSURE 	--
-indexing
-	about: "some explanation"
-feature
-   	count: INTEGER 
-   	animalCapacity: VALUE
-   	accomodateAnimal: BOOLEAN
-   		-> animal: SEQUENCE[ANIMAL] 
-   		ensure
-   			delta ANY;
-   		end 		
-   	removeAnimal: SET[ANIMAL]
-   		-> animal: SEQUENCE[ANIMAL] 
-   		ensure
-   			delta ANY;
-   		end 
-   	moveAnimal  
-   		-> newPlace: CAGE
-   		-> reason: STRING
-   	addAnimals
-   		-> animals: TABLE[ANIMAL, STRING]
-   	nameAnimal
-   		-> name: STRING
-end 
-
- 
-class WATERPARK -- A wet cage.
-
---Test for generics
-class TERRARIUM--[T -> ANIMAL, S] -- A warm cage.
-inherit  
-	ENCLOSURE
-feature
-	temperature: SET[ANY]
-	regulateTemperature
-		-> temps: Set[INTEGER]
-	heatUp: SET[SET[STRING]]  
-end -- end class Terrarium
-
-class CAGE[T -> ANIMAL]
-feature
-	numSnakes, numMice, numBugs, numCats: INTEGER
-	occupants: SEQUENCE[ANIMAL]
-	count: INTEGER
-	maxCapacity: INTEGER
-		ensure
-			Result = 50;
-		end
-	putIn
-		-> newOccupant: ANIMAL
-		require
-			occupants.size < maxCapacity;
-		ensure
-			count = old(count) + 1;
-		end
-	remove
-		-> toGo: ANIMAL
-		require
-			count > 0;
-			occupants.contains(toGo);
-		ensure
-			count /= old(count); 
-		end
-invariant
-	numCats < numMice;
-	numBugs < 100;
-	numMice >= 50;
-  	numSnakes <= 10;
+static_diagram ZOO           
+component   
+cluster ZOO
+component
+cluster ENCLOSURE_CLUSTER
+component
+	class ENCLOSURE
+	indexing    
+		about: "some explanation"
+	feature
+	   	count: INTEGER   
+	   	my_animal_capacity: VALUE
+	   	accomodateAnimal: BOOLEAN
+	   		-> animal: SEQUENCE[ANIMAL] 
+	   	removeAnimal: SET[ANIMAL]
+	   		-> animal: SEQUENCE[ANIMAL] 
+	   	moveAnimal    
+	   		-> newPlace: CAGE  
+	   		-> reason: STRING
+	   	addAnimals
+	   		-> animals: TABLE[ANIMAL, STRING]
+	   	nameAnimal
+	   		-> name: STRING
+	end 
+	
+	--class WATERPARK -- A wet cage.
+	
+	class TERRARIUM[T -> ANIMAL, S] 
+	inherit  
+		ENCLOSURE
+	feature
+		temperature: SET[ANY]
+		regulateTemperature
+			-> temps: SET[INTEGER]
+		heatUp: SET[SET[STRING]]  
+	end 
+	
+	class CAGE[S -> ANIMAL]
+	feature
+		my_height, my_width: INTEGER
+		numSnakes, numMice, numBugs: INTEGER
+		numCats: INTEGER
+			ensure
+				numCats > old numCats;
+			end
+		occupants: SEQUENCE[S]
+		count: INTEGER
+		maxCapacity: INTEGER
+			ensure
+				Result = 50;  
+			end
+		putIn
+			-> newOccupant: S
+			require
+				occupants.count < maxCapacity;
+			ensure
+				count = old count + 1;
+				my_height ^ my_width < 100;
+				Result = (numSnakes + numBugs - numCats) * numMice;
+			end  
+		remove
+			-> toGo: S
+			require
+				count > 0;
+				occupants.contains(toGo);
+			ensure
+				delta occupants;
+				0 <= Result;
+				count /= old count;  
+				Result * Result <= count; 
+			end
+		enlarge
+			-> height: INTEGER
+			require
+				50 = my_height + my_width;
+				my_height + my_width = 90;
+	  			my_height \\ 10 = 0;
+	  			my_width / 25 <= 5;
+	  			my_num_cats - numMice > 0;
+			end
+		countAll
+			require
+				not (occupants.item(2) = Void);
+			ensure
+				delta my_height;
+				my_width < my_height;
+			end
+		paint
+			-> color: INTEGER
+			require
+				+color > 0;
+				
+				+color > 0 xor -color < 0; 
+			end
+	invariant
+		numCats > numMice;
+		numBugs < 100;
+		50 <= numMice;
+	  	numSnakes <= 10;
+	end
 end
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- ANIMALS cluster classes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-deferred class ANIMAL -- An abstract animal.
-indexing    
-  about:  "An abstract animal.";
-  author: "Evka";
-  version: "1";
-feature
-  	weight, feedingFrequency: VALUE
-  	place: ENCLOSURE
-  	sleeping: BOOLEAN
-  	deferred wakeUp
-  	scareAwake
-end 
-
-class ZEBRA -- A zebra animal. With stripes. Preferably black and white.
-feature
-	weight: INTEGER
-	hungry: BOOLEAN
-	pissed: BOOLEAN
-	stripes: SEQUENCE[STRING]
-	feed
-		-> amount: VALUE
-		ensure
-			delta {hungry, asleep};
-			sleeping -> pissed = true;
-		end  
+cluster ANIMAL_CLUSTER
+component
+	deferred class ANIMAL 
+	indexing    
+	  about:  "An abstract animal.";
+	  author: "Evka";
+	  version: "1";
+	feature  
+	  	weight:VALUE
+	  	feedingFrequency: VALUE
+	  	dummyDummy: VALUE
+	  	ensure
+	  			Result = 10 or Result =20 or Result =30;
+	  		end
+	  	place: ENCLOSURE
+	  	sleeping: BOOLEAN
+	  	deferred wakeUp
+	  	scareAwake
+	end 
 	
-	wakeUp
-		require
-			asleep = true;
-		ensure
-			delta asleep;
-			asleep = false;
-		end
-	makePicture
-	paintOver
-		ensure
-			delta stripes;
-		end
-feature{ZEBRA}
-	asleep: BOOLEAN
-invariant 
-	weight > 0;
-end 
-
-deferred class LION -- A lion animal. The king.
-inherit 
-	ANIMAL
-feature
-	feed
-		-> amount: REAL
-	make
-		-> name: SEQUENCE[SEQUENCE[STRING]]
-	isHappy: BOOLEAN
-feature{NONE}
-	effective wakeUp
+	class ZEBRA 
+	feature
+		weight: INTEGER
+		hungry: BOOLEAN
+		pissed: BOOLEAN
+		stripes: SEQUENCE[STRING]
+		feed
+			-> amount: VALUE
+			ensure
+				delta {hungry, asleep};
+				sleeping -> pissed = true;
+				not (sleeping <-> not hungry);
+			end  
+		
+		wakeUp
+			require
+				asleep = true;
+			ensure
+				delta asleep;
+				asleep = false;
+			end
+	feature{ANIMAL_CLUSTER} 
+		makePicture
+			require
+				stripes.item(2) = "black stripe";
+			end   
+		paintOver
+			require
+				not pissed;
+				sleeping and not hungry;
+			ensure
+				delta stripes;
+				pissed or hungry;
+			end
+	feature{ZEBRA}
+		asleep: BOOLEAN
+	invariant 
+		weight > 0;
+	end 
 	
-end 
-
-class MANE
-feature--{MANE, LION}
-	make
+	deferred class LION 
+	inherit 
+		ANIMAL
+	feature
+		feed
+			-> amount: REAL
+		make
+			-> name: SEQUENCE[SEQUENCE[STRING]]
+		isHappy: BOOLEAN
+	feature{NONE}
+		effective wakeWakeUp
+		
+	end 
+	
+	class MANE
+	feature
+		make
+	end
+	
+	
+	LION client {3} :{ MANE
+	LION client {1} KEEPER
+	
+	effective class PENGUIN 
+	feature
+		food: FOOD
+		luckyNumber: INTEGER
+			ensure
+				Result = 9
+			end
+		noLuckyNumber: INTEGER
+		make
+			-> name: STRING
+	feature{PENGUIN}  
+		make3
+			-> name: STRING
+			-> encl: ENCLOSURE
+	end 
+	 
+	PENGUIN client:(1) FOOD   
+	   
+	 
+	effective class SNAKE 
+	inherit 
+		ANIMAL; DANGEROUS_ANIMAL
+	feature
+		feed
+	  	feed1
+	  		-> amount: VALUE  
+	  	feed2
+	  		-> what: STRING
+	 	feed3
+	  		-> amount: VALUE
+	  		-> what: STRING
+	  	feed4
+	  		-> what: STRING
+	  		-> amount: STRING  
+	  	countStripes
+		pattern
+		dummy
+		redefined wakeUp
+	feature{SNAKE}
+		patternOne: STRING
+		patternTwo: STRING
+	end 
+	
+	deferred class DANGEROUS_ANIMAL 
+	  
 end
-
-class ROAR
-feature{NONE}
-	make
-end
-
-
-LION client {3} :{ MANE
-LION client {1} KEEPER
-
-effective class PENGUIN -- A penguin animal. In a dress coat.
-feature
-	food: FOOD
-		--ensure
-			--Result = FOOD.fish
-		--end
-	luckyNumber: INTEGER
-		ensure
-			Result = 9
-		end
-	noLuckyNumber: INTEGER
-	make
-		-> name: STRING
-	make2
-		-> name: STRING
-		-> age: VALUE  
-feature{PENGUIN}
-	make3
-		-> name: STRING
-		-> encl: ENCLOSURE
-feature{NONE}
-	make4   
-		-> name: VALUE
-end 
-    
-   
- 
-effective class SNAKE --overloaded features
-inherit 
-	ANIMAL; DANGEROUS_ANIMAL
-feature
-	feed
-  	feed1
-  		-> amount: VALUE
-  	feed2
-  		-> what: STRING
- 	feed3
-  		-> amount: VALUE
-  		-> what: STRING
-  	feed4
-  		-> what: STRING
-  		-> amount: STRING
-  	countStripes
-	pattern
-	dummy
-	effective wakeUp
-feature{SNAKE}
-	patternOne: STRING
-	patternTwo: STRING
-end 
-
-
-class FOOD  
-feature
-      fish:FOOD
-      grass:FOOD
-      blood:FOOD
-      anything:FOOD
-end
-
-deferred class DANGEROUS_ANIMAL --interface    
-
-
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- PERSONNEL cluster classes
 -- Here we test our class modifier
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
---Test for interface
-deferred class PERSONNEL -- interface
-feature  
-	name: STRING
-		ensure
-			Result = "Mickey Mouse"
-		end
-	--area: STRING  
-	deferred getID: VALUE
-	deferred setVacation 
-	--deferred name: STRING
-
-end   
-
-effective class KEEPER  -- strictfp
-inherit 
-	PERSONNEL
-feature
-	effective getID: INTEGER
-	effective setVacation  
-	name: STRING
-	feedAnimal: BOOLEAN
-		-> animal: ANIMAL
-		ensure
-			delta ANY;
-		end
-end
-
-class MOP	--static member
-class BRUSH  --final
-
-KEEPER client :{ MOP
-KEEPER client :{ BRUSH
-
---MANAGER client :{ KEEPER
-
-root class MANAGER persistent interfaced  --root
-feature  
-	start
-	endd
-end
+cluster PERSONNELS_CLUSTER
+component
+	deferred class PERSONNEL 
+	feature  
+		name: STRING
+			ensure
+				Result = "Mickey Mouse"
+			end  
+		deferred getID: VALUE
+		deferred setVacation
+		area: STRING  
+	end   
 	
---class SPREADSHEET reused --reused, can be ignored
+	effective class KEEPER  
+	inherit 
+		PERSONNEL
+	feature
+		animals: SEQUENCE[ANIMAL]
+			ensure
+				Result /= Void;
+			end
+		favouriteAnimal:(1) ANIMAL
+			ensure
+				Result /= Void;
+			end
+		secondFavouriteAnimal: ANIMAL
+			ensure
+				Result /= Void;
+			end
+		redefined getID: INTEGER
+		ensure
+			Result /= Void;
+		end
+		redefined setVacation 
+		name: STRING
+		ensure
+			Result /= Void;
+		end
+		feedAnimal: BOOLEAN
+			-> animal: ANIMAL
+			ensure
+				Result /= Void;
+			end
+		goOnVacation: STRING
+			-> where: STRING
+			require
+				where /= Void;
+			ensure
+				feedAnimal = true;
+				Result /= Void
+			end
+		make
+			ensure
+				favouriteAnimal /= secondFavouriteAnimal;
+			end
+	end
+	
+	class MOP	
+	class BRUSH 
+	
+	KEEPER client :{ MOP
+	KEEPER client :{ BRUSH
+	
+	class FOOD
+	indexing
+		about: "This class is an example for an enumerated type in BON."   
+	feature
+	      fish:FOOD
+	      ensure
+				Result = old fish;
+		  end
+	      grass:FOOD
+	      ensure
+				Result = old grass;
+		  end
+	      blood:FOOD
+	      ensure
+				Result = old blood;
+		  end
+	      anything:FOOD
+	      ensure
+				Result = old anything;
+		  end
+		  getName: STRING
+	feature{NONE}
+		enumeration:SET
+	end
+	
+	FOOD client:(4) FOOD
+	
+	root class MANAGER persistent interfaced  
+	feature
+		casper: INTEGER
+		experience: INTEGER
+		calculateExperience: INTEGER
+			-> years: INTEGER
+		manage
+		run
+	end
+	
+	end
+	root class ZOO_CLASS
+	feature
+		zooName: STRING
+		animalOfTheMonth: ANIMAL
+		countVisitor
+		-> newNumber: INTEGER
+		giveInformation: STRING  
+	end
+end
 
-end 
+ 
+end

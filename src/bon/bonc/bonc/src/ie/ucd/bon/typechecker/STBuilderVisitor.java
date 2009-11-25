@@ -104,7 +104,8 @@ public class STBuilderVisitor extends AbstractVisitorWithAdditions implements IV
       st.classes.put(name.getName(), node);
 
       if (!context.clusterStack.empty()) {
-        st.classClusterGraph.put(name.getName(), context.clusterStack.peek());
+        st.classClusterMap.put(name.getName(), context.clusterStack.peek());
+        //TODO check if already in a cluster?
       }
 
       st.genericsMap.put(context.clazz, generics);

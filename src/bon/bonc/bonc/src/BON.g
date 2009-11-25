@@ -504,8 +504,8 @@ static_diagram returns [StaticDiagram sd]
 @init { String eid = null; String comment = null; } 
 :
   s='static_diagram' 
-  (extended_id { if(isOk()) eid=$extended_id.eid; } )? 
-  (c=COMMENT { if(isOk()) comment=$c.text; } )? 
+  (extended_id { if(isOk()) eid=$extended_id.eid; } )?
+  comment { comment = $comment.comment; } 
   'component' 
   sb=static_block 
   e='end'
@@ -540,7 +540,7 @@ cluster returns [Cluster cluster]
 :
   c='cluster' cluster_name { end = $cluster_name.stop; }
   (r='reused' { if(isOk()) reused = true; end = $r; } )? 
-  (co=COMMENT { if(isOk()) comment = $co.text; end = $co;} )?    
+  comment { comment = $comment.comment; }   
   (  cc=cluster_components 
      { if(isOk()) components = $cc.components; end = $cc.stop;}
    |
@@ -573,12 +573,16 @@ clazz returns [Clazz clazz]
   )
   (ru='reused' { reused = true; end = $ru; } )? 
   (p='persistent' { persistent = true; end = $p; })?   
-  (i='interfaced' { interfaced = true; end = $i; })? 
-  (co=COMMENT { comment = $co.text; end = $co; } )?
+  (i='interfaced' { interfaced = true; end = $i; })?
+  comment { comment = $comment.comment; }
   
   (ci=class_interface { if(isOk()) classInterface = $ci.ci; end = $ci.stop; } )?
   
   { if(isOk()) $clazz = Clazz.mk($cn.name, generics, mod, classInterface, reused, persistent, interfaced, comment, getSLoc(start,end)); }
+;
+
+comment returns [String comment] :
+  { $comment = lookForCommentBefore(); } 
 ;
             
 static_relation returns [StaticRelation relation] :
@@ -876,7 +880,7 @@ feature_clause returns [Feature feature]
   (  se=selective_export { if(isOk()) selectiveExport = $se.exports; } 
    | { selectiveExport = emptyList(); }
   ) 
-  (c=COMMENT { if(isOk()) comment = $c.text; } )? 
+  comment { comment = $comment.comment; }
   fs=feature_specifications 
   { if(isOk()) $feature = Feature.mk($fs.specs, selectiveExport, comment, getSLoc($f,$fs.stop)); }
 ;
@@ -900,7 +904,7 @@ feature_specification returns [FeatureSpecification spec]
   { end=$fnl.stop; if (start==null) start=$fnl.start; }
   (has_type { if(isOk()) hasType = $has_type.htype; end=$has_type.stop; } )?
   (rc=rename_clause { if(isOk()) renaming = $rc.rename; end=$rc.stop; } )?
-  (c=COMMENT { if(isOk()) comment = $c.text; end=$c; } )?
+  comment { comment = $comment.comment; }
   (  fa=feature_arguments
      { if(isOk()) args = $fa.args; end=$fa.stop; }
    | { args = emptyList(); }
@@ -1329,7 +1333,7 @@ dynamic_diagram returns [DynamicDiagram dd]
 :
   s='dynamic_diagram' 
   (eid=extended_id { if(isOk()) id = $eid.eid; } )? 
-  (c=COMMENT { if(isOk()) comment = $c.text; } )?
+  comment { comment = $comment.comment; }
   'component' 
   ( db=dynamic_block
     { if(isOk()) components = $db.components; }
@@ -1358,11 +1362,11 @@ scenario_description returns [ScenarioDescription description]
 @init { String comment = null; }
 :
   s='scenario' scenario_name 
-  (c=COMMENT { if(isOk()) comment = $c.text; } )?
+  comment { comment = $comment.comment; }
   'action' 
   la=labelled_actions 
   e='end'
-  { if(isOk()) $description = ScenarioDescription.mk($scenario_name.name, $la.actions, comment, getSLoc($s,$c)); }
+  { if(isOk()) $description = ScenarioDescription.mk($scenario_name.name, $la.actions, comment, getSLoc($s,$e)); }
 ;
                       
 labelled_actions returns [List<LabelledAction> actions] :
@@ -1404,7 +1408,7 @@ object_group returns [ObjectGroup group]
   s='object_group' { if (start==null) start=$s; }
   group_name 
   { end = $group_name.stop; }
-  (c=COMMENT { comment = $c.text; end = $c; } )? 
+  comment { comment = $comment.comment; }
   (  gc=group_components
      { if(isOk()) components = $gc.components; }
    | { components = emptyList(); }
@@ -1423,7 +1427,7 @@ object_stack returns [ObjectStack stack]
   s='object_stack' 
   n=object_name
   { end = $n.stop; } 
-  (c=COMMENT { if(isOk()) comment = $c.text; end = $c; } )?
+  comment { comment = $comment.comment; }
   { if(isOk()) $stack = ObjectStack.mk($n.name, comment, getSLoc($s,end)); }
 ;
               
@@ -1433,7 +1437,7 @@ object returns [ObjectInstance object]
   s='object' 
   n=object_name
   { end = $n.stop; } 
-  (c=COMMENT { if(isOk()) comment = $c.text; end = $c; } )?
+  comment { comment = $comment.comment; }
   { if(isOk()) $object = ObjectInstance.mk($n.name, comment, getSLoc($s,end)); } 
 ;
 
