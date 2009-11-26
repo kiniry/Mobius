@@ -4,7 +4,6 @@
  */
 package ie.ucd.bon.printer;
 
-import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
@@ -45,32 +44,22 @@ import ie.ucd.bon.ast.TypeMark.Mark;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.source.SourceLocation;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class LatexPrintVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions, PrintAgent {
-
-  private final TextPrinter tp;
-  private final ByteArrayOutputStream baos;
+public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorWithAdditions, PrintAgent {
 
   public LatexPrintVisitor() {
-    baos = new ByteArrayOutputStream();
-    tp = new TextPrinter(new PrintStream(baos));
   }
 
   public String getAllOutputAsString(ParsingTracker tracker, Map<String, Object> additionalData) throws IOException {
-    ByteArrayOutputStream start = new ByteArrayOutputStream();
+    //ByteArrayOutputStream start = new ByteArrayOutputStream();
     //FreeMarkerTemplate.writeTemplate(new PrintWriter(start), "latex-start.ftl", additionalData);
-
-    StringBuilder sb = new StringBuilder();
-    sb.append(start.toString());
-    sb.append(baos.toString());
-    return sb.toString();
+    //return start.toString().append(super.getAllOutputAsString(additionalData));
+    return super.getAllOutputAsString(tracker, additionalData);
   }
 
   @Override

@@ -52,7 +52,9 @@ function selectedAuto(selectedElement) {
 function processHash(hash) {
   var parts = hash.split(':');
   if (parts.length >= 2) {
-    loadClass(parts[1]);
+	if (parts[0] == 'class') {
+      loadClass(parts[1]);
+	}
     return true;
   }
   return false;

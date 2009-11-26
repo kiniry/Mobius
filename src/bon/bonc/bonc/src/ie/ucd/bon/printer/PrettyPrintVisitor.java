@@ -4,7 +4,6 @@
  */
 package ie.ucd.bon.printer;
 
-import ie.ucd.bon.ast.AbstractVisitorWithAdditions;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
@@ -94,21 +93,16 @@ import ie.ucd.bon.util.StringUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements IVisitorWithAdditions, PrintAgent {
+public class PrettyPrintVisitor extends AbstractPrintVisitor implements IVisitorWithAdditions, PrintAgent {
 
-  private final TextPrinter tp;
-  private final ByteArrayOutputStream baos;
 
   public PrettyPrintVisitor() {
-    baos = new ByteArrayOutputStream();
-    tp = new TextPrinter(new PrintStream(baos));
   }
 
   public String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> data) throws IOException {
@@ -117,16 +111,8 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
 
     StringBuilder sb = new StringBuilder();
     sb.append(start.toString());
-    sb.append(baos.toString());
+    sb.append(super.getAllOutputAsString(tracker, data));
     return sb.toString();
-  }
-
-  public String getVisitorOutputAsString() {
-    return baos.toString();
-  }
-
-  public void resetVisitorOutput() {
-    baos.reset();
   }
 
   @Override

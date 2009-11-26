@@ -6,6 +6,7 @@ package ie.ucd.bon.util;
 
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.Clazz;
+import ie.ucd.bon.printer.LatexPrintVisitor;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 
 import java.io.ByteArrayOutputStream;
@@ -132,6 +133,16 @@ public final class StringUtil {
       sb.append(']');
     }
     return sb.toString();
+  }
+  
+  private static final LatexPrintVisitor lpv = new LatexPrintVisitor();
+  public static String latexPrint(AstNode node) {
+    if (node == null) {
+      return "";
+    }
+    lpv.resetVisitorOutput();
+    node.accept(lpv);
+    return lpv.getVisitorOutputAsString();
   }
 
 }
