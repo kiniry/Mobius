@@ -1,3 +1,4 @@
+<#include "macros.ftl"/>
 <ul><#list related as relate>
- <li><a href="" onclick="return navTo('class:${relate}');">${relate}</a></li>
+ <li><@pclass class=relate/></li>
 </#list></ul>

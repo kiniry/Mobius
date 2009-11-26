@@ -5,6 +5,7 @@
 package ie.ucd.bon.util;
 
 import ie.ucd.bon.ast.AstNode;
+import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.printer.PrettyPrintVisitor;
 
 import java.io.ByteArrayOutputStream;
@@ -118,6 +119,19 @@ public final class StringUtil {
     ppv.resetVisitorOutput();
     node.accept(ppv);
     return ppv.getVisitorOutputAsString();
+  }
+  
+  public static String prettyPrintShortenedClass(Clazz clazz) {
+    StringBuilder sb = new StringBuilder();
+    sb.append(clazz.name.name);
+    if (!clazz.generics.isEmpty()) {
+      ppv.resetVisitorOutput();
+      ppv.visitAllPrintingSeparator(clazz.generics, ", ", false);
+      sb.append('[');
+      sb.append(ppv.getVisitorOutputAsString());
+      sb.append(']');
+    }
+    return sb.toString();
   }
 
 }

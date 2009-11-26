@@ -15,11 +15,12 @@ function setup() {
     $('main-display').morph('opacity: 0.1', {duration: 0.2});
     if ($j('#search-box').val() == 'Search...') {
       $j('#search-box').val('');
-    } else {
+    } else if ($j('#search-box').val() != '') {
       setTimeout(function(){ autocompleter.show(); }, 250);
     }
   });
   
+  //On search box lose focus, restore search box (and  small size
   $j('#search-box').blur(function(event){
     $('search-box').morph('width: 150px; font-size: 12px;', {duration: 0.2});
     $('search-pane').morph('width: 200px; font-size: 20px;', {duration: 0.2});

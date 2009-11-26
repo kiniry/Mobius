@@ -203,8 +203,9 @@
 @Input { zoo_formal.bon }
 
 @Test-name: "Sensetile system."
+@Prog-args: {--formal}
 @Location { sensetile/ }
-@Input { sensetile.bon, processor_unit/processor_unit.bon, processor_unit/sensor_metadata.bon, st_board/channel/channel-formal.bon, st_board/sensor/sensors-formal.bon, processor_unit/sensor_board_driver.bon, server/server.bon, st_board/sensor/sensor_board.bon }
+@Input { sensetile.bon }
 
 @Test-name: "BON book dynamic diagram examples"
 @Prog-args: {--formal}

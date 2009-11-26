@@ -133,7 +133,7 @@ public interface IVisitor {
 
   void visitSupplierIndirection(SupplierIndirection node, IndirectionFeaturePart indirectionFeaturePart , GenericIndirection genericIndirection , SourceLocation loc);
 
-  void visitType(Type node, String identifier , List<Type> actualGenerics , String fullString , SourceLocation loc);
+  void visitType(Type node, String identifier , List<Type> actualGenerics , SourceLocation loc);
 
   void visitTypeMark(TypeMark node, TypeMark.Mark mark , Integer multiplicity , SourceLocation loc);
 

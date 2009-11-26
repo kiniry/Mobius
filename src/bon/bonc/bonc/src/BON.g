@@ -1059,9 +1059,9 @@ formal_generic_name returns [String name] :
 class_type returns [Type type] :  
   c=class_name 
   (  actual_generics
-     { if(isOk()) $type = BONType.mk($c.text, $actual_generics.types, $c.text.concat($actual_generics.text), getSLoc($c.start, $actual_generics.stop)); }
+     { if(isOk()) $type = BONType.mk($c.text, $actual_generics.types, getSLoc($c.start, $actual_generics.stop)); }
     |
-     { if(isOk()) $type = BONType.mk($c.text, Constants.EMPTY_TYPE_LIST, $c.text, getSLoc($c.start,$c.stop)); } 
+     { if(isOk()) $type = BONType.mk($c.text, Constants.EMPTY_TYPE_LIST, getSLoc($c.start,$c.stop)); } 
   ) 
 ;
             
@@ -1085,11 +1085,10 @@ type returns [Type type] :
        i=IDENTIFIER 
        (
         ( actual_generics 
-          { String fullText = $actual_generics.text==null? $IDENTIFIER.text : $IDENTIFIER.text.concat($actual_generics.text);
-            if(isOk()) $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, fullText, getSLoc($i,$actual_generics.stop)); }
+          { if(isOk()) $type = BONType.mk($IDENTIFIER.text, $actual_generics.types, getSLoc($i,$actual_generics.stop)); }
         ) 
         |
-        { if(isOk()) $type = BONType.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, $IDENTIFIER.text,getSLoc($i)); }
+        { if(isOk()) $type = BONType.mk($IDENTIFIER.text, Constants.EMPTY_TYPE_LIST, getSLoc($i)); }
        ) 
 ;
 

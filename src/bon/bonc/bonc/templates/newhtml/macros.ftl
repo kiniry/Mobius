@@ -8,4 +8,5 @@
 <@html_header_no_close title=title/>
 </head>
 </#macro>
-<#macro type type>${pp(type)}</#macro>
+<#macro type type><a href="" onclick="return navTo('class:${type.identifier}');">${StringUtil.prettyPrint(type)}</a></#macro>
+<#macro pclass class><a href="" onclick="return navTo('class:${class.name.name}');">${StringUtil.prettyPrintShortenedClass(class)}</a></#macro>

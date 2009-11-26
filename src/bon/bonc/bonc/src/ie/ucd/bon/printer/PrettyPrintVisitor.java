@@ -407,7 +407,7 @@ public class PrettyPrintVisitor extends AbstractVisitorWithAdditions implements 
   }
 
   @Override
-  public void visitType(Type node, String identifier, List<Type> actualGenerics, String fullString, SourceLocation loc) {
+  public void visitType(Type node, String identifier, List<Type> actualGenerics, SourceLocation loc) {
     tp.print(identifier);
     if (!actualGenerics.isEmpty()) {
       tp.print('[');

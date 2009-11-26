@@ -13,13 +13,19 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.utility.StringUtil;
 
 public class FreeMarkerTemplate {
 
   private static Configuration config;
   private final Map<String,Object> dataModel;
+  
+  private static final BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
+  private static final TemplateHashModel staticModels = wrapper.getStaticModels();
 
   public FreeMarkerTemplate() {
     dataModel = new HashMap<String,Object>();
@@ -45,7 +51,9 @@ public class FreeMarkerTemplate {
   public static boolean writeTemplate(Writer out, String templateName, Map<String,Object> dataModel) {
     try {
       dataModel.put("prepareManifest", new PrepareManifestForXHTMLMethod());
-      dataModel.put("pp", new PrettyPrintMethod());
+      dataModel.put("StringUtil", staticModels.get("ie.ucd.bon.util.StringUtil"));
+      dataModel.put("AstUtil", staticModels.get("ie.ucd.bon.util.AstUtil"));
+      dataModel.put("STUtil", staticModels.get("ie.ucd.bon.util.STUtil"));
       getConfig().getTemplate(templateName).process(dataModel, out);
       out.flush();
       return true;

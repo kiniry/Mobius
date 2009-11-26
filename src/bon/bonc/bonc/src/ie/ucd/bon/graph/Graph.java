@@ -8,7 +8,9 @@ import ie.ucd.bon.util.Converter;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import com.google.common.collect.ForwardingMultimap;
@@ -84,6 +86,36 @@ public class Graph<A,B> extends ForwardingMultimap<A,B> {
     }
     return null;
   }
+  
+  public Set<A> getAllSuccessorNodes(A startNode, Converter<B,A> converter) {
+    return internalGetAllSuccessorNodes(startNode, converter, new LinkedHashSet<A>());
+  }
+  
+  private Set<A> internalGetAllSuccessorNodes(A startNode, Converter<B,A> converter, Set<A> seen) {
+    Collection<A> linked = converter.convert(get(startNode));
+    for (A a : linked) {
+      if (!seen.contains(a)) {
+        seen.add(a);
+        internalGetAllSuccessorNodes(a, converter, seen);
+      }
+    }    
+    return seen;
+  }
+  
+  public Set<A> getAllPredecessorNodes(A startNode, Converter<A,B> converter) {
+    return internalGetAllPredecessorNodes(startNode, converter, new LinkedHashSet<A>());
+  }
+  
+  private Set<A> internalGetAllPredecessorNodes(A startNode, Converter<A,B> converter, Set<A> seen) {
+    Collection<A> linked = reverse().get(converter.convert(startNode));
+    for (A a : linked) {
+      if (!seen.contains(a)) {
+        seen.add(a);
+        internalGetAllPredecessorNodes(a, converter, seen);
+      }
+    }    
+    return seen;
+  }
 
   @Override
   public String toString() {
@@ -93,6 +125,19 @@ public class Graph<A,B> extends ForwardingMultimap<A,B> {
       sb.append(edge.getKey());
       sb.append(" -> ");
       sb.append(edge.getValue());
+      sb.append("\n");
+    }
+
+    return sb.toString();
+  }
+  
+  public String toString(Converter<A,String> aConverter, Converter<B,String> bConverter) {
+    StringBuilder sb = new StringBuilder();
+
+    for (Entry<A,B> edge : entries()) {
+      sb.append(aConverter.convert(edge.getKey()));
+      sb.append(" -> ");
+      sb.append(bConverter.convert(edge.getValue()));
       sb.append("\n");
     }
 

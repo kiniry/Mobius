@@ -1,36 +1,13 @@
 package ie.ucd.bon.util;
 
+import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
-import ie.ucd.bon.graph.Graph;
 import ie.ucd.bon.typechecker.BONST;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class STUtil {
 
-  public static <T> Set<T> getAllSuccessorNodes(Graph<T,T> graph, T startNode, Set<T> seen) {
-    Collection<T> linked = graph.get(startNode);
-    for (T t : linked) {
-      if (!seen.contains(t)) {
-        seen.add(t);
-        getAllSuccessorNodes(graph, t, seen);
-      }
-    }    
-    return seen;
-  }
-  
-  public static <T> Set<T> getAllPredecessorNodes(Graph<T,T> graph, T startNode, Set<T> seen) {
-    Collection<T> linked = graph.reverse().get(startNode);
-    for (T t : linked) {
-      if (!seen.contains(t)) {
-        seen.add(t);
-        getAllPredecessorNodes(graph, t, seen);
-      }
-    }    
-    return seen;
-  }
-  
   public static String getQualifiedClassString(String c, BONST st) {
     Cluster cluster = st.classClusterMap.get(c);
     if (cluster == null) {
@@ -47,5 +24,30 @@ public class STUtil {
     } else {
       return getQualifiedClusterString(clusters.iterator().next().name, st) + '.' + c;
     }
+  }
+  
+  public static Collection<Clazz> getAllDescendants(Clazz clazz, BONST st) {
+    return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.getAllPredecessorNodes(clazz.name.name, Converter.<String>identityConverter()));
+  }
+  
+  public static Collection<Clazz> getImmediateDescendants(Clazz clazz, BONST st) {
+    return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.reverse().get(clazz.name.name));
+  }
+  
+  public static Collection<Clazz> getAllAncestors(Clazz clazz, BONST st) {
+    return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.getAllSuccessorNodes(clazz.name.name, Converter.<String>identityConverter()));
+  }
+  
+  public static Collection<Clazz> getImmediateAncestors(Clazz clazz, BONST st) {
+    return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.get(clazz.name.name));
+  }
+  
+  public static Converter<String,Clazz> classNameToClazzConverter(final BONST st) {
+    return new Converter<String,Clazz>() {      
+      @Override
+      public Clazz convert(String toConvert) {
+        return st.classes.get(toConvert);
+      }
+    };
   }
 }

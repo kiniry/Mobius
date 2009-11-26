@@ -1,46 +1,2546 @@
-system_chart SENSETILE_SYSTEM
-indexing
-  author: "Dragan Stosic & Vieri del Bianco & Joe Kiniry";
-  keywords: "sensor","data stream","data","collect","node","process","experiment","scientist"
-explanation
-  "The SenseTile system enable scientists to run experiments on \
-  \heterogeneus sensors networks. It can deploy applications on  \
-  \sensors nodes and processor nodes, it can collect data coming from sensors \
-  \it can run experiments on collected data."
-
-cluster SENSOR_BOARD
-description
-  "The sensor board is a custom made hardware board dedicated to collect data \
-  \from a set of heterogeneous sensors.\
-  \The sensor board communicates with a processor unit via an usb channel, \
-  \supporting a bidirectional serial data stream communication."
-
-cluster PROCESSOR_UNIT
-description
-  "The processor unit is a small size complete pc dedicated to collect data \
-  \from sensor board and other sensor sources, process data, and provide data \
-  \stream to the server nodes."
-
-cluster SERVER
-description
-  "The server node collect data coming from processor units, manage the data \ 
-  \store, process data according to the various experiments the scientists \ 
-  \ wants to run."
-
-cluster DATA_STORE
-description
-  "The data store passively stores processed data."
-
-cluster SCIENTIST
-description
-  "Scientists deploy experiments into server nodes, processor boards and \
-  \sensor boards which store processed data into data store. \
-  \Scientists run experiments on stored data."
-
-cluster SECURITY
-description
-  "Security manage security requirements, as identity, authenitcation and \
-  \authorization."
-end
-
-
+static_diagram STATIC_DIAGRAM
+component
+  cluster IE
+	component
+  	  cluster UCD
+	    component
+          cluster SENSETILE
+             component
+                cluster SENSORBOARD
+                   component
+                     cluster SIMULATOR
+	                    component
+	                       cluster FORMAL
+		                      component
+		                          cluster SENSOR
+		                             component
+		                             cluster TYPE
+		                                 component
+										    class ACCELEROMETER_SENSOR_TYPE 
+										    indexing
+										        about:        "This class represents light sensor type.";
+										  		title:        "AccelerometerSensorType";
+										  		author:       "Dragan Stosic";
+										  		copyright:    "none";
+										  		organisation: "School of Computer Science and Informatics, UCD";
+										  		date:         "2009/07/05";
+										  		version:      "Revision: 1.00";
+										    
+										    feature
+										      array: SEQUENCE[INTEGER]
+										        ensure
+										          Result = old array;
+										           Result /= Void;
+										        end
+										      legal_AccSensorType: BOOLEAN
+										        -> e: INTEGER
+										        require
+										          e /= Void;
+										        ensure
+										          Result /= Void;
+										          (e = array.item(0) or e = array.item(1) or e = array.item(2) or e = array.item(3)) <-> Result;
+										        end
+										      MEMS: INTEGER
+										        ensure
+										          Result = 2;
+										           Result /= Void;
+										        end
+										      PFPS: INTEGER
+										        ensure
+										          Result = 0;
+										           Result /= Void;
+										        end
+										      SMA: INTEGER
+										        ensure
+										          Result = 1;
+										          Result /= Void;
+										        end
+										        
+										      TCMOS: INTEGER
+										        ensure
+										           Result = 3;
+										           Result /= Void;
+										        end
+										    feature{NONE}
+										      make
+										     
+										    invariant
+										      legal_AccSensorType(PFPS);
+										      legal_AccSensorType(SMA);
+										      legal_AccSensorType(MEMS);
+										      legal_AccSensorType(TCMOS);
+		        							end
+		    							
+		    							 class LIGHT_SENSOR_TYPE 
+									    indexing
+									      about: "This class represents light sensor types.";
+									            title:        "LightSensorType";
+										  		author:       "Dragan Stosic";
+										  		copyright:    "none";
+										  		organisation: "School of Computer Science and Informatics, UCD";
+										  		date:         "2009/07/05";
+										  		version:      "Revision: 1.00";
+									    feature
+									      array: SEQUENCE[INTEGER]
+									        ensure
+									          Result = old array;
+									          Result /= Void;
+									        end
+									      legal_LightSensorType: BOOLEAN
+									        -> e: INTEGER
+									        require
+									          e /= Void;
+									        ensure
+									          Result /= Void;
+									          (e = array.item(0) or e = array.item(1) or e = array.item(2) or e = array.item(3)) <-> Result;
+									        end
+									      PCC: INTEGER
+									        ensure
+									          Result = 1;
+									          Result /= Void;
+									        end
+									      PEC: INTEGER
+									        ensure
+									          Result = 0;
+									          Result /= Void;
+									        end
+									      PJU: INTEGER
+									        ensure
+									          Result = 3;
+									          Result /= Void;
+									        end
+									      PVC: INTEGER
+									        ensure
+									          Result = 2;
+									          Result /= Void;
+									        end
+									    feature{NONE}
+									      make
+									    invariant
+									      legal_LightSensorType(PEC);
+									      legal_LightSensorType(PCC);
+									      legal_LightSensorType(PVC);
+									      legal_LightSensorType(PJU);
+									    end
+									    
+									    class PRESSURE_SENSOR_TYPE 
+									    indexing
+									      about: "This class represents pressure sensor types.";
+									            title:        "PressureSensorType";
+										  		author:       "Dragan Stosic";
+										  		copyright:    "none";
+										  		organisation: "School of Computer Science and Informatics, UCD";
+										  		date:         "2009/07/05";
+										  		version:      "Revision: 1.00";
+										  feature
+									      APS: INTEGER
+									        ensure
+									          Result = 0;
+									          Result /= Void;
+									        end
+									      array: SEQUENCE[INTEGER]
+									        ensure
+									          Result = old array;
+									          Result /= Void;
+									        end
+									      DPS: INTEGER
+									        ensure
+									          Result = 3;
+									          Result /= Void;
+									        end
+									      GPS: INTEGER
+									        ensure
+									          Result = 1;
+									          Result /= Void;
+									        end
+									      legal_PressSensorType: BOOLEAN
+									        -> e: INTEGER
+									        require
+									          e /= Void;
+									        ensure
+									          Result /= Void;
+									          (e = array.item(0) or e = array.item(1) or e = array.item(2) or e = array.item(3) or e = array.item(4)) <-> Result;
+									        end
+									      SPS: INTEGER
+									        ensure
+									          Result = 4;
+									          Result /= Void;
+									        end
+									      VPS: INTEGER
+									        ensure
+									          Result = 2;
+									          Result /= Void;
+									        end
+									    feature{NONE}
+									      make
+									    invariant
+									      legal_PressSensorType(APS);
+									      legal_PressSensorType(GPS);
+									      legal_PressSensorType(VPS);
+									      legal_PressSensorType(DPS);
+									      legal_PressSensorType(SPS);
+									    end
+									    
+									     class SENSOR_INDEXER 
+										    indexing
+										      about: "This class represents an implementation of sensor indexer array.";
+										      title:        "SensorIndexer";
+										  		author:       "Dragan Stosic";
+										  		copyright:    "none";
+										  		organisation: "School of Computer Science and Informatics, UCD";
+										  		date:         "2009/07/05";
+										  		version:      "Revision: 1.00";
+										    feature
+										      ACCEL_X: INTEGER
+										        ensure
+										          Result = 3;
+										          Result /= Void;
+										        end
+										      ACCEL_Y: INTEGER
+										        ensure
+										          Result = 4;
+										          Result /= Void;
+										        end
+										      ACCEL_Z: INTEGER
+										        ensure
+										          Result = 5;
+										          Result /= Void;
+										        end
+										      array: SEQUENCE[INTEGER]
+										        ensure
+										          Result = old array;
+										          Result /= Void;
+										        end
+										      AUDIO_FREQUENCY_48KHZ: INTEGER
+										        ensure
+										          Result = 48;
+										          Result /= Void;
+										        end
+										      AUDIO_FREQUENCY_96KHZ: INTEGER
+										        ensure
+										          Result = 96;
+										          Result /= Void;
+										        end
+										      isValidAxis: BOOLEAN
+										        -> e: INTEGER
+										        require
+										          e /= Void;
+										          e >= ACCEL_X;
+										          e <= ACCEL_Z;
+										        ensure
+										          Result /= Void;
+										          (legal_SensorIndex(3) or legal_SensorIndex(4) or legal_SensorIndex(5)) <-> Result;
+										        end
+										      legal_SensorIndex: BOOLEAN
+										        -> e: INTEGER
+										        require
+										          e /= Void;
+										          e >= THERM;
+										          e <= ACCEL_Z;
+										        ensure
+										          Result /= Void;
+										          (e = array.item(0) or e = array.item(1) or e = array.item(2) or e = array.item(3) or e = array.item(4) or e = array.item(5)) <-> Result;
+										        end
+										      LIGHT: INTEGER
+										        ensure
+										          Result = 1;
+										          Result /= Void;
+										        end
+										      PRESS: INTEGER
+										        ensure
+										          Result = 2;
+										          Result /= Void;
+										        end
+										      THERM: INTEGER
+										        ensure
+										          Result = 0;
+										          Result /= Void;
+										        end
+										    feature{NONE}
+										      make
+										    invariant
+										      legal_SensorIndex(THERM);
+										      legal_SensorIndex(LIGHT);
+										      legal_SensorIndex(PRESS);
+										      legal_SensorIndex(ACCEL_X);
+										      legal_SensorIndex(ACCEL_Y);
+										      legal_SensorIndex(ACCEL_Z);
+										    end
+										    
+										    
+										     class SOUND_SENSOR_TYPE 
+											    indexing
+											      about: "This class represents microphone sensor types.";
+											      title:        "SoundSensorType";
+										  		  author:       "Dragan Stosic";
+										  		  copyright:    "none";
+										  		  organisation: "School of Computer Science and Informatics, UCD";
+										  		  date:         "2009/07/05";
+										  		  version:      "Revision: 1.00";
+											    
+											    feature
+											      arraySound: SEQUENCE[INTEGER]
+											        ensure
+											          Result = old arraySound;
+											          Result /= Void;
+											        end
+											      CCEM: INTEGER
+											        ensure
+											          Result = 8;
+											          Result /= Void;
+											        end
+											      CMS: INTEGER
+											        ensure
+											          Result = 1;
+											          Result /= Void;
+											        end
+											      DMS: INTEGER
+											        ensure
+											          Result = 0;
+											          Result /= Void;
+											        end
+											      FOS: INTEGER
+											        ensure
+											          Result = 3;
+											          Result /= Void;
+											        end
+											      legal_SoundSensorType: BOOLEAN
+											        -> e: INTEGER
+											        require
+											          e /= Void;
+											        ensure
+											          Result /= Void;
+											          (e = arraySound.item(0) or e = arraySound.item(1) or e = arraySound.item(2) or e = arraySound.item(3) or e = arraySound.item(4) or e = arraySound.item(5) or e = arraySound.item(6) or e = arraySound.item(7) or e = arraySound.item(8)) <-> Result;
+											        end
+											      LMS: INTEGER
+											        ensure
+											          Result = 4;
+											          Result /= Void;
+											        end
+											      LQMS: INTEGER
+											        ensure
+											          Result = 5;
+											          Result /= Void;
+											        end
+											      MEMS: INTEGER
+											        ensure
+											          Result = 6;
+											          Result /= Void;
+											        end
+											      PMS: INTEGER
+											        ensure
+											          Result = 2;
+											          Result /= Void;
+											        end
+											      SMS: INTEGER
+											        ensure
+											          Result = 7;
+											          Result /= Void;
+											        end
+											    feature{NONE}
+											      make
+											    invariant
+											      legal_SoundSensorType(DMS);
+											      legal_SoundSensorType(CMS);
+											      legal_SoundSensorType(PMS);
+											      legal_SoundSensorType(FOS);
+											      legal_SoundSensorType(LMS);
+											      legal_SoundSensorType(LQMS);
+											      legal_SoundSensorType(MEMS);
+											      legal_SoundSensorType(SMS);
+											      legal_SoundSensorType(CCEM);
+											    end
+											    
+											    class THERMISTOR_SENSOR_TYPE 
+												    indexing
+												      about: "This class represents thermistor sensor types.";
+												      title:        "ThermistorSensorType";
+										  		      author:       "Dragan Stosic";
+										  		     copyright:    "none";
+										  		     organisation: "School of Computer Science and Informatics, UCD";
+										  		     date:         "2009/07/05";
+										  		     version:      "Revision: 1.00";
+												    
+												    feature
+												      array: SEQUENCE[INTEGER]
+												        ensure
+												          Result = old array;
+												          Result /= Void;
+												        end
+												      legal_ThermSensorType: BOOLEAN
+												        -> e: INTEGER
+												        require
+												          e /= Void;
+												        ensure
+												          Result /= Void;
+												          (e = array.item(0) or e = array.item(1)) <-> Result;
+												        end
+												      NTC: INTEGER
+												        ensure
+												          Result = 0;
+												          Result /= Void;
+												        end
+												      PTC: INTEGER
+												        ensure
+												          Result = 1;
+												          Result /= Void;
+												        end
+												    feature{NONE}
+												      make
+												    invariant
+												      legal_ThermSensorType(NTC);
+												      legal_ThermSensorType(PTC);
+												    end
+												    
+												class ULTRASONIC_SENSOR_TYPE 
+												    indexing
+												      about: "This class represents ultrasonic sensor types.";
+												      author:       "Dragan Stosic";
+										  		     copyright:    "none";
+										  		     organisation: "School of Computer Science and Informatics, UCD";
+										  		     date:         "2009/07/05";
+										  		     version:      "Revision: 1.00";
+												    feature
+												      array: SEQUENCE[INTEGER]
+												        ensure
+												          Result = old array;
+												          Result /= Void;
+												        end
+												      legal_UltraSensorType: BOOLEAN
+												        -> e: INTEGER
+												        require
+												          e /= Void;
+												        ensure
+												          Result /= Void;
+												          (e = array.item(0) or e = array.item(1)) <-> Result;
+												        end
+												      PROX: INTEGER
+												        ensure
+												          Result = 0;
+												          Result /= Void;
+												        end
+												      RANG: INTEGER
+												        ensure
+												          Result = 1;
+												          Result /= Void;
+												        end
+												    feature{NONE}
+												      make
+												    invariant
+												      legal_UltraSensorType(PROX);
+												      legal_UltraSensorType(RANG);
+												    end	    
+		 							end --end type
+		 							cluster CHANNEL
+		 							component
+		 							effective class CHANNEL_EXCEPTION 
+									    indexing
+									      about: "Class implementation of channel.ChannelException.",
+									        "Exception is used during file system operations.";
+									      title:        "ChannelException";
+									  		author:       "Dragan Stosic";
+									  		copyright:    "none";
+									  		organisation: "School of Computer Science and Informatics, UCD";
+									  		date:         "2009/07/05";
+									  		version:      "Revision: 1.00";
+									    inherit
+									      RUNTIME_EXCEPTION
+									    feature
+									      make
+									      make0
+									        -> message: STRING
+									        require
+									          message /= Void;
+									        end
+									      make1
+									        -> cause: THROWABLE
+									        
+									      make2
+									        -> message: STRING
+									        -> cause: THROWABLE
+									        require
+									          message /= Void;
+									         
+									        end
+									    feature{CHANNEL_EXCEPTION}
+									      serialVersionUID: INTEGER
+									        ensure
+									          Result = 221197;
+									        end
+									    end
+									
+									
+									class FILE_PATH_PROVIDER interfaced 
+									    indexing
+									      about: "Define A full absolute path(s)",
+									        "that points to the location(s) on sensor(s) file(s).",
+									        "This class represents a singleton inastance helper.";
+									      title:        "FilePathProvider";
+									  		author:       "Dragan Stosic";
+									  		copyright:    "none";
+									  		organisation: "School of Computer Science and Informatics, UCD";
+									  		date:         "2009/07/05";
+									  		version:      "Revision: 1.00";
+									    feature
+									      make
+									        -> thePaths: SEQUENCE[STRING]
+									        -> theUltraSoundPaths: SEQUENCE[STRING]
+									        -> theSoundPaths: SEQUENCE[STRING]
+									        require
+									         
+									          thePaths.count = 6;
+									          theSoundPaths.count = 4;
+									          theUltraSoundPaths.count = 4;
+									        ensure
+									          delta {sens_pats, sound_pats, ultra_pats};
+									        end
+									      getSensPath: STRING
+									        -> index: INTEGER
+									        require
+									          index /= Void;
+									          index >= 0;
+									          index < 6;
+									        ensure
+									          Result /= Void;
+									          -- Result = Void or \result instanceof String;
+									        end
+									      getSoundPath: STRING
+									        -> index: INTEGER
+									        require
+									          index /= Void;
+									          index >= 0;
+									          index < 4;
+									        ensure
+									          Result /= Void;
+									        end
+									      getUltraSoundPath: STRING
+									        -> index: INTEGER
+									        require
+									          index /= Void;
+									          index >= 0;
+									          index < 4;
+									        ensure
+									          Result /= Void;
+									        end
+									      sens_pats: SEQUENCE[STRING]
+									        ensure
+									          Result /= Void;
+									        end
+									      sound_pats: SEQUENCE[STRING]
+									        ensure
+									          Result /= Void;
+									        end
+									      ultra_pats: SEQUENCE[STRING]
+									        ensure
+									          Result /= Void;
+									        end
+									    invariant
+									      sens_pats.count = 6;
+									      sound_pats.count = 4;
+									      ultra_pats.count = 4;
+									    end
+									
+									
+									    deferred class ICHANNEL interfaced 
+									    indexing
+									      about: "Represents an interface for Channel implementation.";
+									      title:        "IChannel";
+									  		author:       "Dragan Stosic";
+									  		copyright:    "none";
+									  		organisation: "School of Computer Science and Informatics, UCD";
+									  		date:         "2009/07/05";
+									  		version:      "Revision: 1.00";
+									    
+									    feature
+									      mod_name: STRING
+									        ensure
+									          Result /= Void;
+									        end
+									    feature{CHANNEL_CLUSTER}
+									      deferred processArray: SEQUENCE[INTEGER]
+									        require
+									          mod_name /= Void;
+									        ensure
+									          Result /= Void;
+									        end
+									    end
+									    
+									     effective class FILE_CHANNEL 
+									    indexing
+									      about: "This class provides methods for file handling.";
+									      title:        "FileChannel";
+									  		author:       "Dragan Stosic";
+									  		copyright:    "none";
+									  		organisation: "School of Computer Science and Informatics, UCD";
+									  		date:         "2009/07/05";
+									  		version:      "Revision: 1.00";    
+									    inherit
+									      ICHANNEL
+									    feature
+									      make
+									        -> fileName: STRING
+									        require
+									          fileName /= Void;
+									          fileName /= "";
+									        ensure
+									          delta mod_name;
+									          mod_name = fileName;
+									        end
+									      a_fileName: STRING
+									        ensure
+									          Result /= Void;
+									        end
+									      processArray: SEQUENCE[INTEGER]
+									        ensure
+									          Result /= Void;
+									        end
+									    feature{NONE}
+									      convertToInt: SEQUENCE[INTEGER]
+									        -> bytes: SEQUENCE[INTEGER]
+									        require
+									          bytes /= Void;
+									        ensure
+									          Result /= Void;
+									          Result /= Void;
+									        end
+									end
+		 						    end -- end channel
+		 						
+		 					  class RUNTIME_EXCEPTION 
+							    indexing
+							      about: "Class implementation of sensor.MissingSensorException.",
+							        "Exception is used during measurement operations.";
+							     author:       "Dragan Stosic";
+								copyright:    "none";
+								organisation: "School of Computer Science and Informatics, UCD";
+								date:         "2009/07/05";
+								version:      "Revision: 1";
+							    feature
+							      make
+							      make0
+							        -> message: STRING
+							        require
+							          message /= Void;
+							        end
+							      make1
+							        -> cause: THROWABLE
+							        require
+							          cause /= Void;
+							        end
+							      make2
+							        -> message: STRING
+							        -> cause: THROWABLE
+							        require
+							          message /= Void;
+							         
+							        end
+							    feature{MISSING_SENSOR_EXCEPTION}
+							      serialVersionUID: INTEGER
+							        ensure
+							          Result = 221198;
+							        end
+							    end
+		 						
+		 						
+	                          effective class MISSING_SENSOR_EXCEPTION 
+							    indexing
+							      about: "Class implementation of sensor.MissingSensorException.",
+							        "Exception is used during measurement operations.";
+							     author:       "Dragan Stosic";
+								copyright:    "none";
+								organisation: "School of Computer Science and Informatics, UCD";
+								date:         "2009/07/05";
+								version:      "Revision: 1";
+							    inherit
+							      RUNTIME_EXCEPTION
+							    feature
+							      make
+							      make0
+							        -> message: STRING
+							        require
+							          message /= Void;
+							        end
+							      make1
+							        -> cause: THROWABLE
+							        require
+							          cause /= Void;
+							        end
+							      make2
+							        -> message: STRING
+							        -> cause: THROWABLE
+							        require
+							          message /= Void;
+							         
+							        end
+							    feature{MISSING_SENSOR_EXCEPTION}
+							      serialVersionUID: INTEGER
+							        ensure
+							          Result = 221198;
+							        end
+							    end
+							    
+							    deferred class ISENSOR interfaced 
+								    indexing
+								      about: "This interface represents an abstraction of sensor component.";
+								     author:       "Dragan Stosic";
+									copyright:    "none";
+									organisation: "School of Computer Science and Informatics, UCD";
+									date:         "2009/07/05";
+									version:      "Revision: 1.00";
+								    feature
+								      mod_enabled: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_max: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_mesure: JMLDATA_GROUP
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_min: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_value: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{SENSOR_CLUSTER}
+								      deferred getMax: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = mod_max;
+								        end
+								      deferred getMin: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = mod_min;
+								        end
+								      deferred getValue: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = mod_value;
+								        end
+								      deferred isEnabled: BOOLEAN
+								        ensure
+								          Result /= Void;
+								          Result = mod_enabled;
+								        end
+								      deferred measure
+								        require
+								          isEnabled;
+								        ensure
+								          delta {mod_mesure, mod_value};
+								          mod_min <= mod_value;
+								          mod_value <= mod_max;
+								        end
+								      deferred setEnable
+								        -> theFlag: BOOLEAN
+								        require
+								          theFlag /= Void;
+								        ensure
+								          delta mod_enabled;
+								          mod_enabled = theFlag;
+								        end
+								     end
+							    
+							    
+							    effective class ULTRASONIC_SENSOR 
+								    indexing
+								      about: "This class represents a ultra sound sensor.",
+								        "Microphone is an acoustic-to-electric sensor that converts",
+								        "sound into an electrical signal. Sensor working on",
+								        "AUDIO_FREQUENCY = 96KHZ.";
+								     author:       "Dragan Stosic";
+									 copyright:    "none";
+									 organisation: "School of Computer Science and Informatics, UCD";
+									 date:         "2009/07/05";
+									 version:      "Revision: 1.00";
+								    inherit
+								      ISENSOR
+								    feature
+								      make
+								        -> arr: SEQUENCE[INTEGER]
+								        require
+								          arr /= Void;
+								        ensure
+								          delta {mod_enabled, mod_set};
+								          mod_enabled = true;
+								          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+								          a_type = UltrasonicSensorType.PROX;
+								          a_unit = MeasurementUnit.KHERTZ;
+								        end
+								      a_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      a_type: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      a_unit: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      enabled: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      getType: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = UltrasonicSensorType.PROX;
+								        end
+								      getUnit: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = MeasurementUnit.KHERTZ;
+								        end
+								      mod_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      value: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      measure
+								        ensure
+								          mod_max = -43;
+								          mod_min = -51;
+								          a_type = UltrasonicSensorType.PROX;
+								          a_unit = MeasurementUnit.KHERTZ;
+								        end
+								      setEnable
+								        -> theFlag: BOOLEAN
+								        require
+								          theFlag /= Void;
+								        ensure
+								          mod_max = -43;
+								          mod_min = -51;
+								          a_type = UltrasonicSensorType.PROX;
+								          a_unit = MeasurementUnit.KHERTZ;
+								        end
+								      getMax: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      getMin: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      index: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      MAX: INTEGER
+								        ensure
+								          Result = "-43";
+								          Result /= Void;
+								        end
+								      MIN: INTEGER
+								        ensure
+								          Result = "-51";
+								          Result /= Void;
+								        end
+								      setUltraSound
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < mod_set.count;
+								        ensure
+								          delta mod_value;
+								          mod_min <= mod_value;
+								          mod_value <= mod_max;
+								          mod_max = -43;
+								          mod_min = -51;
+								          a_type = UltrasonicSensorType.PROX;
+								          a_unit = MeasurementUnit.KHERTZ;
+								        end
+								    invariant
+								      mod_min <= mod_value;
+								      mod_value <= mod_max;
+								    end 
+								    
+								        effective class THERMISTOR_SENSOR 
+										    inherit
+										      ISENSOR
+										    feature
+										      make
+										        -> arr: SEQUENCE[INTEGER]
+										        require
+										          arr /= Void;
+										        ensure
+										          delta {mod_enabled, mod_set};
+										          mod_enabled = true;
+										          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+										          mod_max = 2047;
+										          mod_min = -880;
+										          a_type = ThermistorSensorType.NTC;
+										          a_unit = MeasurementUnit.CELSIUS;
+										        end
+										      a_set: SEQUENCE[INTEGER]
+										        ensure
+										          Result /= Void;
+										        end
+										      a_type: INTEGER
+										        ensure
+										          Result /= Void;
+										        end
+										      a_unit: INTEGER
+										        ensure
+										          Result /= Void;
+										        end
+										      enabled: BOOLEAN
+										        ensure
+										          Result /= Void;
+										        end
+										      getType: INTEGER
+										        require
+										          isEnabled;
+										        ensure
+										          Result /= Void;
+										          Result = ThermistorSensorType.NTC;
+										        end
+										      getUnit: INTEGER
+										        require
+										          isEnabled;
+										        ensure
+										          Result /= Void;
+										          Result = MeasurementUnit.CELSIUS;
+										        end
+										      MAX: INTEGER
+										        ensure
+										          Result = 2047;
+										          Result /= Void;
+										        end
+										      MIN: INTEGER
+										        ensure
+										          Result = "-880";
+										          Result /= Void;
+										        end
+										      mod_set: SEQUENCE[INTEGER]
+										        ensure
+										          Result /= Void;
+										        end
+										      value: INTEGER
+										        ensure
+										          Result /= Void;
+										        end
+										      measure
+										        ensure
+										          mod_max = 2047;
+										          mod_min = -880;
+										          a_type = ThermistorSensorType.NTC;
+										          a_unit = MeasurementUnit.CELSIUS;
+										        end
+										      setEnable
+										        -> theFlag: BOOLEAN
+										        require
+										          theFlag /= Void;
+										        ensure
+										          mod_max = 2047;
+										          mod_min = -880;
+										          a_type = ThermistorSensorType.NTC;
+										          a_unit = MeasurementUnit.CELSIUS;
+										        end
+										    feature{NONE}
+										      index: INTEGER
+										        ensure
+										          Result /= Void;
+										        end
+										      setTemp
+										        -> index: INTEGER
+										        require
+										          index /= Void;
+										          index >= 0;
+										          index < mod_set.count;
+										        ensure
+										          delta mod_value;
+										          mod_min <= mod_value;
+										          mod_value <= mod_max;
+										          mod_max = 2047;
+										          mod_min = -880;
+										          a_type = ThermistorSensorType.NTC;
+										          a_unit = MeasurementUnit.CELSIUS;
+										        end
+										    invariant
+										      mod_min <= mod_value;
+										      mod_value <= mod_max;
+										    end
+								    
+								    effective class SOUND_SENSOR 
+									    indexing
+									      about: "This class represents a sound sensor - microphone.",
+									        "Microphone is an acoustic-to-electric sensor that converts",
+									        "sound into an electrical signal. Sensor working on",
+									        "AUDIO_FREQUENCY = 48KHZ.";
+									     author:       "Dragan Stosic";
+										 copyright:    "none";
+										 organisation: "School of Computer Science and Informatics, UCD";
+										 date:         "2009/07/05";
+										 version:      "Revision: 1.00"
+									    inherit
+									      ISENSOR
+									    feature
+									      make
+									        -> arr: SEQUENCE[INTEGER]
+									        require
+									          arr /= Void;
+									        ensure
+									          delta {mod_enabled, mod_set};
+									          mod_enabled = true;
+									          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+									          mod_max = -31;
+									          mod_min = -39;
+									          a_type = SoundSensorType.DMS;
+									          a_unit = MeasurementUnit.KHERTZ;
+									        end
+									      a_set: SEQUENCE[INTEGER]
+									        ensure
+									          Result /= Void;
+									        end
+									      a_type: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      a_unit: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      enabled: BOOLEAN
+									        ensure
+									          Result /= Void;
+									        end
+									      getType: INTEGER
+									        require
+									          isEnabled;
+									        ensure
+									          Result /= Void;
+									          Result = SoundSensorType.DMS;
+									        end
+									      getUnit: INTEGER
+									        require
+									          isEnabled;
+									        ensure
+									          Result /= Void;
+									          Result = MeasurementUnit.KHERTZ;
+									        end
+									      mod_set: SEQUENCE[INTEGER]
+									        ensure
+									          Result /= Void;
+									        end
+									      value: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      measure
+									        ensure
+									          mod_max = -31;
+									          mod_min = -39;
+									          a_type = SoundSensorType.DMS;
+									          a_unit = MeasurementUnit.KHERTZ;
+									        end
+									      setEnable
+									        -> theFlag: BOOLEAN
+									        require
+									          theFlag /= Void;
+									        ensure
+									          mod_max = -31;
+									          mod_min = -39;
+									          a_type = SoundSensorType.DMS;
+									          a_unit = MeasurementUnit.KHERTZ;
+									        end
+									      getMax: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      getMin: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									    feature{NONE}
+									      index: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      MAX: INTEGER
+									        ensure
+									          Result = "-31";
+									          Result /= Void;
+									        end
+									      MIN: INTEGER
+									        ensure
+									          Result = "-39";
+									          Result /= Void;
+									        end
+									      setSound
+									        -> index: INTEGER
+									        require
+									          index /= Void;
+									          index >= 0;
+									          index < mod_set.count;
+									        ensure
+									          delta mod_value;
+									          mod_min <= mod_value;
+									          mod_value <= mod_max;
+									          mod_max = -31;
+									          mod_min = -39;
+									          a_type = SoundSensorType.DMS;
+									          a_unit = MeasurementUnit.KHERTZ;
+									        end
+									    invariant
+									      mod_min <= mod_value;
+									      mod_value <= mod_max;
+									    end 
+									    
+									    
+									effective class AXIS_ACCELEROMETER_SENSOR 
+									    indexing
+									      about: "An accelerometer measures the acceleration it experiences",
+									        "relative to freefall. Single model is available",
+									        "to detect magnitude and direction of the acceleration as",
+									        "a vector quantity, and can be used to sense orientation,",
+									        "vibration and shock.";
+									        
+									     author:       "Dragan Stosic";
+										 copyright:    "none";
+										 organisation: "School of Computer Science and Informatics, UCD";
+										 date:         "2009/07/05";
+										 version:      "Revision: 1.00";
+									    inherit
+									      ISENSOR
+									    feature
+									      make
+									        -> arr: SEQUENCE[INTEGER]
+									        require
+									          arr /= Void;
+									        ensure
+									          delta {mod_enabled, mod_set};
+									          mod_enabled = true;
+									          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+									          mod_max = 2232;
+									          mod_min = 1488;
+									          a_unit = MeasurementUnit.MVOLT;
+									          a_type = AccelerometerSensorType.PFPS;
+									        end
+									      a_set: SEQUENCE[INTEGER]
+									        ensure
+									          Result /= Void;
+									        end
+									      a_type: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      a_unit: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      enabled: BOOLEAN
+									        ensure
+									          Result /= Void;
+									        end
+									      getType: INTEGER
+									        require
+									          isEnabled;
+									        ensure
+									          Result /= Void;
+									          Result = AccelerometerSensorType.PFPS;
+									        end
+									      getUnit: INTEGER
+									        require
+									          isEnabled;
+									        ensure
+									          Result /= Void;
+									          Result = MeasurementUnit.MVOLT;
+									        end
+									      mod_set: SEQUENCE[INTEGER]
+									        ensure
+									          Result /= Void;
+									        end
+									      value: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      measure
+									        ensure
+									          mod_max = 2232;
+									          mod_min = 1488;
+									          a_unit = MeasurementUnit.MVOLT;
+									          a_type = AccelerometerSensorType.PFPS;
+									        end
+									      setEnable
+									        -> theFlag: BOOLEAN
+									        require
+									          theFlag /= Void;
+									        ensure
+									          mod_max = 2232;
+									          mod_min = 1488;
+									          a_unit = MeasurementUnit.MVOLT;
+									          a_type = AccelerometerSensorType.PFPS;
+									        end
+									      getMax: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      getMin: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									    feature{NONE}
+									      index: INTEGER
+									        ensure
+									          Result /= Void;
+									        end
+									      MAX: INTEGER
+									        ensure
+									          Result = 2232;
+									           Result /= Void;
+									        end
+									      MIN: INTEGER
+									        ensure
+									          Result = 1488;
+									           Result /= Void;
+									        end
+									      setVoltage
+									        -> index: INTEGER
+									        require
+									          index /= Void;
+									          index >= 0;
+									          index < mod_set.count;
+									        ensure
+									          delta mod_value;
+									          mod_min <= mod_value;
+									          mod_value <= mod_max;
+									          mod_max = 2232;
+									          mod_min = 1488;
+									          a_unit = MeasurementUnit.MVOLT;
+									          a_type = AccelerometerSensorType.PFPS;
+									        end
+									    invariant
+									      mod_min <= mod_value;
+									      mod_value <= mod_max;
+									    end
+							    
+							     effective class LIGHT_SENSOR 
+								    inherit
+								      ISENSOR
+								    feature
+								      make
+								        -> arr: SEQUENCE[INTEGER]
+								        require
+								          arr /= Void;
+								        ensure
+								          delta {mod_enabled, mod_set};
+								          mod_enabled = true;
+								          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+								          mod_max = 1000;
+								          mod_min = 0;
+								          a_type = LightSensorType.PEC;
+								          a_unit = MeasurementUnit.LUX;
+								        end
+								      a_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      a_type: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      a_unit: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      enabled: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      getType: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = LightSensorType.PEC;
+								        end
+								      getUnit: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = MeasurementUnit.LUX;
+								        end
+								      mod_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      value: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      measure
+								        ensure
+								          mod_max = 1000;
+								          mod_min = 0;
+								          a_type = LightSensorType.PEC;
+								          a_unit = MeasurementUnit.LUX;
+								        end
+								      setEnable
+								        -> theFlag: BOOLEAN
+								        require
+								          theFlag /= Void;
+								        ensure
+								          mod_max = 1000;
+								          mod_min = 0;
+								          a_type = LightSensorType.PEC;
+								          a_unit = MeasurementUnit.LUX;
+								        end
+								      getMax: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      getMin: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      index: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      MAX: INTEGER
+								        ensure
+								          Result = 1000;
+								          Result /= Void;
+								        end
+								      MIN: INTEGER
+								        ensure
+								          Result = 0;
+								          Result /= Void;
+								        end
+								      setLight
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < mod_set.count;
+								        ensure
+								          delta mod_value;
+								          mod_min <= mod_value;
+								          mod_value <= mod_max;
+								          mod_max = 1000;
+								          mod_min = 0;
+								          a_type = LightSensorType.PEC;
+								          a_unit = MeasurementUnit.LUX;
+								        end
+								    invariant
+								      mod_min <= mod_value;
+								      mod_value <= mod_max;
+								    end
+							    effective class PRESSURE_SENSOR 
+								    indexing
+								      about: "This class represents a pressure sensor.";
+								     author:       "Dragan Stosic";
+									 copyright:    "none";
+									 organisation: "School of Computer Science and Informatics, UCD";
+									 date:         "2009/07/05";
+									 version:      "Revision: 1.00";
+								    inherit
+								      ISENSOR
+								    feature
+								      make
+								        -> arr: SEQUENCE[INTEGER]
+								        require
+								          arr /= Void;
+								        ensure
+								          delta {mod_enabled, mod_set};
+								          mod_enabled = true;
+								          -- ((\forall  int i,;0 <= i && i < arr.length;arr[i] == a_set[i]));
+								          mod_max = 5585;
+								          mod_min = 310;
+								          a_type = PressureSensorType.APS;
+								          a_unit = MeasurementUnit.PASCAL;
+								        end
+								      a_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      a_type: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      a_unit: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      enabled: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      getType: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = PressureSensorType.APS;
+								        end
+								      getUnit: INTEGER
+								        require
+								          isEnabled;
+								        ensure
+								          Result /= Void;
+								          Result = MeasurementUnit.PASCAL;
+								        end
+								      mod_set: SEQUENCE[INTEGER]
+								        ensure
+								          Result /= Void;
+								        end
+								      value: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      measure
+								        ensure
+								          mod_max = 5585;
+								          mod_min = 310;
+								          a_type = PressureSensorType.APS;
+								          a_unit = MeasurementUnit.PASCAL;
+								        end
+								      setEnable
+								        -> theFlag: BOOLEAN
+								        require
+								          theFlag /= Void;
+								        ensure
+								          mod_max = 5585;
+								          mod_min = 310;
+								          a_type = PressureSensorType.APS;
+								          a_unit = MeasurementUnit.PASCAL;
+								        end
+								      getMax: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      getMin: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      index: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      MAX: INTEGER
+								        ensure
+								          Result = 5585;
+								          Result /= Void;
+								        end
+								      MIN: INTEGER
+								        ensure
+								          Result = 310;
+								          Result /= Void;
+								        end
+								      setPressure
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < mod_set.count;
+								        ensure
+								          delta mod_value;
+								          mod_min <= mod_value;
+								          mod_value <= mod_max;
+								          mod_max = 5585;
+								          mod_min = 310;
+								          a_type = PressureSensorType.APS;
+								          a_unit = MeasurementUnit.PASCAL;
+								        end
+								    invariant
+								      mod_min <= mod_value;
+								      mod_value <= mod_max;
+								    end
+							    
+							  class MEASUREMENT_UNIT 
+							    indexing
+							      about: "This class represents typesafe implementation of measurement units.";
+							     author:       "Dragan Stosic";
+								 copyright:    "none";
+								 organisation: "School of Computer Science and Informatics, UCD";
+								 date:         "2009/07/05";
+								 version:      "Revision: 1.00";
+							    feature
+							      AMPER: INTEGER
+							        ensure
+							          Result = 0;
+							          Result /= Void;
+							        end
+							      array: SEQUENCE[INTEGER]
+							        ensure
+							          Result = old array;
+							          Result /= Void;
+							        end
+							      CELSIUS: INTEGER
+							        ensure
+							          Result = 5;
+							          Result /= Void;
+							        end
+							      DECIBEL: INTEGER
+							        ensure
+							          Result = 4;
+							          Result /= Void;
+							        end
+							      KHERTZ: INTEGER
+							        ensure
+							          Result = 3;
+							          Result /= Void;
+							        end
+							      legal_unit: BOOLEAN
+							        -> e: INTEGER
+							        require
+							          e /= Void;
+							        ensure
+							          Result /= Void;
+							          e = array.item(0) or e = array.item(1) or e = array.item(2) or e = array.item(3) or e = array.item(4) or e = array.item(5) or e = array.item(6) or e = array.item(7) <-> Result;
+							        end
+							      LUX: INTEGER
+							        ensure
+							          Result = 7;
+							          Result /= Void;
+							        end
+							      MVOLT: INTEGER
+							        ensure
+							          Result = 2;
+							          Result /= Void;
+							        end
+							      PASCAL: INTEGER
+							        ensure
+							          Result = 6;
+							          Result /= Void;
+							        end
+							      VOLT: INTEGER
+							        ensure
+							          Result = 1;
+							          Result /= Void;
+							        end
+							    feature{NONE}
+							      make
+							    invariant
+							      legal_unit(AMPER);
+							      legal_unit(VOLT);
+							      legal_unit(MVOLT);
+							      legal_unit(KHERTZ);
+							      legal_unit(DECIBEL);
+							      legal_unit(CELSIUS);
+							      legal_unit(PASCAL);
+							      legal_unit(LUX);
+							    end
+							    
+							    
+							       class SENSOR_BUILDER 
+								    indexing
+								      about: "Represents an sensor builder implementation.";
+								     author:       "Dragan Stosic";
+									 copyright:    "none";
+									 organisation: "School of Computer Science and Informatics, UCD";
+									 date:         "2009/07/05";
+									 version:      "Revision: 1.00";
+								    feature
+								      make
+								        -> theProvider: FILE_PATH_PROVIDER
+								        require
+								          theProvider /= Void;
+								        ensure
+								          delta {g_inv, provider, sensors};
+								          provider = theProvider;
+								          g_inv;
+								        end
+								      getSensor: ISENSOR
+								        -> typeIndex: INTEGER
+								        require
+								          typeIndex /= Void;
+								          g_inv;
+								          typeIndex >= 0;
+								          typeIndex < sensors.count;
+								          SensorIndexer.legal_SensorIndex(typeIndex);
+								        ensure
+								          Result /= Void;
+								          Result = sensors.item(typeIndex);
+								        end
+								      getSensorsLength: INTEGER
+								        ensure
+								          Result /= Void;
+								          Result = sensors.count;
+								        end
+								      g_inv: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      provider: FILE_PATH_PROVIDER
+								        ensure
+								          Result /= Void;
+								        end
+								      sensors: SEQUENCE[ISENSOR]
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      createAxesSensor: ISENSOR
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 3;
+								          index <= 5;
+								        ensure
+								          Result /= Void;
+								          -- \fresh(\result);
+								        end
+								      createLightSensor: ISENSOR
+								        ensure
+								          Result /= Void;
+								          -- \fresh(\result);
+								        end
+								      createPressureSensor: ISENSOR
+								        ensure
+								          Result /= Void;
+								          -- \fresh(\result);
+								        end
+								      createThermistorSensor: ISENSOR
+								        ensure
+								          Result /= Void;
+								          -- \fresh(\result);
+								        end
+								   
+								    end
+							    
+							    class AUDIO_BUILDER 
+								    feature
+								      make
+								        -> theFrequency: INTEGER
+								        -> theProvider: FILE_PATH_PROVIDER
+								        require
+								          theFrequency /= Void;
+								          theProvider /= Void;
+								          theFrequency = SensorIndexer.AUDIO_FREQUENCY_48KHZ or theFrequency /= SensorIndexer.AUDIO_FREQUENCY_48KHZ;
+								        ensure
+								          delta {audioArray, inv, provider};
+								          inv = true;
+								          provider = theProvider;
+								          audioArray /= Void;
+								          audioArray.count = 4;
+								          -- \nonnullelements(audioArray);
+								        end
+								      audioArray: SEQUENCE[ISENSOR]
+								        ensure
+								          Result /= Void;
+								        end
+								      getAudio: ISENSOR
+								        -> typeIndex: INTEGER
+								        require
+								          typeIndex /= Void;
+								          inv;
+								          typeIndex >= 0;
+								          typeIndex < audioArray.count;
+								        ensure
+								          Result /= Void;
+								          Result = audioArray.item(typeIndex);
+								          -- \result instanceof ISensor;
+								        end
+								      getAudioArrayLength: INTEGER
+								        ensure
+								          Result /= Void;
+								          Result = audioArray.count;
+								        end
+								      inv: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      LENGTH: INTEGER
+								        ensure
+								          Result = 4;
+								        end
+								      provider: FILE_PATH_PROVIDER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      createSoundSensor: ISENSOR
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < audioArray.count;
+								        ensure
+								          Result /= Void;
+								          Result /= Void;
+								          -- \result instanceof ISensor;
+								        end
+								      createUltrasonicSensor: ISENSOR
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < audioArray.count;
+								        ensure
+								          Result /= Void;
+								          Result /= Void;
+								          -- \result instanceof ISensor;
+								        end
+								    invariant
+								      audioArray.count = 4;
+								    end
+								    
+		                        end -- end sensor
+		                        
+		                        
+		                        deferred class CLONEABLE interfaced 
+								    indexing
+								    	about:	"A class implements the <code>Cloneable</code> interface to",
+								 				"indicate to the {@link java.lang.Object#clone()} method that it",
+								 				" is legal for that method to make a",
+								 				" field-for-field copy of instances of that class.", 
+								 				" Invoking Object's clone method on an instance that does not implement the", 
+								 				" <code>Cloneable</code> interface results in the exception", 
+								 				" <code>CloneNotSupportedException</code> being thrown.",
+								 				" By convention, classes that implement this interface should override", 
+								 				" <tt>Object.clone</tt> (which is protected) with a public method.",
+								 				" See {@link java.lang.Object#clone()} for details on overriding this method.",
+								 				" Note that this interface does <i>not</i> contain the <tt>clone</tt> method.",
+								 				" Therefore, it is not possible to clone an object merely by virtue of the",
+								 				" fact that it implements this interface.  Even if the clone method is invoked",
+								 				" reflectively, there is no guarantee that it will succeed.";
+								  		title:        "Cloneable";
+								  		author:       "Dragan Stosic";
+								  		copyright:    "none";
+								  		organisation: "School of Computer Science and Informatics, UCD";
+								  		date:         "2009/07/05";
+								  		version:      "Revision: 1.00";
+								  	   feature 
+								  	     clone: ANY
+								  	   end
+		                        effective class FORMAL_INSTANCE_FRAME 
+								    indexing
+								      about: "Represents an instance of Frame interface.";
+								     title:        "FormalInstanceFrame";
+								  		author:       "Dragan Stosic";
+								  		copyright:    "none";
+								  		organisation: "School of Computer Science and Informatics, UCD";
+								  		date:         "2009/07/05";
+								  		version:      "Revision: 1.00";
+								    inherit
+								      CLONEABLE; FRAME
+								    feature
+								      make
+								        ensure
+								          delta {isADCActive, isAudioActive};
+								          isADCActive = true;
+								          isAudioActive = true;
+								        end
+								      adcChannel: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      adcSample: CHARACTER
+								        ensure
+								          Result /= Void;
+								        end
+								      audioFrequency: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      audioSample: SEQUENCE[CHARACTER]
+								        ensure
+								          Result /= Void;
+								        end
+								      g_frame: OBJECT
+								        ensure
+								          Result /= Void;
+								        end
+								      isADCActive: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      isAudioActive: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      isIRDSynachronizationActive: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_audioSample: SEQUENCE[CHARACTER]
+								        ensure
+								          Result /= Void;
+								        end
+								      setAudio
+								        -> channel: INTEGER
+								        -> theAudioSample: CHARACTER
+								        require
+								          channel /= Void;
+								          theAudioSample /= Void;
+								          channel >= 0;
+								          channel < mod_audioSample.count;
+								        ensure
+								          delta mod_audioSample;
+								          mod_audioSample.item(channel) = theAudioSample;
+								        end
+								      clone: ANY
+								        ensure
+								          Result /= Void;
+								          Result = g_frame;
+								        end
+								      getADC: CHARACTER
+								        ensure
+								          Result /= Void;
+								        end
+								      getAudio: CHARACTER
+								        -> channel: INTEGER
+								        require
+								          channel /= Void;
+								        ensure
+								          Result /= Void;
+								        end
+								      isADCActive0: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      isAudioActive0: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								      isIRDSynachronizationActive0: BOOLEAN
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      setADC
+								        -> theAdcSample: CHARACTER
+								        require
+								          theAdcSample /= Void;
+								        ensure
+								          delta adcSample;
+								          adcSample = theAdcSample;
+								        end
+								      setADCActive
+								        -> value: BOOLEAN
+								        require
+								          value /= Void;
+								        ensure
+								          delta isADCActive;
+								          isADCActive = value;
+								        end
+								      setADCChannel
+								        -> theAdcChannel: INTEGER
+								        require
+								          theAdcChannel /= Void;
+								          theAdcChannel >= 0;
+								          theAdcChannel < Frame.ADC_CHANNELS;
+								        ensure
+								          delta adcChannel;
+								          adcChannel = theAdcChannel;
+								        end
+								      setAudioActive
+								        -> value: BOOLEAN
+								        require
+								          value /= Void;
+								        ensure
+								          delta isAudioActive;
+								          isAudioActive = value;
+								        end
+								      setAudioFrequency
+								        -> value: INTEGER
+								        require
+								          value /= Void;
+								          (value = AUDIO_FREQUENCY_48KHZ or value = AUDIO_FREQUENCY_96KHZ);
+								        ensure
+								          delta audioFrequency;
+								          audioFrequency = value;
+								        end
+								      setIRDSynachronizationActive
+								        -> value: BOOLEAN
+								        require
+								          value /= Void;
+								        ensure
+								          delta isIRDSynachronizationActive;
+								          isIRDSynachronizationActive = value;
+								        end
+								    invariant
+								      (audioFrequency = Frame.AUDIO_FREQUENCY_48KHZ or audioFrequency = Frame.AUDIO_FREQUENCY_96KHZ);
+								      adcChannel >= 0;
+								      adcChannel < ADC_CHANNELS;
+								      audioSample /= Void;
+								    end
+								    
+								    
+								     effective class FORMAL_SENSOR_PACKET_BUILDER 
+								    indexing
+								      about: "Represents an instance of FormalSensorPacketBuilder.";
+								      title:        "FormalInstanceFrame";
+								  		author:       "Dragan Stosic";
+								  		copyright:    "none";
+								  		organisation: "School of Computer Science and Informatics, UCD";
+								  		date:         "2009/07/05";
+								  		version:      "Revision: 1.0";
+								    inherit
+								      PACKET_BUILDER
+								    feature
+								      make
+								        -> theTemplate: FORMAL_INSTANCE_PACKET
+								        -> theFrequency: INTEGER
+								        -> thePathProvider: FILE_PATH_PROVIDER
+								        require
+								          theTemplate /= Void;
+								          theFrequency /= Void;
+								          thePathProvider /= Void;
+								          theFrequency = SensorIndexer.AUDIO_FREQUENCY_48KHZ or theFrequency = SensorIndexer.AUDIO_FREQUENCY_96KHZ;
+								        ensure
+								          delta {ab, sb, template};
+								          template = theTemplate;
+								          ab.inv;
+								          sb.g_inv;
+								          -- sb instanceof SensorBuilder;
+								        end
+								      ab: AUDIO_BUILDER
+								        ensure
+								          Result /= Void;
+								        end
+								      sb: SENSOR_BUILDER
+								        ensure
+								          Result /= Void;
+								        end
+								      template: FORMAL_INSTANCE_PACKET
+								        ensure
+								          Result /= Void;
+								        end
+								      getPacket: PACKET
+								        ensure
+								          Result /= Void;
+								          (g_packet /= Void) -> (Result = g_packet);
+								        end
+								    feature{NONE}
+								      g_o: OBJECT
+								        ensure
+								          Result /= Void;
+								        end
+								      g_packet: FORMAL_INSTANCE_PACKET
+								        ensure
+								          Result /= Void;
+								        end
+								      g_sensor: ISENSOR
+								        ensure
+								          Result /= Void;
+								        end
+								      g_value: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								    feature{NONE}
+								      readAudio
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        -> channel: INTEGER
+								        require
+								          packet /= Void;
+								          channel /= Void;
+								        end
+								      setAccelerometerX
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= 1488 and g_value <= 2232) -> (g_value = packet.accelerometerX)));
+								        end
+								      setAccelerometerY
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= 1488 and g_value <= 2232) -> (g_value = packet.accelerometerY)));
+								        end
+								      setAccelerometerZ
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= 1488 and g_value <= 2232) -> (g_value = packet.accelerometerZ)));
+								        end
+								      setLightLevel
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= 0 and g_value <= 1000) -> (g_value = packet.lightLevel)));
+								        end
+								      setPressure
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= 310 and g_value <= 5585) -> (g_value = packet.pressure)));
+								        end
+								      setTemperature
+								        -> packet: FORMAL_INSTANCE_PACKET
+								        require
+								          packet /= Void;
+								        ensure
+								          (sb.getSensorsLength > 0) -> ((g_sensor.isEnabled) -> ((g_value >= -880 and g_value <= 2047) -> (g_value = packet.temperature)));
+								        end
+								      makeClone: FORMAL_INSTANCE_PACKET
+								        require
+								          template /= Void;
+								        ensure
+								          Result /= Void;
+								          -- (g_o instanceof FormalInstancePacket) -> Result = g_packet and g_packet instanceof FormalInstancePacket;
+								        end
+								    invariant
+								      sb.g_inv;
+								      ab.inv;
+								    end
+								    
+								   
+								    effective class FORMAL_INSTANCE_PACKET 
+								    indexing
+								      about: "An packet instance derived from ClonablePacket interface.";
+								      title:        "FormalInstancePacket";
+								  		author:       "Dragan Stosic";
+								  		copyright:    "none";
+								  		organisation: "School of Computer Science and Informatics, UCD";
+								  		date:         "2009/07/05";
+								  		version:      "Revision: 1.0";
+								    inherit
+								      CLONEABLE_PACKET
+								    feature
+								      make
+								        ensure
+								          delta {accelerometerX, accelerometerY, accelerometerZ, mod_frames, pressure, time};
+								          -- pressure = (short)310;
+								          -- accelerometerX = (short)1860;
+								          -- accelerometerY = (short)1860;
+								          -- accelerometerZ = (short)1860;
+								          -- time instanceof TimeInstance;
+								          -- \nonnullelements(mod_frames);
+								        end
+								      accelerometerX: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      accelerometerY: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      accelerometerZ: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      counter: CHARACTER
+								        ensure
+								          Result /= Void;
+								        end
+								      frames: SEQUENCE[FORMAL_INSTANCE_FRAME]
+								        ensure
+								          Result /= Void;
+								        end
+								      getFrame: FRAME
+								        -> index: INTEGER
+								        require
+								          index /= Void;
+								          index >= 0;
+								          index < FRAMES;
+								          -- ((\forall  int i,;0 <= i && i < mod_frames.length;mod_frames[i] instanceof FormalInstanceFrame));
+								        ensure
+								          Result /= Void;
+								        end
+								      g_frame: OBJECT
+								        ensure
+								          Result /= Void;
+								        end
+								      lightLevel: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_frames: SEQUENCE[FORMAL_INSTANCE_FRAME]
+								        ensure
+								          Result /= Void;
+								        end
+								      pressure: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      supplyCurrent: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      supplyVoltage: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      temperature: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      time: TIME_INSTANCE
+								        ensure
+								          Result /= Void;
+								        end
+								      clone: ANY
+								        ensure
+								          Result /= Void;
+								          Result = g_frame;
+								        end
+								    feature{FORMAL}
+								      setAccelerometerX
+								        -> theAccelerometerX: INTEGER
+								        require
+								        
+								          theAccelerometerX /= Void;
+								          theAccelerometerX >= 1488;
+								          theAccelerometerX <= 2232;
+								        ensure
+								          delta accelerometerX;
+								          accelerometerX = theAccelerometerX;
+								        end
+								      setAccelerometerY
+								        -> theAccelerometerY: INTEGER
+								        require
+								          theAccelerometerY /= Void;
+								          theAccelerometerY >= 1488;
+								          theAccelerometerY <= 2232;
+								        ensure
+								          delta accelerometerY;
+								          accelerometerY = theAccelerometerY;
+								        end
+								      setAccelerometerZ
+								        -> theAccelerometerZ: INTEGER
+								        require
+								          theAccelerometerZ /= Void;
+								          theAccelerometerZ >= 1488;
+								          theAccelerometerZ <= 2232;
+								        ensure
+								          delta accelerometerZ;
+								          accelerometerZ = theAccelerometerZ;
+								        end
+								      setCounter
+								        -> theCounter: CHARACTER
+								        require
+								          theCounter /= Void;
+								        ensure
+								          delta counter;
+								          counter = theCounter;
+								        end
+								      setLightLevel
+								        -> theLightLevel: INTEGER
+								        require
+								          theLightLevel /= Void;
+								          theLightLevel >= 0;
+								          theLightLevel <= 1000;
+								        ensure
+								          delta lightLevel;
+								          lightLevel = theLightLevel;
+								        end
+								      setPressure
+								        -> thePressure: INTEGER
+								        require
+								          thePressure /= Void;
+								          thePressure >= 310;
+								          thePressure <= 5585;
+								        ensure
+								          delta pressure;
+								          pressure = thePressure;
+								        end
+								      setSupplyCurrent
+								        -> theSupplyCurrent: INTEGER
+								        require
+								          theSupplyCurrent /= Void;
+								        ensure
+								          delta supplyCurrent;
+								          supplyCurrent = theSupplyCurrent;
+								        end
+								      setSupplyVoltage
+								        -> theSupplyVoltage: INTEGER
+								        require
+								          theSupplyVoltage /= Void;
+								        ensure
+								          delta supplyVoltage;
+								          supplyVoltage = theSupplyVoltage;
+								        end
+								      setTemperature
+								        -> theTemperature: INTEGER
+								        require
+								          theTemperature /= Void;
+								          theTemperature >= -880;
+								          theTemperature <= 2047;
+								        ensure
+								          delta temperature;
+								          temperature = theTemperature;
+								        end
+								      setTime
+								        -> theTime: TIME_INSTANCE
+								        require
+								          theTime /= Void;
+								        ensure
+								          delta time;
+								          time = theTime;
+								        end
+								    invariant
+								      mod_frames.count = FRAMES;
+								      temperature >= -880;
+								      temperature <= 2047;
+								      pressure >= 310;
+								      pressure <= 5585;
+								      lightLevel >= 0;
+								      lightLevel <= 1000;
+								      accelerometerX >= 1488;
+								      accelerometerX <= 2232;
+								      accelerometerY >= 1488;
+								      accelerometerY <= 2232;
+								      accelerometerZ >= 1488;
+								      accelerometerZ <= 2232;
+								    end
+								    
+								    FORMAL_INSTANCE_PACKET client:{ TIME_INSTANCE
+								    
+								    effective class TIME_INSTANCE 
+								    indexing
+								      about: "Represents an instance of Time interface";
+								      title:        "TimeInstance";
+								  		author:       "Dragan Stosic";
+								  		copyright:    "none";
+								  		organisation: "School of Computer Science and Informatics, UCD";
+								  		date:         "2009/07/05";
+								  		version:      "Revision: 1.0";
+								    inherit
+								      CLONEABLE; TIME
+								    feature
+								      make
+								        ensure
+								          delta {mod_centiSeconds, mod_hours, mod_minutes, mod_seconds};
+								          mod_hours = 0;
+								          mod_minutes = 0;
+								          mod_seconds = 0;
+								          mod_centiSeconds = 0;
+								        end
+								      make0
+								        -> template: TIME
+								        require
+								          template /= Void;
+								        ensure
+								          delta {mod_centiSeconds, mod_hours, mod_minutes, mod_seconds};
+								          mod_hours >= 0;
+								          mod_hours < 24;
+								          mod_minutes >= 0;
+								          mod_minutes <= 59;
+								          mod_seconds >= 0;
+								          mod_seconds <= 59;
+								          mod_centiSeconds >= 0;
+								          mod_centiSeconds <= 99;
+								        end
+								      centiSeconds: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      g_time: OBJECT
+								        ensure
+								          Result /= Void;
+								        end
+								      hours: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      minutes: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_centiSeconds: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_hours: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_minutes: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      mod_seconds: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      seconds: INTEGER
+								        ensure
+								          Result /= Void;
+								        end
+								      clone: ANY
+								        ensure
+								          Result /= Void;
+								          Result = g_time;
+								        end
+								    feature{FORMAL}
+								      setCentiSeconds
+								        -> aCentiSeconds: INTEGER
+								        require
+								          aCentiSeconds /= Void;
+								          aCentiSeconds >= 0;
+								          aCentiSeconds <= 99;
+								        ensure
+								          delta centiSeconds;
+								          mod_centiSeconds = aCentiSeconds;
+								        end
+								      setHours
+								        -> aHours: INTEGER
+								        require
+								          aHours /= Void;
+								          aHours >= 0;
+								          aHours < 24;
+								        ensure
+								          delta hours;
+								          mod_hours = aHours;
+								        end
+								      setMinutes
+								        -> aMinutes: INTEGER
+								        require
+								          aMinutes /= Void;
+								          aMinutes >= 0;
+								          aMinutes <= 59;
+								        ensure
+								          delta minutes;
+								          mod_minutes = aMinutes;
+								        end
+								      setSeconds
+								        -> aSeconds: INTEGER
+								        require
+								          aSeconds /= Void;
+								          aSeconds >= 0;
+								          aSeconds <= 59;
+								        ensure
+								          delta seconds;
+								          mod_seconds = aSeconds;
+								        end
+								    invariant
+								      mod_hours >= 0;
+								      mod_hours < 24;
+								      mod_minutes >= 0;
+								      mod_minutes <= 59;
+								      mod_seconds >= 0;
+								      mod_seconds <= 59;
+								      mod_centiSeconds >= 0;
+								      mod_centiSeconds <= 99;
+								    end
+		                        
+		                        
+							end -- end formal
+ 						end -- end sinulator
+ 						
+ 						deferred class PACKET_BUILDER interfaced 
+						    indexing
+						      about: "Packet builder class to be used to build simulators.";
+						       title:        "PacketBuilder";
+						  		author:       "delbianc";
+						  		copyright:    "none";
+						  		organisation: "School of Computer Science and Informatics, UCD";
+						  		date:         "2009/07/05";
+						  		version:      "Revision: 1.00";    
+						  		feature{SIMULATOR_CLUSTER}
+						      deferred getPacket: PACKET
+						        ensure
+						          Result /= Void;
+						        end
+						    end
+						    
+						    
+						   deferred class CLONEABLE_PACKET interfaced 
+						    inherit
+						      CLONEABLE; PACKET
+						    feature{SIMULATOR_CLUSTER}
+						      deferred clone: ANY
+						        ensure
+						          Result /= Void;
+						        end
+						    end
+						    
+						    
+						     deferred class TIME interfaced 
+						    feature{SENSORBOARD_CLUSTER}
+						      deferred getCentiSeconds: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < 100;
+						        end
+						      deferred getHours: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < 24;
+						        end
+						      deferred getMinutes: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < 60;
+						        end
+						      deferred getSeconds: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < 60;
+						        end
+						    end
+						    
+						    
+						    deferred class PACKET interfaced 
+						    indexing
+						      about: "Sensor board output packet data.";
+						    feature
+						      FRAMES: INTEGER
+						        ensure
+						          Result = 82;
+						        end
+						    feature{SENSORBOARD_CLUSTER}
+						      deferred getAccelerometerX: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 1488;
+						          Result <= 2232;
+						        end
+						      deferred getAccelerometerY: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 1488;
+						          Result <= 2232;
+						        end
+						      deferred getAccelerometerZ: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 1488;
+						          Result <= 2232;
+						        end
+						      deferred getCounter: CHARACTER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < 65536;
+						        end
+						      deferred getFrame: FRAME
+						        -> index: INTEGER
+						        require
+						          index /= Void;
+						          index >= 0;
+						          index < FRAMES;
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred getLightLevel: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result <= 1000;
+						        end
+						      deferred getPressure: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 310;
+						          Result <= 5585;
+						        end
+						      deferred getTemperature: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= -880;
+						          Result <= 2047;
+						        end
+						      deferred getTime: TIME
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred getSupplyCurrent: INTEGER
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred getSupplyVoltage: INTEGER
+						        ensure
+						          Result /= Void;
+						        end  
+						  end
+ 						
+ 						 deferred class FRAME interfaced 
+						    indexing
+						      about: "Sensor board internal grìframe of output packet data.";
+						       title:        "Frame";
+						  		author:       "Dragan Stosic";
+						  		copyright:    "none";
+						  		organisation: "School of Computer Science and Informatics, UCD";
+						  		date:         "2009/07/05";
+						  		version:      "Revision: 1.00";
+						    feature
+						      ADC_CHANNELS: INTEGER
+						        ensure
+						          Result = 8;
+						        end
+						      AUDIO_CHANNELS: INTEGER
+						        ensure
+						          Result = 4;
+						        end
+						      AUDIO_FREQUENCY_48KHZ: INTEGER
+						        ensure
+						          Result = 0;
+						        end
+						      AUDIO_FREQUENCY_96KHZ: INTEGER
+						        ensure
+						          Result = 1;
+						        end
+						    feature{SENSORBOARD_CLUSTER}
+						      deferred getADC: CHARACTER
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred getADCChannel: INTEGER
+						        ensure
+						          Result /= Void;
+						          Result >= 0;
+						          Result < ADC_CHANNELS;
+						        end
+						      deferred getAudio: CHARACTER
+						        -> channel: INTEGER
+						        require
+						          channel /= Void;
+						          channel >= 0;
+						          channel < AUDIO_CHANNELS;
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred getAudioFrequency: INTEGER
+						        ensure
+						          Result /= Void;
+						          (Result = AUDIO_FREQUENCY_48KHZ) or (Result = AUDIO_FREQUENCY_96KHZ);
+						        end
+						      deferred isADCActive: BOOLEAN
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred isAudioActive: BOOLEAN
+						        ensure
+						          Result /= Void;
+						        end
+						      deferred isIRDSynachronizationActive: BOOLEAN
+						        ensure
+						          Result /= Void;
+						        end
+						    end
+ 						
+ 						
+ 					end -- end sensorboard
+ 				end -- end sensetile
+ 			end -- end ucd
+ 		end -- end ie 
+ 	   end  

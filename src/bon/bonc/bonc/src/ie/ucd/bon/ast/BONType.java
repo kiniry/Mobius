@@ -5,6 +5,7 @@
 package ie.ucd.bon.ast;
 
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,20 +15,21 @@ import java.util.Map;
 public class BONType extends Type {
 
   public static final BONType voidType(SourceLocation loc) {
-    return new BONType("Void", new ArrayList<Type>(0), "Void", loc);
+    return new BONType("Void", new ArrayList<Type>(0), loc);
   }
   
   private static Map<String,BONType> typeMap = new HashMap<String,BONType>();
 
-  public BONType(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
-    super(identifier, actualGenerics, fullString, location);
-    typeMap.put(fullString, this);
+  public BONType(String identifier, List<Type> actualGenerics, SourceLocation location) {
+    super(identifier, actualGenerics, location);
+    typeMap.put(StringUtil.prettyPrint(this), this);
   }
 
-  public static BONType mk(String identifier, List<Type> actualGenerics, String fullString, SourceLocation location) {
-    BONType type = typeMap.get(fullString);
+  public static BONType mk(String identifier, List<Type> actualGenerics, SourceLocation location) {
+    BONType t = new BONType(identifier, actualGenerics, location);
+    BONType type = typeMap.get(StringUtil.prettyPrint(t));
     if (type == null) {
-      return new BONType(identifier, actualGenerics, fullString, location);
+      return t;
     } else {
       return type;
     }
