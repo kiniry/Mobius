@@ -4,16 +4,20 @@
  */
 package ie.ucd.bon.util;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URISyntaxException;
 
 public final class FileUtil {
 
@@ -36,13 +40,17 @@ public final class FileUtil {
   }
 
   public static Reader getResourceReader(String filePath) {
-    InputStream istream = new FileUtil().getClass().getClassLoader().getResourceAsStream(filePath);
+    InputStream istream = getInputStream(filePath);
     if (istream != null) {
       BufferedReader br = new BufferedReader(new InputStreamReader(istream));
       return br;
     } else {
       return null;
     }
+  }
+
+  public static InputStream getInputStream(String filePath) {
+    return FileUtil.class.getClassLoader().getResourceAsStream(filePath);
   }
 
   public static String readToString(Reader r) throws IOException {
@@ -60,7 +68,7 @@ public final class FileUtil {
   public static String readToString(File file) throws IOException {
     return readToString(new BufferedReader(new FileReader(file)));
   }
-  
+
   public static String readToString(String filePath) throws IOException {
     Reader r = getResourceReader(filePath);
     if (r == null) {
@@ -69,7 +77,7 @@ public final class FileUtil {
       return readToString(r);
     }
   }
-  
+
   public static void writeStringToFile(String s, File f) throws IOException {
     BufferedWriter bw = new BufferedWriter(new FileWriter(f));
     bw.write(s);
@@ -77,4 +85,29 @@ public final class FileUtil {
     bw.close();
   }
 
+  public static boolean copyResourceToExternalFile(String filePath, File outputFile) {
+    try {
+      InputStream is = getInputStream(filePath);
+      if (is == null) {
+        System.out.println("Could find resource: " + filePath);
+        return false;
+      }
+      BufferedInputStream bis = new BufferedInputStream(is);
+
+      FileOutputStream fos = new FileOutputStream(outputFile);
+      BufferedOutputStream bos = new BufferedOutputStream(fos);
+
+      byte[] buf = new byte[bis.available()];
+      int i = 0;
+      while ((i = bis.read(buf))!= -1) {
+        bos.write(buf, 0, i);
+      }
+      bis.close();
+      bos.close();
+
+      return true;
+    } catch (IOException ioe) {
+      return false;
+    }
+  }
 }

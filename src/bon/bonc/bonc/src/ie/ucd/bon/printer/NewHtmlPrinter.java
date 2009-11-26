@@ -7,6 +7,7 @@ import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.parser.tracker.ParsingTracker;
 import ie.ucd.bon.printer.template.FreeMarkerTemplate;
 import ie.ucd.bon.typechecker.BONST;
+import ie.ucd.bon.util.FileUtil;
 import ie.ucd.bon.util.STUtil;
 
 import java.io.File;
@@ -23,18 +24,9 @@ public class NewHtmlPrinter {
     //TODO copy relevant javascript files
     System.out.println("Doing new html printing " + outputDirectory);
     
-    File js = relativeFile(outputDirectory, "js");
-    if (js.exists()) {
-      if (!js.isDirectory()) {
-        System.out.println(js.getPath() + " exists and is not a directory.");
-        return;
-      }
-    } else {
-      if (!js.mkdir()) {
-        System.out.println("Unable to make directory " + js.getPath());
-        return;
-      }
-    }
+   if (!setupDirectory(outputDirectory)) {
+     return;
+   }
         
     Map<String,Object> map = prepareMap(tracker);
     
@@ -47,16 +39,58 @@ public class NewHtmlPrinter {
     BONST st = tracker.getSymbolTable();
     
     //Classes
-    for (Clazz clazz : st.classes.values()) {
-      map.put("class", clazz);
-      map.put("qualifiedclass", STUtil.getQualifiedClassString(clazz.name.name, st));
-      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
-      map.put("related", getRelated(clazz, st));
-      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-related.html"), "newhtml/fclass-related.ftl", map);
-    }
+//    for (Clazz clazz : st.classes.values()) {
+//      map.put("class", clazz);
+//      map.put("qualifiedclass", STUtil.getQualifiedClassString(clazz.name.name, st));
+//      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
+//      map.put("related", getRelated(clazz, st));
+//      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-related.html"), "newhtml/fclass-related.ftl", map);
+//    }
+    FileUtil.copyResourceToExternalFile("templates/txt-start.ftl", relativeFile(outputDirectory, "test.txt"));
     
     //Clusters
     
+  }
+  
+  private static boolean setupDirectory(File outputDirectory) {
+    File js = relativeFile(outputDirectory, "js");
+    File scripty = relativeFile(outputDirectory, "js/scripty");
+    File scripty2 = relativeFile(outputDirectory, "js/scripty2");
+    File jquery = relativeFile(outputDirectory, "js/jquery");
+    
+    if (!(checkDirectory(js) && checkDirectory(scripty) && checkDirectory(scripty2) && checkDirectory(jquery))) {
+      return false;
+    }
+    
+    String[] filePaths = { "js/jquery/jquery-1.3.2.js", "js/jquery/jquery.history.js",
+                           "js/jquery/jquery.hotkeys.js", "js/scripty/scriptaculous.js",
+                           "js/scripty/prototype.js", "js/scripty/builder.js",
+                           "js/scripty/controls.js", "js/scripty/dragdrop.js",
+                           "js/scripty/effects.js", "js/scripty/slider.js",
+                           "js/scripty/sound.js", "js/scripty/unittest.js",
+                           "style.css", "js/jdoc.js"};
+    
+    for (String path : filePaths) {
+      if (!FileUtil.copyResourceToExternalFile("templates/newhtml/" + path, relativeFile(outputDirectory, path))) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  private static boolean checkDirectory(File directory) {
+    if (directory.exists()) {
+      if (!directory.isDirectory()) {
+        System.out.println(directory.getPath() + " exists and is not a directory.");
+        return false;
+      }
+    } else {
+      if (!directory.mkdir()) {
+        System.out.println("Unable to make directory " + directory.getPath());
+        return false;
+      }
+    }
+    return true;
   }
   
   private static File relativeFile(File file, String path) {

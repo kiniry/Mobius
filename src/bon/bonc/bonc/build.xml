@@ -130,7 +130,7 @@
   	
     <mkdir dir="${build}/templates"/>
     <copy todir="${build}/templates">
-      <fileset dir="templates/" includes="*"/> 
+      <fileset dir="templates/" includes="* */* */*/* */*/*/*"/> 
     </copy>
   	
   	<echo message="${release-name}-${release-version}" file="${build}/version"/>

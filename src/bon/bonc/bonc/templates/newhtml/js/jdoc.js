@@ -6,9 +6,7 @@ function setup() {
   var initialHash = $j.history.getCurrent();
   processHash(initialHash);
   $j(document).history(function(e,curr,prev) { processHash(curr); });
-  //loadClass('com.sun.javadoc.AnnotationDesc');
-    
-  //new S2.UI.Autocompleter('search-pane', {choices: class_list});
+
   var autocompleter = new Autocompleter.Local('search-box', 'search-results', elements_list, {updateElement: selectedAuto, partialChars: 1, fullSearch: true});
   
   $j('#search-box').focus(function(event){
