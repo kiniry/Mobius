@@ -4,10 +4,10 @@ body {
 
 div#left-pane {
  float: left; 
- width: 200px; 
+ width: 250px; 
  padding: 0px 0px 0px 10px;
  position: absolute; 
- top: 30px; 
+ top: 30px;
  left: 0px;
  z-index: 1;
 }
@@ -20,7 +20,7 @@ div#main-display {
  padding: 10px;
  position: absolute; 
  top: 0px; 
- left: 200px;
+ left: 250px;
  z-index: 1;
 }
 

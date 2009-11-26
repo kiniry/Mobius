@@ -8,5 +8,8 @@
 <@html_header_no_close title=title/>
 </head>
 </#macro>
-<#macro type type><a href="" onclick="return navTo('class:${type.identifier}');">${StringUtil.prettyPrint(type)}</a></#macro>
+<#macro ptype type><a href="" onclick="return navTo('class:${type.identifier}');">${type.identifier}</a><#if (type.actualGenerics?size > 0)>[<#list type.actualGenerics as gen><@ptype type=gen/><#if gen_has_next>,</#if></#list>]</#if></#macro>
 <#macro pclass class><a href="" onclick="return navTo('class:${class.name.name}');">${StringUtil.prettyPrintShortenedClass(class)}</a></#macro>
+<#macro fspec f><#list f.featureNames as name><@ifspec f=f name=name/></#list></#macro>
+<#macro ifspec f name><p>${name.name}(<#list f.arguments as arg><@parg arg=arg/><#if arg_has_next>, </#if></#list>)</p></#macro>
+<#macro parg arg><@ptype type=arg.type/><#if arg.identifier??> ${arg.identifier}</#if></#macro>

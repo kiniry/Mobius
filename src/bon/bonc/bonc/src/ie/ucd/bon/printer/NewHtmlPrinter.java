@@ -35,21 +35,33 @@ public class NewHtmlPrinter {
 
     //Index page
     FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, "index.html"), "newhtml/index.ftl", map);
+    FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, "all-classes.html"), "newhtml/all-classes.ftl", map);
 
     BONST st = tracker.getSymbolTable();
 
     //Classes
     for (Clazz clazz : st.classes.values()) {
-      map.put("class", clazz);
-      map.put("qualifiedclass", STUtil.getQualifiedClassString(clazz.name.name, st));
-      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
-      map.put("related", getRelated(clazz, st));
-      FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-related.html"), "newhtml/fclass-related.ftl", map);
+      printForClass(clazz, map, st, outputDirectory);
     }
-    FileUtil.copyResourceToExternalFile("templates/txt-start.ftl", relativeFile(outputDirectory, "test.txt"));
 
     //Clusters
 
+  }
+  
+  private static void printForClass(Clazz clazz, Map<String,Object> map, BONST st, File outputDirectory) {
+    map.put("class", clazz);
+    map.put("qualifiedclass", STUtil.getQualifiedClassString(clazz.name.name, st));
+    if (clazz.classInterface != null) {
+      map.put("parents", clazz.classInterface.parents);
+      map.put("features", st.featuresMap.getAll(clazz));
+    } else {
+      map.put("parents", null);
+      map.put("features", null);
+    }
+    map.put("children", STUtil.getAllDescendants(clazz, st));
+    FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
+    map.put("related", getRelated(clazz, st));
+    FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-related.html"), "newhtml/fclass-related.ftl", map);
   }
 
   private static boolean setupDirectory(File outputDirectory) {
@@ -109,7 +121,8 @@ public class NewHtmlPrinter {
     BONST st = tracker.getSymbolTable();
     map.put("st", st);
 
-    map.put("fclasses", st.classes.values());
+    
+    map.put("fclasses", STUtil.alphabeticalClasses(st));
     map.put("fclusters", st.clusters.values());
     map.put("iclasses", st.informal.classes.values());
     map.put("iclusters", st.informal.clusters.values());

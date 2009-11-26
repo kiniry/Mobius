@@ -4,7 +4,9 @@ function setup() {
   $j('#search-box').val('Search...');
   
   var initialHash = $j.history.getCurrent();
-  processHash(initialHash);
+  if (!processHash(initialHash)) {
+	  $j('#main-display').load('all-classes.html');
+  }
   $j(document).history(function(e,curr,prev) { processHash(curr); });
 
   var autocompleter = new Autocompleter.Local('search-box', 'search-results', elements_list, {updateElement: selectedAuto, partialChars: 1, fullSearch: true});
@@ -51,7 +53,9 @@ function processHash(hash) {
   var parts = hash.split(':');
   if (parts.length >= 2) {
     loadClass(parts[1]);
+    return true;
   }
+  return false;
 }
 
 function userLoadClass(qualifiedClassname) {

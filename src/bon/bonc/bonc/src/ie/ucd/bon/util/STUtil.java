@@ -5,6 +5,8 @@ import ie.ucd.bon.ast.Cluster;
 import ie.ucd.bon.typechecker.BONST;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 public class STUtil {
 
@@ -50,4 +52,30 @@ public class STUtil {
       }
     };
   }
+  
+  public static Collection<Clazz> alphabeticalClasses(final BONST st) {
+    Collection<Clazz> classes = new TreeSet<Clazz>(lexicographicClassComparator);
+    classes.addAll(st.classes.values());
+    return classes;
+  }
+  
+  public static Comparator<Clazz> lexicographicClassComparator = new Comparator<Clazz>() {
+    @Override
+    public int compare(Clazz o1, Clazz o2) {
+      return o1.name.name.compareTo(o2.name.name);
+    }
+  };
+  
+  public static Collection<Cluster> alphabeticalClusters(final BONST st) {
+    Collection<Cluster> clusters = new TreeSet<Cluster>(lexicographicClusterComparator);
+    clusters.addAll(st.clusters.values());
+    return clusters;
+  }
+  
+  public static Comparator<Cluster> lexicographicClusterComparator = new Comparator<Cluster>() {
+    @Override
+    public int compare(Cluster o1, Cluster o2) {
+      return o1.name.compareTo(o2.name);
+    }
+  };
 }
