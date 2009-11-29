@@ -17,10 +17,13 @@ public class TwoDimensionalMap<A,B,C> extends HashMap<KeyPair<A,B>,C> {
 
   private final Multimap<A,C> map;
   private final Multimap<C,A> reverseMap;
+  
+  private final Multimap<A,KeyPair<B,C>> firstDimensionMap;
 
   public TwoDimensionalMap() {
     map = LinkedHashMultimap.create();
     reverseMap = LinkedHashMultimap.create();
+    firstDimensionMap = LinkedHashMultimap.create();
   }
 
   public C get(A a, B b) {
@@ -35,11 +38,16 @@ public class TwoDimensionalMap<A,B,C> extends HashMap<KeyPair<A,B>,C> {
   public C put(KeyPair<A, B> key, C value) {
     map.put(key.a, value);
     reverseMap.put(value, key.a);
+    firstDimensionMap.put(key.a, new KeyPair<B,C>(key.b,value));
     return super.put(key, value);
   }
 
   public Collection<C> getAll(A a) {
     return map.get(a);
+  }
+  
+  public Collection<KeyPair<B,C>> getAllPairs(A a) {
+    return firstDimensionMap.get(a);
   }
   
   public Collection<A> getMappedFrom(C c) {

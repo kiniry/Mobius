@@ -7,6 +7,7 @@ package ie.ucd.bon.printer;
 import ie.ucd.bon.ast.AstNode;
 import ie.ucd.bon.ast.BinaryExp;
 import ie.ucd.bon.ast.BonSourceFile;
+import ie.ucd.bon.ast.BooleanConstant;
 import ie.ucd.bon.ast.CallExp;
 import ie.ucd.bon.ast.CharacterConstant;
 import ie.ucd.bon.ast.CharacterInterval;
@@ -27,10 +28,12 @@ import ie.ucd.bon.ast.IntegerConstant;
 import ie.ucd.bon.ast.IntegerInterval;
 import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.Multiplicity;
+import ie.ucd.bon.ast.RealConstant;
 import ie.ucd.bon.ast.RenameClause;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
+import ie.ucd.bon.ast.StringConstant;
 import ie.ucd.bon.ast.Type;
 import ie.ucd.bon.ast.TypeMark;
 import ie.ucd.bon.ast.UnaryExp;
@@ -270,11 +273,27 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
   }
 
   @Override
-  public void visitCharacterConstant(CharacterConstant node, Character value,
-      SourceLocation loc) {
+  public void visitCharacterConstant(CharacterConstant node, Character value, SourceLocation loc) {
     tp.print('\'');
     tp.print(value);
     tp.print('\'');
+  }
+
+  
+  
+  @Override
+  public void visitBooleanConstant(BooleanConstant node, Boolean value, SourceLocation loc) {
+    tp.print(value.toString());
+  }
+
+  @Override
+  public void visitRealConstant(RealConstant node, Double value, SourceLocation loc) {
+    tp.print(value.toString());
+  }
+
+  @Override
+  public void visitStringConstant(StringConstant node, String value, SourceLocation loc) {
+    tp.print(value);
   }
 
   @Override
@@ -318,7 +337,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print('+');
       break;
     case DELTA:
-      tp.print("delta");
+      tp.print("$\\Delta$");
       break;
     case NOT:
       tp.print("not");
@@ -353,7 +372,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print("$\\geq$");
       break;
     case GT:
-      tp.print("$\\gt$");
+      tp.print("$>$");
       break;
     case HASTYPE:
       tp.print(':');
@@ -368,13 +387,13 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print("$\\leq$");
       break;
     case LT:
-      tp.print('<');
+      tp.print("$<$");
       break;
     case MEMBEROF:
       tp.print("$\\in$");
       break;
     case MOD:
-      tp.print("$%$");
+      tp.print("$\\%$");
       break;
     case MUL:
       tp.print("$*$");
@@ -389,7 +408,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print("\\textbf{or}");
       break;
     case POW:
-      tp.print('^');
+      tp.print("\\^");
       break;
     case SUB:
       tp.print("$-$");

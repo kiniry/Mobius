@@ -15,6 +15,5 @@
 </#if>
 <#if (features?? && features?size > 0)>
 <h3>Features</h3>
-<#list features as feature><@fspec f=feature/>
-</#list>
+<#list features as feature><@fspec f=feature/></#list>
 </#if>

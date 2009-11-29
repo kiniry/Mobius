@@ -2,10 +2,14 @@ package ie.ucd.bon.util;
 
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.Cluster;
+import ie.ucd.bon.ast.FeatureArgument;
+import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.typechecker.BONST;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.TreeSet;
 
 public class STUtil {
@@ -18,7 +22,7 @@ public class STUtil {
       return getQualifiedClusterString(cluster.name, st) + '.' + c;
     }
   }
-  
+
   public static String getQualifiedClusterString(String c, BONST st) {
     Collection<Cluster> clusters = st.clusterClusterGraph.get(c);
     if (clusters == null || clusters.size() < 1) {
@@ -27,23 +31,23 @@ public class STUtil {
       return getQualifiedClusterString(clusters.iterator().next().name, st) + '.' + c;
     }
   }
-  
+
   public static Collection<Clazz> getAllDescendants(Clazz clazz, BONST st) {
     return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.getAllPredecessorNodes(clazz.name.name, Converter.<String>identityConverter()));
   }
-  
+
   public static Collection<Clazz> getImmediateDescendants(Clazz clazz, BONST st) {
     return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.reverse().get(clazz.name.name));
   }
-  
+
   public static Collection<Clazz> getAllAncestors(Clazz clazz, BONST st) {
     return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.getAllSuccessorNodes(clazz.name.name, Converter.<String>identityConverter()));
   }
-  
+
   public static Collection<Clazz> getImmediateAncestors(Clazz clazz, BONST st) {
     return classNameToClazzConverter(st).convert(st.simpleClassInheritanceGraph.get(clazz.name.name));
   }
-  
+
   public static Converter<String,Clazz> classNameToClazzConverter(final BONST st) {
     return new Converter<String,Clazz>() {      
       @Override
@@ -52,30 +56,53 @@ public class STUtil {
       }
     };
   }
-  
+
   public static Collection<Clazz> alphabeticalClasses(final BONST st) {
     Collection<Clazz> classes = new TreeSet<Clazz>(lexicographicClassComparator);
     classes.addAll(st.classes.values());
     return classes;
   }
-  
+
   public static Comparator<Clazz> lexicographicClassComparator = new Comparator<Clazz>() {
     @Override
     public int compare(Clazz o1, Clazz o2) {
       return o1.name.name.compareTo(o2.name.name);
     }
   };
-  
+
   public static Collection<Cluster> alphabeticalClusters(final BONST st) {
     Collection<Cluster> clusters = new TreeSet<Cluster>(lexicographicClusterComparator);
     clusters.addAll(st.clusters.values());
     return clusters;
   }
-  
+
   public static Comparator<Cluster> lexicographicClusterComparator = new Comparator<Cluster>() {
     @Override
     public int compare(Cluster o1, Cluster o2) {
       return o1.name.compareTo(o2.name);
     }
   };
+
+  public static String getFeatureSignature(String name, FeatureSpecification fSpec, Clazz clazz, BONST st) {
+    StringBuilder sig = new StringBuilder();
+    sig.append(getQualifiedClassString(clazz.name.name, st));
+    sig.append('.');
+    sig.append(name);
+    
+    //Due to no overloading of feature names, no need for arg types in the sig
+//    if (!fSpec.arguments.isEmpty()) {
+//      sig.append('(');
+//      List<String> argTypes = new ArrayList<String>(fSpec.arguments.size());
+//      for (FeatureArgument arg : fSpec.arguments) {
+//        argTypes.add(arg.type.identifier);
+//      }
+//      sig.append(StringUtil.appendWithSeparator(argTypes, ","));
+//      sig.append(')');
+//    }
+    return sig.toString();
+  }
+  
+  public static String getFeatureSignature(String name, FeatureSpecification fSpec, BONST st) {
+    return getFeatureSignature(name, fSpec, st.featureDeclaringClassMap.get(fSpec), st);
+  }
 }

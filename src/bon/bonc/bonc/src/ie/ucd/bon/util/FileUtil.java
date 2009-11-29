@@ -4,6 +4,8 @@
  */
 package ie.ucd.bon.util;
 
+import ie.ucd.bon.Main;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -17,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URISyntaxException;
 
 public final class FileUtil {
 
@@ -78,11 +79,20 @@ public final class FileUtil {
     }
   }
 
-  public static void writeStringToFile(String s, File f) throws IOException {
-    BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-    bw.write(s);
-    bw.flush();
-    bw.close();
+  public static boolean writeStringToFile(String s, File f) {
+    try {
+      BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+      bw.write(s);
+      bw.flush();
+      bw.close();
+      return true; 
+    } catch (IOException ioe) {
+      if (Main.isDebug()) {
+        ioe.printStackTrace();
+      }
+      System.out.println("Error writing file " + f.getPath());
+      return false;
+    }
   }
 
   public static boolean copyResourceToExternalFile(String filePath, File outputFile) {
