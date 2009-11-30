@@ -1,0 +1,5 @@
+-Make show/hide specs keep previous status when viewing a new class
+-Breadcrumbs/history
+-Incorporate old informal html output
+-Full latex formal class diagram
+-Source code inclusion http://alexgorbatchev.com/wiki/SyntaxHighlighter

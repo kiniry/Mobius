@@ -65,6 +65,9 @@ public class NewHtmlPrinter {
     FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + ".html"), "newhtml/fclass.ftl", map);
     map.put("related", getRelated(clazz, st));
     FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-related.html"), "newhtml/fclass-related.ftl", map);
+    
+    map.put("diagram", StringUtil.latexPrint(clazz));
+    FreeMarkerTemplate.writeTemplateToFile(relativeFile(outputDirectory, clazz.name.name + "-diagram.tex"), "newhtml/tikz.ftl", map);
 
     for (KeyPair<String,FeatureSpecification> pair : st.featuresMap.getAllPairs(clazz)) {
       String featureName = pair.a;

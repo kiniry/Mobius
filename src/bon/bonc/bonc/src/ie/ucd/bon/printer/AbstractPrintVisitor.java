@@ -17,8 +17,7 @@ public class AbstractPrintVisitor extends AbstractVisitorWithAdditions implement
     baos = new ByteArrayOutputStream();
     tp = new TextPrinter(new PrintStream(baos));
   }
- 
-  @Override
+
   public String getAllOutputAsString(ParsingTracker tracker, Map<String,Object> data) throws IOException {
     return baos.toString();
   }

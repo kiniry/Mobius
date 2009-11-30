@@ -19,12 +19,14 @@
 <body>
 
 <div id="left-pane">
- <h3>Related:</h3>
- <p id="related"></p>
- <h3>Recent:</h3>
- <p id="recent"></p>
- <h3>Most used:</h3>
- <p id="most-used"></p>
+ <div id="side-bar">
+  <h3>Related:</h3>
+  <p id="related"></p>
+  <h3>Recent:</h3>
+  <p id="recent"></p>
+  <h3>Most used:</h3>
+  <p id="most-used"></p>
+ </div>
 </div>
 
 <div id="search-pane">
@@ -34,7 +36,10 @@
   <div id="search-results"></div>
 </div>
 
-<div id="main-display"></div>
+<div id="right-pane">
+ <div id="main-display">
+ </div>
+</div>
 
 </body>
 </html>

@@ -3,25 +3,30 @@ body {
 }
 
 div#left-pane {
- float: left; 
- width: 250px; 
- padding: 0px 0px 0px 10px;
+ width: 20%; 
  position: absolute; 
- top: 30px;
- left: 0px;
  z-index: 1;
+}
+
+div#side-bar {
+ padding: 30px 0px 0px 10px;
 }
 
 div#search-pane {
  position: absolute;
 }
 
+div#right-pane {
+ position: absolute; 
+ width: 80%;
+ left: 20%;
+ top: 0px;
+ z-index: 1;
+}
+
 div#main-display {
  padding: 10px;
- position: absolute; 
- top: 0px; 
- left: 250px;
- z-index: 1;
+ border-left: 1px solid black;
 }
 
 #search-box {
@@ -63,4 +68,25 @@ div#main-display {
  list-style: none;
  margin: 0px;
  padding: 0px;
+}
+
+.invisible {
+ display: none;
+}
+
+.indexing dd {
+  margin-left: 20px;
+}
+
+.indexing dt {
+  font-variant: small-caps;
+  letter-spacing: 1px;
+}
+
+.methodsig {
+  font-size: 18px;
+}
+
+.showspecslink, #showallspecslink {
+  font-size: 8px;
 }

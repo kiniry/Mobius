@@ -15,6 +15,7 @@ import ie.ucd.bon.ast.ClassInterface;
 import ie.ucd.bon.ast.ClassName;
 import ie.ucd.bon.ast.Clazz;
 import ie.ucd.bon.ast.ContractClause;
+import ie.ucd.bon.ast.EnumerationElement;
 import ie.ucd.bon.ast.Expression;
 import ie.ucd.bon.ast.Feature;
 import ie.ucd.bon.ast.FeatureArgument;
@@ -30,6 +31,7 @@ import ie.ucd.bon.ast.KeywordConstant;
 import ie.ucd.bon.ast.Multiplicity;
 import ie.ucd.bon.ast.RealConstant;
 import ie.ucd.bon.ast.RenameClause;
+import ie.ucd.bon.ast.SetConstant;
 import ie.ucd.bon.ast.SpecificationElement;
 import ie.ucd.bon.ast.StaticComponent;
 import ie.ucd.bon.ast.StaticDiagram;
@@ -297,6 +299,13 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
   }
 
   @Override
+  public void visitSetConstant(SetConstant node, List<EnumerationElement> enumerations, SourceLocation loc) {
+    tp.print("\\{");
+    visitAllPrintingSeparator(enumerations, ", ", false);
+    tp.print("\\}");
+  }
+
+  @Override
   public void visitCharacterInterval(CharacterInterval node, Character start,
       Character stop, SourceLocation loc) {
     tp.print('\'');
@@ -378,7 +387,7 @@ public class LatexPrintVisitor extends AbstractPrintVisitor implements IVisitorW
       tp.print(':');
       break;
     case IMPLIES:
-      tp.print("->");
+      tp.print("\\rightarrow");
       break;
     case INTDIV:
       tp.print("//");
