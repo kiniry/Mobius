@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mobius ESCJava2 API plugin
 Bundle-SymbolicName: mobius.escjava2.esctools
-Bundle-Version: 2.0.18
+Bundle-Version: 2.0.19
 Bundle-Vendor: David R. Cok and EU MOBIUS IST-15905 project
 Eclipse-JREBundle: true
 Export-Package: escjava,
@@ -22,7 +22,7 @@ Export-Package: escjava,
  escjava.reader,
  escjava.sortedProver,
  escjava.sortedProver.auflia,
- escjava.sortedProver.cvc,
+ escjava.sortedProver.cvc3,
  escjava.sortedProver.fx7,
  escjava.sortedProver.fx7pg,
  escjava.sortedProver.simplify,
@@ -46,5 +46,7 @@ Bundle-ClassPath: esctools2.jar,
  .
 Require-Bundle: mobius.javafe.plugin,
  org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ mobius.atp.cvc3;bundle-version="1.5.1",
+ mobius.pluginlib;bundle-version="1.0.7"
 Bundle-Activator: mobius.escjava2.EscToolsActivator

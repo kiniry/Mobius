@@ -1,6 +1,9 @@
 package mobius.escjava2;
 
 
+import mobius.atp.Cvc3Activator;
+import mobius.util.plugin.Utils;
+
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -86,7 +89,6 @@ public class EscToolsActivator extends AbstractUIPlugin {
   /** {@inheritDoc} */
   public void start(final BundleContext context) throws Exception {
     super.start(context);
-
   }
 
   /** {@inheritDoc} */
@@ -103,7 +105,22 @@ public class EscToolsActivator extends AbstractUIPlugin {
   public static EscToolsActivator getDefault() {
     return plugin;
   }
-  
+  public static void loadCvc3Thingie() {
+    Cvc3Activator.loadCvc3Thingie();
+    try {
+      String path = "";
+      String [] libnames = {"libcvc3jniw.so"};
+      for (String libname:libnames) {
+        System.load(Utils.findPluginResource(PLUGIN_ID, path + libname));
+      }
+
+
+      System.mapLibraryName("cvc3jniw");
+      
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
 
 }
 
