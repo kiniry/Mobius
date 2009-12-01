@@ -2,7 +2,7 @@
 <feature
       id="mobius.provereditor"
       label="Prover Editor"
-      version="1.0.10"
+      version="1.0.12"
       provider-name="Mobius">
 
    <description>
@@ -722,7 +722,21 @@ END OF TERMS AND CONDITIONS
          unpack="false"/>
 
    <plugin
-         id="mobius.atp.yices"
+         id="yices.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="cvc3.editor"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="z3.editor"
          download-size="0"
          install-size="0"
          version="0.0.0"
