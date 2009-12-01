@@ -2,7 +2,7 @@
 <feature
       id="mobius.atp"
       label="Automated Theorem Provers"
-      version="0.2.13"
+      version="0.2.14"
       provider-name="EU Mobius IST-15905 Project">
 
    <description>
