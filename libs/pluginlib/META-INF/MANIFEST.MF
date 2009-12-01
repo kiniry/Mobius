@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Mobius Plug-in UI Library
 Bundle-SymbolicName: mobius.pluginlib;singleton:=true
-Bundle-Version: 1.0.6
+Bundle-Version: 1.0.8
 Bundle-Vendor: David Cok and EU Mobius Partners
 Export-Package: mobius.util.plugin,
  mobius.util.plugin.widgets

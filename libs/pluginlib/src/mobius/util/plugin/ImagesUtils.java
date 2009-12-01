@@ -40,7 +40,6 @@ public final class ImagesUtils {
     return new Status(IStatus.OK, Activator.PLUGIN_ID, IStatus.OK, "", null);
   }
   
-  
   /**
    * Create an image descriptor out of a file. It handle errors and everything.
    * 
@@ -48,7 +47,17 @@ public final class ImagesUtils {
    * @return a valid image descriptor or null
    */
   public static ImageDescriptor createImageDescriptor(final String file) {
-    final Bundle bundle = Platform.getBundle(Activator.PLUGIN_ID);
+    return createImageDescriptor(Activator.PLUGIN_ID, file);
+  }
+
+  /**
+   * Create an image descriptor out of a file. It handle errors and everything.
+   * 
+   * @param file the path to the file. The path is usually the path to a bundle.
+   * @return a valid image descriptor or null
+   */
+  public static ImageDescriptor createImageDescriptor(final String pluginid, final String file) {
+    final Bundle bundle = Platform.getBundle(pluginid);
     if (bundle == null) {
       System.err.println("Bundle not found!!!");
       return null;
@@ -68,8 +77,23 @@ public final class ImagesUtils {
    * @param file the path  to the image
    * @return a valid image or null
    */
-  public static Image createImage(final String file) {
-    final ImageDescriptor desc = createImageDescriptor(file);
+  public static Image createImage(final String file) { 
+    return createImage(Activator.PLUGIN_ID, file);
+  }
+  
+  
+  /**
+   * Creates an image from a file.
+   * It uses {@link #createImageDescriptor(String)} to handle the 
+   * file resolution.
+   * 
+   * @see
+   * #createImageDescriptor(String)
+   * @param file the path  to the image
+   * @return a valid image or null
+   */
+  public static Image createImage(final String pluginid, final String file) {
+    final ImageDescriptor desc = createImageDescriptor(pluginid, file);
     if (desc == null) {
       return null;
     }
