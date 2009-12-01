@@ -35,6 +35,7 @@ public class Cvc3Activator extends AbstractUIPlugin {
    */
   public Cvc3Activator() {
     plugin = this;
+    
   }
 
   /** {@inheritDoc} */
@@ -43,6 +44,27 @@ public class Cvc3Activator extends AbstractUIPlugin {
 
   }
 
+  public static void loadCvc3Thingie() {
+    try {
+      String javapath = "cvc3-20090730/java/lib/";
+      String path = "cvc3-20090730/lib/";
+      String [] libnames = {"libcvc3.so.1", "libcvc3.so.1.0", "libcvc3.so.1.0.0", "libcvc3.so"};
+      String [] libjavanames = {"libcvc3jni.so.1", "libcvc3jni.so.1.0", "libcvc3jni.so.1.0.0", "libcvc3jni.so"};
+      for (String libname:libnames) {
+        System.load(Utils.findPluginResource(PLUGIN_ID, path + libname));
+      }
+      for (String libname:libjavanames) {
+        System.load(Utils.findPluginResource(PLUGIN_ID, javapath + libname));
+      }
+
+
+      System.mapLibraryName("cvc3jni");
+      System.mapLibraryName("cvc3");
+      
+    } catch (Throwable e) {
+      e.printStackTrace();
+    }
+  }
   /** {@inheritDoc} */
   public void stop(final BundleContext context) throws Exception {
     super.stop(context);
@@ -65,7 +87,7 @@ public class Cvc3Activator extends AbstractUIPlugin {
    * @return The location of the cvc3 executable as an absolute file system path.
    * @throws Exception
    */
-  public static String findInternalSimplify(String os) throws Exception {
+  public static String findInternalCvc3(String os) throws Exception {
     if (os == null || os.length() == 0) {
       os = System.getProperty("os.name");
     }

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Cvc3
 Bundle-SymbolicName: mobius.atp.cvc3
-Bundle-Version: 1.5.1
+Bundle-Version: 1.5.2
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
@@ -11,4 +11,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.ui.views,
  mobius.pluginlib
-Export-Package: mobius.atp
+Export-Package: cvc3,
+ mobius.atp
