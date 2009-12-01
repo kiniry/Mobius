@@ -2,7 +2,7 @@
 <feature
       id="mobius.atp"
       label="Automated Theorem Provers"
-      version="0.2.15"
+      version="0.2.16"
       provider-name="EU Mobius IST-15905 Project">
 
    <description>
@@ -24,21 +24,18 @@
          id="mobius.atp.cvc3"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.atp.yices"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
    <plugin
          id="mobius.atp.z3"
          download-size="0"
          install-size="0"
-         version="0.0.0"
-         unpack="false"/>
+         version="0.0.0"/>
 
 </feature>
