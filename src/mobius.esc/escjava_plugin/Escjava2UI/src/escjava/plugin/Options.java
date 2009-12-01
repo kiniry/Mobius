@@ -85,7 +85,7 @@ public final class Options {
 
   /**
    * The option button corresponding to -parsePlus,
-   * which turns off warnings due to missing semicolons.
+   * which turns on the parsing of expressions beginning with //+@ and /*+@.
    */
   public static final BooleanOption parsePlus = new BooleanOption(
       (EscjavaPlugin.PLUGIN_ID + ".parsePlus"),
@@ -169,7 +169,7 @@ public final class Options {
   /** The option widget corresponding to the choice of source version 
    *  compatibility (Java 1.3, Java 1.4 or Java Card 2.1) to be supported.
    */
-  protected static final ChoiceOption source = 
+  public static final ChoiceOption source = 
     new ChoiceOption(
       (EscjavaPlugin.PLUGIN_ID + ".source"),
       EscToolsActivator.JavaVersions.toStringList(),

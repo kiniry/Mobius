@@ -248,13 +248,47 @@
                definitionId="mobius.escjava2.ui.commands.CheckEscjava"
                icon="icons/esc.png"
                id="mobius.escjava2.ui.EscjavaAction.Check"
-               label="Run ESC/Java2"
+               label="Run ESC/Java2 with Simplify"
+               state="false"
+               style="pulldown"
+               toolbarPath="mobius.escjava2.actions"
+               tooltip="Runs ESC/Java2 static checks using Simplify">
+         </action>
+         <action
+               class="escjava.plugin.actions.CheckWithZ3"
+               definitionId="mobius.escjava2.ui.commands.CheckWithZ3"
+               icon="icons/z3.png"
+               id="mobius.escjava2.ui.EscjavaAction.CheckWithZ3"
+               label="Run ESC/Java2 with Z3"
                menubarPath="JMLMenu/EscjavaGroup"
                state="false"
                style="push"
-               toolbarPath="mobius.escjava2.actions"
-               tooltip="Runs ESC/Java2 static checks">
+               tooltip="Runs ESC/Java2 static checks using Z3">
          </action>
+         <action
+               class="escjava.plugin.actions.CheckWithCvc3"
+               definitionId="mobius.escjava2.ui.commands.CheckWithCvc3"
+               icon="icons/cvc3.png"
+               id="mobius.escjava2.ui.EscjavaAction.CheckWithCvc3"
+               label="Run ESC/Java2 with Cvc3"
+               menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
+               style="push"
+               tooltip="Runs ESC/Java2 static checks using Cvc3">
+         </action>
+         
+         <action
+               class="escjava.plugin.actions.CheckWithSimplify"
+               definitionId="mobius.escjava2.ui.commands.CheckWithSimplify"
+               icon="icons/esc.png"
+               id="mobius.escjava2.ui.EscjavaAction.CheckWithSimplify"
+               label="Run ESC/Java2 with Simplify"
+               menubarPath="JMLMenu/EscjavaGroup"
+               state="false"
+               style="push"
+               tooltip="Runs ESC/Java2 static checks using Simplify">
+         </action>
+
 
          <!-- action
                toolbarPath="additions"
@@ -384,7 +418,25 @@
             id="mobius.escjava2.ui.commands.DisableEscjava">
       </command>
       <command
-            name="Check ESC/Java2"
+            name="Check with z3"
+            description="Performs ESC/Java2 checks on selected Java elements"
+            categoryId="mobius.escjava2.ui.EscjavaCommandCategory"
+            id="mobius.escjava2.ui.commands.CheckWithZ3">
+      </command>
+      <command
+            name="Check with Cvc3"
+            description="Performs ESC/Java2 checks on selected Java elements"
+            categoryId="mobius.escjava2.ui.EscjavaCommandCategory"
+            id="mobius.escjava2.ui.commands.CheckWithCvc3">
+      </command>
+      <command
+            name="Check with Simplify"
+            description="Performs ESC/Java2 checks on selected Java elements"
+            categoryId="mobius.escjava2.ui.EscjavaCommandCategory"
+            id="mobius.escjava2.ui.commands.CheckWithSimplify">
+      </command>
+      <command
+            name="Check with ESC/Java2"
             description="Performs ESC/Java2 checks on selected Java elements"
             categoryId="mobius.escjava2.ui.EscjavaCommandCategory"
             id="mobius.escjava2.ui.commands.CheckEscjava">

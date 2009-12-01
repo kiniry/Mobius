@@ -9,6 +9,7 @@ package escjava.plugin;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobius.escjava2.EscToolsActivator;
 import mobius.util.plugin.APreference;
 import mobius.util.plugin.Log;
 import mobius.util.plugin.Utils;
@@ -75,14 +76,12 @@ public class EscjavaPlugin extends AbstractUIPlugin {
     plugin = this;
   }
 
-  /**
-   * This method is called upon plug-in activation.
-   * @param context
-   * @throws Exception
-   */
+  /** {@inheritDoc} */
   //@ modifies Log.log, Log.log.content;
   public void start(final BundleContext context) throws Exception {
     super.start(context);
+    EscToolsActivator.loadCvc3Thingie();
+    
     Log.createLog(EscjavaPlugin.ESC_TOOL_NAME, this);
     APreference.setPreferenceStore(getPlugin().getPreferenceStore());
     APreference.addListener(

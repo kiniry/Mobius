@@ -17,6 +17,7 @@ import escjava.plugin.EscjavaMarker;
  * @author David R. Cok
  */
 public class Clear extends AEscjavaAction {
+  /** the current instance of this class. */
   private static Clear inst;
   
   /** */
@@ -53,6 +54,7 @@ public class Clear extends AEscjavaAction {
     return;
   }
 
+  /** @return the current instance of the clear class. */
   public static Clear getInstance() {
     return inst;
   }

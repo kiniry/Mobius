@@ -5,7 +5,7 @@
  * Created on Jul 30, 2004
  *
  */
-package escjava.plugin;
+package escjava.plugin.checkers;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -22,6 +22,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
+import escjava.plugin.EscjavaMarker;
+import escjava.plugin.EscjavaPlugin;
+import escjava.plugin.EscjavaUtils;
+import escjava.plugin.IEscjavaListener;
+import escjava.plugin.Options;
+
 
 /**
  * This class is the glue between the plugin and the
@@ -30,7 +36,7 @@ import org.eclipse.jdt.core.JavaModelException;
  * @author David R. Cok
  */
 
-public class EscjavaChecker extends escjava.Main 
+public class Checker extends escjava.Main 
         implements javafe.util.ErrorSet.Reporter {
   /** "could not locate specifications for" constant. */
   public static final String COULD_NOT_LOCATE_SPECIFICATIONS_FOR = 
@@ -50,7 +56,7 @@ public class EscjavaChecker extends escjava.Main
    * The default constructor for the Escjava checker.
    * @param proj The Java project to which this instance will be applied.
    */
-  public EscjavaChecker(final IJavaProject proj) {
+  public Checker(final IJavaProject proj) {
     super();
     project = proj;
     // The following is not thread-safe - FIXME 
@@ -185,8 +191,7 @@ public class EscjavaChecker extends escjava.Main
       Log.log("Running Escjava checker");
     }
     if (!addSpecsOptions(inputs) || 
-        !addClasspathOptions(inputs) || 
-        !addSimplifyOptions(inputs)) {
+        !addClasspathOptions(inputs) || !addOptions(inputs)) {
       return false;
     }
     
@@ -242,7 +247,7 @@ public class EscjavaChecker extends escjava.Main
     } 
     catch (Exception e1) {
       final String errMsg = 
-        EscjavaChecker.COULD_NOT_LOCATE_SPECIFICATIONS_FOR + 
+        Checker.COULD_NOT_LOCATE_SPECIFICATIONS_FOR + 
         Options.source.getStringValue();
       Utils.showMessageInUI(null, "Esc/Java", errMsg);
       Log.errorlog(errMsg, e1);
@@ -269,6 +274,9 @@ public class EscjavaChecker extends escjava.Main
   }
   
   
+  protected boolean addOptions(final List<String> inputs) {
+    return addSimplifyOptions(inputs);
+  }
 
 
 
