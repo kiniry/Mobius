@@ -2,7 +2,7 @@
 <feature
       id="mobius.esc"
       label="Extended Static Checking"
-      version="2.0.45"
+      version="2.1.0"
       provider-name="EU Mobius IST-15905 Project">
 
    <description>
