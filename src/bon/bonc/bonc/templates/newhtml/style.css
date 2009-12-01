@@ -87,6 +87,6 @@ div#main-display {
   font-size: 18px;
 }
 
-.showspecslink, #showallspecslink {
+.showspecslink, #showallspecslink, .showsourcelink, #showallsourcelink {
   font-size: 8px;
 }

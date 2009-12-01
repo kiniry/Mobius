@@ -59,18 +59,26 @@
     </div>
    </#if>
    <#assign sourcelines=AstUtil.getSourceLines(feature)/>
-    <#if (sourcelines?size > 0)>
-      <script type="syntaxhighlighter"  class="brush: bon; toolbar: false; first-line: ${feature.getLocation().getLineNumber()};"><![CDATA[
+   <#if (sourcelines?size > 0)>
+    <div class="invisible sourcediv" id="${name}-sourcetoggle">
+     <pre  class="brush: bon; toolbar: false; first-line: ${feature.getLocation().getLineNumber()};">
 <#list sourcelines as line>      ${line}
-      </#list>
-      ]]></script>
-    </#if>
+     </#list>
+     </pre>
+    </div>
+   </#if>
    <#if (feature.contracts.preconditions?size > 0 || feature.contracts.postconditions?size > 0)>
-   <a href="" class="showspecslink" onclick="return toggleShowSpecs(this,'#${name}-spectoggle');">Show specs</a>
+   <a href="" class="showspecslink" onclick="return toggleShow('#${name}-spectoggle',this,'Show specs','Hide specs');">Show specs</a>
+   </#if>
+   <#if (sourcelines?size > 0)>
+   <a href="" class="showsourcelink" onclick="return toggleShow('#${name}-sourcetoggle',this,'Show source','Hide source');">Show source</a>
    </#if>
   </p>
  </#list>
 </#list>
 <hr/>
-<p><a id="showallspecslink" href="" onclick="return toggleAllSpecs();">Show all specs</a></p>
+<p>
+ <a id="showallspecslink" href="#" onclick="return toggleShowAll('#showallspecslink','.showspecslink','.specsdiv','Show specs','Hide specs','Show all specs','Hide all specs');">Show all specs</a>
+ <a id="showallsourcelink" href="#" onclick="return toggleShowAll('#showallsourcelink','.showsourcelink','.sourcediv','Show source','Hide source','Show all source','Hide all source');">Show all source</a>
+</p>
 </#if>

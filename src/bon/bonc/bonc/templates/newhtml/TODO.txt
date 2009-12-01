@@ -1,6 +1,5 @@
--Make show/hide specs keep previous status when viewing a new class
+-Make show/hide specs/source keep previous status when viewing a new class
 -Breadcrumbs/history
 -Incorporate old informal html output
 -Full latex formal class diagram
--Showing/hiding source code
 -Improve png quality
