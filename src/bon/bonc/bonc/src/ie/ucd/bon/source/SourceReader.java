@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,10 @@ import java.util.Map;
  *
  */
 public final class SourceReader {
-
+//TODO, this static instance will not function correctly upon multiple uses through the API
+//For the commandline version the single process is fine
+//For eclipse, there is no issue as we don't read back from the SourceReader (we just use the source locations)
+  
   /** Singleton instance of SourceReader. */
   private static SourceReader instance;
 
@@ -71,6 +75,24 @@ public final class SourceReader {
       }
       return reader.getLine(lineNumber);
     }
+  }
+  
+  /**
+   * 
+   * @param sourceFile
+   * @param lineNumberStart
+   * @param lineNumberEnd ending line number (inclusive)
+   * @return
+   */
+  public List<String> getSourceLines(File sourceFile, int lineNumberStart, int lineNumberEnd) {
+    if (lineNumberStart > lineNumberEnd) {
+      return Collections.emptyList();
+    }
+    List<String> lines = new ArrayList<String>(lineNumberEnd - lineNumberStart + 1);
+    for (int i=lineNumberStart; i <= lineNumberEnd; i++) {
+      lines.add(getSource(sourceFile, i));
+    }
+    return lines;
   }
 
   public SourceLineReader getSourceLineReader(File file) {

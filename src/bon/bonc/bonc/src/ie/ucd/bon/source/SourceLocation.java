@@ -15,9 +15,9 @@ public class SourceLocation implements Comparable<SourceLocation> {
 
   public static final int UNKNOWN = -1;
 
-  public static final SourceLocation NO_LOCATION = new SourceLocation(null, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+  public static final SourceLocation NO_LOCATION = new SourceLocation(null, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
   public static SourceLocation noLocationInFile(File file) {
-    return new SourceLocation(file, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
+    return new SourceLocation(file, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN, UNKNOWN);
   }
   public static final String STDIN_TEXT = "<stdin>";
 
@@ -27,20 +27,22 @@ public class SourceLocation implements Comparable<SourceLocation> {
 
   protected int absoluteCharPositionStart;
   protected int absoluteCharPositionEnd;
+  protected int endLineNumber;
 
   public SourceLocation(File sourceFile, int lineNumber,
       int charPositionInLine, int absoluteCharPositionStart,
-      int absoluteCharPositionEnd
+      int absoluteCharPositionEnd, int endLineNumber
   ) {
     this.sourceFile = sourceFile;
     this.lineNumber = lineNumber;
     this.charPositionInLine = charPositionInLine;
     this.absoluteCharPositionEnd = absoluteCharPositionEnd;
     this.absoluteCharPositionStart = absoluteCharPositionStart;
+    this.endLineNumber = endLineNumber;
   }
   
   public SourceLocation(SourceLocation loc) {
-    this(loc.sourceFile, loc.lineNumber, loc.charPositionInLine, loc.absoluteCharPositionStart, loc.absoluteCharPositionEnd);
+    this(loc.sourceFile, loc.lineNumber, loc.charPositionInLine, loc.absoluteCharPositionStart, loc.absoluteCharPositionEnd, loc.endLineNumber);
   }
 
   public SourceLocation(Token t, File sourceFile) {
@@ -51,6 +53,7 @@ public class SourceLocation implements Comparable<SourceLocation> {
     this.sourceFile = sourceFile;
     //System.out.println("start token: " + start);
     this.lineNumber = start.getLine();
+    this.endLineNumber = end.getLine();
     this.charPositionInLine = start.getCharPositionInLine();
 
     //System.out.println("SourceLoc from token: " + start.getText());
@@ -58,30 +61,29 @@ public class SourceLocation implements Comparable<SourceLocation> {
     if (start instanceof CommonToken) {
       CommonToken cToken = (CommonToken)start;
       this.absoluteCharPositionStart = cToken.getStartIndex();
-      //System.out.println("Set absolute start: " + this.absoluteCharPositionStart);
     } else {
       Main.logDebug(("Not CommonToken. " + start.getClass()));
       if (Main.isDebug()) {
         Thread.dumpStack();
       }
-      this.absoluteCharPositionStart = -1;
+      this.absoluteCharPositionStart = UNKNOWN;
     }
 
+    
     if (end instanceof CommonToken) {
       CommonToken cToken = (CommonToken)end;
       this.absoluteCharPositionEnd = cToken.getStopIndex();
-      //System.out.println("Set absolute end: " + this.absoluteCharPositionEnd);
     } else {
       Main.logDebug("Not CommonToken. " + (end == null ? null : end.getClass()));
       if (Main.isDebug()) {
         Thread.dumpStack();
       }
-      this.absoluteCharPositionEnd = -1;
+      this.absoluteCharPositionEnd = UNKNOWN;
     }
   }
 
   public SourceLocation(SourceLocation start, SourceLocation end) {
-    this(start.sourceFile, start.lineNumber, start.charPositionInLine, start.absoluteCharPositionStart, end.absoluteCharPositionEnd);
+    this(start.sourceFile, start.lineNumber, start.charPositionInLine, start.absoluteCharPositionStart, end.absoluteCharPositionEnd, end.endLineNumber);
   }
 
   public void setStartToken(Token start) {
@@ -116,6 +118,10 @@ public class SourceLocation implements Comparable<SourceLocation> {
 
   public final int getLineNumber() {
     return lineNumber;
+  }
+
+  public final int getEndLineNumber() {
+    return endLineNumber;
   }
 
   public final int getCharPositionInLine() {

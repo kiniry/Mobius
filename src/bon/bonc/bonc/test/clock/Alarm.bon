@@ -1,9 +1,8 @@
-indexing
-  about: "An alarm.";
-
 static_diagram
 component
   deferred class ALARM -- An alarm that is either on or off.
+    indexing
+      about: "An alarm.";
   feature
     deferred on  -- Turn this alarm on.
       ensure

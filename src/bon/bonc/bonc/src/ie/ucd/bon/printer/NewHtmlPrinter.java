@@ -93,8 +93,9 @@ public class NewHtmlPrinter {
     File scripty = relativeFile(outputDirectory, "js/scripty");
     File scripty2 = relativeFile(outputDirectory, "js/scripty2");
     File jquery = relativeFile(outputDirectory, "js/jquery");
+    File sh = relativeFile(outputDirectory, "js/sh");
 
-    if (!(checkDirectory(js) && checkDirectory(scripty) && checkDirectory(scripty2) && checkDirectory(jquery))) {
+    if (!(checkDirectory(js) && checkDirectory(scripty) && checkDirectory(scripty2) && checkDirectory(jquery) && checkDirectory(sh))) {
       return false;
     }
 
@@ -104,7 +105,10 @@ public class NewHtmlPrinter {
         "js/scripty/controls.js", "js/scripty/dragdrop.js",
         "js/scripty/effects.js", "js/scripty/slider.js",
         "js/scripty/sound.js", "js/scripty/unittest.js",
-        "style.css", "js/jdoc.js", "make-images.sh"};
+        "style.css", "js/jdoc.js", "make-images.sh",
+        "js/sh/shCore.js", "js/sh/shCore.css", "js/sh/shThemeDefault.css",
+        "js/sh/shThemeEclipse.css", "js/sh/shBrushBON.js"     
+    };
 
     for (String path : filePaths) {
       if (!FileUtil.copyResourceToExternalFile("templates/newhtml/" + path, relativeFile(outputDirectory, path))) {

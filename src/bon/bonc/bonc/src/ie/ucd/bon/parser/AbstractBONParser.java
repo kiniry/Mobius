@@ -301,8 +301,6 @@ public abstract class AbstractBONParser extends Parser {
       if (t.getChannel() != HIDDEN) {
         return null;
       } else if (getTokenTypeName(t.getType()).equals("COMMENT")) {
-        System.out.println("HIDDEN token. type " + t.getType() + ", text:" + t.getText() + ", channel: " + t.getChannel());
-        System.out.println("Found comment: " + prepareComment(t.getText()));
         return prepareComment(t.getText());
       }
       index--;

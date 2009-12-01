@@ -57,7 +57,16 @@
       </#list>
      </#if>
     </div>
-    <a href="" class="showspecslink" onclick="return toggleShowSpecs(this,'#${name}-spectoggle');">Show specs</a>
+   </#if>
+   <#assign sourcelines=AstUtil.getSourceLines(feature)/>
+    <#if (sourcelines?size > 0)>
+      <script type="syntaxhighlighter"  class="brush: bon; toolbar: false; first-line: ${feature.getLocation().getLineNumber()};"><![CDATA[
+<#list sourcelines as line>      ${line}
+      </#list>
+      ]]></script>
+    </#if>
+   <#if (feature.contracts.preconditions?size > 0 || feature.contracts.postconditions?size > 0)>
+   <a href="" class="showspecslink" onclick="return toggleShowSpecs(this,'#${name}-spectoggle');">Show specs</a>
    </#if>
   </p>
  </#list>

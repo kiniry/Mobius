@@ -8,6 +8,10 @@ import ie.ucd.bon.ast.ClusterChart;
 import ie.ucd.bon.ast.FeatureSpecification;
 import ie.ucd.bon.ast.StaticDiagram;
 import ie.ucd.bon.source.SourceLocation;
+import ie.ucd.bon.source.SourceReader;
+
+import java.util.Collections;
+import java.util.List;
 
 public class AstUtil {
 
@@ -42,4 +46,12 @@ public class AstUtil {
     }
   };
   
+  public static List<String> getSourceLines(AstNode node) {
+    SourceLocation location = node.getLocation();
+    if (location.getLineNumber() != SourceLocation.UNKNOWN && location.getEndLineNumber() != SourceLocation.UNKNOWN) {
+      return SourceReader.getInstance().getSourceLines(location.getSourceFile(), location.getLineNumber(), location.getEndLineNumber());
+    } else {
+      return Collections.emptyList();
+    }
+  }
 }

@@ -2,4 +2,5 @@
 -Breadcrumbs/history
 -Incorporate old informal html output
 -Full latex formal class diagram
--Source code inclusion http://alexgorbatchev.com/wiki/SyntaxHighlighter
+-Showing/hiding source code
+-Improve png quality

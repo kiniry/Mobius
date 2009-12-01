@@ -1,16 +1,16 @@
-indexing
-  about:        "A clock with an alarm.";
-  title:        "TickTockClock";
-  author:       "Joe Kiniry";
-  copyright:    "Copyright (C) 2007 Joe Kiniry";
-  organisation: "School of Computer Science and Informatics, UCD";
-  date:         "January 2007";
-  version:      "Revision: 13";
-
-
 static_diagram
 component
-  class ALARM_CLOCK inherit CLOCK
+  class ALARM_CLOCK
+    indexing
+      about:        "A clock with an alarm.";
+      title:        "TickTockClock";
+      author:       "Joe Kiniry";
+      copyright:    "Copyright (C) 2007 Joe Kiniry";
+      organisation: "School of Computer Science and Informatics, UCD";
+      date:         "January 2007";
+      version:      "Revision: 13";
+    inherit 
+      CLOCK
 
   feature
     my_alarm_time: INTEGER  -- This alarm's time, in monotonically increasing units.

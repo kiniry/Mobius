@@ -94,7 +94,7 @@ public abstract class AbstractBONLexer extends Lexer {
     BONProblem problem;
     if (e.token == null) {
       int offset = getOffset(e);
-      SourceLocation location = new SourceLocation(sourceFile, e.line, e.charPositionInLine, e.index + offset, e.index+offset+1);
+      SourceLocation location = new SourceLocation(sourceFile, e.line, e.charPositionInLine, e.index + offset, e.index+offset+1, e.line);
       problem = new AntlrParsingError(location, msg);
     } else {
       problem = new AntlrParsingError(new SourceLocation(e.token, sourceFile), msg);

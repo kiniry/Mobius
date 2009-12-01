@@ -99,7 +99,7 @@ public final class FileUtil {
     try {
       InputStream is = getInputStream(filePath);
       if (is == null) {
-        System.out.println("Could find resource: " + filePath);
+        System.out.println("Couldn't find resource: " + filePath);
         return false;
       }
       BufferedInputStream bis = new BufferedInputStream(is);

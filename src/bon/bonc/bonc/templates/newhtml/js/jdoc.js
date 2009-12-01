@@ -72,7 +72,9 @@ function userLoadClass(qualifiedClassname) {
 }
 
 function loadClass(qualifiedClassname) {
-  $j('#main-display').load(qualifiedClassname + '.html');
+  $j('#main-display').load(qualifiedClassname + '.html', function() {
+	  SyntaxHighlighter.highlight();  
+  });
   $j('#related').load(qualifiedClassname + '-related.html');
 }
 

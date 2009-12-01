@@ -104,7 +104,7 @@ public class TestOutput {
       } else if (paramTypes[i].equals(File.class)) {
         args[i] = new File(iterator.next());
       } else if (paramTypes[i].equals(SourceLocation.class)) {
-        args[i] = new SourceLocation(new File(iterator.next()), Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()), -1, -1);
+        args[i] = new SourceLocation(new File(iterator.next()), Integer.parseInt(iterator.next()), Integer.parseInt(iterator.next()), -1, -1, -1);
       }
     }
 
