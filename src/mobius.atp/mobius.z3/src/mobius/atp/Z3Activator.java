@@ -26,10 +26,11 @@ public class Z3Activator extends AbstractUIPlugin {
   private static Z3Activator plugin;
 
   public static String [][] z3Binaries = {
+    {"Linux", "z3 2.0 for Linux (using wine)", "Z3-2.0/bin/z3.sh"},                            
     {"Windows", "z3 2.0 for Windows", "Z3-2.0/bin/z3.exe"},
     {"WindowsMt", "z3 2.0 MT for Windows", "Z3-2.0/bin_mt/z3.exe"},
-    {"Windows64","z3 2.0 for Windows", "Z3-2.0/x64/z3.exe"},
-    {"windows64Mt", "z3 2.0 MT for Windows", "Z3-2.0/x64_mt/z3.exe"}};
+    {"Windows64","z3 2.0_64bits for Windows", "Z3-2.0/x64/z3.exe"},
+    {"windows64Mt", "z3 2.0_64bit MT for Windows", "Z3-2.0/x64_mt/z3.exe"}};
   
   private static final Map<String, ProverPath> z3s = new HashMap<String, ProverPath>();
   /**
@@ -85,8 +86,11 @@ public class Z3Activator extends AbstractUIPlugin {
   public static String  [] getZ3(String osname) {
     String os = osname.toLowerCase().trim();
     String [] res = null;
-    if (os.startsWith("windows")) {
+    if (os.startsWith("linux")) {
       res = z3Binaries[0];
+    }
+    if (os.startsWith("windows")) {
+      res = z3Binaries[1];
     }
     else Log.log("Unexpected OS: " + osname);
     return res;
