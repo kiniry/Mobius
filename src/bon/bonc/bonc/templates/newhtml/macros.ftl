@@ -9,13 +9,13 @@
 </head>
 </#macro>
 
-<#macro ptype type><a href="" onclick="return navTo('class:${type.identifier}');">${type.identifier}</a><#if (type.actualGenerics?size > 0)>[<#list type.actualGenerics as gen><@ptype type=gen/><#if gen_has_next>,</#if></#list>]</#if></#macro>
+<#macro ptype type><a href="" onclick="return navTo('class:${type.identifier}:doc');">${type.identifier}</a><#if (type.actualGenerics?size > 0)>[<#list type.actualGenerics as gen><@ptype type=gen/><#if gen_has_next>,</#if></#list>]</#if></#macro>
 
 <#macro ptypebasicstring type>${type.identifier}</a><#if (type.actualGenerics?size > 0)>[<#list type.actualGenerics as gen><@ptype type=gen/><#if gen_has_next>,</#if></#list>]</#if></#macro>
 
 <#macro pclass class><a href="" onclick="return navTo('class:${class.name.name}');">${StringUtil.prettyPrintShortenedClass(class)}</a></#macro>
 
-<#macro methodlink f name>#class:${STUtil.getQualifiedClassString(class.name.name,st)}:<@ifspecsignoparamnames f=f name=name/></#macro>
+<#macro methodlink f name>#class:${STUtil.getQualifiedClassString(class.name.name,st)}:doc:<@ifspecsignoparamnames f=f name=name/></#macro>
 
 <#macro indexing indexing>
  <dl class="indexing">

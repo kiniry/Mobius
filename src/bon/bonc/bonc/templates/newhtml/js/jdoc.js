@@ -46,47 +46,67 @@ function setup() {
 	$j(document).bind('keydown', 's', function() {
 		$j('#showallspecslink').click();
 	});
-	
+
 	$j(document).bind('keydown', 'c', function() {
 		$j('#showallsourcelink').click();
+	});
+	
+	$j(document).bind('keydown', 'd', function() {
+		switchToType('diagram');
+	});
+	
+	$j(document).bind('keydown', 'f', function() {
+		switchToType('doc');
 	});
 
 };
 
+function switchToType(type) {
+	var currentHash = $j.history.getCurrent();
+	var parts = currentHash.split(':');
+	if (parts.length >= 2) {
+	  	var name = parts[1];
+	  	if (parts.length < 3 || parts[2] != type) {
+	  		userLoad(parts[0], name, type);
+	  	}
+	}
+}
+
 function selectedAuto(selectedElement) {
 	var value = Element.collectTextNodesIgnoreClass(selectedElement, 'informal');
-	userLoadClass(value);
+	userLoad('class', value, 'doc');
 	$j('#search-box').blur(); 
 }
 
 function processHash(hash) {
 	var parts = hash.split(':');
 	if (parts.length >= 2) {
-		if (parts[0] == 'class') {
-			loadClass(parts[1]);
-		}
+		parts.length >= 3 ? loadEntity(parts[0],parts[1],parts[2]) : loadEntity(parts[0],parts[1],'doc');
 		return true;
 	}
 	return false;
 }
 
-function userLoadClass(qualifiedClassname) {
-	$j.history.add('class:' + qualifiedClassname);
-	loadClass(qualifiedClassname);
+function userLoad(entity, name, type) {
+	$j.history.add(entity + ':' + name + ":" + type);
+	loadEntity(entity, name, type);
 }
 
-function loadClass(qualifiedClassname) {
-	$j('#main-display').load(qualifiedClassname + '.html', function() {
+function loadEntity(enityt, name, type) {
+	var page = type == 'diagram' ? name + "-diagram.html" : name + '.html';
+	$j('#main-display').load(page, function() {
 		SyntaxHighlighter.highlight();  
 	});
-	$j('#related').load(qualifiedClassname + '-related.html');
+	$j('#related').load(name + '-related.html');
 }
 
 function navTo(loc) {
 	var parts = loc.split(':');
 	if (parts.length >= 2) {
-		if (parts[0] == 'class') {
-			userLoadClass(parts[1]);
+		if (parts.length >= 3) {
+			userLoad(parts[0], parts[1], parts[2]);
+		} else {	
+			userLoad(parts[0], parts[1], 'doc');
 		}
 	}
 	return false;
